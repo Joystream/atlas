@@ -1,9 +1,9 @@
-name: Atlas
+name: Checks
 on: [push, pull_request]
 
 jobs:
   test:
-    name: Atlas Tests
+    name: Tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -21,7 +21,7 @@ jobs:
       - name: Run Tests
         run: yarn coverage
   lint:
-    name: Atlas Lint
+    name: Linting
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -34,8 +34,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{matrix.node-version}}
-      - name: Install root modules
-        run: yarn install --frozen-lockfile
       - name: Install modules
         run: yarn install --frozen-lockfile
       - name: Run ESLint
