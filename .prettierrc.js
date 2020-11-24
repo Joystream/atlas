@@ -1,3 +1,4 @@
 module.exports = {
-  ...require('../.prettierrc.js'),
+  ...require('@joystream/prettier-config'),
+  printWidth: 120,
 }
