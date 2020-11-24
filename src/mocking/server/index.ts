@@ -62,6 +62,11 @@ createServer({
     this.passthrough((request) => {
       return request.url.includes('hotjar')
     })
+
+    // allow Sentry error reporting
+    this.passthrough((request) => {
+      return request.url.includes('sentry')
+    })
   },
 
   seeds(server) {
