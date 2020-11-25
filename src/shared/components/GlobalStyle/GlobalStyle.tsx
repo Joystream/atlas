@@ -33,11 +33,11 @@ const globalStyles = css`
   }
 
   :root {
-    --global-horizontal-padding: ${sizes.b4}px;
+    --global-horizontal-padding: ${sizes(4)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     :root {
-      --global-horizontal-padding: ${sizes.b8}px;
+      --global-horizontal-padding: ${sizes(8)};
     }
   }
 `

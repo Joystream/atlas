@@ -210,5 +210,5 @@ export const PlayButton = styled(Button)`
 `
 
 export const SoundButton = styled(Button)`
-  margin-left: ${sizes.b4}px;
+  margin-left: ${sizes(4)};
 `

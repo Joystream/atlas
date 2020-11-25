@@ -1,4 +1,4 @@
-import sizes from './sizes'
+import { sizesObj as sizes } from './sizes'
 
 const rawSpacing = {
   xxs: sizes.b1,

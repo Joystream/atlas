@@ -1,6 +1,6 @@
 const base = 4
 
-const sizes = {
+export const sizesObj = {
   b1: base,
   b2: base * 2, // 8px
   b3: base * 3, // 12px
@@ -13,4 +13,7 @@ const sizes = {
   b16: base * 16, // 64px
 }
 
-export default sizes
+export function sizes<B extends boolean>(n: number, raw?: B): B extends false ? string : number
+export function sizes(n: number, raw?: boolean) {
+  return raw ? base * n : `${base * n}px`
+}
