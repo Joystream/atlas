@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css, keyframes } from '@emotion/core'
-import { breakpoints, colors, spacing } from '@/shared/theme'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import { CoverHoverOverlay, CoverIcon, ProgressOverlay } from './VideoPreview.styles'
 
 export const HOVER_BORDER_SIZE = '2px'
@@ -37,8 +37,8 @@ export const CoverWrapper = styled.div<MainProps>`
 const clickableAnimation = (clickable: boolean) =>
   clickable
     ? css`
-        transform: translate(-${spacing.xs}, -${spacing.xs});
-        box-shadow: ${spacing.xs} ${spacing.xs} 0 ${colors.blue['500']};
+        transform: translate(-${sizes(2)}, -${sizes(2)});
+        box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']};
 
         ${CoverHoverOverlay} {
           opacity: 1;
@@ -83,7 +83,7 @@ export const Container = styled.article<MainProps>`
 
 const mainInfoContainerCss = css`
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin: ${spacing.xxl} 0 0 ${spacing.xl};
+    margin: ${sizes(8)} 0 0 ${sizes(6)};
   }
 `
 
@@ -91,7 +91,7 @@ export const InfoContainer = styled.div<MainProps>`
   min-height: 86px;
   width: 100%;
   display: flex;
-  margin-top: ${({ main }) => (main ? spacing.m : spacing.s)};
+  margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
   ${({ main }) => main && mainInfoContainerCss};
 `
 
@@ -99,7 +99,7 @@ export const AvatarContainer = styled.div<ScalesWithCoverProps>`
   width: calc(40px * ${(props) => props.scalingFactor});
   min-width: calc(40px * ${(props) => props.scalingFactor});
   height: calc(40px * ${(props) => props.scalingFactor});
-  margin-right: ${spacing.xs};
+  margin-right: ${sizes(2)};
 `
 
 export const TextContainer = styled.div`
@@ -110,6 +110,6 @@ export const TextContainer = styled.div`
 `
 
 export const MetaContainer = styled.div<MainProps>`
-  margin-top: ${({ main }) => (main ? spacing.s : spacing.xs)};
+  margin-top: ${({ main }) => (main ? sizes(3) : sizes(2))};
   width: 100%;
 `

@@ -1,4 +1,4 @@
-import theme from '../../theme'
+import { sizes, colors, typography } from '../../theme'
 import { makeStyles, StyleFn } from '../../utils'
 
 export const SIDENAV_WIDTH = 56
@@ -17,14 +17,14 @@ const nav: StyleFn = () => ({
 
   overflow: 'hidden',
 
-  padding: `${theme.spacing.xxl} ${theme.spacing.m}`,
+  padding: `${sizes(8)} ${sizes(4)}`,
 
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
 
-  backgroundColor: theme.colors.blue[700],
-  color: theme.colors.white,
+  backgroundColor: colors.blue[700],
+  color: colors.white,
 })
 
 const expandButton: StyleFn = () => ({
@@ -51,7 +51,7 @@ const navItemsWrapper: StyleFn = () => ({
 
 const navItemContainer: StyleFn = () => ({
   ':not(:first-child)': {
-    marginTop: theme.spacing.xxxl,
+    marginTop: sizes(10),
   },
   display: 'flex',
   flexDirection: 'column',
@@ -61,16 +61,16 @@ const navItem: StyleFn = () => ({
   display: 'flex',
   alignItems: 'center',
   '> span': {
-    marginLeft: theme.spacing.xxl,
+    marginLeft: sizes(8),
     fontWeight: 'bold',
-    fontFamily: theme.typography.fonts.headers,
-    fontSize: theme.typography.sizes.h5,
+    fontFamily: typography.fonts.headers,
+    fontSize: typography.sizes.h5,
     lineHeight: 1,
   },
 })
 
 const navSubitemsWrapper: StyleFn = () => ({
-  paddingLeft: `calc(${theme.typography.sizes.icon.xlarge} + ${theme.spacing.xxl})`,
+  paddingLeft: `calc(${typography.sizes.icon.xlarge} + ${sizes(8)})`,
   overflow: 'hidden',
   '> div': {
     display: 'flex',
@@ -79,11 +79,11 @@ const navSubitemsWrapper: StyleFn = () => ({
 })
 
 const navSubitem: StyleFn = () => ({
-  fontSize: theme.typography.sizes.body2,
-  fontFamily: theme.typography.fonts.base,
-  marginTop: theme.spacing.xxl,
+  fontSize: typography.sizes.body2,
+  fontFamily: typography.fonts.base,
+  marginTop: sizes(8),
   ':first-child': {
-    marginTop: theme.spacing.xl,
+    marginTop: sizes(6),
   },
 })
 

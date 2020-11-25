@@ -1,6 +1,6 @@
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
-import { colors, sizes, spacing } from '../../theme'
+import { colors, sizes } from '../../theme'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'
@@ -22,9 +22,9 @@ const hoverTransition = ({ animated }: InnerContainerProps) =>
     ? css`
         transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         &:hover {
-          transform: translate3d(-${spacing.xs}, -${spacing.xs}, 0);
+          transform: translate3d(-${sizes(2)}, -${sizes(2)}, 0);
           border: 1px solid ${colors.white};
-          box-shadow: ${spacing.xs} ${spacing.xs} 0 ${colors.blue[500]};
+          box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue[500]};
         }
       `
     : null

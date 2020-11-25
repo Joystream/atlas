@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ChannelAvatar, Placeholder } from '@/shared/components'
-import theme from '@/shared/theme'
+import { sizes, colors, typography } from '@/shared/theme'
 
 export const Container = styled.div`
   display: flex;
@@ -23,26 +23,26 @@ export const PlayerPlaceholder = styled(Placeholder)`
 
 export const DescriptionPlaceholder = styled(Placeholder)`
   height: 28px;
-  margin: ${theme.spacing.m} 0 0;
+  margin: ${sizes(4)} 0 0;
 `
 
 export const InfoContainer = styled.div`
-  padding: ${theme.spacing.xxl} 0;
+  padding: ${sizes(8)} 0;
 `
 
 export const Title = styled.h2`
-  font-size: ${theme.typography.sizes.h2};
+  font-size: ${typography.sizes.h2};
   margin: 0;
 `
 
 export const Meta = styled.span`
   display: block;
-  margin-top: ${theme.spacing.xxs};
-  color: ${theme.colors.gray[300]};
+  margin-top: ${sizes(1)};
+  color: ${colors.gray[300]};
 `
 
 export const ChannelContainer = styled.div`
-  margin-top: ${theme.spacing.m};
+  margin-top: ${sizes(4)};
 `
 
 export const StyledChannelAvatar = styled(ChannelAvatar)`
@@ -52,13 +52,13 @@ export const StyledChannelAvatar = styled(ChannelAvatar)`
 `
 
 export const DescriptionContainer = styled.div`
-  margin-top: ${theme.spacing.xl};
-  border-top: 1px solid ${theme.colors.gray[800]};
+  margin-top: ${sizes(6)};
+  border-top: 1px solid ${colors.gray[800]};
 
   p {
-    color: ${theme.colors.gray[300]};
+    color: ${colors.gray[300]};
     line-height: 175%;
-    margin: ${theme.spacing.m} 0 0;
+    margin: ${sizes(4)} 0 0;
   }
 `
 
@@ -67,6 +67,6 @@ export const MoreVideosContainer = styled.div`
 `
 
 export const MoreVideosHeader = styled.h5`
-  margin: 0 0 ${theme.spacing.m};
-  font-size: ${theme.typography.sizes.h5};
+  margin: 0 0 ${sizes(4)};
+  font-size: ${typography.sizes.h5};
 `

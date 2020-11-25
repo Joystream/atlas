@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { colors, spacing, typography } from '../../theme'
+import { colors, sizes, typography } from '../../theme'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import { HOVER_BORDER_SIZE, fadeInAnimation } from './VideoPreviewBase.styles'
@@ -62,7 +62,7 @@ export const ProgressOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  height: ${spacing.xxs};
+  height: ${sizes(1)};
   background-color: ${colors.white};
 `
 
@@ -77,9 +77,9 @@ export const ProgressBar = styled.div`
 
 export const CoverDurationOverlay = styled.div`
   position: absolute;
-  bottom: ${spacing.xs};
-  right: ${spacing.xs};
-  padding: ${spacing.xxs} ${spacing.xs};
+  bottom: ${sizes(2)};
+  right: ${sizes(2)};
+  padding: ${sizes(1)} ${sizes(2)};
   background-color: ${colors.black};
   color: ${colors.white};
   font-size: ${typography.sizes.body2};

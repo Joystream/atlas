@@ -3,7 +3,7 @@ import { css } from '@emotion/core'
 
 import Button from '../Button'
 import type { ButtonStyleProps } from '../Button/Button.style'
-import { spacing, colors } from '../../theme'
+import { sizes, colors } from '../../theme'
 
 export type ToggleButtonStyleProps = {
   toggled: boolean
@@ -13,8 +13,8 @@ const hoverTransition = ({ toggled, disabled = false, variant }: ToggleButtonSty
   !toggled && !disabled
     ? css`
         &:hover {
-          transform: translate3d(-${spacing.xxs}, -${spacing.xxs}, 0);
-          box-shadow: ${spacing.xxs} ${spacing.xxs} 0 ${variant === 'primary' ? colors.blue[300] : colors.blue[500]};
+          transform: translate3d(-${sizes(1)}, -${sizes(1)}, 0);
+          box-shadow: ${sizes(1)} ${sizes(1)} 0 ${variant === 'primary' ? colors.blue[300] : colors.blue[500]};
           border-color: ${variant === 'primary' ? '' : colors.white};
           color: ${colors.white};
         }

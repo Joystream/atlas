@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors, spacing, typography } from '@/shared/theme'
+import { colors, sizes, typography } from '@/shared/theme'
 import { Avatar } from '@/shared/components'
 
 export const Container = styled.div`
@@ -10,7 +10,7 @@ export const Container = styled.div`
 export const StyledAvatar = styled(Avatar)`
   width: 32px;
   height: 32px;
-  margin-right: ${spacing.xs};
+  margin-right: ${sizes(2)};
 `
 
 export const Name = styled.span`
