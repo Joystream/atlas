@@ -12,17 +12,17 @@ export interface GetChannel_channel_videos_category {
   id: string;
 }
 
-export interface GetChannel_channel_videos_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface GetChannel_channel_videos_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface GetChannel_channel_videos_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface GetChannel_channel_videos_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type GetChannel_channel_videos_media_location = GetChannel_channel_videos_media_location_HTTPVideoMediaLocation | GetChannel_channel_videos_media_location_JoystreamVideoMediaLocation;
+export type GetChannel_channel_videos_media_location = GetChannel_channel_videos_media_location_HttpMediaLocation | GetChannel_channel_videos_media_location_JoystreamMediaLocation;
 
 export interface GetChannel_channel_videos_media {
   __typename: "VideoMedia";

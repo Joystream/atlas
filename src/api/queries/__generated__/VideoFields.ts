@@ -12,17 +12,17 @@ export interface VideoFields_category {
   id: string;
 }
 
-export interface VideoFields_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface VideoFields_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface VideoFields_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface VideoFields_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type VideoFields_media_location = VideoFields_media_location_HTTPVideoMediaLocation | VideoFields_media_location_JoystreamVideoMediaLocation;
+export type VideoFields_media_location = VideoFields_media_location_HttpMediaLocation | VideoFields_media_location_JoystreamMediaLocation;
 
 export interface VideoFields_media {
   __typename: "VideoMedia";

@@ -12,17 +12,17 @@ export interface Search_search_item_Video_category {
   id: string;
 }
 
-export interface Search_search_item_Video_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface Search_search_item_Video_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface Search_search_item_Video_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface Search_search_item_Video_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type Search_search_item_Video_media_location = Search_search_item_Video_media_location_HTTPVideoMediaLocation | Search_search_item_Video_media_location_JoystreamVideoMediaLocation;
+export type Search_search_item_Video_media_location = Search_search_item_Video_media_location_HttpMediaLocation | Search_search_item_Video_media_location_JoystreamMediaLocation;
 
 export interface Search_search_item_Video_media {
   __typename: "VideoMedia";
@@ -64,7 +64,7 @@ export interface Search_search_item_Channel {
 export type Search_search_item = Search_search_item_Video | Search_search_item_Channel;
 
 export interface Search_search {
-  __typename: "FreeTextSearchResult";
+  __typename: "SearchFTSOutput";
   item: Search_search_item;
   rank: number;
 }

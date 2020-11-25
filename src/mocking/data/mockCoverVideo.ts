@@ -17,11 +17,11 @@ export const mockCoverVideoMedia: MockVideoMedia = {
   ...rawCoverVideo.videoMedia,
   __typename: 'VideoMedia',
   location: {
-    __typename: 'HTTPVideoMediaLocation',
+    __typename: 'HttpMediaLocation',
     ...rawCoverVideo.videoMedia.location,
   },
   coverCutLocation: {
-    __typename: 'HTTPVideoMediaLocation',
+    __typename: 'HttpMediaLocation',
     ...rawCoverVideo.videoMedia.coverCutLocation,
   },
 }

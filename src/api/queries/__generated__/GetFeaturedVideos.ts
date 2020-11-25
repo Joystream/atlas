@@ -12,17 +12,17 @@ export interface GetFeaturedVideos_featured_videos_category {
   id: string;
 }
 
-export interface GetFeaturedVideos_featured_videos_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface GetFeaturedVideos_featured_videos_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface GetFeaturedVideos_featured_videos_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface GetFeaturedVideos_featured_videos_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type GetFeaturedVideos_featured_videos_media_location = GetFeaturedVideos_featured_videos_media_location_HTTPVideoMediaLocation | GetFeaturedVideos_featured_videos_media_location_JoystreamVideoMediaLocation;
+export type GetFeaturedVideos_featured_videos_media_location = GetFeaturedVideos_featured_videos_media_location_HttpMediaLocation | GetFeaturedVideos_featured_videos_media_location_JoystreamMediaLocation;
 
 export interface GetFeaturedVideos_featured_videos_media {
   __typename: "VideoMedia";

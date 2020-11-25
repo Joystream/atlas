@@ -25,6 +25,18 @@ type VideoQueryArgs = {
   } | null
 }
 
+type UniqueArgs = {
+  where: { id: string }
+}
+
+export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args, context, info) => {
+  const resolverArgs = {
+    id: args.where.id,
+  }
+
+  return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+}
+
 export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_videosConnection> = (
   obj,
   args,
@@ -52,6 +64,14 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
 export const featuredVideosResolver: QueryResolver<object, VideoFields[]> = (...params) => {
   const videos = mirageGraphQLFieldResolver(...params) as VideoFields[]
   return videos.filter((_, idx) => FEATURED_VIDEOS_INDEXES.includes(idx))
+}
+
+export const channelResolver: QueryResolver<UniqueArgs, ChannelFields> = (obj, args, context, info) => {
+  const resolverArgs = {
+    id: args.where.id,
+  }
+
+  return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
 export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewestChannels_channelsConnection> = (
@@ -91,7 +111,7 @@ export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (
     }
 
     const result: Search_search = {
-      __typename: 'FreeTextSearchResult',
+      __typename: 'SearchFTSOutput',
       item,
       rank: rankCount++,
     }
@@ -111,6 +131,14 @@ export const videoViewsResolver: QueryResolver<VideoViewsArgs> = (obj, args, con
 
 export const addVideoViewResolver: QueryResolver<VideoViewsArgs> = (obj, args, context, info) => {
   const videoInfo = context.mirageSchema.videoViewsInfos.find(args.videoID)
+  if (!videoInfo) {
+    const videoInfo = context.mirageSchema.videoViewsInfos.create({
+      id: args.videoID,
+      views: 1,
+    })
+
+    return videoInfo
+  }
   videoInfo.update({
     views: videoInfo.views + 1,
   })

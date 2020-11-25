@@ -12,17 +12,17 @@ export interface GetNewestVideos_videosConnection_edges_node_category {
   id: string;
 }
 
-export interface GetNewestVideos_videosConnection_edges_node_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface GetNewestVideos_videosConnection_edges_node_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface GetNewestVideos_videosConnection_edges_node_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface GetNewestVideos_videosConnection_edges_node_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type GetNewestVideos_videosConnection_edges_node_media_location = GetNewestVideos_videosConnection_edges_node_media_location_HTTPVideoMediaLocation | GetNewestVideos_videosConnection_edges_node_media_location_JoystreamVideoMediaLocation;
+export type GetNewestVideos_videosConnection_edges_node_media_location = GetNewestVideos_videosConnection_edges_node_media_location_HttpMediaLocation | GetNewestVideos_videosConnection_edges_node_media_location_JoystreamMediaLocation;
 
 export interface GetNewestVideos_videosConnection_edges_node_media {
   __typename: "VideoMedia";

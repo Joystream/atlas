@@ -4,7 +4,7 @@ import { channelFieldsFragment } from './channels'
 
 export const SEARCH = gql`
   query Search($query_string: String!) {
-    search(query_string: $query_string) {
+    search(text: $query_string) {
       item {
         ... on Video {
           ...VideoFields

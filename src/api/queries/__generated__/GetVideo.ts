@@ -12,17 +12,17 @@ export interface GetVideo_video_category {
   id: string;
 }
 
-export interface GetVideo_video_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface GetVideo_video_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface GetVideo_video_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface GetVideo_video_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type GetVideo_video_media_location = GetVideo_video_media_location_HTTPVideoMediaLocation | GetVideo_video_media_location_JoystreamVideoMediaLocation;
+export type GetVideo_video_media_location = GetVideo_video_media_location_HttpMediaLocation | GetVideo_video_media_location_JoystreamMediaLocation;
 
 export interface GetVideo_video_media {
   __typename: "VideoMedia";
@@ -37,17 +37,17 @@ export interface GetVideo_video_channel_videos_category {
   id: string;
 }
 
-export interface GetVideo_video_channel_videos_media_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface GetVideo_video_channel_videos_media_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface GetVideo_video_channel_videos_media_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface GetVideo_video_channel_videos_media_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type GetVideo_video_channel_videos_media_location = GetVideo_video_channel_videos_media_location_HTTPVideoMediaLocation | GetVideo_video_channel_videos_media_location_JoystreamVideoMediaLocation;
+export type GetVideo_video_channel_videos_media_location = GetVideo_video_channel_videos_media_location_HttpMediaLocation | GetVideo_video_channel_videos_media_location_JoystreamMediaLocation;
 
 export interface GetVideo_video_channel_videos_media {
   __typename: "VideoMedia";

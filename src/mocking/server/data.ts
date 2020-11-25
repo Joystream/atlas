@@ -23,7 +23,7 @@ export const createMockData = (server: MirageJSServer) => {
 
   const videoMedias = mockVideosMedia.map((videoMedia) => {
     // FIXME: This suffers from the same behaviour as the search resolver - all the returned items have the same location
-    const location = server.schema.create('HTTPVideoMediaLocation', {
+    const location = server.schema.create('HttpMediaLocation', {
       id: faker.random.uuid(),
       ...videoMedia.location,
     })
@@ -61,7 +61,7 @@ const createCoverVideoData = (server: MirageJSServer, categories: unknown[]) => 
     ...mockCoverVideoChannel,
   })
 
-  const location = server.schema.create('HTTPVideoMediaLocation', {
+  const location = server.schema.create('HttpMediaLocation', {
     id: faker.random.uuid(),
     ...mockCoverVideoMedia.location,
   })

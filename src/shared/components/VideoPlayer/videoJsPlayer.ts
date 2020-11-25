@@ -3,6 +3,7 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
 import { VideoFields_media_location } from '@/api/queries/__generated__/VideoFields'
+import { STORAGE_NODE_URL } from '@/config/urls'
 
 export type VideoJsConfig = {
   src: VideoFields_media_location
@@ -14,12 +15,17 @@ export type VideoJsConfig = {
   posterUrl?: string
 }
 
+const createJoystreamStorageUrl = (dataObjectId: string) => {
+  const url = new URL(dataObjectId, STORAGE_NODE_URL)
+  return url.href
+}
+
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
 export const useVideoJsPlayer: VideoJsPlayerHook = ({ fill, fluid, height, src, width, muted = false, posterUrl }) => {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
-  const parsedSource = src.__typename === 'HTTPVideoMediaLocation' ? src.URL : 'TODO'
+  const parsedSource = src.__typename === 'HttpMediaLocation' ? src.url : createJoystreamStorageUrl(src.dataObjectId)
 
   useEffect(() => {
     const videoJsOptions: VideoJsPlayerOptions = {

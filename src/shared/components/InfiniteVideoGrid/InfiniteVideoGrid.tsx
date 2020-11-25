@@ -141,6 +141,10 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     </>
   )
 
+  if (displayedVideos.length <= 0 && placeholdersCount <= 0) {
+    return null
+  }
+
   return (
     <section className={className}>
       {title && <Title>{title}</Title>}
