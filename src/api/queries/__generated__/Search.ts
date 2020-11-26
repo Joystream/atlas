@@ -74,5 +74,5 @@ export interface Search {
 }
 
 export interface SearchVariables {
-  query_string: string;
+  text: string;
 }

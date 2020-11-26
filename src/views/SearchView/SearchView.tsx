@@ -18,7 +18,7 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useQuery<Search, SearchVariables>(SEARCH, { variables: { query_string: search } })
+  const { data, loading, error } = useQuery<Search, SearchVariables>(SEARCH, { variables: { text: search } })
 
   const getChannelsAndVideos = (loading: boolean, data: Search | undefined) => {
     if (loading || !data?.search) {

@@ -90,7 +90,7 @@ export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewe
 }
 
 // FIXME: This resolver is currently broken and returns the same result n times instead of the correct result.
-export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (_, { query_string }, context) => {
+export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (_, { text }, context) => {
   const { mirageSchema: schema } = context
   const videos = getRecords({ name: 'Video' }, {}, schema) as VideoFields[]
   const channels = getRecords({ name: 'Channel' }, {}, schema) as ChannelFields[]
@@ -98,14 +98,13 @@ export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (
   const items = [...videos, ...channels]
 
   let rankCount = 0
-  const matchQueryStr = (str: string) => str.includes(query_string) || query_string.includes(str)
+  const matchQueryStr = (str: string) => str.includes(text) || text.includes(str)
 
   const relevantItems = items.reduce((acc, item) => {
     const matched =
       item.__typename === 'Channel'
         ? matchQueryStr(item.handle)
         : matchQueryStr(item.description) || matchQueryStr(item.title)
-
     if (!matched) {
       return acc
     }
