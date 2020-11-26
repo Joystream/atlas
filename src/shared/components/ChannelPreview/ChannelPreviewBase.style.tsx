@@ -48,8 +48,8 @@ export const Info = styled.div`
   align-items: center;
   text-align: center;
 
-  margin-top: ${sizes(3)}px;
-  padding: 0 ${sizes(1)}px;
+  margin-top: ${sizes(3)};
+  padding: 0 ${sizes(1)};
   max-width: 100%;
 `
 
