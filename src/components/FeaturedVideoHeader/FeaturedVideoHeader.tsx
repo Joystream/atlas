@@ -78,7 +78,7 @@ const FeaturedVideoHeader: React.FC = () => {
             </PlayButton>
             <SoundButton
               onClick={handleSoundToggleClick}
-              icon={soundMuted ? 'sound-on' : 'sound-off'}
+              icon={!soundMuted ? 'sound-on' : 'sound-off'}
               disabled={!initialLoadDone}
             />
           </ButtonsContainer>
