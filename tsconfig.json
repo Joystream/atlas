@@ -2,11 +2,7 @@
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "target": "es2019",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es2019"
-    ],
+    "lib": ["dom", "dom.iterable", "es2019"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,14 +15,9 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "strict": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noFallthroughCasesInSwitch": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/shared/stories"
-  ],
-  "include": [
-    "src"
-  ]
+  "exclude": ["node_modules", "dist", "src/shared/stories"],
+  "include": ["src"]
 }
