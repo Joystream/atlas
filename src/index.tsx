@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/react'
 import App from './App'
 import './styles.css'
-import { SENTRY_DNS } from './config/urls'
+import { SENTRY_DSN } from './config/urls'
 
-Sentry.init({ dsn: SENTRY_DNS })
+Sentry.init({ dsn: SENTRY_DSN })
 ReactDOM.render(<App />, document.getElementById('root'))

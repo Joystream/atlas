@@ -4,7 +4,7 @@ import { ChannelGallery, ErrorFallback, FeaturedVideoHeader, VideoGallery } from
 
 import { RouteComponentProps } from '@reach/router'
 import { useQuery } from '@apollo/client'
-import * as Sentry from '@sentry/react'
+import { ErrorBoundary } from '@sentry/react'
 import { InfiniteVideoGrid } from '@/shared/components'
 import { GET_FEATURED_VIDEOS, GET_NEWEST_CHANNELS, GET_NEWEST_VIDEOS } from '@/api/queries'
 import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
@@ -73,9 +73,9 @@ const HomeView: React.FC<RouteComponentProps> = () => {
         ) : (
           <ErrorFallback error={newestChannelsError as Error} resetError={() => refetchNewestChannels()} />
         )}
-        <Sentry.ErrorBoundary fallback={ErrorFallback}>
+        <ErrorBoundary fallback={ErrorFallback}>
           <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
-        </Sentry.ErrorBoundary>
+        </ErrorBoundary>
       </Container>
     </>
   )

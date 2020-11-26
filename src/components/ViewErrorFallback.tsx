@@ -35,8 +35,7 @@ const Title = styled(Typography)`
 `
 
 const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
-  console.error(`An error occured in ${componentStack}`)
-  console.error(error)
+  console.error('An error occurred.', { componentStack, error })
   return (
     <Container>
       <ErrorIllustration />

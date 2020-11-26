@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps } from '@reach/router'
-import * as Sentry from '@sentry/react'
+import { ErrorBoundary } from '@sentry/react'
 
 import { ErrorFallback } from '@/components'
 import { CategoryPicker, InfiniteVideoGrid, Typography } from '@/shared/components'
@@ -39,9 +39,9 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
         selectedCategoryId={selectedCategoryId}
         onChange={handleCategoryChange}
       />
-      <Sentry.ErrorBoundary fallback={ErrorFallback}>
+      <ErrorBoundary fallback={ErrorFallback}>
         <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
-      </Sentry.ErrorBoundary>
+      </ErrorBoundary>
     </div>
   )
 }

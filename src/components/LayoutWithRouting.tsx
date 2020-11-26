@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate } from '@reach/router'
-import * as Sentry from '@sentry/react'
+import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
 import { Navbar, ViewErrorFallback } from '@/components'
@@ -13,14 +13,14 @@ type RouteProps = {
 } & RouteComponentProps
 const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
   return (
-    <Sentry.ErrorBoundary
+    <ErrorBoundary
       fallback={ViewErrorFallback}
       onReset={() => {
         navigate('/')
       }}
     >
       <Component {...pathProps} />
-    </Sentry.ErrorBoundary>
+    </ErrorBoundary>
   )
 }
 
