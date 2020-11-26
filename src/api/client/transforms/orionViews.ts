@@ -1,4 +1,4 @@
-import { Transform } from '@graphql-tools/utils'
+import { Transform } from '@graphql-tools/delegate'
 import { GraphQLError, SelectionSetNode } from 'graphql'
 
 class OrionError extends Error {

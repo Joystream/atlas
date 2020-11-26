@@ -29,9 +29,6 @@ const cache = new InMemoryCache({
       },
     },
   },
-  possibleTypes: {
-    FreeTextSearchResultItemType: ['Video', 'Channel'],
-  },
 })
 
 export default cache

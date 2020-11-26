@@ -1,4 +1,4 @@
-import { Transform } from '@graphql-tools/utils'
+import { Transform } from '@graphql-tools/delegate'
 
 // remove views field from the query node video request
 export const RemoveQueryNodeViewsField: Transform = {
