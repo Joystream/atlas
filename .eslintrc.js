@@ -25,5 +25,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/naming-convention': ['off'],
+    // remove once @joystream/eslint-config does not enforce an older version of @typescript-eslint
+    '@typescript-eslint/no-unused-vars': ['off'],
   },
 }
