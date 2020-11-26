@@ -14,8 +14,8 @@
     "pixelHeight": 1440,
     "duration": 29,
     "size": 44851016,
-    "location": { "URL": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm" },
-    "coverCutLocation": { "URL": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4" }
+    "location": { "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm" },
+    "coverCutLocation": { "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4" }
   },
   "channel": {
     "id": "d458e199-e1ae-4ccc-9f42-0ff8fbf9ab81",

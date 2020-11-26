@@ -25,6 +25,18 @@ type VideoQueryArgs = {
   } | null
 }
 
+type UniqueArgs = {
+  where: { id: string }
+}
+
+export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args, context, info) => {
+  const resolverArgs = {
+    id: args.where.id,
+  }
+
+  return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+}
+
 export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_videosConnection> = (
   obj,
   args,
@@ -54,6 +66,14 @@ export const featuredVideosResolver: QueryResolver<object, VideoFields[]> = (...
   return videos.filter((_, idx) => FEATURED_VIDEOS_INDEXES.includes(idx))
 }
 
+export const channelResolver: QueryResolver<UniqueArgs, ChannelFields> = (obj, args, context, info) => {
+  const resolverArgs = {
+    id: args.where.id,
+  }
+
+  return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+}
+
 export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewestChannels_channelsConnection> = (
   obj,
   args,
@@ -70,7 +90,7 @@ export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewe
 }
 
 // FIXME: This resolver is currently broken and returns the same result n times instead of the correct result.
-export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (_, { query_string }, context) => {
+export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (_, { text }, context) => {
   const { mirageSchema: schema } = context
   const videos = getRecords({ name: 'Video' }, {}, schema) as VideoFields[]
   const channels = getRecords({ name: 'Channel' }, {}, schema) as ChannelFields[]
@@ -78,20 +98,19 @@ export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (
   const items = [...videos, ...channels]
 
   let rankCount = 0
-  const matchQueryStr = (str: string) => str.includes(query_string) || query_string.includes(str)
+  const matchQueryStr = (str: string) => str.includes(text) || text.includes(str)
 
   const relevantItems = items.reduce((acc, item) => {
     const matched =
       item.__typename === 'Channel'
         ? matchQueryStr(item.handle)
         : matchQueryStr(item.description) || matchQueryStr(item.title)
-
     if (!matched) {
       return acc
     }
 
     const result: Search_search = {
-      __typename: 'FreeTextSearchResult',
+      __typename: 'SearchFTSOutput',
       item,
       rank: rankCount++,
     }
@@ -111,6 +130,14 @@ export const videoViewsResolver: QueryResolver<VideoViewsArgs> = (obj, args, con
 
 export const addVideoViewResolver: QueryResolver<VideoViewsArgs> = (obj, args, context, info) => {
   const videoInfo = context.mirageSchema.videoViewsInfos.find(args.videoID)
+  if (!videoInfo) {
+    const videoInfo = context.mirageSchema.videoViewsInfos.create({
+      id: args.videoID,
+      views: 1,
+    })
+
+    return videoInfo
+  }
   videoInfo.update({
     views: videoInfo.views + 1,
   })

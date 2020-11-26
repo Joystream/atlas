@@ -7,17 +7,17 @@
 // GraphQL fragment: VideoMediaFields
 // ====================================================
 
-export interface VideoMediaFields_location_HTTPVideoMediaLocation {
-  __typename: "HTTPVideoMediaLocation";
-  URL: string;
+export interface VideoMediaFields_location_HttpMediaLocation {
+  __typename: "HttpMediaLocation";
+  url: string;
 }
 
-export interface VideoMediaFields_location_JoystreamVideoMediaLocation {
-  __typename: "JoystreamVideoMediaLocation";
-  dataObjectID: string;
+export interface VideoMediaFields_location_JoystreamMediaLocation {
+  __typename: "JoystreamMediaLocation";
+  dataObjectId: string;
 }
 
-export type VideoMediaFields_location = VideoMediaFields_location_HTTPVideoMediaLocation | VideoMediaFields_location_JoystreamVideoMediaLocation;
+export type VideoMediaFields_location = VideoMediaFields_location_HttpMediaLocation | VideoMediaFields_location_JoystreamMediaLocation;
 
 export interface VideoMediaFields {
   __typename: "VideoMedia";

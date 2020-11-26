@@ -10,6 +10,7 @@ import {
   channelsResolver,
   featuredVideosResolver,
   searchResolver,
+  videoResolver,
   videosResolver,
   videoViewsResolver,
 } from './resolvers'
@@ -26,13 +27,15 @@ createServer({
     const queryNodeHandler = createGraphQLHandler(extendedQueryNodeSchema, this.schema, {
       resolvers: {
         Query: {
+          video: videoResolver,
           videosConnection: videosResolver,
           featured_videos: featuredVideosResolver,
+          channel: channelsResolver,
           channelsConnection: channelsResolver,
           search: searchResolver,
         },
         // TODO: remove these once the MirageJS bug gets resolved: https://github.com/miragejs/graphql/issues/16
-        FreeTextSearchResult: {
+        SearchFTSOutput: {
           item: ({ item }: any) => item,
         },
         VideoMedia: {

@@ -6,11 +6,11 @@ const videoMediaFieldsFragment = gql`
     pixelHeight
     pixelWidth
     location {
-      ... on HTTPVideoMediaLocation {
-        URL
+      ... on HttpMediaLocation {
+        url
       }
-      ... on JoystreamVideoMediaLocation {
-        dataObjectID
+      ... on JoystreamMediaLocation {
+        dataObjectId
       }
     }
   }
@@ -75,7 +75,7 @@ export const GET_FEATURED_VIDEOS = gql`
 
 export const GET_VIDEO_WITH_CHANNEL_VIDEOS = gql`
   query GetVideo($id: ID!) {
-    video(id: $id) {
+    video(where: { id: $id }) {
       ...VideoFields
       channel {
         id

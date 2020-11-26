@@ -11,7 +11,7 @@ const mockVideosMedia: MockVideoMedia[] = rawVideosMedia.map((rawVideoMedia) => 
     ...rawVideoMedia,
     __typename: 'VideoMedia',
     location: {
-      __typename: 'HTTPVideoMediaLocation',
+      __typename: 'HttpMediaLocation',
       ...rawVideoMedia.location,
     },
   }

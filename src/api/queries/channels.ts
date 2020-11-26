@@ -31,7 +31,7 @@ export const GET_NEWEST_CHANNELS = gql`
 
 export const GET_CHANNEL = gql`
   query GetChannel($id: ID!) {
-    channel(id: $id) {
+    channel(where: { id: $id }) {
       ...ChannelFields
       videos {
         ...VideoFields
