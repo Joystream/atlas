@@ -2,7 +2,7 @@ import React from 'react'
 import { Search_search_item_Channel, Search_search_item_Video } from '@/api/queries/__generated__/Search'
 import { Placeholder, VideoPreviewBase } from '@/shared/components'
 import styled from '@emotion/styled'
-import { spacing, typography } from '@/shared/theme'
+import { sizes, typography } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
 
 type AllResultsTabProps = {
@@ -57,7 +57,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
 }
 
 const SectionHeader = styled.h5`
-  margin: 0 0 ${spacing.m};
+  margin: 0 0 ${sizes(4)};
   font-size: ${typography.sizes.h5};
 `
 

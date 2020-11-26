@@ -1,12 +1,12 @@
 import { makeStyles, StyleFn } from '../../utils'
-import { colors, spacing } from '../../theme'
+import { colors, sizes } from '../../theme'
 
 export type AvatarStyleProps = {
   size?: 'small' | 'default' | 'large'
 }
 
 const container: StyleFn = (_, { size = 'default' }) => {
-  const width = size === 'small' ? spacing.xs : size === 'default' ? spacing.m : spacing.xl
+  const width = size === 'small' ? sizes(2) : size === 'default' ? sizes(4) : sizes(6)
   return {
     borderRadius: 999,
     minWidth: width,

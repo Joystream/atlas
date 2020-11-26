@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Avatar, Placeholder } from '@/shared/components'
-import theme, { breakpoints } from '@/shared/theme'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import { css } from '@emotion/core'
 
 const SM_TITLE_HEIGHT = '48px'
@@ -74,7 +74,7 @@ export const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  @media (min-width: ${theme.breakpoints.small}) {
+  @media (min-width: ${breakpoints.small}) {
     flex-direction: row;
     align-items: center;
   }
@@ -90,11 +90,11 @@ export const TitleSection = styled.div`
 `
 export const TitleContainer = styled.div`
   max-width: 100%;
-  @media screen and (min-width: ${theme.breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 60%;
   }
-  background-color: ${theme.colors.gray[800]};
-  padding: 0 ${theme.sizes.b2}px;
+  background-color: ${colors.gray[800]};
+  padding: 0 ${sizes(2)};
 `
 
 export const Title = styled.h1`
@@ -102,7 +102,7 @@ export const Title = styled.h1`
   font-weight: bold;
   margin: -4px 0 0;
   line-height: ${SM_TITLE_HEIGHT};
-  @media screen and (min-width: ${theme.breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.medium}) {
     line-height: ${TITLE_HEIGHT};
   }
 
@@ -119,12 +119,12 @@ export const VideoSection = styled.section`
 const avatarCss = css`
   width: 128px;
   height: 128px;
-  margin-bottom: ${theme.sizes.b3}px;
+  margin-bottom: ${sizes(3)};
 
-  @media (min-width: ${theme.breakpoints.small}) {
+  @media (min-width: ${breakpoints.small}) {
     width: 136px;
     height: 136px;
-    margin: 0 ${theme.sizes.b6}px 0 0;
+    margin: 0 ${sizes(6)} 0 0;
   }
 `
 
@@ -140,7 +140,7 @@ export const AvatarPlaceholder = styled(Placeholder)`
 export const TitlePlaceholder = styled(Placeholder)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
-  @media screen and (min-width: ${theme.breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.medium}) {
     height: ${TITLE_HEIGHT};
   }
 `

@@ -55,8 +55,8 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
   return (
     <Gallery
       title={title}
-      paddingLeft={sizes.b2}
-      paddingTop={sizes.b2}
+      paddingLeft={sizes(2, true)}
+      paddingTop={sizes(2, true)}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       arrowCss={arrowPosition}
@@ -86,7 +86,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
 
 const videoPreviewCss = css`
   & + & {
-    margin-left: ${sizes.b6}px;
+    margin-left: ${sizes(6)};
   }
 
   min-width: ${MIN_VIDEO_PREVIEW_WIDTH};

@@ -21,9 +21,9 @@ export const Header = styled.header<NavbarStyleProps>`
 
   grid-template-columns: 1fr 2fr;
 
-  padding: ${sizes.b2}px ${sizes.b3}px;
+  padding: ${sizes(2)} ${sizes(3)};
   @media screen and (min-width: ${breakpoints.small}) {
-    padding: ${sizes.b3}px ${sizes.b3}px;
+    padding: ${sizes(3)} ${sizes(3)};
   }
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -35,16 +35,16 @@ export const Header = styled.header<NavbarStyleProps>`
 `
 
 export const LogoLink = styled(Link)`
-  padding: 0 ${sizes.b5}px;
-  margin-right: ${sizes.b2}px;
+  padding: 0 ${sizes(5)};
+  margin-right: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-right: ${sizes.b5}px;
+    margin-right: ${sizes(5)};
   }
 `
 
 export const ShortLogo = styled(UnstyledShortLogo)`
   display: block;
-  height: ${sizes.b1 * 9}px;
+  height: ${sizes(9)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: none;
   }
@@ -52,7 +52,7 @@ export const ShortLogo = styled(UnstyledShortLogo)`
 
 export const FullLogo = styled(UnstyledFullLogo)`
   display: none;
-  height: ${sizes.b1 * 9}px;
+  height: ${sizes(9)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: block;
   }
@@ -61,7 +61,7 @@ export const FullLogo = styled(UnstyledFullLogo)`
 export const NavigationContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-right: ${sizes.b3}px;
+  margin-right: ${sizes(3)};
 `
 
 export const SearchbarContainer = styled.div`
@@ -93,7 +93,7 @@ export const StyledLink = styled(Link)`
 
   span {
     display: none;
-    margin-left: ${sizes.b3}px;
+    margin-left: ${sizes(3)};
   }
   @media screen and (min-width: ${breakpoints.small}) {
     span {
@@ -124,9 +124,9 @@ export const StyledLink = styled(Link)`
   }
 
   & + & {
-    margin-left: ${sizes.b3}px;
+    margin-left: ${sizes(3)};
     @media screen and (min-width: ${breakpoints.small}) {
-      margin-left: ${sizes.b6}px;
+      margin-left: ${sizes(6)};
     }
   }
 `

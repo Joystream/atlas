@@ -6,7 +6,7 @@ import { Typography } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
 
 const Container = styled.div`
-  margin: ${sizes.b10 * 2}px auto 0;
+  margin: ${sizes(20)} auto 0;
   display: grid;
   place-items: center;
   > svg {
@@ -19,7 +19,7 @@ const Message = styled.div`
   flex-direction: column;
   text-align: center;
   margin-top: 90px;
-  margin-bottom: ${sizes.b10}px;
+  margin-bottom: ${sizes(10)};
   > p {
     margin: 0;
     line-height: 1.75;

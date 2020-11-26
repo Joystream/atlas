@@ -4,7 +4,7 @@ import Button from '../Button'
 import { Icon } from '@/shared/components'
 
 export const StyledIcon = styled(Icon)`
-  height: 24px;
+  height: ${sizes(6)};
   color: ${colors.white};
 `
 
@@ -12,7 +12,7 @@ export const Input = styled.input`
   width: 100%;
   height: 100%;
   border: unset;
-  padding: 14px ${sizes.b3}px;
+  padding: 14px ${sizes(3)};
   background: none;
   color: ${colors.white};
 
@@ -32,7 +32,7 @@ export const CancelButton = styled(Button)`
   position: absolute;
   right: 0;
   border: none;
-  padding: 14px ${sizes.b3}px;
+  padding: 14px ${sizes(3)};
   color: ${colors.white};
   :focus,
   :hover {
@@ -49,9 +49,9 @@ export const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: ${sizes.b1 * 14}px;
+  height: ${sizes(14)};
   background-color: ${colors.gray[800]};
-  padding-left: ${sizes.b4}px;
+  padding-left: ${sizes(4)};
   :focus-within {
     outline: 1px solid ${colors.gray[500]};
   }

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors, spacing, typography } from '../../theme'
+import { colors, sizes, typography } from '../../theme'
 import Icon from '../Icon'
 import { css } from '@emotion/core'
 
@@ -32,11 +32,11 @@ export const Container = styled.div<ContainerProps>`
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background-color: rgba(0, 0, 0, 0.3);
-    height: ${spacing.xxxxxl} !important;
+    height: ${sizes(16)} !important;
     align-items: center;
 
     /* account for progress bar on top */
-    padding: 5px ${spacing.xxl} 0;
+    padding: 5px ${sizes(8)} 0;
 
     .vjs-control {
       height: 30px;
@@ -92,8 +92,8 @@ export const Container = styled.div<ContainerProps>`
     .vjs-progress-control {
       position: absolute;
       top: 0;
-      left: ${spacing.xxl};
-      width: calc(100% - 2 * ${spacing.xxl});
+      left: ${sizes(8)};
+      width: calc(100% - 2 * ${sizes(8)});
       height: 5px;
 
       .vjs-progress-holder {

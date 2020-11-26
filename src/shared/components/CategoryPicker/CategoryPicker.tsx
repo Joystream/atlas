@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Placeholder, ToggleButton } from '..'
-import sizes from '@/shared/theme/sizes'
+import { sizes } from '@/shared/theme'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
 
 type CategoryPickerProps = {
@@ -47,11 +47,11 @@ const Container = styled.div`
 `
 
 const StyledPlaceholder = styled(Placeholder)`
-  margin: 0 ${sizes.b3}px ${sizes.b3}px 0;
+  margin: 0 ${sizes(3)} ${sizes(3)} 0;
 `
 
 const StyledToggleButton = styled(ToggleButton)`
-  margin: 0 ${sizes.b3}px ${sizes.b3}px 0;
+  margin: 0 ${sizes(3)} ${sizes(3)} 0;
 `
 
 export default CategoryPicker

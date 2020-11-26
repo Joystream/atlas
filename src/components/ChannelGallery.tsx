@@ -18,7 +18,7 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loadin
   const displayPlaceholders = loading || !channels
 
   return (
-    <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes.b2} paddingTop={sizes.b2}>
+    <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes(2, true)} paddingTop={sizes(2, true)}>
       {displayPlaceholders
         ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
             <ChannelPreviewBase key={`channel-placeholder-${idx}`} />

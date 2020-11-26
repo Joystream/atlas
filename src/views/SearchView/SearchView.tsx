@@ -54,9 +54,9 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
 }
 
 const Container = styled.div`
-  margin: ${sizes.b4} 0;
-  & > * {
-    margin-bottom: ${sizes.b12}px;
+  margin: ${sizes(4)} 0;
+  > * {
+    margin-bottom: ${sizes(12)};
   }
 `
 

@@ -1,4 +1,4 @@
-import { colors, spacing, typography } from '../../theme'
+import { colors, sizes, typography } from '../../theme'
 import { makeStyles, StyleFn } from '../../utils'
 
 export type TabsStyleProps = Record<string, unknown>
@@ -13,7 +13,7 @@ const tabs: StyleFn = () => ({
 })
 const tab: StyleFn = () => ({
   flexBasis: 'content',
-  padding: `${spacing.m} ${spacing.l}`,
+  padding: `${sizes(4)} ${sizes(5)}`,
   cursor: 'pointer',
   borderBottom: `3px solid ${colors.gray[900]}`,
   minWidth: '100px',

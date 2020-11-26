@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
-import { spacing, breakpoints } from '../../theme'
+import { sizes, breakpoints } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreview'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
@@ -31,7 +31,7 @@ type GridProps = {
 
 const Grid: React.FC<GridProps> = ({
   className,
-  gap = spacing.xl,
+  gap = sizes(6),
   onResize,
   repeat = 'fill',
   maxColumns = 6,

@@ -154,7 +154,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 }
 
 const Title = styled.h4`
-  margin: 0 0 ${sizes.b4};
+  margin: 0 0 ${sizes(4)};
   font-size: ${typography.sizes.h5};
 `
 

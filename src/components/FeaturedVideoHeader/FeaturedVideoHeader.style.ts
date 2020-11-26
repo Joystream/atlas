@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { Avatar, Button } from '@/shared/components'
-import { breakpoints, colors, sizes, spacing, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes, typography } from '@/shared/theme'
 import { Link } from '@reach/router'
 import { css } from '@emotion/core'
 
@@ -123,8 +123,8 @@ export const VerticalGradientOverlay = styled.div`
 
 export const InfoContainer = styled.div`
   position: relative;
-  margin-top: -${spacing.xxl};
-  padding-bottom: ${spacing.xxxxl};
+  margin-top: -${sizes(8)};
+  padding-bottom: ${sizes(12)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     position: absolute;
@@ -153,7 +153,7 @@ export const InfoContainer = styled.div`
 `
 
 export const ChannelLink = styled(Link)`
-  margin-bottom: ${spacing.m};
+  margin-bottom: ${sizes(4)};
   display: inline-block;
 `
 
@@ -170,9 +170,9 @@ export const TitleContainer = styled.div`
   a {
     text-decoration: none;
   }
-  margin-bottom: ${spacing.xxl};
+  margin-bottom: ${sizes(8)};
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-bottom: ${spacing.xxxl};
+    margin-bottom: ${sizes(10)};
   }
 
   h2 {
@@ -182,9 +182,9 @@ export const TitleContainer = styled.div`
     font-weight: 700;
 
     display: inline-block;
-    margin: 0 0 ${spacing.m} 0;
+    margin: 0 0 ${sizes(4)} 0;
     @media screen and (min-width: ${breakpoints.medium}) {
-      margin-bottom: ${spacing.l};
+      margin-bottom: ${sizes(5)};
     }
   }
 
@@ -210,5 +210,5 @@ export const PlayButton = styled(Button)`
 `
 
 export const SoundButton = styled(Button)`
-  margin-left: ${sizes.b4}px;
+  margin-left: ${sizes(4)};
 `

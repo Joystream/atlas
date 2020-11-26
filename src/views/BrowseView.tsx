@@ -46,18 +46,18 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
 }
 
 const Header = styled(Typography)`
-  margin: ${sizes.b1 * 14}px 0 ${sizes.b10}px 0; // 56px 40px
+  margin: ${sizes(14)} 0 ${sizes(10)} 0; // 56px 40px
 `
 
 const StyledCategoryPicker = styled(CategoryPicker)`
   z-index: 10;
   position: sticky;
   top: 0;
-  padding: ${sizes.b5}px ${sizes.b8}px ${sizes.b2}px;
+  padding: ${sizes(5)} ${sizes(8)} ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   background-color: ${colors.black};
 `
 const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  padding-top: ${sizes.b2}px;
+  padding-top: ${sizes(2)};
 `
 export default BrowseView
