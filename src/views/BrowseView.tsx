@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import { ErrorFallback } from '@/components'
 import { CategoryPicker, InfiniteVideoGrid, Typography } from '@/shared/components'
+import { NAVBAR_HEIGHT } from '@/components/Navbar'
 import { colors, sizes } from '@/shared/theme'
 import { useQuery } from '@apollo/client'
 import { GET_CATEGORIES } from '@/api/queries'
@@ -52,7 +53,8 @@ const Header = styled(Typography)`
 const StyledCategoryPicker = styled(CategoryPicker)`
   z-index: 10;
   position: sticky;
-  top: 0;
+  /*Offset Category Picker by Navbar Height */
+  top: ${NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} ${sizes(8)} ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   background-color: ${colors.black};

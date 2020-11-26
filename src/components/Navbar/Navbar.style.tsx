@@ -14,8 +14,13 @@ export const StyledSearchbar = styled(Searchbar)`
   transition: max-width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   will-change: max-width;
 `
-
+export const NAVBAR_HEIGHT = 80
 export const Header = styled.header<NavbarStyleProps>`
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  min-height: ${NAVBAR_HEIGHT}px;
+  max-height: ${NAVBAR_HEIGHT}px;
   display: grid;
   width: 100%;
 
