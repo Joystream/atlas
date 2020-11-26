@@ -38,9 +38,6 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   if (!loading && !data?.search) {
     throw new Error(`There was a problem with your search...`)
   }
-  if (loading || !data) {
-    return <p>Loading...</p>
-  }
 
   if (!loading && channels.length === 0 && videos.length === 0) {
     return <EmptyFallback />
