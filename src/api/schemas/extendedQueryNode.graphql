@@ -196,6 +196,7 @@ input CategoryWhereUniqueInput {
 
 input VideoWhereInput {
   categoryId_eq: ID
+  channelId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
 }

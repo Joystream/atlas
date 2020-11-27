@@ -26,7 +26,6 @@ export const queryNodeStitchingResolvers = (
 ): IResolvers => ({
   Query: {
     videosConnection: createResolverWithoutVideoViewsField(queryNodeSchema, 'videosConnection'),
-    channel: createResolverWithoutVideoViewsField(queryNodeSchema, 'channel'),
     search: createResolverWithoutVideoViewsField(queryNodeSchema, 'search'),
     video: createResolverWithoutVideoViewsField(queryNodeSchema, 'video'),
   },
