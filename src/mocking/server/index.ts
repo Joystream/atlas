@@ -7,6 +7,7 @@ import orionSchema from '@/api/schemas/orion.graphql'
 import { createMockData } from './data'
 import {
   addVideoViewResolver,
+  channelResolver,
   channelsResolver,
   featuredVideosResolver,
   searchResolver,
@@ -30,7 +31,7 @@ createServer({
           video: videoResolver,
           videosConnection: videosResolver,
           featured_videos: featuredVideosResolver,
-          channel: channelsResolver,
+          channel: channelResolver,
           channelsConnection: channelsResolver,
           search: searchResolver,
         },
