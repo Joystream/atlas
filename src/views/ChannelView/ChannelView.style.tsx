@@ -7,31 +7,44 @@ import { css } from '@emotion/core'
 const SM_TITLE_HEIGHT = '48px'
 const TITLE_HEIGHT = '56px'
 
+const CONTENT_OVERLAP_MAP = {
+  BASE: 0,
+  SMALL: 50,
+  MEDIUM: 350,
+  LARGE: 500,
+  XLARGE: 600,
+  XXLARGE: 800,
+}
+const GRADIENT_OVERLAP = 150
+const GRADIENT_HEIGHT = 250
+const INFO_BOTTOM_MARGIN = 75
+
 type CoverImageProps = {
   src: string
 }
 
 export const Header = styled.section`
   position: relative;
-  margin-bottom: 60px;
+  padding-bottom: 50px;
 
   // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
   // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
+  margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
   @media screen and (min-width: ${breakpoints.small}) {
-    margin-bottom: -75px;
+    margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
     padding-bottom: 0;
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-bottom: -200px;
+    margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
   }
   @media screen and (min-width: ${breakpoints.large}) {
-    margin-bottom: -250px;
+    margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
   }
   @media screen and (min-width: ${breakpoints.xlarge}) {
-    margin-bottom: -400px;
+    margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
   }
   @media screen and (min-width: ${breakpoints.xxlarge}) {
-    margin-bottom: -600px;
+    margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
   }
 `
 
@@ -51,21 +64,51 @@ export const CoverImage = styled.div<CoverImageProps>`
 
   // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
   // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) 40%), url(${({ src }) => src});
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 2}px), url(${({ src }) => src});
   @media screen and (min-width: ${breakpoints.small}) {
-    background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) 80%), url(${({ src }) => src});
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    background-image: linear-gradient(0deg, black 0%, black 10%, rgba(0, 0, 0, 0) 70%), url(${({ src }) => src});
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
   }
   @media screen and (min-width: ${breakpoints.large}) {
-    background-image: linear-gradient(0deg, black 0%, black 20%, rgba(0, 0, 0, 0) 90%), url(${({ src }) => src});
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
   }
   @media screen and (min-width: ${breakpoints.xlarge}) {
-    background-image: linear-gradient(0deg, black 0%, black 30%, rgba(0, 0, 0, 0) 90%), url(${({ src }) => src});
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
   }
   @media screen and (min-width: ${breakpoints.xxlarge}) {
-    background-image: linear-gradient(0deg, black 0%, black 40%, rgba(0, 0, 0, 0) 90%), url(${({ src }) => src});
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
   }
 `
 
@@ -81,11 +124,25 @@ export const TitleSection = styled.div`
 
   width: 100%;
 
-  max-width: 100%;
-  top: 5%;
-
+  bottom: ${CONTENT_OVERLAP_MAP.BASE + INFO_BOTTOM_MARGIN / 2}px;
   @media screen and (min-width: ${breakpoints.small}) {
-    top: 20%;
+    bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN}px;
+  }
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
+  }
+
+  @media screen and (min-width: ${breakpoints.large}) {
+    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
+  }
+
+  @media screen and (min-width: ${breakpoints.xxlarge}) {
+    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
 export const TitleContainer = styled.div`
@@ -109,7 +166,7 @@ export const Title = styled.h1`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 600px;
 `
 
 export const VideoSection = styled.section`
@@ -118,11 +175,13 @@ export const VideoSection = styled.section`
 
 const avatarCss = css`
   width: 128px;
+  min-width: 128px;
   height: 128px;
   margin-bottom: ${sizes(3)};
 
   @media (min-width: ${breakpoints.small}) {
     width: 136px;
+    min-width: 136px;
     height: 136px;
     margin: 0 ${sizes(6)} 0 0;
   }
