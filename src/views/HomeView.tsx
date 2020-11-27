@@ -55,7 +55,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
         {!hasNewestVideosError ? (
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
         ) : (
-          <ErrorFallback error={newestVideosError as Error} resetError={() => refetchNewestVideos()} />
+          <ErrorFallback error={newestVideosError} resetError={() => refetchNewestVideos()} />
         )}
 
         {!hasFeaturedVideosError ? (
@@ -65,13 +65,13 @@ const HomeView: React.FC<RouteComponentProps> = () => {
             videos={featuredVideosData?.featured_videos}
           />
         ) : (
-          <ErrorFallback error={featuredVideosError as Error} resetError={() => refetchFeaturedVideos()} />
+          <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
         )}
 
         {!hasNewestChannelsError ? (
           <ChannelGallery title="Newest channels" loading={newestChannelsLoading} channels={newestChannels} />
         ) : (
-          <ErrorFallback error={newestChannelsError as Error} resetError={() => refetchNewestChannels()} />
+          <ErrorFallback error={newestChannelsError} resetError={() => refetchNewestChannels()} />
         )}
         <ErrorBoundary fallback={ErrorFallback}>
           <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
