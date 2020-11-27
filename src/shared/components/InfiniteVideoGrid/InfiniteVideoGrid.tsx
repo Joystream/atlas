@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { debounce } from 'lodash'
 import { useLazyQuery } from '@apollo/client'
@@ -60,11 +60,24 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   const endCursor = data?.videosConnection.pageInfo.endCursor
 
+  const getFetchVariables = useCallback(
+    (args: GetNewestVideosVariables): GetNewestVideosVariables => ({
+      ...(channelId ? { channelId } : {}),
+      ...(categoryId ? { categoryId } : {}),
+      ...args,
+    }),
+    [channelId, categoryId]
+  )
+
   useEffect(() => {
     if (ready && !called) {
-      fetchVideos({ variables: { first: targetLoadedVideosCount, categoryId: categoryId || null, channelId } })
+      fetchVideos({
+        variables: getFetchVariables({
+          first: targetLoadedVideosCount,
+        }),
+      })
     }
-  }, [ready, called, categoryId, channelId, targetLoadedVideosCount, fetchVideos])
+  }, [ready, called, getFetchVariables, targetLoadedVideosCount, fetchVideos])
 
   useEffect(() => {
     if (categoryId === cachedCategoryId) {
@@ -85,8 +98,17 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       return
     }
 
-    refetch({ first: categoryRowsCount * videosPerRow + skipCount, categoryId: categoryId || null, channelId })
-  }, [categoryId, cachedCategoryId, channelId, targetRowsCountByCategory, called, refetch, videosPerRow, skipCount])
+    refetch(getFetchVariables({ first: categoryRowsCount * videosPerRow + skipCount }))
+  }, [
+    categoryId,
+    cachedCategoryId,
+    getFetchVariables,
+    targetRowsCountByCategory,
+    called,
+    refetch,
+    videosPerRow,
+    skipCount,
+  ])
 
   useEffect(() => {
     if (loading || !fetchMore || allVideosLoaded) {
@@ -96,19 +118,10 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     if (targetLoadedVideosCount > loadedVideosCount) {
       const videosToLoadCount = targetLoadedVideosCount - loadedVideosCount
       fetchMore({
-        variables: { first: videosToLoadCount, after: endCursor, categoryId: categoryId || null, channelId },
+        variables: getFetchVariables({ first: videosToLoadCount, after: endCursor }),
       })
     }
-  }, [
-    loading,
-    loadedVideosCount,
-    targetLoadedVideosCount,
-    allVideosLoaded,
-    fetchMore,
-    endCursor,
-    categoryId,
-    channelId,
-  ])
+  }, [loading, loadedVideosCount, targetLoadedVideosCount, allVideosLoaded, fetchMore, endCursor, getFetchVariables])
 
   useEffect(() => {
     const scrollHandler = debounce(() => {
