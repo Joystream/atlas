@@ -127,12 +127,10 @@ export const TitleSection = styled.div`
   bottom: ${CONTENT_OVERLAP_MAP.BASE + INFO_BOTTOM_MARGIN / 2}px;
   @media screen and (min-width: ${breakpoints.small}) {
     bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN}px;
-    max-width: 400px;
   }
 
   @media screen and (min-width: ${breakpoints.medium}) {
     bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
-    max-width: 600px;
   }
 
   @media screen and (min-width: ${breakpoints.large}) {
@@ -168,7 +166,7 @@ export const Title = styled.h1`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 600px;
 `
 
 export const VideoSection = styled.section`
