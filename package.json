@@ -19,7 +19,9 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "dev": "react-app-rewired start",
+    "start:prod": "REACT_APP_QUERY_NODE_URL=https://hydra.joystream.org/graphql REACT_APP_ORION_URL=https://orion.joystream.org/graphql yarn start",
+    "dev": "yarn start",
+    "dev:prod": "yarn start:prod",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --watchAll=false",
     "coverage": "yarn test --coverage",
