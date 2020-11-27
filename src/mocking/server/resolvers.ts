@@ -1,5 +1,4 @@
 import { mirageGraphQLFieldResolver } from '@miragejs/graphql'
-import { getRecords } from '@miragejs/graphql/lib/orm/records'
 import { FEATURED_VIDEOS_INDEXES } from '@/mocking/data'
 import { Search_search, SearchVariables } from '@/api/queries/__generated__/Search'
 import { VideoFields } from '@/api/queries/__generated__/VideoFields'
@@ -89,35 +88,50 @@ export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewe
   return paginatedChannels
 }
 
-// FIXME: This resolver is currently broken and returns the same result n times instead of the correct result.
-export const searchResolver: QueryResolver<SearchVariables, Search_search[]> = (_, { text }, context) => {
-  const { mirageSchema: schema } = context
-  const videos = getRecords({ name: 'Video' }, {}, schema) as VideoFields[]
-  const channels = getRecords({ name: 'Channel' }, {}, schema) as ChannelFields[]
+type VideoModel = { attrs: VideoFields }
+type ChannelModel = { attrs: ChannelFields }
+type SearchResolverResult = Omit<Search_search, 'item'> & { item: VideoModel | ChannelModel }
 
-  const items = [...videos, ...channels]
+export const searchResolver: QueryResolver<SearchVariables, SearchResolverResult[]> = (_, { text }, context) => {
+  const { mirageSchema: schema } = context
+
+  const videos = schema.videos.all().models as VideoModel[]
+  const channels = schema.channels.all().models as ChannelModel[]
 
   let rankCount = 0
   const matchQueryStr = (str: string) => str.includes(text) || text.includes(str)
 
-  const relevantItems = items.reduce((acc, item) => {
-    const matched =
-      item.__typename === 'Channel'
-        ? matchQueryStr(item.handle)
-        : matchQueryStr(item.description) || matchQueryStr(item.title)
+  const matchedVideos = videos.reduce((acc, video) => {
+    const matched = matchQueryStr(video.attrs.description) || matchQueryStr(video.attrs.title)
     if (!matched) {
       return acc
     }
 
-    const result: Search_search = {
+    const result: SearchResolverResult = {
       __typename: 'SearchFTSOutput',
-      item,
+      item: video,
       rank: rankCount++,
     }
 
     return [...acc, result]
-  }, [] as Search_search[])
-  return relevantItems
+  }, [] as SearchResolverResult[])
+
+  const matchedChannels = channels.reduce((acc, channel) => {
+    const matched = matchQueryStr(channel.attrs.handle)
+    if (!matched) {
+      return acc
+    }
+
+    const result: SearchResolverResult = {
+      __typename: 'SearchFTSOutput',
+      item: channel,
+      rank: rankCount++,
+    }
+
+    return [...acc, result]
+  }, [] as SearchResolverResult[])
+
+  return [...matchedVideos, ...matchedChannels]
 }
 
 type VideoViewsArgs = {

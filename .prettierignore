@@ -3,4 +3,5 @@ dist/
 .yarn/
 storybook-static/
 .coverage
+tsconfig.json
 __generated__/
