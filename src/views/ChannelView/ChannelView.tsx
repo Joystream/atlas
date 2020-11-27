@@ -31,9 +31,6 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     throw error
   }
 
-  if (loading || !data?.channel) {
-    return <p>Loading Channel...</p>
-  }
   const videos = data?.channel?.videos || []
 
   return (
