@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate } from '@reach/router'
-import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
 import { Navbar, ViewErrorFallback } from '@/components'
@@ -14,7 +14,7 @@ type RouteProps = {
 const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
   return (
     <ErrorBoundary
-      FallbackComponent={ViewErrorFallback}
+      fallback={ViewErrorFallback}
       onReset={() => {
         navigate('/')
       }}

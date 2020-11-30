@@ -59,9 +59,9 @@ createServer({
       this.passthrough(ORION_GRAPHQL_URL)
     }
 
-    // allow Hotjar analytics requests
+    // allow Hotjar analytics requests and Sentry error reporting
     this.passthrough((request) => {
-      return request.url.includes('hotjar')
+      return request.url.includes('hotjar') || request.url.includes('sentry')
     })
   },
 
