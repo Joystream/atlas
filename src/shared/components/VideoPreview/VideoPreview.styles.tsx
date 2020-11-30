@@ -4,6 +4,7 @@ import { fluidRange } from 'polished'
 import { colors, sizes, typography } from '../../theme'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
+import Text from '../Text'
 import { HOVER_BORDER_SIZE, fadeInAnimation } from './VideoPreviewBase.styles'
 
 type MainProps = {
@@ -91,7 +92,7 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const TitleHeader = styled.h3<MainProps & ScalesWithCoverProps & ClickableProps>`
+export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & ClickableProps>`
   margin: 0;
   font-weight: ${typography.weights.bold};
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
@@ -101,7 +102,7 @@ export const TitleHeader = styled.h3<MainProps & ScalesWithCoverProps & Clickabl
   ${fadeInAnimation};
 `
 
-export const ChannelName = styled.span<ChannelProps & ScalesWithCoverProps>`
+export const ChannelName = styled(Text)<ChannelProps & ScalesWithCoverProps>`
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
   line-height: 1.25rem;
   display: inline-block;
@@ -109,7 +110,7 @@ export const ChannelName = styled.span<ChannelProps & ScalesWithCoverProps>`
   ${fadeInAnimation};
 `
 
-export const MetaText = styled.span<MainProps & ScalesWithCoverProps>`
+export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
   font-size: ${({ main, scalingFactor }) =>
     main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2})`};
   ${fadeInAnimation};

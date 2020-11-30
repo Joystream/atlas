@@ -22,16 +22,15 @@ const Message = styled.div`
   text-align: center;
   margin-top: 90px;
   margin-bottom: ${sizes(10)};
-
-  > p {
-    margin: 0;
-    line-height: 1.75;
-    color: ${colors.gray[300]};
-  }
 `
 
 const Title = styled(Text)`
   line-height: 1.25;
+`
+
+const Subtitle = styled(Text)`
+  line-height: 1.75;
+  color: ${colors.gray[300]};
 `
 
 const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
@@ -41,7 +40,7 @@ const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) =>
       <ErrorIllustration />
       <Message>
         <Title variant="h3">Oops! An Error occurred.</Title>
-        <p>We could not acquire expected results. Please try reloading or return to the home page.</p>
+        <Subtitle>We could not acquire expected results. Please try reloading or return to the home page.</Subtitle>
       </Message>
       <Button onClick={resetError}>Return to home page</Button>
     </Container>

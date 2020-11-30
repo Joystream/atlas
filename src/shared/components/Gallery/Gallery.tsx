@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, HeadingContainer } from './Gallery.style'
+import { Container, HeadingContainer, Heading } from './Gallery.style'
 import Carousel from '../Carousel'
 
 type GalleryProps = {
@@ -12,7 +12,7 @@ const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps })
     <Container className={className}>
       {title && (
         <HeadingContainer>
-          <h4>{title}</h4>
+          <Heading variant="h5">{title}</Heading>
         </HeadingContainer>
       )}
       <Carousel {...carouselProps} />

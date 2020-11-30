@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { Avatar, Button } from '@/shared/components'
+import { Avatar, Button, Text } from '@/shared/components'
 import { breakpoints, colors, sizes, typography } from '@/shared/theme'
 import { Link } from '@reach/router'
 import { css } from '@emotion/core'
@@ -175,24 +175,24 @@ export const TitleContainer = styled.div`
     margin-bottom: ${sizes(10)};
   }
 
-  h2 {
-    ${fluidRange({ prop: 'fontSize', fromSize: '40px', toSize: '72px' }, breakpoints.base, breakpoints.xlarge)};
-    ${fluidRange({ prop: 'lineHeight', fromSize: '48px', toSize: '68px' }, breakpoints.base, breakpoints.xlarge)};
-    font-family: ${typography.fonts.headers};
-    font-weight: 700;
-
-    display: inline-block;
-    margin: 0 0 ${sizes(4)} 0;
-    @media screen and (min-width: ${breakpoints.medium}) {
-      margin-bottom: ${sizes(5)};
-    }
-  }
-
   span {
     display: block;
     ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '22px' }, breakpoints.base, breakpoints.xlarge)};
     ${fluidRange({ prop: 'lineHeight', fromSize: '20px', toSize: '26px' }, breakpoints.base, breakpoints.xlarge)};
     color: ${colors.white};
+  }
+`
+
+export const Title = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '40px', toSize: '72px' }, breakpoints.base, breakpoints.xlarge)};
+  ${fluidRange({ prop: 'lineHeight', fromSize: '48px', toSize: '68px' }, breakpoints.base, breakpoints.xlarge)};
+  font-family: ${typography.fonts.headers};
+  font-weight: 700;
+
+  display: inline-block;
+  margin: 0 0 ${sizes(4)} 0;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-bottom: ${sizes(5)};
   }
 `
 

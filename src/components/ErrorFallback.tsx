@@ -3,7 +3,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
 
-import { Button } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
 
 const Container = styled.div`
@@ -23,7 +23,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetEr
   console.error(error)
   return (
     <Container>
-      <p>Something went wrong...</p>
+      <Text>Something went wrong...</Text>
       <StyledButton variant="tertiary" onClick={resetError}>
         Try again
       </StyledButton>

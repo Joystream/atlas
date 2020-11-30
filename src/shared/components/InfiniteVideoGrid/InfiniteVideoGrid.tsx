@@ -3,9 +3,10 @@ import styled from '@emotion/styled'
 import { debounce } from 'lodash'
 import { useLazyQuery } from '@apollo/client'
 
-import { sizes, typography } from '../../theme'
+import { sizes } from '../../theme'
 import { VideoPreviewBase } from '../VideoPreview'
 import Grid from '../Grid'
+import Text from '../Text'
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
 import { GET_NEWEST_VIDEOS } from '@/api/queries'
 import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
@@ -176,15 +177,14 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   return (
     <section className={className}>
-      {title && <Title>{title}</Title>}
+      {title && <Title variant="h5">{title}</Title>}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )
 }
 
-const Title = styled.h4`
+const Title = styled(Text)`
   margin: 0 0 ${sizes(4)};
-  font-size: ${typography.sizes.h5};
 `
 
 const StyledVideoPreview = styled(VideoPreview)`

@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import ChannelPreviewBase from './ChannelPreviewBase'
 import { typography } from '../../theme'
 import { Avatar } from '..'
+import Text from '../Text'
 
 type ChannelPreviewProps = {
   name: string
@@ -14,7 +15,7 @@ type ChannelPreviewProps = {
 
 const ChannelPreview: React.FC<ChannelPreviewProps> = ({ name, avatarURL, className, animated = false, onClick }) => {
   const avatarNode = <StyledAvatar img={avatarURL} name={name} />
-  const nameNode = <NameHeader>{name}</NameHeader>
+  const nameNode = <NameHeader variant="h6">{name}</NameHeader>
 
   return (
     <ChannelPreviewBase
@@ -27,11 +28,9 @@ const ChannelPreview: React.FC<ChannelPreviewProps> = ({ name, avatarURL, classN
   )
 }
 
-const NameHeader = styled.h2`
+const NameHeader = styled(Text)`
   margin: 0;
-  font-size: ${typography.sizes.h6};
   line-height: 1.25;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

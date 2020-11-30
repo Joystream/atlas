@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { ChannelAvatar, Placeholder } from '@/shared/components'
+import { ChannelAvatar, Placeholder, Text } from '@/shared/components'
 import { sizes, colors, typography } from '@/shared/theme'
 
 export const Container = styled.div`
@@ -30,10 +30,7 @@ export const InfoContainer = styled.div`
   padding: ${sizes(8)} 0;
 `
 
-export const Title = styled.h2`
-  font-size: ${typography.sizes.h2};
-  margin: 0;
-`
+export const Title = styled(Text)``
 
 export const Meta = styled.span`
   display: block;
