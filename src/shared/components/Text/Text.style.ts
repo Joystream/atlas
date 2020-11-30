@@ -1,6 +1,6 @@
 import { typography, colors } from '../../theme'
 
-export type TypographyVariant =
+export type TextVariant =
   | 'hero'
   | 'h1'
   | 'h2'

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
 
 import { ReactComponent as ErrorIllustration } from '@/assets/error.svg'
-import { Button, Typography } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
 
 const Container = styled.div`
@@ -30,7 +30,7 @@ const Message = styled.div`
   }
 `
 
-const Title = styled(Typography)`
+const Title = styled(Text)`
   line-height: 1.25;
 `
 

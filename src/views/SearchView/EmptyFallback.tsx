@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { ReactComponent as EmptyStateIllustration } from '@/assets/empty-state-illustration.svg'
-import { Typography } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
 
 const Container = styled.div`
@@ -27,7 +27,7 @@ const Message = styled.div`
   }
 `
 
-const Title = styled(Typography)`
+const Title = styled(Text)`
   line-height: 1.25;
 `
 

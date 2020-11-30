@@ -1,12 +1,12 @@
 import React from 'react'
-import { baseStyle, variantStyles, TypographyVariant } from './Typography.style'
+import { baseStyle, variantStyles, TextVariant } from './Text.style'
 
-type TypographyProps = {
-  variant: TypographyVariant
+type TextProps = {
+  variant: TextVariant
   className?: string
 }
 
-const variantToTag: Record<TypographyVariant, keyof JSX.IntrinsicElements> = {
+const variantToTag: Record<TextVariant, keyof JSX.IntrinsicElements> = {
   body1: 'p',
   body2: 'p',
   caption: 'caption',
@@ -22,7 +22,7 @@ const variantToTag: Record<TypographyVariant, keyof JSX.IntrinsicElements> = {
   h6: 'h6',
 }
 
-const Typography: React.FC<TypographyProps> = ({ variant, className, children }) => {
+const Text: React.FC<TextProps> = ({ variant, className, children }) => {
   const Tag = variantToTag[variant]
   return (
     <Tag css={[baseStyle, variantStyles[variant]]} className={className}>
@@ -31,4 +31,4 @@ const Typography: React.FC<TypographyProps> = ({ variant, className, children })
   )
 }
 
-export default Typography
+export default Text
