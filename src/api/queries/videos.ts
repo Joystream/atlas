@@ -41,11 +41,11 @@ export const videoFieldsFragment = gql`
 `
 
 export const GET_NEWEST_VIDEOS = gql`
-  query GetNewestVideos($first: Int, $after: String, $categoryId: ID) {
+  query GetNewestVideos($first: Int, $after: String, $categoryId: ID, $channelId: ID) {
     videosConnection(
       first: $first
       after: $after
-      where: { categoryId_eq: $categoryId, isCurated_eq: false }
+      where: { categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false }
       orderBy: createdAt_DESC
     ) {
       edges {
@@ -73,7 +73,7 @@ export const GET_FEATURED_VIDEOS = gql`
   ${videoFieldsFragment}
 `
 
-export const GET_VIDEO_WITH_CHANNEL_VIDEOS = gql`
+export const GET_VIDEO = gql`
   query GetVideo($id: ID!) {
     video(where: { id: $id }) {
       ...VideoFields
@@ -81,9 +81,6 @@ export const GET_VIDEO_WITH_CHANNEL_VIDEOS = gql`
         id
         avatarPhotoUrl
         handle
-        videos {
-          ...VideoFields
-        }
       }
     }
   }

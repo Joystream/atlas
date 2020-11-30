@@ -80,4 +80,5 @@ export interface GetNewestVideosVariables {
   first?: number | null;
   after?: string | null;
   categoryId?: string | null;
+  channelId?: string | null;
 }

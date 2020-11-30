@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { debounce } from 'lodash'
 import { useLazyQuery } from '@apollo/client'
@@ -13,8 +13,10 @@ import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__gener
 type InfiniteVideoGridProps = {
   title?: string
   categoryId?: string
+  channelId?: string
   skipCount?: number
   ready?: boolean
+  showChannel?: boolean
   className?: string
 }
 
@@ -24,8 +26,10 @@ const INITIAL_VIDEOS_PER_ROW = 4
 const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
   categoryId = '',
+  channelId,
   skipCount = 0,
   ready = true,
+  showChannel = true,
   className,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
@@ -56,11 +60,24 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   const endCursor = data?.videosConnection.pageInfo.endCursor
 
+  const getFetchVariables = useCallback(
+    (args: GetNewestVideosVariables): GetNewestVideosVariables => ({
+      ...(channelId ? { channelId } : {}),
+      ...(categoryId ? { categoryId } : {}),
+      ...args,
+    }),
+    [channelId, categoryId]
+  )
+
   useEffect(() => {
     if (ready && !called) {
-      fetchVideos({ variables: { first: targetLoadedVideosCount, categoryId } })
+      fetchVideos({
+        variables: getFetchVariables({
+          first: targetLoadedVideosCount,
+        }),
+      })
     }
-  }, [ready, called, categoryId, targetLoadedVideosCount, fetchVideos])
+  }, [ready, called, getFetchVariables, targetLoadedVideosCount, fetchVideos])
 
   useEffect(() => {
     if (categoryId === cachedCategoryId) {
@@ -81,8 +98,17 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       return
     }
 
-    refetch({ first: categoryRowsCount * videosPerRow + skipCount, categoryId })
-  }, [categoryId, cachedCategoryId, targetRowsCountByCategory, called, refetch, videosPerRow, skipCount])
+    refetch(getFetchVariables({ first: categoryRowsCount * videosPerRow + skipCount }))
+  }, [
+    categoryId,
+    cachedCategoryId,
+    getFetchVariables,
+    targetRowsCountByCategory,
+    called,
+    refetch,
+    videosPerRow,
+    skipCount,
+  ])
 
   useEffect(() => {
     if (loading || !fetchMore || allVideosLoaded) {
@@ -91,9 +117,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
     if (targetLoadedVideosCount > loadedVideosCount) {
       const videosToLoadCount = targetLoadedVideosCount - loadedVideosCount
-      fetchMore({ variables: { first: videosToLoadCount, after: endCursor, categoryId } })
+      fetchMore({
+        variables: getFetchVariables({ first: videosToLoadCount, after: endCursor }),
+      })
     }
-  }, [loading, loadedVideosCount, targetLoadedVideosCount, allVideosLoaded, fetchMore, endCursor, categoryId])
+  }, [loading, loadedVideosCount, targetLoadedVideosCount, allVideosLoaded, fetchMore, endCursor, getFetchVariables])
 
   useEffect(() => {
     const scrollHandler = debounce(() => {
@@ -132,11 +160,12 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
           createdAt={v.createdAt}
           views={v.views}
           posterURL={v.thumbnailUrl}
+          showChannel={showChannel}
           key={v.id}
         />
       ))}
       {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <StyledVideoPreviewBase key={idx} />
+        <StyledVideoPreviewBase key={idx} showChannel={showChannel} />
       ))}
     </>
   )

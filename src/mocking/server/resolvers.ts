@@ -21,11 +21,21 @@ type VideoQueryArgs = {
   after: string | null
   where: {
     categoryId_eq: string | null
+    channelId_eq: string | null
   } | null
 }
 
 type UniqueArgs = {
   where: { id: string }
+}
+
+const filterEmptyArgs = (args: Record<string, unknown>): Record<string, unknown> => {
+  return Object.keys(args).reduce((acc, key) => {
+    if (args[key] != null) {
+      acc[key] = args[key]
+    }
+    return acc
+  }, {} as Record<string, unknown>)
 }
 
 export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args, context, info) => {
@@ -46,17 +56,19 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
     first: args.first,
     after: args.after,
   }
-  const extraResolverArgs = args.where?.categoryId_eq
-    ? {
-        categoryId: args.where.categoryId_eq,
-      }
-    : {}
+  const extraResolverArgs = {
+    categoryId: args.where?.categoryId_eq,
+    channelId: args.where?.channelId_eq,
+  }
+
   const resolverArgs = {
     ...baseResolverArgs,
     ...extraResolverArgs,
   }
 
-  const paginatedVideos = mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+  const filteredResolverArgs = filterEmptyArgs(resolverArgs)
+
+  const paginatedVideos = mirageGraphQLFieldResolver(obj, filteredResolverArgs, context, info)
   return paginatedVideos
 }
 

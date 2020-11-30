@@ -15,10 +15,9 @@ import {
   StyledChannelAvatar,
   Title,
 } from './VideoView.style'
-import { PlaceholderVideoGrid, VideoGrid } from '@/components'
-import { Placeholder, VideoPlayer } from '@/shared/components'
+import { InfiniteVideoGrid, Placeholder, VideoPlayer } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
-import { ADD_VIDEO_VIEW, GET_VIDEO_WITH_CHANNEL_VIDEOS } from '@/api/queries'
+import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
 import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
 import routes from '@/config/routes'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -26,7 +25,7 @@ import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { loading, data, error } = useQuery<GetVideo, GetVideoVariables>(GET_VIDEO_WITH_CHANNEL_VIDEOS, {
+  const { loading, data, error } = useQuery<GetVideo, GetVideoVariables>(GET_VIDEO, {
     variables: { id },
   })
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
@@ -110,11 +109,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
           <MoreVideosHeader>
             {data?.video ? `More from ${data.video.channel.handle}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
-          {data?.video ? (
-            <VideoGrid videos={data.video.channel.videos} showChannel={false} />
-          ) : (
-            <PlaceholderVideoGrid />
-          )}
+          <InfiniteVideoGrid ready={!loading} channelId={data?.video?.channel.id} showChannel={false} />
         </MoreVideosContainer>
       </InfoContainer>
     </Container>

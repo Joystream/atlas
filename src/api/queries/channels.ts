@@ -33,9 +33,6 @@ export const GET_CHANNEL = gql`
   query GetChannel($id: ID!) {
     channel(where: { id: $id }) {
       ...ChannelFields
-      videos {
-        ...VideoFields
-      }
     }
   }
   ${channelFieldsFragment}

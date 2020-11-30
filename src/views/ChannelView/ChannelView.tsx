@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/client'
 
 import { GET_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
-import { PlaceholderVideoGrid, VideoGrid } from '@/components'
 
 import {
   AvatarPlaceholder,
@@ -18,20 +17,19 @@ import {
   TitleSection,
   VideoSection,
 } from './ChannelView.style'
+import { InfiniteVideoGrid } from '@/shared/components'
 
 const DEFAULT_CHANNEL_COVER_URL = 'https://eu-central-1.linodeobjects.com/atlas-assets/default-channel-cover.png'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { loading, data, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
+  const { data, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
 
   if (error) {
     throw error
   }
-
-  const videos = data?.channel?.videos || []
 
   return (
     <div>
@@ -55,17 +53,9 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
           )}
         </TitleSection>
       </Header>
-      {!loading ? (
-        videos.length > 0 && (
-          <VideoSection>
-            <VideoGrid videos={videos} showChannel={false} />
-          </VideoSection>
-        )
-      ) : (
-        <VideoSection>
-          <PlaceholderVideoGrid />
-        </VideoSection>
-      )}
+      <VideoSection>
+        <InfiniteVideoGrid channelId={id} />
+      </VideoSection>
     </div>
   )
 }

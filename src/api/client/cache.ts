@@ -9,7 +9,9 @@ const cache = new InMemoryCache({
         channelsConnection: relayStylePagination(),
         videosConnection: relayStylePagination((args) => {
           // make sure queries asking for a specific category are separated in cache
-          return args?.where?.categoryId_eq
+          const channelId = args?.where?.channelId_eq || ''
+          const categoryId = args?.where?.categoryId_eq || ''
+          return `${channelId}:${categoryId}`
         }),
       },
     },
