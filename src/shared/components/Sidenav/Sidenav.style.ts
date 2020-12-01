@@ -1,4 +1,4 @@
-import { sizes, colors, typography } from '../../theme'
+import { sizes, colors, typography, zIndex } from '../../theme'
 import { makeStyles, StyleFn } from '../../utils'
 
 export const SIDENAV_WIDTH = 56
@@ -13,7 +13,7 @@ const nav: StyleFn = () => ({
   top: 0,
   left: 0,
   bottom: 0,
-  zIndex: 100,
+  zIndex: zIndex[2],
 
   overflow: 'hidden',
 
@@ -38,7 +38,7 @@ const drawerOverlay: StyleFn<SidenavStyleProps> = (_, { expanded }) => ({
   right: 0,
   bottom: 0,
   left: 0,
-  zIndex: 99,
+  zIndex: zIndex[1],
 
   display: expanded ? 'block' : 'none',
 

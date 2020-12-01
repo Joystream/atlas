@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors, sizes, typography } from '../../theme'
+import { colors, sizes, typography, zIndex } from '../../theme'
 import Icon from '../Icon'
 import { css } from '@emotion/core'
 
@@ -145,7 +145,7 @@ export const PlayOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 100;
+  z-index: ${zIndex[1]};
 
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
 
