@@ -14,7 +14,7 @@ export const StyledSearchbar = styled(Searchbar)`
   transition: max-width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   will-change: max-width;
 `
-export const NAVBAR_HEIGHT = 80
+export const NAVBAR_HEIGHT = 81
 export const Header = styled.header<NavbarStyleProps>`
   position: sticky;
   top: 0;
@@ -25,6 +25,7 @@ export const Header = styled.header<NavbarStyleProps>`
   width: 100%;
 
   grid-template-columns: 1fr 2fr;
+  border-bottom: 1px solid ${colors.gray[800]};
 
   padding: ${sizes(2)} ${sizes(3)};
   @media screen and (min-width: ${breakpoints.small}) {

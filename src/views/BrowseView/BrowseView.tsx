@@ -1,14 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react'
-import styled from '@emotion/styled'
+import React, { useState, useRef } from 'react'
+
 import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 import { useQuery } from '@apollo/client'
+import { useInView } from 'react-intersection-observer'
 
 import { ErrorFallback } from '@/components'
-import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
-import { ReactComponent as BackgroundPattern } from '@/assets/browse-bg-pattern.svg'
-import { colors, sizes, zIndex } from '@/shared/theme'
+import {
+  StyledCategoryPicker,
+  Container,
+  StyledInfiniteVideoGrid,
+  IntersectionTarget,
+  Header,
+  StyledBackgroundPattern,
+  GRID_TOP_PADDING,
+} from './BrowseView.style'
 import { GET_CATEGORIES } from '@/api/queries'
 import { GetCategories } from '@/api/queries/__generated__/GetCategories'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
@@ -23,7 +31,11 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
       },
     }
   )
+
   const headerRef = useRef<HTMLHeadingElement>(null)
+  const { ref: targetRef, inView } = useInView({
+    rootMargin: `-${NAVBAR_HEIGHT - GRID_TOP_PADDING}px 0px 0px`,
+  })
   const handleCategoryChange = (category: CategoryFields, scrollTop = true) => {
     setSelectedCategoryId(category.id)
     if (headerRef.current && scrollTop) {
@@ -42,11 +54,13 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
         Browse
       </Header>
       <Text variant="h5">Topics that may interest you</Text>
+      <IntersectionTarget ref={targetRef} />
       <StyledCategoryPicker
         categories={categoriesData?.categories}
         loading={categoriesLoading}
         selectedCategoryId={selectedCategoryId}
         onChange={handleCategoryChange}
+        isAtTop={inView}
       />
       <ErrorBoundary fallback={ErrorFallback}>
         <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
@@ -55,31 +69,4 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   )
 }
 
-const Container = styled.div`
-  position: relative;
-  padding-top: ${sizes(14)};
-`
-
-const StyledBackgroundPattern = styled(BackgroundPattern)`
-  position: absolute;
-  right: 0;
-  z-index: ${zIndex.background};
-`
-
-const Header = styled(Text)`
-  margin: 0 0 ${sizes(10)} 0;
-`
-
-const StyledCategoryPicker = styled(CategoryPicker)`
-  z-index: ${zIndex.overlay};
-  position: sticky;
-  /*Offset Category Picker by Navbar Height */
-  top: ${NAVBAR_HEIGHT}px;
-  padding: ${sizes(5)} ${sizes(8)} ${sizes(2)};
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
-  background-color: ${colors.black};
-`
-const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  padding-top: ${sizes(2)};
-`
 export default BrowseView
