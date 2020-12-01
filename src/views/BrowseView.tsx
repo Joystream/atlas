@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
+import { useQuery } from '@apollo/client'
 
 import { ErrorFallback } from '@/components'
 import { CategoryPicker, InfiniteVideoGrid, Typography } from '@/shared/components'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
+import { ReactComponent as BackgroundPattern } from '@/assets/browse-bg-pattern.svg'
 import { colors, sizes } from '@/shared/theme'
-import { useQuery } from '@apollo/client'
 import { GET_CATEGORIES } from '@/api/queries'
 import { GetCategories } from '@/api/queries/__generated__/GetCategories'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
@@ -30,7 +31,8 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   }
 
   return (
-    <div>
+    <Container>
+      <StyledBackgroundPattern />
       <Header variant="hero">Browse</Header>
       <Typography variant="h5">Topics that may interest you</Typography>
       <StyledCategoryPicker
@@ -42,12 +44,23 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
       <ErrorBoundary fallback={ErrorFallback}>
         <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
       </ErrorBoundary>
-    </div>
+    </Container>
   )
 }
 
+const Container = styled.div`
+  position: relative;
+  padding-top: ${sizes(14)};
+`
+
+const StyledBackgroundPattern = styled(BackgroundPattern)`
+  position: absolute;
+  right: 0;
+  z-index: -1;
+`
+
 const Header = styled(Typography)`
-  margin: ${sizes(14)} 0 ${sizes(10)} 0; // 56px 40px
+  margin: 0 0 ${sizes(10)} 0;
 `
 
 const StyledCategoryPicker = styled(CategoryPicker)`
