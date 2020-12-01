@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
@@ -18,12 +18,19 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   const { loading: categoriesLoading, data: categoriesData, error: categoriesError } = useQuery<GetCategories>(
     GET_CATEGORIES,
     {
-      onCompleted: (data) => handleCategoryChange(data.categories[0]),
+      onCompleted: (data) => {
+        handleCategoryChange(data.categories[0])
+        firstCategoryChange.current = false
+      },
     }
   )
-
+  const headerRef = useRef<HTMLHeadingElement>(null)
+  const firstCategoryChange = useRef(true)
   const handleCategoryChange = (category: CategoryFields) => {
     setSelectedCategoryId(category.id)
+    if (headerRef.current && !firstCategoryChange.current) {
+      headerRef.current.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' })
+    }
   }
 
   if (categoriesError) {
@@ -33,7 +40,9 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   return (
     <Container>
       <StyledBackgroundPattern />
-      <Header variant="hero">Browse</Header>
+      <Header variant="hero" ref={headerRef}>
+        Browse
+      </Header>
       <Text variant="h5">Topics that may interest you</Text>
       <StyledCategoryPicker
         categories={categoriesData?.categories}

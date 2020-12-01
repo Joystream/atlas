@@ -8,9 +8,12 @@ type TextProps = {
   className?: string
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 
-const Text: React.FC<TextProps> = ({ variant = 'body2', ...otherProps }) => {
+const Text: React.ForwardRefRenderFunction<HTMLHeadingElement, TextProps> = (
+  { variant = 'body2', ...otherProps },
+  ref
+) => {
   const Tag = styledVariants[variant]
-  return <Tag {...otherProps} />
+  return <Tag {...otherProps} ref={ref} />
 }
 
-export default Text
+export default React.forwardRef(Text)
