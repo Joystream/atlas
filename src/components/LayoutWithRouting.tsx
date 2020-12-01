@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps, Router, navigate } from '@reach/router'
+import { RouteComponentProps, Router, navigate, useLocation } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
 import { Navbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
+
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 
 type RouteProps = {
   Component: React.ComponentType
@@ -19,6 +27,7 @@ const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
         navigate('/')
       }}
     >
+      <ScrollToTop />
       <Component {...pathProps} />
     </ErrorBoundary>
   )
