@@ -56,6 +56,7 @@ const Container = styled.div`
 const StyledBackgroundPattern = styled(BackgroundPattern)`
   position: absolute;
   right: 0;
+  z-index: -1;
 `
 
 const Header = styled(Typography)`
