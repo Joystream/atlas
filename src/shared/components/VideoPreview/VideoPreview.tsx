@@ -138,7 +138,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   )
 
   const metaNode = (
-    <MetaText variant={main ? 'h6' : 'subtitle2'} main={main} scalingFactor={scalingFactor}>
+    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
       {formatVideoViewsAndDate(views, createdAt, { fullViews: main })}
     </MetaText>
   )

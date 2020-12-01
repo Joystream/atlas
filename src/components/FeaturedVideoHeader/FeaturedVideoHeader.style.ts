@@ -186,11 +186,9 @@ export const TitleContainer = styled.div`
 export const Title = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '40px', toSize: '72px' }, breakpoints.base, breakpoints.xlarge)};
   ${fluidRange({ prop: 'lineHeight', fromSize: '48px', toSize: '68px' }, breakpoints.base, breakpoints.xlarge)};
-  font-family: ${typography.fonts.headers};
-  font-weight: 700;
 
   display: inline-block;
-  margin: 0 0 ${sizes(4)} 0;
+  margin-bottom: ${sizes(4)};
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-bottom: ${sizes(5)};
   }

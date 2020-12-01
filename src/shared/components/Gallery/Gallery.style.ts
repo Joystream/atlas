@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { sizes, typography } from '../../theme'
-import Text from '../Text'
 
 export const Container = styled.section`
   display: flex;
@@ -20,7 +19,4 @@ export const HeadingContainer = styled.div`
     font-size: ${typography.sizes.subtitle2};
     padding: 0;
   }
-`
-export const Heading = styled(Text)`
-  margin: 0;
 `

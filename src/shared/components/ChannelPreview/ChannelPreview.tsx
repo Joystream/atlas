@@ -29,7 +29,6 @@ const ChannelPreview: React.FC<ChannelPreviewProps> = ({ name, avatarURL, classN
 }
 
 const NameHeader = styled(Text)`
-  margin: 0;
   line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;

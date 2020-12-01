@@ -30,8 +30,6 @@ export const InfoContainer = styled.div`
   padding: ${sizes(8)} 0;
 `
 
-export const Title = styled(Text)``
-
 export const Meta = styled.span`
   display: block;
   margin-top: ${sizes(1)};
@@ -57,6 +55,10 @@ export const DescriptionContainer = styled.div`
     line-height: 175%;
     margin: ${sizes(4)} 0 0;
   }
+`
+
+export const Title = styled(Text)`
+  font-weight: ${typography.weights.bold};
 `
 
 export const MoreVideosContainer = styled.div`

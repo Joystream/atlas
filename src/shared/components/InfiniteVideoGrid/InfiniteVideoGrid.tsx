@@ -184,7 +184,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 }
 
 const Title = styled(Text)`
-  margin: 0 0 ${sizes(4)};
+  margin-bottom: ${sizes(4)};
 `
 
 const StyledVideoPreview = styled(VideoPreview)`

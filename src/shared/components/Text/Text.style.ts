@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 
 const baseStyles = css`
   font-family: ${typography.fonts.base};
-  color: inherits;
   margin: 0;
 `
 
