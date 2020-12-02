@@ -7,7 +7,6 @@ type VideoPlayerProps = {
   autoplay?: boolean
   isInBackground?: boolean
   playing?: boolean
-  onDataLoaded?: () => void
 } & VideoJsConfig
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -15,7 +14,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   autoplay,
   isInBackground,
   playing,
-  onDataLoaded,
   ...videoJsConfig
 }) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -39,24 +37,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       player.off('loadstart', handler)
     }
   }, [player])
-
-  useEffect(() => {
-    if (!player) {
-      return
-    }
-
-    const handler = () => {
-      if (onDataLoaded) {
-        onDataLoaded()
-      }
-    }
-
-    player.on('loadeddata', handler)
-
-    return () => {
-      player.off('loadeddata', handler)
-    }
-  }, [player, onDataLoaded])
 
   useEffect(() => {
     if (!player || !initialized || !autoplay) {

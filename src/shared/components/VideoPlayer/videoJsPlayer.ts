@@ -13,6 +13,9 @@ export type VideoJsConfig = {
   fill?: boolean
   muted?: boolean
   posterUrl?: string
+  onDataLoaded?: () => void
+  onPlay?: () => void
+  onPause?: () => void
 }
 
 const createJoystreamStorageUrl = (dataObjectId: string) => {
@@ -21,7 +24,18 @@ const createJoystreamStorageUrl = (dataObjectId: string) => {
 }
 
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
-export const useVideoJsPlayer: VideoJsPlayerHook = ({ fill, fluid, height, src, width, muted = false, posterUrl }) => {
+export const useVideoJsPlayer: VideoJsPlayerHook = ({
+  fill,
+  fluid,
+  height,
+  src,
+  width,
+  muted = false,
+  posterUrl,
+  onDataLoaded,
+  onPlay,
+  onPause,
+}) => {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
@@ -99,6 +113,42 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({ fill, fluid, height, src, 
 
     player.poster(posterUrl)
   }, [player, posterUrl])
+
+  useEffect(() => {
+    if (!player || !onDataLoaded) {
+      return
+    }
+
+    player.on('loadeddata', onDataLoaded)
+
+    return () => {
+      player.off('loadeddata', onDataLoaded)
+    }
+  }, [player, onDataLoaded])
+
+  useEffect(() => {
+    if (!player || !onPlay) {
+      return
+    }
+
+    player.on('play', onPlay)
+
+    return () => {
+      player.off('play', onPlay)
+    }
+  }, [player, onPlay])
+
+  useEffect(() => {
+    if (!player || !onPause) {
+      return
+    }
+
+    player.on('pause', onPause)
+
+    return () => {
+      player.off('pause', onPause)
+    }
+  }, [player, onPause])
 
   return [player, playerRef]
 }

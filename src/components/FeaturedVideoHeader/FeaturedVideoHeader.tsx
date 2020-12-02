@@ -39,6 +39,14 @@ const FeaturedVideoHeader: React.FC = () => {
     setSoundMuted(!soundMuted)
   }
 
+  const handlePlay = () => {
+    setVideoPlaying(true)
+  }
+
+  const handlePause = () => {
+    setVideoPlaying(false)
+  }
+
   return (
     <Container>
       <MediaWrapper>
@@ -51,6 +59,8 @@ const FeaturedVideoHeader: React.FC = () => {
               playing={videoPlaying}
               posterUrl={mockCoverVideo.thumbnailUrl}
               onDataLoaded={handlePlaybackDataLoaded}
+              onPlay={handlePlay}
+              onPause={handlePause}
               src={mockCoverVideoMedia.coverCutLocation!}
             />
           </PlayerContainer>
