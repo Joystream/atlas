@@ -98,7 +98,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   const coverNode = (
     <>
       <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
-      {duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
       {!!progress && (
         <ProgressOverlay>
           <ProgressBar style={{ width: `${progress}%` }} />
