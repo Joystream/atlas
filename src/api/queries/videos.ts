@@ -66,8 +66,10 @@ export const GET_NEWEST_VIDEOS = gql`
 
 export const GET_FEATURED_VIDEOS = gql`
   query GetFeaturedVideos {
-    featured_videos {
-      ...VideoFields
+    featuredVideos(orderBy: createdAt_DESC) {
+      video {
+        ...VideoFields
+      }
     }
   }
   ${videoFieldsFragment}

@@ -43,7 +43,9 @@ const HomeView: React.FC<RouteComponentProps> = () => {
   })
 
   const newestVideos = videosData?.videosConnection.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
+  const featuredVideos = featuredVideosData?.featuredVideos.map((featuredVideo) => featuredVideo.video)
   const newestChannels = newestChannelsData?.channelsConnection.edges.map((e) => e.node)
+
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
   const hasNewestChannelsError = newestChannelsError && !newestChannelsLoading
@@ -59,11 +61,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
         )}
 
         {!hasFeaturedVideosError ? (
-          <VideoGallery
-            title="Featured videos"
-            loading={featuredVideosLoading}
-            videos={featuredVideosData?.featured_videos}
-          />
+          <VideoGallery title="Featured videos" loading={featuredVideosLoading} videos={featuredVideos} />
         ) : (
           <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
         )}

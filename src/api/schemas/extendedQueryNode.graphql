@@ -145,6 +145,12 @@ type Video {
   license: License!
 }
 
+type FeaturedVideo {
+  id: ID!
+
+  video: Video!
+}
+
 union SearchResult = Video | Channel
 
 type SearchFTSOutput {
@@ -221,6 +227,11 @@ type VideoConnection {
   totalCount: Int!
 }
 
+enum FeaturedVideoOrderByInput {
+  createdAt_ASC
+  createdAt_DESC
+}
+
 type VideoViewsInfo {
   id: ID!
   views: Int!
@@ -251,7 +262,7 @@ type Query {
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
 
   # List all top trending videos
-  featured_videos: [Video!]!
+  featuredVideos(orderBy: FeaturedVideoOrderByInput): [FeaturedVideo!]!
 
   # Free text search across videos and channels
   search(limit: Int, text: String!): [SearchFTSOutput!]!
