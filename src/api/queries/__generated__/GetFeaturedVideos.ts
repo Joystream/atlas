@@ -7,52 +7,57 @@
 // GraphQL query operation: GetFeaturedVideos
 // ====================================================
 
-export interface GetFeaturedVideos_featured_videos_category {
+export interface GetFeaturedVideos_featuredVideos_video_category {
   __typename: "Category";
   id: string;
 }
 
-export interface GetFeaturedVideos_featured_videos_media_location_HttpMediaLocation {
+export interface GetFeaturedVideos_featuredVideos_video_media_location_HttpMediaLocation {
   __typename: "HttpMediaLocation";
   url: string;
 }
 
-export interface GetFeaturedVideos_featured_videos_media_location_JoystreamMediaLocation {
+export interface GetFeaturedVideos_featuredVideos_video_media_location_JoystreamMediaLocation {
   __typename: "JoystreamMediaLocation";
   dataObjectId: string;
 }
 
-export type GetFeaturedVideos_featured_videos_media_location = GetFeaturedVideos_featured_videos_media_location_HttpMediaLocation | GetFeaturedVideos_featured_videos_media_location_JoystreamMediaLocation;
+export type GetFeaturedVideos_featuredVideos_video_media_location = GetFeaturedVideos_featuredVideos_video_media_location_HttpMediaLocation | GetFeaturedVideos_featuredVideos_video_media_location_JoystreamMediaLocation;
 
-export interface GetFeaturedVideos_featured_videos_media {
+export interface GetFeaturedVideos_featuredVideos_video_media {
   __typename: "VideoMedia";
   id: string;
   pixelHeight: number;
   pixelWidth: number;
-  location: GetFeaturedVideos_featured_videos_media_location;
+  location: GetFeaturedVideos_featuredVideos_video_media_location;
 }
 
-export interface GetFeaturedVideos_featured_videos_channel {
+export interface GetFeaturedVideos_featuredVideos_video_channel {
   __typename: "Channel";
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
 }
 
-export interface GetFeaturedVideos_featured_videos {
+export interface GetFeaturedVideos_featuredVideos_video {
   __typename: "Video";
   id: string;
   title: string;
   description: string;
-  category: GetFeaturedVideos_featured_videos_category;
+  category: GetFeaturedVideos_featuredVideos_video_category;
   views: number | null;
   duration: number;
   thumbnailUrl: string;
   createdAt: GQLDate;
-  media: GetFeaturedVideos_featured_videos_media;
-  channel: GetFeaturedVideos_featured_videos_channel;
+  media: GetFeaturedVideos_featuredVideos_video_media;
+  channel: GetFeaturedVideos_featuredVideos_video_channel;
+}
+
+export interface GetFeaturedVideos_featuredVideos {
+  __typename: "FeaturedVideo";
+  video: GetFeaturedVideos_featuredVideos_video;
 }
 
 export interface GetFeaturedVideos {
-  featured_videos: GetFeaturedVideos_featured_videos[];
+  featuredVideos: GetFeaturedVideos_featuredVideos[];
 }

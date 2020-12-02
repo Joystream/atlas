@@ -50,7 +50,9 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
     `
   }, [coverHeight])
 
-  const displayPlaceholders = loading || !videos
+  if (!loading && videos?.length === 0) {
+    return null
+  }
 
   return (
     <Gallery
@@ -61,7 +63,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       arrowCss={arrowPosition}
     >
-      {displayPlaceholders
+      {loading
         ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
             <StyledVideoPreviewBase key={`video-placeholder-${idx}`} />
           ))
