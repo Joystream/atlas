@@ -14,3 +14,7 @@
   font-weight: bold;
   src: url('./assets/fonts/Inter-Bold.ttf') format('truetype');
 }
+
+.video-js {
+  padding-top: 56.25%;
+}
