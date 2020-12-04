@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { Avatar, Button, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import { Link } from '@reach/router'
 import { css } from '@emotion/core'
 
@@ -131,12 +131,10 @@ export const InfoContainer = styled.div`
     margin: 0;
     padding: 0;
     bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN / 4}px;
-    max-width: 400px;
   }
 
   @media screen and (min-width: ${breakpoints.medium}) {
     bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN / 2}px;
-    max-width: 600px;
   }
 
   @media screen and (min-width: ${breakpoints.large}) {
@@ -177,6 +175,7 @@ export const TitleContainer = styled.div`
 
   span {
     display: block;
+    max-width: 40ch;
     ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '22px' }, breakpoints.base, breakpoints.xlarge)};
     ${fluidRange({ prop: 'lineHeight', fromSize: '20px', toSize: '26px' }, breakpoints.base, breakpoints.xlarge)};
     color: ${colors.white};
