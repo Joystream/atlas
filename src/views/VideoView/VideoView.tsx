@@ -13,7 +13,6 @@ import {
   PlayerPlaceholder,
   PlayerWrapper,
   StyledChannelAvatar,
-  Title,
 } from './VideoView.style'
 import { InfiniteVideoGrid, Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
@@ -70,7 +69,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer>
-        {data?.video ? <Title variant="h2">{data.video.title}</Title> : <Placeholder height={46} width={400} />}
+        {data?.video ? <Text variant="h2">{data.video.title}</Text> : <Placeholder height={46} width={400} />}
         <Meta>
           {data?.video ? (
             formatVideoViewsAndDate(data.video.views, data.video.createdAt, { fullViews: true })

@@ -57,10 +57,6 @@ export const DescriptionContainer = styled.div`
   }
 `
 
-export const Title = styled(Text)`
-  font-weight: ${typography.weights.bold};
-`
-
 export const MoreVideosContainer = styled.div`
   margin-top: 88px;
 `

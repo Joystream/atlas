@@ -1,4 +1,4 @@
-import { typography, colors } from '../../theme'
+import { typography } from '../../theme'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
 
