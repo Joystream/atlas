@@ -20,7 +20,7 @@ const backgroundContainerCss = css`
   .vjs-poster {
     display: block !important;
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
   .vjs-paused:not(.vjs-has-started) .vjs-poster,
