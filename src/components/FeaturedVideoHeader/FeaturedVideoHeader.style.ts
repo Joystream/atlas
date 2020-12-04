@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { Avatar, Button, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import { Link } from '@reach/router'
 import { css } from '@emotion/core'
 
@@ -203,8 +203,18 @@ export const ButtonsContainer = styled.div`
   }
 `
 
-export const PlayButton = styled(Button)`
-  width: 116px;
+export const PlayButton = styled(Button)<{ playing: boolean }>`
+  width: 140px;
+  justify-content: flex-start;
+
+  svg {
+    margin-left: ${sizes(3)};
+  }
+
+  span {
+    margin-top: -3px;
+    margin-left: ${({ playing }) => (playing ? sizes(2) : sizes(3))};
+  }
 `
 
 export const SoundButton = styled(Button)`
