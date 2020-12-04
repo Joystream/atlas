@@ -13,7 +13,7 @@ const nav: StyleFn = () => ({
   top: 0,
   left: 0,
   bottom: 0,
-  zIndex: zIndex[2],
+  zIndex: zIndex.nearOverlay,
 
   overflow: 'hidden',
 
@@ -38,7 +38,7 @@ const drawerOverlay: StyleFn<SidenavStyleProps> = (_, { expanded }) => ({
   right: 0,
   bottom: 0,
   left: 0,
-  zIndex: zIndex[1],
+  zIndex: zIndex.overlay,
 
   display: expanded ? 'block' : 'none',
 

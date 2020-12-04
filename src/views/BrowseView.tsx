@@ -56,7 +56,7 @@ const Container = styled.div`
 const StyledBackgroundPattern = styled(BackgroundPattern)`
   position: absolute;
   right: 0;
-  z-index: ${zIndex[-1]};
+  z-index: ${zIndex.background};
 `
 
 const Header = styled(Typography)`
@@ -64,7 +64,7 @@ const Header = styled(Typography)`
 `
 
 const StyledCategoryPicker = styled(CategoryPicker)`
-  z-index: ${zIndex[1]};
+  z-index: ${zIndex.overlay};
   position: sticky;
   /*Offset Category Picker by Navbar Height */
   top: ${NAVBAR_HEIGHT}px;

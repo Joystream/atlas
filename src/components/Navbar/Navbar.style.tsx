@@ -18,7 +18,7 @@ export const NAVBAR_HEIGHT = 80
 export const Header = styled.header<NavbarStyleProps>`
   position: sticky;
   top: 0;
-  z-index: ${zIndex.infinity};
+  z-index: ${zIndex.header};
   min-height: ${NAVBAR_HEIGHT}px;
   max-height: ${NAVBAR_HEIGHT}px;
   display: grid;

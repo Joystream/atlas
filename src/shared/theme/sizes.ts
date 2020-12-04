@@ -6,16 +6,10 @@ export function sizes(n: number, raw?: boolean) {
 }
 
 export const zIndex = {
-  1: 10,
-  2: 20,
-  3: 30,
-  4: 40,
-  5: 50,
-  '-1': -10,
-  '-2': -20,
-  '-3': -30,
-  '-4': -40,
-  '-5': -50,
-  minusInfinity: -9999,
-  infinity: 9999,
+  background: -10,
+  farBackground: -20,
+  header: 100,
+  overlay: 10,
+  nearOverlay: 20,
+  globalOverlay: 999,
 }

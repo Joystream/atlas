@@ -145,7 +145,7 @@ export const PlayOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: ${zIndex[1]};
+  z-index: ${zIndex.overlay};
 
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
 
