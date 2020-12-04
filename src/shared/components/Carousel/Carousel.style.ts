@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import Button from '../Button'
+import { zIndex } from '../../theme'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -25,7 +26,7 @@ export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
   margin-left: ${(props) => -props.paddingLeft}px;
   margin-top: ${(props) => -props.paddingTop}px;
   width: 10%;
-  z-index: 1;
+  z-index: ${zIndex.overlay};
   background-image: linear-gradient(
     ${(props) => (props.direction === 'prev' ? 270 : 90)}deg,
     transparent,
@@ -39,7 +40,7 @@ export const Arrow = styled(Button)`
   width: ${CAROUSEL_ARROW_HEIGHT}px;
   height: ${CAROUSEL_ARROW_HEIGHT}px;
   transition: none;
-
+  z-index: ${zIndex.nearOverlay};
   &.disabled {
     display: none;
   }

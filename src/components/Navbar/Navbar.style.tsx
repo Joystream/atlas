@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Icon, Searchbar } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { breakpoints, colors, sizes, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Link } from '@reach/router'
@@ -18,7 +18,7 @@ export const NAVBAR_HEIGHT = 80
 export const Header = styled.header<NavbarStyleProps>`
   position: sticky;
   top: 0;
-  z-index: 99;
+  z-index: ${zIndex.header};
   min-height: ${NAVBAR_HEIGHT}px;
   max-height: ${NAVBAR_HEIGHT}px;
   display: grid;

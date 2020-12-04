@@ -8,7 +8,7 @@ import { ErrorFallback } from '@/components'
 import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 import { ReactComponent as BackgroundPattern } from '@/assets/browse-bg-pattern.svg'
-import { colors, sizes } from '@/shared/theme'
+import { colors, sizes, zIndex } from '@/shared/theme'
 import { GET_CATEGORIES } from '@/api/queries'
 import { GetCategories } from '@/api/queries/__generated__/GetCategories'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
@@ -56,7 +56,7 @@ const Container = styled.div`
 const StyledBackgroundPattern = styled(BackgroundPattern)`
   position: absolute;
   right: 0;
-  z-index: -1;
+  z-index: ${zIndex.background};
 `
 
 const Header = styled(Text)`
@@ -64,7 +64,7 @@ const Header = styled(Text)`
 `
 
 const StyledCategoryPicker = styled(CategoryPicker)`
-  z-index: 10;
+  z-index: ${zIndex.overlay};
   position: sticky;
   /*Offset Category Picker by Navbar Height */
   top: ${NAVBAR_HEIGHT}px;
