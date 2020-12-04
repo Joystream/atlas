@@ -111,7 +111,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   )
 
   const titleNode = (
-    <TitleHeader main={main} scalingFactor={scalingFactor} onClick={onClick} clickable={Boolean(onClick)}>
+    <TitleHeader variant="h6" main={main} scalingFactor={scalingFactor} onClick={onClick} clickable={Boolean(onClick)}>
       {title}
     </TitleHeader>
   )
@@ -127,13 +127,18 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   )
 
   const channelNameNode = (
-    <ChannelName channelClickable={channelClickable} onClick={handleChannelClick} scalingFactor={scalingFactor}>
+    <ChannelName
+      variant="subtitle2"
+      channelClickable={channelClickable}
+      onClick={handleChannelClick}
+      scalingFactor={scalingFactor}
+    >
       {channelName}
     </ChannelName>
   )
 
   const metaNode = (
-    <MetaText main={main} scalingFactor={scalingFactor}>
+    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
       {formatVideoViewsAndDate(views, createdAt, { fullViews: main })}
     </MetaText>
   )

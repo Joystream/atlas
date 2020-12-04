@@ -1,8 +1,8 @@
 import React from 'react'
 import { Search_search_item_Channel, Search_search_item_Video } from '@/api/queries/__generated__/Search'
-import { Placeholder, VideoPreviewBase } from '@/shared/components'
+import { Placeholder, VideoPreviewBase, Text } from '@/shared/components'
 import styled from '@emotion/styled'
-import { sizes, typography } from '@/shared/theme'
+import { sizes } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
 
 type AllResultsTabProps = {
@@ -42,13 +42,21 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
       </div>
       {(videos.length > 0 || loading) && (
         <div>
-          {loading ? <Placeholder width={200} height={16} bottomSpace={18} /> : <SectionHeader>Videos</SectionHeader>}
+          {loading ? (
+            <Placeholder width={200} height={16} bottomSpace={18} />
+          ) : (
+            <SectionHeader variant="h5">Videos</SectionHeader>
+          )}
           <VideoGallery videos={videos} loading={loading} />
         </div>
       )}
       {(channels.length > 0 || loading) && (
         <div>
-          {loading ? <Placeholder width={200} height={16} bottomSpace={18} /> : <SectionHeader>Channels</SectionHeader>}
+          {loading ? (
+            <Placeholder width={200} height={16} bottomSpace={18} />
+          ) : (
+            <SectionHeader variant="h5">Channels</SectionHeader>
+          )}
           <ChannelGallery channels={channels} loading={loading} />
         </div>
       )}
@@ -56,9 +64,8 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
   )
 }
 
-const SectionHeader = styled.h5`
+const SectionHeader = styled(Text)`
   margin: 0 0 ${sizes(4)};
-  font-size: ${typography.sizes.h5};
 `
 
 export default AllResultsTab

@@ -13,6 +13,7 @@ import {
   StyledAvatar,
   TitleContainer,
   VerticalGradientOverlay,
+  Title,
 } from './FeaturedVideoHeader.style'
 import { CSSTransition } from 'react-transition-group'
 import { mockCoverVideo, mockCoverVideoChannel, mockCoverVideoMedia } from '@/mocking/data/mockCoverVideo'
@@ -63,7 +64,7 @@ const FeaturedVideoHeader: React.FC = () => {
         </ChannelLink>
         <TitleContainer>
           <Link to={routes.video(mockCoverVideo.id)}>
-            <h2>{mockCoverVideo.title}</h2>
+            <Title variant="h2">{mockCoverVideo.title}</Title>
           </Link>
           <span>{mockCoverVideo.description}</span>
         </TitleContainer>

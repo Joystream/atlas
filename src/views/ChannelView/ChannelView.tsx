@@ -42,7 +42,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
             <>
               <StyledAvatar img={data.channel.avatarPhotoUrl} name={data.channel.handle} />
               <TitleContainer>
-                <Title>{data.channel.handle}</Title>
+                <Title variant="h1">{data.channel.handle}</Title>
               </TitleContainer>
             </>
           ) : (

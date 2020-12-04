@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { Avatar, Placeholder } from '@/shared/components'
+import { Avatar, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
 import { css } from '@emotion/core'
 
@@ -154,9 +154,8 @@ export const TitleContainer = styled.div`
   padding: 0 ${sizes(2)};
 `
 
-export const Title = styled.h1`
+export const Title = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
-  font-weight: bold;
   margin: -4px 0 0;
   line-height: ${SM_TITLE_HEIGHT};
   @media screen and (min-width: ${breakpoints.medium}) {

@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { useQuery } from '@apollo/client'
 
 import { ErrorFallback } from '@/components'
-import { CategoryPicker, InfiniteVideoGrid, Typography } from '@/shared/components'
+import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 import { ReactComponent as BackgroundPattern } from '@/assets/browse-bg-pattern.svg'
 import { colors, sizes } from '@/shared/theme'
@@ -34,7 +34,7 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
     <Container>
       <StyledBackgroundPattern />
       <Header variant="hero">Browse</Header>
-      <Typography variant="h5">Topics that may interest you</Typography>
+      <Text variant="h5">Topics that may interest you</Text>
       <StyledCategoryPicker
         categories={categoriesData?.categories}
         loading={categoriesLoading}
@@ -59,7 +59,7 @@ const StyledBackgroundPattern = styled(BackgroundPattern)`
   z-index: -1;
 `
 
-const Header = styled(Typography)`
+const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
 
