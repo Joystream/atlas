@@ -202,8 +202,18 @@ export const ButtonsContainer = styled.div`
   }
 `
 
-export const PlayButton = styled(Button)`
-  width: 116px;
+export const PlayButton = styled(Button)<{ playing: boolean }>`
+  width: 140px;
+  justify-content: flex-start;
+
+  svg {
+    margin-left: ${sizes(3)};
+  }
+
+  span {
+    margin-top: -3px;
+    margin-left: ${({ playing }) => (playing ? sizes(2) : sizes(3))};
+  }
 `
 
 export const SoundButton = styled(Button)`

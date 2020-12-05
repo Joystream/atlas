@@ -84,6 +84,7 @@ const FeaturedVideoHeader: React.FC = () => {
               onClick={handlePlayPauseClick}
               icon={videoPlaying ? 'pause' : 'play'}
               disabled={!initialLoadDone}
+              playing={videoPlaying}
             >
               {videoPlaying ? 'Pause' : 'Play'}
             </PlayButton>
