@@ -3,7 +3,7 @@ import { css } from '@emotion/core'
 
 import Button from '../Button'
 import type { ButtonStyleProps } from '../Button/Button.style'
-import { sizes, colors } from '../../theme'
+import { sizes, colors, transitions } from '../../theme'
 
 export type ToggleButtonStyleProps = {
   toggled: boolean
@@ -116,7 +116,7 @@ const disabled = ({ disabled }: ToggleButtonStyleProps) =>
     : null
 
 export const StyledToggleButton = styled(Button)`
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.4s ${transitions.easing};
   ${colorsFromProps}
   ${pressed}
   ${hoverTransition}

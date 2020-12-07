@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 
-import { ReactComponent as BackgroundPattern } from '@/assets/browse-bg-pattern.svg'
+import { ReactComponent as BackgroundPattern } from '@/assets/bg-pattern.svg'
 import { colors, sizes, zIndex } from '@/shared/theme'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 

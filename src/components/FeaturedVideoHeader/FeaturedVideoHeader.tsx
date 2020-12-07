@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  ButtonsContainer,
   ChannelLink,
   Container,
   HorizontalGradientOverlay,
@@ -20,6 +19,7 @@ import { mockCoverVideo, mockCoverVideoChannel, mockCoverVideoMedia } from '@/mo
 import routes from '@/config/routes'
 import { VideoPlayer } from '@/shared/components'
 import { Link } from '@reach/router'
+import { transitions } from '@/shared/theme'
 
 const FeaturedVideoHeader: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false)
@@ -78,8 +78,12 @@ const FeaturedVideoHeader: React.FC = () => {
           </Link>
           <span>{mockCoverVideo.description}</span>
         </TitleContainer>
-        <CSSTransition in={initialLoadDone} timeout={200} classNames="fade">
-          <ButtonsContainer>
+        <CSSTransition
+          in={initialLoadDone}
+          timeout={parseInt(transitions.timings.loading)}
+          classNames={transitions.names.fade}
+        >
+          <div>
             <PlayButton
               onClick={handlePlayPauseClick}
               icon={videoPlaying ? 'pause' : 'play'}
@@ -93,7 +97,7 @@ const FeaturedVideoHeader: React.FC = () => {
               icon={!soundMuted ? 'sound-on' : 'sound-off'}
               disabled={!initialLoadDone}
             />
-          </ButtonsContainer>
+          </div>
         </CSSTransition>
       </InfoContainer>
     </Container>

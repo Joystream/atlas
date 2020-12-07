@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css, keyframes } from '@emotion/core'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
 import { CoverHoverOverlay, CoverIcon, ProgressOverlay } from './VideoPreview.styles'
 
 export const HOVER_BORDER_SIZE = '2px'
@@ -58,7 +58,7 @@ export const CoverContainer = styled.div<ClickableProps>`
   padding-top: 56.25%;
   transition-property: box-shadow, transform;
   transition-duration: 0.4s;
-  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition-timing-function: ${transitions.easing};
   ${fadeInAnimation};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   :hover {

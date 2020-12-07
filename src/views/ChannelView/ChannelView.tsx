@@ -20,6 +20,8 @@ import {
   VideoSection,
 } from './ChannelView.style'
 import { InfiniteVideoGrid } from '@/shared/components'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -35,12 +37,22 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     return <span>Channel not found</span>
   }
 
+  const showBgPattern = !data?.channel?.coverPhotoUrl
+
   return (
     <>
       <Header>
         <MediaWrapper>
           <Media>
-            {data?.channel?.coverPhotoUrl ? <CoverImage src={data.channel.coverPhotoUrl} /> : <StyledBgPattern />}
+            <TransitionGroup>
+              <CSSTransition
+                key={showBgPattern ? 'pattern' : 'cover'}
+                timeout={parseInt(transitions.timings.loading)}
+                classNames={transitions.names.fade}
+              >
+                {showBgPattern ? <StyledBgPattern /> : <CoverImage src={data?.channel?.coverPhotoUrl!} />}
+              </CSSTransition>
+            </TransitionGroup>
           </Media>
         </MediaWrapper>
         <TitleSection>

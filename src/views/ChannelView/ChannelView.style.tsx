@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as BgPattern } from '@/assets/bg-pattern.svg'
 import { css } from '@emotion/core'
 
@@ -67,6 +67,11 @@ export const StyledBgPattern = styled(BgPattern)`
   top: 0;
   right: 0;
   bottom: 0;
+  z-index: ${zIndex.background};
+
+  &.${transitions.names.fade}-exit-active {
+    z-index: ${zIndex.farBackground};
+  }
 `
 
 export const CoverImage = styled.div<CoverImageProps>`

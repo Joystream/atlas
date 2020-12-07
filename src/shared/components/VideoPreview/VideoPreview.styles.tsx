@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { colors, sizes, typography } from '../../theme'
+import { colors, sizes, transitions, typography } from '../../theme'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
@@ -38,7 +38,7 @@ export const CoverHoverOverlay = styled.div`
   left: 0;
   opacity: 0;
 
-  transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: opacity 0.4s ${transitions.easing};
 
   border: ${HOVER_BORDER_SIZE} solid ${colors.white};
   background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
@@ -50,7 +50,7 @@ export const CoverHoverOverlay = styled.div`
 
 export const CoverIcon = styled(Icon)`
   transform: translateY(40px);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.4s ${transitions.easing};
   width: 54px;
   height: 54px;
   color: ${colors.white};

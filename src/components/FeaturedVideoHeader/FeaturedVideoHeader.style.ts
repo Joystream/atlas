@@ -193,15 +193,6 @@ export const Title = styled(Text)`
   }
 `
 
-export const ButtonsContainer = styled.div`
-  transition: opacity 200ms;
-  opacity: 0;
-
-  &.fade-enter-done {
-    opacity: 1;
-  }
-`
-
 export const PlayButton = styled(Button)<{ playing: boolean }>`
   width: 140px;
   justify-content: flex-start;
