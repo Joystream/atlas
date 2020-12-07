@@ -20,15 +20,15 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
     {
       onCompleted: (data) => {
         handleCategoryChange(data.categories[0])
-        firstCategoryChange.current = false
+        setCategoryHasChanged(true)
       },
     }
   )
   const headerRef = useRef<HTMLHeadingElement>(null)
-  const firstCategoryChange = useRef(true)
+  const [categoryHasChanged, setCategoryHasChanged] = useState(false)
   const handleCategoryChange = (category: CategoryFields) => {
     setSelectedCategoryId(category.id)
-    if (headerRef.current && !firstCategoryChange.current) {
+    if (headerRef.current && categoryHasChanged) {
       headerRef.current.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' })
     }
   }
