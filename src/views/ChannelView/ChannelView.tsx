@@ -9,8 +9,10 @@ import {
   AvatarPlaceholder,
   CoverImage,
   Header,
+  Media,
   MediaWrapper,
   StyledAvatar,
+  StyledBgPattern,
   Title,
   TitleContainer,
   TitlePlaceholder,
@@ -19,11 +21,9 @@ import {
 } from './ChannelView.style'
 import { InfiniteVideoGrid } from '@/shared/components'
 
-const DEFAULT_CHANNEL_COVER_URL = 'https://eu-central-1.linodeobjects.com/atlas-assets/default-channel-cover.png'
-
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { data, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
+  const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
 
@@ -31,11 +31,17 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     throw error
   }
 
+  if (!loading && !data?.channel) {
+    return <span>Channel not found</span>
+  }
+
   return (
-    <div>
+    <>
       <Header>
         <MediaWrapper>
-          <CoverImage src={data?.channel?.coverPhotoUrl || DEFAULT_CHANNEL_COVER_URL} />
+          <Media>
+            {data?.channel?.coverPhotoUrl ? <CoverImage src={data.channel.coverPhotoUrl} /> : <StyledBgPattern />}
+          </Media>
         </MediaWrapper>
         <TitleSection>
           {data?.channel ? (
@@ -56,7 +62,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
       <VideoSection>
         <InfiniteVideoGrid channelId={id} />
       </VideoSection>
-    </div>
+    </>
   )
 }
 export default ChannelView
