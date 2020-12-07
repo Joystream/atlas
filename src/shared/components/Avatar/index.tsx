@@ -1,2 +1,3 @@
-import Avatar from './Avatar'
+import Avatar, { AvatarSize } from './Avatar'
+export type { AvatarSize }
 export default Avatar

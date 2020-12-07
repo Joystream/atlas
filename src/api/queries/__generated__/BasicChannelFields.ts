@@ -4,13 +4,12 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: ChannelFields
+// GraphQL fragment: BasicChannelFields
 // ====================================================
 
-export interface ChannelFields {
+export interface BasicChannelFields {
   __typename: "Channel";
   id: string;
   handle: string;
   avatarPhotoUrl: string | null;
-  coverPhotoUrl: string | null;
 }

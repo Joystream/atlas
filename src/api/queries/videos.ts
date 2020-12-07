@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { basicChannelFieldsFragment } from './channels'
 
 const videoMediaFieldsFragment = gql`
   fragment VideoMediaFields on VideoMedia {
@@ -80,13 +81,12 @@ export const GET_VIDEO = gql`
     video(where: { id: $id }) {
       ...VideoFields
       channel {
-        id
-        avatarPhotoUrl
-        handle
+        ...BasicChannelFields
       }
     }
   }
   ${videoFieldsFragment}
+  ${basicChannelFieldsFragment}
 `
 
 export const ADD_VIDEO_VIEW = gql`

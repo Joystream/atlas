@@ -6,12 +6,11 @@ import { GET_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
 
 import {
-  AvatarPlaceholder,
   CoverImage,
   Header,
   Media,
   MediaWrapper,
-  StyledAvatar,
+  StyledChannelLink,
   StyledBgPattern,
   Title,
   TitleContainer,
@@ -56,18 +55,13 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
           </Media>
         </MediaWrapper>
         <TitleSection>
+          <StyledChannelLink id={data?.channel?.id} avatarSize="view" hideHandle noLink />
           {data?.channel ? (
-            <>
-              <StyledAvatar img={data.channel.avatarPhotoUrl} name={data.channel.handle} />
-              <TitleContainer>
-                <Title variant="h1">{data.channel.handle}</Title>
-              </TitleContainer>
-            </>
+            <TitleContainer>
+              <Title variant="h1">{data.channel.handle}</Title>
+            </TitleContainer>
           ) : (
-            <>
-              <AvatarPlaceholder />
-              <TitlePlaceholder />
-            </>
+            <TitlePlaceholder />
           )}
         </TitleSection>
       </Header>

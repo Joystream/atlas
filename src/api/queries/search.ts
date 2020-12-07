@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { videoFieldsFragment } from './videos'
-import { channelFieldsFragment } from './channels'
+import { basicChannelFieldsFragment } from './channels'
 
 export const SEARCH = gql`
   query Search($text: String!) {
@@ -10,12 +10,12 @@ export const SEARCH = gql`
           ...VideoFields
         }
         ... on Channel {
-          ...ChannelFields
+          ...BasicChannelFields
         }
       }
       rank
     }
   }
-  ${channelFieldsFragment}
+  ${basicChannelFieldsFragment}
   ${videoFieldsFragment}
 `

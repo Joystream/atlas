@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { navigate, RouteComponentProps, useParams } from '@reach/router'
+import { RouteComponentProps, useParams } from '@reach/router'
 import {
   ChannelContainer,
   Container,
@@ -12,15 +12,14 @@ import {
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
-  StyledChannelAvatar,
 } from './VideoView.style'
 import { InfiniteVideoGrid, Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
 import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
-import routes from '@/config/routes'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
+import { ChannelLink } from '@/components'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -82,15 +81,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
           )}
         </Meta>
         <ChannelContainer>
-          {data?.video ? (
-            <StyledChannelAvatar
-              name={data.video.channel.handle}
-              avatarUrl={data.video.channel.avatarPhotoUrl}
-              onClick={() => navigate(routes.channel(data.video!.channel.id))}
-            />
-          ) : (
-            <Placeholder height={32} width={200} />
-          )}
+          <ChannelLink id={data?.video?.channel.id} />
         </ChannelContainer>
         <DescriptionContainer>
           {data?.video ? (

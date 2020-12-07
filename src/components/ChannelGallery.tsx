@@ -4,11 +4,11 @@ import styled from '@emotion/styled'
 import { ChannelPreviewBase, Gallery } from '@/shared/components'
 import ChannelPreview from './ChannelPreviewWithNavigation'
 import { sizes } from '@/shared/theme'
-import { ChannelFields } from '@/api/queries/__generated__/ChannelFields'
+import { BasicChannelFields } from '@/api/queries/__generated__/BasicChannelFields'
 
 type ChannelGalleryProps = {
   title?: string
-  channels?: ChannelFields[]
+  channels?: BasicChannelFields[]
   loading?: boolean
 }
 
