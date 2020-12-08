@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps, Router, navigate, useLocation } from '@reach/router'
+import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
@@ -25,10 +25,11 @@ const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
 }
 
 const LayoutWithRouting: React.FC = () => {
-  const { pathname } = useLocation()
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+  globalHistory.listen(({ action }) => {
+    if (action === 'PUSH') {
+      window.scrollTo(0, 0)
+    }
+  })
   return (
     <>
       <GlobalStyle />
