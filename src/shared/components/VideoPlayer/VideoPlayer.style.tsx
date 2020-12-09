@@ -40,6 +40,10 @@ export const Container = styled.div<ContainerProps>`
     outline: none;
   }
 
+  .vjs-poster {
+    background-size: cover;
+  }
+
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background-color: rgba(0, 0, 0, 0.3);

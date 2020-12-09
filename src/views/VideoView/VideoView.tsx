@@ -65,7 +65,11 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     <Container>
       <PlayerWrapper>
         <PlayerContainer>
-          {data?.video ? <VideoPlayer src={data.video.media.location} autoplay fluid /> : <PlayerPlaceholder />}
+          {data?.video ? (
+            <VideoPlayer src={data.video.media.location} autoplay fluid posterUrl={data.video.thumbnailUrl} />
+          ) : (
+            <PlayerPlaceholder />
+          )}
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer>
