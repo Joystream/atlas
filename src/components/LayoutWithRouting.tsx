@@ -7,6 +7,7 @@ import { GlobalStyle } from '@/shared/components'
 import { Navbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
+import { globalStyles } from '@/styles/global'
 
 type RouteProps = {
   Component: React.ComponentType
@@ -35,7 +36,7 @@ const LayoutWithRouting: React.FC = () => {
   }, [])
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle additionalStyles={globalStyles} />
       <Navbar default />
       <MainContainer>
         <Router primary={false}>

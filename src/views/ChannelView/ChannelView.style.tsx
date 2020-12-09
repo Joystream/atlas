@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { ReactComponent as BgPattern } from '@/assets/bg-pattern.svg'
 import { css } from '@emotion/core'
 
 const SM_TITLE_HEIGHT = '48px'
@@ -9,14 +10,14 @@ const TITLE_HEIGHT = '56px'
 
 const CONTENT_OVERLAP_MAP = {
   BASE: 0,
-  SMALL: 50,
-  MEDIUM: 350,
-  LARGE: 500,
-  XLARGE: 600,
-  XXLARGE: 800,
+  SMALL: 0,
+  MEDIUM: 0,
+  LARGE: 100,
+  XLARGE: 200,
+  XXLARGE: 300,
 }
-const GRADIENT_OVERLAP = 150
-const GRADIENT_HEIGHT = 250
+const GRADIENT_OVERLAP = 50
+const GRADIENT_HEIGHT = 100
 const INFO_BOTTOM_MARGIN = 75
 
 type CoverImageProps = {
@@ -32,10 +33,10 @@ export const Header = styled.section`
   margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
   @media screen and (min-width: ${breakpoints.small}) {
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
-    padding-bottom: 0;
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
+    padding-bottom: 0;
   }
   @media screen and (min-width: ${breakpoints.large}) {
     margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
@@ -53,10 +54,33 @@ export const MediaWrapper = styled.div`
   width: calc(100% + calc(2 * var(--global-horizontal-padding)));
 `
 
-export const CoverImage = styled.div<CoverImageProps>`
+export const Media = styled.div`
   width: 100%;
   height: 0;
-  padding-top: 56.25%;
+  padding-top: 25%;
+  position: relative;
+  z-index: ${zIndex.background};
+`
+
+export const StyledBgPattern = styled(BgPattern)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${zIndex.background};
+
+  &.${transitions.names.fade}-exit-active {
+    z-index: ${zIndex.farBackground};
+  }
+`
+
+export const CoverImage = styled.div<CoverImageProps>`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: local;
@@ -64,12 +88,12 @@ export const CoverImage = styled.div<CoverImageProps>`
 
   // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
   // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 2}px), url(${({ src }) => src});
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
   @media screen and (min-width: ${breakpoints.small}) {
     background-image: linear-gradient(
         0deg,
         black 0%,
-        black ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP}px,
+        black ${Math.min(CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP, 0)}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
       url(${({ src }) => src});
@@ -78,7 +102,7 @@ export const CoverImage = styled.div<CoverImageProps>`
     background-image: linear-gradient(
         0deg,
         black 0%,
-        black ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP}px,
+        black ${Math.min(CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP, 0)}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
       url(${({ src }) => src});
@@ -113,23 +137,21 @@ export const CoverImage = styled.div<CoverImageProps>`
 `
 
 export const TitleSection = styled.div`
-  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: start;
-  @media (min-width: ${breakpoints.small}) {
+  width: 100%;
+  margin-top: -64px;
+
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: -100px;
     flex-direction: row;
     align-items: center;
   }
 
-  width: 100%;
-
-  bottom: ${CONTENT_OVERLAP_MAP.BASE + INFO_BOTTOM_MARGIN / 2}px;
-  @media screen and (min-width: ${breakpoints.small}) {
-    bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN}px;
-  }
-
   @media screen and (min-width: ${breakpoints.medium}) {
+    position: absolute;
+    margin-top: 0;
     bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
   }
 
@@ -179,10 +201,13 @@ const avatarCss = css`
   margin-bottom: ${sizes(3)};
 
   @media (min-width: ${breakpoints.small}) {
+    margin: 0 ${sizes(6)} 0 0;
+  }
+
+  @media (min-width: ${breakpoints.medium}) {
     width: 136px;
     min-width: 136px;
     height: 136px;
-    margin: 0 ${sizes(6)} 0 0;
   }
 `
 

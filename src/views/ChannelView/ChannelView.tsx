@@ -9,8 +9,10 @@ import {
   AvatarPlaceholder,
   CoverImage,
   Header,
+  Media,
   MediaWrapper,
   StyledAvatar,
+  StyledBgPattern,
   Title,
   TitleContainer,
   TitlePlaceholder,
@@ -18,12 +20,12 @@ import {
   VideoSection,
 } from './ChannelView.style'
 import { InfiniteVideoGrid } from '@/shared/components'
-
-const DEFAULT_CHANNEL_COVER_URL = 'https://eu-central-1.linodeobjects.com/atlas-assets/default-channel-cover.png'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { data, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
+  const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
 
@@ -31,11 +33,27 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     throw error
   }
 
+  if (!loading && !data?.channel) {
+    return <span>Channel not found</span>
+  }
+
+  const showBgPattern = !data?.channel?.coverPhotoUrl
+
   return (
-    <div>
+    <>
       <Header>
         <MediaWrapper>
-          <CoverImage src={data?.channel?.coverPhotoUrl || DEFAULT_CHANNEL_COVER_URL} />
+          <Media>
+            <TransitionGroup>
+              <CSSTransition
+                key={showBgPattern ? 'pattern' : 'cover'}
+                timeout={parseInt(transitions.timings.loading)}
+                classNames={transitions.names.fade}
+              >
+                {showBgPattern ? <StyledBgPattern /> : <CoverImage src={data?.channel?.coverPhotoUrl!} />}
+              </CSSTransition>
+            </TransitionGroup>
+          </Media>
         </MediaWrapper>
         <TitleSection>
           {data?.channel ? (
@@ -56,7 +74,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
       <VideoSection>
         <InfiniteVideoGrid channelId={id} />
       </VideoSection>
-    </div>
+    </>
   )
 }
 export default ChannelView

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors, sizes, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, typography, zIndex } from '../../theme'
 import Icon from '../Icon'
 import { css } from '@emotion/core'
 
@@ -20,7 +20,7 @@ const backgroundContainerCss = css`
   .vjs-poster {
     display: block !important;
     opacity: 0;
-    transition: opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
 
   .vjs-paused:not(.vjs-has-started) .vjs-poster,

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Icon, Searchbar } from '@/shared/components'
-import { breakpoints, colors, sizes, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Link } from '@reach/router'
@@ -11,7 +11,7 @@ type NavbarStyleProps = {
 }
 
 export const StyledSearchbar = styled(Searchbar)`
-  transition: max-width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: max-width ${transitions.timings.regular} ${transitions.easing};
   will-change: max-width;
 `
 export const NAVBAR_HEIGHT = 81
@@ -32,7 +32,7 @@ export const Header = styled.header<NavbarStyleProps>`
     padding: ${sizes(3)} ${sizes(3)};
   }
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.4s ${transitions.easing};
 
   ${StyledSearchbar} {
     width: 100%;
