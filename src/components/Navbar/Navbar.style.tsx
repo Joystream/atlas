@@ -11,7 +11,7 @@ type NavbarStyleProps = {
 }
 
 export const StyledSearchbar = styled(Searchbar)`
-  transition: max-width 0.6s ${transitions.easing};
+  transition: max-width ${transitions.timings.regular} ${transitions.easing};
   will-change: max-width;
 `
 export const NAVBAR_HEIGHT = 81

@@ -38,7 +38,7 @@ export const CoverHoverOverlay = styled.div`
   left: 0;
   opacity: 0;
 
-  transition: opacity 0.4s ${transitions.easing};
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
 
   border: ${HOVER_BORDER_SIZE} solid ${colors.white};
   background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
@@ -50,7 +50,7 @@ export const CoverHoverOverlay = styled.div`
 
 export const CoverIcon = styled(Icon)`
   transform: translateY(40px);
-  transition: all 0.4s ${transitions.easing};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
   width: 54px;
   height: 54px;
   color: ${colors.white};
