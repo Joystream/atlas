@@ -1,7 +1,5 @@
-import React from 'react'
-import styled from '@emotion/styled'
-import { Placeholder, ToggleButton } from '..'
-import { sizes } from '@/shared/theme'
+import React, { useState, useRef } from 'react'
+import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
 
 type CategoryPickerProps = {
@@ -40,18 +38,5 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({
 
   return <Container className={className}>{content}</Container>
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-
-const StyledPlaceholder = styled(Placeholder)`
-  margin: 0 ${sizes(3)} ${sizes(3)} 0;
-`
-
-const StyledToggleButton = styled(ToggleButton)`
-  margin: 0 ${sizes(3)} ${sizes(3)} 0;
-`
 
 export default CategoryPicker
