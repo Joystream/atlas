@@ -31,7 +31,7 @@ const LayoutWithRouting: React.FC = () => {
         window.scrollTo(0, 0)
       }
     })
-    return unsubscribeFromHistory()
+    return unsubscribeFromHistory
   }, [])
   return (
     <>
