@@ -25,11 +25,14 @@ const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
 }
 
 const LayoutWithRouting: React.FC = () => {
-  globalHistory.listen(({ action }) => {
-    if (action === 'PUSH') {
-      window.scrollTo(0, 0)
-    }
-  })
+  useEffect(() => {
+    const unsubscribeFromHistory = globalHistory.listen(({ action }) => {
+      if (action === 'PUSH') {
+        window.scrollTo(0, 0)
+      }
+    })
+    return unsubscribeFromHistory()
+  }, [])
   return (
     <>
       <GlobalStyle />
