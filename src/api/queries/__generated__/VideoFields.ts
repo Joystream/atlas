@@ -27,7 +27,7 @@ export type VideoFields_media_location = VideoFields_media_location_HttpMediaLoc
 export interface VideoFields_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: VideoFields_media_location;
 }
@@ -37,6 +37,25 @@ export interface VideoFields_channel {
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
+}
+
+export interface VideoFields_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface VideoFields_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type VideoFields_license_type = VideoFields_license_type_KnownLicense | VideoFields_license_type_UserDefinedLicense;
+
+export interface VideoFields_license {
+  __typename: "LicenseEntity";
+  id: string;
+  type: VideoFields_license_type;
 }
 
 export interface VideoFields {
@@ -51,4 +70,5 @@ export interface VideoFields {
   createdAt: GQLDate;
   media: VideoFields_media;
   channel: VideoFields_channel;
+  license: VideoFields_license;
 }

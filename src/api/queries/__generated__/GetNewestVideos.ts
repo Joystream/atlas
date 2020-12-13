@@ -27,7 +27,7 @@ export type GetNewestVideos_videosConnection_edges_node_media_location = GetNewe
 export interface GetNewestVideos_videosConnection_edges_node_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: GetNewestVideos_videosConnection_edges_node_media_location;
 }
@@ -37,6 +37,25 @@ export interface GetNewestVideos_videosConnection_edges_node_channel {
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
+}
+
+export interface GetNewestVideos_videosConnection_edges_node_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface GetNewestVideos_videosConnection_edges_node_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type GetNewestVideos_videosConnection_edges_node_license_type = GetNewestVideos_videosConnection_edges_node_license_type_KnownLicense | GetNewestVideos_videosConnection_edges_node_license_type_UserDefinedLicense;
+
+export interface GetNewestVideos_videosConnection_edges_node_license {
+  __typename: "LicenseEntity";
+  id: string;
+  type: GetNewestVideos_videosConnection_edges_node_license_type;
 }
 
 export interface GetNewestVideos_videosConnection_edges_node {
@@ -51,6 +70,7 @@ export interface GetNewestVideos_videosConnection_edges_node {
   createdAt: GQLDate;
   media: GetNewestVideos_videosConnection_edges_node_media;
   channel: GetNewestVideos_videosConnection_edges_node_channel;
+  license: GetNewestVideos_videosConnection_edges_node_license;
 }
 
 export interface GetNewestVideos_videosConnection_edges {

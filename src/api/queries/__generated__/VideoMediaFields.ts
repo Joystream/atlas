@@ -22,7 +22,7 @@ export type VideoMediaFields_location = VideoMediaFields_location_HttpMediaLocat
 export interface VideoMediaFields {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: VideoMediaFields_location;
 }

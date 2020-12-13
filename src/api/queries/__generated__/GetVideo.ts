@@ -27,7 +27,7 @@ export type GetVideo_video_media_location = GetVideo_video_media_location_HttpMe
 export interface GetVideo_video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: GetVideo_video_media_location;
 }
@@ -37,6 +37,25 @@ export interface GetVideo_video_channel {
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
+}
+
+export interface GetVideo_video_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface GetVideo_video_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type GetVideo_video_license_type = GetVideo_video_license_type_KnownLicense | GetVideo_video_license_type_UserDefinedLicense;
+
+export interface GetVideo_video_license {
+  __typename: "LicenseEntity";
+  id: string;
+  type: GetVideo_video_license_type;
 }
 
 export interface GetVideo_video {
@@ -51,6 +70,7 @@ export interface GetVideo_video {
   createdAt: GQLDate;
   media: GetVideo_video_media;
   channel: GetVideo_video_channel;
+  license: GetVideo_video_license;
 }
 
 export interface GetVideo {

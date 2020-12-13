@@ -65,3 +65,18 @@ export const MoreVideosHeader = styled.h5`
   margin: 0 0 ${sizes(4)};
   font-size: ${typography.sizes.h5};
 `
+export const LicenseContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: ${sizes(4)} 0 0;
+  font-size: ${typography.sizes.overhead};
+  color: ${colors.gray[500]};
+  letter-spacing: 0.03rem;
+  p {
+    max-width: 60ch;
+  }
+  a {
+    text-decoration: none;
+    color: ${colors.gray[500]};
+  }
+`

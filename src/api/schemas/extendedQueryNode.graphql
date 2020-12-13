@@ -63,28 +63,34 @@ enum VideoMediaEncoding {
   Theroa_Vorbis
 }
 
-# Apparently there are lots of different Creative Commons licenses,
-# read about all here https://creativecommons.org/licenses/,
-# I haven't had the time.
-enum CreativeCommonsVersion {
-  CC_BY
-  CC_BY_SA
-  CC_BY_ND
-  CC_BY_NC
-  CC_BY_NC_SA
-  CC_BY_NC_ND
-}
-
-type CreativeCommonsLicense {
-  version: CreativeCommonsVersion
+type KnownLicense {
+  code: String!
+  name: String
+  description: String
+  url: String
 }
 
 type UserDefinedLicense {
-  text: String!
+  content: String!
 }
 
-union License = UserDefinedLicense | CreativeCommonsLicense
+union License = UserDefinedLicense | KnownLicense
 
+type LicenseEntity {
+  id: ID!
+  createdAt: Date!
+  createdById: String!
+  updatedAt: Date
+  updatedById: String
+  deletedAt: Date
+  deletedById: String
+  version: Int!
+  type: License!
+  attribution: String
+  happenedIn: Float!
+  happenedInId: String!
+  videoLicense: [Video!]
+}
 type VideoMedia {
   id: ID!
 
@@ -94,8 +100,7 @@ type VideoMedia {
   pixelWidth: Int!
 
   # Resolution height
-  pixelHeight: Int!
-
+  pixelHeight: Int
   # Size in bytes
   size: Float
 
@@ -142,7 +147,7 @@ type Video {
 
   isExplicit: Boolean!
 
-  license: License!
+  license: LicenseEntity!
 }
 
 type FeaturedVideo {

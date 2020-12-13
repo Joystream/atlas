@@ -16,7 +16,20 @@ const videoMediaFieldsFragment = gql`
     }
   }
 `
-
+const licenseFieldsFragment = gql`
+  fragment LicenseFields on LicenseEntity {
+    id
+    type {
+      ... on KnownLicense {
+        code
+        url
+      }
+      ... on UserDefinedLicense {
+        content
+      }
+    }
+  }
+`
 export const videoFieldsFragment = gql`
   fragment VideoFields on Video {
     id
@@ -37,8 +50,12 @@ export const videoFieldsFragment = gql`
       avatarPhotoUrl
       handle
     }
+    license {
+      ...LicenseFields
+    }
   }
   ${videoMediaFieldsFragment}
+  ${licenseFieldsFragment}
 `
 
 export const GET_NEWEST_VIDEOS = gql`
