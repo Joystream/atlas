@@ -155,15 +155,6 @@ export const ChannelLink = styled(Link)`
   display: inline-block;
 `
 
-export const StyledAvatar = styled(Avatar)`
-  width: 64px;
-  height: 64px;
-  @media screen and (min-width: ${breakpoints.medium}) {
-    width: 88px;
-    height: 88px;
-  }
-`
-
 export const TitleContainer = styled.div`
   a {
     text-decoration: none;

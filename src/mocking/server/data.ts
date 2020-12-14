@@ -2,7 +2,7 @@ import { ModelInstance } from 'miragejs/-types'
 import faker from 'faker'
 
 import { mockCategories, mockChannels, mockVideos, mockVideosMedia } from '@/mocking/data'
-import { ChannelFields } from '@/api/queries/__generated__/ChannelFields'
+import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
 import { mockCoverVideo, mockCoverVideoChannel, mockCoverVideoMedia } from '@/mocking/data/mockCoverVideo'
 
@@ -12,7 +12,7 @@ export const createMockData = (server: MirageJSServer) => {
   const channels = mockChannels.map((channel) => {
     return server.schema.create('Channel', {
       ...channel,
-    }) as ModelInstance<ChannelFields>
+    }) as ModelInstance<AllChannelFields>
   })
 
   const categories = mockCategories.map((category) => {

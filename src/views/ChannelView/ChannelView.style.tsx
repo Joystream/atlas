@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { Avatar, Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
+import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as BgPattern } from '@/assets/bg-pattern.svg'
 import { css } from '@emotion/core'
@@ -194,30 +195,12 @@ export const VideoSection = styled.section`
   position: relative;
 `
 
-const avatarCss = css`
-  width: 128px;
-  min-width: 128px;
-  height: 128px;
+export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(3)};
 
   @media (min-width: ${breakpoints.small}) {
     margin: 0 ${sizes(6)} 0 0;
   }
-
-  @media (min-width: ${breakpoints.medium}) {
-    width: 136px;
-    min-width: 136px;
-    height: 136px;
-  }
-`
-
-export const StyledAvatar = styled(Avatar)`
-  ${avatarCss};
-`
-
-export const AvatarPlaceholder = styled(Placeholder)`
-  ${avatarCss};
-  border-radius: 100%;
 `
 
 export const TitlePlaceholder = styled(Placeholder)`

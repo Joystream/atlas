@@ -7,7 +7,7 @@ import {
   GetNewestChannelsVariables,
 } from '@/api/queries/__generated__/GetNewestChannels'
 import { GetNewestVideos_videosConnection } from '@/api/queries/__generated__/GetNewestVideos'
-import { ChannelFields } from '@/api/queries/__generated__/ChannelFields'
+import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,
@@ -77,7 +77,7 @@ export const featuredVideosResolver: QueryResolver<object, VideoFields[]> = (...
   return videos.filter((_, idx) => FEATURED_VIDEOS_INDEXES.includes(idx))
 }
 
-export const channelResolver: QueryResolver<UniqueArgs, ChannelFields> = (obj, args, context, info) => {
+export const channelResolver: QueryResolver<UniqueArgs, AllChannelFields> = (obj, args, context, info) => {
   const resolverArgs = {
     id: args.where.id,
   }
@@ -101,7 +101,7 @@ export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewe
 }
 
 type VideoModel = { attrs: VideoFields }
-type ChannelModel = { attrs: ChannelFields }
+type ChannelModel = { attrs: AllChannelFields }
 type SearchResolverResult = Omit<Search_search, 'item'> & { item: VideoModel | ChannelModel }
 
 export const searchResolver: QueryResolver<SearchVariables, SearchResolverResult[]> = (_, { text }, context) => {

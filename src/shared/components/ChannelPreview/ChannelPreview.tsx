@@ -14,7 +14,7 @@ type ChannelPreviewProps = {
 }
 
 const ChannelPreview: React.FC<ChannelPreviewProps> = ({ name, avatarURL, className, animated = false, onClick }) => {
-  const avatarNode = <StyledAvatar img={avatarURL} name={name} />
+  const avatarNode = <StyledAvatar imageUrl={avatarURL} handle={name} />
   const nameNode = <NameHeader variant="h6">{name}</NameHeader>
 
   return (

@@ -1,8 +1,8 @@
 import { channelAvatarSources, channelPosterSources } from './mockImages'
-import { ChannelFields } from '@/api/queries/__generated__/ChannelFields'
+import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
 import rawChannels from './raw/channels.json'
 
-export type MockChannel = ChannelFields
+export type MockChannel = AllChannelFields
 
 const mockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => ({
   ...rawChannel,

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-import { ChannelFields } from '@/api/queries/__generated__/ChannelFields'
+import { BasicChannelFields } from '@/api/queries/__generated__/BasicChannelFields'
 import { Grid } from '@/shared/components'
 import ChannelPreview from './ChannelPreviewWithNavigation'
 
@@ -10,7 +10,7 @@ const StyledChannelPreview = styled(ChannelPreview)`
 `
 
 type ChannelGridProps = {
-  channels: ChannelFields[]
+  channels: BasicChannelFields[]
 } & React.ComponentProps<typeof Grid>
 
 const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, ...gridProps }) => {

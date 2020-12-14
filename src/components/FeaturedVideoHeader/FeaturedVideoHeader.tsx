@@ -9,7 +9,6 @@ import {
   PlayButton,
   PlayerContainer,
   SoundButton,
-  StyledAvatar,
   TitleContainer,
   VerticalGradientOverlay,
   Title,
@@ -17,7 +16,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { mockCoverVideo, mockCoverVideoChannel, mockCoverVideoMedia } from '@/mocking/data/mockCoverVideo'
 import routes from '@/config/routes'
-import { VideoPlayer } from '@/shared/components'
+import { Avatar, VideoPlayer } from '@/shared/components'
 import { Link } from '@reach/router'
 import { transitions } from '@/shared/theme'
 
@@ -70,7 +69,7 @@ const FeaturedVideoHeader: React.FC = () => {
       </MediaWrapper>
       <InfoContainer>
         <ChannelLink to={routes.channel(mockCoverVideoChannel.id)}>
-          <StyledAvatar img={mockCoverVideoChannel.avatarPhotoUrl} name={mockCoverVideoChannel.handle} />
+          <Avatar imageUrl={mockCoverVideoChannel.avatarPhotoUrl} handle={mockCoverVideoChannel.handle} size="cover" />
         </ChannelLink>
         <TitleContainer>
           <Link to={routes.video(mockCoverVideo.id)}>

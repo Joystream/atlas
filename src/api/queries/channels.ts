@@ -1,8 +1,15 @@
 import gql from 'graphql-tag'
-import { videoFieldsFragment } from './videos'
 
-export const channelFieldsFragment = gql`
-  fragment ChannelFields on Channel {
+export const basicChannelFieldsFragment = gql`
+  fragment BasicChannelFields on Channel {
+    id
+    handle
+    avatarPhotoUrl
+  }
+`
+
+export const allChannelFieldsFragment = gql`
+  fragment AllChannelFields on Channel {
     id
     handle
     avatarPhotoUrl
@@ -16,7 +23,7 @@ export const GET_NEWEST_CHANNELS = gql`
       edges {
         cursor
         node {
-          ...ChannelFields
+          ...AllChannelFields
         }
       }
       pageInfo {
@@ -26,15 +33,14 @@ export const GET_NEWEST_CHANNELS = gql`
       totalCount
     }
   }
-  ${channelFieldsFragment}
+  ${allChannelFieldsFragment}
 `
 
 export const GET_CHANNEL = gql`
   query GetChannel($id: ID!) {
     channel(where: { id: $id }) {
-      ...ChannelFields
+      ...AllChannelFields
     }
   }
-  ${channelFieldsFragment}
-  ${videoFieldsFragment}
+  ${allChannelFieldsFragment}
 `
