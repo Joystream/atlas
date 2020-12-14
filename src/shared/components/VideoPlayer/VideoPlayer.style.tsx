@@ -30,10 +30,6 @@ const backgroundContainerCss = css`
 `
 
 export const Container = styled.div<ContainerProps>`
-  video[poster] {
-    object-fit: fill;
-  }
-
   position: relative;
 
   *:focus {
