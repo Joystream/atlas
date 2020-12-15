@@ -104,13 +104,17 @@ const VideoView: React.FC<RouteComponentProps> = () => {
         </DescriptionContainer>
         <LicenseContainer>
           {data?.video ? (
-            <p>
-              {data.video.license.type.__typename === 'KnownLicense' ? (
-                <a href={data.video.license.type.url || ''}>{`© ${data.video.license.type.code}`}</a>
-              ) : (
-                `${data.video.license.type.content} ©`
-              )}
-            </p>
+            <>
+              <p>
+                License:{' '}
+                {data.video.license.type.__typename === 'KnownLicense' ? (
+                  <a href={data.video.license.type.url || ''}>{`${data.video.license.type.code}`}</a>
+                ) : (
+                  `${data.video.license.type.content}`
+                )}
+              </p>
+              {data.video.license?.attribution ? <p>Attribution: {data.video.license.attribution}</p> : null}
+            </>
           ) : (
             <Placeholder height={12} width={200} />
           )}

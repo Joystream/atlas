@@ -1,6 +1,7 @@
 [
   {
     "id": "283",
+    "attribution": "Awesome company or group INC",
     "type": {
       "__typename": "KnownLicense",
       "code": "CC_BY",
@@ -10,6 +11,7 @@
   },
   {
     "id": "343",
+    "attribution": "Some good state owned content creator",
     "type": {
       "__typename": "KnownLicense",
       "code": "PDM",

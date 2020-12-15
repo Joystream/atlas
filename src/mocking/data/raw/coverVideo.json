@@ -25,6 +25,7 @@
   },
   "license": {
     "id": "1503",
+    "attribution": null,
     "type": {
       "__typename": "UserDefinedLicense",
       "content": "Free to consume and share, no derivatives or adaptations, copyright Jamie King 2020\n"

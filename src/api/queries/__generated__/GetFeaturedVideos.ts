@@ -55,6 +55,7 @@ export type GetFeaturedVideos_featuredVideos_video_license_type = GetFeaturedVid
 export interface GetFeaturedVideos_featuredVideos_video_license {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: GetFeaturedVideos_featuredVideos_video_license_type;
 }
 

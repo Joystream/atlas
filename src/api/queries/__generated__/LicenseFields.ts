@@ -23,5 +23,6 @@ export type LicenseFields_type = LicenseFields_type_KnownLicense | LicenseFields
 export interface LicenseFields {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: LicenseFields_type;
 }

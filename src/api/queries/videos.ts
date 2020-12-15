@@ -19,6 +19,7 @@ const videoMediaFieldsFragment = gql`
 const licenseFieldsFragment = gql`
   fragment LicenseFields on LicenseEntity {
     id
+    attribution
     type {
       ... on KnownLicense {
         code

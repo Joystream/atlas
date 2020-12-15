@@ -67,13 +67,15 @@ export const MoreVideosHeader = styled.h5`
 `
 export const LicenseContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   margin: ${sizes(4)} 0 0;
   font-size: ${typography.sizes.overhead};
   color: ${colors.gray[500]};
   letter-spacing: 0.03rem;
   p {
     max-width: 60ch;
+    margin: 0;
+    line-height: 1.7;
   }
   a {
     text-decoration: none;

@@ -55,6 +55,7 @@ export type GetVideo_video_license_type = GetVideo_video_license_type_KnownLicen
 export interface GetVideo_video_license {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: GetVideo_video_license_type;
 }
 

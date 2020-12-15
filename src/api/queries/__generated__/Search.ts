@@ -55,6 +55,7 @@ export type Search_search_item_Video_license_type = Search_search_item_Video_lic
 export interface Search_search_item_Video_license {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: Search_search_item_Video_license_type;
 }
 

@@ -55,6 +55,7 @@ export type VideoFields_license_type = VideoFields_license_type_KnownLicense | V
 export interface VideoFields_license {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: VideoFields_license_type;
 }
 

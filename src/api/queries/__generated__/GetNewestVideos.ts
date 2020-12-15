@@ -55,6 +55,7 @@ export type GetNewestVideos_videosConnection_edges_node_license_type = GetNewest
 export interface GetNewestVideos_videosConnection_edges_node_license {
   __typename: "LicenseEntity";
   id: string;
+  attribution: string | null;
   type: GetNewestVideos_videosConnection_edges_node_license_type;
 }
 
