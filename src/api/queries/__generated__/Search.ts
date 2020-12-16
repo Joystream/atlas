@@ -27,7 +27,7 @@ export type Search_search_item_Video_media_location = Search_search_item_Video_m
 export interface Search_search_item_Video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: Search_search_item_Video_media_location;
 }
@@ -37,6 +37,26 @@ export interface Search_search_item_Video_channel {
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
+}
+
+export interface Search_search_item_Video_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface Search_search_item_Video_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type Search_search_item_Video_license_type = Search_search_item_Video_license_type_KnownLicense | Search_search_item_Video_license_type_UserDefinedLicense;
+
+export interface Search_search_item_Video_license {
+  __typename: "LicenseEntity";
+  id: string;
+  attribution: string | null;
+  type: Search_search_item_Video_license_type;
 }
 
 export interface Search_search_item_Video {
@@ -51,6 +71,7 @@ export interface Search_search_item_Video {
   createdAt: GQLDate;
   media: Search_search_item_Video_media;
   channel: Search_search_item_Video_channel;
+  license: Search_search_item_Video_license;
 }
 
 export interface Search_search_item_Channel {

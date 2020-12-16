@@ -1,10 +1,15 @@
 import { ModelInstance } from 'miragejs/-types'
 import faker from 'faker'
 
-import { mockCategories, mockChannels, mockVideos, mockVideosMedia } from '@/mocking/data'
+import { mockCategories, mockChannels, mockVideos, mockVideosMedia, mockLicenses } from '@/mocking/data'
 import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
-import { mockCoverVideo, mockCoverVideoChannel, mockCoverVideoMedia } from '@/mocking/data/mockCoverVideo'
+import {
+  mockCoverVideo,
+  mockCoverVideoChannel,
+  mockCoverVideoMedia,
+  mockCoverVideoLicense,
+} from '@/mocking/data/mockCoverVideo'
 
 type MirageJSServer = any
 
@@ -35,6 +40,19 @@ export const createMockData = (server: MirageJSServer) => {
     return model
   })
 
+  const licenseEntities = mockLicenses.map((licenseEntity) => {
+    const licenseType = licenseEntity.type.__typename === 'KnownLicense' ? 'KnownLicense' : 'UserDefinedLicense'
+    const license = server.schema.create(licenseType, {
+      id: faker.random.uuid(),
+      ...licenseEntity.type,
+    })
+
+    const model = server.schema.create('LicenseEntity', {
+      ...licenseEntity,
+      type: license,
+    })
+    return model
+  })
   mockVideos.forEach((video, idx) => {
     const mediaIndex = idx % mockVideosMedia.length
 
@@ -45,6 +63,7 @@ export const createMockData = (server: MirageJSServer) => {
       channel: channels[idx % channels.length],
       category: categories[idx % categories.length],
       media: videoMedias[mediaIndex],
+      license: licenseEntities[idx % licenseEntities.length],
     })
 
     server.create('VideoViewsInfo', {
@@ -71,12 +90,23 @@ const createCoverVideoData = (server: MirageJSServer, categories: unknown[]) => 
     location,
   })
 
+  const license = server.schema.create('UserDefinedLicense', {
+    id: faker.random.uuid(),
+    ...mockCoverVideoLicense.type,
+  })
+
+  const licenseEntity = server.schema.create('LicenseEntity', {
+    ...mockCoverVideoLicense,
+    type: license,
+  })
+
   const video = server.schema.create('Video', {
     ...mockCoverVideo,
     duration: media.duration,
     category: categories[0],
     channel,
     media,
+    license: licenseEntity,
   })
 
   server.create('VideoViewsInfo', {

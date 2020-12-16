@@ -12,6 +12,7 @@ import {
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
+  LicenseContainer,
 } from './VideoView.style'
 import { InfiniteVideoGrid, Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
@@ -99,6 +100,25 @@ const VideoView: React.FC<RouteComponentProps> = () => {
             </>
           )}
         </DescriptionContainer>
+        <LicenseContainer>
+          {data?.video ? (
+            <>
+              <p>
+                License:{' '}
+                {data.video.license.type.__typename === 'KnownLicense' ? (
+                  <a href={data.video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
+                    {data.video.license.type.code}
+                  </a>
+                ) : (
+                  data.video.license.type.content
+                )}
+              </p>
+              {data.video.license?.attribution ? <p>Attribution: {data.video.license.attribution}</p> : null}
+            </>
+          ) : (
+            <Placeholder height={12} width={200} />
+          )}
+        </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
             {data?.video ? `More from ${data.video.channel.handle}` : <Placeholder height={23} width={300} />}

@@ -22,5 +22,13 @@
     "handle": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar.png",
     "coverPhotoUrl": null
+  },
+  "license": {
+    "id": "1503",
+    "attribution": null,
+    "type": {
+      "__typename": "UserDefinedLicense",
+      "content": "Free to consume and share, no derivatives or adaptations, copyright Jamie King 2020\n"
+    }
   }
 }

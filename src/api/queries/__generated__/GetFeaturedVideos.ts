@@ -27,7 +27,7 @@ export type GetFeaturedVideos_featuredVideos_video_media_location = GetFeaturedV
 export interface GetFeaturedVideos_featuredVideos_video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number;
+  pixelHeight: number | null;
   pixelWidth: number;
   location: GetFeaturedVideos_featuredVideos_video_media_location;
 }
@@ -37,6 +37,26 @@ export interface GetFeaturedVideos_featuredVideos_video_channel {
   id: string;
   avatarPhotoUrl: string | null;
   handle: string;
+}
+
+export interface GetFeaturedVideos_featuredVideos_video_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface GetFeaturedVideos_featuredVideos_video_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type GetFeaturedVideos_featuredVideos_video_license_type = GetFeaturedVideos_featuredVideos_video_license_type_KnownLicense | GetFeaturedVideos_featuredVideos_video_license_type_UserDefinedLicense;
+
+export interface GetFeaturedVideos_featuredVideos_video_license {
+  __typename: "LicenseEntity";
+  id: string;
+  attribution: string | null;
+  type: GetFeaturedVideos_featuredVideos_video_license_type;
 }
 
 export interface GetFeaturedVideos_featuredVideos_video {
@@ -51,6 +71,7 @@ export interface GetFeaturedVideos_featuredVideos_video {
   createdAt: GQLDate;
   media: GetFeaturedVideos_featuredVideos_video_media;
   channel: GetFeaturedVideos_featuredVideos_video_channel;
+  license: GetFeaturedVideos_featuredVideos_video_license;
 }
 
 export interface GetFeaturedVideos_featuredVideos {
