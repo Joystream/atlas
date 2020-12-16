@@ -61,8 +61,6 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     return <p>Video not found</p>
   }
 
-  console.log(data?.video?.license)
-
   return (
     <Container>
       <PlayerWrapper>
@@ -108,9 +106,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
               <p>
                 License:{' '}
                 {data.video.license.type.__typename === 'KnownLicense' ? (
-                  <a href={data.video.license.type.url || ''}>{`${data.video.license.type.code}`}</a>
+                  <a
+                    href={data.video.license.type.url || ''}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >{`${data.video.license.type.code}`}</a>
                 ) : (
-                  `${data.video.license.type.content}`
+                  data.video.license.type.content
                 )}
               </p>
               {data.video.license?.attribution ? <p>Attribution: {data.video.license.attribution}</p> : null}

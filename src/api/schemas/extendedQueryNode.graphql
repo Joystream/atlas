@@ -78,17 +78,8 @@ union License = UserDefinedLicense | KnownLicense
 
 type LicenseEntity {
   id: ID!
-  createdAt: Date!
-  createdById: String!
-  updatedAt: Date
-  updatedById: String
-  deletedAt: Date
-  deletedById: String
-  version: Int!
   type: License!
   attribution: String
-  happenedIn: Float!
-  happenedInId: String!
   videoLicense: [Video!]
 }
 type VideoMedia {
@@ -100,7 +91,7 @@ type VideoMedia {
   pixelWidth: Int!
 
   # Resolution height
-  pixelHeight: Int
+  pixelHeight: Int!
   # Size in bytes
   size: Float
 
