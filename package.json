@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "start:prod": "REACT_APP_QUERY_NODE_URL=https://hydra-staging.joystream.app/server/graphql REACT_APP_ORION_URL=https://orion-staging.joystream.app/graphql REACT_APP_STORAGE_NODE_URL=https://staging-3.joystream.app/storage/asset/v0/ yarn start",
+    "start:prod": "REACT_APP_QUERY_NODE_URL=https://hydra.joystream.org/graphql REACT_APP_ORION_URL=https://orion.joystream.org/graphql REACT_APP_STORAGE_NODE_URL=https://rome-rpc-endpoint.joystream.org/asset/v0/ yarn start",
     "dev": "yarn start",
     "dev:prod": "yarn start:prod",
     "build": "react-app-rewired build",
