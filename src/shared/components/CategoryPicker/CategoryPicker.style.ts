@@ -4,8 +4,20 @@ import ToggleButton from '../ToggleButton'
 import { sizes, colors } from '@/shared/theme'
 
 export const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: -webkit-box;
+  white-space: nowrap;
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  > * {
+    &:first-child {
+      margin-left: var(--global-horizontal-padding);
+    }
+    &:last-child {
+      margin-right: var(--global-horizontal-padding);
+    }
+  }
 `
 
 export const StyledPlaceholder = styled(Placeholder)`
