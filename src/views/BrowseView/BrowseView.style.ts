@@ -22,7 +22,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   }
   /*Offset Category Picker by Navbar Height */
   top: ${NAVBAR_HEIGHT}px;
-  padding: ${sizes(5)} 0 ${sizes(2)};
+  padding: ${sizes(5)} 0 ${sizes(5)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   background-color: ${colors.black};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};

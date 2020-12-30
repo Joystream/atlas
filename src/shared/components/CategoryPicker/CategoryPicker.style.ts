@@ -22,5 +22,5 @@ export const StyledPlaceholder = styled(Placeholder)`
 `
 
 export const StyledToggleButton = styled(ToggleButton)`
-  margin: 0 ${sizes(3)} ${sizes(3)} 0;
+  margin-right: ${sizes(3)};
 `
