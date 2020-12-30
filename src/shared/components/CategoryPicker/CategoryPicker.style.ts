@@ -7,9 +7,6 @@ export const Container = styled.div`
   display: -webkit-box;
   white-space: nowrap;
   overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
   > * {
     &:first-child {
       margin-left: var(--global-horizontal-padding);

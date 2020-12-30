@@ -16,6 +16,10 @@ export const Header = styled(Text)`
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   z-index: ${zIndex.overlay};
   position: sticky;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   /*Offset Category Picker by Navbar Height */
   top: ${NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} 0 ${sizes(2)};
