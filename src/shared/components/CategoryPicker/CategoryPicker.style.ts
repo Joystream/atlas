@@ -4,7 +4,7 @@ import ToggleButton from '../ToggleButton'
 import { sizes, colors } from '@/shared/theme'
 
 export const Container = styled.div`
-  display: -webkit-box;
+  display: block;
   white-space: nowrap;
   overflow: scroll;
   > * {
@@ -18,6 +18,7 @@ export const Container = styled.div`
 `
 
 export const StyledPlaceholder = styled(Placeholder)`
+  display: inline-block;
   margin: 0 ${sizes(3)} ${sizes(3)} 0;
 `
 
