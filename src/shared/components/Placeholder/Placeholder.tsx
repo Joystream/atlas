@@ -22,7 +22,6 @@ const pulse = keyframes`
 `
 
 const Placeholder = styled.div<PlaceholderProps>`
-  display: 'inline-flex';
   width: ${({ width = '100%' }) => getPropValue(width)};
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
