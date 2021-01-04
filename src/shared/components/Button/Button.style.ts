@@ -12,6 +12,10 @@ export type ButtonStyleProps = {
   clickable?: boolean
 }
 
+export type IconStyleProps = {
+  disabled?: boolean
+}
+
 const colorsFromProps = ({ variant }: ButtonStyleProps) => {
   let styles
   switch (variant) {
@@ -100,27 +104,28 @@ const disabled = ({ disabled }: ButtonStyleProps) =>
   disabled
     ? css`
         box-shadow: none;
-        color: ${colors.white};
-        background-color: ${colors.gray[100]};
-        border-color: ${colors.gray[100]};
+        color: ${colors.gray[200]};
+        background-color: ${colors.gray[400]};
+        border-color: ${colors.gray[400]};
         &:hover {
-          color: ${colors.white};
-          background-color: ${colors.gray[100]};
-          border-color: ${colors.gray[100]};
+          color: ${colors.gray[200]};
+          background-color: ${colors.gray[400]};
+          border-color: ${colors.gray[400]};
         }
         &:active {
-          color: ${colors.white};
-          background-color: ${colors.gray[100]};
-          border-color: ${colors.gray[100]};
+          color: ${colors.gray[200]};
+          background-color: ${colors.gray[400]};
+          border-color: ${colors.gray[400]};
         }
       `
     : null
 
-export const StyledIcon = styled(Icon)`
+export const StyledIcon = styled(Icon)<IconStyleProps>`
   flex-shrink: 0;
   & + * {
     margin-left: 10px;
   }
+  filter: ${(props) => (props.disabled ? 'brightness(0.7)' : null)};
 `
 export const StyledButton = styled.button<ButtonStyleProps>`
   border-width: 1px;
