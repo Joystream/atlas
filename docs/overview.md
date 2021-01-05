@@ -4,11 +4,11 @@ Atlas is a content consumption and publication app for the Joystream platform. T
 
 ## Conventions
 
-### Some of the used tools
+### Some of the used tools/tech
 
 - React
 - Typescript
-- GraphQL
+- GraphQL (+ [Relay-style pagination](https://graphql.org/learn/pagination/))
 - ESLint, Prettier - for enforcing common code style
 - [Mirage JS](https://miragejs.com/) - for [client-side mocking](#client-side-data-mocking)
 - [Emotion](https://emotion.sh/) - for all the styling
