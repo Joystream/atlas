@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 import {
   ChannelContainer,
@@ -30,6 +30,23 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
 
   const videoID = data?.video?.id
+
+  const [playing, setPlaying] = useState<boolean>(true)
+  const handleUserKeyPress = useCallback((event: Event) => {
+    const { keyCode } = event as KeyboardEvent
+    if (keyCode === 32) {
+      event.preventDefault()
+      setPlaying((prevState) => !prevState)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress)
+    }
+  }, [handleUserKeyPress])
 
   useEffect(() => {
     if (!videoID) {
@@ -66,7 +83,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
       <PlayerWrapper>
         <PlayerContainer>
           {data?.video ? (
-            <VideoPlayer src={data.video.media.location} autoplay fluid posterUrl={data.video.thumbnailUrl} />
+            <VideoPlayer
+              playing={playing}
+              src={data.video.media.location}
+              autoplay
+              fluid
+              posterUrl={data.video.thumbnailUrl}
+            />
           ) : (
             <PlayerPlaceholder />
           )}
