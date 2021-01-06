@@ -32,9 +32,8 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const videoID = data?.video?.id
 
   const [playing, setPlaying] = useState<boolean>(true)
-  const handleUserKeyPress = useCallback((event) => {
-    const { key, keyCode } = event
-
+  const handleUserKeyPress = useCallback((event: Event) => {
+    const { keyCode } = event as KeyboardEvent
     if (keyCode === 32) {
       event.preventDefault()
       setPlaying((prevState) => !prevState)
