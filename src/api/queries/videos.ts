@@ -94,6 +94,22 @@ export const GET_FEATURED_VIDEOS = gql`
   ${videoFieldsFragment}
 `
 
+export const GET_COVER_VIDEO = gql`
+  query GetCoverVideo {
+    coverVideo {
+      video {
+        ...VideoFields
+      }
+      coverDescription
+      coverCutMedia {
+        ...VideoMediaFields
+      }
+    }
+  }
+  ${videoFieldsFragment}
+  ${videoMediaFieldsFragment}
+`
+
 export const GET_VIDEO = gql`
   query GetVideo($id: ID!) {
     video(where: { id: $id }) {

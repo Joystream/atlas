@@ -27,7 +27,7 @@ const Placeholder = styled.div<PlaceholderProps>`
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
   background-color: ${colors.gray['400']};
-  animation: ${pulse} 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `
 
 export default Placeholder

@@ -8,7 +8,7 @@ type ContainerProps = {
 }
 
 export const Container = styled(Link)<ContainerProps>`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   text-decoration: none;
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};

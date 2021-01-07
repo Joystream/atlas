@@ -8,9 +8,11 @@ import {
   mockCoverVideo,
   mockCoverVideoChannel,
   mockCoverVideoMedia,
+  mockCoverVideoInfo,
   mockCoverVideoLicense,
 } from '@/mocking/data/mockCoverVideo'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MirageJSServer = any
 
 export const createMockData = (server: MirageJSServer) => {
@@ -85,9 +87,19 @@ const createCoverVideoData = (server: MirageJSServer, categories: unknown[]) => 
     ...mockCoverVideoMedia.location,
   })
 
+  const coverCutMediaLocation = server.schema.create('HttpMediaLocation', {
+    id: faker.random.uuid(),
+    ...mockCoverVideoInfo.coverCutMedia.location,
+  })
+
   const media = server.schema.create('VideoMedia', {
     ...mockCoverVideoMedia,
     location,
+  })
+
+  const coverCutMedia = server.schema.create('VideoMedia', {
+    ...mockCoverVideoInfo.coverCutMedia,
+    location: coverCutMediaLocation,
   })
 
   const license = server.schema.create('UserDefinedLicense', {
@@ -112,5 +124,12 @@ const createCoverVideoData = (server: MirageJSServer, categories: unknown[]) => 
   server.create('VideoViewsInfo', {
     id: video.id,
     views: video.views,
+  })
+
+  server.create('CoverVideo', {
+    id: faker.random.uuid(),
+    video,
+    coverDescription: mockCoverVideoInfo.coverDescription,
+    coverCutMedia,
   })
 }
