@@ -14,6 +14,7 @@ import {
   StyledInfiniteVideoGrid,
   IntersectionTarget,
   Header,
+  StyledBackgroundPatternContainer,
   StyledBackgroundPattern,
   GRID_TOP_PADDING,
 } from './BrowseView.style'
@@ -49,7 +50,9 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
 
   return (
     <Container>
-      <StyledBackgroundPattern />
+      <StyledBackgroundPatternContainer>
+        <StyledBackgroundPattern />
+      </StyledBackgroundPatternContainer>
       <Header variant="hero" ref={headerRef}>
         Browse
       </Header>
