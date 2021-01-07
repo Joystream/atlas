@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 
 import { ReactComponent as BackgroundPattern } from '@/assets/bg-pattern.svg'
-import { breakpoints, colors, sizes, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 
 type IsAtTop = {
@@ -27,7 +27,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
-  transition: background-color 0.2s;
+  transition: background-color ${transitions.timings.regular} ${transitions.easing};
 `
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
