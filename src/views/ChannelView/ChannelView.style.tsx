@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
-import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { ReactComponent as BgPattern } from '@/assets/bg-pattern.svg'
 import { css } from '@emotion/core'
 
@@ -197,6 +197,10 @@ export const VideoSection = styled.section`
 
 export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(3)};
+
+  span {
+    font-size: ${typography.sizes.h2};
+  }
 
   @media (min-width: ${breakpoints.small}) {
     margin: 0 ${sizes(6)} 0 0;

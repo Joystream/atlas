@@ -74,15 +74,7 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-
   position: relative;
-
-  > span {
-    position: absolute;
-    text-transform: uppercase;
-    font-size: 0.875rem;
-    line-height: 1.43;
-  }
 `
 
 export const StyledPlaceholder = styled(Placeholder)`
@@ -92,6 +84,14 @@ export const StyledPlaceholder = styled(Placeholder)`
 
 export const StyledTransitionGroup = styled(TransitionGroup)`
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    line-height: 1.43;
+  }
 `
 
 export const StyledImage = styled.img`
