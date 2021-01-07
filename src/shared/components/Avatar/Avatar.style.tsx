@@ -89,7 +89,6 @@ export const StyledTransitionGroup = styled(TransitionGroup)`
   align-items: center;
   span {
     text-transform: uppercase;
-    font-size: 0.875rem;
     line-height: 1.43;
   }
 `
