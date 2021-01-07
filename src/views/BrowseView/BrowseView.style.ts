@@ -12,9 +12,6 @@ type IsAtTop = {
 const PATTERN_OFFSET = {
   SMALL: '-150px',
   MEDIUM: '75px',
-  LARGE: 100,
-  XLARGE: 200,
-  XXLARGE: 300,
 }
 
 export const GRID_TOP_PADDING = sizes(2, true)
@@ -50,7 +47,6 @@ export const StyledBackgroundPattern = styled(BackgroundPattern)`
   right: 80px;
   z-index: ${zIndex.background};
   transform: scale(1.3);
-
   @media screen and (min-width: ${breakpoints.base}) {
     display: none;
   }
