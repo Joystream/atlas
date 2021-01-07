@@ -48,26 +48,24 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   }
 
   return (
-    <>
+    <Container>
       <StyledBackgroundPattern />
-      <Container>
-        <Header variant="hero" ref={headerRef}>
-          Browse
-        </Header>
-        <Text variant="h5">Topics that may interest you</Text>
-        <IntersectionTarget ref={targetRef} />
-        <StyledCategoryPicker
-          categories={categoriesData?.categories}
-          loading={categoriesLoading}
-          selectedCategoryId={selectedCategoryId}
-          onChange={handleCategoryChange}
-          isAtTop={inView}
-        />
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
-        </ErrorBoundary>
-      </Container>
-    </>
+      <Header variant="hero" ref={headerRef}>
+        Browse
+      </Header>
+      <Text variant="h5">Topics that may interest you</Text>
+      <IntersectionTarget ref={targetRef} />
+      <StyledCategoryPicker
+        categories={categoriesData?.categories}
+        loading={categoriesLoading}
+        selectedCategoryId={selectedCategoryId}
+        onChange={handleCategoryChange}
+        isAtTop={inView}
+      />
+      <ErrorBoundary fallback={ErrorFallback}>
+        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
+      </ErrorBoundary>
+    </Container>
   )
 }
 
