@@ -39,7 +39,7 @@ const NameHeader = styled(Text)`
 export const StyledAvatar = styled(Avatar)`
   width: 100%;
   height: 100%;
-  > span {
+  span {
     font-size: ${typography.sizes.h2};
   }
 `
