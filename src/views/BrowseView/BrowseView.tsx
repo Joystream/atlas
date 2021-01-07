@@ -49,8 +49,8 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
 
   return (
     <>
-      <StyledBackgroundPattern />
       <Container>
+        <StyledBackgroundPattern />
         <Header variant="hero" ref={headerRef}>
           Browse
         </Header>
