@@ -1,12 +1,10 @@
-import React, { useReducer, useContext, Dispatch } from 'react'
+import React, { useReducer, useContext, useCallback, Dispatch } from 'react'
 
 import { getInitialPersonalData, localStorageClient } from '@/api'
 import { FollowedChannel, WatchedVideo } from '@/api/localStorage'
 type State<T> = {
   data: T
   backupData: T | null
-  status: 'pending' | 'rejected' | 'resolved' | null
-  error: Error | null
 }
 
 type StartAction = {
@@ -30,7 +28,7 @@ function asyncReducer(state: State<PersonalData>, action: Action<PersonalData>):
     case 'START_UPDATE': {
       return {
         ...state,
-        status: 'pending',
+
         backupData: state.data,
       }
     }
@@ -38,23 +36,18 @@ function asyncReducer(state: State<PersonalData>, action: Action<PersonalData>):
       return {
         ...state,
         data: { ...state.data, ...action.updates },
-        status: 'resolved',
+
         backupData: null,
-        error: null,
       }
     }
     case 'FAIL_UPDATE': {
       return {
         ...state,
-        status: 'rejected',
-        error: action.error,
       }
     }
     case 'RESET': {
       return {
         ...state,
-        status: null,
-        error: null,
       }
     }
     default: {
@@ -62,10 +55,20 @@ function asyncReducer(state: State<PersonalData>, action: Action<PersonalData>):
     }
   }
 }
-
-const PersonalDataContext = React.createContext<[State<PersonalData>, Dispatch<Action<PersonalData>>] | undefined>(
-  undefined
-)
+type ContextValue = {
+  state: State<PersonalData>
+  dispatch: Dispatch<Action<PersonalData>>
+  updateChannelFollowing: (
+    ...setChannelFollowingArgs: Parameters<typeof localStorageClient.setChannelFollowing>
+  ) => Promise<void>
+  updateWatchedVideos: (...setWatchedVideoArgs: Parameters<typeof localStorageClient.setWatchedVideo>) => Promise<void>
+  watchedVideos: typeof localStorageClient.watchedVideos
+  watchedVideo: typeof localStorageClient.watchedVideo
+  completedVideos: typeof localStorageClient.completedVideos
+  followedChannels: typeof localStorageClient.followedChannels
+  isFollowingChannel: typeof localStorageClient.isFollowingChannel
+}
+const PersonalDataContext = React.createContext<ContextValue | undefined>(undefined)
 PersonalDataContext.displayName = 'PersonalDataContext'
 
 function usePersonalData() {
@@ -89,36 +92,56 @@ const PersonalDataProvider: React.FC = ({ children }) => {
       error: null,
     }
   })
-  return <PersonalDataContext.Provider value={[state, dispatch]}>{children}</PersonalDataContext.Provider>
+
+  const updateChannelFollowing = useCallback(
+    async (...setChannelFollowingArgs: Parameters<typeof localStorageClient.setChannelFollowing>) => {
+      dispatch({ type: 'START_UPDATE' })
+      try {
+        await localStorageClient.setChannelFollowing(...setChannelFollowingArgs)
+        const updatedChannels = await localStorageClient.followedChannels()
+        dispatch({ type: 'FINISH_UPDATE', updates: { followedChannels: updatedChannels } })
+      } catch (error) {
+        dispatch({ type: 'FAIL_UPDATE', error })
+        return Promise.reject(error)
+      }
+    },
+    []
+  )
+  const updateWatchedVideos = useCallback(
+    async (...setWatchedVideoArgs: Parameters<typeof localStorageClient.setWatchedVideo>) => {
+      dispatch({ type: 'START_UPDATE' })
+      try {
+        await localStorageClient.setWatchedVideo(...setWatchedVideoArgs)
+        const updatedWatchedVideos = await localStorageClient.watchedVideos()
+        dispatch({ type: 'FINISH_UPDATE', updates: { watchedVideos: updatedWatchedVideos } })
+      } catch (error) {
+        dispatch({ type: 'FAIL_UPDATE', error })
+        return Promise.reject(error)
+      }
+    },
+    []
+  )
+
+  const watchedVideos = useCallback(() => localStorageClient.watchedVideos(), [])
+  const interruptedVideos = useCallback(() => localStorageClient.interruptedVideos(), [])
+  const completedVideos = useCallback(() => localStorageClient.completedVideos(), [])
+  const watchedVideo = useCallback((id) => localStorageClient.watchedVideo(id), [])
+  const followedChannels = useCallback(() => localStorageClient.followedChannels(), [])
+  const isFollowingChannel = useCallback((id) => localStorageClient.isFollowingChannel(id), [])
+
+  const value = {
+    state,
+    dispatch,
+    updateChannelFollowing,
+    updateWatchedVideos,
+    watchedVideos,
+    interruptedVideos,
+    completedVideos,
+    watchedVideo,
+    followedChannels,
+    isFollowingChannel,
+  }
+  return <PersonalDataContext.Provider value={value}>{children}</PersonalDataContext.Provider>
 }
 
-const updateChannelFollowing = async (
-  dispatch: Dispatch<Action<PersonalData>>,
-  ...setChannelFollowingArgs: Parameters<typeof localStorageClient.setChannelFollowing>
-) => {
-  dispatch({ type: 'START_UPDATE' })
-  try {
-    await localStorageClient.setChannelFollowing(...setChannelFollowingArgs)
-    const updatedChannels = await localStorageClient.followedChannels()
-    dispatch({ type: 'FINISH_UPDATE', updates: { followedChannels: updatedChannels } })
-  } catch (error) {
-    dispatch({ type: 'FAIL_UPDATE', error })
-    return Promise.reject(error)
-  }
-}
-const updateWatchedVideos = async (
-  dispatch: Dispatch<Action<PersonalData>>,
-  ...setWatchedVideoArgs: Parameters<typeof localStorageClient.setWatchedVideo>
-) => {
-  dispatch({ type: 'START_UPDATE' })
-  try {
-    await localStorageClient.setWatchedVideo(...setWatchedVideoArgs)
-    const updatedWatchedVideos = await localStorageClient.watchedVideos()
-    dispatch({ type: 'FINISH_UPDATE', updates: { watchedVideos: updatedWatchedVideos } })
-  } catch (error) {
-    dispatch({ type: 'FAIL_UPDATE', error })
-    return Promise.reject(error)
-  }
-}
-
-export { usePersonalData, PersonalDataContext, PersonalDataProvider, updateChannelFollowing, updateWatchedVideos }
+export { usePersonalData, PersonalDataContext, PersonalDataProvider }
