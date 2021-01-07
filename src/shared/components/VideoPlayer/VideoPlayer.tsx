@@ -9,10 +9,13 @@ type VideoPlayerProps = {
   playing?: boolean
 } & VideoJsConfig
 
-const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, autoplay, isInBackground, playing, ...videoJsConfig },
-  ref
-) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  className,
+  autoplay,
+  isInBackground,
+  playing,
+  ...videoJsConfig
+}) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)
@@ -83,17 +86,6 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     }
   })
 
-  useEffect(() => {
-    if (!ref) {
-      return
-    }
-    if (typeof ref === 'function') {
-      ref(playerRef.current)
-      return
-    }
-    ref.current = playerRef.current
-  })
-
   const handlePlayOverlayClick = () => {
     if (!player) {
       return
@@ -116,4 +108,4 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
   )
 }
 
-export default React.forwardRef(VideoPlayer)
+export default VideoPlayer
