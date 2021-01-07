@@ -27,6 +27,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
+  transition: background-color 0.2s;
 `
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
