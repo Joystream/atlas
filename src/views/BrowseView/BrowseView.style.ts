@@ -20,7 +20,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   top: ${NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} var(--global-horizontal-padding) ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  background-color: ${colors.black};
+  background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
 `
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
@@ -36,6 +36,8 @@ export const IntersectionTarget = styled.div`
 `
 export const StyledBackgroundPattern = styled(BackgroundPattern)`
   position: absolute;
-  right: 0;
+  top: 154px;
+  right: 80px;
   z-index: ${zIndex.background};
+  transform: scale(1.3);
 `
