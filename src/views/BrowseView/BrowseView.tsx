@@ -14,6 +14,7 @@ import {
   StyledInfiniteVideoGrid,
   IntersectionTarget,
   Header,
+  StyledBackgroundPatternContainer,
   StyledBackgroundPattern,
   GRID_TOP_PADDING,
 } from './BrowseView.style'
@@ -48,26 +49,26 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   }
 
   return (
-    <>
-      <Container>
+    <Container>
+      <StyledBackgroundPatternContainer>
         <StyledBackgroundPattern />
-        <Header variant="hero" ref={headerRef}>
-          Browse
-        </Header>
-        <Text variant="h5">Topics that may interest you</Text>
-        <IntersectionTarget ref={targetRef} />
-        <StyledCategoryPicker
-          categories={categoriesData?.categories}
-          loading={categoriesLoading}
-          selectedCategoryId={selectedCategoryId}
-          onChange={handleCategoryChange}
-          isAtTop={inView}
-        />
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
-        </ErrorBoundary>
-      </Container>
-    </>
+      </StyledBackgroundPatternContainer>
+      <Header variant="hero" ref={headerRef}>
+        Browse
+      </Header>
+      <Text variant="h5">Topics that may interest you</Text>
+      <IntersectionTarget ref={targetRef} />
+      <StyledCategoryPicker
+        categories={categoriesData?.categories}
+        loading={categoriesLoading}
+        selectedCategoryId={selectedCategoryId}
+        onChange={handleCategoryChange}
+        isAtTop={inView}
+      />
+      <ErrorBoundary fallback={ErrorFallback}>
+        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
+      </ErrorBoundary>
+    </Container>
   )
 }
 

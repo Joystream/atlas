@@ -35,23 +35,27 @@ export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
 export const Container = styled.div`
   position: relative;
   padding-top: ${sizes(14)};
-  overflow-x: hidden;
 `
 export const IntersectionTarget = styled.div`
   min-height: 1px;
 `
+export const StyledBackgroundPatternContainer = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+`
 
 export const StyledBackgroundPattern = styled(BackgroundPattern)`
+  display: none;
   position: absolute;
-  top: 73px;
-  right: 80px;
   z-index: ${zIndex.background};
   transform: scale(1.3);
-  @media screen and (min-width: ${breakpoints.base}) {
-    display: none;
-  }
+
   @media screen and (min-width: ${breakpoints.small}) {
     display: block;
+    top: 73px;
     right: ${PATTERN_OFFSET.SMALL};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
