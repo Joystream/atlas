@@ -3,8 +3,6 @@ import { fluidRange } from 'polished'
 import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { ReactComponent as BgPattern } from '@/assets/bg-pattern.svg'
-import { css } from '@emotion/core'
 
 const SM_TITLE_HEIGHT = '48px'
 const TITLE_HEIGHT = '56px'
@@ -61,18 +59,6 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
-`
-
-export const StyledBgPattern = styled(BgPattern)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: ${zIndex.background};
-
-  &.${transitions.names.fade}-exit-active {
-    z-index: ${zIndex.farBackground};
-  }
 `
 
 export const CoverImage = styled.div<CoverImageProps>`
