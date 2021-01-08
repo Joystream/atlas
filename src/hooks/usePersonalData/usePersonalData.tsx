@@ -20,7 +20,7 @@ type UpdateChannelFollowingAction = {
 }
 
 type Action = UpdateWatchedVideosAction | UpdateChannelFollowingAction
-function asyncReducer(state: PersonalData, action: Action): PersonalData {
+const asyncReducer = (state: PersonalData, action: Action) => {
   switch (action.type) {
     case 'UPDATE_WATCHED_VIDEOS': {
       return {
@@ -35,7 +35,8 @@ function asyncReducer(state: PersonalData, action: Action): PersonalData {
       }
     }
     default: {
-      throw new Error(`Unhandled action type: ${(action as any).type}`)
+      console.error(`Unhandled action type, returning state unchanged...`)
+      return state
     }
   }
 }
@@ -46,7 +47,7 @@ type ContextValue = {
 const PersonalDataContext = React.createContext<ContextValue | undefined>(undefined)
 PersonalDataContext.displayName = 'PersonalDataContext'
 
-function usePersonalData() {
+const usePersonalData = () => {
   const context = useContext(PersonalDataContext)
   if (!context) {
     throw new Error(`usePersonalData must be used within a PersonalData Provider.`)
