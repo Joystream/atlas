@@ -10,7 +10,7 @@ type InterruptedVideo = WatchedVideoFields & {
   timestamp: number
 }
 type CompletedVideo = WatchedVideoFields & {
-  __typename: typeof INTERRUPTED_VIDEO
+  __typename: typeof COMPLETED_VIDEO
   id: string
 }
 type WatchedVideo = InterruptedVideo | CompletedVideo
@@ -19,7 +19,7 @@ type FollowedChannel = {
   id: string
 }
 
-interface UserPersonalData {
+interface PersonalDataClient {
   // ==== watched videos ====
 
   // get all the interrupted or completed videos
