@@ -11,13 +11,13 @@ import {
   Media,
   MediaWrapper,
   StyledChannelLink,
-  StyledBgPattern,
   Title,
   TitleContainer,
   TitlePlaceholder,
   TitleSection,
   VideoSection,
 } from './ChannelView.style'
+import { BackgroundPattern } from '@/components'
 import { InfiniteVideoGrid } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -49,7 +49,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
                 timeout={parseInt(transitions.timings.loading)}
                 classNames={transitions.names.fade}
               >
-                {showBgPattern ? <StyledBgPattern /> : <CoverImage src={data?.channel?.coverPhotoUrl!} />}
+                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={data?.channel?.coverPhotoUrl!} />}
               </CSSTransition>
             </TransitionGroup>
           </Media>

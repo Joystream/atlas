@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { useQuery } from '@apollo/client'
 import { useInView } from 'react-intersection-observer'
 
-import { ErrorFallback } from '@/components'
+import { ErrorFallback, BackgroundPattern } from '@/components'
 import { Text } from '@/shared/components'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 import {
@@ -14,8 +14,6 @@ import {
   StyledInfiniteVideoGrid,
   IntersectionTarget,
   Header,
-  StyledBackgroundPatternContainer,
-  StyledBackgroundPattern,
   GRID_TOP_PADDING,
 } from './BrowseView.style'
 import { GET_CATEGORIES } from '@/api/queries'
@@ -50,9 +48,7 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
 
   return (
     <Container>
-      <StyledBackgroundPatternContainer>
-        <StyledBackgroundPattern />
-      </StyledBackgroundPatternContainer>
+      <BackgroundPattern />
       <Header variant="hero" ref={headerRef}>
         Browse
       </Header>

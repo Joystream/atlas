@@ -1,17 +1,11 @@
 import styled from '@emotion/styled'
 import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 
-import { ReactComponent as BackgroundPattern } from '@/assets/bg-pattern.svg'
-import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 
 type IsAtTop = {
   isAtTop: boolean
-}
-
-const PATTERN_OFFSET = {
-  SMALL: '-150px',
-  MEDIUM: '75px',
 }
 
 export const GRID_TOP_PADDING = sizes(2, true)
@@ -39,27 +33,4 @@ export const Container = styled.div`
 `
 export const IntersectionTarget = styled.div`
   min-height: 1px;
-`
-export const StyledBackgroundPatternContainer = styled.div`
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  overflow-x: hidden;
-`
-
-export const StyledBackgroundPattern = styled(BackgroundPattern)`
-  display: none;
-  position: absolute;
-  z-index: ${zIndex.background};
-  transform: scale(1.3);
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: block;
-    top: 73px;
-    right: ${PATTERN_OFFSET.SMALL};
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    right: ${PATTERN_OFFSET.MEDIUM};
-  }
 `
