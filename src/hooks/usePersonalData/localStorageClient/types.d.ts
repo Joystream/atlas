@@ -19,7 +19,7 @@ type FollowedChannel = {
   id: string
 }
 
-interface UserPersonalData {
+interface PersonalDataClient {
   // ==== watched videos ====
 
   // get all the interrupted or completed videos
