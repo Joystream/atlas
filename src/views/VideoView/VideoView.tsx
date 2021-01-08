@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 import {
   ChannelContainer,
@@ -12,6 +12,7 @@ import {
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
+  LicenseContainer,
 } from './VideoView.style'
 import { InfiniteVideoGrid, Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
@@ -29,6 +30,23 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
 
   const videoID = data?.video?.id
+
+  const [playing, setPlaying] = useState<boolean>(true)
+  const handleUserKeyPress = useCallback((event: Event) => {
+    const { keyCode } = event as KeyboardEvent
+    if (keyCode === 32) {
+      event.preventDefault()
+      setPlaying((prevState) => !prevState)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress)
+    }
+  }, [handleUserKeyPress])
 
   useEffect(() => {
     if (!videoID) {
@@ -65,7 +83,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
       <PlayerWrapper>
         <PlayerContainer>
           {data?.video ? (
-            <VideoPlayer src={data.video.media.location} autoplay fluid posterUrl={data.video.thumbnailUrl} />
+            <VideoPlayer
+              playing={playing}
+              src={data.video.media.location}
+              autoplay
+              fluid
+              posterUrl={data.video.thumbnailUrl}
+            />
           ) : (
             <PlayerPlaceholder />
           )}
@@ -99,6 +123,25 @@ const VideoView: React.FC<RouteComponentProps> = () => {
             </>
           )}
         </DescriptionContainer>
+        <LicenseContainer>
+          {data?.video ? (
+            <>
+              <p>
+                License:{' '}
+                {data.video.license.type.__typename === 'KnownLicense' ? (
+                  <a href={data.video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
+                    {data.video.license.type.code}
+                  </a>
+                ) : (
+                  data.video.license.type.content
+                )}
+              </p>
+              {data.video.license?.attribution ? <p>Attribution: {data.video.license.attribution}</p> : null}
+            </>
+          ) : (
+            <Placeholder height={12} width={200} />
+          )}
+        </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
             {data?.video ? `More from ${data.video.channel.handle}` : <Placeholder height={23} width={300} />}

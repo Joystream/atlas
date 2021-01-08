@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import { CategoryPicker, InfiniteVideoGrid, Text } from '@/shared/components'
 
-import { ReactComponent as BackgroundPattern } from '@/assets/bg-pattern.svg'
-import { colors, sizes, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { NAVBAR_HEIGHT } from '@/components/Navbar'
 
 type IsAtTop = {
@@ -20,8 +19,9 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   top: ${NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} var(--global-horizontal-padding) ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  background-color: ${colors.black};
+  background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
+  transition: background-color ${transitions.timings.regular} ${transitions.easing};
 `
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
@@ -33,9 +33,4 @@ export const Container = styled.div`
 `
 export const IntersectionTarget = styled.div`
   min-height: 1px;
-`
-export const StyledBackgroundPattern = styled(BackgroundPattern)`
-  position: absolute;
-  right: 0;
-  z-index: ${zIndex.background};
 `
