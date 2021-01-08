@@ -90,10 +90,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!player) {
       return
     }
-
-    player.play()
+    if (!player.paused()) {
+      player.pause()
+    } else {
+      player.play()
+    }
   }
-
   return (
     <Container className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
@@ -102,7 +104,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </PlayOverlay>
       )}
       <div data-vjs-player>
-        <video ref={playerRef} className="video-js" />
+        <video ref={playerRef} className="video-js" onTouchStart={handlePlayOverlayClick} />
       </div>
     </Container>
   )
