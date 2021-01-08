@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, typography, zIndex } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '48px'
 const TITLE_HEIGHT = '56px'
