@@ -4,7 +4,7 @@ import {
   FollowedChannel,
   InterruptedVideo,
   INTERRUPTED_VIDEO,
-  UserPersonalData,
+  PersonalDataClient,
   WatchedVideo,
 } from './types'
 
@@ -109,7 +109,7 @@ export const getInitialPersonalData = () => {
   }
 }
 
-const localStorageClient: UserPersonalData = {
+const localStorageClient: PersonalDataClient = {
   watchedVideos,
   interruptedVideos,
   completedVideos,
