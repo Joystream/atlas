@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { ChannelAvatar, Placeholder } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { ChannelAvatar, Placeholder, Text } from '@/shared/components'
+import { sizes, colors, typography, breakpoints } from '@/shared/theme'
 
 export const Container = styled.div`
   display: flex;
@@ -34,6 +34,9 @@ export const Meta = styled.span`
   display: block;
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
+  @media screen and (max-width: ${breakpoints.medium}) {
+    font-size: 12px;
+  }
 `
 
 export const ChannelContainer = styled.div`
@@ -54,6 +57,9 @@ export const DescriptionContainer = styled.div`
     color: ${colors.gray[300]};
     line-height: 175%;
     margin: ${sizes(4)} 0 0;
+    @media screen and (max-width: ${breakpoints.small}) {
+      font-size: 14px;
+    }
   }
 `
 
@@ -80,5 +86,14 @@ export const LicenseContainer = styled.div`
   a {
     text-decoration: none;
     color: ${colors.gray[500]};
+  }
+`
+
+export const TitleText = styled(Text)`
+  @media screen and (max-width: ${breakpoints.medium}) {
+    font-size: 32px;
+  }
+  @media screen and (max-width: ${breakpoints.small}) {
+    font-size: 24px;
   }
 `
