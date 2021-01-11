@@ -19,7 +19,7 @@ export const PlayerWrapper = styled.div`
 export const PlayerPlaceholder = styled(Placeholder)`
   height: 30vh;
   @media screen and (min-width: ${breakpoints.small}) {
-    height: 60vh;
+    height: 70vh;
   }
 `
 

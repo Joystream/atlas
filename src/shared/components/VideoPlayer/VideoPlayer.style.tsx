@@ -33,7 +33,7 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 30vh;
   @media screen and (min-width: ${breakpoints.small}) {
-    height: 60vh;
+    height: 70vh;
   }
   *:focus {
     outline: none;
