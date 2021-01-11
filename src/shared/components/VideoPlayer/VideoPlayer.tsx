@@ -90,12 +90,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!player) {
       return
     }
-    if (!player.paused()) {
-      player.pause()
-    } else {
+    if (player.paused()) {
       player.play()
+    } else {
+      player.pause()
     }
   }
+
   return (
     <Container className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
