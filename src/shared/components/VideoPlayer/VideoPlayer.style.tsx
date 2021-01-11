@@ -42,19 +42,18 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
-    background-color: rgba(0, 0, 0, 0.3);
-    height: ${sizes(16)} !important;
+    background: none;
+    margin-top: auto;
+    padding: 0;
+    z-index: ${zIndex.overlay + 1};
     align-items: center;
-
-    @media screen and (max-width: ${breakpoints.small}) {
-      background: none;
-      margin-top: auto;
-      padding: 0;
-      z-index: ${zIndex.overlay + 1};
-    }
-
     /* account for progress bar on top */
-    padding: 5px ${sizes(8)} 0;
+    height: ${sizes(16)} !important;
+
+    @media screen and (min-width: ${breakpoints.small}) {
+      padding: 5px ${sizes(8)} 0;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
 
     .vjs-control {
       height: 30px;
@@ -95,9 +94,10 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-picture-in-picture-control {
-      margin-left: auto;
-      @media screen and (max-width: ${breakpoints.small}) {
-        display: none;
+      display: none;
+      @media screen and (min-width: ${breakpoints.small}) {
+        display: block;
+        margin-left: auto;
       }
     }
     .vjs-fullscreen-control {
@@ -116,19 +116,19 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-progress-control {
-      transition: none !important;
       position: absolute;
-      top: 0;
-      left: ${sizes(8)};
-      width: calc(100% - 2 * ${sizes(8)});
-      height: 5px;
+      transition: none !important;
+      top: initial;
+      height: 2px;
+      left: 0;
+      width: 100%;
+      bottom: -2px;
 
-      @media screen and (max-width: ${breakpoints.small}) {
-        top: initial;
-        height: 2px;
-        left: 0;
-        width: 100%;
-        bottom: -2px;
+      @media screen and (min-width: ${breakpoints.small}) {
+        top: 0;
+        left: ${sizes(8)};
+        width: calc(100% - 2 * ${sizes(8)});
+        height: 5px;
       }
 
       .vjs-progress-holder {
@@ -140,17 +140,17 @@ export const Container = styled.div<ContainerProps>`
             display: none;
           }
           ::before {
-            display: none;
-            @media screen and (max-width: ${breakpoints.small}) {
-              position: absolute;
-              top: -5px;
-              content: '';
-              display: initial;
-              width: 14px;
-              height: 14px;
-              background: ${colors.blue[500]};
-              border-radius: 100%;
-              border: 2px solid #fff;
+            position: absolute;
+            top: -5px;
+            content: '';
+            display: initial;
+            width: 14px;
+            height: 14px;
+            background: ${colors.blue[500]};
+            border-radius: 100%;
+            border: 2px solid ${colors.white};
+            @media screen and (min-width: ${breakpoints.small}) {
+              display: none;
             }
           }
         }

@@ -34,9 +34,7 @@ export const Meta = styled.span`
   display: block;
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
-  @media screen and (max-width: ${breakpoints.medium}) {
-    font-size: 12px;
-  }
+  font-size: 12px;
 `
 
 export const ChannelContainer = styled.div`
@@ -54,11 +52,12 @@ export const DescriptionContainer = styled.div`
   border-top: 1px solid ${colors.gray[800]};
 
   p {
-    color: ${colors.gray[300]};
-    line-height: 175%;
+    font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
-    @media screen and (max-width: ${breakpoints.small}) {
-      font-size: 14px;
+    @media screen and (min-width: ${breakpoints.small}) {
+      font-size: 1rem;
+      color: ${colors.gray[300]};
+      line-height: 175%;
     }
   }
 `
@@ -90,10 +89,11 @@ export const LicenseContainer = styled.div`
 `
 
 export const TitleText = styled(Text)`
-  @media screen and (max-width: ${breakpoints.medium}) {
-    font-size: 32px;
+  font-size: ${typography.sizes.h4};
+  @media screen and (min-width: ${breakpoints.small}) {
+    font-size: ${typography.sizes.h3};
   }
-  @media screen and (max-width: ${breakpoints.small}) {
-    font-size: 24px;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    font-size: ${typography.sizes.h2};
   }
 `
