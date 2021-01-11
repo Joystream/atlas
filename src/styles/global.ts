@@ -2,9 +2,9 @@ import { css } from '@emotion/core'
 import { transitions } from '@/shared/theme'
 
 export const globalStyles = css`
-  .video-js {
+  /* .video-js {
     padding-top: 56.25%;
-  }
+  } */
 
   .${transitions.names.fade}-enter {
     opacity: 0;

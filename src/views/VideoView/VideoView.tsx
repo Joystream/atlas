@@ -87,7 +87,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
               playing={playing}
               src={data.video.media.location}
               autoplay
-              fluid
+              fill
               posterUrl={data.video.thumbnailUrl}
             />
           ) : (

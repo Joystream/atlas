@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, typography, zIndex, breakpoints } from '../../theme'
 import Icon from '../Icon'
 import { css } from '@emotion/core'
 
@@ -31,7 +31,10 @@ const backgroundContainerCss = css`
 
 export const Container = styled.div<ContainerProps>`
   position: relative;
-
+  height: 30vh;
+  @media screen and (min-width: ${breakpoints.small}) {
+    height: 60vh;
+  }
   *:focus {
     outline: none;
   }

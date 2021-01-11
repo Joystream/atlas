@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ChannelAvatar, Placeholder } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { sizes, colors, typography, breakpoints } from '@/shared/theme'
 
 export const Container = styled.div`
   display: flex;
@@ -8,7 +8,7 @@ export const Container = styled.div`
 `
 
 export const PlayerContainer = styled.div`
-  width: min(1250px, 100%);
+  width: 100%;
 `
 
 export const PlayerWrapper = styled.div`
@@ -17,8 +17,10 @@ export const PlayerWrapper = styled.div`
 `
 
 export const PlayerPlaceholder = styled(Placeholder)`
-  padding-top: 56.25%;
-  height: 0;
+  height: 30vh;
+  @media screen and (min-width: ${breakpoints.small}) {
+    height: 60vh;
+  }
 `
 
 export const DescriptionPlaceholder = styled(Placeholder)`
