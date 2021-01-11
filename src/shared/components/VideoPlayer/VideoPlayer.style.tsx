@@ -31,10 +31,7 @@ const backgroundContainerCss = css`
 
 export const Container = styled.div<ContainerProps>`
   position: relative;
-  height: 30vh;
-  @media screen and (min-width: ${breakpoints.small}) {
-    height: 70vh;
-  }
+  height: 100%;
   *:focus {
     outline: none;
   }
@@ -42,7 +39,12 @@ export const Container = styled.div<ContainerProps>`
   .vjs-poster {
     background-size: cover;
   }
-
+  .vjs-tech {
+    object-fit: cover;
+    @media screen and (min-width: ${breakpoints.small}) {
+      object-fit: contain;
+    }
+  }
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background-color: rgba(0, 0, 0, 0.3);
