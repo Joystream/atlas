@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { LinkGetProps, navigate, RouteComponentProps } from '@reach/router'
-
 import routes from '@/config/routes'
+import { Icon } from '@/shared/components'
+import { navigate, RouteComponentProps } from '@reach/router'
+import React, { useState } from 'react'
 import {
-  ActiveIcon,
   FullLogo,
   Header,
-  InactiveIcon,
+  LoginButton,
+  LoginButtonsContainer,
   LogoLink,
   NavigationContainer,
+  PlaylistButton,
   SearchbarContainer,
   ShortLogo,
-  StyledLink,
   StyledSearchbar,
 } from './Navbar.style'
 
@@ -52,16 +52,6 @@ const Navbar: React.FC<NavbarProps> = () => {
           <ShortLogo />
           <FullLogo />
         </LogoLink>
-        <StyledLink to="/" getProps={isActive}>
-          <ActiveIcon name="home-fill" />
-          <InactiveIcon name="home" />
-          <span>Home</span>
-        </StyledLink>
-        <StyledLink to={routes.browse()} getProps={isActive}>
-          <ActiveIcon name="binocular-fill" />
-          <InactiveIcon name="binocular" />
-          <span>Browse</span>
-        </StyledLink>
       </NavigationContainer>
       <SearchbarContainer>
         <StyledSearchbar
@@ -75,12 +65,14 @@ const Navbar: React.FC<NavbarProps> = () => {
           controlled
         />
       </SearchbarContainer>
+      <LoginButtonsContainer>
+        <LoginButton variant="secondary">Login</LoginButton>
+        <PlaylistButton>
+          <Icon name="bars-play" />
+        </PlaylistButton>
+      </LoginButtonsContainer>
     </Header>
   )
-}
-
-const isActive = ({ isCurrent }: LinkGetProps) => {
-  return isCurrent ? { 'data-active': 'true' } : {}
 }
 
 export default Navbar
