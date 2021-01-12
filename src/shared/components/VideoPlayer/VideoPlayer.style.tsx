@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors, sizes, transitions, typography, zIndex, breakpoints } from '../../theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import Icon from '../Icon'
 import { css } from '@emotion/core'
 
@@ -41,12 +41,16 @@ export const Container = styled.div<ContainerProps>`
   }
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
-    background-color: rgba(0, 0, 0, 0.3);
-    height: ${sizes(16)} !important;
+    background: none;
+    margin-top: auto;
+    z-index: ${zIndex.overlay + 1};
     align-items: center;
+    height: ${sizes(16)} !important;
 
-    /* account for progress bar on top */
-    padding: 5px ${sizes(8)} 0;
+    @media screen and (min-width: ${breakpoints.small}) {
+      padding: 5px ${sizes(8)} 0;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
 
     .vjs-control {
       height: 30px;
@@ -87,7 +91,16 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-picture-in-picture-control {
-      margin-left: auto;
+      display: none;
+      @media screen and (min-width: ${breakpoints.small}) {
+        display: block;
+        margin-left: auto;
+      }
+    }
+    .vjs-fullscreen-control {
+      @media screen and (max-width: ${breakpoints.small}) {
+        margin-left: auto;
+      }
     }
 
     .vjs-slider {
@@ -101,17 +114,42 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-progress-control {
       position: absolute;
-      top: 0;
-      left: ${sizes(8)};
-      width: calc(100% - 2 * ${sizes(8)});
-      height: 5px;
+      transition: none !important;
+      top: initial;
+      height: 2px;
+      left: 0;
+      width: 100%;
+      bottom: -2px;
+
+      @media screen and (min-width: ${breakpoints.small}) {
+        top: 0;
+        left: ${sizes(8)};
+        width: calc(100% - 2 * ${sizes(8)});
+        height: 5px;
+      }
 
       .vjs-progress-holder {
         height: 100%;
         margin: 0;
 
-        .vjs-play-progress ::before {
-          display: none;
+        .vjs-play-progress {
+          .vjs-time-tooltip {
+            display: none;
+          }
+          ::before {
+            position: absolute;
+            top: -5px;
+            content: '';
+            display: initial;
+            width: 14px;
+            height: 14px;
+            background: ${colors.blue[500]};
+            border-radius: 100%;
+            border: 2px solid ${colors.white};
+            @media screen and (min-width: ${breakpoints.small}) {
+              display: none;
+            }
+          }
         }
 
         .vjs-load-progress {
