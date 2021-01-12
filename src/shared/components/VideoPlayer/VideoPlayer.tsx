@@ -90,7 +90,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!player) {
       return
     }
-
     player.play()
   }
 
