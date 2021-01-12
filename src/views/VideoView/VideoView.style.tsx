@@ -8,17 +8,21 @@ export const Container = styled.div`
 `
 
 export const PlayerContainer = styled.div`
-  width: min(1250px, 100%);
+  width: 100%;
+  height: calc(100vw * 0.5625);
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: 70vh;
+  }
 `
 
 export const PlayerWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin: 0 calc(-1 * var(--global-horizontal-padding));
 `
 
 export const PlayerPlaceholder = styled(Placeholder)`
-  padding-top: 56.25%;
-  height: 0;
+  height: 100%;
 `
 
 export const DescriptionPlaceholder = styled(Placeholder)`

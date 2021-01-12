@@ -31,7 +31,7 @@ const backgroundContainerCss = css`
 
 export const Container = styled.div<ContainerProps>`
   position: relative;
-
+  height: 100%;
   *:focus {
     outline: none;
   }
@@ -39,7 +39,6 @@ export const Container = styled.div<ContainerProps>`
   .vjs-poster {
     background-size: cover;
   }
-
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background: none;
