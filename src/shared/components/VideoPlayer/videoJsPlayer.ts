@@ -16,6 +16,7 @@ export type VideoJsConfig = {
   onDataLoaded?: () => void
   onPlay?: () => void
   onPause?: () => void
+  onEnd?: () => void
 }
 
 const createJoystreamStorageUrl = (dataObjectId: string) => {
@@ -35,6 +36,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   onDataLoaded,
   onPlay,
   onPause,
+  onEnd,
 }) => {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
@@ -149,6 +151,13 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       player.off('pause', onPause)
     }
   }, [player, onPause])
+
+  useEffect(() => {
+    if (!player || !onEnd) {
+      return
+    }
+    player.on('ended', onEnd)
+  }, [player, onEnd])
 
   return [player, playerRef]
 }

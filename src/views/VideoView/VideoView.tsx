@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 import {
   ChannelContainer,
@@ -21,6 +21,7 @@ import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVide
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
 import { ChannelLink } from '@/components'
+import { useInterval, usePersonalData } from '@/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -28,10 +29,17 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     variables: { id },
   })
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
+  const { state, updateWatchedVideos } = usePersonalData()
 
+  const videoTimestamp = useMemo(() => {
+    const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
+    return currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : null
+  }, [data?.video?.id, state.watchedVideos])
+
+  const videoRef = useRef<HTMLVideoElement>(null)
   const videoID = data?.video?.id
 
-  const [playing, setPlaying] = useState<boolean>(true)
+  const [playing, setPlaying] = useState<boolean>()
   const handleUserKeyPress = useCallback((event: Event) => {
     const { keyCode } = event as KeyboardEvent
     if (keyCode === 32) {
@@ -70,6 +78,24 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     })
   }, [addVideoView, videoID])
 
+  // Save the video timestamp
+  useInterval(() => {
+    if (data?.video?.id && videoRef.current) {
+      updateWatchedVideos('INTERRUPTED', data.video.id, videoRef.current.currentTime)
+    }
+  }, 5000)
+
+  const handleVideoEnd = () => {
+    if (data?.video?.id) {
+      updateWatchedVideos('COMPLETED', data?.video?.id)
+    }
+  }
+  const handleVideoStart = () => {
+    if (videoTimestamp && videoRef.current) {
+      videoRef.current.currentTime = videoTimestamp
+    }
+  }
+
   if (error) {
     throw error
   }
@@ -89,6 +115,9 @@ const VideoView: React.FC<RouteComponentProps> = () => {
               autoplay
               fluid
               posterUrl={data.video.thumbnailUrl}
+              onEnd={handleVideoEnd}
+              onDataLoaded={handleVideoStart}
+              ref={videoRef}
             />
           ) : (
             <PlayerPlaceholder />

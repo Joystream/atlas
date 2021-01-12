@@ -25,13 +25,13 @@ const asyncReducer = (state: PersonalData, action: Action) => {
     case 'UPDATE_WATCHED_VIDEOS': {
       return {
         ...state,
-        ...action.watchedVideos,
+        watchedVideos: action.watchedVideos,
       }
     }
     case 'UPDATE_FOLLOWED_CHANNELS': {
       return {
         ...state,
-        ...action.followedChannels,
+        followedChannels: action.followedChannels,
       }
     }
     default: {
