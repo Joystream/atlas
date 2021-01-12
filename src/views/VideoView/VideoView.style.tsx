@@ -9,8 +9,8 @@ export const Container = styled.div`
 
 export const PlayerContainer = styled.div`
   width: 100%;
-  height: 30vh;
-  @media screen and (min-width: ${breakpoints.small}) {
+  height: calc(100vw * 0.5625);
+  @media screen and (min-width: ${breakpoints.medium}) {
     height: 70vh;
   }
 `
