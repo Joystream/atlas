@@ -1,102 +1,84 @@
-import { sizes, colors, typography, zIndex } from '../../theme'
-import { makeStyles, StyleFn } from '../../utils'
+import styled from '@emotion/styled'
+import { animated } from 'react-spring'
+import { colors, sizes, typography, zIndex } from '../../theme'
+import { Link } from '@reach/router'
 
 export const SIDENAV_WIDTH = 56
 export const EXPANDED_SIDENAV_WIDTH = 360
 
-type SidenavStyleProps = {
+type DrawerProps = {
   expanded: boolean
 }
 
-const nav: StyleFn = () => ({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  zIndex: zIndex.nearOverlay,
+export const SidebarNav = styled(animated.nav)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: ${zIndex.header};
+  overflow: hidden;
+  padding: ${sizes(8)} ${sizes(4)};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: ${colors.blue[700]};
+  color: ${colors.white};
+`
 
-  overflow: 'hidden',
+export const SidebarNavList = styled.ul`
+  list-style: none;
+  margin-top: 90px;
+  padding: 0;
+`
 
-  padding: `${sizes(8)} ${sizes(4)}`,
+export const SidebarNavItem = styled.li`
+  &:not(:first-child) {
+    margin-top: ${sizes(10)};
+  }
+  display: flex;
+  flex-direction: column;
+`
 
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
+export const SidebarNavLink = styled(Link)`
+  color: ${colors.white};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  > span {
+    margin-left: ${sizes(8)};
+    font-weight: bold;
+    font-family: ${typography.fonts.headers};
+    font-size: ${typography.sizes.h5};
+    line-height: 1;
+  }
+`
 
-  backgroundColor: colors.blue[700],
-  color: colors.white,
-})
+export const Drawer = styled(animated.div)<DrawerProps>`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: ${({ expanded }) => (expanded ? 'block' : 'none')};
+  z-index: ${zIndex.overlay};
+  background-color: rgba(0, 0, 0, 0.5);
+`
+export const SubItemsWrapper = styled(animated.div)`
+  padding-left: calc(${typography.sizes.icon.xlarge} + ${sizes(8)});
+  overflow: hidden;
+  > ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    list-style: none;
+  }
+`
 
-const expandButton: StyleFn = () => ({
-  padding: '7px',
-  margin: '-4px',
-})
-
-const drawerOverlay: StyleFn<SidenavStyleProps> = (_, { expanded }) => ({
-  position: 'fixed',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  zIndex: zIndex.overlay,
-
-  display: expanded ? 'block' : 'none',
-
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-})
-
-const navItemsWrapper: StyleFn = () => ({
-  marginTop: '90px',
-})
-
-const navItemContainer: StyleFn = () => ({
-  ':not(:first-child)': {
-    marginTop: sizes(10),
-  },
-  display: 'flex',
-  flexDirection: 'column',
-})
-
-const navItem: StyleFn = () => ({
-  display: 'flex',
-  alignItems: 'center',
-  '> span': {
-    marginLeft: sizes(8),
-    fontWeight: 'bold',
-    fontFamily: typography.fonts.headers,
-    fontSize: typography.sizes.h5,
-    lineHeight: 1,
-  },
-})
-
-const navSubitemsWrapper: StyleFn = () => ({
-  paddingLeft: `calc(${typography.sizes.icon.xlarge} + ${sizes(8)})`,
-  overflow: 'hidden',
-  '> div': {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-})
-
-const navSubitem: StyleFn = () => ({
-  fontSize: typography.sizes.body2,
-  fontFamily: typography.fonts.base,
-  marginTop: sizes(8),
-  ':first-child': {
-    marginTop: sizes(6),
-  },
-})
-
-export const useSidenavCSS = (props: SidenavStyleProps) => ({
-  nav: makeStyles([nav])(props),
-  expandButton: makeStyles([expandButton])(props),
-  drawerOverlay: makeStyles([drawerOverlay])(props),
-  navItemsWrapper: makeStyles([navItemsWrapper])(props),
-})
-
-export const useNavItemCSS = (props: SidenavStyleProps) => ({
-  navItemContainer: makeStyles([navItemContainer])(props),
-  navItem: makeStyles([navItem])(props),
-  navSubitemsWrapper: makeStyles([navSubitemsWrapper])(props),
-  navSubitem: makeStyles([navSubitem])(props),
-})
+export const SubItem = styled.li`
+  font-size: ${typography.sizes.body2};
+  font-family: ${typography.fonts.base};
+  margin-top: ${sizes(8)};
+  :first-of-type {
+    margin-top: ${sizes(6)};
+  }
+`

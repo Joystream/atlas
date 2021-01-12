@@ -1,8 +1,18 @@
 import React, { useState } from 'react'
-import { animated, useSpring, useTransition } from 'react-spring'
+import { useSpring, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 import HamburgerButton from '../HamburgerButton'
-import { EXPANDED_SIDENAV_WIDTH, SIDENAV_WIDTH, useNavItemCSS, useSidenavCSS } from './Sidenav.style'
+import {
+  EXPANDED_SIDENAV_WIDTH,
+  SIDENAV_WIDTH,
+  SidebarNav,
+  SidebarNavList,
+  SidebarNavItem,
+  SidebarNavLink,
+  Drawer,
+  SubItem,
+  SubItemsWrapper,
+} from './Sidenav.style'
 
 type NavSubitem = {
   name: string
@@ -11,6 +21,7 @@ type NavSubitem = {
 type NavItem = {
   subitems?: NavSubitem[]
   icon: React.ReactNode
+  to: string
 } & NavSubitem
 
 type SidenavProps = {
@@ -19,7 +30,6 @@ type SidenavProps = {
 
 const Sidenav: React.FC<SidenavProps> = ({ items }) => {
   const [expanded, setExpanded] = useState(false)
-  const styles = useSidenavCSS({ expanded })
 
   const containerAnimationStyles = useSpring({
     from: { width: SIDENAV_WIDTH },
@@ -33,20 +43,20 @@ const Sidenav: React.FC<SidenavProps> = ({ items }) => {
 
   return (
     <>
-      <animated.nav css={styles.nav} style={containerAnimationStyles}>
-        <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} outerStyles={styles.expandButton} />
-        <div css={styles.navItemsWrapper}>
+      <SidebarNav style={containerAnimationStyles}>
+        <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
+        <SidebarNavList>
           {items.map((item) => (
-            <NavItem key={item.name} expanded={expanded} subitems={item.subitems}>
+            <NavItem key={item.name} to={item.to} expanded={expanded} subitems={item.subitems}>
               {item.icon}
               <span>{item.name}</span>
             </NavItem>
           ))}
-        </div>
-      </animated.nav>
+        </SidebarNavList>
+      </SidebarNav>
       {overlayTransitions.map(
         ({ item, key, props }) =>
-          item && <animated.div css={styles.drawerOverlay} key={key} style={props} onClick={() => setExpanded(false)} />
+          item && <Drawer key={key} style={props} onClick={() => setExpanded(false)} expanded={expanded} />
       )}
     </>
   )
@@ -55,28 +65,28 @@ const Sidenav: React.FC<SidenavProps> = ({ items }) => {
 type NavItemProps = {
   subitems?: NavSubitem[]
   expanded: boolean
+  to: string
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children }) => {
-  const styles = useNavItemCSS({ expanded })
-  const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLDivElement>()
+const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to }) => {
+  const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const subitemsAnimationStyles = useSpring({ height: expanded ? subitemsHeight || 0 : 0 })
 
   return (
-    <div css={styles.navItemContainer}>
-      <a css={styles.navItem}>{children}</a>
+    <SidebarNavItem>
+      <SidebarNavLink to={to}>{children}</SidebarNavLink>
       {subitems && (
-        <animated.div css={styles.navSubitemsWrapper} style={subitemsAnimationStyles}>
-          <div ref={subitemsRef}>
+        <SubItemsWrapper style={subitemsAnimationStyles}>
+          <ul ref={subitemsRef}>
             {subitems.map((item) => (
-              <a key={item.name} css={styles.navSubitem}>
-                {item.name}
-              </a>
+              <SubItem key={item.name}>
+                <a>{item.name}</a>
+              </SubItem>
             ))}
-          </div>
-        </animated.div>
+          </ul>
+        </SubItemsWrapper>
       )}
-    </div>
+    </SidebarNavItem>
   )
 }
 
