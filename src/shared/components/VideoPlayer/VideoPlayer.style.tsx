@@ -44,10 +44,8 @@ export const Container = styled.div<ContainerProps>`
     font-family: ${typography.fonts.base};
     background: none;
     margin-top: auto;
-    padding: 0;
     z-index: ${zIndex.overlay + 1};
     align-items: center;
-    /* account for progress bar on top */
     height: ${sizes(16)} !important;
 
     @media screen and (min-width: ${breakpoints.small}) {
