@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
-import { colors, sizes, typography, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
 
 export const SIDENAV_WIDTH = 56
@@ -13,22 +13,28 @@ type DrawerProps = {
 export const SidebarNav = styled(animated.nav)`
   position: fixed;
   top: 0;
-  left: 0;
   bottom: 0;
   z-index: ${zIndex.header};
-  overflow: hidden;
-  padding: ${sizes(8)} ${sizes(4)};
+  width: 0;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: ${colors.blue[700]};
+
+  overflow: hidden;
   color: ${colors.white};
+  background-color: ${colors.blue[700]};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    left: 0;
+    width: ${SIDENAV_WIDTH};
+  }
 `
 
 export const SidebarNavList = styled.ul`
   list-style: none;
   margin-top: 90px;
   padding: 0;
+  padding: ${sizes(8)} ${sizes(4)};
 `
 
 export const SidebarNavItem = styled.li`
@@ -51,9 +57,23 @@ export const SidebarNavLink = styled(Link)`
     font-size: ${typography.sizes.h5};
     line-height: 1;
   }
+  svg:first-of-type {
+    display: block;
+  }
+  svg:last-of-type {
+    display: none;
+  }
+  &[data-active='true'] {
+    svg:first-of-type {
+      display: none;
+    }
+    svg:last-of-type {
+      display: block;
+    }
+  }
 `
 
-export const Drawer = styled(animated.div)<DrawerProps>`
+export const DrawerOverlay = styled(animated.div)<DrawerProps>`
   position: fixed;
   top: 0;
   right: 0;

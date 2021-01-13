@@ -13,6 +13,10 @@ type NavbarStyleProps = {
 export const StyledSearchbar = styled(Searchbar)`
   transition: max-width ${transitions.timings.regular} ${transitions.easing};
   will-change: max-width;
+  height: 42px;
+  @media screen and (min-width: ${breakpoints.small}) {
+    height: initial;
+  }
 `
 export const NAVBAR_HEIGHT = 81
 export const Header = styled.header<NavbarStyleProps>`
@@ -33,8 +37,10 @@ export const Header = styled.header<NavbarStyleProps>`
   padding: ${sizes(2)} ${sizes(3)};
 
   @media screen and (min-width: ${breakpoints.small}) {
+    z-index: ${zIndex.header};
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 2fr 1fr;
+    column-gap: ${sizes(2)};
     padding: ${sizes(3)} ${sizes(3)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
@@ -50,7 +56,7 @@ export const Header = styled.header<NavbarStyleProps>`
 
 export const LogoLink = styled(Link)`
   padding: 0 ${sizes(5)};
-  margin-right: ${sizes(2)};
+  margin-right: ${sizes(1)};
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(5)};
   }
@@ -75,9 +81,11 @@ export const FullLogo = styled(UnstyledFullLogo)`
 export const NavigationContainer = styled.div`
   margin-left: ${sizes(10)};
   margin-top: ${sizes(1)};
-  display: flex;
+  display: none;
+  align-items: flex-start;
   @media screen and (min-width: ${breakpoints.small}) {
     align-items: center;
+    display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
@@ -86,16 +94,17 @@ export const NavigationContainer = styled.div`
 `
 
 export const SearchbarContainer = styled.div`
-  display: none;
-
-  justify-self: end;
-
-  width: 100%;
   max-width: 1156px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-left: ${sizes(13)};
+  margin-right: ${sizes(3)};
+
   @media screen and (min-width: ${breakpoints.small}) {
-    display: flex;
-    justify-content: center;
+    margin: 0;
     align-items: center;
+    justify-content: center;
   }
 `
 export const ActiveIcon = styled(Icon)`
@@ -156,6 +165,7 @@ export const StyledLink = styled(Link)`
 `
 export const LoginButtonsContainer = styled.div`
   display: block;
+
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
     justify-content: flex-end;
@@ -165,24 +175,33 @@ export const LoginButtonsContainer = styled.div`
 
 export const LoginButton = styled(Button)`
   display: none;
+
   @media screen and (min-width: ${breakpoints.small}) {
     cursor: pointer;
-    padding: 14px 20px;
+    padding: 15px 20px;
     display: block;
   }
 `
 
 export const PlaylistButton = styled.button`
+  --size: 42px;
   cursor: pointer;
+
+  padding-top: 2px;
+  padding-right: 2px;
+  width: var(--size);
+  height: var(--size);
+
   display: flex;
-  border: none;
   justify-content: center;
+
+  border: none;
   align-items: center;
   color: ${colors.white};
   background: ${colors.gray[800]};
-  padding: ${sizes(4)};
+
   @media screen and (min-width: ${breakpoints.small}) {
+    --size: 50px;
     margin-left: ${sizes(3)};
-    padding: 17px 14px;
   }
 `

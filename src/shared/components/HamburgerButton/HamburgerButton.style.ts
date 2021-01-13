@@ -1,21 +1,33 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 
 import styled from '@emotion/styled'
-import { colors } from '../../theme'
+import { breakpoints, colors, sizes, zIndex } from '../../theme'
 
 type HamburgerInnerProps = {
   active: boolean
 }
 
 export const Hamburger = styled.button`
+  top: 0;
+  position: fixed;
+  z-index: ${zIndex.header + 1};
   cursor: pointer;
-  background: none;
+  background-color: ${colors.blue[700]};
   border: none;
   display: inline-block;
-  padding: 7px;
-  margin: -4px;
+  padding: ${sizes(3)};
+  margin: ${sizes(2)};
   &:hover {
     opacity: 0.7;
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    padding: ${sizes(4)};
+    margin: ${sizes(3)};
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin: ${sizes(4)} ${sizes(2)};
+    padding: ${sizes(3)};
+    background: none;
   }
 `
 
