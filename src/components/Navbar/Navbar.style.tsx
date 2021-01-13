@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Icon, Searchbar, Button } from '@/shared/components'
+import { Searchbar, Button } from '@/shared/components'
 import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
@@ -107,62 +107,7 @@ export const SearchbarContainer = styled.div`
     justify-content: center;
   }
 `
-export const ActiveIcon = styled(Icon)`
-  display: none;
-  color: ${colors.gray[300]};
-`
 
-export const InactiveIcon = styled(Icon)`
-  display: block;
-`
-
-export const StyledLink = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  color: ${colors.gray[300]};
-  font-weight: 500;
-
-  text-decoration: none;
-
-  span {
-    display: none;
-    margin-left: ${sizes(3)};
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    span {
-      display: inline-block;
-    }
-  }
-
-  &[data-active='true'] {
-    ${ActiveIcon} {
-      display: block;
-      color: ${colors.gray[100]};
-    }
-    ${InactiveIcon} {
-      display: none;
-    }
-    color: ${colors.gray[100]};
-  }
-
-  &:hover {
-    ${ActiveIcon} {
-      display: block;
-      color: ${colors.white};
-    }
-    ${InactiveIcon} {
-      display: none;
-    }
-    color: ${colors.white};
-  }
-
-  & + & {
-    margin-left: ${sizes(3)};
-    @media screen and (min-width: ${breakpoints.small}) {
-      margin-left: ${sizes(6)};
-    }
-  }
-`
 export const LoginButtonsContainer = styled.div`
   display: block;
 
