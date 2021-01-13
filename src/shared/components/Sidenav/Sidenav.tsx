@@ -22,8 +22,7 @@ import {
 type NavSubitem = {
   name: string
 }
-
-type NavItem = {
+type NavItemType = {
   subitems?: NavSubitem[]
   icon: IconType
   iconFilled: IconType
@@ -31,7 +30,7 @@ type NavItem = {
 } & NavSubitem
 
 type SidenavProps = {
-  items: NavItem[]
+  items: NavItemType[]
 }
 
 const Sidenav: React.FC<SidenavProps> = ({ items }) => {
@@ -115,3 +114,4 @@ const isActive = ({ isCurrent }: LinkGetProps) => {
 }
 
 export { Sidenav as default, NavItem }
+export type { NavItemType }

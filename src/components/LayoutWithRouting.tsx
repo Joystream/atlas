@@ -3,11 +3,40 @@ import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
-import { GlobalStyle } from '@/shared/components'
+import { GlobalStyle, Sidenav } from '@/shared/components'
 import { Navbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
+import { breakpoints, sizes } from '@/shared/theme'
+import { NavItemType } from '../shared/components/Sidenav'
+
+const SIDENAV_ITEMS: NavItemType[] = [
+  {
+    icon: 'home',
+    iconFilled: 'home-fill',
+    name: 'Home',
+    to: '/',
+  },
+  {
+    icon: 'binocular',
+    iconFilled: 'binocular-fill',
+    name: 'Discover',
+    to: '/browse',
+  },
+  {
+    icon: 'browse',
+    iconFilled: 'browse',
+    name: 'Browse',
+    to: '/browse',
+  },
+  {
+    icon: 'books',
+    iconFilled: 'books',
+    name: 'Following',
+    to: '/following',
+  },
+]
 
 type RouteProps = {
   Component: React.ComponentType
@@ -38,6 +67,7 @@ const LayoutWithRouting: React.FC = () => {
     <>
       <GlobalStyle additionalStyles={globalStyles} />
       <Navbar default />
+      <Sidenav items={SIDENAV_ITEMS} />
       <MainContainer>
         <Router primary={false}>
           <Route default Component={HomeView} />
@@ -53,5 +83,9 @@ const LayoutWithRouting: React.FC = () => {
 
 const MainContainer = styled.main`
   padding: 0 var(--global-horizontal-padding);
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: ${sizes(14)};
+  }
 `
 export default LayoutWithRouting
