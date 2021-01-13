@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Icon from '@/shared/components/Icon'
 import { animated } from 'react-spring'
 import { breakpoints, colors, sizes, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
@@ -45,11 +46,21 @@ export const SidebarNavItem = styled.li`
   flex-direction: column;
 `
 
+export const ActiveIcon = styled(Icon)`
+  display: none;
+`
+export const InactiveIcon = styled(Icon)`
+  display: block;
+`
+
 export const SidebarNavLink = styled(Link)`
   color: ${colors.white};
   text-decoration: none;
   display: flex;
   align-items: center;
+  &:hover {
+    opacity: 0.7;
+  }
   > span {
     margin-left: ${sizes(8)};
     font-weight: bold;
@@ -57,18 +68,12 @@ export const SidebarNavLink = styled(Link)`
     font-size: ${typography.sizes.h5};
     line-height: 1;
   }
-  svg:first-of-type {
-    display: block;
-  }
-  svg:last-of-type {
-    display: none;
-  }
   &[data-active='true'] {
-    svg:first-of-type {
-      display: none;
-    }
-    svg:last-of-type {
+    ${ActiveIcon} {
       display: block;
+    }
+    ${InactiveIcon} {
+      display: none;
     }
   }
 `
