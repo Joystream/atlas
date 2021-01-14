@@ -3,26 +3,61 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ChannelFollowsInfo {
+  follows: Int!
+  id: ID!
+}
+
+type EntityViewsInfo {
+  id: ID!
+  views: Int!
+}
+
 type Mutation {
   """
   Add a single view to the target video's count
   """
-  addVideoView(videoID: ID!): VideoViewsInfo!
+  addVideoView(channelId: ID!, videoId: ID!): EntityViewsInfo!
+
+  """
+  Add a single follow to the target channel
+  """
+  followChannel(channelId: ID!): ChannelFollowsInfo!
+
+  """
+  Remove a single follow from the target channel
+  """
+  unfollowChannel(channelId: ID!): ChannelFollowsInfo!
 }
 
 type Query {
   """
+  Get follows counts for a list of channels
+  """
+  batchedChannelFollows(channelIdList: [ID!]!): [ChannelFollowsInfo]!
+
+  """
+  Get views counts for a list of channels
+  """
+  batchedChannelsViews(channelIdList: [ID!]!): [EntityViewsInfo]!
+
+  """
   Get views counts for a list of videos
   """
-  batchedVideoViews(videoIDList: [ID!]!): [VideoViewsInfo]!
+  batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
+
+  """
+  Get follows count for a single channel
+  """
+  channelFollows(channelId: ID!): ChannelFollowsInfo
+
+  """
+  Get views count for a single channel
+  """
+  channelViews(channelId: ID!): EntityViewsInfo
 
   """
   Get views count for a single video
   """
-  videoViews(videoID: ID!): VideoViewsInfo
-}
-
-type VideoViewsInfo {
-  id: ID!
-  views: Int!
+  videoViews(videoId: ID!): EntityViewsInfo
 }

@@ -30,7 +30,8 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   })
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
 
-  const videoID = data?.video?.id
+  const videoId = data?.video?.id
+  const channelId = data?.video?.channel.id
 
   const [playing, setPlaying] = useState<boolean>(true)
   const handleUserKeyPress = useCallback((event: Event) => {
@@ -50,16 +51,16 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [handleUserKeyPress])
 
   useEffect(() => {
-    if (!videoID) {
+    if (!videoId || !channelId) {
       return
     }
     addVideoView({
-      variables: { id: videoID },
+      variables: { videoId, channelId },
       update: (cache, mutationResult) => {
         cache.modify({
           id: cache.identify({
             __typename: 'Video',
-            id: videoID,
+            id: videoId,
           }),
           fields: {
             views: () => mutationResult.data?.addVideoView.views,
@@ -69,7 +70,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     }).catch((error) => {
       console.warn('Failed to increase video views', { error })
     })
-  }, [addVideoView, videoID])
+  }, [addVideoView, videoId, channelId])
 
   if (error) {
     throw error

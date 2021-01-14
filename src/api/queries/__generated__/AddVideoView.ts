@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface AddVideoView_addVideoView {
-  __typename: "VideoViewsInfo";
+  __typename: "EntityViewsInfo";
   id: string;
   views: number;
 }
@@ -18,5 +18,6 @@ export interface AddVideoView {
 }
 
 export interface AddVideoViewVariables {
-  id: string;
+  videoId: string;
+  channelId: string;
 }
