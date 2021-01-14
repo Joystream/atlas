@@ -66,7 +66,7 @@ export const createMockData = (server: MirageJSServer) => {
       license: licenseEntities[idx % licenseEntities.length],
     })
 
-    server.create('VideoViewsInfo', {
+    server.create('EntityViewsInfo', {
       id: video.id,
       views: video.views,
     })
@@ -109,7 +109,7 @@ const createCoverVideoData = (server: MirageJSServer, categories: unknown[]) => 
     license: licenseEntity,
   })
 
-  server.create('VideoViewsInfo', {
+  server.create('EntityViewsInfo', {
     id: video.id,
     views: video.views,
   })

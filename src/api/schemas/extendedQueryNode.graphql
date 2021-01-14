@@ -230,7 +230,12 @@ enum FeaturedVideoOrderByInput {
   createdAt_DESC
 }
 
-type VideoViewsInfo {
+type ChannelFollowsInfo {
+  follows: Int!
+  id: ID!
+}
+
+type EntityViewsInfo {
   id: ID!
   views: Int!
 }
@@ -267,5 +272,9 @@ type Query {
 }
 
 type Mutation {
-  addVideoView(videoID: ID!): VideoViewsInfo!
+  addVideoView(channelId: ID!, videoId: ID!): EntityViewsInfo!
+
+  followChannel(channelId: ID!): ChannelFollowsInfo!
+
+  unfollowChannel(channelId: ID!): ChannelFollowsInfo!
 }
