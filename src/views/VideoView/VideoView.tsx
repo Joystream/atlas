@@ -41,7 +41,8 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
   }, [data?.video?.id, state.watchedVideos, startTimestamp])
 
-  const videoID = data?.video?.id
+  const videoId = data?.video?.id
+  const channelId = data?.video?.channel.id
 
   const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback((event: Event) => {
@@ -61,16 +62,16 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [handleUserKeyPress])
 
   useEffect(() => {
-    if (!videoID) {
+    if (!videoId || !channelId) {
       return
     }
     addVideoView({
-      variables: { id: videoID },
+      variables: { videoId, channelId },
       update: (cache, mutationResult) => {
         cache.modify({
           id: cache.identify({
             __typename: 'Video',
-            id: videoID,
+            id: videoId,
           }),
           fields: {
             views: () => mutationResult.data?.addVideoView.views,
@@ -80,7 +81,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     }).catch((error) => {
       console.warn('Failed to increase video views', { error })
     })
-  }, [addVideoView, videoID])
+  }, [addVideoView, videoId, channelId])
 
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.

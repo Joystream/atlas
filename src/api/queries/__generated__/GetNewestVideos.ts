@@ -27,7 +27,7 @@ export type GetNewestVideos_videosConnection_edges_node_media_location = GetNewe
 export interface GetNewestVideos_videosConnection_edges_node_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number | null;
+  pixelHeight: number;
   pixelWidth: number;
   location: GetNewestVideos_videosConnection_edges_node_media_location;
 }

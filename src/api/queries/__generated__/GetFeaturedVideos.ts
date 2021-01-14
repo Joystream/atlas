@@ -27,7 +27,7 @@ export type GetFeaturedVideos_featuredVideos_video_media_location = GetFeaturedV
 export interface GetFeaturedVideos_featuredVideos_video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number | null;
+  pixelHeight: number;
   pixelWidth: number;
   location: GetFeaturedVideos_featuredVideos_video_media_location;
 }
