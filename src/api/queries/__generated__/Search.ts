@@ -27,7 +27,7 @@ export type Search_search_item_Video_media_location = Search_search_item_Video_m
 export interface Search_search_item_Video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number | null;
+  pixelHeight: number;
   pixelWidth: number;
   location: Search_search_item_Video_media_location;
 }

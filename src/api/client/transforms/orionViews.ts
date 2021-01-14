@@ -30,7 +30,7 @@ const VIDEO_INFO_SELECTION_SET: SelectionSetNode = {
   ],
 }
 
-export const ORION_VIEWS_FIELD_NAME = 'videoViews'
+export const ORION_VIEWS_QUERY_NAME = 'videoViews'
 
 // Transform a request to expect VideoViewsInfo return type instead of an Int
 export const TransformOrionViewsField: Transform = {
@@ -44,7 +44,7 @@ export const TransformOrionViewsField: Transform = {
             selectionSet: {
               ...definition.selectionSet,
               selections: definition.selectionSet.selections.map((selection) => {
-                if (selection.kind === 'Field' && selection.name.value === ORION_VIEWS_FIELD_NAME) {
+                if (selection.kind === 'Field' && selection.name.value === ORION_VIEWS_QUERY_NAME) {
                   return {
                     ...selection,
                     selectionSet: VIDEO_INFO_SELECTION_SET,
@@ -66,7 +66,7 @@ export const TransformOrionViewsField: Transform = {
       throw new OrionError(result.errors)
     }
 
-    const views = result?.data?.[ORION_VIEWS_FIELD_NAME]?.views || 0
+    const views = result?.data?.[ORION_VIEWS_QUERY_NAME]?.views || 0
     const data = {
       videoViews: views,
     }
