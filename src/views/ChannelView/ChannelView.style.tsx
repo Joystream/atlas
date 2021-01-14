@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text, Button } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, typography, zIndex } from '@/shared/theme'
 
@@ -214,5 +214,11 @@ export const SubTitlePlaceholder = styled(Placeholder)`
   height: ${SM_SUBTITLE_HEIGHT};
   @media screen and (min-width: ${breakpoints.medium}) {
     height: ${SUBTITLE_HEIGHT};
+`
+
+export const StyledButton = styled(Button)`
+  align-self: flex-start;
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-left: auto;
   }
 `

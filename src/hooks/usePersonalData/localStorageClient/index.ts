@@ -1,2 +1,2 @@
 export { default as localStorageClient, getInitialPersonalData } from './localStorageClient'
-export * from './types'
+export * from './localStorageClient'

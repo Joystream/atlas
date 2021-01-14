@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 
-import { GET_CHANNEL } from '@/api/queries/channels'
+import { GET_CHANNEL, FOLLOW_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
+
+import { usePersonalData } from '@/hooks'
 
 import {
   CoverImage,
@@ -18,6 +20,7 @@ import {
   VideoSection,
   SubTitle,
   SubTitlePlaceholder,
+  StyledButton,
 } from './ChannelView.style'
 import { BackgroundPattern, InfiniteVideoGrid } from '@/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
@@ -29,7 +32,34 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
+  const [
+    followChannel,
+    { loading: followChannelLoading, data: followChannelData, error: followChannelError },
+  ] = useLazyQuery(FOLLOW_CHANNEL, {
+    variables: { id },
+  })
+  const {
+    state: { followedChannels },
+    updateChannelFollowing,
+  } = usePersonalData()
+  const [isFollowing, setFollowing] = useState<boolean>()
 
+  useEffect(() => {
+    const isFollowing = followedChannels.includes(id)
+    setFollowing(isFollowing)
+  }, [followedChannels, id])
+
+  const handleFollow = async (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    e.preventDefault()
+    if (isFollowing) {
+      updateChannelFollowing(id, false)
+      setFollowing(false)
+    } else {
+      followChannel()
+      updateChannelFollowing(id, true)
+      setFollowing(true)
+    }
+  }
   if (error) {
     throw error
   }
