@@ -3,6 +3,7 @@ import { MockVideo } from '@/mocking/data/mockVideos'
 import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
 import { MockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
+import { GetCoverVideo_coverVideo } from '@/api/queries/__generated__/GetCoverVideo'
 
 export const mockCoverVideoChannel: MockChannel = {
   ...rawCoverVideo.channel,
@@ -21,9 +22,19 @@ export const mockCoverVideoMedia: MockVideoMedia = {
     __typename: 'HttpMediaLocation',
     ...rawCoverVideo.videoMedia.location,
   },
-  coverCutLocation: {
-    __typename: 'HttpMediaLocation',
-    ...rawCoverVideo.videoMedia.coverCutLocation,
+}
+
+type CoverInfo = Omit<GetCoverVideo_coverVideo, 'video' | '__typename'>
+
+export const mockCoverVideoInfo: CoverInfo = {
+  ...rawCoverVideo.cover,
+  coverCutMedia: {
+    __typename: 'VideoMedia',
+    ...rawCoverVideo.cover.coverCutMedia,
+    location: {
+      __typename: 'HttpMediaLocation',
+      ...rawCoverVideo.cover.coverCutMedia.location,
+    },
   },
 }
 
