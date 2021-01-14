@@ -1,7 +1,7 @@
 import { GraphQLSchema } from 'graphql'
 import { delegateToSchema } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
-import { TransformOrionViewsField, ORION_VIEWS_FIELD_NAME, RemoveQueryNodeViewsField } from './transforms'
+import { TransformOrionViewsField, ORION_VIEWS_QUERY_NAME, RemoveQueryNodeViewsField } from './transforms'
 
 const createResolverWithoutVideoViewsField = (
   schema: GraphQLSchema,
@@ -39,9 +39,9 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
-          fieldName: ORION_VIEWS_FIELD_NAME,
+          fieldName: ORION_VIEWS_QUERY_NAME,
           args: {
-            videoID: parent.id,
+            videoId: parent.id,
           },
           context,
           info,

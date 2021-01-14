@@ -27,7 +27,7 @@ export type GetVideo_video_media_location = GetVideo_video_media_location_HttpMe
 export interface GetVideo_video_media {
   __typename: "VideoMedia";
   id: string;
-  pixelHeight: number | null;
+  pixelHeight: number;
   pixelWidth: number;
   location: GetVideo_video_media_location;
 }
