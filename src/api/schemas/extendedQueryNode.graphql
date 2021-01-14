@@ -35,6 +35,8 @@ type Channel {
   language: Language
 
   videos: [Video!]!
+
+  followers: Int
 }
 
 type Category {
