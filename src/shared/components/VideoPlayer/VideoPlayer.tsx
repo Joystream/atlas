@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Container, PlayOverlay, StyledPlayIcon } from './VideoPlayer.style'
 import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
 
@@ -10,7 +10,7 @@ type VideoPlayerProps = {
 } & VideoJsConfig
 
 const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, autoplay, isInBackground, playing, ...videoJsConfig },
+  { className, autoplay, isInBackground, playing, onDataLoaded, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
