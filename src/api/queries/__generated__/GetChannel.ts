@@ -13,6 +13,7 @@ export interface GetChannel_channel {
   handle: string;
   avatarPhotoUrl: string | null;
   coverPhotoUrl: string | null;
+  followers: number | null;
 }
 
 export interface GetChannel {

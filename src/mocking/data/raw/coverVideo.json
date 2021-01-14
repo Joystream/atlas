@@ -21,7 +21,8 @@
     "id": "102",
     "handle": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
-    "coverPhotoUrl": null
+    "coverPhotoUrl": null,
+    "followers": 48717
   },
   "license": {
     "id": "1503",
