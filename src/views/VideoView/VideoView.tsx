@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
+import { debounce } from 'lodash'
 import {
   ChannelContainer,
   Container,
@@ -33,13 +34,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
 
   const videoTimestamp = useMemo(() => {
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
-    return currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : null
+    return currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0
   }, [data?.video?.id, state.watchedVideos])
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoID = data?.video?.id
 
-  const [playing, setPlaying] = useState<boolean>()
+  const [playing, setPlaying] = useState(false)
   const handleUserKeyPress = useCallback((event: Event) => {
     const { keyCode } = event as KeyboardEvent
     if (keyCode === 32) {
@@ -79,20 +80,18 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [addVideoView, videoID])
 
   // Save the video timestamp
-  useInterval(() => {
-    if (data?.video?.id && videoRef.current) {
-      updateWatchedVideos('INTERRUPTED', data.video.id, videoRef.current.currentTime)
-    }
-  }, 5000)
+  const handleTimeUpdate = useCallback(
+    debounce((time) => {
+      if (data?.video?.id) {
+        updateWatchedVideos('INTERRUPTED', data.video.id, time)
+      }
+    }, 5000),
+    [data?.video?.id]
+  )
 
   const handleVideoEnd = () => {
     if (data?.video?.id) {
       updateWatchedVideos('COMPLETED', data?.video?.id)
-    }
-  }
-  const handleVideoStart = () => {
-    if (videoTimestamp && videoRef.current) {
-      videoRef.current.currentTime = videoTimestamp
     }
   }
 
@@ -116,7 +115,8 @@ const VideoView: React.FC<RouteComponentProps> = () => {
               fluid
               posterUrl={data.video.thumbnailUrl}
               onEnd={handleVideoEnd}
-              onDataLoaded={handleVideoStart}
+              onTimeUpdated={handleTimeUpdate}
+              startTime={videoTimestamp}
               ref={videoRef}
             />
           ) : (
