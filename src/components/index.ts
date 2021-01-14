@@ -1,6 +1,6 @@
 export { default as LayoutWithRouting } from './LayoutWithRouting'
 export { default as VideoGallery } from './VideoGallery'
-export { default as FeaturedVideoHeader } from './FeaturedVideoHeader'
+export { default as CoverVideo } from './CoverVideo'
 export { default as ChannelGallery } from './ChannelGallery'
 export { default as Navbar } from './Navbar'
 export { default as VideoGrid } from './VideoGrid'
