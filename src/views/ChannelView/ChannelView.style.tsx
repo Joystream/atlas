@@ -159,22 +159,27 @@ export const TitleContainer = styled.div`
   @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 60%;
   }
-  background-color: ${colors.gray[800]};
-  padding: 0 ${sizes(2)};
 `
 
 export const Title = styled(Text)`
+  line-height: 1;
+  padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
-  margin: -4px 0 0;
-  line-height: ${SM_TITLE_HEIGHT};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    line-height: ${TITLE_HEIGHT};
-  }
+  background-color: ${colors.gray[800]};
 
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
+`
+
+export const SubTitle = styled(Text)`
+  padding: ${sizes(1)} ${sizes(2)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
+  margin-top: ${sizes(2)};
+  color: ${colors.white};
+  background-color: ${colors.gray[800]};
+  display: inline-block;
 `
 
 export const VideoSection = styled.section`

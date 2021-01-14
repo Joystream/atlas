@@ -16,11 +16,13 @@ import {
   TitlePlaceholder,
   TitleSection,
   VideoSection,
+  SubTitle,
 } from './ChannelView.style'
 import { BackgroundPattern } from '@/components'
 import { InfiniteVideoGrid } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import { formatNumberShort } from '@/utils/number'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -59,6 +61,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
           {data?.channel ? (
             <TitleContainer>
               <Title variant="h1">{data.channel.handle}</Title>
+              <SubTitle>{data.channel.followers ? formatNumberShort(data.channel.followers) : 0} Followers</SubTitle>
             </TitleContainer>
           ) : (
             <TitlePlaceholder />
