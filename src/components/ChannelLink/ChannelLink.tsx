@@ -13,6 +13,7 @@ type ChannelLinkProps = {
   hideHandle?: boolean
   hideAvatar?: boolean
   noLink?: boolean
+  overrideChannel?: BasicChannelFields
   avatarSize?: AvatarSize
   className?: string
 }
@@ -22,6 +23,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   hideHandle,
   hideAvatar,
   noLink,
+  overrideChannel,
   avatarSize = 'default',
   className,
 }) => {
@@ -37,14 +39,21 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
     })
   }, [id, client])
 
+  const displayedChannel = overrideChannel || channel
+
   return (
     <Container to={routes.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
-        <Avatar handle={channel?.handle} imageUrl={channel?.avatarPhotoUrl} loading={!channel} size={avatarSize} />
+        <Avatar
+          handle={displayedChannel?.handle}
+          imageUrl={displayedChannel?.avatarPhotoUrl}
+          loading={!displayedChannel}
+          size={avatarSize}
+        />
       )}
       {!hideHandle &&
-        (channel ? (
-          <Handle withAvatar={!hideAvatar}>{channel.handle}</Handle>
+        (displayedChannel ? (
+          <Handle withAvatar={!hideAvatar}>{displayedChannel.handle}</Handle>
         ) : (
           <HandlePlaceholder withAvatar={!hideAvatar} height={16} width={150} />
         ))}

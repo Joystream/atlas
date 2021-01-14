@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { ChannelGallery, ErrorFallback, FeaturedVideoHeader, VideoGallery } from '@/components'
+import { ChannelGallery, ErrorFallback, CoverVideo, VideoGallery } from '@/components'
 
 import { RouteComponentProps } from '@reach/router'
 import { useQuery } from '@apollo/client'
@@ -52,7 +52,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
 
   return (
     <>
-      <FeaturedVideoHeader />
+      <CoverVideo />
       <Container>
         {!hasNewestVideosError ? (
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
