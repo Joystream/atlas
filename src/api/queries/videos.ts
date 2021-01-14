@@ -108,8 +108,8 @@ export const GET_VIDEO = gql`
 `
 
 export const ADD_VIDEO_VIEW = gql`
-  mutation AddVideoView($id: ID!) {
-    addVideoView(videoID: $id) {
+  mutation AddVideoView($videoId: ID!, $channelId: ID!) {
+    addVideoView(videoId: $videoId, channelId: $channelId) {
       id
       views
     }
