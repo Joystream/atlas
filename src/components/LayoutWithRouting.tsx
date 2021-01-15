@@ -24,18 +24,6 @@ const SIDENAV_ITEMS: NavItemType[] = [
     name: 'Discover',
     to: '/browse',
   },
-  {
-    icon: 'browse',
-    iconFilled: 'browse',
-    name: 'Browse',
-    to: '/browse',
-  },
-  {
-    icon: 'books',
-    iconFilled: 'books',
-    name: 'Following',
-    to: '/following',
-  },
 ]
 
 type RouteProps = {

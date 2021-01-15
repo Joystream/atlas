@@ -99,54 +99,10 @@ export const SearchbarContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-left: ${sizes(13)};
-  margin-right: ${sizes(3)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     margin: 0;
     align-items: center;
     justify-content: center;
-  }
-`
-
-export const LoginButtonsContainer = styled.div`
-  display: block;
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-`
-
-export const LoginButton = styled(Button)`
-  display: none;
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    cursor: pointer;
-    padding: 15px 20px;
-    display: block;
-  }
-`
-
-export const PlaylistButton = styled.button`
-  --size: 42px;
-  cursor: pointer;
-
-  padding-top: 2px;
-  padding-right: 2px;
-  width: var(--size);
-  height: var(--size);
-
-  display: flex;
-  justify-content: center;
-
-  border: none;
-  align-items: center;
-  color: ${colors.white};
-  background: ${colors.gray[800]};
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    --size: 50px;
-    margin-left: ${sizes(3)};
   }
 `

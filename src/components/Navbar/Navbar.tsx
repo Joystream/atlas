@@ -5,11 +5,8 @@ import React, { useState } from 'react'
 import {
   FullLogo,
   Header,
-  LoginButton,
-  LoginButtonsContainer,
   LogoLink,
   NavigationContainer,
-  PlaylistButton,
   SearchbarContainer,
   ShortLogo,
   StyledSearchbar,
@@ -65,12 +62,6 @@ const Navbar: React.FC<NavbarProps> = () => {
           controlled
         />
       </SearchbarContainer>
-      <LoginButtonsContainer>
-        <LoginButton variant="secondary">Login</LoginButton>
-        <PlaylistButton>
-          <Icon name="bars-play" />
-        </PlaylistButton>
-      </LoginButtonsContainer>
     </Header>
   )
 }
