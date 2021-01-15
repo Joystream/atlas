@@ -1,22 +1,26 @@
 import styled from '@emotion/styled'
 import Icon from '@/shared/components/Icon'
-import { animated } from 'react-spring'
-import { breakpoints, colors, sizes, typography, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
 
 export const SIDENAV_WIDTH = 56
 export const EXPANDED_SIDENAV_WIDTH = 360
 
-type DrawerProps = {
+type ExpandableElementProps = {
   expanded: boolean
 }
 
-export const SidebarNav = styled(animated.nav)`
+type SubItemProps = {
+  subitemsHeight?: number
+} & ExpandableElementProps
+
+export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
   top: 0;
   bottom: 0;
   z-index: ${zIndex.header};
-  width: 0;
+  width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAV_WIDTH : 0)}px;
+  transition: width ${transitions.timings.regular} ${transitions.easing};
 
   display: flex;
   flex-direction: column;
@@ -27,7 +31,7 @@ export const SidebarNav = styled(animated.nav)`
   background-color: ${colors.blue[700]};
   @media screen and (min-width: ${breakpoints.medium}) {
     left: 0;
-    width: ${SIDENAV_WIDTH};
+    width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAV_WIDTH : SIDENAV_WIDTH)}px;
   }
 `
 
@@ -78,19 +82,20 @@ export const SidebarNavLink = styled(Link)`
   }
 `
 
-export const DrawerOverlay = styled(animated.div)<DrawerProps>`
+export const DrawerOverlay = styled.div<ExpandableElementProps>`
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  display: ${({ expanded }) => (expanded ? 'block' : 'none')};
   z-index: ${zIndex.overlay};
   background-color: rgba(0, 0, 0, 0.5);
 `
-export const SubItemsWrapper = styled(animated.div)`
+export const SubItemsWrapper = styled.div<SubItemProps>`
   padding-left: calc(${typography.sizes.icon.xlarge} + ${sizes(8)});
+  transition: height ${transitions.timings.regular} ${transitions.easing};
   overflow: hidden;
+  height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
   > ul {
     display: flex;
     flex-direction: column;

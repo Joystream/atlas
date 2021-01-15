@@ -1,15 +1,11 @@
 import React, { useState } from 'react'
 import { LinkGetProps } from '@reach/router'
-import { useSpring, useTransition } from 'react-spring'
 import useResizeObserver from 'use-resize-observer'
 import HamburgerButton from '../HamburgerButton'
 import { IconType } from '../../icons/index'
-import { useWindowSize } from '../../../hooks/useWindowSize'
 import {
   InactiveIcon,
   ActiveIcon,
-  EXPANDED_SIDENAV_WIDTH,
-  SIDENAV_WIDTH,
   SidebarNav,
   SidebarNavList,
   SidebarNavItem,
@@ -18,6 +14,8 @@ import {
   SubItem,
   SubItemsWrapper,
 } from './Sidenav.style'
+import { CSSTransition } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 type NavSubitem = {
   name: string
@@ -34,26 +32,12 @@ type SidenavProps = {
 }
 
 const Sidenav: React.FC<SidenavProps> = ({ items }) => {
-  const { width } = useWindowSize()
   const [expanded, setExpanded] = useState(false)
-
-  const sidenavWidth = width >= 1024 ? SIDENAV_WIDTH : 0
-
-  const containerAnimationStyles = useSpring({
-    from: { width: 0 },
-    width: expanded ? EXPANDED_SIDENAV_WIDTH : sidenavWidth,
-  })
-
-  const overlayTransitions = useTransition(expanded, null, {
-    from: { opacity: 0, display: 'none' },
-    enter: { opacity: 1, display: 'block' },
-    leave: { opacity: 0 },
-  })
 
   return (
     <>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
-      <SidebarNav style={containerAnimationStyles}>
+      <SidebarNav expanded={expanded}>
         <SidebarNavList>
           {items.map((item) => (
             <NavItem
@@ -70,10 +54,14 @@ const Sidenav: React.FC<SidenavProps> = ({ items }) => {
           ))}
         </SidebarNavList>
       </SidebarNav>
-      {overlayTransitions.map(
-        ({ item, key, props }) =>
-          item && <DrawerOverlay key={key} style={props} onClick={() => setExpanded(false)} expanded={expanded} />
-      )}
+      <CSSTransition
+        in={expanded}
+        unmountOnExit
+        timeout={parseInt(transitions.timings.loading)}
+        classNames={transitions.names.fade}
+      >
+        <DrawerOverlay onClick={() => setExpanded(false)} expanded={expanded} />
+      </CSSTransition>
     </>
   )
 }
@@ -87,7 +75,6 @@ type NavItemProps = {
 
 const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onClick }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
-  const subitemsAnimationStyles = useSpring({ height: expanded ? subitemsHeight || 0 : 0 })
 
   return (
     <SidebarNavItem>
@@ -95,7 +82,7 @@ const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onC
         {children}
       </SidebarNavLink>
       {subitems && (
-        <SubItemsWrapper style={subitemsAnimationStyles}>
+        <SubItemsWrapper expanded={expanded} subitemsHeight={subitemsHeight}>
           <ul ref={subitemsRef}>
             {subitems.map((item) => (
               <SubItem key={item.name}>

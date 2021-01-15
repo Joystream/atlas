@@ -1,5 +1,4 @@
 import routes from '@/config/routes'
-import { Icon } from '@/shared/components'
 import { navigate, RouteComponentProps } from '@reach/router'
 import React, { useState } from 'react'
 import {
