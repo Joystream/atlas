@@ -36,7 +36,7 @@ type Channel {
 
   videos: [Video!]!
 
-  followers: Int
+  follows: Int
 }
 
 type Category {

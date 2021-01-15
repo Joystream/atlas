@@ -61,7 +61,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
           {data?.channel ? (
             <TitleContainer>
               <Title variant="h1">{data.channel.handle}</Title>
-              <SubTitle>{data.channel.followers ? formatNumberShort(data.channel.followers) : 0} Followers</SubTitle>
+              <SubTitle>{data.channel.follows ? formatNumberShort(data.channel.follows) : 0} Followers</SubTitle>
             </TitleContainer>
           ) : (
             <TitlePlaceholder />

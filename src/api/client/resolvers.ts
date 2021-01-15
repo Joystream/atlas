@@ -1,7 +1,14 @@
 import { GraphQLSchema } from 'graphql'
 import { delegateToSchema } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
-import { TransformOrionViewsField, ORION_VIEWS_QUERY_NAME, RemoveQueryNodeViewsField } from './transforms'
+import {
+  TransformOrionViewsField,
+  ORION_VIEWS_QUERY_NAME,
+  RemoveQueryNodeViewsField,
+  RemoveQueryNodeFollowsField,
+  ORION_FOLLOWS_QUERY_NAME,
+  TransformOrionFollowsField,
+} from './transforms'
 
 const createResolverWithoutVideoViewsField = (
   schema: GraphQLSchema,
@@ -20,6 +27,23 @@ const createResolverWithoutVideoViewsField = (
     })
 }
 
+const createResolverWithoutChannelFollowsField = (
+  schema: GraphQLSchema,
+  fieldName: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): ISchemaLevelResolver<any, any> => {
+  return async (parent, args, context, info) =>
+    delegateToSchema({
+      schema,
+      operation: 'query',
+      fieldName,
+      args,
+      context,
+      info,
+      transforms: [RemoveQueryNodeFollowsField],
+    })
+}
+
 export const queryNodeStitchingResolvers = (
   queryNodeSchema: GraphQLSchema,
   orionSchema: GraphQLSchema
@@ -29,6 +53,8 @@ export const queryNodeStitchingResolvers = (
     featuredVideos: createResolverWithoutVideoViewsField(queryNodeSchema, 'featuredVideos'),
     search: createResolverWithoutVideoViewsField(queryNodeSchema, 'search'),
     video: createResolverWithoutVideoViewsField(queryNodeSchema, 'video'),
+    channelsConnection: createResolverWithoutChannelFollowsField(queryNodeSchema, 'channelsConnection'),
+    channel: createResolverWithoutChannelFollowsField(queryNodeSchema, 'channel'),
   },
   Video: {
     // TODO: Resolve the views count in parallel to the videosConnection query
@@ -49,6 +75,26 @@ export const queryNodeStitchingResolvers = (
         })
       } catch (error) {
         console.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
+  },
+  Channel: {
+    follows: async (parent, args, context, info) => {
+      try {
+        return await delegateToSchema({
+          schema: orionSchema,
+          operation: 'query',
+          fieldName: ORION_FOLLOWS_QUERY_NAME,
+          args: {
+            channelId: parent.id,
+          },
+          context,
+          info,
+          transforms: [TransformOrionFollowsField],
+        })
+      } catch (error) {
+        console.warn('Failed to resolve follows field', { error })
         return null
       }
     },
