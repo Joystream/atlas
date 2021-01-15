@@ -22,7 +22,7 @@ import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVide
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
 import { ChannelLink } from '@/components'
-import { useInterval, usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
