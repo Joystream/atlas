@@ -14,7 +14,7 @@ export const allChannelFieldsFragment = gql`
     handle
     avatarPhotoUrl
     coverPhotoUrl
-    followers
+    follows
   }
 `
 
