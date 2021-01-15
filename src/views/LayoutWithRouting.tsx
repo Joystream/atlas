@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle, SideNavbar } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback } from '@/components'
-import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
+import { HomeView, VideoView, SearchView, ChannelView, BrowseView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { breakpoints, sizes } from '@/shared/theme'
@@ -16,13 +16,19 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
     icon: 'home',
     iconFilled: 'home-fill',
     name: 'Home',
-    to: '/',
+    to: routes.index(),
   },
   {
     icon: 'binocular',
     iconFilled: 'binocular-fill',
     name: 'Discover',
-    to: '/browse',
+    to: routes.browse(),
+  },
+  {
+    icon: 'channels',
+    iconFilled: 'channels',
+    name: 'Channels',
+    to: routes.channels(),
   },
 ]
 
@@ -61,8 +67,9 @@ const LayoutWithRouting: React.FC = () => {
           <Route default Component={HomeView} />
           <Route path={routes.video()} Component={VideoView} />
           <Route path={routes.search()} Component={SearchView} />
-          <Route Component={BrowseView} path={routes.browse()} />
-          <Route Component={ChannelView} path={routes.channel()} />
+          <Route path={routes.browse()} Component={BrowseView} />
+          <Route path={routes.channels()} Component={ChannelsView} />
+          <Route path={routes.channel()} Component={ChannelView} />
         </Router>
       </MainContainer>
     </>

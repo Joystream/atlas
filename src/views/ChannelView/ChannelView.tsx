@@ -19,8 +19,7 @@ import {
   SubTitle,
   SubTitlePlaceholder,
 } from './ChannelView.style'
-import { BackgroundPattern } from '@/components'
-import { InfiniteVideoGrid } from '@/shared/components'
+import { BackgroundPattern, InfiniteVideoGrid } from '@/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
@@ -75,7 +74,7 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
         </TitleSection>
       </Header>
       <VideoSection>
-        <InfiniteVideoGrid channelId={id} />
+        <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
     </>
   )
