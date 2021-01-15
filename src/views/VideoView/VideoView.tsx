@@ -21,12 +21,9 @@ import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
 import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
-<<<<<<< HEAD
+
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
-=======
-import { ChannelLink } from '@/components'
-import { useInterval, usePersonalData } from '@/hooks'
->>>>>>> Save Interrupted Video State
+import { usePersonalData } from '@/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -36,18 +33,14 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
   const { state, updateWatchedVideos } = usePersonalData()
 
-<<<<<<< HEAD
-  const videoId = data?.video?.id
-  const channelId = data?.video?.channel.id
-=======
   const videoTimestamp = useMemo(() => {
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
     return currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0
   }, [data?.video?.id, state.watchedVideos])
 
   const videoRef = useRef<HTMLVideoElement>(null)
-  const videoID = data?.video?.id
->>>>>>> Save Interrupted Video State
+  const channelId = data?.video?.channel.id
+  const videoId = data?.video?.id
 
   const [playing, setPlaying] = useState(false)
   const handleUserKeyPress = useCallback((event: Event) => {
