@@ -100,6 +100,14 @@ export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewe
   return paginatedChannels
 }
 
+type ChannelFollowsArgs = {
+  channelId: string
+}
+
+export const channelFollowsResolver: QueryResolver<ChannelFollowsArgs> = (obj, args, context, info) => {
+  return mirageGraphQLFieldResolver(obj, { id: args.channelId }, context, info)
+}
+
 type VideoModel = { attrs: VideoFields }
 type ChannelModel = { attrs: AllChannelFields }
 type SearchResolverResult = Omit<Search_search, 'item'> & { item: VideoModel | ChannelModel }
@@ -147,18 +155,18 @@ export const searchResolver: QueryResolver<SearchVariables, SearchResolverResult
 }
 
 type VideoViewsArgs = {
-  videoID: string
+  videoId: string
 }
 
 export const videoViewsResolver: QueryResolver<VideoViewsArgs> = (obj, args, context, info) => {
-  return mirageGraphQLFieldResolver(obj, { id: args.videoID }, context, info)
+  return mirageGraphQLFieldResolver(obj, { id: args.videoId }, context, info)
 }
 
 export const addVideoViewResolver: QueryResolver<VideoViewsArgs> = (obj, args, context, info) => {
-  const videoInfo = context.mirageSchema.videoViewsInfos.find(args.videoID)
+  const videoInfo = context.mirageSchema.videoViewsInfos.find(args.videoId)
   if (!videoInfo) {
     const videoInfo = context.mirageSchema.videoViewsInfos.create({
-      id: args.videoID,
+      id: args.videoId,
       views: 1,
     })
 
