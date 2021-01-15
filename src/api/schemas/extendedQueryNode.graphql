@@ -143,6 +143,16 @@ type Video {
   license: LicenseEntity!
 }
 
+type CoverVideo {
+  id: ID!
+
+  video: Video!
+
+  coverDescription: String!
+
+  coverCutMedia: VideoMedia!
+}
+
 type FeaturedVideo {
   id: ID!
 
@@ -263,6 +273,9 @@ type Query {
 
   # List all videos by given constraints
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
+
+  # Get the current cover video
+  coverVideo: CoverVideo!
 
   # List all top trending videos
   featuredVideos(orderBy: FeaturedVideoOrderByInput): [FeaturedVideo!]!

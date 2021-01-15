@@ -14,8 +14,9 @@
     "pixelHeight": 1440,
     "duration": 29,
     "size": 44851016,
-    "location": { "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm" },
-    "coverCutLocation": { "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4" }
+    "location": {
+      "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm"
+    }
   },
   "channel": {
     "id": "102",
@@ -23,6 +24,20 @@
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
     "coverPhotoUrl": null,
     "follows": 48717
+  },
+  "cover": {
+    "coverDescription": "How We Lost Trust In Authority, And Authority Taught Us To Distrust Ourselves",
+    "coverCutMedia": {
+      "id": "4551c421-8edd-4d3b-8357-9fe825742775",
+      "codec": "H264_mpeg4",
+      "pixelWidth": 2560,
+      "pixelHeight": 1440,
+      "duration": 29,
+      "size": 44851016,
+      "location": {
+        "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4"
+      }
+    }
   },
   "license": {
     "id": "1503",

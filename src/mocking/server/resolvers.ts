@@ -8,10 +8,12 @@ import {
 } from '@/api/queries/__generated__/GetNewestChannels'
 import { GetNewestVideos_videosConnection } from '@/api/queries/__generated__/GetNewestVideos'
 import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
+import { GetCoverVideo_coverVideo } from '@/api/queries/__generated__/GetCoverVideo'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,
   args: ArgsType,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: { mirageSchema: any },
   info: unknown
 ) => ReturnType
@@ -70,6 +72,11 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
 
   const paginatedVideos = mirageGraphQLFieldResolver(obj, filteredResolverArgs, context, info)
   return paginatedVideos
+}
+
+export const coverVideoResolver: QueryResolver<never, GetCoverVideo_coverVideo> = (...params) => {
+  const coverVideo = mirageGraphQLFieldResolver(...params) as GetCoverVideo_coverVideo
+  return coverVideo
 }
 
 export const featuredVideosResolver: QueryResolver<object, VideoFields[]> = (...params) => {

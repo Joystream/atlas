@@ -9,6 +9,7 @@ import {
   addVideoViewResolver,
   channelResolver,
   channelsResolver,
+  coverVideoResolver,
   featuredVideosResolver,
   searchResolver,
   videoResolver,
@@ -31,6 +32,7 @@ createServer({
         Query: {
           video: videoResolver,
           videosConnection: videosResolver,
+          coverVideo: coverVideoResolver,
           featured_videos: featuredVideosResolver,
           channel: channelResolver,
           channelsConnection: channelsResolver,

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
+import { darken, fluidRange } from 'polished'
 
-import { Avatar, Button, Text } from '@/shared/components'
+import { Button, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
-import { Link } from '@reach/router'
-import { css } from '@emotion/core'
+import { css, keyframes } from '@emotion/core'
+import ChannelLink from '../ChannelLink'
 
 const CONTENT_OVERLAP_MAP = {
   SMALL: 25,
@@ -16,6 +16,7 @@ const CONTENT_OVERLAP_MAP = {
 const GRADIENT_OVERLAP = 50
 const GRADIENT_HEIGHT = 250
 const INFO_BOTTOM_MARGIN = 100
+const BUTTONS_HEIGHT_PX = '54px'
 
 export const Container = styled.section`
   position: relative;
@@ -61,6 +62,21 @@ const absoluteMediaCss = css`
 
 export const PlayerContainer = styled.div`
   ${absoluteMediaCss};
+`
+
+const pulse = keyframes`
+  0, 100% { 
+    background-color: ${colors.gray[800]}
+  }
+  50% {
+    background-color: ${darken(0.15, colors.gray[800])}
+  }
+`
+
+export const PlayerPlaceholder = styled.div`
+  ${absoluteMediaCss};
+  background-color: ${colors.gray[800]};
+  animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `
 
 export const HorizontalGradientOverlay = styled.div`
@@ -121,15 +137,16 @@ export const VerticalGradientOverlay = styled.div`
   }
 `
 
-export const InfoContainer = styled.div`
+export const InfoContainer = styled.div<{ isLoading: boolean }>`
   position: relative;
+  min-height: 330px;
   margin-top: -${sizes(8)};
   padding-bottom: ${sizes(12)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     position: absolute;
     margin: 0;
-    padding: 0;
+    padding-bottom: 0;
     bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN / 4}px;
   }
 
@@ -150,9 +167,8 @@ export const InfoContainer = styled.div`
   }
 `
 
-export const ChannelLink = styled(Link)`
+export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(4)};
-  display: inline-block;
 `
 
 export const TitleContainer = styled.div`
@@ -184,8 +200,20 @@ export const Title = styled(Text)`
   }
 `
 
+export const TitlePlaceholder = styled(Placeholder)`
+  margin-bottom: ${sizes(4)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-bottom: ${sizes(5)};
+  }
+`
+
+export const ControlsContainer = styled.div`
+  min-height: ${BUTTONS_HEIGHT_PX};
+`
+
 export const PlayButton = styled(Button)<{ playing: boolean }>`
   width: 140px;
+  height: ${BUTTONS_HEIGHT_PX};
   justify-content: flex-start;
 
   svg {
@@ -200,4 +228,5 @@ export const PlayButton = styled(Button)<{ playing: boolean }>`
 
 export const SoundButton = styled(Button)`
   margin-left: ${sizes(4)};
+  height: ${BUTTONS_HEIGHT_PX};
 `
