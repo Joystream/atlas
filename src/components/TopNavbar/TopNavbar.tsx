@@ -11,9 +11,9 @@ import {
   StyledSearchbar,
 } from './TopNavbar.style'
 
-type NavbarProps = RouteComponentProps
+type TopNavbarProps = RouteComponentProps
 
-const Navbar: React.FC<NavbarProps> = () => {
+const TopNavbar: React.FC<TopNavbarProps> = () => {
   const [search, setSearch] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
@@ -65,4 +65,4 @@ const Navbar: React.FC<NavbarProps> = () => {
   )
 }
 
-export default Navbar
+export default TopNavbar

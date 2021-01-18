@@ -3,15 +3,15 @@ import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
-import { GlobalStyle, Sidenav } from '@/shared/components'
+import { GlobalStyle, SideNavbar } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { breakpoints, sizes } from '@/shared/theme'
-import { NavItemType } from '../shared/components/Sidenav'
+import { NavItemType } from '../shared/components/SideNavbar'
 
-const SIDENAV_ITEMS: NavItemType[] = [
+const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
     icon: 'home',
     iconFilled: 'home-fill',
@@ -55,7 +55,7 @@ const LayoutWithRouting: React.FC = () => {
     <>
       <GlobalStyle additionalStyles={globalStyles} />
       <TopNavbar default />
-      <Sidenav items={SIDENAV_ITEMS} />
+      <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <Router primary={false}>
           <Route default Component={HomeView} />

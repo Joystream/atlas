@@ -13,7 +13,7 @@ import {
   DrawerOverlay,
   SubItem,
   SubItemsWrapper,
-} from './Sidenav.style'
+} from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 
@@ -31,7 +31,7 @@ type SidenavProps = {
   items: NavItemType[]
 }
 
-const Sidenav: React.FC<SidenavProps> = ({ items }) => {
+const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -100,5 +100,5 @@ const isActive = ({ isCurrent }: LinkGetProps) => {
   return isCurrent ? { 'data-active': 'true' } : {}
 }
 
-export { Sidenav as default, NavItem }
+export { SideNavbar as default, NavItem }
 export type { NavItemType }

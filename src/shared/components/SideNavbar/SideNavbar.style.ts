@@ -3,8 +3,8 @@ import Icon from '@/shared/components/Icon'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
 
-export const SIDENAV_WIDTH = 56
-export const EXPANDED_SIDENAV_WIDTH = 360
+export const SIDENAVBAR_WIDTH = 56
+export const EXPANDED_SIDENAVBAR_WIDTH = 360
 
 type ExpandableElementProps = {
   expanded: boolean
@@ -19,7 +19,7 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   top: 0;
   bottom: 0;
   z-index: ${zIndex.header};
-  width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAV_WIDTH : 0)}px;
+  width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : 0)}px;
   transition: width ${transitions.timings.regular} ${transitions.easing};
 
   display: flex;
@@ -31,7 +31,7 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   background-color: ${colors.blue[700]};
   @media screen and (min-width: ${breakpoints.medium}) {
     left: 0;
-    width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAV_WIDTH : SIDENAV_WIDTH)}px;
+    width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : SIDENAVBAR_WIDTH)}px;
   }
 `
 
