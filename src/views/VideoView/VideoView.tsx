@@ -85,7 +85,8 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [addVideoView, videoId, channelId])
 
   // Save the video timestamp
-
+  // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
     debounce((time) => {
       if (data?.video?.id) {
