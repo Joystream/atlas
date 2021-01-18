@@ -4,8 +4,10 @@ import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, typography, zIndex } from '@/shared/theme'
 
-const SM_TITLE_HEIGHT = '48px'
-const TITLE_HEIGHT = '56px'
+const SM_TITLE_HEIGHT = '44px'
+const TITLE_HEIGHT = '51px'
+const SM_SUBTITLE_HEIGHT = '24px'
+const SUBTITLE_HEIGHT = '27px'
 
 const CONTENT_OVERLAP_MAP = {
   BASE: 0,
@@ -159,22 +161,27 @@ export const TitleContainer = styled.div`
   @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 60%;
   }
-  background-color: ${colors.gray[800]};
-  padding: 0 ${sizes(2)};
 `
 
 export const Title = styled(Text)`
+  line-height: 1;
+  padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
-  margin: -4px 0 0;
-  line-height: ${SM_TITLE_HEIGHT};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    line-height: ${TITLE_HEIGHT};
-  }
+  background-color: ${colors.gray[800]};
 
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
+`
+
+export const SubTitle = styled(Text)`
+  padding: ${sizes(1)} ${sizes(2)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
+  margin-top: ${sizes(2)};
+  color: ${colors.white};
+  background-color: ${colors.gray[800]};
+  display: inline-block;
 `
 
 export const VideoSection = styled.section`
@@ -198,5 +205,14 @@ export const TitlePlaceholder = styled(Placeholder)`
   height: ${SM_TITLE_HEIGHT};
   @media screen and (min-width: ${breakpoints.medium}) {
     height: ${TITLE_HEIGHT};
+  }
+`
+
+export const SubTitlePlaceholder = styled(Placeholder)`
+  width: 140px;
+  margin-top: ${sizes(2)};
+  height: ${SM_SUBTITLE_HEIGHT};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: ${SUBTITLE_HEIGHT};
   }
 `
