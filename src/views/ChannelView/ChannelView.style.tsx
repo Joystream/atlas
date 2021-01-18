@@ -4,8 +4,10 @@ import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, typography, zIndex } from '@/shared/theme'
 
-const SM_TITLE_HEIGHT = '48px'
-const TITLE_HEIGHT = '56px'
+const SM_TITLE_HEIGHT = '44px'
+const TITLE_HEIGHT = '51px'
+const SM_SUBTITLE_HEIGHT = '24px'
+const SUBTITLE_HEIGHT = '27px'
 
 const CONTENT_OVERLAP_MAP = {
   BASE: 0,
@@ -203,5 +205,14 @@ export const TitlePlaceholder = styled(Placeholder)`
   height: ${SM_TITLE_HEIGHT};
   @media screen and (min-width: ${breakpoints.medium}) {
     height: ${TITLE_HEIGHT};
+  }
+`
+
+export const SubTitlePlaceholder = styled(Placeholder)`
+  width: 140px;
+  margin-top: ${sizes(2)};
+  height: ${SM_SUBTITLE_HEIGHT};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: ${SUBTITLE_HEIGHT};
   }
 `

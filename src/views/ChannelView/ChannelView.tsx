@@ -17,6 +17,7 @@ import {
   TitleSection,
   VideoSection,
   SubTitle,
+  SubTitlePlaceholder,
 } from './ChannelView.style'
 import { BackgroundPattern } from '@/components'
 import { InfiniteVideoGrid } from '@/shared/components'
@@ -58,14 +59,19 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
         </MediaWrapper>
         <TitleSection>
           <StyledChannelLink id={data?.channel?.id} avatarSize="view" hideHandle noLink />
-          {data?.channel ? (
-            <TitleContainer>
-              <Title variant="h1">{data.channel.handle}</Title>
-              <SubTitle>{data.channel.follows ? formatNumberShort(data.channel.follows) : 0} Followers</SubTitle>
-            </TitleContainer>
-          ) : (
-            <TitlePlaceholder />
-          )}
+          <TitleContainer>
+            {data?.channel ? (
+              <>
+                <Title variant="h1">{data.channel.handle}</Title>
+                <SubTitle>{data.channel.follows ? formatNumberShort(data.channel.follows) : 0} Followers</SubTitle>
+              </>
+            ) : (
+              <>
+                <TitlePlaceholder />
+                <SubTitlePlaceholder />
+              </>
+            )}
+          </TitleContainer>
         </TitleSection>
       </Header>
       <VideoSection>
