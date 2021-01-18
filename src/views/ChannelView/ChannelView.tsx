@@ -32,12 +32,6 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
-  const [
-    followChannel,
-    { loading: followChannelLoading, data: followChannelData, error: followChannelError },
-  ] = useLazyQuery(FOLLOW_CHANNEL, {
-    variables: { id },
-  })
   const {
     state: { followedChannels },
     updateChannelFollowing,
@@ -45,17 +39,15 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const [isFollowing, setFollowing] = useState<boolean>()
 
   useEffect(() => {
-    const isFollowing = followedChannels.includes(id)
-    setFollowing(isFollowing)
+    const following = followedChannels.some((channel) => channel.id === id)
+    setFollowing(following)
   }, [followedChannels, id])
 
-  const handleFollow = async (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-    e.preventDefault()
+  const handleFollow = () => {
     if (isFollowing) {
       updateChannelFollowing(id, false)
       setFollowing(false)
     } else {
-      followChannel()
       updateChannelFollowing(id, true)
       setFollowing(true)
     }
