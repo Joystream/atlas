@@ -14,7 +14,7 @@ const StyledBackgroundPatternContainer = styled.div`
   top: 0;
   width: 100%;
   height: 90vh;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: ${zIndex.background};
   &.${transitions.names.fade}-exit-active {
     z-index: ${zIndex.farBackground};
