@@ -1,20 +1,25 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { NavItem, Sidenav, SIDENAV_WIDTH, Icon } from '../components'
+import { SideNavbar, SIDENAVBAR_WIDTH } from '../components'
+import { NavItemType } from '../components/SideNavbar'
 
 export default {
-  title: 'Sidenav',
-  component: Sidenav,
+  title: 'SideNavbar',
+  component: SideNavbar,
 }
 
-const NAV_ITEMS: NavItem[] = [
+const NAV_ITEMS: NavItemType[] = [
   {
     name: 'Home',
-    icon: <Icon name="home" />,
+    icon: 'home',
+    iconFilled: 'home-fill',
+    to: '/',
   },
   {
+    icon: 'binocular',
+    iconFilled: 'binocular-fill',
     name: 'Discover',
-    icon: <Icon name="binocular" />,
+    to: '/browse',
     subitems: [
       {
         name: 'Channels 1',
@@ -33,20 +38,11 @@ const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-  {
-    name: 'Browse',
-    icon: <Icon icon="browse" />,
-    subitems: [
-      {
-        name: 'Channels',
-      },
-    ],
-  },
 ]
 
 export const Default = () => (
   <StoryStyles>
-    <Sidenav items={NAV_ITEMS} />
+    <SideNavbar items={NAV_ITEMS} />
     <ContentWrapper>
       <p>Sensorem, barcas, et fraticinida. Zeta manducares, tanquam barbatus gallus.</p>
       <p>Sensorem, barcas, et fraticinida. Zeta manducares, tanquam barbatus gallus.</p>
@@ -68,5 +64,5 @@ const StoryStyles = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  margin-left: ${SIDENAV_WIDTH}px;
+  margin-left: ${SIDENAVBAR_WIDTH}px;
 `

@@ -1,4 +1,6 @@
 export { ReactComponent as Bars } from './bars.svg'
+export { ReactComponent as BarsPlay } from './bars-play.svg'
+export { ReactComponent as BarsPlus } from './bars-plus.svg'
 export { ReactComponent as Home } from './home.svg'
 export { ReactComponent as HomeFill } from './home-fill.svg'
 export { ReactComponent as Binocular } from './binocular.svg'
@@ -22,6 +24,8 @@ export { ReactComponent as Times } from './times.svg'
 
 const icons = [
   'bars',
+  'bars-play',
+  'bars-plus',
   'home',
   'home-fill',
   'binocular',
