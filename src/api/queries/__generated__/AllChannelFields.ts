@@ -13,4 +13,5 @@ export interface AllChannelFields {
   handle: string;
   avatarPhotoUrl: string | null;
   coverPhotoUrl: string | null;
+  follows: number | null;
 }

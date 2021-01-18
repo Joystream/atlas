@@ -17,6 +17,10 @@ type MirageJSServer = any
 
 export const createMockData = (server: MirageJSServer) => {
   const channels = mockChannels.map((channel) => {
+    server.create('ChannelFollowsInfo', {
+      id: channel.id,
+      follows: channel.follows,
+    })
     return server.schema.create('Channel', {
       ...channel,
     }) as ModelInstance<AllChannelFields>
