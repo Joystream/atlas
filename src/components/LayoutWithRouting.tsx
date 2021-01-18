@@ -3,11 +3,28 @@ import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
-import { GlobalStyle } from '@/shared/components'
-import { Navbar, ViewErrorFallback } from '@/components'
+import { GlobalStyle, SideNavbar } from '@/shared/components'
+import { TopNavbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
+import { breakpoints, sizes } from '@/shared/theme'
+import { NavItemType } from '../shared/components/SideNavbar'
+
+const SIDENAVBAR_ITEMS: NavItemType[] = [
+  {
+    icon: 'home',
+    iconFilled: 'home-fill',
+    name: 'Home',
+    to: '/',
+  },
+  {
+    icon: 'binocular',
+    iconFilled: 'binocular-fill',
+    name: 'Discover',
+    to: '/browse',
+  },
+]
 
 type RouteProps = {
   Component: React.ComponentType
@@ -37,7 +54,8 @@ const LayoutWithRouting: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={globalStyles} />
-      <Navbar default />
+      <TopNavbar default />
+      <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <Router primary={false}>
           <Route default Component={HomeView} />
@@ -53,5 +71,9 @@ const LayoutWithRouting: React.FC = () => {
 
 const MainContainer = styled.main`
   padding: 0 var(--global-horizontal-padding);
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: ${sizes(14)};
+  }
 `
 export default LayoutWithRouting

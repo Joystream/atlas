@@ -1,6 +1,6 @@
 import React from 'react'
 import { SerializedStyles } from '@emotion/core'
-import { useCSS } from './HamburgerButton.style'
+import { Hamburger, HamburgerInner, HamburgerBox } from './HamburgerButton.style'
 
 type HamburgerButtonProps = {
   active: boolean
@@ -8,15 +8,13 @@ type HamburgerButtonProps = {
   outerStyles?: SerializedStyles
 }
 
-const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick, outerStyles }) => {
-  const styles = useCSS({ active })
-
+const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick }) => {
   return (
-    <div css={[styles.hamburger, outerStyles]} onClick={onClick}>
-      <span css={styles.hamburgerBox}>
-        <span css={styles.hamburgerInner} />
-      </span>
-    </div>
+    <Hamburger onClick={onClick} aria-label="Main menu" aria-expanded={active}>
+      <HamburgerBox>
+        <HamburgerInner active={active} />
+      </HamburgerBox>
+    </Hamburger>
   )
 }
 

@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer'
 
 import { ErrorFallback, BackgroundPattern } from '@/components'
 import { Text } from '@/shared/components'
-import { NAVBAR_HEIGHT } from '@/components/Navbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import {
   StyledCategoryPicker,
   Container,
@@ -33,7 +33,7 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
 
   const headerRef = useRef<HTMLHeadingElement>(null)
   const { ref: targetRef, inView } = useInView({
-    rootMargin: `-${NAVBAR_HEIGHT - GRID_TOP_PADDING}px 0px 0px`,
+    rootMargin: `-${TOP_NAVBAR_HEIGHT - GRID_TOP_PADDING}px 0px 0px`,
   })
   const handleCategoryChange = (category: CategoryFields, scrollTop = true) => {
     setSelectedCategoryId(category.id)
