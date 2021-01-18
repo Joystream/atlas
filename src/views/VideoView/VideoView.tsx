@@ -34,7 +34,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
-    if (startTimestamp) {
+    if (startTimestamp != null) {
       return
     }
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
@@ -83,7 +83,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [addVideoView, videoID])
 
   // Save the video timestamp
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const handleTimeUpdate = useCallback(
     debounce((time) => {
       if (data?.video?.id) {
@@ -93,18 +93,18 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     [data?.video?.id]
   )
 
-  const handleVideoEnd = () => {
+  const handleVideoEnd = useCallback(() => {
     if (data?.video?.id) {
       updateWatchedVideos('COMPLETED', data?.video?.id)
     }
-  }
+  }, [data?.video?.id, updateWatchedVideos])
 
-  const handlePlay = () => {
+  const handlePlay = useCallback(() => {
     setPlaying(true)
-  }
-  const handlePause = () => {
+  }, [])
+  const handlePause = useCallback(() => {
     setPlaying(false)
-  }
+  }, [])
 
   if (error) {
     throw error
