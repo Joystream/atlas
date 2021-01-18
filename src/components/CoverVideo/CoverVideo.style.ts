@@ -139,7 +139,6 @@ export const VerticalGradientOverlay = styled.div`
 
 export const InfoContainer = styled.div<{ isLoading: boolean }>`
   position: relative;
-  min-height: 330px;
   margin-top: -${sizes(8)};
   padding-bottom: ${sizes(12)};
 
