@@ -16,11 +16,14 @@ import {
   TitlePlaceholder,
   TitleSection,
   VideoSection,
+  SubTitle,
+  SubTitlePlaceholder,
 } from './ChannelView.style'
 import { BackgroundPattern } from '@/components'
 import { InfiniteVideoGrid } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import { formatNumberShort } from '@/utils/number'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -56,13 +59,19 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
         </MediaWrapper>
         <TitleSection>
           <StyledChannelLink id={data?.channel?.id} avatarSize="view" hideHandle noLink />
-          {data?.channel ? (
-            <TitleContainer>
-              <Title variant="h1">{data.channel.handle}</Title>
-            </TitleContainer>
-          ) : (
-            <TitlePlaceholder />
-          )}
+          <TitleContainer>
+            {data?.channel ? (
+              <>
+                <Title variant="h1">{data.channel.handle}</Title>
+                <SubTitle>{data.channel.follows ? formatNumberShort(data.channel.follows) : 0} Followers</SubTitle>
+              </>
+            ) : (
+              <>
+                <TitlePlaceholder />
+                <SubTitlePlaceholder />
+              </>
+            )}
+          </TitleContainer>
         </TitleSection>
       </Header>
       <VideoSection>

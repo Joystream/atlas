@@ -35,6 +35,8 @@ type Channel {
   language: Language
 
   videos: [Video!]!
+  # extended from Orion
+  follows: Int
 }
 
 type Category {
