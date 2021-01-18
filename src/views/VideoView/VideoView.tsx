@@ -33,16 +33,19 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
   const { state, updateWatchedVideos } = usePersonalData()
 
-  const videoTimestamp = useMemo(() => {
+  const [startTimestamp, setStartTimestamp] = useState<number>()
+  useEffect(() => {
+    if (startTimestamp) {
+      return
+    }
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
-    return currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0
-  }, [data?.video?.id, state.watchedVideos])
+    setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
+  }, [data?.video?.id, state.watchedVideos, startTimestamp])
 
-  const videoRef = useRef<HTMLVideoElement>(null)
   const channelId = data?.video?.channel.id
   const videoId = data?.video?.id
 
-  const [playing, setPlaying] = useState(false)
+  const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback((event: Event) => {
     const { keyCode } = event as KeyboardEvent
     if (keyCode === 32) {
@@ -82,6 +85,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   }, [addVideoView, videoId, channelId])
 
   // Save the video timestamp
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
     debounce((time) => {
       if (data?.video?.id) {
@@ -95,6 +99,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (data?.video?.id) {
       updateWatchedVideos('COMPLETED', data?.video?.id)
     }
+  }
+
+  const handlePlay = () => {
+    setPlaying(true)
+  }
+  const handlePause = () => {
+    setPlaying(false)
   }
 
   if (error) {
@@ -113,13 +124,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
             <VideoPlayer
               playing={playing}
               src={data.video.media.location}
-              autoplay
               fluid
               posterUrl={data.video.thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
-              startTime={videoTimestamp}
-              ref={videoRef}
+              onPlay={handlePlay}
+              onPause={handlePause}
+              startTime={startTimestamp}
             />
           ) : (
             <PlayerPlaceholder />

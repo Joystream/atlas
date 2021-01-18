@@ -169,6 +169,8 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       return
     }
     player.on('ended', onEnd)
+
+    return () => player.off('ended', onEnd)
   }, [player, onEnd])
 
   useEffect(() => {
