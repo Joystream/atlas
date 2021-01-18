@@ -1,11 +1,19 @@
 import { GraphQLSchema } from 'graphql'
-import { delegateToSchema } from '@graphql-tools/delegate'
+import { delegateToSchema, Transform } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
-import { TransformOrionViewsField, ORION_VIEWS_QUERY_NAME, RemoveQueryNodeViewsField } from './transforms'
+import {
+  TransformOrionViewsField,
+  ORION_VIEWS_QUERY_NAME,
+  RemoveQueryNodeViewsField,
+  RemoveQueryNodeFollowsField,
+  ORION_FOLLOWS_QUERY_NAME,
+  TransformOrionFollowsField,
+} from './transforms'
 
-const createResolverWithoutVideoViewsField = (
+const createResolverWithTransforms = (
   schema: GraphQLSchema,
-  fieldName: string
+  fieldName: string,
+  transforms: Array<Transform>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ISchemaLevelResolver<any, any> => {
   return async (parent, args, context, info) =>
@@ -16,7 +24,7 @@ const createResolverWithoutVideoViewsField = (
       args,
       context,
       info,
-      transforms: [RemoveQueryNodeViewsField],
+      transforms,
     })
 }
 
@@ -25,10 +33,17 @@ export const queryNodeStitchingResolvers = (
   orionSchema: GraphQLSchema
 ): IResolvers => ({
   Query: {
-    videosConnection: createResolverWithoutVideoViewsField(queryNodeSchema, 'videosConnection'),
-    featuredVideos: createResolverWithoutVideoViewsField(queryNodeSchema, 'featuredVideos'),
-    search: createResolverWithoutVideoViewsField(queryNodeSchema, 'search'),
-    video: createResolverWithoutVideoViewsField(queryNodeSchema, 'video'),
+    videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
+    featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
+    search: createResolverWithTransforms(queryNodeSchema, 'search', [
+      RemoveQueryNodeViewsField,
+      RemoveQueryNodeFollowsField,
+    ]),
+    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
+    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
+      RemoveQueryNodeFollowsField,
+    ]),
+    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
   },
   Video: {
     // TODO: Resolve the views count in parallel to the videosConnection query
@@ -49,6 +64,26 @@ export const queryNodeStitchingResolvers = (
         })
       } catch (error) {
         console.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
+  },
+  Channel: {
+    follows: async (parent, args, context, info) => {
+      try {
+        return await delegateToSchema({
+          schema: orionSchema,
+          operation: 'query',
+          fieldName: ORION_FOLLOWS_QUERY_NAME,
+          args: {
+            channelId: parent.id,
+          },
+          context,
+          info,
+          transforms: [TransformOrionFollowsField],
+        })
+      } catch (error) {
+        console.warn('Failed to resolve follows field', { error })
         return null
       }
     },
