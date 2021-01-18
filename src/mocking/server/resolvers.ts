@@ -170,9 +170,9 @@ export const videoViewsResolver: QueryResolver<VideoViewsArgs> = (obj, args, con
 }
 
 export const addVideoViewResolver: QueryResolver<VideoViewsArgs> = (obj, args, context, info) => {
-  const videoInfo = context.mirageSchema.videoViewsInfos.find(args.videoId)
+  const videoInfo = context.mirageSchema.entityViewsInfos.find(args.videoId)
   if (!videoInfo) {
-    const videoInfo = context.mirageSchema.videoViewsInfos.create({
+    const videoInfo = context.mirageSchema.entityViewsInfos.create({
       id: args.videoId,
       views: 1,
     })
