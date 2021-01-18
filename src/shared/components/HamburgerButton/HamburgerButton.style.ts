@@ -1,5 +1,6 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 
+import { NAVBAR_HEIGHT } from '@/components/Navbar'
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, zIndex } from '../../theme'
 
@@ -8,7 +9,8 @@ type HamburgerInnerProps = {
 }
 
 export const Hamburger = styled.button`
-  top: 0;
+  top: ${(NAVBAR_HEIGHT - 1) / 2}px;
+  transform: translateY(-50%);
   position: fixed;
   z-index: ${zIndex.header + 1};
   cursor: pointer;
@@ -16,17 +18,15 @@ export const Hamburger = styled.button`
   border: none;
   display: inline-block;
   padding: ${sizes(3)};
-  margin: ${sizes(2)};
+  margin-left: ${sizes(2)};
   &:hover {
     opacity: 0.7;
   }
   @media screen and (min-width: ${breakpoints.small}) {
-    padding: ${sizes(4)};
-    margin: ${sizes(3)};
+    margin-left: ${sizes(3)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin: ${sizes(4)} ${sizes(2)};
-    padding: ${sizes(3)};
+    padding: ${sizes(2)};
     background: none;
   }
 `

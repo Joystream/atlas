@@ -34,14 +34,13 @@ export const Header = styled.header<NavbarStyleProps>`
 
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
   transition: all 0.4s ${transitions.easing};
-  padding: ${sizes(2)} ${sizes(3)};
+  padding: ${sizes(3)} ${sizes(3)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     z-index: ${zIndex.header};
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     column-gap: ${sizes(2)};
-    padding: ${sizes(3)} ${sizes(3)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-left: ${sizes(14)};
@@ -98,11 +97,10 @@ export const SearchbarContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-left: ${sizes(13)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     margin: 0;
-    align-items: center;
-    justify-content: center;
   }
 `
