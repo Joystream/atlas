@@ -32,7 +32,7 @@ const CHANNEL_INFO_SELECTION_SET: SelectionSetNode = {
 
 export const ORION_FOLLOWS_QUERY_NAME = 'channelFollows'
 
-// Transform a request to expect VideoViewsInfo return type instead of an Int
+// Transform a request to expect ChannelFollowsInfo return type instead of an Int
 export const TransformOrionFollowsField: Transform = {
   transformRequest(request) {
     request.document = {

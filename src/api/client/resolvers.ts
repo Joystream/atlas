@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql'
-import { delegateToSchema } from '@graphql-tools/delegate'
+import { delegateToSchema, Transform } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import {
   TransformOrionViewsField,
@@ -10,9 +10,10 @@ import {
   TransformOrionFollowsField,
 } from './transforms'
 
-const createResolverWithoutVideoViewsField = (
+const createResolverWithTransforms = (
   schema: GraphQLSchema,
-  fieldName: string
+  fieldName: string,
+  transforms: Array<Transform>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ISchemaLevelResolver<any, any> => {
   return async (parent, args, context, info) =>
@@ -23,24 +24,7 @@ const createResolverWithoutVideoViewsField = (
       args,
       context,
       info,
-      transforms: [RemoveQueryNodeViewsField],
-    })
-}
-
-const createResolverWithoutChannelFollowsField = (
-  schema: GraphQLSchema,
-  fieldName: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): ISchemaLevelResolver<any, any> => {
-  return async (parent, args, context, info) =>
-    delegateToSchema({
-      schema,
-      operation: 'query',
-      fieldName,
-      args,
-      context,
-      info,
-      transforms: [RemoveQueryNodeFollowsField],
+      transforms,
     })
 }
 
@@ -49,12 +33,17 @@ export const queryNodeStitchingResolvers = (
   orionSchema: GraphQLSchema
 ): IResolvers => ({
   Query: {
-    videosConnection: createResolverWithoutVideoViewsField(queryNodeSchema, 'videosConnection'),
-    featuredVideos: createResolverWithoutVideoViewsField(queryNodeSchema, 'featuredVideos'),
-    search: createResolverWithoutVideoViewsField(queryNodeSchema, 'search'),
-    video: createResolverWithoutVideoViewsField(queryNodeSchema, 'video'),
-    channelsConnection: createResolverWithoutChannelFollowsField(queryNodeSchema, 'channelsConnection'),
-    channel: createResolverWithoutChannelFollowsField(queryNodeSchema, 'channel'),
+    videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
+    featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
+    search: createResolverWithTransforms(queryNodeSchema, 'search', [
+      RemoveQueryNodeViewsField,
+      RemoveQueryNodeFollowsField,
+    ]),
+    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
+    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
+      RemoveQueryNodeFollowsField,
+    ]),
+    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
   },
   Video: {
     // TODO: Resolve the views count in parallel to the videosConnection query
