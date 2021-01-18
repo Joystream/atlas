@@ -6,7 +6,7 @@ import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Link } from '@reach/router'
 
-type NavbarStyleProps = {
+type TopNavbarStyleProps = {
   hasFocus: boolean
 }
 
@@ -18,14 +18,14 @@ export const StyledSearchbar = styled(Searchbar)`
     height: initial;
   }
 `
-export const NAVBAR_HEIGHT = 81
-export const Header = styled.header<NavbarStyleProps>`
+export const TOP_NAVBAR_HEIGHT = 81
+export const Header = styled.header<TopNavbarStyleProps>`
   width: 100%;
   position: sticky;
   top: 0;
   z-index: ${zIndex.header};
-  min-height: ${NAVBAR_HEIGHT}px;
-  max-height: ${NAVBAR_HEIGHT}px;
+  min-height: ${TOP_NAVBAR_HEIGHT}px;
+  max-height: ${TOP_NAVBAR_HEIGHT}px;
 
   display: flex;
   justify-content: space-between;

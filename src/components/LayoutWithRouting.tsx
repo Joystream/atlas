@@ -4,7 +4,7 @@ import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/rou
 import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle, Sidenav } from '@/shared/components'
-import { Navbar, ViewErrorFallback } from '@/components'
+import { TopNavbar, ViewErrorFallback } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, BrowseView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
@@ -54,7 +54,7 @@ const LayoutWithRouting: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={globalStyles} />
-      <Navbar default />
+      <TopNavbar default />
       <Sidenav items={SIDENAV_ITEMS} />
       <MainContainer>
         <Router primary={false}>

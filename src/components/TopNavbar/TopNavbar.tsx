@@ -9,7 +9,7 @@ import {
   SearchbarContainer,
   ShortLogo,
   StyledSearchbar,
-} from './Navbar.style'
+} from './TopNavbar.style'
 
 type NavbarProps = RouteComponentProps
 
