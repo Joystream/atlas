@@ -88,7 +88,7 @@ export const DrawerOverlay = styled.div<ExpandableElementProps>`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: ${zIndex.overlay};
+  z-index: ${zIndex.header};
   background-color: rgba(0, 0, 0, 0.5);
 `
 export const SubItemsWrapper = styled.div<SubItemProps>`

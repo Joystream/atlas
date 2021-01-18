@@ -36,6 +36,14 @@ const Sidenav: React.FC<SidenavProps> = ({ items }) => {
 
   return (
     <>
+      <CSSTransition
+        in={expanded}
+        unmountOnExit
+        timeout={parseInt(transitions.timings.loading)}
+        classNames={transitions.names.fade}
+      >
+        <DrawerOverlay onClick={() => setExpanded(false)} expanded={expanded} />
+      </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
         <SidebarNavList>
@@ -54,14 +62,6 @@ const Sidenav: React.FC<SidenavProps> = ({ items }) => {
           ))}
         </SidebarNavList>
       </SidebarNav>
-      <CSSTransition
-        in={expanded}
-        unmountOnExit
-        timeout={parseInt(transitions.timings.loading)}
-        classNames={transitions.names.fade}
-      >
-        <DrawerOverlay onClick={() => setExpanded(false)} expanded={expanded} />
-      </CSSTransition>
     </>
   )
 }

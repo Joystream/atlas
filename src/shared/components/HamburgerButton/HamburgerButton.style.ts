@@ -8,7 +8,7 @@ type HamburgerInnerProps = {
 }
 
 export const Hamburger = styled.button`
-  top: ${sizes(5)};
+  top: 19px;
   position: fixed;
   z-index: ${zIndex.header + 1};
   cursor: pointer;
@@ -16,7 +16,7 @@ export const Hamburger = styled.button`
   border: none;
   display: inline-block;
   padding: ${sizes(3)};
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(3)};
   &:hover {
     opacity: 0.7;
   }
