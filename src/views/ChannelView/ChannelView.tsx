@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 
-import { GET_CHANNEL, FOLLOW_CHANNEL } from '@/api/queries/channels'
+import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
 
 import { usePersonalData } from '@/hooks'
@@ -27,28 +27,46 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
 
+type FollowedChannel = {
+  id: string
+}
+
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
-  const {
-    state: { followedChannels },
-    updateChannelFollowing,
-  } = usePersonalData()
+  const [followChannel] = useMutation(FOLLOW_CHANNEL, {
+    variables: {
+      channelId: id,
+    },
+  })
+  const [unfollowChannel] = useMutation(UNFOLLOW_CHANNEL, {
+    variables: {
+      channelId: id,
+    },
+  })
+  const { updateChannelFollowing } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
 
   useEffect(() => {
-    const following = followedChannels.some((channel) => channel.id === id)
-    setFollowing(following)
-  }, [followedChannels, id])
+    const followedChannels = localStorage.getItem('followedChannels')
+    if (!followedChannels) {
+      return
+    }
+    const parsedFollowedChannels: FollowedChannel[] = JSON.parse(followedChannels)
+    const isFollowing = parsedFollowedChannels.some((channel) => channel.id === id)
+    setFollowing(isFollowing)
+  }, [id])
 
   const handleFollow = () => {
     if (isFollowing) {
       updateChannelFollowing(id, false)
+      unfollowChannel()
       setFollowing(false)
     } else {
       updateChannelFollowing(id, true)
+      followChannel()
       setFollowing(true)
     }
   }
