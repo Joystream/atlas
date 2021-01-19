@@ -14,13 +14,13 @@ import {
   PlayerWrapper,
   LicenseContainer,
 } from './VideoView.style'
-import { InfiniteVideoGrid, Placeholder, VideoPlayer, Text } from '@/shared/components'
+import { Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
 import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
-import { ChannelLink } from '@/components'
+import { ChannelLink, InfiniteVideoGrid } from '@/components'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()

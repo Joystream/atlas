@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { LinkGetProps } from '@reach/router'
 import useResizeObserver from 'use-resize-observer'
 import HamburgerButton from '../HamburgerButton'
-import { IconType } from '../../icons/index'
+import { IconType } from '../../icons'
 import {
   InactiveIcon,
   ActiveIcon,
