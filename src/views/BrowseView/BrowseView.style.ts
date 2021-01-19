@@ -13,6 +13,10 @@ export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
+export const StyledText = styled(Text)`
+  margin-top: ${sizes(15)};
+`
+
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   z-index: ${zIndex.overlay};
   position: sticky;
