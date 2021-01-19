@@ -5,21 +5,21 @@ type WatchedVideoFields = {
 export const INTERRUPTED_VIDEO = 'INTERRUPTED'
 export const COMPLETED_VIDEO = 'COMPLETED'
 
-type InterruptedVideo = WatchedVideoFields & {
+export type InterruptedVideo = WatchedVideoFields & {
   __typename: typeof INTERRUPTED_VIDEO
   timestamp: number
 }
-type CompletedVideo = WatchedVideoFields & {
+export type CompletedVideo = WatchedVideoFields & {
   __typename: typeof COMPLETED_VIDEO
   id: string
 }
-type WatchedVideo = InterruptedVideo | CompletedVideo
+export type WatchedVideo = InterruptedVideo | CompletedVideo
 
-type FollowedChannel = {
+export type FollowedChannel = {
   id: string
 }
 
-interface PersonalDataClient {
+export interface PersonalDataClient {
   // ==== watched videos ====
 
   // get all the interrupted or completed videos
@@ -34,12 +34,12 @@ interface PersonalDataClient {
   // get status of one specific watched video
   watchedVideo: (id: string) => Promise<WatchedVideo | null>
 
-  // mark the video as interrupted
-  setWatchedVideo: (__typename: typeof INTERRUPTED_VIDEO, id: string, timestamp: number) => Promise<void>
-
-  // mark the video as completed
-  setWatchedVideo: (__typename: typeof COMPLETED_VIDEO, id: string) => Promise<void>
-
+  // mark the video as interrupted or completed
+  setWatchedVideo: (
+    __typename: typeof INTERRUPTED_VIDEO | typeof COMPLETED_VIDEO,
+    id: string,
+    timestamp?: number
+  ) => Promise<void>
   // ==== followed channels ====
 
   // get all the followed channels
@@ -51,5 +51,3 @@ interface PersonalDataClient {
   // get the following status of one specific channel
   isFollowingChannel: (id: string) => Promise<boolean>
 }
-
-export type UsePersonalData = () => UserPersonalData
