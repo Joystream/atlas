@@ -124,12 +124,34 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
     setCachedQueryVariables(queryVariables)
     setRefetching(true)
 
-    const refetchPromise = refetch({ ...queryVariables, first: targetRowsCount * itemsPerRow + skipCount })
+    // refetch will merge new query vars with the one from the previous request
+    // we need to explicitly exclude all vars that are not present, otherwise they will get overwritten with stale values
+    const refetchVariables = Object.keys(cachedQueryVariables).reduce(
+      (variables, key) => {
+        if (!variables[key as keyof TArgs]) {
+          // @ts-ignore since the key is missing in the new vars, we know it's optional
+          variables[key as keyof TArgs] = undefined
+        }
+        return variables
+      },
+      { ...queryVariables }
+    )
+
+    const refetchPromise = refetch({ ...refetchVariables, first: targetRowsCount * itemsPerRow + skipCount })
 
     if (refetchPromise) {
       refetchPromise.then(() => setRefetching(false))
     }
-  }, [queryVariables, queryVariablesChanged, isReady, refetch, targetRowsCount, itemsPerRow, skipCount])
+  }, [
+    queryVariables,
+    cachedQueryVariables,
+    queryVariablesChanged,
+    isReady,
+    refetch,
+    targetRowsCount,
+    itemsPerRow,
+    skipCount,
+  ])
 
   // handle scroll to bottom
   useEffect(() => {
