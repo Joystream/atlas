@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Header } from '@/views/BrowseView/BrowseView.style'
+import { Container, Header } from '@/views/VideosView/VideosView.style'
 import { BackgroundPattern, InfiniteChannelGrid } from '@/components'
 
 const ChannelsView: React.FC = () => {

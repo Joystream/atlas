@@ -15,12 +15,12 @@ import {
   IntersectionTarget,
   Header,
   GRID_TOP_PADDING,
-} from './BrowseView.style'
+} from './VideosView.style'
 import { GET_CATEGORIES, GET_FEATURED_VIDEOS } from '@/api/queries'
 import { GetCategories } from '@/api/queries/__generated__/GetCategories'
 import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
 
-const BrowseView: React.FC<RouteComponentProps> = () => {
+const VideosView: React.FC<RouteComponentProps> = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const { loading: categoriesLoading, data: categoriesData, error: categoriesError } = useQuery<GetCategories>(
     GET_CATEGORIES
@@ -77,4 +77,4 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
   )
 }
 
-export default BrowseView
+export default VideosView
