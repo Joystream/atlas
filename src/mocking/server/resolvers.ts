@@ -115,6 +115,38 @@ export const channelFollowsResolver: QueryResolver<ChannelFollowsArgs> = (obj, a
   return mirageGraphQLFieldResolver(obj, { id: args.channelId }, context, info)
 }
 
+export const followChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, args, context, info) => {
+  const channelInfo = context.mirageSchema.ChannelFollowsInfo.find(args.channelId)
+  if (!channelInfo) {
+    const channelInfo = context.mirageSchema.entityViewsInfos.create({
+      id: args.channelId,
+      follows: 1,
+    })
+
+    return channelInfo
+  }
+  channelInfo.update({
+    follows: channelInfo.follows + 1,
+  })
+  return channelInfo
+}
+
+export const unfollowChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, args, context, info) => {
+  const channelInfo = context.mirageSchema.ChannelFollowsInfo.find(args.channelId)
+  if (!channelInfo) {
+    const channelInfo = context.mirageSchema.entityViewsInfos.create({
+      id: args.channelId,
+      follows: 0,
+    })
+
+    return channelInfo
+  }
+  channelInfo.update({
+    follows: channelInfo.follows - 1,
+  })
+  return channelInfo
+}
+
 type VideoModel = { attrs: VideoFields }
 type ChannelModel = { attrs: AllChannelFields }
 type SearchResolverResult = Omit<Search_search, 'item'> & { item: VideoModel | ChannelModel }
