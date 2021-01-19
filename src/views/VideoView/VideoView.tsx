@@ -22,7 +22,7 @@ import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVide
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
 import { ChannelLink } from '@/components'
-import { usePersonalData } from '@/hooks'
+import { usePersonalData, useRouterQuery } from '@/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -30,16 +30,24 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     variables: { id },
   })
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
-  const { state, updateWatchedVideos } = usePersonalData()
-
   const [startTimestamp, setStartTimestamp] = useState<number>()
+  const { state, updateWatchedVideos } = usePersonalData()
+  const timestampFromQuery = Number(useRouterQuery('time'))
+
   useEffect(() => {
     if (startTimestamp != null) {
       return
     }
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
-    setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [data?.video?.id, state.watchedVideos, startTimestamp])
+    const duration = data?.video?.duration ? Number(data?.video?.duration) : 0
+
+    if (timestampFromQuery && timestampFromQuery < duration) {
+      setStartTimestamp(timestampFromQuery)
+    }
+    if (!timestampFromQuery) {
+      setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
+    }
+  }, [data?.video?.id, state.watchedVideos, startTimestamp, timestampFromQuery, data?.video?.duration])
 
   const videoId = data?.video?.id
   const channelId = data?.video?.channel.id
