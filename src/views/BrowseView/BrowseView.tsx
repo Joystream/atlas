@@ -62,7 +62,7 @@ const BrowseView: React.FC<RouteComponentProps> = () => {
         isAtTop={inView}
       />
       <ErrorBoundary fallback={ErrorFallback}>
-        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!selectedCategoryId} />
+        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categoriesData?.categories} />
       </ErrorBoundary>
     </Container>
   )
