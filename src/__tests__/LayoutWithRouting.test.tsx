@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { LayoutWithRouting } from '../components'
+import LayoutWithRouting from '../views/LayoutWithRouting'
 
 describe('LayoutWithRouting component', () => {
   const component = shallow(<LayoutWithRouting />)

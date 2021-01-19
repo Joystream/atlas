@@ -8,6 +8,7 @@ export { ReactComponent as BinocularFill } from './binocular-fill.svg'
 export { ReactComponent as Browse } from './browse.svg'
 export { ReactComponent as Books } from './books.svg'
 export { ReactComponent as Block } from './block.svg'
+export { ReactComponent as Channels } from './channels.svg'
 export { ReactComponent as ChevronDown } from './chevron-down-big.svg'
 export { ReactComponent as ChevronUp } from './chevron-up-big.svg'
 export { ReactComponent as ChevronRight } from './chevron-right-big.svg'
@@ -33,6 +34,7 @@ const icons = [
   'browse',
   'books',
   'block',
+  'channels',
   'chevron-down',
   'chevron-up',
   'chevron-right',

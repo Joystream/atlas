@@ -3,27 +3,14 @@ import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
 import { sizes, breakpoints } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreview'
+import { css } from '@emotion/core'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
-
-type ContainerProps = Required<Pick<GridProps, 'gap' | 'maxColumns' | 'minWidth' | 'repeat'>>
-
-const Container = styled.div<ContainerProps>`
-  display: grid;
-  gap: ${(props) => toPx(props.gap)};
-  grid-template-columns: repeat(
-    auto-${(props) => props.repeat},
-    minmax(min(${(props) => toPx(props.minWidth)}, 100%), 1fr)
-  );
-  @media (min-width: ${toPx(breakpoints.xlarge)}) {
-    grid-template-columns: repeat(${(props) => props.maxColumns}, 1fr);
-  }
-`
 
 type GridProps = {
   gap?: number | string
   className?: string
-  maxColumns?: number
+  maxColumns?: number | null
   minWidth?: number | string
   repeat?: 'fit' | 'fill'
   onResize?: (sizes: number[]) => void
@@ -60,6 +47,27 @@ const Grid: React.FC<GridProps> = ({
     />
   )
 }
+
+type ContainerProps = Required<Pick<GridProps, 'gap' | 'maxColumns' | 'minWidth' | 'repeat'>>
+
+const maxColumnsCss = ({ maxColumns }: ContainerProps) =>
+  maxColumns
+    ? css`
+        @media (min-width: ${toPx(breakpoints.xlarge)}) {
+          grid-template-columns: repeat(${maxColumns}, 1fr);
+        }
+      `
+    : null
+
+const Container = styled.div<ContainerProps>`
+  display: grid;
+  gap: ${(props) => toPx(props.gap)};
+  grid-template-columns: repeat(
+    auto-${(props) => props.repeat},
+    minmax(min(${(props) => toPx(props.minWidth)}, 100%), 1fr)
+  );
+  ${maxColumnsCss};
+`
 
 type BreakpointsToMatchGridArg = {
   breakpoints: number
