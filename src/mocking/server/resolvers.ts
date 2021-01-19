@@ -116,9 +116,9 @@ export const channelFollowsResolver: QueryResolver<ChannelFollowsArgs> = (obj, a
 }
 
 export const followChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, args, context, info) => {
-  const channelInfo = context.mirageSchema.channelFollowsInfo.find(args.channelId)
+  const channelInfo = context.mirageSchema.channelFollowsInfos.find(args.channelId)
   if (!channelInfo) {
-    const channelInfo = context.mirageSchema.channelFollowsInfo.create({
+    const channelInfo = context.mirageSchema.channelFollowsInfos.create({
       id: args.channelId,
       follows: 1,
     })
@@ -132,9 +132,9 @@ export const followChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, ar
 }
 
 export const unfollowChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, args, context, info) => {
-  const channelInfo = context.mirageSchema.channelFollowsInfo.find(args.channelId)
+  const channelInfo = context.mirageSchema.channelFollowsInfos.find(args.channelId)
   if (!channelInfo) {
-    const channelInfo = context.mirageSchema.channelFollowsInfo.create({
+    const channelInfo = context.mirageSchema.channelFollowsInfos.create({
       id: args.channelId,
       follows: 0,
     })

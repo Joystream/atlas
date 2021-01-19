@@ -36,12 +36,12 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
-  const [followChannel] = useMutation(FOLLOW_CHANNEL, {
+  const [followChannel] = useMutation<GetChannelVariables>(FOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },
   })
-  const [unfollowChannel] = useMutation(UNFOLLOW_CHANNEL, {
+  const [unfollowChannel] = useMutation<GetChannelVariables>(UNFOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },

@@ -48,7 +48,7 @@ export const GET_CHANNEL = gql`
 
 export const FOLLOW_CHANNEL = gql`
   mutation followChannel($channelId: ID!) {
-    followChannel(where: { id: $channelId }) {
+    followChannel(channelId: $channelId) {
       id
       follows
     }
@@ -56,7 +56,7 @@ export const FOLLOW_CHANNEL = gql`
 `
 export const UNFOLLOW_CHANNEL = gql`
   mutation unfollowChannel($channelId: ID!) {
-    unfollowChannel(where: { id: $channelId }) {
+    unfollowChannel(channelId: $channelId) {
       id
       follows
     }
