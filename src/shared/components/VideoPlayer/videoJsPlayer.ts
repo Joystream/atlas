@@ -13,9 +13,12 @@ export type VideoJsConfig = {
   fill?: boolean
   muted?: boolean
   posterUrl?: string
+  startTime?: number
   onDataLoaded?: () => void
   onPlay?: () => void
   onPause?: () => void
+  onEnd?: () => void
+  onTimeUpdated?: (time: number) => void
 }
 
 const createJoystreamStorageUrl = (dataObjectId: string) => {
@@ -32,9 +35,12 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   width,
   muted = false,
   posterUrl,
+  startTime = 0,
   onDataLoaded,
   onPlay,
   onPause,
+  onEnd,
+  onTimeUpdated,
 }) => {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
@@ -129,6 +135,14 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   }, [player, onDataLoaded])
 
   useEffect(() => {
+    if (!player || !startTime) {
+      return
+    }
+
+    player.currentTime(startTime)
+  }, [player, startTime])
+
+  useEffect(() => {
     if (!player || !onPlay) {
       return
     }
@@ -151,6 +165,25 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       player.off('pause', onPause)
     }
   }, [player, onPause])
+
+  useEffect(() => {
+    if (!player || !onEnd) {
+      return
+    }
+    player.on('ended', onEnd)
+
+    return () => player.off('ended', onEnd)
+  }, [player, onEnd])
+
+  useEffect(() => {
+    if (!player || !onTimeUpdated) {
+      return
+    }
+    const handler = () => onTimeUpdated(player.currentTime())
+    player.on('timeupdate', handler)
+
+    return () => player.off('timeupdate', handler)
+  }, [onTimeUpdated, player])
 
   return [player, playerRef]
 }
