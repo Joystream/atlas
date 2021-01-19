@@ -46,7 +46,7 @@ const watchedVideo = async (id: string) => {
 const setWatchedVideo = async (
   __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO,
   id: string,
-  timestamp?: number
+  timestamp: number
 ) => {
   const currentVideos = await watchedVideos()
   const currentVideo = currentVideos.find((v) => v.id === id)
