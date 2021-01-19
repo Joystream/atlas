@@ -111,6 +111,9 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
               </>
             )}
           </TitleContainer>
+          <StyledButton variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </StyledButton>
         </TitleSection>
       </Header>
       <VideoSection>

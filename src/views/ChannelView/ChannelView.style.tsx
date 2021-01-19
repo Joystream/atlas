@@ -214,6 +214,7 @@ export const SubTitlePlaceholder = styled(Placeholder)`
   height: ${SM_SUBTITLE_HEIGHT};
   @media screen and (min-width: ${breakpoints.medium}) {
     height: ${SUBTITLE_HEIGHT};
+  }
 `
 
 export const StyledButton = styled(Button)`
