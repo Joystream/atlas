@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
+import { debounce } from 'lodash'
 import {
   ChannelContainer,
   Container,
@@ -20,7 +21,9 @@ import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
 import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
+
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { usePersonalData } from '@/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
@@ -28,11 +31,21 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     variables: { id },
   })
   const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
+  const { state, updateWatchedVideos } = usePersonalData()
 
-  const videoId = data?.video?.id
+  const [startTimestamp, setStartTimestamp] = useState<number>()
+  useEffect(() => {
+    if (startTimestamp != null) {
+      return
+    }
+    const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
+    setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
+  }, [data?.video?.id, state.watchedVideos, startTimestamp])
+
   const channelId = data?.video?.channel.id
+  const videoId = data?.video?.id
 
-  const [playing, setPlaying] = useState<boolean>(true)
+  const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback((event: Event) => {
     const { keyCode } = event as KeyboardEvent
     if (keyCode === 32) {
@@ -71,6 +84,31 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     })
   }, [addVideoView, videoId, channelId])
 
+  // Save the video timestamp
+  // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleTimeUpdate = useCallback(
+    debounce((time) => {
+      if (data?.video?.id) {
+        updateWatchedVideos('INTERRUPTED', data.video.id, time)
+      }
+    }, 5000),
+    [data?.video?.id]
+  )
+
+  const handleVideoEnd = useCallback(() => {
+    if (data?.video?.id) {
+      updateWatchedVideos('COMPLETED', data?.video?.id)
+    }
+  }, [data?.video?.id, updateWatchedVideos])
+
+  const handlePlay = useCallback(() => {
+    setPlaying(true)
+  }, [])
+  const handlePause = useCallback(() => {
+    setPlaying(false)
+  }, [])
+
   if (error) {
     throw error
   }
@@ -87,9 +125,13 @@ const VideoView: React.FC<RouteComponentProps> = () => {
             <VideoPlayer
               playing={playing}
               src={data.video.media.location}
-              autoplay
               fluid
               posterUrl={data.video.thumbnailUrl}
+              onEnd={handleVideoEnd}
+              onTimeUpdated={handleTimeUpdate}
+              onPlay={handlePlay}
+              onPause={handlePause}
+              startTime={startTimestamp}
             />
           ) : (
             <PlayerPlaceholder />

@@ -40,6 +40,7 @@ export interface PersonalDataClient {
     id: string,
     timestamp?: number
   ) => Promise<void>
+
   // ==== followed channels ====
 
   // get all the followed channels
