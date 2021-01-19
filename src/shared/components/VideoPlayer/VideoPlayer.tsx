@@ -10,7 +10,7 @@ type VideoPlayerProps = {
 } & VideoJsConfig
 
 const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, autoplay, isInBackground, playing, onDataLoaded, ...videoJsConfig },
+  { className, autoplay, isInBackground, playing, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
