@@ -4,19 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: followChannel
+// GraphQL mutation operation: FollowChannel
 // ====================================================
 
-export interface followChannel_followChannel {
+export interface FollowChannel_followChannel {
   __typename: "ChannelFollowsInfo";
   id: string;
   follows: number;
 }
 
-export interface followChannel {
-  followChannel: followChannel_followChannel;
+export interface FollowChannel {
+  followChannel: FollowChannel_followChannel;
 }
 
-export interface followChannelVariables {
+export interface FollowChannelVariables {
   channelId: string;
 }

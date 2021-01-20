@@ -4,19 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: unfollowChannel
+// GraphQL mutation operation: UnfollowChannel
 // ====================================================
 
-export interface unfollowChannel_unfollowChannel {
+export interface UnfollowChannel_unfollowChannel {
   __typename: "ChannelFollowsInfo";
   id: string;
   follows: number;
 }
 
-export interface unfollowChannel {
-  unfollowChannel: unfollowChannel_unfollowChannel;
+export interface UnfollowChannel {
+  unfollowChannel: UnfollowChannel_unfollowChannel;
 }
 
-export interface unfollowChannelVariables {
+export interface UnfollowChannelVariables {
   channelId: string;
 }

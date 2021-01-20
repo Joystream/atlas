@@ -4,8 +4,8 @@ import { useQuery, useMutation } from '@apollo/client'
 
 import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
-import { followChannel, followChannelVariables } from '@/api/queries/__generated__/followChannel'
-import { unfollowChannel, unfollowChannelVariables } from '@/api/queries/__generated__/unfollowChannel'
+import { FollowChannel, FollowChannelVariables } from '@/api/queries/__generated__/followChannel'
+import { UnfollowChannel, UnfollowChannelVariables } from '@/api/queries/__generated__/unfollowChannel'
 import { usePersonalData } from '@/hooks'
 
 import {
@@ -21,9 +21,10 @@ import {
   VideoSection,
   SubTitle,
   SubTitlePlaceholder,
-  StyledButton,
+  StyledButtonContainer,
 } from './ChannelView.style'
 import { BackgroundPattern, InfiniteVideoGrid } from '@/components'
+import { Button } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
@@ -37,12 +38,12 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
-  const [followChannel] = useMutation<followChannel, followChannelVariables>(FOLLOW_CHANNEL, {
+  const [followChannel] = useMutation<FollowChannel, FollowChannelVariables>(FOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },
   })
-  const [unfollowChannel] = useMutation<unfollowChannel, unfollowChannelVariables>(UNFOLLOW_CHANNEL, {
+  const [unfollowChannel] = useMutation<UnfollowChannel, UnfollowChannelVariables>(UNFOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },
@@ -110,9 +111,11 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
               </>
             )}
           </TitleContainer>
-          <StyledButton variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </StyledButton>
+          <StyledButtonContainer>
+            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </Button>
+          </StyledButtonContainer>
         </TitleSection>
       </Header>
       <VideoSection>

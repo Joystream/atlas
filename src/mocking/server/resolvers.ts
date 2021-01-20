@@ -142,7 +142,7 @@ export const unfollowChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, 
     return channelInfo
   }
   channelInfo.update({
-    follows: Math.max(channelInfo.follows - 1),
+    follows: Math.max(0, channelInfo.follows - 1),
   })
   return channelInfo
 }
