@@ -42,10 +42,32 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     variables: {
       channelId: id,
     },
+    update: (cache, mutationResult) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Channel',
+          id,
+        }),
+        fields: {
+          follows: () => mutationResult.data?.followChannel.follows,
+        },
+      })
+    },
   })
   const [unfollowChannel] = useMutation<UnfollowChannel, UnfollowChannelVariables>(UNFOLLOW_CHANNEL, {
     variables: {
       channelId: id,
+    },
+    update: (cache, mutationResult) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Channel',
+          id,
+        }),
+        fields: {
+          follows: () => mutationResult.data?.unfollowChannel.follows,
+        },
+      })
     },
   })
   const {
@@ -60,14 +82,18 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   }, [followedChannels, id])
 
   const handleFollow = () => {
-    if (isFollowing) {
-      updateChannelFollowing(id, false)
-      unfollowChannel()
-      setFollowing(false)
-    } else {
-      updateChannelFollowing(id, true)
-      followChannel()
-      setFollowing(true)
+    try {
+      if (isFollowing) {
+        updateChannelFollowing(id, false)
+        unfollowChannel()
+        setFollowing(false)
+      } else {
+        updateChannelFollowing(id, true)
+        followChannel()
+        setFollowing(true)
+      }
+    } catch (error) {
+      console.warn('Failed to update Channel following', { error })
     }
   }
   if (error) {
