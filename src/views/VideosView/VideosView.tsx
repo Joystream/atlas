@@ -34,14 +34,14 @@ const VideosView: React.FC<RouteComponentProps> = () => {
     notifyOnNetworkStatusChange: true,
   })
 
-  const headerRef = useRef<HTMLHeadingElement>(null)
+  const topicsRef = useRef<HTMLHeadingElement>(null)
   const { ref: targetRef, inView } = useInView({
     rootMargin: `-${TOP_NAVBAR_HEIGHT - GRID_TOP_PADDING}px 0px 0px`,
   })
   const handleCategoryChange = (categoryId: string | null, scrollTop = true) => {
     setSelectedCategoryId(categoryId)
-    if (headerRef.current && scrollTop) {
-      headerRef.current.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' })
+    if (topicsRef.current && scrollTop) {
+      topicsRef.current.scrollIntoView({ block: 'start', inline: 'nearest' })
     }
   }
 
@@ -53,15 +53,15 @@ const VideosView: React.FC<RouteComponentProps> = () => {
   return (
     <Container>
       <BackgroundPattern />
-      <Header variant="hero" ref={headerRef}>
-        Videos
-      </Header>
+      <Header variant="hero">Videos</Header>
       {!hasFeaturedVideosError ? (
         <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos} />
       ) : (
         <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
       )}
-      <StyledText variant="h5">Topics that may interest you</StyledText>
+      <StyledText ref={topicsRef} variant="h5">
+        Topics that may interest you
+      </StyledText>
       <IntersectionTarget ref={targetRef} />
       <StyledCategoryPicker
         categories={categoriesData?.categories}

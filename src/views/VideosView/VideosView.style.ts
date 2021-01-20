@@ -14,7 +14,7 @@ export const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
 export const StyledText = styled(Text)`
-  margin-top: ${sizes(15)};
+  padding-top: ${sizes(20)};
 `
 
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
@@ -24,7 +24,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   top: ${TOP_NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} var(--global-horizontal-padding) ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
+  background-color: ${colors.black};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
   transition: background-color ${transitions.timings.regular} ${transitions.easing};
 `
