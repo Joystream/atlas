@@ -14,6 +14,7 @@ export const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
 export const StyledText = styled(Text)`
+  /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */
   padding-top: ${TOP_NAVBAR_HEIGHT}px;
 `
 
