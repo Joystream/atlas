@@ -16,6 +16,8 @@ import {
   videosResolver,
   videoViewsResolver,
   channelFollowsResolver,
+  followChannelResolver,
+  unfollowChannelResolver,
 } from './resolvers'
 import {
   MOCK_ORION_GRAPHQL_URL,
@@ -49,6 +51,8 @@ createServer({
         },
         Mutation: {
           addVideoView: addVideoViewResolver,
+          followChannel: followChannelResolver,
+          unfollowChannel: unfollowChannelResolver,
         },
       },
     })
