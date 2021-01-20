@@ -35,7 +35,7 @@ createServer({
           video: videoResolver,
           videosConnection: videosResolver,
           coverVideo: coverVideoResolver,
-          featured_videos: featuredVideosResolver,
+          featuredVideos: featuredVideosResolver,
           channel: channelResolver,
           channelsConnection: channelsResolver,
           search: searchResolver,

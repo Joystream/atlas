@@ -1,7 +1,14 @@
 import { ModelInstance } from 'miragejs/-types'
 import faker from 'faker'
 
-import { mockCategories, mockChannels, mockVideos, mockVideosMedia, mockLicenses } from '@/mocking/data'
+import {
+  mockCategories,
+  mockChannels,
+  mockVideos,
+  mockVideosMedia,
+  mockLicenses,
+  FEATURED_VIDEOS_INDEXES,
+} from '@/mocking/data'
 import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
 import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
 import {
@@ -59,10 +66,15 @@ export const createMockData = (server: MirageJSServer) => {
     })
     return model
   })
-  mockVideos.forEach((video, idx) => {
+  const videos = mockVideos.map((video, idx) => {
     const mediaIndex = idx % mockVideosMedia.length
 
-    server.schema.create('Video', {
+    server.create('EntityViewsInfo', {
+      id: video.id,
+      views: video.views,
+    })
+
+    return server.schema.create('Video', {
       ...video,
       views: undefined,
       duration: mockVideosMedia[mediaIndex].duration,
@@ -71,12 +83,16 @@ export const createMockData = (server: MirageJSServer) => {
       media: videoMedias[mediaIndex],
       license: licenseEntities[idx % licenseEntities.length],
     })
-
-    server.create('EntityViewsInfo', {
-      id: video.id,
-      views: video.views,
-    })
   })
+
+  videos
+    .filter((_, idx) => FEATURED_VIDEOS_INDEXES.includes(idx))
+    .forEach((video) => {
+      server.schema.create('FeaturedVideo', {
+        id: faker.random.uuid(),
+        video,
+      })
+    })
 
   createCoverVideoData(server, categories)
 }
