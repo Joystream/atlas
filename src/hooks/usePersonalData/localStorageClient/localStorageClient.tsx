@@ -92,11 +92,10 @@ const setChannelFollowing = async (id: string, follow = true) => {
   if (isFollowing) {
     newFollowedChannels = follow
       ? currentFollowedChannels
-      : currentFollowedChannels.filter((channel) => channel.id === id)
+      : currentFollowedChannels.filter((channel) => channel.id !== id)
   } else {
-    newFollowedChannels = follow ? [...currentFollowedChannels, id] : currentFollowedChannels
+    newFollowedChannels = follow ? [...currentFollowedChannels, { id }] : currentFollowedChannels
   }
-
   writeToLocalStorage('followedChannels', newFollowedChannels)
 }
 
