@@ -158,8 +158,9 @@ export const TitleSection = styled.div`
 `
 export const TitleContainer = styled.div`
   max-width: 100%;
-  @media screen and (min-width: ${breakpoints.medium}) {
-    max-width: 60%;
+  overflow: hidden;
+  @media screen and (min-width: ${breakpoints.small}) {
+    max-width: 53%;
   }
 `
 
@@ -219,7 +220,10 @@ export const SubTitlePlaceholder = styled(Placeholder)`
 
 export const StyledButton = styled(Button)`
   align-self: flex-start;
+  margin-top: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-left: auto;
+    align-self: center;
+    margin-top: -31px;
   }
 `

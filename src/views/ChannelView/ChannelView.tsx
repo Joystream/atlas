@@ -4,7 +4,8 @@ import { useQuery, useMutation } from '@apollo/client'
 
 import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
 import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
-
+import { followChannel, followChannelVariables } from '@/api/queries/__generated__/followChannel'
+import { unfollowChannel, unfollowChannelVariables } from '@/api/queries/__generated__/unfollowChannel'
 import { usePersonalData } from '@/hooks'
 
 import {
@@ -36,28 +37,26 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
   })
-  const [followChannel] = useMutation<GetChannelVariables>(FOLLOW_CHANNEL, {
+  const [followChannel] = useMutation<followChannel, followChannelVariables>(FOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },
   })
-  const [unfollowChannel] = useMutation<GetChannelVariables>(UNFOLLOW_CHANNEL, {
+  const [unfollowChannel] = useMutation<unfollowChannel, unfollowChannelVariables>(UNFOLLOW_CHANNEL, {
     variables: {
       channelId: id,
     },
   })
-  const { updateChannelFollowing } = usePersonalData()
+  const {
+    state: { followedChannels },
+    updateChannelFollowing,
+  } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
 
   useEffect(() => {
-    const followedChannels = localStorage.getItem('followedChannels')
-    if (!followedChannels) {
-      return
-    }
-    const parsedFollowedChannels: FollowedChannel[] = JSON.parse(followedChannels)
-    const isFollowing = parsedFollowedChannels.some((channel) => channel.id === id)
+    const isFollowing = followedChannels.some((channel) => channel.id === id)
     setFollowing(isFollowing)
-  }, [id])
+  }, [followedChannels, id])
 
   const handleFollow = () => {
     if (isFollowing) {
