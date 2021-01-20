@@ -13,6 +13,11 @@ export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
+export const StyledText = styled(Text)`
+  /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */
+  padding-top: ${TOP_NAVBAR_HEIGHT}px;
+`
+
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   z-index: ${zIndex.overlay};
   position: sticky;
@@ -20,7 +25,7 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   top: ${TOP_NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} var(--global-horizontal-padding) ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  background-color: ${(props) => (props.isAtTop ? colors.transparent : colors.black)};
+  background-color: ${colors.black};
   border-bottom: 1px solid ${(props) => (props.isAtTop ? colors.black : colors.gray[800])};
   transition: background-color ${transitions.timings.regular} ${transitions.easing};
 `
