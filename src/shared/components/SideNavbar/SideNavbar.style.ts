@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import Icon from '@/shared/components/Icon'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
 
-export const SIDENAVBAR_WIDTH = 56
+export const SIDENAVBAR_WIDTH = 72
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 
 type ExpandableElementProps = {
@@ -12,6 +11,10 @@ type ExpandableElementProps = {
 
 type SubItemProps = {
   subitemsHeight?: number
+} & ExpandableElementProps
+
+type SidebarNavLinkProps = {
+  content: string
 } & ExpandableElementProps
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
@@ -28,7 +31,7 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 
   overflow: hidden;
   color: ${colors.white};
-  background-color: ${colors.blue[700]};
+  background-color: ${colors.gray[700]};
   @media screen and (min-width: ${breakpoints.medium}) {
     left: 0;
     width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : SIDENAVBAR_WIDTH)}px;
@@ -38,32 +41,36 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 export const SidebarNavList = styled.ul`
   list-style: none;
   margin-top: 90px;
-  padding: 0;
-  padding: ${sizes(8)} ${sizes(4)};
+  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  padding: ${sizes(8)} 0;
 `
 
 export const SidebarNavItem = styled.li`
-  &:not(:first-child) {
-    margin-top: ${sizes(10)};
-  }
+  width: 100%;
   display: flex;
   flex-direction: column;
 `
 
-export const ActiveIcon = styled(Icon)`
-  display: none;
-`
-export const InactiveIcon = styled(Icon)`
-  display: block;
-`
-
-export const SidebarNavLink = styled(Link)`
+export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
+  padding: ${sizes(5)} ${sizes(6)};
   color: ${colors.white};
   text-decoration: none;
   display: flex;
+  position: relative;
   align-items: center;
   &:hover {
-    opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  > svg {
+    transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
+    transition: transform ${transitions.timings.regular} ${transitions.easing};
+    transition-delay: ${({ expanded }) => (expanded ? 0 : 0.3)}s;
   }
   > span {
     margin-left: ${sizes(8)};
@@ -73,12 +80,20 @@ export const SidebarNavLink = styled(Link)`
     line-height: 1;
   }
   &[data-active='true'] {
-    ${ActiveIcon} {
-      display: block;
-    }
-    ${InactiveIcon} {
-      display: none;
-    }
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+  :after {
+    content: ${({ content }) => `'${content}'`};
+    position: absolute;
+    font-size: 12px;
+    color: white;
+    transition: opacity ${transitions.timings.regular} ${transitions.easing};
+    transition-delay: ${({ expanded }) => (expanded ? 0 : 0.3)}s;
+    opacity: ${({ expanded }) => (expanded ? 0 : 1)};
+    left: ${SIDENAVBAR_WIDTH / 2}px;
+    transform: translateX(-50%);
+    bottom: 0;
+    margin-bottom: 10px;
   }
 `
 

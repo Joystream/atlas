@@ -13,20 +13,17 @@ import { NavItemType } from '../shared/components/SideNavbar'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
-    icon: 'home',
-    iconFilled: 'home-fill',
+    icon: 'home-fill',
     name: 'Home',
     to: routes.index(),
   },
   {
-    icon: 'videos',
-    iconFilled: 'videos',
-    name: 'Videos',
-    to: routes.videos(),
+    icon: 'binocular-fill',
+    name: 'Discover',
+    to: routes.browse(),
   },
   {
     icon: 'channels',
-    iconFilled: 'channels',
     name: 'Channels',
     to: routes.channels(),
   },

@@ -8,23 +8,30 @@ type HamburgerInnerProps = {
 }
 
 export const Hamburger = styled.button`
-  top: 19px;
+  height: ${sizes(11)};
+  width: ${sizes(11)};
+  top: 18px;
   position: fixed;
   z-index: ${zIndex.header + 1};
   cursor: pointer;
-  background-color: ${colors.blue[700]};
+  background-color: ${colors.gray[700]};
   border: none;
+  border-radius: 100%;
   display: inline-block;
-  padding: ${sizes(3)};
   margin-left: ${sizes(3)};
   &:hover {
-    opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.12);
   }
-  @media screen and (min-width: ${breakpoints.small}) {
-    margin-left: ${sizes(3)};
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.4);
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    padding: ${sizes(2)};
+    top: 16px;
+    height: ${sizes(12)};
+    width: ${sizes(12)};
     background: none;
   }
 `

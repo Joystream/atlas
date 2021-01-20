@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import { LinkGetProps } from '@reach/router'
 import useResizeObserver from 'use-resize-observer'
 import HamburgerButton from '../HamburgerButton'
-import { IconType } from '../../icons'
 import {
-  InactiveIcon,
-  ActiveIcon,
   SidebarNav,
   SidebarNavList,
   SidebarNavItem,
@@ -16,6 +13,7 @@ import {
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import Icon, { IconType } from '@/shared/components/Icon'
 
 type NavSubitem = {
   name: string
@@ -23,7 +21,6 @@ type NavSubitem = {
 type NavItemType = {
   subitems?: NavSubitem[]
   icon: IconType
-  iconFilled: IconType
   to: string
 } & NavSubitem
 
@@ -53,10 +50,10 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
               to={item.to}
               expanded={expanded}
               subitems={item.subitems}
+              itemName={item.name}
               onClick={() => setExpanded(false)}
             >
-              <ActiveIcon name={item.iconFilled} />
-              <InactiveIcon name={item.icon} />
+              <Icon name={item.icon} />
               <span>{item.name}</span>
             </NavItem>
           ))}
@@ -70,15 +67,16 @@ type NavItemProps = {
   subitems?: NavSubitem[]
   expanded: boolean
   to: string
+  itemName: string
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onClick, itemName }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
 
   return (
     <SidebarNavItem>
-      <SidebarNavLink onClick={onClick} to={to} getProps={isActive}>
+      <SidebarNavLink onClick={onClick} to={to} getProps={isActive} expanded={expanded} content={itemName}>
         {children}
       </SidebarNavLink>
       {subitems && (

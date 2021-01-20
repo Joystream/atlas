@@ -63,7 +63,7 @@ export const LogoLink = styled(Link)`
 
 export const ShortLogo = styled(UnstyledShortLogo)`
   display: block;
-  height: ${sizes(9)};
+  height: ${sizes(8)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: none;
   }
@@ -71,7 +71,7 @@ export const ShortLogo = styled(UnstyledShortLogo)`
 
 export const FullLogo = styled(UnstyledFullLogo)`
   display: none;
-  height: ${sizes(9)};
+  height: ${sizes(8)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: block;
   }
@@ -98,7 +98,7 @@ export const SearchbarContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: ${sizes(13)};
+  margin-left: ${sizes(14)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     margin: 0;
