@@ -41,7 +41,9 @@ const VideosView: React.FC<RouteComponentProps> = () => {
   const handleCategoryChange = (categoryId: string | null, scrollTop = true) => {
     setSelectedCategoryId(categoryId)
     if (topicsRef.current && scrollTop) {
-      topicsRef.current.scrollIntoView({ block: 'start', inline: 'nearest' })
+      setTimeout(() => {
+        topicsRef.current?.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' })
+      })
     }
   }
 

@@ -14,7 +14,7 @@ export const Header = styled(Text)`
   margin: 0 0 ${sizes(10)} 0;
 `
 export const StyledText = styled(Text)`
-  padding-top: ${sizes(20)};
+  padding-top: ${TOP_NAVBAR_HEIGHT}px;
 `
 
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`

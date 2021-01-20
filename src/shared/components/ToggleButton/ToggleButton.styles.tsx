@@ -56,7 +56,7 @@ const colorsFromProps = ({ variant, toggled }: ToggleButtonStyleProps) => {
     case 'secondary': {
       styles = css`
         color: ${colors.white};
-        background-color: ${toggled ? colors.blue[500] : colors.black};
+        background-color: ${toggled ? colors.blue[500] : colors.transparent};
         border-color: ${toggled ? colors.white : colors.blue[500]};
         &:hover {
           border-color: ${toggled ? colors.white : colors.blue[700]};
