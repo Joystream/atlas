@@ -14,6 +14,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import Icon, { IconType } from '@/shared/components/Icon'
+import FollowingChannels from './FollowingChannels'
 
 type NavSubitem = {
   name: string
@@ -26,9 +27,10 @@ type NavItemType = {
 
 type SidenavProps = {
   items: NavItemType[]
+  channelIDs?: string[]
 }
 
-const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
+const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -58,6 +60,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             </NavItem>
           ))}
         </SidebarNavList>
+        {channelIDs && <FollowingChannels channelIDs={channelIDs} expanded={expanded} />}
       </SidebarNav>
     </>
   )

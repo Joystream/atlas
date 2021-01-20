@@ -1,9 +1,12 @@
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
+import Text from '../Text'
+import ChannelLink from '../../../components/ChannelLink'
 
 export const SIDENAVBAR_WIDTH = 72
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
+export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
   expanded: boolean
@@ -39,10 +42,10 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 `
 
 export const SidebarNavList = styled.ul`
+  margin-top: 106px;
   list-style: none;
-  margin-top: 90px;
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
-  padding: ${sizes(8)} 0;
+  padding: 0;
 `
 
 export const SidebarNavItem = styled.li`
@@ -52,7 +55,7 @@ export const SidebarNavItem = styled.li`
 `
 
 export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
-  padding: ${sizes(5)} ${sizes(6)};
+  padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;
   display: flex;
@@ -94,6 +97,56 @@ export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
     transform: translateX(-50%);
     bottom: 0;
     margin-bottom: 10px;
+  }
+`
+export const FollowingChannelsTitle = styled(Text)`
+  margin-top: ${sizes(6)};
+  margin-bottom: ${sizes(4)};
+  padding-left: ${NAVBAR_LEFT_PADDING}px;
+  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
+  color: ${colors.gray[300]};
+`
+export const FollowingChannelsWrapper = styled.div`
+  padding-left: ${NAVBAR_LEFT_PADDING}px;
+  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
+  overflow-y: auto;
+  margin-bottom: 60px;
+`
+
+export const FollowingChannelsList = styled.ul`
+  padding: 0;
+  margin: 0;
+`
+export const StyledChannelLink = styled(ChannelLink)`
+  span {
+    margin-left: ${sizes(6)};
+  }
+`
+
+export const FollowingChannelsItem = styled.li`
+  margin-top: ${sizes(5)};
+  list-style: none;
+`
+
+export const ShowMoreButton = styled.button`
+  cursor: pointer;
+  padding: ${sizes(5)} 0;
+  display: inline-block;
+  font-family: ${typography.fonts.headers};
+  font-size: 1rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  background: none;
+  svg {
+    margin-top: 5px;
+    margin-left: 10px;
+  }
+
+  > span {
+    margin-left: 34px;
   }
 `
 
