@@ -17,6 +17,7 @@ type VideoGalleryProps = {
   title?: string
   videos?: VideoFields[]
   loading?: boolean
+  onVideoClick?: (id: string) => void
 }
 
 const PLACEHOLDERS_COUNT = 12
@@ -35,7 +36,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) => {
+const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onVideoClick }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -80,6 +81,11 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
               posterURL={video.thumbnailUrl}
               key={video.id}
               onCoverResize={onCoverResize}
+              onClick={() => {
+                if (onVideoClick) {
+                  onVideoClick(video.id)
+                }
+              }}
             />
           ))}
     </Gallery>
