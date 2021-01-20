@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle, SideNavbar } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback } from '@/components'
-import { HomeView, VideoView, SearchView, ChannelView, BrowseView, ChannelsView } from '@/views'
+import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { breakpoints, sizes } from '@/shared/theme'
@@ -19,10 +19,10 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
     to: routes.index(),
   },
   {
-    icon: 'binocular',
-    iconFilled: 'binocular-fill',
-    name: 'Discover',
-    to: routes.browse(),
+    icon: 'videos',
+    iconFilled: 'videos',
+    name: 'Videos',
+    to: routes.videos(),
   },
   {
     icon: 'channels',
@@ -67,7 +67,7 @@ const LayoutWithRouting: React.FC = () => {
           <Route default Component={HomeView} />
           <Route path={routes.video()} Component={VideoView} />
           <Route path={routes.search()} Component={SearchView} />
-          <Route path={routes.browse()} Component={BrowseView} />
+          <Route path={routes.videos()} Component={VideosView} />
           <Route path={routes.channels()} Component={ChannelsView} />
           <Route path={routes.channel()} Component={ChannelView} />
         </Router>

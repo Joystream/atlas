@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
-import { GET_FEATURED_VIDEOS, GET_NEWEST_VIDEOS } from '@/api/queries'
+import { GET_NEWEST_VIDEOS } from '@/api/queries'
 import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
 import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
 
@@ -21,20 +21,10 @@ const HomeView: React.FC<RouteComponentProps> = () => {
     variables: { first: NEWEST_VIDEOS_COUNT },
     notifyOnNetworkStatusChange: true,
   })
-  const {
-    loading: featuredVideosLoading,
-    data: featuredVideosData,
-    error: featuredVideosError,
-    refetch: refetchFeaturedVideos,
-  } = useQuery<GetFeaturedVideos>(GET_FEATURED_VIDEOS, {
-    notifyOnNetworkStatusChange: true,
-  })
 
   const newestVideos = videosData?.videosConnection.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
-  const featuredVideos = featuredVideosData?.featuredVideos.map((featuredVideo) => featuredVideo.video)
 
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
-  const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
 
   return (
     <>
@@ -44,12 +34,6 @@ const HomeView: React.FC<RouteComponentProps> = () => {
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
         ) : (
           <ErrorFallback error={newestVideosError} resetError={() => refetchNewestVideos()} />
-        )}
-
-        {!hasFeaturedVideosError ? (
-          <VideoGallery title="Featured videos" loading={featuredVideosLoading} videos={featuredVideos} />
-        ) : (
-          <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
         )}
 
         <ErrorBoundary fallback={ErrorFallback}>

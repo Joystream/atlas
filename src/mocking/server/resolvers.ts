@@ -1,5 +1,4 @@
 import { mirageGraphQLFieldResolver } from '@miragejs/graphql'
-import { FEATURED_VIDEOS_INDEXES } from '@/mocking/data'
 import { Search_search, SearchVariables } from '@/api/queries/__generated__/Search'
 import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import {
@@ -25,6 +24,10 @@ type VideoQueryArgs = {
     categoryId_eq: string | null
     channelId_eq: string | null
   } | null
+}
+
+type FeaturedVideosQueryArgs = {
+  orderBy?: string
 }
 
 type UniqueArgs = {
@@ -79,9 +82,15 @@ export const coverVideoResolver: QueryResolver<never, GetCoverVideo_coverVideo> 
   return coverVideo
 }
 
-export const featuredVideosResolver: QueryResolver<object, VideoFields[]> = (...params) => {
-  const videos = mirageGraphQLFieldResolver(...params) as VideoFields[]
-  return videos.filter((_, idx) => FEATURED_VIDEOS_INDEXES.includes(idx))
+export const featuredVideosResolver: QueryResolver<FeaturedVideosQueryArgs, VideoFields[]> = (
+  obj,
+  args,
+  context,
+  info
+) => {
+  delete args.orderBy
+  const videos = mirageGraphQLFieldResolver(obj, args, context, info) as VideoFields[]
+  return videos
 }
 
 export const channelResolver: QueryResolver<UniqueArgs, AllChannelFields> = (obj, args, context, info) => {
