@@ -10,11 +10,12 @@ type ChannelGalleryProps = {
   title?: string
   channels?: BasicChannelFields[]
   loading?: boolean
+  onChannelClick?: (id: string) => void
 }
 
 const PLACEHOLDERS_COUNT = 12
 
-const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loading }) => {
+const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loading, onChannelClick }) => {
   if (!loading && channels?.length === 0) {
     return null
   }
@@ -31,6 +32,11 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loadin
               name={channel.handle}
               avatarURL={channel.avatarPhotoUrl}
               key={channel.id}
+              onClick={() => {
+                if (onChannelClick) {
+                  onChannelClick(channel.id)
+                }
+              }}
               animated
             />
           ))}
