@@ -18,9 +18,9 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
     to: routes.index(),
   },
   {
-    icon: 'binocular-fill',
-    name: 'Discover',
-    to: routes.browse(),
+    icon: 'videos',
+    name: 'Videos',
+    to: routes.videos(),
   },
   {
     icon: 'channels',
