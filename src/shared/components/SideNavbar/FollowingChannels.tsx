@@ -1,25 +1,28 @@
 import React, { useState } from 'react'
 import {
-  FollowingChannelsWrapper,
-  FollowingChannelsTitle,
-  FollowingChannelsList,
-  FollowingChannelsItem,
+  ChannelsWrapper,
+  ChannelsTitle,
+  ChannelsList,
+  ChannelsItem,
   ShowMoreButton,
   StyledChannelLink,
-} from './SideNavbar.style'
+} from './FollowingChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
 import Icon from '../Icon'
 
 const MAX_CHANNELS = 4
+
 type FollowingChannels = {
   channelIDs: string[]
   expanded: boolean
+  onClick: () => void
 }
 
-const FollowingChannels: React.FC<FollowingChannels> = ({ channelIDs, expanded }) => {
+const FollowingChannels: React.FC<FollowingChannels> = ({ channelIDs, expanded, onClick }) => {
   const [isShowingMore, setIsShowingMore] = useState(false)
   const numberOfChannels = isShowingMore ? channelIDs.length : MAX_CHANNELS
+  const channels = channelIDs.slice(0, numberOfChannels)
   return (
     <>
       <CSSTransition
@@ -28,9 +31,7 @@ const FollowingChannels: React.FC<FollowingChannels> = ({ channelIDs, expanded }
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <FollowingChannelsTitle variant="h6">
-          {numberOfChannels ? 'Following Channels' : 'No Following Channels'}
-        </FollowingChannelsTitle>
+        <ChannelsTitle variant="h6">{numberOfChannels ? 'Following Channels' : 'No Following Channels'}</ChannelsTitle>
       </CSSTransition>
       <CSSTransition
         in={expanded}
@@ -38,19 +39,19 @@ const FollowingChannels: React.FC<FollowingChannels> = ({ channelIDs, expanded }
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <FollowingChannelsWrapper>
-          <FollowingChannelsList>
-            {channelIDs.slice(0, numberOfChannels).map((id) => (
-              <FollowingChannelsItem key={id}>
-                <StyledChannelLink id={id} avatarSize="default" />
-              </FollowingChannelsItem>
+        <ChannelsWrapper>
+          <ChannelsList>
+            {channels.map((id) => (
+              <ChannelsItem key={id} onClick={onClick}>
+                <StyledChannelLink id={id} />
+              </ChannelsItem>
             ))}
-          </FollowingChannelsList>
+          </ChannelsList>
           <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
             <Icon name={isShowingMore ? 'chevron-up' : 'chevron-down'} />
             {isShowingMore ? <span>Show Less</span> : <span>Show {channelIDs.length - MAX_CHANNELS} More</span>}
           </ShowMoreButton>
-        </FollowingChannelsWrapper>
+        </ChannelsWrapper>
       </CSSTransition>
     </>
   )

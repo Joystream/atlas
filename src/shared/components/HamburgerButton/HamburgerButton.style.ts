@@ -10,6 +10,7 @@ type HamburgerInnerProps = {
 export const Hamburger = styled.button`
   height: ${sizes(11)};
   width: ${sizes(11)};
+  padding: 0;
   top: 18px;
   position: fixed;
   z-index: ${zIndex.header + 1};

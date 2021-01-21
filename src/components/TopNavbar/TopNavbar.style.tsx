@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Searchbar } from '@/shared/components'
+import { Searchbar, SIDENAVBAR_WIDTH } from '@/shared/components'
 import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
@@ -43,7 +43,7 @@ export const Header = styled.header<TopNavbarStyleProps>`
     column-gap: ${sizes(2)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${sizes(14)};
+    margin-left: ${SIDENAVBAR_WIDTH}px;
     width: calc(100% - ${sizes(14)});
   }
 
