@@ -10,6 +10,8 @@ import {
   DrawerOverlay,
   SubItem,
   SubItemsWrapper,
+  Logo,
+  LogoLink,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -33,6 +35,8 @@ type SidenavProps = {
 const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
   const [expanded, setExpanded] = useState(false)
 
+  const closeSideNav = () => setExpanded(false)
+
   return (
     <>
       <CSSTransition
@@ -41,10 +45,13 @@ const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <DrawerOverlay onClick={() => setExpanded(false)} expanded={expanded} />
+        <DrawerOverlay onClick={closeSideNav} expanded={expanded} />
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
+        <LogoLink to="/" onClick={closeSideNav}>
+          <Logo />
+        </LogoLink>
         <SidebarNavList>
           {items.map((item) => (
             <NavItem
@@ -53,14 +60,14 @@ const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
               expanded={expanded}
               subitems={item.subitems}
               itemName={item.name}
-              onClick={() => setExpanded(false)}
+              onClick={closeSideNav}
             >
               <Icon name={item.icon} />
               <span>{item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>
-        {channelIDs && <FollowingChannels channelIDs={channelIDs} expanded={expanded} />}
+        {channelIDs && <FollowingChannels onClick={closeSideNav} channelIDs={channelIDs} expanded={expanded} />}
       </SidebarNav>
     </>
   )

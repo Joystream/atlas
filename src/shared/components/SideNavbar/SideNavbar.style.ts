@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Link } from '@reach/router'
-import Text from '../Text'
-import ChannelLink from '../../../components/ChannelLink'
+import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
 export const SIDENAVBAR_WIDTH = 72
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
@@ -41,8 +40,17 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   }
 `
 
+export const LogoLink = styled(Link)`
+  margin-left: 80px;
+  margin-top: 24px;
+`
+
+export const Logo = styled(UnstyledFullLogo)`
+  height: ${sizes(8)};
+`
+
 export const SidebarNavList = styled.ul`
-  margin-top: 106px;
+  margin-top: 56px;
   list-style: none;
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   padding: 0;
@@ -97,56 +105,6 @@ export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
     transform: translateX(-50%);
     bottom: 0;
     margin-bottom: 10px;
-  }
-`
-export const FollowingChannelsTitle = styled(Text)`
-  margin-top: ${sizes(6)};
-  margin-bottom: ${sizes(4)};
-  padding-left: ${NAVBAR_LEFT_PADDING}px;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  color: ${colors.gray[300]};
-`
-export const FollowingChannelsWrapper = styled.div`
-  padding-left: ${NAVBAR_LEFT_PADDING}px;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  overflow-y: auto;
-  margin-bottom: 60px;
-`
-
-export const FollowingChannelsList = styled.ul`
-  padding: 0;
-  margin: 0;
-`
-export const StyledChannelLink = styled(ChannelLink)`
-  span {
-    margin-left: ${sizes(6)};
-  }
-`
-
-export const FollowingChannelsItem = styled.li`
-  margin-top: ${sizes(5)};
-  list-style: none;
-`
-
-export const ShowMoreButton = styled.button`
-  cursor: pointer;
-  padding: ${sizes(5)} 0;
-  display: inline-block;
-  font-family: ${typography.fonts.headers};
-  font-size: 1rem;
-  border: none;
-  display: flex;
-  align-items: center;
-  color: white;
-  font-weight: bold;
-  background: none;
-  svg {
-    margin-top: 5px;
-    margin-left: 10px;
-  }
-
-  > span {
-    margin-left: 34px;
   }
 `
 
