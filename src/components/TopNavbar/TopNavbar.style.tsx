@@ -44,7 +44,7 @@ export const Header = styled.header<TopNavbarStyleProps>`
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-left: ${SIDENAVBAR_WIDTH}px;
-    width: calc(100% - ${sizes(14)});
+    width: calc(100% - ${SIDENAVBAR_WIDTH}px);
   }
 
   ${StyledSearchbar} {

@@ -79,9 +79,11 @@ export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
     background-color: rgba(0, 0, 0, 0.4);
   }
   > svg {
-    transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
-    transition: transform ${transitions.timings.regular} ${transitions.easing};
-    transition-delay: ${({ expanded }) => (expanded ? 0 : 0.3)}s;
+    @media screen and (min-width: ${breakpoints.medium}) {
+      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
+      transition: transform ${transitions.timings.regular} ${transitions.easing};
+      transition-delay: ${({ expanded }) => (expanded ? 0.1 : 0.5)}s;
+    }
   }
   > span {
     margin-left: ${sizes(8)};
@@ -94,17 +96,19 @@ export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
     background-color: rgba(0, 0, 0, 0.24);
   }
   :after {
-    content: ${({ content }) => `'${content}'`};
-    position: absolute;
-    font-size: 12px;
-    color: white;
-    transition: opacity ${transitions.timings.regular} ${transitions.easing};
-    transition-delay: ${({ expanded }) => (expanded ? 0 : 0.3)}s;
-    opacity: ${({ expanded }) => (expanded ? 0 : 1)};
-    left: ${SIDENAVBAR_WIDTH / 2}px;
-    transform: translateX(-50%);
-    bottom: 0;
-    margin-bottom: 10px;
+    @media screen and (min-width: ${breakpoints.medium}) {
+      content: ${({ content }) => `'${content}'`};
+      position: absolute;
+      font-size: 12px;
+      color: white;
+      transition: opacity ${transitions.timings.regular} ${transitions.easing};
+      transition-delay: ${({ expanded }) => (expanded ? 0 : 0.5)}s;
+      opacity: ${({ expanded }) => (expanded ? 0 : 1)};
+      left: ${SIDENAVBAR_WIDTH / 2}px;
+      transform: translateX(-50%);
+      bottom: 0;
+      margin-bottom: 10px;
+    }
   }
 `
 
