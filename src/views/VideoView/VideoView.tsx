@@ -40,15 +40,19 @@ const VideoView: React.FC<RouteComponentProps> = () => {
       return
     }
     const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
-    const duration = data?.video?.duration ? Number(data?.video?.duration) : 0
 
-    if (timestampFromQuery && timestampFromQuery < duration) {
+    setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
+  }, [data?.video?.id, state.watchedVideos, startTimestamp, data?.video?.duration])
+
+  useEffect(() => {
+    const duration = data?.video?.duration ?? 0
+    if (!timestampFromQuery || timestampFromQuery > duration) {
+      return
+    }
+    if (timestampFromQuery < duration) {
       setStartTimestamp(timestampFromQuery)
     }
-    if (!timestampFromQuery) {
-      setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-    }
-  }, [data?.video?.id, state.watchedVideos, startTimestamp, timestampFromQuery, data?.video?.duration])
+  }, [data?.video?.duration, timestampFromQuery])
 
   const channelId = data?.video?.channel.id
   const videoId = data?.video?.id
