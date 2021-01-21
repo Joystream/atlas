@@ -16,7 +16,8 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import Icon, { IconType } from '@/shared/components/Icon'
-import FollowingChannels from './FollowingChannels'
+import FollowedChannels from './FollowedChannels'
+import { usePersonalData } from '@/hooks'
 
 type NavSubitem = {
   name: string
@@ -29,10 +30,12 @@ type NavItemType = {
 
 type SidenavProps = {
   items: NavItemType[]
-  channelIDs?: string[]
 }
 
-const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
+const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
+  const {
+    state: { followedChannels },
+  } = usePersonalData()
   const [expanded, setExpanded] = useState(false)
 
   const closeSideNav = () => setExpanded(false)
@@ -67,7 +70,9 @@ const SideNavbar: React.FC<SidenavProps> = ({ items, channelIDs }) => {
             </NavItem>
           ))}
         </SidebarNavList>
-        {channelIDs && <FollowingChannels onClick={closeSideNav} channelIDs={channelIDs} expanded={expanded} />}
+        {followedChannels && (
+          <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
+        )}
       </SidebarNav>
     </>
   )
