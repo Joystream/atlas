@@ -49,9 +49,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (!timestampFromQuery || timestampFromQuery > duration) {
       return
     }
-    if (timestampFromQuery < duration) {
-      setStartTimestamp(timestampFromQuery)
-    }
+    setStartTimestamp(timestampFromQuery)
   }, [data?.video?.duration, timestampFromQuery])
 
   const channelId = data?.video?.channel.id
