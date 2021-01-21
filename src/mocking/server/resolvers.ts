@@ -21,6 +21,7 @@ type VideoQueryArgs = {
   first: number | null
   after: string | null
   where: {
+    id_in: string[] | null
     categoryId_eq: string | null
     channelId_eq: string | null
   } | null
@@ -64,6 +65,7 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
   const extraResolverArgs = {
     categoryId: args.where?.categoryId_eq,
     channelId: args.where?.channelId_eq,
+    id_in: args.where?.id_in,
   }
 
   const resolverArgs = {
@@ -72,8 +74,19 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
   }
 
   const filteredResolverArgs = filterEmptyArgs(resolverArgs)
-
   const paginatedVideos = mirageGraphQLFieldResolver(obj, filteredResolverArgs, context, info)
+
+  // type Edge = {
+  //   node: {
+  //     id: string
+  //   }
+  // }
+  // const IdsArg = args.where?.id_in
+  // if (IdsArg) {
+  //   const filtered = paginatedVideos.edges.filter((edge: Edge) => IdsArg.includes(edge.node.id))
+  //   console.log({ edges: filtered, pageInfo: paginatedVideos.pageInfo, totalCount: filtered.length })
+  //   return { edges: filtered, pageInfo: paginatedVideos.pageInfo, totalCount: filtered.length }
+  // }
   return paginatedVideos
 }
 

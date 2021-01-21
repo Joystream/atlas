@@ -213,6 +213,7 @@ input VideoWhereInput {
   channelId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
+  id_in: [ID!]
 }
 
 input VideoWhereUniqueInput {

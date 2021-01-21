@@ -4,7 +4,7 @@ import { RouteComponentProps } from '@reach/router'
 import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
+import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery, InterruptedVideosGallery } from '@/components'
 import { GET_NEWEST_VIDEOS } from '@/api/queries'
 import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
 import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
@@ -30,6 +30,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
     <>
       <CoverVideo />
       <Container>
+        <InterruptedVideosGallery />
         {!hasNewestVideosError ? (
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
         ) : (
