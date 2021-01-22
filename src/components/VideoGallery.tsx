@@ -77,6 +77,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
               views={video.views}
               createdAt={video.createdAt}
               duration={video.duration}
+              progress={video.progress}
               posterURL={video.thumbnailUrl}
               key={video.id}
               onCoverResize={onCoverResize}

@@ -6,7 +6,6 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery, InterruptedVideosGallery } from '@/components'
 import { GET_NEWEST_VIDEOS } from '@/api/queries'
-import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
 import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
 
 const NEWEST_VIDEOS_COUNT = 8

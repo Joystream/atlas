@@ -85,18 +85,8 @@ export const GET_NEWEST_VIDEOS = gql`
 
 export const GET_VIDEOS_WITH_IDS = gql`
   query GetVideosWithIds($ids: [ID!]!) {
-    videosConnection(where: { id_in: $ids }) {
-      edges {
-        cursor
-        node {
-          ...VideoFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
+    videos(where: { id_in: $ids }) {
+      ...VideoFields
     }
   }
   ${videoFieldsFragment}

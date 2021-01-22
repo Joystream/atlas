@@ -21,7 +21,6 @@ type VideoQueryArgs = {
   first: number | null
   after: string | null
   where: {
-    id_in: string[] | null
     categoryId_eq: string | null
     channelId_eq: string | null
   } | null
@@ -33,6 +32,10 @@ type FeaturedVideosQueryArgs = {
 
 type UniqueArgs = {
   where: { id: string }
+}
+
+type IdsArgs = {
+  where: { id_in: string[] }
 }
 
 const filterEmptyArgs = (args: Record<string, unknown>): Record<string, unknown> => {
@@ -52,6 +55,14 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args,
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
+export const videosWithIdsResolver: QueryResolver<IdsArgs, VideoModel[]> = (obj, args, context, info) => {
+  const { mirageSchema: schema } = context
+  const ids = args.where?.id_in
+  const videos = schema.videos.all().models as VideoModel[]
+  const filtered = videos.filter((video) => ids.includes(video.attrs.id))
+  return filtered
+}
+
 export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_videosConnection> = (
   obj,
   args,
@@ -65,7 +76,6 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
   const extraResolverArgs = {
     categoryId: args.where?.categoryId_eq,
     channelId: args.where?.channelId_eq,
-    id_in: args.where?.id_in,
   }
 
   const resolverArgs = {
@@ -74,19 +84,8 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
   }
 
   const filteredResolverArgs = filterEmptyArgs(resolverArgs)
-  const paginatedVideos = mirageGraphQLFieldResolver(obj, filteredResolverArgs, context, info)
 
-  // type Edge = {
-  //   node: {
-  //     id: string
-  //   }
-  // }
-  // const IdsArg = args.where?.id_in
-  // if (IdsArg) {
-  //   const filtered = paginatedVideos.edges.filter((edge: Edge) => IdsArg.includes(edge.node.id))
-  //   console.log({ edges: filtered, pageInfo: paginatedVideos.pageInfo, totalCount: filtered.length })
-  //   return { edges: filtered, pageInfo: paginatedVideos.pageInfo, totalCount: filtered.length }
-  // }
+  const paginatedVideos = mirageGraphQLFieldResolver(obj, filteredResolverArgs, context, info)
   return paginatedVideos
 }
 
