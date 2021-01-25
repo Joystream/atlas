@@ -22,7 +22,7 @@ export const StyledSearchbar = styled(Searchbar)`
 export const TOP_NAVBAR_HEIGHT = 81
 export const Header = styled.header<TopNavbarStyleProps>`
   width: 100%;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: ${zIndex.header};
   min-height: ${TOP_NAVBAR_HEIGHT}px;

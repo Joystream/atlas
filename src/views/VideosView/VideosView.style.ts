@@ -4,6 +4,7 @@ import { InfiniteVideoGrid } from '@/components'
 
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+import { SIDENAVBAR_WIDTH } from '@/shared/components/SideNavbar/SideNavbar.style'
 
 type IsAtTop = {
   isAtTop: boolean
@@ -32,9 +33,17 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
 `
+// export const Container = styled.div`
+//   position: relative;
+//   padding-top: ${sizes(14)};
+// `
 
 export const Container = styled.div`
-  position: relative;
+  position: absolute;
+  top: ${TOP_NAVBAR_HEIGHT}px;
+  left: ${SIDENAVBAR_WIDTH}px;
+  right: var(--global-horizontal-padding);
+  padding-left: var(--global-horizontal-padding);
   padding-top: ${sizes(14)};
 `
 export const IntersectionTarget = styled.div`

@@ -6,6 +6,7 @@ const transitions = {
   },
   names: {
     fade: 'fade',
+    fadeAndSlide: 'fade-slide',
   },
 }
 
