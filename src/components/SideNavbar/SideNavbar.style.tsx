@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
 import React from 'react'
 import { Link } from '@reach/router'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'

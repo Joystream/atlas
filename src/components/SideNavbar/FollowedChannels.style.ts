@@ -1,7 +1,7 @@
 import { sizes, colors, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import ChannelLink from '../../../components/ChannelLink'
-import Text from '../Text'
+import ChannelLink from '../ChannelLink'
+import Text from '../../shared/components/Text'
 import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from './SideNavbar.style'
 
 export const ChannelsTitle = styled(Text)`

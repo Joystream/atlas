@@ -9,7 +9,7 @@ import {
 } from './FollowedChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
-import Icon from '../Icon'
+import Icon from '../../shared/components/Icon'
 import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
 
 const MAX_CHANNELS = 4
@@ -25,7 +25,7 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
 
   const numberOfChannels = followedChannels.length
   const channelsToSlice = isShowingMore ? numberOfChannels : MAX_CHANNELS
-  const channels = numberOfChannels > MAX_CHANNELS ? followedChannels.slice(0, channelsToSlice) : followedChannels
+  const channels = followedChannels.slice(0, channelsToSlice)
   return (
     <>
       <CSSTransition

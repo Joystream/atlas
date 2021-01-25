@@ -2,14 +2,13 @@ import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
-
-import { GlobalStyle, SideNavbar } from '@/shared/components'
-import { TopNavbar, ViewErrorFallback } from '@/components'
+import { GlobalStyle } from '@/shared/components'
+import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { breakpoints, sizes } from '@/shared/theme'
-import { NavItemType } from '../shared/components/SideNavbar'
+import { NavItemType } from '@/components/SideNavbar'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {

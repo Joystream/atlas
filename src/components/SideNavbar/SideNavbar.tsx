@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { LinkGetProps } from '@reach/router'
 import useResizeObserver from 'use-resize-observer'
-import HamburgerButton from '../HamburgerButton'
 import {
   SidebarNav,
   SidebarNavList,
@@ -18,6 +17,7 @@ import { transitions } from '@/shared/theme'
 import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
+import HamburgerButton from '@/shared/components/HamburgerButton'
 
 type NavSubitem = {
   name: string
