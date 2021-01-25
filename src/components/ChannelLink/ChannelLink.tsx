@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react'
-import { useApolloClient } from '@apollo/client'
-import { basicChannelFieldsFragment } from '@/api/queries'
-import { GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
+import React from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_CHANNEL } from '@/api/queries'
+import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
 import { BasicChannelFields } from '@/api/queries/__generated__/BasicChannelFields'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
 import routes from '@/config/routes'
@@ -27,17 +27,15 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   avatarSize = 'default',
   className,
 }) => {
-  const client = useApolloClient()
+  const { data } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
+    fetchPolicy: 'cache-first',
+    skip: !id,
+    variables: {
+      id: id || '',
+    },
+  })
 
-  const channel = useMemo(() => {
-    if (!id) {
-      return null
-    }
-    return client.readFragment<BasicChannelFields, GetChannelVariables>({
-      fragment: basicChannelFieldsFragment,
-      id: `Channel:${id}`,
-    })
-  }, [id, client])
+  const channel = data?.channel
 
   const displayedChannel = overrideChannel || channel
 
