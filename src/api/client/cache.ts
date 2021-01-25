@@ -13,6 +13,15 @@ const cache = new InMemoryCache({
           const categoryId = args?.where?.categoryId_eq || ''
           return `${channelId}:${categoryId}`
         }),
+        channel(existing, { toReference, args }) {
+          return (
+            existing ||
+            toReference({
+              __typename: 'Channel',
+              id: args?.where.id,
+            })
+          )
+        },
       },
     },
     Video: {
