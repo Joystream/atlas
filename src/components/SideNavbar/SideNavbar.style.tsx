@@ -86,7 +86,6 @@ export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props
     @media screen and (min-width: ${breakpoints.medium}) {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
-      transition-delay: ${({ expanded }) => (expanded ? 0.1 : 0.5)}s;
     }
   }
   > span {
@@ -106,7 +105,6 @@ export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props
       font-size: 12px;
       color: white;
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
-      transition-delay: ${({ expanded }) => (expanded ? 0 : 0.5)}s;
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
       left: ${SIDENAVBAR_WIDTH / 2}px;
       transform: translateX(-50%);
