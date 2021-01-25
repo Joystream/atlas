@@ -24,7 +24,7 @@ const INITIAL_VIDEOS_PER_ROW = 4
 const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
   categoryId = '',
-  channelId,
+  channelId = null,
   skipCount = 0,
   ready = true,
   showChannel = true,
@@ -39,6 +39,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   const [targetRowsCountByCategory, setTargetRowsCountByCategory] = useState<Record<string, number>>({
     [categoryId]: INITIAL_ROWS,
   })
+  const [cachedChannelId, setCachedChannelId] = useState<string | null>(channelId)
   const [cachedCategoryId, setCachedCategoryId] = useState<string>(categoryId)
 
   const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
@@ -92,6 +93,20 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       }))
     }
   }, [categoryId, channelId, cachedCategoryId, targetRowsCountByCategory, videosPerRow, skipCount])
+
+  // handle channel change
+  useEffect(() => {
+    if (channelId === cachedChannelId) {
+      return
+    }
+
+    setCachedChannelId(channelId)
+
+    setQueryVariables({
+      ...(channelId ? { channelId } : {}),
+      ...(categoryId ? { categoryId } : {}),
+    })
+  }, [channelId, cachedChannelId, categoryId])
 
   const gridContent = (
     <>
