@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import { LinkGetProps } from '@reach/router'
 import useResizeObserver from 'use-resize-observer'
-import HamburgerButton from '../HamburgerButton'
-import { IconType } from '../../icons'
 import {
-  InactiveIcon,
-  ActiveIcon,
   SidebarNav,
   SidebarNavList,
   SidebarNavItem,
@@ -13,9 +9,15 @@ import {
   DrawerOverlay,
   SubItem,
   SubItemsWrapper,
+  Logo,
+  LogoLink,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import Icon, { IconType } from '@/shared/components/Icon'
+import FollowedChannels from './FollowedChannels'
+import { usePersonalData } from '@/hooks'
+import HamburgerButton from '@/shared/components/HamburgerButton'
 
 type NavSubitem = {
   name: string
@@ -23,7 +25,6 @@ type NavSubitem = {
 type NavItemType = {
   subitems?: NavSubitem[]
   icon: IconType
-  iconFilled: IconType
   to: string
 } & NavSubitem
 
@@ -32,7 +33,12 @@ type SidenavProps = {
 }
 
 const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
+  const {
+    state: { followedChannels },
+  } = usePersonalData()
   const [expanded, setExpanded] = useState(false)
+
+  const closeSideNav = () => setExpanded(false)
 
   return (
     <>
@@ -42,10 +48,13 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <DrawerOverlay onClick={() => setExpanded(false)} expanded={expanded} />
+        <DrawerOverlay onClick={closeSideNav} />
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
+        <LogoLink to="/" onClick={closeSideNav}>
+          <Logo />
+        </LogoLink>
         <SidebarNavList>
           {items.map((item) => (
             <NavItem
@@ -53,14 +62,17 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
               to={item.to}
               expanded={expanded}
               subitems={item.subitems}
-              onClick={() => setExpanded(false)}
+              itemName={item.name}
+              onClick={closeSideNav}
             >
-              <ActiveIcon name={item.iconFilled} />
-              <InactiveIcon name={item.icon} />
+              <Icon name={item.icon} />
               <span>{item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>
+        {followedChannels.length > 0 && (
+          <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
+        )}
       </SidebarNav>
     </>
   )
@@ -70,15 +82,16 @@ type NavItemProps = {
   subitems?: NavSubitem[]
   expanded: boolean
   to: string
+  itemName: string
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
 
   return (
     <SidebarNavItem>
-      <SidebarNavLink onClick={onClick} to={to} getProps={isActive}>
+      <SidebarNavLink onClick={onClick} to={to} getProps={isActive} expanded={expanded} content={itemName}>
         {children}
       </SidebarNavLink>
       {subitems && (

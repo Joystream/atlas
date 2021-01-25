@@ -5,6 +5,7 @@ import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Link } from '@reach/router'
+import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
 
 type TopNavbarStyleProps = {
   hasFocus: boolean
@@ -43,8 +44,8 @@ export const Header = styled.header<TopNavbarStyleProps>`
     column-gap: ${sizes(2)};
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${sizes(14)};
-    width: calc(100% - ${sizes(14)});
+    margin-left: ${SIDENAVBAR_WIDTH}px;
+    width: calc(100% - ${SIDENAVBAR_WIDTH}px);
   }
 
   ${StyledSearchbar} {
@@ -59,11 +60,15 @@ export const LogoLink = styled(Link)`
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(5)};
   }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 0;
+    margin-left: 2px;
+  }
 `
 
 export const ShortLogo = styled(UnstyledShortLogo)`
   display: block;
-  height: ${sizes(9)};
+  height: ${sizes(8)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: none;
   }
@@ -71,7 +76,7 @@ export const ShortLogo = styled(UnstyledShortLogo)`
 
 export const FullLogo = styled(UnstyledFullLogo)`
   display: none;
-  height: ${sizes(9)};
+  height: ${sizes(8)};
   @media screen and (min-width: ${breakpoints.medium}) {
     display: block;
   }
@@ -98,7 +103,7 @@ export const SearchbarContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: ${sizes(13)};
+  margin-left: ${sizes(14)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     margin: 0;
