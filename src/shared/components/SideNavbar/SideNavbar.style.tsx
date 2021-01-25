@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
+import React from 'react'
 import { Link } from '@reach/router'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
@@ -62,7 +63,7 @@ export const SidebarNavItem = styled.li`
   flex-direction: column;
 `
 
-export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
+export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props} />)<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;
@@ -112,7 +113,7 @@ export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
   }
 `
 
-export const DrawerOverlay = styled.div<ExpandableElementProps>`
+export const DrawerOverlay = styled.div`
   position: fixed;
   top: 0;
   right: 0;

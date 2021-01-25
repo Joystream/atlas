@@ -48,7 +48,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <DrawerOverlay onClick={closeSideNav} expanded={expanded} />
+        <DrawerOverlay onClick={closeSideNav} />
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
@@ -70,7 +70,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             </NavItem>
           ))}
         </SidebarNavList>
-        {followedChannels && (
+        {followedChannels.length > 0 && (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
         )}
       </SidebarNav>
@@ -86,7 +86,7 @@ type NavItemProps = {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded, subitems, children, to, onClick, itemName }) => {
+const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
 
   return (

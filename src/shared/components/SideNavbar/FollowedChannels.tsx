@@ -14,13 +14,13 @@ import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/type
 
 const MAX_CHANNELS = 4
 
-type FollowedChannels = {
+type FollowedChannelsProps = {
   followedChannels: FollowedChannel[]
   expanded: boolean
   onClick: () => void
 }
 
-const FollowedChannels: React.FC<FollowedChannels> = ({ followedChannels, expanded, onClick }) => {
+const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, expanded, onClick }) => {
   const [isShowingMore, setIsShowingMore] = useState(false)
 
   const numberOfChannels = followedChannels.length
@@ -34,7 +34,7 @@ const FollowedChannels: React.FC<FollowedChannels> = ({ followedChannels, expand
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <ChannelsTitle variant="h6">{numberOfChannels ? 'Following Channels' : 'No Following Channels'}</ChannelsTitle>
+        <ChannelsTitle variant="h6">Followed Channels</ChannelsTitle>
       </CSSTransition>
       <CSSTransition
         in={expanded}
