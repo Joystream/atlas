@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
-import Icon from '@/shared/components/Icon'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
+import React from 'react'
 import { Link } from '@reach/router'
+import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
-export const SIDENAVBAR_WIDTH = 56
+export const SIDENAVBAR_WIDTH = 72
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
+export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
   expanded: boolean
@@ -12,6 +14,10 @@ type ExpandableElementProps = {
 
 type SubItemProps = {
   subitemsHeight?: number
+} & ExpandableElementProps
+
+type SidebarNavLinkProps = {
+  content: string
 } & ExpandableElementProps
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
@@ -28,42 +34,59 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 
   overflow: hidden;
   color: ${colors.white};
-  background-color: ${colors.blue[700]};
+  background-color: ${colors.gray[700]};
   @media screen and (min-width: ${breakpoints.medium}) {
     left: 0;
     width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : SIDENAVBAR_WIDTH)}px;
   }
 `
 
+export const LogoLink = styled(Link)`
+  margin-top: 24px;
+  margin-left: 80px;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: 86px;
+  }
+`
+
+export const Logo = styled(UnstyledFullLogo)`
+  height: ${sizes(8)};
+`
+
 export const SidebarNavList = styled.ul`
+  margin-top: 56px;
   list-style: none;
-  margin-top: 90px;
+  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   padding: 0;
-  padding: ${sizes(8)} ${sizes(4)};
 `
 
 export const SidebarNavItem = styled.li`
-  &:not(:first-child) {
-    margin-top: ${sizes(10)};
-  }
+  width: 100%;
   display: flex;
   flex-direction: column;
 `
 
-export const ActiveIcon = styled(Icon)`
-  display: none;
-`
-export const InactiveIcon = styled(Icon)`
-  display: block;
-`
-
-export const SidebarNavLink = styled(Link)`
+export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props} />)<SidebarNavLinkProps>`
+  padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;
   display: flex;
+  position: relative;
   align-items: center;
   &:hover {
-    opacity: 0.7;
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  > svg {
+    @media screen and (min-width: ${breakpoints.medium}) {
+      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
+      transition: transform ${transitions.timings.regular} ${transitions.easing};
+    }
   }
   > span {
     margin-left: ${sizes(8)};
@@ -73,16 +96,25 @@ export const SidebarNavLink = styled(Link)`
     line-height: 1;
   }
   &[data-active='true'] {
-    ${ActiveIcon} {
-      display: block;
-    }
-    ${InactiveIcon} {
-      display: none;
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+  :after {
+    @media screen and (min-width: ${breakpoints.medium}) {
+      content: ${({ content }) => `'${content}'`};
+      position: absolute;
+      font-size: 12px;
+      color: white;
+      transition: opacity ${transitions.timings.regular} ${transitions.easing};
+      opacity: ${({ expanded }) => (expanded ? 0 : 1)};
+      left: ${SIDENAVBAR_WIDTH / 2}px;
+      transform: translateX(-50%);
+      bottom: 0;
+      margin-bottom: 10px;
     }
   }
 `
 
-export const DrawerOverlay = styled.div<ExpandableElementProps>`
+export const DrawerOverlay = styled.div`
   position: fixed;
   top: 0;
   right: 0;
