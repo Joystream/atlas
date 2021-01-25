@@ -42,8 +42,11 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 `
 
 export const LogoLink = styled(Link)`
-  margin-left: 80px;
   margin-top: 24px;
+  margin-left: 80px;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: 86px;
+  }
 `
 
 export const Logo = styled(UnstyledFullLogo)`

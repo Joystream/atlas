@@ -60,6 +60,10 @@ export const LogoLink = styled(Link)`
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(5)};
   }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: 0;
+    margin-left: 2px;
+  }
 `
 
 export const ShortLogo = styled(UnstyledShortLogo)`
