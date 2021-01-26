@@ -9,6 +9,10 @@ import { GetVideosWithIds, GetVideosWithIdsVariables } from '@/api/queries/__gen
 
 import { ErrorFallback, VideoGallery } from '@/components'
 
+interface Lookup {
+  [key: string]: number
+}
+
 const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
@@ -19,9 +23,12 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const { loading, data, error, refetch } = useQuery<GetVideosWithIds, GetVideosWithIdsVariables>(GET_VIDEOS_WITH_IDS, {
     variables: { ids: interruptedVideosId },
   })
-  const videoTimestampsMap: Record<string, number> = interruptedVideosState.reduce((acc, video) => {
-    // @ts-ignore mapping timestamps to a lookup, ts prevents accessing timestamp on WatchedVideo type
-    acc[video.id] = video.timestamp || 0
+
+  const videoTimestampsMap: Record<string, number> = interruptedVideosState.reduce((acc: Lookup, video) => {
+    if (video.__typename === 'INTERRUPTED') {
+      acc[video.id] = video.timestamp || 0
+      return acc
+    }
     return acc
   }, {})
 
