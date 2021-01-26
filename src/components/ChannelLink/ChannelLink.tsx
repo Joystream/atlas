@@ -1,7 +1,5 @@
 import React from 'react'
-import { useQuery } from '@apollo/client'
-import { GET_CHANNEL } from '@/api/queries'
-import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
+import { useChannelLink } from '@/api/hooks'
 import { BasicChannelFields } from '@/api/queries/__generated__/BasicChannelFields'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
 import routes from '@/config/routes'
@@ -27,15 +25,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   avatarSize = 'default',
   className,
 }) => {
-  const { data } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
-    fetchPolicy: 'cache-first',
-    skip: !id,
-    variables: {
-      id: id || '',
-    },
-  })
-
-  const channel = data?.channel
+  const { data: channel } = useChannelLink(id)
 
   const displayedChannel = overrideChannel || channel
 
