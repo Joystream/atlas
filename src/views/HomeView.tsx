@@ -7,7 +7,8 @@ import { VideoOrderByInput } from '@/api/queries'
 import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
-import { SIDENAVBAR_WIDTH } from '@/shared/components/SideNavbar/SideNavbar.style'
+import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
+import { breakpoints } from '@/shared/theme'
 
 const NEWEST_VIDEOS_COUNT = 8
 
@@ -45,9 +46,12 @@ const HomeView: React.FC = () => {
 export const StyledViewContainer = styled.div`
   position: absolute;
   top: ${TOP_NAVBAR_HEIGHT}px;
-  left: ${SIDENAVBAR_WIDTH}px;
+  left: 0;
   right: var(--global-horizontal-padding);
   padding-left: var(--global-horizontal-padding);
+  @media screen and (min-width: ${breakpoints.medium}) {
+    left: ${SIDENAVBAR_WIDTH}px;
+  }
 `
 
 export const Container = styled.div`

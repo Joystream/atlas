@@ -6,13 +6,14 @@ import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-ro
 import { RouteComponentProps, Router, navigate, globalHistory, Location } from '@reach/router'
 >>>>>>> d6cbe39 (add routing transition to layoutWithRouting, add slide transitions in theme)
 import { ErrorBoundary } from '@sentry/react'
-import { GlobalStyle, SideNavbar } from '@/shared/components'
+import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+
 import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { globalStyles } from '@/styles/global'
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { breakpoints } from '@/shared/theme'
 import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
@@ -23,6 +24,12 @@ import { routingTransitions } from '@/styles/transitions'
 
 import { NavItemType } from '../shared/components/SideNavbar'
 >>>>>>> d6cbe39 (add routing transition to layoutWithRouting, add slide transitions in theme)
+=======
+import { routingTransitions } from '@/styles/routingTransitions'
+import { breakpoints, sizes, transitions } from '@/shared/theme'
+import { NavItemType } from '@/components/SideNavbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+>>>>>>> 577e60d (add rwd to views)
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {

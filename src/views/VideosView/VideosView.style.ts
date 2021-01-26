@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import { CategoryPicker, Text } from '@/shared/components'
 import { InfiniteVideoGrid } from '@/components'
 
-import { colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex, breakpoints } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
-import { SIDENAVBAR_WIDTH } from '@/shared/components/SideNavbar/SideNavbar.style'
+import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
 
 type IsAtTop = {
   isAtTop: boolean
@@ -33,18 +33,17 @@ export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
 export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
 `
-// export const Container = styled.div`
-//   position: relative;
-//   padding-top: ${sizes(14)};
-// `
 
 export const Container = styled.div`
   position: absolute;
   top: ${TOP_NAVBAR_HEIGHT}px;
-  left: ${SIDENAVBAR_WIDTH}px;
+  left: 0;
   right: var(--global-horizontal-padding);
   padding-left: var(--global-horizontal-padding);
   padding-top: ${sizes(14)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    left: ${SIDENAVBAR_WIDTH}px;
+  }
 `
 export const IntersectionTarget = styled.div`
   min-height: 1px;
