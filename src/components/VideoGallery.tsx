@@ -13,9 +13,13 @@ import VideoPreview from './VideoPreviewWithNavigation'
 import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import { sizes } from '@/shared/theme'
 
+interface VideoFieldsWithProgress extends VideoFields {
+  progress?: number
+}
+
 type VideoGalleryProps = {
   title?: string
-  videos?: VideoFields[]
+  videos?: VideoFieldsWithProgress[]
   loading?: boolean
 }
 

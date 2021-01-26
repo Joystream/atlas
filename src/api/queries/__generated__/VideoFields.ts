@@ -72,6 +72,4 @@ export interface VideoFields {
   media: VideoFields_media;
   channel: VideoFields_channel;
   license: VideoFields_license;
-  timestamp?: number;
-  progress?:number
 }

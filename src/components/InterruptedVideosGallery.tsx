@@ -3,10 +3,9 @@ import { RouteComponentProps } from '@reach/router'
 
 import { useQuery } from '@apollo/client'
 import { usePersonalData } from '@/hooks'
-
 import { GET_VIDEOS_WITH_IDS } from '@/api/queries'
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
-import { GetVideosWithIdsVariables } from '@/api/queries/__generated__/GetVideosWithIds'
+
+import { GetVideosWithIds, GetVideosWithIdsVariables } from '@/api/queries/__generated__/GetVideosWithIds'
 
 import { ErrorFallback, VideoGallery } from '@/components'
 
@@ -17,30 +16,29 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const interruptedVideosState = watchedVideos.filter((video) => video.__typename === 'INTERRUPTED' && video.timestamp)
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
 
-  const {
-    loading: interruptedVideosLoading,
-    data: interruptedVideosData,
-    error: interruptedVideosError,
-    refetch: refetchInterruptedVideos,
-  } = useQuery<{ videos: VideoFields[] }, GetVideosWithIdsVariables>(GET_VIDEOS_WITH_IDS, {
+  const { loading, data, error, refetch } = useQuery<GetVideosWithIds, GetVideosWithIdsVariables>(GET_VIDEOS_WITH_IDS, {
     variables: { ids: interruptedVideosId },
   })
+  const videoTimestampsMap: Record<string, number> = interruptedVideosState.reduce((acc, video) => {
+    // @ts-ignore mapping timestamps to a lookup, ts prevents accessing timestamp on WatchedVideo type
+    acc[video.id] = video.timestamp || 0
+    return acc
+  }, {})
 
-  const interruptedVideos = interruptedVideosData?.videos.map((video, idx) => ({
+  const interruptedVideos = data?.videos?.map((video) => ({
     ...video,
-    // @ts-ignore interruptedVideosState is filtered so it has timestamp
-    timestamp: interruptedVideosState[idx].timestamp,
-    // @ts-ignore interruptedVideosState is filtered so it has timestamp
-    progress: (interruptedVideosState[idx].timestamp / video.duration) * 100,
+    timestamp: videoTimestampsMap[video.id],
+    progress: (videoTimestampsMap[video.id] / video.duration) * 100,
   }))
-  const hasInterruptedVideosError = interruptedVideosError && !interruptedVideosLoading
+
+  const hasInterruptedVideosError = error && !loading
 
   return (
     <>
       {!hasInterruptedVideosError ? (
-        <VideoGallery title="Continue watching" loading={interruptedVideosLoading} videos={interruptedVideos} />
+        <VideoGallery title="Continue watching" loading={loading} videos={interruptedVideos} />
       ) : (
-        <ErrorFallback error={interruptedVideosError} resetError={() => refetchInterruptedVideos()} />
+        <ErrorFallback error={error} resetError={() => refetch()} />
       )}
     </>
   )
