@@ -8,6 +8,7 @@ import { SEARCH } from '@/api/queries'
 import { Search, SearchVariables } from '@/api/queries/__generated__/Search'
 import { TabsMenu } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
+import { usePersonalData } from '@/hooks'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 
@@ -16,10 +17,10 @@ type SearchViewProps = {
 } & RouteComponentProps
 const tabs = ['all results', 'videos', 'channels']
 
-const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
+const SearchView: React.FC<SearchViewProps> = ({ search = '', location }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { data, loading, error } = useQuery<Search, SearchVariables>(SEARCH, { variables: { text: search } })
-
+  console.log({ location })
   const getChannelsAndVideos = (loading: boolean, data: Search | undefined) => {
     if (loading || !data?.search) {
       return { channels: [], videos: [] }
@@ -31,7 +32,14 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
+  const { updateRecentSearches } = usePersonalData()
 
+  const handleVideoClick = (id: string) => {
+    updateRecentSearches(id, 'video')
+  }
+  const handleChannelClick = (id: string) => {
+    updateRecentSearches(id, 'channel')
+  }
   if (error) {
     throw error
   }
@@ -46,9 +54,27 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   return (
     <Container>
       <TabsMenu tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
-      {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
-      {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
-      {selectedIndex === 2 && (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+      {selectedIndex === 0 && (
+        <AllResultsTab
+          loading={loading}
+          videos={videos}
+          channels={channels}
+          onVideoClick={handleVideoClick}
+          onChannelClick={handleChannelClick}
+        />
+      )}
+      {selectedIndex === 1 &&
+        (loading ? (
+          <PlaceholderVideoGrid />
+        ) : (
+          <VideoGrid videos={videos} onVideoClick={handleVideoClick} onChannelClick={handleChannelClick} />
+        ))}
+      {selectedIndex === 2 &&
+        (loading ? (
+          <PlaceholderVideoGrid />
+        ) : (
+          <ChannelGrid channels={channels} repeat="fill" onChannelClick={handleChannelClick} />
+        ))}
     </Container>
   )
 }

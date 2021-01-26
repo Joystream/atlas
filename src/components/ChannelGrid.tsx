@@ -11,13 +11,24 @@ const StyledChannelPreview = styled(ChannelPreview)`
 
 type ChannelGridProps = {
   channels: BasicChannelFields[]
+  onChannelClick?: (id: string) => void
 } & React.ComponentProps<typeof Grid>
 
-const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, ...gridProps }) => {
+const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...gridProps }) => {
   return (
     <Grid {...gridProps}>
       {channels.map((c) => (
-        <StyledChannelPreview key={c.id} id={c.id} name={c.handle} avatarURL={c.avatarPhotoUrl} />
+        <StyledChannelPreview
+          key={c.id}
+          id={c.id}
+          name={c.handle}
+          avatarURL={c.avatarPhotoUrl}
+          onClick={() => {
+            if (onChannelClick) {
+              onChannelClick(c.id)
+            }
+          }}
+        />
       ))}
     </Grid>
   )

@@ -13,8 +13,10 @@ const StyledVideoPreview = styled(VideoPreview)`
 type VideoGridProps = {
   videos: VideoFields[]
   showChannel?: boolean
+  onVideoClick?: (id: string) => void
+  onChannelClick?: (id: string) => void
 }
-const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true }) => {
+const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVideoClick, onChannelClick }) => {
   return (
     <Grid>
       {videos.map((v, idx) => (
@@ -30,6 +32,16 @@ const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true }) => 
           views={v.views}
           posterURL={v.thumbnailUrl}
           showChannel={showChannel}
+          onClick={() => {
+            if (onVideoClick) {
+              onVideoClick(v.id)
+            }
+          }}
+          onChannelClick={() => {
+            if (onChannelClick) {
+              onChannelClick(v.channel.id)
+            }
+          }}
         />
       ))}
     </Grid>

@@ -1,5 +1,5 @@
 import routes from '@/config/routes'
-import { navigate, RouteComponentProps } from '@reach/router'
+import { RouteComponentProps, WindowLocation } from '@reach/router'
 import React, { useState } from 'react'
 import {
   FullLogo,
@@ -11,9 +11,11 @@ import {
   StyledSearchbar,
 } from './TopNavbar.style'
 
-type TopNavbarProps = RouteComponentProps
+type TopNavbarProps = {
+  oldLocation?: WindowLocation
+} & RouteComponentProps
 
-const TopNavbar: React.FC<TopNavbarProps> = () => {
+const TopNavbar: React.FC<TopNavbarProps> = ({ location, oldLocation, navigate = () => {} }) => {
   const [search, setSearch] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
@@ -22,8 +24,7 @@ const TopNavbar: React.FC<TopNavbarProps> = () => {
       navigate(routes.search(search))
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
-      setIsFocused(false)
-      setSearch('')
+      handleCancel()
       e.currentTarget.blur()
     }
   }
@@ -35,11 +36,15 @@ const TopNavbar: React.FC<TopNavbarProps> = () => {
 
   const handleFocus = () => {
     setIsFocused(true)
+    navigate(routes.searchOverlay(), { state: { oldLocation: location } })
   }
 
   const handleCancel = () => {
     setSearch('')
     setIsFocused(false)
+    if (oldLocation) {
+      navigate(oldLocation.pathname)
+    }
   }
   return (
     <Header hasFocus={isFocused}>

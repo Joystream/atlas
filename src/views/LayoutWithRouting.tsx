@@ -1,10 +1,19 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
+import {
+  RouteComponentProps,
+  Router,
+  navigate,
+  globalHistory,
+  Location,
+  RouterProps,
+  WindowLocation,
+} from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
+
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
+import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView, SearchOverlay } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { breakpoints, sizes } from '@/shared/theme'
@@ -44,6 +53,21 @@ const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
   )
 }
 
+type RoutesProps = Omit<RouterProps, 'component'>
+const Routes: React.FC<RoutesProps> = (props) => (
+  <Router {...props}>
+    <Route default Component={HomeView} />
+    <Route path={routes.video()} Component={VideoView} />
+    <Route path={routes.searchOverlay()} Component={SearchOverlay} />
+    <Route path={routes.search()} Component={SearchView} />
+    <Route path={routes.videos()} Component={VideosView} />
+    <Route path={routes.channels()} Component={ChannelsView} />
+    <Route path={routes.channel()} Component={ChannelView} />
+  </Router>
+)
+type hasOldLocation = {
+  oldLocation: WindowLocation
+}
 const LayoutWithRouting: React.FC = () => {
   useEffect(() => {
     const unsubscribeFromHistory = globalHistory.listen(({ action }) => {
@@ -56,17 +80,16 @@ const LayoutWithRouting: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={globalStyles} />
-      <TopNavbar default />
+      <Location>
+        {({ location, navigate }) => {
+          const { oldLocation } = (location as WindowLocation<hasOldLocation>).state || location
+
+          return <TopNavbar location={location} oldLocation={oldLocation} navigate={navigate} />
+        }}
+      </Location>
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
-        <Router primary={false}>
-          <Route default Component={HomeView} />
-          <Route path={routes.video()} Component={VideoView} />
-          <Route path={routes.search()} Component={SearchView} />
-          <Route path={routes.videos()} Component={VideosView} />
-          <Route path={routes.channels()} Component={ChannelsView} />
-          <Route path={routes.channel()} Component={ChannelView} />
-        </Router>
+        <Routes primary={false} />
       </MainContainer>
     </>
   )

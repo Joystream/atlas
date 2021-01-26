@@ -4,23 +4,24 @@ import { Placeholder, VideoPreviewBase, Text } from '@/shared/components'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
-import { usePersonalData } from '@/hooks'
 
 type AllResultsTabProps = {
   videos: Search_search_item_Video[]
   channels: Search_search_item_Channel[]
   loading: boolean
+  onVideoClick: (id: string) => void
+  onChannelClick: (id: string) => void
 }
 
-const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channels, loading }) => {
+const AllResultsTab: React.FC<AllResultsTabProps> = ({
+  videos: allVideos,
+  channels,
+  loading,
+  onVideoClick,
+  onChannelClick,
+}) => {
   const [bestMatch, ...videos] = allVideos
-  const { updateRecentSearches } = usePersonalData()
-  const handleVideoClick = (id: string) => {
-    updateRecentSearches(id, 'video')
-  }
-  const handleChannelClick = (id: string) => {
-    updateRecentSearches(id, 'channel')
-  }
+
   return (
     <>
       <div>
@@ -42,7 +43,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
               createdAt={bestMatch.createdAt}
               views={bestMatch.views}
               posterURL={bestMatch.thumbnailUrl}
-              onClick={() => handleVideoClick(bestMatch.id)}
+              onClick={() => onVideoClick(bestMatch.id)}
               main
             />
           </>
@@ -55,7 +56,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
           ) : (
             <SectionHeader variant="h5">Videos</SectionHeader>
           )}
-          <VideoGallery videos={videos} loading={loading} onVideoClick={handleVideoClick} />
+          <VideoGallery videos={videos} loading={loading} onVideoClick={onVideoClick} />
         </div>
       )}
       {(channels.length > 0 || loading) && (
@@ -65,7 +66,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
           ) : (
             <SectionHeader variant="h5">Channels</SectionHeader>
           )}
-          <ChannelGallery channels={channels} loading={loading} onChannelClick={handleChannelClick} />
+          <ChannelGallery channels={channels} loading={loading} onChannelClick={onChannelClick} />
         </div>
       )}
     </>
