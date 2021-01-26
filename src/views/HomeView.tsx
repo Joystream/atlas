@@ -1,28 +1,19 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps } from '@reach/router'
-import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
-import { GET_NEWEST_VIDEOS } from '@/api/queries'
-import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
-import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
-
-const NEWEST_VIDEOS_COUNT = 8
+import { useNewestVideos } from '@/api/hooks'
 
 const HomeView: React.FC<RouteComponentProps> = () => {
   const {
     loading: newestVideosLoading,
-    data: videosData,
+    data: newestVideos,
     error: newestVideosError,
+    newestVideosCount,
     refetch: refetchNewestVideos,
-  } = useQuery<GetNewestVideos, GetNewestVideosVariables>(GET_NEWEST_VIDEOS, {
-    variables: { first: NEWEST_VIDEOS_COUNT },
-    notifyOnNetworkStatusChange: true,
-  })
-
-  const newestVideos = videosData?.videosConnection.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
+  } = useNewestVideos()
 
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
 
@@ -37,7 +28,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
         )}
 
         <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
+          <StyledInfiniteVideoGrid title="More videos" skipCount={newestVideosCount} />
         </ErrorBoundary>
       </Container>
     </>

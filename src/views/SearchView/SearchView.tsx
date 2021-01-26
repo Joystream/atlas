@@ -2,14 +2,13 @@ import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { RouteComponentProps } from '@reach/router'
-import { useQuery } from '@apollo/client'
 
-import { SEARCH } from '@/api/queries'
-import { Search, SearchVariables } from '@/api/queries/__generated__/Search'
+import { Search_search } from '@/api/queries/__generated__/Search'
 import { TabsMenu } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
+import { useSearch } from '@/api/hooks'
 
 type SearchViewProps = {
   search?: string
@@ -18,13 +17,13 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useQuery<Search, SearchVariables>(SEARCH, { variables: { text: search } })
+  const { data, loading, error } = useSearch(search)
 
-  const getChannelsAndVideos = (loading: boolean, data: Search | undefined) => {
-    if (loading || !data?.search) {
+  const getChannelsAndVideos = (loading: boolean, data: Search_search[] | undefined) => {
+    if (loading || !data) {
       return { channels: [], videos: [] }
     }
-    const results = data.search
+    const results = data
     const videos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
     const channels = results.flatMap((result) => (result.item.__typename === 'Channel' ? [result.item] : []))
     return { channels, videos }
@@ -35,7 +34,7 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   if (error) {
     throw error
   }
-  if (!loading && !data?.search) {
+  if (!loading && !data) {
     throw new Error(`There was a problem with your search...`)
   }
 
