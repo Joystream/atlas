@@ -1,23 +1,21 @@
 import { typography, colors } from '../../theme'
-import { StyleFn, makeStyles } from '../../utils'
+import { Link } from '@reach/router'
+import styled from '@emotion/styled'
 
 export type CustomLinkStyleProps = Record<string, unknown>
 
-const regular: StyleFn = () => ({
-  fontFamily: typography.fonts.base,
-  fontSize: typography.sizes.overhead,
-  color: colors.blue[400],
-  textDecoration: 'none',
-  cursor: 'pointer',
-})
-const disabled: StyleFn = () => ({
-  fontFamily: typography.fonts.base,
-  fontSize: typography.sizes.overhead,
-  color: colors.gray[200],
-  textDecoration: 'none',
-  cursor: 'not-allowed',
-})
-export const useCSS = (props: CustomLinkStyleProps) => ({
-  regular: makeStyles([regular])(props),
-  disabled: makeStyles([disabled])(props),
-})
+export const StyledLink = styled(Link)`
+  font-family: ${typography.fonts.base};
+  font-size: ${typography.sizes.overhead};
+  color: ${colors.blue[400]};
+  text-decoration: none;
+  cursor: pointer;
+`
+
+export const DisabledLabel = styled.label`
+  font-family: ${typography.fonts.base};
+  font-size: ${typography.sizes.overhead};
+  color: ${colors.gray[200]};
+  text-decoration: none;
+  cursor: not-allowed;
+`
