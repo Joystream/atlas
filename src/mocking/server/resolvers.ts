@@ -9,6 +9,7 @@ import {
   SearchQueryVariables,
   SearchFtsOutput,
 } from '@/api/queries'
+import { getEdges, getPageInfo } from './utils'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,
@@ -18,12 +19,14 @@ type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType
   info: unknown
 ) => ReturnType
 
-type VideoQueryArgs = {
+export type VideoQueryArgs = {
   first: number | null
   after: string | null
-  where: {
+  where?: {
     categoryId_eq: string | null
     channelId_eq: string | null
+    channelId_in: string[]
+    createdAt_gte: Date
   } | null
 }
 
@@ -52,7 +55,6 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFieldsFragment> = (ob
   const resolverArgs = {
     id: args.where.id,
   }
-
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
@@ -70,10 +72,51 @@ export const videosConnectionResolver: QueryResolver<VideoQueryArgs, GetVideosCo
   context,
   info
 ) => {
+  const { mirageSchema: schema } = context
+  const { where, after, first } = args
+
   const baseResolverArgs = {
-    first: args.first,
-    after: args.after,
+    first,
+    after,
   }
+
+  if (where?.channelId_in?.length && where?.createdAt_gte) {
+    const videos = schema.videos.all().models as VideoModel[]
+    const videosResult = videos
+      .map((v) => ({
+        ...v.attrs,
+      }))
+      .filter((v) => {
+        if (where?.channelId_in?.length) {
+          return where?.channelId_in.includes(v.channelId)
+        }
+        return v
+      })
+      .filter((v) => {
+        if (where?.createdAt_gte) {
+          return new Date(where.createdAt_gte) <= new Date(v.createdAt)
+        }
+        return v
+      })
+      .map((v) => ({
+        ...v,
+        channel: schema.channels.find(v.channelId),
+        category: schema.categories.find(v.categoryId),
+        media: schema.videoMedia.find(v.mediaId),
+        license: schema.licenseEntities.find(v.licenseId),
+      }))
+
+    const edges = getEdges(videosResult, baseResolverArgs)
+
+    const connection = {
+      edges,
+      pageInfo: getPageInfo(videosResult, edges),
+      totalCount: videosResult.length,
+      __typename: 'VideoConnection',
+    }
+    return connection
+  }
+
   const extraResolverArgs = {
     categoryId: args.where?.categoryId_eq,
     channelId: args.where?.channelId_eq,
@@ -169,7 +212,8 @@ export const unfollowChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, 
   return channelInfo
 }
 
-type VideoModel = { attrs: VideoFieldsFragment }
+type ExtraVideoFields = { channelId: string; categoryId: string; mediaId: string; licenseId: string }
+type VideoModel = { attrs: VideoFieldsFragment & ExtraVideoFields }
 type ChannelModel = { attrs: AllChannelFieldsFragment }
 type SearchResolverResult = Omit<SearchFtsOutput, 'item' | 'isTypeOf' | 'highlight'> & {
   item: VideoModel | ChannelModel
