@@ -9,6 +9,7 @@ import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
   title?: string
+  videosToExclude?: string[]
   categoryId?: string
   channelId?: string
   skipCount?: number
@@ -22,6 +23,7 @@ const INITIAL_VIDEOS_PER_ROW = 4
 
 const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
+  videosToExclude,
   categoryId = '',
   channelId = null,
   skipCount = 0,
@@ -107,9 +109,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     })
   }, [channelId, cachedChannelId, categoryId])
 
+  const items = displayedItems.filter((node) => !videosToExclude?.includes(node.id))
+
   const gridContent = (
     <>
-      {displayedItems.map((v) => (
+      {items.map((v) => (
         <VideoPreview
           id={v.id}
           channelId={v.channel.id}
@@ -129,7 +133,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     </>
   )
 
-  if (displayedItems.length <= 0 && placeholdersCount <= 0) {
+  if (items.length <= 0 && placeholdersCount <= 0) {
     return null
   }
 

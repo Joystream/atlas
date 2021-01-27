@@ -1,39 +1,57 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
+import {
+  ErrorFallback,
+  CoverVideo,
+  InfiniteVideoGrid,
+  VideoGallery,
+  InterruptedVideosGallery,
+  InfiniteFollowedChannelsVideoGrid,
+} from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
-import { VideoOrderByInput } from '@/api/queries'
-import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
-const NEWEST_VIDEOS_COUNT = 8
+import { usePersonalData } from '@/hooks'
+import { sub } from 'date-fns'
+
+const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
+
+// last three months
+const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
 const HomeView: React.FC = () => {
   const {
-    loading: newestVideosLoading,
-    videosConnection,
-    error: newestVideosError,
-    refetch: refetchNewestVideos,
-  } = useVideosConnection({ first: 8, orderBy: VideoOrderByInput.CreatedAtDesc })
+    state: { followedChannels },
+  } = usePersonalData()
 
-  const newestVideos = videosConnection?.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
+  const channelIdIn = followedChannels.map((channel) => channel.id)
+  const { videosConnection, loading } = useVideosConnection({
+    channelIdIn,
+    createdAtGte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
+  })
 
-  const hasNewestVideosError = newestVideosError && !newestVideosLoading
+  const followedChannelsVideosCount = videosConnection?.totalCount
 
   return (
     <>
       <CoverVideo />
       <Container>
         <InterruptedVideosGallery />
-        {!hasNewestVideosError ? (
-          <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
+        {followedChannelsVideosCount && followedChannelsVideosCount >= MIN_FOLLOWED_CHANNELS_VIDEOS ? (
+          <ErrorBoundary fallback={ErrorFallback}>
+            <StyledInfiniteFollowedChannelsVideoGrid
+              isTitleLoading={loading}
+              title="Recent videos from followed channels"
+              createdAtGte={MIN_DATE_FOLLOWED_CHANNELS_VIDEOS}
+              channelIdIn={channelIdIn}
+            />
+          </ErrorBoundary>
         ) : (
-          <ErrorFallback error={newestVideosError} resetError={() => refetchNewestVideos()} />
+          <ErrorBoundary fallback={ErrorFallback}>
+            <StyledInfiniteVideoGrid title="Recent videos" isTitleLoading={loading} />
+          </ErrorBoundary>
         )}
-
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
-        </ErrorBoundary>
       </Container>
     </>
   )
@@ -47,6 +65,10 @@ const Container = styled.div`
 `
 
 const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
+  margin: 0;
+  padding-bottom: 4rem;
+`
+const StyledInfiniteFollowedChannelsVideoGrid = styled(InfiniteFollowedChannelsVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
 `

@@ -13,10 +13,10 @@ import {
 
 type InfiniteFollowedChannelsVideoGridProps = {
   title?: string
+  videosToExclude?: string[]
   channelIdIn?: string[]
   createdAtGte?: Date
   skipCount?: number
-  videosToNotInclude?: string[]
   ready?: boolean
   showChannel?: boolean
   className?: string
@@ -33,7 +33,7 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   className,
   channelIdIn,
   createdAtGte,
-  videosToNotInclude,
+  videosToExclude,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables = useMemo(
@@ -67,8 +67,7 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   if (error) {
     throw error
   }
-
-  const items = displayedItems.filter((item) => !videosToNotInclude?.includes(item.id))
+  const items = displayedItems.filter((node) => !videosToExclude?.includes(node.id))
 
   const gridContent = (
     <>
