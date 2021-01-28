@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 

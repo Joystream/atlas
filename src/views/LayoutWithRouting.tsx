@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps, Router, navigate, globalHistory } from '@reach/router'
+import { BrowserRouter, Routes, useNavigate, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from '@sentry/react'
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
@@ -28,10 +28,18 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
+export type RouteComponentProps = {
+  caseSensitive?: boolean
+  children?: React.ReactNode
+  element?: React.ReactElement | null
+  path?: string
+}
+
 type RouteProps = {
   Component: React.ComponentType
 } & RouteComponentProps
 const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
+  const navigate = useNavigate()
   return (
     <ErrorBoundary
       fallback={ViewErrorFallback}
@@ -45,30 +53,35 @@ const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
 }
 
 const LayoutWithRouting: React.FC = () => {
+  const pathname = useLocation()
   useEffect(() => {
-    const unsubscribeFromHistory = globalHistory.listen(({ action }) => {
-      if (action === 'PUSH') {
-        window.scrollTo(0, 0)
-      }
-    })
-    return unsubscribeFromHistory
-  }, [])
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   return (
     <>
       <GlobalStyle additionalStyles={globalStyles} />
-      <TopNavbar default />
+      <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
-        <Router primary={false}>
-          <Route default Component={HomeView} />
+        <Routes>
+          <Route path="*" Component={HomeView} />
           <Route path={routes.video()} Component={VideoView} />
           <Route path={routes.search()} Component={SearchView} />
           <Route path={routes.videos()} Component={VideosView} />
           <Route path={routes.channels()} Component={ChannelsView} />
           <Route path={routes.channel()} Component={ChannelView} />
-        </Router>
+        </Routes>
       </MainContainer>
     </>
+  )
+}
+
+const RouterWrapper = () => {
+  return (
+    <BrowserRouter>
+      <LayoutWithRouting />
+    </BrowserRouter>
   )
 }
 
@@ -79,4 +92,4 @@ const MainContainer = styled.main`
     margin-left: ${SIDENAVBAR_WIDTH}px;
   }
 `
-export default LayoutWithRouting
+export default RouterWrapper

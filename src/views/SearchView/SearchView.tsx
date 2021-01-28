@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { useQuery } from '@apollo/client'
 
 import { SEARCH } from '@/api/queries'

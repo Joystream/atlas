@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 
-import { RouteComponentProps } from '@reach/router'
+import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { ErrorBoundary } from '@sentry/react'
 import { useQuery } from '@apollo/client'
 import { useInView } from 'react-intersection-observer'

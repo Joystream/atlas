@@ -1,5 +1,5 @@
 import React from 'react'
-import { navigate } from '@reach/router'
+import { useNavigate } from 'react-router-dom'
 
 import { ChannelPreview } from '@/shared/components'
 import routes from '@/config/routes'
@@ -13,6 +13,7 @@ const ChannelPreviewWithNavigation: React.FC<ChannelPreviewWithNavigationProps> 
   onClick,
   ...channelPreviewProps
 }) => {
+  const navigate = useNavigate()
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (onClick) {
       onClick(e)

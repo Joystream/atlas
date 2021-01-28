@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { RouteComponentProps, useParams } from '@reach/router'
+import { useParams } from 'react-router-dom'
+import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { useQuery, useMutation } from '@apollo/client'
 
 import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'

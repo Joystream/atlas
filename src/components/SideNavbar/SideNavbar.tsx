@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { LinkGetProps } from '@reach/router'
 import useResizeObserver from 'use-resize-observer'
 import {
   SidebarNav,
@@ -91,7 +90,7 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
 
   return (
     <SidebarNavItem>
-      <SidebarNavLink onClick={onClick} to={to} getProps={isActive} expanded={expanded} content={itemName}>
+      <SidebarNavLink onClick={onClick} to={to} expanded={expanded} content={itemName}>
         {children}
       </SidebarNavLink>
       {subitems && (
@@ -107,10 +106,6 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
       )}
     </SidebarNavItem>
   )
-}
-
-const isActive = ({ isCurrent }: LinkGetProps) => {
-  return isCurrent ? { 'data-active': 'true' } : {}
 }
 
 export { SideNavbar as default, NavItem }

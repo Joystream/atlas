@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { RouteComponentProps, useParams } from '@reach/router'
-import { throttle } from 'lodash'
+import { useParams } from 'react-router-dom'
+import { RouteComponentProps } from '@/views/LayoutWithRouting'
+import { debounce } from 'lodash'
 import {
   ChannelContainer,
   Container,

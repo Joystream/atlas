@@ -8,8 +8,6 @@ type CustomLinkProps = {
   className?: string
   replace?: boolean
   ref?: React.Ref<HTMLAnchorElement>
-  innerRef?: React.Ref<HTMLAnchorElement>
-  getProps?: any
   state?: any
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 } & CustomLinkStyleProps
@@ -21,8 +19,6 @@ export default function CustomLink({
   className = '',
   replace = false,
   ref = () => {},
-  innerRef = () => {},
-  getProps = () => {},
   state = null,
   ...props
 }: CustomLinkProps) {
