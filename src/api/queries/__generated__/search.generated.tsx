@@ -11,11 +11,11 @@ export type SearchQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchQuery = { __typename?: 'Query', search: Array<{ __typename?: 'SearchFTSOutput', rank: number, item: (
-      { __typename?: 'Video' }
+export type SearchQuery = { __typename: 'Query', search: Array<{ __typename: 'SearchFTSOutput', rank: number, item: (
+      { __typename: 'Video' }
       & VideoFieldsFragment
     ) | (
-      { __typename?: 'Channel' }
+      { __typename: 'Channel' }
       & BasicChannelFieldsFragment
     ) }> };
 

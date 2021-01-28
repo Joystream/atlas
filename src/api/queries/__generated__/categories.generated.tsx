@@ -2,13 +2,13 @@ import * as Types from './baseTypes.generated';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-export type CategoryFieldsFragment = { __typename?: 'Category', id: string, name: string };
+export type CategoryFieldsFragment = { __typename: 'Category', id: string, name: string };
 
 export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<(
-    { __typename?: 'Category' }
+export type GetCategoriesQuery = { __typename: 'Query', categories: Array<(
+    { __typename: 'Category' }
     & CategoryFieldsFragment
   )> };
 

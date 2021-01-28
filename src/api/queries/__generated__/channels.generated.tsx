@@ -2,9 +2,9 @@ import * as Types from './baseTypes.generated';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-export type BasicChannelFieldsFragment = { __typename?: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string> };
+export type BasicChannelFieldsFragment = { __typename: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string> };
 
-export type AllChannelFieldsFragment = { __typename?: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string>, coverPhotoUrl?: Types.Maybe<string>, follows?: Types.Maybe<number> };
+export type AllChannelFieldsFragment = { __typename: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string>, coverPhotoUrl?: Types.Maybe<string>, follows?: Types.Maybe<number> };
 
 export type GetNewestChannelsQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>;
@@ -12,18 +12,18 @@ export type GetNewestChannelsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetNewestChannelsQuery = { __typename?: 'Query', channelsConnection: { __typename?: 'ChannelConnection', totalCount: number, edges: Array<{ __typename?: 'ChannelEdge', cursor: string, node: (
-        { __typename?: 'Channel' }
+export type GetNewestChannelsQuery = { __typename: 'Query', channelsConnection: { __typename: 'ChannelConnection', totalCount: number, edges: Array<{ __typename: 'ChannelEdge', cursor: string, node: (
+        { __typename: 'Channel' }
         & AllChannelFieldsFragment
-      ) }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
+      ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
 
 export type GetChannelQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
 
-export type GetChannelQuery = { __typename?: 'Query', channel?: Types.Maybe<(
-    { __typename?: 'Channel' }
+export type GetChannelQuery = { __typename: 'Query', channel?: Types.Maybe<(
+    { __typename: 'Channel' }
     & AllChannelFieldsFragment
   )> };
 
@@ -32,14 +32,14 @@ export type FollowChannelMutationVariables = Types.Exact<{
 }>;
 
 
-export type FollowChannelMutation = { __typename?: 'Mutation', followChannel: { __typename?: 'ChannelFollowsInfo', id: string, follows: number } };
+export type FollowChannelMutation = { __typename: 'Mutation', followChannel: { __typename: 'ChannelFollowsInfo', id: string, follows: number } };
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
   channelId: Types.Scalars['ID'];
 }>;
 
 
-export type UnfollowChannelMutation = { __typename?: 'Mutation', unfollowChannel: { __typename?: 'ChannelFollowsInfo', id: string, follows: number } };
+export type UnfollowChannelMutation = { __typename: 'Mutation', unfollowChannel: { __typename: 'ChannelFollowsInfo', id: string, follows: number } };
 
 export const BasicChannelFieldsFragmentDoc = gql`
     fragment BasicChannelFields on Channel {

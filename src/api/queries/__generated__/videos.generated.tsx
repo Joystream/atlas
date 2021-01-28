@@ -4,15 +4,15 @@ import { BasicChannelFieldsFragment , BasicChannelFieldsFragmentDoc } from './ch
 import { gql } from '@apollo/client';
 
 import * as Apollo from '@apollo/client';
-export type VideoMediaFieldsFragment = { __typename?: 'VideoMedia', id: string, pixelHeight: number, pixelWidth: number, location: { __typename?: 'JoystreamMediaLocation', dataObjectId: string } | { __typename?: 'HttpMediaLocation', url: string } };
+export type VideoMediaFieldsFragment = { __typename: 'VideoMedia', id: string, pixelHeight: number, pixelWidth: number, location: { __typename: 'JoystreamMediaLocation', dataObjectId: string } | { __typename: 'HttpMediaLocation', url: string } };
 
-export type LicenseFieldsFragment = { __typename?: 'LicenseEntity', id: string, attribution?: Types.Maybe<string>, type: { __typename?: 'UserDefinedLicense', content: string } | { __typename?: 'KnownLicense', code: string, url?: Types.Maybe<string> } };
+export type LicenseFieldsFragment = { __typename: 'LicenseEntity', id: string, attribution?: Types.Maybe<string>, type: { __typename: 'UserDefinedLicense', content: string } | { __typename: 'KnownLicense', code: string, url?: Types.Maybe<string> } };
 
-export type VideoFieldsFragment = { __typename?: 'Video', id: string, title: string, description: string, views?: Types.Maybe<number>, duration: number, thumbnailUrl: string, createdAt: Date, category: { __typename?: 'Category', id: string }, media: (
-    { __typename?: 'VideoMedia' }
+export type VideoFieldsFragment = { __typename: 'Video', id: string, title: string, description: string, views?: Types.Maybe<number>, duration: number, thumbnailUrl: string, createdAt: Date, category: { __typename: 'Category', id: string }, media: (
+    { __typename: 'VideoMedia' }
     & VideoMediaFieldsFragment
-  ), channel: { __typename?: 'Channel', id: string, avatarPhotoUrl?: Types.Maybe<string>, handle: string }, license: (
-    { __typename?: 'LicenseEntity' }
+  ), channel: { __typename: 'Channel', id: string, avatarPhotoUrl?: Types.Maybe<string>, handle: string }, license: (
+    { __typename: 'LicenseEntity' }
     & LicenseFieldsFragment
   ) };
 
@@ -24,27 +24,27 @@ export type GetNewestVideosQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetNewestVideosQuery = { __typename?: 'Query', videosConnection: { __typename?: 'VideoConnection', totalCount: number, edges: Array<{ __typename?: 'VideoEdge', cursor: string, node: (
-        { __typename?: 'Video' }
+export type GetNewestVideosQuery = { __typename: 'Query', videosConnection: { __typename: 'VideoConnection', totalCount: number, edges: Array<{ __typename: 'VideoEdge', cursor: string, node: (
+        { __typename: 'Video' }
         & VideoFieldsFragment
-      ) }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
+      ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
 
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetFeaturedVideosQuery = { __typename?: 'Query', featuredVideos: Array<{ __typename?: 'FeaturedVideo', video: (
-      { __typename?: 'Video' }
+export type GetFeaturedVideosQuery = { __typename: 'Query', featuredVideos: Array<{ __typename: 'FeaturedVideo', video: (
+      { __typename: 'Video' }
       & VideoFieldsFragment
     ) }> };
 
 export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCoverVideoQuery = { __typename?: 'Query', coverVideo: { __typename?: 'CoverVideo', coverDescription: string, video: (
-      { __typename?: 'Video' }
+export type GetCoverVideoQuery = { __typename: 'Query', coverVideo: { __typename: 'CoverVideo', coverDescription: string, video: (
+      { __typename: 'Video' }
       & VideoFieldsFragment
     ), coverCutMedia: (
-      { __typename?: 'VideoMedia' }
+      { __typename: 'VideoMedia' }
       & VideoMediaFieldsFragment
     ) } };
 
@@ -53,9 +53,9 @@ export type GetVideoQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetVideoQuery = { __typename?: 'Query', video?: Types.Maybe<(
-    { __typename?: 'Video', channel: (
-      { __typename?: 'Channel' }
+export type GetVideoQuery = { __typename: 'Query', video?: Types.Maybe<(
+    { __typename: 'Video', channel: (
+      { __typename: 'Channel' }
       & BasicChannelFieldsFragment
     ) }
     & VideoFieldsFragment
@@ -67,7 +67,7 @@ export type AddVideoViewMutationVariables = Types.Exact<{
 }>;
 
 
-export type AddVideoViewMutation = { __typename?: 'Mutation', addVideoView: { __typename?: 'EntityViewsInfo', id: string, views: number } };
+export type AddVideoViewMutation = { __typename: 'Mutation', addVideoView: { __typename: 'EntityViewsInfo', id: string, views: number } };
 
 export const VideoMediaFieldsFragmentDoc = gql`
     fragment VideoMediaFields on VideoMedia {
