@@ -76,7 +76,7 @@ const MainContainer = styled.main`
   padding: 0 var(--global-horizontal-padding);
 
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${sizes(14)};
+    margin-left: ${sizes(18)};
   }
 `
 export default LayoutWithRouting
