@@ -3,7 +3,7 @@ import { MockVideo } from '@/mocking/data/mockVideos'
 import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
 import { MockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
-import { GetCoverVideo_coverVideo } from '@/api/queries/__generated__/GetCoverVideo'
+import { CoverVideo } from '@/api/queries/__generated__/baseTypes.generated'
 
 export const mockCoverVideoChannel: MockChannel = {
   ...rawCoverVideo.channel,
@@ -24,7 +24,7 @@ export const mockCoverVideoMedia: MockVideoMedia = {
   },
 }
 
-type CoverInfo = Omit<GetCoverVideo_coverVideo, 'video' | '__typename'>
+export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
 
 export const mockCoverVideoInfo: CoverInfo = {
   ...rawCoverVideo.cover,

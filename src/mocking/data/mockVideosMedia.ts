@@ -1,9 +1,9 @@
-import { VideoMediaFields, VideoMediaFields_location } from '@/api/queries/__generated__/VideoMediaFields'
 import rawVideosMedia from './raw/videosMedia.json'
+import { VideoMediaFieldsFragment } from '@/api/queries/__generated__/videos.generated'
 
-export type MockVideoMedia = VideoMediaFields & {
+export type MockVideoMedia = VideoMediaFieldsFragment & {
   duration: number
-  coverCutLocation?: VideoMediaFields_location
+  coverCutLocation?: VideoMediaFieldsFragment['location']
 }
 
 const mockVideosMedia: MockVideoMedia[] = rawVideosMedia.map((rawVideoMedia) => {
