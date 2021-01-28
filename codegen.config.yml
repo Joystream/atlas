@@ -1,0 +1,25 @@
+overwrite: true
+schema: "./src/api/schemas/**/*.graphql"
+documents: 
+  - "./src/api/queries/**/*.ts"
+  - "!./src/api/queries/__generated__/"
+config: 
+  scalars:
+    Date: Date
+  preResolveTypes: true # avoid using Pick
+generates:
+  src/api/queries/__generated__/baseTypes.generated.ts: 
+    - typescript
+  src/api/queries/__generated__/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: baseTypes.generated.ts
+      folder: __generated__
+      extension: .generated.tsx
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+        - eslint --fix
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
