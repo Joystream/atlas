@@ -39,6 +39,26 @@ export interface GetCoverVideo_coverVideo_video_channel {
   handle: string;
 }
 
+export interface GetCoverVideo_coverVideo_video_license_type_KnownLicense {
+  __typename: "KnownLicense";
+  code: string;
+  url: string | null;
+}
+
+export interface GetCoverVideo_coverVideo_video_license_type_UserDefinedLicense {
+  __typename: "UserDefinedLicense";
+  content: string;
+}
+
+export type GetCoverVideo_coverVideo_video_license_type = GetCoverVideo_coverVideo_video_license_type_KnownLicense | GetCoverVideo_coverVideo_video_license_type_UserDefinedLicense;
+
+export interface GetCoverVideo_coverVideo_video_license {
+  __typename: "LicenseEntity";
+  id: string;
+  attribution: string | null;
+  type: GetCoverVideo_coverVideo_video_license_type;
+}
+
 export interface GetCoverVideo_coverVideo_video {
   __typename: "Video";
   id: string;
@@ -51,6 +71,7 @@ export interface GetCoverVideo_coverVideo_video {
   createdAt: GQLDate;
   media: GetCoverVideo_coverVideo_video_media;
   channel: GetCoverVideo_coverVideo_video_channel;
+  license: GetCoverVideo_coverVideo_video_license;
 }
 
 export interface GetCoverVideo_coverVideo_coverCutMedia_location_HttpMediaLocation {

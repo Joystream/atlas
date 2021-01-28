@@ -45,7 +45,14 @@ export const GET_CHANNEL = gql`
   }
   ${allChannelFieldsFragment}
 `
-
+export const GET_CHANNELS_WITH_IDS = gql`
+  query GetChannels($ids: [ID!]) {
+    channels(where: { id_in: $ids }) {
+      ...AllChannelFields
+    }
+  }
+  ${allChannelFieldsFragment}
+`
 export const FOLLOW_CHANNEL = gql`
   mutation FollowChannel($channelId: ID!) {
     followChannel(channelId: $channelId) {

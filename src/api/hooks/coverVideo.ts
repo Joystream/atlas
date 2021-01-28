@@ -3,6 +3,7 @@ import {
   mockCoverVideo,
   mockCoverVideoChannel,
   mockCoverVideoInfo,
+  mockCoverVideoLicense,
   mockCoverVideoMedia,
 } from '@/mocking/data/mockCoverVideo'
 
@@ -24,6 +25,7 @@ const useCoverVideo: UseCoverVideo = () => {
         duration: mockCoverVideoMedia.duration,
         media: mockCoverVideoMedia,
         channel: mockCoverVideoChannel,
+        license: mockCoverVideoLicense,
       },
     },
   }

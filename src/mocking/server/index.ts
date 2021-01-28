@@ -8,11 +8,13 @@ import { createMockData } from './data'
 import {
   addVideoViewResolver,
   channelResolver,
+  channelsWithIdsResolver,
   channelsResolver,
   coverVideoResolver,
   featuredVideosResolver,
   searchResolver,
   videoResolver,
+  videosWithIdsResolver,
   videosResolver,
   videoViewsResolver,
   channelFollowsResolver,
@@ -33,10 +35,12 @@ createServer({
       resolvers: {
         Query: {
           video: videoResolver,
+          videos: videosWithIdsResolver,
           videosConnection: videosResolver,
           coverVideo: coverVideoResolver,
           featuredVideos: featuredVideosResolver,
           channel: channelResolver,
+          channels: channelsWithIdsResolver,
           channelsConnection: channelsResolver,
           search: searchResolver,
         },

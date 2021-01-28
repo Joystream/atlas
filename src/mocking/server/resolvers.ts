@@ -34,6 +34,10 @@ type UniqueArgs = {
   where: { id: string }
 }
 
+type IdsArgs = {
+  where: { id_in: string[] }
+}
+
 const filterEmptyArgs = (args: Record<string, unknown>): Record<string, unknown> => {
   return Object.keys(args).reduce((acc, key) => {
     if (args[key] != null) {
@@ -49,6 +53,14 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args,
   }
 
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+}
+
+export const videosWithIdsResolver: QueryResolver<IdsArgs, VideoModel[]> = (obj, args, context, info) => {
+  const { mirageSchema: schema } = context
+  const ids = args.where?.id_in
+  const videos = schema.videos.all().models as VideoModel[]
+  const filtered = videos.filter((video) => ids.includes(video.attrs.id))
+  return filtered
 }
 
 export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_videosConnection> = (
@@ -99,6 +111,14 @@ export const channelResolver: QueryResolver<UniqueArgs, AllChannelFields> = (obj
   }
 
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
+}
+
+export const channelsWithIdsResolver: QueryResolver<IdsArgs, ChannelModel[]> = (obj, args, context, info) => {
+  const { mirageSchema: schema } = context
+  const ids = args.where?.id_in
+  const channels = schema.channels.all().models as ChannelModel[]
+  const filtered = channels.filter((video) => ids.includes(video.attrs.id))
+  return filtered
 }
 
 export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewestChannels_channelsConnection> = (

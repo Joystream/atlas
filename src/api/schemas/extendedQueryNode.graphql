@@ -182,6 +182,7 @@ type PageInfo {
 input ChannelWhereInput {
   isCurated_eq: Boolean
   isPublic_eq: Boolean
+  id_in: [ID!]
 }
 
 input ChannelWhereUniqueInput {
@@ -211,6 +212,7 @@ input CategoryWhereUniqueInput {
 input VideoWhereInput {
   categoryId_eq: ID
   channelId_eq: ID
+  id_in: [ID!]
   isCurated_eq: Boolean
   isPublic_eq: Boolean
 }
@@ -254,7 +256,10 @@ type Query {
   # Lookup a channel by its ID
   channel(where: ChannelWhereUniqueInput!): Channel
 
-  # List all channel by given constraints
+  # List all channels by given constraints
+  channels(where: ChannelWhereInput): [Channel!]
+
+  # List all channel by given constraints with pagination
   channelsConnection(
     first: Int
     after: String
@@ -272,6 +277,9 @@ type Query {
   video(where: VideoWhereUniqueInput!): Video
 
   # List all videos by given constraints
+  videos(where: VideoWhereInput): [Video!]
+
+  # List all videos by given constraints with pagination
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
 
   # Get the current cover video

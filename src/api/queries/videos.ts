@@ -123,6 +123,19 @@ export const GET_VIDEO = gql`
   ${basicChannelFieldsFragment}
 `
 
+export const GET_VIDEOS_WITH_IDS = gql`
+  query GetVideos($ids: [ID!]) {
+    videos(where: { id_in: $ids }) {
+      ...VideoFields
+      channel {
+        ...BasicChannelFields
+      }
+    }
+  }
+  ${videoFieldsFragment}
+  ${basicChannelFieldsFragment}
+`
+
 export const ADD_VIDEO_VIEW = gql`
   mutation AddVideoView($videoId: ID!, $channelId: ID!) {
     addVideoView(videoId: $videoId, channelId: $channelId) {

@@ -33,6 +33,7 @@ export const queryNodeStitchingResolvers = (
   orionSchema: GraphQLSchema
 ): IResolvers => ({
   Query: {
+    videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
     featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
@@ -40,6 +41,7 @@ export const queryNodeStitchingResolvers = (
       RemoveQueryNodeFollowsField,
     ]),
     video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
+    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
     ]),
