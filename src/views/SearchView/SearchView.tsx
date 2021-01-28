@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 
 import { SEARCH } from '@/api/queries'
 import { Search, SearchVariables } from '@/api/queries/__generated__/Search'
-import { TabsMenu } from '@/shared/components'
+import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
@@ -45,7 +45,7 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
 
   return (
     <Container>
-      <TabsMenu tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
+      <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
       {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
       {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
       {selectedIndex === 2 && (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}

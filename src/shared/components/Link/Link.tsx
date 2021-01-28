@@ -1,6 +1,5 @@
 import React, { ReactChild } from 'react'
-import { Link } from '@reach/router'
-import { CustomLinkStyleProps, useCSS } from './Link.style'
+import { CustomLinkStyleProps, DisabledLabel, StyledLink } from './Link.style'
 
 type CustomLinkProps = {
   children: ReactChild
@@ -27,13 +26,10 @@ export default function CustomLink({
   state = null,
   ...props
 }: CustomLinkProps) {
-  const styles = useCSS(props)
-
-  if (disabled) return <label css={styles.disabled}>{children}</label>
+  if (disabled) return <DisabledLabel>{children}</DisabledLabel>
   return (
-    <Link
+    <StyledLink
       to={to}
-      css={styles.regular}
       className={className}
       replace={replace}
       ref={ref}
@@ -42,6 +38,6 @@ export default function CustomLink({
       state={state}
     >
       {children}
-    </Link>
+    </StyledLink>
   )
 }
