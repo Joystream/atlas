@@ -97,30 +97,6 @@ export const GET_VIDEOS_CONNECTION = gql`
   ${videoFieldsFragment}
 `
 
-export const GET_NEWEST_VIDEOS = gql`
-  query GetNewestVideos($first: Int, $after: String, $categoryId: ID, $channelId: ID) {
-    videosConnection(
-      first: $first
-      after: $after
-      where: { categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false }
-      orderBy: createdAt_DESC
-    ) {
-      edges {
-        cursor
-        node {
-          ...VideoFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-    }
-  }
-  ${videoFieldsFragment}
-`
-
 export const GET_FEATURED_VIDEOS = gql`
   query GetFeaturedVideos {
     featuredVideos(orderBy: createdAt_DESC) {

@@ -1,13 +1,16 @@
 import { mirageGraphQLFieldResolver } from '@miragejs/graphql'
-import { Search_search, SearchVariables } from '@/api/queries/__generated__/Search'
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import {
-  GetNewestChannels_channelsConnection,
-  GetNewestChannelsVariables,
-} from '@/api/queries/__generated__/GetNewestChannels'
-import { GetNewestVideos_videosConnection } from '@/api/queries/__generated__/GetNewestVideos'
-import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
-import { GetCoverVideo_coverVideo } from '@/api/queries/__generated__/GetCoverVideo'
+  GetVideosConnectionQuery,
+  VideoFieldsFragment,
+  GetCoverVideoQuery,
+} from '@/api/queries/__generated__/videos.generated'
+import {
+  AllChannelFieldsFragment,
+  GetChannelsConnectionQuery,
+  GetChannelsConnectionQueryVariables,
+} from '@/api/queries/__generated__/channels.generated'
+import { SearchQueryVariables } from '@/api/queries/__generated__/search.generated'
+import { SearchFtsOutput } from '@/api/queries/__generated__/baseTypes.generated'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,
@@ -43,7 +46,7 @@ const filterEmptyArgs = (args: Record<string, unknown>): Record<string, unknown>
   }, {} as Record<string, unknown>)
 }
 
-export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args, context, info) => {
+export const videoResolver: QueryResolver<UniqueArgs, VideoFieldsFragment> = (obj, args, context, info) => {
   const resolverArgs = {
     id: args.where.id,
   }
@@ -51,12 +54,7 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFields> = (obj, args,
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
-export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_videosConnection> = (
-  obj,
-  args,
-  context,
-  info
-) => {
+export const videosResolver: QueryResolver<VideoQueryArgs, GetVideosConnectionQuery> = (obj, args, context, info) => {
   const baseResolverArgs = {
     first: args.first,
     after: args.after,
@@ -77,23 +75,23 @@ export const videosResolver: QueryResolver<VideoQueryArgs, GetNewestVideos_video
   return paginatedVideos
 }
 
-export const coverVideoResolver: QueryResolver<never, GetCoverVideo_coverVideo> = (...params) => {
-  const coverVideo = mirageGraphQLFieldResolver(...params) as GetCoverVideo_coverVideo
+export const coverVideoResolver: QueryResolver<never, GetCoverVideoQuery['coverVideo']> = (...params) => {
+  const coverVideo = mirageGraphQLFieldResolver(...params) as GetCoverVideoQuery['coverVideo']
   return coverVideo
 }
 
-export const featuredVideosResolver: QueryResolver<FeaturedVideosQueryArgs, VideoFields[]> = (
+export const featuredVideosResolver: QueryResolver<FeaturedVideosQueryArgs, VideoFieldsFragment[]> = (
   obj,
   args,
   context,
   info
 ) => {
   delete args.orderBy
-  const videos = mirageGraphQLFieldResolver(obj, args, context, info) as VideoFields[]
+  const videos = mirageGraphQLFieldResolver(obj, args, context, info) as VideoFieldsFragment[]
   return videos
 }
 
-export const channelResolver: QueryResolver<UniqueArgs, AllChannelFields> = (obj, args, context, info) => {
+export const channelResolver: QueryResolver<UniqueArgs, AllChannelFieldsFragment> = (obj, args, context, info) => {
   const resolverArgs = {
     id: args.where.id,
   }
@@ -101,7 +99,7 @@ export const channelResolver: QueryResolver<UniqueArgs, AllChannelFields> = (obj
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
-export const channelsResolver: QueryResolver<GetNewestChannelsVariables, GetNewestChannels_channelsConnection> = (
+export const channelsResolver: QueryResolver<GetChannelsConnectionQueryVariables, GetChannelsConnectionQuery> = (
   obj,
   args,
   context,
@@ -156,11 +154,13 @@ export const unfollowChannelResolver: QueryResolver<ChannelFollowsArgs> = (obj, 
   return channelInfo
 }
 
-type VideoModel = { attrs: VideoFields }
-type ChannelModel = { attrs: AllChannelFields }
-type SearchResolverResult = Omit<Search_search, 'item'> & { item: VideoModel | ChannelModel }
+type VideoModel = { attrs: VideoFieldsFragment }
+type ChannelModel = { attrs: AllChannelFieldsFragment }
+type SearchResolverResult = Omit<SearchFtsOutput, 'item' | 'isTypeOf' | 'highlight'> & {
+  item: VideoModel | ChannelModel
+}
 
-export const searchResolver: QueryResolver<SearchVariables, SearchResolverResult[]> = (_, { text }, context) => {
+export const searchResolver: QueryResolver<SearchQueryVariables, SearchResolverResult[]> = (_, { text }, context) => {
   const { mirageSchema: schema } = context
 
   const videos = schema.videos.all().models as VideoModel[]

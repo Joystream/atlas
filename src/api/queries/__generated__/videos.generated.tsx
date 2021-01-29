@@ -32,19 +32,6 @@ export type GetVideosConnectionQuery = { __typename: 'Query', videosConnection: 
         & VideoFieldsFragment
       ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
 
-export type GetNewestVideosQueryVariables = Types.Exact<{
-  first?: Types.Maybe<Types.Scalars['Int']>;
-  after?: Types.Maybe<Types.Scalars['String']>;
-  categoryId?: Types.Maybe<Types.Scalars['ID']>;
-  channelId?: Types.Maybe<Types.Scalars['ID']>;
-}>;
-
-
-export type GetNewestVideosQuery = { __typename: 'Query', videosConnection: { __typename: 'VideoConnection', totalCount: number, edges: Array<{ __typename: 'VideoEdge', cursor: string, node: (
-        { __typename: 'Video' }
-        & VideoFieldsFragment
-      ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
-
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -190,52 +177,6 @@ export function useGetVideosConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetVideosConnectionQueryHookResult = ReturnType<typeof useGetVideosConnectionQuery>;
 export type GetVideosConnectionLazyQueryHookResult = ReturnType<typeof useGetVideosConnectionLazyQuery>;
 export type GetVideosConnectionQueryResult = Apollo.QueryResult<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>;
-export const GetNewestVideosDocument = gql`
-    query GetNewestVideos($first: Int, $after: String, $categoryId: ID, $channelId: ID) {
-  videosConnection(first: $first, after: $after, where: {categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false}, orderBy: createdAt_DESC) {
-    edges {
-      cursor
-      node {
-        ...VideoFields
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    totalCount
-  }
-}
-    ${VideoFieldsFragmentDoc}`;
-
-/**
- * __useGetNewestVideosQuery__
- *
- * To run a query within a React component, call `useGetNewestVideosQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNewestVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNewestVideosQuery({
- *   variables: {
- *      first: // value for 'first'
- *      after: // value for 'after'
- *      categoryId: // value for 'categoryId'
- *      channelId: // value for 'channelId'
- *   },
- * });
- */
-export function useGetNewestVideosQuery(baseOptions?: Apollo.QueryHookOptions<GetNewestVideosQuery, GetNewestVideosQueryVariables>) {
-        return Apollo.useQuery<GetNewestVideosQuery, GetNewestVideosQueryVariables>(GetNewestVideosDocument, baseOptions);
-      }
-export function useGetNewestVideosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNewestVideosQuery, GetNewestVideosQueryVariables>) {
-          return Apollo.useLazyQuery<GetNewestVideosQuery, GetNewestVideosQueryVariables>(GetNewestVideosDocument, baseOptions);
-        }
-export type GetNewestVideosQueryHookResult = ReturnType<typeof useGetNewestVideosQuery>;
-export type GetNewestVideosLazyQueryHookResult = ReturnType<typeof useGetNewestVideosLazyQuery>;
-export type GetNewestVideosQueryResult = Apollo.QueryResult<GetNewestVideosQuery, GetNewestVideosQueryVariables>;
 export const GetFeaturedVideosDocument = gql`
     query GetFeaturedVideos {
   featuredVideos(orderBy: createdAt_DESC) {

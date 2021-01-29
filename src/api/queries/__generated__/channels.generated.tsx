@@ -6,13 +6,13 @@ export type BasicChannelFieldsFragment = { __typename: 'Channel', id: string, ha
 
 export type AllChannelFieldsFragment = { __typename: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string>, coverPhotoUrl?: Types.Maybe<string>, follows?: Types.Maybe<number> };
 
-export type GetNewestChannelsQueryVariables = Types.Exact<{
+export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>;
   after?: Types.Maybe<Types.Scalars['String']>;
 }>;
 
 
-export type GetNewestChannelsQuery = { __typename: 'Query', channelsConnection: { __typename: 'ChannelConnection', totalCount: number, edges: Array<{ __typename: 'ChannelEdge', cursor: string, node: (
+export type GetChannelsConnectionQuery = { __typename: 'Query', channelsConnection: { __typename: 'ChannelConnection', totalCount: number, edges: Array<{ __typename: 'ChannelEdge', cursor: string, node: (
         { __typename: 'Channel' }
         & AllChannelFieldsFragment
       ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
@@ -57,8 +57,8 @@ export const AllChannelFieldsFragmentDoc = gql`
   follows
 }
     `;
-export const GetNewestChannelsDocument = gql`
-    query GetNewestChannels($first: Int, $after: String) {
+export const GetChannelsConnectionDocument = gql`
+    query GetChannelsConnection($first: Int, $after: String) {
   channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
     edges {
       cursor
@@ -76,31 +76,31 @@ export const GetNewestChannelsDocument = gql`
     ${AllChannelFieldsFragmentDoc}`;
 
 /**
- * __useGetNewestChannelsQuery__
+ * __useGetChannelsConnectionQuery__
  *
- * To run a query within a React component, call `useGetNewestChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNewestChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetChannelsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetNewestChannelsQuery({
+ * const { data, loading, error } = useGetChannelsConnectionQuery({
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
  * });
  */
-export function useGetNewestChannelsQuery(baseOptions?: Apollo.QueryHookOptions<GetNewestChannelsQuery, GetNewestChannelsQueryVariables>) {
-        return Apollo.useQuery<GetNewestChannelsQuery, GetNewestChannelsQueryVariables>(GetNewestChannelsDocument, baseOptions);
+export function useGetChannelsConnectionQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>) {
+        return Apollo.useQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(GetChannelsConnectionDocument, baseOptions);
       }
-export function useGetNewestChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNewestChannelsQuery, GetNewestChannelsQueryVariables>) {
-          return Apollo.useLazyQuery<GetNewestChannelsQuery, GetNewestChannelsQueryVariables>(GetNewestChannelsDocument, baseOptions);
+export function useGetChannelsConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>) {
+          return Apollo.useLazyQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(GetChannelsConnectionDocument, baseOptions);
         }
-export type GetNewestChannelsQueryHookResult = ReturnType<typeof useGetNewestChannelsQuery>;
-export type GetNewestChannelsLazyQueryHookResult = ReturnType<typeof useGetNewestChannelsLazyQuery>;
-export type GetNewestChannelsQueryResult = Apollo.QueryResult<GetNewestChannelsQuery, GetNewestChannelsQueryVariables>;
+export type GetChannelsConnectionQueryHookResult = ReturnType<typeof useGetChannelsConnectionQuery>;
+export type GetChannelsConnectionLazyQueryHookResult = ReturnType<typeof useGetChannelsConnectionLazyQuery>;
+export type GetChannelsConnectionQueryResult = Apollo.QueryResult<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>;
 export const GetChannelDocument = gql`
     query GetChannel($id: ID!) {
   channel(where: {id: $id}) {
