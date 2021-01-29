@@ -19,7 +19,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import routes from '@/config/routes'
 import { Placeholder, VideoPlayer } from '@/shared/components'
-import { Link } from '@reach/router'
+import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
 

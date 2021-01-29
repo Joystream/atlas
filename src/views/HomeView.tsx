@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps } from '@reach/router'
 import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 
@@ -10,7 +9,7 @@ import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__gener
 
 const NEWEST_VIDEOS_COUNT = 8
 
-const HomeView: React.FC<RouteComponentProps> = () => {
+const HomeView: React.FC = () => {
   const {
     loading: newestVideosLoading,
     data: videosData,
