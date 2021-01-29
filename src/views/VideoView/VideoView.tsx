@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 import { throttle } from 'lodash'
 import {
@@ -39,10 +39,10 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
+    const currentVideo = state.watchedVideos.find((v) => v.id === id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [data?.video?.id, state.watchedVideos, startTimestamp, data?.video?.duration])
+  }, [id, state.watchedVideos, startTimestamp, data?.video?.duration])
 
   useEffect(() => {
     const duration = data?.video?.duration ?? 0
