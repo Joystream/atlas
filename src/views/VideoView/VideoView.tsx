@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { debounce } from 'lodash'
 import {
   ChannelContainer,
@@ -26,7 +25,7 @@ import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 
-const VideoView: React.FC<RouteComponentProps> = () => {
+const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, data, error } = useQuery<GetVideo, GetVideoVariables>(GET_VIDEO, {
     variables: { id },

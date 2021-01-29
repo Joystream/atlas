@@ -28,16 +28,13 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
-export type RouteComponentProps = {
+type RouteProps = {
+  Component: React.ComponentType
   caseSensitive?: boolean
   children?: React.ReactNode
   element?: React.ReactElement | null
   path?: string
 }
-
-type RouteProps = {
-  Component: React.ComponentType
-} & RouteComponentProps
 const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
   const navigate = useNavigate()
   return (

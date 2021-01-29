@@ -1,5 +1,4 @@
 import routes from '@/config/routes'
-import { RouteComponentProps } from '@/views/LayoutWithRouting'
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import {
@@ -12,9 +11,7 @@ import {
   StyledSearchbar,
 } from './TopNavbar.style'
 
-type TopNavbarProps = RouteComponentProps
-
-const TopNavbar: React.FC<TopNavbarProps> = () => {
+const TopNavbar: React.FC = () => {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [isFocused, setIsFocused] = useState(false)
