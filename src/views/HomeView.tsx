@@ -8,7 +8,7 @@ import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
-import { breakpoints } from '@/shared/theme'
+import { breakpoints, transitions } from '@/shared/theme'
 
 const NEWEST_VIDEOS_COUNT = 8
 
@@ -27,8 +27,12 @@ const HomeView: React.FC = () => {
   return (
     <StyledViewContainer>
       <CoverVideo />
+<<<<<<< HEAD
       <Container>
         <InterruptedVideosGallery />
+=======
+      <Container className={transitions.names.slide}>
+>>>>>>> 0eaf57b (fix transition fade out on exit and slide up on enter)
         {!hasNewestVideosError ? (
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
         ) : (

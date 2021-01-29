@@ -109,7 +109,7 @@ const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
       </Header>
-      <VideoSection>
+      <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
     </>

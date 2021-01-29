@@ -99,7 +99,7 @@ const LayoutWithRouting: React.FC = () => {
           {({ location }) => (
             <TransitionGroup>
               <CSSTransition
-                timeout={parseInt(transitions.timings.regular)}
+                timeout={2.5 * parseInt(transitions.timings.regular)}
                 classNames={transitions.names.fadeAndSlide}
                 key={location.key}
               >
