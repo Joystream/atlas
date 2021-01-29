@@ -7,8 +7,8 @@ import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
-import { breakpoints, sizes } from '@/shared/theme'
-import { NavItemType } from '@/components/SideNavbar'
+import { breakpoints } from '@/shared/theme'
+import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
@@ -76,7 +76,7 @@ const MainContainer = styled.main`
   padding: 0 var(--global-horizontal-padding);
 
   @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${sizes(14)};
+    margin-left: ${SIDENAVBAR_WIDTH}px;
   }
 `
 export default LayoutWithRouting
