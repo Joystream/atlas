@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { BrowserRouter, Routes, useNavigate, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from '@sentry/react'
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
@@ -28,29 +28,9 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
-type RouteProps = {
-  Component: React.ComponentType
-  caseSensitive?: boolean
-  children?: React.ReactNode
-  element?: React.ReactElement | null
-  path?: string
-}
-const Route: React.FC<RouteProps> = ({ Component, ...pathProps }) => {
-  const navigate = useNavigate()
-  return (
-    <ErrorBoundary
-      fallback={ViewErrorFallback}
-      onReset={() => {
-        navigate('/')
-      }}
-    >
-      <Component {...pathProps} />
-    </ErrorBoundary>
-  )
-}
-
 const LayoutWithRouting: React.FC = () => {
   const pathname = useLocation()
+  const navigate = useNavigate()
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
@@ -61,14 +41,33 @@ const LayoutWithRouting: React.FC = () => {
       <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
-        <Routes>
-          <Route path="*" Component={HomeView} />
-          <Route path={routes.video()} Component={VideoView} />
-          <Route path={routes.search()} Component={SearchView} />
-          <Route path={routes.videos()} Component={VideosView} />
-          <Route path={routes.channels()} Component={ChannelsView} />
-          <Route path={routes.channel()} Component={ChannelView} />
-        </Routes>
+        <ErrorBoundary
+          fallback={ViewErrorFallback}
+          onReset={() => {
+            navigate('/')
+          }}
+        >
+          <Routes>
+            <Route path="*">
+              <HomeView />
+            </Route>
+            <Route path={routes.video()}>
+              <VideoView />
+            </Route>
+            <Route path={routes.search()}>
+              <SearchView />
+            </Route>
+            <Route path={routes.videos()}>
+              <VideosView />
+            </Route>
+            <Route path={routes.channels()}>
+              <ChannelsView />
+            </Route>
+            <Route path={routes.channel()}>
+              <ChannelView />
+            </Route>
+          </Routes>
+        </ErrorBoundary>
       </MainContainer>
     </>
   )
