@@ -1,17 +1,16 @@
-import { useQuery } from '@apollo/client'
-import { GET_FEATURED_VIDEOS } from '@/api/queries'
-import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
+import {
+  GetFeaturedVideosQueryVariables,
+  useGetFeaturedVideosQuery,
+} from '@/api/queries/__generated__/videos.generated'
+import { QueryHookOptions } from '@apollo/client'
+import { GetFeaturedVideosQuery } from '../queries/__generated__/videos.generated'
 
-const useFeaturedVideos = () => {
-  const { loading, data, error, refetch } = useQuery<GetFeaturedVideos>(GET_FEATURED_VIDEOS, {
-    notifyOnNetworkStatusChange: true,
-  })
-
+type Opts = QueryHookOptions<GetFeaturedVideosQuery>
+const useFeaturedVideos = (variables?: GetFeaturedVideosQueryVariables, opts?: Opts) => {
+  const { data, ...rest } = useGetFeaturedVideosQuery({ ...opts, variables })
   return {
-    loading,
-    data: data?.featuredVideos,
-    error,
-    refetch,
+    featuredVideos: data?.featuredVideos,
+    ...rest,
   }
 }
 

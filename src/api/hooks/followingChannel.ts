@@ -1,10 +1,7 @@
-import { useMutation } from '@apollo/client'
-import { FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
-import { FollowChannel, FollowChannelVariables } from '@/api/queries/__generated__/followChannel'
-import { UnfollowChannel, UnfollowChannelVariables } from '@/api/queries/__generated__/unfollowChannel'
+import { useFollowChannelMutation, useUnfollowChannelMutation } from '../queries/__generated__/channels.generated'
 
 const useFollowingChannel = (id: string) => {
-  const [followChannel] = useMutation<FollowChannel, FollowChannelVariables>(FOLLOW_CHANNEL, {
+  const [followChannel] = useFollowChannelMutation({
     variables: {
       channelId: id,
     },
@@ -20,7 +17,7 @@ const useFollowingChannel = (id: string) => {
       })
     },
   })
-  const [unfollowChannel] = useMutation<UnfollowChannel, UnfollowChannelVariables>(UNFOLLOW_CHANNEL, {
+  const [unfollowChannel] = useUnfollowChannelMutation({
     variables: {
       channelId: id,
     },

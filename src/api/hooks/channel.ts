@@ -1,27 +1,16 @@
-import { useQuery } from '@apollo/client'
-import { GET_CHANNEL } from '@/api/queries/channels'
-import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
+import { useGetChannelQuery, GetChannelQuery } from '@/api/queries/__generated__/channels.generated'
+import { QueryHookOptions } from '@apollo/client'
 
-export const useChannel = (id: string) => {
-  const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
+type Opts = QueryHookOptions<GetChannelQuery>
+const useChannel = (id: string, opts?: Opts) => {
+  const { data, ...rest } = useGetChannelQuery({
+    ...opts,
     variables: { id },
   })
   return {
-    loading,
-    data: data?.channel,
-    error,
+    channel: data?.channel,
+    ...rest,
   }
 }
 
-export const useChannelLink = (id: string | undefined) => {
-  const { data } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
-    fetchPolicy: 'cache-first',
-    skip: !id,
-    variables: {
-      id: id || '',
-    },
-  })
-  return {
-    data: data?.channel,
-  }
-}
+export default useChannel

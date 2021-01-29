@@ -1,13 +1,16 @@
-import { useQuery } from '@apollo/client'
-import { GET_CATEGORIES } from '@/api/queries'
-import { GetCategories } from '@/api/queries/__generated__/GetCategories'
+import {
+  useGetCategoriesQuery,
+  GetCategoriesQueryVariables,
+  GetCategoriesQuery,
+} from '@/api/queries/__generated__/categories.generated'
+import { QueryHookOptions } from '@apollo/client'
 
-const useCategories = () => {
-  const { loading, data, error } = useQuery<GetCategories>(GET_CATEGORIES)
+type Opts = QueryHookOptions<GetCategoriesQuery>
+const useCategories = (variables?: GetCategoriesQueryVariables, opts?: Opts) => {
+  const { data, ...rest } = useGetCategoriesQuery({ ...opts, variables })
   return {
-    loading,
-    data: data?.categories,
-    error,
+    categories: data?.categories,
+    ...rest,
   }
 }
 

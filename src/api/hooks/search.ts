@@ -1,14 +1,13 @@
-import { useQuery } from '@apollo/client'
-import { SEARCH } from '@/api/queries'
-import { Search, SearchVariables } from '@/api/queries/__generated__/Search'
+import { useSearchQuery, SearchQueryVariables, SearchQuery } from '@/api/queries/__generated__/search.generated'
+import { QueryHookOptions } from '@apollo/client'
 
-const useSearch = (search: string) => {
-  const { data, loading, error } = useQuery<Search, SearchVariables>(SEARCH, { variables: { text: search } })
+type Opts = QueryHookOptions<SearchQuery>
+const useSearch = (variables: SearchQueryVariables, opts?: Opts) => {
+  const { data, ...rest } = useSearchQuery({ ...opts, variables })
 
   return {
-    loading,
     data: data?.search,
-    error,
+    ...rest,
   }
 }
 
