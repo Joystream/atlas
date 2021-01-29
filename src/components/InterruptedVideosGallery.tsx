@@ -9,32 +9,31 @@ import { GetVideosWithIds, GetVideosWithIdsVariables } from '@/api/queries/__gen
 
 import { ErrorFallback, VideoGallery } from '@/components'
 
-interface Lookup {
-  [key: string]: number
-}
+const INTERRUPTED_VIDEOS_COUNT = 16
 
 const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
   } = usePersonalData()
-  const interruptedVideosState = watchedVideos.filter((video) => video.__typename === 'INTERRUPTED' && video.timestamp)
+
+  const interruptedVideosState = watchedVideos
+    .filter((video) => video.__typename === 'INTERRUPTED')
+    .slice(-INTERRUPTED_VIDEOS_COUNT)
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
 
   const { loading, data, error, refetch } = useQuery<GetVideosWithIds, GetVideosWithIdsVariables>(GET_VIDEOS_WITH_IDS, {
     variables: { ids: interruptedVideosId },
   })
 
-  const videoTimestampsMap: Record<string, number> = interruptedVideosState.reduce((acc: Lookup, video) => {
+  const videoTimestampsMap = interruptedVideosState.reduce((acc, video) => {
     if (video.__typename === 'INTERRUPTED') {
       acc[video.id] = video.timestamp || 0
-      return acc
     }
     return acc
-  }, {})
+  }, {} as Record<string, number>)
 
   const interruptedVideos = data?.videos?.map((video) => ({
     ...video,
-    timestamp: videoTimestampsMap[video.id],
     progress: (videoTimestampsMap[video.id] / video.duration) * 100,
   }))
 

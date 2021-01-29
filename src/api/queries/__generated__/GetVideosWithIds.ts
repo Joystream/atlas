@@ -75,7 +75,7 @@ export interface GetVideosWithIds_videos {
 }
 
 export interface GetVideosWithIds {
-  videos: GetVideosWithIds_videos[] | null;
+  videos: GetVideosWithIds_videos[];
 }
 
 export interface GetVideosWithIdsVariables {
