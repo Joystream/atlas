@@ -1,5 +1,5 @@
 import { typography, colors } from '../../theme'
-import { Link } from '@reach/router'
+import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 
 export type CustomLinkStyleProps = Record<string, unknown>

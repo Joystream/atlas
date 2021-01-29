@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
-import { RouteComponentProps } from '@reach/router'
 import { useQuery } from '@apollo/client'
 
 import { SEARCH } from '@/api/queries'
@@ -13,7 +12,7 @@ import EmptyFallback from './EmptyFallback'
 
 type SearchViewProps = {
   search?: string
-} & RouteComponentProps
+}
 const tabs = ['all results', 'videos', 'channels']
 
 const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {

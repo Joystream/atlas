@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { navigate } from '@reach/router'
+import { useNavigate } from 'react-router-dom'
 import { VideoPreview } from '@/shared/components'
 
 import routes from '@/config/routes'
@@ -17,6 +17,7 @@ const VideoPreviewWithNavigation: React.FC<VideoPreviewWithNavigationProps> = ({
   onChannelClick,
   ...videoPreviewProps
 }) => {
+  const navigate = useNavigate()
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (onClick) {
       onClick(e)

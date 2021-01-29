@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { RouteComponentProps, useParams } from '@reach/router'
+import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
 import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
@@ -33,7 +33,7 @@ type FollowedChannel = {
   id: string
 }
 
-const ChannelView: React.FC<RouteComponentProps> = () => {
+const ChannelView: React.FC = () => {
   const { id } = useParams()
   const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
     variables: { id },
