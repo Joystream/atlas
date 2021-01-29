@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 
-import { useFollowingChannel, useChannel } from '@/api/hooks'
+import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { usePersonalData } from '@/hooks'
 
 import {
@@ -28,7 +28,8 @@ import { formatNumberShort } from '@/utils/number'
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
-  const { followChannel, unfollowChannel } = useFollowingChannel(id)
+  const { followChannel } = useFollowChannel()
+  const { unfollowChannel } = useUnfollowChannel()
   const {
     state: { followedChannels },
     updateChannelFollowing,
@@ -44,11 +45,11 @@ const ChannelView: React.FC<RouteComponentProps> = () => {
     try {
       if (isFollowing) {
         updateChannelFollowing(id, false)
-        unfollowChannel()
+        unfollowChannel(id)
         setFollowing(false)
       } else {
         updateChannelFollowing(id, true)
-        followChannel()
+        followChannel(id)
         setFollowing(true)
       }
     } catch (error) {

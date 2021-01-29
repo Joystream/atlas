@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
 import { debounce } from 'lodash'
 import {
@@ -20,11 +20,12 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
-import { useVideo } from '@/api/hooks'
+import { useVideo, useAddVideoView } from '@/api/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { loading, video, error, addVideoView } = useVideo(id)
+  const { loading, video, error } = useVideo(id)
+  const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
 
@@ -70,20 +71,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (!videoId || !channelId) {
       return
     }
-    addVideoView({
-      variables: { videoId, channelId },
-      update: (cache, mutationResult) => {
-        cache.modify({
-          id: cache.identify({
-            __typename: 'Video',
-            id: videoId,
-          }),
-          fields: {
-            views: () => mutationResult.data?.addVideoView.views,
-          },
-        })
-      },
-    }).catch((error) => {
+    addVideoView(videoId, channelId).catch((error) => {
       console.warn('Failed to increase video views', { error })
     })
   }, [addVideoView, videoId, channelId])
