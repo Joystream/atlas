@@ -12,8 +12,5 @@ export { default as ErrorFallback } from './ErrorFallback'
 export { default as ChannelLink } from './ChannelLink'
 export { default as BackgroundPattern } from './BackgroundPattern'
 export { InfiniteVideoGrid, InfiniteChannelGrid } from './InfiniteGrids'
-<<<<<<< HEAD
 export { default as SideNavbar, SIDENAVBAR_WIDTH, EXPANDED_SIDENAVBAR_WIDTH, NavItem } from './SideNavbar'
-=======
 export { default as InterruptedVideosGallery } from './InterruptedVideosGallery'
->>>>>>> 5c0e71e (add interrupted videos carousel)
