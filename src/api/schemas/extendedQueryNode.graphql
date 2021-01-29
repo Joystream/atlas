@@ -213,6 +213,7 @@ input VideoWhereInput {
   channelId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
+  id_in: [ID!]
 }
 
 input VideoWhereUniqueInput {
@@ -270,6 +271,9 @@ type Query {
 
   # Lookup video by its ID
   video(where: VideoWhereUniqueInput!): Video
+
+  # Lookup videos by where params
+  videos(where: VideoWhereInput): [Video!]!
 
   # List all videos by given constraints
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
