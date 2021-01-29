@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 
-import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 import { useQuery } from '@apollo/client'
 import { useInView } from 'react-intersection-observer'
@@ -20,7 +19,7 @@ import { GET_CATEGORIES, GET_FEATURED_VIDEOS } from '@/api/queries'
 import { GetCategories } from '@/api/queries/__generated__/GetCategories'
 import { GetFeaturedVideos } from '@/api/queries/__generated__/GetFeaturedVideos'
 
-const VideosView: React.FC<RouteComponentProps> = () => {
+const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const { loading: categoriesLoading, data: categoriesData, error: categoriesError } = useQuery<GetCategories>(
     GET_CATEGORIES

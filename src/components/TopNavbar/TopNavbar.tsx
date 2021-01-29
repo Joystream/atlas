@@ -1,5 +1,5 @@
 import routes from '@/config/routes'
-import { navigate, RouteComponentProps } from '@reach/router'
+import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import {
   FullLogo,
@@ -11,9 +11,8 @@ import {
   StyledSearchbar,
 } from './TopNavbar.style'
 
-type TopNavbarProps = RouteComponentProps
-
-const TopNavbar: React.FC<TopNavbarProps> = () => {
+const TopNavbar: React.FC = () => {
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
