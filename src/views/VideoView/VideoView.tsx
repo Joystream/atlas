@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { RouteComponentProps, useParams } from '@reach/router'
+import { useParams } from 'react-router-dom'
 import { throttle } from 'lodash'
 import {
   ChannelContainer,
@@ -22,7 +22,7 @@ import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
 
-const VideoView: React.FC<RouteComponentProps> = () => {
+const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
@@ -9,7 +8,7 @@ import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
 const NEWEST_VIDEOS_COUNT = 8
 
-const HomeView: React.FC<RouteComponentProps> = () => {
+const HomeView: React.FC = () => {
   const {
     loading: newestVideosLoading,
     videosConnection,

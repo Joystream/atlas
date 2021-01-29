@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { RouteComponentProps, useParams } from '@reach/router'
+import { useParams } from 'react-router-dom'
+import { useQuery, useMutation } from '@apollo/client'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { usePersonalData } from '@/hooks'
@@ -25,7 +26,11 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
 
-const ChannelView: React.FC<RouteComponentProps> = () => {
+type FollowedChannel = {
+  id: string
+}
+
+const ChannelView: React.FC = () => {
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
   const { followChannel } = useFollowChannel()

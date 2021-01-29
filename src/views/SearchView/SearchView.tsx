@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
-import { RouteComponentProps } from '@reach/router'
 import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
@@ -11,7 +10,7 @@ import { SearchQuery } from '@/api/queries/__generated__/search.generated'
 
 type SearchViewProps = {
   search?: string
-} & RouteComponentProps
+}
 const tabs = ['all results', 'videos', 'channels']
 
 const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {

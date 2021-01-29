@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
 import React from 'react'
-import { Link } from '@reach/router'
+import { Link } from 'react-router-dom'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
 export const SIDENAVBAR_WIDTH = 72

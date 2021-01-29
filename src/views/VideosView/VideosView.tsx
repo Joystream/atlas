@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 
-import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 import { useInView } from 'react-intersection-observer'
 import { useFeaturedVideos, useCategories } from '@/api/hooks'
@@ -17,7 +16,7 @@ import {
   GRID_TOP_PADDING,
 } from './VideosView.style'
 
-const VideosView: React.FC<RouteComponentProps> = () => {
+const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const {
