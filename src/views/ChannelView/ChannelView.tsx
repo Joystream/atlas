@@ -27,7 +27,7 @@ import { formatNumberShort } from '@/utils/number'
 
 const ChannelView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { data: channel, loading, error } = useChannel(id)
+  const { channel, loading, error } = useChannel(id)
   const { followChannel, unfollowChannel } = useFollowingChannel(id)
   const {
     state: { followedChannels },

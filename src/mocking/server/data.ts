@@ -1,6 +1,6 @@
 import { ModelInstance } from 'miragejs/-types'
 import faker from 'faker'
-
+// TODO update types
 import {
   mockCategories,
   mockChannels,
@@ -9,8 +9,8 @@ import {
   mockLicenses,
   FEATURED_VIDEOS_INDEXES,
 } from '@/mocking/data'
-import { AllChannelFields } from '@/api/queries/__generated__/AllChannelFields'
-import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
+import { AllChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
+import { CategoryFieldsFragment } from '@/api/queries/__generated__/categories.generated'
 import {
   mockCoverVideo,
   mockCoverVideoChannel,
@@ -30,13 +30,13 @@ export const createMockData = (server: MirageJSServer) => {
     })
     return server.schema.create('Channel', {
       ...channel,
-    }) as ModelInstance<AllChannelFields>
+    }) as ModelInstance<AllChannelFieldsFragment>
   })
 
   const categories = mockCategories.map((category) => {
     return server.schema.create('Category', {
       ...category,
-    }) as ModelInstance<CategoryFields>
+    }) as ModelInstance<CategoryFieldsFragment>
   })
 
   const videoMedias = mockVideosMedia.map((videoMedia) => {

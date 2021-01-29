@@ -4,16 +4,20 @@ import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
 
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
-import { useNewestVideos } from '@/api/hooks'
+import useVideosConnection from '@/api/hooks/videosConnection'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+
+const NEWEST_VIDEOS_COUNT = 8
 
 const HomeView: React.FC<RouteComponentProps> = () => {
   const {
     loading: newestVideosLoading,
-    data: newestVideos,
+    videosConnection,
     error: newestVideosError,
-    newestVideosCount,
     refetch: refetchNewestVideos,
-  } = useNewestVideos()
+  } = useVideosConnection({ first: 8, orderBy: VideoOrderByInput.CreatedAtDesc })
+
+  const newestVideos = videosConnection?.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
 
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
 
@@ -28,7 +32,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
         )}
 
         <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid title="More videos" skipCount={newestVideosCount} />
+          <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
         </ErrorBoundary>
       </Container>
     </>

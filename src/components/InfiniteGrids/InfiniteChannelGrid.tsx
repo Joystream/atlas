@@ -5,7 +5,7 @@ import { css } from '@emotion/core'
 import { sizes } from '@/shared/theme'
 import { ChannelPreviewBase, Grid, Text } from '@/shared/components'
 import { GET_NEWEST_CHANNELS } from '@/api/queries'
-import { GetNewestChannels, GetNewestChannelsVariables } from '@/api/queries/__generated__/GetNewestChannels'
+import { GetNewestChannelsQuery, GetNewestChannelsQueryVariables } from '@/api/queries/__generated__/channels.generated'
 import ChannelPreview from '@/components/ChannelPreviewWithNavigation'
 import useInfiniteGrid from './useInfiniteGrid'
 
@@ -29,9 +29,9 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
   }, [])
 
   const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
-    GetNewestChannels,
-    GetNewestChannels['channelsConnection'],
-    GetNewestChannelsVariables
+    GetNewestChannelsQuery,
+    GetNewestChannelsQuery['channelsConnection'],
+    GetNewestChannelsQueryVariables
   >({
     query: GET_NEWEST_CHANNELS,
     onScrollToBottom,

@@ -5,7 +5,7 @@ import { sizes } from '@/shared/theme'
 import { Grid, Text, VideoPreviewBase } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
 import { GET_NEWEST_VIDEOS } from '@/api/queries'
-import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
+import { GetNewestVideosQuery, GetNewestVideosQueryVariables } from '@/api/queries/__generated__/videos.generated'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
@@ -52,9 +52,9 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   }, [cachedCategoryId, targetRowsCount])
 
   const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
-    GetNewestVideos,
-    GetNewestVideos['videosConnection'],
-    GetNewestVideosVariables
+    GetNewestVideosQuery,
+    GetNewestVideosQuery['videosConnection'],
+    GetNewestVideosQueryVariables
   >({
     query: GET_NEWEST_VIDEOS,
     onScrollToBottom,

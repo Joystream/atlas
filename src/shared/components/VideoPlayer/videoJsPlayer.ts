@@ -2,11 +2,11 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
-import { VideoFields_media_location } from '@/api/queries/__generated__/VideoFields'
 import { STORAGE_NODE_URL } from '@/config/urls'
+import { MediaLocation } from '@/api/queries/__generated__/baseTypes.generated'
 
 export type VideoJsConfig = {
-  src: VideoFields_media_location
+  src: MediaLocation
   width?: number
   height?: number
   fluid?: boolean

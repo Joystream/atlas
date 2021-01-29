@@ -24,7 +24,7 @@ import { useVideo } from '@/api/hooks'
 
 const VideoView: React.FC<RouteComponentProps> = () => {
   const { id } = useParams()
-  const { loading, data: video, error, addVideoView } = useVideo(id)
+  const { loading, video, error, addVideoView } = useVideo(id)
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
 
@@ -146,7 +146,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
         {video ? <Text variant="h2">{video.title}</Text> : <Placeholder height={46} width={400} />}
         <Meta>
           {video ? (
-            formatVideoViewsAndDate(video.views, video.createdAt, { fullViews: true })
+            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
             <Placeholder height={18} width={200} />
           )}

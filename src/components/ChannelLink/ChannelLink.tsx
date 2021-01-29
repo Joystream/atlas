@@ -1,9 +1,9 @@
 import React from 'react'
-import { useChannelLink } from '@/api/hooks'
-import { BasicChannelFields } from '@/api/queries/__generated__/BasicChannelFields'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
 import routes from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
+import useChannel from '@/api/hooks/channel'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
 
 type ChannelLinkProps = {
   id?: string
@@ -11,7 +11,7 @@ type ChannelLinkProps = {
   hideHandle?: boolean
   hideAvatar?: boolean
   noLink?: boolean
-  overrideChannel?: BasicChannelFields
+  overrideChannel?: BasicChannelFieldsFragment
   avatarSize?: AvatarSize
   className?: string
 }
@@ -25,7 +25,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   avatarSize = 'default',
   className,
 }) => {
-  const { data: channel } = useChannelLink(id)
+  const { channel } = useChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
 
   const displayedChannel = overrideChannel || channel
 

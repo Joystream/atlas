@@ -2,14 +2,12 @@ import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { RouteComponentProps } from '@reach/router'
-
-import { SEARCH } from '@/api/queries'
-import { Search, SearchVariables } from '@/api/queries/__generated__/Search'
 import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
+import { SearchQuery } from '@/api/queries/__generated__/search.generated'
 
 type SearchViewProps = {
   search?: string
@@ -18,9 +16,9 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch(search)
+  const { data, loading, error } = useSearch({ text: search }, { fetchPolicy: 'cache-and-network' })
 
-  const getChannelsAndVideos = (loading: boolean, data: Search_search[] | undefined) => {
+  const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
       return { channels: [], videos: [] }
     }

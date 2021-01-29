@@ -35,7 +35,7 @@ type VideoPreviewProps = {
   duration?: number
   // video watch progress in percent (0-100)
   progress?: number
-  views: number | null
+  views?: number | null
   posterURL: string
 
   showChannel?: boolean
@@ -138,7 +138,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
   const metaNode = (
     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-      {formatVideoViewsAndDate(views, createdAt, { fullViews: main })}
+      {views && formatVideoViewsAndDate(views, createdAt, { fullViews: main })}
     </MetaText>
   )
 

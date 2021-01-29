@@ -19,13 +19,13 @@ import {
 
 const VideosView: React.FC<RouteComponentProps> = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
-  const { loading: categoriesLoading, data: categoriesData, error: categoriesError } = useCategories()
+  const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const {
     loading: featuredVideosLoading,
-    data: featuredVideosData,
+    featuredVideos,
     error: featuredVideosError,
     refetch: refetchFeaturedVideos,
-  } = useFeaturedVideos()
+  } = useFeaturedVideos({}, { notifyOnNetworkStatusChange: true })
 
   const topicsRef = useRef<HTMLHeadingElement>(null)
   const { ref: targetRef, inView } = useInView({
@@ -43,14 +43,14 @@ const VideosView: React.FC<RouteComponentProps> = () => {
   if (categoriesError) {
     throw categoriesError
   }
-  const featuredVideos = featuredVideosData?.map((featuredVideo) => featuredVideo.video)
+  const videos = featuredVideos?.map((featuredVideo) => featuredVideo.video)
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
   return (
     <Container>
       <BackgroundPattern />
       <Header variant="hero">Videos</Header>
       {!hasFeaturedVideosError ? (
-        <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos} />
+        <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
       ) : (
         <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
       )}
@@ -59,14 +59,14 @@ const VideosView: React.FC<RouteComponentProps> = () => {
       </StyledText>
       <IntersectionTarget ref={targetRef} />
       <StyledCategoryPicker
-        categories={categoriesData}
+        categories={categories}
         loading={categoriesLoading}
         selectedCategoryId={selectedCategoryId}
         onChange={handleCategoryChange}
         isAtTop={inView}
       />
       <ErrorBoundary fallback={ErrorFallback}>
-        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categoriesData} />
+        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
       </ErrorBoundary>
     </Container>
   )
