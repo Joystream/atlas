@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
-
+import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
 const NEWEST_VIDEOS_COUNT = 8
 

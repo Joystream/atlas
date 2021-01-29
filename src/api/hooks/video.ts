@@ -19,29 +19,11 @@ const useVideo = (id: string, opts?: Opts) => {
   }
 }
 
-type AddVideoViewOpts = MutationHookOptions<AddVideoViewMutation>
+type AddVideoViewOpts = Omit<MutationHookOptions<AddVideoViewMutation>, 'variables'>
 export const useAddVideoView = (opts?: AddVideoViewOpts) => {
-  const [addVideoView, rest] = useAddVideoViewMutation()
+  const [addVideoView, rest] = useAddVideoViewMutation(opts)
   return {
-    addVideoView: (videoId: string, channelId: string) =>
-      addVideoView({
-        ...opts,
-        variables: {
-          videoId,
-          channelId,
-        },
-        update: (cache, mutationResult) => {
-          cache.modify({
-            id: cache.identify({
-              __typename: 'Video',
-              id: videoId,
-            }),
-            fields: {
-              views: () => mutationResult.data?.addVideoView.views,
-            },
-          })
-        },
-      }),
+    addVideoView,
     ...rest,
   }
 }

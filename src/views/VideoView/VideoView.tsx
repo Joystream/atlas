@@ -34,11 +34,10 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (startTimestamp != null) {
       return
     }
-  const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
+    const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [id, state.watchedVideos, startTimestamp, video?.duration])
-
+  }, [state.watchedVideos, startTimestamp, video?.duration, video?.id])
 
   useEffect(() => {
     const duration = video?.duration ?? 0
@@ -72,7 +71,23 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (!videoId || !channelId) {
       return
     }
-    addVideoView(videoId, channelId).catch((error) => {
+    addVideoView({
+      variables: {
+        videoId,
+        channelId,
+      },
+      update: (cache, mutationResult) => {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Video',
+            id: videoId,
+          }),
+          fields: {
+            views: () => mutationResult.data?.addVideoView.views,
+          },
+        })
+      },
+    }).catch((error) => {
       console.warn('Failed to increase video views', { error })
     })
   }, [addVideoView, videoId, channelId])
@@ -84,7 +99,6 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     throttle((time) => {
       if (video?.id) {
         updateWatchedVideos('INTERRUPTED', video.id, time)
-
       }
     }, 5000),
     [video?.id]
@@ -93,7 +107,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   const handleVideoEnd = useCallback(() => {
     if (video?.id) {
       handleTimeUpdate.cancel()
-      updateWatchedVideos('COMPLETED', data?.video?.id)
+      updateWatchedVideos('COMPLETED', video?.id)
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
