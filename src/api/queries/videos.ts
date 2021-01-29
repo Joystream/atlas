@@ -97,6 +97,15 @@ export const GET_VIDEOS_CONNECTION = gql`
   ${videoFieldsFragment}
 `
 
+export const GET_VIDEOS_WITH_IDS = gql`
+  query GetVideosWithIds($ids: [ID!]!) {
+    videos(where: { id_in: $ids }) {
+      ...VideoFields
+    }
+  }
+  ${videoFieldsFragment}
+`
+
 export const GET_FEATURED_VIDEOS = gql`
   query GetFeaturedVideos {
     featuredVideos(orderBy: createdAt_DESC) {

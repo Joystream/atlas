@@ -37,6 +37,10 @@ type UniqueArgs = {
   where: { id: string }
 }
 
+type IdsArgs = {
+  where: { id_in: string[] }
+}
+
 const filterEmptyArgs = (args: Record<string, unknown>): Record<string, unknown> => {
   return Object.keys(args).reduce((acc, key) => {
     if (args[key] != null) {
@@ -54,7 +58,16 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFieldsFragment> = (ob
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
+export const videosWithIdsResolver: QueryResolver<IdsArgs, VideoModel[]> = (obj, args, context, info) => {
+  const { mirageSchema: schema } = context
+  const ids = args.where?.id_in
+  const videos = schema.videos.all().models as VideoModel[]
+  const filtered = videos.filter((video) => ids.includes(video.attrs.id))
+  return filtered
+}
+
 export const videosResolver: QueryResolver<VideoQueryArgs, GetVideosConnectionQuery> = (obj, args, context, info) => {
+
   const baseResolverArgs = {
     first: args.first,
     after: args.after,

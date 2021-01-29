@@ -2,10 +2,10 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { RouteComponentProps } from '@reach/router'
 import { ErrorBoundary } from '@sentry/react'
-
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+
 
 const NEWEST_VIDEOS_COUNT = 8
 
@@ -25,6 +25,7 @@ const HomeView: React.FC<RouteComponentProps> = () => {
     <>
       <CoverVideo />
       <Container>
+        <InterruptedVideosGallery />
         {!hasNewestVideosError ? (
           <VideoGallery title="Newest videos" loading={newestVideosLoading} videos={newestVideos} />
         ) : (
