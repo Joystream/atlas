@@ -22,24 +22,9 @@ export default function CustomLink({
   state = null,
   ...props
 }: CustomLinkProps) {
-<<<<<<< HEAD
   if (disabled) return <DisabledLabel>{children}</DisabledLabel>
   return (
-    <StyledLink
-      to={to}
-      className={className}
-      replace={replace}
-      ref={ref}
-      innerRef={innerRef}
-      getProps={getProps}
-      state={state}
-    >
-=======
-  const styles = useCSS(props)
-  if (disabled) return <label css={styles.disabled}>{children}</label>
-  return (
-    <Link to={to} css={styles.regular} replace={replace} ref={ref} state={state}>
->>>>>>> 2aaabc5 (fix navbar button when active, remove RouteComponentProps)
+    <StyledLink to={to} className={className} replace={replace} ref={ref} state={state}>
       {children}
     </StyledLink>
   )

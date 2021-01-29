@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 import {
   ChannelContainer,
   Container,
