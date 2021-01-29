@@ -3,8 +3,9 @@ import useFeaturedVideos from './featuredVideos'
 import useCategories from './categories'
 import useChannel, { useFollowChannel, useUnfollowChannel } from './channel'
 import useSearch from './search'
-import useVideo, { useAddVideoView } from './video'
+import useVideo, { useVideos, useAddVideoView } from './video'
 import useVideosConnection from './videosConnection'
+
 export {
   useCoverVideo,
   useVideosConnection,
@@ -15,5 +16,6 @@ export {
   useUnfollowChannel,
   useSearch,
   useVideo,
+  useVideos,
   useAddVideoView,
 }

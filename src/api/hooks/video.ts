@@ -3,11 +3,14 @@ import {
   useAddVideoViewMutation,
   GetVideoQuery,
   AddVideoViewMutation,
+  GetVideosQuery,
+  GetVideosQueryVariables,
+  useGetVideosQuery,
 } from '@/api/queries/__generated__/videos.generated'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
-type Opts = QueryHookOptions<GetVideoQuery>
-const useVideo = (id: string, opts?: Opts) => {
+type VideoOpts = QueryHookOptions<GetVideoQuery>
+const useVideo = (id: string, opts?: VideoOpts) => {
   const { data, ...queryRest } = useGetVideoQuery({
     ...opts,
     variables: { id },
@@ -16,6 +19,15 @@ const useVideo = (id: string, opts?: Opts) => {
   return {
     video: data?.video,
     ...queryRest,
+  }
+}
+
+type VideosOpts = QueryHookOptions<GetVideosQuery>
+export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
+  const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
+  return {
+    videos: data?.videos,
+    ...rest,
   }
 }
 

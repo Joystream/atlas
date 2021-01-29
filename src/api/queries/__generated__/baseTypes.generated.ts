@@ -187,6 +187,7 @@ export type VideoWhereInput = {
   createdAt_gte?: Maybe<Scalars['Date']>;
   isCurated_eq?: Maybe<Scalars['Boolean']>;
   isPublic_eq?: Maybe<Scalars['Boolean']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type VideoWhereUniqueInput = {
@@ -250,6 +251,7 @@ export type Query = {
   video?: Maybe<Video>;
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>;
+  videos: Array<Video>;
   videosConnection: VideoConnection;
 };
 
@@ -315,6 +317,11 @@ export type QueryVideoArgs = {
 
 export type QueryVideoViewsArgs = {
   videoId: Scalars['ID'];
+};
+
+
+export type QueryVideosArgs = {
+  where?: Maybe<VideoWhereInput>;
 };
 
 

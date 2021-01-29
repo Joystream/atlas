@@ -97,9 +97,9 @@ export const GET_VIDEOS_CONNECTION = gql`
   ${videoFieldsFragment}
 `
 
-export const GET_VIDEOS_WITH_IDS = gql`
-  query GetVideosWithIds($ids: [ID!]!) {
-    videos(where: { id_in: $ids }) {
+export const GET_VIDEOS = gql`
+  query GetVideos($id_in: [ID!]!) {
+    videos(where: { id_in: $id_in }) {
       ...VideoFields
     }
   }

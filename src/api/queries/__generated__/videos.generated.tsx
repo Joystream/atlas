@@ -32,6 +32,16 @@ export type GetVideosConnectionQuery = { __typename: 'Query', videosConnection: 
         & VideoFieldsFragment
       ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
 
+export type GetVideosQueryVariables = Types.Exact<{
+  id_in: Array<Types.Scalars['ID']> | Types.Scalars['ID'];
+}>;
+
+
+export type GetVideosQuery = { __typename: 'Query', videos: Array<(
+    { __typename: 'Video' }
+    & VideoFieldsFragment
+  )> };
+
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -177,6 +187,39 @@ export function useGetVideosConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetVideosConnectionQueryHookResult = ReturnType<typeof useGetVideosConnectionQuery>;
 export type GetVideosConnectionLazyQueryHookResult = ReturnType<typeof useGetVideosConnectionLazyQuery>;
 export type GetVideosConnectionQueryResult = Apollo.QueryResult<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>;
+export const GetVideosDocument = gql`
+    query GetVideos($id_in: [ID!]!) {
+  videos(where: {id_in: $id_in}) {
+    ...VideoFields
+  }
+}
+    ${VideoFieldsFragmentDoc}`;
+
+/**
+ * __useGetVideosQuery__
+ *
+ * To run a query within a React component, call `useGetVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVideosQuery({
+ *   variables: {
+ *      id_in: // value for 'id_in'
+ *   },
+ * });
+ */
+export function useGetVideosQuery(baseOptions: Apollo.QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>) {
+        return Apollo.useQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, baseOptions);
+      }
+export function useGetVideosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVideosQuery, GetVideosQueryVariables>) {
+          return Apollo.useLazyQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, baseOptions);
+        }
+export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>;
+export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>;
+export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>;
 export const GetFeaturedVideosDocument = gql`
     query GetFeaturedVideos {
   featuredVideos(orderBy: createdAt_DESC) {
