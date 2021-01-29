@@ -29,12 +29,10 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "storybook": "start-storybook -p 6006 --quiet -c src/shared/.storybook",
     "build-storybook": "build-storybook -c src/shared/.storybook",
-    "queries:codegen": "apollo client:codegen --target typescript --passthroughCustomScalars --customScalarsPrefix=GQL",
-    "queries:watch": "yarn queries:codegen --watch",
     "mocking:videos": "node scripts/mocking/generateVideos.js",
     "mocking:videosMedia": "node scripts/mocking/generateVideosMedia.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
-    "codegen": "graphql-codegen --config codegen.config.yml"
+    "queries:codegen": "graphql-codegen --config codegen.config.yml"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
