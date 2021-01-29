@@ -16,6 +16,22 @@ export type VideoFieldsFragment = { __typename: 'Video', id: string, title: stri
     & LicenseFieldsFragment
   ) };
 
+export type GetVideosConnectionQueryVariables = Types.Exact<{
+  first?: Types.Maybe<Types.Scalars['Int']>;
+  after?: Types.Maybe<Types.Scalars['String']>;
+  categoryId?: Types.Maybe<Types.Scalars['ID']>;
+  channelId?: Types.Maybe<Types.Scalars['ID']>;
+  channelIdIn?: Types.Maybe<Array<Types.Maybe<Types.Scalars['ID']>> | Types.Maybe<Types.Scalars['ID']>>;
+  createdAtGte?: Types.Maybe<Types.Scalars['Date']>;
+  orderBy?: Types.Maybe<Types.VideoOrderByInput>;
+}>;
+
+
+export type GetVideosConnectionQuery = { __typename: 'Query', videosConnection: { __typename: 'VideoConnection', totalCount: number, edges: Array<{ __typename: 'VideoEdge', cursor: string, node: (
+        { __typename: 'Video' }
+        & VideoFieldsFragment
+      ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
+
 export type GetNewestVideosQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>;
   after?: Types.Maybe<Types.Scalars['String']>;
@@ -125,6 +141,55 @@ export const VideoFieldsFragmentDoc = gql`
 }
     ${VideoMediaFieldsFragmentDoc}
 ${LicenseFieldsFragmentDoc}`;
+export const GetVideosConnectionDocument = gql`
+    query GetVideosConnection($first: Int, $after: String, $categoryId: ID, $channelId: ID, $channelIdIn: [ID], $createdAtGte: Date, $orderBy: VideoOrderByInput) {
+  videosConnection(first: $first, after: $after, where: {categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false, channelId_in: $channelIdIn, createdAt_gte: $createdAtGte}, orderBy: $orderBy) {
+    edges {
+      cursor
+      node {
+        ...VideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+    ${VideoFieldsFragmentDoc}`;
+
+/**
+ * __useGetVideosConnectionQuery__
+ *
+ * To run a query within a React component, call `useGetVideosConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideosConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVideosConnectionQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      categoryId: // value for 'categoryId'
+ *      channelId: // value for 'channelId'
+ *      channelIdIn: // value for 'channelIdIn'
+ *      createdAtGte: // value for 'createdAtGte'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetVideosConnectionQuery(baseOptions?: Apollo.QueryHookOptions<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>) {
+        return Apollo.useQuery<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>(GetVideosConnectionDocument, baseOptions);
+      }
+export function useGetVideosConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>) {
+          return Apollo.useLazyQuery<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>(GetVideosConnectionDocument, baseOptions);
+        }
+export type GetVideosConnectionQueryHookResult = ReturnType<typeof useGetVideosConnectionQuery>;
+export type GetVideosConnectionLazyQueryHookResult = ReturnType<typeof useGetVideosConnectionLazyQuery>;
+export type GetVideosConnectionQueryResult = Apollo.QueryResult<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>;
 export const GetNewestVideosDocument = gql`
     query GetNewestVideos($first: Int, $after: String, $categoryId: ID, $channelId: ID) {
   videosConnection(first: $first, after: $after, where: {categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false}, orderBy: createdAt_DESC) {

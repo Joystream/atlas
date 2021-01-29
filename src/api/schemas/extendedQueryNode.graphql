@@ -58,13 +58,6 @@ type HttpMediaLocation {
 # In the future we can add IPFS, Dat, etc.
 union MediaLocation = JoystreamMediaLocation | HttpMediaLocation
 
-# Mixed both encoding and containers, only having popular combos, may need to be changed later.
-enum VideoMediaEncoding {
-  H264_mpeg4
-  VP8_WEBM
-  Theroa_Vorbis
-}
-
 type KnownLicense {
   code: String!
   name: String
@@ -86,8 +79,6 @@ type LicenseEntity {
 }
 type VideoMedia {
   id: ID!
-
-  encoding: VideoMediaEncoding!
 
   # Resolution width
   pixelWidth: Int!
@@ -210,7 +201,9 @@ input CategoryWhereUniqueInput {
 
 input VideoWhereInput {
   categoryId_eq: ID
+  channelId_in: [ID]
   channelId_eq: ID
+  createdAt_gte: Date
   isCurated_eq: Boolean
   isPublic_eq: Boolean
 }

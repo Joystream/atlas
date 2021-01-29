@@ -182,7 +182,9 @@ export type CategoryWhereUniqueInput = {
 
 export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>;
+  channelId_in?: Maybe<Array<Maybe<Scalars['ID']>>>;
   channelId_eq?: Maybe<Scalars['ID']>;
+  createdAt_gte?: Maybe<Scalars['Date']>;
   isCurated_eq?: Maybe<Scalars['Boolean']>;
   isPublic_eq?: Maybe<Scalars['Boolean']>;
 };
