@@ -13,9 +13,13 @@ import VideoPreview from './VideoPreviewWithNavigation'
 import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import { sizes } from '@/shared/theme'
 
+interface VideoFieldsWithProgress extends VideoFields {
+  progress?: number
+}
+
 type VideoGalleryProps = {
   title?: string
-  videos?: VideoFields[]
+  videos?: VideoFieldsWithProgress[]
   loading?: boolean
 }
 
@@ -77,6 +81,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading }) =
               views={video.views}
               createdAt={video.createdAt}
               duration={video.duration}
+              progress={video.progress}
               posterURL={video.thumbnailUrl}
               key={video.id}
               onCoverResize={onCoverResize}

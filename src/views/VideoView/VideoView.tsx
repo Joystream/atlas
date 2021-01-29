@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 import {
   ChannelContainer,
   Container,
@@ -40,10 +40,10 @@ const VideoView: React.FC<RouteComponentProps> = () => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === data?.video?.id)
+    const currentVideo = state.watchedVideos.find((v) => v.id === id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [data?.video?.id, state.watchedVideos, startTimestamp, data?.video?.duration])
+  }, [id, state.watchedVideos, startTimestamp, data?.video?.duration])
 
   useEffect(() => {
     const duration = data?.video?.duration ?? 0
@@ -99,7 +99,7 @@ const VideoView: React.FC<RouteComponentProps> = () => {
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
-    debounce((time) => {
+    throttle((time) => {
       if (data?.video?.id) {
         updateWatchedVideos('INTERRUPTED', data.video.id, time)
       }
@@ -109,9 +109,10 @@ const VideoView: React.FC<RouteComponentProps> = () => {
 
   const handleVideoEnd = useCallback(() => {
     if (data?.video?.id) {
+      handleTimeUpdate.cancel()
       updateWatchedVideos('COMPLETED', data?.video?.id)
     }
-  }, [data?.video?.id, updateWatchedVideos])
+  }, [data?.video?.id, handleTimeUpdate, updateWatchedVideos])
 
   const handlePlay = useCallback(() => {
     setPlaying(true)
