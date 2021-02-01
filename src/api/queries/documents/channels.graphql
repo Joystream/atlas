@@ -1,0 +1,49 @@
+fragment BasicChannelFields on Channel {
+  id
+  handle
+  avatarPhotoUrl
+}
+
+fragment AllChannelFields on Channel {
+  id
+  handle
+  avatarPhotoUrl
+  coverPhotoUrl
+  follows
+}
+
+query GetChannel($id: ID!) {
+  channel(where: { id: $id }) {
+    ...AllChannelFields
+  }
+}
+
+query GetChannelsConnection($first: Int, $after: String) {
+  channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+mutation FollowChannel($channelId: ID!) {
+  followChannel(channelId: $channelId) {
+    id
+    follows
+  }
+}
+
+mutation UnfollowChannel($channelId: ID!) {
+  unfollowChannel(channelId: $channelId) {
+    id
+    follows
+  }
+}

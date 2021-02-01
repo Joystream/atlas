@@ -3,7 +3,7 @@ import Avatar, { AvatarSize } from '@/shared/components/Avatar'
 import routes from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import useChannel from '@/api/hooks/channel'
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
+import { BasicChannelFieldsFragment } from '@/api/queries/channels'
 
 type ChannelLinkProps = {
   id?: string

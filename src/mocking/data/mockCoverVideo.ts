@@ -3,7 +3,7 @@ import { MockVideo } from '@/mocking/data/mockVideos'
 import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
 import { MockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
-import { CoverVideo } from '@/api/queries/__generated__/baseTypes.generated'
+import { CoverVideo } from '@/api/queries/baseTypes'
 
 export const mockCoverVideoChannel: MockChannel = {
   ...rawCoverVideo.channel,

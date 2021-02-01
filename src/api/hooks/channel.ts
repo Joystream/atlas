@@ -3,9 +3,10 @@ import {
   GetChannelQuery,
   useFollowChannelMutation,
   useUnfollowChannelMutation,
-} from '@/api/queries/__generated__/channels.generated'
+  FollowChannelMutation,
+  UnfollowChannelMutation,
+} from '@/api/queries/channels'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
-import { FollowChannelMutation, UnfollowChannelMutation } from '../queries/__generated__/channels.generated'
 
 type Opts = QueryHookOptions<GetChannelQuery>
 const useChannel = (id: string, opts?: Opts) => {

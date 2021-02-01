@@ -5,12 +5,12 @@ import { css } from '@emotion/core'
 import { sizes } from '@/shared/theme'
 import { ChannelPreviewBase, Grid, Text } from '@/shared/components'
 import {
+  GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-} from '@/api/queries/__generated__/channels.generated'
+} from '@/api/queries/channels'
 import ChannelPreview from '@/components/ChannelPreviewWithNavigation'
 import useInfiniteGrid from './useInfiniteGrid'
-import { GET_CHANNELS_CONNECTION } from '@/api/queries/channels'
 
 type InfiniteChannelGridProps = {
   title?: string
@@ -36,7 +36,7 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
     GetChannelsConnectionQuery['channelsConnection'],
     GetChannelsConnectionQueryVariables
   >({
-    query: GET_CHANNELS_CONNECTION,
+    query: GetChannelsConnectionDocument,
     onScrollToBottom,
     isReady: ready,
     skipCount,

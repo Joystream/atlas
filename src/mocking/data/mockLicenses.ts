@@ -1,6 +1,6 @@
 import rawLicenses from './raw/licenses.json'
-import { LicenseFieldsFragment } from '@/api/queries/__generated__/videos.generated'
-import { KnownLicense, UserDefinedLicense } from '@/api/queries/__generated__/baseTypes.generated'
+import { LicenseFieldsFragment } from '@/api/queries/videos'
+import { KnownLicense, UserDefinedLicense } from '@/api/queries/baseTypes'
 
 export type MockLicense = LicenseFieldsFragment
 

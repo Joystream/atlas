@@ -1,16 +1,12 @@
 import { mirageGraphQLFieldResolver } from '@miragejs/graphql'
-import {
-  GetVideosConnectionQuery,
-  VideoFieldsFragment,
-  GetCoverVideoQuery,
-} from '@/api/queries/__generated__/videos.generated'
+import { GetVideosConnectionQuery, VideoFieldsFragment, GetCoverVideoQuery } from '@/api/queries/videos'
 import {
   AllChannelFieldsFragment,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-} from '@/api/queries/__generated__/channels.generated'
-import { SearchQueryVariables } from '@/api/queries/__generated__/search.generated'
-import { SearchFtsOutput } from '@/api/queries/__generated__/baseTypes.generated'
+} from '@/api/queries/channels'
+import { SearchQueryVariables } from '@/api/queries/search'
+import { SearchFtsOutput } from '@/api/queries/baseTypes'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,

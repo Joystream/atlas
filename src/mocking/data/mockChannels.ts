@@ -1,6 +1,6 @@
 import { channelAvatarSources, channelPosterSources } from './mockImages'
 import rawChannels from './raw/channels.json'
-import { AllChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
+import { AllChannelFieldsFragment } from '@/api/queries/channels'
 
 export type MockChannel = AllChannelFieldsFragment
 

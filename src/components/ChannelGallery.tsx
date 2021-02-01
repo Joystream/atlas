@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { ChannelPreviewBase, Gallery } from '@/shared/components'
 import ChannelPreview from './ChannelPreviewWithNavigation'
 import { sizes } from '@/shared/theme'
-import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
+import { BasicChannelFieldsFragment } from '@/api/queries/channels'
 
 type ChannelGalleryProps = {
   title?: string
