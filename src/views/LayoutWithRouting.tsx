@@ -1,35 +1,17 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-<<<<<<< HEAD
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
-=======
-import { RouteComponentProps, Router, navigate, globalHistory, Location } from '@reach/router'
->>>>>>> d6cbe39 (add routing transition to layoutWithRouting, add slide transitions in theme)
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-
 import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { globalStyles } from '@/styles/global'
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { breakpoints } from '@/shared/theme'
-import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
-=======
-import { breakpoints, sizes, breakpoints, sizes, transitions } from '@/shared/theme'
-import { NavItemType } from '@/components/SideNavbar'
-import { routingTransitions } from '@/styles/transitions'
-
-import { NavItemType } from '../shared/components/SideNavbar'
->>>>>>> d6cbe39 (add routing transition to layoutWithRouting, add slide transitions in theme)
-=======
 import { routingTransitions } from '@/styles/routingTransitions'
 import { breakpoints, sizes, transitions } from '@/shared/theme'
-import { NavItemType } from '@/components/SideNavbar'
+import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
->>>>>>> 577e60d (add rwd to views)
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
@@ -49,17 +31,25 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
+const routesMap = [
+  { path: '*', Component: HomeView },
+  { path: routes.video(), Component: VideoView },
+  { path: routes.search(), Component: SearchView },
+  { path: routes.videos(), Component: VideosView },
+  { path: routes.channels(), Component: ChannelsView },
+  { path: routes.channel(), Component: ChannelView },
+]
+
 const LayoutWithRouting: React.FC = () => {
-  const pathname = useLocation()
+  const location = useLocation()
   const navigate = useNavigate()
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [pathname])
-
+  }, [location])
+  console.log(location)
   return (
     <>
-<<<<<<< HEAD
-      <GlobalStyle additionalStyles={globalStyles} />
+      <GlobalStyle additionalStyles={[globalStyles, routingTransitions]} />
       <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
@@ -69,53 +59,20 @@ const LayoutWithRouting: React.FC = () => {
             navigate('/')
           }}
         >
-          <Routes>
-            <Route path="*">
-              <HomeView />
-            </Route>
-            <Route path={routes.video()}>
-              <VideoView />
-            </Route>
-            <Route path={routes.search()}>
-              <SearchView />
-            </Route>
-            <Route path={routes.videos()}>
-              <VideosView />
-            </Route>
-            <Route path={routes.channels()}>
-              <ChannelsView />
-            </Route>
-            <Route path={routes.channel()}>
-              <ChannelView />
-            </Route>
-          </Routes>
+          <SwitchTransition>
+            <CSSTransition
+              timeout={parseInt(transitions.timings.regular)}
+              classNames={transitions.names.fadeAndSlide}
+              key={location.key}
+            >
+              <Routes>
+                {routesMap.map(({ path, Component }) => (
+                  <Route key={path} path={path} element={<Component />} />
+                ))}
+              </Routes>
+            </CSSTransition>
+          </SwitchTransition>
         </ErrorBoundary>
-=======
-      <GlobalStyle additionalStyles={[globalStyles, routingTransitions]} />
-      <TopNavbar default />
-      <SideNavbar items={SIDENAVBAR_ITEMS} />
-      <MainContainer>
-        <Location>
-          {({ location }) => (
-            <TransitionGroup>
-              <CSSTransition
-                timeout={2.5 * parseInt(transitions.timings.regular)}
-                classNames={transitions.names.fadeAndSlide}
-                key={location.key}
-              >
-                <Router primary={false} location={location}>
-                  <Route default Component={HomeView} />
-                  <Route path={routes.video()} Component={VideoView} />
-                  <Route path={routes.search()} Component={SearchView} />
-                  <Route path={routes.videos()} Component={VideosView} />
-                  <Route path={routes.channels()} Component={ChannelsView} />
-                  <Route path={routes.channel()} Component={ChannelView} />
-                </Router>
-              </CSSTransition>
-            </TransitionGroup>
-          )}
-        </Location>
->>>>>>> d6cbe39 (add routing transition to layoutWithRouting, add slide transitions in theme)
       </MainContainer>
     </>
   )

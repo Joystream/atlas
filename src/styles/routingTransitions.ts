@@ -15,17 +15,12 @@ export const routingTransitions = css`
     & .${transitions.names.slide} {
       transform: translateY(0);
       transition: ${transitions.timings.loading} ${transitions.easing};
-      transition-delay: ${transitions.timings.loading};
     }
+    transition: ${transitions.timings.loading} ${transitions.easing};
   }
 
   .${transitions.names.fadeAndSlide}-exit {
     opacity: 1;
-  }
-
-  .${transitions.names.fadeAndSlide}-enter-active {
-    transition: ${transitions.timings.loading} ${transitions.easing};
-    transition-delay: ${transitions.timings.loading};
   }
 
   .${transitions.names.fadeAndSlide}-exit-active {
