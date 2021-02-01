@@ -1,26 +1,22 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
-
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery, InterruptedVideosGallery } from '@/components'
-import { GET_NEWEST_VIDEOS } from '@/api/queries'
-import { GetNewestVideos, GetNewestVideosVariables } from '@/api/queries/__generated__/GetNewestVideos'
+import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/components'
+import useVideosConnection from '@/api/hooks/videosConnection'
+import { VideoOrderByInput } from '@/api/queries/__generated__/baseTypes.generated'
+import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
 
 const NEWEST_VIDEOS_COUNT = 8
 
 const HomeView: React.FC = () => {
   const {
     loading: newestVideosLoading,
-    data: videosData,
+    videosConnection,
     error: newestVideosError,
     refetch: refetchNewestVideos,
-  } = useQuery<GetNewestVideos, GetNewestVideosVariables>(GET_NEWEST_VIDEOS, {
-    variables: { first: NEWEST_VIDEOS_COUNT },
-    notifyOnNetworkStatusChange: true,
-  })
+  } = useVideosConnection({ first: 8, orderBy: VideoOrderByInput.CreatedAtDesc })
 
-  const newestVideos = videosData?.videosConnection.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
+  const newestVideos = videosConnection?.edges.slice(0, NEWEST_VIDEOS_COUNT).map((e) => e.node)
 
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
 

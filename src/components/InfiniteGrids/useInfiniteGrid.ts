@@ -11,7 +11,7 @@ type PaginatedData<T> = {
   }[]
   pageInfo: {
     hasNextPage: boolean
-    endCursor: string | null
+    endCursor?: string | null
   }
   totalCount: number
 }

@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 
-import { GET_CHANNEL, FOLLOW_CHANNEL, UNFOLLOW_CHANNEL } from '@/api/queries/channels'
-import { GetChannel, GetChannelVariables } from '@/api/queries/__generated__/GetChannel'
-import { FollowChannel, FollowChannelVariables } from '@/api/queries/__generated__/followChannel'
-import { UnfollowChannel, UnfollowChannelVariables } from '@/api/queries/__generated__/unfollowChannel'
+import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { usePersonalData } from '@/hooks'
 
 import {
@@ -35,41 +32,9 @@ type FollowedChannel = {
 
 const ChannelView: React.FC = () => {
   const { id } = useParams()
-  const { data, loading, error } = useQuery<GetChannel, GetChannelVariables>(GET_CHANNEL, {
-    variables: { id },
-  })
-  const [followChannel] = useMutation<FollowChannel, FollowChannelVariables>(FOLLOW_CHANNEL, {
-    variables: {
-      channelId: id,
-    },
-    update: (cache, mutationResult) => {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'Channel',
-          id,
-        }),
-        fields: {
-          follows: () => mutationResult.data?.followChannel.follows,
-        },
-      })
-    },
-  })
-  const [unfollowChannel] = useMutation<UnfollowChannel, UnfollowChannelVariables>(UNFOLLOW_CHANNEL, {
-    variables: {
-      channelId: id,
-    },
-    update: (cache, mutationResult) => {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'Channel',
-          id,
-        }),
-        fields: {
-          follows: () => mutationResult.data?.unfollowChannel.follows,
-        },
-      })
-    },
-  })
+  const { channel, loading, error } = useChannel(id)
+  const { followChannel } = useFollowChannel()
+  const { unfollowChannel } = useUnfollowChannel()
   const {
     state: { followedChannels },
     updateChannelFollowing,
@@ -85,11 +50,11 @@ const ChannelView: React.FC = () => {
     try {
       if (isFollowing) {
         updateChannelFollowing(id, false)
-        unfollowChannel()
+        unfollowChannel(id)
         setFollowing(false)
       } else {
         updateChannelFollowing(id, true)
-        followChannel()
+        followChannel(id)
         setFollowing(true)
       }
     } catch (error) {
@@ -100,11 +65,11 @@ const ChannelView: React.FC = () => {
     throw error
   }
 
-  if (!loading && !data?.channel) {
+  if (!loading && !channel) {
     return <span>Channel not found</span>
   }
 
-  const showBgPattern = !data?.channel?.coverPhotoUrl
+  const showBgPattern = !channel?.coverPhotoUrl
 
   return (
     <>
@@ -117,18 +82,18 @@ const ChannelView: React.FC = () => {
                 timeout={parseInt(transitions.timings.loading)}
                 classNames={transitions.names.fade}
               >
-                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={data?.channel?.coverPhotoUrl!} />}
+                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={channel?.coverPhotoUrl!} />}
               </CSSTransition>
             </TransitionGroup>
           </Media>
         </MediaWrapper>
         <TitleSection>
-          <StyledChannelLink id={data?.channel?.id} avatarSize="view" hideHandle noLink />
+          <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>
-            {data?.channel ? (
+            {channel ? (
               <>
-                <Title variant="h1">{data.channel.handle}</Title>
-                <SubTitle>{data.channel.follows ? formatNumberShort(data.channel.follows) : 0} Followers</SubTitle>
+                <Title variant="h1">{channel.handle}</Title>
+                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (
               <>

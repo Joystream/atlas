@@ -1,15 +1,10 @@
 import rawLicenses from './raw/licenses.json'
-import {
-  LicenseFields,
-  LicenseFields_type_KnownLicense,
-  LicenseFields_type_UserDefinedLicense,
-} from '@/api/queries/__generated__/LicenseFields'
+import { LicenseFieldsFragment } from '@/api/queries/__generated__/videos.generated'
+import { KnownLicense, UserDefinedLicense } from '@/api/queries/__generated__/baseTypes.generated'
 
-export type MockLicense = LicenseFields
+export type MockLicense = LicenseFieldsFragment
 
-export type WhichLicense<T> = T extends Pick<LicenseFields_type_KnownLicense, 'code'>
-  ? LicenseFields_type_KnownLicense
-  : LicenseFields_type_UserDefinedLicense
+export type WhichLicense<T> = T extends Pick<KnownLicense, 'code'> ? KnownLicense : UserDefinedLicense
 
 const mockLicenses: MockLicense[] = rawLicenses.map((rawLicense) => ({
   __typename: 'LicenseEntity',
