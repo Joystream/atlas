@@ -1,9 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
-import {
-  useGetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
-  GetVideosConnectionQuery,
-} from '@/api/queries/__generated__/videos.generated'
+import { GetVideosConnectionQuery, GetVideosConnectionQueryVariables, useGetVideosConnectionQuery } from '@/api/queries'
 
 type Opts = QueryHookOptions<GetVideosConnectionQuery>
 const useVideosConnection = (variables?: GetVideosConnectionQueryVariables, opts?: Opts) => {

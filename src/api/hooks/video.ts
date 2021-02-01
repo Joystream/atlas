@@ -6,7 +6,7 @@ import {
   GetVideosQuery,
   GetVideosQueryVariables,
   useGetVideosQuery,
-} from '@/api/queries/__generated__/videos.generated'
+} from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
 type VideoOpts = QueryHookOptions<GetVideoQuery>

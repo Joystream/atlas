@@ -1,8 +1,4 @@
-import {
-  useGetCategoriesQuery,
-  GetCategoriesQueryVariables,
-  GetCategoriesQuery,
-} from '@/api/queries/__generated__/categories.generated'
+import { useGetCategoriesQuery, GetCategoriesQueryVariables, GetCategoriesQuery } from '@/api/queries'
 import { QueryHookOptions } from '@apollo/client'
 
 type Opts = QueryHookOptions<GetCategoriesQuery>

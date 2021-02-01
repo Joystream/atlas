@@ -35,6 +35,7 @@ type Channel {
   language: Language
 
   videos: [Video!]!
+
   # extended from Orion
   follows: Int
 }
@@ -103,6 +104,7 @@ type Video {
 
   description: String!
 
+  # extended from Orion
   views: Int
 
   # In seconds
@@ -234,16 +236,6 @@ enum FeaturedVideoOrderByInput {
   createdAt_DESC
 }
 
-type ChannelFollowsInfo {
-  follows: Int!
-  id: ID!
-}
-
-type EntityViewsInfo {
-  id: ID!
-  views: Int!
-}
-
 type Query {
   # Lookup a channel by its ID
   channel(where: ChannelWhereUniqueInput!): Channel
@@ -279,12 +271,4 @@ type Query {
 
   # Free text search across videos and channels
   search(limit: Int, text: String!): [SearchFTSOutput!]!
-}
-
-type Mutation {
-  addVideoView(channelId: ID!, videoId: ID!): EntityViewsInfo!
-
-  followChannel(channelId: ID!): ChannelFollowsInfo!
-
-  unfollowChannel(channelId: ID!): ChannelFollowsInfo!
 }

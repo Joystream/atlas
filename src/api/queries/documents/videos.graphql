@@ -1,0 +1,128 @@
+fragment VideoMediaFields on VideoMedia {
+  id
+  pixelHeight
+  pixelWidth
+  location {
+    ... on HttpMediaLocation {
+      url
+    }
+    ... on JoystreamMediaLocation {
+      dataObjectId
+    }
+  }
+}
+
+fragment LicenseFields on LicenseEntity {
+  id
+  attribution
+  type {
+    ... on KnownLicense {
+      code
+      url
+    }
+    ... on UserDefinedLicense {
+      content
+    }
+  }
+}
+
+fragment VideoFields on Video {
+  id
+  title
+  description
+  category {
+    id
+  }
+  views
+  duration
+  thumbnailUrl
+  createdAt
+  media {
+    ...VideoMediaFields
+  }
+  channel {
+    id
+    avatarPhotoUrl
+    handle
+  }
+  license {
+    ...LicenseFields
+  }
+}
+
+query GetVideo($id: ID!) {
+  video(where: { id: $id }) {
+    ...VideoFields
+    channel {
+      ...BasicChannelFields
+    }
+  }
+}
+
+query GetVideosConnection(
+  $first: Int
+  $after: String
+  $categoryId: ID
+  $channelId: ID
+  $channelIdIn: [ID]
+  $createdAtGte: Date
+  $orderBy: VideoOrderByInput = createdAt_DESC
+) {
+  videosConnection(
+    first: $first
+    after: $after
+    where: {
+      categoryId_eq: $categoryId
+      channelId_eq: $channelId
+      isCurated_eq: false
+      channelId_in: $channelIdIn
+      createdAt_gte: $createdAtGte
+    }
+    orderBy: $orderBy
+  ) {
+    edges {
+      cursor
+      node {
+        ...VideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+query GetVideos($id_in: [ID!]!) {
+  videos(where: { id_in: $id_in }) {
+    ...VideoFields
+  }
+}
+
+query GetFeaturedVideos {
+  featuredVideos(orderBy: createdAt_DESC) {
+    video {
+      ...VideoFields
+    }
+  }
+}
+
+query GetCoverVideo {
+  coverVideo {
+    video {
+      ...VideoFields
+    }
+    coverDescription
+    coverCutMedia {
+      ...VideoMediaFields
+    }
+  }
+}
+
+mutation AddVideoView($videoId: ID!, $channelId: ID!) {
+  addVideoView(videoId: $videoId, channelId: $channelId) {
+    id
+    views
+  }
+}

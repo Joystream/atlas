@@ -8,8 +8,8 @@ import {
   mockLicenses,
   FEATURED_VIDEOS_INDEXES,
 } from '@/mocking/data'
-import { AllChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
-import { CategoryFieldsFragment } from '@/api/queries/__generated__/categories.generated'
+import { AllChannelFieldsFragment, CategoryFieldsFragment } from '@/api/queries'
+
 import {
   mockCoverVideo,
   mockCoverVideoChannel,
