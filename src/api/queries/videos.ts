@@ -67,7 +67,7 @@ export const GET_VIDEOS_CONNECTION = gql`
     $channelId: ID
     $channelIdIn: [ID]
     $createdAtGte: Date
-    $orderBy: VideoOrderByInput
+    $orderBy: VideoOrderByInput = createdAt_DESC
   ) {
     videosConnection(
       first: $first

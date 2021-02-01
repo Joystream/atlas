@@ -1,6 +1,5 @@
 import { ModelInstance } from 'miragejs/-types'
 import faker from 'faker'
-// TODO update types
 import {
   mockCategories,
   mockChannels,

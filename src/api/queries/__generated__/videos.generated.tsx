@@ -139,7 +139,7 @@ export const VideoFieldsFragmentDoc = gql`
     ${VideoMediaFieldsFragmentDoc}
 ${LicenseFieldsFragmentDoc}`;
 export const GetVideosConnectionDocument = gql`
-    query GetVideosConnection($first: Int, $after: String, $categoryId: ID, $channelId: ID, $channelIdIn: [ID], $createdAtGte: Date, $orderBy: VideoOrderByInput) {
+    query GetVideosConnection($first: Int, $after: String, $categoryId: ID, $channelId: ID, $channelIdIn: [ID], $createdAtGte: Date, $orderBy: VideoOrderByInput = createdAt_DESC) {
   videosConnection(first: $first, after: $after, where: {categoryId_eq: $categoryId, channelId_eq: $channelId, isCurated_eq: false, channelId_in: $channelIdIn, createdAt_gte: $createdAtGte}, orderBy: $orderBy) {
     edges {
       cursor
