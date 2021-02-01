@@ -10,10 +10,10 @@ import {
   CAROUSEL_ARROW_HEIGHT,
 } from '@/shared/components'
 import VideoPreview from './VideoPreviewWithNavigation'
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import { sizes } from '@/shared/theme'
+import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
 
-interface VideoFieldsWithProgress extends VideoFields {
+interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
 }
 

@@ -1,8 +1,11 @@
 import { thumbnailSources } from './mockImages'
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import rawVideos from './raw/videos.json'
+import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
 
-export type MockVideo = Omit<VideoFields, 'media' | 'category' | 'channel' | 'createdAt' | 'duration' | 'license'> & {
+export type MockVideo = Omit<
+  VideoFieldsFragment,
+  'media' | 'category' | 'channel' | 'createdAt' | 'duration' | 'license' | 'isPublic' | 'isCurated' | 'isExplicit'
+> & {
   createdAt: unknown
 }
 

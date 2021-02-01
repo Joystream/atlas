@@ -3,11 +3,10 @@ import { RouteComponentProps } from '@reach/router'
 
 import { useQuery } from '@apollo/client'
 import { usePersonalData } from '@/hooks'
-import { GET_VIDEOS_WITH_IDS } from '@/api/queries'
-
-import { GetVideosWithIds, GetVideosWithIdsVariables } from '@/api/queries/__generated__/GetVideosWithIds'
+import { GET_VIDEOS } from '@/api/queries'
 
 import { ErrorFallback, VideoGallery } from '@/components'
+import { useVideos } from '../api/hooks/video'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 
@@ -21,8 +20,8 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     .slice(-INTERRUPTED_VIDEOS_COUNT)
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
 
-  const { loading, data, error, refetch } = useQuery<GetVideosWithIds, GetVideosWithIdsVariables>(GET_VIDEOS_WITH_IDS, {
-    variables: { ids: interruptedVideosId },
+  const { videos, error, loading, refetch } = useVideos({
+    id_in: interruptedVideosId,
   })
 
   const videoTimestampsMap = interruptedVideosState.reduce((acc, video) => {
@@ -32,7 +31,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     return acc
   }, {} as Record<string, number>)
 
-  const interruptedVideos = data?.videos?.map((video) => ({
+  const interruptedVideos = videos?.map((video) => ({
     ...video,
     progress: (videoTimestampsMap[video.id] / video.duration) * 100,
   }))

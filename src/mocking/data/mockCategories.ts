@@ -1,7 +1,7 @@
-import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
 import rawCategories from './raw/categories.json'
+import { CategoryFieldsFragment } from '@/api/queries/__generated__/categories.generated'
 
-type MockCategory = CategoryFields
+type MockCategory = CategoryFieldsFragment
 
 const mockCategories: MockCategory[] = rawCategories.map((c) => ({ ...c, __typename: 'Category' }))
 

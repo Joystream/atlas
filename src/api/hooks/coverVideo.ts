@@ -1,4 +1,6 @@
-import { GetCoverVideo_coverVideo } from '@/api/queries/__generated__/GetCoverVideo'
+import { CoverVideo } from '@/api/queries/__generated__/baseTypes.generated'
+import { MockVideo } from '../../mocking/data/mockVideos'
+import { AllChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
 import {
   mockCoverVideo,
   mockCoverVideoChannel,
@@ -6,7 +8,14 @@ import {
   mockCoverVideoMedia,
 } from '@/mocking/data/mockCoverVideo'
 
-type UseCoverVideo = () => { data: GetCoverVideo_coverVideo }
+type UseCoverVideo = () => {
+  data: {
+    __typename: 'CoverVideo'
+    coverDescription: CoverVideo['coverDescription']
+    coverCutMedia: CoverVideo['coverCutMedia']
+    video: MockVideo & { channel: AllChannelFieldsFragment }
+  }
+}
 
 const useCoverVideo: UseCoverVideo = () => {
   return {

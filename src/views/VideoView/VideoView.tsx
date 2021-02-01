@@ -16,21 +16,16 @@ import {
   LicenseContainer,
 } from './VideoView.style'
 import { Placeholder, VideoPlayer, Text } from '@/shared/components'
-import { useMutation, useQuery } from '@apollo/client'
-import { ADD_VIDEO_VIEW, GET_VIDEO } from '@/api/queries'
-import { GetVideo, GetVideoVariables } from '@/api/queries/__generated__/GetVideo'
 import { formatVideoViewsAndDate } from '@/utils/video'
-import { AddVideoView, AddVideoViewVariables } from '@/api/queries/__generated__/AddVideoView'
 
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
+import { useVideo, useAddVideoView } from '@/api/hooks'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
-  const { loading, data, error } = useQuery<GetVideo, GetVideoVariables>(GET_VIDEO, {
-    variables: { id },
-  })
-  const [addVideoView] = useMutation<AddVideoView, AddVideoViewVariables>(ADD_VIDEO_VIEW)
+  const { loading, video, error } = useVideo(id)
+  const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
 
@@ -39,21 +34,21 @@ const VideoView: React.FC = () => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === id)
+    const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [id, state.watchedVideos, startTimestamp, data?.video?.duration])
+  }, [state.watchedVideos, startTimestamp, video?.duration, video?.id])
 
   useEffect(() => {
-    const duration = data?.video?.duration ?? 0
+    const duration = video?.duration ?? 0
     if (!timestampFromQuery || timestampFromQuery > duration) {
       return
     }
     setStartTimestamp(timestampFromQuery)
-  }, [data?.video?.duration, timestampFromQuery])
+  }, [video?.duration, timestampFromQuery])
 
-  const channelId = data?.video?.channel.id
-  const videoId = data?.video?.id
+  const channelId = video?.channel.id
+  const videoId = video?.id
 
   const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback((event: Event) => {
@@ -77,7 +72,10 @@ const VideoView: React.FC = () => {
       return
     }
     addVideoView({
-      variables: { videoId, channelId },
+      variables: {
+        videoId,
+        channelId,
+      },
       update: (cache, mutationResult) => {
         cache.modify({
           id: cache.identify({
@@ -99,19 +97,19 @@ const VideoView: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTimeUpdate = useCallback(
     throttle((time) => {
-      if (data?.video?.id) {
-        updateWatchedVideos('INTERRUPTED', data.video.id, time)
+      if (video?.id) {
+        updateWatchedVideos('INTERRUPTED', video.id, time)
       }
     }, 5000),
-    [data?.video?.id]
+    [video?.id]
   )
 
   const handleVideoEnd = useCallback(() => {
-    if (data?.video?.id) {
+    if (video?.id) {
       handleTimeUpdate.cancel()
-      updateWatchedVideos('COMPLETED', data?.video?.id)
+      updateWatchedVideos('COMPLETED', video?.id)
     }
-  }, [data?.video?.id, handleTimeUpdate, updateWatchedVideos])
+  }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
   const handlePlay = useCallback(() => {
     setPlaying(true)
@@ -124,7 +122,7 @@ const VideoView: React.FC = () => {
     throw error
   }
 
-  if (!loading && !data?.video) {
+  if (!loading && !video) {
     return <p>Video not found</p>
   }
 
@@ -132,12 +130,12 @@ const VideoView: React.FC = () => {
     <Container>
       <PlayerWrapper>
         <PlayerContainer>
-          {data?.video ? (
+          {video ? (
             <VideoPlayer
               playing={playing}
-              src={data.video.media.location}
+              src={video.media.location}
               fluid
-              posterUrl={data.video.thumbnailUrl}
+              posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}
@@ -150,21 +148,21 @@ const VideoView: React.FC = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer>
-        {data?.video ? <Text variant="h2">{data.video.title}</Text> : <Placeholder height={46} width={400} />}
+        {video ? <Text variant="h2">{video.title}</Text> : <Placeholder height={46} width={400} />}
         <Meta>
-          {data?.video ? (
-            formatVideoViewsAndDate(data.video.views, data.video.createdAt, { fullViews: true })
+          {video ? (
+            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
             <Placeholder height={18} width={200} />
           )}
         </Meta>
         <ChannelContainer>
-          <ChannelLink id={data?.video?.channel.id} />
+          <ChannelLink id={video?.channel.id} />
         </ChannelContainer>
         <DescriptionContainer>
-          {data?.video ? (
+          {video ? (
             <>
-              {data.video.description.split('\n').map((line, idx) => (
+              {video.description.split('\n').map((line, idx) => (
                 <p key={idx}>{line}</p>
               ))}
             </>
@@ -178,19 +176,19 @@ const VideoView: React.FC = () => {
           )}
         </DescriptionContainer>
         <LicenseContainer>
-          {data?.video ? (
+          {video ? (
             <>
               <p>
                 License:{' '}
-                {data.video.license.type.__typename === 'KnownLicense' ? (
-                  <a href={data.video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
-                    {data.video.license.type.code}
+                {video.license.type.__typename === 'KnownLicense' ? (
+                  <a href={video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
+                    {video.license.type.code}
                   </a>
                 ) : (
-                  data.video.license.type.content
+                  video.license.type.content
                 )}
               </p>
-              {data.video.license?.attribution ? <p>Attribution: {data.video.license.attribution}</p> : null}
+              {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>
           ) : (
             <Placeholder height={12} width={200} />
@@ -198,9 +196,9 @@ const VideoView: React.FC = () => {
         </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
-            {data?.video ? `More from ${data.video.channel.handle}` : <Placeholder height={23} width={300} />}
+            {video ? `More from ${video.channel.handle}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
-          <InfiniteVideoGrid ready={!loading} channelId={data?.video?.channel.id} showChannel={false} />
+          <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
         </MoreVideosContainer>
       </InfoContainer>
     </Container>
