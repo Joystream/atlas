@@ -1,6 +1,9 @@
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import { VideoQueryArgs } from './resolvers'
-import { GetVideosConnection_videosConnection_edges } from '@/api/queries/__generated__/GetVideosConnection'
+import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
+import { VideoEdge } from '@/api/queries/__generated__/baseTypes.generated'
+import { Video } from '../../api/queries/__generated__/baseTypes.generated'
+import { GetVideosQueryHookResult, GetVideosConnectionQuery } from '../../api/queries/__generated__/videos.generated'
+import { GetVideosConnection } from '../../api/queries/__generated__/GetVideosConnection'
 
 export const encode =
   typeof btoa !== 'undefined'
@@ -9,7 +12,7 @@ export const encode =
     ? (str: string) => Buffer.from(str).toString('base64')
     : (str: string) => str
 
-export const getIndexOfRecord = (records: VideoFields[], cursor: string | null) => {
+export const getIndexOfRecord = (records: VideoFieldsFragment[], cursor: string | null) => {
   let index = null
 
   if (cursor === null) return index
@@ -24,7 +27,7 @@ export const getIndexOfRecord = (records: VideoFields[], cursor: string | null) 
   return index
 }
 
-export const getEdges = (records: VideoFields[], args: VideoQueryArgs) => {
+export const getEdges = (records: VideoFieldsFragment[], args: VideoQueryArgs) => {
   const { after, first } = args
   const afterIndex = getIndexOfRecord(records, after)
 
@@ -37,8 +40,10 @@ export const getEdges = (records: VideoFields[], args: VideoQueryArgs) => {
     __typename: 'VideoEdge' as const,
   }))
 }
-
-export const getPageInfo = (records: VideoFields[], edges: GetVideosConnection_videosConnection_edges[]) => {
+export const getPageInfo = (
+  records: VideoFieldsFragment[],
+  edges: GetVideosConnectionQuery['videosConnection']['edges']
+) => {
   const pageInfo = {
     hasPreviousPage: false,
     hasNextPage: false,
