@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/shared/theme'
-import { Grid, Text, VideoPreviewBase } from '@/shared/components'
+import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
   title?: string
+  isTitleLoading?: boolean
   categoryId?: string
   channelId?: string
   skipCount?: number
@@ -22,6 +23,7 @@ const INITIAL_VIDEOS_PER_ROW = 4
 
 const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
+  isTitleLoading,
   categoryId = '',
   channelId = null,
   skipCount = 0,
@@ -135,13 +137,17 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   return (
     <section className={className}>
-      {title && <Title variant="h5">{title}</Title>}
+      {isTitleLoading ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )
 }
 
 const Title = styled(Text)`
+  margin-bottom: ${sizes(4)};
+`
+
+const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
 `
 

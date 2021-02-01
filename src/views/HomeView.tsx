@@ -1,24 +1,21 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { useQuery } from '@apollo/client'
 import { ErrorBoundary } from '@sentry/react'
 import {
   ErrorFallback,
   CoverVideo,
   InfiniteVideoGrid,
-  VideoGallery,
   InterruptedVideosGallery,
   InfiniteFollowedChannelsVideoGrid,
 } from '@/components'
-import useVideosConnection from '@/api/hooks/videosConnection'
-
 import { usePersonalData } from '@/hooks'
 import { sub } from 'date-fns'
+import useVideosConnection from '@/api/hooks/videosConnection'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 
 // last three months
-const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
+const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 90 })
 
 const HomeView: React.FC = () => {
   const {

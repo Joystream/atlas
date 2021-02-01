@@ -1,16 +1,14 @@
-import { GET_VIDEOS_CONNECTION } from '@/api/queries/videos'
-
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
-import { Grid, Text, VideoPreviewBase } from '@/shared/components'
+import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import React, { useCallback, useMemo, useState } from 'react'
 import useInfiniteGrid from './useInfiniteGrid'
-
-import { GetVideosConnection, GetVideosConnectionVariables } from '@/api/queries/__generated__/GetVideosConnection'
+import { GetVideosConnectionQuery, GetVideosConnectionQueryVariables, GetVideosConnectionDocument } from '@/api/queries'
 
 type InfiniteFollowedChannelsVideoGridProps = {
   title?: string
+  isTitleLoading?: boolean
   channelIdIn?: string[]
   createdAtGte?: Date
   skipCount?: number
@@ -29,6 +27,7 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   showChannel = true,
   className,
   channelIdIn,
+  isTitleLoading,
   createdAtGte,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
@@ -46,11 +45,11 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   }, [])
 
   const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
-    GetVideosConnection,
-    GetVideosConnection['videosConnection'],
-    GetVideosConnectionVariables
+    GetVideosConnectionQuery,
+    GetVideosConnectionQuery['videosConnection'],
+    GetVideosConnectionQueryVariables
   >({
-    query: GET_VIDEOS_CONNECTION,
+    query: GetVideosConnectionDocument,
     onScrollToBottom,
     isReady: ready,
     skipCount,
@@ -92,13 +91,16 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
 
   return (
     <section className={className}>
-      {title && <Title variant="h5">{title}</Title>}
+      {isTitleLoading ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )
 }
 
 const Title = styled(Text)`
+  margin-bottom: ${sizes(4)};
+`
+const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
 `
 

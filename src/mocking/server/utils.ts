@@ -1,9 +1,5 @@
 import { VideoQueryArgs } from './resolvers'
-import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
-import { VideoEdge } from '@/api/queries/__generated__/baseTypes.generated'
-import { Video } from '../../api/queries/__generated__/baseTypes.generated'
-import { GetVideosQueryHookResult, GetVideosConnectionQuery } from '../../api/queries/__generated__/videos.generated'
-import { GetVideosConnection } from '../../api/queries/__generated__/GetVideosConnection'
+import { VideoFieldsFragment, GetVideosConnectionQuery } from '@/api/queries/__generated__/videos.generated'
 
 export const encode =
   typeof btoa !== 'undefined'
