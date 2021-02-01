@@ -1,4 +1,4 @@
-import { GET_FOLLOWED_CHANNELS_RECENT_VIDEOS } from '@/api/queries/videos'
+import { GET_VIDEOS_CONNECTION } from '@/api/queries/videos'
 
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
 import { Grid, Text, VideoPreviewBase } from '@/shared/components'
@@ -6,14 +6,11 @@ import { sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import React, { useCallback, useMemo, useState } from 'react'
 import useInfiniteGrid from './useInfiniteGrid'
-import {
-  GetFollowedChannelsRecentVideos,
-  GetFollowedChannelsRecentVideosVariables,
-} from '@/api/queries/__generated__/GetFollowedChannelsRecentVideos'
+
+import { GetVideosConnection, GetVideosConnectionVariables } from '@/api/queries/__generated__/GetVideosConnection'
 
 type InfiniteFollowedChannelsVideoGridProps = {
   title?: string
-  videosToExclude?: string[]
   channelIdIn?: string[]
   createdAtGte?: Date
   skipCount?: number
@@ -33,7 +30,6 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   className,
   channelIdIn,
   createdAtGte,
-  videosToExclude,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables = useMemo(
@@ -50,11 +46,11 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   }, [])
 
   const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
-    GetFollowedChannelsRecentVideos,
-    GetFollowedChannelsRecentVideos['videosConnection'],
-    GetFollowedChannelsRecentVideosVariables
+    GetVideosConnection,
+    GetVideosConnection['videosConnection'],
+    GetVideosConnectionVariables
   >({
-    query: GET_FOLLOWED_CHANNELS_RECENT_VIDEOS,
+    query: GET_VIDEOS_CONNECTION,
     onScrollToBottom,
     isReady: ready,
     skipCount,
@@ -67,11 +63,10 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
   if (error) {
     throw error
   }
-  const items = displayedItems.filter((node) => !videosToExclude?.includes(node.id))
 
   const gridContent = (
     <>
-      {items.map((v) => (
+      {displayedItems.map((v) => (
         <VideoPreview
           id={v.id}
           channelId={v.channel.id}
@@ -91,7 +86,7 @@ const InfiniteFollowedChannelsVideoGrid: React.FC<InfiniteFollowedChannelsVideoG
     </>
   )
 
-  if (items.length <= 0 && placeholdersCount <= 0) {
+  if (displayedItems.length <= 0 && placeholdersCount <= 0) {
     return null
   }
 

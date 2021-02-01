@@ -80,14 +80,14 @@ export const videosConnectionResolver: QueryResolver<VideoQueryArgs, GetVideosCo
     after,
   }
 
-  if (where?.channelId_in?.length && where?.createdAt_gte) {
+  if (where?.channelId_in && where?.createdAt_gte) {
     const videos = schema.videos.all().models as VideoModel[]
     const videosResult = videos
       .map((v) => ({
         ...v.attrs,
       }))
       .filter((v) => {
-        if (where?.channelId_in?.length) {
+        if (where?.channelId_in) {
           return where?.channelId_in.includes(v.channelId)
         }
         return v

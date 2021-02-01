@@ -14,7 +14,7 @@ const cache = new InMemoryCache({
           const channelIdIn = JSON.stringify(args?.where?.channelId_in || '')
           const createdAtGte = JSON.stringify(args?.where?.createdAt_gte || '')
 
-          // only for GET_FOLLOWED_CHANNELS_RECENT_VIDEOS_IDS query
+          // only for counting videos in HomeView
           if (args?.where.channelId_in && !args?.first) {
             return `${createdAtGte}:${channelIdIn}`
           }

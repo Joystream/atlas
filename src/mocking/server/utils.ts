@@ -1,6 +1,6 @@
 import { VideoFields } from '@/api/queries/__generated__/VideoFields'
-import { GetFollowedChannelsRecentVideos_videosConnection_edges } from '@/api/queries/__generated__/GetFollowedChannelsRecentVideos'
 import { VideoQueryArgs } from './resolvers'
+import { GetVideosConnection_videosConnection_edges } from '@/api/queries/__generated__/GetVideosConnection'
 
 export const encode =
   typeof btoa !== 'undefined'
@@ -38,10 +38,7 @@ export const getEdges = (records: VideoFields[], args: VideoQueryArgs) => {
   }))
 }
 
-export const getPageInfo = (
-  records: VideoFields[],
-  edges: GetFollowedChannelsRecentVideos_videosConnection_edges[]
-) => {
+export const getPageInfo = (records: VideoFields[], edges: GetVideosConnection_videosConnection_edges[]) => {
   const pageInfo = {
     hasPreviousPage: false,
     hasNextPage: false,
