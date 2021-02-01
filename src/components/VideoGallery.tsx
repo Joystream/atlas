@@ -11,7 +11,7 @@ import {
 } from '@/shared/components'
 import VideoPreview from './VideoPreviewWithNavigation'
 import { sizes } from '@/shared/theme'
-import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
+import { VideoFieldsFragment } from '@/api/queries'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number

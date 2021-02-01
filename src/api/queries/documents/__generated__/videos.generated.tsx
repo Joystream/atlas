@@ -1,4 +1,4 @@
-import * as Types from './baseTypes.generated';
+import * as Types from '../../__generated__/baseTypes.generated';
 
 import { BasicChannelFieldsFragment , BasicChannelFieldsFragmentDoc } from './channels.generated';
 import { gql } from '@apollo/client';

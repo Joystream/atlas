@@ -217,18 +217,6 @@ export enum FeaturedVideoOrderByInput {
   CreatedAtDesc = 'createdAt_DESC'
 }
 
-export type ChannelFollowsInfo = {
-  __typename: 'ChannelFollowsInfo';
-  follows: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-export type EntityViewsInfo = {
-  __typename: 'EntityViewsInfo';
-  id: Scalars['ID'];
-  views: Scalars['Int'];
-};
-
 export type Query = {
   __typename: 'Query';
   /** Get follows counts for a list of channels */
@@ -330,6 +318,18 @@ export type QueryVideosConnectionArgs = {
   after?: Maybe<Scalars['String']>;
   where?: Maybe<VideoWhereInput>;
   orderBy?: Maybe<VideoOrderByInput>;
+};
+
+export type ChannelFollowsInfo = {
+  __typename: 'ChannelFollowsInfo';
+  follows: Scalars['Int'];
+  id: Scalars['ID'];
+};
+
+export type EntityViewsInfo = {
+  __typename: 'EntityViewsInfo';
+  id: Scalars['ID'];
+  views: Scalars['Int'];
 };
 
 export type Mutation = {

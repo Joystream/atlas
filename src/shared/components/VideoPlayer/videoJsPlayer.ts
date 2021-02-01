@@ -3,7 +3,7 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
 import { STORAGE_NODE_URL } from '@/config/urls'
-import { MediaLocation } from '@/api/queries/__generated__/baseTypes.generated'
+import { MediaLocation } from '@/api/queries'
 
 export type VideoJsConfig = {
   src: MediaLocation

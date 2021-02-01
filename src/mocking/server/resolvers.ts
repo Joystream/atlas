@@ -3,14 +3,12 @@ import {
   GetVideosConnectionQuery,
   VideoFieldsFragment,
   GetCoverVideoQuery,
-} from '@/api/queries/__generated__/videos.generated'
-import {
   AllChannelFieldsFragment,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-} from '@/api/queries/__generated__/channels.generated'
-import { SearchQueryVariables } from '@/api/queries/__generated__/search.generated'
-import { SearchFtsOutput } from '@/api/queries/__generated__/baseTypes.generated'
+  SearchQueryVariables,
+  SearchFtsOutput,
+} from '@/api/queries'
 
 type QueryResolver<ArgsType extends object = Record<string, unknown>, ReturnType = unknown> = (
   obj: unknown,
