@@ -1,13 +1,14 @@
 import React from 'react'
-import { Search_search_item_Channel, Search_search_item_Video } from '@/api/queries/__generated__/Search'
 import { Placeholder, VideoPreviewBase, Text } from '@/shared/components'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
+import { BasicChannelFieldsFragment } from '@/api/queries/__generated__/channels.generated'
+import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
 
 type AllResultsTabProps = {
-  videos: Search_search_item_Video[]
-  channels: Search_search_item_Channel[]
+  videos: VideoFieldsFragment[]
+  channels: BasicChannelFieldsFragment[]
   loading: boolean
 }
 

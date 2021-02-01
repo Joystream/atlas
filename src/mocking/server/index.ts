@@ -13,12 +13,12 @@ import {
   featuredVideosResolver,
   searchResolver,
   videoResolver,
-  videosWithIdsResolver,
   videosResolver,
   videoViewsResolver,
   channelFollowsResolver,
   followChannelResolver,
   unfollowChannelResolver,
+  videosConnectionResolver,
 } from './resolvers'
 import {
   MOCK_ORION_GRAPHQL_URL,
@@ -34,8 +34,8 @@ createServer({
       resolvers: {
         Query: {
           video: videoResolver,
-          videos: videosWithIdsResolver,
-          videosConnection: videosResolver,
+          videos: videosResolver,
+          videosConnection: videosConnectionResolver,
           coverVideo: coverVideoResolver,
           featuredVideos: featuredVideosResolver,
           channel: channelResolver,

@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-import { VideoFields } from '@/api/queries/__generated__/VideoFields'
 import { Grid } from '@/shared/components'
 import VideoPreview from './VideoPreviewWithNavigation'
+import { VideoFieldsFragment } from '@/api/queries/__generated__/videos.generated'
 
 const StyledVideoPreview = styled(VideoPreview)`
   margin: 0 auto;
@@ -11,7 +11,7 @@ const StyledVideoPreview = styled(VideoPreview)`
 `
 
 type VideoGridProps = {
-  videos: VideoFields[]
+  videos: VideoFieldsFragment[]
   showChannel?: boolean
 }
 const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true }) => {

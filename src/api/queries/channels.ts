@@ -18,8 +18,8 @@ export const allChannelFieldsFragment = gql`
   }
 `
 
-export const GET_NEWEST_CHANNELS = gql`
-  query GetNewestChannels($first: Int, $after: String) {
+export const GET_CHANNELS_CONNECTION = gql`
+  query GetChannelsConnection($first: Int, $after: String) {
     channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
       edges {
         cursor

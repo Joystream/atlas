@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
-import { CategoryFields } from '@/api/queries/__generated__/CategoryFields'
+import { CategoryFieldsFragment } from '@/api/queries/__generated__/categories.generated'
 
 type CategoryPickerProps = {
-  categories?: CategoryFields[]
+  categories?: CategoryFieldsFragment[]
   selectedCategoryId: string | null
   loading?: boolean
   onChange: (categoryId: string | null) => void
