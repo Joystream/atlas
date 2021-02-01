@@ -1,5 +1,5 @@
 import rawCategories from './raw/categories.json'
-import { CategoryFieldsFragment } from '@/api/queries/categories'
+import { CategoryFieldsFragment } from '@/api/queries'
 
 type MockCategory = CategoryFieldsFragment
 

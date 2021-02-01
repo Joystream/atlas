@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
-import { CategoryFieldsFragment } from '@/api/queries/categories'
+import { CategoryFieldsFragment } from '@/api/queries'
 
 type CategoryPickerProps = {
   categories?: CategoryFieldsFragment[]

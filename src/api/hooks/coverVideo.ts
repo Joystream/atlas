@@ -1,6 +1,6 @@
-import { CoverVideo } from '@/api/queries/baseTypes'
+import { CoverVideo, AllChannelFieldsFragment } from '@/api/queries'
 import { MockVideo } from '@/mocking/data/mockVideos'
-import { AllChannelFieldsFragment } from '@/api/queries/channels'
+
 import {
   mockCoverVideo,
   mockCoverVideoChannel,

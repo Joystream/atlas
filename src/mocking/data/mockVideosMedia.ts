@@ -1,5 +1,5 @@
 import rawVideosMedia from './raw/videosMedia.json'
-import { VideoMediaFieldsFragment } from '@/api/queries/videos'
+import { VideoMediaFieldsFragment } from '@/api/queries'
 
 export type MockVideoMedia = VideoMediaFieldsFragment & {
   duration: number

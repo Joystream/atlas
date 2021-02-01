@@ -1,4 +1,4 @@
-import { useSearchQuery, SearchQueryVariables, SearchQuery } from '@/api/queries/search'
+import { useSearchQuery, SearchQueryVariables, SearchQuery } from '@/api/queries'
 import { QueryHookOptions } from '@apollo/client'
 
 type Opts = QueryHookOptions<SearchQuery>

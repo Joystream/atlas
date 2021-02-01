@@ -5,7 +5,7 @@ import {
   useUnfollowChannelMutation,
   FollowChannelMutation,
   UnfollowChannelMutation,
-} from '@/api/queries/channels'
+} from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
 type Opts = QueryHookOptions<GetChannelQuery>

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Grid } from '@/shared/components'
 import ChannelPreview from './ChannelPreviewWithNavigation'
-import { BasicChannelFieldsFragment } from '@/api/queries/channels'
+import { BasicChannelFieldsFragment } from '@/api/queries'
 
 const StyledChannelPreview = styled(ChannelPreview)`
   margin: 0 auto;

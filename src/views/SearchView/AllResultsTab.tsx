@@ -3,8 +3,7 @@ import { Placeholder, VideoPreviewBase, Text } from '@/shared/components'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
-import { BasicChannelFieldsFragment } from '@/api/queries/channels'
-import { VideoFieldsFragment } from '@/api/queries/videos'
+import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 
 type AllResultsTabProps = {
   videos: VideoFieldsFragment[]

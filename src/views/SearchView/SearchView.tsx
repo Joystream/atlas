@@ -6,7 +6,7 @@ import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
-import { SearchQuery } from '@/api/queries/search'
+import { SearchQuery } from '@/api/queries'
 
 type SearchViewProps = {
   search?: string

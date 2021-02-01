@@ -1,6 +1,6 @@
 import { thumbnailSources } from './mockImages'
 import rawVideos from './raw/videos.json'
-import { VideoFieldsFragment } from '@/api/queries/videos'
+import { VideoFieldsFragment } from '@/api/queries'
 
 export type MockVideo = Omit<
   VideoFieldsFragment,

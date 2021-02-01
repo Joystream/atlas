@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Grid } from '@/shared/components'
 import VideoPreview from './VideoPreviewWithNavigation'
-import { VideoFieldsFragment } from '@/api/queries/videos'
+import { VideoFieldsFragment } from '@/api/queries'
 
 const StyledVideoPreview = styled(VideoPreview)`
   margin: 0 auto;

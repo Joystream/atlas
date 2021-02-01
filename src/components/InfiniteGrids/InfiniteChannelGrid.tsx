@@ -8,7 +8,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-} from '@/api/queries/channels'
+} from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreviewWithNavigation'
 import useInfiniteGrid from './useInfiniteGrid'
 

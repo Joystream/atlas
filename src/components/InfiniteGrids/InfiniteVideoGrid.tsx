@@ -4,11 +4,7 @@ import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Grid, Text, VideoPreviewBase } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
-import {
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
-} from '@/api/queries/videos'
+import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
