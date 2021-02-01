@@ -1,12 +1,9 @@
 import React from 'react'
 import { RouteComponentProps } from '@reach/router'
 
-import { useQuery } from '@apollo/client'
 import { usePersonalData } from '@/hooks'
-import { GET_VIDEOS } from '@/api/queries'
-
 import { ErrorFallback, VideoGallery } from '@/components'
-import { useVideos } from '../api/hooks/video'
+import { useVideos } from '@/api/hooks'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 

@@ -1,0 +1,10 @@
+fragment CategoryFields on Category {
+  id
+  name
+}
+
+query GetCategories {
+  categories {
+    ...CategoryFields
+  }
+}

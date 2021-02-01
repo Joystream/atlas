@@ -1,9 +1,5 @@
-import {
-  GetFeaturedVideosQueryVariables,
-  useGetFeaturedVideosQuery,
-} from '@/api/queries/__generated__/videos.generated'
+import { GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables, useGetFeaturedVideosQuery } from '@/api/queries'
 import { QueryHookOptions } from '@apollo/client'
-import { GetFeaturedVideosQuery } from '../queries/__generated__/videos.generated'
 
 type Opts = QueryHookOptions<GetFeaturedVideosQuery>
 const useFeaturedVideos = (variables?: GetFeaturedVideosQueryVariables, opts?: Opts) => {

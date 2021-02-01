@@ -1,0 +1,13 @@
+query Search($text: String!) {
+  search(text: $text) {
+    item {
+      ... on Video {
+        ...VideoFields
+      }
+      ... on Channel {
+        ...BasicChannelFields
+      }
+    }
+    rank
+  }
+}

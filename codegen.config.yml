@@ -1,8 +1,7 @@
 overwrite: true
 schema: './src/api/schemas/**/*.graphql'
 documents:
-  - './src/api/queries/**/*.ts'
-  - '!./src/api/queries/__generated__/'
+  - './src/api/queries/**/*.graphql'
 config:
   scalars:
     Date: Date

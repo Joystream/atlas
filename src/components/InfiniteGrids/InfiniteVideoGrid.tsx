@@ -4,11 +4,7 @@ import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Grid, Text, VideoPreviewBase } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreviewWithNavigation'
-import { GET_VIDEOS_CONNECTION } from '@/api/queries'
-import {
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
-} from '@/api/queries/__generated__/videos.generated'
+import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
@@ -59,7 +55,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
   >({
-    query: GET_VIDEOS_CONNECTION,
+    query: GetVideosConnectionDocument,
     onScrollToBottom,
     isReady: ready,
     skipCount,
