@@ -150,7 +150,7 @@ const VideoView: React.FC = () => {
       </PlayerWrapper>
       <InfoContainer>
         {video ? <TitleText variant="h2">{video.title}</TitleText> : <Placeholder height={46} width={400} />}
-        <Meta>
+        <Meta variant="subtitle1">
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
