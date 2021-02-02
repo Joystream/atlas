@@ -98,7 +98,6 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     if (!player) {
       return
     }
-
     player.play()
   }
 

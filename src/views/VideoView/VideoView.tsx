@@ -14,6 +14,7 @@ import {
   PlayerPlaceholder,
   PlayerWrapper,
   LicenseContainer,
+  TitleText,
 } from './VideoView.style'
 import { Placeholder, VideoPlayer, Text } from '@/shared/components'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -134,7 +135,7 @@ const VideoView: React.FC = () => {
             <VideoPlayer
               playing={playing}
               src={video.media.location}
-              fluid
+              fill
               posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
@@ -148,7 +149,7 @@ const VideoView: React.FC = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer>
-        {video ? <Text variant="h2">{video.title}</Text> : <Placeholder height={46} width={400} />}
+        {video ? <TitleText variant="h2">{video.title}</TitleText> : <Placeholder height={46} width={400} />}
         <Meta>
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })

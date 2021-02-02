@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { ChannelAvatar, Placeholder } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { ChannelAvatar, Placeholder, Text } from '@/shared/components'
+import { sizes, colors, typography, breakpoints } from '@/shared/theme'
 
 export const Container = styled.div`
   display: flex;
@@ -8,17 +8,21 @@ export const Container = styled.div`
 `
 
 export const PlayerContainer = styled.div`
-  width: min(1250px, 100%);
+  width: 100%;
+  height: calc(100vw * 0.5625);
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: 70vh;
+  }
 `
 
 export const PlayerWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin: 0 calc(-1 * var(--global-horizontal-padding));
 `
 
 export const PlayerPlaceholder = styled(Placeholder)`
-  padding-top: 56.25%;
-  height: 0;
+  height: 100%;
 `
 
 export const DescriptionPlaceholder = styled(Placeholder)`
@@ -34,6 +38,7 @@ export const Meta = styled.span`
   display: block;
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
+  font-size: 12px;
 `
 
 export const ChannelContainer = styled.div`
@@ -51,9 +56,13 @@ export const DescriptionContainer = styled.div`
   border-top: 1px solid ${colors.gray[800]};
 
   p {
-    color: ${colors.gray[300]};
-    line-height: 175%;
+    font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
+    @media screen and (min-width: ${breakpoints.small}) {
+      font-size: 1rem;
+      color: ${colors.gray[300]};
+      line-height: 175%;
+    }
   }
 `
 
@@ -80,5 +89,15 @@ export const LicenseContainer = styled.div`
   a {
     text-decoration: none;
     color: ${colors.gray[500]};
+  }
+`
+
+export const TitleText = styled(Text)`
+  font-size: ${typography.sizes.h4};
+  @media screen and (min-width: ${breakpoints.small}) {
+    font-size: ${typography.sizes.h3};
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    font-size: ${typography.sizes.h2};
   }
 `
