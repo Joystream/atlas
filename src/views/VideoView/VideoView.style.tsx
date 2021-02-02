@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { ChannelAvatar, Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import { sizes, colors, typography, breakpoints } from '@/shared/theme'
+import { fluidRange } from 'polished'
 
 export const Container = styled.div`
   display: flex;
@@ -34,21 +35,20 @@ export const InfoContainer = styled.div`
   padding: ${sizes(8)} 0;
 `
 
-export const Meta = styled.span`
+export const Meta = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
-  font-size: 12px;
+
+  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.base, breakpoints.xlarge)};
+`
+
+export const TitleText = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
 `
 
 export const ChannelContainer = styled.div`
   margin-top: ${sizes(4)};
-`
-
-export const StyledChannelAvatar = styled(ChannelAvatar)`
-  :hover {
-    cursor: pointer;
-  }
 `
 
 export const DescriptionContainer = styled.div`
@@ -89,15 +89,5 @@ export const LicenseContainer = styled.div`
   a {
     text-decoration: none;
     color: ${colors.gray[500]};
-  }
-`
-
-export const TitleText = styled(Text)`
-  font-size: ${typography.sizes.h4};
-  @media screen and (min-width: ${breakpoints.small}) {
-    font-size: ${typography.sizes.h3};
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    font-size: ${typography.sizes.h2};
   }
 `
