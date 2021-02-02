@@ -1,37 +1,47 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Container, Title, WarningText, StyledTooltip, StyledInput } from './HeaderTextField.style'
 
-const HeaderTextField = () => {
-  const [text, setText] = useState('Lorem ipsum dolor')
-  const [isInEditMode, setEditMode] = useState(false)
-  const inputElement = useRef<HTMLInputElement>(null)
-
-  const handleTextChange = (e) => {
-    if (e.key !== 'Enter' || inputElement.current === null) {
-      return
-    }
-    setEditMode(false)
-    // Some logic here
-  }
-  return (
-    <Container>
-      {isInEditMode ? (
-        <StyledInput
-          ref={inputElement}
-          type="text"
-          defaultValue={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => handleTextChange(e)}
-        />
-      ) : (
-        <Title variant="h1" onClick={(e) => setEditMode(!isInEditMode)}>
-          {text}
-        </Title>
-      )}
-      {text.length < 2 && <WarningText variant="body1">Channel title must be at least 2 character</WarningText>}
-      {!isInEditMode && text && <StyledTooltip data-text="Click to edit channel title!" />}
-    </Container>
-  )
+type HeaderTextFieldProps = {
+  title: string
+  helperText: string
+  errorText: string
+  variant?: 'default' | 'error' | 'warning'
 }
+
+const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
+  ({ title, helperText, errorText, variant = 'default' }, ref) => {
+    const [text, setText] = useState(title)
+    const [isInEditMode, setEditMode] = useState(false)
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key !== 'Enter' || ref === null) {
+        return
+      }
+      setEditMode(false)
+    }
+
+    return (
+      <Container>
+        {isInEditMode ? (
+          <StyledInput
+            ref={ref}
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e)}
+          />
+        ) : (
+          <Title variant="h1" onClick={() => setEditMode(true)}>
+            {text}
+          </Title>
+        )}
+        {variant === 'error' && <WarningText variant="body1">{errorText}</WarningText>}
+        {!isInEditMode && text && <StyledTooltip data-text={helperText} />}
+      </Container>
+    )
+  }
+)
+
+HeaderTextField.displayName = 'HeaderTextField'
 
 export default HeaderTextField

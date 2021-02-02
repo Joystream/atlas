@@ -6,4 +6,27 @@ export default {
   component: HeaderTextField,
 }
 
-export const Primary = () => <HeaderTextField />
+export const Default = () => {
+  const input = React.useRef<HTMLInputElement>(null)
+  return (
+    <HeaderTextField
+      ref={input}
+      title="Lorem ipsum dolor"
+      helperText="Click to edit channel title!"
+      errorText="Channel title must be at least 2 character"
+    />
+  )
+}
+
+export const Error = () => {
+  const input = React.useRef<HTMLInputElement>(null)
+  return (
+    <HeaderTextField
+      ref={input}
+      title="Lorem ipsum dolor"
+      helperText="Click to edit channel title!"
+      errorText="Channel title must be at least 2 character"
+      variant="error"
+    />
+  )
+}
