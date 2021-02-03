@@ -72,3 +72,6 @@ yarn-error.log
 .yarnrc.yml
 # Yarn Integrity file
 .yarn-integrity
+
+# vscode/extensions
+.history

@@ -7,6 +7,10 @@ import {
   UnfollowChannelMutation,
 } from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
+import {
+  GetChannelVideoCountQuery,
+  useGetChannelVideoCountQuery,
+} from '../queries/documents/__generated__/channels.generated'
 
 type Opts = QueryHookOptions<GetChannelQuery>
 const useChannel = (id: string, opts?: Opts) => {
@@ -16,6 +20,18 @@ const useChannel = (id: string, opts?: Opts) => {
   })
   return {
     channel: data?.channel,
+    ...rest,
+  }
+}
+
+type VideoCountOpts = QueryHookOptions<GetChannelVideoCountQuery>
+export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) => {
+  const { data, ...rest } = useGetChannelVideoCountQuery({
+    ...opts,
+    variables: { channelId },
+  })
+  return {
+    videoCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }
