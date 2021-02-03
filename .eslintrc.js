@@ -6,6 +6,7 @@ module.exports = {
     jest: true,
   },
   extends: ['plugin:react-hooks/recommended', '@joystream/eslint-config'],
+  plugins: ['@emotion'],
   rules: {
     'react/prop-types': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -27,5 +28,9 @@ module.exports = {
     '@typescript-eslint/naming-convention': ['off'],
     // remove once @joystream/eslint-config does not enforce an older version of @typescript-eslint
     '@typescript-eslint/no-unused-vars': ['off'],
+    // make sure we use the proper Emotion imports
+    '@emotion/pkg-renaming': 'error',
+    '@emotion/no-vanilla': 'error',
+    '@emotion/syntax-preference': [2, 'string'],
   },
 }
