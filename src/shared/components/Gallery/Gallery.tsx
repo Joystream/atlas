@@ -1,12 +1,12 @@
 import React from 'react'
 import { Container, HeadingContainer } from './Gallery.style'
-import Carousel from '../Carousel'
+import Carousel, { CarouselProps } from '../Carousel/Carousel'
 import Text from '../Text'
 
-type GalleryProps = {
+export type GalleryProps = {
   title?: string
   className?: string
-} & React.ComponentProps<typeof Carousel>
+} & CarouselProps
 
 const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps }) => {
   return (

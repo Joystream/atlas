@@ -8,7 +8,7 @@ export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
-  expanded: boolean
+  expanded?: boolean
 }
 
 type SubItemProps = {

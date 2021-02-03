@@ -1,5 +1,5 @@
 import { typography } from '../../theme'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 const baseStyles = css`

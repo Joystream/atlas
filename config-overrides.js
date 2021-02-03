@@ -4,7 +4,7 @@ const { override, addBabelPreset, addBabelPlugin, addWebpackAlias, addWebpackMod
 
 module.exports = {
   webpack: override(
-    addBabelPlugin('babel-plugin-emotion'),
+    addBabelPlugin('@emotion/babel-plugin'),
     addBabelPreset('@emotion/babel-preset-css-prop'),
     addWebpackAlias({
       '@': path.resolve(__dirname, 'src/'),

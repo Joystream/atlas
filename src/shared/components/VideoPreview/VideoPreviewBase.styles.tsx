@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { css, keyframes } from '@emotion/core'
+import { css, keyframes } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
 import { CoverHoverOverlay, CoverIcon, ProgressOverlay } from './VideoPreview.styles'
 

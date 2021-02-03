@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { css, SerializedStyles } from '@emotion/core'
+import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
 import { breakpoints, colors } from '../../theme'
 import Placeholder from '../Placeholder'

@@ -1,4 +1,4 @@
-import { css, Global, SerializedStyles } from '@emotion/core'
+import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import { breakpoints, colors, sizes, typography } from '../../theme'
 import React from 'react'
