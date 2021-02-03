@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { Container, Title, WarningText, StyledTooltip, StyledInput } from './HeaderTextField.style'
 
-type HeaderTextFieldProps = {
-  title: string
+export type HeaderTextFieldProps = {
+  value: string
   helperText: string
   errorText: string
+  onChange: (value: string) => void
   variant?: 'default' | 'error' | 'warning'
 }
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ title, helperText, errorText, variant = 'default' }, ref) => {
-    const [text, setText] = useState(title)
+  ({ value, helperText, errorText, onChange, variant = 'default' }, ref) => {
     const [isInEditMode, setEditMode] = useState(false)
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -26,17 +26,19 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
           <StyledInput
             ref={ref}
             type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={() => setEditMode(false)}
+            autoFocus
           />
         ) : (
           <Title variant="h1" onClick={() => setEditMode(true)}>
-            {text}
+            {value}
+            {variant === 'error' && <WarningText variant="body1">{errorText}</WarningText>}
           </Title>
         )}
-        {variant === 'error' && <WarningText variant="body1">{errorText}</WarningText>}
-        {!isInEditMode && text && <StyledTooltip data-text={helperText} />}
+        {!isInEditMode && value && <StyledTooltip data-text={helperText} />}
       </Container>
     )
   }

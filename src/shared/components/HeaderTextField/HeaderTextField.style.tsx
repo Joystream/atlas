@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Text } from '@/shared/components'
-import { colors, sizes, typography } from '@/shared/theme'
+import { colors, sizes, typography, breakpoints } from '@/shared/theme'
 
 export const Title = styled(Text)`
   line-height: 1;
@@ -11,12 +11,15 @@ export const Title = styled(Text)`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 100%;
-  max-width: 600px;
+  width: fit-content;
+  max-width: 100%;
   transition: 0.2s;
   cursor: pointer;
   &:hover {
     filter: brightness(80%);
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    max-width: 600px;
   }
 `
 
@@ -24,7 +27,7 @@ export const WarningText = styled(Text)`
   color: ${colors.warning};
   background-color: ${colors.gray[800]};
   max-width: 600px;
-  padding: ${sizes(2)};
+  padding: ${sizes(2)} 0;
   ${fluidRange({ prop: 'fontSize', fromSize: '10px', toSize: '16px' })};
 `
 
@@ -37,9 +40,6 @@ export const StyledInput = styled.input`
   font-family: ${typography.fonts.headers};
   font-weight: ${typography.weights.bold};
   border: none;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   width: 100%;
   max-width: 600px;
   max-height: 50px;
@@ -58,8 +58,8 @@ export const StyledTooltip = styled.span`
     top: ${sizes(4)};
     width: 200px;
     padding: 10px;
-    background: #52616b;
-    color: #fff;
+    background: ${colors.gray[400]};
+    color: ${colors.white};
     text-align: center;
   }
   &:after {
@@ -67,8 +67,8 @@ export const StyledTooltip = styled.span`
     content: '';
     margin-left: ${sizes(4)};
     transform: rotate(90deg);
-    border: 10px solid #52616b;
-    border-color: transparent #52616b transparent transparent;
+    border: 10px solid transparent;
+    border-right-color: ${colors.gray[400]};
   }
 `
 
