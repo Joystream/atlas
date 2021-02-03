@@ -1,5 +1,5 @@
 import React from 'react'
-import { SerializedStyles } from '@emotion/core'
+import { SerializedStyles } from '@emotion/react'
 import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
 

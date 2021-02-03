@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { Container, PlayOverlay, StyledPlayIcon } from './VideoPlayer.style'
 import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
 
-type VideoPlayerProps = {
+export type VideoPlayerProps = {
   className?: string
   autoplay?: boolean
   isInBackground?: boolean

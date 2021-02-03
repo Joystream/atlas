@@ -1,11 +1,11 @@
-import { SerializedStyles } from '@emotion/core'
+import { SerializedStyles } from '@emotion/react'
 import React, { useRef } from 'react'
 
 import { useGlider, GliderProps } from '../Glider'
 
 import { Container, GliderContainer, Arrow, Track, BackgroundGradient } from './Carousel.style'
 
-type CarouselProps = {
+export type CarouselProps = {
   paddingLeft?: number
   paddingTop?: number
   className?: string

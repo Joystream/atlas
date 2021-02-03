@@ -2,7 +2,7 @@ import React from 'react'
 import { AvatarContainer, Info, InnerContainer, OuterContainer } from './ChannelPreviewBase.style'
 import Placeholder from '../Placeholder'
 
-type ChannelPreviewBaseProps = {
+export type ChannelPreviewBaseProps = {
   avatarNode?: React.ReactNode
   nameNode?: React.ReactNode
   className?: string
