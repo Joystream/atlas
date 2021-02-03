@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from '@emotion/styled'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 import { sizes } from '@/shared/theme'
 import { ChannelPreviewBase, Grid, Text } from '@/shared/components'

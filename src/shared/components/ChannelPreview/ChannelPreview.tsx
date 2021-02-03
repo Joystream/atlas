@@ -5,7 +5,7 @@ import { typography } from '../../theme'
 import { Avatar } from '..'
 import Text from '../Text'
 
-type ChannelPreviewProps = {
+export type ChannelPreviewProps = {
   name: string
   avatarURL?: string | null
   className?: string

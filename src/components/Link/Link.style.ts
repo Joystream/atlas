@@ -1,8 +1,6 @@
-import { typography, colors } from '../../theme'
 import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
-
-export type CustomLinkStyleProps = Record<string, unknown>
+import { typography, colors } from '@/shared/theme'
 
 export const StyledLink = styled(Link)`
   font-family: ${typography.fonts.base};

@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/core'
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { colors } from '@/shared/theme'
 import { darken } from 'polished'

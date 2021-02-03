@@ -3,7 +3,7 @@ import { darken, fluidRange } from 'polished'
 
 import { Button, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
-import { css, keyframes } from '@emotion/core'
+import { css, keyframes } from '@emotion/react'
 import ChannelLink from '../ChannelLink'
 
 const CONTENT_OVERLAP_MAP = {

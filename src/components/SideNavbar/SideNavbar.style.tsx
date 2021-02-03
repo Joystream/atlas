@@ -9,7 +9,7 @@ export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
-  expanded: boolean
+  expanded?: boolean
 }
 
 type SubItemProps = {
@@ -66,7 +66,7 @@ export const SidebarNavItem = styled.li`
   flex-direction: column;
 `
 
-export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props} />)<SidebarNavLinkProps>`
+export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;

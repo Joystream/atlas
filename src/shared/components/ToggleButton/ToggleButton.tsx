@@ -3,7 +3,7 @@ import { StyledToggleButton } from './ToggleButton.styles'
 
 import type { ButtonProps } from '../Button/Button'
 
-type ToggleButtonProps = {
+export type ToggleButtonProps = {
   controlled?: boolean
   toggled?: boolean
 } & ButtonProps

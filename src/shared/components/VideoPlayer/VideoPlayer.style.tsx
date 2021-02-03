@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
 import Icon from '../Icon'
-import { css } from '@emotion/core'
 
 type ContainerProps = {
   isInBackground?: boolean

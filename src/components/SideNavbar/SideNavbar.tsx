@@ -95,7 +95,7 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
         onClick={onClick}
         data-active={match ? 'true' : ''}
         to={to}
-        expanded={expanded}
+        expanded={expanded || undefined}
         content={itemName}
       >
         {children}

@@ -12,6 +12,7 @@ export const Hamburger = styled.button`
   width: ${sizes(11)};
   padding: 0;
   top: 18px;
+  // FIXME: this shouldn't be set to 'fixed', button should work on its own, consumer may set it to fixed
   position: fixed;
   z-index: ${zIndex.header + 1};
   cursor: pointer;

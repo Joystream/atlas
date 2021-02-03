@@ -4,7 +4,7 @@ const { override, addBabelPreset, addBabelPlugin, addWebpackAlias, addWebpackMod
 
 module.exports = {
   webpack: override(
-    addBabelPlugin('babel-plugin-emotion'),
+    addBabelPlugin('@emotion/babel-plugin'),
     addBabelPreset('@emotion/babel-preset-css-prop'),
     addWebpackAlias({
       '@': path.resolve(__dirname, 'src/'),
@@ -20,9 +20,9 @@ module.exports = {
     return paths
   },
   jest: function (config) {
-    config.coverageDirectory = path.resolve(__dirname, '..', '..', '.coverage')
+    config.coverageDirectory = path.resolve(__dirname, '.coverage')
     // Don't collect coverage from stories folder
-    config.collectCoverageFrom.push('!<rootDir>/src/**/stories/**/*.{js,jsx,ts,tsx}')
+    config.collectCoverageFrom.push('!<rootDir>/src/**/*.stories.*')
 
     return config
   },
