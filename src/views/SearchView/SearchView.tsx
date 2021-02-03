@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
+import { usePersonalData } from '@/hooks'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
@@ -28,7 +29,14 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
+  const { updateRecentSearches } = usePersonalData()
 
+  const handleVideoClick = (id: string) => {
+    updateRecentSearches(id, 'video')
+  }
+  const handleChannelClick = (id: string) => {
+    updateRecentSearches(id, 'channel')
+  }
   if (error) {
     throw error
   }
@@ -44,13 +52,29 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
     <ViewWrapper>
       <Container>
         <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
-        {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
-        {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
+        {selectedIndex === 0 && (
+          <AllResultsTab
+            loading={loading}
+            videos={videos}
+            channels={channels}
+            onVideoClick={handleVideoClick}
+            onChannelClick={handleChannelClick}
+          />
+        )}
+        {selectedIndex === 1 &&
+          (loading ? (
+            <PlaceholderVideoGrid />
+          ) : (
+            <VideoGrid videos={videos} onVideoClick={handleVideoClick} onChannelClick={handleChannelClick} />
+          ))}
         {selectedIndex === 2 &&
-          (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+          (loading ? (
+            <PlaceholderVideoGrid />
+          ) : (
+            <ChannelGrid channels={channels} repeat="fill" onChannelClick={handleChannelClick} />
+          ))}
       </Container>
     </ViewWrapper>
-  )
 }
 
 const Container = styled.div`

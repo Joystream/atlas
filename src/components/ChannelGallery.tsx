@@ -10,13 +10,20 @@ type ChannelGalleryProps = {
   title?: string
   channels?: BasicChannelFieldsFragment[]
   loading?: boolean
+  onChannelClick?: (id: string) => void
 }
 
 const PLACEHOLDERS_COUNT = 12
 
-const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loading }) => {
+const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loading, onChannelClick }) => {
   if (!loading && channels?.length === 0) {
     return null
+  }
+
+  const handleClick = (id: string) => {
+    if (onChannelClick) {
+      onChannelClick(id)
+    }
   }
 
   return (
@@ -25,7 +32,7 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loadin
         ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
             <ChannelPreviewBase key={`channel-placeholder-${idx}`} />
           ))
-        : channels?.map((channel) => <StyledChannelPreview id={channel.id} key={channel.id} />)}
+        : channels?.map((channel) => <StyledChannelPreview id={channel.id} key={channel.id} onClick={() => handleClick(channel.id)} />)}
     </Gallery>
   )
 }

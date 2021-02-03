@@ -21,8 +21,7 @@ const TopNavbar: React.FC = () => {
       navigate(routes.search(search))
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
-      setIsFocused(false)
-      setSearch('')
+      handleCancel()
       e.currentTarget.blur()
     }
   }
@@ -34,11 +33,16 @@ const TopNavbar: React.FC = () => {
 
   const handleFocus = () => {
     setIsFocused(true)
+    navigate(routes.searchOverlay(), { state: { oldLocation: location } })
   }
 
   const handleCancel = () => {
     setSearch('')
     setIsFocused(false)
+    // TODO: fix
+    // if (oldLocation) {
+    //   navigate(oldLocation.pathname)
+    // }
   }
   return (
     <Header hasFocus={isFocused}>
