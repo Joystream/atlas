@@ -1,69 +1,93 @@
-import * as Types from '../../__generated__/baseTypes.generated';
+import * as Types from '../../__generated__/baseTypes.generated'
 
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
-export type BasicChannelFieldsFragment = { __typename: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string> };
+import { gql } from '@apollo/client'
+import * as Apollo from '@apollo/client'
+export type BasicChannelFieldsFragment = {
+  __typename: 'Channel'
+  id: string
+  handle: string
+  avatarPhotoUrl?: Types.Maybe<string>
+}
 
-export type AllChannelFieldsFragment = { __typename: 'Channel', id: string, handle: string, avatarPhotoUrl?: Types.Maybe<string>, coverPhotoUrl?: Types.Maybe<string>, follows?: Types.Maybe<number> };
+export type AllChannelFieldsFragment = {
+  __typename: 'Channel'
+  id: string
+  handle: string
+  avatarPhotoUrl?: Types.Maybe<string>
+  coverPhotoUrl?: Types.Maybe<string>
+  follows?: Types.Maybe<number>
+}
 
 export type GetChannelQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID'];
-}>;
+  id: Types.Scalars['ID']
+}>
 
-
-export type GetChannelQuery = { __typename: 'Query', channel?: Types.Maybe<(
-    { __typename: 'Channel' }
-    & AllChannelFieldsFragment
-  )> };
+export type GetChannelQuery = {
+  __typename: 'Query'
+  channel?: Types.Maybe<{ __typename: 'Channel' } & AllChannelFieldsFragment>
+}
 
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
-  first?: Types.Maybe<Types.Scalars['Int']>;
-  after?: Types.Maybe<Types.Scalars['String']>;
-}>;
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+}>
 
-
-export type GetChannelsConnectionQuery = { __typename: 'Query', channelsConnection: { __typename: 'ChannelConnection', totalCount: number, edges: Array<{ __typename: 'ChannelEdge', cursor: string, node: (
-        { __typename: 'Channel' }
-        & AllChannelFieldsFragment
-      ) }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor?: Types.Maybe<string> } } };
-
-export type FollowChannelMutationVariables = Types.Exact<{
-  channelId: Types.Scalars['ID'];
-}>;
-
-
-export type FollowChannelMutation = { __typename: 'Mutation', followChannel: { __typename: 'ChannelFollowsInfo', id: string, follows: number } };
-
-export type UnfollowChannelMutationVariables = Types.Exact<{
-  channelId: Types.Scalars['ID'];
-}>;
-
-
-export type UnfollowChannelMutation = { __typename: 'Mutation', unfollowChannel: { __typename: 'ChannelFollowsInfo', id: string, follows: number } };
-
-export const BasicChannelFieldsFragmentDoc = gql`
-    fragment BasicChannelFields on Channel {
-  id
-  handle
-  avatarPhotoUrl
-}
-    `;
-export const AllChannelFieldsFragmentDoc = gql`
-    fragment AllChannelFields on Channel {
-  id
-  handle
-  avatarPhotoUrl
-  coverPhotoUrl
-  follows
-}
-    `;
-export const GetChannelDocument = gql`
-    query GetChannel($id: ID!) {
-  channel(where: {id: $id}) {
-    ...AllChannelFields
+export type GetChannelsConnectionQuery = {
+  __typename: 'Query'
+  channelsConnection: {
+    __typename: 'ChannelConnection'
+    totalCount: number
+    edges: Array<{
+      __typename: 'ChannelEdge'
+      cursor: string
+      node: { __typename: 'Channel' } & AllChannelFieldsFragment
+    }>
+    pageInfo: { __typename: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
 }
-    ${AllChannelFieldsFragmentDoc}`;
+
+export type FollowChannelMutationVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
+}>
+
+export type FollowChannelMutation = {
+  __typename: 'Mutation'
+  followChannel: { __typename: 'ChannelFollowsInfo'; id: string; follows: number }
+}
+
+export type UnfollowChannelMutationVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
+}>
+
+export type UnfollowChannelMutation = {
+  __typename: 'Mutation'
+  unfollowChannel: { __typename: 'ChannelFollowsInfo'; id: string; follows: number }
+}
+
+export const BasicChannelFieldsFragmentDoc = gql`
+  fragment BasicChannelFields on Channel {
+    id
+    handle
+    avatarPhotoUrl
+  }
+`
+export const AllChannelFieldsFragmentDoc = gql`
+  fragment AllChannelFields on Channel {
+    id
+    handle
+    avatarPhotoUrl
+    coverPhotoUrl
+    follows
+  }
+`
+export const GetChannelDocument = gql`
+  query GetChannel($id: ID!) {
+    channel(where: { id: $id }) {
+      ...AllChannelFields
+    }
+  }
+  ${AllChannelFieldsFragmentDoc}
+`
 
 /**
  * __useGetChannelQuery__
@@ -82,31 +106,34 @@ export const GetChannelDocument = gql`
  * });
  */
 export function useGetChannelQuery(baseOptions: Apollo.QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
-        return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions);
-      }
-export function useGetChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
-          return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions);
-        }
-export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>;
-export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>;
-export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>;
-export const GetChannelsConnectionDocument = gql`
-    query GetChannelsConnection($first: Int, $after: String) {
-  channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
-    edges {
-      cursor
-      node {
-        ...AllChannelFields
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    totalCount
-  }
+  return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
 }
-    ${AllChannelFieldsFragmentDoc}`;
+export function useGetChannelLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
+}
+export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
+export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
+export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>
+export const GetChannelsConnectionDocument = gql`
+  query GetChannelsConnection($first: Int, $after: String) {
+    channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
+      edges {
+        cursor
+        node {
+          ...AllChannelFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
+    }
+  }
+  ${AllChannelFieldsFragmentDoc}
+`
 
 /**
  * __useGetChannelsConnectionQuery__
@@ -125,24 +152,37 @@ export const GetChannelsConnectionDocument = gql`
  *   },
  * });
  */
-export function useGetChannelsConnectionQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>) {
-        return Apollo.useQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(GetChannelsConnectionDocument, baseOptions);
-      }
-export function useGetChannelsConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>) {
-          return Apollo.useLazyQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(GetChannelsConnectionDocument, baseOptions);
-        }
-export type GetChannelsConnectionQueryHookResult = ReturnType<typeof useGetChannelsConnectionQuery>;
-export type GetChannelsConnectionLazyQueryHookResult = ReturnType<typeof useGetChannelsConnectionLazyQuery>;
-export type GetChannelsConnectionQueryResult = Apollo.QueryResult<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>;
-export const FollowChannelDocument = gql`
-    mutation FollowChannel($channelId: ID!) {
-  followChannel(channelId: $channelId) {
-    id
-    follows
-  }
+export function useGetChannelsConnectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>
+) {
+  return Apollo.useQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(
+    GetChannelsConnectionDocument,
+    baseOptions
+  )
 }
-    `;
-export type FollowChannelMutationFn = Apollo.MutationFunction<FollowChannelMutation, FollowChannelMutationVariables>;
+export function useGetChannelsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(
+    GetChannelsConnectionDocument,
+    baseOptions
+  )
+}
+export type GetChannelsConnectionQueryHookResult = ReturnType<typeof useGetChannelsConnectionQuery>
+export type GetChannelsConnectionLazyQueryHookResult = ReturnType<typeof useGetChannelsConnectionLazyQuery>
+export type GetChannelsConnectionQueryResult = Apollo.QueryResult<
+  GetChannelsConnectionQuery,
+  GetChannelsConnectionQueryVariables
+>
+export const FollowChannelDocument = gql`
+  mutation FollowChannel($channelId: ID!) {
+    followChannel(channelId: $channelId) {
+      id
+      follows
+    }
+  }
+`
+export type FollowChannelMutationFn = Apollo.MutationFunction<FollowChannelMutation, FollowChannelMutationVariables>
 
 /**
  * __useFollowChannelMutation__
@@ -161,21 +201,29 @@ export type FollowChannelMutationFn = Apollo.MutationFunction<FollowChannelMutat
  *   },
  * });
  */
-export function useFollowChannelMutation(baseOptions?: Apollo.MutationHookOptions<FollowChannelMutation, FollowChannelMutationVariables>) {
-        return Apollo.useMutation<FollowChannelMutation, FollowChannelMutationVariables>(FollowChannelDocument, baseOptions);
-      }
-export type FollowChannelMutationHookResult = ReturnType<typeof useFollowChannelMutation>;
-export type FollowChannelMutationResult = Apollo.MutationResult<FollowChannelMutation>;
-export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<FollowChannelMutation, FollowChannelMutationVariables>;
-export const UnfollowChannelDocument = gql`
-    mutation UnfollowChannel($channelId: ID!) {
-  unfollowChannel(channelId: $channelId) {
-    id
-    follows
-  }
+export function useFollowChannelMutation(
+  baseOptions?: Apollo.MutationHookOptions<FollowChannelMutation, FollowChannelMutationVariables>
+) {
+  return Apollo.useMutation<FollowChannelMutation, FollowChannelMutationVariables>(FollowChannelDocument, baseOptions)
 }
-    `;
-export type UnfollowChannelMutationFn = Apollo.MutationFunction<UnfollowChannelMutation, UnfollowChannelMutationVariables>;
+export type FollowChannelMutationHookResult = ReturnType<typeof useFollowChannelMutation>
+export type FollowChannelMutationResult = Apollo.MutationResult<FollowChannelMutation>
+export type FollowChannelMutationOptions = Apollo.BaseMutationOptions<
+  FollowChannelMutation,
+  FollowChannelMutationVariables
+>
+export const UnfollowChannelDocument = gql`
+  mutation UnfollowChannel($channelId: ID!) {
+    unfollowChannel(channelId: $channelId) {
+      id
+      follows
+    }
+  }
+`
+export type UnfollowChannelMutationFn = Apollo.MutationFunction<
+  UnfollowChannelMutation,
+  UnfollowChannelMutationVariables
+>
 
 /**
  * __useUnfollowChannelMutation__
@@ -194,9 +242,17 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<UnfollowChannelM
  *   },
  * });
  */
-export function useUnfollowChannelMutation(baseOptions?: Apollo.MutationHookOptions<UnfollowChannelMutation, UnfollowChannelMutationVariables>) {
-        return Apollo.useMutation<UnfollowChannelMutation, UnfollowChannelMutationVariables>(UnfollowChannelDocument, baseOptions);
-      }
-export type UnfollowChannelMutationHookResult = ReturnType<typeof useUnfollowChannelMutation>;
-export type UnfollowChannelMutationResult = Apollo.MutationResult<UnfollowChannelMutation>;
-export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<UnfollowChannelMutation, UnfollowChannelMutationVariables>;
+export function useUnfollowChannelMutation(
+  baseOptions?: Apollo.MutationHookOptions<UnfollowChannelMutation, UnfollowChannelMutationVariables>
+) {
+  return Apollo.useMutation<UnfollowChannelMutation, UnfollowChannelMutationVariables>(
+    UnfollowChannelDocument,
+    baseOptions
+  )
+}
+export type UnfollowChannelMutationHookResult = ReturnType<typeof useUnfollowChannelMutation>
+export type UnfollowChannelMutationResult = Apollo.MutationResult<UnfollowChannelMutation>
+export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
+  UnfollowChannelMutation,
+  UnfollowChannelMutationVariables
+>
