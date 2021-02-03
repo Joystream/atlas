@@ -11,7 +11,7 @@ import {
 import styled from '@emotion/styled'
 import Placeholder from '../Placeholder'
 
-type VideoPreviewBaseProps = {
+export type VideoPreviewBaseProps = {
   coverNode?: React.ReactNode
   titleNode?: React.ReactNode
   showChannel?: boolean

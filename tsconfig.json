@@ -24,8 +24,7 @@
   },
   "exclude": [
     "node_modules",
-    "dist",
-    "src/shared/stories"
+    "dist"
   ],
   "include": [
     "src"

@@ -49,7 +49,7 @@ const FancySection: React.FC<FancySectionProps> = ({firstProps, secondProp, ...e
 
 ## Styling components
 
-We mainly use `@emotion/styled` to style components, if there is some style pattern or "snippet" that is repeated between multiple components, we like to use the `css` prop from `@emotion/core` to do so.
+We mainly use `@emotion/styled` to style components, if there is some style pattern or "snippet" that is repeated between multiple components, we like to use the `css` prop from `@emotion/react` to do so.
 When possible, we like to use variables from our theme, which is imported from `@/shared/theme`, theme components should be distructured before being used. When possible, *always* use values from the theme as it helps keep the app consistent.
 
 Here is a kitchen sink example:
@@ -57,7 +57,7 @@ Here is a kitchen sink example:
 ```javascript
 // YourComponent.style.tsx
 import styled from "@emotion/styled"
-import {css} from "@emotion/core"
+import {css} from "@emotion/react"
 
 import {colors, sizes} from "@/shared/theme"
 

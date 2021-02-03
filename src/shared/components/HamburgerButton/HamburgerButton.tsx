@@ -1,8 +1,8 @@
 import React from 'react'
-import { SerializedStyles } from '@emotion/core'
+import { SerializedStyles } from '@emotion/react'
 import { Hamburger, HamburgerInner, HamburgerBox } from './HamburgerButton.style'
 
-type HamburgerButtonProps = {
+export type HamburgerButtonProps = {
   active: boolean
   onClick: (e: React.MouseEvent<HTMLElement>) => void
   outerStyles?: SerializedStyles

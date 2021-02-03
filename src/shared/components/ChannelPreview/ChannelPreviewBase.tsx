@@ -14,7 +14,7 @@ import Placeholder from '../Placeholder'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 
-type ChannelPreviewBaseProps = {
+export type ChannelPreviewBaseProps = {
   avatarUrl?: string
   handle?: string
   videoCount?: number

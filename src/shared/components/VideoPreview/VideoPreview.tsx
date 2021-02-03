@@ -28,7 +28,7 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
   ((videoPreviewWidth - MIN_VIDEO_PREVIEW_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
-type VideoPreviewProps = {
+export type VideoPreviewProps = {
   title: string
   channelName: string
   channelAvatarURL?: string | null

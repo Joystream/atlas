@@ -1,4 +1,4 @@
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { transitions } from '@/shared/theme'
 
 export const globalStyles = css`
