@@ -21,7 +21,7 @@ type InfiniteChannelGridProps = {
 }
 
 const INITIAL_ROWS = 4
-const INITIAL_CHANNELS_PER_ROW = 4
+const INITIAL_CHANNELS_PER_ROW = 7
 const QUERY_VARIABLES = {}
 
 const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCount = 0, ready = true, className }) => {
