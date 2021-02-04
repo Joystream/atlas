@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import TextField from '.'
+import TextField, { TextFieldProps } from '.'
 import { Meta, Story } from '@storybook/react'
-import { TextFieldProps } from './TextField'
 
 export default {
   title: 'Shared/TextField',
@@ -43,6 +42,7 @@ const TemplateWithControlledInput: Story<TextFieldProps> = (args) => {
 }
 
 export const Default = Template.bind({})
+
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const Disabled = Template.bind({})

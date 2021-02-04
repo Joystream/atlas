@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import InputBase, { InputBaseProps } from '../InputBase/InputBase'
+import InputBase, { InputBaseProps } from '../InputBase'
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
 import Icon from '../Icon'

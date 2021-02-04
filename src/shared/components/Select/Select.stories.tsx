@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import Select from '.'
-import { SelectProps, SelectedItem } from './Select'
+import Select, { SelectProps, SelectedItem } from '.'
 import { Story, Meta } from '@storybook/react'
 
-const items = [
+const items: SelectedItem[] = [
   { name: 'first', value: 'first' },
   { name: 'second', value: 'second' },
   { name: 'third', value: 'third' },
@@ -16,6 +15,10 @@ export default {
     items,
     label: 'change value',
     placeholder: 'placeholder',
+    disabled: false,
+    error: '',
+    helperText: '',
+    warning: '',
   },
 } as Meta
 
@@ -36,14 +39,6 @@ const TemplateWithControlledInput: Story<SelectProps> = (args) => {
 }
 
 export const Default = Template.bind({})
-Default.args = {
-  label: '',
-  placeholder: '',
-  disabled: false,
-  error: '',
-  helperText: '',
-  warning: '',
-}
 
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 

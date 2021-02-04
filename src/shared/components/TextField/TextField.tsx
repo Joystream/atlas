@@ -1,7 +1,6 @@
 import React, { forwardRef, useState } from 'react'
-import InputBase, { InputBaseProps } from '../InputBase/InputBase'
+import InputBase, { InputBaseProps, LabelText } from '../InputBase'
 import { TextInput } from './TextField.style'
-import { LabelText } from '../InputBase'
 
 export type TextFieldProps = {
   type?: 'text' | 'email' | 'password' | 'search'

@@ -1,6 +1,6 @@
 import { colors } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { labelOnTop, styledinputStates } from '../InputBase/InputBase.styles'
+import { labelOnTop, styledinputStates } from '../InputBase'
 
 type TextInputProps = {
   filled?: boolean
