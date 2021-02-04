@@ -9,7 +9,7 @@ import {
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
 } from '@/api/queries'
-import ChannelPreview from '@/components/ChannelPreviewWithNavigation'
+import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteChannelGridProps = {
@@ -53,13 +53,7 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
   const gridContent = (
     <>
       {displayedItems.map((channel) => (
-        <StyledChannelPreview
-          key={channel.id}
-          id={channel.id}
-          name={channel.handle}
-          avatarURL={channel.avatarPhotoUrl}
-          animated
-        />
+        <StyledChannelPreview key={channel.id} id={channel.id} animated />
       ))}
       {Array.from({ length: placeholdersCount }, (_, idx) => (
         <StyledChannelPreviewBase key={idx} />
