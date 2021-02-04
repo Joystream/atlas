@@ -46,7 +46,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading)}
+            timeout={parseInt(transitions.timings.loading) * 0.75}
             classNames={transitions.names.fade}
           >
             <InnerContainer animated={loading === false && animated}>
@@ -60,7 +60,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                   {loading ? (
                     <Placeholder width="140px" height="16px" />
                   ) : (
-                    <VideoCount variant="subtitle2">{videoCount} Uploads</VideoCount>
+                    <VideoCount variant="subtitle2">{videoCount ? `${videoCount} Uploads` : '⠀'}</VideoCount>
                   )}
                 </VideoCountContainer>
               </Info>
