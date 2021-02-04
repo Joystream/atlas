@@ -3,6 +3,10 @@ import { fluidRange } from 'polished'
 import { Text } from '@/shared/components'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
 
+type WarningTextProps = {
+  error?: boolean
+}
+
 export const Container = styled.div`
   position: relative;
   width: fit-content;
@@ -32,7 +36,7 @@ export const StyledInput = styled.input`
   }
 `
 
-export const WarningText = styled(Text)`
+export const WarningText = styled(Text)<WarningTextProps>`
   color: ${({ error }) => (error ? colors.error : colors.warning)};
   background-color: ${colors.gray[800]};
   width: fit-content;
