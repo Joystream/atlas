@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
-import { sizes } from '@/shared/theme'
+import { sizes, transitions } from '@/shared/theme'
 import { ChannelPreviewBase, Grid, Text } from '@/shared/components'
 import {
   GetChannelsConnectionDocument,
@@ -11,6 +11,7 @@ import {
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
+import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group'
 
 type InfiniteChannelGridProps = {
   title?: string
@@ -52,11 +53,12 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
 
   const gridContent = (
     <>
-      {displayedItems.map((channel) => (
-        <StyledChannelPreview key={channel.id} id={channel.id} animated />
+      {/* we are reusing the components below by giving them the same keys */}
+      {displayedItems.map((channel, idx) => (
+        <StyledChannelPreview key={idx} id={channel.id} animated />
       ))}
       {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <StyledChannelPreviewBase key={idx} />
+        <StyledChannelPreview key={idx + displayedItems.length} />
       ))}
     </>
   )
