@@ -26,7 +26,8 @@ type ChannelPreviewBaseProps = {
 const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   avatarURL,
   name,
-  videoCount,
+  videoCount = 0,
+  loading,
   channelHref,
   className,
   animated = false,
@@ -42,15 +43,15 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
       <Anchor href={channelHref}>
         <InnerContainer animated={animated}>
           <AvatarContainer>
-            {avatarURL ? <StyledAvatar imageUrl={avatarURL} handle={name} /> : <Placeholder rounded />}
+            {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarURL} handle={name} />}
           </AvatarContainer>
           <Info>
-            {name ? <NameHeader variant="h6">{name}</NameHeader> : <Placeholder width="140px" height="16px" />}
+            {loading ? <Placeholder width="140px" height="16px" /> : <NameHeader variant="h6">{name}</NameHeader>}
             <VideoCountContainer>
-              {videoCount ? (
-                <VideoCount variant="subtitle2">{videoCount} Uploads</VideoCount>
-              ) : (
+              {loading ? (
                 <Placeholder width="140px" height="16px" />
+              ) : (
+                <VideoCount variant="subtitle2">{videoCount} Uploads</VideoCount>
               )}
             </VideoCountContainer>
           </Info>
