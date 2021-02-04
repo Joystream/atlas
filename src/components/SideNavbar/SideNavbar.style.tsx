@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router-dom'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
 export const SIDENAVBAR_WIDTH = 72
@@ -18,7 +18,8 @@ type SubItemProps = {
 
 type SidebarNavLinkProps = {
   content: string
-} & ExpandableElementProps
+} & ExpandableElementProps &
+  LinkProps
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
@@ -66,7 +67,7 @@ export const SidebarNavItem = styled.li`
   flex-direction: column;
 `
 
-export const SidebarNavLink = styled(({ expanded, ...props }) => <Link {...props} />)<SidebarNavLinkProps>`
+export const SidebarNavLink = styled(({ expanded, ...props }: SidebarNavLinkProps) => <Link {...props} />)`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;
