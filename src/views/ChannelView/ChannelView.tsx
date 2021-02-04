@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Container } from '@/views/LayoutWithRouting'
 import { useParams } from 'react-router-dom'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
@@ -68,7 +67,7 @@ const ChannelView: React.FC = () => {
   const showBgPattern = !channel?.coverPhotoUrl
 
   return (
-    <Container>
+    <>
       <Header>
         <MediaWrapper>
           <Media>
@@ -108,7 +107,7 @@ const ChannelView: React.FC = () => {
       <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
-    </Container>
+    </>
   )
 }
 export default ChannelView

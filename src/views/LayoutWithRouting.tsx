@@ -48,7 +48,7 @@ const LayoutWithRouting: React.FC = () => {
     // delay scroll to allow transition to finish first
     setTimeout(() => {
       window.scrollTo(0, 0)
-    }, parseInt(transitions.timings.regular))
+    }, parseInt(transitions.timings.routing))
   }, [location])
 
   return (
@@ -71,7 +71,15 @@ const LayoutWithRouting: React.FC = () => {
             >
               <Routes location={location}>
                 {routesMap.map(({ path, Component }) => (
-                  <Route key={path} path={path} element={<Component />} />
+                  <Route
+                    key={path}
+                    path={path}
+                    element={
+                      <ViewWrapper>
+                        <Component />
+                      </ViewWrapper>
+                    }
+                  />
                 ))}
               </Routes>
             </CSSTransition>
@@ -97,16 +105,9 @@ const MainContainer = styled.main`
     margin-left: ${SIDENAVBAR_WIDTH}px;
   }
 `
-
-export const Container = styled.div`
-  position: absolute;
-  top: ${TOP_NAVBAR_HEIGHT}px;
-  left: 0;
-  right: var(--global-horizontal-padding);
-  padding-left: var(--global-horizontal-padding);
-  @media screen and (min-width: ${breakpoints.medium}) {
-    left: ${SIDENAVBAR_WIDTH}px;
-  }
+// wrapper to fade out views and make proper transition
+const ViewWrapper = styled.div`
+  position: relative;
 `
 
 export default RouterWrapper

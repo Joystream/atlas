@@ -14,9 +14,9 @@ export const routingTransitions = css`
     opacity: 1;
     & .${transitions.names.slide} {
       transform: translateY(0);
-      transition: ${transitions.timings.routing} ${transitions.easing};
+      transition: ${transitions.timings.routing} ${transitions.routingEasing};
     }
-    transition: ${transitions.timings.routing} ${transitions.easing};
+    transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 
   .${transitions.names.fadeAndSlide}-exit {
@@ -25,6 +25,6 @@ export const routingTransitions = css`
 
   .${transitions.names.fadeAndSlide}-exit-active {
     opacity: 0;
-    transition: ${transitions.timings.routing} ${transitions.easing};
+    transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 `

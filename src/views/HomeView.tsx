@@ -5,7 +5,6 @@ import { ErrorFallback, CoverVideo, InfiniteVideoGrid, VideoGallery } from '@/co
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { VideoOrderByInput } from '@/api/queries'
 import InterruptedVideosGallery from '@/components/InterruptedVideosGallery'
-import { Container as ViewContainer } from '@/views/LayoutWithRouting'
 import { transitions } from '@/shared/theme'
 
 const NEWEST_VIDEOS_COUNT = 8
@@ -23,7 +22,7 @@ const HomeView: React.FC = () => {
   const hasNewestVideosError = newestVideosError && !newestVideosLoading
 
   return (
-    <ViewContainer>
+    <>
       <CoverVideo />
       <Container className={transitions.names.slide}>
         <InterruptedVideosGallery />
@@ -37,7 +36,7 @@ const HomeView: React.FC = () => {
           <StyledInfiniteVideoGrid title="More videos" skipCount={NEWEST_VIDEOS_COUNT} />
         </ErrorBoundary>
       </Container>
-    </ViewContainer>
+    </>
   )
 }
 

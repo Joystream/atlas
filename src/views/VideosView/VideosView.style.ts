@@ -4,7 +4,6 @@ import { InfiniteVideoGrid } from '@/components'
 
 import { colors, sizes, transitions, zIndex, breakpoints } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
-import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
 
 type IsAtTop = {
   isAtTop: boolean
@@ -13,6 +12,7 @@ type IsAtTop = {
 export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
   margin: ${sizes(14)} 0 ${sizes(10)} 0;
+  padding-top: ${sizes(14)};
 `
 export const StyledText = styled(Text)`
   /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */

@@ -14,7 +14,6 @@ import {
   Header,
   GRID_TOP_PADDING,
 } from './VideosView.style'
-import { Container } from '@/views/LayoutWithRouting'
 import { transitions } from '@/shared/theme'
 
 const VideosView: React.FC = () => {
@@ -46,7 +45,7 @@ const VideosView: React.FC = () => {
   const videos = featuredVideos?.map((featuredVideo) => featuredVideo.video)
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
   return (
-    <Container>
+    <>
       <BackgroundPattern />
       <div className={transitions.names.slide}>
         <Header variant="hero">Videos</Header>
@@ -70,7 +69,7 @@ const VideosView: React.FC = () => {
           <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
         </ErrorBoundary>
       </div>
-    </Container>
+    </>
   )
 }
 
