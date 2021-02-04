@@ -7,6 +7,7 @@ import { useFeaturedVideos, useCategories } from '@/api/hooks'
 import { ErrorFallback, BackgroundPattern, VideoGallery } from '@/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import {
+  StyledViewWrapper,
   StyledText,
   StyledCategoryPicker,
   StyledInfiniteVideoGrid,
@@ -45,7 +46,7 @@ const VideosView: React.FC = () => {
   const videos = featuredVideos?.map((featuredVideo) => featuredVideo.video)
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
   return (
-    <>
+    <StyledViewWrapper>
       <BackgroundPattern />
       <div className={transitions.names.slide}>
         <Header variant="hero">Videos</Header>
@@ -69,7 +70,7 @@ const VideosView: React.FC = () => {
           <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
         </ErrorBoundary>
       </div>
-    </>
+    </StyledViewWrapper>
   )
 }
 

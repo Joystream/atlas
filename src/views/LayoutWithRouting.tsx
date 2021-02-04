@@ -71,15 +71,7 @@ const LayoutWithRouting: React.FC = () => {
             >
               <Routes location={location}>
                 {routesMap.map(({ path, Component }) => (
-                  <Route
-                    key={path}
-                    path={path}
-                    element={
-                      <ViewWrapper>
-                        <Component />
-                      </ViewWrapper>
-                    }
-                  />
+                  <Route key={path} path={path} element={<Component />} />
                 ))}
               </Routes>
             </CSSTransition>
@@ -100,14 +92,9 @@ const RouterWrapper = () => {
 
 const MainContainer = styled.main`
   padding: 0 var(--global-horizontal-padding);
-  margin-top: ${TOP_NAVBAR_HEIGHT}px;
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-left: ${SIDENAVBAR_WIDTH}px;
   }
-`
-// wrapper to fade out views and make proper transition
-const ViewWrapper = styled.div`
-  position: relative;
 `
 
 export default RouterWrapper

@@ -19,7 +19,7 @@ import {
   SubTitlePlaceholder,
   StyledButtonContainer,
 } from './ChannelView.style'
-import { BackgroundPattern, InfiniteVideoGrid } from '@/components'
+import { BackgroundPattern, InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { Button } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -67,7 +67,7 @@ const ChannelView: React.FC = () => {
   const showBgPattern = !channel?.coverPhotoUrl
 
   return (
-    <>
+    <ViewWrapper>
       <Header>
         <MediaWrapper>
           <Media>
@@ -107,7 +107,7 @@ const ChannelView: React.FC = () => {
       <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
-    </>
+    </ViewWrapper>
   )
 }
 export default ChannelView

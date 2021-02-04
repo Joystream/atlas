@@ -1,18 +1,21 @@
 import styled from '@emotion/styled'
 import { CategoryPicker, Text } from '@/shared/components'
-import { InfiniteVideoGrid } from '@/components'
+import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 
-import { colors, sizes, transitions, zIndex, breakpoints } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 
 type IsAtTop = {
   isAtTop: boolean
 }
 
+export const StyledViewWrapper = styled(ViewWrapper)`
+  padding-top: ${sizes(14)};
+`
+
 export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
-  margin: ${sizes(14)} 0 ${sizes(10)} 0;
-  padding-top: ${sizes(14)};
+  margin: 0 0 ${sizes(10)} 0;
 `
 export const StyledText = styled(Text)`
   /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { throttle } from 'lodash'
 import {
   ChannelContainer,
-  Container,
+  StyledViewWrapper,
   DescriptionContainer,
   DescriptionPlaceholder,
   InfoContainer,
@@ -129,7 +129,7 @@ const VideoView: React.FC = () => {
   }
 
   return (
-    <Container>
+    <StyledViewWrapper>
       <PlayerWrapper>
         <PlayerContainer>
           {video ? (
@@ -203,7 +203,7 @@ const VideoView: React.FC = () => {
           <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
         </MoreVideosContainer>
       </InfoContainer>
-    </Container>
+    </StyledViewWrapper>
   )
 }
 
