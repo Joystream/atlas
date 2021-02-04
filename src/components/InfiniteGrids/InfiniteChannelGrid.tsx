@@ -11,6 +11,7 @@ import {
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
+import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group'
 
 type InfiniteChannelGridProps = {
   title?: string
