@@ -12,7 +12,7 @@ type IsAtTop = {
 
 export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
-  margin: 0 0 ${sizes(10)} 0;
+  margin: ${sizes(14)} 0 ${sizes(10)} 0;
 `
 export const StyledText = styled(Text)`
   /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */
@@ -34,17 +34,6 @@ export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
 `
 
-export const Container = styled.div`
-  position: absolute;
-  top: ${TOP_NAVBAR_HEIGHT}px;
-  left: 0;
-  right: var(--global-horizontal-padding);
-  padding-left: var(--global-horizontal-padding);
-  padding-top: ${sizes(14)};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    left: ${SIDENAVBAR_WIDTH}px;
-  }
-`
 export const IntersectionTarget = styled.div`
   min-height: 1px;
 `

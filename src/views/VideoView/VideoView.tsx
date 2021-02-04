@@ -16,7 +16,8 @@ import {
   LicenseContainer,
   TitleText,
 } from './VideoView.style'
-import { Placeholder, VideoPlayer, Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+import { Placeholder, VideoPlayer } from '@/shared/components'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
@@ -148,7 +149,7 @@ const VideoView: React.FC = () => {
           )}
         </PlayerContainer>
       </PlayerWrapper>
-      <InfoContainer>
+      <InfoContainer className={transitions.names.slide}>
         {video ? <TitleText variant="h2">{video.title}</TitleText> : <Placeholder height={46} width={400} />}
         <Meta variant="subtitle1">
           {video ? (

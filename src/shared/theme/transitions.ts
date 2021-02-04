@@ -3,6 +3,7 @@ const transitions = {
   timings: {
     loading: '600ms',
     regular: '400ms',
+    routing: '300ms',
   },
   names: {
     fade: 'fade',

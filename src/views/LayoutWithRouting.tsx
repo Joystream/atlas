@@ -65,7 +65,7 @@ const LayoutWithRouting: React.FC = () => {
         >
           <SwitchTransition>
             <CSSTransition
-              timeout={parseInt(transitions.timings.regular)}
+              timeout={parseInt(transitions.timings.routing)}
               classNames={transitions.names.fadeAndSlide}
               key={location.key}
             >
@@ -97,4 +97,16 @@ const MainContainer = styled.main`
     margin-left: ${SIDENAVBAR_WIDTH}px;
   }
 `
+
+export const Container = styled.div`
+  position: absolute;
+  top: ${TOP_NAVBAR_HEIGHT}px;
+  left: 0;
+  right: var(--global-horizontal-padding);
+  padding-left: var(--global-horizontal-padding);
+  @media screen and (min-width: ${breakpoints.medium}) {
+    left: ${SIDENAVBAR_WIDTH}px;
+  }
+`
+
 export default RouterWrapper

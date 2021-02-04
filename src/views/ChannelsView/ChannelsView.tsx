@@ -1,5 +1,6 @@
 import React from 'react'
-import { Container, Header } from '@/views/VideosView/VideosView.style'
+import { Container } from '@/views/LayoutWithRouting'
+import { Header } from '@/views/VideosView/VideosView.style'
 import { BackgroundPattern, InfiniteChannelGrid } from '@/components'
 import { transitions } from '@/shared/theme'
 

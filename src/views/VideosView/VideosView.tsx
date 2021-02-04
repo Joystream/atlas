@@ -9,12 +9,13 @@ import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import {
   StyledText,
   StyledCategoryPicker,
-  Container,
   StyledInfiniteVideoGrid,
   IntersectionTarget,
   Header,
   GRID_TOP_PADDING,
 } from './VideosView.style'
+import { Container } from '@/views/LayoutWithRouting'
+import { transitions } from '@/shared/theme'
 
 const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
@@ -47,26 +48,28 @@ const VideosView: React.FC = () => {
   return (
     <Container>
       <BackgroundPattern />
-      <Header variant="hero">Videos</Header>
-      {!hasFeaturedVideosError ? (
-        <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
-      ) : (
-        <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
-      )}
-      <StyledText ref={topicsRef} variant="h5">
-        Topics that may interest you
-      </StyledText>
-      <IntersectionTarget ref={targetRef} />
-      <StyledCategoryPicker
-        categories={categories}
-        loading={categoriesLoading}
-        selectedCategoryId={selectedCategoryId}
-        onChange={handleCategoryChange}
-        isAtTop={inView}
-      />
-      <ErrorBoundary fallback={ErrorFallback}>
-        <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
-      </ErrorBoundary>
+      <div className={transitions.names.slide}>
+        <Header variant="hero">Videos</Header>
+        {!hasFeaturedVideosError ? (
+          <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
+        ) : (
+          <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
+        )}
+        <StyledText ref={topicsRef} variant="h5">
+          Topics that may interest you
+        </StyledText>
+        <IntersectionTarget ref={targetRef} />
+        <StyledCategoryPicker
+          categories={categories}
+          loading={categoriesLoading}
+          selectedCategoryId={selectedCategoryId}
+          onChange={handleCategoryChange}
+          isAtTop={inView}
+        />
+        <ErrorBoundary fallback={ErrorFallback}>
+          <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
+        </ErrorBoundary>
+      </div>
     </Container>
   )
 }
