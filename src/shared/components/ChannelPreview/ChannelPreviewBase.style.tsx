@@ -31,7 +31,7 @@ const hoverTransition = ({ animated }: InnerContainerProps) =>
       `
     : null
 
-export const InnerContainer = styled.a<InnerContainerProps>`
+export const InnerContainer = styled.div<InnerContainerProps>`
   background-color: ${colors.gray[800]};
   color: ${colors.gray[300]};
 

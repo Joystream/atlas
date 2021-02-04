@@ -11,6 +11,8 @@ import {
   VideoCountContainer,
 } from './ChannelPreviewBase.style'
 import Placeholder from '../Placeholder'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 type ChannelPreviewBaseProps = {
   avatarURL?: string
@@ -26,8 +28,8 @@ type ChannelPreviewBaseProps = {
 const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   avatarURL,
   name,
-  videoCount = 0,
-  loading,
+  videoCount,
+  loading = true,
   channelHref,
   className,
   animated = false,
@@ -41,21 +43,30 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   return (
     <OuterContainer className={className} onClick={handleClick}>
       <Anchor href={channelHref}>
-        <InnerContainer animated={animated}>
-          <AvatarContainer>
-            {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarURL} handle={name} />}
-          </AvatarContainer>
-          <Info>
-            {loading ? <Placeholder width="140px" height="16px" /> : <NameHeader variant="h6">{name}</NameHeader>}
-            <VideoCountContainer>
-              {loading ? (
-                <Placeholder width="140px" height="16px" />
-              ) : (
-                <VideoCount variant="subtitle2">{videoCount} Uploads</VideoCount>
-              )}
-            </VideoCountContainer>
-          </Info>
-        </InnerContainer>
+        <SwitchTransition>
+          <CSSTransition
+            key={loading ? 'placeholder' : 'content'}
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            <InnerContainer animated={loading === false && animated}>
+              <AvatarContainer>
+                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarURL} handle={name} />}
+              </AvatarContainer>
+
+              <Info>
+                {loading ? <Placeholder width="140px" height="16px" /> : <NameHeader variant="h6">{name}</NameHeader>}
+                <VideoCountContainer>
+                  {loading ? (
+                    <Placeholder width="140px" height="16px" />
+                  ) : (
+                    <VideoCount variant="subtitle2">{videoCount} Uploads</VideoCount>
+                  )}
+                </VideoCountContainer>
+              </Info>
+            </InnerContainer>
+          </CSSTransition>
+        </SwitchTransition>
       </Anchor>
     </OuterContainer>
   )
