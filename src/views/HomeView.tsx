@@ -3,13 +3,7 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import { usePersonalData } from '@/hooks'
 import { sub } from 'date-fns'
-import {
-  ErrorFallback,
-  CoverVideo,
-  InfiniteVideoGrid,
-  InterruptedVideosGallery,
-  ViewWrapper,
-} from '@/components'
+import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { transitions } from '@/shared/theme'
 
