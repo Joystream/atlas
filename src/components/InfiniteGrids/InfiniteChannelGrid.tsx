@@ -51,14 +51,12 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
     throw error
   }
 
+  const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
       {/* we are reusing the components below by giving them the same keys */}
-      {displayedItems.map((channel, idx) => (
+      {[...displayedItems, ...placeholderItems].map((channel, idx) => (
         <StyledChannelPreview key={idx} id={channel.id} animated />
-      ))}
-      {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <StyledChannelPreview key={idx + displayedItems.length} />
       ))}
     </>
   )
