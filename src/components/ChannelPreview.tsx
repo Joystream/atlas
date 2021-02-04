@@ -13,11 +13,11 @@ type ChannelPreviewProps = {
 
 const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, animated, onClick }) => {
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
-  const { videoCount, loading: loadingVideoCount } = useChannelVideoCount(id ?? '', {
+  const { videoCount } = useChannelVideoCount(id ?? '', {
     fetchPolicy: 'cache-first',
     skip: !id,
   })
-  const isLoading = loading || loadingVideoCount || id === undefined
+  const isLoading = loading || id === undefined
   return (
     <ChannelPreviewBase
       className={className}
