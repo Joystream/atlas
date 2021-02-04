@@ -48,8 +48,11 @@ export const SelectButton = styled.button<SelectButtonProps>`
 export const StyledLabelText = styled(LabelText)`
   ${labelOnTop};
 `
+type SelectMenuProps = {
+  isOpen?: boolean
+}
 
-export const SelectMenu = styled.ul<{ isOpen?: boolean }>`
+export const SelectMenu = styled.ul<SelectMenuProps>`
   width: 100%;
   position: absolute;
   padding: 0;
@@ -58,8 +61,11 @@ export const SelectMenu = styled.ul<{ isOpen?: boolean }>`
   color: ${colors.white};
   list-style: none;
 `
+type SelectOptionProps = {
+  isSelected?: boolean
+}
 
-export const SelectOption = styled.li<{ isSelected?: boolean }>`
+export const SelectOption = styled.li<SelectOptionProps>`
   margin: 0;
   cursor: pointer;
   padding: ${sizes(2)} ${sizes(3)};
