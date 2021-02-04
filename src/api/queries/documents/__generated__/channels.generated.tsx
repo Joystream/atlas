@@ -28,11 +28,13 @@ export type GetChannelQuery = {
 }
 
 export type GetChannelVideoCountQueryVariables = Types.Exact<{
-  channelId: Types.Scalars['ID'];
-}>;
+  channelId: Types.Scalars['ID']
+}>
 
-
-export type GetChannelVideoCountQuery = { __typename: 'Query', videosConnection: { __typename: 'VideoConnection', totalCount: number } };
+export type GetChannelVideoCountQuery = {
+  __typename: 'Query'
+  videosConnection: { __typename: 'VideoConnection'; totalCount: number }
+}
 
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
@@ -113,21 +115,23 @@ export const GetChannelDocument = gql`
  * });
  */
 export function useGetChannelQuery(baseOptions: Apollo.QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
-        return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions);
-      }
-export function useGetChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
-          return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions);
-        }
-export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>;
-export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>;
-export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>;
-export const GetChannelVideoCountDocument = gql`
-    query GetChannelVideoCount($channelId: ID!) {
-  videosConnection(first: 0, where: {channelId_eq: $channelId}) {
-    totalCount
-  }
+  return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
 }
-    `;
+export function useGetChannelLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
+}
+export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
+export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
+export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>
+export const GetChannelVideoCountDocument = gql`
+  query GetChannelVideoCount($channelId: ID!) {
+    videosConnection(first: 0, where: { channelId_eq: $channelId }) {
+      totalCount
+    }
+  }
+`
 
 /**
  * __useGetChannelVideoCountQuery__
@@ -145,15 +149,28 @@ export const GetChannelVideoCountDocument = gql`
  *   },
  * });
  */
-export function useGetChannelVideoCountQuery(baseOptions: Apollo.QueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>) {
-        return Apollo.useQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(GetChannelVideoCountDocument, baseOptions);
-      }
-export function useGetChannelVideoCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>) {
-          return Apollo.useLazyQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(GetChannelVideoCountDocument, baseOptions);
-        }
-export type GetChannelVideoCountQueryHookResult = ReturnType<typeof useGetChannelVideoCountQuery>;
-export type GetChannelVideoCountLazyQueryHookResult = ReturnType<typeof useGetChannelVideoCountLazyQuery>;
-export type GetChannelVideoCountQueryResult = Apollo.QueryResult<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>;
+export function useGetChannelVideoCountQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+) {
+  return Apollo.useQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
+    GetChannelVideoCountDocument,
+    baseOptions
+  )
+}
+export function useGetChannelVideoCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
+    GetChannelVideoCountDocument,
+    baseOptions
+  )
+}
+export type GetChannelVideoCountQueryHookResult = ReturnType<typeof useGetChannelVideoCountQuery>
+export type GetChannelVideoCountLazyQueryHookResult = ReturnType<typeof useGetChannelVideoCountLazyQuery>
+export type GetChannelVideoCountQueryResult = Apollo.QueryResult<
+  GetChannelVideoCountQuery,
+  GetChannelVideoCountQueryVariables
+>
 export const GetChannelsConnectionDocument = gql`
   query GetChannelsConnection($first: Int, $after: String) {
     channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
