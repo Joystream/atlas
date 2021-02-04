@@ -41,6 +41,7 @@ export const InnerContainer = styled.a<InnerContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid transparent;
   ${hoverTransition}
 `
 
