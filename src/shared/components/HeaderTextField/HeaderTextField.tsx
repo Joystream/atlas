@@ -6,13 +6,14 @@ export type Variant = 'default' | 'error' | 'warning'
 export type HeaderTextFieldProps = {
   value: string
   warningText?: string
+  errorText?: string
   onChange: (value: string) => void
   variant?: Variant
 }
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ value, warningText, onChange, variant = 'default' }, ref) => {
+  ({ value, warningText, errorText, onChange, variant = 'default' }, ref) => {
     const inputElement = useRef<HTMLInputElement>(null)
     useEffect(() => {
       if (inputElement.current === null) {
@@ -30,7 +31,12 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
           onChange={(e: ChangeEvent) => onChange(e.target.value)}
           required
         />
-        {variant === 'error' && <WarningText variant="body1">{warningText}</WarningText>}
+        {variant === 'warning' && <WarningText variant="body1">{warningText}</WarningText>}
+        {variant === 'error' && (
+          <WarningText variant="body1" error>
+            {errorText}
+          </WarningText>
+        )}
       </Container>
     )
   }

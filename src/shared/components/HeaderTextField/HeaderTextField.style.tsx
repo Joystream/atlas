@@ -22,7 +22,7 @@ export const StyledInput = styled.input`
   font-weight: ${typography.weights.bold};
   border: none;
   min-width: 100px;
-  max-width: 100%;
+  max-width: 100vw;
   height: ${sizes(13)};
   &:hover {
     filter: brightness(80%);
@@ -33,7 +33,7 @@ export const StyledInput = styled.input`
 `
 
 export const WarningText = styled(Text)`
-  color: ${colors.warning};
+  color: ${({ error }) => (error ? colors.error : colors.warning)};
   background-color: ${colors.gray[800]};
   width: fit-content;
   max-width: 600px;
