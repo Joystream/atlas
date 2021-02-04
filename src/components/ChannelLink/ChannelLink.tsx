@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
 import routes from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
-import useChannel from '@/api/hooks/channel'
+import { useChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 
 type ChannelLinkProps = {

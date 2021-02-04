@@ -51,7 +51,7 @@ type VideoPreview = {
 
 type ChannelPreview = {
   handle: string
-  avatarPhotoUrl: string | null
+  avatarPhotoUrl?: string | null
   onClick: () => void
 }
 export const SmallVideoPreview: React.FC<VideoPreview> = ({ title, thumbnailUrl, onClick }) => (

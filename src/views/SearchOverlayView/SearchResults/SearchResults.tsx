@@ -4,19 +4,19 @@ import { sizes } from '@/shared/theme'
 import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
-import AllResultsTab from '@/views/SearchView/AllResultsTab'
+import AllResultsTab from './AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
 import { SearchQuery } from '@/api/queries'
 
-type SearchViewProps = {
-  search?: string
+type SearchResultsProps = {
+  query: string
 }
 const tabs = ['all results', 'videos', 'channels']
 
-const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
+const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: search }, { fetchPolicy: 'cache-and-network' })
+  const { data, loading, error } = useSearch({ text: query }, { fetchPolicy: 'cache-and-network' })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
@@ -75,6 +75,7 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
           ))}
       </Container>
     </ViewWrapper>
+  )
 }
 
 const Container = styled.div`
@@ -84,4 +85,4 @@ const Container = styled.div`
   }
 `
 
-export default SearchView
+export default SearchResults

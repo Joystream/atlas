@@ -1,5 +1,5 @@
 import routes from '@/config/routes'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import {
   FullLogo,
@@ -11,16 +11,35 @@ import {
   StyledSearchbar,
 } from './TopNavbar.style'
 
+type RoutingState = {
+  oldLocation?: string
+}
+
 const TopNavbar: React.FC = () => {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const location = useLocation()
+  const locationState = location.state as RoutingState | null
+  const oldLocation = locationState?.oldLocation || location.pathname
+
+  // TODO: close the searchbar on external navigation
+
+  const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === 'Enter' || e.key === 'NumpadEnter') && search.trim()) {
-      navigate(routes.search(search))
+    if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
+      // TODO possibly move to routes
+      const searchQueryParams = new URLSearchParams()
+      // TODO import
+      searchQueryParams.set('query', searchQuery.trim())
+      const searchUrl = `${routes.search()}?${searchQueryParams.toString()}`
+
+      const state: RoutingState = { oldLocation }
+
+      navigate(searchUrl, { state })
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
+      // TODO close overlay
       handleCancel()
       e.currentTarget.blur()
     }
@@ -28,21 +47,29 @@ const TopNavbar: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsFocused(true)
-    setSearch(e.currentTarget.value)
+    setSearchQuery(e.currentTarget.value)
   }
 
   const handleFocus = () => {
     setIsFocused(true)
-    navigate(routes.searchOverlay(), { state: { oldLocation: location } })
+    // TODO open search overlay
+
+    if (location.pathname !== routes.search()) {
+      const state: RoutingState = { oldLocation }
+
+      navigate(routes.search(), { state })
+    }
   }
 
   const handleCancel = () => {
-    setSearch('')
+    setSearchQuery('')
     setIsFocused(false)
-    // TODO: fix
-    // if (oldLocation) {
-    //   navigate(oldLocation.pathname)
-    // }
+
+    const oldLocation = locationState?.oldLocation
+
+    if (oldLocation) {
+      navigate(oldLocation)
+    }
   }
   return (
     <Header hasFocus={isFocused}>
@@ -56,7 +83,7 @@ const TopNavbar: React.FC = () => {
         <StyledSearchbar
           placeholder="Search..."
           onChange={handleChange}
-          value={search}
+          value={searchQuery}
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           onCancel={handleCancel}
