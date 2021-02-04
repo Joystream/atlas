@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Tabs } from '@/shared/components'
-import { VideoGrid, PlaceholderVideoGrid, ChannelGrid } from '@/components'
+import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
 import AllResultsTab from '@/views/SearchView/AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
@@ -41,12 +41,15 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   }
 
   return (
-    <Container>
-      <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
-      {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
-      {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
-      {selectedIndex === 2 && (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
-    </Container>
+    <ViewWrapper>
+      <Container>
+        <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
+        {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
+        {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
+        {selectedIndex === 2 &&
+          (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+      </Container>
+    </ViewWrapper>
   )
 }
 

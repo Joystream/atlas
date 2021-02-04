@@ -1,24 +1,30 @@
 import styled from '@emotion/styled'
-import { ChannelAvatar, Placeholder } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { ViewWrapper } from '@/components'
+import { Placeholder, Text } from '@/shared/components'
+import { sizes, colors, typography, breakpoints } from '@/shared/theme'
+import { fluidRange } from 'polished'
 
-export const Container = styled.div`
+export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
   flex-direction: column;
 `
 
 export const PlayerContainer = styled.div`
-  width: min(1250px, 100%);
+  width: 100%;
+  height: calc(100vw * 0.5625);
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: 70vh;
+  }
 `
 
 export const PlayerWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin: 0 calc(-1 * var(--global-horizontal-padding));
 `
 
 export const PlayerPlaceholder = styled(Placeholder)`
-  padding-top: 56.25%;
-  height: 0;
+  height: 100%;
 `
 
 export const DescriptionPlaceholder = styled(Placeholder)`
@@ -30,20 +36,20 @@ export const InfoContainer = styled.div`
   padding: ${sizes(8)} 0;
 `
 
-export const Meta = styled.span`
+export const Meta = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
+
+  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.base, breakpoints.xlarge)};
+`
+
+export const TitleText = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
 `
 
 export const ChannelContainer = styled.div`
   margin-top: ${sizes(4)};
-`
-
-export const StyledChannelAvatar = styled(ChannelAvatar)`
-  :hover {
-    cursor: pointer;
-  }
 `
 
 export const DescriptionContainer = styled.div`
@@ -51,9 +57,13 @@ export const DescriptionContainer = styled.div`
   border-top: 1px solid ${colors.gray[800]};
 
   p {
-    color: ${colors.gray[300]};
-    line-height: 175%;
+    font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
+    @media screen and (min-width: ${breakpoints.small}) {
+      font-size: 1rem;
+      color: ${colors.gray[300]};
+      line-height: 175%;
+    }
   }
 `
 

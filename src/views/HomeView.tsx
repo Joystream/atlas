@@ -1,10 +1,17 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { sub } from 'date-fns'
+import {
+  ErrorFallback,
+  CoverVideo,
+  InfiniteVideoGrid,
+  InterruptedVideosGallery,
+  ViewWrapper,
+} from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
+import { transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
@@ -25,9 +32,9 @@ const HomeView: React.FC = () => {
   const shouldShowFollowedChannels =
     followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
   return (
-    <>
+    <ViewWrapper>
       <CoverVideo />
-      <Container>
+      <Container className={transitions.names.slide}>
         <InterruptedVideosGallery />
         <ErrorBoundary fallback={ErrorFallback}>
           <StyledInfiniteVideoGrid
@@ -39,7 +46,7 @@ const HomeView: React.FC = () => {
           />
         </ErrorBoundary>
       </Container>
-    </>
+    </ViewWrapper>
   )
 }
 

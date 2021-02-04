@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useQuery, useMutation } from '@apollo/client'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { usePersonalData } from '@/hooks'
@@ -20,15 +19,11 @@ import {
   SubTitlePlaceholder,
   StyledButtonContainer,
 } from './ChannelView.style'
-import { BackgroundPattern, InfiniteVideoGrid } from '@/components'
+import { BackgroundPattern, InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { Button } from '@/shared/components'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
-
-type FollowedChannel = {
-  id: string
-}
 
 const ChannelView: React.FC = () => {
   const { id } = useParams()
@@ -72,7 +67,7 @@ const ChannelView: React.FC = () => {
   const showBgPattern = !channel?.coverPhotoUrl
 
   return (
-    <>
+    <ViewWrapper>
       <Header>
         <MediaWrapper>
           <Media>
@@ -87,7 +82,7 @@ const ChannelView: React.FC = () => {
             </TransitionGroup>
           </Media>
         </MediaWrapper>
-        <TitleSection>
+        <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>
             {channel ? (
@@ -109,10 +104,10 @@ const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
       </Header>
-      <VideoSection>
+      <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
-    </>
+    </ViewWrapper>
   )
 }
 export default ChannelView

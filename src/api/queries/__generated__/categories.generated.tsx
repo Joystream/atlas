@@ -1,30 +1,30 @@
-import * as Types from './baseTypes.generated';
+import * as Types from './baseTypes.generated'
 
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
-export type CategoryFieldsFragment = { __typename: 'Category', id: string, name: string };
+import { gql } from '@apollo/client'
+import * as Apollo from '@apollo/client'
+export type CategoryFieldsFragment = { __typename: 'Category'; id: string; name: string }
 
-export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
-
-export type GetCategoriesQuery = { __typename: 'Query', categories: Array<(
-    { __typename: 'Category' }
-    & CategoryFieldsFragment
-  )> };
+export type GetCategoriesQuery = {
+  __typename: 'Query'
+  categories: Array<{ __typename: 'Category' } & CategoryFieldsFragment>
+}
 
 export const CategoryFieldsFragmentDoc = gql`
-    fragment CategoryFields on Category {
-  id
-  name
-}
-    `;
-export const GetCategoriesDocument = gql`
-    query GetCategories {
-  categories {
-    ...CategoryFields
+  fragment CategoryFields on Category {
+    id
+    name
   }
-}
-    ${CategoryFieldsFragmentDoc}`;
+`
+export const GetCategoriesDocument = gql`
+  query GetCategories {
+    categories {
+      ...CategoryFields
+    }
+  }
+  ${CategoryFieldsFragmentDoc}
+`
 
 /**
  * __useGetCategoriesQuery__
@@ -41,12 +41,16 @@ export const GetCategoriesDocument = gql`
  *   },
  * });
  */
-export function useGetCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-        return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions);
-      }
-export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
-          return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions);
-        }
-export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
-export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
-export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export function useGetCategoriesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>
+) {
+  return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions)
+}
+export function useGetCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions)
+}
+export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>
+export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>
+export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>

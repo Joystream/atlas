@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { throttle } from 'lodash'
 import {
   ChannelContainer,
-  Container,
+  StyledViewWrapper,
   DescriptionContainer,
   DescriptionPlaceholder,
   InfoContainer,
@@ -14,8 +14,10 @@ import {
   PlayerPlaceholder,
   PlayerWrapper,
   LicenseContainer,
+  TitleText,
 } from './VideoView.style'
-import { Placeholder, VideoPlayer, Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+import { Placeholder, VideoPlayer } from '@/shared/components'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
@@ -127,14 +129,14 @@ const VideoView: React.FC = () => {
   }
 
   return (
-    <Container>
+    <StyledViewWrapper>
       <PlayerWrapper>
         <PlayerContainer>
           {video ? (
             <VideoPlayer
               playing={playing}
               src={video.media.location}
-              fluid
+              fill
               posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
@@ -147,9 +149,9 @@ const VideoView: React.FC = () => {
           )}
         </PlayerContainer>
       </PlayerWrapper>
-      <InfoContainer>
-        {video ? <Text variant="h2">{video.title}</Text> : <Placeholder height={46} width={400} />}
-        <Meta>
+      <InfoContainer className={transitions.names.slide}>
+        {video ? <TitleText variant="h2">{video.title}</TitleText> : <Placeholder height={46} width={400} />}
+        <Meta variant="subtitle1">
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
@@ -201,7 +203,7 @@ const VideoView: React.FC = () => {
           <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
         </MoreVideosContainer>
       </InfoContainer>
-    </Container>
+    </StyledViewWrapper>
   )
 }
 
