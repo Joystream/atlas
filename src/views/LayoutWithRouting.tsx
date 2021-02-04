@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from '@emotion/styled'
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 
@@ -12,7 +12,7 @@ import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { breakpoints, transitions } from '@/shared/theme'
 import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+import { Location } from 'history'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
@@ -35,22 +35,31 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
 const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
-  { path: routes.search(), Component: SearchOverlayView },
   { path: routes.videos(), Component: VideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
 ]
 
+type RoutingState = {
+  oldLocation?: Location
+}
+
 const LayoutWithRouting: React.FC = () => {
   const location = useLocation()
+  const locationState = location.state as RoutingState | null
   const navigate = useNavigate()
+  const searchMatch = useMatch({ path: routes.search() })
 
   useEffect(() => {
     // delay scroll to allow transition to finish first
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, parseInt(transitions.timings.routing))
+
+    // TODO don't scroll when exiting the search overlay
   }, [location])
+
+  const displayedLocation = locationState?.oldLocation || location
 
   return (
     <>
@@ -68,15 +77,16 @@ const LayoutWithRouting: React.FC = () => {
             <CSSTransition
               timeout={parseInt(transitions.timings.routing)}
               classNames={transitions.names.fadeAndSlide}
-              key={location.key}
+              key={displayedLocation.pathname}
             >
-              <Routes location={location}>
+              <Routes location={displayedLocation}>
                 {routesMap.map(({ path, Component }) => (
                   <Route key={path} path={path} element={<Component />} />
                 ))}
               </Routes>
             </CSSTransition>
           </SwitchTransition>
+          {searchMatch ? <Route path={routes.search()} element={<SearchOverlayView />} /> : null}
         </ErrorBoundary>
       </MainContainer>
     </>
@@ -92,7 +102,9 @@ const RouterWrapper = () => {
 }
 
 const MainContainer = styled.main`
+  position: relative;
   padding: 0 var(--global-horizontal-padding);
+
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-left: ${SIDENAVBAR_WIDTH}px;
   }

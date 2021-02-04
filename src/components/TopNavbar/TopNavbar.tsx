@@ -1,5 +1,6 @@
 import routes from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Location } from 'history'
 import React, { useState } from 'react'
 import {
   FullLogo,
@@ -12,14 +13,14 @@ import {
 } from './TopNavbar.style'
 
 type RoutingState = {
-  oldLocation?: string
+  oldLocation?: Location
 }
 
 const TopNavbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState | null
-  const oldLocation = locationState?.oldLocation || location.pathname
+  const oldLocation = locationState?.oldLocation || location
 
   // TODO: close the searchbar on external navigation
 
