@@ -1,14 +1,17 @@
 import React from 'react'
-import { Container, Header } from '@/views/VideosView/VideosView.style'
+import { Header, StyledViewWrapper } from '@/views/VideosView/VideosView.style'
 import { BackgroundPattern, InfiniteChannelGrid } from '@/components'
+import { transitions } from '@/shared/theme'
 
 const ChannelsView: React.FC = () => {
   return (
-    <Container>
+    <StyledViewWrapper>
       <BackgroundPattern />
-      <Header variant="hero">Channels</Header>
-      <InfiniteChannelGrid />
-    </Container>
+      <Header variant="hero" className={transitions.names.slide}>
+        Channels
+      </Header>
+      <InfiniteChannelGrid className={transitions.names.slide} />
+    </StyledViewWrapper>
   )
 }
 

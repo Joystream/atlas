@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { CategoryPicker, Text } from '@/shared/components'
-import { InfiniteVideoGrid } from '@/components'
+import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
@@ -8,6 +8,10 @@ import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 type IsAtTop = {
   isAtTop: boolean
 }
+
+export const StyledViewWrapper = styled(ViewWrapper)`
+  padding-top: ${sizes(14)};
+`
 
 export const GRID_TOP_PADDING = sizes(2, true)
 export const Header = styled(Text)`
@@ -33,10 +37,6 @@ export const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   padding-top: ${GRID_TOP_PADDING}px;
 `
 
-export const Container = styled.div`
-  position: relative;
-  padding-top: ${sizes(14)};
-`
 export const IntersectionTarget = styled.div`
   min-height: 1px;
 `
