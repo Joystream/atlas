@@ -12,6 +12,8 @@ type InfiniteVideoGridProps = {
   isTitleLoading?: boolean
   categoryId?: string
   channelId?: string
+  channelIdIn?: string[] | null
+  createdAtGte?: Date | null
   skipCount?: number
   ready?: boolean
   showChannel?: boolean
@@ -26,6 +28,8 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   isTitleLoading,
   categoryId = '',
   channelId = null,
+  channelIdIn = null,
+  createdAtGte = null,
   skipCount = 0,
   ready = true,
   showChannel = true,
@@ -34,6 +38,8 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [queryVariables, setQueryVariables] = useState({
     ...(channelId ? { channelId } : {}),
+    ...(channelIdIn ? { channelIdIn } : {}),
+    ...(createdAtGte ? { createdAtGte } : {}),
     ...(categoryId ? { categoryId } : {}),
   })
 
@@ -41,6 +47,8 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     [categoryId]: INITIAL_ROWS,
   })
   const [cachedChannelId, setCachedChannelId] = useState<string | null>(channelId)
+  const [cachedChannelIdIn, setCachedChannelIdIn] = useState<string[] | null>(channelIdIn)
+  const [cachedCreatedAtGte, setCachedCreatedAtGte] = useState<Date | null>(createdAtGte)
   const [cachedCategoryId, setCachedCategoryId] = useState<string>(categoryId)
 
   const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
@@ -82,6 +90,8 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
     setQueryVariables({
       ...(channelId ? { channelId } : {}),
+      ...(channelIdIn ? { channelIdIn } : {}),
+      ...(createdAtGte ? { createdAtGte } : {}),
       ...(categoryId ? { categoryId } : {}),
     })
 
@@ -93,9 +103,18 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
         [categoryId]: categoryRowsCount,
       }))
     }
-  }, [categoryId, channelId, cachedCategoryId, targetRowsCountByCategory, videosPerRow, skipCount])
+  }, [
+    categoryId,
+    channelId,
+    cachedCategoryId,
+    targetRowsCountByCategory,
+    videosPerRow,
+    skipCount,
+    channelIdIn,
+    createdAtGte,
+  ])
 
-  // handle channel change
+  // handle channelId change
   useEffect(() => {
     if (channelId === cachedChannelId) {
       return
@@ -105,9 +124,41 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
     setQueryVariables({
       ...(channelId ? { channelId } : {}),
+      ...(channelIdIn ? { channelIdIn } : {}),
+      ...(createdAtGte ? { createdAtGte } : {}),
       ...(categoryId ? { categoryId } : {}),
     })
-  }, [channelId, cachedChannelId, categoryId])
+  }, [channelId, cachedChannelId, categoryId, channelIdIn, createdAtGte])
+
+  useEffect(() => {
+    if (JSON.stringify(cachedChannelIdIn) === JSON.stringify(channelIdIn)) {
+      return
+    }
+
+    setCachedChannelIdIn(channelIdIn)
+
+    setQueryVariables({
+      ...(channelId ? { channelId } : {}),
+      ...(channelIdIn ? { channelIdIn } : {}),
+      ...(createdAtGte ? { createdAtGte } : {}),
+      ...(categoryId ? { categoryId } : {}),
+    })
+  }, [cachedChannelIdIn, categoryId, channelId, channelIdIn, createdAtGte])
+
+  useEffect(() => {
+    if (createdAtGte === cachedCreatedAtGte) {
+      return
+    }
+
+    setCachedCreatedAtGte(createdAtGte)
+
+    setQueryVariables({
+      ...(channelId ? { channelId } : {}),
+      ...(channelIdIn ? { channelIdIn } : {}),
+      ...(createdAtGte ? { createdAtGte } : {}),
+      ...(categoryId ? { categoryId } : {}),
+    })
+  }, [cachedCreatedAtGte, categoryId, channelId, channelIdIn, createdAtGte])
 
   const gridContent = (
     <>
