@@ -1,28 +1,36 @@
-import React, { useEffect } from 'react'
-import { Container, WarningText, StyledTooltip, StyledInput } from './HeaderTextField.style'
+import React, { useRef, useEffect } from 'react'
+import { Container, WarningText, StyledInput } from './HeaderTextField.style'
+
+export type Variant = 'default' | 'error' | 'warning'
 
 export type HeaderTextFieldProps = {
   value: string
-  helperText: string
-  errorText: string
+  warningText?: string
   onChange: (value: string) => void
-  variant?: 'default' | 'error' | 'warning'
+  variant?: Variant
 }
+type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ value, helperText, errorText, onChange, variant = 'default' }, ref) => {
+  ({ value, warningText, onChange, variant = 'default' }, ref) => {
+    const inputElement = useRef<HTMLInputElement>(null)
     useEffect(() => {
-      if (ref === null) {
+      if (inputElement.current === null) {
         return
       }
-      ref.current.style.width = value.length + 'ch'
-    }, [ref, value, value.length])
+      inputElement.current.style.width = value.length + 'ch'
+    }, [inputElement, value.length])
 
     return (
       <Container>
-        <StyledInput ref={ref} type="text" value={value} onChange={(e) => onChange(e.target.value)} />
-        {variant === 'error' && <WarningText variant="body1">{errorText}</WarningText>}
-        {value && <StyledTooltip data-text={helperText} />}
+        <StyledInput
+          ref={inputElement}
+          type="text"
+          value={value}
+          onChange={(e: ChangeEvent) => onChange(e.target.value)}
+          required
+        />
+        {variant === 'error' && <WarningText variant="body1">{warningText}</WarningText>}
       </Container>
     )
   }
