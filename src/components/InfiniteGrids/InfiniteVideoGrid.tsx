@@ -9,7 +9,6 @@ import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
   title?: string
-  isTitleLoading?: boolean
   categoryId?: string
   channelId?: string
   channelIdIn?: string[] | null
@@ -25,7 +24,6 @@ const INITIAL_VIDEOS_PER_ROW = 4
 
 const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
-  isTitleLoading,
   categoryId = '',
   channelId = null,
   channelIdIn = null,
@@ -188,7 +186,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   return (
     <section className={className}>
-      {isTitleLoading ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
+      {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )

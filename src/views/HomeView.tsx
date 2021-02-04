@@ -17,7 +17,7 @@ const HomeView: React.FC = () => {
   } = usePersonalData()
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
-  const { videosConnection, loading } = useVideosConnection({
+  const { videosConnection, loading, error } = useVideosConnection({
     channelIdIn,
     createdAtGte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
   })
@@ -25,6 +25,10 @@ const HomeView: React.FC = () => {
   const followedChannelsVideosCount = videosConnection?.totalCount
   const shouldShowFollowedChannels =
     followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
+
+  if (error) {
+    throw error
+  }
   return (
     <ViewWrapper>
       <CoverVideo />
@@ -33,7 +37,6 @@ const HomeView: React.FC = () => {
         <ErrorBoundary fallback={ErrorFallback}>
           <StyledInfiniteVideoGrid
             title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
-            isTitleLoading={loading}
             channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
             createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
             ready={!loading}
