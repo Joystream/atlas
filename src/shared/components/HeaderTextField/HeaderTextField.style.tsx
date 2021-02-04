@@ -33,7 +33,7 @@ export const StyledInput = styled.input`
 `
 
 export const WarningText = styled(Text)`
-  color: ${colors.warning};
+  color: ${({ error }) => (error ? colors.error : colors.warning)};
   background-color: ${colors.gray[800]};
   width: fit-content;
   max-width: 600px;
