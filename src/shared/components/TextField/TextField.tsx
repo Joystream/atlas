@@ -11,7 +11,7 @@ export type TextFieldProps = {
   required?: boolean
 } & InputBaseProps
 
-const TextField: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
+const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
   { type = 'text', label, helperText, value, onChange, onBlur, onFocus, error, warning, disabled, required },
   ref
 ) => {
@@ -50,6 +50,8 @@ const TextField: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps
   )
 }
 
+const TextField = forwardRef(TextFieldComponent)
+
 TextField.displayName = 'TextField'
 
-export default forwardRef(TextField)
+export default TextField

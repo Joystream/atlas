@@ -7,20 +7,6 @@ export default {
   component: TextField,
   args: {
     label: 'label text',
-    disabled: false,
-    helperText: '',
-    warning: '',
-    error: '',
-    required: false,
-    type: 'email',
-  },
-  argTypes: {
-    type: {
-      control: {
-        type: 'inline-radio',
-        options: ['email', 'password', 'search', 'text'] as TextFieldProps['type'][],
-      },
-    },
   },
 } as Meta
 
@@ -44,18 +30,3 @@ const TemplateWithControlledInput: Story<TextFieldProps> = (args) => {
 export const Default = Template.bind({})
 
 export const WithControlledInput = TemplateWithControlledInput.bind({})
-
-export const Disabled = Template.bind({})
-Disabled.args = {
-  disabled: true,
-}
-
-export const Error = Template.bind({})
-Error.args = {
-  error: 'Some Error!',
-}
-
-export const Warning = Template.bind({})
-Warning.args = {
-  warning: 'Some warning!',
-}
