@@ -14,7 +14,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     display: inline-block;
     content: attr(data-text);
     bottom: 0;
-    transform: translateY(calc(100% + 5px)) scale(${({ isActive }) => (isActive ? 1 : 1.1)});
+    transform: translateY(calc(100% + 10px)) scale(${({ isActive }) => (isActive ? 1 : 1.1)});
     min-width: 100px;
     max-width: 200px;
     opacity: ${({ isActive }) => (isActive ? 1 : 0)};
@@ -31,7 +31,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     content: '';
     bottom: 0;
     margin-left: ${sizes(2)};
-    transform: rotate(90deg) translateX(${({ isActive }) => (isActive ? sizes(2.5) : sizes(4))});
+    transform: rotate(90deg) translateX(${({ isActive }) => (isActive ? sizes(3) : sizes(6))});
     opacity: ${({ isActive }) => (isActive ? 1 : 0)};
     display: ${({ arrowDisabled }) => (arrowDisabled ? 'none' : 'inline-block')};
     border: 10px solid transparent;
