@@ -4,11 +4,12 @@ import {
   StyledTitleText,
   StyledContentText,
   StyledHeadRow,
+  StyledIcon,
   StyledButtonContainer,
   StyledPrimaryButton,
   StyledSecondaryButton,
+  dialogTransitions,
 } from './Dialog.style'
-import { Icon } from '@/shared/components'
 
 export type DialogProps = {
   title?: string
@@ -17,15 +18,28 @@ export type DialogProps = {
   secondaryButton?: string
   icon?: 'success' | 'failure' | null
   exitButton?: boolean
+  handleExit?: () => void
+  handlePrimaryButton?: () => void
+  handleSecondaryButton?: () => void
 }
 
-const Dialog: React.FC<DialogProps> = ({ title, content, primaryButton, secondaryButton, icon, exitButton }) => {
+const Dialog: React.FC<DialogProps> = ({
+  title,
+  content,
+  primaryButton,
+  secondaryButton,
+  icon,
+  exitButton,
+  handleExit,
+  handlePrimaryButton,
+  handleSecondaryButton,
+}) => {
   return (
-    <StyledContainer>
+    <StyledContainer css={dialogTransitions}>
       {icon || exitButton ? (
         <StyledHeadRow>
-          {icon && <Icon name={icon} />}
-          {exitButton && <Icon name="times-white" />}
+          {icon && <StyledIcon name={icon} />}
+          {exitButton && <StyledIcon marginLeft={!icon} name="times-white" onClick={handleExit} />}
         </StyledHeadRow>
       ) : (
         ''
@@ -34,8 +48,12 @@ const Dialog: React.FC<DialogProps> = ({ title, content, primaryButton, secondar
       {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
       <StyledContentText variant="body2">{content}</StyledContentText>
       <StyledButtonContainer>
-        {secondaryButton && <StyledSecondaryButton variant="secondary">{secondaryButton}</StyledSecondaryButton>}
-        {primaryButton && <StyledPrimaryButton>{primaryButton}</StyledPrimaryButton>}
+        {secondaryButton && (
+          <StyledSecondaryButton variant="secondary" onClick={handleSecondaryButton}>
+            {secondaryButton}
+          </StyledSecondaryButton>
+        )}
+        {primaryButton && <StyledPrimaryButton onClick={handlePrimaryButton}>{primaryButton}</StyledPrimaryButton>}
       </StyledButtonContainer>
     </StyledContainer>
   )
