@@ -49,7 +49,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading) * 0.5}
+            timeout={parseInt(transitions.timings.loading) * 0.75}
             classNames={transitions.names.fade}
           >
             <InnerContainer animated={isAnimated}>
