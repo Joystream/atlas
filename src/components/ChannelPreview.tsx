@@ -6,12 +6,11 @@ import routes from '@/config/routes'
 
 type ChannelPreviewProps = {
   id?: string
-  animated?: boolean
   className?: string
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, animated, onClick }) => {
+export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, onClick }) => {
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const { videoCount } = useChannelVideoCount(id ?? '', {
     fetchPolicy: 'cache-first',
@@ -25,7 +24,6 @@ const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, animated
       handle={channel?.handle}
       channelHref={routes.channel(id)}
       videoCount={videoCount}
-      animated={animated}
       loading={isLoading}
       onClick={onClick}
     />

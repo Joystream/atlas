@@ -56,7 +56,7 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
     <>
       {/* we are reusing the components below by giving them the same keys */}
       {[...displayedItems, ...placeholderItems].map((channel, idx) => (
-        <StyledChannelPreview key={idx} id={channel.id} animated />
+        <StyledChannelPreview key={idx} id={channel.id} />
       ))}
     </>
   )
