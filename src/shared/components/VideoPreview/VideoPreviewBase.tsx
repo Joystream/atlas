@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   AvatarContainer,
   Container,
@@ -10,34 +10,62 @@ import {
 } from './VideoPreviewBase.styles'
 import styled from '@emotion/styled'
 import Placeholder from '../Placeholder'
+import { formatVideoViewsAndDate } from '@/utils/video'
+import { formatDurationShort } from '@/utils/time'
+import useResizeObserver from 'use-resize-observer'
 
 type VideoPreviewBaseProps = {
-  coverNode?: React.ReactNode
-  titleNode?: React.ReactNode
   showChannel?: boolean
-  channelAvatarNode?: React.ReactNode
-  channelNameNode?: React.ReactNode
   showMeta?: boolean
   main?: boolean
-  metaNode?: React.ReactNode
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   className?: string
   scalingFactor?: number
 }
 
+export const MIN_VIDEO_PREVIEW_WIDTH = 300
+const MAX_VIDEO_PREVIEW_WIDTH = 600
+const MIN_SCALING_FACTOR = 1
+const MAX_SCALING_FACTOR = 1.375
+// Linear Interpolation, see https://en.wikipedia.org/wiki/Linear_interpolation
+const calculateScalingFactor = (videoPreviewWidth: number) =>
+  MIN_SCALING_FACTOR +
+  ((videoPreviewWidth - MIN_VIDEO_PREVIEW_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
+    (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
+
 const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
-  coverNode,
-  titleNode,
   showChannel = true,
-  channelAvatarNode,
-  channelNameNode,
+
   showMeta = true,
   main = false,
-  metaNode,
+
   onClick,
   className,
   scalingFactor = 1,
 }) => {
+  const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
+  const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
+    onResize: (size) => {
+      const { width: videoPreviewWidth, height: videoPreviewHeight } = size
+      if (onCoverResize) {
+        onCoverResize(videoPreviewWidth, videoPreviewHeight)
+      }
+      if (videoPreviewWidth && !main) {
+        setScalingFactor(calculateScalingFactor(videoPreviewWidth))
+      }
+    },
+  })
+
+  const channelClickable = !!onChannelClick
+
+  const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!onChannelClick) {
+      return
+    }
+    e.stopPropagation()
+    onChannelClick(e)
+  }
+
   const clickable = !!onClick
 
   const displayChannel = showChannel && !main
@@ -47,6 +75,53 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const titlePlaceholder = <Placeholder height={main ? 45 : 18} width="60%" />
   const channelNamePlaceholder = <SpacedPlaceholder height="12px" width="60%" />
   const metaPlaceholder = <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
+
+  const coverNode = (
+    <>
+      <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
+      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+      {!!progress && (
+        <ProgressOverlay>
+          <ProgressBar style={{ width: `${progress}%` }} />
+        </ProgressOverlay>
+      )}
+      <CoverHoverOverlay>
+        <CoverPlayIcon />
+      </CoverHoverOverlay>
+    </>
+  )
+
+  const titleNode = (
+    <TitleHeader variant="h6" main={main} scalingFactor={scalingFactor} onClick={onClick} clickable={Boolean(onClick)}>
+      {title}
+    </TitleHeader>
+  )
+
+  const channelAvatarNode = (
+    <StyledAvatar
+      handle={channelName}
+      imageUrl={channelAvatarURL}
+      channelClickable={channelClickable}
+      onClick={handleChannelClick}
+    />
+  )
+
+  const channelNameNode = (
+    <ChannelName
+      variant="subtitle2"
+      channelClickable={channelClickable}
+      onClick={handleChannelClick}
+      scalingFactor={scalingFactor}
+    >
+      {channelName}
+    </ChannelName>
+  )
+
+  const metaNode = (
+    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
+      {formatVideoViewsAndDate(views || null, createdAt, { fullViews: main })}
+    </MetaText>
+  )
 
   return (
     <Container main={main} className={className}>
