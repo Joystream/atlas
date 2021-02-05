@@ -32,14 +32,13 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   loading = true,
   channelHref,
   className,
-  animated = false,
   onClick,
 }) => {
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return
     onClick(e)
   }
-
+  const isAnimated = !loading && !!channelHref
   return (
     <OuterContainer className={className} onClick={handleClick}>
       <Anchor href={channelHref}>
@@ -49,7 +48,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
             timeout={parseInt(transitions.timings.loading) * 0.75}
             classNames={transitions.names.fade}
           >
-            <InnerContainer animated={loading === false && animated}>
+            <InnerContainer animated={isAnimated}>
               <AvatarContainer>
                 {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} handle={handle} />}
               </AvatarContainer>
