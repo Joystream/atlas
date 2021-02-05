@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { colors, sizes, transitions, typography } from '../../theme'
 import { Avatar } from '..'
 import Text from '@/shared/components/Text'
+import { Link } from 'react-router-dom'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'
@@ -45,7 +46,7 @@ export const InnerContainer = styled.div<InnerContainerProps>`
   ${hoverTransition}
 `
 
-export const Anchor = styled.a`
+export const Anchor = styled(Link)`
   all: unset;
 `
 
