@@ -1,5 +1,6 @@
 import Snackbar from '@/shared/components/Snackbar/Snackbar'
 import { transitions } from '@/shared/theme'
+import { css } from '@emotion/react'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
@@ -10,8 +11,30 @@ export type DisplaySnackbarArgs = {
   message: string
 }
 
+const snackbarTransitions = css`
+  .snackbar-enter {
+    transform: translateX(-200%);
+  }
+  .snackbar-enter-active {
+    transform: translateX(0);
+  }
+  .snackbar-exit {
+    transform: translateX(0);
+  }
+  .snackbar-exit-active {
+    transform: translateX(-200%);
+  }
+  .snackbar-enter-active {
+    transition: transform ${transitions.timings.loading} ${transitions.easing};
+  }
+  .snackbar-exit-active {
+    transition: transform 800ms ${transitions.easing};
+  }
+`
+
 type SnackbarContextValue = {
   displaySnackbar: (args: DisplaySnackbarArgs) => void
+  closeSnackbar: () => void
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)
@@ -46,17 +69,24 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   }, [snackbarOpts?.time])
 
   return (
-    <SnackbarContext.Provider value={{ displaySnackbar }}>
+    <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
       {children}
-      <CSSTransition
-        in={isVisible && !!snackbarOpts}
-        unmountOnExit
-        timeout={parseInt(transitions.timings.loading)}
-        classNames={transitions.names.fade}
-        onExited={() => setsnackbarOpts(null)}
-      >
-        <Snackbar message={snackbarOpts?.message || ''} variant={snackbarOpts?.variant} onClick={closeSnackbar} />
-      </CSSTransition>
+      <div css={snackbarTransitions}>
+        <CSSTransition
+          in={isVisible && !!snackbarOpts}
+          unmountOnExit
+          timeout={parseInt(transitions.timings.loading)}
+          classNames={'snackbar'}
+          onExited={() => setsnackbarOpts(null)}
+        >
+          <Snackbar
+            message={snackbarOpts?.message || ''}
+            variant={snackbarOpts?.variant}
+            onClick={closeSnackbar}
+            buttonText={snackbarOpts?.buttonText}
+          />
+        </CSSTransition>
+      </div>
     </SnackbarContext.Provider>
   )
 }
