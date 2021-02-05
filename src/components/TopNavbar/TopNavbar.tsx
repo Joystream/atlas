@@ -1,7 +1,7 @@
 import routes from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Location } from 'history'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FullLogo,
   Header,
@@ -22,10 +22,15 @@ const TopNavbar: React.FC = () => {
   const locationState = location.state as RoutingState | null
   const oldLocation = locationState?.oldLocation || location
 
-  // TODO: close the searchbar on external navigation
-
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if (isFocused && location.pathname !== routes.search()) {
+      setSearchQuery('')
+      setIsFocused(false)
+    }
+  }, [isFocused, location.pathname])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {

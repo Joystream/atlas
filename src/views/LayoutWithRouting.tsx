@@ -86,7 +86,15 @@ const LayoutWithRouting: React.FC = () => {
               </Routes>
             </CSSTransition>
           </SwitchTransition>
-          {searchMatch ? <Route path={routes.search()} element={<SearchOverlayView />} /> : null}
+          <CSSTransition
+            timeout={parseInt(transitions.timings.routing)}
+            classNames={transitions.names.slideDown}
+            in={!!searchMatch}
+            unmountOnExit
+            mountOnEnter
+          >
+            <Route path={routes.search()} element={<SearchOverlayView />} />
+          </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
     </>

@@ -10,6 +10,7 @@ const transitions = {
     fade: 'fade',
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
+    slideDown: 'slide-down',
   },
 }
 
