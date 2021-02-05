@@ -7,11 +7,11 @@ export type TooltipProps = {
 }
 
 const Tooltip: React.FC<TooltipProps> = ({ children, text, arrowDisabled }) => {
-  const [isHover, setHover] = useState(false)
+  const [isActive, setActive] = useState(false)
 
   return (
-    <StyledTooltip data-text={text} isActive={isHover} arrowDisabled={arrowDisabled}>
-      <ChildrenContainer onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+    <StyledTooltip data-text={text} isActive={isActive} arrowDisabled={arrowDisabled}>
+      <ChildrenContainer onMouseEnter={() => setActive(true)} onMouseLeave={() => setActive(false)}>
         {children}
       </ChildrenContainer>
     </StyledTooltip>
