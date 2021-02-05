@@ -32,7 +32,8 @@
     "mocking:videos": "node scripts/mocking/generateVideos.js",
     "mocking:videosMedia": "node scripts/mocking/generateVideosMedia.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
-    "queries:codegen": "graphql-codegen --config codegen.config.yml"
+    "queries:codegen": "graphql-codegen --config codegen.config.yml",
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
@@ -95,6 +96,8 @@
     "lint-staged": "^10.2.7",
     "lodash": "^4.17.19",
     "miragejs": "^0.1.40",
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
