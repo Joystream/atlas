@@ -1,7 +1,7 @@
-import { css } from '@emotion/react'
 import { transitions } from '@/shared/theme'
+import { css } from '@emotion/react'
 
-export const globalStyles = css`
+export const transitionStyles = css`
   .${transitions.names.fade}-enter {
     opacity: 0;
   }
