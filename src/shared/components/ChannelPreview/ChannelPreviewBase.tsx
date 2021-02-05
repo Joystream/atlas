@@ -15,7 +15,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 
 type ChannelPreviewBaseProps = {
-  avatarURL?: string
+  avatarUrl?: string
   name?: string
   videoCount?: number
   channelHref?: string
@@ -26,7 +26,7 @@ type ChannelPreviewBaseProps = {
 }
 
 const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
-  avatarURL,
+  avatarUrl,
   name,
   videoCount,
   loading = true,
@@ -51,7 +51,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
           >
             <InnerContainer animated={loading === false && animated}>
               <AvatarContainer>
-                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarURL} handle={name} />}
+                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} handle={name} />}
               </AvatarContainer>
 
               <Info>
@@ -62,7 +62,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                   ) : (
                     <CSSTransition
                       in={!!videoCount}
-                      timeout={parseInt(transitions.timings.loading) * 1.5}
+                      timeout={parseInt(transitions.timings.loading) * 0.5}
                       classNames={transitions.names.fade}
                     >
                       <VideoCount variant="subtitle2">{videoCount ? `${videoCount} Uploads` : '⠀'}</VideoCount>

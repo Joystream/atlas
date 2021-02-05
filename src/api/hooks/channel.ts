@@ -8,7 +8,7 @@ import {
   useFollowChannelMutation,
   UnfollowChannelMutation,
   useUnfollowChannelMutation,
-} from '../queries/__generated__/channels.generated'
+} from '@/api/queries/'
 
 type Opts = QueryHookOptions<GetChannelQuery>
 const useChannel = (id: string, opts?: Opts) => {
