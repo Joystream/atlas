@@ -1,6 +1,9 @@
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
-import { colors, sizes, transitions } from '../../theme'
+import { colors, sizes, transitions, typography } from '../../theme'
+import { Avatar } from '..'
+import Text from '@/shared/components/Text'
+import { Link } from 'react-router-dom'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'
@@ -34,12 +37,17 @@ export const InnerContainer = styled.div<InnerContainerProps>`
   color: ${colors.gray[300]};
 
   width: calc(156px + calc(2 * ${containerPadding}));
-  padding: 0 ${containerPadding};
+  padding: 0 ${containerPadding} ${sizes(3)} ${containerPadding};
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid transparent;
   ${hoverTransition}
+`
+
+export const Anchor = styled(Link)`
+  all: unset;
 `
 
 export const Info = styled.div`
@@ -53,10 +61,36 @@ export const Info = styled.div`
   max-width: 100%;
 `
 
+export const VideoCountContainer = styled.div`
+  margin-top: ${sizes(2)};
+`
+
 export const AvatarContainer = styled.div`
   width: 100%;
   height: 156px;
   position: relative;
   margin-top: -${imageTopOverflow};
   z-index: 2;
+`
+
+export const TextBase = styled(Text)`
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+`
+
+export const NameHeader = styled(TextBase)``
+
+export const VideoCount = styled(TextBase)`
+  color: ${colors.gray[300]};
+`
+
+export const StyledAvatar = styled(Avatar)`
+  width: 100%;
+  height: 100%;
+  span {
+    font-size: ${typography.sizes.h2};
+  }
 `
