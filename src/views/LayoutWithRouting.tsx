@@ -8,7 +8,6 @@ import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, LegalView } from '@/views'
 import routes from '@/config/routes'
-import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { NavItemType } from '@/components/SideNavbar'
@@ -76,6 +75,7 @@ const LayoutWithRouting: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={[globalStyles, routingTransitions]} />
+      <GlobalStyle />
       <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
