@@ -1,7 +1,8 @@
 import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
-import { breakpoints, colors, sizes, typography } from '../../theme'
 import React from 'react'
+import { breakpoints, colors, sizes, typography } from '../../theme'
+import { transitionStyles } from './transitionStyles'
 
 const globalStyles = css`
   ${emotionNormalize};
@@ -53,7 +54,7 @@ const GlobalStyle: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
       ? additionalStyles
       : [additionalStyles]
     : []
-  return <Global styles={[globalStyles, ...additionalStylesArray]} />
+  return <Global styles={[globalStyles, transitionStyles, ...additionalStylesArray]} />
 }
 
 export default GlobalStyle
