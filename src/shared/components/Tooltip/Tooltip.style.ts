@@ -20,7 +20,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     opacity: ${({ isActive }) => (isActive ? 1 : 0)};
     font-size: ${typography.sizes.caption};
     font-weight: ${typography.weights.thin};
-    padding: ${sizes(1)} ${sizes(2)};
+    padding: ${sizes(2.5)} ${sizes(2)};
     background: ${colors.gray[400]};
     color: ${colors.white};
     z-index: ${zIndex.nearOverlay};
@@ -31,7 +31,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     content: '';
     bottom: 0;
     margin-left: ${sizes(2)};
-    transform: rotate(90deg) translateX(${({ isActive }) => (isActive ? sizes(3) : sizes(6))});
+    transform: rotate(90deg) translateX(${({ isActive }) => (isActive ? sizes(3) : sizes(5))});
     opacity: ${({ isActive }) => (isActive ? 1 : 0)};
     display: ${({ arrowDisabled }) => (arrowDisabled ? 'none' : 'inline-block')};
     border: 10px solid transparent;
