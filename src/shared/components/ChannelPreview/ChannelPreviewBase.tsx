@@ -20,7 +20,6 @@ type ChannelPreviewBaseProps = {
   videoCount?: number
   channelHref?: string
   className?: string
-  animated?: boolean
   loading?: boolean
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
