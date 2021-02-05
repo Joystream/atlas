@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ApolloError, useLazyQuery } from '@apollo/client'
+import { ApolloError, useLazyQuery, useQuery } from '@apollo/client'
 import { debounce } from 'lodash'
 import { DocumentNode } from 'graphql'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
@@ -58,12 +58,10 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
   const [cachedQueryVariables, setCachedQueryVariables] = useState(queryVariables)
   const [refetching, setRefetching] = useState(false)
 
-  const [fetchItems, { loading, data: rawData, error, fetchMore, called, refetch }] = useLazyQuery<TRawData, TArgs>(
-    query,
-    {
-      notifyOnNetworkStatusChange: true,
-    }
-  )
+  const { loading, data: rawData, error, fetchMore, called, refetch } = useQuery<TRawData, TArgs>(query, {
+    notifyOnNetworkStatusChange: true,
+    skip: !isReady,
+  })
 
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -75,18 +73,6 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
   const endCursor = data?.pageInfo.endCursor
 
   const queryVariablesChanged = queryVariables !== cachedQueryVariables
-
-  // handle initial data fetch
-  useEffect(() => {
-    if (isReady && !called) {
-      fetchItems({
-        variables: {
-          ...queryVariables,
-          first: targetLoadedItemsCount,
-        },
-      })
-    }
-  }, [isReady, called, fetchItems, queryVariables, targetLoadedItemsCount])
 
   // handle fetching more items
   useEffect(() => {

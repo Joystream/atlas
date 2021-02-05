@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
-import { sizes, transitions } from '@/shared/theme'
-import { ChannelPreviewBase, Grid, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+import { Grid, Text } from '@/shared/components'
 import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
@@ -11,7 +11,6 @@ import {
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
-import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group'
 
 type InfiniteChannelGridProps = {
   title?: string
@@ -84,10 +83,6 @@ const previewCss = css`
 `
 
 const StyledChannelPreview = styled(ChannelPreview)`
-  ${previewCss};
-`
-
-const StyledChannelPreviewBase = styled(ChannelPreviewBase)`
   ${previewCss};
 `
 
