@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { ChannelPreviewBase, Gallery } from '@/shared/components'
-import ChannelPreview from './ChannelPreviewWithNavigation'
+import ChannelPreview from './ChannelPreview'
 import { sizes } from '@/shared/theme'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 
@@ -25,15 +25,7 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loadin
         ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
             <ChannelPreviewBase key={`channel-placeholder-${idx}`} />
           ))
-        : channels!.map((channel) => (
-            <StyledChannelPreview
-              id={channel.id}
-              name={channel.handle}
-              avatarURL={channel.avatarPhotoUrl}
-              key={channel.id}
-              animated
-            />
-          ))}
+        : channels?.map((channel) => <StyledChannelPreview id={channel.id} key={channel.id} />)}
     </Gallery>
   )
 }

@@ -1,12 +1,14 @@
-import {
-  useGetChannelQuery,
-  GetChannelQuery,
-  useFollowChannelMutation,
-  useUnfollowChannelMutation,
-  FollowChannelMutation,
-  UnfollowChannelMutation,
-} from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
+import {
+  GetChannelQuery,
+  useGetChannelQuery,
+  GetChannelVideoCountQuery,
+  useGetChannelVideoCountQuery,
+  FollowChannelMutation,
+  useFollowChannelMutation,
+  UnfollowChannelMutation,
+  useUnfollowChannelMutation,
+} from '@/api/queries/'
 
 type Opts = QueryHookOptions<GetChannelQuery>
 const useChannel = (id: string, opts?: Opts) => {
@@ -16,6 +18,18 @@ const useChannel = (id: string, opts?: Opts) => {
   })
   return {
     channel: data?.channel,
+    ...rest,
+  }
+}
+
+type VideoCountOpts = QueryHookOptions<GetChannelVideoCountQuery>
+export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) => {
+  const { data, ...rest } = useGetChannelVideoCountQuery({
+    ...opts,
+    variables: { channelId },
+  })
+  return {
+    videoCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }
