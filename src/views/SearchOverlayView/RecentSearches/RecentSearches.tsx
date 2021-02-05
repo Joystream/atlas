@@ -1,68 +1,68 @@
 import React, { useMemo } from 'react'
-import { Container, SearchesList, SmallChannelPreview, SmallVideoPreview, Title } from './RecentSearches.style'
-import { navigate } from '@reach/router'
-import routes from '@/config/routes'
+import { Container, SearchesList, Title } from './RecentSearches.style'
+import { RecentChannelPreview, RecentVideoPreview } from './previews'
 import { usePersonalData } from '@/hooks'
-import { useVideos } from '@/api/hooks'
-import { useChannels } from '@/api/hooks/channel'
+import { Text } from '@/shared/components'
+import { useVideos, useChannels } from '@/api/hooks'
+import { createLookup } from '@/utils/data'
+
+type IdsLookup = {
+  videoIds: string[]
+  channelIds: string[]
+}
 
 const RecentSearches: React.FC = () => {
   const {
     state: { recentSearches },
   } = usePersonalData()
 
-  const { videoIds, channelIds } = useMemo(
-    () => ({
-      videoIds: recentSearches.flatMap((s) => (s.type === 'video' ? s.id : [])),
-      channelIds: recentSearches.flatMap((s) => (s.type === 'channel' ? s.id : [])),
-    }),
-    [recentSearches]
+  const { videoIds, channelIds } = useMemo(() => {
+    return recentSearches.reduce(
+      (acc, item) => {
+        const arr = item.type === 'channel' ? acc.channelIds : acc.videoIds
+        arr.push(item.id)
+        return acc
+      },
+      { videoIds: [], channelIds: [] } as IdsLookup
+    )
+  }, [recentSearches])
+
+  const { videos, loading: videosLoading, error: videosError } = useVideos(
+    { id_in: videoIds },
+    { skip: !videoIds.length }
+  )
+  const { channels, loading: channelsLoading, error: channelsError } = useChannels(
+    { id_in: channelIds },
+    { skip: !channelIds.length }
   )
 
-  const { videos, loading: videosLoading } = useVideos({ id_in: videoIds }, { skip: !videoIds.length })
-  const { channels, loading: channelsLoading } = useChannels({ id_in: channelIds }, { skip: !channelIds.length })
+  if (videosError) {
+    throw videosError
+  }
 
-  const recentSearchesResolved = useMemo(
-    () =>
-      recentSearches.flatMap((s) => {
-        if (s.type === 'video') {
-          return videos ? videos.find((v) => v.id === s.id) : []
-        } else if (s.type === 'channel') {
-          return channels ? channels.find((c) => c.id === s.id) : []
-        }
-      }),
-    [videos, channels, recentSearches]
-  )
+  if (channelsError) {
+    throw channelsError
+  }
+
+  const videosLookup = useMemo(() => createLookup(videos || []), [videos])
+  const channelsLookup = useMemo(() => createLookup(channels || []), [channels])
 
   return (
     <Container>
       <Title variant="hero">Recent Searches</Title>
-      {
-        <SearchesList>
-          {!videosLoading &&
-            !channelsLoading &&
-            recentSearchesResolved.map((recentSearch) => {
-              if (!recentSearch?.__typename) {
-                return null
-              }
-              return recentSearch.__typename === 'Video' ? (
-                <SmallVideoPreview
-                  key={recentSearch.id}
-                  title={recentSearch.title}
-                  thumbnailUrl={recentSearch.thumbnailUrl}
-                  onClick={() => navigate(routes.video(recentSearch.id))}
-                />
-              ) : (
-                <SmallChannelPreview
-                  key={recentSearch.id}
-                  handle={recentSearch.handle}
-                  avatarPhotoUrl={recentSearch.avatarPhotoUrl}
-                  onClick={() => navigate(routes.channel(recentSearch.id))}
-                />
-              )
-            })}
-        </SearchesList>
-      }
+      <SearchesList>
+        {recentSearches.length ? (
+          recentSearches.map((recentSearch) => {
+            if (recentSearch.type === 'channel') {
+              return <RecentChannelPreview key={recentSearch.id} channel={channelsLookup[recentSearch.id]} />
+            } else {
+              return <RecentVideoPreview key={recentSearch.id} video={videosLookup[recentSearch.id]} />
+            }
+          })
+        ) : (
+          <Text variant="body1">No recent searches yet</Text>
+        )}
+      </SearchesList>
     </Container>
   )
 }

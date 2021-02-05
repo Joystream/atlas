@@ -1,6 +1,5 @@
-import routes from '@/config/routes'
+import routes, { QUERY_PARAMS } from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Location } from 'history'
 import React, { useEffect, useState } from 'react'
 import {
   FullLogo,
@@ -11,16 +10,13 @@ import {
   ShortLogo,
   StyledSearchbar,
 } from './TopNavbar.style'
-
-type RoutingState = {
-  oldLocation?: Location
-}
+import { RoutingState } from '@/types/routing'
 
 const TopNavbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const locationState = location.state as RoutingState | null
-  const oldLocation = locationState?.oldLocation || location
+  const locationState = location.state as RoutingState
+  const overlaidLocation = locationState?.overlaidLocation || location
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -36,16 +32,14 @@ const TopNavbar: React.FC = () => {
     if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
       // TODO possibly move to routes
       const searchQueryParams = new URLSearchParams()
-      // TODO import
-      searchQueryParams.set('query', searchQuery.trim())
+      searchQueryParams.set(QUERY_PARAMS.SEARCH, searchQuery.trim())
       const searchUrl = `${routes.search()}?${searchQueryParams.toString()}`
 
-      const state: RoutingState = { oldLocation }
+      const state: RoutingState = { overlaidLocation }
 
       navigate(searchUrl, { state })
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
-      // TODO close overlay
       handleCancel()
       e.currentTarget.blur()
     }
@@ -61,7 +55,7 @@ const TopNavbar: React.FC = () => {
     // TODO open search overlay
 
     if (location.pathname !== routes.search()) {
-      const state: RoutingState = { oldLocation }
+      const state: RoutingState = { overlaidLocation }
 
       navigate(routes.search(), { state })
     }
@@ -71,10 +65,10 @@ const TopNavbar: React.FC = () => {
     setSearchQuery('')
     setIsFocused(false)
 
-    const oldLocation = locationState?.oldLocation
+    const overlaidLocation = locationState?.overlaidLocation
 
-    if (oldLocation) {
-      navigate(oldLocation)
+    if (overlaidLocation) {
+      navigate(overlaidLocation)
     }
   }
   return (

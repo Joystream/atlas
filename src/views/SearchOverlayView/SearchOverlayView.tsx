@@ -5,12 +5,11 @@ import SearchResults from './SearchResults'
 import styled from '@emotion/styled'
 import { colors, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
-
-// TODO: import
-const SEARCH_QUERY_PARAM = 'query'
+import { SIDENAVBAR_WIDTH } from '@/components'
+import { QUERY_PARAMS } from '@/config/routes'
 
 const SearchOverlayView: React.FC = () => {
-  const searchQuery = useRouterQuery(SEARCH_QUERY_PARAM)
+  const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
 
   // TODO we should probably handle that in one place for all the overlays
   // prevent body scroll
@@ -22,14 +21,18 @@ const SearchOverlayView: React.FC = () => {
     }
   }, [])
 
-  return <OverlayContainer>{searchQuery ? <SearchResults query={searchQuery} /> : <RecentSearches />}</OverlayContainer>
+  return (
+    <OverlayContainer role="dialog">
+      {searchQuery ? <SearchResults query={searchQuery} /> : <RecentSearches />}
+    </OverlayContainer>
+  )
 }
 
 const OverlayContainer = styled.div`
-  position: absolute;
+  position: fixed;
   z-index: ${zIndex.nearOverlay};
-  top: 0;
-  left: 0;
+  top: ${TOP_NAVBAR_HEIGHT}px;
+  left: ${SIDENAVBAR_WIDTH}px;
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
 

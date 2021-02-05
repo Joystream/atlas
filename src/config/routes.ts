@@ -7,3 +7,7 @@ export default {
   videos: () => '/videos',
   channels: () => '/channels',
 }
+
+export const QUERY_PARAMS = {
+  SEARCH: 'query',
+}

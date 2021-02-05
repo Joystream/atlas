@@ -5,6 +5,7 @@ const transitions = {
     loading: '600ms',
     regular: '400ms',
     routing: '300ms',
+    routingSearchOverlay: '400ms',
   },
   names: {
     fade: 'fade',

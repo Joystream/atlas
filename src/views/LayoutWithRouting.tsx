@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -12,6 +12,7 @@ import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { breakpoints, transitions } from '@/shared/theme'
 import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
+import { RoutingState } from '@/types/routing'
 import { Location } from 'history'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
@@ -40,26 +41,35 @@ const routesMap = [
   { path: routes.channel(), Component: ChannelView },
 ]
 
-type RoutingState = {
-  oldLocation?: Location
-}
-
 const LayoutWithRouting: React.FC = () => {
-  const location = useLocation()
-  const locationState = location.state as RoutingState | null
+  const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: routes.search() })
+  const [cachedLocation, setCachedLocation] = useState(location)
 
   useEffect(() => {
+    if (location === cachedLocation) {
+      return
+    }
+
+    setCachedLocation(location)
+
+    if (
+      cachedLocation.state?.overlaidLocation?.pathname === location.pathname ||
+      location.pathname === routes.search()
+    ) {
+      // if exiting routing overlay, skip scroll to top
+      return
+    }
+
     // delay scroll to allow transition to finish first
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, parseInt(transitions.timings.routing))
+  }, [location, cachedLocation])
 
-    // TODO don't scroll when exiting the search overlay
-  }, [location])
-
-  const displayedLocation = locationState?.oldLocation || location
+  const locationState = location.state as RoutingState
+  const displayedLocation = locationState?.overlaidLocation || location
 
   return (
     <>
@@ -87,7 +97,7 @@ const LayoutWithRouting: React.FC = () => {
             </CSSTransition>
           </SwitchTransition>
           <CSSTransition
-            timeout={parseInt(transitions.timings.routing)}
+            timeout={parseInt(transitions.timings.routingSearchOverlay)}
             classNames={transitions.names.slideDown}
             in={!!searchMatch}
             unmountOnExit

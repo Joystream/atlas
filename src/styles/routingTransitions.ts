@@ -33,7 +33,7 @@ export const routingTransitions = css`
   }
 
   .${transitions.names.slideDown}-enter-active {
-    transition: transform ${transitions.timings.routing} ${transitions.routingEasing};
+    transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
     transform: translateY(0%);
   }
 
@@ -42,7 +42,7 @@ export const routingTransitions = css`
   }
 
   .${transitions.names.slideDown}-exit-active {
-    transition: transform ${transitions.timings.routing} ${transitions.routingEasing};
+    transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
     transform: translateY(-100%);
   }
 `
