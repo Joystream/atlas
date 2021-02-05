@@ -10,13 +10,13 @@ export type SelectedItem = {
 } | null
 
 export type SelectProps = {
-  onChange: (changes: UseSelectStateChange<SelectedItem>) => void
+  onChange?: (changes: UseSelectStateChange<SelectedItem>) => void
   value?: SelectedItem
   items: SelectedItem[]
   placeholder?: string
 } & InputBaseProps
 
-const Select: React.ForwardRefRenderFunction<HTMLDivElement, SelectProps> = (props, ref) => {
+const SelectComponent: React.ForwardRefRenderFunction<HTMLDivElement, SelectProps> = (props, ref) => {
   const { label = '', items, placeholder = 'Select option', error, warning, value, disabled, onChange } = props
 
   const {
@@ -59,7 +59,8 @@ const Select: React.ForwardRefRenderFunction<HTMLDivElement, SelectProps> = (pro
     </InputBase>
   )
 }
+const Select = forwardRef(SelectComponent)
 
 Select.displayName = 'Select'
 
-export default forwardRef(Select)
+export default Select
