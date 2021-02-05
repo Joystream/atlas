@@ -22,7 +22,7 @@ const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, animated
     <ChannelPreviewBase
       className={className}
       avatarUrl={channel?.avatarPhotoUrl ?? undefined}
-      name={channel?.handle}
+      handle={channel?.handle}
       channelHref={routes.channel(id)}
       videoCount={videoCount}
       animated={animated}
