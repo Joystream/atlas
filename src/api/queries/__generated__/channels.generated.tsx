@@ -27,6 +27,15 @@ export type GetChannelQuery = {
   channel?: Types.Maybe<{ __typename: 'Channel' } & AllChannelFieldsFragment>
 }
 
+export type GetChannelVideoCountQueryVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
+}>
+
+export type GetChannelVideoCountQuery = {
+  __typename: 'Query'
+  videosConnection: { __typename: 'VideoConnection'; totalCount: number }
+}
+
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
@@ -116,6 +125,52 @@ export function useGetChannelLazyQuery(
 export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
 export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
 export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>
+export const GetChannelVideoCountDocument = gql`
+  query GetChannelVideoCount($channelId: ID!) {
+    videosConnection(first: 0, where: { channelId_eq: $channelId }) {
+      totalCount
+    }
+  }
+`
+
+/**
+ * __useGetChannelVideoCountQuery__
+ *
+ * To run a query within a React component, call `useGetChannelVideoCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelVideoCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelVideoCountQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetChannelVideoCountQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+) {
+  return Apollo.useQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
+    GetChannelVideoCountDocument,
+    baseOptions
+  )
+}
+export function useGetChannelVideoCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
+    GetChannelVideoCountDocument,
+    baseOptions
+  )
+}
+export type GetChannelVideoCountQueryHookResult = ReturnType<typeof useGetChannelVideoCountQuery>
+export type GetChannelVideoCountLazyQueryHookResult = ReturnType<typeof useGetChannelVideoCountLazyQuery>
+export type GetChannelVideoCountQueryResult = Apollo.QueryResult<
+  GetChannelVideoCountQuery,
+  GetChannelVideoCountQueryVariables
+>
 export const GetChannelsConnectionDocument = gql`
   query GetChannelsConnection($first: Int, $after: String) {
     channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
