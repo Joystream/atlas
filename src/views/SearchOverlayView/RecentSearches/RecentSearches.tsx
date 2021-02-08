@@ -27,14 +27,8 @@ const RecentSearches: React.FC = () => {
     )
   }, [recentSearches])
 
-  const { videos, loading: videosLoading, error: videosError } = useVideos(
-    { id_in: videoIds },
-    { skip: !videoIds.length }
-  )
-  const { channels, loading: channelsLoading, error: channelsError } = useChannels(
-    { id_in: channelIds },
-    { skip: !channelIds.length }
-  )
+  const { videos, error: videosError } = useVideos({ id_in: videoIds }, { skip: !videoIds.length })
+  const { channels, error: channelsError } = useChannels({ id_in: channelIds }, { skip: !channelIds.length })
 
   if (videosError) {
     throw videosError

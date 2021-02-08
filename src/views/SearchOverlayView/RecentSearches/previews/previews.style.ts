@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { colors, sizes } from '@/shared/theme'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import { Link } from 'react-router-dom'
 import { css } from '@emotion/core'
 
@@ -41,11 +41,16 @@ export const PreviewContainer = styled(Link)`
   }
 
   > * + * {
-    margin-left: ${sizes(6)};
+    margin-left: ${sizes(3)};
+
+    @media screen and (min-width: ${breakpoints.small}) {
+      margin-left: ${sizes(6)};
+    }
   }
 `
 
 const videoImageCss = css`
+  min-width: 200px;
   width: 200px;
   height: 122px;
 `
