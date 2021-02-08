@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 import InputBase, { InputBaseProps, LabelText } from '../InputBase'
 import { TextInput } from './TextField.style'
 

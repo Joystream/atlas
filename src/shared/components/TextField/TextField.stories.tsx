@@ -1,7 +1,7 @@
 import React from 'react'
 import TextField, { TextFieldProps } from '.'
 import { Meta, Story } from '@storybook/react'
-import { useState, useEffect, useRef } from '@storybook/addons'
+import { useState, useRef } from '@storybook/addons'
 import Button from '../Button'
 
 export default {
@@ -9,6 +9,9 @@ export default {
   component: TextField,
   args: {
     label: 'label text',
+  },
+  argTypes: {
+    value: { table: { disable: true } },
   },
 } as Meta
 
@@ -30,6 +33,10 @@ const TemplateWithUncontrolledInput: Story<TextFieldProps> = (args) => {
 }
 
 export const Default = Template.bind({})
+Default.argTypes = {
+  value: { table: { disable: false } },
+}
 
 export const WithControlledInput = TemplateWithControlledInput.bind({})
+
 export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
