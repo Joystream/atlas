@@ -11,27 +11,6 @@ export type DisplaySnackbarArgs = {
   message: string
 }
 
-const snackbarTransitions = css`
-  .snackbar-enter {
-    transform: translateX(-200%);
-  }
-  .snackbar-enter-active {
-    transform: translateX(0);
-  }
-  .snackbar-exit {
-    transform: translateX(0);
-  }
-  .snackbar-exit-active {
-    transform: translateX(-200%);
-  }
-  .snackbar-enter-active {
-    transition: transform ${transitions.timings.loading} ${transitions.easing};
-  }
-  .snackbar-exit-active {
-    transition: transform 800ms ${transitions.easing};
-  }
-`
-
 type SnackbarContextValue = {
   displaySnackbar: (args: DisplaySnackbarArgs) => void
   closeSnackbar: () => void
@@ -71,22 +50,21 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   return (
     <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
       {children}
-      <div css={snackbarTransitions}>
-        <CSSTransition
-          in={isVisible && !!snackbarOpts}
-          unmountOnExit
-          timeout={parseInt(transitions.timings.loading)}
-          classNames={'snackbar'}
-          onExited={() => setsnackbarOpts(null)}
-        >
-          <Snackbar
-            message={snackbarOpts?.message || ''}
-            variant={snackbarOpts?.variant}
-            onClick={closeSnackbar}
-            buttonText={snackbarOpts?.buttonText}
-          />
-        </CSSTransition>
-      </div>
+      <CSSTransition
+        in={isVisible && !!snackbarOpts}
+        unmountOnExit
+        mountOnEnter
+        timeout={parseInt(transitions.timings.loading)}
+        classNames={'snackbar'}
+        onExited={() => setsnackbarOpts(null)}
+      >
+        <Snackbar
+          message={snackbarOpts?.message || ''}
+          variant={snackbarOpts?.variant}
+          onClick={closeSnackbar}
+          buttonText={snackbarOpts?.buttonText}
+        />
+      </CSSTransition>
     </SnackbarContext.Provider>
   )
 }

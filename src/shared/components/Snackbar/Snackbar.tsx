@@ -1,6 +1,7 @@
+import { Global } from '@emotion/react'
 import React from 'react'
 import Icon from '../Icon'
-import { SnackbarWrapper, SnackbarParagraph, SnackbarButton } from './Snackbar.style'
+import { SnackbarButton, SnackbarParagraph, snackbarTransitions, SnackbarWrapper } from './Snackbar.style'
 
 export type SnackbarProps = {
   variant?: 'error' | 'success' | 'info'
@@ -14,13 +15,16 @@ const SnackbarComponent: React.ForwardRefRenderFunction<HTMLDivElement, Snackbar
   ref
 ) => {
   return (
-    <SnackbarWrapper ref={ref}>
-      <SnackbarParagraph>
-        <Icon name={variant} />
-        {message}
-      </SnackbarParagraph>
-      <SnackbarButton onClick={onClick}>{buttonText}</SnackbarButton>
-    </SnackbarWrapper>
+    <>
+      <Global styles={snackbarTransitions} />
+      <SnackbarWrapper ref={ref}>
+        <SnackbarParagraph>
+          <Icon name={variant} />
+          {message}
+        </SnackbarParagraph>
+        <SnackbarButton onClick={onClick}>{buttonText}</SnackbarButton>
+      </SnackbarWrapper>
+    </>
   )
 }
 
