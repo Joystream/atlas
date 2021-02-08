@@ -1,5 +1,7 @@
 import React from 'react'
+import { Portal } from '@/components'
 import {
+  StyledBackdrop,
   StyledContainer,
   StyledTitleText,
   StyledContentText,
@@ -38,29 +40,33 @@ const Dialog: React.FC<DialogProps> = ({
   handleSecondaryButton,
 }) => {
   return (
-    <StyledContainer css={dialogTransitions}>
-      {icon || exitButton ? (
-        <StyledHeadRow>
-          {icon && <Icon name={icon} />}
-          {exitButton && (
-            <StyledExitButton aria-label="close dialog" onClick={handleExit} marginLeft={!icon}>
-              <Icon name="times-white" />
-            </StyledExitButton>
-          )}
-        </StyledHeadRow>
-      ) : null}
+    <Portal>
+      <StyledBackdrop>
+        <StyledContainer css={dialogTransitions}>
+          {icon || exitButton ? (
+            <StyledHeadRow>
+              {icon && <Icon name={icon} />}
+              {exitButton && (
+                <StyledExitButton aria-label="close dialog" onClick={handleExit} marginLeft={!icon}>
+                  <Icon name="times-white" />
+                </StyledExitButton>
+              )}
+            </StyledHeadRow>
+          ) : null}
 
-      {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
-      <StyledContentText variant="body2">{content}</StyledContentText>
-      <StyledButtonContainer>
-        {secondaryButton && (
-          <StyledSecondaryButton variant="secondary" onClick={handleSecondaryButton}>
-            {secondaryButton}
-          </StyledSecondaryButton>
-        )}
-        {primaryButton && <StyledPrimaryButton onClick={handlePrimaryButton}>{primaryButton}</StyledPrimaryButton>}
-      </StyledButtonContainer>
-    </StyledContainer>
+          {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
+          <StyledContentText variant="body2">{content}</StyledContentText>
+          <StyledButtonContainer>
+            {secondaryButton && (
+              <StyledSecondaryButton variant="secondary" onClick={handleSecondaryButton}>
+                {secondaryButton}
+              </StyledSecondaryButton>
+            )}
+            {primaryButton && <StyledPrimaryButton onClick={handlePrimaryButton}>{primaryButton}</StyledPrimaryButton>}
+          </StyledButtonContainer>
+        </StyledContainer>
+      </StyledBackdrop>
+    </Portal>
   )
 }
 

@@ -7,6 +7,13 @@ type StyledExitButtonProps = {
   marginLeft?: boolean
 }
 
+export const StyledBackdrop = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+`
+
 export const StyledContainer = styled.div`
   width: 100%;
   max-width: ${sizes(110)};
