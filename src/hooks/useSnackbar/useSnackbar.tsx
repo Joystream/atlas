@@ -1,6 +1,7 @@
+import { snackbarTransitions } from '@/shared/components/Snackbar'
 import Snackbar from '@/shared/components/Snackbar/Snackbar'
 import { transitions } from '@/shared/theme'
-import { css } from '@emotion/react'
+import { Global } from '@emotion/react'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
@@ -21,11 +22,11 @@ SnackbarContext.displayName = 'SnackbarContext'
 
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false)
-  const [snackbarOpts, setsnackbarOpts] = useState<DisplaySnackbarArgs | null>(null)
+  const [snackbarOpts, setSnackbarOpts] = useState<DisplaySnackbarArgs | null>(null)
 
   const displaySnackbar = ({ time, variant, message, buttonText }: DisplaySnackbarArgs) => {
     setIsVisible(true)
-    setsnackbarOpts({
+    setSnackbarOpts({
       time,
       variant,
       message,
@@ -50,13 +51,14 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   return (
     <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
       {children}
+      <Global styles={snackbarTransitions}></Global>
       <CSSTransition
         in={isVisible && !!snackbarOpts}
         unmountOnExit
         mountOnEnter
         timeout={parseInt(transitions.timings.loading)}
         classNames={'snackbar'}
-        onExited={() => setsnackbarOpts(null)}
+        onExited={() => setSnackbarOpts(null)}
       >
         <Snackbar
           message={snackbarOpts?.message || ''}

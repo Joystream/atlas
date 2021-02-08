@@ -1,7 +1,6 @@
-import { Global } from '@emotion/react'
 import React from 'react'
 import Icon from '../Icon'
-import { SnackbarButton, SnackbarParagraph, snackbarTransitions, SnackbarWrapper } from './Snackbar.style'
+import { SnackbarButton, SnackbarParagraph, SnackbarWrapper } from './Snackbar.style'
 
 export type SnackbarProps = {
   variant?: 'error' | 'success' | 'info'
@@ -16,7 +15,6 @@ const SnackbarComponent: React.ForwardRefRenderFunction<HTMLDivElement, Snackbar
 ) => {
   return (
     <>
-      <Global styles={snackbarTransitions} />
       <SnackbarWrapper ref={ref}>
         <SnackbarParagraph>
           <Icon name={variant} />

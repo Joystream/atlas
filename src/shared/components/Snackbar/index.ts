@@ -1,2 +1,3 @@
 import Snackbar from './Snackbar'
-export default Snackbar
+import { snackbarTransitions } from './Snackbar.style'
+export { Snackbar as default, snackbarTransitions }
