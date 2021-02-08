@@ -74,7 +74,6 @@ const TopNavbar: React.FC = () => {
 
     // navigate to overlaid view or home on searchbar close
     const overlaidLocation = locationState?.overlaidLocation || { pathname: routes.index() }
-    console.log({ overlaidLocation })
     navigate(overlaidLocation)
   }
   return (
