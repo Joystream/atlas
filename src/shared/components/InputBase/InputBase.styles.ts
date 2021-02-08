@@ -46,14 +46,15 @@ export const LabelText = styled.span`
   max-width: 100%;
 
   color: ${colors.gray[400]};
+  background-color: none;
   font-size: ${typography.sizes.subtitle2};
 
-  background-color: ${colors.black};
-  transition: all ${transitions.timings.regular} ${transitions.easing};
+  transition: all ${transitions.timings.regular} ${transitions.easing}, background-color 250ms;
 `
 
 export const labelOnTop = css`
   transform: translateY(-19px);
+  background-color: ${colors.black};
   font-size: ${sizes(3)};
   color: ${colors.gray[300]};
 `
