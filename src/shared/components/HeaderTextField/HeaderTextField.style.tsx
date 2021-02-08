@@ -2,9 +2,10 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Text } from '@/shared/components'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
+import { Variant } from './HeaderTextField'
 
-type WarningTextProps = {
-  error?: boolean
+type HelperTextProps = {
+  helperTextVariant: Variant
 }
 
 export const Container = styled.div`
@@ -36,8 +37,9 @@ export const StyledInput = styled.input`
   }
 `
 
-export const WarningText = styled(Text)<WarningTextProps>`
-  color: ${({ error }) => (error ? colors.error : colors.warning)};
+export const HelperText = styled(Text)<HelperTextProps>`
+  color: ${({ helperTextVariant }) => helperTextVariant === 'warning' && colors.warning};
+  color: ${({ helperTextVariant }) => helperTextVariant === 'error' && colors.error};
   background-color: ${colors.gray[800]};
   width: fit-content;
   max-width: 600px;
