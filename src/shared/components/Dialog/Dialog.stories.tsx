@@ -70,7 +70,7 @@ const TransitionTemplate: Story<DialogProps> = ({
       <CSSTransition
         in={showDialog}
         timeout={250}
-        classNames={transitions.names.dialog}
+        classNames="dialog"
         unmountOnExit
         onEnter={() => setShowButton(false)}
         onExited={() => setShowButton(true)}

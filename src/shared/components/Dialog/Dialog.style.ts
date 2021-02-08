@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { colors, sizes, breakpoints, typography, transitions } from '../../theme'
-import { Text, Button, Icon } from '@/shared/components'
+import { colors, sizes, breakpoints, typography } from '../../theme'
+import { Text, Button } from '@/shared/components'
 
-type StyledIconProps = {
+type StyledExitButtonProps = {
   marginLeft?: boolean
 }
 
 export const StyledContainer = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: ${sizes(110)};
   margin: 0 auto;
   background-color: ${colors.gray[600]};
@@ -27,16 +27,13 @@ export const StyledContentText = styled(Text)`
   color: ${colors.white};
   font-weight: ${typography.weights.thin};
   margin-bottom: ${sizes(6)};
+  word-wrap: break-word;
 `
 
 export const StyledHeadRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: ${sizes(4)};
-`
-
-export const StyledIcon = styled(Icon)<StyledIconProps>`
-  margin-left: ${({ marginLeft }) => marginLeft && 'auto'};
 `
 
 export const StyledButtonContainer = styled.div`
@@ -71,6 +68,16 @@ export const StyledSecondaryButton = styled(Button)`
   }
 `
 
+export const StyledExitButton = styled(Button)<StyledExitButtonProps>`
+  padding: 0;
+  background-color: ${colors.transparent};
+  border: none;
+  margin-left: ${({ marginLeft }) => marginLeft && 'auto'};
+  &:hover {
+    background-color: ${colors.transparent};
+  }
+`
+
 export const dialogTransitions = css`
   &.dialog-enter {
     opacity: 0;
@@ -79,7 +86,7 @@ export const dialogTransitions = css`
   &.dialog-enter-active {
     opacity: 1;
     transform: scale(1);
-    transition: ${transitions.timings.dialogEnter} ${transitions.dialogEasing};
+    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
   &.dialog-exit {
     opacity: 1;
@@ -88,6 +95,6 @@ export const dialogTransitions = css`
   &.dialog-exit-active {
     opacity: 0;
     transform: scale(0.88);
-    transition: ${transitions.timings.dialogExit} ${transitions.dialogEasing};
+    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `

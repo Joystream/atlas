@@ -4,23 +4,26 @@ import {
   StyledTitleText,
   StyledContentText,
   StyledHeadRow,
-  StyledIcon,
   StyledButtonContainer,
   StyledPrimaryButton,
   StyledSecondaryButton,
+  StyledExitButton,
   dialogTransitions,
 } from './Dialog.style'
+import { Icon } from '@/shared/components'
+
+type MouseEvent = React.MouseEvent<HTMLButtonElement>
 
 export type DialogProps = {
   title?: string
   content: string
   primaryButton?: string
   secondaryButton?: string
-  icon?: 'success' | 'failure' | null
+  icon?: 'success' | 'failure'
   exitButton?: boolean
-  handleExit?: () => void
-  handlePrimaryButton?: () => void
-  handleSecondaryButton?: () => void
+  handleExit?: (e: MouseEvent) => void
+  handlePrimaryButton?: (e: MouseEvent) => void
+  handleSecondaryButton?: (e: MouseEvent) => void
 }
 
 const Dialog: React.FC<DialogProps> = ({
@@ -38,12 +41,14 @@ const Dialog: React.FC<DialogProps> = ({
     <StyledContainer css={dialogTransitions}>
       {icon || exitButton ? (
         <StyledHeadRow>
-          {icon && <StyledIcon name={icon} />}
-          {exitButton && <StyledIcon marginLeft={!icon} name="times-white" onClick={handleExit} />}
+          {icon && <Icon name={icon} />}
+          {exitButton && (
+            <StyledExitButton aria-label="close dialog" onClick={handleExit} marginLeft={!icon}>
+              <Icon name="times-white" />
+            </StyledExitButton>
+          )}
         </StyledHeadRow>
-      ) : (
-        ''
-      )}
+      ) : null}
 
       {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
       <StyledContentText variant="body2">{content}</StyledContentText>
