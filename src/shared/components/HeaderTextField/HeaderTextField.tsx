@@ -1,37 +1,30 @@
-import React, { useRef, useEffect } from 'react'
+import { stubFalse } from 'lodash'
+import React from 'react'
 import { Container, HelperText, StyledInput } from './HeaderTextField.style'
-
-export type Variant = 'default' | 'error' | 'warning'
 
 export type HeaderTextFieldProps = {
   value: string
   helperText?: string
-  onChange: (value: string) => void
-  variant?: Variant
+  error?: boolean
+  warning?: boolean
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
-type ChangeEvent = React.ChangeEvent<HTMLInputElement>
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ value, helperText, onChange, variant = 'default' }, ref) => {
-    const inputElement = useRef<HTMLInputElement>(null)
-    useEffect(() => {
-      if (inputElement.current === null) {
-        return
-      }
-      inputElement.current.style.width = value.length + 'ch'
-    }, [inputElement, value.length])
-
+  ({ value, helperText, error, warning, onChange }, ref) => {
+    const controlled = onChange?.name === 'onChange'
     return (
       <Container>
         <StyledInput
-          ref={inputElement}
+          ref={ref}
           type="text"
-          value={value}
-          onChange={(e: ChangeEvent) => onChange(e.target.value)}
+          defaultValue={value}
+          onChange={onChange}
+          widthSize={controlled ? value.length : null}
           required
         />
         {helperText && (
-          <HelperText variant="body1" helperTextVariant={variant}>
+          <HelperText variant="body1" error={error} warning={warning}>
             {helperText}
           </HelperText>
         )}

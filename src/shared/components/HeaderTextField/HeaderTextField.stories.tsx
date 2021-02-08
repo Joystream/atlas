@@ -1,32 +1,28 @@
 import React, { useState } from 'react'
-import HeaderTextField, { Variant } from './HeaderTextField'
+import HeaderTextField, { HeaderTextFieldProps } from './HeaderTextField'
+import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Shared/HeaderTextField',
   component: HeaderTextField,
   argTypes: {
-    name: { control: 'text', defaultValue: 'Lorem ipsum' },
     helperText: { control: 'text', defaultValue: 'Channel title must be at least 2 character' },
-    variant: {
-      control: {
-        type: 'select',
-        options: ['default', 'error', 'warning'],
-      },
-    },
+    warning: { control: 'boolean' },
+    error: { control: 'boolean' },
   },
-}
+} as Meta
 
-type StoryProps = {
-  name: string
-  helperText: string
-  variant: Variant
-}
-
-const Template = ({ name, helperText, variant }: StoryProps) => {
-  const [text, setText] = useState(name)
+const Template: Story<HeaderTextFieldProps> = (args) => {
   const input = React.useRef<HTMLInputElement>(null)
-
-  return <HeaderTextField ref={input} value={text} helperText={helperText} onChange={setText} variant={variant} />
+  const [text, setText] = useState('Lorem ipsum')
+  return <HeaderTextField {...args} value={text} ref={input} onChange={(e) => setText(e.target.value)} />
 }
 
-export const Regular = Template.bind({})
+export const Controlled = Template.bind({})
+
+const TemplateUncontrolled: Story<HeaderTextFieldProps> = (args) => {
+  const input = React.useRef<HTMLInputElement>(null)
+  return <HeaderTextField {...args} value="Lorem ipsum" ref={input} />
+}
+
+export const Uncontrolled = TemplateUncontrolled.bind({})
