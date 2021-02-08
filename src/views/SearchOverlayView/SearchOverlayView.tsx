@@ -5,7 +5,6 @@ import SearchResults from './SearchResults'
 import styled from '@emotion/styled'
 import { colors, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
-import { SIDENAVBAR_WIDTH } from '@/components'
 import { QUERY_PARAMS } from '@/config/routes'
 
 const SearchOverlayView: React.FC = () => {
@@ -32,7 +31,7 @@ const OverlayContainer = styled.div`
   position: fixed;
   z-index: ${zIndex.nearOverlay};
   top: ${TOP_NAVBAR_HEIGHT}px;
-  left: ${SIDENAVBAR_WIDTH}px;
+  left: var(--sidenav-collapsed-width);
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
 

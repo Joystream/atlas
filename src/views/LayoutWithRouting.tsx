@@ -10,8 +10,8 @@ import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, Channe
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
-import { breakpoints, transitions } from '@/shared/theme'
-import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
+import { transitions } from '@/shared/theme'
+import { NavItemType } from '@/components/SideNavbar'
 import { RoutingState } from '@/types/routing'
 import { Location } from 'history'
 
@@ -122,10 +122,7 @@ const RouterWrapper = () => {
 const MainContainer = styled.main`
   position: relative;
   padding: 0 var(--global-horizontal-padding);
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${SIDENAVBAR_WIDTH}px;
-  }
+  margin-left: var(--sidenav-collapsed-width);
 `
 
 export default RouterWrapper
