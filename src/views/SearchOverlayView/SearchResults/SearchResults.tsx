@@ -16,7 +16,7 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: query }, { fetchPolicy: 'cache-and-network' })
+  const { data, loading, error } = useSearch({ text: query })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {

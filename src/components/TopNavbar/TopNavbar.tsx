@@ -22,22 +22,29 @@ const TopNavbar: React.FC = () => {
   const [isFocused, setIsFocused] = useState(false)
 
   useEffect(() => {
-    if (isFocused && location.pathname !== routes.search()) {
+    // close the searchbar on external navigation
+    if (isFocused && !location.pathname.includes(routes.search())) {
       setSearchQuery('')
       setIsFocused(false)
     }
-  }, [isFocused, location.pathname])
+
+    // focus the searchbar when visiting search (e.g. from a link)
+    if (!isFocused && location.pathname.includes(routes.search())) {
+      setIsFocused(true)
+      if (location.search) {
+        const params = new URLSearchParams(location.search)
+        const query = params.get(QUERY_PARAMS.SEARCH)
+        setSearchQuery(query || '')
+      }
+    }
+  }, [isFocused, location.pathname, location.search])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
-      // TODO possibly move to routes
-      const searchQueryParams = new URLSearchParams()
-      searchQueryParams.set(QUERY_PARAMS.SEARCH, searchQuery.trim())
-      const searchUrl = `${routes.search()}?${searchQueryParams.toString()}`
-
       const state: RoutingState = { overlaidLocation }
 
-      navigate(searchUrl, { state })
+      // navigate to search results
+      navigate(routes.search({ query: searchQuery.trim() }), { state })
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
       handleCancel()
@@ -52,9 +59,9 @@ const TopNavbar: React.FC = () => {
 
   const handleFocus = () => {
     setIsFocused(true)
-    // TODO open search overlay
 
-    if (location.pathname !== routes.search()) {
+    // open the search overlay if not already visible
+    if (!location.pathname.includes(routes.search())) {
       const state: RoutingState = { overlaidLocation }
 
       navigate(routes.search(), { state })
@@ -65,11 +72,10 @@ const TopNavbar: React.FC = () => {
     setSearchQuery('')
     setIsFocused(false)
 
-    const overlaidLocation = locationState?.overlaidLocation
-
-    if (overlaidLocation) {
-      navigate(overlaidLocation)
-    }
+    // navigate to overlaid view or home on searchbar close
+    const overlaidLocation = locationState?.overlaidLocation || { pathname: routes.index() }
+    console.log({ overlaidLocation })
+    navigate(overlaidLocation)
   }
   return (
     <Header hasFocus={isFocused}>
