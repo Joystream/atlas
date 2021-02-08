@@ -1,4 +1,5 @@
 import { colors } from '@/shared/theme'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { labelOnTop, styledinputStates } from '../InputBase'
 
@@ -11,15 +12,38 @@ type TextInputProps = {
 
 export const TextInput = styled.input<TextInputProps>`
   color: ${colors.white};
+  :not(:placeholder-shown) {
+    ${styledinputStates.filled}
+  }
+  :focus {
+    ${styledinputStates.focused}
+  }
+  :placeholder-shown {
+    ${styledinputStates.activated}
+  }
+  :not(:focus) {
+    ${styledinputStates.default}
+  }
 
   ${styledinputStates.default}
 
-  ${({ focused, filled }) => focused && !filled && styledinputStates.activated};
-  ${({ focused, filled }) => focused && filled && styledinputStates.focused};
-  ${({ focused, filled }) => !focused && filled && styledinputStates.filled};
+  ${({ error }) =>
+    error &&
+    css`
+      &,
+      :not(:focus) {
+        ${styledinputStates.error}
+      }
+    `};
 
-  ${({ error }) => error && styledinputStates.error};
-  ${({ disabled }) => disabled && styledinputStates.disabled};
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      &,
+      :not(:focus) {
+        ${styledinputStates.disabled}
+      }
+    `};
 
   ::-webkit-input-placeholder {
     opacity: 0;

@@ -15,33 +15,20 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   { type = 'text', label, helperText, value, onChange, onBlur, onFocus, error, warning, disabled, required },
   ref
 ) => {
-  const [isFocused, setIsFocused] = useState(false)
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    onFocus && onFocus(e)
-    setIsFocused(true)
-  }
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    onBlur && onBlur(e)
-    setIsFocused(false)
-  }
-
   return (
     <InputBase helperText={helperText} error={error} warning={warning} disabled={disabled}>
       <label>
         <TextInput
+          ref={ref}
           value={value}
-          filled={!!value}
-          focused={isFocused}
           disabled={disabled}
-          error={!!error}
+          error={error}
           onChange={onChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={onFocus}
+          onBlur={onBlur}
           placeholder={label}
           type={type}
           required={required}
-          ref={ref}
           tabIndex={disabled ? -1 : 0}
         />
         <LabelText>{label}</LabelText>

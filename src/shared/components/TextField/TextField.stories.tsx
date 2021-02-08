@@ -14,17 +14,7 @@ const Template: Story<TextFieldProps> = (args) => <TextField {...args} />
 
 const TemplateWithControlledInput: Story<TextFieldProps> = (args) => {
   const [value, setValue] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
-  return (
-    <TextField
-      {...args}
-      onChange={(e) => setValue(e.target.value)}
-      value={value}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      helperText={isFocused ? 'focused' : 'not focused'}
-    />
-  )
+  return <TextField {...args} onChange={(e) => setValue(e.target.value)} value={value} />
 }
 
 export const Default = Template.bind({})
