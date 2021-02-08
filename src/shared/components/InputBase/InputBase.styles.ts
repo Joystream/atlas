@@ -81,9 +81,7 @@ export const styledinputStates = {
   `,
   error: css`
     border: 1px solid ${colors.error};
-    background: red;
   `,
-  warning: css``,
 }
 
 type HelperTextProps = {
