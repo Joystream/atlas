@@ -157,12 +157,18 @@ export const channelResolver: QueryResolver<UniqueArgs, AllChannelFieldsFragment
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
-export const channelsResolver: QueryResolver<GetChannelsConnectionQueryVariables, GetChannelsConnectionQuery> = (
-  obj,
-  args,
-  context,
-  info
-) => {
+export const channelsResolver: QueryResolver<IdsArgs, ChannelModel[]> = (obj, args, context, info) => {
+  const { mirageSchema: schema } = context
+  const ids = args.where?.id_in
+  const channels = schema.channels.all().models as ChannelModel[]
+  const filtered = channels.filter((channel) => ids.includes(channel.attrs.id))
+  return filtered
+}
+
+export const channelsConnectionResolver: QueryResolver<
+  GetChannelsConnectionQueryVariables,
+  GetChannelsConnectionQuery
+> = (obj, args, context, info) => {
   const resolverArgs = {
     first: args.first,
     after: args.after,

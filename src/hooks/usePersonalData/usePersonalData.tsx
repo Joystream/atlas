@@ -3,6 +3,7 @@ import React, { useReducer, useContext, useCallback, Dispatch } from 'react'
 import {
   FollowedChannel,
   WatchedVideo,
+  RecentSearch,
   PersonalDataClient,
   getInitialPersonalData,
   localStorageClient,
@@ -18,8 +19,12 @@ type UpdateChannelFollowingAction = {
   type: 'UPDATE_FOLLOWED_CHANNELS'
   followedChannels: FollowedChannel[]
 }
+type UpdateSearchesAction = {
+  type: 'UPDATE_SEARCHES'
+  recentSearches: RecentSearch[]
+}
 
-type Action = UpdateWatchedVideosAction | UpdateChannelFollowingAction
+type Action = UpdateWatchedVideosAction | UpdateChannelFollowingAction | UpdateSearchesAction
 const asyncReducer = (state: PersonalData, action: Action) => {
   switch (action.type) {
     case 'UPDATE_WATCHED_VIDEOS': {
@@ -32,6 +37,12 @@ const asyncReducer = (state: PersonalData, action: Action) => {
       return {
         ...state,
         followedChannels: action.followedChannels,
+      }
+    }
+    case 'UPDATE_SEARCHES': {
+      return {
+        ...state,
+        recentSearches: action.recentSearches,
       }
     }
     default: {
@@ -77,11 +88,25 @@ const usePersonalData = () => {
     },
     [dispatch]
   )
-  return { state, updateWatchedVideos, updateChannelFollowing }
+
+  const updateRecentSearches = useCallback(
+    async (...setRecentSearchArgs: Parameters<PersonalDataClient['setRecentSearch']>) => {
+      try {
+        await personalClient.setRecentSearch(...setRecentSearchArgs)
+        const updatedRecentSearches = await personalClient.recentSearches()
+        dispatch({ type: 'UPDATE_SEARCHES', recentSearches: updatedRecentSearches })
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    },
+    [dispatch]
+  )
+  return { state, updateWatchedVideos, updateChannelFollowing, updateRecentSearches }
 }
 type PersonalData = {
   watchedVideos: WatchedVideo[]
   followedChannels: FollowedChannel[]
+  recentSearches: RecentSearch[]
 }
 const PersonalDataProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<typeof asyncReducer, undefined>(asyncReducer, undefined, () => ({

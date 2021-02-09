@@ -4,7 +4,6 @@ import React from 'react'
 import { Link, LinkProps } from 'react-router-dom'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 
-export const SIDENAVBAR_WIDTH = 72
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
 
@@ -26,7 +25,7 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   top: 0;
   bottom: 0;
   z-index: ${zIndex.header};
-  width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : 0)}px;
+  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
 
   display: flex;
@@ -36,10 +35,6 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   overflow: hidden;
   color: ${colors.white};
   background-color: ${colors.gray[700]};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    left: 0;
-    width: ${({ expanded }) => (expanded ? EXPANDED_SIDENAVBAR_WIDTH : SIDENAVBAR_WIDTH)}px;
-  }
 `
 
 export const LogoLink = styled(Link)`
@@ -107,7 +102,7 @@ export const SidebarNavLink = styled(({ expanded, ...props }: SidebarNavLinkProp
       color: white;
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
-      left: ${SIDENAVBAR_WIDTH / 2}px;
+      left: calc(var(--sidenav-collapsed-width) / 2);
       transform: translateX(-50%);
       bottom: 0;
       margin-bottom: 10px;

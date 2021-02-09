@@ -19,6 +19,11 @@ export type FollowedChannel = {
   id: string
 }
 
+export type RecentSearch = {
+  id: string
+  type: 'video' | 'channel'
+}
+
 export interface PersonalDataClient {
   // ==== watched videos ====
 
@@ -51,4 +56,12 @@ export interface PersonalDataClient {
 
   // get the following status of one specific channel
   isFollowingChannel: (id: string) => Promise<boolean>
+
+  // === recent searches ===
+
+  // get all recent searches
+  recentSearches: () => Promise<RecentSearch[]>
+
+  // add a recent search
+  setRecentSearch: (id: string, type: 'video' | 'channel') => Promise<void>
 }
