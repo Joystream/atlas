@@ -73,6 +73,7 @@
     "csstype": "^3.0.0-beta.4",
     "customize-cra": "^1.0.0",
     "date-fns": "^2.15.0",
+    "downshift": "^6.1.0",
     "emotion-normalize": "~11.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
