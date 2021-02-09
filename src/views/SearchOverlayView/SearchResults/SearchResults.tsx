@@ -3,19 +3,20 @@ import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Tabs } from '@/shared/components'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
-import AllResultsTab from '@/views/SearchView/AllResultsTab'
+import { usePersonalData } from '@/hooks'
+import AllResultsTab from './AllResultsTab'
 import EmptyFallback from './EmptyFallback'
 import { useSearch } from '@/api/hooks'
 import { SearchQuery } from '@/api/queries'
 
-type SearchViewProps = {
-  search?: string
+type SearchResultsProps = {
+  query: string
 }
 const tabs = ['all results', 'videos', 'channels']
 
-const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
+const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: search }, { fetchPolicy: 'cache-and-network' })
+  const { data, loading, error } = useSearch({ text: query })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
@@ -28,7 +29,14 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
+  const { updateRecentSearches } = usePersonalData()
 
+  const handleVideoClick = (id: string) => {
+    updateRecentSearches(id, 'video')
+  }
+  const handleChannelClick = (id: string) => {
+    updateRecentSearches(id, 'channel')
+  }
   if (error) {
     throw error
   }
@@ -44,10 +52,27 @@ const SearchView: React.FC<SearchViewProps> = ({ search = '' }) => {
     <ViewWrapper>
       <Container>
         <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
-        {selectedIndex === 0 && <AllResultsTab loading={loading} videos={videos} channels={channels} />}
-        {selectedIndex === 1 && (loading ? <PlaceholderVideoGrid /> : <VideoGrid videos={videos} />)}
+        {selectedIndex === 0 && (
+          <AllResultsTab
+            loading={loading}
+            videos={videos}
+            channels={channels}
+            onVideoClick={handleVideoClick}
+            onChannelClick={handleChannelClick}
+          />
+        )}
+        {selectedIndex === 1 &&
+          (loading ? (
+            <PlaceholderVideoGrid />
+          ) : (
+            <VideoGrid videos={videos} onVideoClick={handleVideoClick} onChannelClick={handleChannelClick} />
+          ))}
         {selectedIndex === 2 &&
-          (loading ? <PlaceholderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+          (loading ? (
+            <PlaceholderVideoGrid />
+          ) : (
+            <ChannelGrid channels={channels} repeat="fill" onChannelClick={handleChannelClick} />
+          ))}
       </Container>
     </ViewWrapper>
   )
@@ -60,4 +85,4 @@ const Container = styled.div`
   }
 `
 
-export default SearchView
+export default SearchResults

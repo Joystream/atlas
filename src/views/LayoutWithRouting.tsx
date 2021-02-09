@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
+
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { HomeView, VideoView, SearchView, ChannelView, VideosView, ChannelsView } from '@/views'
+import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
-import { breakpoints, transitions } from '@/shared/theme'
-import { NavItemType, SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
+import { transitions } from '@/shared/theme'
+import { NavItemType } from '@/components/SideNavbar'
+import { RoutingState } from '@/types/routing'
+import { Location } from 'history'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
@@ -34,22 +37,40 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
 const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
-  { path: routes.search(), Component: SearchView },
   { path: routes.videos(), Component: VideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
 ]
 
 const LayoutWithRouting: React.FC = () => {
-  const location = useLocation()
+  const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
+  const searchMatch = useMatch({ path: routes.search() })
+  const [cachedLocation, setCachedLocation] = useState(location)
 
   useEffect(() => {
+    if (location === cachedLocation) {
+      return
+    }
+
+    setCachedLocation(location)
+
+    if (
+      cachedLocation.state?.overlaidLocation?.pathname === location.pathname ||
+      location.pathname === routes.search()
+    ) {
+      // if exiting routing overlay, skip scroll to top
+      return
+    }
+
     // delay scroll to allow transition to finish first
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, parseInt(transitions.timings.routing))
-  }, [location])
+  }, [location, cachedLocation])
+
+  const locationState = location.state as RoutingState
+  const displayedLocation = locationState?.overlaidLocation || location
 
   return (
     <>
@@ -67,15 +88,24 @@ const LayoutWithRouting: React.FC = () => {
             <CSSTransition
               timeout={parseInt(transitions.timings.routing)}
               classNames={transitions.names.fadeAndSlide}
-              key={location.key}
+              key={displayedLocation.pathname}
             >
-              <Routes location={location}>
+              <Routes location={displayedLocation}>
                 {routesMap.map(({ path, Component }) => (
                   <Route key={path} path={path} element={<Component />} />
                 ))}
               </Routes>
             </CSSTransition>
           </SwitchTransition>
+          <CSSTransition
+            timeout={parseInt(transitions.timings.routingSearchOverlay)}
+            classNames={transitions.names.slideDown}
+            in={!!searchMatch}
+            unmountOnExit
+            mountOnEnter
+          >
+            <Route path={routes.search()} element={<SearchOverlayView />} />
+          </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
     </>
@@ -91,10 +121,9 @@ const RouterWrapper = () => {
 }
 
 const MainContainer = styled.main`
-  padding: 0 var(--global-horizontal-padding);
-  @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${SIDENAVBAR_WIDTH}px;
-  }
+  position: relative;
+  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
+  margin-left: var(--sidenav-collapsed-width);
 `
 
 export default RouterWrapper

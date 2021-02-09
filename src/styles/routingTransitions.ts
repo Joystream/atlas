@@ -27,4 +27,22 @@ export const routingTransitions = css`
     opacity: 0;
     transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
+
+  .${transitions.names.slideDown}-enter {
+    transform: translateY(-100%);
+  }
+
+  .${transitions.names.slideDown}-enter-active {
+    transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
+    transform: translateY(0%);
+  }
+
+  .${transitions.names.slideDown}-exit {
+    transform: translateY(0%);
+  }
+
+  .${transitions.names.slideDown}-exit-active {
+    transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
+    transform: translateY(-100%);
+  }
 `
