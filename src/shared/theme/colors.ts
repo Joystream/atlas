@@ -26,4 +26,5 @@ export default {
   },
   success: '#1CCB00',
   error: '#FF3861',
+  warning: '#EB4F1E',
 }
