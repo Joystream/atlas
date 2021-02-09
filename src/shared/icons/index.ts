@@ -23,6 +23,9 @@ export { ReactComponent as SoundOff } from './sound-off.svg'
 export { ReactComponent as Search } from './search.svg'
 export { ReactComponent as Times } from './times.svg'
 export { ReactComponent as Videos } from './videos.svg'
+export { ReactComponent as Info } from './info.svg'
+export { ReactComponent as Error } from './error.svg'
+export { ReactComponent as Success } from './success-check.svg'
 
 const icons = [
   'bars',
@@ -50,6 +53,9 @@ const icons = [
   'sound-off',
   'times',
   'videos',
+  'info',
+  'error',
+  'success',
 ] as const
 
 export type IconType = typeof icons[number]
