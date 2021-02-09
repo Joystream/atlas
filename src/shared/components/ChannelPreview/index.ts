@@ -1,3 +1,3 @@
 import ChannelPreviewBase from './ChannelPreviewBase'
 
-export { ChannelPreviewBase }
+export default ChannelPreviewBase

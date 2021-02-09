@@ -7,6 +7,16 @@ import {
   MetaContainer,
   TextContainer,
   CoverWrapper,
+  ChannelHandle,
+  CoverDurationOverlay,
+  CoverHoverOverlay,
+  CoverImage,
+  CoverPlayIcon,
+  MetaText,
+  ProgressBar,
+  ProgressOverlay,
+  StyledAvatar,
+  TitleHeader,
 } from './VideoPreviewBase.styles'
 import styled from '@emotion/styled'
 import Placeholder from '../Placeholder'
@@ -15,12 +25,26 @@ import { formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 
 type VideoPreviewBaseProps = {
+  title?: string
+  channelHandle?: string
+  channelAvatarUrl?: string | null
+  createdAt?: Date
+  duration?: number
+  // video watch progress in percent (0-100)
+  progress?: number
+  views?: number | null
+  thumbnailUrl?: string
+  isLoading?: boolean
+  videoHref?: string
+  channelHref?: string
   showChannel?: boolean
   showMeta?: boolean
   main?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
   className?: string
   scalingFactor?: number
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onCoverResize?: (width: number | undefined, height: number | undefined) => void
 }
 
 export const MIN_VIDEO_PREVIEW_WIDTH = 300
@@ -34,14 +58,22 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
 const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
+  title,
+  channelHandle,
+  channelAvatarUrl,
+  createdAt,
+  duration,
+  progress = 0,
+  views,
+  thumbnailUrl,
+  onCoverResize,
+  isLoading = true,
   showChannel = true,
-
   showMeta = true,
   main = false,
-
+  onChannelClick,
   onClick,
   className,
-  scalingFactor = 1,
 }) => {
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
@@ -70,74 +102,81 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
 
   const displayChannel = showChannel && !main
 
-  const coverPlaceholder = <CoverPlaceholder />
-  const channelAvatarPlaceholder = <Placeholder rounded />
-  const titlePlaceholder = <Placeholder height={main ? 45 : 18} width="60%" />
-  const channelNamePlaceholder = <SpacedPlaceholder height="12px" width="60%" />
-  const metaPlaceholder = <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
-
-  const coverNode = (
-    <>
-      <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
-      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-      {!!progress && (
-        <ProgressOverlay>
-          <ProgressBar style={{ width: `${progress}%` }} />
-        </ProgressOverlay>
-      )}
-      <CoverHoverOverlay>
-        <CoverPlayIcon />
-      </CoverHoverOverlay>
-    </>
-  )
-
-  const titleNode = (
-    <TitleHeader variant="h6" main={main} scalingFactor={scalingFactor} onClick={onClick} clickable={Boolean(onClick)}>
-      {title}
-    </TitleHeader>
-  )
-
-  const channelAvatarNode = (
-    <StyledAvatar
-      handle={channelName}
-      imageUrl={channelAvatarURL}
-      channelClickable={channelClickable}
-      onClick={handleChannelClick}
-    />
-  )
-
-  const channelNameNode = (
-    <ChannelName
-      variant="subtitle2"
-      channelClickable={channelClickable}
-      onClick={handleChannelClick}
-      scalingFactor={scalingFactor}
-    >
-      {channelName}
-    </ChannelName>
-  )
-
-  const metaNode = (
-    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-      {formatVideoViewsAndDate(views || null, createdAt, { fullViews: main })}
-    </MetaText>
-  )
-
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
-        <CoverContainer clickable={clickable}>{coverNode || coverPlaceholder}</CoverContainer>
+        <CoverContainer clickable={clickable}>
+          {isLoading ? (
+            <CoverPlaceholder />
+          ) : (
+            <>
+              <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
+              {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+              {!!progress && (
+                <ProgressOverlay>
+                  <ProgressBar style={{ width: `${progress}%` }} />
+                </ProgressOverlay>
+              )}
+              <CoverHoverOverlay>
+                <CoverPlayIcon />
+              </CoverHoverOverlay>
+            </>
+          )}
+        </CoverContainer>
       </CoverWrapper>
       <InfoContainer main={main}>
         {displayChannel && (
           <AvatarContainer scalingFactor={scalingFactor}>
-            {channelAvatarNode || channelAvatarPlaceholder}
+            {isLoading ? (
+              <Placeholder rounded />
+            ) : (
+              <StyledAvatar
+                handle={channelHandle}
+                imageUrl={channelAvatarUrl}
+                channelClickable={channelClickable}
+                onClick={handleChannelClick}
+              />
+            )}
           </AvatarContainer>
         )}
         <TextContainer>
-          {titleNode || titlePlaceholder}
-          {displayChannel && (channelNameNode || channelNamePlaceholder)}
-          {showMeta && <MetaContainer main={main}>{metaNode || metaPlaceholder}</MetaContainer>}
+          {isLoading ? (
+            <Placeholder height={main ? 45 : 18} width="60%" />
+          ) : (
+            <TitleHeader
+              variant="h6"
+              main={main}
+              scalingFactor={scalingFactor}
+              onClick={onClick}
+              clickable={Boolean(onClick)}
+            >
+              {title}
+            </TitleHeader>
+          )}
+          {displayChannel &&
+            (isLoading ? (
+              <SpacedPlaceholder height="12px" width="60%" />
+            ) : (
+              <ChannelHandle
+                variant="subtitle2"
+                channelClickable={channelClickable}
+                onClick={handleChannelClick}
+                scalingFactor={scalingFactor}
+              >
+                {channelHandle}
+              </ChannelHandle>
+            ))}
+          {showMeta && (
+            <MetaContainer main={main}>
+              {isLoading ? (
+                <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
+              ) : createdAt ? (
+                <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
+                  {formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
+                </MetaText>
+              ) : null}
+            </MetaContainer>
+          )}
         </TextContainer>
       </InfoContainer>
     </Container>

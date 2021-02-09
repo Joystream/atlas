@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { sizes } from '@/shared/theme'
 import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
-import VideoPreview from '@/components/VideoPreviewWithNavigation'
+import VideoPreview from '@/components/VideoPreview'
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
@@ -161,18 +161,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   const gridContent = (
     <>
       {displayedItems.map((v) => (
-        <VideoPreview
-          id={v.id}
-          channelId={v.channel.id}
-          title={v.title}
-          channelName={v.channel.handle}
-          channelAvatarURL={v.channel.avatarPhotoUrl}
-          createdAt={v.createdAt}
-          views={v.views}
-          posterURL={v.thumbnailUrl}
-          showChannel={showChannel}
-          key={v.id}
-        />
+        <VideoPreview id={v.id} showChannel={showChannel} key={v.id} />
       ))}
       {Array.from({ length: placeholdersCount }, (_, idx) => (
         <VideoPreviewBase key={idx} showChannel={showChannel} />

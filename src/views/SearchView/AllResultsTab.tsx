@@ -26,17 +26,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
         {bestMatch && (
           <>
             <h3>Best Match</h3>
-            <VideoPreview
-              id={bestMatch.id}
-              channelId={bestMatch.channel.id}
-              title={bestMatch.title}
-              duration={bestMatch.duration}
-              channelName={bestMatch.channel.handle}
-              createdAt={bestMatch.createdAt}
-              views={bestMatch.views}
-              posterURL={bestMatch.thumbnailUrl}
-              main
-            />
+            <VideoPreview id={bestMatch.id} main />
           </>
         )}
       </div>
