@@ -1,19 +1,14 @@
+import { useVideo } from '@/api/hooks'
+import routes from '@/config/routes'
 import React from 'react'
 import VideoPreviewBase from '../shared/components/VideoPreview/VideoPreviewBase'
 
 type VideoPreviewProps = {
-  title: string
-  channelName: string
-  channelAvatarURL?: string | null
-  createdAt: Date
-  duration?: number
-  // video watch progress in percent (0-100)
-  progress?: number
-  views?: number | null
-  posterURL: string
+  id?: string
   showChannel?: boolean
   showMeta?: boolean
   main?: boolean
+  progress?: number
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -21,38 +16,38 @@ type VideoPreviewProps = {
 }
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({
-  title,
-  channelName,
-  channelAvatarURL,
-  createdAt,
-  duration,
-  progress = 0,
-  views,
-  posterURL,
+  id,
   showChannel = true,
   showMeta = true,
   main = false,
-  onClick,
-  onChannelClick,
+  progress,
   className,
   onCoverResize,
+  onChannelClick,
+  onClick,
 }) => {
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (!onClick) {
-      return
-    }
-    e.stopPropagation()
-    onClick(e)
-  }
-
+  const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+  const isLoading = loading || id === undefined
   return (
     <VideoPreviewBase
+      title={video?.title}
+      channelHandle={video?.channel.handle}
+      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      createdAt={video?.createdAt}
+      duration={video?.duration}
+      views={video?.views}
+      thumbnailUrl={video?.thumbnailUrl}
+      videoHref={id ? routes.video(video?.id) : undefined}
+      channelHref={id ? routes.channel(video?.channel.id) : undefined}
+      progress={progress}
+      isLoading={isLoading}
       showChannel={showChannel}
       showMeta={showMeta}
       main={main}
-      onClick={onClick && handleClick}
       className={className}
-      scalingFactor={scalingFactor}
+      onCoverResize={onCoverResize}
+      onChannelClick={onChannelClick}
+      onClick={onClick}
     />
   )
 }
