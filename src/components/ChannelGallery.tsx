@@ -32,9 +32,7 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loadin
         ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
             <ChannelPreviewBase key={`channel-placeholder-${idx}`} />
           ))
-        : channels?.map((channel) => (
-            <StyledChannelPreview id={channel.id} key={channel.id} onClick={() => handleClick(channel.id)} />
-          ))}
+        : channels?.map(({ id }) => <StyledChannelPreview id={id} key={id} onClick={() => handleClick(id)} />)}
     </Gallery>
   )
 }

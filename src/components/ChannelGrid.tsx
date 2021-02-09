@@ -23,8 +23,8 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...
 
   return (
     <Grid {...gridProps}>
-      {channels.map((c) => (
-        <StyledChannelPreview key={c.id} id={c.id} onClick={() => handleClick(c.id)} />
+      {channels.map(({ id }) => (
+        <StyledChannelPreview key={id} id={id} onClick={() => handleClick(id)} />
       ))}
     </Grid>
   )
