@@ -18,6 +18,18 @@ query GetChannel($id: ID!) {
   }
 }
 
+query GetChannelVideoCount($channelId: ID!) {
+  videosConnection(first: 0, where: { channelId_eq: $channelId }) {
+    totalCount
+  }
+}
+
+query GetChannels($id_in: [ID!]!) {
+  channels(where: { id_in: $id_in }) {
+    ...AllChannelFields
+  }
+}
+
 query GetChannelsConnection($first: Int, $after: String) {
   channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
     edges {

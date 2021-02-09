@@ -9,9 +9,17 @@ type AllResultsTabProps = {
   videos: VideoFieldsFragment[]
   channels: BasicChannelFieldsFragment[]
   loading: boolean
+  onVideoClick: (id: string) => void
+  onChannelClick: (id: string) => void
 }
 
-const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channels, loading }) => {
+const AllResultsTab: React.FC<AllResultsTabProps> = ({
+  videos: allVideos,
+  channels,
+  loading,
+  onVideoClick,
+  onChannelClick,
+}) => {
   const [bestMatch, ...videos] = allVideos
 
   return (
@@ -35,6 +43,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
               createdAt={bestMatch.createdAt}
               views={bestMatch.views}
               posterURL={bestMatch.thumbnailUrl}
+              onClick={() => onVideoClick(bestMatch.id)}
               main
             />
           </>
@@ -47,7 +56,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
           ) : (
             <SectionHeader variant="h5">Videos</SectionHeader>
           )}
-          <VideoGallery videos={videos} loading={loading} />
+          <VideoGallery videos={videos} loading={loading} onVideoClick={onVideoClick} />
         </div>
       )}
       {(channels.length > 0 || loading) && (
@@ -57,7 +66,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
           ) : (
             <SectionHeader variant="h5">Channels</SectionHeader>
           )}
-          <ChannelGallery channels={channels} loading={loading} />
+          <ChannelGallery channels={channels} loading={loading} onChannelClick={onChannelClick} />
         </div>
       )}
     </>

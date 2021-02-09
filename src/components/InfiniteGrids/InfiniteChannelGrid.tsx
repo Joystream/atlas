@@ -3,13 +3,13 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 
 import { sizes } from '@/shared/theme'
-import { ChannelPreviewBase, Grid, Text } from '@/shared/components'
+import { Grid, Text } from '@/shared/components'
 import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
 } from '@/api/queries'
-import ChannelPreview from '@/components/ChannelPreviewWithNavigation'
+import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteChannelGridProps = {
@@ -20,7 +20,7 @@ type InfiniteChannelGridProps = {
 }
 
 const INITIAL_ROWS = 4
-const INITIAL_CHANNELS_PER_ROW = 4
+const INITIAL_CHANNELS_PER_ROW = 7
 const QUERY_VARIABLES = {}
 
 const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCount = 0, ready = true, className }) => {
@@ -50,19 +50,12 @@ const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCo
     throw error
   }
 
+  const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
-      {displayedItems.map((channel) => (
-        <StyledChannelPreview
-          key={channel.id}
-          id={channel.id}
-          name={channel.handle}
-          avatarURL={channel.avatarPhotoUrl}
-          animated
-        />
-      ))}
-      {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <StyledChannelPreviewBase key={idx} />
+      {/* we are reusing the components below by giving them the same keys */}
+      {[...displayedItems, ...placeholderItems].map((channel, idx) => (
+        <StyledChannelPreview key={idx} id={channel.id} />
       ))}
     </>
   )
@@ -90,10 +83,6 @@ const previewCss = css`
 `
 
 const StyledChannelPreview = styled(ChannelPreview)`
-  ${previewCss};
-`
-
-const StyledChannelPreviewBase = styled(ChannelPreviewBase)`
   ${previewCss};
 `
 

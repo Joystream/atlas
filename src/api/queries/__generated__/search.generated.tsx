@@ -1,41 +1,40 @@
-import * as Types from './baseTypes.generated';
+import * as Types from './baseTypes.generated'
 
-import { VideoFieldsFragment , VideoFieldsFragmentDoc } from './videos.generated';
-import { BasicChannelFieldsFragment , BasicChannelFieldsFragmentDoc } from './channels.generated';
-import { gql } from '@apollo/client';
+import { VideoFieldsFragment, VideoFieldsFragmentDoc } from './videos.generated'
+import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { gql } from '@apollo/client'
 
-
-import * as Apollo from '@apollo/client';
+import * as Apollo from '@apollo/client'
 export type SearchQueryVariables = Types.Exact<{
-  text: Types.Scalars['String'];
-}>;
+  text: Types.Scalars['String']
+}>
 
-
-export type SearchQuery = { __typename: 'Query', search: Array<{ __typename: 'SearchFTSOutput', rank: number, item: (
-      { __typename: 'Video' }
-      & VideoFieldsFragment
-    ) | (
-      { __typename: 'Channel' }
-      & BasicChannelFieldsFragment
-    ) }> };
-
+export type SearchQuery = {
+  __typename: 'Query'
+  search: Array<{
+    __typename: 'SearchFTSOutput'
+    rank: number
+    item: ({ __typename: 'Video' } & VideoFieldsFragment) | ({ __typename: 'Channel' } & BasicChannelFieldsFragment)
+  }>
+}
 
 export const SearchDocument = gql`
-    query Search($text: String!) {
-  search(text: $text) {
-    item {
-      ... on Video {
-        ...VideoFields
+  query Search($text: String!) {
+    search(text: $text) {
+      item {
+        ... on Video {
+          ...VideoFields
+        }
+        ... on Channel {
+          ...BasicChannelFields
+        }
       }
-      ... on Channel {
-        ...BasicChannelFields
-      }
+      rank
     }
-    rank
   }
-}
-    ${VideoFieldsFragmentDoc}
-${BasicChannelFieldsFragmentDoc}`;
+  ${VideoFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
+`
 
 /**
  * __useSearchQuery__
@@ -54,11 +53,11 @@ ${BasicChannelFieldsFragmentDoc}`;
  * });
  */
 export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables>) {
-        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions);
-      }
+  return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions)
+}
 export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions);
-        }
-export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
-export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
-export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
+  return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions)
+}
+export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>
+export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>
+export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>

@@ -5,7 +5,6 @@ import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Link } from 'react-router-dom'
-import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar'
 
 type TopNavbarStyleProps = {
   hasFocus: boolean
@@ -21,9 +20,11 @@ export const StyledSearchbar = styled(Searchbar)`
 `
 export const TOP_NAVBAR_HEIGHT = 81
 export const Header = styled.header<TopNavbarStyleProps>`
-  width: 100%;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: var(--sidenav-collapsed-width);
+  right: 0;
+
   z-index: ${zIndex.header};
   min-height: ${TOP_NAVBAR_HEIGHT}px;
   max-height: ${TOP_NAVBAR_HEIGHT}px;
@@ -34,18 +35,15 @@ export const Header = styled.header<TopNavbarStyleProps>`
   border-bottom: 1px solid ${colors.gray[800]};
 
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
-  transition: all 0.4s ${transitions.easing};
-  padding: ${sizes(3)} ${sizes(3)};
+  transition: background-color 0.4s ${transitions.easing};
+
+  padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     z-index: ${zIndex.header};
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     column-gap: ${sizes(2)};
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    margin-left: ${SIDENAVBAR_WIDTH}px;
-    width: calc(100% - ${SIDENAVBAR_WIDTH}px);
   }
 
   ${StyledSearchbar} {

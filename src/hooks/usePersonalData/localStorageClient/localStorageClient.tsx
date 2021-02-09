@@ -6,6 +6,7 @@ import {
   INTERRUPTED_VIDEO,
   PersonalDataClient,
   WatchedVideo,
+  RecentSearch,
 } from './types'
 
 const promisify = <T,>(fn: (...args: unknown[]) => T) => (...args: Parameters<typeof fn>) =>
@@ -99,12 +100,21 @@ const setChannelFollowing = async (id: string, follow = true) => {
   writeToLocalStorage('followedChannels', newFollowedChannels)
 }
 
+const recentSearches = promisify(() => readFromLocalStorage<RecentSearch[]>('recentSearches') ?? [])
+const setRecentSearch = async (id: string, type: 'video' | 'channel') => {
+  const currentRecentSearches = await recentSearches()
+  const newRecentSearches = [{ id, type }, ...currentRecentSearches.filter((search) => search.id !== id)]
+
+  writeToLocalStorage('recentSearches', newRecentSearches)
+}
 export const getInitialPersonalData = () => {
   const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
   const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
+  const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
   return {
     watchedVideos,
     followedChannels,
+    recentSearches,
   }
 }
 
@@ -117,6 +127,8 @@ const localStorageClient: PersonalDataClient = {
   followedChannels,
   isFollowingChannel,
   setChannelFollowing,
+  recentSearches,
+  setRecentSearch,
 }
 
 export default localStorageClient

@@ -1,15 +1,24 @@
 overwrite: true
+
 schema: './src/api/schemas/**/*.graphql'
+
 documents:
   - './src/api/queries/**/*.graphql'
+
 config:
   scalars:
     Date: Date
   preResolveTypes: true # avoid using Pick
   nonOptionalTypename: true
+
 generates:
   src/api/queries/__generated__/baseTypes.generated.ts:
-    - typescript
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+        - eslint --fix
+    plugins:
+      - typescript
   src/api/queries/__generated__/:
     preset: near-operation-file
     presetConfig:

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
+import { ViewWrapper } from '@/components'
 import { Placeholder, Text } from '@/shared/components'
 import { sizes, colors, typography, breakpoints } from '@/shared/theme'
 import { fluidRange } from 'polished'
 
-export const Container = styled.div`
+export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
   flex-direction: column;
 `

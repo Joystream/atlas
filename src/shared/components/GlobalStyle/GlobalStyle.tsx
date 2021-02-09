@@ -35,10 +35,11 @@ const globalStyles = css`
 
   :root {
     --global-horizontal-padding: ${sizes(4)};
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    :root {
+    --sidenav-collapsed-width: 0;
+
+    @media screen and (min-width: ${breakpoints.medium}) {
       --global-horizontal-padding: ${sizes(8)};
+      --sidenav-collapsed-width: 72px;
     }
   }
 `

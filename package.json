@@ -32,7 +32,8 @@
     "mocking:videos": "node scripts/mocking/generateVideos.js",
     "mocking:videosMedia": "node scripts/mocking/generateVideosMedia.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
-    "queries:codegen": "graphql-codegen --config codegen.config.yml"
+    "queries:codegen": "graphql-codegen --config codegen.config.yml",
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
@@ -55,8 +56,7 @@
     "@joystream/prettier-config": "^1.0.0",
     "@miragejs/graphql": "^0.1.4",
     "@sentry/react": "^5.27.6",
-    "@storybook/addons": "^6.1.16",
-    "@storybook/theming": "^6.1.16",
+    "@types/body-scroll-lock": "^2.6.1",
     "@types/enzyme": "^3.10.5",
     "@types/faker": "^5.1.0",
     "@types/glider-js": "^1.7.3",
@@ -69,6 +69,7 @@
     "@types/video.js": "^7.3.10",
     "apollo": "^2.30.2",
     "babel-jest": "26.6.3",
+    "body-scroll-lock": "^3.1.5",
     "cross-env": "^7.0.3",
     "csstype": "^3.0.0-beta.4",
     "customize-cra": "^1.0.0",
@@ -91,6 +92,8 @@
     "lint-staged": "^10.2.7",
     "lodash": "^4.17.19",
     "miragejs": "^0.1.40",
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",

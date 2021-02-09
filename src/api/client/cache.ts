@@ -11,7 +11,15 @@ const cache = new InMemoryCache({
           // make sure queries asking for a specific category are separated in cache
           const channelId = args?.where?.channelId_eq || ''
           const categoryId = args?.where?.categoryId_eq || ''
-          return `${channelId}:${categoryId}`
+          const channelIdIn = JSON.stringify(args?.where?.channelId_in || '')
+          const createdAtGte = JSON.stringify(args?.where?.createdAt_gte || '')
+
+          // only for counting videos in HomeView
+          if (args?.where.channelId_in && !args?.first) {
+            return `${createdAtGte}:${channelIdIn}`
+          }
+
+          return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}`
         }),
         channel(existing, { toReference, args }) {
           return (

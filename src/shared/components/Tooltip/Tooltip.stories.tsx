@@ -1,7 +1,8 @@
 import React from 'react'
 import Tooltip, { TooltipProps } from './Tooltip'
-import { Text, Button, ChannelPreview } from '@/shared/components'
+import { Text, Button, ChannelPreviewBase } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
+import { BrowserRouter } from 'react-router-dom'
 
 export default {
   title: 'Shared/Tooltip',
@@ -30,12 +31,15 @@ const HeadingTooltip: Story<TooltipProps> = (args) => (
 export const WithHeading = HeadingTooltip.bind({})
 
 const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
-  <Tooltip {...args}>
-    <ChannelPreview
-      name="Lorem"
-      avatarURL="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
-    />
-  </Tooltip>
+  <BrowserRouter>
+    <Tooltip {...args}>
+      <ChannelPreviewBase
+        handle="Lorem"
+        avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
+        loading={false}
+      />
+    </Tooltip>
+  </BrowserRouter>
 )
 
 export const WithChannelPreview = ChannelPreviewTooltip.bind({})
