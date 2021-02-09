@@ -9,6 +9,7 @@ export default {
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet!' },
     arrowDisabled: { defaultValue: false },
+    darkenContent: { defaultValue: true },
   },
 } as Meta
 

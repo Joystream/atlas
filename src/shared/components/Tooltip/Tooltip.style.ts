@@ -6,6 +6,10 @@ type TooltipProps = {
   arrowDisabled?: boolean
 }
 
+type ChildrenContainerProps = {
+  darkenContent?: boolean
+}
+
 export const StyledTooltip = styled.div<TooltipProps>`
   position: relative;
   display: inline-block;
@@ -42,9 +46,9 @@ export const StyledTooltip = styled.div<TooltipProps>`
   }
 `
 
-export const ChildrenContainer = styled.div`
+export const ChildrenContainer = styled.div<ChildrenContainerProps>`
   transition: filter 200ms ${transitions.easing};
   &:hover {
-    filter: brightness(90%);
+    filter: ${({ darkenContent }) => darkenContent && 'brightness(90%)'};
   }
 `
