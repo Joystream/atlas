@@ -42,7 +42,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
 `
 
 export const ChildrenContainer = styled.div`
-  transition: 0.2s;
+  transition: filter 200ms ${transitions.easing};
   &:hover {
     filter: brightness(90%);
   }
