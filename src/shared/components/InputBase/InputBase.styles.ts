@@ -22,7 +22,7 @@ export const FormGroup = styled.div<FormGroupProps>`
   input,
   button,
   label {
-    cursor: pointer;
+    cursor: edit;
   }
 
   ${({ disabled }) =>

@@ -28,14 +28,13 @@ export const SelectButton = styled.button<SelectButtonProps>`
   align-items: center;
   ${styledinputStates.default}
 
-  ${({ isOpen }) => isOpen && styledinputStates.focused};
-
-  :focus {
-    ${({ error }) => !error && styledinputStates.focused};
-  }
-
   ${({ error }) => error && styledinputStates.error};
   ${({ disabled }) => disabled && styledinputStates.disabled};
+
+  ${({ isOpen }) => isOpen && styledinputStates.focused};
+  :focus {
+    ${styledinputStates.focused};
+  }
 
   svg {
     transition: all ${transitions.timings.regular} ${transitions.easing};
