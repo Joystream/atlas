@@ -8,8 +8,8 @@ type TooltipProps = {
 
 export const StyledTooltip = styled.div<TooltipProps>`
   position: relative;
-  width: fit-content;
-  &:before {
+  display: inline-block;
+  &::before {
     position: absolute;
     display: inline-block;
     content: attr(data-text);
@@ -24,9 +24,9 @@ export const StyledTooltip = styled.div<TooltipProps>`
     background: ${colors.gray[400]};
     color: ${colors.white};
     z-index: ${zIndex.nearOverlay};
-    transition: 100ms;
+    transition: transform 100ms ${transitions.easing}, opacity 100ms ${transitions.easing};
   }
-  &:after {
+  &::after {
     position: absolute;
     content: '';
     bottom: 0;
@@ -37,12 +37,11 @@ export const StyledTooltip = styled.div<TooltipProps>`
     border: 10px solid transparent;
     border-right-color: ${colors.gray[400]};
     z-index: ${zIndex.overlay};
-    transition: 100ms;
+    transition: transform 100ms ${transitions.easing}, opacity 100ms ${transitions.easing};
   }
 `
 
 export const ChildrenContainer = styled.div`
-  width: fit-content;
   transition: 0.2s;
   &:hover {
     filter: brightness(90%);
