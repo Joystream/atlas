@@ -60,7 +60,7 @@ const Dialog: React.FC<DialogProps> = ({
     <Portal>
       <CSSTransition in={showDialog} timeout={250} classNames="modal" unmountOnExit>
         <StyledBackdrop css={dialogTransitions} onClick={!disableBackdropClick ? onBackdropClick : undefined}>
-          <StyledContainer className="dialog">
+          <StyledContainer className="dialog" onClick={(e) => e.stopPropagation()}>
             {icon || exitButton ? (
               <StyledHeadRow>
                 {icon && <Icon name={icon} />}
