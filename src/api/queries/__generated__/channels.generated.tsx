@@ -36,6 +36,15 @@ export type GetChannelVideoCountQuery = {
   videosConnection: { __typename: 'VideoConnection'; totalCount: number }
 }
 
+export type GetChannelsQueryVariables = Types.Exact<{
+  id_in: Array<Types.Scalars['ID']> | Types.Scalars['ID']
+}>
+
+export type GetChannelsQuery = {
+  __typename: 'Query'
+  channels: Array<{ __typename: 'Channel' } & AllChannelFieldsFragment>
+}
+
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
@@ -171,6 +180,42 @@ export type GetChannelVideoCountQueryResult = Apollo.QueryResult<
   GetChannelVideoCountQuery,
   GetChannelVideoCountQueryVariables
 >
+export const GetChannelsDocument = gql`
+  query GetChannels($id_in: [ID!]!) {
+    channels(where: { id_in: $id_in }) {
+      ...AllChannelFields
+    }
+  }
+  ${AllChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelsQuery({
+ *   variables: {
+ *      id_in: // value for 'id_in'
+ *   },
+ * });
+ */
+export function useGetChannelsQuery(baseOptions: Apollo.QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>) {
+  return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions)
+}
+export function useGetChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions)
+}
+export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>
+export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLazyQuery>
+export type GetChannelsQueryResult = Apollo.QueryResult<GetChannelsQuery, GetChannelsQueryVariables>
 export const GetChannelsConnectionDocument = gql`
   query GetChannelsConnection($first: Int, $after: String) {
     channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {

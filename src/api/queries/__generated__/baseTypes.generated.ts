@@ -151,6 +151,7 @@ export type PageInfo = {
 export type ChannelWhereInput = {
   isCurated_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
+  id_in?: Maybe<Array<Scalars['ID']>>
 }
 
 export type ChannelWhereUniqueInput = {
@@ -231,6 +232,7 @@ export type Query = {
   channelFollows?: Maybe<ChannelFollowsInfo>
   /** Get views count for a single channel */
   channelViews?: Maybe<EntityViewsInfo>
+  channels: Array<Channel>
   channelsConnection: ChannelConnection
   coverVideo: CoverVideo
   featuredVideos: Array<FeaturedVideo>
@@ -268,6 +270,10 @@ export type QueryChannelFollowsArgs = {
 
 export type QueryChannelViewsArgs = {
   channelId: Scalars['ID']
+}
+
+export type QueryChannelsArgs = {
+  where?: Maybe<ChannelWhereInput>
 }
 
 export type QueryChannelsConnectionArgs = {
