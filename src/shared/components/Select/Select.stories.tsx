@@ -25,10 +25,7 @@ export default {
 const Template: Story<SelectProps> = (args) => <Select {...args} />
 
 const TemplateWithControlledInput: Story<SelectProps> = (args) => {
-  const [selectedItem, setSelectedItem] = useState<SelectedItem>({
-    value: 'selected value',
-    name: 'selected value',
-  })
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
   return (
     <Select
       {...args}

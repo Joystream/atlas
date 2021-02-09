@@ -9,14 +9,15 @@ export type TextFieldProps = {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   required?: boolean
+  className?: string
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
-  { type = 'text', label, helperText, value, onChange, onBlur, onFocus, error, warning, disabled, required },
+  { type = 'text', label, value, onChange, onBlur, onFocus, error, disabled, required, ...inputBaseProps },
   ref
 ) => {
   return (
-    <InputBase helperText={helperText} error={error} warning={warning} disabled={disabled}>
+    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <label>
         <TextInput
           ref={ref}

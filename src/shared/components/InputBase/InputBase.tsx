@@ -7,6 +7,7 @@ export type InputBaseProps = {
   warning?: boolean
   helperText?: string
   disabled?: boolean
+  className?: string
 }
 const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -17,9 +18,16 @@ const getVariant = (warning?: boolean, error?: boolean) => {
   }
 }
 
-const InputBase: React.FC<InputBaseProps> = ({ children, helperText = '\u00A0', warning, error, disabled }) => {
+const InputBase: React.FC<InputBaseProps> = ({
+  children,
+  helperText = '\u00A0',
+  warning,
+  error,
+  disabled,
+  className,
+}) => {
   return (
-    <FormGroup disabled={disabled}>
+    <FormGroup disabled={disabled} className={className}>
       {children}
       <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
     </FormGroup>

@@ -7,18 +7,19 @@ import Icon from '../Icon'
 export type SelectedItem = {
   value: string
   name: string
-} | null
+}
 
 export type SelectProps = {
   onChange?: (changes: UseSelectStateChange<SelectedItem>) => void
-  value?: SelectedItem
-  items: SelectedItem[]
+  value?: SelectedItem | null
+  items?: SelectedItem[]
   placeholder?: string
 } & InputBaseProps
 
-const SelectComponent: React.ForwardRefRenderFunction<HTMLDivElement, SelectProps> = (props, ref) => {
-  const { label = '', items, placeholder = 'Select option', error, warning, value, disabled, onChange } = props
-
+const SelectComponent: React.ForwardRefRenderFunction<HTMLDivElement, SelectProps> = (
+  { label = '', items, placeholder = 'Select option', error, value, disabled, onChange, ...inputBaseProps },
+  ref
+) => {
   const {
     isOpen,
     selectedItem,
@@ -27,10 +28,10 @@ const SelectComponent: React.ForwardRefRenderFunction<HTMLDivElement, SelectProp
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items, selectedItem: value, onSelectedItemChange: onChange })
+  } = useSelect({ items: items || [], selectedItem: value, onSelectedItemChange: onChange })
 
   return (
-    <InputBase error={error} warning={warning} disabled={disabled}>
+    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <SelectWrapper ref={ref}>
         <SelectButton
           disabled={disabled}
@@ -49,6 +50,7 @@ const SelectComponent: React.ForwardRefRenderFunction<HTMLDivElement, SelectProp
         </label>
         <SelectMenu isOpen={isOpen} {...getMenuProps()}>
           {isOpen &&
+            items &&
             items.map((item, index) => (
               <SelectOption isSelected={highlightedIndex === index} key={index} {...getItemProps({ item, index })}>
                 {item?.name}
