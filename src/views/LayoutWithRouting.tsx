@@ -14,6 +14,7 @@ import { transitions } from '@/shared/theme'
 import { NavItemType } from '@/components/SideNavbar'
 import { RoutingState } from '@/types/routing'
 import { Location } from 'history'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
@@ -121,7 +122,7 @@ const RouterWrapper = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: 0 var(--global-horizontal-padding);
+  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
   margin-left: var(--sidenav-collapsed-width);
 `
 

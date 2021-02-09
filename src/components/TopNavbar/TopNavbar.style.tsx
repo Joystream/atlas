@@ -20,8 +20,11 @@ export const StyledSearchbar = styled(Searchbar)`
 `
 export const TOP_NAVBAR_HEIGHT = 81
 export const Header = styled.header<TopNavbarStyleProps>`
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: var(--sidenav-collapsed-width);
+  right: 0;
+
   z-index: ${zIndex.header};
   min-height: ${TOP_NAVBAR_HEIGHT}px;
   max-height: ${TOP_NAVBAR_HEIGHT}px;
@@ -32,11 +35,9 @@ export const Header = styled.header<TopNavbarStyleProps>`
   border-bottom: 1px solid ${colors.gray[800]};
 
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
-  transition: all 0.4s ${transitions.easing};
-  padding: ${sizes(3)} ${sizes(3)};
+  transition: background-color 0.4s ${transitions.easing};
 
-  margin-left: var(--sidenav-collapsed-width);
-  width: calc(100% - var(--sidenav-collapsed-width));
+  padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
   @media screen and (min-width: ${breakpoints.small}) {
     z-index: ${zIndex.header};

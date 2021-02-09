@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useRouterQuery } from '@/hooks'
+import { useOverlayManager, useRouterQuery } from '@/hooks'
 import RecentSearches from './RecentSearches'
 import SearchResults from './SearchResults'
 import styled from '@emotion/styled'
@@ -9,16 +9,16 @@ import { QUERY_PARAMS } from '@/config/routes'
 
 const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
+  const { handleOverlayOpen, handleOverlayClose } = useOverlayManager()
 
-  // TODO we should probably handle that in one place for all the overlays
   // prevent body scroll
   useEffect(() => {
-    document.body.style.setProperty('overflow', 'hidden')
+    handleOverlayOpen()
 
     return () => {
-      document.body.style.setProperty('overflow', null)
+      handleOverlayClose()
     }
-  }, [])
+  }, [handleOverlayClose, handleOverlayOpen])
 
   return (
     <OverlayContainer role="dialog">
