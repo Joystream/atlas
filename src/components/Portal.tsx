@@ -8,7 +8,6 @@ const Portal: React.FC = ({ children }) => {
     const element = el.current
     const portalRoot = document.getElementById('portal-root') as HTMLElement
 
-    console.log(portalRoot)
     portalRoot.appendChild(element)
     return () => {
       portalRoot.removeChild(element)

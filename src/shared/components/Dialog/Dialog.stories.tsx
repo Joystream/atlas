@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import Dialog, { DialogProps } from './Dialog'
 import { Story } from '@storybook/react'
 import { Button } from '@/shared/components'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '../../theme'
 
 export default {
   title: 'Shared/Dialog',
@@ -37,6 +35,7 @@ const RegularTemplate: Story<DialogProps> = ({ icon, title, content, primaryButt
       secondaryButton={secondaryButton}
       icon={icon}
       exitButton={exitButton}
+      showDialog={true}
     />
   )
 }
@@ -51,7 +50,6 @@ const TransitionTemplate: Story<DialogProps> = ({
   secondaryButton,
   exitButton,
 }) => {
-  const [showButton, setShowButton] = useState(true)
   const [showDialog, setShowDialog] = useState(false)
 
   const handleExit = () => {
@@ -66,27 +64,19 @@ const TransitionTemplate: Story<DialogProps> = ({
 
   return (
     <>
-      {showButton && <Button onClick={() => setShowDialog(true)}>Open Dialog</Button>}
-      <CSSTransition
-        in={showDialog}
-        timeout={250}
-        classNames="dialog"
-        unmountOnExit
-        onEnter={() => setShowButton(false)}
-        onExited={() => setShowButton(true)}
-      >
-        <Dialog
-          title={title}
-          content={content}
-          primaryButton={primaryButton}
-          secondaryButton={secondaryButton}
-          icon={icon}
-          exitButton={exitButton}
-          handleExit={handleExit}
-          handlePrimaryButton={handlePrimaryButton}
-          handleSecondaryButton={handleSecondaryButton}
-        />
-      </CSSTransition>
+      <Button onClick={() => setShowDialog(true)}>Open Dialog</Button>
+      <Dialog
+        title={title}
+        content={content}
+        primaryButton={primaryButton}
+        secondaryButton={secondaryButton}
+        icon={icon}
+        exitButton={exitButton}
+        handleExit={handleExit}
+        handlePrimaryButton={handlePrimaryButton}
+        handleSecondaryButton={handleSecondaryButton}
+        showDialog={showDialog}
+      />
     </>
   )
 }

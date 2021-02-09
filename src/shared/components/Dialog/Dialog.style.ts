@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { colors, sizes, breakpoints, typography } from '../../theme'
+import { colors, sizes, breakpoints, typography, zIndex } from '../../theme'
 import { Text, Button } from '@/shared/components'
+import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
 
 type StyledExitButtonProps = {
   marginLeft?: boolean
@@ -9,15 +10,21 @@ type StyledExitButtonProps = {
 
 export const StyledBackdrop = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: ${zIndex.globalOverlay};
+  @media (min-width: ${breakpoints.medium}) {
+    padding-left: ${SIDENAVBAR_WIDTH}px;
+  }
 `
 
 export const StyledContainer = styled.div`
-  width: 100%;
+  width: 90%;
   max-width: ${sizes(110)};
-  margin: 0 auto;
+  margin: ${sizes(32)} auto;
   background-color: ${colors.gray[600]};
   padding: ${sizes(4)};
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.12), 0px 24px 40px rgba(0, 0, 0, 0.16);
@@ -86,22 +93,32 @@ export const StyledExitButton = styled(Button)<StyledExitButtonProps>`
 `
 
 export const dialogTransitions = css`
-  &.dialog-enter {
+  &.modal-enter {
     opacity: 0;
-    transform: scale(0.88);
+    & .dialog {
+      transform: scale(0.88);
+    }
   }
-  &.dialog-enter-active {
+  &.modal-enter-active {
     opacity: 1;
-    transform: scale(1);
+    & .dialog {
+      transform: scale(1);
+      transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
+    }
     transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
-  &.dialog-exit {
+  &.modal-exit {
     opacity: 1;
-    transform: scale(1);
+    & .dialog {
+      transform: scale(1);
+    }
   }
-  &.dialog-exit-active {
+  &.modal-exit-active {
     opacity: 0;
-    transform: scale(0.88);
+    & .dialog {
+      transform: scale(0.88);
+      transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
+    }
     transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `
