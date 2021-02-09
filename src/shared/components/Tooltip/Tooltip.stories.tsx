@@ -7,8 +7,8 @@ export default {
   title: 'Shared/Tooltip',
   component: Tooltip,
   argTypes: {
-    text: { control: 'text', defaultValue: 'Lorem ipsum dolor sit amet!' },
-    arrowDisabled: { control: 'boolean', defaultValue: false },
+    text: { defaultValue: 'Lorem ipsum dolor sit amet!' },
+    arrowDisabled: { defaultValue: false },
   },
 } as Meta
 

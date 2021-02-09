@@ -20,6 +20,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     opacity: ${({ isActive }) => (isActive ? 1 : 0)};
     font-size: ${typography.sizes.caption};
     font-weight: ${typography.weights.thin};
+    line-height: ${sizes(4)};
     padding: ${sizes(2.5)} ${sizes(2)};
     background: ${colors.gray[400]};
     color: ${colors.white};
