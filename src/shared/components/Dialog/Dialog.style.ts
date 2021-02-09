@@ -35,6 +35,7 @@ export const StyledContainer = styled.div`
 
 export const StyledTitleText = styled(Text)`
   margin-bottom: ${sizes(3)};
+  line-height: ${sizes(8)};
 `
 
 export const StyledContentText = styled(Text)`
@@ -42,6 +43,7 @@ export const StyledContentText = styled(Text)`
   font-weight: ${typography.weights.thin};
   margin-bottom: ${sizes(6)};
   word-wrap: break-word;
+  line-height: ${sizes(5)};
 `
 
 export const StyledHeadRow = styled.div`
@@ -50,7 +52,7 @@ export const StyledHeadRow = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-export const StyledButtonContainer = styled.div`
+export const StyledButtonsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
   @media screen and (min-width: ${breakpoints.small}) {

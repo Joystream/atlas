@@ -7,7 +7,7 @@ import {
   StyledTitleText,
   StyledContentText,
   StyledHeadRow,
-  StyledButtonContainer,
+  StyledButtonsContainer,
   StyledPrimaryButton,
   StyledSecondaryButton,
   StyledExitButton,
@@ -24,10 +24,12 @@ export type DialogProps = {
   secondaryButton?: string
   icon?: 'success' | 'failure'
   exitButton?: boolean
-  showDialog?: boolean
   handleExit?: (e: MouseEvent) => void
   handlePrimaryButton?: (e: MouseEvent) => void
   handleSecondaryButton?: (e: MouseEvent) => void
+  showDialog?: boolean
+  disableBackdropClick?: boolean
+  onBackdropClick?: (event: React.MouseEvent<HTMLDivElement>) => void
 }
 
 const Dialog: React.FC<DialogProps> = ({
@@ -37,10 +39,12 @@ const Dialog: React.FC<DialogProps> = ({
   secondaryButton,
   icon,
   exitButton,
-  showDialog,
   handleExit,
   handlePrimaryButton,
   handleSecondaryButton,
+  showDialog,
+  disableBackdropClick = false,
+  onBackdropClick,
 }) => {
   useEffect(() => {
     if (!showDialog) {
@@ -55,7 +59,7 @@ const Dialog: React.FC<DialogProps> = ({
   return (
     <Portal>
       <CSSTransition in={showDialog} timeout={250} classNames="modal" unmountOnExit>
-        <StyledBackdrop css={dialogTransitions}>
+        <StyledBackdrop css={dialogTransitions} onClick={!disableBackdropClick ? onBackdropClick : undefined}>
           <StyledContainer className="dialog">
             {icon || exitButton ? (
               <StyledHeadRow>
@@ -70,7 +74,7 @@ const Dialog: React.FC<DialogProps> = ({
 
             {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
             <StyledContentText variant="body2">{content}</StyledContentText>
-            <StyledButtonContainer>
+            <StyledButtonsContainer>
               {secondaryButton && (
                 <StyledSecondaryButton variant="secondary" onClick={handleSecondaryButton}>
                   {secondaryButton}
@@ -79,7 +83,7 @@ const Dialog: React.FC<DialogProps> = ({
               {primaryButton && (
                 <StyledPrimaryButton onClick={handlePrimaryButton}>{primaryButton}</StyledPrimaryButton>
               )}
-            </StyledButtonContainer>
+            </StyledButtonsContainer>
           </StyledContainer>
         </StyledBackdrop>
       </CSSTransition>

@@ -14,11 +14,11 @@ export default {
       },
       defaultValue: 'success',
     },
-    title: { control: 'text', defaultValue: 'De- spa- Cito' },
+    title: { control: 'text', defaultValue: 'Lorem ipsum dolor sit amet' },
     content: {
       control: 'text',
       defaultValue:
-        'Sí, sabes que ya llevo un rato mirándote Tengo que bailar contigo hoy (DY) Vi que tu mirada ya estaba llamándome Muéstrame el camino que yo voy',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     },
     primaryButton: { control: 'text', defaultValue: 'Confirm' },
     secondaryButton: { control: 'text', defaultValue: 'Cancel' },
@@ -76,6 +76,7 @@ const TransitionTemplate: Story<DialogProps> = ({
         handlePrimaryButton={handlePrimaryButton}
         handleSecondaryButton={handleSecondaryButton}
         showDialog={showDialog}
+        onBackdropClick={handleExit}
       />
     </>
   )
