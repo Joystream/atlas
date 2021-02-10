@@ -28,7 +28,7 @@ export const ChannelsList = styled.ul`
   margin: 0;
 `
 export const StyledChannelLink = styled(ChannelLink)`
-  span {
+  > span {
     margin-left: ${sizes(6)};
   }
 `
