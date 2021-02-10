@@ -6,6 +6,7 @@ import { breakpoints, colors, sizes, transitions, typography } from '../../theme
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
+import { Link } from 'react-router-dom'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -78,6 +79,10 @@ const mainContainerCss = css`
   @media screen and (min-width: ${breakpoints.medium}) {
     flex-direction: row;
   }
+`
+
+export const Anchor = styled(Link)`
+  all: unset;
 `
 
 export const Container = styled.article<MainProps>`
