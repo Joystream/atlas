@@ -8,6 +8,9 @@ import {
   useFollowChannelMutation,
   UnfollowChannelMutation,
   useUnfollowChannelMutation,
+  GetChannelsQuery,
+  GetChannelsQueryVariables,
+  useGetChannelsQuery,
 } from '@/api/queries/'
 
 type Opts = QueryHookOptions<GetChannelQuery>
@@ -30,6 +33,15 @@ export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) =
   })
   return {
     videoCount: data?.videosConnection.totalCount,
+    ...rest,
+  }
+}
+
+type ChannelsOpts = QueryHookOptions<GetChannelsQuery>
+export const useChannels = (variables?: GetChannelsQueryVariables, opts?: ChannelsOpts) => {
+  const { data, ...rest } = useGetChannelsQuery({ ...opts, variables })
+  return {
+    channels: data?.channels,
     ...rest,
   }
 }

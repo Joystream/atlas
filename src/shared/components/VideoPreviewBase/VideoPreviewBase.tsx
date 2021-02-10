@@ -25,7 +25,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 
-type VideoPreviewBaseProps = {
+export type VideoPreviewBaseProps = {
   title?: string
   channelHandle?: string
   channelAvatarUrl?: string | null
