@@ -17,6 +17,7 @@ import {
   ProgressOverlay,
   StyledAvatar,
   TitleHeader,
+  Anchor,
 } from './VideoPreviewBase.styles'
 import styled from '@emotion/styled'
 import Placeholder from '../Placeholder'
@@ -67,6 +68,8 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   views,
   thumbnailUrl,
   onCoverResize,
+  channelHref,
+  videoHref,
   isLoading = true,
   showChannel = true,
   showMeta = true,
@@ -88,7 +91,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     },
   })
 
-  const channelClickable = !!onChannelClick
+  const channelClickable = !!onChannelClick || !!channelHref
 
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
@@ -98,31 +101,37 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     onChannelClick(e)
   }
 
-  const clickable = !!onClick
+  const clickable = !!onClick || !!videoHref
 
   const displayChannel = showChannel && !main
-
+  const handleAnchorClick = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    if (!href) {
+      e.preventDefault()
+    }
+  }
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
-        <CoverContainer clickable={clickable}>
-          {isLoading ? (
-            <CoverPlaceholder />
-          ) : (
-            <>
-              <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
-              {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-              {!!progress && (
-                <ProgressOverlay>
-                  <ProgressBar style={{ width: `${progress}%` }} />
-                </ProgressOverlay>
-              )}
-              <CoverHoverOverlay>
-                <CoverPlayIcon />
-              </CoverHoverOverlay>
-            </>
-          )}
-        </CoverContainer>
+        <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+          <CoverContainer clickable={clickable}>
+            {isLoading ? (
+              <CoverPlaceholder />
+            ) : (
+              <>
+                <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
+                {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                {!!progress && (
+                  <ProgressOverlay>
+                    <ProgressBar style={{ width: `${progress}%` }} />
+                  </ProgressOverlay>
+                )}
+                <CoverHoverOverlay>
+                  <CoverPlayIcon />
+                </CoverHoverOverlay>
+              </>
+            )}
+          </CoverContainer>
+        </Anchor>
       </CoverWrapper>
       <InfoContainer main={main}>
         {displayChannel && (
@@ -130,12 +139,14 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
             {isLoading ? (
               <Placeholder rounded />
             ) : (
-              <StyledAvatar
-                handle={channelHandle}
-                imageUrl={channelAvatarUrl}
-                channelClickable={channelClickable}
-                onClick={handleChannelClick}
-              />
+              <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+                <StyledAvatar
+                  handle={channelHandle}
+                  imageUrl={channelAvatarUrl}
+                  channelClickable={channelClickable}
+                  onClick={handleChannelClick}
+                />
+              </Anchor>
             )}
           </AvatarContainer>
         )}
@@ -143,28 +154,32 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
           {isLoading ? (
             <Placeholder height={main ? 45 : 18} width="60%" />
           ) : (
-            <TitleHeader
-              variant="h6"
-              main={main}
-              scalingFactor={scalingFactor}
-              onClick={onClick}
-              clickable={Boolean(onClick)}
-            >
-              {title}
-            </TitleHeader>
+            <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+              <TitleHeader
+                variant="h6"
+                main={main}
+                scalingFactor={scalingFactor}
+                onClick={onClick}
+                clickable={clickable}
+              >
+                {title}
+              </TitleHeader>
+            </Anchor>
           )}
           {displayChannel &&
             (isLoading ? (
               <SpacedPlaceholder height="12px" width="60%" />
             ) : (
-              <ChannelHandle
-                variant="subtitle2"
-                channelClickable={channelClickable}
-                onClick={handleChannelClick}
-                scalingFactor={scalingFactor}
-              >
-                {channelHandle}
-              </ChannelHandle>
+              <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+                <ChannelHandle
+                  variant="subtitle2"
+                  channelClickable={channelClickable}
+                  onClick={handleChannelClick}
+                  scalingFactor={scalingFactor}
+                >
+                  {channelHandle}
+                </ChannelHandle>
+              </Anchor>
             ))}
           {showMeta && (
             <MetaContainer main={main}>
