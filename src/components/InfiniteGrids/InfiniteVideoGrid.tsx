@@ -158,13 +158,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     })
   }, [cachedCreatedAtGte, categoryId, channelId, channelIdIn, createdAtGte])
 
+  const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
-      {displayedItems.map((v) => (
-        <VideoPreview id={v.id} showChannel={showChannel} key={v.id} />
-      ))}
-      {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <VideoPreview key={idx} showChannel={showChannel} />
+      {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
+        <VideoPreview id={video.id} key={idx} showChannel={showChannel} />
       ))}
     </>
   )
