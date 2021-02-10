@@ -5,7 +5,6 @@ import { transitions } from '@/shared/theme'
 
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  handle?: string | null
   imageUrl?: string | null
   loading?: boolean
   className?: string

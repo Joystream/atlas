@@ -32,12 +32,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   return (
     <Container to={routes.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
-        <Avatar
-          handle={displayedChannel?.handle}
-          imageUrl={displayedChannel?.avatarPhotoUrl}
-          loading={!displayedChannel}
-          size={avatarSize}
-        />
+        <Avatar imageUrl={displayedChannel?.avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />
       )}
       {!hideHandle &&
         (displayedChannel ? (
