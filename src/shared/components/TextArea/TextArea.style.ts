@@ -13,7 +13,7 @@ export const StyledTextArea = styled.textarea`
   font-size: ${typography.sizes.subtitle2};
   border: none;
   border-bottom: 1px solid ${colors.gray[900]};
-  transition: background ${transitions.timings.regular} ${transitions.easing};
+  transition: all ${transitions.timings.loading} ${transitions.easing};
   ::placeholder {
     color: ${colors.gray[400]};
   }
