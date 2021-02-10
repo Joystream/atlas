@@ -33,11 +33,11 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   className,
   onClick,
 }) => {
+  const isAnimated = !loading && !!channelHref
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return
     onClick(e)
   }
-  const isAnimated = !loading && !!channelHref
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!channelHref) {
       e.preventDefault()
@@ -49,7 +49,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading) * 0.75}
+            timeout={parseInt(transitions.timings.loading) * 2}
             classNames={transitions.names.fade}
           >
             <InnerContainer animated={isAnimated}>

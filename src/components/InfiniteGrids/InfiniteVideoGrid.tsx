@@ -173,7 +173,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   return (
     <section className={className}>
-      {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
+      {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )

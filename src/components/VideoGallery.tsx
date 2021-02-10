@@ -52,7 +52,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
   if (!loading && videos?.length === 0) {
     return null
   }
-  const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
+  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
   return (
     <Gallery
       title={title}

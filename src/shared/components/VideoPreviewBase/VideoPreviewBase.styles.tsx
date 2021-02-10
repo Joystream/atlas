@@ -154,6 +154,10 @@ export const CoverHoverOverlay = styled.div`
   align-items: center;
 `
 
+export const InnerContainer = styled.div`
+  display: contents;
+`
+
 export const CoverIcon = styled(Icon)`
   transform: translateY(40px);
   transition: all ${transitions.timings.regular} ${transitions.easing};
