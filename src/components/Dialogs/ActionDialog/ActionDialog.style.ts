@@ -1,23 +1,10 @@
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
-import { colors, sizes, breakpoints, typography } from '../../theme'
+import { colors, sizes, breakpoints, typography } from '@/shared/theme'
 import { Text, Button } from '@/shared/components'
 
 type StyledExitButtonProps = {
   marginLeft?: boolean
 }
-
-export const StyledContainer = styled.div`
-  width: 90%;
-  max-width: ${sizes(110)};
-  margin: ${sizes(32)} auto;
-  background-color: ${colors.gray[600]};
-  padding: ${sizes(4)};
-  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.12), 0px 24px 40px rgba(0, 0, 0, 0.16);
-  @media screen and (min-width: ${breakpoints.small}) {
-    padding: ${sizes(6)};
-  }
-`
 
 export const StyledTitleText = styled(Text)`
   margin-bottom: ${sizes(3)};
@@ -77,36 +64,5 @@ export const StyledExitButton = styled(Button)<StyledExitButtonProps>`
   margin-left: ${({ marginLeft }) => marginLeft && 'auto'};
   &:hover {
     background-color: ${colors.transparent};
-  }
-`
-
-export const dialogTransitions = css`
-  &.backdrop-enter {
-    opacity: 0;
-    & .dialog {
-      transform: scale(0.88);
-    }
-  }
-  &.backdrop-enter-active {
-    opacity: 1;
-    & .dialog {
-      transform: scale(1);
-      transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-    }
-    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-  }
-  &.backdrop-exit {
-    opacity: 1;
-    & .dialog {
-      transform: scale(1);
-    }
-  }
-  &.backdrop-exit-active {
-    opacity: 0;
-    & .dialog {
-      transform: scale(0.88);
-      transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
-    }
-    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `

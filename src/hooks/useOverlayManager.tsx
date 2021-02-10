@@ -1,10 +1,6 @@
 import React, { useCallback, useContext, useState, useRef } from 'react'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import { CSSTransition } from 'react-transition-group'
-import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
-import { breakpoints, zIndex } from '@/shared/theme'
-import { dialogTransitions } from '@/shared/components/Dialog/Dialog.style'
 
 type OverlayManagerContextValue = {
   overlayOpen: boolean
@@ -40,13 +36,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <Global styles={overlayManagerStyles(scrollbarGap)} />
       <OverlayManagerContext.Provider value={{ overlayOpen, setOverlayOpen: handleOverlayOpen, overlayContainerRef }}>
         {children}
-        <CSSTransition in={overlayOpen} timeout={250} classNames="backdrop" unmountOnExit mountOnEnter>
-          <StyledOverlayContainer
-            ref={overlayContainerRef}
-            className="backdrop"
-            css={dialogTransitions}
-          ></StyledOverlayContainer>
-        </CSSTransition>
+        <div ref={overlayContainerRef}></div>
       </OverlayManagerContext.Provider>
     </>
   )
@@ -55,18 +45,6 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 const overlayManagerStyles = (scrollbarGap = 0) => css`
   :root {
     --scrollbar-gap-width: ${scrollbarGap}px;
-  }
-`
-const StyledOverlayContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: ${zIndex.globalOverlay};
-  @media (min-width: ${breakpoints.medium}) {
-    padding-left: var(--scrollbar-gap-width);
   }
 `
 
