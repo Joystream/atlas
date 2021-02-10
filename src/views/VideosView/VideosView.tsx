@@ -8,13 +8,15 @@ import { ErrorFallback, BackgroundPattern, VideoGallery } from '@/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import {
   StyledViewWrapper,
-  StyledText,
   StyledCategoryPicker,
   StyledInfiniteVideoGrid,
   IntersectionTarget,
   Header,
   GRID_TOP_PADDING,
+  CategoriesVideosContainer,
+  FeaturedVideosContainer,
 } from './VideosView.style'
+import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 const VideosView: React.FC = () => {
@@ -35,7 +37,10 @@ const VideosView: React.FC = () => {
     setSelectedCategoryId(categoryId)
     if (topicsRef.current && scrollTop) {
       setTimeout(() => {
-        topicsRef.current?.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' })
+        const offset = TOP_NAVBAR_HEIGHT
+        const relativeY = topicsRef?.current?.getBoundingClientRect().top || 0
+        const scrollY = relativeY + window.pageYOffset - offset
+        window.scrollTo({ top: scrollY, behavior: 'smooth' })
       })
     }
   }
@@ -45,30 +50,37 @@ const VideosView: React.FC = () => {
   }
   const videos = featuredVideos?.map((featuredVideo) => featuredVideo.video)
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
+
   return (
     <StyledViewWrapper>
       <BackgroundPattern />
       <div className={transitions.names.slide}>
         <Header variant="hero">Videos</Header>
-        {!hasFeaturedVideosError ? (
-          <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
-        ) : (
-          <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
-        )}
-        <StyledText ref={topicsRef} variant="h5">
-          Topics that may interest you
-        </StyledText>
-        <IntersectionTarget ref={targetRef} />
-        <StyledCategoryPicker
-          categories={categories}
-          loading={categoriesLoading}
-          selectedCategoryId={selectedCategoryId}
-          onChange={handleCategoryChange}
-          isAtTop={inView}
-        />
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
-        </ErrorBoundary>
+        {featuredVideosLoading || featuredVideos?.length ? (
+          <FeaturedVideosContainer>
+            {!hasFeaturedVideosError ? (
+              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
+            ) : (
+              <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
+            )}
+          </FeaturedVideosContainer>
+        ) : null}
+        <CategoriesVideosContainer>
+          <Text ref={topicsRef} variant="h5">
+            Topics that may interest you
+          </Text>
+          <IntersectionTarget ref={targetRef} />
+          <StyledCategoryPicker
+            categories={categories}
+            loading={categoriesLoading}
+            selectedCategoryId={selectedCategoryId}
+            onChange={handleCategoryChange}
+            isAtTop={inView}
+          />
+          <ErrorBoundary fallback={ErrorFallback}>
+            <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
+          </ErrorBoundary>
+        </CategoriesVideosContainer>
       </div>
     </StyledViewWrapper>
   )

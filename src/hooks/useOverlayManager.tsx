@@ -43,6 +43,10 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
   :root {
     --scrollbar-gap-width: ${scrollbarGap}px;
   }
+
+  body {
+    overflow-y: scroll;
+  }
 `
 
 export const useOverlayManager = () => {
