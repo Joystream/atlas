@@ -110,10 +110,15 @@ export const EditButton = styled.button<EditButtonProps>`
   }
 
   svg {
-    ${({ size }) => size === 'cover' && 'display: none'};
     fill: ${colors.gray[300]};
     width: 17px;
     margin-bottom: ${sizes(3)};
+    ${({ size }) =>
+      size === 'cover' &&
+      css`
+        width: 15px;
+        margin-bottom: ${sizes(1)};
+      `};
   }
 `
 
