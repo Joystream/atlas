@@ -1,5 +1,5 @@
 import React from 'react'
-import ChannelPreviewBase from '../shared/components/ChannelPreview/ChannelPreviewBase'
+import ChannelPreviewBase from '../shared/components/ChannelPreviewBase/ChannelPreviewBase'
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
 import routes from '@/config/routes'
