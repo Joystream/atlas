@@ -17,10 +17,15 @@ const HomeView: React.FC = () => {
   } = usePersonalData()
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
-  const { videosConnection, loading, error } = useVideosConnection({
-    channelIdIn,
-    createdAtGte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
-  })
+  const followingAnyChannels = channelIdIn.length > 0
+
+  const { videosConnection, loading, error } = useVideosConnection(
+    {
+      channelIdIn,
+      createdAtGte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
+    },
+    { skip: !followingAnyChannels }
+  )
 
   const followedChannelsVideosCount = videosConnection?.totalCount
   const shouldShowFollowedChannels =
@@ -39,7 +44,7 @@ const HomeView: React.FC = () => {
             title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
             channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
             createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
-            ready={!loading}
+            ready={!loading || !followingAnyChannels}
           />
         </ErrorBoundary>
       </Container>

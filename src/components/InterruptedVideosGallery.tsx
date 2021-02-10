@@ -16,10 +16,14 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     .filter((video) => video.__typename === 'INTERRUPTED')
     .slice(-INTERRUPTED_VIDEOS_COUNT)
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
+  const anyInterruptedVideos = interruptedVideosId.length > 0
 
-  const { videos, error, loading, refetch } = useVideos({
-    id_in: interruptedVideosId,
-  })
+  const { videos, error, loading, refetch } = useVideos(
+    {
+      id_in: interruptedVideosId,
+    },
+    { skip: !anyInterruptedVideos }
+  )
 
   const videoTimestampsMap = interruptedVideosState.reduce((acc, video) => {
     if (video.__typename === 'INTERRUPTED') {
@@ -34,6 +38,10 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   }))
 
   const hasInterruptedVideosError = error && !loading
+
+  if (!anyInterruptedVideos) {
+    return null
+  }
 
   return (
     <>
