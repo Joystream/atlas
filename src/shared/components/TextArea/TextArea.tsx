@@ -1,4 +1,5 @@
 import React, { forwardRef, useState } from 'react'
+import { getVariant } from '../InputBase'
 import { HelperText, HelperTextCount, HelperTextsWrapper, StyledTextArea, TextAreaWrapper } from './TextArea.style'
 
 export type TextAreaProps = {
@@ -74,15 +75,6 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       </HelperTextsWrapper>
     </TextAreaWrapper>
   )
-}
-
-const getVariant = (warning?: boolean, error?: boolean) => {
-  if (error) {
-    return 'error'
-  }
-  if (warning && !error) {
-    return 'warning'
-  }
 }
 
 const TextArea = forwardRef(TextAreaComponent)

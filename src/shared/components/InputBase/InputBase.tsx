@@ -9,7 +9,7 @@ export type InputBaseProps = {
   disabled?: boolean
   className?: string
 }
-const getVariant = (warning?: boolean, error?: boolean) => {
+export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
     return 'error'
   }
