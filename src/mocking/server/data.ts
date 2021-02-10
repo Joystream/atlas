@@ -29,6 +29,7 @@ export const createMockData = (server: MirageJSServer) => {
     })
     return server.schema.create('Channel', {
       ...channel,
+      avatarPhotoUrl: undefined,
     }) as ModelInstance<AllChannelFieldsFragment>
   })
 

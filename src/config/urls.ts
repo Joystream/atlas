@@ -12,8 +12,11 @@ const storageNodeUrl = readEnv('REACT_APP_STORAGE_NODE_URL')
 const sentryDSN = readEnv('REACT_APP_SENTRY_DSN')
 
 const headBranch = readEnv('REACT_APP_HEAD')
+const branch = readEnv('REACT_APP_BRANCH')
 
 const isStaging = !(headBranch || '').includes('master')
+
+console.log({ headBranch, branch })
 
 export const MOCK_QUERY_NODE_GRAPHQL_URL = '/query-node-graphql'
 export const QUERY_NODE_GRAPHQL_URL = (isStaging ? queryNodeStagingUrl : queryNodeUrl) || MOCK_QUERY_NODE_GRAPHQL_URL
