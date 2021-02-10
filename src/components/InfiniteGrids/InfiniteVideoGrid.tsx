@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/shared/theme'
-import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
+import { Grid, Text, Placeholder } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreview'
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
@@ -164,7 +164,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
         <VideoPreview id={v.id} showChannel={showChannel} key={v.id} />
       ))}
       {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <VideoPreviewBase key={idx} showChannel={showChannel} />
+        <VideoPreview key={idx} showChannel={showChannel} />
       ))}
     </>
   )

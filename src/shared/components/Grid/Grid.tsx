@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
 import { sizes, breakpoints } from '../../theme'
-import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreview'
+import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
 import { css } from '@emotion/core'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
