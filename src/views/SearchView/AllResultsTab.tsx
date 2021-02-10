@@ -1,5 +1,5 @@
 import React from 'react'
-import { Placeholder, VideoPreviewBase, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
@@ -17,18 +17,9 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channe
   return (
     <>
       <div>
-        {loading && (
-          <>
-            <Placeholder width={200} height={16} bottomSpace={18} />
-            <VideoPreviewBase main />
-          </>
-        )}
-        {bestMatch && (
-          <>
-            <h3>Best Match</h3>
-            <VideoPreview id={bestMatch.id} main />
-          </>
-        )}
+        {loading && <Placeholder width={200} height={16} bottomSpace={18} />}
+        {bestMatch && <h3>Best Match</h3>}
+        <VideoPreview id={bestMatch?.id} main />
       </div>
       {(videos.length > 0 || loading) && (
         <div>

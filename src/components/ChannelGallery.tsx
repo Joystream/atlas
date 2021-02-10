@@ -14,18 +14,17 @@ type ChannelGalleryProps = {
 
 const PLACEHOLDERS_COUNT = 12
 
-const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels, loading }) => {
+const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels = [], loading }) => {
   if (!loading && channels?.length === 0) {
     return null
   }
 
+  const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
   return (
     <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes(2, true)} paddingTop={sizes(2, true)}>
-      {loading
-        ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
-            <ChannelPreviewBase key={`channel-placeholder-${idx}`} />
-          ))
-        : channels?.map((channel) => <StyledChannelPreview id={channel.id} key={channel.id} />)}
+      {[...channels, ...placeholderItems].map((channel, idx) => (
+        <StyledChannelPreview key={idx} id={channel.id} />
+      ))}
     </Gallery>
   )
 }

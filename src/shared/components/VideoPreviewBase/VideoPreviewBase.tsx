@@ -112,7 +112,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
-        <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+        <Anchor to={videoHref ?? ''} onClick={handleAnchorClick(videoHref)}>
           <CoverContainer clickable={clickable}>
             {isLoading ? (
               <CoverPlaceholder />
@@ -154,7 +154,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
           {isLoading ? (
             <Placeholder height={main ? 45 : 18} width="60%" />
           ) : (
-            <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+            <Anchor to={videoHref ?? ''} onClick={handleAnchorClick(videoHref)}>
               <TitleHeader
                 variant="h6"
                 main={main}
