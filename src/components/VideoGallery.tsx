@@ -34,7 +34,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading }) => {
+const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading, onVideoClick }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -63,7 +63,16 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
       arrowCss={arrowPosition}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <StyledVideoPreview id={video.id} key={idx} onCoverResize={onCoverResize} />
+        <StyledVideoPreview
+          id={video.id}
+          key={idx}
+          onCoverResize={onCoverResize}
+          onClick={() => {
+            if (onVideoClick && video.id) {
+              onVideoClick(video.id)
+            }
+          }}
+        />
       ))}
     </Gallery>
   )
