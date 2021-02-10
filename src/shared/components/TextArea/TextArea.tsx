@@ -49,7 +49,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       setCharactersWarning('warning')
     }
 
-    if (currentLength === maxLength) {
+    if (currentLength > maxLength) {
       setCharactersCount(currentLength)
       setCharactersWarning('error')
     }
@@ -57,14 +57,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
 
   return (
     <TextAreaWrapper className={className}>
-      <StyledTextArea
-        ref={ref}
-        placeholder={placeholder}
-        onChange={handleOnChange}
-        value={value}
-        rows={rows}
-        maxLength={maxLength}
-      />
+      <StyledTextArea ref={ref} placeholder={placeholder} onChange={handleOnChange} value={value} rows={rows} />
       <HelperTextsWrapper>
         <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
         {charactersCount !== 0 && (

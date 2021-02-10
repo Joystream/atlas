@@ -22,6 +22,7 @@ export const StyledTextArea = styled.textarea`
   }
   :focus {
     border-bottom: 1px solid ${colors.blue[500]};
+    background: ${colors.gray[900]};
   }
   :placeholder-shown {
     border-bottom: 1px solid ${colors.gray[200]};
