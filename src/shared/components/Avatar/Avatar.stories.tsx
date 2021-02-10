@@ -5,6 +5,11 @@ import React from 'react'
 export default {
   title: 'Shared/Avatar',
   component: Avatar,
+  argTypes: {
+    size: {
+      defaultValue: 'cover',
+    },
+  },
 } as Meta
 
 const Template: Story<AvatarProps> = (args) => <Avatar {...args} />
