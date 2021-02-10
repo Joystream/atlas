@@ -6,7 +6,7 @@ export const TextAreaWrapper = styled.div`
 `
 
 export const StyledTextArea = styled.textarea`
-  background: ${colors.black};
+  background: transparent;
   width: 100%;
   resize: none;
   color: ${colors.gray[300]};
@@ -16,19 +16,24 @@ export const StyledTextArea = styled.textarea`
   transition: all ${transitions.timings.loading} ${transitions.easing};
   ::placeholder {
     color: ${colors.gray[400]};
-  }
-  &:hover {
-    background: ${colors.gray[900]};
+    transition: color ${transitions.timings.loading} ${transitions.easing};
   }
   :focus {
     border-bottom: 1px solid ${colors.blue[500]};
-    background: ${colors.gray[900]};
   }
   :placeholder-shown {
     border-bottom: 1px solid ${colors.gray[200]};
   }
   :not(:focus) {
     border-bottom: 1px solid ${colors.gray[900]};
+  }
+  :hover {
+    :not(:focus) {
+      border-bottom: 1px solid ${colors.gray[500]};
+      ::placeholder {
+        color: ${colors.gray[500]};
+      }
+    }
   }
 `
 type HelperTextProps = {
