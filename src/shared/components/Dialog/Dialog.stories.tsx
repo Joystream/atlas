@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Dialog, { DialogProps } from './Dialog'
-import { Story } from '@storybook/react'
+import { Story, Meta } from '@storybook/react'
 import { Button } from '@/shared/components'
+import { OverlayManagerProvider, useOverlayManager } from '@/hooks/useOverlayManager'
 
 export default {
   title: 'Shared/Dialog',
@@ -24,7 +25,14 @@ export default {
     secondaryButton: { control: 'text', defaultValue: 'Cancel' },
     exitButton: { control: 'boolean', defaultValue: true },
   },
-}
+  decorators: [
+    (Story) => (
+      <OverlayManagerProvider>
+        <Story />
+      </OverlayManagerProvider>
+    ),
+  ],
+} as Meta
 
 const RegularTemplate: Story<DialogProps> = ({ icon, title, content, primaryButton, secondaryButton, exitButton }) => {
   return (
@@ -76,7 +84,6 @@ const TransitionTemplate: Story<DialogProps> = ({
         handlePrimaryButton={handlePrimaryButton}
         handleSecondaryButton={handleSecondaryButton}
         showDialog={showDialog}
-        onBackdropClick={handleExit}
       />
     </>
   )

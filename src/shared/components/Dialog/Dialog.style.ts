@@ -1,25 +1,11 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { colors, sizes, breakpoints, typography, zIndex } from '../../theme'
+import { colors, sizes, breakpoints, typography } from '../../theme'
 import { Text, Button } from '@/shared/components'
-import { SIDENAVBAR_WIDTH } from '@/components/SideNavbar/SideNavbar.style'
 
 type StyledExitButtonProps = {
   marginLeft?: boolean
 }
-
-export const StyledBackdrop = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: ${zIndex.globalOverlay};
-  @media (min-width: ${breakpoints.medium}) {
-    padding-left: ${SIDENAVBAR_WIDTH}px;
-  }
-`
 
 export const StyledContainer = styled.div`
   width: 90%;
@@ -95,13 +81,13 @@ export const StyledExitButton = styled(Button)<StyledExitButtonProps>`
 `
 
 export const dialogTransitions = css`
-  &.modal-enter {
+  &.backdrop-enter {
     opacity: 0;
     & .dialog {
       transform: scale(0.88);
     }
   }
-  &.modal-enter-active {
+  &.backdrop-enter-active {
     opacity: 1;
     & .dialog {
       transform: scale(1);
@@ -109,13 +95,13 @@ export const dialogTransitions = css`
     }
     transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
-  &.modal-exit {
+  &.backdrop-exit {
     opacity: 1;
     & .dialog {
       transform: scale(1);
     }
   }
-  &.modal-exit-active {
+  &.backdrop-exit-active {
     opacity: 0;
     & .dialog {
       transform: scale(0.88);

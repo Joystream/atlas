@@ -1,20 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 
-const Portal: React.FC = ({ children }) => {
-  const el = React.useRef(document.createElement('div'))
+type PortalProps = {
+  portal: React.RefObject<HTMLDivElement>
+}
 
-  useEffect(() => {
-    const element = el.current
-    const portalRoot = document.getElementById('portal-root') as HTMLElement
-
-    portalRoot.appendChild(element)
-    return () => {
-      portalRoot.removeChild(element)
-    }
-  }, [])
-
-  return createPortal(children, el.current)
+const Portal: React.FC<PortalProps> = ({ children, portal }) => {
+  const element = portal.current!
+  return createPortal(children, element)
 }
 
 export default Portal
