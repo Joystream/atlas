@@ -52,7 +52,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
   if (!loading && videos?.length === 0) {
     return null
   }
-  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
+  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({
+    id: undefined,
+    progress: undefined,
+  }))
   return (
     <Gallery
       title={title}
@@ -65,6 +68,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview
           id={video.id}
+          progress={video?.progress}
           key={idx}
           onCoverResize={onCoverResize}
           onClick={() => {

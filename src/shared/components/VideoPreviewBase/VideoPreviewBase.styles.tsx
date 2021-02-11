@@ -83,6 +83,7 @@ const mainContainerCss = css`
 
 export const Anchor = styled(Link)`
   all: unset;
+  color: inherit;
 `
 
 export const Container = styled.article<MainProps>`

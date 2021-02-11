@@ -45,7 +45,6 @@ export type VideoPreviewBaseProps = {
   showMeta?: boolean
   main?: boolean
   className?: string
-  scalingFactor?: number
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
@@ -94,8 +93,9 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     },
   })
 
-  const channelClickable = !!onChannelClick || !!channelHref
-
+  const displayChannel = showChannel && !main
+  const clickable = (!!onClick || !!videoHref) && !isLoading
+  const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
@@ -103,10 +103,6 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     e.stopPropagation()
     onChannelClick(e)
   }
-
-  const clickable = !!onClick || !!videoHref
-
-  const displayChannel = showChannel && !main
   const handleAnchorClick = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
       e.preventDefault()
