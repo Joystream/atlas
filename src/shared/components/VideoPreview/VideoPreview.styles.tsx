@@ -61,23 +61,22 @@ export const RemoveButton = styled(Button)`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};
-  width: 39px;
+  width: 40px;
   height: 40px;
+  padding: 0;
   background-color: ${colors.blue};
   color: ${colors.white};
   transition: all ${transitions.timings.regular} ${transitions.easing};
   cursor: pointer;
-  ${CoverIcon} {
-    width: 20px;
+  span {
     height: 20px;
-    transform: translateY(0);
   }
 `
 
 export const CoverPlayIcon = ({ ...props }) => <CoverIcon name="play-outline" {...props} />
 export const CoverRemoveButton = ({ ...props }) => (
   <RemoveButton {...props}>
-    <CoverIcon name="times" />
+    <Icon name="times" />
   </RemoveButton>
 )
 

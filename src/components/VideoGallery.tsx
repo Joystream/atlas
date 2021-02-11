@@ -15,14 +15,13 @@ import { VideoFieldsFragment } from '@/api/queries'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
-  removeButton?: boolean
-  handleRemove?: () => Promise<undefined>
 }
 
 type VideoGalleryProps = {
   title?: string
   videos?: VideoFieldsWithProgress[]
   loading?: boolean
+  removeButton?: boolean
   onVideoClick?: (id: string) => void
 }
 
@@ -42,7 +41,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onVideoClick }) => {
+const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onVideoClick, removeButton }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -85,11 +84,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onV
               createdAt={video.createdAt}
               duration={video.duration}
               progress={video.progress}
-              removeButton={video.removeButton}
-              handleRemove={video.handleRemove}
               posterURL={video.thumbnailUrl}
               key={video.id}
               onCoverResize={onCoverResize}
+              removeButton={removeButton}
               onClick={() => {
                 if (onVideoClick) {
                   onVideoClick(video.id)

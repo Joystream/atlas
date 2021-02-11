@@ -30,7 +30,7 @@ const VideoPreviewWithNavigation: React.FC<VideoPreviewWithNavigationProps> = ({
     }
     navigate(routes.channel(channelId))
   }
-  return <VideoPreview {...videoPreviewProps} onClick={handleClick} onChannelClick={handleChannelClick} />
+  return <VideoPreview {...videoPreviewProps} id={id} onClick={handleClick} onChannelClick={handleChannelClick} />
 }
 
 export default VideoPreviewWithNavigation
