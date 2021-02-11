@@ -27,7 +27,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   },
   ref
 ) => {
-  const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | undefined>()
+  const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
   const [charactersCount, setCharactersCount] = useState(0)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -42,15 +42,15 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
     const warningLength = maxLength * 0.8
     const currentLength = e.target.value.length
 
-    setCharactersCount(0)
+    setCharactersCount(currentLength)
 
     if (currentLength > warningLength) {
-      setCharactersCount(currentLength)
       setCharactersWarning('warning')
+    } else {
+      setCharactersWarning(null)
     }
 
     if (currentLength > maxLength) {
-      setCharactersCount(currentLength)
       setCharactersWarning('error')
     }
   }
@@ -60,7 +60,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       <StyledTextArea ref={ref} placeholder={placeholder} onChange={handleOnChange} value={value} rows={rows} />
       <HelperTextsWrapper>
         <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
-        {charactersCount !== 0 && (
+        {(charactersWarning === 'warning' || charactersWarning === 'error') && (
           <HelperTextCount helperTextVariant={charactersWarning}>
             {charactersCount}/{maxLength}
           </HelperTextCount>
