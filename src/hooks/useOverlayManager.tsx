@@ -5,40 +5,67 @@ import { css, Global } from '@emotion/react'
 import { zIndex } from '@/shared/theme'
 
 type OverlayManagerContextValue = {
-  overlayOpen: boolean
-  setOverlayOpen: (value: boolean, scrollbarGap?: number) => void
+  scrollLocked: boolean
+  setScrollLocked: (value: boolean, scrollbarGap?: number) => void
+  overlayContainerOpened: boolean
+  setOverlayContainerOpened: (value: boolean) => void
   overlayContainerRef: React.RefObject<HTMLDivElement>
 }
+
+type OverlayContainerProps = {
+  isOpened?: boolean
+}
+
 const OverlayManagerContext = React.createContext<OverlayManagerContextValue | undefined>(undefined)
 OverlayManagerContext.displayName = 'OverlayManagerContext'
 
 export const OverlayManagerProvider: React.FC = ({ children }) => {
-  const [overlayOpen, setOverlayOpen] = useState(false)
+  const [scrollLocked, setScrollLocked] = useState(false)
+  const [overlayContainerOpened, setOverlayContainerOpened] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const overlayContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleOverlayOpen = (value: boolean, scrollbarGap?: number) => {
-    if (value === overlayOpen) {
+  const handleScrollLocked = (value: boolean, scrollbarGap?: number) => {
+    if (value === scrollLocked) {
       return
     }
 
     if (value) {
-      setOverlayOpen(true)
+      setScrollLocked(true)
       setScrollbarGap(scrollbarGap || 0)
       disableBodyScroll(document.body, { reserveScrollBarGap: true })
     } else {
-      setOverlayOpen(false)
+      setScrollLocked(false)
       setScrollbarGap(0)
       enableBodyScroll(document.body)
+    }
+  }
+
+  const handleContainerOpened = (value: boolean) => {
+    if (value === overlayContainerOpened) {
+      return
+    }
+    if (value) {
+      setOverlayContainerOpened(true)
+    } else {
+      setOverlayContainerOpened(false)
     }
   }
 
   return (
     <>
       <Global styles={overlayManagerStyles(scrollbarGap)} />
-      <OverlayManagerContext.Provider value={{ overlayOpen, setOverlayOpen: handleOverlayOpen, overlayContainerRef }}>
+      <OverlayManagerContext.Provider
+        value={{
+          scrollLocked,
+          setScrollLocked: handleScrollLocked,
+          overlayContainerOpened,
+          setOverlayContainerOpened: handleContainerOpened,
+          overlayContainerRef,
+        }}
+      >
         {children}
-        <StyledOverlayContainer ref={overlayContainerRef}></StyledOverlayContainer>
+        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened}></StyledOverlayContainer>
       </OverlayManagerContext.Provider>
     </>
   )
@@ -50,14 +77,14 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
   }
 `
 
-const StyledOverlayContainer = styled.div`
+const StyledOverlayContainer = styled.div<OverlayContainerProps>`
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  visibility: hidden;
-  opacity: 0;
+  visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
+  opacity: ${({ isOpened }) => (isOpened ? '1' : '0')};
   z-index: ${zIndex.globalOverlay};
   background-color: rgba(0, 0, 0, 0.4);
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
@@ -68,38 +95,30 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setOverlayOpen, overlayContainerRef } = context
+  const { setScrollLocked, setOverlayContainerOpened, overlayContainerRef } = context
 
-  const handleOverlayOpen = useCallback(() => {
+  const lockScroll = useCallback(() => {
     const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
-    setOverlayOpen(true, scrollbarGap)
-  }, [setOverlayOpen])
+    setScrollLocked(true, scrollbarGap)
+  }, [setScrollLocked])
 
-  const handleOverlayClose = useCallback(() => {
-    setOverlayOpen(false)
-  }, [setOverlayOpen])
+  const unlockScroll = useCallback(() => {
+    setScrollLocked(false)
+  }, [setScrollLocked])
 
-  const handleOverlayContainerOpen = useCallback(() => {
-    if (overlayContainerRef.current === null) {
-      return
-    }
-    overlayContainerRef.current.style.visibility = 'visible'
-    overlayContainerRef.current.style.opacity = '1'
-  }, [overlayContainerRef])
+  const openOverlayContainer = useCallback(() => {
+    setOverlayContainerOpened(true)
+  }, [setOverlayContainerOpened])
 
-  const handleOverlayContainerClose = useCallback(() => {
-    if (overlayContainerRef.current === null) {
-      return
-    }
-    overlayContainerRef.current.style.opacity = '0'
-    overlayContainerRef.current.style.visibility = 'hidden'
-  }, [overlayContainerRef])
+  const closeOverlayContainer = useCallback(() => {
+    setOverlayContainerOpened(false)
+  }, [setOverlayContainerOpened])
 
   return {
-    handleOverlayOpen,
-    handleOverlayClose,
-    handleOverlayContainerOpen,
-    handleOverlayContainerClose,
+    lockScroll,
+    unlockScroll,
+    openOverlayContainer,
+    closeOverlayContainer,
     overlayContainerRef,
   }
 }

@@ -14,23 +14,23 @@ export type DialogProps = {
 const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton, handleExit }) => {
   const {
     overlayContainerRef,
-    handleOverlayOpen,
-    handleOverlayClose,
-    handleOverlayContainerOpen,
-    handleOverlayContainerClose,
+    lockScroll,
+    unlockScroll,
+    openOverlayContainer,
+    closeOverlayContainer,
   } = useOverlayManager()
 
   useEffect(() => {
     if (!showDialog) {
       return
     }
-    handleOverlayOpen()
-    handleOverlayContainerOpen()
+    lockScroll()
+    openOverlayContainer()
     return () => {
-      handleOverlayClose()
-      handleOverlayContainerClose()
+      unlockScroll()
+      closeOverlayContainer()
     }
-  }, [handleOverlayClose, handleOverlayContainerClose, handleOverlayContainerOpen, handleOverlayOpen, showDialog])
+  }, [showDialog, lockScroll, unlockScroll, openOverlayContainer, closeOverlayContainer])
   return (
     <Portal containerRef={overlayContainerRef}>
       <CSSTransition in={showDialog} timeout={250} classNames="dialog" css={dialogTransitions}>
