@@ -31,12 +31,18 @@ const Avatar: React.FC<AvatarProps> = ({
   className,
   editable,
 }) => {
+  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation()
+    if (onEditClick) {
+      onEditClick(e)
+    }
+  }
   const isEditable = !loading && editable && size !== 'default'
   return (
     <Container onClick={onClick} size={size} className={className}>
       <StyledTransitionGroup>
         {isEditable && (
-          <EditButton size={size} withAvatar={!!imageUrl} onClick={onEditClick}>
+          <EditButton size={size} withAvatar={!!imageUrl} onClick={handleEditClick}>
             <Icon name="camera" />
             <span>{imageUrl ? 'Edit' : 'Add avatar'}</span>
           </EditButton>
