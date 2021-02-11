@@ -5,6 +5,7 @@ import { colors, sizes, transitions, typography } from '../../theme'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
+import Button from '../Button'
 import { HOVER_BORDER_SIZE, fadeInAnimation } from './VideoPreviewBase.styles'
 
 type MainProps = {
@@ -56,7 +57,29 @@ export const CoverIcon = styled(Icon)`
   color: ${colors.white};
 `
 
+export const RemoveButton = styled(Button)`
+  position: absolute;
+  top: ${sizes(2)};
+  right: ${sizes(2)};
+  width: 39px;
+  height: 40px;
+  background-color: ${colors.blue};
+  color: ${colors.white};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+  cursor: pointer;
+  ${CoverIcon} {
+    width: 20px;
+    height: 20px;
+    transform: translateY(0);
+  }
+`
+
 export const CoverPlayIcon = ({ ...props }) => <CoverIcon name="play-outline" {...props} />
+export const CoverRemoveButton = ({ ...props }) => (
+  <RemoveButton {...props}>
+    <CoverIcon name="times" />
+  </RemoveButton>
+)
 
 export const ProgressOverlay = styled.div`
   position: absolute;

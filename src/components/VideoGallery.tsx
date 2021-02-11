@@ -15,6 +15,8 @@ import { VideoFieldsFragment } from '@/api/queries'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
+  removeButton?: boolean
+  handleRemove?: () => Promise<undefined>
 }
 
 type VideoGalleryProps = {
@@ -83,6 +85,8 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onV
               createdAt={video.createdAt}
               duration={video.duration}
               progress={video.progress}
+              removeButton={video.removeButton}
+              handleRemove={video.handleRemove}
               posterURL={video.thumbnailUrl}
               key={video.id}
               onCoverResize={onCoverResize}

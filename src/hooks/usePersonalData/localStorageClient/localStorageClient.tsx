@@ -7,6 +7,7 @@ import {
   PersonalDataClient,
   WatchedVideo,
   RecentSearch,
+  REMOVED_VIDEO,
 } from './types'
 
 const promisify = <T,>(fn: (...args: unknown[]) => T) => (...args: Parameters<typeof fn>) =>
@@ -45,7 +46,7 @@ const watchedVideo = async (id: string) => {
   return videos.find((v) => v.id === id) ?? null
 }
 const setWatchedVideo = async (
-  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO,
+  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO | typeof REMOVED_VIDEO,
   id: string,
   timestamp?: number
 ) => {
@@ -77,6 +78,10 @@ const setWatchedVideo = async (
   if (!currentVideo) {
     const newVideo = __typename === 'COMPLETED' ? { __typename, id } : { __typename, id, timestamp }
     writeToLocalStorage('watchedVideos', [...currentVideos, newVideo])
+  }
+  if (__typename === 'REMOVED') {
+    const filtered = currentVideos.filter((v) => v.id !== id)
+    writeToLocalStorage('watchedVideos', filtered)
   }
 }
 
