@@ -1,4 +1,4 @@
-import { colors, sizes, typography } from '@/shared/theme'
+import { colors, sizes, transitions, typography } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
@@ -33,6 +33,7 @@ export const StyledLink = styled(({ isChevron, ...rest }: StyledLinkProps) => <N
   background: none;
   text-decoration: none;
   font-family: ${typography.fonts.headers};
+  transition: all ${transitions.timings.loading} ${transitions.easing};
   :hover {
     color: ${colors.white};
     background-color: ${colors.gray[600]};
