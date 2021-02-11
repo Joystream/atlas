@@ -28,14 +28,10 @@ export const Regular = RegularTemplate.bind({})
 const TransitionTemplate: Story<DialogProps> = ({ exitButton }) => {
   const [showDialog, setShowDialog] = useState(false)
 
-  const handleExit = () => {
-    setShowDialog(false)
-  }
-
   return (
     <>
       <Button onClick={() => setShowDialog(true)}>Open Dialog</Button>
-      <Dialog exitButton={exitButton} handleExit={handleExit} showDialog={showDialog} />
+      <Dialog exitButton={exitButton} handleExit={() => setShowDialog(false)} showDialog={showDialog} />
     </>
   )
 }

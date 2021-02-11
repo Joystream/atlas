@@ -22,7 +22,6 @@ export { ReactComponent as SoundOn } from './sound-on.svg'
 export { ReactComponent as SoundOff } from './sound-off.svg'
 export { ReactComponent as Search } from './search.svg'
 export { ReactComponent as Times } from './times.svg'
-export { ReactComponent as TimesWhite } from './times-white.svg'
 export { ReactComponent as Videos } from './videos.svg'
 export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
@@ -53,7 +52,6 @@ const icons = [
   'sound-on',
   'sound-off',
   'times',
-  'times-white',
   'videos',
   'info',
   'error',

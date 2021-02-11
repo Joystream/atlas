@@ -2,11 +2,14 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 
 type PortalProps = {
-  portal: React.RefObject<HTMLDivElement>
+  containerRef: React.RefObject<HTMLDivElement>
 }
 
-const Portal: React.FC<PortalProps> = ({ children, portal }) => {
-  const element = portal.current!
+const Portal: React.FC<PortalProps> = ({ children, containerRef }) => {
+  const element = containerRef.current
+  if (!element) {
+    return null
+  }
   return createPortal(children, element)
 }
 

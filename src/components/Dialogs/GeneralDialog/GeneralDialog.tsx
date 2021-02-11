@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
-import { StyledBackdrop, StyledContainer, StyledExitButton, dialogTransitions } from './GeneralDialog.style'
+import { StyledContainer, StyledExitButton, dialogTransitions } from './GeneralDialog.style'
 import { Icon } from '@/shared/components'
 
 export type DialogProps = {
@@ -12,34 +12,38 @@ export type DialogProps = {
 }
 
 const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton, handleExit }) => {
-  const { overlayContainerRef, handleOverlayOpen, handleOverlayClose } = useOverlayManager()
+  const {
+    overlayContainerRef,
+    handleOverlayOpen,
+    handleOverlayClose,
+    handleOverlayContainerOpen,
+    handleOverlayContainerClose,
+  } = useOverlayManager()
 
   useEffect(() => {
     if (!showDialog) {
       return
     }
     handleOverlayOpen()
+    handleOverlayContainerOpen()
     return () => {
       handleOverlayClose()
+      handleOverlayContainerClose()
     }
-  }, [handleOverlayClose, handleOverlayOpen, showDialog])
+  }, [handleOverlayClose, handleOverlayContainerClose, handleOverlayContainerOpen, handleOverlayOpen, showDialog])
   return (
-    overlayContainerRef.current && (
-      <Portal portal={overlayContainerRef}>
-        <CSSTransition in={showDialog} timeout={250} classNames="backdrop" unmountOnExit mountOnEnter>
-          <StyledBackdrop css={dialogTransitions} className="backdrop">
-            <StyledContainer className="dialog">
-              {exitButton && (
-                <StyledExitButton aria-label="close dialog" onClick={handleExit}>
-                  <Icon name="times-white" />
-                </StyledExitButton>
-              )}
-              {children}
-            </StyledContainer>
-          </StyledBackdrop>
-        </CSSTransition>
-      </Portal>
-    )
+    <Portal containerRef={overlayContainerRef}>
+      <CSSTransition in={showDialog} timeout={250} classNames="dialog" css={dialogTransitions}>
+        <StyledContainer className="dialog">
+          {exitButton && (
+            <StyledExitButton aria-label="close dialog" onClick={handleExit}>
+              <Icon name="times" color="white" />
+            </StyledExitButton>
+          )}
+          {children}
+        </StyledContainer>
+      </CSSTransition>
+    </Portal>
   )
 }
 
