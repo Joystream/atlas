@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
-import { usePersonalData } from '@/hooks'
 import {
   ChannelName,
   CoverDurationOverlay,
@@ -29,7 +28,6 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
 type VideoPreviewProps = {
-  id: string
   title: string
   channelName: string
   channelAvatarURL?: string | null
@@ -38,6 +36,7 @@ type VideoPreviewProps = {
   // video watch progress in percent (0-100)
   progress?: number
   removeButton?: boolean
+  handleRemove?: () => Promise<void>
   views?: number | null
   posterURL: string
 
@@ -51,7 +50,6 @@ type VideoPreviewProps = {
 }
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({
-  id,
   title,
   channelName,
   channelAvatarURL,
@@ -59,6 +57,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   duration,
   progress = 0,
   removeButton,
+  handleRemove,
   views,
   posterURL,
   showChannel = true,
@@ -70,7 +69,6 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   onCoverResize,
 }) => {
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
-  const { updateWatchedVideos } = usePersonalData()
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
       const { width: videoPreviewWidth, height: videoPreviewHeight } = size
@@ -105,9 +103,10 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     if (!onClick) {
       return
     }
-
-    e.stopPropagation()
-    updateWatchedVideos('REMOVED', id)
+    if (handleRemove) {
+      e.stopPropagation()
+      handleRemove()
+    }
   }
 
   const coverNode = (

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
+import { usePersonalData } from '@/hooks'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
 
@@ -42,6 +43,7 @@ const breakpoints = breakpointsOfGrid({
 }))
 
 const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onVideoClick, removeButton }) => {
+  const { updateWatchedVideos } = usePersonalData()
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -88,6 +90,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onV
               key={video.id}
               onCoverResize={onCoverResize}
               removeButton={removeButton}
+              handleRemove={() => updateWatchedVideos('REMOVED', video.id)}
               onClick={() => {
                 if (onVideoClick) {
                   onVideoClick(video.id)
