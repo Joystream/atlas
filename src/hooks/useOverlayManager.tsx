@@ -25,32 +25,28 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const overlayContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleScrollLocked = (value: boolean, scrollbarGap?: number) => {
-    if (value === scrollLocked) {
-      return
-    }
+  const handleScrollLocked = useCallback(
+    (value: boolean, scrollbarGap?: number) => {
+      if (value === scrollLocked) {
+        return
+      }
 
-    if (value) {
-      setScrollLocked(true)
-      setScrollbarGap(scrollbarGap || 0)
-      disableBodyScroll(document.body, { reserveScrollBarGap: true })
-    } else {
-      setScrollLocked(false)
-      setScrollbarGap(0)
-      enableBodyScroll(document.body)
-    }
-  }
+      if (value) {
+        setScrollLocked(true)
+        setScrollbarGap(scrollbarGap || 0)
+        disableBodyScroll(document.body, { reserveScrollBarGap: true })
+      } else {
+        setScrollLocked(false)
+        setScrollbarGap(0)
+        enableBodyScroll(document.body)
+      }
+    },
+    [scrollLocked]
+  )
 
-  const handleContainerOpened = (value: boolean) => {
-    if (value === overlayContainerOpened) {
-      return
-    }
-    if (value) {
-      setOverlayContainerOpened(true)
-    } else {
-      setOverlayContainerOpened(false)
-    }
-  }
+  const handleContainerOpened = useCallback((value: boolean) => {
+    setOverlayContainerOpened(value)
+  }, [])
 
   return (
     <>
