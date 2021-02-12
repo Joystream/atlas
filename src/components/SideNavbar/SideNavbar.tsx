@@ -52,7 +52,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
-        <LogoLink to="/" onClick={closeSideNav}>
+        <LogoLink to="/" onClick={closeSideNav} tabIndex={expanded ? 0 : -1}>
           <Logo />
         </LogoLink>
         <SidebarNavList>
