@@ -1,5 +1,4 @@
-import { stubFalse } from 'lodash'
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, HelperText, StyledInput } from './HeaderTextField.style'
 
 export type HeaderTextFieldProps = {
@@ -12,6 +11,7 @@ export type HeaderTextFieldProps = {
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
   ({ value, helperText, error, warning, onChange }, ref) => {
+    const [valueLength, setValueLength] = useState(value.length)
     const controlled = onChange?.name === 'onChange'
     return (
       <Container>
@@ -20,7 +20,8 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
           type="text"
           defaultValue={value}
           onChange={onChange}
-          widthSize={controlled ? value.length : null}
+          widthSize={controlled ? value.length : valueLength}
+          onBlur={(e) => setValueLength(e.target.value.length)}
           required
         />
         {helperText && (

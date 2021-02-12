@@ -8,7 +8,7 @@ type HelperTextProps = {
   warning?: boolean
 }
 
-type InputWidthProps = {
+type StyledInputProps = {
   widthSize: number | null
 }
 
@@ -18,7 +18,7 @@ export const Container = styled.div`
   background-color: ${colors.gray[800]};
 `
 
-export const StyledInput = styled.input<InputWidthProps>`
+export const StyledInput = styled.input<StyledInputProps>`
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
@@ -32,7 +32,7 @@ export const StyledInput = styled.input<InputWidthProps>`
   border: none;
   min-width: 100px;
   max-width: 100vw;
-  width: ${({ widthSize }) => (widthSize ? widthSize + 'ch' : '100%')};
+  width: ${({ widthSize = 0 }) => widthSize && `${widthSize}ch`};
   height: ${sizes(13)};
   &:hover {
     filter: brightness(80%);
