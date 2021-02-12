@@ -54,7 +54,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
           >
             <InnerContainer animated={isAnimated}>
               <AvatarContainer>
-                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} handle={handle} />}
+                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} />}
               </AvatarContainer>
               <Info>
                 {loading ? <Placeholder width="140px" height="16px" /> : <NameHeader variant="h6">{handle}</NameHeader>}

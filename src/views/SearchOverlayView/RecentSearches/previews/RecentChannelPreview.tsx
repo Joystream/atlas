@@ -19,7 +19,7 @@ type RecentChannelPreviewProps = {
 const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
   return (
     <PreviewContainer to={routes.channel(channel?.id)}>
-      <StyledChannelAvatar handle={channel?.handle} imageUrl={channel?.avatarPhotoUrl} loading={!channel} />
+      <StyledChannelAvatar imageUrl={channel?.avatarPhotoUrl} loading={!channel} />
       <SwitchTransition>
         <CSSTransition
           key={channel ? 'placeholder' : 'content'}

@@ -11,7 +11,7 @@ type ChannelAvatarProps = {
 const ChannelAvatar: React.FC<ChannelAvatarProps> = ({ handle, avatarUrl, className, onClick }) => {
   return (
     <Container className={className} onClick={onClick}>
-      <StyledAvatar handle={handle} imageUrl={avatarUrl} />
+      <StyledAvatar imageUrl={avatarUrl} />
       <Name>{handle}</Name>
     </Container>
   )
