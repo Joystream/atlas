@@ -3,13 +3,17 @@ import { css } from '@emotion/react'
 import { Button } from '@/shared/components'
 import { colors, sizes, breakpoints } from '@/shared/theme'
 
-export const StyledContainer = styled.div`
+type ContainerProps = {
+  wide?: boolean
+}
+
+export const StyledContainer = styled.div<ContainerProps>`
   position: relative;
   width: 90%;
-  max-width: ${sizes(110)};
+  max-width: ${({ wide }) => (wide ? '700px' : '440px')};
   min-height: 150px;
   margin: ${sizes(32)} auto;
-  background-color: ${colors.gray[600]};
+  background-color: ${colors.gray[700]};
   padding: ${sizes(4)};
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.12), 0px 24px 40px rgba(0, 0, 0, 0.16);
   @media screen and (min-width: ${breakpoints.small}) {
