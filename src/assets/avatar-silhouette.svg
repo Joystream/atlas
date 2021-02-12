@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 136">
+  <defs/>
+  <mask id="a" width="136" height="136" x="0" y="0" maskUnits="userSpaceOnUse">
+    <circle cx="68" cy="68" r="68" fill="white"/>
+  </mask>
+  <g mask="url(#a)">
+    <circle cx="68" cy="68" r="68" fill="#0E1113"/>
+    <circle cx="68" cy="60" r="28" fill="#1F2529"/>
+    <circle cx="68" cy="164" r="68" fill="#1F2529"/>
+  </g>
+</svg>
