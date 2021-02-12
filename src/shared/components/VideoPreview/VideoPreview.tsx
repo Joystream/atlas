@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
-
 import {
   ChannelName,
   CoverDurationOverlay,
   CoverHoverOverlay,
   CoverImage,
   CoverPlayIcon,
+  CoverRemoveButton,
   MetaText,
   ProgressBar,
   ProgressOverlay,
@@ -35,6 +35,8 @@ type VideoPreviewProps = {
   duration?: number
   // video watch progress in percent (0-100)
   progress?: number
+  removeButton?: boolean
+  onRemoveButtonClick?: () => void
   views?: number | null
   posterURL: string
 
@@ -54,6 +56,8 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   createdAt,
   duration,
   progress = 0,
+  removeButton,
+  onRemoveButtonClick,
   views,
   posterURL,
   showChannel = true,
@@ -95,6 +99,16 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     onClick(e)
   }
 
+  const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!onClick) {
+      return
+    }
+    if (onRemoveButtonClick) {
+      e.stopPropagation()
+      onRemoveButtonClick()
+    }
+  }
+
   const coverNode = (
     <>
       <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
@@ -105,6 +119,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         </ProgressOverlay>
       )}
       <CoverHoverOverlay>
+        {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
         <CoverPlayIcon />
       </CoverHoverOverlay>
     </>

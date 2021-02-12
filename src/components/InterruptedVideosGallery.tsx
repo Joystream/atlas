@@ -10,6 +10,7 @@ const INTERRUPTED_VIDEOS_COUNT = 16
 const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
+    updateWatchedVideos,
   } = usePersonalData()
 
   const interruptedVideosState = watchedVideos
@@ -33,12 +34,22 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     progress: (videoTimestampsMap[video.id] / video.duration) * 100,
   }))
 
+  const onRemoveButtonClick = (id: string) => {
+    updateWatchedVideos('REMOVED', id)
+  }
+
   const hasInterruptedVideosError = error && !loading
 
   return (
     <>
       {!hasInterruptedVideosError ? (
-        <VideoGallery title="Continue watching" loading={loading} videos={interruptedVideos} />
+        <VideoGallery
+          title="Continue watching"
+          loading={loading}
+          videos={interruptedVideos}
+          onRemoveButtonClick={onRemoveButtonClick}
+          removeButton
+        />
       ) : (
         <ErrorFallback error={error} resetError={() => refetch()} />
       )}
