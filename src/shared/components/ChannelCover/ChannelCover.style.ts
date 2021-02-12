@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { Placeholder, Text, Button } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import ChannelLink from '@/components/ChannelLink'
-import { breakpoints, colors, sizes, typography, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import Avatar from '../Avatar'
+import { css } from '@emotion/react'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -24,6 +25,10 @@ const INFO_BOTTOM_MARGIN = 75
 
 type CoverImageProps = {
   src: string
+}
+
+type EditableOverlayProps = {
+  withImage?: boolean
 }
 
 export const Header = styled.section`
@@ -54,6 +59,7 @@ export const Header = styled.section`
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   width: calc(100% + calc(2 * var(--global-horizontal-padding)));
+  position: relative;
 `
 
 export const Media = styled.div`
@@ -126,6 +132,69 @@ export const CoverImage = styled.div<CoverImageProps>`
   }
 `
 
+const commonButtonStyles = css`
+  border: none;
+  background: none;
+  font-size: ${typography.sizes.subtitle2};
+  cursor: pointer;
+  position: absolute;
+`
+
+export const EditableOverlay = styled.div<EditableOverlayProps>`
+  z-index: 1;
+  width: 100%;
+  background-color: ${({ withImage }) => (withImage ? 'rgba(0, 0, 0, 0.8)' : 'none')};
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  justify-content: center;
+  top: 0;
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  :hover {
+    opacity: 1;
+  }
+`
+
+export const RemoveCoverButton = styled.button`
+  ${commonButtonStyles};
+  display: flex;
+  align-items: center;
+  color: ${colors.white};
+  position: absolute;
+  right: 48px;
+  top: 48px;
+  svg {
+    margin-right: 10px;
+    width: 16px;
+    fill: ${colors.white};
+  }
+`
+
+export const EditCoverButton = styled.button`
+  ${commonButtonStyles};
+  color: ${colors.gray[300]};
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    padding: 10px;
+    margin-right: 12px;
+    border: 1px solid white;
+    border-radius: 100%;
+    width: 40px;
+    fill: ${colors.white};
+  }
+  span {
+    width: 160px;
+    line-height: 20px;
+    text-align: left;
+  }
+`
+
 export const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -160,6 +229,7 @@ export const TitleSection = styled.div`
 
 export const StyledAvatar = styled(Avatar)`
   margin-bottom: ${sizes(3)};
+  z-index: 2;
 
   @media (min-width: ${breakpoints.small}) {
     margin: 0 ${sizes(6)} 0 0;
@@ -167,6 +237,7 @@ export const StyledAvatar = styled(Avatar)`
 `
 
 export const TitleContainer = styled.div`
+  z-index: 2;
   max-width: 100%;
   overflow: hidden;
   @media screen and (min-width: ${breakpoints.medium}) {
@@ -224,6 +295,7 @@ export const SubTitlePlaceholder = styled(Placeholder)`
   }
 `
 export const StyledButtonContainer = styled.div`
+  z-index: 2;
   margin-top: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: 0;

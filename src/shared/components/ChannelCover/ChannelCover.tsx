@@ -5,15 +5,17 @@ import { formatNumberShort } from '@/utils/number'
 import React from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { Button } from '..'
-import Avatar from '../Avatar'
+import Icon from '../Icon'
 import {
   CoverImage,
+  EditableOverlay,
+  EditCoverButton,
   Header,
   Media,
   MediaWrapper,
+  RemoveCoverButton,
   StyledAvatar,
   StyledButtonContainer,
-  StyledChannelLink,
   SubTitle,
   SubTitlePlaceholder,
   Title,
@@ -22,14 +24,33 @@ import {
   TitleSection,
 } from './ChannelCover.style'
 
-type ChannelCoverProps = {
+type BasicChannelCoverProps = {
+  isFollowing?: boolean
   channel?: AllChannelFieldsFragment
   handleFollow?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  isFollowing?: boolean
-  editable?: boolean
 }
+type EditableProps =
+  | {
+      editable?: false
+      handleEditCover?: never
+      handleRemovecover?: never
+    }
+  | {
+      editable: true
+      handleEditCover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+      handleRemovecover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    }
 
-const ChannelCover: React.FC<ChannelCoverProps> = ({ channel, handleFollow, isFollowing, editable }) => {
+export type ChannelCoverProps = BasicChannelCoverProps & EditableProps
+
+const ChannelCover: React.FC<ChannelCoverProps> = ({
+  channel,
+  handleFollow,
+  isFollowing,
+  editable,
+  handleRemovecover,
+  handleEditCover,
+}) => {
   const showBgPattern = !channel?.coverPhotoUrl
   return (
     <Header>
@@ -45,9 +66,23 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ channel, handleFollow, isFo
             </CSSTransition>
           </TransitionGroup>
         </Media>
+        {editable && (
+          <EditableOverlay withImage={!!channel?.coverPhotoUrl}>
+            <EditCoverButton onClick={handleEditCover}>
+              <Icon name="camera" />
+              <span>Click Anywhere to {channel?.coverPhotoUrl ? 'Edit' : 'Add'} Cover Image</span>
+            </EditCoverButton>
+            {channel?.coverPhotoUrl && (
+              <RemoveCoverButton onClick={handleRemovecover}>
+                <Icon name="trash" />
+                Remove cover
+              </RemoveCoverButton>
+            )}
+          </EditableOverlay>
+        )}
       </MediaWrapper>
       <TitleSection className={transitions.names.slide}>
-        <StyledAvatar imageUrl={channel?.avatarPhotoUrl} size="view" loading={!channel} />
+        <StyledAvatar imageUrl={channel?.avatarPhotoUrl} size="view" loading={!channel} editable={editable} />
         <TitleContainer>
           {channel ? (
             <>
@@ -62,9 +97,11 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ channel, handleFollow, isFo
           )}
         </TitleContainer>
         <StyledButtonContainer>
-          <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </Button>
+          {handleFollow && (
+            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </Button>
+          )}
         </StyledButtonContainer>
       </TitleSection>
     </Header>
