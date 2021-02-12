@@ -14,7 +14,7 @@ export const StyledContainer = styled.div`
   margin: ${sizes(32)} auto;
   background-color: ${colors.gray[600]};
   padding: var(--dialog-padding);
-  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.12), 0px 24px 40px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0px 24px 40px rgba(0, 0, 0, 0.16);
 `
 
 export const StyledExitButton = styled(Button)`

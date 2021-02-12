@@ -2,18 +2,18 @@ import React, { useEffect } from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
-import { StyledContainer, StyledExitButton } from './GeneralDialog.style'
+import { StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { Icon } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
-export type DialogProps = {
+export type BaseDialogProps = {
   showDialog?: boolean
   exitButton?: boolean
   className?: string
-  handleExit?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton, handleExit, className }) => {
+const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton, onExitClick, className }) => {
   const {
     overlayContainerRef,
     lockScroll,
@@ -39,7 +39,7 @@ const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton
       <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog}>
         <StyledContainer className={className}>
           {exitButton && (
-            <StyledExitButton aria-label="close dialog" onClick={handleExit}>
+            <StyledExitButton aria-label="close dialog" onClick={onExitClick}>
               <Icon name="times" color="white" />
             </StyledExitButton>
           )}
@@ -50,4 +50,4 @@ const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton
   )
 }
 
-export default GeneralDialog
+export default BaseDialog
