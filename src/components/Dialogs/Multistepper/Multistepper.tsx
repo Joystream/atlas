@@ -32,15 +32,21 @@ const Multistepper: React.FC<MultistepperProps> = ({
     <Dialog wide {...dialogProps}>
       <StyledHeader>
         <StyledStepsInfoContainer>
-          {steps.map((step, idx) => (
-            <StyledStepInfo key={step.title}>
-              <StyledCircle isFilled={idx === currentStep || currentStep > idx}>
-                {currentStep > idx ? <Icon name="check" /> : idx + 1}
-              </StyledCircle>
-              <StyledStepInfoText isActive={idx === currentStep}>{step.title}</StyledStepInfoText>
-              {idx === steps.length - 1 ? null : <hr />}
-            </StyledStepInfo>
-          ))}
+          {steps.map((step, idx) => {
+            const isActive = idx === currentStep
+            const isCompleted = currentStep > idx
+            const isLast = idx === steps.length - 1
+
+            return (
+              <StyledStepInfo key={step.title} isActive={isActive}>
+                <StyledCircle isFilled={isActive || isCompleted}>
+                  {isCompleted ? <Icon name="check" /> : idx + 1}
+                </StyledCircle>
+                <StyledStepInfoText isActive={isActive}>{step.title}</StyledStepInfoText>
+                {isLast ? null : <hr />}
+              </StyledStepInfo>
+            )
+          })}
         </StyledStepsInfoContainer>
         {exitButton && (
           <StyledExitButton aria-label="close dialog" onClick={handleExit}>

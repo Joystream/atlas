@@ -6,7 +6,7 @@ type CircleProps = {
   isFilled?: boolean
 }
 
-type TextProps = {
+type isActiveProp = {
   isActive?: boolean
 }
 
@@ -22,12 +22,16 @@ export const StyledHeader = styled.div`
     margin: -${sizes(6)} -${sizes(6)} 0;
   }
   hr {
-    width: 16px;
-    height: 1px;
-    border: none;
-    background-color: ${colors.gray[400]};
-    margin: 0 ${sizes(4)};
-    flex-shrink: 1;
+    display: none;
+    @media screen and (min-width: ${breakpoints.small}) {
+      display: inline;
+      width: 16px;
+      height: 1px;
+      border: none;
+      background-color: ${colors.gray[400]};
+      margin: 0 ${sizes(4)};
+      flex-shrink: 1;
+    }
   }
 `
 
@@ -35,9 +39,12 @@ export const StyledStepsInfoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-export const StyledStepInfo = styled.div`
-  display: flex;
+export const StyledStepInfo = styled.div<isActiveProp>`
+  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: flex;
+  }
 `
 export const StyledCircle = styled.div<CircleProps>`
   display: flex;
@@ -46,22 +53,21 @@ export const StyledCircle = styled.div<CircleProps>`
   align-items: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 100%;
   border: 1px solid ${colors.gray[400]};
   background-color: ${({ isFilled }) => (isFilled ? colors.gray[400] : 'transparent')};
   color: ${({ isFilled }) => (isFilled ? colors.white : colors.gray[300])};
 `
-export const StyledStepInfoText = styled(Text)<TextProps>`
-  display: none;
-  width: 120px;
-  word-wrap: break-word;
+export const StyledStepInfoText = styled(Text)<isActiveProp>`
+  display: inline-block;
   color: ${({ isActive }) => (isActive ? colors.white : colors.gray[300])};
-  font-size: 12px;
+  font-size: ${sizes(4)};
   font-weight: ${typography.weights.semibold};
   line-height: 16px;
   margin-left: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
-    display: inline-block;
+    max-width: 120px;
+    font-size: ${sizes(3)};
   }
 `
 

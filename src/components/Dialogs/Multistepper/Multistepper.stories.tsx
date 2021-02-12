@@ -28,8 +28,8 @@ const Element: React.FC<ElementType> = ({ whichStep, handleStep, currentStep }) 
     <>
       <h1>Hello! This is a {whichStep} step!</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button onClick={(e) => handleStep(currentStep - 1)}>Previous step</Button>
-        <Button onClick={(e) => handleStep(currentStep + 1)}>Next step</Button>
+        <Button onClick={() => handleStep(currentStep - 1)}>Previous step</Button>
+        <Button onClick={() => handleStep(currentStep + 1)}>Next step</Button>
       </div>
     </>
   )
@@ -45,7 +45,7 @@ const RegularTemplate: Story = (args) => {
   }
   const steps = [
     {
-      title: 'Add Polkadot plugn',
+      title: 'Add Polkadot plugin',
       element: <Element whichStep="first" handleStep={handleStepChange} currentStep={currentStep} />,
     },
     {
@@ -57,6 +57,7 @@ const RegularTemplate: Story = (args) => {
       element: <Element whichStep="third" handleStep={handleStepChange} currentStep={currentStep} />,
     },
   ]
+
   return <Multistepper showDialog={true} steps={steps} currentStep={currentStep} {...args} />
 }
 
