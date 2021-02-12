@@ -79,7 +79,7 @@ const setWatchedVideo = async (
     const newVideo = __typename === 'COMPLETED' ? { __typename, id } : { __typename, id, timestamp }
     writeToLocalStorage('watchedVideos', [...currentVideos, newVideo])
   }
-  if (__typename === 'REMOVED') {
+  if (currentVideo?.__typename === 'REMOVED') {
     const filtered = currentVideos.filter((v) => v.id !== id)
     writeToLocalStorage('watchedVideos', filtered)
   }
