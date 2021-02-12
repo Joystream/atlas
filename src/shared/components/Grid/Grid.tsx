@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
 import { sizes, breakpoints } from '../../theme'
@@ -25,7 +25,9 @@ const Grid: React.FC<GridProps> = ({
   minWidth = MIN_VIDEO_PREVIEW_WIDTH,
   ...props
 }) => {
-  const { ref: gridRef } = useResizeObserver<HTMLDivElement>({
+  const gridRef = useRef<HTMLImageElement>(null)
+  useResizeObserver<HTMLDivElement>({
+    ref: gridRef,
     onResize: () => {
       if (onResize && gridRef.current) {
         const computedStyles = window.getComputedStyle(gridRef.current)
