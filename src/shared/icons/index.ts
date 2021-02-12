@@ -26,6 +26,7 @@ export { ReactComponent as Videos } from './videos.svg'
 export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
 export { ReactComponent as Success } from './success-check.svg'
+export { ReactComponent as Camera } from './camera.svg'
 
 const icons = [
   'bars',
@@ -56,6 +57,7 @@ const icons = [
   'info',
   'error',
   'success',
+  'camera',
 ] as const
 
 export type IconType = typeof icons[number]

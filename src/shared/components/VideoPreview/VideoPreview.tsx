@@ -117,12 +117,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   )
 
   const channelAvatarNode = (
-    <StyledAvatar
-      handle={channelName}
-      imageUrl={channelAvatarURL}
-      channelClickable={channelClickable}
-      onClick={handleChannelClick}
-    />
+    <StyledAvatar imageUrl={channelAvatarURL} channelClickable={channelClickable} onClick={handleChannelClick} />
   )
 
   const channelNameNode = (
