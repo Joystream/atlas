@@ -34,6 +34,10 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     progress: (videoTimestampsMap[video.id] / video.duration) * 100,
   }))
 
+  const onRemoveButtonClick = (id: string) => {
+    updateWatchedVideos('REMOVED', id)
+  }
+
   const hasInterruptedVideosError = error && !loading
 
   return (
@@ -43,7 +47,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
           title="Continue watching"
           loading={loading}
           videos={interruptedVideos}
-          removeInterruptedVideos={(id) => updateWatchedVideos('REMOVED', id)}
+          onRemoveButtonClick={onRemoveButtonClick}
           removeButton
         />
       ) : (

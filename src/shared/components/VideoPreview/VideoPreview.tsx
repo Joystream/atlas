@@ -36,7 +36,7 @@ type VideoPreviewProps = {
   // video watch progress in percent (0-100)
   progress?: number
   removeButton?: boolean
-  handleRemoveInterruptedVideo?: () => void
+  onRemoveButtonClick?: () => void
   views?: number | null
   posterURL: string
 
@@ -57,7 +57,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   duration,
   progress = 0,
   removeButton,
-  handleRemoveInterruptedVideo,
+  onRemoveButtonClick,
   views,
   posterURL,
   showChannel = true,
@@ -103,9 +103,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     if (!onClick) {
       return
     }
-    if (handleRemoveInterruptedVideo) {
+    if (onRemoveButtonClick) {
       e.stopPropagation()
-      handleRemoveInterruptedVideo()
+      onRemoveButtonClick()
     }
   }
 

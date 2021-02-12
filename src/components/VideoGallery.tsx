@@ -22,7 +22,7 @@ type VideoGalleryProps = {
   videos?: VideoFieldsWithProgress[]
   loading?: boolean
   removeButton?: boolean
-  removeInterruptedVideos?: (id: string) => void
+  onRemoveButtonClick?: (id: string) => void
   onVideoClick?: (id: string) => void
 }
 
@@ -48,7 +48,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   loading,
   onVideoClick,
   removeButton,
-  removeInterruptedVideos,
+  onRemoveButtonClick,
 }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
@@ -96,9 +96,9 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
               key={video.id}
               onCoverResize={onCoverResize}
               removeButton={removeButton}
-              handleRemoveInterruptedVideo={() => {
-                if (removeInterruptedVideos) {
-                  removeInterruptedVideos(video.id)
+              onRemoveButtonClick={() => {
+                if (onRemoveButtonClick) {
+                  onRemoveButtonClick(video.id)
                 }
               }}
               onClick={() => {
