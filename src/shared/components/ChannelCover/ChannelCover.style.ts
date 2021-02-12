@@ -143,7 +143,7 @@ const commonButtonStyles = css`
 export const EditableOverlay = styled.div<EditableOverlayProps>`
   z-index: 1;
   width: 100%;
-  background-color: ${({ withImage }) => (withImage ? 'rgba(0, 0, 0, 0.8)' : 'none')};
+  background-color: ${({ withImage }) => (withImage ? 'rgba(0, 0, 0, 0.7)' : 'none')};
   height: 100%;
   position: absolute;
   display: flex;
@@ -159,14 +159,24 @@ export const EditableOverlay = styled.div<EditableOverlayProps>`
 
 export const RemoveCoverButton = styled.button`
   ${commonButtonStyles};
+  position: absolute;
   display: flex;
   align-items: center;
   color: ${colors.white};
-  position: absolute;
-  right: 48px;
-  top: 48px;
+  right: ${sizes(5)};
+  top: ${sizes(4)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    right: ${sizes(10)};
+    top: ${sizes(9)};
+  }
+  span {
+    margin-left: 10px;
+    display: none;
+    @media screen and (min-width: ${breakpoints.small}) {
+      display: inline;
+    }
+  }
   svg {
-    margin-right: 10px;
     width: 16px;
     fill: ${colors.white};
   }
@@ -178,7 +188,12 @@ export const EditCoverButton = styled.button`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
+  padding-top: ${sizes(4)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    align-items: center;
+    flex-direction: row;
+    padding-top: 0;
+  }
   justify-content: center;
   svg {
     padding: 10px;
@@ -189,9 +204,10 @@ export const EditCoverButton = styled.button`
     fill: ${colors.white};
   }
   span {
-    width: 160px;
-    line-height: 20px;
+    line-height: 40px;
     text-align: left;
+    line-height: 20px;
+    width: 160px;
   }
 `
 
@@ -239,7 +255,6 @@ export const StyledAvatar = styled(Avatar)`
 export const TitleContainer = styled.div`
   z-index: 2;
   max-width: 100%;
-  overflow: hidden;
   @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 60%;
   }
