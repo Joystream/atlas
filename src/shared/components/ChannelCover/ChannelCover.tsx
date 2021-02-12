@@ -3,9 +3,10 @@ import { BackgroundPattern } from '@/components'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
 import React from 'react'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import { Button } from '..'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { Button, HeaderTextField } from '..'
 import Icon from '../Icon'
+import Tooltip from '../Tooltip'
 import {
   CoverImage,
   EditableOverlay,
@@ -34,11 +35,13 @@ type EditableProps =
       editable?: false
       handleEditCover?: never
       handleRemovecover?: never
+      handleChangeName?: never
     }
   | {
       editable: true
       handleEditCover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
       handleRemovecover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+      handleChangeName?: (e: React.ChangeEvent<HTMLInputElement>) => void
     }
 
 export type ChannelCoverProps = BasicChannelCoverProps & EditableProps
@@ -50,8 +53,10 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   editable,
   handleRemovecover,
   handleEditCover,
+  handleChangeName,
 }) => {
   const showBgPattern = !channel?.coverPhotoUrl
+
   return (
     <Header>
       <MediaWrapper>
@@ -75,7 +80,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
             {channel?.coverPhotoUrl && (
               <RemoveCoverButton onClick={handleRemovecover}>
                 <Icon name="trash" />
-                Remove cover
+                <span>Remove cover</span>
               </RemoveCoverButton>
             )}
           </EditableOverlay>
@@ -86,8 +91,20 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
         <TitleContainer>
           {channel ? (
             <>
-              <Title variant="h1">{channel.handle}</Title>
-              <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+              {editable ? (
+                <>
+                  <Tooltip text="Click to edit channel title">
+                    <HeaderTextField value={channel?.handle} onChange={handleChangeName} />
+                  </Tooltip>
+                  <br />
+                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                </>
+              ) : (
+                <>
+                  <Title variant="h1">{channel.handle}</Title>
+                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                </>
+              )}
             </>
           ) : (
             <>
