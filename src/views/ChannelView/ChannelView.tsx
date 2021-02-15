@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
+import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
-
-import {
-  CoverImage,
-  Header,
-  Media,
-  MediaWrapper,
-  StyledChannelLink,
-  Title,
-  TitleContainer,
-  TitlePlaceholder,
-  TitleSection,
-  VideoSection,
-  SubTitle,
-  SubTitlePlaceholder,
-  StyledButtonContainer,
-} from './ChannelView.style'
-import { BackgroundPattern, InfiniteVideoGrid, ViewWrapper } from '@/components'
-import { Button } from '@/shared/components'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { formatNumberShort } from '@/utils/number'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { VideoSection } from './ChannelView.style'
 
 const ChannelView: React.FC = () => {
   const { id } = useParams()
@@ -64,46 +46,9 @@ const ChannelView: React.FC = () => {
     return <span>Channel not found</span>
   }
 
-  const showBgPattern = !channel?.coverPhotoUrl
-
   return (
     <ViewWrapper>
-      <Header>
-        <MediaWrapper>
-          <Media>
-            <TransitionGroup>
-              <CSSTransition
-                key={showBgPattern ? 'pattern' : 'cover'}
-                timeout={parseInt(transitions.timings.loading)}
-                classNames={transitions.names.fade}
-              >
-                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={channel?.coverPhotoUrl!} />}
-              </CSSTransition>
-            </TransitionGroup>
-          </Media>
-        </MediaWrapper>
-        <TitleSection className={transitions.names.slide}>
-          <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
-          <TitleContainer>
-            {channel ? (
-              <>
-                <Title variant="h1">{channel.handle}</Title>
-                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-              </>
-            ) : (
-              <>
-                <TitlePlaceholder />
-                <SubTitlePlaceholder />
-              </>
-            )}
-          </TitleContainer>
-          <StyledButtonContainer>
-            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Button>
-          </StyledButtonContainer>
-        </TitleSection>
-      </Header>
+      <ChannelCover channel={channel} handleFollow={handleFollow} isFollowing={isFollowing} />
       <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>

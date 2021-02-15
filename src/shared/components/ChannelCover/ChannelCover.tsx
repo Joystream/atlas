@@ -4,7 +4,7 @@ import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
 import React, { useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { Button, HeaderTextField } from '..'
+import { HeaderTextField } from '..'
 import Icon from '../Icon'
 import Tooltip from '../Tooltip'
 import {
@@ -28,7 +28,7 @@ import {
 
 type BasicChannelCoverProps = {
   isFollowing?: boolean
-  channel?: AllChannelFieldsFragment
+  channel?: AllChannelFieldsFragment | null
   handleFollow?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 type EditableProps =

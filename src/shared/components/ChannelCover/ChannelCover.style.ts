@@ -183,9 +183,6 @@ export const StyledAvatar = styled(Avatar)`
 export const TitleContainer = styled.div`
   z-index: 2;
   max-width: 100%;
-  input {
-    width: 100%;
-  }
 `
 
 export const Title = styled(Text)`
@@ -193,8 +190,6 @@ export const Title = styled(Text)`
   padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
   background-color: ${colors.gray[800]};
-
-  white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
