@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyledContainer, StyledMenuItem, StyledIcon, StyledText } from './ContextualMenu.style'
+import { StyledContainer, StyledMenuItem, StyledIcon, StyledText } from './ContextMenu.style'
 import * as Icons from '../../icons'
 
 type MenuItemProps = {
@@ -23,7 +23,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({ iconName, children, onClick 
   )
 }
 
-const ContextualMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
+const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
   return (
     <StyledContainer isActive={isActive} position={position}>
       {children}
@@ -31,4 +31,4 @@ const ContextualMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActiv
   )
 }
 
-export default ContextualMenu
+export default ContextMenu

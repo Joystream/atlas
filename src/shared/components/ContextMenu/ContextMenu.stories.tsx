@@ -1,12 +1,12 @@
 import React from 'react'
-import ContextualMenu, { MenuItem } from './ContextualMenu'
+import ContextMenu, { MenuItem } from './ContextMenu'
 import { useContextMenu } from '@/hooks'
 import { Button } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Shared/ContextualMenu',
-  component: ContextualMenu,
+  component: ContextMenu,
 } as Meta
 
 const Template: Story = (args) => {
@@ -18,7 +18,7 @@ const Template: Story = (args) => {
         <Button onClick={openContextMenu}>Open menu on the right side</Button>
       </div>
       <div>
-        <ContextualMenu contextMenuOpts={contextMenuOpts} {...args}>
+        <ContextMenu contextMenuOpts={contextMenuOpts} {...args}>
           <MenuItem iconName="info" onClick={closeContextMenu}>
             Edit video
           </MenuItem>
@@ -28,7 +28,7 @@ const Template: Story = (args) => {
           <MenuItem iconName="error" onClick={closeContextMenu}>
             Delete video
           </MenuItem>
-        </ContextualMenu>
+        </ContextMenu>
       </div>
     </>
   )
