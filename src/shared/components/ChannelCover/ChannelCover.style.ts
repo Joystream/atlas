@@ -5,26 +5,16 @@ import ChannelLink from '@/components/ChannelLink'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import Avatar from '../Avatar'
 import { css } from '@emotion/react'
+import Button from '../Button'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
-const CONTENT_OVERLAP_MAP = {
-  BASE: 0,
-  SMALL: 0,
-  MEDIUM: 0,
-  LARGE: 100,
-  XLARGE: 200,
-  XXLARGE: 300,
-}
-const GRADIENT_OVERLAP = 50
-const GRADIENT_HEIGHT = 100
-const INFO_BOTTOM_MARGIN = 75
-
 type CoverImageProps = {
   src: string
+  editable?: boolean
 }
 
 type EditableOverlayProps = {
@@ -33,39 +23,18 @@ type EditableOverlayProps = {
 
 export const Header = styled.section`
   position: relative;
-  padding-bottom: 50px;
-
-  // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
-  // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
-  margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
-  @media screen and (min-width: ${breakpoints.small}) {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
-    padding-bottom: 0;
-  }
-  @media screen and (min-width: ${breakpoints.large}) {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
-  }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
-  }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
-  }
 `
 
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
+  height: 280px;
   width: calc(100% + calc(2 * var(--global-horizontal-padding)));
   position: relative;
 `
 
 export const Media = styled.div`
   width: 100%;
-  height: 0;
-  padding-top: 25%;
+  height: 400px;
   position: relative;
   z-index: ${zIndex.background};
 `
@@ -82,54 +51,10 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-attachment: local;
   background-size: cover;
 
-  // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-  // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
-  @media screen and (min-width: ${breakpoints.small}) {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${Math.min(CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP, 0)}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ src }) => src});
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${Math.min(CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP, 0)}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ src }) => src});
-  }
-  @media screen and (min-width: ${breakpoints.large}) {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ src }) => src});
-  }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ src }) => src});
-  }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ src }) => src});
-  }
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0) 100%),
+    url(${({ src }) => src});
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  opacity: ${({ editable }) => (editable ? 0.6 : 1)};
 `
 
 const commonButtonStyles = css`
@@ -143,107 +68,110 @@ const commonButtonStyles = css`
 export const EditableOverlay = styled.div<EditableOverlayProps>`
   z-index: 1;
   width: 100%;
-  background-color: ${({ withImage }) => (withImage ? 'rgba(0, 0, 0, 0.7)' : 'none')};
-  height: 100%;
   position: absolute;
   display: flex;
-  align-items: center;
-  opacity: 0;
+  height: 100%;
   justify-content: center;
   top: 0;
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  :hover {
+  :hover button {
     opacity: 1;
   }
 `
 
 export const RemoveCoverButton = styled.button`
   ${commonButtonStyles};
+  opacity: 1;
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
   position: absolute;
   display: flex;
   align-items: center;
   color: ${colors.white};
   right: ${sizes(5)};
   top: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    right: ${sizes(10)};
-    top: ${sizes(9)};
-  }
   span {
     margin-left: 10px;
     display: none;
-    @media screen and (min-width: ${breakpoints.small}) {
-      display: inline;
-    }
   }
   svg {
     width: 16px;
     fill: ${colors.white};
   }
+  @media screen and (min-width: ${breakpoints.small}) {
+    opacity: 0;
+    span {
+      display: inline;
+    }
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    right: ${sizes(10)};
+    top: ${sizes(9)};
+  }
 `
 
 export const EditCoverButton = styled.button`
   ${commonButtonStyles};
-  color: ${colors.gray[300]};
-  width: 100%;
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  color: ${colors.white};
   height: 100%;
+  width: 100%;
   display: flex;
-  padding-top: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.medium}) {
-    align-items: center;
-    flex-direction: row;
-    padding-top: 0;
-  }
+  align-items: flex-end;
+  opacity: 1;
   justify-content: center;
+  padding-bottom: 30px;
+
   svg {
     padding: 10px;
     margin-right: 12px;
-    border: 1px solid white;
     border-radius: 100%;
     width: 40px;
+    border: 1px solid ${colors.white};
     fill: ${colors.white};
   }
   span {
-    line-height: 40px;
     text-align: left;
-    line-height: 20px;
+    line-height: 40px;
     width: 160px;
+    .large-viewports {
+      display: none;
+    }
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    color: ${colors.gray[200]};
+    opacity: 0;
+    padding-bottom: 50px;
+    span {
+      line-height: 20px;
+      .large-viewports {
+        display: inline;
+      }
+    }
+    svg {
+      fill: ${colors.gray[200]};
+      border: 1px solid ${colors.gray[200]};
+    }
   }
 `
 
 export const TitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  position: absolute;
+  margin-top: 40px;
+  top: 0;
   width: 100%;
-  margin-top: -64px;
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    margin-top: -100px;
-    flex-direction: row;
+  @media (min-width: ${breakpoints.small}) {
+    display: flex;
     align-items: center;
-  }
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    position: absolute;
-    margin-top: 0;
-    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
-  }
-
-  @media screen and (min-width: ${breakpoints.large}) {
-    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  @media screen and (min-width: ${breakpoints.xlarge}) {
-    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
-    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
 
+export const ChannelInfo = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: ${sizes(5)};
+`
+
 export const StyledAvatar = styled(Avatar)`
+  margin: 0 ${sizes(6)} 0 0;
   margin-bottom: ${sizes(3)};
   z-index: 2;
 
@@ -255,8 +183,8 @@ export const StyledAvatar = styled(Avatar)`
 export const TitleContainer = styled.div`
   z-index: 2;
   max-width: 100%;
-  @media screen and (min-width: ${breakpoints.medium}) {
-    max-width: 60%;
+  input {
+    width: 100%;
   }
 `
 
@@ -309,13 +237,12 @@ export const SubTitlePlaceholder = styled(Placeholder)`
     height: ${SUBTITLE_HEIGHT};
   }
 `
-export const StyledButtonContainer = styled.div`
-  z-index: 2;
+export const StyledButton = styled(Button)`
+  position: relative;
+  z-index: 3;
   margin-top: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: 0;
-    padding-left: ${sizes(6)};
     margin-left: auto;
-    align-self: center;
   }
 `

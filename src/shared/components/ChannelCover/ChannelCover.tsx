@@ -2,12 +2,13 @@ import { AllChannelFieldsFragment } from '@/api/queries'
 import { BackgroundPattern } from '@/components'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
-import React from 'react'
+import React, { useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Button, HeaderTextField } from '..'
 import Icon from '../Icon'
 import Tooltip from '../Tooltip'
 import {
+  ChannelInfo,
   CoverImage,
   EditableOverlay,
   EditCoverButton,
@@ -16,7 +17,7 @@ import {
   MediaWrapper,
   RemoveCoverButton,
   StyledAvatar,
-  StyledButtonContainer,
+  StyledButton,
   SubTitle,
   SubTitlePlaceholder,
   Title,
@@ -36,12 +37,18 @@ type EditableProps =
       handleEditCover?: never
       handleRemovecover?: never
       handleChangeName?: never
+      changeNameHelperText?: never
+      changeNameError?: never
+      changeNameWarning?: never
     }
   | {
       editable: true
       handleEditCover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
       handleRemovecover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
       handleChangeName?: (e: React.ChangeEvent<HTMLInputElement>) => void
+      changeNameHelperText?: string
+      changeNameError?: boolean
+      changeNameWarning?: boolean
     }
 
 export type ChannelCoverProps = BasicChannelCoverProps & EditableProps
@@ -54,8 +61,12 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   handleRemovecover,
   handleEditCover,
   handleChangeName,
+  changeNameHelperText,
+  changeNameError,
+  changeNameWarning,
 }) => {
   const showBgPattern = !channel?.coverPhotoUrl
+  const [overlayVisible, setoverlayVisible] = useState(false)
 
   return (
     <Header>
@@ -67,15 +78,26 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {showBgPattern ? <BackgroundPattern /> : <CoverImage src={channel?.coverPhotoUrl!} />}
+              {showBgPattern ? (
+                <BackgroundPattern />
+              ) : (
+                <CoverImage editable={editable && overlayVisible} src={channel?.coverPhotoUrl!} />
+              )}
             </CSSTransition>
           </TransitionGroup>
         </Media>
         {editable && (
-          <EditableOverlay withImage={!!channel?.coverPhotoUrl}>
+          <EditableOverlay
+            withImage={!!channel?.coverPhotoUrl}
+            onMouseEnter={() => setoverlayVisible(true)}
+            onMouseLeave={() => setoverlayVisible(false)}
+          >
             <EditCoverButton onClick={handleEditCover}>
               <Icon name="camera" />
-              <span>Click Anywhere to {channel?.coverPhotoUrl ? 'Edit' : 'Add'} Cover Image</span>
+              <span>
+                <span className="large-viewports"> Click Anywhere to </span> {channel?.coverPhotoUrl ? 'Edit' : 'Add'}
+                Cover Image
+              </span>
             </EditCoverButton>
             {channel?.coverPhotoUrl && (
               <RemoveCoverButton onClick={handleRemovecover}>
@@ -87,39 +109,43 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
         )}
       </MediaWrapper>
       <TitleSection className={transitions.names.slide}>
-        <StyledAvatar imageUrl={channel?.avatarPhotoUrl} size="view" loading={!channel} editable={editable} />
-        <TitleContainer>
-          {channel ? (
-            <>
-              {editable ? (
-                <>
-                  <Tooltip text="Click to edit channel title">
-                    <HeaderTextField value={channel?.handle} onChange={handleChangeName} />
-                  </Tooltip>
-                  <br />
-                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                </>
-              ) : (
-                <>
-                  <Title variant="h1">{channel.handle}</Title>
-                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <TitlePlaceholder />
-              <SubTitlePlaceholder />
-            </>
-          )}
-        </TitleContainer>
-        <StyledButtonContainer>
-          {handleFollow && (
-            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Button>
-          )}
-        </StyledButtonContainer>
+        <ChannelInfo>
+          <StyledAvatar imageUrl={channel?.avatarPhotoUrl} size="view" loading={!channel} editable={editable} />
+          <TitleContainer>
+            {!channel && (
+              <>
+                <TitlePlaceholder />
+                <SubTitlePlaceholder />
+              </>
+            )}
+            {channel && editable && (
+              <>
+                <Tooltip text="Click to edit channel title">
+                  <HeaderTextField
+                    value={channel?.handle}
+                    onChange={handleChangeName}
+                    helperText={changeNameHelperText}
+                    warning={changeNameWarning}
+                    error={changeNameError}
+                  />
+                </Tooltip>
+                <br />
+                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+              </>
+            )}
+            {channel && !editable && (
+              <>
+                <Title variant="h1">{channel.handle}</Title>
+                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+              </>
+            )}
+          </TitleContainer>
+        </ChannelInfo>
+        {handleFollow && (
+          <StyledButton variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </StyledButton>
+        )}
       </TitleSection>
     </Header>
   )
