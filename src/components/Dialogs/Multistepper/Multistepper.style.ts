@@ -6,7 +6,7 @@ type CircleProps = {
   isFilled?: boolean
 }
 
-type isActiveProp = {
+type StyledStepInfoProps = {
   isActive?: boolean
 }
 
@@ -23,7 +23,7 @@ export const StyledHeader = styled.div`
   }
   hr {
     display: none;
-    @media screen and (min-width: ${breakpoints.small}) {
+    @media screen and (min-width: 800px) {
       display: inline;
       width: 16px;
       height: 1px;
@@ -36,12 +36,16 @@ export const StyledHeader = styled.div`
 `
 
 export const StyledStepsInfoContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  @media screen and (min-width: ${breakpoints.small}) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: ${sizes(4)};
+  }
 `
-export const StyledStepInfo = styled.div<isActiveProp>`
+export const StyledStepInfo = styled.div<StyledStepInfoProps>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
+  margin-right: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
   }
@@ -58,7 +62,7 @@ export const StyledCircle = styled.div<CircleProps>`
   background-color: ${({ isFilled }) => (isFilled ? colors.gray[400] : 'transparent')};
   color: ${({ isFilled }) => (isFilled ? colors.white : colors.gray[300])};
 `
-export const StyledStepInfoText = styled(Text)<isActiveProp>`
+export const StyledStepInfoText = styled(Text)<StyledStepInfoProps>`
   display: inline-block;
   color: ${({ isActive }) => (isActive ? colors.white : colors.gray[300])};
   font-size: ${sizes(4)};

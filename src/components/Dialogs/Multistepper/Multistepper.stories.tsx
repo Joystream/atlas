@@ -19,14 +19,14 @@ export default {
   ],
 } as Meta
 type ElementType = {
-  whichStep: string
+  step: string
   handleStep: (idx: number) => void
   currentStep: number
 }
-const Element: React.FC<ElementType> = ({ whichStep, handleStep, currentStep }) => {
+const Element: React.FC<ElementType> = ({ step, handleStep, currentStep }) => {
   return (
     <>
-      <h1>Hello! This is a {whichStep} step!</h1>
+      <h1>Hello! This is a {step} step!</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button onClick={() => handleStep(currentStep - 1)}>Previous step</Button>
         <Button onClick={() => handleStep(currentStep + 1)}>Next step</Button>
@@ -46,15 +46,15 @@ const RegularTemplate: Story = (args) => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <Element whichStep="first" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="first" handleStep={handleStepChange} currentStep={currentStep} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <Element whichStep="second" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="second" handleStep={handleStepChange} currentStep={currentStep} />,
     },
     {
       title: 'Get FREE tokens and start a channel',
-      element: <Element whichStep="third" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="third" handleStep={handleStepChange} currentStep={currentStep} />,
     },
   ]
 
