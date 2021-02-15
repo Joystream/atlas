@@ -1,6 +1,7 @@
 import { AllChannelFieldsFragment } from '@/api/queries'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { Button } from '..'
 import ChannelCover, { ChannelCoverProps } from './ChannelCover'
 
 const channel: AllChannelFieldsFragment = {
@@ -32,7 +33,18 @@ export default {
   decorators: [(story) => <div style={{ marginLeft: '-15px', padding: '-10px' }}>{story()}</div>],
 } as Meta
 
-const Template: Story<ChannelCoverProps> = (args) => <ChannelCover {...args} />
+const Template: Story<ChannelCoverProps> = (args) => {
+  return (
+    <>
+      <ChannelCover {...args} />
+      <h3>The content will show up here</h3>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum consequuntur, consequatur in eaque ipsum labore
+        perferendis quisquam voluptates, rerum quaerat quis sed velit incidunt unde assumenda facere fugit. Sit, cum?
+      </p>
+    </>
+  )
+}
 
 export const Default = Template.bind({})
 
