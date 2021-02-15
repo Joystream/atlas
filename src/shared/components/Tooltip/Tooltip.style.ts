@@ -30,6 +30,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     color: ${colors.white};
     z-index: ${zIndex.nearOverlay};
     transition: transform 100ms ${transitions.easing}, opacity 100ms ${transitions.easing};
+    pointer-events: none;
   }
   &::after {
     position: absolute;
