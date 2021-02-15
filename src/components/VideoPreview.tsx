@@ -1,7 +1,7 @@
 import { useVideo } from '@/api/hooks'
 import routes from '@/config/routes'
 import React from 'react'
-import VideoPreviewBase from '../shared/components/VideoPreviewBase/VideoPreviewBase'
+import { VideoPreviewBase } from '@/shared/components'
 
 type VideoPreviewProps = {
   id?: string
