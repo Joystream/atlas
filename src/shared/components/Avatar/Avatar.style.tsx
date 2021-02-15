@@ -35,10 +35,15 @@ const coverAvatarCss = css`
 `
 
 const viewAvatarCss = css`
-  width: 128px;
-  min-width: 128px;
-  height: 128px;
+  width: 80px;
+  min-width: 80px;
+  height: 80px;
 
+  @media (min-width: ${breakpoints.small}) {
+    width: 128px;
+    min-width: 128px;
+    height: 128px;
+  }
   @media (min-width: ${breakpoints.medium}) {
     width: 136px;
     min-width: 136px;
