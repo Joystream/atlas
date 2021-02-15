@@ -1,11 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
-import { MemoryRouter, Route, useLocation } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import Pagination from './Pagination'
-
-const Router: React.FC = (children) => {
-  return <MemoryRouter>{children}</MemoryRouter>
-}
 
 export default {
   title: 'Shared/Pagination',

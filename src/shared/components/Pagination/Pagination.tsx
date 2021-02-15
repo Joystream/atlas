@@ -13,29 +13,28 @@ type PaginationProps = {
 const Pagination: React.FC<PaginationProps> = ({
   take = 0,
   totalCount = 0,
-  currentPage = 0,
+  currentPage = 1,
   url = '',
   maxPaginationLinks = 5,
 }) => {
   const totalPages = take ? Math.ceil(totalCount / take) : 0
   const prevPage = currentPage - 1
   const nextPage = currentPage + 1
-  const startingIdx = getStartingIdx(currentPage, maxPaginationLinks, totalPages)
+
+  const pages = generatePaginationArray(currentPage, maxPaginationLinks, totalPages)
 
   return (
     <PaginationWrapper>
-      {startingIdx > 1 && (
+      {currentPage > 1 && (
         <StyledLink isChevron={true} to={`${url}/${prevPage}`}>
           <Icon name="chevron-left" />
         </StyledLink>
       )}
-      {Array.from({ length: totalPages })
-        .map((_, i) => (
-          <StyledLink key={i + startingIdx} to={`${url}/${i + startingIdx}`}>
-            {i + startingIdx}
-          </StyledLink>
-        ))
-        .slice(0, maxPaginationLinks)}
+      {pages.map((page) => (
+        <StyledLink key={page} to={`${url}/${page}`}>
+          {page}
+        </StyledLink>
+      ))}
       {nextPage <= totalPages && (
         <StyledLink isChevron={true} to={`${url}/${nextPage}`}>
           <Icon name="chevron-right" />
@@ -45,17 +44,13 @@ const Pagination: React.FC<PaginationProps> = ({
   )
 }
 
-const getStartingIdx = (currentPage: number, maxPaginationLinks: number, totalPages: number) => {
-  const center = Math.ceil(maxPaginationLinks / 2) - 1
-  if (center <= 0) {
-    return 1
+const generatePaginationArray = (currentPage: number, maxPaginationLinks: number, totalPages: number) => {
+  const array = Array.from({ length: totalPages }).map((_, idx) => idx + 1)
+  if (currentPage + maxPaginationLinks <= totalPages) {
+    return array.slice(currentPage - 1, currentPage - 1 + maxPaginationLinks)
+  } else {
+    return array.slice(-maxPaginationLinks)
   }
-  if (currentPage + maxPaginationLinks >= totalPages) {
-    return totalPages - maxPaginationLinks
-  }
-  if (currentPage > center) {
-    return currentPage - center
-  }
-  return 1
 }
+
 export default Pagination
