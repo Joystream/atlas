@@ -1,10 +1,9 @@
+import { Placeholder, Text } from '@/shared/components'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import { Placeholder, Text } from '@/shared/components'
-import ChannelLink from '@/components/ChannelLink'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import Avatar from '../Avatar'
-import { css } from '@emotion/react'
 import Button from '../Button'
 
 const SM_TITLE_HEIGHT = '44px'
@@ -90,7 +89,6 @@ export const RemoveCoverButton = styled.button`
   top: ${sizes(4)};
   span {
     margin-left: 10px;
-    display: none;
   }
   svg {
     width: 16px;
@@ -98,9 +96,6 @@ export const RemoveCoverButton = styled.button`
   }
   @media screen and (min-width: ${breakpoints.small}) {
     opacity: 0;
-    span {
-      display: inline;
-    }
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     right: ${sizes(10)};
@@ -202,18 +197,6 @@ export const SubTitle = styled(Text)`
   color: ${colors.white};
   background-color: ${colors.gray[800]};
   display: inline-block;
-`
-
-export const StyledChannelLink = styled(ChannelLink)`
-  margin-bottom: ${sizes(3)};
-
-  span {
-    font-size: ${typography.sizes.h2};
-  }
-
-  @media (min-width: ${breakpoints.small}) {
-    margin: 0 ${sizes(6)} 0 0;
-  }
 `
 
 export const TitlePlaceholder = styled(Placeholder)`

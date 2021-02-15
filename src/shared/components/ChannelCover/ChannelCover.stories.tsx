@@ -18,7 +18,6 @@ export default {
   component: ChannelCover,
   argTypes: {
     editable: {
-      defaultValue: true,
       table: {
         required: false,
       },
@@ -30,7 +29,6 @@ export default {
       },
     },
   },
-  decorators: [(story) => <div style={{ marginLeft: '-15px', padding: '-10px' }}>{story()}</div>],
 } as Meta
 
 const Template: Story<ChannelCoverProps> = (args) => {
