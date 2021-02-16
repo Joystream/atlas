@@ -20,6 +20,10 @@ type EditableOverlayProps = {
   withImage?: boolean
 }
 
+type TitleContainerProps = {
+  editable?: boolean
+}
+
 export const Header = styled.section`
   position: relative;
 `
@@ -175,9 +179,10 @@ export const StyledAvatar = styled(Avatar)`
   }
 `
 
-export const TitleContainer = styled.div`
+export const TitleContainer = styled.div<TitleContainerProps>`
   z-index: 2;
   max-width: 100%;
+  ${({ editable }) => !editable && `overflow: hidden`};
 `
 
 export const Title = styled(Text)`
@@ -186,8 +191,11 @@ export const Title = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
   background-color: ${colors.gray[800]};
   text-overflow: ellipsis;
+  max-height: 250px;
   overflow: hidden;
-  max-width: 600px;
+  @media (min-width: ${breakpoints.small}) {
+    word-break: break-all;
+  }
 `
 
 export const SubTitle = styled(Text)`

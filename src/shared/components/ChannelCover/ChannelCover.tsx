@@ -65,7 +65,8 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   changeNameError,
   changeNameWarning,
 }) => {
-  const showBgPattern = !channel?.coverPhotoUrl
+  const coverPhotoUrl = channel?.coverPhotoUrl
+  const avatarPhotoUrl = channel?.avatarPhotoUrl
   const [overlayVisible, setoverlayVisible] = useState(false)
 
   return (
@@ -74,32 +75,32 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
         <Media>
           <TransitionGroup>
             <CSSTransition
-              key={showBgPattern ? 'pattern' : 'cover'}
+              key={coverPhotoUrl ? 'cover' : 'pattern'}
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {showBgPattern ? (
-                <BackgroundPattern />
+              {coverPhotoUrl ? (
+                <CoverImage editable={editable && overlayVisible} src={coverPhotoUrl} />
               ) : (
-                <CoverImage editable={editable && overlayVisible} src={channel?.coverPhotoUrl!} />
+                <BackgroundPattern />
               )}
             </CSSTransition>
           </TransitionGroup>
         </Media>
         {editable && (
           <EditableOverlay
-            withImage={!!channel?.coverPhotoUrl}
+            withImage={!!coverPhotoUrl}
             onMouseEnter={() => setoverlayVisible(true)}
             onMouseLeave={() => setoverlayVisible(false)}
           >
             <EditCoverButton onClick={handleEditCover}>
               <Icon name="camera" />
               <span>
-                <span className="large-viewports"> Click Anywhere to </span> {channel?.coverPhotoUrl ? 'Edit' : 'Add'}
+                <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit' : 'Add'}
                 Cover Image
               </span>
             </EditCoverButton>
-            {channel?.coverPhotoUrl && (
+            {coverPhotoUrl && (
               <RemoveCoverButton onClick={handleRemovecover}>
                 <Icon name="trash" />
                 <span>Remove cover</span>
@@ -110,8 +111,8 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
       </MediaWrapper>
       <TitleSection className={transitions.names.slide}>
         <ChannelInfo>
-          <StyledAvatar imageUrl={channel?.avatarPhotoUrl} size="view" loading={!channel} editable={editable} />
-          <TitleContainer>
+          <StyledAvatar imageUrl={avatarPhotoUrl} size="view" loading={!channel} editable={editable} />
+          <TitleContainer editable={editable}>
             {!channel && (
               <>
                 <TitlePlaceholder />
