@@ -56,6 +56,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
     id: undefined,
     progress: undefined,
   }))
+  const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   return (
     <Gallery
       title={title}
@@ -71,11 +72,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
           progress={video?.progress}
           key={idx}
           onCoverResize={onCoverResize}
-          onClick={() => {
-            if (onVideoClick && video.id) {
-              onVideoClick(video.id)
-            }
-          }}
+          onClick={createClickHandler(video.id)}
         />
       ))}
     </Gallery>

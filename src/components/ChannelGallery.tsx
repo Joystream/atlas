@@ -20,13 +20,13 @@ const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels = [], l
     return null
   }
 
-  const handleClick = (id?: string) => () => id && onChannelClick && onChannelClick(id)
+  const createClickHandler = (id?: string) => () => id && onChannelClick && onChannelClick(id)
 
   const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
   return (
     <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes(2, true)} paddingTop={sizes(2, true)}>
       {[...channels, ...placeholderItems].map((channel, idx) => (
-        <StyledChannelPreview key={idx} id={channel.id} onClick={handleClick(channel.id)} />
+        <StyledChannelPreview key={idx} id={channel.id} onClick={createClickHandler(channel.id)} />
       ))}
     </Gallery>
   )

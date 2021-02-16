@@ -1,7 +1,7 @@
+import React from 'react'
 import { useVideo } from '@/api/hooks'
 import routes from '@/config/routes'
-import React from 'react'
-import { VideoPreviewBase } from '@/shared/components'
+import VideoPreviewBase, { VideoPreviewBaseMetaProps } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 
 type VideoPreviewProps = {
   id?: string
@@ -9,22 +9,14 @@ type VideoPreviewProps = {
   showMeta?: boolean
   main?: boolean
   progress?: number
-  onCoverResize?: (width: number | undefined, height: number | undefined) => void
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   className?: string
 }
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({
+const VideoPreview: React.FC<VideoPreviewProps & VideoPreviewBaseMetaProps> = ({
   id,
-  showChannel = true,
-  showMeta = true,
-  main = false,
   progress,
   className,
-  onCoverResize,
-  onChannelClick,
-  onClick,
+  ...metaProps
 }) => {
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const isLoading = loading || id === undefined
@@ -41,13 +33,8 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       progress={progress}
       isLoading={isLoading}
-      showChannel={showChannel}
-      showMeta={showMeta}
-      main={main}
       className={className}
-      onCoverResize={onCoverResize}
-      onChannelClick={onChannelClick}
-      onClick={onClick}
+      {...metaProps}
     />
   )
 }

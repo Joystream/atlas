@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
 import { css, keyframes } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
-import { fluidRange } from 'polished'
+import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
-import { Link } from 'react-router-dom'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -225,4 +226,15 @@ export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
   font-size: ${({ main, scalingFactor }) =>
     main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2})`};
   ${fadeInAnimation};
+`
+
+export const SpacedPlaceholder = styled(Placeholder)`
+  margin-top: 6px;
+`
+export const CoverPlaceholder = styled(Placeholder)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `

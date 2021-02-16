@@ -19,15 +19,24 @@ import {
   StyledAvatar,
   TitleHeader,
   Anchor,
+  CoverPlaceholder,
+  SpacedPlaceholder,
 } from './VideoPreviewBase.styles'
-import styled from '@emotion/styled'
-import Placeholder from '../Placeholder'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import { Placeholder } from '..'
 
+export type VideoPreviewBaseMetaProps = {
+  showChannel?: boolean
+  showMeta?: boolean
+  main?: boolean
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onCoverResize?: (width: number | undefined, height: number | undefined) => void
+}
 export type VideoPreviewBaseProps = {
   title?: string
   channelHandle?: string
@@ -41,14 +50,8 @@ export type VideoPreviewBaseProps = {
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
-  showChannel?: boolean
-  showMeta?: boolean
-  main?: boolean
   className?: string
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onCoverResize?: (width: number | undefined, height: number | undefined) => void
-}
+} & VideoPreviewBaseMetaProps
 
 export const MIN_VIDEO_PREVIEW_WIDTH = 300
 const MAX_VIDEO_PREVIEW_WIDTH = 600
@@ -205,16 +208,5 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     </Container>
   )
 }
-
-const SpacedPlaceholder = styled(Placeholder)`
-  margin-top: 6px;
-`
-const CoverPlaceholder = styled(Placeholder)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-`
 
 export default VideoPreviewBase
