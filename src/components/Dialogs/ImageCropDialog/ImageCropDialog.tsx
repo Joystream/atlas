@@ -1,60 +1,126 @@
-import React, { useCallback, useEffect, useRef } from 'react'
-import ActionDialog, { ActionDialogProps } from '../ActionDialog'
-import { HiddenInput } from './ImageCropDialog.style'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { ActionDialogProps } from '../ActionDialog'
+import { HiddenInput, CropContainer, StyledImage, StyledActionDialog, CropPlaceholder } from './ImageCropDialog.style'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.min.css'
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type ImageCropDialogProps = {
+  imageType: 'avatar' | 'videoThumbnail' | 'cover'
+  onConfirm: (croppedBlob: Blob, croppedUrl: string) => void
   onCancel: () => void
 } & Pick<ActionDialogProps, 'showDialog' | 'onExitClick'>
 
-const ImageCropDialog: React.FC<ImageCropDialogProps> = ({ showDialog, onCancel, ...actionDialogProps }) => {
+const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
+  showDialog,
+  imageType,
+  onConfirm,
+  onCancel,
+  ...actionDialogProps
+}) => {
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const handleFileSelectClosed = useCallback(() => {
-    const files = inputRef.current?.files
-
-    if (!files || files.length !== 1) {
-      if (files && files.length > 1) {
-        console.warn('more than 1 file selected')
-      }
-      onCancel()
-      return
-    }
-
-    console.log(files)
-  }, [onCancel])
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [cropper, setCropper] = useState<Cropper | null>(null)
+  const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!showDialog) {
+    if (!editedImageHref) {
       return
     }
 
+    if (!imageRef.current) {
+      console.error('no image ref!')
+      return
+    }
+
+    const cropper = new Cropper(imageRef.current, {
+      viewMode: 1,
+      dragMode: 'move',
+      cropBoxResizable: false,
+      cropBoxMovable: false,
+      aspectRatio: 1,
+      guides: false,
+      center: false,
+      background: false,
+      autoCropArea: 0.9,
+    })
+    setCropper(cropper)
+
+    return () => {
+      console.log('cropper destroy')
+      cropper.destroy()
+    }
+  }, [editedImageHref])
+
+  const handleDialogEnter = useCallback(() => {
     // open file picker on mount
     if (inputRef.current) {
       inputRef.current.click()
-      window.addEventListener('focus', handleFileSelectClosed, { once: true })
     } else {
       // TODO remove
       console.warn('no current :(')
     }
-  }, [showDialog, handleFileSelectClosed])
+  }, [])
 
-  // useEffect(() => {
-  //   window.addEventListener('focus', handleWindowFocus)
-  //   return () => {
-  //     window.removeEventListener('focus', handleWindowFocus)
-  //   }
-  // }, [handleWindowFocus])
+  const handleDialogExit = useCallback(() => {
+    console.log('handleDialogExit')
+    setEditedImageHref(null)
+  }, [])
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleFileChange')
+  const handleFileChange = () => {
+    // TODO: handle no file selected, probably with window focus event
+    const files = inputRef.current?.files
+    if (!files?.length) {
+      console.error('no files selected')
+      return
+    }
+    const selectedFile = files[0]
+    const fileUrl = URL.createObjectURL(selectedFile)
+    setEditedImageHref(fileUrl)
+  }
+
+  const handleConfirmClick = () => {
+    if (!cropper) {
+      return
+    }
+
+    // TODO adjust for different types
+    cropper
+      .getCroppedCanvas({
+        minWidth: 128,
+        minHeight: 128,
+        width: 256,
+        height: 256,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      })
+      .toBlob((blob) => {
+        if (!blob) {
+          console.error('Empty blob from cropped canvas', { blob })
+          return
+        }
+        const url = URL.createObjectURL(blob)
+        onConfirm(blob, url)
+      })
   }
 
   return (
-    <ActionDialog showDialog={showDialog} exitButton {...actionDialogProps}>
+    <StyledActionDialog
+      showDialog={showDialog}
+      primaryButtonText="Confirm"
+      onPrimaryButtonClick={handleConfirmClick}
+      onEnter={handleDialogEnter}
+      onExit={handleDialogExit}
+      {...actionDialogProps}
+    >
       <HiddenInput type="file" accept="image/*" onChange={handleFileChange} ref={inputRef} />
-      This is image crop
-    </ActionDialog>
+      {editedImageHref ? (
+        <CropContainer rounded={imageType === 'avatar'}>
+          <StyledImage src={editedImageHref} ref={imageRef} />
+        </CropContainer>
+      ) : (
+        <CropPlaceholder />
+      )}
+    </StyledActionDialog>
   )
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Story, Meta } from '@storybook/react'
 import ImageCropDialog, { ImageCropDialogProps } from './ImageCropDialog'
-import { Button } from '@/shared/components'
+import { Avatar } from '@/shared/components'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 
 export default {
@@ -21,6 +21,12 @@ export default {
 
 const RegularTemplate: Story<ImageCropDialogProps> = (args) => {
   const [showDialog, setShowDialog] = useState(false)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+  const handleConfirm = (blob: Blob, url: string) => {
+    setImageUrl(url)
+    setShowDialog(false)
+  }
 
   const handleClose = () => {
     setShowDialog(false)
@@ -28,8 +34,14 @@ const RegularTemplate: Story<ImageCropDialogProps> = (args) => {
 
   return (
     <>
-      <Button onClick={() => setShowDialog(true)}>Open Dialog</Button>
-      <ImageCropDialog showDialog={showDialog} onExitClick={handleClose} onCancel={handleClose} />
+      <Avatar imageUrl={imageUrl} editable onEditClick={() => setShowDialog(true)} size="cover" />
+      <ImageCropDialog
+        imageType="avatar"
+        showDialog={showDialog}
+        onExitClick={handleClose}
+        onConfirm={handleConfirm}
+        onCancel={handleClose}
+      />
     </>
   )
 }
