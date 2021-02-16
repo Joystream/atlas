@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
-import { colors, sizes, transitions, zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex, typography } from '../../theme'
 import { Text, Icon } from '@/shared/components'
 
 type ContainerProps = {
@@ -41,8 +40,8 @@ export const StyledIcon = styled(Icon)`
 `
 
 export const StyledText = styled(Text)`
-  font-size: 14px;
-  font-weight: 700px;
-  line-height: 16px;
+  font-size: ${typography.sizes.subtitle2};
+  font-weight: ${typography.weights.medium};
+  line-height: ${sizes(4)};
   margin-left: ${sizes(3)};
 `
