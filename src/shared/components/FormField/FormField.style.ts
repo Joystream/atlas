@@ -14,13 +14,15 @@ export const FormFieldWrapper = styled.div<FormFieldWrapperProps>`
 export const FormFieldTitle = styled(Text)`
   margin: 0;
   line-height: ${sizes(5)};
+  word-wrap: break-word;
 `
 
 export const FormFieldDescription = styled(Text)`
   margin-top: ${sizes(2)};
   font-size: ${typography.sizes.subtitle2};
-  line-height: ${sizes(5)};
   color: ${colors.gray[300]};
+  line-height: ${sizes(5)};
+  word-wrap: break-word;
 `
 
 export const ChildrenWrapper = styled.div`
