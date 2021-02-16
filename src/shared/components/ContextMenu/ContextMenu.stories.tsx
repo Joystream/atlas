@@ -1,12 +1,19 @@
 import React from 'react'
-import ContextMenu, { MenuItem } from './ContextMenu'
-import { useContextMenu } from '@/hooks'
+import ContextMenu, { ContextMenuItem } from './ContextMenu'
+import { OverlayManagerProvider, useContextMenu } from '@/hooks'
 import { Button } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
 
 export default {
-  title: 'Shared/ContextualMenu',
+  title: 'Shared/ContextMenu',
   component: ContextMenu,
+  decorators: [
+    (Story) => (
+      <OverlayManagerProvider>
+        <Story />
+      </OverlayManagerProvider>
+    ),
+  ],
 } as Meta
 
 const Template: Story = (args) => {
@@ -19,15 +26,15 @@ const Template: Story = (args) => {
       </div>
       <div>
         <ContextMenu contextMenuOpts={contextMenuOpts} {...args}>
-          <MenuItem iconName="info" onClick={closeContextMenu}>
+          <ContextMenuItem iconName="info" onClick={closeContextMenu}>
             Edit video
-          </MenuItem>
-          <MenuItem iconName="success" onClick={closeContextMenu}>
+          </ContextMenuItem>
+          <ContextMenuItem iconName="success" onClick={closeContextMenu}>
             Copy video URL
-          </MenuItem>
-          <MenuItem iconName="error" onClick={closeContextMenu}>
+          </ContextMenuItem>
+          <ContextMenuItem iconName="error" onClick={closeContextMenu}>
             Delete video
-          </MenuItem>
+          </ContextMenuItem>
         </ContextMenu>
       </div>
     </>

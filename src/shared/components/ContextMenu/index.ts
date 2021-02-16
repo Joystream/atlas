@@ -1,2 +1,2 @@
-import ContextMenu, { MenuItem } from './ContextMenu'
-export { ContextMenu, MenuItem }
+import ContextMenu, { ContextMenuItem } from './ContextMenu'
+export { ContextMenu, ContextMenuItem }

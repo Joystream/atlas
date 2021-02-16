@@ -1,4 +1,6 @@
 import React from 'react'
+import { Portal } from '@/components'
+import { useOverlayManager } from '@/hooks'
 import { StyledContainer, StyledMenuItem, StyledIcon, StyledText } from './ContextMenu.style'
 import * as Icons from '../../icons'
 
@@ -14,7 +16,7 @@ type ContextMenuProps = {
   }
 }
 
-export const MenuItem: React.FC<MenuItemProps> = ({ iconName, children, onClick }) => {
+export const ContextMenuItem: React.FC<MenuItemProps> = ({ iconName, children, onClick }) => {
   return (
     <StyledMenuItem onClick={onClick}>
       <StyledIcon name={iconName} />
@@ -24,10 +26,13 @@ export const MenuItem: React.FC<MenuItemProps> = ({ iconName, children, onClick 
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
+  const { contextMenuContainerRef } = useOverlayManager()
   return (
-    <StyledContainer isActive={isActive} position={position}>
-      {children}
-    </StyledContainer>
+    <Portal containerRef={contextMenuContainerRef}>
+      <StyledContainer isActive={isActive} position={position}>
+        {children}
+      </StyledContainer>
+    </Portal>
   )
 }
 
