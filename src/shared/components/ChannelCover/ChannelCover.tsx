@@ -96,7 +96,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
             <EditCoverButton onClick={handleEditCover}>
               <Icon name="camera" />
               <span>
-                <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit' : 'Add'}
+                <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
                 Cover Image
               </span>
             </EditCoverButton>

@@ -60,46 +60,61 @@ export const CoverImage = styled.div<CoverImageProps>`
   opacity: ${({ editable }) => (editable ? 0.6 : 1)};
 `
 
-const commonButtonStyles = css`
-  border: none;
-  background: none;
-  font-size: ${typography.sizes.subtitle2};
-  cursor: pointer;
-  position: absolute;
-`
-
 export const EditableOverlay = styled.div<EditableOverlayProps>`
   z-index: 1;
   width: 100%;
   position: absolute;
-  display: flex;
   height: 100%;
-  justify-content: center;
   top: 0;
   :hover button {
     opacity: 1;
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: flex;
+    justify-content: center;
+  }
+`
+
+const commonButtonStyles = css`
+  border: none;
+  background: ${colors.gray[800]};
+  font-size: ${typography.sizes.subtitle2};
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  color: ${colors.white};
+  padding: ${sizes(2)};
+  @media screen and (min-width: ${breakpoints.small}) {
+    background: none;
   }
 `
 
 export const RemoveCoverButton = styled.button`
   ${commonButtonStyles};
+  bottom: 0;
+  right: ${sizes(5)};
   opacity: 1;
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  position: absolute;
-  display: flex;
-  align-items: center;
-  color: ${colors.white};
-  right: ${sizes(5)};
-  top: ${sizes(4)};
   span {
-    margin-left: 10px;
+    margin-left: ${sizes(2)};
   }
   svg {
-    width: 16px;
+    width: ${sizes(5)};
     fill: ${colors.white};
   }
+
   @media screen and (min-width: ${breakpoints.small}) {
+    top: ${sizes(4)};
+    bottom: initial;
     opacity: 0;
+    span {
+      margin-left: 10px;
+    }
+    svg {
+      width: ${sizes(4)};
+      fill: ${colors.white};
+    }
   }
   @media screen and (min-width: ${breakpoints.medium}) {
     right: ${sizes(10)};
@@ -109,44 +124,46 @@ export const RemoveCoverButton = styled.button`
 
 export const EditCoverButton = styled.button`
   ${commonButtonStyles};
+  bottom: 0px;
+  left: ${sizes(5)};
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  color: ${colors.white};
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  opacity: 1;
-  justify-content: center;
-  padding-bottom: 30px;
 
   svg {
-    padding: 10px;
-    margin-right: 12px;
-    border-radius: 100%;
-    width: 40px;
-    border: 1px solid ${colors.white};
+    width: ${sizes(5)};
+    margin-right: ${sizes(2)};
     fill: ${colors.white};
   }
   span {
     text-align: left;
-    line-height: 40px;
-    width: 160px;
+    line-height: ${sizes(5)};
     .large-viewports {
       display: none;
     }
   }
   @media screen and (min-width: ${breakpoints.small}) {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    opacity: 1;
+    justify-content: center;
+    padding-bottom: 30px;
     color: ${colors.gray[200]};
     opacity: 0;
     padding-bottom: 50px;
     span {
-      line-height: 20px;
+      width: 160px;
+      line-height: ${sizes(5)};
       .large-viewports {
         display: inline;
       }
     }
     svg {
+      width: 40px;
+      padding: 10px;
+      margin-right: 12px;
       fill: ${colors.gray[200]};
+      border-radius: 100%;
       border: 1px solid ${colors.gray[200]};
     }
   }
