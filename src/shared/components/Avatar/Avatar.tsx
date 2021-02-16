@@ -40,13 +40,13 @@ const Avatar: React.FC<AvatarProps> = ({
   const isEditable = !loading && editable && size !== 'default'
   return (
     <Container onClick={onClick} size={size} className={className}>
+      {isEditable && (
+        <EditButton size={size} withAvatar={!!imageUrl} onClick={handleEditClick}>
+          <Icon name="camera" />
+          <span>{imageUrl ? 'Edit' : 'Add avatar'}</span>
+        </EditButton>
+      )}
       <StyledTransitionGroup>
-        {isEditable && (
-          <EditButton size={size} withAvatar={!!imageUrl} onClick={handleEditClick}>
-            <Icon name="camera" />
-            <span>{imageUrl ? 'Edit' : 'Add avatar'}</span>
-          </EditButton>
-        )}
         <CSSTransition
           key={loading ? 'placeholder' : 'content'}
           timeout={parseInt(transitions.timings.loading)}
