@@ -12,6 +12,8 @@ export const StyledContainer = styled.div<ContainerProps>`
   position: absolute;
   visibility: ${({ isActive }) => (isActive ? 'visible' : 'hidden')};
   top: ${({ position }) => position.y}px;
+  left: ${({ position }) => position.left && position.x}px;
+  right: ${({ position }) => !position.left && position.x}px;
   opacity: ${({ isActive }) => (isActive ? '1' : '0')};
   transform: scale(${({ isActive }) => (isActive ? '1' : '0.88')});
   background-color: ${colors.gray[800]};
@@ -20,14 +22,6 @@ export const StyledContainer = styled.div<ContainerProps>`
   padding: ${sizes(2)};
   z-index: ${zIndex.globalOverlay};
   transition: opacity 200ms ${transitions.easing}, transform 200ms ${transitions.easing};
-  ${({ position }) =>
-    position.left
-      ? css`
-          left: ${position.x}px;
-        `
-      : css`
-          right: ${position.x}px;
-        `}
 `
 
 export const StyledMenuItem = styled.div`
