@@ -1,6 +1,6 @@
 // this rule gives trouble on forward refed components
 /* eslint-disable react/display-name */
-import React from 'react'
+import React, { useState } from 'react'
 import Icon from '../Icon'
 import { Checkmark, Container, InnerContainer, Input } from './Checkbox.styles'
 
