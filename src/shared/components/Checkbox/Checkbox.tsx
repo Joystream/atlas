@@ -20,8 +20,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ value, indeterminate, onChange, disabled = false, onFocus, onBlur, error = false, className, ...props }, ref) => {
     const isIndeterminate = indeterminate || false
     const isSelected = !!value
-    const [isHovered, setIsHovered] = React.useState<boolean>(false)
-    const [isFocused, setIsFocused] = React.useState<boolean>(false)
+    const [isHovered, setIsHovered] = useState(false)
+    const [isFocused, setIsFocused] = useState(false)
 
     return (
       <Container
