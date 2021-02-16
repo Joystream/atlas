@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { VideoPreviewBase } from '@/shared/components/VideoPreviewBase'
+import VideoPreviewBase from '@/shared/components/VideoPreviewBase'
 import { BrowserRouter } from 'react-router-dom'
 
 describe('VideoPreviewBase component', () => {
