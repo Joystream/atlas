@@ -1,5 +1,3 @@
-// this rule gives trouble on forward refed components
-/* eslint-disable react/display-name */
 import React, { useState } from 'react'
 import Icon from '../Icon'
 import { Checkmark, Container, InnerContainer, Input } from './Checkbox.styles'
@@ -23,52 +21,57 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const [isHovered, setIsHovered] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
 
+    const onMouseEnter = () => {
+      if (!disabled) {
+        setIsHovered(true)
+      }
+    }
+    const onMouseLeave = () => {
+      if (!disabled) {
+        setIsHovered(false)
+      }
+    }
+    const onChangeHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (!disabled && onChange) {
+        onChange(!value)
+      }
+    }
+    const onFocusHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (!disabled) {
+        setIsFocused(true)
+        if (onFocus) {
+          onFocus(e)
+        }
+      }
+    }
+    const onBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (!disabled) {
+        setIsFocused(false)
+        if (onBlur) {
+          onBlur(e)
+        }
+      }
+    }
     return (
       <Container
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         selected={value}
         disabled={disabled}
-        isFocused={isFocused}
         isHovered={isHovered}
+        isFocused={isFocused}
         error={error}
-        onMouseEnter={() => {
-          if (!disabled) {
-            setIsHovered(true)
-          }
-        }}
-        onMouseLeave={() => {
-          if (!disabled) {
-            setIsHovered(false)
-          }
-        }}
       >
-        <InnerContainer isFocused={isFocused} isHovered={isHovered} selected={value} disabled={disabled} error={error}>
+        <InnerContainer selected={value} disabled={disabled} error={error} isHovered={isHovered} isFocused={isFocused}>
           <Input
             ref={ref}
             type="checkbox"
             data-multiple="false"
             checked={isSelected}
             disabled={disabled}
-            onChange={() => {
-              if (!disabled && onChange) {
-                onChange(!value)
-              }
-            }}
-            onFocus={(e) => {
-              if (!disabled) {
-                setIsFocused(true)
-                if (onFocus) {
-                  onFocus(e)
-                }
-              }
-            }}
-            onBlur={(e) => {
-              if (!disabled) {
-                setIsFocused(false)
-                if (onBlur) {
-                  onBlur(e)
-                }
-              }
-            }}
+            onChange={onChangeHandler}
+            onFocus={onFocusHandler}
+            onBlur={onBlurHandler}
             {...props}
           />
           <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
@@ -77,5 +80,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     )
   }
 )
+
+Checkbox.displayName = 'Checkbox'
 
 export default Checkbox

@@ -1,27 +1,28 @@
-import { sizes, colors } from '@/shared/theme'
+import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
   width: max-content;
-  padding: ${theme.sizes(2)};
-  margin: -${theme.sizes(2)};
+  padding: ${sizes(2)};
+  margin: -${sizes(2)};
   cursor: pointer;
-  border-radius: 9999px;
-  color: ${theme.colors.gray[300]};
+  border-radius: 100%;
+  color: ${colors.gray[300]};
+  transition: background ${transitions.timings.loading} ${transitions.easing};
   ${({ isFocused, isHovered, selected, disabled }) =>
     (isFocused || isHovered) &&
-    `background: ${theme.colors.gray[800]};
-    ${selected && `background: ${theme.colors.blue[900]};`}
+    `background: ${colors.gray[800]};
+    ${selected && `background: ${colors.blue[900]};`}
     ${disabled && `background: transparent;`}`}
 `
 
 const selectedStyles = (props: CheckboxStateProps) =>
   props.selected
     ? css`
-        background-color: ${props.selected ? theme.colors.blue[500] : 'transparent'};
-        border: 1px solid ${theme.colors.blue[500]};
+        background-color: ${props.selected ? colors.blue[500] : 'transparent'};
+        border: 1px solid ${colors.blue[500]};
       `
     : null
 const disabledStyles = (props: CheckboxStateProps) =>
@@ -32,9 +33,9 @@ const disabledStyles = (props: CheckboxStateProps) =>
         `,
         props.selected &&
           css`
-            background-color: ${props.disabled ? theme.colors.gray[700] : 'transparent'};
-            border: 1px solid ${theme.colors.gray[700]};
-            color: ${theme.colors.gray[400]};
+            background-color: ${props.disabled ? colors.gray[700] : 'transparent'};
+            border: 1px solid ${colors.gray[700]};
+            color: ${colors.gray[400]};
           `,
       ]
     : null
@@ -42,11 +43,11 @@ const errorStyles = (props: CheckboxStateProps) =>
   props.error
     ? [
         css`
-          border: 1px solid ${theme.colors.error};
+          border: 1px solid ${colors.error};
         `,
         props.selected &&
           css`
-            background-color: ${theme.colors.error};
+            background-color: ${colors.error};
           `,
       ]
     : null
@@ -59,13 +60,13 @@ export type CheckboxStateProps = {
 }
 export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
-  color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[300]};
+  color: ${colors.white};
+  border: 1px solid ${colors.gray[300]};
   ${selectedStyles}
   ${errorStyles}
   ${disabledStyles}
   &:active {
-    border: 1px solid ${theme.colors.gray[100]};
+    border: 1px solid ${colors.gray[100]};
   }
 `
 
