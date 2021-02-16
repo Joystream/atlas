@@ -1,4 +1,4 @@
-import theme from '@/shared/theme'
+import { sizes, colors } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
