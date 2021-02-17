@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 import InputBase from '../InputBase'
 import { DateInput } from './Datepicker.style'
 
@@ -12,6 +12,15 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   { error, disabled, required },
   ref
 ) => {
+  const handleInputChange: (e: React.KeyboardEvent<HTMLInputElement>) => void = (e) => {
+    const target = e.target as HTMLInputElement
+    if (!target.value || e.key === 'Backspace') {
+      return
+    }
+    if (/^[0-9][0-9]$/.test(target.value) || /(^[0-9][0-9](\s+\/\s+)[0-9][0-9]$)/.test(target.value)) {
+      target.value = target.value + ' / '
+    }
+  }
   return (
     <InputBase error={error} disabled={disabled}>
       <label>
@@ -23,6 +32,8 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
           required={required}
           tabIndex={disabled ? -1 : 0}
           placeholder="DD / MM / YYYY"
+          onKeyUp={handleInputChange}
+          maxLength={14}
         />
       </label>
     </InputBase>
