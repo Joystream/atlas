@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import Datepicker from './Datepicker'
 import { Meta, Story } from '@storybook/react'
 
