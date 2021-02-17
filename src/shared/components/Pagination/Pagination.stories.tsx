@@ -11,7 +11,7 @@ export default {
       defaultValue: 10,
     },
     totalCount: {
-      defaultValue: 47,
+      defaultValue: 90,
     },
   },
 } as Meta

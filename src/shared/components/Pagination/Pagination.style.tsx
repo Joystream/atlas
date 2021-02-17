@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 type PaginationButtonProps = {
   isChevron?: boolean
   isActive?: boolean
+  isHidden?: boolean
 }
 
 export const PaginationWrapper = styled.div`
@@ -31,10 +32,19 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   background: none;
   text-decoration: none;
   font-family: ${typography.fonts.headers};
-  transition: all ${transitions.timings.loading} ${transitions.easing};
-  :hover {
+  transition: background-color ${transitions.timings.loading} ${transitions.easing},
+    color ${transitions.timings.loading} ${transitions.easing}, opacity 200ms ${transitions.easing};
+  :hover,
+  :focus,
+  :active {
     color: ${colors.white};
     background-color: ${colors.gray[600]};
   }
   ${({ isChevron, isActive }) => !isChevron && isActive && buttonActiveState}
+  ${({ isHidden }) =>
+    isHidden &&
+    css`
+      pointer-events: none;
+      opacity: 0;
+    `};
 `
