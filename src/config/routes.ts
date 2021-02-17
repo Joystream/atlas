@@ -17,6 +17,7 @@ export default {
   videos: () => '/videos',
   channels: () => '/channels',
   legal: () => '/legal',
+  playground: () => '/playground',
 }
 
 export const QUERY_PARAMS = {

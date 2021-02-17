@@ -6,9 +6,17 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, LegalView } from '@/views'
+import {
+  HomeView,
+  VideoView,
+  SearchOverlayView,
+  ChannelView,
+  VideosView,
+  ChannelsView,
+  LegalView,
+  PlaygroundView,
+} from '@/views'
 import routes from '@/config/routes'
-import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { NavItemType } from '@/components/SideNavbar'
 import { RoutingState } from '@/types/routing'
@@ -40,6 +48,7 @@ const routesMap = [
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
   { path: routes.legal(), Component: LegalView },
+  { path: routes.playground(), Component: PlaygroundView },
 ]
 
 const LayoutWithRouting: React.FC = () => {
@@ -74,7 +83,6 @@ const LayoutWithRouting: React.FC = () => {
 
   return (
     <>
-      <GlobalStyle additionalStyles={[globalStyles, routingTransitions]} />
       <GlobalStyle />
       <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
