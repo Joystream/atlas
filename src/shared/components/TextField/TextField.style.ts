@@ -11,6 +11,7 @@ type TextInputProps = {
 }
 
 export const TextInput = styled.input<TextInputProps>`
+  width: 100%;
   color: ${colors.white};
   :not(:placeholder-shown) {
     ${styledinputStates.filled}

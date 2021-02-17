@@ -2,7 +2,8 @@ import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const TextAreaWrapper = styled.div`
-  max-width: 300px;
+  width: 100%;
+  max-width: var(--input-max-width); ;
 `
 
 export const StyledTextArea = styled.textarea`
