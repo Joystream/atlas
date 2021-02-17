@@ -136,6 +136,7 @@ export const CoverImage = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
+  ${fadeInAnimation};
 `
 
 export const CoverHoverOverlay = styled.div`
@@ -154,10 +155,6 @@ export const CoverHoverOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
-export const InnerContainer = styled.div`
-  display: contents;
 `
 
 export const CoverIcon = styled(Icon)`
