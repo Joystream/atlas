@@ -3,10 +3,10 @@ import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks'
 import { CSSTransition } from 'react-transition-group'
 import { StyledContainer, StyledMenuItem, StyledIcon, StyledText, menuTransitions } from './ContextMenu.style'
-import * as Icons from '../../icons'
+import type { IconType } from '../Icon'
 
 type MenuItemProps = {
-  iconName: Icons.IconType
+  iconName: IconType
   onClick: () => void
 }
 
