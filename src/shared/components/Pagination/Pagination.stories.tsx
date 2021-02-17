@@ -14,11 +14,6 @@ export default {
       defaultValue: 47,
     },
   },
-  decorators: [
-    (story) => {
-      return <MemoryRouter>{story()}</MemoryRouter>
-    },
-  ],
 } as Meta
 
 const Template: Story = (args) => <Pagination {...args} />

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Icon from '../Icon'
-import { PaginationWrapper, StyledLink } from './Pagination.style'
+import { PaginationWrapper, PaginationButton } from './Pagination.style'
 
 type PaginationProps = {
   take?: number
@@ -8,37 +8,44 @@ type PaginationProps = {
   currentPage?: number
   url?: string
   maxPaginationLinks?: number
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   take = 0,
   totalCount = 0,
   currentPage = 1,
-  url = '',
   maxPaginationLinks = 5,
+  onClick,
 }) => {
+  const [page, setPage] = useState(currentPage)
   const totalPages = take ? Math.ceil(totalCount / take) : 0
-  const prevPage = currentPage - 1
-  const nextPage = currentPage + 1
+  const prevPage = page - 1
+  const nextPage = page + 1
 
-  const pages = generatePaginationArray(currentPage, maxPaginationLinks, totalPages)
+  const pages = generatePaginationArray(page, maxPaginationLinks, totalPages)
+
+  const handleButtonClick = (page: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onClick && onClick(e)
+    setPage(page)
+  }
 
   return (
     <PaginationWrapper>
-      {currentPage > 1 && (
-        <StyledLink isChevron={true} to={`${url}/${prevPage}`}>
+      {page > 1 && (
+        <PaginationButton isChevron={true} onClick={(e) => handleButtonClick(prevPage, e)}>
           <Icon name="chevron-left" />
-        </StyledLink>
+        </PaginationButton>
       )}
-      {pages.map((page) => (
-        <StyledLink key={page} to={`${url}/${page}`}>
-          {page}
-        </StyledLink>
+      {pages.map((pageItem) => (
+        <PaginationButton isActive={page === pageItem} key={pageItem} onClick={(e) => handleButtonClick(pageItem, e)}>
+          {pageItem}
+        </PaginationButton>
       ))}
       {nextPage <= totalPages && (
-        <StyledLink isChevron={true} to={`${url}/${nextPage}`}>
+        <PaginationButton isChevron={true} onClick={(e) => handleButtonClick(nextPage, e)}>
           <Icon name="chevron-right" />
-        </StyledLink>
+        </PaginationButton>
       )}
     </PaginationWrapper>
   )
