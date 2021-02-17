@@ -66,13 +66,13 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       arrowCss={arrowPosition}
     >
-      {[...videos, ...placeholderItems]?.map(({ id, progress }, idx) => (
+      {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview
-          id={id}
-          progress={progress}
-          key={id ?? 'placeholder' + idx}
+          id={video.id}
+          progress={video?.progress}
+          key={idx}
           onCoverResize={onCoverResize}
-          onClick={createClickHandler(id)}
+          onClick={createClickHandler(video.id)}
         />
       ))}
     </Gallery>

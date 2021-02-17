@@ -27,19 +27,6 @@ type ScalesWithCoverProps = {
   scalingFactor: number
 }
 
-const fadeIn = keyframes`
-  0% {
-    opacity: 0
-  }
-  100% {
-    opacity: 1
-  }
-`
-
-export const fadeInAnimation = css`
-  animation: ${fadeIn} 0.5s ease-in;
-`
-
 export const CoverWrapper = styled.div<MainProps>`
   width: 100%;
   max-width: ${({ main }) => (main ? '650px' : '')};
@@ -69,7 +56,6 @@ export const CoverContainer = styled.div<ClickableProps>`
   transition-property: box-shadow, transform;
   transition-duration: 0.4s;
   transition-timing-function: ${transitions.easing};
-  ${fadeInAnimation};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   :hover {
     ${(props) => clickableAnimation(props.clickable)}
@@ -136,7 +122,6 @@ export const CoverImage = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-  ${fadeInAnimation};
 `
 
 export const CoverHoverOverlay = styled.div`
@@ -208,7 +193,6 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
-  ${fadeInAnimation};
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
@@ -216,13 +200,11 @@ export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
   line-height: 1.25rem;
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
-  ${fadeInAnimation};
 `
 
 export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
   font-size: ${({ main, scalingFactor }) =>
     main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2})`};
-  ${fadeInAnimation};
 `
 
 export const SpacedPlaceholder = styled(Placeholder)`
