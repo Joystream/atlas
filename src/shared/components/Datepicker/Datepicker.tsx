@@ -1,6 +1,7 @@
-import React, { forwardRef } from 'react'
-import InputBase from '../InputBase'
-import { DateInput } from './Datepicker.style'
+import React, { forwardRef, useState } from 'react'
+import NumberFormat from 'react-number-format'
+import { parse, isValid } from 'date-fns'
+import TextField from '../TextField'
 
 export type DatepickerProps = {
   required?: boolean
@@ -9,34 +10,30 @@ export type DatepickerProps = {
 }
 
 const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, DatepickerProps> = (
-  { error, disabled, required },
+  { required, error, disabled },
   ref
 ) => {
-  const handleInputChange: (e: React.KeyboardEvent<HTMLInputElement>) => void = (e) => {
-    const target = e.target as HTMLInputElement
-    if (!target.value || e.key === 'Backspace') {
+  const [validationError, setValidationError] = useState(false)
+  const validateDate: (event: React.FocusEvent<HTMLInputElement>) => void = (e) => {
+    if (!e.target.value) {
+      setValidationError(false)
       return
     }
-    if (/^[0-9][0-9]$/.test(target.value) || /(^[0-9][0-9](\s+\/\s+)[0-9][0-9]$)/.test(target.value)) {
-      target.value = target.value + ' / '
-    }
+    const date = parse(e.target.value, 'dd/MM/yyyy', new Date())
+    setValidationError(!isValid(date))
   }
   return (
-    <InputBase error={error} disabled={disabled}>
-      <label>
-        <DateInput
-          ref={ref}
-          disabled={disabled}
-          error={error}
-          type="text"
-          required={required}
-          tabIndex={disabled ? -1 : 0}
-          placeholder="DD / MM / YYYY"
-          onKeyUp={handleInputChange}
-          maxLength={14}
-        />
-      </label>
-    </InputBase>
+    <NumberFormat
+      getInputRef={ref}
+      customInput={TextField}
+      format="##/##/####"
+      label="DD / MM / YYYY"
+      mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
+      onBlur={validateDate}
+      error={error || validationError}
+      required={required}
+      disabled={disabled}
+    />
   )
 }
 
