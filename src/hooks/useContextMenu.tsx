@@ -11,7 +11,7 @@ export const useContextMenu = () => {
     }
   })
 
-  const openContextMenu = useCallback((event) => {
+  const openContextMenu = useCallback((event: React.MouseEvent) => {
     const clickPositionFromRight = document.body.clientWidth - event.pageX
     if (clickPositionFromRight > 200) {
       setPosition({ x: event.pageX, y: event.pageY, left: true })

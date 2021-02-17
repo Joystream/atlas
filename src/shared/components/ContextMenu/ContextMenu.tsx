@@ -1,7 +1,8 @@
 import React from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks'
-import { StyledContainer, StyledMenuItem, StyledIcon, StyledText } from './ContextMenu.style'
+import { CSSTransition } from 'react-transition-group'
+import { StyledContainer, StyledMenuItem, StyledIcon, StyledText, menuTransitions } from './ContextMenu.style'
 import * as Icons from '../../icons'
 
 type MenuItemProps = {
@@ -29,9 +30,11 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, 
   const { contextMenuContainerRef } = useOverlayManager()
   return (
     <Portal containerRef={contextMenuContainerRef}>
-      <StyledContainer isActive={isActive} position={position}>
-        {children}
-      </StyledContainer>
+      <CSSTransition in={isActive} timeout={150} classNames="menu" css={menuTransitions} unmountOnExit>
+        <StyledContainer className="menu" position={position}>
+          {children}
+        </StyledContainer>
+      </CSSTransition>
     </Portal>
   )
 }
