@@ -11,11 +11,11 @@ export const Container = styled.div<CheckboxStateProps>`
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
-  ${({ isFocused, isHovered, selected, disabled }) =>
-    (isFocused || isHovered) &&
-    `background: ${colors.gray[800]};
-    ${selected && `background: ${colors.blue[900]};`}
-    ${disabled && `background: transparent;`}`}
+  ${({ isFocused, selected, disabled }) =>
+    isFocused && !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
+  &:hover {
+    ${({ selected, disabled }) => !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
+  }
 `
 
 const selectedStyles = (props: CheckboxStateProps) =>
@@ -56,7 +56,6 @@ export type CheckboxStateProps = {
   disabled: boolean
   error: boolean
   isFocused: boolean
-  isHovered: boolean
 }
 export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
