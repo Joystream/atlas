@@ -39,7 +39,7 @@ const Template: Story<WithChildren> = (args) => (
   <FormField
     {...args}
     css={css`
-      width: 300px;
+      max-width: 450px;
     `}
   />
 )

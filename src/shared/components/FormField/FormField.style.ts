@@ -2,23 +2,22 @@ import { colors, sizes, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Text from '../Text'
 
-type FormFieldWrapperProps = {
-  fullWidth?: boolean
-}
-
-export const FormFieldWrapper = styled.div<FormFieldWrapperProps>`
+export const FormFieldWrapper = styled.div`
   margin-top: ${sizes(2)};
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : '350px')};
+  width: 100%;
+  max-width: var(--input-max-width); ;
 `
 
 export const FormFieldTitle = styled(Text)`
   margin: 0;
   line-height: ${sizes(5)};
   word-wrap: break-word;
+  width: 85%;
 `
 
 export const FormFieldDescription = styled(Text)`
   margin-top: ${sizes(2)};
+  width: 85%;
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.gray[300]};
   line-height: ${sizes(5)};

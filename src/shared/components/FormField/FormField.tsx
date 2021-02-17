@@ -5,15 +5,12 @@ export type FormFieldProps = {
   title: string
   description?: string | string[]
   className?: string
-  fullWidth?: boolean
 }
 
-const FormField: React.FC<FormFieldProps> = ({ children, title, description, className, fullWidth }) => {
+const FormField: React.FC<FormFieldProps> = ({ children, title, description, className }) => {
   return (
-    <FormFieldWrapper fullWidth={fullWidth}>
-      <FormFieldTitle className={className} variant="h6">
-        {title}
-      </FormFieldTitle>
+    <FormFieldWrapper className={className}>
+      <FormFieldTitle variant="h6">{title}</FormFieldTitle>
       {description &&
         (description instanceof Array ? (
           description.map((p, idx) => (
