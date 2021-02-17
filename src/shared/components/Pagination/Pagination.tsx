@@ -54,10 +54,9 @@ const Pagination: React.FC<PaginationProps> = ({
 const generatePaginationArray = (currentPage: number, maxPaginationLinks: number, totalPages: number) => {
   const array = Array.from({ length: totalPages }).map((_, idx) => idx + 1)
 
-  if (currentPage + maxPaginationLinks <= totalPages) {
-    const center = Math.ceil(maxPaginationLinks / 2)
+  const center = Math.ceil(maxPaginationLinks / 2)
+  if (currentPage + center <= totalPages) {
     const start = Math.max(currentPage - 1 - center, 0)
-
     return array.slice(start, start + maxPaginationLinks)
   } else {
     return array.slice(-maxPaginationLinks)
