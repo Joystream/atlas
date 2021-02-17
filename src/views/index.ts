@@ -4,6 +4,7 @@ import ChannelView from './ChannelView'
 import VideosView from './VideosView'
 import ChannelsView from './ChannelsView'
 import SearchOverlayView from './SearchOverlayView'
+import PlaygroundView from './PlaygroundView'
 import LegalView from './LegalView'
 
-export { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, LegalView }
+export { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, LegalView, PlaygroundView }
