@@ -3,9 +3,22 @@ import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { formatNumberShort } from '@/utils/number'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { VideoSection } from './ChannelView.style'
+import {
+  ChannelInfo,
+  Header,
+  StyledAvatar,
+  StyledButton,
+  SubTitle,
+  SubTitlePlaceholder,
+  Title,
+  TitleContainer,
+  TitlePlaceholder,
+  TitleSection,
+  VideoSection,
+} from './ChannelView.style'
 
 const ChannelView: React.FC = () => {
   const { id } = useParams()
@@ -46,9 +59,35 @@ const ChannelView: React.FC = () => {
     return <span>Channel not found</span>
   }
 
+  const avatarPhotoUrl = channel?.avatarPhotoUrl
+  const coverPhotoUrl = channel?.coverPhotoUrl
+
   return (
     <ViewWrapper>
-      <ChannelCover channel={channel} handleFollow={handleFollow} isFollowing={isFollowing} />
+      <Header>
+        <ChannelCover coverPhotoUrl={coverPhotoUrl} />
+        <TitleSection className={transitions.names.slide}>
+          <ChannelInfo>
+            <StyledAvatar imageUrl={avatarPhotoUrl} size="view" loading={!channel} />
+            <TitleContainer>
+              {!channel ? (
+                <>
+                  <TitlePlaceholder />
+                  <SubTitlePlaceholder />
+                </>
+              ) : (
+                <>
+                  <Title variant="h1">{channel.handle}</Title>
+                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                </>
+              )}
+            </TitleContainer>
+          </ChannelInfo>
+          <StyledButton variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </StyledButton>
+        </TitleSection>
+      </Header>
       <VideoSection className={transitions.names.slide}>
         <InfiniteVideoGrid channelId={id} showChannel={false} />
       </VideoSection>
