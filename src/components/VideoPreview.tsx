@@ -5,19 +5,11 @@ import VideoPreviewBase, { VideoPreviewBaseMetaProps } from '@/shared/components
 
 type VideoPreviewProps = {
   id?: string
-  showChannel?: boolean
-  showMeta?: boolean
-  main?: boolean
   progress?: number
   className?: string
-}
+} & VideoPreviewBaseMetaProps
 
-const VideoPreview: React.FC<VideoPreviewProps & VideoPreviewBaseMetaProps> = ({
-  id,
-  progress,
-  className,
-  ...metaProps
-}) => {
+const VideoPreview: React.FC<VideoPreviewProps> = ({ id, progress, className, ...metaProps }) => {
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const isLoading = loading || id === undefined
   return (

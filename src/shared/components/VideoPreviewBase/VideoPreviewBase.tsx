@@ -105,7 +105,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     e.stopPropagation()
     onChannelClick(e)
   }
-  const handleAnchorClick = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
       e.preventDefault()
     }
@@ -113,7 +113,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
-        <Anchor to={videoHref ?? ''} onClick={handleAnchorClick(videoHref)}>
+        <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
           <SwitchTransition>
             <CSSTransition
               key={isLoading ? 'placeholder' : 'content'}
