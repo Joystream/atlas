@@ -36,7 +36,6 @@ const globalStyles = css`
   :root {
     --global-horizontal-padding: ${sizes(4)};
     --sidenav-collapsed-width: 0;
-    --input-max-width: 600px;
 
     @media screen and (min-width: ${breakpoints.medium}) {
       --global-horizontal-padding: ${sizes(8)};

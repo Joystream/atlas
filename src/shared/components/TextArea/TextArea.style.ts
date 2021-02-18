@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 export const TextAreaWrapper = styled.div`
   width: 100%;
-  max-width: var(--input-max-width); ;
 `
 
 export const StyledTextArea = styled.textarea`
