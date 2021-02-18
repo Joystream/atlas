@@ -13,13 +13,14 @@ type StyledStepInfoProps = {
 export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   min-height: 80px;
   border-bottom: 1px solid ${colors.gray[500]};
-  margin: -${sizes(4)} -${sizes(4)} 0;
-  padding: ${sizes(4)};
+  margin: 0 calc(-1 * var(--dialog-padding-small));
+  padding: 0 var(--dialog-padding-small);
   @media screen and (min-width: ${breakpoints.small}) {
-    margin: -${sizes(6)} -${sizes(6)} 0;
+    margin: 0 calc(-1 * var(--dialog-padding-large));
+    padding: 0 var(--dialog-padding-large);
   }
   hr {
     display: none;

@@ -1,6 +1,5 @@
 import React from 'react'
-import Dialog from '../GeneralDialog/GeneralDialog'
-import { DialogProps } from '@/components/Dialogs/GeneralDialog/GeneralDialog'
+import Dialog, { DialogProps } from '../GeneralDialog/GeneralDialog'
 import {
   StyledHeader,
   StyledStepsInfoContainer,
@@ -13,28 +12,28 @@ import { Icon } from '@/shared/components'
 
 type Step = {
   title: string
-  element: JSX.Element
+  element: React.ReactNode
 }
 
 type MultistepperProps = {
   steps: Step[]
-  currentStep?: number
+  currentStepIdx?: number
 } & DialogProps
 
 const Multistepper: React.FC<MultistepperProps> = ({
   steps,
-  currentStep = 0,
+  currentStepIdx = 0,
   exitButton,
   handleExit,
   ...dialogProps
 }) => {
   return (
-    <Dialog wide {...dialogProps}>
+    <Dialog {...dialogProps}>
       <StyledHeader>
         <StyledStepsInfoContainer>
           {steps.map((step, idx) => {
-            const isActive = idx === currentStep
-            const isCompleted = currentStep > idx
+            const isActive = idx === currentStepIdx
+            const isCompleted = currentStepIdx > idx
             const isLast = idx === steps.length - 1
 
             return (
@@ -54,7 +53,7 @@ const Multistepper: React.FC<MultistepperProps> = ({
           </StyledExitButton>
         )}
       </StyledHeader>
-      {steps[currentStep].element}
+      {steps[currentStepIdx].element}
     </Dialog>
   )
 }

@@ -12,7 +12,7 @@ export type DialogProps = {
   handleExit?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton, handleExit, wide }) => {
+const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton, handleExit }) => {
   const {
     overlayContainerRef,
     lockScroll,
@@ -35,7 +35,7 @@ const GeneralDialog: React.FC<DialogProps> = ({ children, showDialog, exitButton
   return (
     <Portal containerRef={overlayContainerRef}>
       <CSSTransition in={showDialog} timeout={250} classNames="dialog" css={dialogTransitions}>
-        <StyledContainer className="dialog" wide={wide}>
+        <StyledContainer className="dialog">
           {exitButton && (
             <StyledExitButton aria-label="close dialog" onClick={handleExit}>
               <Icon name="times" color="white" />

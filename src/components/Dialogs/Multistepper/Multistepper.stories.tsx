@@ -21,22 +21,22 @@ export default {
 type ElementType = {
   step: string
   handleStep: (idx: number) => void
-  currentStep: number
+  currentStepIdx: number
 }
-const Element: React.FC<ElementType> = ({ step, handleStep, currentStep }) => {
+const Element: React.FC<ElementType> = ({ step, handleStep, currentStepIdx }) => {
   return (
     <>
       <h1>Hello! This is a {step} step!</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button onClick={() => handleStep(currentStep - 1)}>Previous step</Button>
-        <Button onClick={() => handleStep(currentStep + 1)}>Next step</Button>
+        <Button onClick={() => handleStep(currentStepIdx - 1)}>Previous step</Button>
+        <Button onClick={() => handleStep(currentStepIdx + 1)}>Next step</Button>
       </div>
     </>
   )
 }
 
 const RegularTemplate: Story = (args) => {
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStepIdx, setCurrentStep] = useState(0)
   const handleStepChange = (idx: number) => {
     if (idx < 0 || idx > steps.length - 1) {
       return
@@ -46,19 +46,19 @@ const RegularTemplate: Story = (args) => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <Element step="first" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="first" handleStep={handleStepChange} currentStepIdx={currentStepIdx} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <Element step="second" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="second" handleStep={handleStepChange} currentStepIdx={currentStepIdx} />,
     },
     {
       title: 'Get FREE tokens and start a channel',
-      element: <Element step="third" handleStep={handleStepChange} currentStep={currentStep} />,
+      element: <Element step="third" handleStep={handleStepChange} currentStepIdx={currentStepIdx} />,
     },
   ]
 
-  return <Multistepper showDialog={true} steps={steps} currentStep={currentStep} {...args} />
+  return <Multistepper showDialog={true} steps={steps} currentStepIdx={currentStepIdx} {...args} />
 }
 
 export const Regular = RegularTemplate.bind({})
