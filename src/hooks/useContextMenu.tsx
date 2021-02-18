@@ -5,15 +5,16 @@ export const useContextMenu = () => {
   const [isActive, setMenuActive] = useState(false)
 
   useEffect(() => {
-    document.addEventListener('click', () => setMenuActive(false), true)
+    const closeContextMenu = () => setMenuActive(false)
+    document.addEventListener('click', closeContextMenu, true)
     return () => {
-      document.removeEventListener('click', () => setMenuActive(false), true)
+      document.removeEventListener('click', closeContextMenu, true)
     }
-  })
+  }, [])
 
-  const openContextMenu = useCallback((event: React.MouseEvent) => {
+  const openContextMenu = useCallback((event: React.MouseEvent, menuWidth: number) => {
     const clickPositionFromRight = document.body.clientWidth - event.pageX
-    if (clickPositionFromRight > 200) {
+    if (clickPositionFromRight > menuWidth) {
       setPosition({ x: event.pageX, y: event.pageY, left: true })
     } else {
       setPosition({ x: clickPositionFromRight, y: event.pageY, left: false })

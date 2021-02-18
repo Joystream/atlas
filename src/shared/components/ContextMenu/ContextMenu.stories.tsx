@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ContextMenu, { ContextMenuItem } from './ContextMenu'
 import { OverlayManagerProvider, useContextMenu } from '@/hooks'
 import { Button } from '@/shared/components'
@@ -17,43 +17,22 @@ export default {
 } as Meta
 
 const Template: Story = (args) => {
-  const {
-    openContextMenu: leftOpenContextMenu,
-    closeContextMenu: leftCloseContextMenu,
-    contextMenuOpts: leftContextMenuOpts,
-  } = useContextMenu()
-  const {
-    openContextMenu: rightOpenContextMenu,
-    closeContextMenu: rightCloseContextMenu,
-    contextMenuOpts: rightContextMenuOpts,
-  } = useContextMenu()
+  const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button onClick={leftOpenContextMenu}>Open menu on the left side</Button>
-        <Button onClick={rightOpenContextMenu}>Open menu on the right side</Button>
+        <Button onClick={(e) => openContextMenu(e, 200)}>Open menu on the left side</Button>
+        <Button onClick={(e) => openContextMenu(e, 200)}>Open menu on the right side</Button>
       </div>
       <div>
-        <ContextMenu contextMenuOpts={leftContextMenuOpts} {...args}>
-          <ContextMenuItem iconName="info" onClick={leftCloseContextMenu}>
+        <ContextMenu contextMenuOpts={contextMenuOpts} {...args}>
+          <ContextMenuItem iconName="info" onClick={closeContextMenu}>
             Edit video
           </ContextMenuItem>
-          <ContextMenuItem iconName="success" onClick={leftCloseContextMenu}>
+          <ContextMenuItem iconName="success" onClick={closeContextMenu}>
             Copy video URL
           </ContextMenuItem>
-          <ContextMenuItem iconName="error" onClick={leftCloseContextMenu}>
-            Delete video
-          </ContextMenuItem>
-        </ContextMenu>
-
-        <ContextMenu contextMenuOpts={rightContextMenuOpts} {...args}>
-          <ContextMenuItem iconName="info" onClick={rightCloseContextMenu}>
-            Edit video
-          </ContextMenuItem>
-          <ContextMenuItem iconName="success" onClick={rightCloseContextMenu}>
-            Copy video URL
-          </ContextMenuItem>
-          <ContextMenuItem iconName="error" onClick={rightCloseContextMenu}>
+          <ContextMenuItem iconName="error" onClick={closeContextMenu}>
             Delete video
           </ContextMenuItem>
         </ContextMenu>
