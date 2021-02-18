@@ -1,6 +1,7 @@
 import React from 'react'
 import Dialog, { DialogProps } from '../GeneralDialog/GeneralDialog'
 import {
+  StyledDialog,
   StyledHeader,
   StyledStepsInfoContainer,
   StyledStepInfo,
@@ -28,7 +29,7 @@ const Multistepper: React.FC<MultistepperProps> = ({
   ...dialogProps
 }) => {
   return (
-    <Dialog {...dialogProps}>
+    <StyledDialog {...dialogProps}>
       <StyledHeader>
         <StyledStepsInfoContainer>
           {steps.map((step, idx) => {
@@ -54,7 +55,7 @@ const Multistepper: React.FC<MultistepperProps> = ({
         )}
       </StyledHeader>
       {steps[currentStepIdx].element}
-    </Dialog>
+    </StyledDialog>
   )
 }
 

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Dialog from '../GeneralDialog/GeneralDialog'
 import { Text, Button } from '@/shared/components'
 import { colors, sizes, breakpoints, typography } from '@/shared/theme'
 
@@ -10,17 +11,23 @@ type StyledStepInfoProps = {
   isActive?: boolean
 }
 
+export const StyledDialog = styled(Dialog)`
+  max-width: 700px;
+`
+
 export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 80px;
+
   border-bottom: 1px solid ${colors.gray[500]};
   margin: 0 calc(-1 * var(--dialog-padding-small));
   padding: 0 var(--dialog-padding-small);
+  padding-bottom: var(--dialog-padding-small);
   @media screen and (min-width: ${breakpoints.small}) {
     margin: 0 calc(-1 * var(--dialog-padding-large));
     padding: 0 var(--dialog-padding-large);
+    padding-bottom: var(--dialog-padding-large);
   }
   hr {
     display: none;
@@ -78,6 +85,7 @@ export const StyledStepInfoText = styled(Text)<StyledStepInfoProps>`
 
 export const StyledExitButton = styled(Button)`
   padding: 0;
+  align-self: center;
   background-color: ${colors.transparent};
   border: none;
   &:hover {

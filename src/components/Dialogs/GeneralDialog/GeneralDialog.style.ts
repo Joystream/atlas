@@ -17,9 +17,6 @@ export const StyledContainer = styled.div`
   @media screen and (min-width: ${breakpoints.small}) {
     padding: var(--dialog-padding-large);
   }
-  &.wide {
-    max-width: 700px;
-  }
 `
 
 export const StyledExitButton = styled(Button)`
@@ -30,29 +27,5 @@ export const StyledExitButton = styled(Button)`
   border: none;
   &:hover {
     background-color: ${colors.transparent};
-  }
-`
-
-export const dialogTransitions = css`
-  &.dialog-enter {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-
-  &.dialog-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-  }
-
-  &.dialog-exit {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  &.dialog-exit-active {
-    opacity: 0;
-    transform: scale(0.88);
-    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `
