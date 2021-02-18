@@ -19,11 +19,4 @@ module.exports = {
     paths.appBuild = path.resolve(__dirname, 'dist')
     return paths
   },
-  jest: function (config) {
-    config.coverageDirectory = path.resolve(__dirname, '.coverage')
-    // Don't collect coverage from stories folder
-    config.collectCoverageFrom.push('!<rootDir>/src/**/*.stories.*')
-
-    return config
-  },
 }
