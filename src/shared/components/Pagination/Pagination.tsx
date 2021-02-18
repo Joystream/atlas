@@ -2,52 +2,50 @@ import React, { useState } from 'react'
 import Icon from '../Icon'
 import { PaginationWrapper, PaginationButton } from './Pagination.style'
 
-type PaginationProps = {
+export type PaginationProps = {
   itemsPerPage?: number
   totalCount?: number
-  currentPage?: number
   maxPaginationLinks?: number
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onChangePage: (page: number) => void
+  page: number
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   itemsPerPage = 0,
   totalCount = 0,
-  currentPage = 1,
   maxPaginationLinks = 5,
-  onClick,
+  page = 0,
+  onChangePage,
 }) => {
-  const [page, setPage] = useState(currentPage)
   const totalPages = itemsPerPage ? Math.ceil(totalCount / itemsPerPage) : 0
   const prevPage = page - 1
   const nextPage = page + 1
 
   const pages = generatePaginationArray(page, maxPaginationLinks, totalPages)
 
-  const handleButtonClick = (page: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    onClick && onClick(e)
-    setPage(page)
-  }
-
   return (
     <PaginationWrapper>
       <PaginationButton
         isHidden={page <= 1}
         isChevron={true}
-        onClick={(e) => handleButtonClick(prevPage, e)}
+        onClick={() => onChangePage(prevPage)}
         tabIndex={page <= 1 ? -1 : 0}
       >
         <Icon name="chevron-left" />
       </PaginationButton>
       {pages.map((pageItem) => (
-        <PaginationButton isActive={page === pageItem} key={pageItem} onClick={(e) => handleButtonClick(pageItem, e)}>
+        <PaginationButton
+          isActive={page ? page === pageItem : pageItem === 1}
+          key={pageItem}
+          onClick={() => onChangePage(pageItem)}
+        >
           {pageItem}
         </PaginationButton>
       ))}
       <PaginationButton
         isHidden={nextPage > totalPages}
         isChevron={true}
-        onClick={(e) => handleButtonClick(nextPage, e)}
+        onClick={() => (page ? onChangePage(nextPage) : onChangePage(2))}
         tabIndex={nextPage <= totalPages ? -1 : 0}
       >
         <Icon name="chevron-right" />
