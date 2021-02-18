@@ -21,17 +21,12 @@ export const StyledHeader = styled.div`
   align-items: flex-start;
 
   border-bottom: 1px solid ${colors.gray[500]};
-  margin: 0 calc(-1 * var(--dialog-padding-small));
-  padding: 0 var(--dialog-padding-small);
-  padding-bottom: var(--dialog-padding-small);
-  @media screen and (min-width: ${breakpoints.small}) {
-    margin: 0 calc(-1 * var(--dialog-padding-large));
-    padding: 0 var(--dialog-padding-large);
-    padding-bottom: var(--dialog-padding-large);
-  }
+  margin: 0 calc(-1 * var(--dialog-padding));
+  padding: 0 var(--dialog-padding);
+  padding-bottom: var(--dialog-padding);
   hr {
     display: none;
-    @media screen and (min-width: 800px) {
+    @media screen and (min-width: ${breakpoints.small}) {
       display: inline;
       width: 16px;
       height: 1px;
@@ -80,15 +75,5 @@ export const StyledStepInfoText = styled(Text)<StyledStepInfoProps>`
   @media screen and (min-width: ${breakpoints.small}) {
     max-width: 120px;
     font-size: ${sizes(3)};
-  }
-`
-
-export const StyledExitButton = styled(Button)`
-  padding: 0;
-  align-self: center;
-  background-color: ${colors.transparent};
-  border: none;
-  &:hover {
-    background-color: ${colors.transparent};
   }
 `

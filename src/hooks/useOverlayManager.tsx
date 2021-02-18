@@ -44,7 +44,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={overlayManagerStyles(scrollbarGap)} />
+      <Global styles={[overlayManagerStyles(scrollbarGap), transitionStyles]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
@@ -55,11 +55,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
         }}
       >
         {children}
-        <StyledOverlayContainer
-          ref={overlayContainerRef}
-          isOpened={overlayContainerOpened}
-          css={transitionStyles}
-        ></StyledOverlayContainer>
+        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened}></StyledOverlayContainer>
       </OverlayManagerContext.Provider>
     </>
   )
