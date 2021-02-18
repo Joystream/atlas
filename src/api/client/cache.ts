@@ -30,6 +30,15 @@ const cache = new InMemoryCache({
             })
           )
         },
+        video(existing, { toReference, args }) {
+          return (
+            existing ||
+            toReference({
+              __typename: 'Video',
+              id: args?.where.id,
+            })
+          )
+        },
       },
     },
     Video: {

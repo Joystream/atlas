@@ -77,7 +77,7 @@ const ChannelView: React.FC = () => {
                 timeout={parseInt(transitions.timings.loading)}
                 classNames={transitions.names.fade}
               >
-                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={channel?.coverPhotoUrl!} />}
+                {showBgPattern ? <BackgroundPattern /> : <CoverImage src={channel?.coverPhotoUrl ?? ''} />}
               </CSSTransition>
             </TransitionGroup>
           </Media>

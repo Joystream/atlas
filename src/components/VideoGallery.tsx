@@ -2,14 +2,8 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import {
-  breakpointsOfGrid,
-  Gallery,
-  MIN_VIDEO_PREVIEW_WIDTH,
-  VideoPreviewBase,
-  CAROUSEL_ARROW_HEIGHT,
-} from '@/shared/components'
-import VideoPreview from './VideoPreviewWithNavigation'
+import { breakpointsOfGrid, Gallery, MIN_VIDEO_PREVIEW_WIDTH, CAROUSEL_ARROW_HEIGHT } from '@/shared/components'
+import VideoPreview from './VideoPreview'
 import { sizes } from '@/shared/theme'
 import { VideoFieldsFragment } from '@/api/queries'
 
@@ -40,7 +34,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onVideoClick }) => {
+const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading, onVideoClick }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -58,7 +52,11 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onV
   if (!loading && videos?.length === 0) {
     return null
   }
-
+  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({
+    id: undefined,
+    progress: undefined,
+  }))
+  const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   return (
     <Gallery
       title={title}
@@ -68,48 +66,25 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos, loading, onV
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       arrowCss={arrowPosition}
     >
-      {loading
-        ? Array.from({ length: PLACEHOLDERS_COUNT }).map((_, idx) => (
-            <StyledVideoPreviewBase key={`video-placeholder-${idx}`} />
-          ))
-        : videos!.map((video) => (
-            <StyledVideoPreview
-              id={video.id}
-              channelId={video.channel.id}
-              title={video.title}
-              channelName={video.channel.handle}
-              channelAvatarURL={video.channel.avatarPhotoUrl}
-              views={video.views}
-              createdAt={video.createdAt}
-              duration={video.duration}
-              progress={video.progress}
-              posterURL={video.thumbnailUrl}
-              key={video.id}
-              onCoverResize={onCoverResize}
-              onClick={() => {
-                if (onVideoClick) {
-                  onVideoClick(video.id)
-                }
-              }}
-            />
-          ))}
+      {[...videos, ...placeholderItems]?.map((video, idx) => (
+        <StyledVideoPreview
+          id={video.id}
+          progress={video?.progress}
+          key={idx}
+          onCoverResize={onCoverResize}
+          onClick={createClickHandler(video.id)}
+        />
+      ))}
     </Gallery>
   )
 }
 
-const videoPreviewCss = css`
+const StyledVideoPreview = styled(VideoPreview)`
   & + & {
     margin-left: ${sizes(6)};
   }
 
   min-width: ${MIN_VIDEO_PREVIEW_WIDTH};
-`
-
-const StyledVideoPreviewBase = styled(VideoPreviewBase)`
-  ${videoPreviewCss};
-`
-const StyledVideoPreview = styled(VideoPreview)`
-  ${videoPreviewCss};
 `
 
 export default VideoGallery

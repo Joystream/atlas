@@ -1,22 +1,25 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { VideoPreview } from '@/shared/components/VideoPreview'
+import VideoPreviewBase from '@/shared/components/VideoPreviewBase'
+import { BrowserRouter } from 'react-router-dom'
 
-describe('VideoPreview component', () => {
+describe('VideoPreviewBase component', () => {
   ;(global as any).ResizeObserver = class {
     disconnect() {}
     observe(element: any, initObject: any) {}
   }
-  it('Should render Video Preview correctly', () => {
+  it.only('Should render Video Preview correctly', () => {
     expect(
       mount(
-        <VideoPreview
-          title="Some Video Title"
-          channelName="some channel"
-          posterURL=""
-          views={1000}
-          createdAt={new Date()}
-        />
+        <BrowserRouter>
+          <VideoPreviewBase
+            title="Some Video Title"
+            channelHandle="some channel"
+            thumbnailUrl=""
+            views={1000}
+            createdAt={new Date()}
+          />
+        </BrowserRouter>
       )
     ).toBeDefined()
   })

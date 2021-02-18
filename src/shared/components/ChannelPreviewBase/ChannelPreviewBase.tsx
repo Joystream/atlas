@@ -33,11 +33,11 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   className,
   onClick,
 }) => {
+  const isAnimated = !loading && !!channelHref
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return
     onClick(e)
   }
-  const isAnimated = !loading && !!channelHref
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!channelHref) {
       e.preventDefault()
