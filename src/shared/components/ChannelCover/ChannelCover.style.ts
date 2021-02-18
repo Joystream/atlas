@@ -86,18 +86,6 @@ export const EditCoverButton = styled.button`
   left: ${sizes(5)};
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
-  svg {
-    width: ${sizes(5)};
-    margin-right: ${sizes(2)};
-    fill: ${colors.white};
-  }
-  span {
-    text-align: left;
-    line-height: ${sizes(5)};
-    .large-viewports {
-      display: none;
-    }
-  }
   @media screen and (min-width: ${breakpoints.small}) {
     height: 100%;
     width: 100%;
@@ -109,20 +97,43 @@ export const EditCoverButton = styled.button`
     color: ${colors.gray[200]};
     opacity: 0;
     padding-bottom: 50px;
-    span {
-      width: 160px;
-      line-height: ${sizes(5)};
-      .large-viewports {
-        display: inline;
-      }
-    }
+  }
+`
+
+export const EditIconWrapper = styled.span`
+  svg {
+    margin-right: ${sizes(2)};
+    width: ${sizes(4)};
+    fill: ${colors.white};
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border: 2px solid ${colors.gray[200]};
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     svg {
-      width: 40px;
-      padding: 10px;
-      margin-right: 12px;
+      width: 18px;
+      margin: 0;
       fill: ${colors.gray[200]};
-      border-radius: 100%;
-      border: 1px solid ${colors.gray[200]};
+    }
+  }
+`
+
+export const EditButtonMessage = styled.span`
+  text-align: left;
+  line-height: ${sizes(5)};
+  .large-viewports {
+    display: none;
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    width: 160px;
+    line-height: ${sizes(5)};
+    .large-viewports {
+      display: inline;
     }
   }
 `

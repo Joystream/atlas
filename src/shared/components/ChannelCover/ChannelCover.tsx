@@ -7,6 +7,8 @@ import {
   CoverImage,
   EditableControls,
   EditCoverButton,
+  EditIconWrapper,
+  EditButtonMessage,
   Media,
   MediaWrapper,
   RemoveCoverButton,
@@ -36,11 +38,13 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
           onMouseLeave={() => setoverlayVisible(false)}
         >
           <EditCoverButton onClick={onCoverEditClick}>
-            <Icon name="camera" />
-            <span>
+            <EditIconWrapper>
+              <Icon name="camera" />
+            </EditIconWrapper>
+            <EditButtonMessage>
               <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
               Cover Image
-            </span>
+            </EditButtonMessage>
           </EditCoverButton>
           {coverPhotoUrl && (
             <RemoveCoverButton onClick={onCoverRemoveClick}>
