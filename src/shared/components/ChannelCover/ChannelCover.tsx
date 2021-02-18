@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Icon from '../Icon'
 import {
   CoverImage,
-  EditableOverlay,
+  EditableControls,
   EditCoverButton,
   Media,
   MediaWrapper,
@@ -34,23 +34,8 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ coverPhotoUrl, editable, ha
 
   return (
     <MediaWrapper>
-      <Media>
-        <TransitionGroup>
-          <CSSTransition
-            key={coverPhotoUrl ? 'cover' : 'pattern'}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-          >
-            {coverPhotoUrl ? (
-              <CoverImage editable={editable && overlayVisible} src={coverPhotoUrl} />
-            ) : (
-              <BackgroundPattern />
-            )}
-          </CSSTransition>
-        </TransitionGroup>
-      </Media>
       {editable && (
-        <EditableOverlay
+        <EditableControls
           withImage={!!coverPhotoUrl}
           onMouseEnter={() => setoverlayVisible(true)}
           onMouseLeave={() => setoverlayVisible(false)}
@@ -68,8 +53,23 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ coverPhotoUrl, editable, ha
               <span>Remove cover</span>
             </RemoveCoverButton>
           )}
-        </EditableOverlay>
+        </EditableControls>
       )}
+      <Media>
+        <TransitionGroup>
+          <CSSTransition
+            key={coverPhotoUrl ? 'cover' : 'pattern'}
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            {coverPhotoUrl ? (
+              <CoverImage editable={editable && overlayVisible} src={coverPhotoUrl} />
+            ) : (
+              <BackgroundPattern />
+            )}
+          </CSSTransition>
+        </TransitionGroup>
+      </Media>
     </MediaWrapper>
   )
 }

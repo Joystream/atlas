@@ -7,7 +7,7 @@ type CoverImageProps = {
   editable?: boolean
 }
 
-type EditableOverlayProps = {
+type EditableControlsProps = {
   withImage?: boolean
 }
 
@@ -18,32 +18,7 @@ export const MediaWrapper = styled.div`
   position: relative;
 `
 
-export const Media = styled.div`
-  width: 100%;
-  height: 400px;
-  position: relative;
-  z-index: ${zIndex.background};
-`
-
-export const CoverImage = styled.div<CoverImageProps>`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: local;
-  background-size: cover;
-
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0) 100%),
-    url(${({ src }) => src});
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  opacity: ${({ editable }) => (editable ? 0.6 : 1)};
-`
-
-export const EditableOverlay = styled.div<EditableOverlayProps>`
+export const EditableControls = styled.div<EditableControlsProps>`
   z-index: 1;
   width: 100%;
   position: absolute;
@@ -150,4 +125,29 @@ export const EditCoverButton = styled.button`
       border: 1px solid ${colors.gray[200]};
     }
   }
+`
+
+export const Media = styled.div`
+  width: 100%;
+  height: 400px;
+  position: relative;
+  z-index: ${zIndex.background};
+`
+
+export const CoverImage = styled.div<CoverImageProps>`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: local;
+  background-size: cover;
+
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0) 100%),
+    url(${({ src }) => src});
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  opacity: ${({ editable }) => (editable ? 0.6 : 1)};
 `
