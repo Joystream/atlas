@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   StyledActionBarContainer,
-  StyledTextContainer,
+  StyledInfoContainer,
   StyledPrimaryText,
   StyledSecondaryText,
   StyledButtonsContainer,
@@ -9,16 +9,35 @@ import {
 } from './ActionBar.style'
 import { Button } from '@/shared/components'
 
-const ActionBar = () => {
+export type ActionBarProps = {
+  variant: 'primary' | 'secondary'
+  primaryText: string
+  secondaryText: string
+  primaryButtonText: string
+  secondaryButtonText: string
+}
+
+const ActionBar: React.FC<ActionBarProps> = ({
+  variant,
+  primaryText,
+  secondaryText,
+  primaryButtonText,
+  secondaryButtonText,
+}) => {
+  const isPrimary = variant === 'primary'
   return (
     <StyledActionBarContainer>
-      <StyledTextContainer>
-        <StyledPrimaryText>Fee: 0.2 Joy</StyledPrimaryText>
-        <StyledSecondaryText>Every change to the blockchain requires making a nominal transaction.</StyledSecondaryText>
-      </StyledTextContainer>
+      <StyledInfoContainer>
+        {isPrimary ? (
+          <>
+            <StyledPrimaryText>{primaryText}</StyledPrimaryText>
+            <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
+          </>
+        ) : null}
+      </StyledInfoContainer>
       <StyledButtonsContainer>
-        <StyledSecondaryButton variant="secondary">Save As Draft</StyledSecondaryButton>
-        <Button>Start Publishing</Button>
+        <StyledSecondaryButton variant="secondary">{secondaryButtonText}</StyledSecondaryButton>
+        <Button>{primaryButtonText}</Button>
       </StyledButtonsContainer>
     </StyledActionBarContainer>
   )
