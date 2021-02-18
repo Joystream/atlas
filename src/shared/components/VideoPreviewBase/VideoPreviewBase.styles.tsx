@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
-import { css, keyframes } from '@emotion/react'
+import { css } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
@@ -113,11 +113,16 @@ export const MetaContainer = styled.div<MainProps>`
   width: 100%;
 `
 
-export const CoverImage = styled.img`
-  display: block;
+export const CoverImageContainer = styled.div`
   position: absolute;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
+`
+
+export const CoverImage = styled.img`
+  display: block;
   width: 100%;
   height: 100%;
 `

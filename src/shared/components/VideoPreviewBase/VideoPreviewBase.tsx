@@ -20,6 +20,7 @@ import {
   Anchor,
   CoverPlaceholder,
   SpacedPlaceholder,
+  CoverImageContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDurationShort } from '@/utils/time'
@@ -114,17 +115,17 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
         <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-          <SwitchTransition>
-            <CSSTransition
-              key={isLoading ? 'placeholder' : 'content'}
-              timeout={parseInt(transitions.timings.regular)}
-              classNames={transitions.names.fade}
-            >
-              <CoverContainer clickable={clickable}>
+          <CoverContainer clickable={clickable}>
+            <SwitchTransition>
+              <CSSTransition
+                key={isLoading ? 'placeholder' : 'content'}
+                timeout={parseInt(transitions.timings.regular)}
+                classNames={transitions.names.fade}
+              >
                 {isLoading ? (
                   <CoverPlaceholder />
                 ) : (
-                  <div>
+                  <CoverImageContainer>
                     <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     {!!progress && (
@@ -135,11 +136,11 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <CoverHoverOverlay>
                       <CoverPlayIcon />
                     </CoverHoverOverlay>
-                  </div>
+                  </CoverImageContainer>
                 )}
-              </CoverContainer>
-            </CSSTransition>
-          </SwitchTransition>
+              </CSSTransition>
+            </SwitchTransition>
+          </CoverContainer>
         </Anchor>
       </CoverWrapper>
       <SwitchTransition>
