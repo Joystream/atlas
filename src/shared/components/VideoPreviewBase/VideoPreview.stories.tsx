@@ -2,6 +2,7 @@ import React from 'react'
 import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
 import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
+import { BrowserRouter } from 'react-router-dom'
 
 export default {
   title: 'Shared/VideoPreview',
@@ -15,9 +16,11 @@ export default {
 const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
   return (
-    <Wrapper>
-      <VideoPreviewBase {...args} createdAt={createdAtDate} />
-    </Wrapper>
+    <BrowserRouter>
+      <Wrapper>
+        <VideoPreviewBase {...args} createdAt={createdAtDate} />
+      </Wrapper>
+    </BrowserRouter>
   )
 }
 const PlaceholderTemplate: Story<VideoPreviewBaseProps> = (args) => (
