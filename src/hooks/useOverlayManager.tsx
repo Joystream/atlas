@@ -3,6 +3,7 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
 import { zIndex } from '@/shared/theme'
+import { transitionStyles } from '@/shared/components/GlobalStyle/transitionStyles'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
@@ -43,7 +44,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={overlayManagerStyles(scrollbarGap)} />
+      <Global styles={[overlayManagerStyles(scrollbarGap), transitionStyles]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
