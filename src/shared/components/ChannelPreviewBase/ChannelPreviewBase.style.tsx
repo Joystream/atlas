@@ -48,6 +48,7 @@ export const InnerContainer = styled.div<InnerContainerProps>`
 
 export const Anchor = styled(Link)`
   all: unset;
+  color: inherit;
 `
 
 export const Info = styled.div`

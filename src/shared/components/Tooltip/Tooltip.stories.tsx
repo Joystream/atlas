@@ -1,6 +1,6 @@
 import React from 'react'
 import Tooltip, { TooltipProps } from './Tooltip'
-import { Text, Button, ChannelPreview } from '@/shared/components'
+import { Text, Button, ChannelPreviewBase } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
 
 export default {
@@ -31,9 +31,9 @@ export const WithHeading = HeadingTooltip.bind({})
 
 const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
   <Tooltip {...args}>
-    <ChannelPreview
-      name="Lorem"
-      avatarURL="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
+    <ChannelPreviewBase
+      handle="Lorem"
+      avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
     />
   </Tooltip>
 )

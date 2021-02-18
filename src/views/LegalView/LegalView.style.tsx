@@ -2,7 +2,7 @@ import React from 'react'
 import { Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export const Box = styled.div`
   scroll-behavior: smooth;
