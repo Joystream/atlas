@@ -1,3 +1,4 @@
+import { darken } from 'polished'
 import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
@@ -14,7 +15,10 @@ export const Container = styled.div<CheckboxStateProps>`
   ${({ isFocused, selected, disabled }) =>
     isFocused && !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
   &:hover {
-    ${({ selected, disabled }) => !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
+    ${({ selected, disabled, error }) => [
+      !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`,
+      error && `background: ${darken(0.5, colors.error)};`,
+    ]}
   }
 `
 
