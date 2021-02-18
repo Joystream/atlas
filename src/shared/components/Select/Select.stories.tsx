@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Select, { SelectProps, SelectedItem } from '.'
 import { Story, Meta } from '@storybook/react'
+import { css } from '@emotion/react'
 
 const items: SelectedItem[] = [
   { name: 'first', value: 'first' },
@@ -22,7 +23,14 @@ export default {
   },
 } as Meta
 
-const Template: Story<SelectProps> = (args) => <Select {...args} />
+const Template: Story<SelectProps> = (args) => (
+  <Select
+    {...args}
+    css={css`
+      max-width: 400px;
+    `}
+  />
+)
 
 const TemplateWithControlledInput: Story<SelectProps> = (args) => {
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
@@ -31,6 +39,9 @@ const TemplateWithControlledInput: Story<SelectProps> = (args) => {
       {...args}
       onChange={({ selectedItem }) => selectedItem && setSelectedItem(selectedItem)}
       value={selectedItem}
+      css={css`
+        max-width: 400px;
+      `}
     />
   )
 }

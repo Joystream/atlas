@@ -8,7 +8,6 @@ type FormGroupProps = {
 }
 
 export const FormGroup = styled.div<FormGroupProps>`
-  max-width: 300px;
   position: relative;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
   input,

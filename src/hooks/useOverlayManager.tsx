@@ -3,6 +3,7 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
 import { zIndex } from '@/shared/theme'
+import { transitionStyles } from '@/shared/components/GlobalStyle/transitionStyles'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
@@ -10,6 +11,7 @@ type OverlayManagerContextValue = {
   overlayContainerOpened: boolean
   setOverlayContainerOpened: (value: boolean) => void
   overlayContainerRef: React.RefObject<HTMLDivElement>
+  contextMenuContainerRef: React.RefObject<HTMLDivElement>
 }
 
 type OverlayContainerProps = {
@@ -24,7 +26,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [overlayContainerOpened, setOverlayContainerOpened] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const overlayContainerRef = useRef<HTMLDivElement>(null)
-
+  const contextMenuContainerRef = useRef<HTMLDivElement>(null)
   const handleScrollLocked = useCallback((value: boolean, scrollbarGap?: number) => {
     if (value) {
       setScrollLocked(true)
@@ -43,7 +45,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={overlayManagerStyles(scrollbarGap)} />
+      <Global styles={[overlayManagerStyles(scrollbarGap), transitionStyles]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
@@ -51,9 +53,11 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
           overlayContainerOpened,
           setOverlayContainerOpened: handleContainerOpened,
           overlayContainerRef,
+          contextMenuContainerRef,
         }}
       >
         {children}
+        <StyledContextMenuContainer ref={contextMenuContainerRef}></StyledContextMenuContainer>
         <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened}></StyledOverlayContainer>
       </OverlayManagerContext.Provider>
     </>
@@ -65,7 +69,12 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
     --scrollbar-gap-width: ${scrollbarGap}px;
   }
 `
-
+const StyledContextMenuContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+`
 const StyledOverlayContainer = styled.div<OverlayContainerProps>`
   position: fixed;
   top: 0;
@@ -84,7 +93,7 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setScrollLocked, setOverlayContainerOpened, overlayContainerRef } = context
+  const { setScrollLocked, setOverlayContainerOpened, overlayContainerRef, contextMenuContainerRef } = context
 
   const lockScroll = useCallback(() => {
     const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
@@ -109,5 +118,6 @@ export const useOverlayManager = () => {
     openOverlayContainer,
     closeOverlayContainer,
     overlayContainerRef,
+    contextMenuContainerRef,
   }
 }

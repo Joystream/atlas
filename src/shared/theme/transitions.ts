@@ -4,14 +4,15 @@ const transitions = {
   timings: {
     loading: '600ms',
     regular: '400ms',
-    routing: '300ms',
     routingSearchOverlay: '400ms',
+    routing: '300ms',
   },
   names: {
     fade: 'fade',
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
     slideDown: 'slide-down',
+    dialog: 'dialog',
   },
 }
 

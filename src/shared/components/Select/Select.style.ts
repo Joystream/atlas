@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { labelOnTop, LabelText, styledinputStates } from '../InputBase'
 
 export const SelectWrapper = styled.div`
-  max-width: 250px;
+  width: 100%;
   position: relative;
 `
 type SelectButtonProps = {
