@@ -12,24 +12,19 @@ import {
   RemoveCoverButton,
 } from './ChannelCover.style'
 
-type BasicChannelCoverProps = {
+export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
+  editable?: boolean
+  onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onCoverRemoveClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
-type EditableProps =
-  | {
-      editable?: false
-      handleEditCover?: never
-      handleRemoveCover?: never
-    }
-  | {
-      editable: true
-      handleEditCover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-      handleRemoveCover?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-    }
 
-export type ChannelCoverProps = BasicChannelCoverProps & EditableProps
-
-const ChannelCover: React.FC<ChannelCoverProps> = ({ coverPhotoUrl, editable, handleRemoveCover, handleEditCover }) => {
+const ChannelCover: React.FC<ChannelCoverProps> = ({
+  coverPhotoUrl,
+  editable,
+  onCoverEditClick,
+  onCoverRemoveClick,
+}) => {
   const [overlayVisible, setoverlayVisible] = useState(false)
 
   return (
@@ -40,7 +35,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ coverPhotoUrl, editable, ha
           onMouseEnter={() => setoverlayVisible(true)}
           onMouseLeave={() => setoverlayVisible(false)}
         >
-          <EditCoverButton onClick={handleEditCover}>
+          <EditCoverButton onClick={onCoverEditClick}>
             <Icon name="camera" />
             <span>
               <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
@@ -48,7 +43,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({ coverPhotoUrl, editable, ha
             </span>
           </EditCoverButton>
           {coverPhotoUrl && (
-            <RemoveCoverButton onClick={handleRemoveCover}>
+            <RemoveCoverButton onClick={onCoverRemoveClick}>
               <Icon name="trash" />
               <span>Remove cover</span>
             </RemoveCoverButton>
