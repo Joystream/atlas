@@ -117,14 +117,14 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
           <SwitchTransition>
             <CSSTransition
               key={isLoading ? 'placeholder' : 'content'}
-              timeout={parseInt(transitions.timings.loading) * 0.75}
+              timeout={parseInt(transitions.timings.regular)}
               classNames={transitions.names.fade}
             >
               <CoverContainer clickable={clickable}>
                 {isLoading ? (
                   <CoverPlaceholder />
                 ) : (
-                  <>
+                  <div>
                     <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     {!!progress && (
@@ -135,7 +135,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <CoverHoverOverlay>
                       <CoverPlayIcon />
                     </CoverHoverOverlay>
-                  </>
+                  </div>
                 )}
               </CoverContainer>
             </CSSTransition>
@@ -145,7 +145,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       <SwitchTransition>
         <CSSTransition
           key={isLoading ? 'placeholder' : 'content'}
-          timeout={parseInt(transitions.timings.loading) * 0.75}
+          timeout={parseInt(transitions.timings.regular)}
           classNames={transitions.names.fade}
         >
           <InfoContainer main={main}>

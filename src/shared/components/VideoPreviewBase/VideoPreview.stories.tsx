@@ -23,14 +23,10 @@ const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
     </BrowserRouter>
   )
 }
-const PlaceholderTemplate: Story<VideoPreviewBaseProps> = (args) => (
-  <Wrapper>
-    <VideoPreviewBase />
-  </Wrapper>
-)
 
 export const Regular = Template.bind({})
 Regular.args = {
+  isLoading: true,
   title: 'Example Video',
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
@@ -42,7 +38,6 @@ Regular.args = {
   views: 100,
   thumbnailUrl: 'https://source.unsplash.com/7MAjXGUmaPw/640x380',
 }
-export const Placeholder = PlaceholderTemplate.bind({})
 
 const Wrapper = styled.div`
   max-width: 500px;

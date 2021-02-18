@@ -53,9 +53,7 @@ export const CoverContainer = styled.div<ClickableProps>`
   width: 100%;
   height: 0;
   padding-top: 56.25%;
-  transition-property: box-shadow, transform;
-  transition-duration: 0.4s;
-  transition-timing-function: ${transitions.easing};
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   :hover {
     ${(props) => clickableAnimation(props.clickable)}
