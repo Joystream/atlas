@@ -26,7 +26,7 @@ const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
 
 export const Regular = Template.bind({})
 Regular.args = {
-  isLoading: true,
+  isLoading: false,
   title: 'Example Video',
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
@@ -36,7 +36,7 @@ Regular.args = {
   duration: 100,
   progress: 0,
   views: 100,
-  thumbnailUrl: 'https://source.unsplash.com/7MAjXGUmaPw/640x380',
+  thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
 const Wrapper = styled.div`
