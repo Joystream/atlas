@@ -9,13 +9,13 @@ export const VIEWBOX_CENTER_Y = VIEWBOX_HEIGHT / 2
 
 export type CircularProgressbarProps = {
   value: number
-  circleRatio: number
-  counterClockwise: boolean
-  maxValue: number
-  minValue: number
-  strokeWidth: number
-  background: boolean
-  backgroundPadding: number
+  circleRatio?: number
+  counterClockwise?: boolean
+  maxValue?: number
+  minValue?: number
+  strokeWidth?: number
+  background?: boolean
+  backgroundPadding?: number
 }
 
 const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
