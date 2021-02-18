@@ -1,6 +1,6 @@
 import { BackgroundPattern } from '@/components'
 import { transitions } from '@/shared/theme'
-import React, { useState } from 'react'
+import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import Icon from '../Icon'
 import {
@@ -38,7 +38,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
                 <Icon name="camera" />
               </EditIconWrapper>
               <EditButtonMessage>
-                <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
+                Click Anywhere to {coverPhotoUrl ? 'Edit ' : 'Add '}
                 Cover Image
               </EditButtonMessage>
             </EditCoverButton>

@@ -1,5 +1,5 @@
 import { Avatar, Placeholder, Button, Text } from '@/shared/components'
-import { breakpoints, sizes, colors } from '@/shared/theme'
+import { breakpoints, sizes, colors, typography } from '@/shared/theme'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
 
@@ -18,10 +18,11 @@ const SUBTITLE_HEIGHT = '27px'
 
 export const TitleSection = styled.div`
   position: absolute;
-  margin-top: 40px;
+  margin-top: 50px;
   top: 0;
   width: 100%;
   @media (min-width: ${breakpoints.small}) {
+    margin-top: 40px;
     display: flex;
     align-items: center;
   }
@@ -87,11 +88,15 @@ export const SubTitlePlaceholder = styled(Placeholder)`
   }
 `
 export const StyledButton = styled(Button)`
+  padding: 12px 14px;
+  font-size: ${typography.sizes.button.medium};
   position: relative;
   z-index: 3;
   margin-top: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: 0;
     margin-left: auto;
+    padding: 14px 20px;
+    font-size: ${typography.sizes.button.large};
   }
 `
