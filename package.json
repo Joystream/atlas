@@ -95,7 +95,7 @@
     "react-transition-group": "^4.4.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
-    "use-resize-observer": "^6.1.0",
+    "use-resize-observer": "^7.0.0",
     "video.js": "^7.8.3",
     "webpack-merge": "^5.7.3"
   },

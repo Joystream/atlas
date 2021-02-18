@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/shared/theme'
-import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
-import VideoPreview from '@/components/VideoPreviewWithNavigation'
+import { Grid, Text, Placeholder } from '@/shared/components'
+import VideoPreview from '@/components/VideoPreview'
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
@@ -102,25 +102,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     createdAtGte,
   ])
 
+  const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
-      {displayedItems.map((v) => (
-        <VideoPreview
-          id={v.id}
-          channelId={v.channel.id}
-          title={v.title}
-          channelName={v.channel.handle}
-          channelAvatarURL={v.channel.avatarPhotoUrl}
-          createdAt={v.createdAt}
-          views={v.views}
-          duration={v.duration}
-          posterURL={v.thumbnailUrl}
-          showChannel={showChannel}
-          key={v.id}
-        />
-      ))}
-      {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <VideoPreviewBase key={idx} showChannel={showChannel} />
+      {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
+        <VideoPreview id={video.id} key={idx} showChannel={showChannel} />
       ))}
     </>
   )
@@ -131,7 +117,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   return (
     <section className={className}>
-      {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
+      {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )

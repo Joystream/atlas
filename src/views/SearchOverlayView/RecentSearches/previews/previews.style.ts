@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Avatar, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
 import { Link } from 'react-router-dom'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const previewSubtextCss = css`
   margin-top: ${sizes(1)};

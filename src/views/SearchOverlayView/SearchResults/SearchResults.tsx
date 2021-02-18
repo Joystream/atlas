@@ -54,6 +54,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
         <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
         {selectedIndex === 0 && (
           <AllResultsTab
+            key={query}
             loading={loading}
             videos={videos}
             channels={channels}

@@ -1,18 +1,18 @@
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 import {
-  useGetChannelQuery,
-  useGetChannelVideoCountQuery,
-  useGetChannelsQuery,
-  useFollowChannelMutation,
-  useUnfollowChannelMutation,
   GetChannelQuery,
-  GetChannelVideoCountQuery,
-  FollowChannelMutation,
-  UnfollowChannelMutation,
+  useGetChannelQuery,
   GetChannelsQuery,
   GetChannelsQueryVariables,
+  useGetChannelsQuery,
   GetBasicChannelQuery,
   useGetBasicChannelQuery,
+  GetChannelVideoCountQuery,
+  useGetChannelVideoCountQuery,
+  FollowChannelMutation,
+  useFollowChannelMutation,
+  UnfollowChannelMutation,
+  useUnfollowChannelMutation,
 } from '@/api/queries'
 
 type BasicChannelOpts = QueryHookOptions<GetBasicChannelQuery>
