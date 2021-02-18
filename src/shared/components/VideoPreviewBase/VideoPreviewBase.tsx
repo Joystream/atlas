@@ -154,7 +154,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 {isLoading ? (
                   <Placeholder rounded />
                 ) : (
-                  <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <StyledAvatar
                       imageUrl={channelAvatarUrl}
                       channelClickable={channelClickable}
@@ -168,7 +168,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               {isLoading ? (
                 <Placeholder height={main ? 45 : 18} width="60%" />
               ) : (
-                <Anchor to={videoHref ?? ''} onClick={handleAnchorClick(videoHref)}>
+                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                   <TitleHeader
                     variant="h6"
                     main={main}
@@ -184,7 +184,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 (isLoading ? (
                   <SpacedPlaceholder height="12px" width="60%" />
                 ) : (
-                  <Anchor to={channelHref ?? ''} onClick={handleAnchorClick(channelHref)}>
+                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <ChannelHandle
                       variant="subtitle2"
                       channelClickable={channelClickable}
