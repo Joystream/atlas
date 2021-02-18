@@ -4,8 +4,8 @@ import { SVG, Background, Trail, StyledPath } from './CircularProgressbar.style'
 export const VIEWBOX_WIDTH = 100
 export const VIEWBOX_HEIGHT = 100
 export const VIEWBOX_HEIGHT_HALF = VIEWBOX_HEIGHT / 2
-export const VIEWBOX_CENTER_X = 50
-export const VIEWBOX_CENTER_Y = 50
+export const VIEWBOX_CENTER_X = VIEWBOX_WIDTH / 2
+export const VIEWBOX_CENTER_Y = VIEWBOX_HEIGHT / 2
 
 export type CircularProgressbarProps = {
   value: number
