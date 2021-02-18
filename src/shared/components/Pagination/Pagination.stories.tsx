@@ -1,13 +1,12 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
 import Pagination from './Pagination'
 
 export default {
   title: 'Shared/Pagination',
   component: Pagination,
   argTypes: {
-    take: {
+    itemsPerPage: {
       defaultValue: 10,
     },
     totalCount: {
