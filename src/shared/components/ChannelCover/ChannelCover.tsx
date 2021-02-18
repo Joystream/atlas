@@ -12,6 +12,7 @@ import {
   Media,
   MediaWrapper,
   RemoveCoverButton,
+  CoverWrapper,
 } from './ChannelCover.style'
 
 export type ChannelCoverProps = {
@@ -27,49 +28,41 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   onCoverEditClick,
   onCoverRemoveClick,
 }) => {
-  const [overlayVisible, setoverlayVisible] = useState(false)
-
   return (
-    <MediaWrapper>
-      {editable && (
-        <EditableControls
-          withImage={!!coverPhotoUrl}
-          onMouseEnter={() => setoverlayVisible(true)}
-          onMouseLeave={() => setoverlayVisible(false)}
-        >
-          <EditCoverButton onClick={onCoverEditClick}>
-            <EditIconWrapper>
-              <Icon name="camera" />
-            </EditIconWrapper>
-            <EditButtonMessage>
-              <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
-              Cover Image
-            </EditButtonMessage>
-          </EditCoverButton>
-          {coverPhotoUrl && (
-            <RemoveCoverButton onClick={onCoverRemoveClick}>
-              <Icon name="trash" />
-              <span>Remove cover</span>
-            </RemoveCoverButton>
-          )}
-        </EditableControls>
-      )}
-      <Media>
-        <TransitionGroup>
-          <CSSTransition
-            key={coverPhotoUrl ? 'cover' : 'pattern'}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-          >
-            {coverPhotoUrl ? (
-              <CoverImage editable={editable && overlayVisible} src={coverPhotoUrl} />
-            ) : (
-              <BackgroundPattern />
+    <CoverWrapper>
+      <MediaWrapper>
+        {editable && (
+          <EditableControls withImage={!!coverPhotoUrl}>
+            <EditCoverButton onClick={onCoverEditClick}>
+              <EditIconWrapper>
+                <Icon name="camera" />
+              </EditIconWrapper>
+              <EditButtonMessage>
+                <span className="large-viewports"> Click Anywhere to </span> {coverPhotoUrl ? 'Edit ' : 'Add '}
+                Cover Image
+              </EditButtonMessage>
+            </EditCoverButton>
+            {coverPhotoUrl && (
+              <RemoveCoverButton onClick={onCoverRemoveClick}>
+                <Icon name="trash" />
+                <span>Remove cover</span>
+              </RemoveCoverButton>
             )}
-          </CSSTransition>
-        </TransitionGroup>
-      </Media>
-    </MediaWrapper>
+          </EditableControls>
+        )}
+        <Media>
+          <TransitionGroup>
+            <CSSTransition
+              key={coverPhotoUrl ? 'cover' : 'pattern'}
+              timeout={parseInt(transitions.timings.loading)}
+              classNames={transitions.names.fade}
+            >
+              {coverPhotoUrl ? <CoverImage src={coverPhotoUrl} /> : <BackgroundPattern />}
+            </CSSTransition>
+          </TransitionGroup>
+        </Media>
+      </MediaWrapper>
+    </CoverWrapper>
   )
 }
 

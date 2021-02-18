@@ -4,18 +4,66 @@ import styled from '@emotion/styled'
 
 type CoverImageProps = {
   src: string
-  editable?: boolean
 }
 
 type EditableControlsProps = {
   withImage?: boolean
 }
 
+const CONTENT_OVERLAP_MAP = {
+  BASE: 0,
+  SMALL: 0,
+  MEDIUM: 0,
+  LARGE: 0,
+  XLARGE: 200,
+  XXLARGE: 300,
+}
+const GRADIENT_OVERLAP = 50
+const GRADIENT_HEIGHT = 100
+
+export const CoverWrapper = styled.div`
+  position: relative;
+  padding-bottom: 50px;
+  // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
+  // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
+  margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
+    padding-bottom: 0px;
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
+    margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
+    padding-bottom: 100px;
+  }
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
+    padding-bottom: 200px;
+  }
+  @media screen and (min-width: ${breakpoints.xxlarge}) {
+    margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
+  }
+`
+
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  height: 280px;
   width: calc(100% + calc(2 * var(--global-horizontal-padding)));
+  height: 170px;
   position: relative;
+  @media screen and (min-width: ${breakpoints.small}) {
+    height: 270px;
+  }
+`
+
+export const Media = styled.div`
+  width: 100%;
+  height: 0;
+  padding-top: 25%;
+  position: relative;
+  z-index: ${zIndex.background};
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
 `
 
 export const EditableControls = styled.div<EditableControlsProps>`
@@ -24,6 +72,9 @@ export const EditableControls = styled.div<EditableControlsProps>`
   position: absolute;
   height: 100%;
   top: 0;
+  :hover + ${Media} {
+    opacity: 0.6;
+  }
   :hover button {
     opacity: 1;
   }
@@ -87,16 +138,17 @@ export const EditCoverButton = styled.button`
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
   @media screen and (min-width: ${breakpoints.small}) {
+    left: initial;
+    bottom: initial;
     height: 100%;
     width: 100%;
     display: flex;
     align-items: flex-end;
     opacity: 1;
     justify-content: center;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
     color: ${colors.gray[200]};
     opacity: 0;
-    padding-bottom: 50px;
   }
 `
 
@@ -138,13 +190,6 @@ export const EditButtonMessage = styled.span`
   }
 `
 
-export const Media = styled.div`
-  width: 100%;
-  height: 400px;
-  position: relative;
-  z-index: ${zIndex.background};
-`
-
 export const CoverImage = styled.div<CoverImageProps>`
   position: absolute;
   top: 0;
@@ -156,9 +201,52 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-position: center;
   background-attachment: local;
   background-size: cover;
-
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0) 100%),
-    url(${({ src }) => src});
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  opacity: ${({ editable }) => (editable ? 0.6 : 1)};
+
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
+  @media screen and (min-width: ${breakpoints.small}) {
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${Math.min(CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP, 0)}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${Math.min(CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP, 0)}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
+  }
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
+  }
+  @media screen and (min-width: ${breakpoints.xxlarge}) {
+    background-image: linear-gradient(
+        0deg,
+        black 0%,
+        black ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP}px,
+        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
+      ),
+      url(${({ src }) => src});
+  }
 `
