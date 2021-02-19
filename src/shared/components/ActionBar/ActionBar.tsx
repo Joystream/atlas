@@ -5,24 +5,32 @@ import {
   StyledPrimaryText,
   StyledSecondaryText,
   StyledButtonsContainer,
+  StyledPrimaryButton,
   StyledSecondaryButton,
 } from './ActionBar.style'
-import { Button } from '@/shared/components'
+import type { IconType } from '../Icon'
 
 export type ActionBarProps = {
   variant: 'primary' | 'secondary'
-  primaryText: string
-  secondaryText: string
-  primaryButtonText: string
-  secondaryButtonText: string
+  primaryText?: string
+  secondaryText?: string
+  primaryButtonText?: string
+  secondaryButtonText?: string
+  secondaryButtonIcon?: IconType
+  onClickPrimaryButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClickSecondaryButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({
+  children,
   variant,
   primaryText,
   secondaryText,
   primaryButtonText,
   secondaryButtonText,
+  secondaryButtonIcon,
+  onClickPrimaryButton,
+  onClickSecondaryButton,
 }) => {
   const isPrimary = variant === 'primary'
   return (
@@ -33,11 +41,21 @@ const ActionBar: React.FC<ActionBarProps> = ({
             <StyledPrimaryText>{primaryText}</StyledPrimaryText>
             <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
           </>
-        ) : null}
+        ) : (
+          children
+        )}
       </StyledInfoContainer>
       <StyledButtonsContainer>
-        <StyledSecondaryButton variant="secondary">{secondaryButtonText}</StyledSecondaryButton>
-        <Button>{primaryButtonText}</Button>
+        {secondaryButtonText && (
+          <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onClickSecondaryButton}>
+            {secondaryButtonText}
+          </StyledSecondaryButton>
+        )}
+        {primaryButtonText && (
+          <StyledPrimaryButton isActionBarPrimary={isPrimary} onClick={onClickPrimaryButton}>
+            {primaryButtonText}
+          </StyledPrimaryButton>
+        )}
       </StyledButtonsContainer>
     </StyledActionBarContainer>
   )

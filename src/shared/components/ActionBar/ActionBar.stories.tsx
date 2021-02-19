@@ -8,8 +8,8 @@ export default {
   args: {
     primaryText: 'Fee: 0.2 Joy',
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
-    primaryButtonText: 'Start Publishing',
-    secondaryButtonText: 'Save As Draft',
+    primaryButtonText: 'Edit the channel (0.2 JOY)',
+    secondaryButtonText: 'Cancel',
   },
   argTypes: {
     variant: {
