@@ -4,6 +4,7 @@ import Text from '../Text'
 
 export const MessageWrapper = styled.div`
   position: relative;
+  margin: ${sizes(6)} 0;
   padding: ${sizes(4)};
   border: 1px solid ${colors.gray[700]};
   width: 100%;

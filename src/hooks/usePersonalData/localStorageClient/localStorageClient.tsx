@@ -7,6 +7,7 @@ import {
   PersonalDataClient,
   WatchedVideo,
   RecentSearch,
+  DismissedMessage,
 } from './types'
 
 const promisify = <T,>(fn: (...args: unknown[]) => T) => (...args: Parameters<typeof fn>) =>
@@ -107,14 +108,28 @@ const setRecentSearch = async (id: string, type: 'video' | 'channel') => {
 
   writeToLocalStorage('recentSearches', newRecentSearches)
 }
+
+const dismissedMessages = promisify(() => readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? [])
+const setDismissedMessages = async (id: string, add = true) => {
+  const currentDismissedMessages = await dismissedMessages()
+
+  const newDismissedMessages = add
+    ? [{ id }, ...currentDismissedMessages.filter((dissmissedMessage) => dissmissedMessage.id !== id)]
+    : [...currentDismissedMessages.filter((dissmissedMessage) => dissmissedMessage.id !== id)]
+
+  writeToLocalStorage('dismissedMessages', newDismissedMessages)
+}
+
 export const getInitialPersonalData = () => {
   const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
   const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
   const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
+  const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
   return {
     watchedVideos,
     followedChannels,
     recentSearches,
+    dismissedMessages,
   }
 }
 
@@ -129,6 +144,8 @@ const localStorageClient: PersonalDataClient = {
   setChannelFollowing,
   recentSearches,
   setRecentSearch,
+  dismissedMessages,
+  setDismissedMessages,
 }
 
 export default localStorageClient
