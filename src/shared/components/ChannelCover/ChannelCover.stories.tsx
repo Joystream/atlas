@@ -11,8 +11,8 @@ export default {
         required: false,
       },
     },
-    handleEditCover: { action: 'edit/add cover' },
-    handleRemoveCover: { action: 'remove cover' },
+    onCoverEditClick: { action: 'edit/add cover' },
+    onCoverRemoveClick: { action: 'remove cover' },
     coverPhotoUrl: {
       defaultValue: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
     },

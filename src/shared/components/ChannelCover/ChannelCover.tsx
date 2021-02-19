@@ -32,10 +32,11 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
     <CoverWrapper>
       <MediaWrapper>
         {editable && (
-          <EditableControls withImage={!!coverPhotoUrl}>
+          <EditableControls>
             <EditCoverButton onClick={onCoverEditClick}>
               <EditIconWrapper>
-                <Icon name="camera" />
+                <Icon className="desktop" name="camera" />
+                <Icon className="mobile" name="gear" />
               </EditIconWrapper>
               <EditButtonMessage>
                 Click Anywhere to {coverPhotoUrl ? 'Edit ' : 'Add '}

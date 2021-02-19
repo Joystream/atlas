@@ -92,10 +92,6 @@ export const CoverImage = styled.div<CoverImageProps>`
   }
 `
 
-type EditableControlsProps = {
-  withImage?: boolean
-}
-
 export const CoverWrapper = styled.div`
   position: relative;
   padding-bottom: 150px;
@@ -121,7 +117,7 @@ export const CoverWrapper = styled.div`
   }
 `
 
-export const EditableControls = styled.div<EditableControlsProps>`
+export const EditableControls = styled.div`
   z-index: 1;
   width: 100%;
   height: 100%;
@@ -140,10 +136,10 @@ export const EditableControls = styled.div<EditableControlsProps>`
 
 const commonButtonStyles = css`
   border: none;
-  background: ${colors.gray[800]};
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 100%;
-  height: 35px;
-  width: 35px;
+  height: 32px;
+  width: 32px;
   cursor: pointer;
   position: absolute;
   display: flex;
@@ -216,9 +212,17 @@ export const EditCoverButton = styled.button`
 `
 
 export const EditIconWrapper = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   svg {
-    height: ${sizes(3)};
-    fill: ${colors.white};
+    height: 14px;
+    &.mobile {
+      display: inline;
+    }
+    &.desktop {
+      display: none;
+    }
   }
   @media screen and (min-width: ${breakpoints.small}) {
     width: 40px;
@@ -226,13 +230,16 @@ export const EditIconWrapper = styled.span`
     margin-right: 12px;
     border: 2px solid ${colors.gray[200]};
     border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     svg {
       width: 18px;
       margin: 0;
       fill: ${colors.gray[200]};
+      &.mobile {
+        display: none;
+      }
+      &.desktop {
+        display: inline;
+      }
     }
   }
 `
