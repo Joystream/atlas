@@ -1,6 +1,6 @@
+import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import ActionBar, { ActionBarProps } from './ActionBar'
-import React from 'react'
 
 export default {
   title: 'Shared/ActionBar',
@@ -8,13 +8,10 @@ export default {
   args: {
     primaryText: 'Fee: 0.2 Joy',
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
+    detailsText: 'Video details saved as draft (2 min ago)',
+    detailsTextIcon: 'info',
     primaryButtonText: 'Edit the channel (0.2 JOY)',
     secondaryButtonText: 'Cancel',
-  },
-  argTypes: {
-    variant: {
-      defaultValue: 'primary',
-    },
   },
 } as Meta
 

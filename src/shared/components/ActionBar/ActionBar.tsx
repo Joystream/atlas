@@ -4,17 +4,19 @@ import {
   StyledInfoContainer,
   StyledPrimaryText,
   StyledSecondaryText,
+  StyledDetailsTextContainer,
   StyledButtonsContainer,
-  StyledPrimaryButton,
   StyledSecondaryButton,
 } from './ActionBar.style'
+import { Button, Icon } from '@/shared/components'
 import type { IconType } from '../Icon'
 
 export type ActionBarProps = {
-  variant: 'primary' | 'secondary'
   primaryText?: string
   secondaryText?: string
   primaryButtonText?: string
+  detailsText?: string
+  detailsTextIcon: IconType
   secondaryButtonText?: string
   secondaryButtonIcon?: IconType
   onClickPrimaryButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -22,40 +24,34 @@ export type ActionBarProps = {
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({
-  children,
-  variant,
   primaryText,
   secondaryText,
   primaryButtonText,
   secondaryButtonText,
+  detailsText,
+  detailsTextIcon,
   secondaryButtonIcon,
   onClickPrimaryButton,
   onClickSecondaryButton,
 }) => {
-  const isPrimary = variant === 'primary'
   return (
     <StyledActionBarContainer>
       <StyledInfoContainer>
-        {isPrimary ? (
-          <>
-            <StyledPrimaryText>{primaryText}</StyledPrimaryText>
-            <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
-          </>
-        ) : (
-          children
-        )}
+        <StyledPrimaryText>{primaryText}</StyledPrimaryText>
+        <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
       </StyledInfoContainer>
       <StyledButtonsContainer>
-        {secondaryButtonText && (
+        {detailsText && (
+          <StyledDetailsTextContainer>
+            {detailsText} <Icon name={detailsTextIcon} />
+          </StyledDetailsTextContainer>
+        )}
+        {secondaryButtonText && !detailsText && (
           <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onClickSecondaryButton}>
             {secondaryButtonText}
           </StyledSecondaryButton>
         )}
-        {primaryButtonText && (
-          <StyledPrimaryButton isActionBarPrimary={isPrimary} onClick={onClickPrimaryButton}>
-            {primaryButtonText}
-          </StyledPrimaryButton>
-        )}
+        {primaryButtonText && <Button onClick={onClickPrimaryButton}>{primaryButtonText}</Button>}
       </StyledButtonsContainer>
     </StyledActionBarContainer>
   )
