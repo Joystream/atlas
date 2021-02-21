@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { fluidRange } from 'polished'
+import { fluidRange, transparentize } from 'polished'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
@@ -39,6 +39,9 @@ const clickableAnimation = (clickable: boolean) =>
 
         ${CoverHoverOverlay} {
           opacity: 1;
+        }
+        ${CoverIcon} {
+          transform: translateY(0);
         }
         ${CoverIcon} {
           transform: translateY(0);
@@ -148,12 +151,33 @@ export const CoverHoverOverlay = styled.div`
 export const CoverIcon = styled(Icon)`
   transform: translateY(40px);
   transition: all ${transitions.timings.regular} ${transitions.easing};
-  width: 54px;
-  height: 54px;
   color: ${colors.white};
 `
-
-export const CoverPlayIcon = ({ ...props }) => <CoverIcon name="play-outline" {...props} />
+export const CoverPlayIcon = ({ ...props }) => (
+  <CoverIcon
+    css={css`
+      width: 54px;
+      height: 54px;
+    `}
+    name="play-outline"
+    {...props}
+  />
+)
+export const CoverEditIcon = ({ ...props }) => (
+  <CoverIcon
+    css={css`
+      width: 46px;
+      height: 46px;
+      padding-bottom: 6px;
+      border-bottom: 3px solid ${colors.white};
+    `}
+    name="pencil"
+    {...props}
+  />
+)
+export const DraftIcon = ({ ...props }) => <Icon css={css``} name="page" {...props} />
+// TODO: export the right icon from figma
+export const UnlistedIcon = ({ ...props }) => <Icon css={css``} name="page" {...props} />
 
 export const ProgressOverlay = styled.div`
   position: absolute;
@@ -171,6 +195,19 @@ export const ProgressBar = styled.div`
   height: 100%;
   width: 0;
   background-color: ${colors.blue['500']};
+`
+
+export const CoverVideoPublishingStateOverlay = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  bottom: ${sizes(2)};
+  left: ${sizes(2)};
+  padding: ${sizes(1)} ${sizes(2)};
+  background-color: ${transparentize(0.1, colors.black)};
+  color: ${colors.gray[300]};
+  font-size: ${typography.sizes.body2};
 `
 
 export const CoverDurationOverlay = styled.div`
@@ -219,4 +256,11 @@ export const CoverPlaceholder = styled(Placeholder)`
   left: 0;
   width: 100%;
   height: 100%;
+`
+
+export const CoverCheckboxContainer = styled.div`
+  position: absolute;
+  top: ${sizes(2)};
+  left: ${sizes(2)};
+  padding: ${sizes(2)} ${sizes(2)};
 `

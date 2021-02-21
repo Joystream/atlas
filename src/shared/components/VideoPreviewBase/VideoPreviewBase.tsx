@@ -21,6 +21,11 @@ import {
   CoverPlaceholder,
   SpacedPlaceholder,
   CoverImageContainer,
+  CoverVideoPublishingStateOverlay,
+  CoverEditIcon,
+  DraftIcon,
+  UnlistedIcon,
+  CoverCheckboxContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDurationShort } from '@/utils/time'
@@ -28,6 +33,7 @@ import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { Placeholder } from '..'
+import Checkbox from '../Checkbox'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -37,6 +43,21 @@ export type VideoPreviewBaseMetaProps = {
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
 }
+
+type VideoPreviewPublisherProps =
+  | {
+      publisherMode: true
+      videoPublishState?: 'default' | 'draft' | 'unlisted'
+      selected: boolean
+      onSelectClick: (value: boolean) => void
+    }
+  | {
+      publisherMode?: false | undefined
+      videoPublishState?: undefined | 'default'
+      selected?: undefined
+      onSelectClick?: undefined
+    }
+
 export type VideoPreviewBaseProps = {
   title?: string
   channelHandle?: string
@@ -51,7 +72,8 @@ export type VideoPreviewBaseProps = {
   videoHref?: string
   channelHref?: string
   className?: string
-} & VideoPreviewBaseMetaProps
+} & VideoPreviewBaseMetaProps &
+  VideoPreviewPublisherProps
 
 export const MIN_VIDEO_PREVIEW_WIDTH = 300
 const MAX_VIDEO_PREVIEW_WIDTH = 600
@@ -79,7 +101,11 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   showChannel = true,
   showMeta = true,
   main = false,
+  videoPublishState = 'default',
+  publisherMode = false,
+  selected,
   onChannelClick,
+  onSelectClick,
   onClick,
   className,
 }) => {
@@ -127,15 +153,33 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 ) : (
                   <CoverImageContainer>
                     <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
+                    {videoPublishState !== 'default' && (
+                      <CoverVideoPublishingStateOverlay>
+                        {videoPublishState === 'draft' && <DraftIcon />}
+                        {videoPublishState === 'unlisted' && <UnlistedIcon />}
+                        {videoPublishState}
+                      </CoverVideoPublishingStateOverlay>
+                    )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                    <CoverHoverOverlay>
+                      {publisherMode && (
+                        <CoverCheckboxContainer>
+                          <Checkbox
+                            value={!!selected}
+                            onChange={(value) => {
+                              onSelectClick && onSelectClick(value)
+                              console.log({ value3: value, onSelectClick })
+                            }}
+                          />
+                        </CoverCheckboxContainer>
+                      )}
+                      {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
+                    </CoverHoverOverlay>
                     {!!progress && (
                       <ProgressOverlay>
                         <ProgressBar style={{ width: `${progress}%` }} />
                       </ProgressOverlay>
                     )}
-                    <CoverHoverOverlay>
-                      <CoverPlayIcon />
-                    </CoverHoverOverlay>
                   </CoverImageContainer>
                 )}
               </CSSTransition>

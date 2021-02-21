@@ -15,6 +15,8 @@ export { ReactComponent as ChevronRight } from './chevron-right-big.svg'
 export { ReactComponent as ChevronLeft } from './chevron-left-big.svg'
 export { ReactComponent as Check } from './check.svg'
 export { ReactComponent as Dash } from './dash.svg'
+export { ReactComponent as Pencil } from './pencil.svg'
+export { ReactComponent as Page } from './page.svg'
 export { ReactComponent as Play } from './play.svg'
 export { ReactComponent as PlayOutline } from './play-outline.svg'
 export { ReactComponent as Pause } from './pause.svg'
@@ -46,6 +48,8 @@ const icons = [
   'chevron-left',
   'check',
   'dash',
+  'pencil',
+  'page',
   'play',
   'play-outline',
   'pause',
