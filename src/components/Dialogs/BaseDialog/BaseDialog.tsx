@@ -3,7 +3,6 @@ import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
 import { StyledContainer, StyledExitButton } from './BaseDialog.style'
-import { Icon } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 export type BaseDialogProps = {
@@ -65,11 +64,7 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
         <StyledContainer className={className}>
           {showDialog && (
             <>
-              {exitButton && (
-                <StyledExitButton aria-label="close dialog" onClick={onExitClick}>
-                  <Icon name="times" color="white" />
-                </StyledExitButton>
-              )}
+              {exitButton && <StyledExitButton aria-label="close dialog" onClick={onExitClick} icon="close" />}
               {children}
             </>
           )}

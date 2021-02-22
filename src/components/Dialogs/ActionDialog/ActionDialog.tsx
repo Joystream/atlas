@@ -1,6 +1,7 @@
 import React from 'react'
 import BaseDialog, { BaseDialogProps } from '../BaseDialog'
-import { ActionsContainer, StyledSecondaryButton, ButtonsContainer, StyledButton } from './ActionDialog.style'
+import { ActionsContainer, ButtonsContainer } from './ActionDialog.style'
+import { Button } from '@/shared/components'
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
@@ -40,11 +41,11 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         <ActionsContainer>
           {additionalActionsNode}
           <ButtonsContainer>
-            {primaryButtonText && <StyledButton onClick={handlePrimaryButtonClick}>{primaryButtonText}</StyledButton>}
+            {primaryButtonText && <Button onClick={handlePrimaryButtonClick}>{primaryButtonText}</Button>}
             {secondaryButtonText && (
-              <StyledSecondaryButton variant="tertiary" onClick={handleSecondaryButtonClick}>
+              <Button variant="secondary" onClick={handleSecondaryButtonClick}>
                 {secondaryButtonText}
-              </StyledSecondaryButton>
+              </Button>
             )}
           </ButtonsContainer>
         </ActionsContainer>

@@ -1,8 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
-import { HiddenInput, CropContainer, StyledImage, StyledActionDialog, CropPlaceholder } from './ImageCropDialog.style'
+import {
+  HiddenInput,
+  CropContainer,
+  StyledImage,
+  StyledActionDialog,
+  CropPlaceholder,
+  HeaderContainer,
+  AlignInfoContainer,
+  AlignInfo,
+  HeaderText,
+} from './ImageCropDialog.style'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
+import { Icon } from '@/shared/components'
 
 export type ImageCropDialogProps = {
   imageType: 'avatar' | 'videoThumbnail' | 'cover'
@@ -112,7 +123,13 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
       onExit={handleDialogExit}
       {...actionDialogProps}
     >
-      <HiddenInput type="file" accept="image/*" onChange={handleFileChange} ref={inputRef} />
+      <HeaderContainer>
+        <HeaderText variant="h6">Crop and position</HeaderText>
+      </HeaderContainer>
+      <AlignInfoContainer>
+        <Icon name="drag" />
+        <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
+      </AlignInfoContainer>
       {editedImageHref ? (
         <CropContainer rounded={imageType === 'avatar'}>
           <StyledImage src={editedImageHref} ref={imageRef} />
@@ -120,6 +137,7 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
       ) : (
         <CropPlaceholder />
       )}
+      <HiddenInput type="file" accept="image/*" onChange={handleFileChange} ref={inputRef} />
     </StyledActionDialog>
   )
 }

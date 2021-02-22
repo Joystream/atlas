@@ -1,15 +1,8 @@
 import styled from '@emotion/styled'
 import ActionDialog from '../ActionDialog'
 import { css } from '@emotion/react'
-import { Placeholder } from '@/shared/components'
-
-export const HiddenInput = styled.input`
-  opacity: 0;
-  visibility: hidden;
-  position: fixed;
-  top: -99999px;
-  left: -99999px;
-`
+import { Placeholder, Text } from '@/shared/components'
+import { colors, sizes } from '@/shared/theme'
 
 export const StyledActionDialog = styled(ActionDialog)`
   max-width: 536px;
@@ -20,6 +13,34 @@ const roundedCropperCss = css`
   .cropper-face {
     border-radius: 50%;
   }
+`
+
+export const HeaderContainer = styled.div`
+  padding-bottom: ${sizes(4)};
+  border-bottom: 1px solid ${colors.gray['500']};
+`
+
+export const HeaderText = styled(Text)`
+  padding: ${sizes(2.5)} 0;
+`
+
+export const AlignInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${sizes(4)} 0;
+`
+
+export const AlignInfo = styled(Text)`
+  margin-left: ${sizes(2)};
+`
+
+export const HiddenInput = styled.input`
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: -99999px;
+  left: -99999px;
 `
 
 const cropAreaSizeCss = css`

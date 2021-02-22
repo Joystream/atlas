@@ -15,13 +15,14 @@ export { ReactComponent as ChevronRight } from './chevron-right-big.svg'
 export { ReactComponent as ChevronLeft } from './chevron-left-big.svg'
 export { ReactComponent as Check } from './check.svg'
 export { ReactComponent as Dash } from './dash.svg'
+export { ReactComponent as Drag } from './drag.svg'
 export { ReactComponent as Play } from './play.svg'
 export { ReactComponent as PlayOutline } from './play-outline.svg'
 export { ReactComponent as Pause } from './pause.svg'
 export { ReactComponent as SoundOn } from './sound-on.svg'
 export { ReactComponent as SoundOff } from './sound-off.svg'
 export { ReactComponent as Search } from './search.svg'
-export { ReactComponent as Times } from './times.svg'
+export { ReactComponent as Close } from './close.svg'
 export { ReactComponent as Videos } from './videos.svg'
 export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
@@ -48,14 +49,15 @@ const icons = [
   'chevron-right',
   'chevron-left',
   'check',
+  'close',
   'dash',
+  'drag',
   'play',
   'play-outline',
   'pause',
   'search',
   'sound-on',
   'sound-off',
-  'times',
   'videos',
   'info',
   'error',
