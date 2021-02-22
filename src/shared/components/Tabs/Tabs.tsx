@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TabsGroup, Tab } from './Tabs.styles'
 
-type TabsProps = {
+export type TabsProps = {
   tabs: string[]
   initialIndex?: number
   onSelectTab: (idx: number) => void
