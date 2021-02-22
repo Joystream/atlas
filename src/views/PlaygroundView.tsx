@@ -7,9 +7,32 @@ import Link from '@/components/Link'
 type Inputs = {
   title: string
   videoSelect: string
+  header: string
+  check: string
+  textarea: string
 }
 
-const titleValidation = { required: true, maxLength: 20 }
+const textFieldValidation = (inputName: string) => ({
+  required: {
+    value: true,
+    message: `${inputName} cannot be empty`,
+  },
+  minLength: {
+    value: 3,
+    message: `${inputName} must be longer than 3 characters.`,
+  },
+  maxLength: {
+    value: 20,
+    message: `${inputName} cannot be longer than 20 characters.`,
+  },
+})
+
+const selectValidation = () => ({
+  required: {
+    value: true,
+    message: 'Option must be selected',
+  },
+})
 
 const items: SelectedItem[] = [
   { name: 'Public (Anyone can see this video', value: 'public' },
