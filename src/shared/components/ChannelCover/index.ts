@@ -1,2 +1,3 @@
 import ChannelCover from './ChannelCover'
-export default ChannelCover
+import { CONTENT_OVERLAP_MAP } from './ChannelCover.style'
+export { ChannelCover as default, CONTENT_OVERLAP_MAP }

@@ -2,7 +2,7 @@ import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/s
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-const CONTENT_OVERLAP_MAP = {
+export const CONTENT_OVERLAP_MAP = {
   BASE: 0,
   SMALL: 0,
   MEDIUM: 0,
@@ -26,10 +26,9 @@ export const MediaWrapper = styled.div`
 export const Media = styled.div`
   width: 100%;
   height: 0;
+  padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  padding-top: 30%;
 `
 
 export const CoverImage = styled.div<CoverImageProps>`
@@ -94,16 +93,13 @@ export const CoverImage = styled.div<CoverImageProps>`
 
 export const CoverWrapper = styled.div`
   position: relative;
-  padding-bottom: 150px;
   // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
   // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
   margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
   @media screen and (min-width: ${breakpoints.small}) {
-    padding-bottom: 40px;
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    padding-bottom: 0px;
     margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
   }
   @media screen and (min-width: ${breakpoints.large}) {
@@ -118,11 +114,9 @@ export const CoverWrapper = styled.div`
 `
 
 export const EditableControls = styled.div`
-  z-index: 1;
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
   display: flex;
   justify-content: center;
 
@@ -181,9 +175,6 @@ export const RemoveCoverButton = styled.button`
       fill: ${colors.white};
     }
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    top: ${sizes(4)};
-  }
 `
 
 export const EditCoverButton = styled.button`
@@ -200,14 +191,9 @@ export const EditCoverButton = styled.button`
     height: 100%;
     width: 100%;
     display: flex;
-    align-items: flex-end;
     justify-content: center;
     color: ${colors.gray[200]};
     opacity: 0;
-  }
-
-  @media screen and (min-width: ${breakpoints.medium}) {
-    align-items: center;
   }
 `
 

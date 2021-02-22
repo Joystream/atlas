@@ -1,4 +1,4 @@
-import { Placeholder, Text } from '@/shared/components'
+import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
 import { breakpoints, sizes, colors, typography } from '@/shared/theme'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
@@ -17,15 +17,6 @@ const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
-
-const CONTENT_OVERLAP_MAP = {
-  BASE: 0,
-  SMALL: 0,
-  MEDIUM: 0,
-  LARGE: 100,
-  XLARGE: 200,
-  XXLARGE: 300,
-}
 
 const INFO_BOTTOM_MARGIN = 75
 
