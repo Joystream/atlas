@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { WithValue } from '../../../../.storybook/WithValue'
 import { Meta, Story } from '@storybook/react'
@@ -20,15 +20,12 @@ export default {
   },
 } as Meta
 
-const SingleTemplate: Story<CheckboxProps> = (args) => {
-  const [value, setvalue] = useState(false)
+const SingleTemplate: Story<CheckboxProps> = (args) => (
+  <WithValue initial={true} actionName="onChange">
+    {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue}></Checkbox>}
+  </WithValue>
+)
 
-  return (
-    <WithValue initial={true} actionName="onChange">
-      {(_value, setValue) => <Checkbox {...args} value={value} onChange={setvalue}></Checkbox>}
-    </WithValue>
-  )
-}
 const Template: Story<CheckboxProps> = (args) => (
   <>
     <WithValue initial={false} actionName="onChange">

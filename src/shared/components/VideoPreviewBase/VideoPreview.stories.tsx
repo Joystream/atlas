@@ -3,6 +3,7 @@ import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
 import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
 import { BrowserRouter } from 'react-router-dom'
+import { css } from '@emotion/react'
 
 export default {
   title: 'Shared/VideoPreview',
@@ -18,25 +19,28 @@ export default {
     onClick: { table: { disable: true } },
     onChannelClick: { table: { disable: true } },
     onCoverResize: { table: { disable: true } },
+    publisherMode: { table: { disable: true } },
   },
 } as Meta
 
 const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
+  return (
+    <BrowserRouter>
+      <Wrapper main={args.main}>
+        <VideoPreviewBase {...args} createdAt={createdAtDate} />
+      </Wrapper>
+    </BrowserRouter>
+  )
+}
+
+const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
+  const createdAtDate = new Date(createdAt ?? '')
   const [value, setvalue] = useState(false)
   return (
     <BrowserRouter>
       <Wrapper main={args.main}>
-        <VideoPreviewBase
-          {...args}
-          publisherMode
-          selected={value}
-          onSelectClick={(value) => {
-            console.log({ value })
-            setvalue(value)
-          }}
-          createdAt={createdAtDate}
-        />
+        <VideoPreviewBase {...args} publisherMode selected={value} onSelectClick={setvalue} createdAt={createdAtDate} />
       </Wrapper>
     </BrowserRouter>
   )
@@ -59,7 +63,7 @@ Regular.args = {
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
-export const PublisherDefault = Template.bind({})
+export const PublisherDefault = Publisher.bind({})
 PublisherDefault.args = {
   isLoading: false,
   title: 'Example Video',
@@ -76,7 +80,7 @@ PublisherDefault.args = {
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
-export const PublisherDraft = Template.bind({})
+export const PublisherDraft = Publisher.bind({})
 PublisherDraft.args = {
   isLoading: false,
   title: 'Example Video',
@@ -90,10 +94,10 @@ PublisherDraft.args = {
   views: 10000,
   publisherMode: true,
   videoPublishState: 'draft',
-  thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
+  thumbnailUrl: undefined,
 }
 
-export const PublisherUnlisted = Template.bind({})
+export const PublisherUnlisted = Publisher.bind({})
 PublisherUnlisted.args = {
   isLoading: false,
   title: 'Example Video',
@@ -110,6 +114,66 @@ PublisherUnlisted.args = {
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
+const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
+  const createdAtDate = new Date(createdAt ?? '')
+  const [value, setvalue] = useState(false)
+  const [value2, setvalue2] = useState(false)
+  const [value3, setvalue3] = useState(false)
+  const isAnySelected = value || value2 || value3
+  return (
+    <BrowserRouter>
+      <ContainerMix>
+        <VideoPreviewBase
+          {...args}
+          publisherMode
+          videoPublishState={'default'}
+          selected={value2}
+          onSelectClick={setvalue2}
+          createdAt={createdAtDate}
+        />
+        <VideoPreviewBase
+          {...args}
+          publisherMode
+          videoPublishState={'draft'}
+          selected={value3}
+          onSelectClick={setvalue3}
+          createdAt={createdAtDate}
+          thumbnailUrl={undefined}
+        />
+        <VideoPreviewBase
+          {...args}
+          publisherMode
+          videoPublishState={'unlisted'}
+          selected={value}
+          onSelectClick={setvalue}
+          createdAt={createdAtDate}
+        />
+      </ContainerMix>
+    </BrowserRouter>
+  )
+}
+export const Mixed = Mix.bind({})
+Mixed.args = {
+  isLoading: false,
+  title: 'Example Video',
+  channelHandle: 'Example Channel',
+  channelAvatarUrl: '',
+  createdAt: new Date(),
+  showChannel: true,
+  showMeta: true,
+  duration: 100,
+  progress: 50,
+  views: 10000,
+  publisherMode: true,
+  thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
+}
+
 const Wrapper = styled.div<{ main?: boolean }>`
   max-width: ${({ main }) => (main ? 1200 : 350)}px;
+`
+
+const ContainerMix = styled.div`
+  display: flex;
+  gap: 24px;
+  max-width: ${350 * 3}px;
 `

@@ -26,6 +26,7 @@ import {
   DraftIcon,
   UnlistedIcon,
   CoverCheckboxContainer,
+  CoverNoImage,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDurationShort } from '@/utils/time'
@@ -129,7 +130,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     if (!onChannelClick) {
       return
     }
-    e.stopPropagation()
+    // e.stopPropagation()
     onChannelClick(e)
   }
   const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -140,52 +141,55 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main} onClick={onClick}>
-        <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-          <CoverContainer clickable={clickable}>
-            <SwitchTransition>
-              <CSSTransition
-                key={isLoading ? 'placeholder' : 'content'}
-                timeout={parseInt(transitions.timings.regular)}
-                classNames={transitions.names.fade}
-              >
-                {isLoading ? (
-                  <CoverPlaceholder />
-                ) : (
-                  <CoverImageContainer>
-                    <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
-                    {videoPublishState !== 'default' && (
-                      <CoverVideoPublishingStateOverlay>
-                        {videoPublishState === 'draft' && <DraftIcon />}
-                        {videoPublishState === 'unlisted' && <UnlistedIcon />}
-                        {videoPublishState}
-                      </CoverVideoPublishingStateOverlay>
+        <CoverContainer clickable={clickable}>
+          <SwitchTransition>
+            <CSSTransition
+              key={isLoading ? 'placeholder' : 'content'}
+              timeout={parseInt(transitions.timings.regular)}
+              classNames={transitions.names.fade}
+            >
+              {isLoading ? (
+                <CoverPlaceholder />
+              ) : (
+                <CoverImageContainer>
+                  <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                    {thumbnailUrl ? (
+                      <CoverImage
+                        darkenImg={videoPublishState !== 'default'}
+                        src={thumbnailUrl}
+                        ref={imgRef}
+                        alt={`${title} by ${channelHandle} thumbnail`}
+                      />
+                    ) : (
+                      <CoverNoImage />
                     )}
-                    {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                    <CoverHoverOverlay>
-                      {publisherMode && (
-                        <CoverCheckboxContainer>
-                          <Checkbox
-                            value={!!selected}
-                            onChange={(value) => {
-                              onSelectClick && onSelectClick(value)
-                              console.log({ value3: value, onSelectClick })
-                            }}
-                          />
-                        </CoverCheckboxContainer>
-                      )}
-                      {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
-                    </CoverHoverOverlay>
-                    {!!progress && (
-                      <ProgressOverlay>
-                        <ProgressBar style={{ width: `${progress}%` }} />
-                      </ProgressOverlay>
+                  </Anchor>
+                  {videoPublishState !== 'default' && (
+                    <CoverVideoPublishingStateOverlay>
+                      {videoPublishState === 'draft' && <DraftIcon />}
+                      {videoPublishState === 'unlisted' && <UnlistedIcon />}
+                      {videoPublishState}
+                    </CoverVideoPublishingStateOverlay>
+                  )}
+                  {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                  <CoverHoverOverlay>
+                    {publisherMode && (
+                      <CoverCheckboxContainer>
+                        <Checkbox value={!!selected} onChange={onSelectClick} />
+                      </CoverCheckboxContainer>
                     )}
-                  </CoverImageContainer>
-                )}
-              </CSSTransition>
-            </SwitchTransition>
-          </CoverContainer>
-        </Anchor>
+                    {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
+                  </CoverHoverOverlay>
+                  {!!progress && (
+                    <ProgressOverlay>
+                      <ProgressBar style={{ width: `${progress}%` }} />
+                    </ProgressOverlay>
+                  )}
+                </CoverImageContainer>
+              )}
+            </CSSTransition>
+          </SwitchTransition>
+        </CoverContainer>
       </CoverWrapper>
       <SwitchTransition>
         <CSSTransition
