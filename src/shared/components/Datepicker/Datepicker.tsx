@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react'
+import { parse } from 'date-fns'
 import NumberFormat from 'react-number-format'
 import TextField from '../TextField'
 
@@ -7,7 +8,7 @@ export type DatepickerProps = {
   error?: boolean
   disabled?: boolean
   helperText?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (date: Date) => void
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
@@ -15,6 +16,10 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   { required, error, disabled, helperText, onChange, onBlur },
   ref
 ) => {
+  const handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
+    const date = parse(e.target.value, 'dd/MM/yyyy', new Date())
+    onChange(date)
+  }
   return (
     <NumberFormat
       getInputRef={ref}
@@ -26,7 +31,7 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
       error={error}
       required={required}
       disabled={disabled}
-      onChange={onChange}
+      onChange={handleChange}
       onBlur={onBlur}
     />
   )

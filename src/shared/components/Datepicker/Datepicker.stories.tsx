@@ -16,8 +16,7 @@ const Template: Story<DatepickerProps> = (args) => {
   const [date, setDate] = useState<Date>()
   const [validationError, setValidationError] = useState(false)
 
-  const handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const date = parse(e.target.value, 'dd/MM/yyyy', new Date())
+  const handleChange: (date: Date) => void = (date) => {
     setDate(date)
   }
   const handleDateValidation = () => {
@@ -29,13 +28,7 @@ const Template: Story<DatepickerProps> = (args) => {
 
   return (
     <>
-      <Datepicker
-        {...args}
-        ref={ref}
-        onChange={handleInputChange}
-        onBlur={handleDateValidation}
-        error={validationError}
-      />
+      <Datepicker {...args} ref={ref} onChange={handleChange} onBlur={handleDateValidation} error={validationError} />
     </>
   )
 }
