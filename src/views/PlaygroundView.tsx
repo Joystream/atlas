@@ -4,7 +4,25 @@ import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
 
+type Inputs = {
+  title: string
+  videoSelect: string
+}
+
+const titleValidation = { required: true, maxLength: 20 }
+
+const items: SelectedItem[] = [
+  { name: 'Public (Anyone can see this video', value: 'public' },
+  { name: 'Private', value: 'private' },
+]
+
 export const PlaygroundView = () => {
+  const { register, handleSubmit, control, setValue, watch, errors } = useForm<Inputs>({
+    shouldFocusError: false,
+  })
+  const onSubmit = handleSubmit((data) => console.log(data))
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
+  const [checkboxValue, setCheckboxValue] = useState(false)
   return (
     <Container>
       <Text variant="h2">Internal testing view</Text>
@@ -34,6 +52,14 @@ const LinksContainer = styled.div`
   gap: 20px;
   a {
     font-size: 16px;
+  }
+`
+
+const StyledCheckboxContainer = styled.div`
+  display: flex;
+  margin-bottom: 50px;
+  p {
+    margin-left: 20px;
   }
 `
 

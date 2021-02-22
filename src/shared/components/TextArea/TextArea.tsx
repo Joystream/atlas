@@ -3,6 +3,7 @@ import { getVariant } from '../InputBase'
 import { HelperText, HelperTextCount, HelperTextsWrapper, StyledTextArea, TextAreaWrapper } from './TextArea.style'
 
 export type TextAreaProps = {
+  name?: string
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
@@ -16,6 +17,7 @@ export type TextAreaProps = {
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   {
     onChange,
+    name,
     placeholder = 'Something should be here',
     value,
     maxLength,
@@ -57,7 +59,14 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
 
   return (
     <TextAreaWrapper className={className}>
-      <StyledTextArea ref={ref} placeholder={placeholder} onChange={handleOnChange} value={value} rows={rows} />
+      <StyledTextArea
+        name={name}
+        ref={ref}
+        placeholder={placeholder}
+        onChange={handleOnChange}
+        value={value}
+        rows={rows}
+      />
       <HelperTextsWrapper>
         <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
         {(charactersWarning === 'warning' || charactersWarning === 'error') && (
