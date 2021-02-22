@@ -124,10 +124,22 @@ export const CoverImageContainer = styled.div`
   left: 0;
 `
 
-export const CoverImage = styled.img`
+type CoverImageProps = {
+  darkenImg: boolean
+}
+export const CoverImage = styled.img<CoverImageProps>`
   display: block;
   width: 100%;
   height: 100%;
+  ${({ darkenImg }) => darkenImg && `filter: brightness(45%);`}
+`
+
+export const CoverNoImage = styled.div`
+  background: blue;
+  width: 100%;
+  height: 100%;
+  background: rgb(16, 18, 20);
+  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
 `
 
 export const CoverHoverOverlay = styled.div`
@@ -176,8 +188,7 @@ export const CoverEditIcon = ({ ...props }) => (
   />
 )
 export const DraftIcon = ({ ...props }) => <Icon css={css``} name="page" {...props} />
-// TODO: export the right icon from figma
-export const UnlistedIcon = ({ ...props }) => <Icon css={css``} name="page" {...props} />
+export const UnlistedIcon = ({ ...props }) => <Icon css={css``} name="unlisted" {...props} />
 
 export const ProgressOverlay = styled.div`
   position: absolute;
@@ -208,6 +219,7 @@ export const CoverVideoPublishingStateOverlay = styled.div`
   background-color: ${transparentize(0.1, colors.black)};
   color: ${colors.gray[300]};
   font-size: ${typography.sizes.body2};
+  text-transform: capitalize;
 `
 
 export const CoverDurationOverlay = styled.div`

@@ -31,6 +31,7 @@ export { ReactComponent as Success } from './success-check.svg'
 export { ReactComponent as Camera } from './camera.svg'
 export { ReactComponent as Trash } from './trash.svg'
 export { ReactComponent as Gear } from './gear.svg'
+export { ReactComponent as Unlisted } from './unlisted.svg'
 
 const icons = [
   'bars',
@@ -66,6 +67,7 @@ const icons = [
   'camera',
   'trash',
   'gear',
+  'unlisted',
 ] as const
 
 export type IconType = typeof icons[number]

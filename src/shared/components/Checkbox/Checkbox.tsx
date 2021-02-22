@@ -17,14 +17,11 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ value, indeterminate, onChange, disabled = false, onFocus, onBlur, error = false, className, ...props }, ref) => {
     const isIndeterminate = indeterminate || false
+    const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
-    const [_value, _setValue] = useState(false)
 
-    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
+    const onChangeHandler = (e: React.FocusEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
-        console.log({ value2: !value })
         onChange(!value)
       }
     }
@@ -45,25 +42,20 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       }
     }
     return (
-      <Container selected={value} disabled={disabled} isFocused={isFocused} error={error} className={className}>
+      <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
         <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
           <Input
             ref={ref}
             type="checkbox"
             data-multiple="false"
-            checked={value}
+            checked={isSelected}
             disabled={disabled}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              // onChangeHandler(e)
-            }}
             onChange={onChangeHandler}
             onFocus={onFocusHandler}
             onBlur={onBlurHandler}
             {...props}
           />
-          <Checkmark>{value ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
+          <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
         </InnerContainer>
       </Container>
     )
