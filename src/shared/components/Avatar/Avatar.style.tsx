@@ -26,7 +26,6 @@ const coverAvatarCss = css`
   width: 64px;
   min-width: 64px;
   height: 64px;
-
   @media screen and (min-width: ${breakpoints.medium}) {
     width: 88px;
     min-width: 88px;
@@ -35,15 +34,9 @@ const coverAvatarCss = css`
 `
 
 const viewAvatarCss = css`
-  width: 80px;
-  min-width: 80px;
-  height: 80px;
-
-  @media (min-width: ${breakpoints.small}) {
-    width: 128px;
-    min-width: 128px;
-    height: 128px;
-  }
+  width: 128px;
+  min-width: 128px;
+  height: 128px;
   @media (min-width: ${breakpoints.medium}) {
     width: 136px;
     min-width: 136px;
@@ -96,24 +89,20 @@ export const EditButton = styled.button<EditButtonProps>`
   position: absolute;
   z-index: 3;
   color: ${colors.gray[300]};
-
   font-family: ${typography.fonts.headers};
   font-weight: ${typography.weights.bold};
   font-size: ${typography.sizes.subtitle2};
   ${({ size }) => size === 'cover' && `font-size: ${typography.sizes.button.small}`};
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   transition: all ${transitions.timings.loading} ${transitions.easing};
   opacity: ${({ withAvatar }) => (withAvatar ? 0 : 1)};
   :hover {
     background-color: rgba(11, 12, 15, 0.7);
     opacity: 1;
   }
-
   svg {
     fill: ${colors.gray[300]};
     width: 17px;

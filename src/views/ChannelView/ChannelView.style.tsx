@@ -1,14 +1,16 @@
-import { Avatar, Placeholder, Button, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import { breakpoints, sizes, colors, typography } from '@/shared/theme'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
-
-export const VideoSection = styled.section`
-  position: relative;
-`
+import { ChannelLink } from '@/components'
 
 export const Header = styled.section`
   position: relative;
+  padding-bottom: 50px;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-bottom: 0;
+  }
 `
 
 const SM_TITLE_HEIGHT = '44px'
@@ -16,37 +18,50 @@ const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
+const CONTENT_OVERLAP_MAP = {
+  BASE: 0,
+  SMALL: 0,
+  MEDIUM: 0,
+  LARGE: 100,
+  XLARGE: 200,
+  XXLARGE: 300,
+}
+
+const INFO_BOTTOM_MARGIN = 75
+
 export const TitleSection = styled.div`
-  position: absolute;
-  margin-top: 50px;
-  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   width: 100%;
-  @media (min-width: ${breakpoints.small}) {
-    margin-top: 40px;
-    display: flex;
+  margin-top: -64px;
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: -100px;
+    flex-direction: row;
     align-items: center;
   }
-`
-
-export const ChannelInfo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: ${sizes(5)};
-`
-
-export const StyledAvatar = styled(Avatar)`
-  margin: 0 ${sizes(6)} 0 0;
-  margin-bottom: ${sizes(3)};
-  z-index: 2;
-
-  @media (min-width: ${breakpoints.small}) {
-    margin: 0 ${sizes(6)} 0 0;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    position: absolute;
+    margin-top: 0;
+    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
+    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
+  }
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
+  }
+  @media screen and (min-width: ${breakpoints.xxlarge}) {
+    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
-
 export const TitleContainer = styled.div`
-  z-index: 2;
   max-width: 100%;
+  overflow: hidden;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    max-width: 60%;
+  }
+  z-index: 2;
 `
 
 export const Title = styled(Text)`
@@ -54,12 +69,10 @@ export const Title = styled(Text)`
   padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
   background-color: ${colors.gray[800]};
+  white-space: nowrap;
   text-overflow: ellipsis;
-  max-height: 250px;
   overflow: hidden;
-  @media (min-width: ${breakpoints.small}) {
-    word-break: break-all;
-  }
+  max-width: 600px;
 `
 
 export const SubTitle = styled(Text)`
@@ -69,6 +82,21 @@ export const SubTitle = styled(Text)`
   color: ${colors.white};
   background-color: ${colors.gray[800]};
   display: inline-block;
+`
+
+export const VideoSection = styled.section`
+  position: relative;
+`
+
+export const StyledChannelLink = styled(ChannelLink)`
+  margin-bottom: ${sizes(3)};
+  position: relative;
+  span {
+    font-size: ${typography.sizes.h2};
+  }
+  @media (min-width: ${breakpoints.small}) {
+    margin: 0 ${sizes(6)} 0 0;
+  }
 `
 
 export const TitlePlaceholder = styled(Placeholder)`
@@ -87,16 +115,13 @@ export const SubTitlePlaceholder = styled(Placeholder)`
     height: ${SUBTITLE_HEIGHT};
   }
 `
-export const StyledButton = styled(Button)`
-  padding: 12px 14px;
-  font-size: ${typography.sizes.button.medium};
-  position: relative;
-  z-index: 3;
+export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
+  z-index: 2;
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: 0;
+    padding-left: ${sizes(6)};
     margin-left: auto;
-    padding: 14px 20px;
-    font-size: ${typography.sizes.button.large};
+    align-self: center;
   }
 `
