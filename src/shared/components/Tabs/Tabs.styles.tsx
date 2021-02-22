@@ -46,7 +46,7 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
   bottom: 0;
   left: ${(props) => (props.direction === 'prev' ? 0 : 'auto')};
   right: ${(props) => (props.direction === 'next' ? 0 : 'auto')};
-  width: 30%;
+  width: 20%;
   z-index: ${zIndex.overlay};
   background-image: linear-gradient(${(props) => (props.direction === 'prev' ? 270 : 90)}deg, transparent, black);
   pointer-events: none;

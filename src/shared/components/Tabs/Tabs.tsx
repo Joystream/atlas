@@ -10,7 +10,9 @@ export type TabsProps = {
 const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [center, setCenter] = useState(0)
-  const { ref: tabsRef } = useResizeObserver<HTMLImageElement>({
+  const tabsRef = useRef<HTMLDivElement>(null)
+  useResizeObserver<HTMLDivElement>({
+    ref: tabsRef,
     onResize: ({ width }) => {
       if (!tabsRef.current || !width) {
         return
