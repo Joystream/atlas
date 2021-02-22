@@ -1,6 +1,7 @@
 import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import ActionBar, { ActionBarProps } from './ActionBar'
+import ActionBarTransaction from './ActionBarTransaction'
 
 export default {
   title: 'Shared/ActionBar',
@@ -10,7 +11,7 @@ export default {
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
     detailsText: 'Video details saved as draft (2 min ago)',
     detailsTextIcon: 'info',
-    primaryButtonText: 'Edit the channel (0.2 JOY)',
+    primaryButtonText: 'Edit the channel',
     secondaryButtonText: 'Cancel',
   },
 } as Meta
@@ -18,3 +19,7 @@ export default {
 const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} />
 
 export const Default = Template.bind({})
+
+const TransactionTemplate: Story<ActionBarProps> = (args) => <ActionBarTransaction {...args} fee={1} />
+
+export const Transaction = TransactionTemplate.bind({})

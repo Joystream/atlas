@@ -6,10 +6,11 @@ export const StyledActionBarContainer = styled.div`
   display: flex;
   width: 100%;
   background-color: ${colors.gray[800]};
-  padding: ${sizes(3)} ${sizes(8)};
+  padding: ${sizes(3)} ${sizes(4)};
   @media screen and (min-width: ${breakpoints.medium}) {
     flex-direction: row;
     justify-content: space-between;
+    padding: ${sizes(3)} ${sizes(8)};
   }
 `
 
@@ -34,7 +35,6 @@ export const StyledPrimaryText = styled(Text)`
   font-size: ${typography.sizes.h5};
   font-weight: ${typography.weights.bold};
   text-align: right;
-  letter-spacing: ${sizes(0.5)};
   padding-bottom: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(4)};
@@ -47,6 +47,7 @@ export const StyledSecondaryText = styled(Text)`
   line-height: 20px;
   max-width: 280px;
   text-align: right;
+  align-self: center;
   @media screen and (min-width: ${breakpoints.medium}) {
     text-align: left;
   }

@@ -16,11 +16,11 @@ export type ActionBarProps = {
   secondaryText?: string
   primaryButtonText?: string
   detailsText?: string
-  detailsTextIcon: IconType
+  detailsTextIcon?: IconType
   secondaryButtonText?: string
   secondaryButtonIcon?: IconType
-  onClickPrimaryButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onClickSecondaryButton?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const ActionBar: React.FC<ActionBarProps> = ({
@@ -31,8 +31,8 @@ const ActionBar: React.FC<ActionBarProps> = ({
   detailsText,
   detailsTextIcon,
   secondaryButtonIcon,
-  onClickPrimaryButton,
-  onClickSecondaryButton,
+  onConfirmClick,
+  onCancelClick,
 }) => {
   return (
     <StyledActionBarContainer>
@@ -43,15 +43,15 @@ const ActionBar: React.FC<ActionBarProps> = ({
       <StyledButtonsContainer>
         {detailsText && (
           <StyledDetailsTextContainer>
-            {detailsText} <Icon name={detailsTextIcon} />
+            {detailsText} <Icon name={detailsTextIcon || 'info'} />
           </StyledDetailsTextContainer>
         )}
         {secondaryButtonText && (
-          <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onClickSecondaryButton}>
+          <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onCancelClick}>
             {secondaryButtonText}
           </StyledSecondaryButton>
         )}
-        {primaryButtonText && <Button onClick={onClickPrimaryButton}>{primaryButtonText}</Button>}
+        {primaryButtonText && <Button onClick={onConfirmClick}>{primaryButtonText}</Button>}
       </StyledButtonsContainer>
     </StyledActionBarContainer>
   )
