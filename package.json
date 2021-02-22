@@ -89,6 +89,7 @@
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.0.5",
+    "rc-slider": "^9.7.1",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
     "react-docgen-typescript-loader": "^3.7.1",
