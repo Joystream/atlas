@@ -46,7 +46,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
             {detailsText} <Icon name={detailsTextIcon} />
           </StyledDetailsTextContainer>
         )}
-        {secondaryButtonText && !detailsText && (
+        {secondaryButtonText && (
           <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onClickSecondaryButton}>
             {secondaryButtonText}
           </StyledSecondaryButton>

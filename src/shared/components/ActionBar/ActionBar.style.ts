@@ -4,7 +4,6 @@ import { Text, Button } from '@/shared/components'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
   background-color: ${colors.gray[800]};
   padding: ${sizes(3)} ${sizes(8)};
@@ -15,16 +14,17 @@ export const StyledActionBarContainer = styled.div`
 `
 
 export const StyledInfoContainer = styled.div`
-  width: 100%;
-  display: flex;
+  display: none;
+  width: auto;
   flex-direction: column;
-  align-items: flex-end;
-  padding-bottom: ${sizes(4)};
+  align-items: flex-start;
+  padding-bottom: 0;
   @media screen and (min-width: ${breakpoints.medium}) {
-    width: auto;
+    display: flex;
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
     flex-direction: row;
-    align-items: flex-start;
-    padding-bottom: 0;
+    width: 100%;
   }
 `
 
@@ -52,33 +52,34 @@ export const StyledSecondaryText = styled(Text)`
   }
 `
 
-export const StyledDetailsTextContainer = styled.div`
+export const StyledButtonsContainer = styled.div`
   display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+`
+
+export const StyledDetailsTextContainer = styled.div`
+  display: none;
   align-items: center;
   justify-content: center;
   color: ${colors.white};
   font-size: ${typography.sizes.body2};
   line-height: 20px;
-  margin-bottom: ${sizes(2)};
+  margin-right: auto;
   svg {
     margin-left: ${sizes(2)};
     width: 16px;
     height: 16px;
   }
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: flex;
+  }
   @media screen and (min-width: ${breakpoints.medium}) {
     text-align: right;
     margin-bottom: 0;
-    margin-right: ${sizes(6)};
-    align-items: center;
-    justify-content: flex-end;
-  }
-`
-
-export const StyledButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  @media screen and (min-width: ${breakpoints.medium}) {
-    flex-direction: row;
+    margin-right: ${sizes(2)};
     align-items: center;
     justify-content: flex-end;
   }
