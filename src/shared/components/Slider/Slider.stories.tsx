@@ -2,6 +2,7 @@ import React from 'react'
 import Slider, { SliderProps } from '.'
 import { Story, Meta } from '@storybook/react'
 import { WithValue } from '../../../../.storybook/WithValue'
+import styled from '@emotion/styled'
 
 export default {
   title: 'Shared/Slider',
@@ -18,8 +19,12 @@ export default {
 
 const Template: Story<SliderProps> = (args) => (
   <WithValue initial={50} actionName="onChange">
-    {(value, setValue) => <Slider style={{ maxWidth: '200px' }} {...args} value={value} onChange={setValue} />}
+    {(value, setValue) => <StyledSlider {...args} value={value} onChange={setValue} />}
   </WithValue>
 )
 
 export const Default = Template.bind({})
+
+const StyledSlider = styled(Slider)`
+  max-width: 300px;
+`
