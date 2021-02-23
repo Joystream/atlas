@@ -1,3 +1,5 @@
+import { promisify } from '@/utils/data'
+import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 import {
   CompletedVideo,
   COMPLETED_VIDEO,
@@ -8,27 +10,6 @@ import {
   WatchedVideo,
   RecentSearch,
 } from './types'
-
-const promisify = <T,>(fn: (...args: unknown[]) => T) => (...args: Parameters<typeof fn>) =>
-  new Promise((resolve) => resolve(fn(...args))) as Promise<T>
-
-const readFromLocalStorage = <T,>(key: string, { deserialize = JSON.parse } = {}) => {
-  const valueInLocalStorage = window.localStorage.getItem(key)
-  if (valueInLocalStorage) {
-    try {
-      return deserialize(valueInLocalStorage) as T
-    } catch (error) {
-      console.error(
-        `An error occured when deserializing a value from Local Storage. Did you pass the correct serializer to readFromLocalStorage?`
-      )
-      throw error
-    }
-  }
-}
-
-const writeToLocalStorage = <T,>(key: string, value: T, { serialize = JSON.stringify } = {}) => {
-  window.localStorage.setItem(key, serialize(value))
-}
 
 const watchedVideos = promisify(() => readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? [])
 const interruptedVideos = async () => {
