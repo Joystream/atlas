@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
+import DraftsPlayground from './Playgrounds/DraftsPlayground'
 
 export const PlaygroundView = () => {
   return (
@@ -10,12 +11,12 @@ export const PlaygroundView = () => {
       <Text variant="h2">Internal testing view</Text>
       <LinksContainer>
         <Link to="./first">First</Link>
-        <Link to="./second">Second</Link>
+        <Link to="./drafts">Drafts</Link>
         <Link to="./third">Third</Link>
       </LinksContainer>
       <Routes>
         <Route key="first" path="/first" element={<p>First</p>} />
-        <Route key="second" path="/second" element={<p>Second</p>} />
+        <Route key="drafts" path="/drafts" element={<DraftsPlayground />} />
         <Route key="third" path="/third" element={<p>Third</p>} />
       </Routes>
     </Container>
