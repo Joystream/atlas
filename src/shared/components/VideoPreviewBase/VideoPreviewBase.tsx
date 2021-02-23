@@ -135,6 +135,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
+  const checkboxNode = (
+    <CoverCheckboxContainer>
+      <Checkbox value={!!selected} onChange={onSelectClick} />
+    </CoverCheckboxContainer>
+  )
+
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
@@ -173,11 +179,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                       <CoverNoImage />
                     )}
                   </Anchor>
-                  {publisherMode && isAnyVideoSelected && (
-                    <CoverCheckboxContainer>
-                      <Checkbox value={!!selected} onChange={onSelectClick} />
-                    </CoverCheckboxContainer>
-                  )}
+                  {publisherMode && isAnyVideoSelected && checkboxNode}
                   {videoPublishState !== 'default' && (
                     <CoverVideoPublishingStateOverlay>
                       {videoPublishState === 'draft' && <DraftIcon />}
@@ -187,11 +189,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   )}
                   {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                   <CoverHoverOverlay>
-                    {publisherMode && (
-                      <CoverCheckboxContainer>
-                        <Checkbox value={!!selected} onChange={onSelectClick} />
-                      </CoverCheckboxContainer>
-                    )}
+                    {publisherMode && checkboxNode}
                     {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
                   </CoverHoverOverlay>
                   {!!progress && (
