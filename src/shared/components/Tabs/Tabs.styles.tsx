@@ -24,6 +24,7 @@ export const TabsGroup = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+  scrollbar-width: none;
 `
 
 export const Tab = styled.div<TabProps>`
