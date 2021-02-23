@@ -1,4 +1,3 @@
-import { stubFalse } from 'lodash'
 import React from 'react'
 import { Container, HelperText, StyledInput } from './HeaderTextField.style'
 

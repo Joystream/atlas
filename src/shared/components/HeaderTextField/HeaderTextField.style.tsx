@@ -8,7 +8,7 @@ type HelperTextProps = {
   warning?: boolean
 }
 
-type InputWidthProps = {
+type StyledInputProps = {
   widthSize: number | null
 }
 
@@ -18,7 +18,7 @@ export const Container = styled.div`
   background-color: ${colors.gray[800]};
 `
 
-export const StyledInput = styled.input<InputWidthProps>`
+export const StyledInput = styled.input<StyledInputProps>`
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
