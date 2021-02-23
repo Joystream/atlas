@@ -14,6 +14,11 @@ import { textFieldValidation, requiredValidation } from './formValidationOptions
 import { SelectedItem } from '@/shared/components/Select'
 import styled from '@emotion/styled'
 
+const items: SelectedItem[] = [
+  { name: 'Public (Anyone can see this video', value: 'public' },
+  { name: 'Private', value: 'private' },
+]
+
 type Inputs = {
   title: string
   videoSelect: string
@@ -22,28 +27,26 @@ type Inputs = {
   textarea: string
 }
 
-const items: SelectedItem[] = [
-  { name: 'Public (Anyone can see this video', value: 'public' },
-  { name: 'Private', value: 'private' },
-]
-
-export const PlaygroundFormView = () => {
+const PlaygroundForm = () => {
   const { register, handleSubmit, control, setValue, errors } = useForm<Inputs>({
     shouldFocusError: false,
   })
-  const onSubmit = handleSubmit((data) => console.log(data))
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
   const [checkboxValue, setCheckboxValue] = useState(false)
+
+  const onSubmit = handleSubmit((data) => console.log(data))
+
   return (
     <>
       <form onSubmit={onSubmit}>
         <HeaderTextField
           name="header"
-          ref={register(textFieldValidation('Channel', 3, 20))}
+          ref={register(textFieldValidation('Channel name', 3, 20))}
           value="Lorem ipsum"
           error={!!errors.header}
           helperText={errors.header?.message}
         />
+
         <FormField title="Title" description="Lorem ipsum dolor sit amet">
           <TextField
             name="title"
@@ -75,10 +78,7 @@ export const PlaygroundFormView = () => {
           />
         </FormField>
 
-        <FormField
-          title="Marketing"
-          description="Short explanation message lives here. Ideally it will be as short as possible but sometimes it might reach the 2 line height."
-        >
+        <FormField title="Marketing" description="Lorem ipsum dolor sit amet.">
           <StyledCheckboxContainer>
             <Checkbox
               name="check"
@@ -117,4 +117,4 @@ const StyledCheckboxContainer = styled.div`
   }
 `
 
-export default PlaygroundFormView
+export default PlaygroundForm

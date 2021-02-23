@@ -10,18 +10,22 @@ type RegisterOptions = Partial<{
   validate: Validate | Record<string, Validate>
 }>
 
-export const textFieldValidation: (name: string, min: number, max: number) => RegisterOptions = (name, min, max) => ({
+export const textFieldValidation: (name: string, minLength: number, maxLength: number) => RegisterOptions = (
+  name,
+  minLength,
+  maxLength
+) => ({
   required: {
     value: true,
     message: `${name} cannot be empty`,
   },
   minLength: {
-    value: min,
-    message: `${name} must be longer than ${min} characters.`,
+    value: minLength,
+    message: `${name} must be longer than ${minLength} characters.`,
   },
   maxLength: {
-    value: max,
-    message: `${name} cannot be longer than ${max} characters.`,
+    value: maxLength,
+    message: `${name} cannot be longer than ${maxLength} characters.`,
   },
 })
 
