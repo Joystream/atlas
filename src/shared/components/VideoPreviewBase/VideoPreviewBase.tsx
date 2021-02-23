@@ -28,15 +28,17 @@ import {
   CoverCheckboxContainer,
   CoverNoImage,
   KebabMenuIcon,
-  KebabMenuContainer,
+  ContextMenuContainer,
+  KebabMenuIconContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
-import { Placeholder } from '..'
+import { ContextMenu, ContextMenuItem, Placeholder } from '..'
 import Checkbox from '../Checkbox'
+import { useContextMenu } from '@/hooks'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -115,6 +117,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onClick,
   className,
 }) => {
+  const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
@@ -270,9 +273,24 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 </MetaContainer>
               )}
             </TextContainer>
-            <KebabMenuContainer>
-              <KebabMenuIcon />
-            </KebabMenuContainer>
+            {publisherMode && (
+              <ContextMenuContainer>
+                <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
+                  <KebabMenuIcon />
+                </KebabMenuIconContainer>
+                <ContextMenu contextMenuOpts={contextMenuOpts}>
+                  <ContextMenuItem iconName="pencil2" onClick={closeContextMenu}>
+                    Edit Video
+                  </ContextMenuItem>
+                  <ContextMenuItem iconName="link" onClick={closeContextMenu}>
+                    Copy Video URL
+                  </ContextMenuItem>
+                  <ContextMenuItem iconName="trash" onClick={closeContextMenu}>
+                    Delete Video
+                  </ContextMenuItem>
+                </ContextMenu>
+              </ContextMenuContainer>
+            )}
           </InfoContainer>
         </CSSTransition>
       </SwitchTransition>

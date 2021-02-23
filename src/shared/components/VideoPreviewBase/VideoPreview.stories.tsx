@@ -4,6 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
 import { BrowserRouter } from 'react-router-dom'
 import { css } from '@emotion/react'
+import { OverlayManagerProvider } from '@/hooks'
 
 export default {
   title: 'Shared/VideoPreview',
@@ -27,9 +28,11 @@ const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
   return (
     <BrowserRouter>
-      <Wrapper main={args.main}>
-        <VideoPreviewBase {...args} createdAt={createdAtDate} />
-      </Wrapper>
+      <OverlayManagerProvider>
+        <Wrapper main={args.main}>
+          <VideoPreviewBase {...args} createdAt={createdAtDate} />
+        </Wrapper>
+      </OverlayManagerProvider>
     </BrowserRouter>
   )
 }
@@ -39,16 +42,18 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const [value, setvalue] = useState(false)
   return (
     <BrowserRouter>
-      <Wrapper main={args.main}>
-        <VideoPreviewBase
-          {...args}
-          publisherMode
-          selected={value}
-          onSelectClick={setvalue}
-          isAnyVideoSelected={false}
-          createdAt={createdAtDate}
-        />
-      </Wrapper>
+      <OverlayManagerProvider>
+        <Wrapper main={args.main}>
+          <VideoPreviewBase
+            {...args}
+            publisherMode
+            selected={value}
+            onSelectClick={setvalue}
+            isAnyVideoSelected={false}
+            createdAt={createdAtDate}
+          />
+        </Wrapper>
+      </OverlayManagerProvider>
     </BrowserRouter>
   )
 }
@@ -132,36 +137,38 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const isAnySelected = value || value2 || value3
   return (
     <BrowserRouter>
-      <ContainerMix>
-        <VideoPreviewBase
-          {...args}
-          publisherMode
-          videoPublishState={'default'}
-          selected={value2}
-          onSelectClick={setvalue2}
-          createdAt={createdAtDate}
-          isAnyVideoSelected={isAnySelected}
-        />
-        <VideoPreviewBase
-          {...args}
-          publisherMode
-          videoPublishState={'draft'}
-          selected={value3}
-          onSelectClick={setvalue3}
-          createdAt={createdAtDate}
-          thumbnailUrl={undefined}
-          isAnyVideoSelected={isAnySelected}
-        />
-        <VideoPreviewBase
-          {...args}
-          publisherMode
-          videoPublishState={'unlisted'}
-          selected={value}
-          onSelectClick={setvalue}
-          createdAt={createdAtDate}
-          isAnyVideoSelected={isAnySelected}
-        />
-      </ContainerMix>
+      <OverlayManagerProvider>
+        <ContainerMix>
+          <VideoPreviewBase
+            {...args}
+            publisherMode
+            videoPublishState={'default'}
+            selected={value2}
+            onSelectClick={setvalue2}
+            createdAt={createdAtDate}
+            isAnyVideoSelected={isAnySelected}
+          />
+          <VideoPreviewBase
+            {...args}
+            publisherMode
+            videoPublishState={'draft'}
+            selected={value3}
+            onSelectClick={setvalue3}
+            createdAt={createdAtDate}
+            thumbnailUrl={undefined}
+            isAnyVideoSelected={isAnySelected}
+          />
+          <VideoPreviewBase
+            {...args}
+            publisherMode
+            videoPublishState={'unlisted'}
+            selected={value}
+            onSelectClick={setvalue}
+            createdAt={createdAtDate}
+            isAnyVideoSelected={isAnySelected}
+          />
+        </ContainerMix>
+      </OverlayManagerProvider>
     </BrowserRouter>
   )
 }
