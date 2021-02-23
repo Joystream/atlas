@@ -41,14 +41,26 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
   const handleDialogEnter = useCallback(() => {
     // open file picker on dialog open
     inputRef.current?.click()
-  }, [])
+
+    const handleWindowFocus = () => {
+      // wait a bit so the browser can populate the input's value
+      setTimeout(() => {
+        const files = inputRef.current?.files
+        if (!files?.length) {
+          // no file selected, closing
+          onCancel()
+        }
+      }, 500)
+    }
+
+    window.addEventListener('focus', handleWindowFocus, { once: true })
+  }, [onCancel])
 
   const handleDialogExit = useCallback(() => {
     setEditedImageHref(null)
   }, [])
 
   const handleFileChange = () => {
-    // TODO: handle no file selected, probably with window focus event
     const files = inputRef.current?.files
     if (!files?.length) {
       console.error('no files selected')
