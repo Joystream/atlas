@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import styled from '@emotion/styled'
-import PlaygroundForm from './PlaygroundForm'
+import { PlaygroundForm } from './Playgrounds'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
 
