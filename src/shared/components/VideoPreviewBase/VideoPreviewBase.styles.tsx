@@ -189,6 +189,7 @@ export const CoverEditIcon = ({ ...props }) => (
 )
 export const DraftIcon = ({ ...props }) => <Icon css={css``} name="page" {...props} />
 export const UnlistedIcon = ({ ...props }) => <Icon css={css``} name="unlisted" {...props} />
+export const KebabMenuIcon = ({ ...props }) => <Icon css={css``} name="kebab-menu" {...props} />
 
 export const ProgressOverlay = styled.div`
   position: absolute;
@@ -275,4 +276,8 @@ export const CoverCheckboxContainer = styled.div`
   top: ${sizes(2)};
   left: ${sizes(2)};
   padding: ${sizes(2)} ${sizes(2)};
+`
+
+export const KebabMenuContainer = styled.div`
+  padding: 12px 12px 12px 12px;
 `

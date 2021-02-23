@@ -15,6 +15,7 @@ export { ReactComponent as ChevronRight } from './chevron-right-big.svg'
 export { ReactComponent as ChevronLeft } from './chevron-left-big.svg'
 export { ReactComponent as Check } from './check.svg'
 export { ReactComponent as Dash } from './dash.svg'
+export { ReactComponent as KebabMenu } from './kebab-menu.svg'
 export { ReactComponent as Pencil } from './pencil.svg'
 export { ReactComponent as Page } from './page.svg'
 export { ReactComponent as Play } from './play.svg'
@@ -49,6 +50,7 @@ const icons = [
   'chevron-left',
   'check',
   'dash',
+  'kebab-menu',
   'pencil',
   'page',
   'play',

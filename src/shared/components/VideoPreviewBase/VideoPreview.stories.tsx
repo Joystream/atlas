@@ -40,7 +40,14 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   return (
     <BrowserRouter>
       <Wrapper main={args.main}>
-        <VideoPreviewBase {...args} publisherMode selected={value} onSelectClick={setvalue} createdAt={createdAtDate} />
+        <VideoPreviewBase
+          {...args}
+          publisherMode
+          selected={value}
+          onSelectClick={setvalue}
+          isAnyVideoSelected={false}
+          createdAt={createdAtDate}
+        />
       </Wrapper>
     </BrowserRouter>
   )
@@ -76,6 +83,7 @@ PublisherDefault.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
+  isAnyVideoSelected: false,
   videoPublishState: 'default',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
@@ -93,6 +101,7 @@ PublisherDraft.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
+  isAnyVideoSelected: false,
   videoPublishState: 'draft',
   thumbnailUrl: undefined,
 }
@@ -110,6 +119,7 @@ PublisherUnlisted.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
+  isAnyVideoSelected: false,
   videoPublishState: 'unlisted',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
@@ -130,6 +140,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
           selected={value2}
           onSelectClick={setvalue2}
           createdAt={createdAtDate}
+          isAnyVideoSelected={isAnySelected}
         />
         <VideoPreviewBase
           {...args}
@@ -139,6 +150,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
           onSelectClick={setvalue3}
           createdAt={createdAtDate}
           thumbnailUrl={undefined}
+          isAnyVideoSelected={isAnySelected}
         />
         <VideoPreviewBase
           {...args}
@@ -147,6 +159,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
           selected={value}
           onSelectClick={setvalue}
           createdAt={createdAtDate}
+          isAnyVideoSelected={isAnySelected}
         />
       </ContainerMix>
     </BrowserRouter>
@@ -158,7 +171,7 @@ Mixed.args = {
   title: 'Example Video',
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
-  createdAt: new Date(),
+  createdAt: new Date('2021'),
   showChannel: true,
   showMeta: true,
   duration: 100,

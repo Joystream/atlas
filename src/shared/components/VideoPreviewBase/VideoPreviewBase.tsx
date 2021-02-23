@@ -27,9 +27,11 @@ import {
   UnlistedIcon,
   CoverCheckboxContainer,
   CoverNoImage,
+  KebabMenuIcon,
+  KebabMenuContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
-import { formatDurationShort } from '@/utils/time'
+import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
@@ -50,12 +52,14 @@ type VideoPreviewPublisherProps =
       publisherMode: true
       videoPublishState?: 'default' | 'draft' | 'unlisted'
       selected: boolean
+      isAnyVideoSelected: boolean
       onSelectClick: (value: boolean) => void
     }
   | {
       publisherMode?: false | undefined
       videoPublishState?: undefined | 'default'
       selected?: undefined
+      isAnyVideoSelected?: undefined
       onSelectClick?: undefined
     }
 
@@ -105,6 +109,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   videoPublishState = 'default',
   publisherMode = false,
   selected,
+  isAnyVideoSelected,
   onChannelClick,
   onSelectClick,
   onClick,
@@ -126,6 +131,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
+
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
@@ -155,7 +161,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl ? (
                       <CoverImage
-                        darkenImg={videoPublishState !== 'default'}
+                        darkenImg={videoPublishState !== 'default' || !!isAnyVideoSelected}
                         src={thumbnailUrl}
                         ref={imgRef}
                         alt={`${title} by ${channelHandle} thumbnail`}
@@ -164,6 +170,11 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                       <CoverNoImage />
                     )}
                   </Anchor>
+                  {publisherMode && isAnyVideoSelected && (
+                    <CoverCheckboxContainer>
+                      <Checkbox value={!!selected} onChange={onSelectClick} />
+                    </CoverCheckboxContainer>
+                  )}
                   {videoPublishState !== 'default' && (
                     <CoverVideoPublishingStateOverlay>
                       {videoPublishState === 'draft' && <DraftIcon />}
@@ -250,12 +261,18 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
                     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-                      {formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
+                      {/* TODO: draft one should not be createdAt ?? */}
+                      {videoPublishState === 'draft'
+                        ? `Last updated ${formatDateAgo(createdAt)}`
+                        : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
                     </MetaText>
                   ) : null}
                 </MetaContainer>
               )}
             </TextContainer>
+            <KebabMenuContainer>
+              <KebabMenuIcon />
+            </KebabMenuContainer>
           </InfoContainer>
         </CSSTransition>
       </SwitchTransition>
