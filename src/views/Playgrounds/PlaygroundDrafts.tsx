@@ -20,7 +20,7 @@ const FRUITS = [
   { value: 'kiwi', name: 'kiwi' },
 ]
 
-const DraftsPlayground = () => {
+const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { drafts, createOrSaveDraft, getSingleDraft, discardDraft, discardAllDrafts } = useDraft<typeof form>(form)
 
@@ -126,4 +126,4 @@ const DraftsPlayground = () => {
   )
 }
 
-export default DraftsPlayground
+export default PlaygroundDrafts
