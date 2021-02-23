@@ -4,7 +4,47 @@ import 'cropperjs/dist/cropper.min.css'
 
 const INITIAL_ZOOM = 0.1
 
-export const useCropperJs = (imageEl: HTMLImageElement | null) => {
+export type CropperImageType = 'avatar' | 'videoThumbnail' | 'cover'
+
+type UseCropperOpts = {
+  imageEl: HTMLImageElement | null
+  imageType: CropperImageType
+}
+
+const ASPECT_RATIO_PER_TYPE: Record<CropperImageType, number> = {
+  avatar: 1,
+  videoThumbnail: 16 / 9,
+  cover: 4,
+}
+
+const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOptions> = {
+  avatar: {
+    minWidth: 128,
+    minHeight: 128,
+    width: 256,
+    height: 256,
+    maxWidth: 1024,
+    maxHeight: 1024,
+  },
+  videoThumbnail: {
+    minWidth: 1280,
+    minHeight: 720,
+    width: 1920,
+    height: 1080,
+    maxWidth: 3840,
+    maxHeight: 2160,
+  },
+  cover: {
+    minWidth: 1920,
+    minHeight: 480,
+    width: 1920,
+    height: 480,
+    maxWidth: 3840,
+    maxHeight: 960,
+  },
+}
+
+export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
   const [cropper, setCropper] = useState<Cropper | null>(null)
   const [currentZoom, setCurrentZoom] = useState(INITIAL_ZOOM)
 
@@ -36,7 +76,7 @@ export const useCropperJs = (imageEl: HTMLImageElement | null) => {
       dragMode: 'move',
       cropBoxResizable: false,
       cropBoxMovable: false,
-      aspectRatio: 1,
+      aspectRatio: ASPECT_RATIO_PER_TYPE[imageType],
       guides: false,
       center: false,
       background: false,
@@ -49,7 +89,7 @@ export const useCropperJs = (imageEl: HTMLImageElement | null) => {
     return () => {
       cropper.destroy()
     }
-  }, [imageEl])
+  }, [imageEl, imageType])
 
   const cropImage = async (): Promise<[Blob, string]> => {
     return new Promise((resolve, reject) => {
@@ -58,24 +98,14 @@ export const useCropperJs = (imageEl: HTMLImageElement | null) => {
         return
       }
 
-      // TODO adjust for different types
-      cropper
-        .getCroppedCanvas({
-          minWidth: 128,
-          minHeight: 128,
-          width: 256,
-          height: 256,
-          maxWidth: 1024,
-          maxHeight: 1024,
-        })
-        .toBlob((blob) => {
-          if (!blob) {
-            console.error('Empty blob from cropped canvas', { blob })
-            return
-          }
-          const url = URL.createObjectURL(blob)
-          resolve([blob, url])
-        })
+      cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType]).toBlob((blob) => {
+        if (!blob) {
+          console.error('Empty blob from cropped canvas', { blob })
+          return
+        }
+        const url = URL.createObjectURL(blob)
+        resolve([blob, url])
+      })
     })
   }
 

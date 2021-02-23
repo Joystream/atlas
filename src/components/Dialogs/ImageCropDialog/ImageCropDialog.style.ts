@@ -66,7 +66,7 @@ export const CropContainer = styled.div<{ rounded?: boolean }>`
       width: 100%;
       height: 100%;
       top: 0;
-      border-radius: 50%;
+      border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
 
       box-shadow: inset 0 0 0 2px rgba(187, 231, 255, 0.48);
     }

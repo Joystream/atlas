@@ -14,10 +14,10 @@ import {
   StyledSlider,
 } from './ImageCropDialog.style'
 import { Icon } from '@/shared/components'
-import { useCropperJs } from './cropperJs'
+import { useCropper, CropperImageType } from './cropper'
 
 export type ImageCropDialogProps = {
-  imageType: 'avatar' | 'videoThumbnail' | 'cover'
+  imageType: CropperImageType
   onConfirm: (croppedBlob: Blob, croppedUrl: string) => void
   onCancel: () => void
 } & Pick<ActionDialogProps, 'showDialog' | 'onExitClick'>
@@ -32,7 +32,7 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
-  const { cropImage, currentZoom, handleZoomChange } = useCropperJs(imageEl)
+  const { cropImage, currentZoom, handleZoomChange } = useCropper({ imageEl, imageType })
 
   const imageElRefCallback = (el: HTMLImageElement) => {
     setImageEl(el)
