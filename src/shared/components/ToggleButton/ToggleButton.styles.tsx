@@ -97,6 +97,7 @@ const disabled = ({ disabled }: ToggleButtonStyleProps) =>
   disabled
     ? css`
         box-shadow: none;
+        filter: none;
         fill: unset;
         stroke: unset;
         color: ${colors.white};

@@ -76,18 +76,18 @@ const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => 
   let padding, fontSize
   switch (size) {
     case 'small': {
-      padding = '8px 12px'
+      padding = '9px 13px'
       fontSize = typography.sizes.button.small
       break
     }
     case 'medium': {
-      padding = hasText ? `12px 16px` : '12px'
+      padding = hasText ? `13px 17px` : '13px'
       fontSize = typography.sizes.button.medium
       break
     }
     case 'large':
     default: {
-      padding = hasText ? `14px 20px` : '14px'
+      padding = hasText ? `12px 20px` : '12px'
       fontSize = typography.sizes.button.large
       break
     }
@@ -112,7 +112,7 @@ export const StyledIcon = styled(Icon)<IconStyleProps>`
   display: block;
   flex-shrink: 0;
   position: relative;
-  top: 0.1em;
+  top: 0.09em;
   width: ${({ size }) => (size === 'large' ? '24px' : '14px')};
   height: ${({ size }) => (size === 'large' ? '24px' : '14px')};
   & + * {
