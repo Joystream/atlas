@@ -13,6 +13,7 @@ import {
   MediaWrapper,
   RemoveCoverButton,
   CoverWrapper,
+  StyledEditIcon,
 } from './ChannelCover.style'
 
 export type ChannelCoverProps = {
@@ -35,8 +36,8 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverButton onClick={onCoverEditClick}>
               <EditIconWrapper>
-                <Icon className="desktop" name="camera" />
-                <Icon className="mobile" name="gear" />
+                <StyledEditIcon variant="desktop" name="camera" />
+                <StyledEditIcon variant="mobile" name="gear" />
               </EditIconWrapper>
               <EditButtonMessage>
                 Click Anywhere to {coverPhotoUrl ? 'Edit ' : 'Add '}

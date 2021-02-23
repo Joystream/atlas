@@ -1,6 +1,7 @@
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import Icon from '../Icon'
 
 export const CONTENT_OVERLAP_MAP = {
   BASE: 0,
@@ -12,6 +13,10 @@ export const CONTENT_OVERLAP_MAP = {
 }
 const GRADIENT_OVERLAP = 50
 const GRADIENT_HEIGHT = 100
+
+type StyledEditIconProps = {
+  variant: 'mobile' | 'desktop'
+}
 
 type CoverImageProps = {
   src: string
@@ -202,13 +207,6 @@ export const EditIconWrapper = styled.span`
   justify-content: center;
   align-items: center;
   svg {
-    height: 14px;
-    &.mobile {
-      display: inline;
-    }
-    &.desktop {
-      display: none;
-    }
   }
   @media screen and (min-width: ${breakpoints.small}) {
     width: 40px;
@@ -217,16 +215,17 @@ export const EditIconWrapper = styled.span`
     border: 2px solid ${colors.gray[200]};
     border-radius: 100%;
     svg {
-      width: 18px;
-      margin: 0;
-      fill: ${colors.gray[200]};
-      &.mobile {
-        display: none;
-      }
-      &.desktop {
-        display: inline;
-      }
     }
+  }
+`
+export const StyledEditIcon = styled(Icon)<StyledEditIconProps>`
+  display: ${({ variant }) => (variant === 'mobile' ? 'inline' : 'none')};
+  height: 14px;
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: ${({ variant }) => (variant === 'desktop' ? 'inline' : 'none')};
+    width: 18px;
+    margin: 0;
+    fill: ${colors.gray[200]};
   }
 `
 
