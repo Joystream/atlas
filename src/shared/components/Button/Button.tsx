@@ -19,7 +19,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     variant = 'primary',
     disabled = false,
     full = false,
-    size = 'regular',
+    size = 'medium',
     containerCss,
     className,
     onClick,
@@ -46,7 +46,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       size={size}
       ref={ref}
     >
-      {icon && <StyledIcon disabled={disabled} name={icon} />}
+      {icon && <StyledIcon disabled={disabled} name={icon} size={size} />}
       {children && <span>{children}</span>}
     </StyledButton>
   )

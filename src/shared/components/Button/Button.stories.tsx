@@ -19,14 +19,14 @@ const SingleTemplate: Story<ButtonProps> = (args) => <Button {...args}>Regular</
 
 const Template: Story<ButtonProps> = (args) => (
   <>
-    <Button {...args} size="regular">
-      Regular
+    <Button {...args} size="large">
+      Large
+    </Button>
+    <Button {...args} size="medium">
+      Medium
     </Button>
     <Button {...args} size="small">
       Small
-    </Button>
-    <Button {...args} size="smaller">
-      Smaller
     </Button>
   </>
 )

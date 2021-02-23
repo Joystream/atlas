@@ -6,7 +6,7 @@ import { colors, typography } from '../../theme'
 export type ButtonStyleProps = {
   variant?: 'primary' | 'secondary' | 'tertiary'
   full?: boolean
-  size?: 'regular' | 'small' | 'smaller'
+  size?: 'large' | 'medium' | 'small'
   disabled?: boolean
   hasText?: boolean
   clickable?: boolean
@@ -14,6 +14,7 @@ export type ButtonStyleProps = {
 
 export type IconStyleProps = {
   disabled?: boolean
+  size?: 'large' | 'medium' | 'small'
 }
 
 const colorsFromProps = ({ variant }: ButtonStyleProps) => {
@@ -23,12 +24,12 @@ const colorsFromProps = ({ variant }: ButtonStyleProps) => {
       styles = css`
         background-color: transparent;
         border-color: transparent;
-        color: ${colors.blue[500]};
+        color: ${colors.white};
         &:hover {
-          color: ${colors.blue[300]};
+          background-color: ${colors.gray[900]};
         }
         &:active {
-          color: ${colors.blue[700]};
+          background-color: transparent;
         }
       `
       break
@@ -37,14 +38,13 @@ const colorsFromProps = ({ variant }: ButtonStyleProps) => {
       styles = css`
         color: ${colors.white};
         background-color: ${colors.black};
-        border-color: ${colors.blue[500]};
+        border-color: ${colors.gray[500]};
         &:hover {
-          border-color: ${colors.blue[700]};
-          color: ${colors.blue[300]};
+          border-color: ${colors.white};
         }
         &:active {
-          border-color: ${colors.blue[700]};
-          color: ${colors.blue[700]};
+          background-color: ${colors.blue[700]};
+          border-color: ${colors.white};
         }
       `
       break
@@ -72,20 +72,20 @@ const colorsFromProps = ({ variant }: ButtonStyleProps) => {
   return styles
 }
 
-const sizeFromProps = ({ size = 'regular', full, hasText }: ButtonStyleProps) => {
+const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => {
   let padding, fontSize
   switch (size) {
-    case 'smaller': {
-      padding = '10px'
+    case 'small': {
+      padding = '8px 12px'
       fontSize = typography.sizes.button.small
       break
     }
-    case 'small': {
-      padding = hasText ? `12px 14px` : '12px'
+    case 'medium': {
+      padding = hasText ? `12px 16px` : '12px'
       fontSize = typography.sizes.button.medium
       break
     }
-    case 'regular':
+    case 'large':
     default: {
       padding = hasText ? `14px 20px` : '14px'
       fontSize = typography.sizes.button.large
@@ -103,26 +103,18 @@ const sizeFromProps = ({ size = 'regular', full, hasText }: ButtonStyleProps) =>
 const disabled = ({ disabled }: ButtonStyleProps) =>
   disabled
     ? css`
-        box-shadow: none;
-        color: ${colors.gray[200]};
-        background-color: ${colors.gray[400]};
-        border-color: ${colors.gray[400]};
-        &:hover {
-          color: ${colors.gray[200]};
-          background-color: ${colors.gray[400]};
-          border-color: ${colors.gray[400]};
-        }
-        &:active {
-          color: ${colors.gray[200]};
-          background-color: ${colors.gray[400]};
-          border-color: ${colors.gray[400]};
-        }
+        filter: brightness(50%);
+        pointer-events: none;
       `
     : null
 
 export const StyledIcon = styled(Icon)<IconStyleProps>`
   display: block;
   flex-shrink: 0;
+  position: relative;
+  top: 0.1em;
+  width: ${({ size }) => (size === 'large' ? '24px' : '14px')};
+  height: ${({ size }) => (size === 'large' ? '24px' : '14px')};
   & + * {
     margin-left: 10px;
   }
