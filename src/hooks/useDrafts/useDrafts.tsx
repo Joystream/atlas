@@ -20,7 +20,7 @@ export const useDraft = <T extends object>(state: T) => {
     getInitialDrafts()
   }, [])
 
-  const createAndSaveDraft = async (draftId: string) => {
+  const createOrSaveDraft = async (draftId: string) => {
     await addOrUpdateDraft(draftId, { ...state })
     await getInitialDrafts()
   }
@@ -37,7 +37,7 @@ export const useDraft = <T extends object>(state: T) => {
 
   return {
     drafts: draftsState,
-    createAndSaveDraft,
+    createOrSaveDraft,
     getSingleDraft,
     discardDraft,
     discardAllDrafts,
