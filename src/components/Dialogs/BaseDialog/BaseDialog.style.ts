@@ -20,12 +20,8 @@ export const StyledContainer = styled.div`
 
 export const StyledExitButton = styled(Button)`
   position: absolute;
-  top: ${sizes(4)};
-  right: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.small}) {
-    top: ${sizes(6)};
-    right: ${sizes(6)};
-  }
+  top: var(--dialog-padding);
+  right: var(--dialog-padding);
   background-color: ${colors.transparent};
   border: none;
   &:hover {
