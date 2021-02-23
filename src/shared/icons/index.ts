@@ -68,6 +68,8 @@ const icons = [
   'warning',
   'trash',
   'gear',
+  'zoom-in',
+  'zoom-out',
 ] as const
 
 export type IconType = typeof icons[number]
