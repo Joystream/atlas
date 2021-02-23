@@ -14,7 +14,7 @@ export const CONTENT_OVERLAP_MAP = {
 const GRADIENT_OVERLAP = 50
 const GRADIENT_HEIGHT = 100
 
-type StyledEditIconProps = {
+type EditIconProps = {
   variant: 'mobile' | 'desktop'
 }
 
@@ -218,7 +218,7 @@ export const EditIconWrapper = styled.span`
     }
   }
 `
-export const StyledEditIcon = styled(Icon)<StyledEditIconProps>`
+export const EditIcon = styled(Icon)<EditIconProps>`
   display: ${({ variant }) => (variant === 'mobile' ? 'inline' : 'none')};
   height: 14px;
   @media screen and (min-width: ${breakpoints.small}) {
