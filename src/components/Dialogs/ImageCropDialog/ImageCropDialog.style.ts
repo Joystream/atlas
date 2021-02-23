@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import ActionDialog from '../ActionDialog'
 import { css } from '@emotion/react'
-import { Placeholder, Text } from '@/shared/components'
+import { Placeholder, Slider, Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 
 export const StyledActionDialog = styled(ActionDialog)`
@@ -82,4 +82,14 @@ export const StyledImage = styled.img`
   display: block;
 
   max-width: 100%;
+`
+
+export const ZoomControl = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+export const StyledSlider = styled(Slider)`
+  margin: 0 ${sizes(4)};
+  flex: 1;
 `

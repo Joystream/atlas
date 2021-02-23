@@ -11,10 +11,6 @@ export const ButtonsContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 
-  * + & {
-    margin-top: ${sizes(2)};
-  }
-
   @media screen and (min-width: ${BREAKPOINT}) {
     flex-direction: row-reverse;
     margin-left: auto;
@@ -39,5 +35,15 @@ export const ActionsContainer = styled.div`
   @media screen and (min-width: ${BREAKPOINT}) {
     flex-direction: row;
     align-items: center;
+  }
+`
+
+export const AdditionalActionsContainer = styled.div`
+  width: 100%;
+  margin-bottom: ${sizes(6)};
+
+  @media screen and (min-width: ${BREAKPOINT}) {
+    margin-bottom: 0;
+    margin-right: ${sizes(6)};
   }
 `

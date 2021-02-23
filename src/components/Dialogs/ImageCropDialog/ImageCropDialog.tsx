@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
 import {
   HiddenInput,
@@ -10,10 +10,11 @@ import {
   AlignInfoContainer,
   AlignInfo,
   HeaderText,
+  ZoomControl,
+  StyledSlider,
 } from './ImageCropDialog.style'
-import Cropper from 'cropperjs'
-import 'cropperjs/dist/cropper.min.css'
 import { Icon } from '@/shared/components'
+import { useCropperJs } from './cropperJs'
 
 export type ImageCropDialogProps = {
   imageType: 'avatar' | 'videoThumbnail' | 'cover'
@@ -29,51 +30,20 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
   ...actionDialogProps
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
-  const [cropper, setCropper] = useState<Cropper | null>(null)
+  const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
+  const { cropImage, currentZoom, handleZoomChange } = useCropperJs(imageEl)
 
-  useEffect(() => {
-    if (!editedImageHref) {
-      return
-    }
-
-    if (!imageRef.current) {
-      console.error('no image ref!')
-      return
-    }
-
-    const cropper = new Cropper(imageRef.current, {
-      viewMode: 1,
-      dragMode: 'move',
-      cropBoxResizable: false,
-      cropBoxMovable: false,
-      aspectRatio: 1,
-      guides: false,
-      center: false,
-      background: false,
-      autoCropArea: 0.9,
-    })
-    setCropper(cropper)
-
-    return () => {
-      console.log('cropper destroy')
-      cropper.destroy()
-    }
-  }, [editedImageHref])
+  const imageElRefCallback = (el: HTMLImageElement) => {
+    setImageEl(el)
+  }
 
   const handleDialogEnter = useCallback(() => {
-    // open file picker on mount
-    if (inputRef.current) {
-      inputRef.current.click()
-    } else {
-      // TODO remove
-      console.warn('no current :(')
-    }
+    // open file picker on dialog open
+    inputRef.current?.click()
   }, [])
 
   const handleDialogExit = useCallback(() => {
-    console.log('handleDialogExit')
     setEditedImageHref(null)
   }, [])
 
@@ -89,30 +59,18 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
     setEditedImageHref(fileUrl)
   }
 
-  const handleConfirmClick = () => {
-    if (!cropper) {
-      return
-    }
-
-    // TODO adjust for different types
-    cropper
-      .getCroppedCanvas({
-        minWidth: 128,
-        minHeight: 128,
-        width: 256,
-        height: 256,
-        maxWidth: 1024,
-        maxHeight: 1024,
-      })
-      .toBlob((blob) => {
-        if (!blob) {
-          console.error('Empty blob from cropped canvas', { blob })
-          return
-        }
-        const url = URL.createObjectURL(blob)
-        onConfirm(blob, url)
-      })
+  const handleConfirmClick = async () => {
+    const [blob, url] = await cropImage()
+    onConfirm(blob, url)
   }
+
+  const zoomControlNode = (
+    <ZoomControl>
+      <Icon name="zoom-out" />
+      <StyledSlider value={currentZoom} onChange={handleZoomChange} min={0.05} max={0.5} step={0.02} />
+      <Icon name="zoom-in" />
+    </ZoomControl>
+  )
 
   return (
     <StyledActionDialog
@@ -121,18 +79,19 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
       onPrimaryButtonClick={handleConfirmClick}
       onEnter={handleDialogEnter}
       onExit={handleDialogExit}
+      additionalActionsNode={zoomControlNode}
       {...actionDialogProps}
     >
       <HeaderContainer>
         <HeaderText variant="h6">Crop and position</HeaderText>
       </HeaderContainer>
       <AlignInfoContainer>
-        <Icon name="drag" />
+        <Icon name="position" />
         <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
       </AlignInfoContainer>
       {editedImageHref ? (
         <CropContainer rounded={imageType === 'avatar'}>
-          <StyledImage src={editedImageHref} ref={imageRef} />
+          <StyledImage src={editedImageHref} ref={imageElRefCallback} />
         </CropContainer>
       ) : (
         <CropPlaceholder />

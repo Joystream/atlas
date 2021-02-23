@@ -1,6 +1,6 @@
 import React from 'react'
 import BaseDialog, { BaseDialogProps } from '../BaseDialog'
-import { ActionsContainer, ButtonsContainer } from './ActionDialog.style'
+import { ActionsContainer, ButtonsContainer, AdditionalActionsContainer } from './ActionDialog.style'
 import { Button } from '@/shared/components'
 
 export type ActionDialogProps = {
@@ -39,7 +39,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       {children}
       {hasAnyAction && (
         <ActionsContainer>
-          {additionalActionsNode}
+          {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
             {primaryButtonText && <Button onClick={handlePrimaryButtonClick}>{primaryButtonText}</Button>}
             {secondaryButtonText && (
