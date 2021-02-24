@@ -24,7 +24,7 @@ const PlaygroundValidationForm = () => {
     shouldFocusError: false,
     defaultValues: {
       title: '',
-      videoSelect: null,
+      selectedVideoVisibility: null,
       header: '',
       textarea: '',
       check: false,
@@ -59,15 +59,15 @@ const PlaygroundValidationForm = () => {
 
         <FormField title="Video Visibility">
           <Controller
-            name="videoSelect"
+            name="selectedVideoVisibility"
             control={control}
             rules={requiredValidation('Video visibility')}
             render={({ value }) => (
               <Select
                 items={items}
-                onChange={(e) => setValue('videoSelect', e.selectedItem?.value)}
-                error={!!errors.videoSelect && !value}
-                helperText={errors.videoSelect?.message}
+                onChange={(e) => setValue('selectedVideoVisibility', e.selectedItem?.value)}
+                error={!!errors.selectedVideoVisibility && !value}
+                helperText={errors.selectedVideoVisibility?.message}
               />
             )}
           />
@@ -91,6 +91,7 @@ const PlaygroundValidationForm = () => {
           <Textarea
             name="textarea"
             ref={register(textFieldValidation('Description', 3, 20))}
+            maxLength={20}
             error={!!errors.textarea}
             helperText={errors.textarea?.message}
           />
