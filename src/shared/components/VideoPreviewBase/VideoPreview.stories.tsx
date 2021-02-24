@@ -21,6 +21,10 @@ export default {
     onChannelClick: { table: { disable: true } },
     onCoverResize: { table: { disable: true } },
     publisherMode: { table: { disable: true } },
+    isSelected: { table: { disable: true } },
+    isAnyVideoSelected: { table: { disable: true } },
+    onSelectClick: { table: { disable: true } },
+    videoPublishState: { table: { disable: true } },
   },
 } as Meta
 
@@ -45,11 +49,11 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
       <OverlayManagerProvider>
         <Wrapper main={args.main}>
           <VideoPreviewBase
+            isAnyVideoSelected={false}
             {...args}
             publisherMode
-            selected={value}
+            isSelected={value}
             onSelectClick={setvalue}
-            isAnyVideoSelected={false}
             createdAt={createdAtDate}
           />
         </Wrapper>
@@ -82,7 +86,7 @@ PublisherDefault.args = {
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
-  showChannel: true,
+  showChannel: false,
   showMeta: true,
   duration: 100,
   progress: 50,
@@ -100,7 +104,7 @@ PublisherDraft.args = {
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
-  showChannel: true,
+  showChannel: false,
   showMeta: true,
   duration: 100,
   progress: 50,
@@ -118,7 +122,7 @@ PublisherUnlisted.args = {
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
-  showChannel: true,
+  showChannel: false,
   showMeta: true,
   duration: 100,
   progress: 50,
@@ -143,7 +147,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             {...args}
             publisherMode
             videoPublishState={'default'}
-            selected={value2}
+            isSelected={value2}
             onSelectClick={setvalue2}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
@@ -152,7 +156,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             {...args}
             publisherMode
             videoPublishState={'draft'}
-            selected={value3}
+            isSelected={value3}
             onSelectClick={setvalue3}
             createdAt={createdAtDate}
             thumbnailUrl={undefined}
@@ -162,7 +166,7 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             {...args}
             publisherMode
             videoPublishState={'unlisted'}
-            selected={value}
+            isSelected={value}
             onSelectClick={setvalue}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
@@ -179,7 +183,7 @@ Mixed.args = {
   channelHandle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date('2021'),
-  showChannel: true,
+  showChannel: false,
   showMeta: true,
   duration: 100,
   progress: 50,

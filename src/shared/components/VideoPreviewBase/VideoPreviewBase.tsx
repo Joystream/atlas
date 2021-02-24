@@ -53,14 +53,14 @@ type VideoPreviewPublisherProps =
   | {
       publisherMode: true
       videoPublishState?: 'default' | 'draft' | 'unlisted'
-      selected: boolean
+      isSelected: boolean
       isAnyVideoSelected: boolean
       onSelectClick: (value: boolean) => void
     }
   | {
       publisherMode?: false | undefined
       videoPublishState?: undefined | 'default'
-      selected?: undefined
+      isSelected?: undefined
       isAnyVideoSelected?: undefined
       onSelectClick?: undefined
     }
@@ -110,7 +110,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   main = false,
   videoPublishState = 'default',
   publisherMode = false,
-  selected,
+  isSelected,
   isAnyVideoSelected,
   onChannelClick,
   onSelectClick,
@@ -137,9 +137,10 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
 
   const checkboxNode = (
     <CoverCheckboxContainer>
-      <Checkbox value={!!selected} onChange={onSelectClick} />
+      <Checkbox value={!!isSelected} onChange={onSelectClick} />
     </CoverCheckboxContainer>
   )
+  const hoverIconNode = publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />
 
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
@@ -151,6 +152,9 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     if (!href) {
       e.preventDefault()
     }
+  }
+  const handleCoverHoverOverlayClick = () => {
+    isAnyVideoSelected && onSelectClick?.(!isSelected)
   }
   return (
     <Container main={main} className={className}>
@@ -169,7 +173,8 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl ? (
                       <CoverImage
-                        darkenImg={videoPublishState !== 'default' || !!isAnyVideoSelected}
+                        darkenImg={videoPublishState !== 'default'}
+                        isAnyVideoSelected={!!isAnyVideoSelected}
                         src={thumbnailUrl}
                         ref={imgRef}
                         alt={`${title} by ${channelHandle} thumbnail`}
@@ -187,9 +192,9 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     </CoverVideoPublishingStateOverlay>
                   )}
                   {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                  <CoverHoverOverlay>
+                  <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                     {publisherMode && checkboxNode}
-                    {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
+                    {isAnyVideoSelected === false && hoverIconNode}
                   </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>
@@ -256,12 +261,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   </Anchor>
                 ))}
               {showMeta && (
-                <MetaContainer main={main}>
+                <MetaContainer noMarginTop={showChannel === false} main={main}>
                   {isLoading ? (
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
                     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-                      {/* TODO: draft one should not be createdAt ?? */}
+                      {/* TODO: instead of createdAt add the lastUpdate from useDraft hook */}
                       {videoPublishState === 'draft'
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
@@ -270,11 +275,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 </MetaContainer>
               )}
             </TextContainer>
-            {publisherMode && (
+            {publisherMode && !isLoading && (
               <ContextMenuContainer>
                 <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
                   <KebabMenuIcon />
                 </KebabMenuIconContainer>
+                {/* TODO: menu to be integrated with the video publishing functions */}
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
                   <ContextMenuItem iconName="pencil2" onClick={closeContextMenu}>
                     Edit Video

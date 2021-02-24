@@ -56,7 +56,7 @@ export const CoverContainer = styled.div<ClickableProps>`
   width: 100%;
   height: 0;
   padding-top: 56.25%;
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   :hover {
     ${(props) => clickableAnimation(props.clickable)}
@@ -111,8 +111,11 @@ export const TextContainer = styled.div`
   width: 100%;
 `
 
-export const MetaContainer = styled.div<MainProps>`
-  margin-top: ${({ main }) => (main ? sizes(3) : sizes(2))};
+type MetaContainerProps = { noMarginTop: boolean } & MainProps
+export const MetaContainer = styled.div<MetaContainerProps>`
+  margin-top: ${sizes(2)};
+  margin-top: ${({ noMarginTop }) => noMarginTop && 0};
+  margin-top: ${({ main }) => main && sizes(3)};
   width: 100%;
 `
 
@@ -126,12 +129,14 @@ export const CoverImageContainer = styled.div`
 
 type CoverImageProps = {
   darkenImg: boolean
+  isAnyVideoSelected: boolean
 }
 export const CoverImage = styled.img<CoverImageProps>`
   display: block;
   width: 100%;
   height: 100%;
   ${({ darkenImg }) => darkenImg && `filter: brightness(45%);`}
+  ${({ isAnyVideoSelected }) => isAnyVideoSelected && `filter: brightness(25%);`}
 `
 
 export const CoverNoImage = styled.div`
@@ -279,12 +284,26 @@ export const CoverCheckboxContainer = styled.div`
 `
 
 export const KebabMenuIconContainer = styled.div`
-  padding: 8px;
-  margin: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   position: relative;
+  border-radius: 100%;
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+
+  path:not([fill='none']) {
+    transition: all ${transitions.timings.regular} ${transitions.easing};
+  }
+
+  &:hover {
+    path:not([fill='none']) {
+      fill: ${colors.white};
+    }
+    background-color: ${transparentize(1 - 0.06, colors.white)};
+  }
 `
 
-export const ContextMenuContainer = styled.div`
-  padding: 12px;
-`
+export const ContextMenuContainer = styled.div``
