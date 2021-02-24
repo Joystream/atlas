@@ -9,6 +9,9 @@ export type TabsProps = {
   initialIndex?: number
   onSelectTab: (idx: number) => void
 }
+
+const SCROLL_SHADOW_OFFSET = 10
+
 const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [isContentOverflown, setIsContentOverflown] = useState(false)
@@ -23,30 +26,25 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     if (!tabsGroup) {
       return
     }
-
     setIsContentOverflown(tabsGroup.scrollWidth > tabsGroup.clientWidth)
-
-    if (!isContentOverflown) {
-      return
-    }
-
-    const middleTabPosition = tabsGroup.clientWidth / 2 - TAB_WIDTH / 2
-    const currentItemOffsetleft = TAB_WIDTH * selected
-
-    tabsGroup.scrollLeft = currentItemOffsetleft - middleTabPosition
-  }, [isContentOverflown, selected, tabs.length, tabsRef])
+  }, [])
 
   useEffect(() => {
     const tabsGroup = tabsRef.current
     if (!tabsGroup || !isContentOverflown) {
       return
     }
+    const { scrollLeft, clientWidth, scrollWidth } = tabsGroup
+
+    const middleTabPosition = clientWidth / 2 - TAB_WIDTH / 2
+    const currentItemOffsetleft = TAB_WIDTH * selected
+
+    tabsGroup.scrollLeft = currentItemOffsetleft - middleTabPosition
 
     const touchHandler = throttle(() => {
-      const { scrollLeft, clientWidth, scrollWidth } = tabsGroup
       setShadowsVisible({
-        left: scrollLeft > 10,
-        right: scrollLeft < scrollWidth - clientWidth - 10,
+        left: scrollLeft > SCROLL_SHADOW_OFFSET,
+        right: scrollLeft < scrollWidth - clientWidth - SCROLL_SHADOW_OFFSET,
       })
     }, 100)
 
@@ -57,7 +55,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
       tabsGroup.removeEventListener('touchmove', touchHandler)
       tabsGroup.removeEventListener('scroll', touchHandler)
     }
-  }, [isContentOverflown])
+  }, [isContentOverflown, selected])
 
   const createClickHandler = (idx?: number) => () => {
     if (idx !== undefined) {
