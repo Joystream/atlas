@@ -16,7 +16,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
   const tabsRef = useRef<HTMLDivElement>(null)
   const [shadowsVisible, setShadowsVisible] = useState({
     left: false,
-    right: false,
+    right: true,
   })
 
   useResizeObserver<HTMLDivElement>({
@@ -52,32 +52,35 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     }
     const touchHandler = throttle(() => {
       const { scrollLeft, clientWidth, scrollWidth } = tabsGroup
-      if (scrollLeft > 20) {
+      if (scrollLeft > 10) {
         setShadowsVisible((shadows) => ({ ...shadows, left: true }))
       } else {
         setShadowsVisible((shadows) => ({ ...shadows, left: false }))
       }
-      if (scrollLeft < scrollWidth - clientWidth - 20) {
+      if (scrollLeft < scrollWidth - clientWidth - 10) {
         setShadowsVisible((shadows) => ({ ...shadows, right: true }))
       } else {
         setShadowsVisible((shadows) => ({ ...shadows, right: false }))
       }
     }, 100)
     tabsGroup.addEventListener('touchmove', touchHandler)
+    tabsGroup.addEventListener('scroll', touchHandler)
     return () => {
       touchHandler.cancel()
       tabsGroup.removeEventListener('touchmove', touchHandler)
+      tabsGroup.removeEventListener('scroll', touchHandler)
     }
   }, [])
+
+  const isGradientVisible = center > 0
 
   return (
     <TabsWrapper>
       <CSSTransition
-        in={shadowsVisible.left}
+        in={shadowsVisible.left && isGradientVisible}
         timeout={100}
         classNames={transitions.names.fade}
         unmountOnExit
-        mountOnEnter
       >
         <BackgroundGradient direction="prev" />
       </CSSTransition>
@@ -96,11 +99,10 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
         ))}
       </TabsGroup>
       <CSSTransition
-        in={shadowsVisible.right}
+        in={shadowsVisible.right && isGradientVisible}
         timeout={100}
         classNames={transitions.names.fade}
         unmountOnExit
-        mountOnEnter
       >
         <BackgroundGradient direction="next" />
       </CSSTransition>
