@@ -30,7 +30,7 @@ const SingleTemplate: Story<CheckboxProps> = (args) => (
 )
 
 const Template: Story<CheckboxProps> = (args) => (
-  <>
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
     <WithValue initial={false} actionName="onChange">
       {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue}></Checkbox>}
     </WithValue>
@@ -40,7 +40,7 @@ const Template: Story<CheckboxProps> = (args) => (
     <WithValue initial={true} actionName="onChange">
       {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} indeterminate></Checkbox>}
     </WithValue>
-  </>
+  </div>
 )
 
 export const Single = SingleTemplate.bind({})

@@ -12,7 +12,7 @@ export const CheckboxLabel = styled.label<CheckboxLabelProps>`
   padding: ${sizes(2)} 0;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   align-items: center;
-  display: flex;
+  display: inline-flex;
 `
 
 export const LabelText = styled(Text)`
