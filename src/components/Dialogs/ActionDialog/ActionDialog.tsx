@@ -20,18 +20,6 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   children,
   ...baseDialogProps
 }) => {
-  const handlePrimaryButtonClick = (e: React.MouseEvent) => {
-    if (onPrimaryButtonClick) {
-      onPrimaryButtonClick(e)
-    }
-  }
-
-  const handleSecondaryButtonClick = (e: React.MouseEvent) => {
-    if (onSecondaryButtonClick) {
-      onSecondaryButtonClick(e)
-    }
-  }
-
   const hasAnyAction = additionalActionsNode || primaryButtonText || secondaryButtonText
 
   return (
@@ -41,9 +29,9 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
-            {primaryButtonText && <Button onClick={handlePrimaryButtonClick}>{primaryButtonText}</Button>}
+            {primaryButtonText && <Button onClick={onPrimaryButtonClick}>{primaryButtonText}</Button>}
             {secondaryButtonText && (
-              <Button variant="secondary" onClick={handleSecondaryButtonClick}>
+              <Button variant="secondary" onClick={onSecondaryButtonClick}>
                 {secondaryButtonText}
               </Button>
             )}
