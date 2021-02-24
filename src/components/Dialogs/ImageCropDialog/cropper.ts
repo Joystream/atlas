@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
 
-const INITIAL_ZOOM = 0.1
+const MAX_ZOOM = 3
 
 export type CropperImageType = 'avatar' | 'videoThumbnail' | 'cover'
 
@@ -46,7 +46,10 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
 
 export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
   const [cropper, setCropper] = useState<Cropper | null>(null)
-  const [currentZoom, setCurrentZoom] = useState(INITIAL_ZOOM)
+  const [currentZoom, setCurrentZoom] = useState(0)
+  const [zoomRange, setZoomRange] = useState<[number, number]>([0, 1])
+
+  const zoomStep = (zoomRange[1] - zoomRange[0]) / 20
 
   const handleZoomChange = (zoom: number) => {
     setCurrentZoom(zoom)
@@ -59,19 +62,21 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
       return
     }
 
-    const handleZoomEvent = (event: Cropper.ZoomEvent<HTMLImageElement>) => {
-      const { ratio, oldRatio } = event.detail
-      console.log({ ratio, oldRatio })
-      // TODO fix min zoom
-      if (ratio < 0.05 || ratio > 0.5) {
-        event.preventDefault()
-        return
-      }
+    const handleReady = (event: Cropper.ReadyEvent<HTMLImageElement>) => {
+      const { cropper } = event.currentTarget
+      const { width: cropBoxWidth, height: cropBoxHeight } = cropper.getCropBoxData()
+      const { naturalWidth: imageWidth, naturalHeight: imageHeight } = cropper.getImageData()
 
-      setCurrentZoom(ratio)
+      const minZoom = normalizeZoomValue(Math.max(cropBoxWidth / imageWidth, cropBoxHeight / imageHeight))
+      const maxZoom = normalizeZoomValue(minZoom * MAX_ZOOM)
+
+      setZoomRange([minZoom, maxZoom])
+
+      const middleZoom = minZoom + (maxZoom - minZoom) / 2
+      cropper.zoomTo(middleZoom)
     }
 
-    const cropper: Cropper = new Cropper(imageEl, {
+    const cropper = new Cropper(imageEl, {
       viewMode: 1,
       dragMode: 'move',
       cropBoxResizable: false,
@@ -82,8 +87,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
       background: false,
       autoCropArea: 0.9,
       toggleDragModeOnDblclick: false,
-      zoom: handleZoomEvent,
-      ready: () => cropper.zoomTo(INITIAL_ZOOM),
+      ready: handleReady,
     })
     setCropper(cropper)
 
@@ -91,6 +95,32 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
       cropper.destroy()
     }
   }, [imageEl, imageType])
+
+  // handle zoom event
+  useEffect(() => {
+    if (!imageEl) {
+      return
+    }
+
+    const handleZoomEvent = (event: Event) => {
+      const { ratio } = (event as Cropper.ZoomEvent<HTMLImageElement>).detail
+      const [minZoom, maxZoom] = zoomRange
+      const normalizedRatio = normalizeZoomValue(ratio)
+
+      if (normalizedRatio < minZoom || normalizedRatio > maxZoom) {
+        event.preventDefault()
+        return
+      }
+
+      setCurrentZoom(normalizedRatio)
+    }
+
+    imageEl.addEventListener('zoom', handleZoomEvent)
+
+    return () => {
+      imageEl.removeEventListener('zoom', handleZoomEvent)
+    }
+  }, [imageEl, zoomRange])
 
   const cropImage = async (): Promise<[Blob, string]> => {
     return new Promise((resolve, reject) => {
@@ -110,5 +140,10 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     })
   }
 
-  return { currentZoom, handleZoomChange, cropper, cropImage }
+  return { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage }
+}
+
+const normalizeZoomValue = (value: number) => {
+  const base = 100
+  return Math.floor(value * base) / base
 }

@@ -32,7 +32,7 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
-  const { cropImage, currentZoom, handleZoomChange } = useCropper({ imageEl, imageType })
+  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType })
 
   const imageElRefCallback = (el: HTMLImageElement) => {
     setImageEl(el)
@@ -79,7 +79,13 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
   const zoomControlNode = (
     <ZoomControl>
       <Icon name="zoom-out" />
-      <StyledSlider value={currentZoom} onChange={handleZoomChange} min={0.05} max={0.5} step={0.02} />
+      <StyledSlider
+        value={currentZoom}
+        onChange={handleZoomChange}
+        min={zoomRange[0]}
+        max={zoomRange[1]}
+        step={zoomStep}
+      />
       <Icon name="zoom-in" />
     </ZoomControl>
   )
