@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { parse, isValid } from 'date-fns'
+import { isValid } from 'date-fns'
 import Datepicker, { DatepickerProps } from './Datepicker'
 import { Meta, Story } from '@storybook/react'
 
@@ -13,10 +13,10 @@ export default {
 
 const Template: Story<DatepickerProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
-  const [date, setDate] = useState<Date>()
+  const [date, setDate] = useState<Date | null>()
   const [validationError, setValidationError] = useState(false)
 
-  const handleChange: (date: Date) => void = (date) => {
+  const handleChange: (date: Date | null) => void = (date) => {
     setDate(date)
   }
   const handleDateValidation = () => {
@@ -25,10 +25,10 @@ const Template: Story<DatepickerProps> = (args) => {
     }
     setValidationError(!isValid(date))
   }
-
   return (
     <>
       <Datepicker {...args} ref={ref} onChange={handleChange} onBlur={handleDateValidation} error={validationError} />
+      <span>{date ? (isValid(date) ? date.toISOString() : 'Invalid date') : 'No date'}</span>
     </>
   )
 }

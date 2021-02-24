@@ -8,7 +8,7 @@ export type DatepickerProps = {
   error?: boolean
   disabled?: boolean
   helperText?: string
-  onChange: (date: Date) => void
+  onChange: (date: Date | null) => void
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
@@ -17,8 +17,12 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   ref
 ) => {
   const handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    const date = parse(e.target.value, 'dd/MM/yyyy', new Date())
-    onChange(date)
+    if (!e.target.value) {
+      onChange(null)
+    } else {
+      const date = parse(e.target.value, 'dd/MM/yyyy', new Date())
+      onChange(date)
+    }
   }
   return (
     <NumberFormat
