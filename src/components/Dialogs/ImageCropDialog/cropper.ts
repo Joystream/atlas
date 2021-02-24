@@ -81,6 +81,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
       center: false,
       background: false,
       autoCropArea: 0.9,
+      toggleDragModeOnDblclick: false,
       zoom: handleZoomEvent,
       ready: () => cropper.zoomTo(INITIAL_ZOOM),
     })
