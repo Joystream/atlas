@@ -3,7 +3,7 @@ import ActionBar, { ActionBarProps } from './ActionBar'
 
 type ActionBarTransactionProps = {
   fee: number
-} & ActionBarProps
+} & Omit<ActionBarProps, 'primaryText' | 'secondaryText'>
 
 const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({ fee, primaryButtonText, ...actionBarArgs }) => {
   return (
