@@ -110,7 +110,7 @@ const setRecentSearch = async (id: string, type: 'video' | 'channel') => {
 }
 
 const dismissedMessages = promisify(() => readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? [])
-const setDismissedMessages = async (id: string, add = true) => {
+const setDismissedMessage = async (id: string, add = true) => {
   const currentDismissedMessages = await dismissedMessages()
 
   const newDismissedMessages = add
@@ -145,7 +145,7 @@ const localStorageClient: PersonalDataClient = {
   recentSearches,
   setRecentSearch,
   dismissedMessages,
-  setDismissedMessages,
+  setDismissedMessage,
 }
 
 export default localStorageClient

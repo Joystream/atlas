@@ -75,5 +75,5 @@ export interface PersonalDataClient {
   dismissedMessages: () => Promise<DismissedMessage[]>
 
   // add a dismissed message
-  setDismissedMessages: (id: string, add?: boolean) => Promise<void>
+  setDismissedMessage: (id: string, add?: boolean) => Promise<void>
 }

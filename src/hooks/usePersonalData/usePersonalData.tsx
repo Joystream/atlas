@@ -118,9 +118,9 @@ const usePersonalData = () => {
   )
 
   const updateDismissedMessages = useCallback(
-    async (...setDismissedMessagesArgs: Parameters<PersonalDataClient['setDismissedMessages']>) => {
+    async (...setDismissedMessageArgs: Parameters<PersonalDataClient['setDismissedMessage']>) => {
       try {
-        await personalClient.setDismissedMessages(...setDismissedMessagesArgs)
+        await personalClient.setDismissedMessage(...setDismissedMessageArgs)
         const updatedDismissedMessages = await personalClient.dismissedMessages()
         dispatch({ type: 'UPDATE_DISMISSED_MESSAGES', dismissedMessages: updatedDismissedMessages })
       } catch (error) {
