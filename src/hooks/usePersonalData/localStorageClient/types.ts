@@ -24,6 +24,10 @@ export type RecentSearch = {
   type: 'video' | 'channel'
 }
 
+export type DismissedMessage = {
+  id: string
+}
+
 export interface PersonalDataClient {
   // ==== watched videos ====
 
@@ -64,4 +68,12 @@ export interface PersonalDataClient {
 
   // add a recent search
   setRecentSearch: (id: string, type: 'video' | 'channel') => Promise<void>
+
+  // === dismissed messages ===
+
+  // get all dismissed messages
+  dismissedMessages: () => Promise<DismissedMessage[]>
+
+  // add a dismissed message
+  setDismissedMessage: (id: string, add?: boolean) => Promise<void>
 }

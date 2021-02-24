@@ -33,6 +33,7 @@ export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
 export { ReactComponent as Success } from './success-check.svg'
 export { ReactComponent as Camera } from './camera.svg'
+export { ReactComponent as Warning } from './warning.svg'
 export { ReactComponent as Gear } from './gear.svg'
 export { ReactComponent as Unlisted } from './unlisted.svg'
 
@@ -72,6 +73,8 @@ const icons = [
   'error',
   'success',
   'camera',
+  'warning',
+  'trash',
   'gear',
   'unlisted',
 ] as const
