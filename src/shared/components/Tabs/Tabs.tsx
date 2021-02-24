@@ -12,7 +12,7 @@ export type TabsProps = {
 }
 const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
-  const [center, setCenter] = useState(0)
+  const [middleTabPosition, setMiddleTabPosition] = useState(0)
   const tabsRef = useRef<HTMLDivElement>(null)
   const [shadowsVisible, setShadowsVisible] = useState({
     left: false,
@@ -27,23 +27,23 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
       }
       const isScrollBarVisible = tabsRef.current.scrollWidth > width
       if (isScrollBarVisible) {
-        setCenter(width / 3)
+        setMiddleTabPosition(width / 3)
       } else {
-        setCenter(0)
+        setMiddleTabPosition(0)
       }
     },
   })
 
   useEffect(() => {
     const tabsGroup = tabsRef.current
-    if (!tabsGroup) {
+    if (!tabsGroup || selected < 1) {
       return
     }
-    const currentItemOffsetleft = selected > 0 && TAB_WIDTH * selected
+    const currentItemOffsetleft = TAB_WIDTH * selected
     if (currentItemOffsetleft) {
-      tabsGroup.scrollLeft = currentItemOffsetleft - center
+      tabsGroup.scrollLeft = currentItemOffsetleft - middleTabPosition
     }
-  }, [center, selected, tabs.length, tabsRef])
+  }, [middleTabPosition, selected, tabs.length, tabsRef])
 
   useEffect(() => {
     const tabsGroup = tabsRef.current
@@ -72,7 +72,14 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     }
   }, [])
 
-  const isGradientVisible = center > 0
+  const createClickHandler = (idx?: number) => () => {
+    if (idx !== undefined) {
+      onSelectTab(idx)
+      setSelected(idx)
+    }
+  }
+
+  const isGradientVisible = middleTabPosition > 0
 
   return (
     <TabsWrapper>
@@ -86,14 +93,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
       </CSSTransition>
       <TabsGroup ref={tabsRef}>
         {tabs.map((tab, idx) => (
-          <Tab
-            onClick={() => {
-              onSelectTab(idx)
-              setSelected(idx)
-            }}
-            key={`${tab}-${idx}`}
-            selected={selected === idx}
-          >
+          <Tab onClick={createClickHandler(idx)} key={`${tab}-${idx}`} selected={selected === idx}>
             <span>{tab}</span>
           </Tab>
         ))}
