@@ -8,6 +8,9 @@ export default {
   title: 'Shared/Checkbox',
   component: Checkbox,
   argTypes: {
+    label: {
+      defaultValue: 'Checkbox label',
+    },
     value: { table: { disable: true } },
     indeterminate: { table: { disable: true } },
     disabled: { table: { disable: true } },
