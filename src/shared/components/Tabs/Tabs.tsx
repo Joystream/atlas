@@ -2,7 +2,6 @@ import { transitions } from '@/shared/theme'
 import { throttle } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import useResizeObserver from 'use-resize-observer'
 import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Tabs.styles'
 
 export type TabsProps = {
@@ -12,57 +11,45 @@ export type TabsProps = {
 }
 const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
-  const [middleTabPosition, setMiddleTabPosition] = useState(0)
+  const [isContentOverflown, setIsContentOverflown] = useState(false)
   const tabsRef = useRef<HTMLDivElement>(null)
   const [shadowsVisible, setShadowsVisible] = useState({
     left: false,
     right: true,
   })
 
-  useResizeObserver<HTMLDivElement>({
-    ref: tabsRef,
-    onResize: ({ width }) => {
-      if (!tabsRef.current || !width) {
-        return
-      }
-      const isScrollBarVisible = tabsRef.current.scrollWidth > width
-      if (isScrollBarVisible) {
-        setMiddleTabPosition(width / 3)
-      } else {
-        setMiddleTabPosition(0)
-      }
-    },
-  })
-
-  useEffect(() => {
-    const tabsGroup = tabsRef.current
-    if (!tabsGroup || selected < 1) {
-      return
-    }
-    const currentItemOffsetleft = TAB_WIDTH * selected
-    if (currentItemOffsetleft) {
-      tabsGroup.scrollLeft = currentItemOffsetleft - middleTabPosition
-    }
-  }, [middleTabPosition, selected, tabs.length, tabsRef])
-
   useEffect(() => {
     const tabsGroup = tabsRef.current
     if (!tabsGroup) {
       return
     }
+
+    setIsContentOverflown(tabsGroup.scrollWidth > tabsGroup.clientWidth)
+
+    if (!isContentOverflown) {
+      return
+    }
+
+    const middleTabPosition = tabsGroup.clientWidth / 2 - TAB_WIDTH / 2
+    const currentItemOffsetleft = TAB_WIDTH * selected
+
+    tabsGroup.scrollLeft = currentItemOffsetleft - middleTabPosition
+  }, [isContentOverflown, selected, tabs.length, tabsRef])
+
+  useEffect(() => {
+    const tabsGroup = tabsRef.current
+    if (!tabsGroup || !isContentOverflown) {
+      return
+    }
+
     const touchHandler = throttle(() => {
       const { scrollLeft, clientWidth, scrollWidth } = tabsGroup
-      if (scrollLeft > 10) {
-        setShadowsVisible((shadows) => ({ ...shadows, left: true }))
-      } else {
-        setShadowsVisible((shadows) => ({ ...shadows, left: false }))
-      }
-      if (scrollLeft < scrollWidth - clientWidth - 10) {
-        setShadowsVisible((shadows) => ({ ...shadows, right: true }))
-      } else {
-        setShadowsVisible((shadows) => ({ ...shadows, right: false }))
-      }
+      setShadowsVisible({
+        left: scrollLeft > 10,
+        right: scrollLeft < scrollWidth - clientWidth - 10,
+      })
     }, 100)
+
     tabsGroup.addEventListener('touchmove', touchHandler)
     tabsGroup.addEventListener('scroll', touchHandler)
     return () => {
@@ -70,7 +57,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
       tabsGroup.removeEventListener('touchmove', touchHandler)
       tabsGroup.removeEventListener('scroll', touchHandler)
     }
-  }, [])
+  }, [isContentOverflown])
 
   const createClickHandler = (idx?: number) => () => {
     if (idx !== undefined) {
@@ -79,12 +66,10 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     }
   }
 
-  const isGradientVisible = middleTabPosition > 0
-
   return (
     <TabsWrapper>
       <CSSTransition
-        in={shadowsVisible.left && isGradientVisible}
+        in={shadowsVisible.left && isContentOverflown}
         timeout={100}
         classNames={transitions.names.fade}
         unmountOnExit
@@ -99,7 +84,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
         ))}
       </TabsGroup>
       <CSSTransition
-        in={shadowsVisible.right && isGradientVisible}
+        in={shadowsVisible.right && isContentOverflown}
         timeout={100}
         classNames={transitions.names.fade}
         unmountOnExit
