@@ -44,7 +44,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
         <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
       </StyledInfoContainer>
       <StyledButtonsContainer>
-        {detailsText && (
+        {detailsText && tooltipText && (
           <StyledTooltip text={tooltipText} above right>
             <StyledDetailsTextContainer>
               {detailsText} <Icon name={detailsTextIcon || 'info'} />
