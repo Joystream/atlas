@@ -20,7 +20,7 @@ const items: SelectedItem[] = [
 ]
 
 const PlaygroundValidationForm = () => {
-  const { register, handleSubmit, control, setValue, reset, errors } = useForm({
+  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm({
     shouldFocusError: false,
     defaultValues: {
       title: '',
@@ -65,7 +65,10 @@ const PlaygroundValidationForm = () => {
             render={({ value }) => (
               <Select
                 items={items}
-                onChange={(e) => setValue('selectedVideoVisibility', e.selectedItem?.value)}
+                onChange={(e) => {
+                  setValue('selectedVideoVisibility', e.selectedItem?.value)
+                  clearErrors('selectedVideoVisibility')
+                }}
                 error={!!errors.selectedVideoVisibility && !value}
                 helperText={errors.selectedVideoVisibility?.message}
               />
