@@ -1,15 +1,15 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 
-export const draft = async (id: string) => {
-  const currentDrafts = await drafts()
+export const getDraft = async (id: string) => {
+  const currentDrafts = await getDrafts()
   return currentDrafts.find((d) => d.id === id) ?? null
 }
 
-export const drafts = promisify(() => readFromLocalStorage<any[]>('drafts') || [])
+export const getDrafts = promisify(() => readFromLocalStorage<any[]>('drafts') || [])
 
 export const addOrUpdateDraft = async (id: string, draftProps: any) => {
-  const currentDrafts = await drafts()
+  const currentDrafts = await getDrafts()
   const timeStamp = new Date().toISOString()
   const newDrafts = [
     { ...draftProps, id, recentlyUpdatedAt: timeStamp },
@@ -19,7 +19,7 @@ export const addOrUpdateDraft = async (id: string, draftProps: any) => {
 }
 
 export const removeDraft = async (id: string) => {
-  const currentDrafts = await drafts()
+  const currentDrafts = await getDrafts()
   const newDrafts = [...currentDrafts.filter((search) => search.id !== id)]
   writeToLocalStorage('drafts', newDrafts)
 }

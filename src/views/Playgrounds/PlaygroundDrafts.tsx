@@ -22,13 +22,13 @@ const FRUITS = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, createOrSaveDraft, getSingleDraft, discardDraft, discardAllDrafts } = useDraft<typeof form>(form)
+  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDraft<typeof form>(form)
 
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
-    const draft = await getSingleDraft(draftID)
+    const draft = await getDraft(draftID)
     if (draft) {
       setForm(draft)
     } else {
@@ -89,16 +89,16 @@ const PlaygroundDrafts = () => {
       <div style={{ display: 'flex', gap: '20px' }}>
         <Button
           onClick={async () => {
-            await createOrSaveDraft(fakeId)
+            await createOrUpdateDraft(fakeId)
             setCurrentDraft(fakeId)
           }}
         >
           Create new draft
         </Button>
-        {currentDraftId && <Button onClick={() => createOrSaveDraft(currentDraftId)}>Save this draft</Button>}
+        {currentDraftId && <Button onClick={() => createOrUpdateDraft(currentDraftId)}>Save this draft</Button>}
         <Button
           onClick={async () => {
-            await discardDraft(currentDraftId)
+            await removeDraft(currentDraftId)
             setCurrentDraft('')
           }}
         >
@@ -106,7 +106,7 @@ const PlaygroundDrafts = () => {
         </Button>
         <Button
           onClick={async () => {
-            await discardAllDrafts()
+            await removeAllDrafts()
             setCurrentDraft('')
           }}
         >
