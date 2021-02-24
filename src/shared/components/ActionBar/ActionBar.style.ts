@@ -1,11 +1,14 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
-import { Text, Button } from '@/shared/components'
+import { Text, Button, Tooltip } from '@/shared/components'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  background-color: ${colors.gray[800]};
+  background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   @media screen and (min-width: ${breakpoints.medium}) {
     flex-direction: row;
@@ -25,6 +28,7 @@ export const StyledInfoContainer = styled.div`
   }
   @media screen and (min-width: ${breakpoints.large}) {
     flex-direction: row;
+    align-items: center;
     width: 100%;
   }
 `
@@ -61,28 +65,26 @@ export const StyledButtonsContainer = styled.div`
   justify-content: flex-end;
 `
 
-export const StyledDetailsTextContainer = styled.div`
+export const StyledTooltip = styled(Tooltip)`
   display: none;
-  align-items: center;
-  justify-content: center;
-  color: ${colors.white};
+  margin-right: ${sizes(14)};
+  div {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: block;
+  }
+`
+
+export const StyledDetailsTextContainer = styled.div`
+  color: ${colors.gray[200]};
   font-size: ${typography.sizes.body2};
-  line-height: 20px;
-  margin-right: auto;
   svg {
     margin-left: ${sizes(2)};
     width: 16px;
     height: 16px;
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: flex;
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    text-align: right;
-    margin-bottom: 0;
-    margin-right: ${sizes(2)};
-    align-items: center;
-    justify-content: flex-end;
   }
 `
 

@@ -4,6 +4,7 @@ import {
   StyledInfoContainer,
   StyledPrimaryText,
   StyledSecondaryText,
+  StyledTooltip,
   StyledDetailsTextContainer,
   StyledButtonsContainer,
   StyledSecondaryButton,
@@ -16,6 +17,7 @@ export type ActionBarProps = {
   secondaryText?: string
   primaryButtonText?: string
   detailsText?: string
+  tooltipText?: string
   detailsTextIcon?: IconType
   secondaryButtonText?: string
   secondaryButtonIcon?: IconType
@@ -29,6 +31,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
   primaryButtonText,
   secondaryButtonText,
   detailsText,
+  tooltipText,
   detailsTextIcon,
   secondaryButtonIcon,
   onConfirmClick,
@@ -42,11 +45,13 @@ const ActionBar: React.FC<ActionBarProps> = ({
       </StyledInfoContainer>
       <StyledButtonsContainer>
         {detailsText && (
-          <StyledDetailsTextContainer>
-            {detailsText} <Icon name={detailsTextIcon || 'info'} />
-          </StyledDetailsTextContainer>
+          <StyledTooltip text={tooltipText} above right>
+            <StyledDetailsTextContainer>
+              {detailsText} <Icon name={detailsTextIcon || 'info'} />
+            </StyledDetailsTextContainer>
+          </StyledTooltip>
         )}
-        {secondaryButtonText && (
+        {secondaryButtonText && !detailsText && (
           <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onCancelClick}>
             {secondaryButtonText}
           </StyledSecondaryButton>

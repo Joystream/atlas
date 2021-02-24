@@ -11,6 +11,8 @@ export default {
     text: { defaultValue: 'Lorem ipsum dolor sit amet!' },
     arrowDisabled: { defaultValue: false },
     darkenContent: { defaultValue: true },
+    right: { defaultValue: false },
+    above: { defaultValue: false },
   },
 } as Meta
 

@@ -10,6 +10,8 @@ export default {
     primaryText: 'Fee: 0.2 Joy',
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
     detailsText: 'Video details saved as draft (2 min ago)',
+    tooltipText:
+      'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
     detailsTextIcon: 'info',
     primaryButtonText: 'Edit the channel',
     secondaryButtonText: 'Cancel',
