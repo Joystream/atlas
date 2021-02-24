@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import {
   Button as _Button,
@@ -19,22 +19,22 @@ const items: SelectedItem[] = [
   { name: 'Private', value: 'private' },
 ]
 
-type Inputs = {
-  title: string
-  videoSelect: string
-  header: string
-  check: string
-  textarea: string
-}
-
-const PlaygroundForm = () => {
-  const { register, handleSubmit, control, setValue, errors } = useForm<Inputs>({
+const PlaygroundValidationForm = () => {
+  const { register, handleSubmit, control, setValue, reset, errors } = useForm({
     shouldFocusError: false,
+    defaultValues: {
+      title: '',
+      videoSelect: null,
+      header: '',
+      textarea: '',
+      check: false,
+    },
   })
-  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
-  const [checkboxValue, setCheckboxValue] = useState(false)
 
-  const onSubmit = handleSubmit((data) => console.log(data))
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
+    reset()
+  })
 
   return (
     <>
@@ -61,17 +61,12 @@ const PlaygroundForm = () => {
           <Controller
             name="videoSelect"
             control={control}
-            defaultValue={selectedItem}
-            rules={requiredValidation('Video Visibility')}
-            render={() => (
+            rules={requiredValidation('Video visibility')}
+            render={({ value }) => (
               <Select
                 items={items}
-                onChange={({ selectedItem }) => {
-                  setValue('videoSelect', selectedItem)
-                  selectedItem && setSelectedItem(selectedItem)
-                }}
-                value={selectedItem}
-                error={!!errors.videoSelect && !selectedItem}
+                onChange={(e) => setValue('videoSelect', e.selectedItem?.value)}
+                error={!!errors.videoSelect && !value}
                 helperText={errors.videoSelect?.message}
               />
             )}
@@ -80,16 +75,18 @@ const PlaygroundForm = () => {
 
         <FormField title="Marketing" description="Lorem ipsum dolor sit amet.">
           <StyledCheckboxContainer>
-            <Checkbox
+            <Controller
+              as={Checkbox}
               name="check"
-              ref={register(requiredValidation('Checkbox'))}
-              value={checkboxValue}
-              onChange={setCheckboxValue}
+              rules={{ required: true }}
               error={!!errors.check}
+              control={control}
+              value={false}
             />
             <Text>My video features a paid promotion material</Text>
           </StyledCheckboxContainer>
         </FormField>
+
         <FormField title="Description">
           <Textarea
             name="textarea"
@@ -117,4 +114,4 @@ const StyledCheckboxContainer = styled.div`
   }
 `
 
-export default PlaygroundForm
+export default PlaygroundValidationForm
