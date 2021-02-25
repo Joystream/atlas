@@ -1,14 +1,25 @@
 import React from 'react'
 import Text, { TextProps } from './Text'
 import { Meta, Story } from '@storybook/react'
+import { css } from '@emotion/react'
 
 export default {
   title: 'Shared/Text',
   component: Text,
 } as Meta
 
-const Template: Story<Omit<TextProps, 'ref'>> = (args) => (
-  <>
+const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
+  <div
+    css={css`
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      > * {
+        margin-top: 12px;
+      }
+    `}
+  >
     <Text {...args} variant="hero">
       Hero
     </Text>
@@ -48,7 +59,7 @@ const Template: Story<Omit<TextProps, 'ref'>> = (args) => (
     <Text {...args} variant="overhead">
       Overhead
     </Text>
-  </>
+  </div>
 )
 
 export const Regular = Template.bind({})
