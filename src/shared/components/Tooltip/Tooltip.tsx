@@ -3,19 +3,40 @@ import { StyledTooltip, ChildrenContainer } from './Tooltip.style'
 
 export type TooltipProps = {
   text: string
+  above?: boolean
+  right?: boolean
   arrowDisabled?: boolean
   darkenContent?: boolean
+  className?: string
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ children, text, arrowDisabled, darkenContent = true }) => {
+const Tooltip: React.FC<TooltipProps> = ({
+  children,
+  text,
+  above,
+  right,
+  arrowDisabled,
+  darkenContent = true,
+  className,
+}) => {
   const [isActive, setActive] = useState(false)
 
   return (
-    <StyledTooltip data-text={text} isActive={isActive} arrowDisabled={arrowDisabled}>
+    <StyledTooltip
+      data-text={text}
+      isActive={isActive}
+      arrowDisabled={arrowDisabled}
+      above={above}
+      right={right}
+      className={className}
+    >
       <ChildrenContainer
         onMouseEnter={() => setActive(true)}
         onMouseLeave={() => setActive(false)}
+        onFocus={() => setActive(true)}
+        onBlur={() => setActive(false)}
         darkenContent={darkenContent}
+        tabIndex={0}
       >
         {children}
       </ChildrenContainer>
