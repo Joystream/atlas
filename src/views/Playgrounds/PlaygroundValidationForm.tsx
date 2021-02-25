@@ -1,5 +1,8 @@
 import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { isValid } from 'date-fns'
+import { textFieldValidation, requiredValidation } from './formValidationOptions'
+import styled from '@emotion/styled'
 import {
   Button as _Button,
   Text,
@@ -9,18 +12,26 @@ import {
   Checkbox,
   Textarea,
   HeaderTextField,
+  Datepicker,
 } from '@/shared/components'
-import { textFieldValidation, requiredValidation } from './formValidationOptions'
 import { SelectedItem } from '@/shared/components/Select'
-import styled from '@emotion/styled'
 
 const items: SelectedItem[] = [
   { name: 'Public (Anyone can see this video', value: 'public' },
   { name: 'Private', value: 'private' },
 ]
 
+type Inputs = {
+  title: string
+  selectedVideoVisibility: string | null
+  header: string
+  check: boolean
+  date: Date | null
+  textarea: string
+}
+
 const PlaygroundValidationForm = () => {
-  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm({
+  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       title: '',
@@ -28,6 +39,7 @@ const PlaygroundValidationForm = () => {
       header: '',
       textarea: '',
       check: false,
+      date: null,
     },
   })
 
@@ -88,6 +100,21 @@ const PlaygroundValidationForm = () => {
             />
             <Text>My video features a paid promotion material</Text>
           </StyledCheckboxContainer>
+        </FormField>
+
+        <FormField title="Date" description="Lorem ipsum dolor sit amet.">
+          <Controller
+            name="date"
+            control={control}
+            rules={{ validate: (date) => isValid(date) }}
+            render={() => (
+              <Datepicker
+                onChange={(date) => setValue('date', date)}
+                onBlur={() => clearErrors('date')}
+                error={!!errors.date}
+              />
+            )}
+          />
         </FormField>
 
         <FormField title="Description">
