@@ -1,7 +1,7 @@
 import React from 'react'
 import ActionBar, { ActionBarProps } from './ActionBar'
 
-type ActionBarTransactionProps = {
+export type ActionBarTransactionProps = {
   fee: number
 } & Omit<ActionBarProps, 'primaryText' | 'secondaryText'>
 
