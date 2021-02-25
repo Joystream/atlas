@@ -18,7 +18,19 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   (
-    { name, value, indeterminate, onChange, disabled = false, onFocus, onBlur, error = false, className, label, ...props },
+    {
+      name,
+      value,
+      indeterminate,
+      onChange,
+      disabled = false,
+      onFocus,
+      onBlur,
+      error = false,
+      className,
+      label,
+      ...props
+    },
     ref
   ) => {
     const isIndeterminate = indeterminate || false
