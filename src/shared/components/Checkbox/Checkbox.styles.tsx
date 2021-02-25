@@ -1,7 +1,24 @@
-import { darken } from 'polished'
-import { sizes, colors, transitions } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
+import { darken } from 'polished'
+import Text from '../Text'
+
+type CheckboxLabelProps = {
+  disabled?: boolean
+}
+
+export const CheckboxLabel = styled.label<CheckboxLabelProps>`
+  padding: ${sizes(2)} 0;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  align-items: center;
+  display: inline-flex;
+`
+
+export const LabelText = styled(Text)`
+  margin-left: 10px;
+  color: ${colors.gray[400]};
+`
 
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
