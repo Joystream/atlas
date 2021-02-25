@@ -34,7 +34,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     if (!tabsGroup || !isContentOverflown) {
       return
     }
-    const { scrollLeft, clientWidth, scrollWidth } = tabsGroup
+    const { clientWidth, scrollWidth } = tabsGroup
 
     const middleTabPosition = clientWidth / 2 - TAB_WIDTH / 2
     const currentItemOffsetleft = TAB_WIDTH * selected
@@ -43,8 +43,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
 
     const touchHandler = throttle(() => {
       setShadowsVisible({
-        left: scrollLeft > SCROLL_SHADOW_OFFSET,
-        right: scrollLeft < scrollWidth - clientWidth - SCROLL_SHADOW_OFFSET,
+        left: tabsGroup.scrollLeft > SCROLL_SHADOW_OFFSET,
+        right: tabsGroup.scrollLeft < scrollWidth - clientWidth - SCROLL_SHADOW_OFFSET,
       })
     }, 100)
 
