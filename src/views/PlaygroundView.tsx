@@ -1,6 +1,7 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import styled from '@emotion/styled'
+import { PlaygroundValidationForm } from './Playgrounds'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
 import PlaygroundDrafts from './Playgrounds/PlaygroundDrafts'
@@ -10,12 +11,12 @@ export const PlaygroundView = () => {
     <Container>
       <Text variant="h2">Internal testing view</Text>
       <LinksContainer>
-        <Link to="./first">First</Link>
+        <Link to="./validation-form">Validation Form</Link>
         <Link to="./drafts">Drafts</Link>
         <Link to="./third">Third</Link>
       </LinksContainer>
       <Routes>
-        <Route key="first" path="/first" element={<p>First</p>} />
+        <Route key="validation-form" path="/validation-form" element={<PlaygroundValidationForm />} />
         <Route key="drafts" path="/drafts" element={<PlaygroundDrafts />} />
         <Route key="third" path="/third" element={<p>Third</p>} />
       </Routes>

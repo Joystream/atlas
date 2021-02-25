@@ -7,6 +7,7 @@ import {
   PersonalDataClient,
   getInitialPersonalData,
   localStorageClient,
+  DismissedMessage,
 } from './localStorageClient'
 
 const personalClient = localStorageClient
@@ -23,8 +24,16 @@ type UpdateSearchesAction = {
   type: 'UPDATE_SEARCHES'
   recentSearches: RecentSearch[]
 }
+type UpdateDismissedMessagesAction = {
+  type: 'UPDATE_DISMISSED_MESSAGES'
+  dismissedMessages: DismissedMessage[]
+}
 
-type Action = UpdateWatchedVideosAction | UpdateChannelFollowingAction | UpdateSearchesAction
+type Action =
+  | UpdateWatchedVideosAction
+  | UpdateChannelFollowingAction
+  | UpdateSearchesAction
+  | UpdateDismissedMessagesAction
 const asyncReducer = (state: PersonalData, action: Action) => {
   switch (action.type) {
     case 'UPDATE_WATCHED_VIDEOS': {
@@ -43,6 +52,12 @@ const asyncReducer = (state: PersonalData, action: Action) => {
       return {
         ...state,
         recentSearches: action.recentSearches,
+      }
+    }
+    case 'UPDATE_DISMISSED_MESSAGES': {
+      return {
+        ...state,
+        dismissedMessages: action.dismissedMessages,
       }
     }
     default: {
@@ -101,12 +116,26 @@ const usePersonalData = () => {
     },
     [dispatch]
   )
-  return { state, updateWatchedVideos, updateChannelFollowing, updateRecentSearches }
+
+  const updateDismissedMessages = useCallback(
+    async (...setDismissedMessageArgs: Parameters<PersonalDataClient['setDismissedMessage']>) => {
+      try {
+        await personalClient.setDismissedMessage(...setDismissedMessageArgs)
+        const updatedDismissedMessages = await personalClient.dismissedMessages()
+        dispatch({ type: 'UPDATE_DISMISSED_MESSAGES', dismissedMessages: updatedDismissedMessages })
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    },
+    [dispatch]
+  )
+  return { state, updateWatchedVideos, updateChannelFollowing, updateRecentSearches, updateDismissedMessages }
 }
 type PersonalData = {
   watchedVideos: WatchedVideo[]
   followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
+  dismissedMessages: DismissedMessage[]
 }
 const PersonalDataProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<typeof asyncReducer, undefined>(asyncReducer, undefined, () => ({

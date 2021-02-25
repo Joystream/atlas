@@ -3,6 +3,7 @@ import InputBase, { InputBaseProps, LabelText } from '../InputBase'
 import { TextInput } from './TextField.style'
 
 export type TextFieldProps = {
+  name?: string
   type?: 'text' | 'email' | 'password' | 'search'
   value?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -13,7 +14,7 @@ export type TextFieldProps = {
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
-  { type = 'text', label, value, onChange, onBlur, onFocus, error, disabled, required, ...inputBaseProps },
+  { name, type = 'text', label, value, onChange, onBlur, onFocus, error, disabled, required, ...inputBaseProps },
   ref
 ) => {
   return (
@@ -21,6 +22,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
       <label>
         <TextInput
           ref={ref}
+          name={name}
           value={value}
           disabled={disabled}
           error={error}
