@@ -1,4 +1,4 @@
-import { useDraft } from '@/hooks/useDrafts/useDrafts'
+import { useDrafts } from '@/hooks'
 import { FormField, Button, Text } from '@/shared/components'
 import Select from '@/shared/components/Select'
 import TextArea from '@/shared/components/TextArea'
@@ -22,7 +22,7 @@ const FRUITS = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDraft<typeof form>(form)
+  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDrafts<typeof form>(form)
 
   const [currentDraftId, setCurrentDraftId] = useState('')
 

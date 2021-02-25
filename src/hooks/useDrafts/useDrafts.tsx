@@ -3,7 +3,7 @@ import { addOrUpdateDraft, clearDrafts, getDraft, getDrafts, removeDraft } from 
 
 type CommonDraftProps = { id: string; recentlyUpdatedAt: string }
 
-export const useDraft = <T extends object>(state: T) => {
+export const useDrafts = <T extends object>(state: T) => {
   const [draftsState, setDraftsState] = useState<(T & CommonDraftProps)[]>([])
 
   const getInitialDrafts = async () => {
