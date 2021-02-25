@@ -1,10 +1,9 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { PlaygroundValidationForm } from './Playgrounds'
+import { PlaygroundValidationForm, PlaygroundDrafts } from './Playgrounds'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
-import PlaygroundDrafts from './Playgrounds/PlaygroundDrafts'
 
 export const PlaygroundView = () => {
   return (
