@@ -4,6 +4,7 @@ import { Checkmark, Container, InnerContainer, Input } from './Checkbox.styles'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
+  name?: string
   value: boolean
   disabled?: boolean
   indeterminate?: boolean
@@ -15,7 +16,10 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ value, indeterminate, onChange, disabled = false, onFocus, onBlur, error = false, className, ...props }, ref) => {
+  (
+    { name, value, indeterminate, onChange, disabled = false, onFocus, onBlur, error = false, className, ...props },
+    ref
+  ) => {
     const isIndeterminate = indeterminate || false
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
@@ -45,6 +49,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
         <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
           <Input
+            name={name}
             ref={ref}
             type="checkbox"
             data-multiple="false"
