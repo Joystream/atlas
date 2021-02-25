@@ -1,4 +1,4 @@
-import { useDrafts } from '@/hooks'
+import { CommonDraftProps, useDrafts } from '@/hooks'
 import { FormField, Button, Text } from '@/shared/components'
 import Select from '@/shared/components/Select'
 import TextArea from '@/shared/components/TextArea'
@@ -22,15 +22,18 @@ const FRUITS = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDrafts<typeof form>(form)
-
+  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDrafts({
+    state: form,
+    type: 'videos',
+  })
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
     const draft = await getDraft(draftID)
     if (draft) {
-      setForm(draft)
+      const { id, type, updatedAt, ...rest } = draft
+      setForm(rest)
     } else {
       setForm(INITIAL_STATE)
     }
