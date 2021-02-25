@@ -266,7 +266,6 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
                     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-                      {/* TODO: instead of createdAt add the lastUpdate from useDraft hook */}
                       {videoPublishState === 'draft'
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
