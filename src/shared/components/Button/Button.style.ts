@@ -15,6 +15,7 @@ export type ButtonStyleProps = {
 export type IconStyleProps = {
   disabled?: boolean
   size?: 'large' | 'medium' | 'small'
+  hasText?: boolean
 }
 
 const colorsFromProps = ({ variant }: ButtonStyleProps) => {
@@ -100,20 +101,85 @@ const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => 
   `
 }
 
-const disabled = ({ disabled }: ButtonStyleProps) =>
-  disabled
+const disabled = ({ disabled, variant }: ButtonStyleProps) => {
+  let bgColor, color, borderColor, opacity
+  switch (variant) {
+    case 'tertiary': {
+      bgColor = colors.black
+      color = colors.white
+      borderColor = colors.transparent
+      opacity = 0.32
+      break
+    }
+    case 'secondary': {
+      bgColor = colors.black
+      color = colors.white
+      borderColor = colors.white
+      opacity = 0.32
+      break
+    }
+    case 'primary':
+    default: {
+      bgColor = colors.blue[500]
+      color = colors.white
+      borderColor = colors.blue[500]
+      opacity = 0.4
+      break
+    }
+  }
+  return disabled
     ? css`
-        filter: brightness(50%);
-        pointer-events: none;
+        box-shadow: none;
+        color: ${color};
+        background-color: ${bgColor};
+        border-color: ${borderColor};
+        opacity: ${opacity};
+        &:hover {
+          color: ${color};
+          background-color: ${bgColor};
+          border-color: ${borderColor};
+          opacity: ${opacity};
+        }
+        &:active {
+          color: ${color};
+          background-color: ${bgColor};
+          border-color: ${borderColor};
+          opacity: ${opacity};
+        }
       `
     : null
+}
+const iconSizeFromProps = ({ size: sizeProp = 'medium', hasText }: IconStyleProps) => {
+  let size
+  if (!hasText) {
+    size = 'auto'
+  } else {
+    switch (sizeProp) {
+      case 'small': {
+        size = 'var(--small-icon)'
+        break
+      }
+      case 'medium': {
+        size = 'var(--medium-icon)'
+        break
+      }
+      case 'large':
+      default: {
+        size = 'var(--large-icon)'
+        break
+      }
+    }
+  }
+  return css`
+    width: ${size};
+    height: ${size};
+  `
+}
 
 export const StyledIcon = styled(Icon)<IconStyleProps>`
   display: block;
   flex-shrink: 0;
-  width: ${({ size }) => (size === 'large' ? '24px' : '14px')};
-  height: ${({ size }) => (size === 'large' ? '24px' : '14px')};
-  margin: ${({ size }) => (size === 'large' ? '-14px 0' : size === 'medium' ? '-12px 0' : '-8px 0')};
+  ${iconSizeFromProps}
   & + * {
     margin-left: 10px;
   }

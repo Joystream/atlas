@@ -46,7 +46,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       size={size}
       ref={ref}
     >
-      {icon && <StyledIcon disabled={disabled} name={icon} size={size} />}
+      {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
       {children && <span>{children}</span>}
     </StyledButton>
   )

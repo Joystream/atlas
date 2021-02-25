@@ -44,6 +44,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({
               toggled={category.id === selectedCategoryId}
               variant="secondary"
               onClick={() => handleCategoryChange(category.id)}
+              size="large"
             >
               {category.name}
             </StyledToggleButton>

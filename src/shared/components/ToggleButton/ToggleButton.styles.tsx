@@ -103,15 +103,18 @@ const disabled = ({ disabled }: ToggleButtonStyleProps) =>
         color: ${colors.white};
         background-color: ${colors.gray[100]};
         border-color: ${colors.gray[100]};
+        opacity: 1;
         &:hover {
           color: ${colors.white};
           background-color: ${colors.gray[100]};
           border-color: ${colors.gray[100]};
+          opacity: 1;
         }
         &:active {
           color: ${colors.white};
           background-color: ${colors.gray[100]};
           border-color: ${colors.gray[100]};
+          opacity: 1;
         }
       `
     : null
