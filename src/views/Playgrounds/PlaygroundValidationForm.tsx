@@ -5,7 +5,6 @@ import { textFieldValidation, requiredValidation } from './formValidationOptions
 import styled from '@emotion/styled'
 import {
   Button as _Button,
-  Text,
   FormField,
   TextField,
   Select,
@@ -13,6 +12,7 @@ import {
   Textarea,
   HeaderTextField,
   Datepicker,
+  RadioButton,
 } from '@/shared/components'
 import { SelectedItem } from '@/shared/components/Select'
 
@@ -28,6 +28,7 @@ type Inputs = {
   check: boolean
   date: Date | null
   textarea: string
+  radioGroup: string
 }
 
 const PlaygroundValidationForm = () => {
@@ -40,6 +41,7 @@ const PlaygroundValidationForm = () => {
       textarea: '',
       check: false,
       date: null,
+      radioGroup: 'all',
     },
   })
 
@@ -97,8 +99,8 @@ const PlaygroundValidationForm = () => {
               error={!!errors.check}
               control={control}
               value={false}
+              label="My video features a paid promotion material"
             />
-            <Text>My video features a paid promotion material</Text>
           </StyledCheckboxContainer>
         </FormField>
 
@@ -113,6 +115,29 @@ const PlaygroundValidationForm = () => {
                 onBlur={() => clearErrors('date')}
                 error={!!errors.date}
               />
+            )}
+          />
+        </FormField>
+
+        <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
+          <Controller
+            name="radioGroup"
+            control={control}
+            render={(props) => (
+              <StyledRadioContainer>
+                <RadioButton
+                  value="all"
+                  label="All audiences"
+                  onChange={(value) => setValue('radioGroup', value)}
+                  selected={props.value}
+                />
+                <RadioButton
+                  value="mature"
+                  label="Mature"
+                  onChange={(value) => setValue('radioGroup', value)}
+                  selected={props.value}
+                />
+              </StyledRadioContainer>
             )}
           />
         </FormField>
@@ -143,6 +168,11 @@ const StyledCheckboxContainer = styled.div`
   p {
     margin-left: 20px;
   }
+`
+
+const StyledRadioContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 export default PlaygroundValidationForm
