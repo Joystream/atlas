@@ -33,7 +33,7 @@ const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, descript
         {title}
       </MessageTitle>
       <MessageButton aria-label="close dialog" onClick={() => updateDismissedMessages(id)}>
-        <Icon name="times" />
+        <Icon name="close" />
       </MessageButton>
       <MessageDescription variant="body2">{description}</MessageDescription>
     </MessageWrapper>

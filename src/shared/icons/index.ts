@@ -15,18 +15,21 @@ export { ReactComponent as ChevronRight } from './chevron-right-big.svg'
 export { ReactComponent as ChevronLeft } from './chevron-left-big.svg'
 export { ReactComponent as Check } from './check.svg'
 export { ReactComponent as Dash } from './dash.svg'
+export { ReactComponent as Position } from './position.svg'
 export { ReactComponent as Play } from './play.svg'
 export { ReactComponent as PlayOutline } from './play-outline.svg'
 export { ReactComponent as Pause } from './pause.svg'
 export { ReactComponent as SoundOn } from './sound-on.svg'
 export { ReactComponent as SoundOff } from './sound-off.svg'
 export { ReactComponent as Search } from './search.svg'
-export { ReactComponent as Times } from './times.svg'
+export { ReactComponent as Close } from './close.svg'
 export { ReactComponent as Videos } from './videos.svg'
 export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
 export { ReactComponent as Success } from './success-check.svg'
 export { ReactComponent as Camera } from './camera.svg'
+export { ReactComponent as ZoomIn } from './zoom-in.svg'
+export { ReactComponent as ZoomOut } from './zoom-out.svg'
 export { ReactComponent as Warning } from './warning.svg'
 export { ReactComponent as Trash } from './trash.svg'
 export { ReactComponent as Gear } from './gear.svg'
@@ -48,14 +51,15 @@ const icons = [
   'chevron-right',
   'chevron-left',
   'check',
+  'close',
   'dash',
+  'position',
   'play',
   'play-outline',
   'pause',
   'search',
   'sound-on',
   'sound-off',
-  'times',
   'videos',
   'info',
   'error',
@@ -64,6 +68,8 @@ const icons = [
   'warning',
   'trash',
   'gear',
+  'zoom-in',
+  'zoom-out',
 ] as const
 
 export type IconType = typeof icons[number]
