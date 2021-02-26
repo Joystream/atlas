@@ -1,24 +1,76 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { addOrUpdateDraft, clearDrafts, getDraft, getDraftsWithType, removeDraft } from './utils'
+import { addDraft, clearDrafts, getDraft, getDrafts, removeDraft, updateDraft } from './utils'
 
-type UseDraftOpts<T> = {
-  state: T
-  type: string
+export type DraftType = 'video' | 'channel'
+
+export type CommonDraftProps = {
+  id: string
+  updatedAt?: string
 }
 
-export type CommonDraftProps<T = unknown> = { id: string; updatedAt: string; type: string } & T
+export type VideoDraft = {
+  type: 'video'
+  title?: string
+  description?: string
+  publicness?: 'public' | 'private'
+  publishedBefore?: string
+  marketing?: boolean
+  contentRating?: 'all' | 'mature'
+} & CommonDraftProps
+
+export type ChannelDraft = {
+  type: 'channel'
+  title?: string
+  description?: string
+  publicness?: 'public' | 'private'
+  language?: string
+} & CommonDraftProps
+
+export type Draft = VideoDraft | ChannelDraft
+
+type DraftState = {
+  video: VideoDraft[]
+  channel: ChannelDraft[]
+}
 
 type ContextType = {
-  setDraftsState: React.Dispatch<React.SetStateAction<CommonDraftProps[]>>
-  draftsState: CommonDraftProps[]
+  setDraftsState: (value: React.SetStateAction<DraftState>) => void
+  draftsState: DraftState
+  getInitialDrafts: () => Promise<void>
 }
 
 const DraftsContext = React.createContext<undefined | ContextType>(undefined)
 DraftsContext.displayName = 'DraftsContext'
 
 export const DraftsProvider: React.FC = ({ children }) => {
-  const [draftsState, setDraftsState] = useState<CommonDraftProps[]>([])
-  return <DraftsContext.Provider value={{ setDraftsState, draftsState }}>{children}</DraftsContext.Provider>
+  const [draftsState, setDraftsState] = useState<ContextType['draftsState']>({
+    channel: [],
+    video: [],
+  })
+
+  const getInitialDrafts = useCallback(async () => {
+    try {
+      const currentDrafts = await getDrafts()
+      const video = currentDrafts.filter((draft): draft is VideoDraft => draft.type === 'video')
+      const channel = currentDrafts.filter((draft): draft is ChannelDraft => draft.type === 'channel')
+      setDraftsState({
+        video,
+        channel,
+      })
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }, [setDraftsState])
+
+  useEffect(() => {
+    getInitialDrafts()
+  }, [getInitialDrafts])
+
+  return (
+    <DraftsContext.Provider value={{ setDraftsState, draftsState, getInitialDrafts }}>
+      {children}
+    </DraftsContext.Provider>
+  )
 }
 
 export const useContextDrafts = () => {
@@ -29,41 +81,41 @@ export const useContextDrafts = () => {
   return ctx
 }
 
-export const useDrafts = <T,>({ state, type }: UseDraftOpts<T>) => {
-  const { setDraftsState, draftsState } = useContextDrafts()
-
-  const getInitialDrafts = useCallback(async () => {
-    const currentDrafts = await getDraftsWithType<T>(type)
-    setDraftsState(currentDrafts)
-  }, [setDraftsState, type])
+export const useDrafts = <T extends DraftType>(type: T) => {
+  const { draftsState, getInitialDrafts } = useContextDrafts()
 
   const getSingleDraft = async (draftId: string) => {
-    const singleDraft = await getDraft<T>(draftId)
-    return singleDraft
+    const singleDraft = await getDraft(draftId)
+    if (singleDraft?.type === type) {
+      return singleDraft
+    }
   }
 
-  useEffect(() => {
+  const updateSingleDraft = async (draftId: string, draftProps: Partial<Omit<Draft, 'id' | 'updatedAt'>>) => {
+    await updateDraft(draftId, draftProps)
     getInitialDrafts()
-  }, [getInitialDrafts])
+  }
 
-  const createOrUpdateDraft = async (draftId: string) => {
-    await addOrUpdateDraft<T>(draftId, type, { ...state })
+  const createSingleDraft = async (draft: Omit<Draft, 'updatedAt'>) => {
+    const newDraft = await addDraft({ ...draft, type })
     await getInitialDrafts()
+    return newDraft
   }
 
   const discardDraft = async (draftId: string) => {
     await removeDraft(draftId)
-    await getInitialDrafts()
+    getInitialDrafts()
   }
 
   const discardAllDrafts = async () => {
     clearDrafts()
-    await getInitialDrafts()
+    getInitialDrafts()
   }
 
   return {
-    drafts: draftsState as CommonDraftProps<T>[],
-    createOrUpdateDraft,
+    drafts: draftsState[type],
+    updateDraft: updateSingleDraft,
+    addDraft: createSingleDraft,
     getDraft: getSingleDraft,
     removeDraft: discardDraft,
     removeAllDrafts: discardAllDrafts,

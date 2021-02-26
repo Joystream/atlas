@@ -1,4 +1,4 @@
-import { CommonDraftProps, useDrafts } from '@/hooks'
+import { useDrafts, VideoDraft } from '@/hooks'
 import { FormField, Button, Text } from '@/shared/components'
 import Select from '@/shared/components/Select'
 import TextArea from '@/shared/components/TextArea'
@@ -6,40 +6,33 @@ import TextField from '@/shared/components/TextField'
 import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
-const INITIAL_STATE = {
-  firstName: '',
-  lastName: '',
+const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
+  title: '',
   description: '',
-  favouriteFruit: '',
+  contentRating: undefined,
 }
 
-const FRUITS = [
-  { value: 'banana', name: 'banana' },
-  { value: 'apple', name: 'apple' },
-  { value: 'cherry', name: 'cherry' },
-  { value: 'kiwi', name: 'kiwi' },
+const CONTENT_RATING = [
+  { value: 'all', name: 'all' },
+  { value: 'mature', name: 'mature' },
 ]
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, createOrUpdateDraft, getDraft, removeDraft, removeAllDrafts } = useDrafts({
-    state: form,
-    type: 'videos',
-  })
+  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video')
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
     const draft = await getDraft(draftID)
     if (draft) {
-      const { id, type, updatedAt, ...rest } = draft
-      setForm(rest)
+      const { title, description, contentRating } = draft as VideoDraft
+      setForm({ title, description, contentRating })
     } else {
       setForm(INITIAL_STATE)
     }
   }
 
-  const fakeId = new Date().getTime().toString()
   const draftsIds = drafts.map((draft) => ({ value: draft.id, name: draft.id }))
 
   return (
@@ -58,6 +51,9 @@ const PlaygroundDrafts = () => {
         </FormField>
       )}
 
+      <FormField title="Your title">
+        <TextField label="title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+      </FormField>
       <FormField title="Your description">
         <TextArea
           placeholder="description"
@@ -66,39 +62,31 @@ const PlaygroundDrafts = () => {
         />
       </FormField>
 
-      <FormField title="Your first name">
-        <TextField
-          label="first name"
-          value={form.firstName}
-          onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-        />
-      </FormField>
-      <FormField title="Your second name">
-        <TextField
-          label="second name"
-          value={form.lastName}
-          onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-        />
-      </FormField>
-      <FormField title="Your favourite fruit">
+      <FormField title="Content Rating">
         <Select
-          placeholder="favourite fruit"
-          label="favourite fruit"
-          items={FRUITS}
-          value={{ value: form.favouriteFruit, name: form.favouriteFruit }}
-          onChange={({ selectedItem }) => setForm({ ...form, favouriteFruit: selectedItem?.value || '' })}
+          placeholder="rating"
+          label="rating"
+          items={CONTENT_RATING}
+          value={{ value: form.contentRating || '', name: form.contentRating || '' }}
+          onChange={({ selectedItem }) =>
+            setForm({ ...form, contentRating: selectedItem?.value as VideoDraft['contentRating'] })
+          }
         />
       </FormField>
       <div style={{ display: 'flex', gap: '20px' }}>
         <Button
           onClick={async () => {
-            await createOrUpdateDraft(fakeId)
-            setCurrentDraft(fakeId)
+            const newDraft = await addDraft(form as VideoDraft)
+            if (newDraft) {
+              setCurrentDraft(newDraft.id)
+            }
           }}
         >
           Create new draft
         </Button>
-        {currentDraftId && <Button onClick={() => createOrUpdateDraft(currentDraftId)}>Save this draft</Button>}
+        {currentDraftId && (
+          <Button onClick={async () => await updateDraft(currentDraftId, form)}>Save this draft</Button>
+        )}
         <Button
           onClick={async () => {
             await removeDraft(currentDraftId)

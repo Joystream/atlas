@@ -1,31 +1,30 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { CommonDraftProps } from './useDrafts'
+import { Draft } from './useDrafts'
 
-export const getDrafts = <T>() => promisify(() => readFromLocalStorage<CommonDraftProps<T>[]>('drafts') || [])()
+export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
 
-export const getDraftsWithType = async <T>(type: string) => {
-  const currentDrafts = await getDrafts<T>()
-  return currentDrafts.filter((draft) => draft.type === type)
-}
-
-export const getDraft = async <T>(id: string) => {
-  const currentDrafts = await getDrafts<T>()
+export const getDraft = async (id: string) => {
+  const currentDrafts = await getDrafts()
   return currentDrafts.find((d) => d.id === id) ?? null
 }
 
-export const addOrUpdateDraft = async <T>(id: string, type: string, draftProps: T) => {
-  const currentDrafts = await getDrafts<T>()
+export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
+  const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
-  const isDraftAlreadyExist = currentDrafts.some((draft) => draft.id === id)
+  const id = new Date().getTime().toString()
+  const newDraft = { ...draftProps, updatedAt, id }
+  const newDrafts = [newDraft, ...currentDrafts]
+  writeToLocalStorage('drafts', newDrafts)
+  return newDraft
+}
 
-  let newDrafts: CommonDraftProps<T>[] = []
-
-  if (isDraftAlreadyExist) {
-    newDrafts = currentDrafts.map((draft) => (draft.id === id ? { ...draft, ...draftProps, id, updatedAt } : draft))
-  } else {
-    newDrafts = [{ ...draftProps, id, updatedAt, type }, ...currentDrafts]
-  }
+export const updateDraft = async (draftId: string, draftProps: Partial<Draft>) => {
+  const currentDrafts = await getDrafts()
+  const updatedAt = new Date().toISOString()
+  const newDrafts = currentDrafts.map((draft) =>
+    draft.id === draftId ? { ...draft, ...draftProps, updatedAt } : draft
+  )
   writeToLocalStorage('drafts', newDrafts)
 }
 
