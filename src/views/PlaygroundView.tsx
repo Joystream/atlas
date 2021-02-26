@@ -48,7 +48,7 @@ const VideoMetadata = () => {
     <div>
       <input
         type="file"
-        accept="video/*"
+        accept="video/*,.mkv"
         onChange={(e) => {
           const file = e.target.files?.[0]
           setFile(file)
