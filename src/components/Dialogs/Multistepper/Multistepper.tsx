@@ -1,5 +1,5 @@
 import React from 'react'
-import { DialogProps } from '../GeneralDialog/GeneralDialog'
+import { BaseDialogProps } from '../BaseDialog'
 import {
   StyledDialog,
   StyledHeader,
@@ -18,7 +18,7 @@ type Step = {
 type MultistepperProps = {
   steps: Step[]
   currentStepIdx?: number
-} & DialogProps
+} & BaseDialogProps
 
 const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, ...dialogProps }) => {
   return (
