@@ -5,19 +5,21 @@ export type HeaderTextFieldProps = {
   name?: string
   value: string
   helperText?: string
+  placeholder?: string
   error?: boolean
   warning?: boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ name, value, helperText, error, warning, onChange }, ref) => {
+  ({ name, value, helperText, placeholder, error, warning, onChange }, ref) => {
     const controlled = onChange?.name === 'onChange'
     return (
       <Container>
         <StyledInput
           ref={ref}
           name={name}
+          placeholder={placeholder}
           type="text"
           defaultValue={value}
           onChange={onChange}

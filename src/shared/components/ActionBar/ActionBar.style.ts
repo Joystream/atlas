@@ -6,8 +6,8 @@ export const StyledActionBarContainer = styled.div`
   display: flex;
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: var(--sidenav-collapsed-width);
+  right: 0;
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   @media screen and (min-width: ${breakpoints.medium}) {

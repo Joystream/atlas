@@ -21,6 +21,7 @@ export type ActionBarProps = {
   detailsTextIcon?: IconType
   secondaryButtonText?: string
   secondaryButtonIcon?: IconType
+  className?: string
   onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -34,11 +35,12 @@ const ActionBar: React.FC<ActionBarProps> = ({
   tooltipText,
   detailsTextIcon,
   secondaryButtonIcon,
+  className,
   onConfirmClick,
   onCancelClick,
 }) => {
   return (
-    <StyledActionBarContainer>
+    <StyledActionBarContainer className={className}>
       <StyledInfoContainer>
         <StyledPrimaryText>{primaryText}</StyledPrimaryText>
         <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
