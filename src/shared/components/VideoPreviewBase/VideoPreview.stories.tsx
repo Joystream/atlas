@@ -3,7 +3,6 @@ import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
 import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
 import { BrowserRouter } from 'react-router-dom'
-import { css } from '@emotion/react'
 import { OverlayManagerProvider } from '@/hooks'
 
 export default {
@@ -12,8 +11,6 @@ export default {
   argTypes: {
     createdAt: { control: 'date' },
     progress: { control: { type: 'range', min: 0, max: 100, step: 1 } },
-    channelAvatarUrl: { table: { disable: true } },
-    thumbnailUrl: { table: { disable: true } },
     videoHref: { table: { disable: true } },
     channelHref: { table: { disable: true } },
     className: { table: { disable: true } },
@@ -25,6 +22,7 @@ export default {
     isAnyVideoSelected: { table: { disable: true } },
     onSelectClick: { table: { disable: true } },
     videoPublishState: { table: { disable: true } },
+    contextMenuCallbacks: { table: { disable: true } },
   },
 } as Meta
 
@@ -44,6 +42,10 @@ const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
 const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
   const [value, setvalue] = useState(false)
+
+  const handler = () => {
+    console.log('called')
+  }
   return (
     <BrowserRouter>
       <OverlayManagerProvider>
@@ -55,6 +57,11 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             isSelected={value}
             onSelectClick={setvalue}
             createdAt={createdAtDate}
+            contextMenuCallbacks={{
+              onEditVideoClick: handler,
+              onCopyVideoURLClick: handler,
+              onDeleteVideoClick: handler,
+            }}
           />
         </Wrapper>
       </OverlayManagerProvider>
@@ -139,6 +146,9 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const [value2, setvalue2] = useState(false)
   const [value3, setvalue3] = useState(false)
   const isAnySelected = value || value2 || value3
+  const handler = () => {
+    console.log('called')
+  }
   return (
     <BrowserRouter>
       <OverlayManagerProvider>
@@ -151,6 +161,11 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             onSelectClick={setvalue2}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
+            contextMenuCallbacks={{
+              onEditVideoClick: handler,
+              onCopyVideoURLClick: handler,
+              onDeleteVideoClick: handler,
+            }}
           />
           <VideoPreviewBase
             {...args}
@@ -161,6 +176,10 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             createdAt={createdAtDate}
             thumbnailUrl={undefined}
             isAnyVideoSelected={isAnySelected}
+            contextMenuCallbacks={{
+              onEditVideoClick: handler,
+              onDeleteVideoClick: handler,
+            }}
           />
           <VideoPreviewBase
             {...args}
@@ -170,6 +189,11 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             onSelectClick={setvalue}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
+            contextMenuCallbacks={{
+              onEditVideoClick: handler,
+              onCopyVideoURLClick: handler,
+              onDeleteVideoClick: handler,
+            }}
           />
         </ContainerMix>
       </OverlayManagerProvider>

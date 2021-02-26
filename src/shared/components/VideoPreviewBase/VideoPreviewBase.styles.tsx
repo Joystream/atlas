@@ -43,9 +43,6 @@ const clickableAnimation = (clickable: boolean) =>
         ${CoverIcon} {
           transform: translateY(0);
         }
-        ${CoverIcon} {
-          transform: translateY(0);
-        }
         ${ProgressOverlay} {
           bottom: ${HOVER_BORDER_SIZE};
         }
@@ -294,7 +291,7 @@ export const KebabMenuIconContainer = styled.div`
   border-radius: 100%;
   transition: all ${transitions.timings.regular} ${transitions.easing};
 
-  path:not([fill='none']) {
+  path {
     transition: all ${transitions.timings.regular} ${transitions.easing};
   }
 

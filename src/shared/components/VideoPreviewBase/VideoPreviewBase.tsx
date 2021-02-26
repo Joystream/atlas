@@ -56,6 +56,7 @@ type VideoPreviewPublisherProps =
       isSelected: boolean
       isAnyVideoSelected: boolean
       onSelectClick: (value: boolean) => void
+      contextMenuCallbacks: ContextMenuCallbacks
     }
   | {
       publisherMode?: false | undefined
@@ -63,7 +64,14 @@ type VideoPreviewPublisherProps =
       isSelected?: undefined
       isAnyVideoSelected?: undefined
       onSelectClick?: undefined
+      contextMenuCallbacks?: undefined
     }
+
+type ContextMenuCallbacks = {
+  onEditVideoClick?: () => void
+  onCopyVideoURLClick?: () => void
+  onDeleteVideoClick?: () => void
+}
 
 export type VideoPreviewBaseProps = {
   title?: string
@@ -116,6 +124,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onSelectClick,
   onClick,
   className,
+  contextMenuCallbacks = {},
 }) => {
   const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -194,7 +203,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                   <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                     {publisherMode && checkboxNode}
-                    {isAnyVideoSelected === false && hoverIconNode}
+                    {!isAnyVideoSelected && hoverIconNode}
                   </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>
@@ -279,17 +288,22 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
                   <KebabMenuIcon />
                 </KebabMenuIconContainer>
-                {/* TODO: menu to be integrated with the video publishing functions */}
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  <ContextMenuItem iconName="pencil2" onClick={closeContextMenu}>
-                    Edit Video
-                  </ContextMenuItem>
-                  <ContextMenuItem iconName="link" onClick={closeContextMenu}>
-                    Copy Video URL
-                  </ContextMenuItem>
-                  <ContextMenuItem iconName="trash" onClick={closeContextMenu}>
-                    Delete Video
-                  </ContextMenuItem>
+                  {contextMenuCallbacks.onEditVideoClick && (
+                    <ContextMenuItem iconName="pencil-fill" onClick={contextMenuCallbacks.onEditVideoClick}>
+                      Edit Video
+                    </ContextMenuItem>
+                  )}
+                  {contextMenuCallbacks.onCopyVideoURLClick && (
+                    <ContextMenuItem iconName="link" onClick={contextMenuCallbacks.onCopyVideoURLClick}>
+                      Copy Video URL
+                    </ContextMenuItem>
+                  )}
+                  {contextMenuCallbacks.onDeleteVideoClick && (
+                    <ContextMenuItem iconName="trash" onClick={contextMenuCallbacks.onDeleteVideoClick}>
+                      Delete Video
+                    </ContextMenuItem>
+                  )}
                 </ContextMenu>
               </ContextMenuContainer>
             )}

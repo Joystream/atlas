@@ -17,7 +17,7 @@ export { ReactComponent as Check } from './check.svg'
 export { ReactComponent as Dash } from './dash.svg'
 export { ReactComponent as KebabMenu } from './kebab-menu.svg'
 export { ReactComponent as Pencil } from './pencil.svg'
-export { ReactComponent as Pencil2 } from './pencil2.svg'
+export { ReactComponent as PencilFill } from './pencil-fill.svg'
 export { ReactComponent as Page } from './page.svg'
 export { ReactComponent as Play } from './play.svg'
 export { ReactComponent as PlayOutline } from './play-outline.svg'
@@ -57,7 +57,7 @@ const icons = [
   'dash',
   'kebab-menu',
   'pencil',
-  'pencil2',
+  'pencil-fill',
   'page',
   'play',
   'play-outline',
