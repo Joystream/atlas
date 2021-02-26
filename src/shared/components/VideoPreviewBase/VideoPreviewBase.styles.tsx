@@ -173,7 +173,7 @@ export const RemoveButton = styled(Button)`
 export const CoverPlayIcon = ({ ...props }) => <CoverIcon name="play-outline" {...props} />
 export const CoverRemoveButton = ({ ...props }) => (
   <RemoveButton {...props}>
-    <Icon name="times" />
+    <Icon name="close" />
   </RemoveButton>
 )
 

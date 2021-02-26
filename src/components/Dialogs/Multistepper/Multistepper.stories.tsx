@@ -5,7 +5,7 @@ import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { Button } from '@/shared/components'
 
 export default {
-  title: 'General components/Multistepper',
+  title: 'General/Multistepper',
   component: Multistepper,
   argTypes: {
     exitButton: { defaultValue: true },

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import Dialog from '../GeneralDialog/GeneralDialog'
-import { Text, Button } from '@/shared/components'
+import BaseDialog from '../BaseDialog'
+import { Text } from '@/shared/components'
 import { colors, sizes, breakpoints, typography } from '@/shared/theme'
 
 type CircleProps = {
@@ -11,7 +11,7 @@ type StyledStepInfoProps = {
   isActive?: boolean
 }
 
-export const StyledDialog = styled(Dialog)`
+export const StyledDialog = styled(BaseDialog)`
   max-width: 700px;
 `
 
