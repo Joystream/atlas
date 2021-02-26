@@ -41,7 +41,7 @@ const PlaygroundValidationForm = () => {
       textarea: '',
       check: false,
       date: null,
-      radioGroup: 'all',
+      radioGroup: '',
     },
   })
 
@@ -123,19 +123,28 @@ const PlaygroundValidationForm = () => {
           <Controller
             name="radioGroup"
             control={control}
+            rules={{ required: true }}
             render={(props) => (
               <StyledRadioContainer>
                 <RadioButton
                   value="all"
                   label="All audiences"
-                  onChange={(value) => setValue('radioGroup', value)}
+                  onChange={(value) => {
+                    clearErrors('radioGroup')
+                    setValue('radioGroup', value)
+                  }}
                   selected={props.value}
+                  error={!!errors.radioGroup}
                 />
                 <RadioButton
                   value="mature"
                   label="Mature"
-                  onChange={(value) => setValue('radioGroup', value)}
+                  onChange={(value) => {
+                    clearErrors('radioGroup')
+                    setValue('radioGroup', value)
+                  }}
                   selected={props.value}
+                  error={!!errors.radioGroup}
                 />
               </StyledRadioContainer>
             )}
