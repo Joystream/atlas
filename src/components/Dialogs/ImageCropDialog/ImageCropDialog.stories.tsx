@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
-import ImageCropDialog, { ImageCropDialogProps } from './ImageCropDialog'
+import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
 import { Avatar, Placeholder } from '@/shared/components'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { css } from '@emotion/react'
@@ -23,38 +23,23 @@ export default {
 } as Meta
 
 const RegularTemplate: Story<ImageCropDialogProps> = () => {
-  const [showAvatarDialog, setShowAvatarDialog] = useState(false)
+  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
-  const [showThumbnailDialog, setShowThumbnailDialog] = useState(false)
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
-  const [showCoverDialog, setShowCoverDialog] = useState(false)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
   const handleAvatarConfirm = (blob: Blob, url: string) => {
     setAvatarImageUrl(url)
-    setShowAvatarDialog(false)
-  }
-
-  const handleAvatarClose = () => {
-    setShowAvatarDialog(false)
   }
 
   const handleThumbnailConfirm = (blob: Blob, url: string) => {
     setThumbnailImageUrl(url)
-    setShowThumbnailDialog(false)
-  }
-
-  const handleThumbnailClose = () => {
-    setShowThumbnailDialog(false)
   }
 
   const handleCoverConfirm = (blob: Blob, url: string) => {
     setCoverImageUrl(url)
-    setShowCoverDialog(false)
-  }
-
-  const handleCoverClose = () => {
-    setShowCoverDialog(false)
   }
 
   return (
@@ -68,40 +53,22 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
         }
       `}
     >
-      <Avatar imageUrl={avatarImageUrl} editable onEditClick={() => setShowAvatarDialog(true)} size="cover" />
+      <Avatar imageUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
 
       {thumbnailImageUrl ? (
-        <Image src={thumbnailImageUrl} onClick={() => setShowThumbnailDialog(true)} />
+        <Image src={thumbnailImageUrl} onClick={() => thumbnailDialogRef.current?.open()} />
       ) : (
-        <ImagePlaceholder onClick={() => setShowThumbnailDialog(true)} />
+        <ImagePlaceholder onClick={() => thumbnailDialogRef.current?.open()} />
       )}
       {coverImageUrl ? (
-        <Image src={coverImageUrl} onClick={() => setShowCoverDialog(true)} />
+        <Image src={coverImageUrl} onClick={() => coverDialogRef.current?.open()} />
       ) : (
-        <ImagePlaceholder onClick={() => setShowCoverDialog(true)} />
+        <ImagePlaceholder onClick={() => coverDialogRef.current?.open()} />
       )}
 
-      <ImageCropDialog
-        imageType="avatar"
-        showDialog={showAvatarDialog}
-        onExitClick={handleAvatarClose}
-        onConfirm={handleAvatarConfirm}
-        onCancel={handleAvatarClose}
-      />
-      <ImageCropDialog
-        imageType="videoThumbnail"
-        showDialog={showThumbnailDialog}
-        onExitClick={handleThumbnailClose}
-        onConfirm={handleThumbnailConfirm}
-        onCancel={handleThumbnailClose}
-      />
-      <ImageCropDialog
-        imageType="cover"
-        showDialog={showCoverDialog}
-        onExitClick={handleCoverClose}
-        onConfirm={handleCoverConfirm}
-        onCancel={handleCoverClose}
-      />
+      <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />
+      <ImageCropDialog imageType="videoThumbnail" onConfirm={handleThumbnailConfirm} ref={thumbnailDialogRef} />
+      <ImageCropDialog imageType="cover" onConfirm={handleCoverConfirm} ref={coverDialogRef} />
     </div>
   )
 }
