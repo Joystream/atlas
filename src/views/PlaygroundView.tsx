@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { PlaygroundValidationForm } from './Playgrounds'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
-import { useVideoMetadata } from '@/hooks/useVideoMetadata'
+import { VideoMetadata } from './Playgrounds/VideoMetaData'
 
 export const PlaygroundView = () => {
   return (
@@ -40,26 +40,3 @@ const LinksContainer = styled.div`
 `
 
 export default PlaygroundView
-
-const VideoMetadata = () => {
-  const { setFile, metadata } = useVideoMetadata()
-  console.log({ metadata })
-  return (
-    <div>
-      <input
-        type="file"
-        accept="video/*,.mkv"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          setFile(file)
-        }}
-      ></input>
-      <h2>Metadata:</h2>
-      <p>type: {metadata?.type}</p>
-      <p>sizeInBytes: {metadata?.sizeInBytes}</p>
-      <p>duration: {metadata?.duration}</p>
-      <p>width: {metadata?.width}</p>
-      <p>height: {metadata?.height}</p>
-    </div>
-  )
-}
