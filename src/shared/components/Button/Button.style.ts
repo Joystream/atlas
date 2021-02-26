@@ -74,22 +74,28 @@ const colorsFromProps = ({ variant }: ButtonStyleProps) => {
 }
 
 const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => {
-  let padding, fontSize
+  let padding, fontSize, lineHeight, fontMarginTop
   switch (size) {
     case 'small': {
       padding = '8px 12px'
       fontSize = typography.sizes.button.small
+      lineHeight = typography.lineHeights.button.small
+      fontMarginTop = '-1px'
       break
     }
     case 'medium': {
       padding = hasText ? `12px 16px` : '12px'
       fontSize = typography.sizes.button.medium
+      lineHeight = typography.lineHeights.button.medium
+      fontMarginTop = '-1px'
       break
     }
     case 'large':
     default: {
       padding = hasText ? `14px 20px` : '14px'
       fontSize = typography.sizes.button.large
+      lineHeight = typography.lineHeights.button.large
+      fontMarginTop = '-2px'
       break
     }
   }
@@ -98,6 +104,10 @@ const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => 
     display: ${full ? 'flex' : 'inline-flex'};
     font-size: ${fontSize};
     padding: ${padding};
+    line-height: ${lineHeight};
+    span {
+      margin-top: ${fontMarginTop};
+    }
   `
 }
 
@@ -150,22 +160,25 @@ const disabled = ({ disabled, variant }: ButtonStyleProps) => {
     : null
 }
 const iconSizeFromProps = ({ size: sizeProp = 'medium', hasText }: IconStyleProps) => {
-  let size
+  let size, margin
   if (!hasText) {
     size = 'auto'
   } else {
     switch (sizeProp) {
       case 'small': {
-        size = 'var(--small-icon)'
+        size = typography.sizes.icon.small
+        margin = '-8px 0'
         break
       }
       case 'medium': {
-        size = 'var(--medium-icon)'
+        size = typography.sizes.icon.medium
+        margin = '-12px 0'
         break
       }
       case 'large':
       default: {
-        size = 'var(--large-icon)'
+        size = typography.sizes.icon.large
+        margin = '-14px 0'
         break
       }
     }
@@ -173,17 +186,18 @@ const iconSizeFromProps = ({ size: sizeProp = 'medium', hasText }: IconStyleProp
   return css`
     width: ${size};
     height: ${size};
+    margin: ${margin};
   `
 }
 
 export const StyledIcon = styled(Icon)<IconStyleProps>`
   display: block;
   flex-shrink: 0;
-  ${iconSizeFromProps}
   & + * {
     margin-left: 10px;
   }
   filter: ${(props) => (props.disabled ? 'brightness(0.7)' : null)};
+  ${iconSizeFromProps}
 `
 export const StyledButton = styled.button<ButtonStyleProps>`
   border-width: 1px;
