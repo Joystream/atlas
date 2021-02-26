@@ -169,6 +169,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
           channelAvatarURL={v.channel.avatarPhotoUrl}
           createdAt={v.createdAt}
           views={v.views}
+          duration={v.duration}
           posterURL={v.thumbnailUrl}
           showChannel={showChannel}
           key={v.id}
