@@ -18,16 +18,18 @@ export type IconStyleProps = {
   hasText?: boolean
 }
 
-const colorsFromProps = ({ variant }: ButtonStyleProps) => {
+const colorsFromProps = ({ variant, hasText }: ButtonStyleProps) => {
   let styles
   switch (variant) {
     case 'tertiary': {
+      const circleRadius = hasText ? '0' : '100%'
       styles = css`
         background-color: transparent;
         border-color: transparent;
         color: ${colors.white};
         &:hover {
-          background-color: ${colors.gray[900]};
+          background-color: ${colors.gray[800]};
+          border-radius: ${circleRadius};
         }
         &:active {
           background-color: transparent;
@@ -74,40 +76,34 @@ const colorsFromProps = ({ variant }: ButtonStyleProps) => {
 }
 
 const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => {
-  let padding, fontSize, lineHeight, fontMarginTop
+  let padding, fontSize, buttonSizeWithoutText
   switch (size) {
     case 'small': {
-      padding = '8px 12px'
+      padding = '9.5px 12px'
       fontSize = typography.sizes.button.small
-      lineHeight = typography.lineHeights.button.small
-      fontMarginTop = '-1px'
+      buttonSizeWithoutText = '32px'
       break
     }
     case 'medium': {
       padding = hasText ? `12px 16px` : '12px'
       fontSize = typography.sizes.button.medium
-      lineHeight = typography.lineHeights.button.medium
-      fontMarginTop = '-1px'
+      buttonSizeWithoutText = '40px'
       break
     }
     case 'large':
     default: {
-      padding = hasText ? `14px 20px` : '14px'
+      padding = hasText ? `15px 20px` : '14px'
       fontSize = typography.sizes.button.large
-      lineHeight = typography.lineHeights.button.large
-      fontMarginTop = '-2px'
+      buttonSizeWithoutText = '48px'
       break
     }
   }
   return css`
-    width: ${full ? '100%' : ''};
+    width: ${!hasText ? buttonSizeWithoutText : full ? '100%' : ''};
+    height: ${!hasText ? buttonSizeWithoutText : 'auto'};
     display: ${full ? 'flex' : 'inline-flex'};
     font-size: ${fontSize};
     padding: ${padding};
-    line-height: ${lineHeight};
-    span {
-      margin-top: ${fontMarginTop};
-    }
   `
 }
 
@@ -203,7 +199,8 @@ export const StyledButton = styled.button<ButtonStyleProps>`
   border-width: 1px;
   border-style: solid;
   font-family: ${typography.fonts.headers};
-  font-weight: ${typography.weights.bold};
+  font-weight: ${typography.weights.medium};
+  line-height: 1;
   display: inline-flex;
   justify-content: center;
   align-items: center;

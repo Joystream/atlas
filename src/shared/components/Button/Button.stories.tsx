@@ -40,6 +40,19 @@ export const WithIcon = Template.bind({})
 WithIcon.args = {
   icon: 'block',
 }
+const IconTemplate: Story<ButtonProps> = (args) => (
+  <>
+    <Button {...args} size="large" />
+
+    <Button {...args} size="medium" />
+
+    <Button {...args} size="small" />
+  </>
+)
+export const JustIcon = IconTemplate.bind({})
+JustIcon.args = {
+  icon: 'bars',
+}
 export const Primary = Template.bind({})
 export const Secondary = Template.bind({})
 Secondary.args = {
