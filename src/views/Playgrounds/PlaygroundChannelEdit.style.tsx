@@ -1,15 +1,25 @@
 import styled from '@emotion/styled'
 import { sizes, breakpoints } from '@/shared/theme'
 import { Textarea, ActionBarTransaction, Avatar } from '@/shared/components'
+import { TitleSection } from '../ChannelView/ChannelView.style'
 
-export const Form = styled.form`
-  padding-bottom: 100px;
+export const StyledTitleSection = styled(TitleSection)`
+  display: inline-flex;
+  flex-direction: row;
+  padding-top: ${sizes(8)};
+  @media (min-width: ${breakpoints.small}) {
+    padding-top: 0;
+  }
 `
 
 export const InnerFormContainer = styled.div`
+  width: 100%;
   max-width: 760px;
   margin-top: 50px;
-  margin-left: 144px;
+  padding-bottom: 200px;
+  @media screen and (min-width: ${breakpoints.large}) {
+    margin-left: calc(144px - var(--global-horizontal-padding));
+  }
 `
 
 export const StyledTextarea = styled(Textarea)`
@@ -19,14 +29,18 @@ export const StyledTextarea = styled(Textarea)`
 `
 
 export const StyledActionBarTransaction = styled(ActionBarTransaction)`
-  @media screen and (min-width: ${breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.large}) {
     padding: ${sizes(3)} 144px;
   }
 `
 export const StyledAvatar = styled(Avatar)`
-  margin-bottom: ${sizes(3)};
   position: relative;
+  margin-right: ${sizes(4)};
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
   @media (min-width: ${breakpoints.small}) {
-    margin: 0 ${sizes(6)} 0 0;
+    width: 136px;
+    height: 136px;
   }
 `

@@ -5,8 +5,8 @@ import { transitions } from '@/shared/theme'
 import { requiredValidation, textFieldValidation } from './formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import {
+  StyledTitleSection,
   StyledTextarea,
-  Form,
   StyledActionBarTransaction,
   StyledAvatar,
   InnerFormContainer,
@@ -15,10 +15,8 @@ import {
   Header,
   SubTitle,
   SubTitlePlaceholder,
-  Title,
   TitleContainer,
   TitlePlaceholder,
-  TitleSection,
 } from '../ChannelView/ChannelView.style'
 import { ViewWrapper } from '@/components'
 import { SelectedItem } from '@/shared/components/Select'
@@ -41,7 +39,7 @@ const publicnessItems: SelectedItem[] = [
 ]
 
 const channel = {
-  handle: 'Lorem',
+  handle: 'Lorem ipsum',
   follows: 1000,
 }
 
@@ -61,25 +59,33 @@ const PlaygroundChannelEdit = () => {
   })
   return (
     <ViewWrapper>
-      <Form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>
         <Header>
           <ChannelCover
             coverPhotoUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg"
             editable
           />
 
-          <TitleSection className={transitions.names.slide}>
-            <StyledAvatar imageUrl="https://picsum.photos/200/300" size="view" editable />
+          <StyledTitleSection className={transitions.names.slide}>
+            <StyledAvatar imageUrl="https://picsum.photos/200/300" size="fill" editable />
             <TitleContainer>
               {channel ? (
                 <>
-                  <HeaderTextField
+                  <Controller
                     name="channelName"
-                    ref={register(textFieldValidation('Channel name', 3, 20))}
-                    value={channel.handle}
-                    placeholder="Add Channel Title"
-                    error={!!errors.channelName}
-                    helperText={errors.channelName?.message}
+                    control={control}
+                    rules={textFieldValidation('Channel name', 3, 20)}
+                    render={(props) => (
+                      <HeaderTextField
+                        placeholder="Add Channel Title"
+                        value={props.value}
+                        onChange={(e) => {
+                          setValue('channelName', e.currentTarget.value)
+                        }}
+                        error={!!errors.channelName}
+                        helperText={errors.channelName?.message}
+                      />
+                    )}
                   />
                   <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
                 </>
@@ -90,7 +96,7 @@ const PlaygroundChannelEdit = () => {
                 </TitlePlaceholder>
               )}
             </TitleContainer>
-          </TitleSection>
+          </StyledTitleSection>
         </Header>
         <InnerFormContainer>
           <FormField title="Description">
@@ -151,7 +157,7 @@ const PlaygroundChannelEdit = () => {
           </FormField>
           <StyledActionBarTransaction fee={1} primaryButtonText="Publish Changes" />
         </InnerFormContainer>
-      </Form>
+      </form>
     </ViewWrapper>
   )
 }
