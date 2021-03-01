@@ -6,6 +6,7 @@ import {
   CoverDurationOverlay,
   CoverHoverOverlay,
   CoverImage,
+  CoverNoImage,
   CoverPlayIcon,
   MetaText,
   ProgressBar,
@@ -36,7 +37,7 @@ type VideoPreviewProps = {
   // video watch progress in percent (0-100)
   progress?: number
   views?: number | null
-  posterURL: string
+  posterURL?: string
 
   showChannel?: boolean
   showMeta?: boolean
@@ -97,7 +98,11 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
   const coverNode = (
     <>
-      <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
+      {posterURL ? (
+        <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
+      ) : (
+        <CoverNoImage />
+      )}
       {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
       {!!progress && (
         <ProgressOverlay>

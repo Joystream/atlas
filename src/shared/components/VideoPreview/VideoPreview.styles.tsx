@@ -115,3 +115,13 @@ export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
     main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2})`};
   ${fadeInAnimation};
 `
+
+export const CoverNoImage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(16, 18, 20);
+  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
+`
