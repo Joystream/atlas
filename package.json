@@ -19,7 +19,6 @@
   "scripts": {
     "start": "react-app-rewired start",
     "dev": "yarn start",
-    "dev:prod": "yarn start:prod",
     "build": "react-app-rewired build",
     "eject": "react-app-rewired eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
