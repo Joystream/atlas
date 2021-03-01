@@ -129,9 +129,9 @@ const PlaygroundValidationForm = () => {
                 <RadioButton
                   value="all"
                   label="All audiences"
-                  onChange={(value) => {
+                  onChange={(e) => {
                     clearErrors('radioGroup')
-                    setValue('radioGroup', value)
+                    setValue('radioGroup', e.currentTarget.value)
                   }}
                   selected={props.value}
                   error={!!errors.radioGroup}
@@ -139,9 +139,9 @@ const PlaygroundValidationForm = () => {
                 <RadioButton
                   value="mature"
                   label="Mature"
-                  onChange={(value) => {
+                  onChange={(e) => {
                     clearErrors('radioGroup')
-                    setValue('radioGroup', value)
+                    setValue('radioGroup', e.currentTarget.value)
                   }}
                   selected={props.value}
                   error={!!errors.radioGroup}

@@ -11,12 +11,16 @@ export default {
 } as Meta
 
 const Template: Story = (args) => {
-  const [selected, setSelected] = useState('1')
+  const [selected, setSelected] = useState<string | number>('1')
+  const handleClick: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+    const element = e.currentTarget as HTMLInputElement
+    setSelected(element.value)
+  }
   return (
     <div>
-      <RadioButton {...args} name="radio-group" value="1" selected={selected} onChange={setSelected} />
-      <RadioButton {...args} name="radio-group" value="2" selected={selected} onChange={setSelected} />
-      <RadioButton {...args} name="radio-group" value="3" selected={selected} onChange={setSelected} />
+      <RadioButton {...args} name="radio-group" value="1" selected={selected} onClick={handleClick} />
+      <RadioButton {...args} name="radio-group" value="2" selected={selected} onClick={handleClick} />
+      <RadioButton {...args} name="radio-group" value="3" selected={selected} onClick={handleClick} />
     </div>
   )
 }
