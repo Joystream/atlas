@@ -163,7 +163,7 @@ const iconSizeFromProps = ({ size: sizeProp = 'medium', hasText }: IconStyleProp
     switch (sizeProp) {
       case 'small': {
         size = typography.sizes.icon.small
-        margin = '-8px 0'
+        margin = '-9.5px 0'
         break
       }
       case 'medium': {
@@ -174,7 +174,7 @@ const iconSizeFromProps = ({ size: sizeProp = 'medium', hasText }: IconStyleProp
       case 'large':
       default: {
         size = typography.sizes.icon.large
-        margin = '-14px 0'
+        margin = '-15px 0'
         break
       }
     }
