@@ -2,8 +2,7 @@ import React, { useCallback, useContext, useState, useRef } from 'react'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
-import { zIndex } from '@/shared/theme'
-import { transitionStyles } from '@/shared/components/GlobalStyle/transitionStyles'
+import { transitions, zIndex } from '@/shared/theme'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
@@ -45,7 +44,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={[overlayManagerStyles(scrollbarGap), transitionStyles]} />
+      <Global styles={[overlayManagerStyles(scrollbarGap), dialogTransitions]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
@@ -57,8 +56,8 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
         }}
       >
         {children}
-        <StyledContextMenuContainer ref={contextMenuContainerRef}></StyledContextMenuContainer>
-        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened}></StyledOverlayContainer>
+        <StyledContextMenuContainer ref={contextMenuContainerRef} />
+        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened} />
       </OverlayManagerContext.Provider>
     </>
   )
@@ -69,12 +68,38 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
     --scrollbar-gap-width: ${scrollbarGap}px;
   }
 `
+
+const dialogTransitions = css`
+  &.${transitions.names.dialog}-enter {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  &.${transitions.names.dialog}-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
+  }
+
+  &.${transitions.names.dialog}-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &.${transitions.names.dialog}-exit-active {
+    opacity: 0;
+    transform: scale(0.88);
+    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
+  }
+`
+
 const StyledContextMenuContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
 `
+
 const StyledOverlayContainer = styled.div<OverlayContainerProps>`
   position: fixed;
   top: 0;

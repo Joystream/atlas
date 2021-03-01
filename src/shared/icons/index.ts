@@ -19,6 +19,7 @@ export { ReactComponent as KebabMenu } from './kebab-menu.svg'
 export { ReactComponent as Pencil } from './pencil.svg'
 export { ReactComponent as PencilFill } from './pencil-fill.svg'
 export { ReactComponent as Page } from './page.svg'
+export { ReactComponent as Position } from './position.svg'
 export { ReactComponent as Play } from './play.svg'
 export { ReactComponent as PlayOutline } from './play-outline.svg'
 export { ReactComponent as Pause } from './pause.svg'
@@ -28,11 +29,14 @@ export { ReactComponent as Search } from './search.svg'
 export { ReactComponent as Times } from './times.svg'
 export { ReactComponent as Trash } from './trash.svg'
 export { ReactComponent as Link } from './link.svg'
+export { ReactComponent as Close } from './close.svg'
 export { ReactComponent as Videos } from './videos.svg'
 export { ReactComponent as Info } from './info.svg'
 export { ReactComponent as Error } from './error.svg'
 export { ReactComponent as Success } from './success-check.svg'
 export { ReactComponent as Camera } from './camera.svg'
+export { ReactComponent as ZoomIn } from './zoom-in.svg'
+export { ReactComponent as ZoomOut } from './zoom-out.svg'
 export { ReactComponent as Warning } from './warning.svg'
 export { ReactComponent as Gear } from './gear.svg'
 export { ReactComponent as Unlisted } from './unlisted.svg'
@@ -54,11 +58,13 @@ const icons = [
   'chevron-right',
   'chevron-left',
   'check',
+  'close',
   'dash',
   'kebab-menu',
   'pencil',
   'pencil-fill',
   'page',
+  'position',
   'play',
   'play-outline',
   'pause',
@@ -66,7 +72,6 @@ const icons = [
   'sound-on',
   'sound-off',
   'times',
-  'trash',
   'link',
   'videos',
   'info',
@@ -77,6 +82,8 @@ const icons = [
   'trash',
   'gear',
   'unlisted',
+  'zoom-in',
+  'zoom-out',
 ] as const
 
 export type IconType = typeof icons[number]

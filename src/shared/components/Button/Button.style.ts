@@ -121,6 +121,7 @@ const disabled = ({ disabled }: ButtonStyleProps) =>
     : null
 
 export const StyledIcon = styled(Icon)<IconStyleProps>`
+  display: block;
   flex-shrink: 0;
   & + * {
     margin-left: 10px;
@@ -131,7 +132,7 @@ export const StyledButton = styled.button<ButtonStyleProps>`
   border-width: 1px;
   border-style: solid;
   font-family: ${typography.fonts.headers};
-  font-weight: ${typography.weights.medium};
+  font-weight: ${typography.weights.bold};
   display: inline-flex;
   justify-content: center;
   align-items: center;
