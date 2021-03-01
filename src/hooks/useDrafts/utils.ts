@@ -19,13 +19,14 @@ export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
   return newDraft
 }
 
-export const updateDraft = async (draftId: string, draftProps: Partial<Draft>) => {
+export const updateDraft = async (draftId: string, draftProps: Omit<Draft, 'updatedAt' | 'id' | 'type'>) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
   const newDrafts = currentDrafts.map((draft) =>
     draft.id === draftId ? { ...draft, ...draftProps, updatedAt } : draft
   )
   writeToLocalStorage('drafts', newDrafts)
+  return newDrafts.find((draft) => draft.id === draftId)
 }
 
 export const removeDraft = async (id: string) => {

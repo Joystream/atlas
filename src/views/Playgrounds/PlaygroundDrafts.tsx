@@ -19,14 +19,14 @@ const CONTENT_RATING = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video')
+  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('videos')
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
     const draft = await getDraft(draftID)
     if (draft) {
-      const { title, description, contentRating } = draft as VideoDraft
+      const { title, description, contentRating } = draft
       setForm({ title, description, contentRating })
     } else {
       setForm(INITIAL_STATE)
@@ -76,7 +76,7 @@ const PlaygroundDrafts = () => {
       <div style={{ display: 'flex', gap: '20px' }}>
         <Button
           onClick={async () => {
-            const newDraft = await addDraft(form as VideoDraft)
+            const newDraft = await addDraft(form)
             if (newDraft) {
               setCurrentDraft(newDraft.id)
             }

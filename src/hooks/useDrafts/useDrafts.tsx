@@ -1,15 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { addDraft, clearDrafts, getDraft, getDrafts, removeDraft, updateDraft } from './utils'
 
-export type DraftType = 'video' | 'channel'
-
 export type CommonDraftProps = {
   id: string
   updatedAt?: string
 }
 
+export type DraftType = 'videos' | 'channels'
+
 export type VideoDraft = {
-  type: 'video'
+  type: 'videos'
   title?: string
   description?: string
   publicness?: 'public' | 'private'
@@ -19,7 +19,7 @@ export type VideoDraft = {
 } & CommonDraftProps
 
 export type ChannelDraft = {
-  type: 'channel'
+  type: 'channels'
   title?: string
   description?: string
   publicness?: 'public' | 'private'
@@ -29,12 +29,11 @@ export type ChannelDraft = {
 export type Draft = VideoDraft | ChannelDraft
 
 type DraftState = {
-  video: VideoDraft[]
-  channel: ChannelDraft[]
+  videos: VideoDraft[]
+  channels: ChannelDraft[]
 }
 
 type ContextType = {
-  setDraftsState: (value: React.SetStateAction<DraftState>) => void
   draftsState: DraftState
   getInitialDrafts: () => Promise<void>
 }
@@ -44,18 +43,18 @@ DraftsContext.displayName = 'DraftsContext'
 
 export const DraftsProvider: React.FC = ({ children }) => {
   const [draftsState, setDraftsState] = useState<ContextType['draftsState']>({
-    channel: [],
-    video: [],
+    channels: [],
+    videos: [],
   })
 
   const getInitialDrafts = useCallback(async () => {
     try {
       const currentDrafts = await getDrafts()
-      const video = currentDrafts.filter((draft): draft is VideoDraft => draft.type === 'video')
-      const channel = currentDrafts.filter((draft): draft is ChannelDraft => draft.type === 'channel')
+      const videos = currentDrafts.filter((draft): draft is VideoDraft => draft.type === 'videos')
+      const channels = currentDrafts.filter((draft): draft is ChannelDraft => draft.type === 'channels')
       setDraftsState({
-        video,
-        channel,
+        videos,
+        channels,
       })
     } catch (error) {
       return Promise.reject(error)
@@ -66,12 +65,10 @@ export const DraftsProvider: React.FC = ({ children }) => {
     getInitialDrafts()
   }, [getInitialDrafts])
 
-  return (
-    <DraftsContext.Provider value={{ setDraftsState, draftsState, getInitialDrafts }}>
-      {children}
-    </DraftsContext.Provider>
-  )
+  return <DraftsContext.Provider value={{ draftsState, getInitialDrafts }}>{children}</DraftsContext.Provider>
 }
+
+type GetDraftType<T extends DraftType> = T extends 'videos' ? VideoDraft : ChannelDraft
 
 export const useContextDrafts = () => {
   const ctx = useContext(DraftsContext)
@@ -85,21 +82,20 @@ export const useDrafts = <T extends DraftType>(type: T) => {
   const { draftsState, getInitialDrafts } = useContextDrafts()
 
   const getSingleDraft = async (draftId: string) => {
-    const singleDraft = await getDraft(draftId)
-    if (singleDraft?.type === type) {
-      return singleDraft
-    }
+    const draft = (await getDraft(draftId)) as GetDraftType<T>
+    return draft
   }
 
-  const updateSingleDraft = async (draftId: string, draftProps: Partial<Omit<Draft, 'id' | 'updatedAt'>>) => {
-    await updateDraft(draftId, draftProps)
+  const updateSingleDraft = async (draftId: string, draftProps: Omit<Draft, 'id' | 'updatedAt' | 'type'>) => {
+    const updatedDraft = await updateDraft(draftId, draftProps)
     getInitialDrafts()
+    return updatedDraft as GetDraftType<T>
   }
 
-  const createSingleDraft = async (draft: Omit<Draft, 'updatedAt'>) => {
+  const createSingleDraft = async (draft: Omit<Draft, 'updatedAt' | 'id' | 'type'>) => {
     const newDraft = await addDraft({ ...draft, type })
     await getInitialDrafts()
-    return newDraft
+    return newDraft as GetDraftType<T>
   }
 
   const discardDraft = async (draftId: string) => {
@@ -111,7 +107,6 @@ export const useDrafts = <T extends DraftType>(type: T) => {
     clearDrafts()
     getInitialDrafts()
   }
-
   return {
     drafts: draftsState[type],
     updateDraft: updateSingleDraft,
