@@ -44,7 +44,7 @@ Historically, Atlas codebase was split between two packages - `app` and `@joystr
 
 ### DevOps
 
-We currently use GitHub actions and Netlify for all our DevOps needs. On every PR we run GitHub actions to ensure the code follows the linting rules and all the tests pass. Also, for every PR, Netlify previews are generated so that it's easy to explore the updated app.
+We currently use GitHub actions and Netlify for all our DevOps needs. On every PR we run GitHub actions to ensure the code follows the linting rules. Also, for every PR, Netlify previews are generated so that it's easy to explore the updated app.
 
 The deployed version of Atlas (at https://play.joysytream.org) is also hosted by Netlify. This one gets redeployed on every push/merge to master.
 

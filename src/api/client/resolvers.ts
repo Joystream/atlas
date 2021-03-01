@@ -33,18 +33,22 @@ export const queryNodeStitchingResolvers = (
   orionSchema: GraphQLSchema
 ): IResolvers => ({
   Query: {
+    // video queries
+    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
     videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
     featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
+    // channel queries
+    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
+    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
+    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
+      RemoveQueryNodeFollowsField,
+    ]),
+    // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
       RemoveQueryNodeViewsField,
       RemoveQueryNodeFollowsField,
     ]),
-    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
-    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
-      RemoveQueryNodeFollowsField,
-    ]),
-    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
   },
   Video: {
     // TODO: Resolve the views count in parallel to the videosConnection query
