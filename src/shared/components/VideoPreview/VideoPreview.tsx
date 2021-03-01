@@ -5,6 +5,7 @@ import {
   CoverDurationOverlay,
   CoverHoverOverlay,
   CoverImage,
+  CoverNoImage,
   CoverPlayIcon,
   CoverRemoveButton,
   MetaText,
@@ -38,7 +39,7 @@ type VideoPreviewProps = {
   removeButton?: boolean
   onRemoveButtonClick?: () => void
   views?: number | null
-  posterURL: string
+  posterURL?: string
 
   showChannel?: boolean
   showMeta?: boolean
@@ -111,7 +112,11 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
   const coverNode = (
     <>
-      <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
+      {posterURL ? (
+        <CoverImage src={posterURL} ref={imgRef} alt={`${title} by ${channelName} thumbnail`} />
+      ) : (
+        <CoverNoImage />
+      )}
       {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
       {!!progress && (
         <ProgressOverlay>
