@@ -301,7 +301,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   )}
                   {contextMenuCallbacks.onDeleteVideoClick && (
                     <ContextMenuItem iconName="trash" onClick={contextMenuCallbacks.onDeleteVideoClick}>
-                      Delete Video
+                      {videoPublishState === 'draft' ? 'Delete Draft' : 'Delete Video'}
                     </ContextMenuItem>
                   )}
                 </ContextMenu>
