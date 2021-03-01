@@ -1,7 +1,7 @@
-import { colors, sizes, transitions } from '@/shared/theme'
+import { shade } from 'polished'
+import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
-import { darken } from 'polished'
 import Text from '../Text'
 
 type CheckboxLabelProps = {
@@ -34,7 +34,7 @@ export const Container = styled.div<CheckboxStateProps>`
   &:hover {
     ${({ selected, disabled, error }) => [
       !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`,
-      error && `background: ${darken(0.5, colors.error)};`,
+      error && `background: ${shade(0.7, colors.error)};`,
     ]}
   }
 `
