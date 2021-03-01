@@ -9,25 +9,25 @@ import React, { useState } from 'react'
 const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
   title: '',
   description: '',
-  contentRating: undefined,
+  isExplicit: undefined,
 }
 
 const CONTENT_RATING = [
-  { value: 'all', name: 'all' },
-  { value: 'mature', name: 'mature' },
+  { value: false, name: 'all' },
+  { value: true, name: 'mature' },
 ]
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('videos')
+  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video')
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
     const draft = await getDraft(draftID)
     if (draft) {
-      const { title, description, contentRating } = draft
-      setForm({ title, description, contentRating })
+      const { title, description, isExplicit } = draft
+      setForm({ title, description, isExplicit })
     } else {
       setForm(INITIAL_STATE)
     }
@@ -46,7 +46,7 @@ const PlaygroundDrafts = () => {
             label="change draft"
             items={draftsIds}
             value={{ name: currentDraftId, value: currentDraftId }}
-            onChange={({ selectedItem }) => selectedItem?.value && setCurrentDraft(selectedItem.value)}
+            onChange={({ selectedItem }) => selectedItem?.value && setCurrentDraft(selectedItem.value as string)}
           />
         </FormField>
       )}
@@ -67,9 +67,9 @@ const PlaygroundDrafts = () => {
           placeholder="rating"
           label="rating"
           items={CONTENT_RATING}
-          value={{ value: form.contentRating || '', name: form.contentRating || '' }}
+          value={{ value: form.isExplicit as boolean, name: form.isExplicit ? 'all' : 'mature' }}
           onChange={({ selectedItem }) =>
-            setForm({ ...form, contentRating: selectedItem?.value as VideoDraft['contentRating'] })
+            selectedItem && setForm({ ...form, isExplicit: selectedItem.value as boolean })
           }
         />
       </FormField>
