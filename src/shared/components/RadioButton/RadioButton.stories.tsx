@@ -17,7 +17,7 @@ const Template: Story = (args) => {
     setSelected(element.value)
   }
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <RadioButton {...args} name="radio-group" value="1" selected={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="2" selected={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="3" selected={selected} onClick={handleClick} />

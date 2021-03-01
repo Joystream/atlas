@@ -1,6 +1,5 @@
 import React from 'react'
-import { Label, Input, StyledInput, RadioButtonStyleProps } from './RadioButton.style'
-import { LabelText } from '../Checkbox/Checkbox.styles'
+import { Label, Input, StyledInput, StyledLabelText, RadioButtonStyleProps } from './RadioButton.style'
 
 type RadioButtonProps = Partial<{
   selected: string | number
@@ -11,27 +10,30 @@ type RadioButtonProps = Partial<{
   React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
 
-const RadioButton: React.FC<RadioButtonProps> = ({
-  value,
-  selected,
-  label,
-  position = 'end',
-  disabled,
-  error,
-  onClick,
-  ...props
-}) => {
-  const clickable = !!onClick
+const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
+  ({ value, selected, label, disabled, error, onClick, ...props }, ref) => {
+    const clickable = !!onClick
+    const isSelected = value === selected
 
-  const isSelected = value === selected
-  return (
-    <Label position={position} clickable={clickable} disabled={disabled}>
-      <StyledInput checked={isSelected} error={error} disabled={disabled}>
-        <Input value={value} type="radio" onClick={onClick} disabled={disabled} {...props} checked={isSelected} />
-      </StyledInput>
-      {label && <LabelText>{label}</LabelText>}
-    </Label>
-  )
-}
+    return (
+      <Label clickable={clickable} disabled={disabled}>
+        <StyledInput checked={isSelected} error={error} disabled={disabled}>
+          <Input
+            ref={ref}
+            value={value}
+            type="radio"
+            onClick={onClick}
+            disabled={disabled}
+            {...props}
+            defaultChecked={isSelected}
+          />
+        </StyledInput>
+        {label && <StyledLabelText>{label}</StyledLabelText>}
+      </Label>
+    )
+  }
+)
+
+RadioButton.displayName = 'RadioButton'
 
 export default RadioButton
