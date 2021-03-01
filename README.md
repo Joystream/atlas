@@ -16,12 +16,6 @@ To build the app for distribution, run:
 $ yarn build
 ```
 
-To run tests (Currently WIP) run:
-
-```bash
-$ yarn test
-```
-
 ## Developer resources
 
 More info on how Atlas works can be found in [the Atlas overview](docs/overview.md). For a brief overview of the coding style within Atlas, check out [our Style Guide](docs/styleguide.md)
