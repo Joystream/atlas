@@ -26,7 +26,6 @@ export { ReactComponent as Pause } from './pause.svg'
 export { ReactComponent as SoundOn } from './sound-on.svg'
 export { ReactComponent as SoundOff } from './sound-off.svg'
 export { ReactComponent as Search } from './search.svg'
-export { ReactComponent as Times } from './times.svg'
 export { ReactComponent as Trash } from './trash.svg'
 export { ReactComponent as Link } from './link.svg'
 export { ReactComponent as Close } from './close.svg'
@@ -71,7 +70,6 @@ const icons = [
   'search',
   'sound-on',
   'sound-off',
-  'times',
   'link',
   'videos',
   'info',
