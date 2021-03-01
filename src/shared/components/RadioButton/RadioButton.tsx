@@ -1,5 +1,6 @@
 import React from 'react'
 import { Label, Input, StyledInput, RadioButtonStyleProps } from './RadioButton.style'
+import { LabelText } from '../Checkbox/Checkbox.styles'
 
 type RadioButtonProps = Partial<{
   selected: string | number
@@ -28,7 +29,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
       <StyledInput checked={isSelected} error={error} disabled={disabled}>
         <Input value={value} type="radio" onClick={onClick} disabled={disabled} {...props} checked={isSelected} />
       </StyledInput>
-      {label && <span>{label}</span>}
+      {label && <LabelText>{label}</LabelText>}
     </Label>
   )
 }

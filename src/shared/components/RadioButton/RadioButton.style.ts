@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { colors } from '../../theme'
+import { colors, sizes } from '../../theme'
 
 export type RadioButtonStyleProps = Partial<{
   error: boolean
@@ -88,6 +88,7 @@ export const Label = styled.label<RadioButtonStyleProps>`
   display: flex;
   flex-direction: ${({ position }) => (position === 'start' || position === 'end' ? 'row' : 'column')};
   align-items: center;
+  margin-bottom: ${sizes(4)};
   cursor: ${(props) => (props.clickable && !props.disabled ? 'pointer' : 'auto')};
   & > span:nth-of-type(1) {
     margin: 8px;
