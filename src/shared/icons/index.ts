@@ -41,6 +41,8 @@ export { ReactComponent as Gear } from './gear.svg'
 export { ReactComponent as Unlisted } from './unlisted.svg'
 export { ReactComponent as VideoDnd } from './video-dnd.svg'
 export { ReactComponent as ImageDnd } from './image-dnd.svg'
+export { ReactComponent as TrashFill } from './trash-fill.svg'
+export { ReactComponent as PlaySmall } from './play-small.svg'
 
 const icons = [
   'bars',
@@ -86,6 +88,8 @@ const icons = [
   'zoom-out',
   'video-dnd',
   'image-dnd',
+  'trash-fill',
+  'play-small',
 ] as const
 
 export type IconType = typeof icons[number]
