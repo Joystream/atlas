@@ -214,6 +214,9 @@ Mixed.args = {
   views: 10000,
   publisherMode: true,
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
+  onClick: () => {
+    console.log('Click')
+  },
 }
 
 const Wrapper = styled.div<{ main?: boolean }>`

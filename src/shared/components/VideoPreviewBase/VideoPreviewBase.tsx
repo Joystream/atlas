@@ -162,12 +162,16 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       e.preventDefault()
     }
   }
-  const handleCoverHoverOverlayClick = () => {
-    isAnyVideoSelected && onSelectClick?.(!isSelected)
+  const handleCoverHoverOverlayClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (isAnyVideoSelected) {
+      onSelectClick?.(!isSelected)
+    } else {
+      onClick?.(e)
+    }
   }
   return (
     <Container main={main} className={className}>
-      <CoverWrapper main={main} onClick={onClick}>
+      <CoverWrapper main={main}>
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
