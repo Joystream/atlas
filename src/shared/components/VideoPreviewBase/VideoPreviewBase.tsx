@@ -291,7 +291,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
                   {contextMenuCallbacks.onEditVideoClick && (
                     <ContextMenuItem iconName="pencil-fill" onClick={contextMenuCallbacks.onEditVideoClick}>
-                      Edit Video
+                      {videoPublishState === 'draft' ? 'Edit Draft' : 'Edit Video'}
                     </ContextMenuItem>
                   )}
                   {contextMenuCallbacks.onCopyVideoURLClick && (
