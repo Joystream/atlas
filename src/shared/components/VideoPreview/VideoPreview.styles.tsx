@@ -94,6 +94,7 @@ export const ProgressBar = styled.div`
   left: 0;
   bottom: 0;
   height: 100%;
+  max-width: 100%;
   width: 0;
   background-color: ${colors.blue['500']};
 `

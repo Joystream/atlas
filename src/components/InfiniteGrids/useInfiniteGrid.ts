@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ApolloError, useLazyQuery, useQuery } from '@apollo/client'
+import { ApolloError, useQuery } from '@apollo/client'
 import { debounce } from 'lodash'
 import { DocumentNode } from 'graphql'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
@@ -60,7 +60,7 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
   const [cachedQueryVariables, setCachedQueryVariables] = useState(queryVariables)
   const [refetching, setRefetching] = useState(false)
 
-  const { loading, data: rawData, error, fetchMore, called, refetch } = useQuery<TRawData, TArgs>(query, {
+  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
