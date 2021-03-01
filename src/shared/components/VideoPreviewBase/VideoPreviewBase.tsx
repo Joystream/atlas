@@ -22,13 +22,24 @@ import {
   CoverPlaceholder,
   SpacedPlaceholder,
   CoverImageContainer,
+  CoverVideoPublishingStateOverlay,
+  CoverEditIcon,
+  DraftIcon,
+  UnlistedIcon,
+  CoverCheckboxContainer,
+  CoverNoImage,
+  KebabMenuIcon,
+  ContextMenuContainer,
+  KebabMenuIconContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
-import { formatDurationShort } from '@/utils/time'
+import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
-import { Placeholder } from '..'
+import { ContextMenu, ContextMenuItem, Placeholder } from '..'
+import Checkbox from '../Checkbox'
+import { useContextMenu } from '@/hooks'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -40,6 +51,31 @@ export type VideoPreviewBaseMetaProps = {
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: () => void
 }
+
+type VideoPreviewPublisherProps =
+  | {
+      publisherMode: true
+      videoPublishState?: 'default' | 'draft' | 'unlisted'
+      isSelected: boolean
+      isAnyVideoSelected: boolean
+      onSelectClick: (value: boolean) => void
+      contextMenuCallbacks: ContextMenuCallbacks
+    }
+  | {
+      publisherMode?: false | undefined
+      videoPublishState?: undefined | 'default'
+      isSelected?: undefined
+      isAnyVideoSelected?: undefined
+      onSelectClick?: undefined
+      contextMenuCallbacks?: undefined
+    }
+
+type ContextMenuCallbacks = {
+  onEditVideoClick?: () => void
+  onCopyVideoURLClick?: () => void
+  onDeleteVideoClick?: () => void
+}
+
 export type VideoPreviewBaseProps = {
   title?: string
   channelHandle?: string
@@ -54,7 +90,8 @@ export type VideoPreviewBaseProps = {
   videoHref?: string
   channelHref?: string
   className?: string
-} & VideoPreviewBaseMetaProps
+} & VideoPreviewBaseMetaProps &
+  VideoPreviewPublisherProps
 
 export const MIN_VIDEO_PREVIEW_WIDTH = 300
 const MAX_VIDEO_PREVIEW_WIDTH = 600
@@ -84,10 +121,17 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   showChannel = true,
   showMeta = true,
   main = false,
+  videoPublishState = 'default',
+  publisherMode = false,
+  isSelected,
+  isAnyVideoSelected,
   onChannelClick,
+  onSelectClick,
   onClick,
   className,
+  contextMenuCallbacks = {},
 }) => {
+  const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
@@ -104,17 +148,31 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
+
+  const checkboxNode = (
+    <CoverCheckboxContainer>
+      <Checkbox value={!!isSelected} onChange={onSelectClick} />
+    </CoverCheckboxContainer>
+  )
+  const hoverIconNode = publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />
+
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
     }
-    e.stopPropagation()
     onChannelClick(e)
   }
 
   const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
       e.preventDefault()
+    }
+  }
+  const handleCoverHoverOverlayClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (isAnyVideoSelected) {
+      onSelectClick?.(!isSelected)
+    } else {
+      onClick?.(e)
     }
   }
   const createRemoveClickHandler = () => (e: React.MouseEvent<HTMLElement>) => {
@@ -125,36 +183,55 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   }
   return (
     <Container main={main} className={className}>
-      <CoverWrapper main={main} onClick={onClick}>
-        <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-          <CoverContainer clickable={clickable}>
-            <SwitchTransition>
-              <CSSTransition
-                key={isLoading ? 'placeholder' : 'content'}
-                timeout={parseInt(transitions.timings.regular)}
-                classNames={transitions.names.fade}
-              >
-                {isLoading ? (
-                  <CoverPlaceholder />
-                ) : (
-                  <CoverImageContainer>
-                    <CoverImage src={thumbnailUrl} ref={imgRef} alt={`${title} by ${channelHandle} thumbnail`} />
-                    {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                    {!!progress && (
-                      <ProgressOverlay>
-                        <ProgressBar style={{ width: `${progress}%` }} />
-                      </ProgressOverlay>
+      <CoverWrapper main={main}>
+        <CoverContainer clickable={clickable}>
+          <SwitchTransition>
+            <CSSTransition
+              key={isLoading ? 'placeholder' : 'content'}
+              timeout={parseInt(transitions.timings.regular)}
+              classNames={transitions.names.fade}
+            >
+              {isLoading ? (
+                <CoverPlaceholder />
+              ) : (
+                <CoverImageContainer>
+                  <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                    {thumbnailUrl ? (
+                      <CoverImage
+                        darkenImg={videoPublishState !== 'default'}
+                        isAnyVideoSelected={!!isAnyVideoSelected}
+                        src={thumbnailUrl}
+                        ref={imgRef}
+                        alt={`${title} by ${channelHandle} thumbnail`}
+                      />
+                    ) : (
+                      <CoverNoImage />
                     )}
-                    <CoverHoverOverlay>
-                      {removeButton && <CoverRemoveButton onClick={createRemoveClickHandler()} />}
-                      <CoverPlayIcon />
-                    </CoverHoverOverlay>
-                  </CoverImageContainer>
-                )}
-              </CSSTransition>
-            </SwitchTransition>
-          </CoverContainer>
-        </Anchor>
+                  </Anchor>
+                  {publisherMode && isAnyVideoSelected && checkboxNode}
+                  {videoPublishState !== 'default' && (
+                    <CoverVideoPublishingStateOverlay>
+                      {videoPublishState === 'draft' && <DraftIcon />}
+                      {videoPublishState === 'unlisted' && <UnlistedIcon />}
+                      {videoPublishState}
+                    </CoverVideoPublishingStateOverlay>
+                  )}
+                  {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                  <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                    {publisherMode && checkboxNode}
+                    {!isAnyVideoSelected && hoverIconNode}
+                    {removeButton && <CoverRemoveButton onClick={createRemoveClickHandler()} />}
+                  </CoverHoverOverlay>
+                  {!!progress && (
+                    <ProgressOverlay>
+                      <ProgressBar style={{ width: `${progress}%` }} />
+                    </ProgressOverlay>
+                  )}
+                </CoverImageContainer>
+              )}
+            </CSSTransition>
+          </SwitchTransition>
+        </CoverContainer>
       </CoverWrapper>
       <SwitchTransition>
         <CSSTransition
@@ -210,17 +287,43 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   </Anchor>
                 ))}
               {showMeta && (
-                <MetaContainer main={main}>
+                <MetaContainer noMarginTop={!showChannel} main={main}>
                   {isLoading ? (
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
                     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-                      {formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
+                      {videoPublishState === 'draft'
+                        ? `Last updated ${formatDateAgo(createdAt)}`
+                        : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
                     </MetaText>
                   ) : null}
                 </MetaContainer>
               )}
             </TextContainer>
+            {publisherMode && !isLoading && (
+              <ContextMenuContainer>
+                <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
+                  <KebabMenuIcon />
+                </KebabMenuIconContainer>
+                <ContextMenu contextMenuOpts={contextMenuOpts}>
+                  {contextMenuCallbacks.onEditVideoClick && (
+                    <ContextMenuItem iconName="pencil-fill" onClick={contextMenuCallbacks.onEditVideoClick}>
+                      {videoPublishState === 'draft' ? 'Edit Draft' : 'Edit Video'}
+                    </ContextMenuItem>
+                  )}
+                  {contextMenuCallbacks.onCopyVideoURLClick && (
+                    <ContextMenuItem iconName="link" onClick={contextMenuCallbacks.onCopyVideoURLClick}>
+                      Copy Video URL
+                    </ContextMenuItem>
+                  )}
+                  {contextMenuCallbacks.onDeleteVideoClick && (
+                    <ContextMenuItem iconName="trash" onClick={contextMenuCallbacks.onDeleteVideoClick}>
+                      {videoPublishState === 'draft' ? 'Delete Draft' : 'Delete Video'}
+                    </ContextMenuItem>
+                  )}
+                </ContextMenu>
+              </ContextMenuContainer>
+            )}
           </InfoContainer>
         </CSSTransition>
       </SwitchTransition>
