@@ -274,7 +274,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   </Anchor>
                 ))}
               {showMeta && (
-                <MetaContainer noMarginTop={showChannel === false} main={main}>
+                <MetaContainer noMarginTop={!showChannel} main={main}>
                   {isLoading ? (
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
