@@ -67,7 +67,7 @@ const PlaygroundDrafts = () => {
           placeholder="rating"
           label="rating"
           items={CONTENT_RATING}
-          value={{ value: form.isExplicit as boolean, name: form.isExplicit ? 'all' : 'mature' }}
+          value={{ value: form.isExplicit as boolean, name: form.isExplicit ? 'mature' : 'all' }}
           onChange={({ selectedItem }) =>
             selectedItem && setForm({ ...form, isExplicit: selectedItem.value as boolean })
           }
