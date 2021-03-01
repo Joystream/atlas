@@ -19,7 +19,6 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "start:prod": "cross-env REACT_APP_QUERY_NODE_URL=https://hydra.joystream.org/graphql REACT_APP_ORION_URL=https://orion.joystream.org/graphql REACT_APP_STORAGE_NODE_URL=https://rome-rpc-endpoint.joystream.org/asset/v0/ yarn start",
     "dev": "yarn start",
     "dev:prod": "yarn start:prod",
     "build": "react-app-rewired build",
@@ -77,7 +76,6 @@
     "babel-jest": "26.6.3",
     "babel-plugin-emotion": "^10.0.33",
     "body-scroll-lock": "^3.1.5",
-    "cross-env": "^7.0.3",
     "csstype": "^3.0.0-beta.4",
     "customize-cra": "^1.0.0",
     "date-fns": "^2.15.0",
