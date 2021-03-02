@@ -18,33 +18,31 @@ export type VideoMetadata = {
   width: number
   duration: number
 }
-export const getVideoMetadata = async (
-  file?: File
-): Promise<{ metadata: VideoMetadata; error?: undefined } | { metadata?: undefined; error: Error }> => {
+export const getVideoMetadata = async (file?: File): Promise<{ metadata: VideoMetadata }> => {
   const videoEl = document.createElement('video')
   const mimeType = file?.type ?? ''
   const sizeInBytes = file?.size ?? 0
-  const Url = URL
   const canPlay = videoEl.canPlayType(mimeType)
 
-  return new Promise((resolve) => {
-    const handleLoadeddata = (e: Event) => {
+  return new Promise((resolve, reject) => {
+    const handleLoadedData = (e: Event) => {
       // Video should now be loaded but we can add a second check
       if (videoEl.readyState >= 3) {
         const height = videoEl.videoHeight
         const width = videoEl.videoWidth
         const duration = videoEl.duration
         resolve({ metadata: { mimeType, sizeInBytes, height, width, duration } })
-        videoEl.removeEventListener('loadeddata', handleLoadeddata)
+      } else {
+        reject(new Error('There was an error loading the video please try again'))
       }
     }
 
     if (canPlay) {
-      const fileURL = Url.createObjectURL(file)
+      const fileURL = URL.createObjectURL(file)
       videoEl.src = fileURL
-      videoEl.addEventListener('loadeddata', handleLoadeddata)
+      videoEl.addEventListener('loadeddata', handleLoadedData, { once: true })
     } else {
-      resolve({ error: new Error("Can't play video file") })
+      reject(new Error("Can't play video file"))
     }
   })
 }
