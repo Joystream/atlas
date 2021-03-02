@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ApolloError, useQuery } from '@apollo/client'
 import { debounce } from 'lodash'
 import { DocumentNode } from 'graphql'
@@ -57,10 +57,8 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
-  const [cachedQueryVariables, setCachedQueryVariables] = useState(queryVariables)
-  const [refetching, setRefetching] = useState(false)
 
-  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
+  const { loading, data: rawData, error, fetchMore } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
@@ -75,11 +73,9 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
   const allItemsLoaded = data ? !data.pageInfo.hasNextPage : false
   const endCursor = data?.pageInfo.endCursor
 
-  const queryVariablesChanged = queryVariables !== cachedQueryVariables
-
   // handle fetching more items
   useEffect(() => {
-    if (loading || !fetchMore || allItemsLoaded || refetching || queryVariablesChanged) {
+    if (loading || !isReady || !fetchMore || allItemsLoaded) {
       return
     }
 
@@ -92,55 +88,7 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
     fetchMore({
       variables: { ...queryVariables, first: missingItemsCount, after: endCursor },
     })
-  }, [
-    loading,
-    fetchMore,
-    allItemsLoaded,
-    refetching,
-    queryVariablesChanged,
-    queryVariables,
-    targetLoadedItemsCount,
-    loadedItemsCount,
-    endCursor,
-  ])
-
-  // handle query vars change
-  useEffect(() => {
-    if (!queryVariablesChanged || !refetch || !isReady) {
-      return
-    }
-
-    setCachedQueryVariables(queryVariables)
-    setRefetching(true)
-
-    // refetch will merge new query vars with the one from the previous request
-    // we need to explicitly exclude all vars that are not present, otherwise they will get overwritten with stale values
-    const refetchVariables = Object.keys(cachedQueryVariables).reduce(
-      (variables, key) => {
-        if (!variables[key as keyof TArgs]) {
-          // @ts-ignore since the key is missing in the new vars, we know it's optional
-          variables[key as keyof TArgs] = undefined
-        }
-        return variables
-      },
-      { ...queryVariables }
-    )
-
-    const refetchPromise = refetch({ ...refetchVariables, first: targetRowsCount * itemsPerRow + skipCount })
-
-    if (refetchPromise) {
-      refetchPromise.then(() => setRefetching(false))
-    }
-  }, [
-    queryVariables,
-    cachedQueryVariables,
-    queryVariablesChanged,
-    isReady,
-    refetch,
-    targetRowsCount,
-    itemsPerRow,
-    skipCount,
-  ])
+  }, [loading, fetchMore, allItemsLoaded, queryVariables, targetLoadedItemsCount, loadedItemsCount, endCursor, isReady])
 
   // handle scroll to bottom
   useEffect(() => {
