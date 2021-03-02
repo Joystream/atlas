@@ -18,6 +18,15 @@ export type AllChannelFieldsFragment = {
   follows?: Types.Maybe<number>
 }
 
+export type GetBasicChannelQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID']
+}>
+
+export type GetBasicChannelQuery = {
+  __typename: 'Query'
+  channel?: Types.Maybe<{ __typename: 'Channel' } & BasicChannelFieldsFragment>
+}
+
 export type GetChannelQueryVariables = Types.Exact<{
   id: Types.Scalars['ID']
 }>
@@ -98,6 +107,44 @@ export const AllChannelFieldsFragmentDoc = gql`
     follows
   }
 `
+export const GetBasicChannelDocument = gql`
+  query GetBasicChannel($id: ID!) {
+    channel(where: { id: $id }) {
+      ...BasicChannelFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetBasicChannelQuery__
+ *
+ * To run a query within a React component, call `useGetBasicChannelQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicChannelQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicChannelQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBasicChannelQuery(
+  baseOptions: Apollo.QueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
+) {
+  return Apollo.useQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, baseOptions)
+}
+export function useGetBasicChannelLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, baseOptions)
+}
+export type GetBasicChannelQueryHookResult = ReturnType<typeof useGetBasicChannelQuery>
+export type GetBasicChannelLazyQueryHookResult = ReturnType<typeof useGetBasicChannelLazyQuery>
+export type GetBasicChannelQueryResult = Apollo.QueryResult<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 export const GetChannelDocument = gql`
   query GetChannel($id: ID!) {
     channel(where: { id: $id }) {

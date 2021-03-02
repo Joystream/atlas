@@ -10,7 +10,7 @@ import {
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
 type VideoOpts = QueryHookOptions<GetVideoQuery>
-const useVideo = (id: string, opts?: VideoOpts) => {
+export const useVideo = (id: string, opts?: VideoOpts) => {
   const { data, ...queryRest } = useGetVideoQuery({
     ...opts,
     variables: { id },
@@ -33,11 +33,22 @@ export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts
 
 type AddVideoViewOpts = Omit<MutationHookOptions<AddVideoViewMutation>, 'variables'>
 export const useAddVideoView = (opts?: AddVideoViewOpts) => {
-  const [addVideoView, rest] = useAddVideoViewMutation(opts)
+  const [addVideoView, rest] = useAddVideoViewMutation({
+    update: (cache, mutationResult) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Video',
+          id: mutationResult.data?.addVideoView.id,
+        }),
+        fields: {
+          views: () => mutationResult.data?.addVideoView.views,
+        },
+      })
+    },
+    ...opts,
+  })
   return {
     addVideoView,
     ...rest,
   }
 }
-
-export default useVideo

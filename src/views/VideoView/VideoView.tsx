@@ -78,17 +78,6 @@ const VideoView: React.FC = () => {
         videoId,
         channelId,
       },
-      update: (cache, mutationResult) => {
-        cache.modify({
-          id: cache.identify({
-            __typename: 'Video',
-            id: videoId,
-          }),
-          fields: {
-            views: () => mutationResult.data?.addVideoView.views,
-          },
-        })
-      },
     }).catch((error) => {
       console.warn('Failed to increase video views', { error })
     })

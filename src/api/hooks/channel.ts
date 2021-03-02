@@ -11,10 +11,24 @@ import {
   UnfollowChannelMutation,
   GetChannelsQuery,
   GetChannelsQueryVariables,
+  GetBasicChannelQuery,
+  useGetBasicChannelQuery,
 } from '@/api/queries'
 
-type Opts = QueryHookOptions<GetChannelQuery>
-export const useChannel = (id: string, opts?: Opts) => {
+type BasicChannelOpts = QueryHookOptions<GetBasicChannelQuery>
+export const useBasicChannel = (id: string, opts?: BasicChannelOpts) => {
+  const { data, ...rest } = useGetBasicChannelQuery({
+    ...opts,
+    variables: { id },
+  })
+  return {
+    channel: data?.channel,
+    ...rest,
+  }
+}
+
+type ChannelOpts = QueryHookOptions<GetChannelQuery>
+export const useChannel = (id: string, opts?: ChannelOpts) => {
   const { data, ...rest } = useGetChannelQuery({
     ...opts,
     variables: { id },
