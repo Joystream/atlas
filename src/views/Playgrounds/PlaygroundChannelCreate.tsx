@@ -4,7 +4,6 @@ import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/D
 import { ChannelCover, FormField, Select, HeaderTextField, Tooltip } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { requiredValidation, textFieldValidation } from './formValidationOptions'
-import { formatNumberShort } from '@/utils/number'
 import {
   StyledTitleSection,
   TitleContainer,
@@ -13,7 +12,7 @@ import {
   StyledAvatar,
   InnerFormContainer,
 } from './PlaygroundChannelEdit.style'
-import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '../ChannelView/ChannelView.style'
+import { Header } from '../ChannelView/ChannelView.style'
 import { ViewWrapper } from '@/components'
 import { SelectedItem } from '@/shared/components/Select'
 
@@ -36,24 +35,13 @@ const publicnessItems: SelectedItem[] = [
   { name: 'Private', value: 'private' },
 ]
 
-const channel = {
-  avatar: 'https://picsum.photos/200/300',
-  cover: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-  handle: 'Lorem ipsum',
-  follows: 1000,
-  description: `Making videos about cars, coffee and travel
-YouTube: SeenThroughGlass
-Podcast: BehindTheGlass
-Business: Lucy.Bayliss@mcsaatchimerlin.com`,
-}
-
 const PlaygroundChannelEdit = () => {
   const { register, handleSubmit, control, setValue, getValues, clearErrors, errors } = useForm<Inputs>({
     defaultValues: {
-      avatar: channel.avatar,
-      cover: channel.cover,
-      channelName: channel.handle,
-      description: channel.description,
+      avatar: null,
+      cover: null,
+      channelName: '',
+      description: '',
       selectedLanguage: '',
       selectedPublicness: '',
     },
@@ -111,26 +99,16 @@ const PlaygroundChannelEdit = () => {
             />
 
             <TitleContainer>
-              {channel ? (
-                <>
-                  <Tooltip text="Click to edit channel title">
-                    <HeaderTextField
-                      name="channelName"
-                      ref={register(textFieldValidation('Channel name', 3, 20))}
-                      value={channel.handle}
-                      placeholder="Add Channel Title"
-                      error={!!errors.channelName}
-                      helperText={errors.channelName?.message}
-                    />
-                  </Tooltip>
-                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                </>
-              ) : (
-                <TitlePlaceholder>
-                  <TitlePlaceholder />
-                  <SubTitlePlaceholder />
-                </TitlePlaceholder>
-              )}
+              <Tooltip text="Click to edit channel title" darkenContent={false}>
+                <HeaderTextField
+                  name="channelName"
+                  ref={register(textFieldValidation('Channel name', 3, 20))}
+                  value=""
+                  placeholder="Add Channel Title"
+                  error={!!errors.channelName}
+                  helperText={errors.channelName?.message}
+                />
+              </Tooltip>
             </TitleContainer>
           </StyledTitleSection>
         </Header>
