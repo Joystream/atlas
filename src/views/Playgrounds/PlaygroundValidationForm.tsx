@@ -182,6 +182,7 @@ const StyledCheckboxContainer = styled.div`
 const StyledRadioContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `
 
 export default PlaygroundValidationForm

@@ -6,13 +6,13 @@ import { colors, sizes, typography, transitions } from '../../theme'
 export type RadioButtonStyleProps = Partial<{
   error: boolean
   disabled: boolean
-  clickable: boolean
   checked: boolean
 }>
 
 export const Input = styled.input`
   margin: auto;
   opacity: 0;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
 
 const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => {
@@ -93,7 +93,7 @@ export const Label = styled.label<RadioButtonStyleProps>`
   display: inline-flex;
   align-items: center;
   margin-bottom: ${sizes(4)};
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : props.clickable ? 'pointer' : 'auto')};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   & > span:nth-of-type(1) {
     margin: 8px;
   }
