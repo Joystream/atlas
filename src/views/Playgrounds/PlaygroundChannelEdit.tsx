@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
 import { ChannelCover, FormField, Select, HeaderTextField } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { requiredValidation, textFieldValidation } from './formValidationOptions'
@@ -53,51 +54,61 @@ const PlaygroundChannelEdit = () => {
       selectedPublicness: 'public',
     },
   })
-
+  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
+  const handleAvatarConfirm = (blob: Blob, url: string) => {
+    setAvatarImageUrl(url)
+  }
   return (
     <ViewWrapper>
-      <form onSubmit={onSubmit}>
-        <Header>
-          <ChannelCover
-            coverPhotoUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg"
+      <Header>
+        <ChannelCover
+          coverPhotoUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg"
+          editable
+        />
+
+        <StyledTitleSection className={transitions.names.slide}>
+          <StyledAvatar
+            imageUrl={avatarImageUrl || 'https://picsum.photos/200/300'}
+            size="fill"
+            onEditClick={() => avatarDialogRef.current?.open()}
             editable
           />
 
-          <StyledTitleSection className={transitions.names.slide}>
-            <StyledAvatar imageUrl="https://picsum.photos/200/300" size="fill" editable />
-            <TitleContainer>
-              {channel ? (
-                <>
-                  <Controller
-                    name="channelName"
-                    control={control}
-                    rules={textFieldValidation('Channel name', 3, 20)}
-                    render={(props) => (
-                      <HeaderTextField
-                        placeholder="Add Channel Title"
-                        value={props.value}
-                        onChange={(e) => {
-                          setValue('channelName', e.currentTarget.value)
-                        }}
-                        error={!!errors.channelName}
-                        helperText={errors.channelName?.message}
-                      />
-                    )}
-                  />
-                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                </>
-              ) : (
-                <TitlePlaceholder>
-                  <TitlePlaceholder />
-                  <SubTitlePlaceholder />
-                </TitlePlaceholder>
-              )}
-            </TitleContainer>
-          </StyledTitleSection>
-        </Header>
+          <TitleContainer>
+            {channel ? (
+              <>
+                <Controller
+                  name="channelName"
+                  control={control}
+                  rules={textFieldValidation('Channel name', 3, 20)}
+                  render={(props) => (
+                    <HeaderTextField
+                      placeholder="Add Channel Title"
+                      value={props.value}
+                      onChange={(e) => {
+                        setValue('channelName', e.currentTarget.value)
+                      }}
+                      error={!!errors.channelName}
+                      helperText={errors.channelName?.message}
+                    />
+                  )}
+                />
+                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+              </>
+            ) : (
+              <TitlePlaceholder>
+                <TitlePlaceholder />
+                <SubTitlePlaceholder />
+              </TitlePlaceholder>
+            )}
+          </TitleContainer>
+        </StyledTitleSection>
+      </Header>
+      <form onSubmit={onSubmit}>
         <InnerFormContainer>
           <FormField title="Description">
             <StyledTextarea
@@ -157,6 +168,7 @@ const PlaygroundChannelEdit = () => {
           </FormField>
           <StyledActionBarTransaction fee={1} primaryButtonText="Publish Changes" />
         </InnerFormContainer>
+        <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />
       </form>
     </ViewWrapper>
   )
