@@ -12,6 +12,12 @@ fragment AllChannelFields on Channel {
   follows
 }
 
+query GetBasicChannel($id: ID!) {
+  channel(where: { id: $id }) {
+    ...BasicChannelFields
+  }
+}
+
 query GetChannel($id: ID!) {
   channel(where: { id: $id }) {
     ...AllChannelFields
