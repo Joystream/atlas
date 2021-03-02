@@ -38,8 +38,14 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
   useImperativeHandle(ref, () => ({
-    open: () => {
-      inputRef.current?.click()
+    open: (file?: File) => {
+      if (file) {
+        const fileUrl = URL.createObjectURL(file)
+        setEditedImageHref(fileUrl)
+        setShowDialog(true)
+      } else {
+        inputRef.current?.click()
+      }
     },
   }))
 
