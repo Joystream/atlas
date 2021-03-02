@@ -42,6 +42,7 @@ query GetChannelsConnection($first: Int, $after: String) {
       cursor
       node {
         ...AllChannelFields
+        createdAt # the node must include the field by which the connection is sorted by
       }
     }
     pageInfo {
