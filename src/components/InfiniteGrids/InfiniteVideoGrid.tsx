@@ -34,19 +34,16 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   className,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [queryVariables, setQueryVariables] = useState({
+  const queryVariables = {
     ...(channelId ? { channelId } : {}),
     ...(channelIdIn ? { channelIdIn } : {}),
     ...(createdAtGte ? { createdAtGte } : {}),
     ...(categoryId ? { categoryId } : {}),
-  })
+  }
 
   const [targetRowsCountByCategory, setTargetRowsCountByCategory] = useState<Record<string, number>>({
     [categoryId]: INITIAL_ROWS,
   })
-  const [cachedChannelId, setCachedChannelId] = useState<string | null>(channelId)
-  const [cachedChannelIdIn, setCachedChannelIdIn] = useState<string[] | null>(channelIdIn)
-  const [cachedCreatedAtGte, setCachedCreatedAtGte] = useState<Date | null>(createdAtGte)
   const [cachedCategoryId, setCachedCategoryId] = useState<string>(categoryId)
 
   const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
@@ -86,13 +83,6 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
     setCachedCategoryId(categoryId)
 
-    setQueryVariables({
-      ...(channelId ? { channelId } : {}),
-      ...(channelIdIn ? { channelIdIn } : {}),
-      ...(createdAtGte ? { createdAtGte } : {}),
-      ...(categoryId ? { categoryId } : {}),
-    })
-
     const categoryRowsSet = !!targetRowsCountByCategory[categoryId]
     const categoryRowsCount = categoryRowsSet ? targetRowsCountByCategory[categoryId] : INITIAL_ROWS
     if (!categoryRowsSet) {
@@ -111,52 +101,6 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     channelIdIn,
     createdAtGte,
   ])
-
-  // handle channelId change
-  useEffect(() => {
-    if (channelId === cachedChannelId) {
-      return
-    }
-
-    setCachedChannelId(channelId)
-
-    setQueryVariables({
-      ...(channelId ? { channelId } : {}),
-      ...(channelIdIn ? { channelIdIn } : {}),
-      ...(createdAtGte ? { createdAtGte } : {}),
-      ...(categoryId ? { categoryId } : {}),
-    })
-  }, [channelId, cachedChannelId, categoryId, channelIdIn, createdAtGte])
-
-  useEffect(() => {
-    if (JSON.stringify(cachedChannelIdIn) === JSON.stringify(channelIdIn)) {
-      return
-    }
-
-    setCachedChannelIdIn(channelIdIn)
-
-    setQueryVariables({
-      ...(channelId ? { channelId } : {}),
-      ...(channelIdIn ? { channelIdIn } : {}),
-      ...(createdAtGte ? { createdAtGte } : {}),
-      ...(categoryId ? { categoryId } : {}),
-    })
-  }, [cachedChannelIdIn, categoryId, channelId, channelIdIn, createdAtGte])
-
-  useEffect(() => {
-    if (createdAtGte === cachedCreatedAtGte) {
-      return
-    }
-
-    setCachedCreatedAtGte(createdAtGte)
-
-    setQueryVariables({
-      ...(channelId ? { channelId } : {}),
-      ...(channelIdIn ? { channelIdIn } : {}),
-      ...(createdAtGte ? { createdAtGte } : {}),
-      ...(categoryId ? { categoryId } : {}),
-    })
-  }, [cachedCreatedAtGte, categoryId, channelId, channelIdIn, createdAtGte])
 
   const gridContent = (
     <>
