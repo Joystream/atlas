@@ -69,10 +69,10 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   justify-content: center;
   align-items: center;
   background-clip: content-box;
-  padding: 4px;
+  padding: 2px;
   box-sizing: border-box;
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   &::before {
     content: '';
     top: -8px;

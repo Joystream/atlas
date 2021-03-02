@@ -25,7 +25,7 @@ const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
             onClick={onClick}
             disabled={disabled}
             {...props}
-            defaultChecked={isSelected}
+            checked={isSelected}
           />
         </StyledInput>
         {label && <StyledLabelText>{label}</StyledLabelText>}
