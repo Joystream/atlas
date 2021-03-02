@@ -7,7 +7,16 @@ import { Location } from 'history'
 
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
+import {
+  HomeView,
+  VideoView,
+  SearchOverlayView,
+  ChannelView,
+  VideosView,
+  ChannelsView,
+  PlaygroundView,
+  MyVideosView,
+} from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
@@ -37,6 +46,7 @@ const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
   { path: routes.videos(), Component: VideosView },
+  { path: routes.myVideos(), Component: MyVideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
   { path: routes.playground(), Component: PlaygroundView },

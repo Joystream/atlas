@@ -1,6 +1,5 @@
 export default {
   index: () => '/',
-  video: (id = ':id') => `/video/${id}`,
   searchOverlay: () => `/search`,
   search: ({ query }: { query?: string } = {}) => {
     const basePath = '/search'
@@ -14,8 +13,10 @@ export default {
     return basePath
   },
   channel: (id = ':id') => `/channel/${id}`,
-  videos: () => '/videos',
   channels: () => '/channels',
+  video: (id = ':id') => `/video/${id}`,
+  videos: () => '/videos',
+  myVideos: () => '/my-videos',
   playground: () => '/playground/*',
 }
 
