@@ -67,7 +67,7 @@ export type GetChannelsConnectionQuery = {
     edges: Array<{
       __typename: 'ChannelEdge'
       cursor: string
-      node: { __typename: 'Channel' } & AllChannelFieldsFragment
+      node: { __typename: 'Channel'; createdAt: Date } & AllChannelFieldsFragment
     }>
     pageInfo: { __typename: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
@@ -270,6 +270,7 @@ export const GetChannelsConnectionDocument = gql`
         cursor
         node {
           ...AllChannelFields
+          createdAt
         }
       }
       pageInfo {

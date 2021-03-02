@@ -57,7 +57,11 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                 {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} handle={handle} />}
               </AvatarContainer>
               <Info>
-                {loading ? <Placeholder width="140px" height="16px" /> : <NameHeader variant="h6">{handle}</NameHeader>}
+                {loading ? (
+                  <Placeholder width="140px" height="16px" />
+                ) : (
+                  <NameHeader variant="h6">{handle || '\u00A0'}</NameHeader>
+                )}
                 <VideoCountContainer>
                   {loading ? (
                     <Placeholder width="140px" height="16px" />

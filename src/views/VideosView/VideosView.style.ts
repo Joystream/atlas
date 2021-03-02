@@ -11,6 +11,7 @@ type IsAtTop = {
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   padding-top: ${sizes(14)};
+  padding-bottom: ${sizes(4)};
 `
 
 export const GRID_TOP_PADDING = sizes(2, true)
