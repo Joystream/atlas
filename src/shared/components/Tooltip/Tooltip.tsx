@@ -5,6 +5,7 @@ export type TooltipProps = {
   text: string
   above?: boolean
   right?: boolean
+  offsetY?: number
   arrowDisabled?: boolean
   darkenContent?: boolean
   className?: string
@@ -15,6 +16,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   text,
   above,
   right,
+  offsetY,
   arrowDisabled,
   darkenContent = true,
   className,
@@ -28,6 +30,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       arrowDisabled={arrowDisabled}
       above={above}
       right={right}
+      offsetY={offsetY}
       className={className}
     >
       <ChildrenContainer

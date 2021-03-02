@@ -1,24 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
-import { ChannelCover, FormField, Select, HeaderTextField } from '@/shared/components'
+import { ChannelCover, FormField, Select, HeaderTextField, Tooltip } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { requiredValidation, textFieldValidation } from './formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import {
   StyledTitleSection,
+  TitleContainer,
   StyledTextarea,
   StyledActionBarTransaction,
   StyledAvatar,
   InnerFormContainer,
 } from './PlaygroundChannelEdit.style'
-import {
-  Header,
-  SubTitle,
-  SubTitlePlaceholder,
-  TitleContainer,
-  TitlePlaceholder,
-} from '../ChannelView/ChannelView.style'
+import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '../ChannelView/ChannelView.style'
 import { ViewWrapper } from '@/components'
 import { SelectedItem } from '@/shared/components/Select'
 
@@ -27,6 +22,8 @@ type Inputs = {
   description?: string
   selectedPublicness?: string
   selectedLanguage?: string
+  avatar: string | null
+  cover: string | null
 }
 
 const languages: SelectedItem[] = [
@@ -40,86 +37,116 @@ const publicnessItems: SelectedItem[] = [
 ]
 
 const channel = {
+  avatar: 'https://picsum.photos/200/300',
+  cover: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
   handle: 'Lorem ipsum',
   follows: 1000,
+  description: `Making videos about cars, coffee and travel
+YouTube: SeenThroughGlass
+Podcast: BehindTheGlass
+Business: Lucy.Bayliss@mcsaatchimerlin.com`,
 }
 
 const PlaygroundChannelEdit = () => {
-  const { register, handleSubmit, control, setValue, clearErrors, errors } = useForm<Inputs>({
+  const { register, handleSubmit, control, setValue, getValues, clearErrors, errors } = useForm<Inputs>({
     defaultValues: {
+      avatar: channel.avatar,
+      cover: channel.cover,
       channelName: channel.handle,
-      description:
-        'Making videos about cars, coffee and travelYouTube: SeenThroughGlassPodcast: BehindTheGlassBusiness: Lucy.Bayliss@mcsaatchimerlin.com',
-      selectedLanguage: 'english',
-      selectedPublicness: 'public',
+      description: channel.description,
+      selectedLanguage: '',
+      selectedPublicness: '',
     },
   })
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
+
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
   const handleAvatarConfirm = (blob: Blob, url: string) => {
+    setValue('avatar', url)
     setAvatarImageUrl(url)
   }
+  const handleCoverConfirm = (blob: Blob, url: string) => {
+    setValue('cover', url)
+    setCoverImageUrl(url)
+  }
+  const handleCoverRemove = () => {
+    setValue('cover', null)
+    setCoverImageUrl(null)
+  }
+
+  useEffect(() => {
+    setAvatarImageUrl(getValues('avatar'))
+    setCoverImageUrl(getValues('cover'))
+  }, [getValues])
+
   return (
     <ViewWrapper>
-      <Header>
-        <ChannelCover
-          coverPhotoUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg"
-          editable
-        />
-
-        <StyledTitleSection className={transitions.names.slide}>
-          <StyledAvatar
-            imageUrl={avatarImageUrl || 'https://picsum.photos/200/300'}
-            size="fill"
-            onEditClick={() => avatarDialogRef.current?.open()}
+      <form onSubmit={onSubmit}>
+        <Header>
+          <ChannelCover
+            coverPhotoUrl={coverImageUrl}
+            onCoverEditClick={(e) => {
+              e.preventDefault()
+              coverDialogRef.current?.open()
+            }}
+            onCoverRemoveClick={handleCoverRemove}
             editable
           />
 
-          <TitleContainer>
-            {channel ? (
-              <>
-                <Controller
-                  name="channelName"
-                  control={control}
-                  rules={textFieldValidation('Channel name', 3, 20)}
-                  render={(props) => (
+          <StyledTitleSection className={transitions.names.slide}>
+            <StyledAvatar
+              imageUrl={avatarImageUrl}
+              size="fill"
+              onEditClick={(e) => {
+                e.preventDefault()
+                avatarDialogRef.current?.open()
+              }}
+              editable
+            />
+
+            <TitleContainer>
+              {channel ? (
+                <>
+                  <Tooltip text="Click to edit channel title">
                     <HeaderTextField
+                      name="channelName"
+                      ref={register(textFieldValidation('Channel name', 3, 20))}
+                      value={channel.handle}
                       placeholder="Add Channel Title"
-                      value={props.value}
-                      onChange={(e) => {
-                        setValue('channelName', e.currentTarget.value)
-                      }}
                       error={!!errors.channelName}
                       helperText={errors.channelName?.message}
                     />
-                  )}
-                />
-                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-              </>
-            ) : (
-              <TitlePlaceholder>
-                <TitlePlaceholder />
-                <SubTitlePlaceholder />
-              </TitlePlaceholder>
-            )}
-          </TitleContainer>
-        </StyledTitleSection>
-      </Header>
-      <form onSubmit={onSubmit}>
+                  </Tooltip>
+                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                </>
+              ) : (
+                <TitlePlaceholder>
+                  <TitlePlaceholder />
+                  <SubTitlePlaceholder />
+                </TitlePlaceholder>
+              )}
+            </TitleContainer>
+          </StyledTitleSection>
+        </Header>
         <InnerFormContainer>
           <FormField title="Description">
-            <StyledTextarea
-              name="description"
-              spellcheck={false}
-              lineHeight={2}
-              ref={register(textFieldValidation('Description', 3, 160))}
-              maxLength={160}
-              error={!!errors.description}
-              helperText={errors.description?.message}
-            />
+            <Tooltip text="Click to edit channel description" offsetY={-50}>
+              <StyledTextarea
+                name="description"
+                spellcheck={false}
+                lineHeight={2}
+                ref={register(textFieldValidation('Description', 3, 160))}
+                maxLength={160}
+                error={!!errors.description}
+                helperText={errors.description?.message}
+              />
+            </Tooltip>
           </FormField>
           <FormField
             title="Change Language"
@@ -168,7 +195,16 @@ const PlaygroundChannelEdit = () => {
           </FormField>
           <StyledActionBarTransaction fee={1} primaryButtonText="Publish Changes" />
         </InnerFormContainer>
-        <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />
+        <Controller
+          name="avatar"
+          control={control}
+          render={() => <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />}
+        />
+        <Controller
+          name="cover"
+          control={control}
+          render={() => <ImageCropDialog imageType="cover" onConfirm={handleCoverConfirm} ref={coverDialogRef} />}
+        />
       </form>
     </ViewWrapper>
   )

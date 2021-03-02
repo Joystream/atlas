@@ -5,11 +5,18 @@ import { TitleSection } from '../ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
+  width: auto;
   flex-direction: row;
   padding-top: ${sizes(8)};
   @media (min-width: ${breakpoints.small}) {
     padding-top: 0;
   }
+`
+
+export const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 export const InnerFormContainer = styled.div`
@@ -24,8 +31,10 @@ export const InnerFormContainer = styled.div`
 
 export const StyledTextarea = styled(Textarea)`
   position: relative;
-  height: 120px;
-  margin-bottom: 100px;
+  width: 100%;
+  textarea {
+    height: 120px;
+  }
 `
 
 export const StyledActionBarTransaction = styled(ActionBarTransaction)`
