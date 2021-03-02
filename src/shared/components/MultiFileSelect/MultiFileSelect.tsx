@@ -1,111 +1,89 @@
-import React, { useCallback, useState } from 'react'
-import Button from '../Button'
-import {
-  ButtonsGroup,
-  DragAndDropContainer,
-  DragAndDropArea,
-  InnerContainer,
-  Paragraph,
-  StyledIcon,
-  Title,
-  StepsContainer,
-  Step,
-  StepStatus,
-  StepNumber,
-  StepDetails,
-  DeleteButton,
-  FileType,
-  FileName,
-  TrashIcon,
-  StepDivider,
-  Thumbnail,
-  ProgressBar,
-} from './MultiFileSelect.style'
-import { useDropzone, DropzoneOptions } from 'react-dropzone'
+import ImageCropDialog from '@/components/Dialogs/ImageCropDialog'
+import React, { useRef, useState } from 'react'
 import Icon from '../Icon'
-import { image } from 'faker'
+import FileDrop from './FileDrop'
+import FileStep from './FileStep'
+import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+
+type FileState = {
+  video: File | null
+  image: File | null
+}
+export type Step = 'video' | 'image'
 
 const MultiFileSelect = () => {
-  const [files, setFiles] = useState<File[]>([])
-  const [fileUploaded, setFileUploaded] = useState(false)
-
-  const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback((acceptedFiles) => {
-    // Do something with the files
-    setFileUploaded(true)
-    setTimeout(() => {
-      setFileUploaded(false)
-    }, 900)
-  }, [])
-  const onDropRejected: DropzoneOptions['onDropRejected'] = useCallback((acceptedFiles) => {
-    console.log('wrong file type')
-  }, [])
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isFileDialogActive,
-    isDragReject,
-    acceptedFiles,
-    draggedFiles,
-    isFocused,
-  } = useDropzone({
-    onDropAccepted,
-    onDropRejected,
-    accept: 'video/*',
-    maxFiles: 1,
-    multiple: false,
+  const [files, setFiles] = useState<FileState>({
+    video: null,
+    image: null,
   })
-  const loaded = false
-  const isMovie = true
+  const [croppedImageUrl, setCroppedImageUrl] = useState<string>()
+
+  const dialogRef = useRef(null)
+
+  const [step, setStep] = useState<Step>('video')
+  const [image, setImage] = useState<string>()
+
+  const handleUploadFile = (file: File) => {
+    if (file.type.includes('video')) {
+      setFiles({
+        ...files,
+        video: file,
+      })
+      setStep('image')
+    }
+    if (file.type.includes('image')) {
+      setFiles({
+        ...files,
+        image: file,
+      })
+      // @ts-ignore for now
+      dialogRef.current.open(file)
+    }
+  }
+
   return (
-    <DragAndDropContainer>
-      <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-        <ProgressBar fileUploaded={fileUploaded} />
-        <InnerContainer>
-          <StyledIcon name="video-dnd" />
-          <Title variant="h5">Select Video File</Title>
-          <Paragraph variant="subtitle2" as="p">
-            16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.
-          </Paragraph>
-          <ButtonsGroup>
-            <span>Drag and drop or </span>
-            <input {...getInputProps()} />
-            <Button>Select a file</Button>
-          </ButtonsGroup>
-        </InnerContainer>
-      </DragAndDropArea>
+    <MultiFileSelectContainer>
+      {croppedImageUrl ? (
+        <img src={croppedImageUrl} style={{ width: '100%', objectFit: 'cover' }} alt="video thumbnail" />
+      ) : (
+        <FileDrop
+          onUploadFile={handleUploadFile}
+          step={step}
+          icon={step === 'video' ? 'video-dnd' : 'image-dnd'}
+          title={step === 'video' ? 'Select Video File' : 'Add Thumbnail Image'}
+          paragraph={
+            step === 'video'
+              ? `16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.`
+              : `Accepting JPG, PNG formats. Can't exceed 20MB (Example data).`
+          }
+        />
+      )}
       <StepsContainer>
-        <Step>
-          <StepStatus>
-            <StepNumber>1</StepNumber>
-            <Thumbnail>{isMovie ? <Icon name="play-small" /> : <img src="" alt="" />}</Thumbnail>
-            <StepDetails>
-              <FileType variant="overhead">Video file</FileType>
-              <FileName variant="subtitle2">Bla bla.mov</FileName>
-            </StepDetails>
-          </StepStatus>
-          <DeleteButton>
-            <TrashIcon name="trash-fill" />
-          </DeleteButton>
-        </Step>
+        <FileStep
+          step={1}
+          active={step === 'video'}
+          file={files.video}
+          type="video"
+          onDelete={() => setFiles({ ...files, video: null })}
+        />
         <StepDivider>
-          <Icon name="chevron-right"></Icon>
+          <Icon name="chevron-right" />
         </StepDivider>
-        <Step>
-          <StepStatus>
-            <StepNumber>2</StepNumber>
-            <StepDetails>
-              <FileType variant="overhead">Video file</FileType>
-              <FileName variant="subtitle2">Bla bla.mov</FileName>
-            </StepDetails>
-          </StepStatus>
-          <DeleteButton>
-            <TrashIcon name="trash-fill" />
-          </DeleteButton>
-        </Step>
+        <FileStep
+          step={2}
+          active={step === 'image'}
+          file={files.image}
+          type="image"
+          thumbnailImage={croppedImageUrl}
+          onDelete={() => setFiles({ ...files, image: null })}
+        />
       </StepsContainer>
-    </DragAndDropContainer>
+      <ImageCropDialog
+        ref={dialogRef}
+        imageType="videoThumbnail"
+        onConfirm={(_, croppedImageUrl) => setCroppedImageUrl(croppedImageUrl)}
+      />
+    </MultiFileSelectContainer>
   )
 }
 
