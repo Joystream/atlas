@@ -31,13 +31,16 @@ export const StyledInput = styled.input<StyledInputProps>`
   font-weight: ${typography.weights.bold};
   border: none;
   min-width: 100px;
-  max-width: 100vw;
+  max-width: calc(100vw - 150px);
   width: ${({ widthSize }) => (widthSize ? widthSize + 'ch' : '100%')};
   height: ${sizes(13)};
   &:hover {
     filter: brightness(80%);
   }
   @media screen and (min-width: ${breakpoints.small}) {
+    max-width: calc(100vw - 200px);
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 600px;
   }
 `

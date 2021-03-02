@@ -39,7 +39,7 @@ const publicnessItems: SelectedItem[] = [
 const channel = {
   avatar: 'https://picsum.photos/200/300',
   cover: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-  handle: 'Lorem ipsum',
+  handle: 'Lorem ipsum dolor sit amet',
   follows: 1000,
   description: `Making videos about cars, coffee and travel
 YouTube: SeenThroughGlass
@@ -114,13 +114,21 @@ const PlaygroundChannelEdit = () => {
               {channel ? (
                 <>
                   <Tooltip text="Click to edit channel title">
-                    <HeaderTextField
+                    <Controller
                       name="channelName"
-                      ref={register(textFieldValidation('Channel name', 3, 20))}
-                      value={channel.handle}
-                      placeholder="Add Channel Title"
-                      error={!!errors.channelName}
-                      helperText={errors.channelName?.message}
+                      control={control}
+                      rules={textFieldValidation('Channel name', 3, 20)}
+                      render={(props) => (
+                        <HeaderTextField
+                          placeholder="Add Channel Title"
+                          value={props.value}
+                          onChange={(e) => {
+                            setValue('channelName', e.currentTarget.value)
+                          }}
+                          error={!!errors.channelName}
+                          helperText={errors.channelName?.message}
+                        />
+                      )}
                     />
                   </Tooltip>
                   <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
