@@ -54,6 +54,7 @@ type SelectMenuProps = {
 export const SelectMenu = styled.ul<SelectMenuProps>`
   width: 100%;
   position: absolute;
+  z-index: 1;
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
   background-color: ${colors.gray[700]};
