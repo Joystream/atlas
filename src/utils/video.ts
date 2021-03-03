@@ -8,7 +8,7 @@ export const formatVideoViewsAndDate = (
 ): string => {
   const formattedDate = formatDateAgo(date)
   const formattedViews = views !== null && (fullViews ? formatNumber(views) : formatNumberShort(views))
-  return formattedViews ? `${formattedViews} views • ${formattedDate}` : formattedDate
+  return formattedViews ? `${formattedDate} • ${formattedViews} views` : formattedDate
 }
 
 export type VideoMetadata = {

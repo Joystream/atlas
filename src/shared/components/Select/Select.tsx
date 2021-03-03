@@ -5,14 +5,14 @@ import { useSelect, UseSelectStateChange } from 'downshift'
 import Icon from '../Icon'
 
 export type SelectedItem = {
-  value: string
+  value: string | boolean
   name: string
 }
 
 export type SelectProps = {
   onChange?: (changes: UseSelectStateChange<SelectedItem>) => void
   value?: SelectedItem | null
-  items?: SelectedItem[]
+  items: SelectedItem[]
   placeholder?: string
 } & InputBaseProps
 
