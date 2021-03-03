@@ -147,6 +147,7 @@ const PlaygroundChannelEdit = () => {
             </TitleContainer>
           </StyledTitleSection>
         </Header>
+
         <InnerFormContainer>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description" offsetY={-50}>
