@@ -27,7 +27,7 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({
       <div>
         {loading && <Placeholder width={200} height={16} bottomSpace={18} />}
         {bestMatch && <h3>Best Match</h3>}
-        <VideoPreview id={bestMatch?.id} main />
+        <VideoPreview id={bestMatch?.id} main onClick={() => onVideoClick(bestMatch?.id)} />
       </div>
       {(videos.length > 0 || loading) && (
         <div>

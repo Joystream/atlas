@@ -10,6 +10,7 @@ import {
   WatchedVideo,
   RecentSearch,
   DismissedMessage,
+  REMOVED_VIDEO,
 } from './types'
 
 const watchedVideos = promisify(() => readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? [])
@@ -27,7 +28,7 @@ const watchedVideo = async (id: string) => {
   return videos.find((v) => v.id === id) ?? null
 }
 const setWatchedVideo = async (
-  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO,
+  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO | typeof REMOVED_VIDEO,
   id: string,
   timestamp?: number
 ) => {
@@ -59,6 +60,10 @@ const setWatchedVideo = async (
   if (!currentVideo) {
     const newVideo = __typename === 'COMPLETED' ? { __typename, id } : { __typename, id, timestamp }
     writeToLocalStorage('watchedVideos', [...currentVideos, newVideo])
+  }
+  if (currentVideo?.__typename === 'REMOVED') {
+    const filtered = currentVideos.filter((v) => v.id !== id)
+    writeToLocalStorage('watchedVideos', filtered)
   }
 }
 
