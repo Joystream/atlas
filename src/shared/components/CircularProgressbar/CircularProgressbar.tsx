@@ -9,13 +9,14 @@ export const VIEWBOX_CENTER_Y = VIEWBOX_HEIGHT / 2
 
 export type CircularProgressbarProps = {
   value: number
-  circleRatio: number
-  counterClockwise: boolean
-  maxValue: number
-  minValue: number
-  strokeWidth: number
-  background: boolean
-  backgroundPadding: number
+  circleRatio?: number
+  counterClockwise?: boolean
+  maxValue?: number
+  minValue?: number
+  strokeWidth?: number
+  background?: boolean
+  backgroundPadding?: number
+  className?: string
 }
 
 const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
@@ -27,6 +28,7 @@ const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
   maxValue = 100,
   minValue = 0,
   strokeWidth = 15,
+  className,
 }) => {
   const getBackgroundPadding = () => (background ? backgroundPadding : 0)
   // The radius of the path is defined to be in the middle, so in order for the path to
@@ -41,7 +43,7 @@ const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
   const pathRatio = getPathRatio()
   return (
     <>
-      <SVG viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}>
+      <SVG viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`} className={className}>
         {background ? <Background cx={VIEWBOX_CENTER_X} cy={VIEWBOX_CENTER_Y} r={VIEWBOX_HEIGHT_HALF} /> : null}
         <Trail
           counterClockwise={counterClockwise}
