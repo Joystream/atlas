@@ -56,14 +56,12 @@ const FileDrop: React.FC<FileDropProps> = ({
     setError('Wrong file type!')
   }, [])
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive } = useDropzone({
     onDropAccepted,
     onDropRejected,
     accept: step + '/*',
     maxFiles: 1,
     multiple: false,
-    noClick: true,
-    noKeyboard: true,
   })
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
@@ -82,7 +80,7 @@ const FileDrop: React.FC<FileDropProps> = ({
               </Paragraph>
               <ButtonsGroup>
                 <DragDropText variant="body2">Drag and drop or </DragDropText>
-                <UploadButton onClick={open}>
+                <UploadButton>
                   <Icon name="video-camera"></Icon>
                   Select a file
                 </UploadButton>

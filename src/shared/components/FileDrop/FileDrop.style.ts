@@ -1,4 +1,4 @@
-import { colors, sizes, transitions } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Icon from '../Icon'
 import Text from '../Text'
@@ -6,10 +6,7 @@ import { darken } from 'polished'
 import Button from '../Button'
 
 type DragAndDropAreaProps = {
-  isFocused?: boolean
-  isDragActive?: boolean
   isDragAccept?: boolean
-  isDragReject?: boolean
   isFileDialogActive?: boolean
 }
 
@@ -22,8 +19,8 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
 
   background-color: ${darken(0.16, colors.gray[600])};
   cursor: pointer;
-  width: 640px;
-  height: 400px;
+  width: 320px;
+  height: 250px;
   display: flex;
   justify-content: center;
 
@@ -37,6 +34,10 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   :hover,
   :focus {
     border: 1px dashed ${colors.blue[500]};
+  }
+  @media screen and (min-width: ${breakpoints.small}) {
+    width: 640px;
+    height: 400px;
   }
 `
 
@@ -91,9 +92,14 @@ export const DismissButton = styled.button`
 `
 
 export const InnerContainer = styled.div`
-  margin-top: ${sizes(10)};
-  max-width: 350px;
+  margin-top: ${sizes(1)};
   text-align: center;
+  max-width: 200px;
+
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: ${sizes(10)};
+    max-width: 350px;
+  }
 `
 
 export const StyledIcon = styled(Icon)`
@@ -103,19 +109,28 @@ export const StyledIcon = styled(Icon)`
 
 export const Title = styled(Text)`
   line-height: 1.2;
-  margin-top: ${sizes(4)};
+  margin-top: ${sizes(2)};
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: ${sizes(4)};
+  }
 `
 
 export const Paragraph = styled(Text)`
   margin-top: ${sizes(8)};
   line-height: ${sizes(5)};
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: ${sizes(4)};
+  }
 `
 
 export const ButtonsGroup = styled.div`
-  margin-top: ${sizes(8)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
+  @media screen and (min-width: ${breakpoints.small}) {
+    margin-top: ${sizes(8)};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `
 export const UploadButton = styled(Button)`
   display: flex;
