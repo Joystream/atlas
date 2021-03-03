@@ -12,7 +12,7 @@ import {
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
-import { Step } from '../MultiFileSelect/MultiFileSelect'
+import { Step } from '../MultiFileSelect'
 
 export type FileStepProps = {
   stepNumber: number

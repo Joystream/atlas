@@ -18,7 +18,7 @@ import {
   Title,
   UploadButton,
 } from './FileDrop.style'
-import { Step } from '../MultiFileSelect/MultiFileSelect'
+import { Step } from '../MultiFileSelect'
 
 export type FileDropProps = {
   step: Step
