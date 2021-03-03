@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { sizes, breakpoints } from '@/shared/theme'
-import { Textarea, ActionBarTransaction, Avatar } from '@/shared/components'
+import { Textarea, ActionBarTransaction, Avatar, FormField } from '@/shared/components'
 import { TitleSection } from '../ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`
@@ -27,6 +27,10 @@ export const InnerFormContainer = styled.div`
   @media screen and (min-width: ${breakpoints.large}) {
     margin-left: calc(144px - var(--global-horizontal-padding));
   }
+`
+
+export const StyledFormField = styled(FormField)`
+  margin-top: 40px;
 `
 
 export const StyledTextarea = styled(Textarea)`

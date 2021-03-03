@@ -1,34 +1,28 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
-import { ChannelCover, FormField, Select, HeaderTextField, Tooltip } from '@/shared/components'
+
+import { ImageCropDialog, ImageCropDialogImperativeHandle, ViewWrapper } from '@/components'
+import { ChannelCover, FormField, Select, SelectedItem, HeaderTextField, Tooltip } from '@/shared/components'
+
 import { transitions } from '@/shared/theme'
-import { requiredValidation, textFieldValidation } from './formValidationOptions'
-import { formatNumberShort } from '@/utils/number'
 import {
   StyledTitleSection,
   TitleContainer,
+  StyledFormField,
   StyledTextarea,
   StyledActionBarTransaction,
   StyledAvatar,
   InnerFormContainer,
 } from './PlaygroundChannelEdit.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '../ChannelView/ChannelView.style'
-import { ViewWrapper } from '@/components'
-import { SelectedItem } from '@/shared/components/Select'
 
-type Inputs = {
-  channelName?: string
-  description?: string
-  selectedPublicness?: string
-  selectedLanguage?: string
-  avatar: string | null
-  cover: string | null
-}
+import { requiredValidation, textFieldValidation } from './formValidationOptions'
+import { formatNumberShort } from '@/utils/number'
 
 const languages: SelectedItem[] = [
   { name: 'English', value: 'english' },
   { name: 'Polish', value: 'polish' },
+  { name: 'Spanish', value: 'spanish' },
 ]
 
 const publicnessItems: SelectedItem[] = [
@@ -47,8 +41,19 @@ Podcast: BehindTheGlass
 Business: Lucy.Bayliss@mcsaatchimerlin.com`,
 }
 
+type Inputs = {
+  channelName?: string
+  description?: string
+  selectedPublicness?: string
+  selectedLanguage?: string
+  avatar: string | null
+  cover: string | null
+}
+
 const PlaygroundChannelEdit = () => {
-  const { register, handleSubmit, control, setValue, getValues, clearErrors, errors } = useForm<Inputs>({
+  const { register, handleSubmit: useHandleSubmit, control, setValue, getValues, reset, clearErrors, errors } = useForm<
+    Inputs
+  >({
     defaultValues: {
       avatar: channel.avatar,
       cover: channel.cover,
@@ -64,7 +69,7 @@ const PlaygroundChannelEdit = () => {
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const onSubmit = handleSubmit((data) => {
+  const handleSubmit = useHandleSubmit((data) => {
     console.log(data)
   })
   const handleAvatarConfirm = (blob: Blob, url: string) => {
@@ -87,7 +92,7 @@ const PlaygroundChannelEdit = () => {
 
   return (
     <ViewWrapper>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <Header>
           <ChannelCover
             coverPhotoUrl={coverImageUrl}
@@ -157,7 +162,7 @@ const PlaygroundChannelEdit = () => {
               />
             </Tooltip>
           </FormField>
-          <FormField
+          <StyledFormField
             title="Change Language"
             description="Channel language is the main language the content you publish on your channel."
           >
@@ -178,9 +183,9 @@ const PlaygroundChannelEdit = () => {
                 />
               )}
             />
-          </FormField>
+          </StyledFormField>
 
-          <FormField
+          <StyledFormField
             title="Publicness"
             description="Channel language is the main language the content you publish on your channel. We use it to provide users feed they look for. This text is FPO."
           >
@@ -201,8 +206,16 @@ const PlaygroundChannelEdit = () => {
                 />
               )}
             />
-          </FormField>
-          <StyledActionBarTransaction fee={1} primaryButtonText="Publish Changes" />
+          </StyledFormField>
+          <StyledActionBarTransaction
+            fee={1}
+            primaryButtonText="Publish Changes"
+            secondaryButtonText="Cancel"
+            onCancelClick={(e) => {
+              e.preventDefault()
+              reset()
+            }}
+          />
         </InnerFormContainer>
         <Controller
           name="avatar"
