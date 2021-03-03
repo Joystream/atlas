@@ -18,7 +18,7 @@ export type VideoMetadata = {
   width: number
   duration: number
 }
-export const getVideoMetadata = async (file?: File): Promise<{ metadata: VideoMetadata }> => {
+export const getVideoMetadata = async (file: File): Promise<VideoMetadata> => {
   const videoEl = document.createElement('video')
   const mimeType = file?.type ?? ''
   const sizeInBytes = file?.size ?? 0
@@ -31,7 +31,7 @@ export const getVideoMetadata = async (file?: File): Promise<{ metadata: VideoMe
         const height = videoEl.videoHeight
         const width = videoEl.videoWidth
         const duration = videoEl.duration
-        resolve({ metadata: { mimeType, sizeInBytes, height, width, duration } })
+        resolve({ mimeType, sizeInBytes, height, width, duration })
       } else {
         reject(new Error('There was an error loading the video please try again'))
       }

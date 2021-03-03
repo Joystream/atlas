@@ -12,12 +12,14 @@ export const VideoMetadata = () => {
         accept="video/*,.mkv"
         onChange={async (e) => {
           const file = e.target.files?.[0]
-          try {
-            seterror(undefined)
-            const { metadata } = await getVideoMetadata(file)
-            setmetadata(metadata)
-          } catch (err) {
-            seterror(err)
+          if (file) {
+            try {
+              seterror(undefined)
+              const metadata = await getVideoMetadata(file)
+              setmetadata(metadata)
+            } catch (err) {
+              seterror(err)
+            }
           }
         }}
       ></input>
