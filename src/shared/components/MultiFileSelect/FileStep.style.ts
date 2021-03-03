@@ -1,5 +1,6 @@
-import { sizes, colors, typography } from '@/shared/theme'
+import { sizes, colors, typography, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
+import CircularProgressbar from '../CircularProgressbar'
 import Icon from '../Icon'
 import Text from '../Text'
 
@@ -7,19 +8,21 @@ type StepProps = {
   active?: boolean
 }
 
-export const Step = styled.div<StepProps>`
+export const StepWrapper = styled.div<StepProps>`
   padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
+  transition: border ${transitions.timings.routing} ${transitions.easing};
 `
 
 export const StepStatus = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  position: relative;
 `
 
 export const StepNumber = styled.div<StepProps>`
@@ -33,6 +36,7 @@ export const StepNumber = styled.div<StepProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color ${transitions.timings.routing} ${transitions.easing};
 `
 
 export const StepDetails = styled.div`
@@ -43,6 +47,7 @@ export const StepDetails = styled.div`
 export const FileType = styled(Text)`
   display: block;
   color: ${colors.gray[300]};
+  font-weight: ${typography.weights.regular};
   overflow: hidden;
 `
 
@@ -60,12 +65,18 @@ export const DeleteButton = styled.button`
   border: none;
   background: none;
   cursor: pointer;
+  flex-shrink: 0;
 `
 
 export const TrashIcon = styled(Icon)`
-  color: ${colors.gray[600]};
+  color: ${colors.white};
   height: ${sizes(4)};
 `
+export const StyledProgress = styled(CircularProgressbar)`
+  width: ${sizes(7)};
+  height: ${sizes(7)};
+`
+
 export const Thumbnail = styled.div`
   flex-shrink: 0;
   color: white;
@@ -78,8 +89,8 @@ export const Thumbnail = styled.div`
   justify-content: center;
   overflow: hidden;
   svg {
-    height: 8px;
-    width: 8px;
+    height: ${sizes(3)};
+    width: ${sizes(3)};
   }
   img {
     object-fit: cover;

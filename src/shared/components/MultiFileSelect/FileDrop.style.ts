@@ -1,8 +1,9 @@
-import { colors, sizes, transitions, typography } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Icon from '../Icon'
 import Text from '../Text'
 import { darken } from 'polished'
+import Button from '../Button'
 
 type DragAndDropAreaProps = {
   isFocused?: boolean
@@ -13,7 +14,7 @@ type DragAndDropAreaProps = {
 }
 
 type ProgressBarProps = {
-  fileUploaded?: boolean
+  progress?: number
 }
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
@@ -45,8 +46,10 @@ export const ProgressBar = styled.div<ProgressBarProps>`
   background-color: ${colors.blue[500]};
   opacity: 0.2;
   position: absolute;
-  clip-path: inset(0% ${({ fileUploaded }) => (fileUploaded ? 0 : 100)}% 0% 0%);
-  transition: clip-path ${transitions.timings.loading} ${transitions.easing};
+
+  transition: transform 100ms ${transitions.easing};
+  transform-origin: left;
+  transform: ${({ progress = 0 }) => `scaleX(${progress && progress / 100})`};
 `
 
 export const ErrorContainer = styled.div`
@@ -62,6 +65,13 @@ export const ErrorContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+export const Thumbnail = styled.img`
+  object-fit: cover;
+  max-width: 100%;
+  height: 100%;
+  display: block;
 `
 
 export const ErrorIcon = styled(Icon)`
@@ -103,4 +113,25 @@ export const Paragraph = styled(Text)`
 
 export const ButtonsGroup = styled.div`
   margin-top: ${sizes(8)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+export const UploadButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    margin-right: ${sizes(2)};
+    position: relative;
+    top: 0.125em;
+    width: ${sizes(4)};
+    height: ${sizes(4)};
+  }
+`
+
+export const DragDropText = styled(Text)`
+  margin-right: ${sizes(5)};
+  color: ${colors.gray[300]};
+  text-decoration: underline;
 `

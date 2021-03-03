@@ -1,7 +1,7 @@
 import React from 'react'
 import Icon from '../Icon'
 import {
-  Step,
+  StepWrapper,
   StepStatus,
   StepNumber,
   StepDetails,
@@ -10,33 +10,50 @@ import {
   FileName,
   TrashIcon,
   Thumbnail,
+  StyledProgress,
 } from './FileStep.style'
+import { Step } from './MultiFileSelect'
 
 type FileStepProps = {
-  step: number
+  stepNumber: number
   active: boolean
   file: File | null
   onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  type: 'video' | 'image'
-  loading?: boolean
-  thumbnailImage?: string
+  step: Step
+  thumbnail?: string
+  onChangeStep?: (step: Step) => void
+  overhead?: string
+  subtitle?: string
+  progress?: number
 }
 
-const FileStep: React.FC<FileStepProps> = ({ step, active, file, type, onDelete, thumbnailImage }) => {
-  const overhead = type === 'video' ? 'Video File' : 'Thumbnail Image'
-  const subtitle = type === 'video' ? 'Select Video File' : 'Add Thumbnail Image'
+const FileStep: React.FC<FileStepProps> = ({
+  stepNumber,
+  active,
+  file,
+  step,
+  onDelete,
+  thumbnail,
+  onChangeStep,
+  overhead,
+  subtitle,
+  progress = 0,
+}) => {
   return (
-    <Step active={active}>
+    <StepWrapper active={active} onClick={() => onChangeStep?.(step)}>
       <StepStatus>
-        {!file && <StepNumber active={active}>{step}</StepNumber>}
-        {file && (
-          <Thumbnail>
-            {type === 'video' && <Icon name="play-small" />}
-            {type === 'image' && thumbnailImage && <img src={thumbnailImage} alt="thumbnail"></img>}
-          </Thumbnail>
-        )}
+        {!file && <StepNumber active={active}>{stepNumber}</StepNumber>}
+        {file &&
+          (progress ? (
+            <StyledProgress value={progress} maxValue={80} />
+          ) : (
+            <Thumbnail>
+              {step === 'video' && <Icon name="video-camera" />}
+              {step === 'image' && thumbnail && <img src={thumbnail} alt="thumbnail"></img>}
+            </Thumbnail>
+          ))}
         <StepDetails>
-          <FileType variant="overhead">{file ? overhead : `Step ${step}`}</FileType>
+          <FileType variant="overhead">{file ? overhead : `Step ${stepNumber}`}</FileType>
           <FileName variant="subtitle2">{file ? file.name : subtitle}</FileName>
         </StepDetails>
       </StepStatus>
@@ -45,7 +62,7 @@ const FileStep: React.FC<FileStepProps> = ({ step, active, file, type, onDelete,
           <TrashIcon name="trash-fill" />
         </DeleteButton>
       )}
-    </Step>
+    </StepWrapper>
   )
 }
 

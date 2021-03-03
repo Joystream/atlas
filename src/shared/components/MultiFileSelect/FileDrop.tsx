@@ -1,21 +1,24 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
-import { Step } from './MultiFileSelect'
-import Button from '../Button'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import Icon from '../Icon'
 import {
   ButtonsGroup,
+  DismissButton,
   DragAndDropArea,
+  DragDropText,
+  ErrorContainer,
+  ErrorIcon,
+  ErrorText,
   InnerContainer,
   Paragraph,
-  StyledIcon,
-  Title,
   ProgressBar,
-  ErrorContainer,
-  ErrorText,
-  DismissButton,
-  ErrorIcon,
+  StyledIcon,
+  Thumbnail,
+  Title,
+  UploadButton,
 } from './FileDrop.style'
+import { Step } from './MultiFileSelect'
 
 type FileDropProps = {
   step: Step
@@ -23,10 +26,22 @@ type FileDropProps = {
   icon: 'video-dnd' | 'image-dnd'
   title: string
   paragraph: string
+  thumbnail?: string
+  loading?: boolean
+  progress?: number
+  onReAdjustThumbnail: () => void
 }
 
-const FileDrop: React.FC<FileDropProps> = ({ onUploadFile, step, icon, title, paragraph }) => {
-  const [fileUploaded, setFileUploaded] = useState(false)
+const FileDrop: React.FC<FileDropProps> = ({
+  onUploadFile,
+  step,
+  icon,
+  title,
+  paragraph,
+  thumbnail,
+  onReAdjustThumbnail,
+  progress,
+}) => {
   const [error, setError] = useState<string>()
 
   const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
@@ -41,29 +56,41 @@ const FileDrop: React.FC<FileDropProps> = ({ onUploadFile, step, icon, title, pa
     setError('Wrong file type!')
   }, [])
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
     onDropAccepted,
     onDropRejected,
     accept: step + '/*',
     maxFiles: 1,
     multiple: false,
+    noClick: true,
+    noKeyboard: true,
   })
-
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <ProgressBar fileUploaded={fileUploaded} />
-      <InnerContainer>
-        <StyledIcon name={icon} />
-        <Title variant="h5">{title}</Title>
-        <Paragraph variant="subtitle2" as="p">
-          {paragraph}
-        </Paragraph>
-        <ButtonsGroup>
-          <span>Drag and drop or </span>
-          <input {...getInputProps()} />
-          <Button>Select a file</Button>
-        </ButtonsGroup>
-      </InnerContainer>
+      <ProgressBar progress={progress} />
+      <input {...getInputProps()} />
+      {thumbnail && step === 'image' ? (
+        <Thumbnail src={thumbnail} alt="video thumbnail" onClick={onReAdjustThumbnail} />
+      ) : (
+        <SwitchTransition>
+          <CSSTransition key={step === 'video' ? 'video' : 'image'} classNames="fade" timeout={100}>
+            <InnerContainer>
+              <StyledIcon name={icon} />
+              <Title variant="h5">{title}</Title>
+              <Paragraph variant="subtitle2" as="p">
+                {paragraph}
+              </Paragraph>
+              <ButtonsGroup>
+                <DragDropText variant="body2">Drag and drop or </DragDropText>
+                <UploadButton onClick={open}>
+                  <Icon name="video-camera"></Icon>
+                  Select a file
+                </UploadButton>
+              </ButtonsGroup>
+            </InnerContainer>
+          </CSSTransition>
+        </SwitchTransition>
+      )}
       {error && (
         <ErrorContainer onClick={(e) => e.stopPropagation()}>
           <ErrorIcon name="error-second" />
