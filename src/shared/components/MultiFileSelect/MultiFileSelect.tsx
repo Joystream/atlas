@@ -1,7 +1,7 @@
 import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
 import React, { useEffect, useRef, useState } from 'react'
 import Icon from '../Icon'
-import FileDrop from './FileDrop'
+import FileDrop from '../FileDrop/FileDrop'
 import FileStep from '../FileStep/FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 

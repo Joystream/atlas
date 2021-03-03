@@ -18,9 +18,9 @@ import {
   Title,
   UploadButton,
 } from './FileDrop.style'
-import { Step } from './MultiFileSelect'
+import { Step } from '../MultiFileSelect/MultiFileSelect'
 
-type FileDropProps = {
+export type FileDropProps = {
   step: Step
   onUploadFile: (file: File) => void
   icon: 'video-dnd' | 'image-dnd'
