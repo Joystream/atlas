@@ -139,7 +139,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       }
     },
   })
-
+  const [failedLoadImage, setFailedLoadImage] = useState(false)
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
@@ -169,6 +169,11 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       onClick?.(e)
     }
   }
+  const handleFailedThumbnailLoad = () => {
+    if (!failedLoadImage) {
+      setFailedLoadImage(true)
+    }
+  }
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
@@ -184,11 +189,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               ) : (
                 <CoverImageContainer>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                    {thumbnailUrl ? (
+                    {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState !== 'default'}
                         isAnyVideoSelected={!!isAnyVideoSelected}
                         src={thumbnailUrl}
+                        onError={handleFailedThumbnailLoad}
                         ref={imgRef}
                         alt={`${title} by ${channelHandle} thumbnail`}
                       />
