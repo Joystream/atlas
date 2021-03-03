@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Text } from '@/shared/components'
 import { getVideoMetadata, VideoMetadata as Metadata } from '@/utils/video'
 
-export const VideoMetadata = () => {
+export const VideoMetaData = () => {
   const [metadata, setmetadata] = useState<Metadata>()
   const [error, seterror] = useState<Error>()
   return (
@@ -33,3 +33,5 @@ export const VideoMetadata = () => {
     </div>
   )
 }
+
+export default VideoMetaData
