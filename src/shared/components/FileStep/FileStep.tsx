@@ -12,14 +12,14 @@ import {
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
-import { Step } from './MultiFileSelect'
+import { Step } from '../MultiFileSelect/MultiFileSelect'
 
-type FileStepProps = {
+export type FileStepProps = {
   stepNumber: number
   active: boolean
-  file: File | null
   onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   step: Step
+  fileName?: string
   thumbnail?: string
   onChangeStep?: (step: Step) => void
   overhead?: string
@@ -28,9 +28,9 @@ type FileStepProps = {
 }
 
 const FileStep: React.FC<FileStepProps> = ({
-  stepNumber,
+  stepNumber = 1,
   active,
-  file,
+  fileName,
   step,
   onDelete,
   thumbnail,
@@ -42,8 +42,8 @@ const FileStep: React.FC<FileStepProps> = ({
   return (
     <StepWrapper active={active} onClick={() => onChangeStep?.(step)}>
       <StepStatus>
-        {!file && <StepNumber active={active}>{stepNumber}</StepNumber>}
-        {file &&
+        {!fileName && <StepNumber active={active}>{stepNumber}</StepNumber>}
+        {fileName &&
           (progress ? (
             <StyledProgress value={progress} maxValue={80} />
           ) : (
@@ -53,11 +53,11 @@ const FileStep: React.FC<FileStepProps> = ({
             </Thumbnail>
           ))}
         <StepDetails>
-          <FileType variant="overhead">{file ? overhead : `Step ${stepNumber}`}</FileType>
-          <FileName variant="subtitle2">{file ? file.name : subtitle}</FileName>
+          <FileType variant="overhead">{fileName ? overhead : `Step ${stepNumber}`}</FileType>
+          <FileName variant="subtitle2">{fileName || subtitle}</FileName>
         </StepDetails>
       </StepStatus>
-      {file && (
+      {fileName && (
         <DeleteButton onClick={onDelete}>
           <TrashIcon name="trash-fill" />
         </DeleteButton>

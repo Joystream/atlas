@@ -2,7 +2,7 @@ import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/D
 import React, { useEffect, useRef, useState } from 'react'
 import Icon from '../Icon'
 import FileDrop from './FileDrop'
-import FileStep from './FileStep'
+import FileStep from '../FileStep/FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 export type FileState = {
@@ -91,7 +91,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
           subtitle="Select Video File"
           stepNumber={1}
           active={step === 'video'}
-          file={files.video}
+          fileName={files.video?.name}
           step="video"
           onDelete={() => onChangeFiles({ ...files, video: null })}
           onChangeStep={handleChangeStep}
@@ -105,7 +105,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
           subtitle="Add Thumbnail Image"
           stepNumber={2}
           active={step === 'image'}
-          file={files.image}
+          fileName={files.image?.name}
           step="image"
           onDelete={() => {
             onChangeFiles({ ...files, image: null })
