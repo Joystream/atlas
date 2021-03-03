@@ -12,6 +12,12 @@ fragment AllChannelFields on Channel {
   follows
 }
 
+query GetBasicChannel($id: ID!) {
+  channel(where: { id: $id }) {
+    ...BasicChannelFields
+  }
+}
+
 query GetChannel($id: ID!) {
   channel(where: { id: $id }) {
     ...AllChannelFields
@@ -36,6 +42,7 @@ query GetChannelsConnection($first: Int, $after: String) {
       cursor
       node {
         ...AllChannelFields
+        createdAt # the node must include the field by which the connection is sorted by
       }
     }
     pageInfo {

@@ -8,6 +8,7 @@ import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
+import Button from '@/shared/components/Button'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -137,10 +138,8 @@ export const CoverImage = styled.img<CoverImageProps>`
 `
 
 export const CoverNoImage = styled.div`
-  background: blue;
   width: 100%;
   height: 100%;
-  background: rgb(16, 18, 20);
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
 `
 
@@ -160,6 +159,22 @@ export const CoverHoverOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+export const RemoveButton = styled(Button)`
+  position: absolute;
+  top: ${sizes(2)};
+  right: ${sizes(2)};
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: ${colors.blue};
+  color: ${colors.white};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+  cursor: pointer;
+  svg {
+    display: block;
+  }
 `
 
 export const CoverIcon = styled(Icon)`
@@ -192,6 +207,11 @@ export const CoverEditIcon = ({ ...props }) => (
 export const DraftIcon = ({ ...props }) => <Icon name="page" {...props} />
 export const UnlistedIcon = ({ ...props }) => <Icon name="unlisted" {...props} />
 export const KebabMenuIcon = ({ ...props }) => <Icon name="kebab-menu" {...props} />
+export const CoverRemoveButton = ({ ...props }) => (
+  <RemoveButton {...props}>
+    <Icon name="close" />
+  </RemoveButton>
+)
 
 export const ProgressOverlay = styled.div`
   position: absolute;

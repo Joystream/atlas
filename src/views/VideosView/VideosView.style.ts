@@ -11,15 +11,21 @@ type IsAtTop = {
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   padding-top: ${sizes(14)};
+  padding-bottom: ${sizes(4)};
 `
 
 export const GRID_TOP_PADDING = sizes(2, true)
+
 export const Header = styled(Text)`
-  margin: 0 0 ${sizes(10)} 0;
+  margin-bottom: ${sizes(10)};
 `
-export const StyledText = styled(Text)`
-  /* Navbar Height padding so the text is not overlapped by Navbar when scrollIntoview */
-  padding-top: ${TOP_NAVBAR_HEIGHT}px;
+
+export const FeaturedVideosContainer = styled.div`
+  margin-bottom: ${sizes(10)};
+`
+
+export const CategoriesVideosContainer = styled.div`
+  padding-bottom: ${sizes(4)};
 `
 
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
