@@ -5,22 +5,25 @@ import FileDrop from './FileDrop'
 import FileStep from './FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
-type FileState = {
+export type FileState = {
   video: File | null
   image: File | null
 }
+
+export type MultiFileSelectProps = {
+  onChangeFiles: React.Dispatch<React.SetStateAction<FileState>>
+  files: FileState
+  onCropImage: React.Dispatch<React.SetStateAction<string>>
+  croppedImageUrl: string
+}
+
 export type Step = 'video' | 'image'
 
-const MultiFileSelect = () => {
+const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files, croppedImageUrl, onCropImage }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const [croppedImageUrl, setCroppedImageUrl] = useState<string>()
   const [step, setStep] = useState<Step>('video')
   const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [files, setFiles] = useState<FileState>({
-    video: null,
-    image: null,
-  })
 
   useEffect(() => {
     if (!isLoading) {
@@ -41,14 +44,14 @@ const MultiFileSelect = () => {
 
   const handleUploadFile = (file: File) => {
     if (file.type.includes('video')) {
-      setFiles({
+      onChangeFiles({
         ...files,
         video: file,
       })
       setIsLoading(true)
     }
     if (file.type.includes('image')) {
-      setFiles({
+      onChangeFiles({
         ...files,
         image: file,
       })
@@ -90,7 +93,7 @@ const MultiFileSelect = () => {
           active={step === 'video'}
           file={files.video}
           step="video"
-          onDelete={() => setFiles({ ...files, video: null })}
+          onDelete={() => onChangeFiles({ ...files, video: null })}
           onChangeStep={handleChangeStep}
           progress={progress}
         />
@@ -105,8 +108,8 @@ const MultiFileSelect = () => {
           file={files.image}
           step="image"
           onDelete={() => {
-            setFiles({ ...files, image: null })
-            setCroppedImageUrl('')
+            onChangeFiles({ ...files, image: null })
+            onCropImage('')
           }}
           onChangeStep={handleChangeStep}
           thumbnail={croppedImageUrl}
@@ -115,7 +118,7 @@ const MultiFileSelect = () => {
       <ImageCropDialog
         ref={dialogRef}
         imageType="videoThumbnail"
-        onConfirm={(_, croppedImageUrl) => setCroppedImageUrl(croppedImageUrl)}
+        onConfirm={(_, croppedImageUrl) => onCropImage(croppedImageUrl)}
       />
     </MultiFileSelectContainer>
   )
