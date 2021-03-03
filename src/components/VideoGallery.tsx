@@ -66,7 +66,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
     progress: undefined,
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
-  const createRemoveClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
+  const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
   return (
     <Gallery
       title={title}
@@ -81,10 +81,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
           id={video.id}
           progress={video?.progress}
           key={idx}
+          removeButton={video ? removeButton : false}
           onCoverResize={onCoverResize}
           onClick={createClickHandler(video.id)}
-          removeButton={removeButton}
-          onRemoveButtonClick={createRemoveClickHandler(video.id)}
+          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
         />
       ))}
     </Gallery>

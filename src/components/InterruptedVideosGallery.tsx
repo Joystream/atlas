@@ -64,8 +64,8 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
           title="Continue watching"
           loading={loading}
           videos={interruptedSortedVideos}
-          onRemoveButtonClick={onRemoveButtonClick}
           removeButton
+          onRemoveButtonClick={onRemoveButtonClick}
         />
       ) : (
         <ErrorFallback error={error} resetError={() => refetch()} />

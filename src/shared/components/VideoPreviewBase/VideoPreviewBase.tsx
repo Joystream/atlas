@@ -11,7 +11,6 @@ import {
   CoverDurationOverlay,
   CoverHoverOverlay,
   CoverImage,
-  CoverRemoveButton,
   CoverPlayIcon,
   MetaText,
   ProgressBar,
@@ -31,6 +30,7 @@ import {
   KebabMenuIcon,
   ContextMenuContainer,
   KebabMenuIconContainer,
+  CoverRemoveButton,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -49,7 +49,7 @@ export type VideoPreviewBaseMetaProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
-  onRemoveButtonClick?: () => void
+  onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 type VideoPreviewPublisherProps =
@@ -110,8 +110,6 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   createdAt,
   duration,
   progress = 0,
-  removeButton,
-  onRemoveButtonClick,
   views,
   thumbnailUrl,
   onCoverResize,
@@ -121,6 +119,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   showChannel = true,
   showMeta = true,
   main = false,
+  removeButton = false,
   videoPublishState = 'default',
   publisherMode = false,
   isSelected,
@@ -128,6 +127,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onChannelClick,
   onSelectClick,
   onClick,
+  onRemoveButtonClick,
   className,
   contextMenuCallbacks = {},
 }) => {
@@ -175,15 +175,15 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       onClick?.(e)
     }
   }
+  const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (onRemoveButtonClick) {
+      e.stopPropagation()
+      onRemoveButtonClick(e)
+    }
+  }
   const handleFailedThumbnailLoad = () => {
     if (!failedLoadImage) {
       setFailedLoadImage(true)
-    }
-  }
-  const createRemoveClickHandler = () => (e: React.MouseEvent<HTMLElement>) => {
-    if (onRemoveButtonClick) {
-      e.stopPropagation()
-      onRemoveButtonClick()
     }
   }
   return (
@@ -226,7 +226,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                     {publisherMode && checkboxNode}
                     {!isAnyVideoSelected && hoverIconNode}
-                    {removeButton && <CoverRemoveButton onClick={createRemoveClickHandler()} />}
+                    {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
                   </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>
