@@ -56,13 +56,44 @@ export const SidebarNavList = styled.ul`
   padding: 0;
 `
 
+export const ButtonGroup = styled.div`
+  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  margin-bottom: ${sizes(10)};
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`
+
+export const ButtonLink = styled(Link)`
+  padding: 14px ${NAVBAR_LEFT_PADDING}px;
+  margin: 0 ${NAVBAR_LEFT_PADDING}px;
+  border: 1px solid ${colors.gray[400]};
+  font-family: ${typography.fonts.headers};
+  text-decoration: none;
+  display: block;
+  color: ${colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    margin-right: 10px;
+    position: relative;
+    top: 0.125em;
+    width: ${sizes(4)};
+    height: ${sizes(4)};
+  }
+`
+
 export const SidebarNavItem = styled.li`
   width: 100%;
   display: flex;
   flex-direction: column;
 `
 
-export const SidebarNavLink = styled(Link)<SidebarNavLinkProps>`
+const LinkWithExpandedProps = ({ expanded, ...props }: SidebarNavLinkProps & LinkProps) => <Link {...props} />
+
+export const SidebarNavLink = styled(LinkWithExpandedProps)`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;

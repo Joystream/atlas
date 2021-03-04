@@ -11,6 +11,8 @@ import {
   SubItemsWrapper,
   Logo,
   LogoLink,
+  ButtonGroup,
+  ButtonLink,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -33,6 +35,8 @@ type SidenavProps = {
 }
 
 const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
+  const isStudio = useMatch('/studio')
+
   const {
     state: { followedChannels },
   } = usePersonalData()
@@ -73,6 +77,19 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         {followedChannels.length > 0 && (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
         )}
+        <ButtonGroup>
+          <CSSTransition
+            in={expanded}
+            unmountOnExit
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            <ButtonLink onClick={closeSideNav} to={isStudio ? '/' : '/studio'}>
+              <Icon name="external" />
+              Joystream {!isStudio && 'studio'}
+            </ButtonLink>
+          </CSSTransition>
+        </ButtonGroup>
       </SidebarNav>
     </>
   )
