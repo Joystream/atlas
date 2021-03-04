@@ -58,11 +58,38 @@ export const videoResolver: QueryResolver<UniqueArgs, VideoFieldsFragment> = (ob
   return mirageGraphQLFieldResolver(obj, resolverArgs, context, info)
 }
 
-export const videosResolver: QueryResolver<IdsArgs, VideoModel[]> = (obj, args, context, info) => {
+export const videosResolver: QueryResolver<
+  {
+    offset?: number
+    limit?: number
+    where: {
+      id_in?: string[]
+      channelId_eq?: string
+    }
+  },
+  VideoModel[]
+> = (obj, args, context, info) => {
   const { mirageSchema: schema } = context
   const ids = args.where?.id_in
+  const channelId = args.where.channelId_eq
+  const offset = args.offset
+  const limit = args.limit
   const videos = schema.videos.all().models as VideoModel[]
-  const filtered = videos.filter((video) => ids.includes(video.attrs.id))
+  let filtered = videos
+
+  if (ids) {
+    filtered = filtered.filter((video) => ids?.includes(video.attrs.id))
+  }
+  if (channelId) {
+    filtered = filtered.filter((video) => video.attrs.channelId === channelId)
+  }
+  if (offset) {
+    filtered = filtered.slice(offset, undefined)
+  }
+  if (limit) {
+    filtered = filtered.slice(undefined, limit)
+  }
+
   return filtered
 }
 

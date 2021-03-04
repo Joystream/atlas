@@ -1,5 +1,5 @@
 import { InMemoryCache } from '@apollo/client'
-import { relayStylePagination } from '@apollo/client/utilities'
+import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 
 const cache = new InMemoryCache({
@@ -21,6 +21,32 @@ const cache = new InMemoryCache({
 
           return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}`
         }),
+        videos: {
+          read(
+            existing,
+            {
+              args: {
+                // Default to returning the entire cached list,
+                // if offset and limit are not provided.
+                // @ts-ignore whatevs
+                offset = 0,
+                // @ts-ignore whatevs
+                limit = existing?.length,
+              } = {},
+            }
+          ) {
+            return existing && existing.slice(offset, offset + limit)
+          },
+          keyArgs: false,
+          // @ts-ignore whatevs
+          merge(existing, incoming, { args: { offset = 0 } }) {
+            const merged = existing ? existing.slice(0) : []
+            for (let i = 0; i < incoming.length; ++i) {
+              merged[offset + i] = incoming[i]
+            }
+            return merged
+          },
+        },
         channel(existing, { toReference, args }) {
           return (
             existing ||

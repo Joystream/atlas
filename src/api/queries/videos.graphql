@@ -94,8 +94,8 @@ query GetVideosConnection(
   }
 }
 
-query GetVideos($id_in: [ID!]!) {
-  videos(where: { id_in: $id_in }) {
+query GetVideos($offset: Int, $limit: Int, $id_in: [ID], $channelId: ID) {
+  videos(offset: $offset, limit: $limit, where: { id_in: $id_in, channelId_eq: $channelId }) {
     ...VideoFields
   }
 }

@@ -70,10 +70,16 @@ export type GetVideosConnectionQuery = {
 }
 
 export type GetVideosQueryVariables = Types.Exact<{
-  id_in: Array<Types.Scalars['ID']> | Types.Scalars['ID']
+  offset?: Types.Maybe<Types.Scalars['Int']>
+  limit?: Types.Maybe<Types.Scalars['Int']>
+  id_in?: Types.Maybe<Array<Types.Maybe<Types.Scalars['ID']>> | Types.Maybe<Types.Scalars['ID']>>
+  channelId?: Types.Maybe<Types.Scalars['ID']>
 }>
 
-export type GetVideosQuery = { __typename: 'Query'; videos: Array<{ __typename: 'Video' } & VideoFieldsFragment> }
+export type GetVideosQuery = {
+  __typename: 'Query'
+  videos?: Types.Maybe<Array<{ __typename: 'Video' } & VideoFieldsFragment>>
+}
 
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never }>
 
@@ -282,8 +288,8 @@ export type GetVideosConnectionQueryResult = Apollo.QueryResult<
   GetVideosConnectionQueryVariables
 >
 export const GetVideosDocument = gql`
-  query GetVideos($id_in: [ID!]!) {
-    videos(where: { id_in: $id_in }) {
+  query GetVideos($offset: Int, $limit: Int, $id_in: [ID], $channelId: ID) {
+    videos(offset: $offset, limit: $limit, where: { id_in: $id_in, channelId_eq: $channelId }) {
       ...VideoFields
     }
   }
@@ -302,11 +308,14 @@ export const GetVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetVideosQuery({
  *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *      id_in: // value for 'id_in'
+ *      channelId: // value for 'channelId'
  *   },
  * });
  */
-export function useGetVideosQuery(baseOptions: Apollo.QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>) {
+export function useGetVideosQuery(baseOptions?: Apollo.QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>) {
   return Apollo.useQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, baseOptions)
 }
 export function useGetVideosLazyQuery(
