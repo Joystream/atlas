@@ -133,7 +133,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selected={props.value}
+                  selectedValue={props.value}
                   error={!!errors.radioGroup}
                 />
                 <RadioButton
@@ -143,7 +143,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selected={props.value}
+                  selectedValue={props.value}
                   error={!!errors.radioGroup}
                 />
               </StyledRadioContainer>

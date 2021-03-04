@@ -2,7 +2,7 @@ import React from 'react'
 import { Label, Input, StyledInput, StyledLabelText, RadioButtonStyleProps } from './RadioButton.style'
 
 type RadioButtonProps = Partial<{
-  selected: string | number
+  selectedValue: string | number
   label: string
 }> &
   Omit<RadioButtonStyleProps, 'clickable'> &
@@ -10,8 +10,8 @@ type RadioButtonProps = Partial<{
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
 
 const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
-  ({ value, selected, label, disabled, error, ...props }, ref) => {
-    const isSelected = value === selected
+  ({ value, selectedValue, label, disabled, error, ...props }, ref) => {
+    const isSelected = value === selectedValue
 
     return (
       <Label disabled={disabled}>
