@@ -158,7 +158,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     onChannelClick(e)
   }
   const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!href) {
+    if (!href || publisherMode) {
       e.preventDefault()
     }
   }
@@ -201,20 +201,20 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     ) : (
                       <CoverNoImage />
                     )}
+                    {publisherMode && isAnyVideoSelected && checkboxNode}
+                    {videoPublishState !== 'default' && (
+                      <CoverVideoPublishingStateOverlay>
+                        {videoPublishState === 'draft' && <DraftIcon />}
+                        {videoPublishState === 'unlisted' && <UnlistedIcon />}
+                        {videoPublishState}
+                      </CoverVideoPublishingStateOverlay>
+                    )}
+                    {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                    <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                      {publisherMode && checkboxNode}
+                      {!isAnyVideoSelected && hoverIconNode}
+                    </CoverHoverOverlay>
                   </Anchor>
-                  {publisherMode && isAnyVideoSelected && checkboxNode}
-                  {videoPublishState !== 'default' && (
-                    <CoverVideoPublishingStateOverlay>
-                      {videoPublishState === 'draft' && <DraftIcon />}
-                      {videoPublishState === 'unlisted' && <UnlistedIcon />}
-                      {videoPublishState}
-                    </CoverVideoPublishingStateOverlay>
-                  )}
-                  {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                  <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                    {publisherMode && checkboxNode}
-                    {!isAnyVideoSelected && hoverIconNode}
-                  </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>
                       <ProgressBar style={{ width: `${progress}%` }} />
