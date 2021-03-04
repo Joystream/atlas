@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
 import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
+import { CropData } from './cropper'
 import { Avatar, Placeholder } from '@/shared/components'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { css } from '@emotion/react'
@@ -30,15 +31,16 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropData) => {
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string) => {
+  const handleThumbnailConfirm = (blob: Blob, url: string, cropData: CropData) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string) => {
+  const handleCoverConfirm = (blob: Blob, url: string, cropData: CropData) => {
+    console.log(cropData)
     setCoverImageUrl(url)
   }
 

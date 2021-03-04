@@ -44,6 +44,16 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
   },
 }
 
+export type CropData = {
+  height: number
+  rotate: number
+  scaleX: number
+  scaleY: number
+  width: number
+  x: number
+  y: number
+}
+
 export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
   const [cropper, setCropper] = useState<Cropper | null>(null)
   const [currentZoom, setCurrentZoom] = useState(0)
@@ -122,20 +132,20 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     }
   }, [imageEl, zoomRange])
 
-  const cropImage = async (): Promise<[Blob, string]> => {
+  const cropImage = async (): Promise<[Blob, string, CropData]> => {
     return new Promise((resolve, reject) => {
       if (!cropper) {
         reject(new Error('No cropper instance'))
         return
       }
-
+      const cropData = cropper.getData()
       cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType]).toBlob((blob) => {
         if (!blob) {
           console.error('Empty blob from cropped canvas', { blob })
           return
         }
         const url = URL.createObjectURL(blob)
-        resolve([blob, url])
+        resolve([blob, url, cropData])
       })
     })
   }

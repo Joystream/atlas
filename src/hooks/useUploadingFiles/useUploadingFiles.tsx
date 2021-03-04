@@ -1,0 +1,111 @@
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import {
+  getUploadingFiles,
+  getUploadingFile as getUploadingFileFn,
+  updateUploadingFileStatus as updateUploadingFileStatusFn,
+  addUploadingFileData as addUploadingFileDataFn,
+  removeUploadingFileData as removeUploadingFileDataFn,
+  clearUploadingFilesData as clearUploadingFilesDataFn,
+} from './utils'
+import { CropData } from '@/components'
+
+type UploadingFileType = 'video' | 'thumbnail' | 'cover' | 'avatar'
+export type StatusType = 'completed' | 'notCompleted'
+export type UploadingFile = {
+  id: string
+  hash: string
+  storageProvider: string
+  type: UploadingFileType
+  status: StatusType
+  cropData?: CropData
+}
+
+type UploadingFilesState = {
+  uploadingFiles: UploadingFile[]
+}
+
+type UploadingFilesContextValue = {
+  uploadingFilesState: UploadingFilesState
+  fetchUploadingFiles: () => Promise<void>
+}
+
+const UploadingFilesContext = React.createContext<undefined | UploadingFilesContextValue>(undefined)
+UploadingFilesContext.displayName = 'UploadingFilesContext'
+
+export const UploadingFilesProvider: React.FC = ({ children }) => {
+  const [uploadingFilesState, setUploadingFilesState] = useState<UploadingFilesState>({
+    uploadingFiles: [],
+  })
+
+  const fetchUploadingFiles = useCallback(async () => {
+    const uploadingFiles = await getUploadingFiles()
+    setUploadingFilesState({ uploadingFiles })
+  }, [setUploadingFilesState])
+
+  useEffect(() => {
+    fetchUploadingFiles()
+  }, [fetchUploadingFiles])
+
+  return (
+    <UploadingFilesContext.Provider value={{ uploadingFilesState, fetchUploadingFiles }}>
+      {children}
+    </UploadingFilesContext.Provider>
+  )
+}
+
+export const useContextUploadingFiles = () => {
+  const ctx = useContext(UploadingFilesContext)
+  if (ctx === undefined) {
+    throw new Error('useUploadingFiles must be used within a UploadingFilesProvider')
+  }
+  return ctx
+}
+
+export const useUploadingFilesData = () => {
+  const { uploadingFilesState, fetchUploadingFiles } = useContextUploadingFiles()
+
+  const getUploadingFileData = useCallback(async (id: string) => {
+    const uploadingFile = await getUploadingFileFn(id)
+    return uploadingFile
+  }, [])
+
+  const updateUploadingFileStatus = useCallback(
+    async (id: string, status: StatusType) => {
+      const updatedUploadingFileStatus = await updateUploadingFileStatusFn(id, status)
+      fetchUploadingFiles()
+      return updatedUploadingFileStatus
+    },
+    [fetchUploadingFiles]
+  )
+
+  const addUploadingFileData = useCallback(
+    async (fileData: Omit<UploadingFile, 'id'>) => {
+      const newFileData = await addUploadingFileDataFn(fileData)
+      fetchUploadingFiles()
+      return newFileData
+    },
+    [fetchUploadingFiles]
+  )
+
+  const removeUploadingFileData = useCallback(
+    async (id: string) => {
+      await removeUploadingFileDataFn(id)
+      fetchUploadingFiles()
+    },
+    [fetchUploadingFiles]
+  )
+
+  const clearUploadingFilesData = useCallback(async () => {
+    clearUploadingFilesDataFn()
+    fetchUploadingFiles()
+  }, [fetchUploadingFiles])
+
+  return {
+    uploadingFilesData: uploadingFilesState.uploadingFiles,
+    updateUploadingFileStatus,
+    addUploadingFileData,
+    getUploadingFileData,
+    removeUploadingFileData,
+    clearUploadingFilesData,
+  }
+}
