@@ -49,7 +49,7 @@ export type VideoPreviewBaseMetaProps = {
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
 }
 
-type VideoPreviewPublisherProps =
+export type VideoPreviewPublisherProps =
   | {
       publisherMode: true
       videoPublishState?: 'default' | 'draft' | 'unlisted'
@@ -67,7 +67,7 @@ type VideoPreviewPublisherProps =
       contextMenuCallbacks?: undefined
     }
 
-type ContextMenuCallbacks = {
+export type ContextMenuCallbacks = {
   onEditVideoClick?: () => void
   onCopyVideoURLClick?: () => void
   onDeleteVideoClick?: () => void

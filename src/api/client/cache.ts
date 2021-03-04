@@ -1,3 +1,4 @@
+import { VideoQueryArgs } from '@/mocking/server/resolvers'
 import { InMemoryCache } from '@apollo/client'
 import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
@@ -28,9 +29,9 @@ const cache = new InMemoryCache({
               args: {
                 // Default to returning the entire cached list,
                 // if offset and limit are not provided.
-                // @ts-ignore whatevs
+                // @ts-ignore not too sure how to type this
                 offset = 0,
-                // @ts-ignore whatevs
+                // @ts-ignore not too sure how to type this
                 limit = existing?.length,
               } = {},
             }
@@ -38,7 +39,7 @@ const cache = new InMemoryCache({
             return existing && existing.slice(offset, offset + limit)
           },
           keyArgs: false,
-          // @ts-ignore whatevs
+          // @ts-ignore not too sure how to type this
           merge(existing, incoming, { args: { offset = 0 } }) {
             const merged = existing ? existing.slice(0) : []
             for (let i = 0; i < incoming.length; ++i) {
