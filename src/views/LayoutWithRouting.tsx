@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
-
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
@@ -14,6 +13,7 @@ import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import { NavItemType } from '@/components/SideNavbar'
+import loadable from '@loadable/component'
 
 const SIDENAVBAR_ITEMS: NavItemType[] = [
   {
@@ -33,6 +33,10 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
+const StudioView = loadable(() => import('@/studio/StudioView'))
+
+StudioView.displayName = 'StudioView'
+
 const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
@@ -40,6 +44,7 @@ const routesMap = [
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
   { path: routes.playground(), Component: PlaygroundView },
+  { path: routes.studio(), Component: StudioView },
 ]
 
 const LayoutWithRouting: React.FC = () => {
