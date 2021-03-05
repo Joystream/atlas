@@ -86,7 +86,7 @@ const FileDrop: React.FC<FileDropProps> = ({
               <ButtonsGroup>
                 <DragDropText variant="body2">Drag and drop or </DragDropText>
                 <UploadButton>
-                  <Icon name="video-camera"></Icon>
+                  <Icon name="upload"></Icon>
                   Select a file
                 </UploadButton>
               </ButtonsGroup>

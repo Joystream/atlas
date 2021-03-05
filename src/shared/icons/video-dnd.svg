@@ -1,12 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 72 64">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48">
   <defs/>
-  <mask id="a" width="38" height="32" x="17" y="16" maskUnits="userSpaceOnUse">
-    <path fill="white" fill-rule="evenodd" d="M55 16H17v32h22a16 16 0 0116-16V16z" clip-rule="evenodd"/>
-  </mask>
-  <g mask="url(#a)">
-    <path stroke="currentColor" stroke-width="3" d="M18.5 17.5h35v29h-35z"/>
-    <path fill="currentColor" d="M33.49 36.17l5.94-3.3a1 1 0 000-1.74l-5.94-3.3a1 1 0 00-1.49.87v6.6a1 1 0 001.49.87z"/>
-  </g>
-  <circle cx="55" cy="48" r="12.5" stroke="currentColor" stroke-width="3"/>
-  <path fill="currentColor" d="M53 50h4v-3h3l-5-6-5 6h3v3zm-2 2h8v2h-8v-2z"/>
+  <path stroke="currentColor" stroke-width="2" d="M23 36H3a1 1 0 01-1-1V9c0-.6.4-1 1-1h30c.6 0 1 .4 1 1v16"/>
+  <path fill="currentColor" d="M16 18l7 4-7 4v-8z"/>
+  <path stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" d="M34 44h-7a1 1 0 01-1-1V29c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v14c0 .6-.4 1-1 1h-3"/>
+  <path stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M34 44V34"/>
+  <path stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" d="M31 37l3-3 3 3"/>
 </svg>

@@ -46,6 +46,7 @@ export { ReactComponent as PlaySmall } from './play-small.svg'
 export { ReactComponent as ErrorSecond } from './error-second.svg'
 export { ReactComponent as VideoCamera } from './video-camera.svg'
 export { ReactComponent as Padlock } from './padlock.svg'
+export { ReactComponent as Upload } from './upload.svg'
 
 const icons = [
   'bars',
@@ -96,6 +97,7 @@ const icons = [
   'error-second',
   'video-camera',
   'padlock',
+  'upload',
 ] as const
 
 export type IconType = typeof icons[number]
