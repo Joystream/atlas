@@ -32,7 +32,7 @@ type UploadingFilesContextValue = {
 const UploadingFilesContext = React.createContext<undefined | UploadingFilesContextValue>(undefined)
 UploadingFilesContext.displayName = 'UploadingFilesContext'
 
-export const UploadingFilesProvider: React.FC = ({ children }) => {
+export const UploadingFilesDataProvider: React.FC = ({ children }) => {
   const [uploadingFilesState, setUploadingFilesState] = useState<UploadingFilesState>({
     uploadingFiles: [],
   })
@@ -53,7 +53,7 @@ export const UploadingFilesProvider: React.FC = ({ children }) => {
   )
 }
 
-export const useContextUploadingFiles = () => {
+export const useContextUploadingFilesData = () => {
   const ctx = useContext(UploadingFilesContext)
   if (ctx === undefined) {
     throw new Error('useUploadingFiles must be used within a UploadingFilesProvider')
@@ -62,7 +62,7 @@ export const useContextUploadingFiles = () => {
 }
 
 export const useUploadingFilesData = () => {
-  const { uploadingFilesState, fetchUploadingFiles } = useContextUploadingFiles()
+  const { uploadingFilesState, fetchUploadingFiles } = useContextUploadingFilesData()
 
   const getUploadingFileData = useCallback(async (id: string) => {
     const uploadingFile = await getUploadingFileFn(id)

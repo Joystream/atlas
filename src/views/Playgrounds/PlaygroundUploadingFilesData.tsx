@@ -1,12 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { useUploadingFilesData } from '@/hooks'
 import styled from '@emotion/styled'
-import ImageCropDialog, {
-  ImageCropDialogImperativeHandle,
-  ImageCropDialogProps,
-} from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
-import { Avatar, Placeholder, Text, Button } from '@/shared/components'
-import { getVideoMetadata, VideoMetadata as Metadata } from '@/utils/video'
+import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
+import { Avatar, Text, Button } from '@/shared/components'
+import { getVideoMetadata } from '@/utils/video'
 import { CropData } from '@/components/Dialogs/ImageCropDialog/cropper'
 
 export const PlaygroundUploadingFilesData = () => {
@@ -30,6 +27,14 @@ export const PlaygroundUploadingFilesData = () => {
       status: 'notCompleted',
     })
     setAvatarImageUrl(url)
+  }
+
+  const handleStatusChange = (id: string, currentStatus: 'completed' | 'notCompleted') => {
+    if (currentStatus === 'notCompleted') {
+      updateUploadingFileStatus(id, 'completed')
+    } else {
+      updateUploadingFileStatus(id, 'notCompleted')
+    }
   }
 
   return (
@@ -74,7 +79,7 @@ export const PlaygroundUploadingFilesData = () => {
               </>
             )}
             <p>status: {status}</p>
-            <Button onClick={() => updateUploadingFileStatus(id, 'completed')}>Change status</Button>
+            <Button onClick={() => handleStatusChange(id, status)}>Change status</Button>
           </StyledDataContainer>
         ))
       ) : (

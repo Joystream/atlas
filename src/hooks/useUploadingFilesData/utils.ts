@@ -1,6 +1,6 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { UploadingFile, StatusType } from './useUploadingFiles'
+import { UploadingFile, StatusType } from './useUploadingFilesData'
 
 export const getUploadingFiles = promisify(() => readFromLocalStorage<UploadingFile[]>('uploadingFiles') || [])
 

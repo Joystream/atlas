@@ -40,7 +40,6 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   }
 
   const handleCoverConfirm = (blob: Blob, url: string, cropData: CropData) => {
-    console.log(cropData)
     setCoverImageUrl(url)
   }
 
