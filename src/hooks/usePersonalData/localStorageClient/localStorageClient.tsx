@@ -1,3 +1,5 @@
+import { promisify } from '@/utils/data'
+import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 import {
   CompletedVideo,
   COMPLETED_VIDEO,
@@ -8,28 +10,8 @@ import {
   WatchedVideo,
   RecentSearch,
   DismissedMessage,
+  REMOVED_VIDEO,
 } from './types'
-
-const promisify = <T,>(fn: (...args: unknown[]) => T) => (...args: Parameters<typeof fn>) =>
-  new Promise((resolve) => resolve(fn(...args))) as Promise<T>
-
-const readFromLocalStorage = <T,>(key: string, { deserialize = JSON.parse } = {}) => {
-  const valueInLocalStorage = window.localStorage.getItem(key)
-  if (valueInLocalStorage) {
-    try {
-      return deserialize(valueInLocalStorage) as T
-    } catch (error) {
-      console.error(
-        `An error occured when deserializing a value from Local Storage. Did you pass the correct serializer to readFromLocalStorage?`
-      )
-      throw error
-    }
-  }
-}
-
-const writeToLocalStorage = <T,>(key: string, value: T, { serialize = JSON.stringify } = {}) => {
-  window.localStorage.setItem(key, serialize(value))
-}
 
 const watchedVideos = promisify(() => readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? [])
 const interruptedVideos = async () => {
@@ -46,7 +28,7 @@ const watchedVideo = async (id: string) => {
   return videos.find((v) => v.id === id) ?? null
 }
 const setWatchedVideo = async (
-  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO,
+  __typename: typeof COMPLETED_VIDEO | typeof INTERRUPTED_VIDEO | typeof REMOVED_VIDEO,
   id: string,
   timestamp?: number
 ) => {
@@ -78,6 +60,10 @@ const setWatchedVideo = async (
   if (!currentVideo) {
     const newVideo = __typename === 'COMPLETED' ? { __typename, id } : { __typename, id, timestamp }
     writeToLocalStorage('watchedVideos', [...currentVideos, newVideo])
+  }
+  if (currentVideo?.__typename === 'REMOVED') {
+    const filtered = currentVideos.filter((v) => v.id !== id)
+    writeToLocalStorage('watchedVideos', filtered)
   }
 }
 

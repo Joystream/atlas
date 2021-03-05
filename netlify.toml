@@ -1,4 +1,13 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
+
+[[plugins]]
+package = "@netlify/plugin-local-install-core"
+
+[[plugins]]
+package = "./netlify-plugins/contextual-env"
+  [plugins.inputs]
+  production_branch = "master"
+  app_env_prefix = "REACT_APP_"

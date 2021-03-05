@@ -30,6 +30,7 @@ import {
   KebabMenuIcon,
   ContextMenuContainer,
   KebabMenuIconContainer,
+  CoverRemoveButton,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -44,9 +45,11 @@ export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
   showMeta?: boolean
   main?: boolean
+  removeButton?: boolean
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
+  onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 export type VideoPreviewPublisherProps =
@@ -116,6 +119,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   showChannel = true,
   showMeta = true,
   main = false,
+  removeButton = false,
   videoPublishState = 'default',
   publisherMode = false,
   isSelected,
@@ -123,6 +127,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onChannelClick,
   onSelectClick,
   onClick,
+  onRemoveButtonClick,
   className,
   contextMenuCallbacks = {},
 }) => {
@@ -139,7 +144,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       }
     },
   })
-
+  const [failedLoadImage, setFailedLoadImage] = useState(false)
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
@@ -169,6 +174,17 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       onClick?.(e)
     }
   }
+  const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (onRemoveButtonClick) {
+      e.stopPropagation()
+      onRemoveButtonClick(e)
+    }
+  }
+  const handleFailedThumbnailLoad = () => {
+    if (!failedLoadImage) {
+      setFailedLoadImage(true)
+    }
+  }
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
@@ -184,11 +200,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               ) : (
                 <CoverImageContainer>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                    {thumbnailUrl ? (
+                    {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState !== 'default'}
                         isAnyVideoSelected={!!isAnyVideoSelected}
                         src={thumbnailUrl}
+                        onError={handleFailedThumbnailLoad}
                         ref={imgRef}
                         alt={`${title} by ${channelHandle} thumbnail`}
                       />
@@ -208,6 +225,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                     {publisherMode && checkboxNode}
                     {!isAnyVideoSelected && hoverIconNode}
+                    {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
                   </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>

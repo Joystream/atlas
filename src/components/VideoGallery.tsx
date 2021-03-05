@@ -15,6 +15,8 @@ type VideoGalleryProps = {
   title?: string
   videos?: VideoFieldsWithProgress[]
   loading?: boolean
+  removeButton?: boolean
+  onRemoveButtonClick?: (id: string) => void
   onVideoClick?: (id: string) => void
 }
 
@@ -34,7 +36,14 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading, onVideoClick }) => {
+const VideoGallery: React.FC<VideoGalleryProps> = ({
+  title,
+  videos = [],
+  loading,
+  onVideoClick,
+  removeButton,
+  onRemoveButtonClick,
+}) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
     setCoverHeight(imgHeight)
@@ -57,6 +66,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
     progress: undefined,
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
+  const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
   return (
     <Gallery
       title={title}
@@ -71,8 +81,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ title, videos = [], loading
           id={video.id}
           progress={video?.progress}
           key={idx}
+          removeButton={video ? removeButton : false}
           onCoverResize={onCoverResize}
           onClick={createClickHandler(video.id)}
+          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
         />
       ))}
     </Gallery>
