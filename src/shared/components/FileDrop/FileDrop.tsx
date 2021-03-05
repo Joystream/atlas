@@ -27,9 +27,8 @@ export type FileDropProps = {
   title: string
   paragraph: string
   thumbnail?: string
-  loading?: boolean
   progress?: number
-  onReAdjustThumbnail: () => void
+  onReAdjustThumbnail?: () => void
 }
 
 const FileDrop: React.FC<FileDropProps> = ({
@@ -63,12 +62,18 @@ const FileDrop: React.FC<FileDropProps> = ({
     maxFiles: 1,
     multiple: false,
   })
+
+  const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    e.stopPropagation()
+    onReAdjustThumbnail?.()
+  }
+
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
       <ProgressBar progress={progress} />
       <input {...getInputProps()} />
       {thumbnail && step === 'image' ? (
-        <Thumbnail src={thumbnail} alt="video thumbnail" onClick={onReAdjustThumbnail} />
+        <Thumbnail src={thumbnail} alt="video thumbnail" onClick={handleReAdjustThumbnail} title="Click to readjust" />
       ) : (
         <SwitchTransition>
           <CSSTransition key={step === 'video' ? 'video' : 'image'} classNames="fade" timeout={100}>

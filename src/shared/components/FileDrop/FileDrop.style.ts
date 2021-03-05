@@ -19,8 +19,10 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
 
   background-color: ${darken(0.16, colors.gray[600])};
   cursor: pointer;
-  width: 320px;
-  height: 250px;
+  width: 100%;
+  height: calc(100vw * 0.5625);
+  max-width: 640px;
+  max-height: 360px;
   display: flex;
   justify-content: center;
 
@@ -34,10 +36,6 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   :hover,
   :focus {
     border: 1px dashed ${colors.blue[500]};
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    width: 640px;
-    height: 400px;
   }
 `
 
@@ -92,11 +90,16 @@ export const DismissButton = styled.button`
 `
 
 export const InnerContainer = styled.div`
-  margin-top: ${sizes(1)};
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
   text-align: center;
   max-width: 200px;
+  height: 100%;
 
   @media screen and (min-width: ${breakpoints.small}) {
+    display: block;
     margin-top: ${sizes(10)};
     max-width: 350px;
   }
@@ -104,7 +107,10 @@ export const InnerContainer = styled.div`
 
 export const StyledIcon = styled(Icon)`
   color: ${colors.gray[300]};
-  width: 72px;
+  width: ${sizes(14)};
+  @media screen and (min-width: ${breakpoints.small}) {
+    width: ${sizes(18)};
+  }
 `
 
 export const Title = styled(Text)`
@@ -116,10 +122,10 @@ export const Title = styled(Text)`
 `
 
 export const Paragraph = styled(Text)`
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(4)};
   line-height: ${sizes(5)};
   @media screen and (min-width: ${breakpoints.small}) {
-    margin-top: ${sizes(4)};
+    margin-top: ${sizes(8)};
   }
 `
 

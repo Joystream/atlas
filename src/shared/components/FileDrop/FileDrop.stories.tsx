@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 import FileDrop, { FileDropProps } from './FileDrop'
 
 export default {
@@ -22,7 +22,21 @@ export default {
 } as Meta
 
 const Template: Story<FileDropProps> = (args) => {
-  return <FileDrop {...args} />
+  const [videofile, setVideoFile] = useState<null | File>(null)
+  return (
+    <>
+      <FileDrop {...args} onUploadFile={(file) => setVideoFile(file)} />
+      <p>{videofile ? 'File' : 'No uploaded file'}</p>
+      {videofile && (
+        <ul>
+          <li>name: {videofile.name}</li>
+          <li>size: {videofile.size}</li>
+          <li>type: {videofile.type}</li>
+          <li>lastModified: {videofile?.lastModified}</li>
+        </ul>
+      )}
+    </>
+  )
 }
 
 export const Default = Template.bind({})
