@@ -86,7 +86,7 @@ export function useGlider<T extends HTMLElement>({
 function useEventListener<K extends keyof GliderEventMap>(
   element: HTMLElement | undefined | null,
   event: K,
-  listener: (event: GliderEvent<GliderEventMap[K]>) => void = () => {}
+  listener: (event: GliderEvent<GliderEventMap[K]>) => void = () => ({})
 ) {
   const savedListener = useRef(listener)
 
