@@ -1,11 +1,11 @@
-import { sizes, colors, typography, transitions } from '@/shared/theme'
+import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import CircularProgressbar from '../CircularProgressbar'
-import Icon from '../Icon'
 import Text from '../Text'
 
 type StepProps = {
   active?: boolean
+  disabled?: boolean
 }
 
 export const StepWrapper = styled.div<StepProps>`
@@ -16,6 +16,17 @@ export const StepWrapper = styled.div<StepProps>`
   align-items: center;
   border: 1px solid ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
   transition: border ${transitions.timings.routing} ${transitions.easing};
+  cursor: pointer;
+  transition: background-color ${transitions.timings.routing} ${transitions.easing};
+  background-color: ${({ active }) => (active ? 'rgba(180, 187, 255, 0.06)' : 'none')};
+  :hover:not([aria-disabled='true']) {
+    background-color: rgba(180, 187, 255, 0.12);
+  }
+  &[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: none;
+  }
 `
 
 export const StepStatus = styled.div`
@@ -66,12 +77,16 @@ export const DeleteButton = styled.button`
   background: none;
   cursor: pointer;
   flex-shrink: 0;
+  svg {
+    color: ${colors.white};
+    height: ${sizes(4)};
+  }
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    background: none;
+  }
 `
 
-export const TrashIcon = styled(Icon)`
-  color: ${colors.white};
-  height: ${sizes(4)};
-`
 export const StyledProgress = styled(CircularProgressbar)`
   width: ${sizes(7)};
   height: ${sizes(7)};

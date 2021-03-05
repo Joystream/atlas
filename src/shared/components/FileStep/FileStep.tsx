@@ -8,7 +8,6 @@ import {
   DeleteButton,
   FileType,
   FileName,
-  TrashIcon,
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
@@ -25,6 +24,7 @@ export type FileStepProps = {
   overhead?: string
   subtitle?: string
   progress?: number
+  disabled?: boolean
 }
 
 const FileStep: React.FC<FileStepProps> = ({
@@ -38,9 +38,13 @@ const FileStep: React.FC<FileStepProps> = ({
   overhead,
   subtitle,
   progress = 0,
+  disabled,
 }) => {
+  const handleChangeStep = () => {
+    !disabled && onChangeStep?.(step)
+  }
   return (
-    <StepWrapper active={active} onClick={() => onChangeStep?.(step)}>
+    <StepWrapper aria-disabled={disabled} active={active} onClick={handleChangeStep}>
       <StepStatus>
         {!fileName && <StepNumber active={active}>{stepNumber}</StepNumber>}
         {fileName &&
@@ -58,8 +62,8 @@ const FileStep: React.FC<FileStepProps> = ({
         </StepDetails>
       </StepStatus>
       {fileName && (
-        <DeleteButton onClick={onDelete}>
-          <TrashIcon name="trash-fill" />
+        <DeleteButton aria-disabled={disabled} onClick={onDelete}>
+          {disabled ? <Icon name="padlock" /> : <Icon name="trash-fill" />}
         </DeleteButton>
       )}
     </StepWrapper>
