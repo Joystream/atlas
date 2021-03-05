@@ -33,7 +33,9 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
-const StudioView = loadable(() => import('@/studio/StudioView'))
+const StudioView = loadable(() => import('@/studio/StudioView'), {
+  fallback: <div>Loading...</div>,
+})
 
 StudioView.displayName = 'StudioView'
 
@@ -82,37 +84,39 @@ const LayoutWithRouting: React.FC = () => {
       <GlobalStyle additionalStyles={routingTransitions} />
       <TopNavbar />
       <SideNavbar items={SIDENAVBAR_ITEMS} />
-      <MainContainer>
-        <ErrorBoundary
-          fallback={ViewErrorFallback}
-          onReset={() => {
-            navigate('/')
-          }}
-        >
-          <SwitchTransition>
-            <CSSTransition
-              timeout={parseInt(transitions.timings.routing)}
-              classNames={transitions.names.fadeAndSlide}
-              key={displayedLocation.pathname}
-            >
-              <Routes location={displayedLocation}>
-                {routesMap.map(({ path, Component }) => (
-                  <Route key={path} path={path} element={<Component />} />
-                ))}
-              </Routes>
-            </CSSTransition>
-          </SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(transitions.timings.routingSearchOverlay)}
-            classNames={transitions.names.slideDown}
-            in={!!searchMatch}
-            unmountOnExit
-            mountOnEnter
+      <Suspense fallback={<div>Loading...</div>}>
+        <MainContainer>
+          <ErrorBoundary
+            fallback={ViewErrorFallback}
+            onReset={() => {
+              navigate('/')
+            }}
           >
-            <Route path={routes.search()} element={<SearchOverlayView />} />
-          </CSSTransition>
-        </ErrorBoundary>
-      </MainContainer>
+            <SwitchTransition>
+              <CSSTransition
+                timeout={parseInt(transitions.timings.routing)}
+                classNames={transitions.names.fadeAndSlide}
+                key={displayedLocation.pathname}
+              >
+                <Routes location={displayedLocation}>
+                  {routesMap.map(({ path, Component }) => (
+                    <Route key={path} path={path} element={<Component />} />
+                  ))}
+                </Routes>
+              </CSSTransition>
+            </SwitchTransition>
+            <CSSTransition
+              timeout={parseInt(transitions.timings.routingSearchOverlay)}
+              classNames={transitions.names.slideDown}
+              in={!!searchMatch}
+              unmountOnExit
+              mountOnEnter
+            >
+              <Route path={routes.search()} element={<SearchOverlayView />} />
+            </CSSTransition>
+          </ErrorBoundary>
+        </MainContainer>
+      </Suspense>
     </>
   )
 }

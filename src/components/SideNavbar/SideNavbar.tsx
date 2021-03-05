@@ -20,6 +20,7 @@ import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
+import routes from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -35,7 +36,7 @@ type SidenavProps = {
 }
 
 const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
-  const isStudio = useMatch('/studio')
+  const isStudio = useMatch(routes.studio())
 
   const {
     state: { followedChannels },
@@ -84,7 +85,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             timeout={parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
           >
-            <ButtonLink onClick={closeSideNav} to={isStudio ? '/' : '/studio'}>
+            <ButtonLink onClick={closeSideNav} to={isStudio ? routes.index() : routes.studio()}>
               <Icon name="external" />
               Joystream {!isStudio && 'studio'}
             </ButtonLink>
