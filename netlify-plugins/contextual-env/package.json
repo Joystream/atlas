@@ -1,0 +1,8 @@
+{
+  "name": "contextual-env",
+  "version": "1.0.0",
+  "dependencies": {
+    "@octokit/rest": "^18.2.1",
+    "lodash": "^4.17.21"
+  }
+}

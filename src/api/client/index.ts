@@ -8,25 +8,29 @@ import extendedQueryNodeSchema from '../schemas/extendedQueryNode.graphql'
 import orionSchema from '../schemas/orion.graphql'
 
 import cache from './cache'
-import { orionExecutor, queryNodeExecutor } from './executors'
 import { queryNodeStitchingResolvers } from './resolvers'
+import { createExecutors } from '@/api/client/executors'
 
-const executableQueryNodeSchema = wrapSchema({
-  schema: buildASTSchema(extendedQueryNodeSchema),
-  executor: queryNodeExecutor,
-})
-const executableOrionSchema = wrapSchema({
-  schema: buildASTSchema(orionSchema),
-  executor: orionExecutor,
-})
+const createApolloClient = () => {
+  const { queryNodeExecutor, orionExecutor } = createExecutors()
 
-const mergedSchema = mergeSchemas({
-  schemas: [executableQueryNodeSchema, executableOrionSchema],
-  resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
-})
+  const executableQueryNodeSchema = wrapSchema({
+    schema: buildASTSchema(extendedQueryNodeSchema),
+    executor: queryNodeExecutor,
+  })
+  const executableOrionSchema = wrapSchema({
+    schema: buildASTSchema(orionSchema),
+    executor: orionExecutor,
+  })
 
-const link = new SchemaLink({ schema: mergedSchema })
+  const mergedSchema = mergeSchemas({
+    schemas: [executableQueryNodeSchema, executableOrionSchema],
+    resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
+  })
 
-const apolloClient = new ApolloClient({ link, cache })
+  const link = new SchemaLink({ schema: mergedSchema })
 
-export default apolloClient
+  return new ApolloClient({ link, cache })
+}
+
+export default createApolloClient
