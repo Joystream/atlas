@@ -10,7 +10,7 @@ const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 
 const testChannelId = '0d75be46-9e81-4d79-a38f-753fbec0adf6'
 const videosPerPage = 8
-
+// TODO: Channel dependant drafts
 export const MyVideosView = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [currentTab, setCurrentTab] = useState(0)

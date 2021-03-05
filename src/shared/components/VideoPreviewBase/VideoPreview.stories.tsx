@@ -51,10 +51,10 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
       <OverlayManagerProvider>
         <Wrapper main={args.main}>
           <VideoPreviewBase
-            isAnyVideoSelected={false}
             {...args}
             publisherMode
             isSelected={value}
+            isAnyVideoSelected={value}
             onSelectClick={setvalue}
             createdAt={createdAtDate}
             contextMenuCallbacks={{
@@ -99,7 +99,6 @@ PublisherDefault.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  isAnyVideoSelected: false,
   videoPublishState: 'default',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
@@ -117,7 +116,6 @@ PublisherDraft.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  isAnyVideoSelected: false,
   videoPublishState: 'draft',
   thumbnailUrl: undefined,
 }
@@ -135,7 +133,6 @@ PublisherUnlisted.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  isAnyVideoSelected: false,
   videoPublishState: 'unlisted',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
