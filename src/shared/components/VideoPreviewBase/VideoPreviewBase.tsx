@@ -158,7 +158,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     onChannelClick(e)
   }
   const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!href || publisherMode) {
+    if (!href || isAnyVideoSelected) {
       e.preventDefault()
     }
   }
