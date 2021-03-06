@@ -7,6 +7,7 @@ export type PaginationProps = {
   totalCount?: number
   maxPaginationLinks?: number
   onChangePage: (page: number) => void
+  onMouseEnterPage?: (page: number) => void
   page: number
 }
 
@@ -16,6 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
   maxPaginationLinks = 5,
   page = 0,
   onChangePage,
+  onMouseEnterPage = (page: number) => ({}),
 }) => {
   const totalPages = itemsPerPage ? Math.ceil(totalCount / itemsPerPage) : 0
   const prevPage = page - 1
@@ -29,6 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({
         isHidden={page <= 1}
         isChevron={true}
         onClick={() => onChangePage(prevPage)}
+        onMouseEnter={() => onMouseEnterPage(prevPage)}
         tabIndex={page <= 1 ? -1 : 0}
       >
         <Icon name="chevron-left" />
@@ -38,6 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
           isActive={page ? page === pageItem : pageItem === 1}
           key={pageItem}
           onClick={() => onChangePage(pageItem)}
+          onMouseEnter={() => onMouseEnterPage(pageItem)}
         >
           {pageItem}
         </PaginationButton>
@@ -46,6 +50,7 @@ const Pagination: React.FC<PaginationProps> = ({
         isHidden={nextPage > totalPages}
         isChevron={true}
         onClick={() => (page ? onChangePage(nextPage) : onChangePage(2))}
+        onMouseEnter={() => (page ? onMouseEnterPage(nextPage) : onMouseEnterPage(2))}
         tabIndex={nextPage <= totalPages ? -1 : 0}
       >
         <Icon name="chevron-right" />
