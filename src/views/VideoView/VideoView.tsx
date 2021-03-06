@@ -102,13 +102,6 @@ const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
-  const handlePlay = useCallback(() => {
-    setPlaying(true)
-  }, [])
-  const handlePause = useCallback(() => {
-    setPlaying(false)
-  }, [])
-
   if (error) {
     throw error
   }
@@ -129,8 +122,6 @@ const VideoView: React.FC = () => {
               posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
-              onPlay={handlePlay}
-              onPause={handlePause}
               startTime={startTimestamp}
             />
           ) : (
