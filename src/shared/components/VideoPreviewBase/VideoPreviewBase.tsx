@@ -59,7 +59,7 @@ export type VideoPreviewPublisherProps =
       isSelected: boolean
       isAnyVideoSelected: boolean
       onSelectClick: (value: boolean) => void
-      contextMenuCallbacks: ContextMenuCallbacks
+      contextMenuCallbacks?: ContextMenuCallbacks
     }
   | {
       publisherMode?: false | undefined
@@ -67,7 +67,8 @@ export type VideoPreviewPublisherProps =
       isSelected?: undefined
       isAnyVideoSelected?: undefined
       onSelectClick?: undefined
-      contextMenuCallbacks?: undefined
+      // ideally, this should be contextMenuCallbacks?: undefined but I couldn't get it to work
+      contextMenuCallbacks?: ContextMenuCallbacks
     }
 
 export type ContextMenuCallbacks = {
