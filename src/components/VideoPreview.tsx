@@ -14,9 +14,17 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   VideoPreviewPublisherProps
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading, ...metaProps }) => {
+const VideoPreview: React.FC<VideoPreviewProps> = ({
+  id,
+  className,
+  isLoading = false,
+  videoPublishState,
+  ...metaProps
+}) => {
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const _isLoading = loading || id === undefined || isLoading
+
+  const videoHref = id ? routes.video(id) : undefined
   return (
     <VideoPreviewBase
       title={video?.title}
@@ -26,12 +34,18 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading, .
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={video?.thumbnailUrl}
-      videoHref={id ? routes.video(id) : undefined}
+      videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
-      isLoading={isLoading}
+      isLoading={_isLoading}
       className={className}
-      // TODO: handle menu contextMenuCallbacks
-      // contextMenuCallbacks={{}}
+      contextMenuCallbacks={{
+        onEditVideoClick: () => ({}),
+        onCopyVideoURLClick:
+          videoPublishState === 'draft'
+            ? undefined
+            : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : ''),
+        onDeleteVideoClick: () => ({}),
+      }}
       {...metaProps}
     />
   )
