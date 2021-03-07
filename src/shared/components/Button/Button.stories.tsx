@@ -51,7 +51,7 @@ const IconTemplate: Story<ButtonProps> = (args) => (
 )
 export const JustIcon = IconTemplate.bind({})
 JustIcon.args = {
-  icon: 'bars',
+  icon: 'block',
 }
 export const Primary = Template.bind({})
 export const Secondary = Template.bind({})
