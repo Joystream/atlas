@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { DropzoneOptions, useDropzone } from 'react-dropzone'
+import { DropzoneOptions, FileError, useDropzone, FileRejection } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import Icon from '../Icon'
 import {
@@ -29,20 +29,26 @@ export type FileDropProps = {
   thumbnail?: string
   progress?: number
   onReAdjustThumbnail?: () => void
+  onDropRejected?: (fileRejections: FileRejection[]) => void
+  onError?: React.Dispatch<React.SetStateAction<string>>
+  error?: string
+  maxSize?: number
 }
 
 const FileDrop: React.FC<FileDropProps> = ({
   onUploadFile,
   step,
+  maxSize,
   icon,
   title,
   paragraph,
   thumbnail,
   onReAdjustThumbnail,
+  onDropRejected,
   progress,
+  onError,
+  error,
 }) => {
-  const [error, setError] = useState<string>()
-
   const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
     (acceptedFiles) => {
       const [file] = acceptedFiles
@@ -51,16 +57,13 @@ const FileDrop: React.FC<FileDropProps> = ({
     [onUploadFile]
   )
 
-  const onDropRejected: DropzoneOptions['onDropRejected'] = useCallback(() => {
-    setError('Wrong file type!')
-  }, [])
-
   const { getRootProps, getInputProps, isDragAccept, isFileDialogActive } = useDropzone({
     onDropAccepted,
     onDropRejected,
     accept: step + '/*',
     maxFiles: 1,
     multiple: false,
+    maxSize,
   })
 
   const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
@@ -98,7 +101,7 @@ const FileDrop: React.FC<FileDropProps> = ({
         <ErrorContainer onClick={(e) => e.stopPropagation()}>
           <ErrorIcon name="error-second" />
           <ErrorText variant="body2">{error}</ErrorText>
-          <DismissButton onClick={() => setError('')}>
+          <DismissButton onClick={() => onError?.('')}>
             <Icon name="close" />
           </DismissButton>
         </ErrorContainer>

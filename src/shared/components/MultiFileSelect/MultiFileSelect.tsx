@@ -1,8 +1,9 @@
 import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
 import React, { useEffect, useRef, useState } from 'react'
-import Icon from '../Icon'
+import { FileRejection } from 'react-dropzone'
 import FileDrop from '../FileDrop'
 import FileStep from '../FileStep'
+import Icon from '../Icon'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 export type FileState = {
@@ -13,13 +14,28 @@ export type FileState = {
 export type MultiFileSelectProps = {
   onChangeFiles: React.Dispatch<React.SetStateAction<FileState>>
   files: FileState
-  onCropImage: React.Dispatch<React.SetStateAction<string>>
-  croppedImageUrl: string
+  onCropImage?: React.Dispatch<React.SetStateAction<string>>
+  croppedImageUrl?: string
+  maxImageSize?: number // in bytes
+  maxVideoSize?: number // in bytes
+  onDropRejected?: (fileRejections: FileRejection[]) => void
+  onError?: React.Dispatch<React.SetStateAction<string>>
+  error?: string
 }
 
 export type Step = 'video' | 'image'
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files, croppedImageUrl, onCropImage }) => {
+const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
+  onChangeFiles,
+  files,
+  croppedImageUrl,
+  onCropImage,
+  onError,
+  onDropRejected,
+  error,
+  maxImageSize,
+  maxVideoSize,
+}) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [step, setStep] = useState<Step>('video')
   const [progress, setProgress] = useState(0)
@@ -69,9 +85,19 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
     setStep(step)
   }
 
+  const handleDeleteFile = (fileType: 'video' | 'image') => {
+    onChangeFiles({ ...files, [fileType]: null })
+    setIsLoading(false)
+    setProgress(0)
+    if (fileType === 'image') {
+      onCropImage?.('')
+    }
+  }
+
   return (
     <MultiFileSelectContainer>
       <FileDrop
+        maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
         progress={progress}
@@ -84,6 +110,9 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
             ? `16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.`
             : `Accepting JPG, PNG formats. Can't exceed 20MB (Example data).`
         }
+        onDropRejected={onDropRejected}
+        onError={onError}
+        error={error}
       />
       <StepsContainer>
         <FileStep
@@ -93,7 +122,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
           active={step === 'video'}
           fileName={files.video?.name}
           step="video"
-          onDelete={() => onChangeFiles({ ...files, video: null })}
+          onDelete={() => handleDeleteFile('video')}
           onChangeStep={handleChangeStep}
           progress={progress}
         />
@@ -107,10 +136,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
           active={step === 'image'}
           fileName={files.image?.name}
           step="image"
-          onDelete={() => {
-            onChangeFiles({ ...files, image: null })
-            onCropImage('')
-          }}
+          onDelete={() => handleDeleteFile('image')}
           onChangeStep={handleChangeStep}
           thumbnail={croppedImageUrl}
         />
@@ -118,7 +144,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({ onChangeFiles, files,
       <ImageCropDialog
         ref={dialogRef}
         imageType="videoThumbnail"
-        onConfirm={(_, croppedImageUrl) => onCropImage(croppedImageUrl)}
+        onConfirm={(_, croppedImageUrl) => onCropImage?.(croppedImageUrl)}
       />
     </MultiFileSelectContainer>
   )

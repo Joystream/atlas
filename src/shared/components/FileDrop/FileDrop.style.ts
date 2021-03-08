@@ -22,7 +22,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   width: 100%;
   height: calc(100vw * 0.5625);
   max-width: 640px;
-  max-height: 360px;
+  max-height: 400px;
   display: flex;
   justify-content: center;
 
