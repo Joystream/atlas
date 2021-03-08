@@ -1,7 +1,7 @@
 export { default as VideoGallery } from './VideoGallery'
 export { default as CoverVideo } from './CoverVideo'
 export { default as ChannelGallery } from './ChannelGallery'
-export { default as TopNavbar } from './TopNavbar'
+export { default as TopNavbar } from './Topbar'
 export { default as VideoGrid } from './VideoGrid'
 export { default as PlaceholderVideoGrid } from './PlaceholderVideoGrid'
 export { default as VideoPreview } from './VideoPreview'

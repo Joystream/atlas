@@ -11,7 +11,7 @@ import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+import { TOP_NAVBAR_HEIGHT } from '@/shared/components/'
 import { NavItemType } from '@/components/SideNavbar'
 import loadable from '@loadable/component'
 
