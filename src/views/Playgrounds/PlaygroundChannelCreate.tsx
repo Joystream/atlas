@@ -38,7 +38,7 @@ type Inputs = {
   cover: string | null
 }
 
-const PlaygroundChannelEdit = () => {
+const PlaygroundChannelCreate = () => {
   const { register, handleSubmit: useHandleSubmit, control, setValue, getValues, reset, clearErrors, errors } = useForm<
     Inputs
   >({
@@ -125,7 +125,6 @@ const PlaygroundChannelEdit = () => {
                 name="description"
                 placeholder="Add description"
                 spellcheck={false}
-                lineHeight={2}
                 ref={register(textFieldValidation('Description', 3, 160))}
                 maxLength={160}
                 error={!!errors.description}
@@ -205,4 +204,4 @@ const PlaygroundChannelEdit = () => {
   )
 }
 
-export default PlaygroundChannelEdit
+export default PlaygroundChannelCreate

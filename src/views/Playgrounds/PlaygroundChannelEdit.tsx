@@ -155,7 +155,7 @@ const PlaygroundChannelEdit = () => {
                 name="description"
                 placeholder="Add description"
                 spellcheck={false}
-                lineHeight={2}
+                rows={200}
                 ref={register(textFieldValidation('Description', 3, 160))}
                 maxLength={160}
                 error={!!errors.description}

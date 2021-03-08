@@ -1,22 +1,17 @@
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-type TextAreaProps = {
-  lineHeight?: number
-}
-
 export const TextAreaWrapper = styled.div`
   width: 100%;
 `
 
-export const StyledTextArea = styled.textarea<TextAreaProps>`
+export const StyledTextArea = styled.textarea`
   background: transparent;
   width: 100%;
-  height: 200px;
   resize: none;
   color: ${colors.gray[300]};
   font-size: ${typography.sizes.subtitle2};
-  line-height: ${({ lineHeight }) => lineHeight};
+  line-height: 2;
   border: none;
   border-bottom: 1px solid ${colors.gray[900]};
   transition: all ${transitions.timings.loading} ${transitions.easing};
