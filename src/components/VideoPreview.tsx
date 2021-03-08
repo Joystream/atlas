@@ -5,6 +5,7 @@ import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
+import { useDrafts } from '@/hooks'
 
 export type VideoPreviewProps = {
   id?: string
@@ -21,16 +22,19 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   videoPublishState,
   ...metaProps
 }) => {
+  const { drafts } = useDrafts('video')
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const _isLoading = loading || id === undefined || isLoading
 
+  const isDraft = videoPublishState === 'draft'
+  const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   const videoHref = id ? routes.video(id) : undefined
   return (
     <VideoPreviewBase
-      title={video?.title}
+      title={isDraft ? draft?.title : video?.title}
       channelHandle={video?.channel.handle}
       channelAvatarUrl={video?.channel.avatarPhotoUrl}
-      createdAt={video?.createdAt}
+      createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={video?.thumbnailUrl}
@@ -38,12 +42,12 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={_isLoading}
       className={className}
+      videoPublishState={videoPublishState}
       contextMenuCallbacks={{
         onEditVideoClick: () => ({}),
-        onCopyVideoURLClick:
-          videoPublishState === 'draft'
-            ? undefined
-            : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : ''),
+        onCopyVideoURLClick: isDraft
+          ? undefined
+          : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : ''),
         onDeleteVideoClick: () => ({}),
       }}
       {...metaProps}
