@@ -108,5 +108,5 @@ export const useDrafts = (type: DraftType) => {
     getDraft: getSingleDraft,
     removeDraft: discardDraft,
     removeAllDrafts: discardAllDrafts,
-  }
+  } as const
 }
