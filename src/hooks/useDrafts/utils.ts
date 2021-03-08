@@ -12,7 +12,7 @@ export const getDraft = async (id: string) => {
 export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
-  const id = new Date().getTime().toString()
+  const id = Math.random().toString(36).substr(2, 9)
   const newDraft = { ...draftProps, updatedAt, id }
   const newDrafts = [newDraft, ...currentDrafts]
   writeToLocalStorage('drafts', newDrafts)
