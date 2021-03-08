@@ -3,7 +3,7 @@ import { addDraft, clearDrafts, getDraft, getDrafts, removeDraft, updateDraft } 
 
 export type CommonDraftProps = {
   id: string
-  updatedAt: string
+  updatedAt: Date
 }
 
 export type Draft = VideoDraft
