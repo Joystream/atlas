@@ -21,8 +21,10 @@ const HomeView: React.FC = () => {
 
   const { videosConnection, loading, error } = useVideosConnection(
     {
-      channelIdIn,
-      createdAtGte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
+      where: {
+        channelId_in: channelIdIn,
+        createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
+      },
     },
     { skip: !anyFollowedChannels }
   )

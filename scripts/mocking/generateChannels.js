@@ -12,6 +12,7 @@ const generateChannel = () => {
     id: faker.random.uuid(),
     handle: faker.lorem.words(handleWordsCount),
     follows: faker.random.number(150000),
+    createdAt: faker.date.past(10),
   }
 }
 

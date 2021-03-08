@@ -8,6 +8,5 @@ query Search($text: String!) {
         ...BasicChannelFields
       }
     }
-    rank
   }
 }

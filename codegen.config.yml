@@ -9,7 +9,6 @@ config:
   scalars:
     Date: Date
   preResolveTypes: true # avoid using Pick
-  nonOptionalTypename: true
 
 generates:
   src/api/queries/__generated__/baseTypes.generated.ts:
