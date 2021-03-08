@@ -79,7 +79,7 @@ const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => 
   let padding, fontSize, buttonSizeWithoutText
   switch (size) {
     case 'small': {
-      padding = 'var(--vertical-padding-small) var(--horizontal-padding-small)'
+      padding = hasText ? 'var(--vertical-padding-small) var(--horizontal-padding-small)' : '0'
       fontSize = typography.sizes.button.small
       buttonSizeWithoutText = '32px'
       break
@@ -99,6 +99,7 @@ const sizeFromProps = ({ size = 'medium', full, hasText }: ButtonStyleProps) => 
     }
   }
   return css`
+    min-width: ${hasText && '100px'};
     width: ${!hasText ? buttonSizeWithoutText : full ? '100%' : ''};
     height: ${!hasText && buttonSizeWithoutText};
     display: ${full ? 'flex' : 'inline-flex'};
