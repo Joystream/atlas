@@ -13,7 +13,7 @@ import {
   StyledActionBarTransaction,
   StyledAvatar,
   InnerFormContainer,
-} from './PlaygroundChannelEdit.style'
+} from './PlaygroundChannelEditCreate.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '../ChannelView/ChannelView.style'
 
 import { requiredValidation, textFieldValidation } from './formValidationOptions'
@@ -55,10 +55,10 @@ const PlaygroundChannelEdit = () => {
     Inputs
   >({
     defaultValues: {
-      avatar: channel.avatar,
-      cover: channel.cover,
-      channelName: channel.handle,
-      description: channel.description,
+      avatar: channel.avatar || null,
+      cover: channel.cover || null,
+      channelName: channel.handle || '',
+      description: channel.description || '',
       selectedLanguage: '',
       selectedPublicness: '',
     },
@@ -215,6 +215,8 @@ const PlaygroundChannelEdit = () => {
             onCancelClick={(e) => {
               e.preventDefault()
               reset()
+              // For reseting selects field, avatar and cover
+              window.location.reload()
             }}
           />
         </InnerFormContainer>

@@ -36,7 +36,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       <ChildrenContainer
         onMouseEnter={() => setActive(true)}
         onMouseLeave={() => setActive(false)}
-        onFocus={() => setActive(true)}
+        onFocus={() => setActive(false)}
         onBlur={() => setActive(false)}
         darkenContent={darkenContent}
         tabIndex={0}
