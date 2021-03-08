@@ -56,14 +56,14 @@ export type VideoPreviewPublisherProps =
   | {
       publisherMode: true
       videoPublishState?: 'default' | 'draft' | 'unlisted'
-      isSelected: boolean
-      isAnyVideoSelected: boolean
-      onSelectClick: (value: boolean) => void
+      isSelected?: boolean
+      isAnyVideoSelected?: boolean
+      onSelectClick?: (value: boolean) => void
       contextMenuCallbacks?: ContextMenuCallbacks
     }
   | {
-      publisherMode?: false | undefined
-      videoPublishState?: undefined | 'default'
+      publisherMode?: false
+      videoPublishState?: undefined
       isSelected?: undefined
       isAnyVideoSelected?: undefined
       onSelectClick?: undefined

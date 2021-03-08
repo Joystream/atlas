@@ -15,18 +15,12 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   VideoPreviewPublisherProps
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({
-  id,
-  className,
-  isLoading = false,
-  videoPublishState,
-  ...metaProps
-}) => {
+const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
   const { drafts } = useDrafts('video')
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const _isLoading = loading || id === undefined || isLoading
 
-  const isDraft = videoPublishState === 'draft'
+  const isDraft = metaProps.videoPublishState === 'draft'
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   const videoHref = id ? routes.video(id) : undefined
   return (
@@ -42,7 +36,6 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={_isLoading}
       className={className}
-      videoPublishState={videoPublishState}
       contextMenuCallbacks={{
         onEditVideoClick: () => ({}),
         onCopyVideoURLClick: isDraft

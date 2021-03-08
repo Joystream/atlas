@@ -77,7 +77,6 @@ Regular.args = {
   channelAvatarUrl: '',
   createdAt: new Date(),
   publisherMode: false,
-  videoPublishState: 'default',
   showChannel: true,
   showMeta: true,
   duration: 100,
