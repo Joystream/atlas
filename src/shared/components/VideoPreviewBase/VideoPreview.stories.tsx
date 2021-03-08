@@ -57,11 +57,9 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             isAnyVideoSelected={value}
             onSelectClick={setvalue}
             createdAt={createdAtDate}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
         </Wrapper>
       </OverlayManagerProvider>
@@ -157,11 +155,9 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             onSelectClick={setvalue2}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
           <VideoPreviewBase
             {...args}
@@ -172,10 +168,8 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             createdAt={createdAtDate}
             thumbnailUrl={undefined}
             isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onDeleteVideoClick={handler}
           />
           <VideoPreviewBase
             {...args}
@@ -185,11 +179,9 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             onSelectClick={setvalue}
             createdAt={createdAtDate}
             isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
         </ContainerMix>
       </OverlayManagerProvider>

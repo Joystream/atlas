@@ -36,13 +36,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = 
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={_isLoading}
       className={className}
-      contextMenuCallbacks={{
-        onEditVideoClick: () => ({}),
-        onCopyVideoURLClick: isDraft
-          ? undefined
-          : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : ''),
-        onDeleteVideoClick: () => ({}),
-      }}
+      onCopyVideoURLClick={
+        isDraft ? undefined : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : '')
+      }
       {...metaProps}
     />
   )

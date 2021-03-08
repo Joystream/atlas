@@ -59,7 +59,9 @@ export type VideoPreviewPublisherProps =
       isSelected?: boolean
       isAnyVideoSelected?: boolean
       onSelectClick?: (value: boolean) => void
-      contextMenuCallbacks?: ContextMenuCallbacks
+      onEditVideoClick?: () => void
+      onCopyVideoURLClick?: () => void
+      onDeleteVideoClick?: () => void
     }
   | {
       publisherMode?: false
@@ -67,15 +69,10 @@ export type VideoPreviewPublisherProps =
       isSelected?: undefined
       isAnyVideoSelected?: undefined
       onSelectClick?: undefined
-      // ideally, this should be contextMenuCallbacks?: undefined but I couldn't get it to work
-      contextMenuCallbacks?: ContextMenuCallbacks
+      onEditVideoClick?: () => void
+      onCopyVideoURLClick?: () => void
+      onDeleteVideoClick?: () => void
     }
-
-export type ContextMenuCallbacks = {
-  onEditVideoClick?: () => void
-  onCopyVideoURLClick?: () => void
-  onDeleteVideoClick?: () => void
-}
 
 export type VideoPreviewBaseProps = {
   title?: string
@@ -130,7 +127,9 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onClick,
   onRemoveButtonClick,
   className,
-  contextMenuCallbacks = {},
+  onEditVideoClick,
+  onCopyVideoURLClick,
+  onDeleteVideoClick,
 }) => {
   const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -312,18 +311,18 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <KebabMenuIcon />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {contextMenuCallbacks.onEditVideoClick && (
-                    <ContextMenuItem iconName="pencil-fill" onClick={contextMenuCallbacks.onEditVideoClick}>
+                  {onEditVideoClick && (
+                    <ContextMenuItem iconName="pencil-fill" onClick={onEditVideoClick}>
                       {videoPublishState === 'draft' ? 'Edit Draft' : 'Edit Video'}
                     </ContextMenuItem>
                   )}
-                  {contextMenuCallbacks.onCopyVideoURLClick && (
-                    <ContextMenuItem iconName="link" onClick={contextMenuCallbacks.onCopyVideoURLClick}>
+                  {onCopyVideoURLClick && (
+                    <ContextMenuItem iconName="link" onClick={onCopyVideoURLClick}>
                       Copy Video URL
                     </ContextMenuItem>
                   )}
-                  {contextMenuCallbacks.onDeleteVideoClick && (
-                    <ContextMenuItem iconName="trash" onClick={contextMenuCallbacks.onDeleteVideoClick}>
+                  {onDeleteVideoClick && (
+                    <ContextMenuItem iconName="trash" onClick={onDeleteVideoClick}>
                       {videoPublishState === 'draft' ? 'Delete Draft' : 'Delete Video'}
                     </ContextMenuItem>
                   )}

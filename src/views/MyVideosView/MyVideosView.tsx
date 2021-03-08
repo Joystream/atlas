@@ -130,18 +130,21 @@ export const MyVideosView = () => {
         {drafts
           // this makes for a smoother transition between pages
           // .slice(0, videosPerPage)
-          .map((video, idx) => (
+          .map((draft, idx) => (
             <VideoPreview
               key={idx + '-' + currentTabName + '-' + currentPage}
-              id={video.id}
+              id={draft.id}
               showChannel={false}
               // isLoading={loading}
               publisherMode
               videoPublishState="draft"
-              isSelected={selectedVideos.includes(video.id)}
+              isSelected={selectedVideos.includes(draft.id)}
               isAnyVideoSelected={selectedVideos.length > 0}
               onSelectClick={(isSelected) => {
-                video.id && handleVideoSelect(video.id, isSelected)
+                draft.id && handleVideoSelect(draft.id, isSelected)
+              }}
+              onDeleteVideoClick={() => {
+                removeDraft(draft.id)
               }}
             />
           ))}
