@@ -10,11 +10,10 @@ export type SearchQueryVariables = Types.Exact<{
 }>
 
 export type SearchQuery = {
-  __typename: 'Query'
+  __typename?: 'Query'
   search: Array<{
-    __typename: 'SearchFTSOutput'
-    rank: number
-    item: ({ __typename: 'Video' } & VideoFieldsFragment) | ({ __typename: 'Channel' } & BasicChannelFieldsFragment)
+    __typename?: 'SearchFTSOutput'
+    item: ({ __typename?: 'Video' } & VideoFieldsFragment) | ({ __typename?: 'Channel' } & BasicChannelFieldsFragment)
   }>
 }
 
@@ -29,7 +28,6 @@ export const SearchDocument = gql`
           ...BasicChannelFields
         }
       }
-      rank
     }
   }
   ${VideoFieldsFragmentDoc}
