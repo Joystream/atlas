@@ -57,6 +57,10 @@ export const Arrow = styled(Button)`
   &.disabled + ${BackgroundGradient} {
     --gradientColor: transparent;
   }
+  svg {
+    width: auto;
+    height: auto;
+  }
 `
 
 export const GliderContainer = styled.div<HasPadding>`

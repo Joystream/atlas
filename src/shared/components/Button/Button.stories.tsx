@@ -19,14 +19,14 @@ const SingleTemplate: Story<ButtonProps> = (args) => <Button {...args}>Regular</
 
 const Template: Story<ButtonProps> = (args) => (
   <>
-    <Button {...args} size="regular">
-      Regular
+    <Button {...args} size="large">
+      Large
+    </Button>
+    <Button {...args} size="medium">
+      Medium
     </Button>
     <Button {...args} size="small">
       Small
-    </Button>
-    <Button {...args} size="smaller">
-      Smaller
     </Button>
   </>
 )
@@ -38,6 +38,19 @@ Single.argTypes = {
 }
 export const WithIcon = Template.bind({})
 WithIcon.args = {
+  icon: 'block',
+}
+const IconTemplate: Story<ButtonProps> = (args) => (
+  <>
+    <Button {...args} size="large" />
+
+    <Button {...args} size="medium" />
+
+    <Button {...args} size="small" />
+  </>
+)
+export const JustIcon = IconTemplate.bind({})
+JustIcon.args = {
   icon: 'block',
 }
 export const Primary = Template.bind({})
