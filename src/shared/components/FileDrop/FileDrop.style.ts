@@ -139,17 +139,7 @@ export const ButtonsGroup = styled.div`
   }
 `
 export const UploadButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  svg {
-    margin-right: ${sizes(2)};
-    position: relative;
-    top: 0.125em;
-    width: ${sizes(4)};
-    height: ${sizes(4)};
-  }
 `
 
 export const DragDropText = styled(Text)`
