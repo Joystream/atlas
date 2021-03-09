@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link, LinkProps } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
+import { Button } from '@/shared/components'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -65,24 +66,11 @@ export const ButtonGroup = styled.div`
   justify-content: flex-end;
 `
 
-export const ButtonLink = styled(Link)`
+export const ButtonLink = styled(Button)`
   padding: 14px ${NAVBAR_LEFT_PADDING}px;
   margin: 0 ${NAVBAR_LEFT_PADDING}px;
   border: 1px solid ${colors.gray[400]};
   font-family: ${typography.fonts.headers};
-  text-decoration: none;
-  display: block;
-  color: ${colors.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  svg {
-    margin-right: 10px;
-    position: relative;
-    top: 0.125em;
-    width: ${sizes(4)};
-    height: ${sizes(4)};
-  }
 `
 
 export const SidebarNavItem = styled.li`

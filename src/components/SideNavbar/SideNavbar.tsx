@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMatch } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
   SidebarNav,
@@ -85,8 +85,13 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             timeout={parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
           >
-            <ButtonLink onClick={closeSideNav} to={isStudio ? routes.index() : routes.studio()}>
-              <Icon name="external" />
+            <ButtonLink
+              variant="tertiary"
+              onLinkClick={closeSideNav}
+              icon="external"
+              asLink
+              to={isStudio ? routes.index() : routes.studio()}
+            >
               Joystream {!isStudio && 'studio'}
             </ButtonLink>
           </CSSTransition>

@@ -2,6 +2,8 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import Icon from '../Icon'
 import { colors, typography } from '../../theme'
+import { LinkProps, Link } from 'react-router-dom'
+import React from 'react'
 
 export type ButtonStyleProps = {
   variant?: 'primary' | 'secondary' | 'tertiary'
@@ -168,7 +170,7 @@ export const StyledIcon = styled(Icon)<IconStyleProps>`
   }
   filter: ${(props) => (props.disabled ? 'brightness(0.7)' : null)};
 `
-export const StyledButton = styled.button<ButtonStyleProps>`
+const sharedStyles = css`
   --vertical-padding-small: 9px;
   --vertical-padding-medium: 12px;
   --vertical-padding-large: 15px;
@@ -185,6 +187,32 @@ export const StyledButton = styled.button<ButtonStyleProps>`
   display: inline-flex;
   justify-content: center;
   align-items: center;
+`
+
+const LinkWithButtonProps = ({
+  variant,
+  full,
+  size,
+  disabled,
+  hasText,
+  clickable,
+  ...props
+}: ButtonStyleProps & LinkProps) => <Link {...props} />
+
+export const StyledButton = styled.button<ButtonStyleProps>`
+  ${sharedStyles}
+  &:hover {
+    cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
+  }
+
+  ${colorsFromProps};
+  ${sizeFromProps};
+  ${disabled};
+`
+
+export const StyledLink = styled(LinkWithButtonProps)`
+  ${sharedStyles}
+  text-decoration: none;
   &:hover {
     cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
   }
