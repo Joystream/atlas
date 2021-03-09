@@ -43,3 +43,18 @@ export const TextContainer = styled.div`
     opacity: 0.4;
   }
 `
+
+export const NavDrawerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+  transform: translateY(60px);
+  width: 320px;
+  background-color: ${colors.gray[800]};
+  ${MemberInfoContainer} {
+    &:hover {
+      background-color: white;
+    }
+  }
+`

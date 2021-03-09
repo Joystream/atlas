@@ -6,6 +6,7 @@ import {
   MemberInfoContainer,
   StyledAvatar,
   TextContainer,
+  NavDrawerContainer,
 } from './StudioTopbar.style'
 
 const MemberInfo: React.FC = () => {
@@ -16,19 +17,31 @@ const MemberInfo: React.FC = () => {
         <Text>Wild Crypto Fan16</Text>
         <Text>Mikael Cowan</Text>
       </TextContainer>
-      <Button icon="chevron-down" variant="tertiary" />
     </MemberInfoContainer>
+  )
+}
+
+const NavDrawer: React.FC = () => {
+  return (
+    <NavDrawerContainer>
+      <MemberInfo />
+      <MemberInfo />
+    </NavDrawerContainer>
   )
 }
 
 const StudioTopbar: React.FC = () => {
   return (
-    <StyledTopbarBase variant="studio">
-      <StudioContainer>
-        <Button icon="add-video" />
-        <MemberInfo />
-      </StudioContainer>
-    </StyledTopbarBase>
+    <>
+      <StyledTopbarBase variant="studio">
+        <StudioContainer>
+          <Button icon="add-video" />
+          <MemberInfo />
+          <Button icon="chevron-down" variant="tertiary" />
+        </StudioContainer>
+      </StyledTopbarBase>
+      <NavDrawer />
+    </>
   )
 }
 
