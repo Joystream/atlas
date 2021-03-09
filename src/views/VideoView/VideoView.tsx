@@ -175,9 +175,9 @@ const VideoView: React.FC = () => {
                   <a href={video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
                     {video.license.type.code}
                   </a>
-                ) : (
+                ) : video.license.type.__typename === 'UserDefinedLicense' ? (
                   video.license.type.content
-                )}
+                ) : null}
               </p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>

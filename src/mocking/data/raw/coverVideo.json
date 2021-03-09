@@ -15,6 +15,7 @@
     "duration": 29,
     "size": 44851016,
     "location": {
+      "__typename": "HttpMediaLocation",
       "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm"
     }
   },
@@ -23,7 +24,8 @@
     "handle": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
     "coverPhotoUrl": null,
-    "follows": 48717
+    "follows": 48717,
+    "createdAt": "2018-01-27T08:59:19.385Z"
   },
   "cover": {
     "coverDescription": "How We Lost Trust In Authority, And Authority Taught Us To Distrust Ourselves",

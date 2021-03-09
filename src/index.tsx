@@ -5,24 +5,24 @@ import App from './App'
 import './styles/fonts.css'
 import { SENTRY_DSN } from './config/urls'
 
-const initApp = () => {
-  Sentry.init({ dsn: SENTRY_DSN })
+type Env = 'production' | 'staging' | 'development'
+
+const env = (process.env.REACT_APP_ENV?.toLowerCase() || 'development') as Env
+
+const initApp = async () => {
+  if (env === 'development') {
+    try {
+      const { worker } = await import('./mocking/browser')
+      await worker.start()
+    } catch (e) {
+      console.error('Failed to load mocking server', e)
+    }
+  }
+
+  if (env === 'production') {
+    Sentry.init({ dsn: SENTRY_DSN })
+  }
   ReactDOM.render(<App />, document.getElementById('root'))
 }
 
-if (process.env.REACT_APP_ENV?.toLowerCase() !== 'production') {
-  // // import mocking code only in staging/dev environments
-  console.log('Loading mocking server...')
-  import('@/mocking/server')
-    .then(() => {
-      console.log('Loaded mocking server')
-    })
-    .catch((e) => {
-      console.log('Failed to load mocking server', e)
-    })
-    .finally(() => {
-      initApp()
-    })
-} else {
-  initApp()
-}
+initApp()

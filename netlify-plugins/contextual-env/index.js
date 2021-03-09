@@ -5,14 +5,17 @@ const { get } = require('lodash')
 
 const ENV_PRODUCTION = 'PRODUCTION'
 const ENV_STAGING = 'STAGING'
+const ENV_DEVELOPMENT = 'DEVELOPMENT'
 
 module.exports = {
   onPreBuild: async ({ inputs: { production_branch, app_env_prefix }, utils }) => {
-    const { CONTEXT, REVIEW_ID, REPOSITORY_URL } = process.env
+    const { CONTEXT, REVIEW_ID, REPOSITORY_URL, SITE_NAME } = process.env
 
     // === get env based on branch/PR ===
     let env = ENV_PRODUCTION
-    if (CONTEXT === 'branch-deploy') {
+    if (SITE_NAME === 'atlas-app-mocked') {
+      env = ENV_DEVELOPMENT
+    } else if (CONTEXT === 'branch-deploy') {
       env = ENV_STAGING
     } else if (CONTEXT === 'deploy-preview') {
       const productionPull = await isProductionPull({

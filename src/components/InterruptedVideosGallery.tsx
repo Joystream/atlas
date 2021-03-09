@@ -28,7 +28,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
 
   const { videos, error, loading, refetch } = useVideos(
     {
-      id_in: interruptedVideosId,
+      where: { id_in: interruptedVideosId },
     },
     { skip: !anyInterruptedVideos }
   )
