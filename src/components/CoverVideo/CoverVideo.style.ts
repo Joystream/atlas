@@ -228,4 +228,10 @@ export const PlayButton = styled(Button)<{ playing: boolean }>`
 export const SoundButton = styled(Button)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
+  width: ${BUTTONS_HEIGHT_PX};
+  transform: translateY(4px);
+  svg {
+    width: auto;
+    height: auto;
+  }
 `
