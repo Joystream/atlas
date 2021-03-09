@@ -7,6 +7,7 @@ import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
 const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
+  channelId: '123',
   title: '',
   description: '',
   isExplicit: undefined,
@@ -26,8 +27,8 @@ const PlaygroundDrafts = () => {
     setCurrentDraftId(draftID)
     const draft = await getDraft(draftID)
     if (draft) {
-      const { title, description, isExplicit } = draft
-      setForm({ title, description, isExplicit })
+      const { title, description, isExplicit, channelId } = draft
+      setForm({ title, description, isExplicit, channelId })
     } else {
       setForm(INITIAL_STATE)
     }

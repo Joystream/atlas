@@ -35,6 +35,11 @@ export const removeDraft = async (id: string) => {
   writeToLocalStorage('drafts', newDrafts)
 }
 
-export const clearDrafts = () => {
-  writeToLocalStorage('drafts', [])
+export const clearDrafts = async (channelId?: string) => {
+  const currentDrafts = await getDrafts()
+  if (channelId) {
+    writeToLocalStorage('drafts', [...currentDrafts.filter((draft) => draft.channelId !== channelId)])
+  } else {
+    writeToLocalStorage('drafts', [])
+  }
 }

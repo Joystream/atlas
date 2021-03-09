@@ -192,7 +192,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
           <SwitchTransition>
             <CSSTransition
               key={isLoading ? 'placeholder' : 'content'}
-              timeout={parseInt(transitions.timings.regular)}
+              timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
               {isLoading ? (
@@ -241,7 +241,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       <SwitchTransition>
         <CSSTransition
           key={isLoading ? 'placeholder' : 'content'}
-          timeout={parseInt(transitions.timings.regular)}
+          timeout={parseInt(transitions.timings.sharp)}
           classNames={transitions.names.fade}
         >
           <InfoContainer main={main}>

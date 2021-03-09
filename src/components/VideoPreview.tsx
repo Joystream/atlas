@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useVideo } from '@/api/hooks'
 import routes from '@/config/routes'
 import VideoPreviewBase, {
@@ -16,10 +16,15 @@ export type VideoPreviewProps = {
   VideoPreviewPublisherProps
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
+  const [loadOnMount, setloadOnMount] = useState(true)
   const { drafts } = useDrafts('video')
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
-  const _isLoading = loading || id === undefined || isLoading
 
+  useEffect(() => {
+    setloadOnMount(false)
+  }, [])
+
+  const _isLoading = loading || id === undefined || isLoading || loadOnMount
   const isDraft = metaProps.videoPublishState === 'draft'
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   const videoHref = id ? routes.video(id) : undefined

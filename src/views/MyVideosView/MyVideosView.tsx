@@ -12,9 +12,8 @@ const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 
 const testChannelId = '100'
 const videosPerPage = 8
-// TODO: No videos screen
+// TODO: No videos screen (this was deleted from figma??)
 // TODO: Unlisted videos
-// TODO: Channel dependant drafts
 // TODO: video selection / deletion
 // TODO: dynamic channels (not hardcoded)
 // TODO: context menu callbacks
@@ -24,8 +23,7 @@ const videosPerPage = 8
 // TODO: add total video count to the useVideos hook
 export const MyVideosView = () => {
   const [selectedVideos, setselectedVideos] = useState<VideoPreviewProps['id'][]>([])
-  // const [isActionBarActive, setisActionBarActive] = useState(false)
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video')
+  const { drafts, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video', testChannelId)
   const [currentPage, setCurrentPage] = useState(1)
   const [currentTab, setCurrentTab] = useState(0)
   const currentTabName = tabs[currentTab]
@@ -51,6 +49,7 @@ export const MyVideosView = () => {
     const createDrafts = async () => {
       for (let i = 0; i < 8; i++) {
         await addDraft({
+          channelId: testChannelId,
           title: Math.random().toString(36),
           description: 'string',
           isPublic: true,
@@ -58,6 +57,16 @@ export const MyVideosView = () => {
           isExplicit: false,
         })
       }
+      // for (let i = 0; i < 8; i++) {
+      //   await addDraft({
+      //     channelId: '1313',
+      //     title: Math.random().toString(36),
+      //     description: 'string',
+      //     isPublic: true,
+      //     hasMarketing: false,
+      //     isExplicit: false,
+      //   })
+      // }
     }
     createDrafts()
     return () => {
@@ -107,7 +116,7 @@ export const MyVideosView = () => {
           }
         />
       )}
-      {/* <Grid>
+      <Grid>
         {videosWPlaceholders
           // this makes for a smoother transition between pages
           .slice(0, videosPerPage)
@@ -125,8 +134,8 @@ export const MyVideosView = () => {
               }}
             />
           ))}
-      </Grid> */}
-      <Grid>
+      </Grid>
+      {/* <Grid>
         {drafts
           // this makes for a smoother transition between pages
           // .slice(0, videosPerPage)
@@ -143,12 +152,13 @@ export const MyVideosView = () => {
               onSelectClick={(isSelected) => {
                 draft.id && handleVideoSelect(draft.id, isSelected)
               }}
+              onEditVideoClick={() => ({})}
               onDeleteVideoClick={() => {
                 removeDraft(draft.id)
               }}
             />
           ))}
-      </Grid>
+      </Grid> */}
       <PaginationContainer extraPaddingBottom={isActionBarActive}>
         <Pagination
           onChangePage={(page) => {
