@@ -20,9 +20,8 @@ const INITIAL_VIDEOS_PER_ROW = 4
 // TODO: dynamic channels (not hardcoded)
 // TODO: No videos screen (this was deleted from figma??)
 // doable
-// TODO: make all this logic into a hook possibly
 // TODO: add total video count to the useVideos hook
-// TODO: video title not clickable when selecting mode
+// TODO: how is the action bar supossed to work?
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   // Drafts calls can run into race conditions
