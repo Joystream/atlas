@@ -33,7 +33,7 @@ const SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
-const StudioView = loadable(() => import('@/studio/StudioView'), {
+const StudioView = loadable(() => import('./studio/StudioView'), {
   fallback: <div>Loading...</div>,
 })
 
