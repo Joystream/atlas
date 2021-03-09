@@ -2,36 +2,35 @@ fragment BasicChannelFields on Channel {
   id
   handle
   avatarPhotoUrl
+  createdAt
 }
 
 fragment AllChannelFields on Channel {
-  id
-  handle
-  avatarPhotoUrl
+  ...BasicChannelFields
   coverPhotoUrl
   follows
 }
 
-query GetBasicChannel($id: ID!) {
-  channel(where: { id: $id }) {
+query GetBasicChannel($where: ChannelWhereUniqueInput!) {
+  channel(where: $where) {
     ...BasicChannelFields
   }
 }
 
-query GetChannel($id: ID!) {
-  channel(where: { id: $id }) {
+query GetChannel($where: ChannelWhereUniqueInput!) {
+  channel(where: $where) {
     ...AllChannelFields
   }
 }
 
-query GetChannelVideoCount($channelId: ID!) {
-  videosConnection(first: 0, where: { channelId_eq: $channelId }) {
+query GetChannelVideoCount($where: VideoWhereInput) {
+  videosConnection(first: 0, where: $where) {
     totalCount
   }
 }
 
-query GetChannels($id_in: [ID!]!) {
-  channels(where: { id_in: $id_in }) {
+query GetChannels($where: ChannelWhereInput) {
+  channels(where: $where) {
     ...AllChannelFields
   }
 }
@@ -42,7 +41,6 @@ query GetChannelsConnection($first: Int, $after: String) {
       cursor
       node {
         ...AllChannelFields
-        createdAt # the node must include the field by which the connection is sorted by
       }
     }
     pageInfo {
@@ -50,6 +48,16 @@ query GetChannelsConnection($first: Int, $after: String) {
       endCursor
     }
     totalCount
+  }
+}
+
+### Orion
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelFollows($channelId: ID!) {
+  channelFollows(channelId: $channelId) {
+    id
+    follows
   }
 }
 

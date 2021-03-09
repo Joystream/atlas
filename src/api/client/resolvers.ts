@@ -20,6 +20,7 @@ const createResolverWithTransforms = (
     delegateToSchema({
       schema,
       operation: 'query',
+      operationName: info?.operation?.name?.value,
       fieldName,
       args,
       context,
@@ -59,6 +60,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetVideoViews',
           fieldName: ORION_VIEWS_QUERY_NAME,
           args: {
             videoId: parent.id,
@@ -79,6 +82,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetChannelFollows',
           fieldName: ORION_FOLLOWS_QUERY_NAME,
           args: {
             channelId: parent.id,
