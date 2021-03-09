@@ -12,22 +12,27 @@ const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 
 const testChannelId = '100'
 const videosPerPage = 8
-// TODO: No videos screen (this was deleted from figma??)
+// not yet doable
+/* TODO: adjust action bar to the real fee */
 // TODO: Unlisted videos
-// TODO: video selection / deletion
+// TODO: on edit video callbacks
+// TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
-// TODO: context menu callbacks
-// TODO: Responsive
+// TODO: No videos screen (this was deleted from figma??)
+// doable
+// TODO: put the logic together
+// TODO: action bar
+// TODO: video selection / deletion
 // TODO: OnCoverResize support
 // TODO: make all this logic into a hook possibly
 // TODO: add total video count to the useVideos hook
 export const MyVideosView = () => {
   const [selectedVideos, setselectedVideos] = useState<VideoPreviewProps['id'][]>([])
+  // Drafts calls can run into race conditions
   const { drafts, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video', testChannelId)
-  const [currentPage, setCurrentPage] = useState(1)
   const [currentTab, setCurrentTab] = useState(0)
   const currentTabName = tabs[currentTab]
-
+  const { currentPage, setCurrentPage } = usePagination([currentTab])
   // we need the total video count from somewhere
   const { videosConnection, loading: loadingVideosConnection, error: errorVideosConnection } = useVideosConnection({
     channelId: testChannelId,
@@ -47,50 +52,47 @@ export const MyVideosView = () => {
   // hook to tests draft should be deleted before final
   useEffect(() => {
     const createDrafts = async () => {
-      for (let i = 0; i < 8; i++) {
+      await removeAllDrafts()
+      for (let i = 0; i < 32; i++) {
         await addDraft({
           channelId: testChannelId,
-          title: Math.random().toString(36),
+          title: i.toString(),
+          // title: Math.random().toString(36),
           description: 'string',
           isPublic: true,
           hasMarketing: false,
           isExplicit: false,
         })
       }
-      // for (let i = 0; i < 8; i++) {
-      //   await addDraft({
-      //     channelId: '1313',
-      //     title: Math.random().toString(36),
-      //     description: 'string',
-      //     isPublic: true,
-      //     hasMarketing: false,
-      //     isExplicit: false,
-      //   })
-      // }
     }
     createDrafts()
     return () => {
       removeAllDrafts()
     }
-  }, [addDraft, removeAllDrafts])
+  }, [])
 
+  useEffect(() => {
+    setselectedVideos([])
+  }, [currentTab])
+  const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (videosConnection?.totalCount ?? 0) > 0)
+  const isActionBarActive = selectedVideos.length > 0
   const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
   const videosWPlaceholders = [...(videos || []), ...placeholderItems]
-  console.log({
-    videosWPlaceholders,
-    drafts,
-    placeholderItems,
-    videos,
-    loading,
-    isLoading,
-    error,
-    currentTabName,
-    currentPage,
-  })
+  // console.log({
+  //   videosWPlaceholders,
+  //   drafts,
+  //   placeholderItems,
+  //   videos,
+  //   loading,
+  //   isLoading,
+  //   error,
+  //   currentTabName,
+  //   currentPage,
+  // })
 
   const handleVideoSelect = (id: string, isSelected: boolean) => {
     if (selectedVideos.includes(id)) {
@@ -99,14 +101,13 @@ export const MyVideosView = () => {
       setselectedVideos([...selectedVideos, id])
     }
   }
-  const isActionBarActive = selectedVideos.length > 0
   return (
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
       <TabsContainer>
         <Tabs initialIndex={0} tabs={tabs} onSelectTab={setCurrentTab} />
       </TabsContainer>
-      {currentTabName === 'Drafts' && (
+      {isDraftTab && (
         // Should this really be dismissable?
         <StyledDismissibleMessage
           id="video-draft-saved-locally-warning"
@@ -116,76 +117,90 @@ export const MyVideosView = () => {
           }
         />
       )}
-      <Grid>
-        {videosWPlaceholders
-          // this makes for a smoother transition between pages
-          .slice(0, videosPerPage)
-          .map((video, idx) => (
-            <VideoPreview
-              key={idx + '-' + currentTabName + '-' + currentPage}
-              id={video.id}
-              showChannel={false}
-              isLoading={loading}
-              publisherMode
-              isSelected={selectedVideos.includes(video.id)}
-              isAnyVideoSelected={selectedVideos.length > 0}
-              onSelectClick={(isSelected) => {
-                video.id && handleVideoSelect(video.id, isSelected)
-              }}
-            />
-          ))}
-      </Grid>
-      {/* <Grid>
-        {drafts
-          // this makes for a smoother transition between pages
-          // .slice(0, videosPerPage)
-          .map((draft, idx) => (
-            <VideoPreview
-              key={idx + '-' + currentTabName + '-' + currentPage}
-              id={draft.id}
-              showChannel={false}
-              // isLoading={loading}
-              publisherMode
-              videoPublishState="draft"
-              isSelected={selectedVideos.includes(draft.id)}
-              isAnyVideoSelected={selectedVideos.length > 0}
-              onSelectClick={(isSelected) => {
-                draft.id && handleVideoSelect(draft.id, isSelected)
-              }}
-              onEditVideoClick={() => ({})}
-              onDeleteVideoClick={() => {
-                removeDraft(draft.id)
-              }}
-            />
-          ))}
-      </Grid> */}
+      {currentTabName !== 'Drafts' && (
+        <Grid>
+          {videosWPlaceholders
+            // this makes for a smoother transition between pages
+            .slice(0, videosPerPage)
+            .map((video, idx) => (
+              <VideoPreview
+                key={idx + '-' + currentTabName + '-' + currentPage}
+                id={video.id}
+                showChannel={false}
+                isLoading={loading}
+                publisherMode
+                isSelected={selectedVideos.includes(video.id)}
+                isAnyVideoSelected={selectedVideos.length > 0}
+                onSelectClick={(isSelected) => {
+                  video.id && handleVideoSelect(video.id, isSelected)
+                }}
+              />
+            ))}
+        </Grid>
+      )}
+      {isDraftTab && (
+        <Grid>
+          {drafts
+            .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
+            .map((draft, idx) => (
+              <VideoPreview
+                key={idx + '-' + currentTabName + '-' + currentPage}
+                id={draft.id}
+                showChannel={false}
+                // isLoading={loading}
+                publisherMode
+                videoPublishState="draft"
+                isSelected={selectedVideos.includes(draft.id)}
+                isAnyVideoSelected={selectedVideos.length > 0}
+                onSelectClick={(isSelected) => {
+                  draft.id && handleVideoSelect(draft.id, isSelected)
+                }}
+                onEditVideoClick={() => ({})}
+                onDeleteVideoClick={() => {
+                  removeDraft(draft.id)
+                }}
+              />
+            ))}
+        </Grid>
+      )}
       <PaginationContainer extraPaddingBottom={isActionBarActive}>
         <Pagination
           onChangePage={(page) => {
             setCurrentPage(page)
           }}
           onMouseEnterPage={(page) => {
-            fetchMore({
-              variables: {
-                // substract 1 coz offset index starts at 0
-                offset: videosPerPage * (page - 1),
-                limit: videosPerPage,
-              },
-            })
+            currentTabName !== 'Drafts' &&
+              fetchMore({
+                variables: {
+                  // substract 1 coz offset index starts at 0
+                  offset: videosPerPage * (page - 1),
+                  limit: videosPerPage,
+                },
+              })
           }}
           page={currentPage}
           itemsPerPage={videosPerPage}
-          totalCount={videosConnection?.totalCount}
+          totalCount={isDraftTab ? drafts.length : videosConnection?.totalCount}
         ></Pagination>
       </PaginationContainer>
-      {/* TODO: adjust this to the real fee */}
-      {/* TODO: also this bar needs quite a bit of adjustments */}
-      {isActionBarActive && <ActionBarTransaction fee={currentTabName === 'Drafts' ? 0 : 0.2} />}
+      {isActionBarActive && <ActionBarTransaction fee={isDraftTab ? 0 : 0.2} />}
     </ViewContainer>
   )
 }
 
 export default MyVideosView
+
+const usePagination = (deps?: React.DependencyList) => {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // reset the pagination when changing tabs
+  useEffect(() => {
+    setCurrentPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps)
+
+  return { currentPage, setCurrentPage }
+}
 
 const TabsContainer = styled.div`
   padding-top: ${sizes(8)};

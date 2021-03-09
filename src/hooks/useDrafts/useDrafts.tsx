@@ -104,7 +104,7 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
 
   const discardAllDrafts = useCallback(
     async (channelId?: string) => {
-      clearDrafts(channelId)
+      await clearDrafts(channelId)
       fetchDrafts(channelId)
     },
     [fetchDrafts]
