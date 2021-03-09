@@ -29,9 +29,14 @@ export const updateDraft = async (draftId: string, draftProps: RawDraft) => {
   return newDrafts.find((draft) => draft.id === draftId)
 }
 
-export const removeDraft = async (id: string) => {
+export const removeDraft = async (ids: string | string[]) => {
   const currentDrafts = await getDrafts()
-  const newDrafts = currentDrafts.filter((draft) => draft.id !== id)
+  let newDrafts
+  if (Array.isArray(ids)) {
+    newDrafts = currentDrafts.filter((draft) => !ids.includes(draft.id))
+  } else {
+    newDrafts = currentDrafts.filter((draft) => draft.id !== ids)
+  }
   writeToLocalStorage('drafts', newDrafts)
 }
 

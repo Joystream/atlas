@@ -95,8 +95,8 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   )
 
   const discardDraft = useCallback(
-    async (draftId: string) => {
-      await removeDraft(draftId)
+    async (draftIds: string | string[]) => {
+      await removeDraft(draftIds)
       fetchDrafts(channelId)
     },
     [channelId, fetchDrafts]

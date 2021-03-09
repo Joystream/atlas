@@ -6,12 +6,13 @@ import ActionBarTransaction from '@/shared/components/ActionBar/ActionBarTransac
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
+import ActionBarMyVideos from './ActionBarMyVideos'
 import { StyledText, ViewContainer } from './MyVideos.styles'
 
 const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 
 const testChannelId = '100'
-const videosPerPage = 8
+const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
 /* TODO: adjust action bar to the real fee */
 // TODO: Unlisted videos
@@ -25,8 +26,10 @@ const videosPerPage = 8
 // TODO: OnCoverResize support
 // TODO: make all this logic into a hook possibly
 // TODO: add total video count to the useVideos hook
+// TODO: video title not clickable when selecting mode
 export const MyVideosView = () => {
-  const [selectedVideos, setselectedVideos] = useState<VideoPreviewProps['id'][]>([])
+  const [selectedVideosIds, setselectedVideosIds] = useState<string[]>([])
+  const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   // Drafts calls can run into race conditions
   const { drafts, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
@@ -36,6 +39,7 @@ export const MyVideosView = () => {
   const { videosConnection, loading: loadingVideosConnection, error: errorVideosConnection } = useVideosConnection({
     channelId: testChannelId,
   })
+  const videosPerPage = 2 * videosPerRow
   const { loading, videos, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
@@ -71,11 +75,11 @@ export const MyVideosView = () => {
   }, [])
 
   useEffect(() => {
-    setselectedVideos([])
+    handleDeselect()
   }, [currentTab])
   const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (videosConnection?.totalCount ?? 0) > 0)
-  const isActionBarActive = selectedVideos.length > 0
+  const isActionBarActive = selectedVideosIds.length > 0
   const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
     id: undefined,
     progress: undefined,
@@ -94,10 +98,18 @@ export const MyVideosView = () => {
   // })
 
   const handleVideoSelect = (id: string, isSelected: boolean) => {
-    if (selectedVideos.includes(id)) {
-      setselectedVideos(selectedVideos.filter((_id) => _id !== id))
+    if (selectedVideosIds.includes(id)) {
+      setselectedVideosIds(selectedVideosIds.filter((_id) => _id !== id))
     } else {
-      setselectedVideos([...selectedVideos, id])
+      setselectedVideosIds([...selectedVideosIds, id])
+    }
+  }
+  const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
+  const handleDeselect = () => setselectedVideosIds([])
+  const handleDelete = () => {
+    if (isDraftTab) {
+      removeDraft(selectedVideosIds)
+      handleDeselect()
     }
   }
   return (
@@ -117,7 +129,7 @@ export const MyVideosView = () => {
         />
       )}
       {currentTabName !== 'Drafts' && (
-        <Grid>
+        <Grid onResize={handleOnResizeGrid}>
           {videosWPlaceholders
             // this makes for a smoother transition between pages
             .slice(0, videosPerPage)
@@ -128,8 +140,8 @@ export const MyVideosView = () => {
                 showChannel={false}
                 isLoading={loading}
                 publisherMode
-                isSelected={selectedVideos.includes(video.id)}
-                isAnyVideoSelected={selectedVideos.length > 0}
+                isSelected={!!video.id && selectedVideosIds.includes(video.id)}
+                isAnyVideoSelected={selectedVideosIds.length > 0}
                 onSelectClick={(isSelected) => {
                   video.id && handleVideoSelect(video.id, isSelected)
                 }}
@@ -138,7 +150,7 @@ export const MyVideosView = () => {
         </Grid>
       )}
       {isDraftTab && (
-        <Grid>
+        <Grid onResize={handleOnResizeGrid}>
           {drafts
             .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
             .map((draft, idx) => (
@@ -149,8 +161,8 @@ export const MyVideosView = () => {
                 // isLoading={loading}
                 publisherMode
                 videoPublishState="draft"
-                isSelected={selectedVideos.includes(draft.id)}
-                isAnyVideoSelected={selectedVideos.length > 0}
+                isSelected={selectedVideosIds.includes(draft.id)}
+                isAnyVideoSelected={selectedVideosIds.length > 0}
                 onSelectClick={(isSelected) => {
                   draft.id && handleVideoSelect(draft.id, isSelected)
                 }}
@@ -182,7 +194,15 @@ export const MyVideosView = () => {
           totalCount={isDraftTab ? drafts.length : videosConnection?.totalCount}
         ></Pagination>
       </PaginationContainer>
-      {isActionBarActive && <ActionBarTransaction fee={isDraftTab ? 0 : 0.2} />}
+      {isActionBarActive && (
+        <ActionBarMyVideos
+          videosSelectedCount={selectedVideosIds.length}
+          fee={isDraftTab ? 0 : 0.2}
+          onDelete={handleDelete}
+          onCancel={handleDeselect}
+          onDeselect={handleDeselect}
+        />
+      )}
     </ViewContainer>
   )
 }
