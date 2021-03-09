@@ -87,9 +87,9 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
           >
             <ButtonLink
               variant="tertiary"
-              onLinkClick={closeSideNav}
+              onClick={closeSideNav}
               icon="external"
-              asLink
+              as={Link}
               to={isStudio ? routes.index() : routes.studio()}
             >
               Joystream {!isStudio && 'studio'}

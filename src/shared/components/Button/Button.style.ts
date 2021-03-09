@@ -1,17 +1,17 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import Icon from '../Icon'
 import { colors, typography } from '../../theme'
-import { LinkProps, Link } from 'react-router-dom'
-import React from 'react'
+import Icon from '../Icon'
+import isPropValid from '@emotion/is-prop-valid'
 
 export type ButtonStyleProps = {
   variant?: 'primary' | 'secondary' | 'tertiary'
-  full?: boolean
   size?: 'large' | 'medium' | 'small'
   disabled?: boolean
+  full?: boolean
   hasText?: boolean
   clickable?: boolean
+  to?: string
 }
 
 export type IconStyleProps = {
@@ -159,7 +159,7 @@ const disabled = ({ disabled, variant }: ButtonStyleProps) => {
     : null
 }
 
-export const StyledIcon = styled(Icon)<IconStyleProps>`
+export const StyledIcon = styled(Icon, { shouldForwardProp: isPropValid })<IconStyleProps>`
   display: block;
   flex-shrink: 0;
   width: ${typography.sizes.icon.small};
@@ -170,7 +170,8 @@ export const StyledIcon = styled(Icon)<IconStyleProps>`
   }
   filter: ${(props) => (props.disabled ? 'brightness(0.7)' : null)};
 `
-const sharedStyles = css`
+// shouldForwardProp fixes unknown prop warning https://reactjs.org/warnings/unknown-prop.html
+export const StyledButton = styled('button', { shouldForwardProp: isPropValid })<ButtonStyleProps>`
   --vertical-padding-small: 9px;
   --vertical-padding-medium: 12px;
   --vertical-padding-large: 15px;
@@ -180,6 +181,7 @@ const sharedStyles = css`
   --horizontal-padding-large: 20px;
 
   border-width: 1px;
+  text-decoration: none;
   border-style: solid;
   font-family: ${typography.fonts.headers};
   font-weight: ${typography.weights.medium};
@@ -187,32 +189,6 @@ const sharedStyles = css`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-`
-
-const LinkWithButtonProps = ({
-  variant,
-  full,
-  size,
-  disabled,
-  hasText,
-  clickable,
-  ...props
-}: ButtonStyleProps & LinkProps) => <Link {...props} />
-
-export const StyledButton = styled.button<ButtonStyleProps>`
-  ${sharedStyles}
-  &:hover {
-    cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
-  }
-
-  ${colorsFromProps};
-  ${sizeFromProps};
-  ${disabled};
-`
-
-export const StyledLink = styled(LinkWithButtonProps)`
-  ${sharedStyles}
-  text-decoration: none;
   &:hover {
     cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
   }

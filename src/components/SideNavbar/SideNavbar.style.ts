@@ -1,9 +1,9 @@
-import React from 'react'
-import { Link, LinkProps } from 'react-router-dom'
-import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Button } from '@/shared/components'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import isPropValid from '@emotion/is-prop-valid'
+import styled from '@emotion/styled'
+import { Link, LinkProps } from 'react-router-dom'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -79,9 +79,7 @@ export const SidebarNavItem = styled.li`
   flex-direction: column;
 `
 
-const LinkWithExpandedProps = ({ expanded, ...props }: SidebarNavLinkProps & LinkProps) => <Link {...props} />
-
-export const SidebarNavLink = styled(LinkWithExpandedProps)`
+export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;

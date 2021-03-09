@@ -1,6 +1,6 @@
 import React from 'react'
 import { SerializedStyles } from '@emotion/react'
-import { ButtonStyleProps, StyledButton, StyledIcon, StyledLink } from './Button.style'
+import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
 
 export type ButtonProps = {
@@ -10,9 +10,8 @@ export type ButtonProps = {
   containerCss?: SerializedStyles
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  asLink?: boolean
   to?: string
-  onLinkClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  as?: React.ElementType
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
 
 const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -26,8 +25,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     containerCss,
     className,
     onClick,
-    onLinkClick,
-    asLink,
+    as,
     to = '',
   },
   ref
@@ -35,24 +33,10 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
   const clickable = !!onClick
   const hasText = !!children
 
-  return asLink ? (
-    <StyledLink
-      to={to}
-      css={containerCss}
-      className={className}
-      onClick={onLinkClick}
-      disabled={disabled}
-      variant={variant}
-      clickable={clickable}
-      hasText={hasText}
-      full={full}
-      size={size}
-    >
-      {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
-      {children && <span>{children}</span>}
-    </StyledLink>
-  ) : (
+  return (
     <StyledButton
+      as={as}
+      to={to}
       css={containerCss}
       className={className}
       onClick={onClick}
