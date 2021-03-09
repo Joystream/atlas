@@ -210,6 +210,10 @@ export const ControlsContainer = styled.div`
   min-height: ${BUTTONS_HEIGHT_PX};
 `
 
+export const ButtonsContainer = styled.div`
+  display: flex;
+`
+
 export const PlayButton = styled(Button)<{ playing: boolean }>`
   width: 140px;
   height: ${BUTTONS_HEIGHT_PX};
@@ -229,7 +233,6 @@ export const SoundButton = styled(Button)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
   width: ${BUTTONS_HEIGHT_PX};
-  transform: translateY(4px);
   svg {
     width: auto;
     height: auto;

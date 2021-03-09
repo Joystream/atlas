@@ -15,6 +15,7 @@ import {
   TitlePlaceholder,
   PlayerPlaceholder,
   ControlsContainer,
+  ButtonsContainer,
 } from './CoverVideo.style'
 import { CSSTransition } from 'react-transition-group'
 import routes from '@/config/routes'
@@ -111,7 +112,7 @@ const CoverVideo: React.FC = () => {
             unmountOnExit
             appear
           >
-            <div>
+            <ButtonsContainer>
               <PlayButton
                 onClick={handlePlayPauseClick}
                 icon={videoPlaying ? 'pause' : 'play'}
@@ -125,7 +126,7 @@ const CoverVideo: React.FC = () => {
                 icon={!soundMuted ? 'sound-on' : 'sound-off'}
                 size="large"
               />
-            </div>
+            </ButtonsContainer>
           </CSSTransition>
         </ControlsContainer>
       </InfoContainer>
