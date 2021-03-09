@@ -20,7 +20,6 @@ const videosPerPage = 8
 // TODO: dynamic channels (not hardcoded)
 // TODO: No videos screen (this was deleted from figma??)
 // doable
-// TODO: put the logic together
 // TODO: action bar
 // TODO: video selection / deletion
 // TODO: OnCoverResize support
