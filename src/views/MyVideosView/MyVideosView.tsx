@@ -1,11 +1,10 @@
-import { useVideos, useVideosConnection } from '@/api/hooks'
-import { VideoPreview, VideoPreviewProps } from '@/components'
-import { useDrafts } from '@/hooks'
-import { Grid, Pagination, Tabs, DismissibleMessage, ActionBar } from '@/shared/components'
-import ActionBarTransaction from '@/shared/components/ActionBar/ActionBarTransaction'
-import { colors, sizes } from '@/shared/theme'
-import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
+import styled from '@emotion/styled'
+import { useVideos, useVideosConnection } from '@/api/hooks'
+import { VideoPreview } from '@/components'
+import { useDrafts } from '@/hooks'
+import { Grid, Pagination, Tabs, DismissibleMessage } from '@/shared/components'
+import { colors, sizes } from '@/shared/theme'
 import ActionBarMyVideos from './ActionBarMyVideos'
 import { StyledText, ViewContainer } from './MyVideos.styles'
 
@@ -14,27 +13,24 @@ const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 const testChannelId = '100'
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
-/* TODO: adjust action bar to the real fee */
+// TODO: adjust action bar to the real fee
 // TODO: Unlisted videos
 // TODO: on edit video callbacks
 // TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
 // TODO: No videos screen (this was deleted from figma??)
 // doable
-// TODO: action bar
-// TODO: video selection / deletion
-// TODO: OnCoverResize support
 // TODO: make all this logic into a hook possibly
 // TODO: add total video count to the useVideos hook
 // TODO: video title not clickable when selecting mode
 export const MyVideosView = () => {
-  const [selectedVideosIds, setselectedVideosIds] = useState<string[]>([])
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   // Drafts calls can run into race conditions
-  const { drafts, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video', testChannelId)
+  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
-  const currentTabName = tabs[currentTab]
-  const { currentPage, setCurrentPage } = usePagination([currentTab])
+  const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { selectedVideosIds, setselectedVideosIds, deselectVideos } = useVideoSelection(currentTab)
+
   // we need the total video count from somewhere
   const { videosConnection, loading: loadingVideosConnection, error: errorVideosConnection } = useVideosConnection({
     channelId: testChannelId,
@@ -74,9 +70,7 @@ export const MyVideosView = () => {
     }
   }, [])
 
-  useEffect(() => {
-    handleDeselect()
-  }, [currentTab])
+  const currentTabName = tabs[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (videosConnection?.totalCount ?? 0) > 0)
   const isActionBarActive = selectedVideosIds.length > 0
@@ -105,7 +99,7 @@ export const MyVideosView = () => {
     }
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const handleDeselect = () => setselectedVideosIds([])
+  const handleDeselect = () => deselectVideos()
   const handleDelete = () => {
     if (isDraftTab) {
       removeDraft(selectedVideosIds)
@@ -152,13 +146,13 @@ export const MyVideosView = () => {
       {isDraftTab && (
         <Grid onResize={handleOnResizeGrid}>
           {drafts
+            // pagination slice
             .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
             .map((draft, idx) => (
               <VideoPreview
                 key={idx + '-' + currentTabName + '-' + currentPage}
                 id={draft.id}
                 showChannel={false}
-                // isLoading={loading}
                 publisherMode
                 videoPublishState="draft"
                 isSelected={selectedVideosIds.includes(draft.id)}
@@ -197,7 +191,7 @@ export const MyVideosView = () => {
       {isActionBarActive && (
         <ActionBarMyVideos
           videosSelectedCount={selectedVideosIds.length}
-          fee={isDraftTab ? 0 : 0.2}
+          fee={isDraftTab ? 0 : 0.2} // fake fee for now
           onDelete={handleDelete}
           onCancel={handleDeselect}
           onDeselect={handleDeselect}
@@ -209,16 +203,23 @@ export const MyVideosView = () => {
 
 export default MyVideosView
 
-const usePagination = (deps?: React.DependencyList) => {
+const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(1)
-
   // reset the pagination when changing tabs
   useEffect(() => {
     setCurrentPage(1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
-
+  }, [currentTab])
   return { currentPage, setCurrentPage }
+}
+
+const useVideoSelection = (currentTab: number) => {
+  const [selectedVideosIds, setselectedVideosIds] = useState<string[]>([])
+  const deselectVideos = () => setselectedVideosIds([])
+  // reset the video selection when changing tabs
+  useEffect(() => {
+    setselectedVideosIds([])
+  }, [currentTab])
+  return { selectedVideosIds, setselectedVideosIds, deselectVideos }
 }
 
 const TabsContainer = styled.div`
