@@ -18,9 +18,8 @@ const INITIAL_VIDEOS_PER_ROW = 4
 // TODO: on edit video callbacks
 // TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
-// TODO: No videos screen (this was deleted from figma??)
+// TODO: No videos screen (this was deleted from figma?)
 // doable
-// TODO: add total video count to the useVideos hook
 // TODO: how is the action bar supossed to work?
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
@@ -29,13 +28,8 @@ export const MyVideosView = () => {
   const [currentTab, setCurrentTab] = useState(0)
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { selectedVideosIds, setselectedVideosIds, deselectVideos } = useVideoSelection(currentTab)
-
-  // we need the total video count from somewhere
-  const { videosConnection, loading: loadingVideosConnection, error: errorVideosConnection } = useVideosConnection({
-    channelId: testChannelId,
-  })
   const videosPerPage = 2 * videosPerRow
-  const { loading, videos, error, fetchMore } = useVideos(
+  const { loading, videos, error, totalCount, fetchMore } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * (currentPage - 1),
@@ -71,7 +65,7 @@ export const MyVideosView = () => {
 
   const currentTabName = tabs[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
-  const isLoading = loading || (videos?.length === 0 && (videosConnection?.totalCount ?? 0) > 0)
+  const isLoading = loading || (videos?.length === 0 && (totalCount ?? 0) > 0)
   const isActionBarActive = selectedVideosIds.length > 0
   const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
     id: undefined,
@@ -83,6 +77,7 @@ export const MyVideosView = () => {
   //   drafts,
   //   placeholderItems,
   //   videos,
+  //   totalCount,
   //   loading,
   //   isLoading,
   //   error,
@@ -184,7 +179,7 @@ export const MyVideosView = () => {
           }}
           page={currentPage}
           itemsPerPage={videosPerPage}
-          totalCount={isDraftTab ? drafts.length : videosConnection?.totalCount}
+          totalCount={isDraftTab ? drafts.length : totalCount}
         ></Pagination>
       </PaginationContainer>
       {isActionBarActive && (
