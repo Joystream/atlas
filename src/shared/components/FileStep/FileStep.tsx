@@ -62,9 +62,12 @@ const FileStep: React.FC<FileStepProps> = ({
         </StepDetails>
       </StepStatus>
       {fileName && (
-        <DeleteButton aria-disabled={disabled} onClick={onDelete}>
-          {disabled ? <Icon name="padlock" /> : <Icon name="trash-fill" />}
-        </DeleteButton>
+        <DeleteButton
+          variant="tertiary"
+          disabled={disabled}
+          onClick={onDelete}
+          icon={disabled ? 'padlock' : 'trash-fill'}
+        />
       )}
     </StepWrapper>
   )

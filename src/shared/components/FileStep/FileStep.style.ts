@@ -1,5 +1,6 @@
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
+import Button from '../Button'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
 
@@ -71,19 +72,14 @@ export const FileName = styled(Text)`
   text-overflow: ellipsis;
 `
 
-export const DeleteButton = styled.button`
-  padding: ${sizes(2)};
-  border: none;
-  background: none;
-  cursor: pointer;
+type DeleteButtonProps = {
+  disabled?: boolean
+}
+
+export const DeleteButton = styled(Button)<DeleteButtonProps>`
   flex-shrink: 0;
-  svg {
-    color: ${colors.white};
-    height: ${sizes(4)};
-  }
-  &[aria-disabled='true'] {
-    cursor: not-allowed;
-    background: none;
+  :hover {
+    ${({ disabled }) => disabled && 'cursor: not-allowed'};
   }
 `
 
