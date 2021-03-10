@@ -25,7 +25,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   background-color: ${darken(0.16, colors.gray[600])};
   width: 100%;
   height: 0;
-  padding-top: 56.25%;
+  padding-top: 90%;
   display: flex;
   justify-content: center;
 
@@ -40,6 +40,10 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   :focus {
     border: 1px dashed ${colors.blue[500]};
   }
+
+  @media screen and (min-width: 450px) {
+    padding-top: 56.25%;
+  }
 `
 
 export const InnerContainer = styled.div`
@@ -50,7 +54,7 @@ export const InnerContainer = styled.div`
   flex-direction: column;
   display: flex;
   text-align: center;
-  max-width: 300px;
+  max-width: 280px;
   height: 100%;
 
   @media screen and (min-width: ${breakpoints.small}) {
@@ -91,9 +95,10 @@ export const ErrorContainer = styled.div`
 export const Thumbnail = styled.img`
   position: absolute;
   top: 0;
-  object-fit: cover;
+  object-fit: contain;
   max-width: 100%;
   height: 100%;
+  cursor: pointer;
   display: block;
 `
 
@@ -110,7 +115,7 @@ export const DismissButton = styled(Button)`
 
 export const StyledIcon = styled(Icon)`
   color: ${colors.gray[300]};
-  width: ${sizes(10)};
+  width: ${sizes(12)};
   @media screen and (min-width: ${breakpoints.small}) {
     width: ${sizes(18)};
   }
@@ -119,38 +124,31 @@ export const StyledIcon = styled(Icon)`
 export const Title = styled(Text)`
   line-height: 1.2;
   margin-top: ${sizes(2)};
-  font-size: ${typography.sizes.h6};
+  font-size: ${typography.sizes.h5};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(4)};
-    font-size: ${typography.sizes.h5};
   }
 `
 
 export const Paragraph = styled(Text)`
-  margin-top: ${sizes(3)};
   line-height: ${sizes(5)};
-  font-size: ${typography.sizes.caption};
+  font-size: ${typography.sizes.subtitle2};
+  margin-top: ${sizes(4)};
   @media screen and (min-width: ${breakpoints.small}) {
-    font-size: ${typography.sizes.subtitle2};
     margin-top: ${sizes(8)};
   }
 `
 
 export const ButtonsGroup = styled.div`
-  margin-top: ${sizes(3)};
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: ${sizes(4)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(8)};
   }
 `
-export const UploadButton = styled(Button)`
-  padding: var(--vertical-padding-small) var(--horizontal-padding-small);
-  @media screen and (min-width: ${breakpoints.small}) {
-    padding: var(--vertical-padding-large) var(--horizontal-padding-large);
-  }
-`
+export const UploadButton = styled(Button)``
 
 export const DragDropText = styled(Text)`
   display: none;
