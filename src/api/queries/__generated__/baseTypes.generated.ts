@@ -21,13 +21,13 @@ export enum Language {
 }
 
 export type Member = {
-  __typename: 'Member'
+  __typename?: 'Member'
   id: Scalars['ID']
   handle: Scalars['String']
 }
 
 export type Channel = {
-  __typename: 'Channel'
+  __typename?: 'Channel'
   id: Scalars['ID']
   createdAt: Scalars['Date']
   handle: Scalars['String']
@@ -43,26 +43,26 @@ export type Channel = {
 }
 
 export type Category = {
-  __typename: 'Category'
+  __typename?: 'Category'
   id: Scalars['ID']
   name: Scalars['String']
   videos?: Maybe<Array<Video>>
 }
 
 export type JoystreamMediaLocation = {
-  __typename: 'JoystreamMediaLocation'
+  __typename?: 'JoystreamMediaLocation'
   dataObjectId: Scalars['String']
 }
 
 export type HttpMediaLocation = {
-  __typename: 'HttpMediaLocation'
+  __typename?: 'HttpMediaLocation'
   url: Scalars['String']
 }
 
 export type MediaLocation = JoystreamMediaLocation | HttpMediaLocation
 
 export type KnownLicense = {
-  __typename: 'KnownLicense'
+  __typename?: 'KnownLicense'
   code: Scalars['String']
   name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
@@ -70,14 +70,14 @@ export type KnownLicense = {
 }
 
 export type UserDefinedLicense = {
-  __typename: 'UserDefinedLicense'
+  __typename?: 'UserDefinedLicense'
   content: Scalars['String']
 }
 
 export type License = UserDefinedLicense | KnownLicense
 
 export type LicenseEntity = {
-  __typename: 'LicenseEntity'
+  __typename?: 'LicenseEntity'
   id: Scalars['ID']
   type: License
   attribution?: Maybe<Scalars['String']>
@@ -85,7 +85,7 @@ export type LicenseEntity = {
 }
 
 export type VideoMedia = {
-  __typename: 'VideoMedia'
+  __typename?: 'VideoMedia'
   id: Scalars['ID']
   pixelWidth: Scalars['Int']
   pixelHeight: Scalars['Int']
@@ -94,7 +94,7 @@ export type VideoMedia = {
 }
 
 export type Video = {
-  __typename: 'Video'
+  __typename?: 'Video'
   id: Scalars['ID']
   channel: Channel
   category: Category
@@ -117,7 +117,7 @@ export type Video = {
 }
 
 export type CoverVideo = {
-  __typename: 'CoverVideo'
+  __typename?: 'CoverVideo'
   id: Scalars['ID']
   video: Video
   coverDescription: Scalars['String']
@@ -125,7 +125,7 @@ export type CoverVideo = {
 }
 
 export type FeaturedVideo = {
-  __typename: 'FeaturedVideo'
+  __typename?: 'FeaturedVideo'
   id: Scalars['ID']
   video: Video
 }
@@ -133,7 +133,7 @@ export type FeaturedVideo = {
 export type SearchResult = Video | Channel
 
 export type SearchFtsOutput = {
-  __typename: 'SearchFTSOutput'
+  __typename?: 'SearchFTSOutput'
   item: SearchResult
   rank: Scalars['Float']
   isTypeOf: Scalars['String']
@@ -141,7 +141,7 @@ export type SearchFtsOutput = {
 }
 
 export type PageInfo = {
-  __typename: 'PageInfo'
+  __typename?: 'PageInfo'
   hasNextPage: Scalars['Boolean']
   hasPreviousPage: Scalars['Boolean']
   startCursor?: Maybe<Scalars['String']>
@@ -164,13 +164,13 @@ export enum ChannelOrderByInput {
 }
 
 export type ChannelEdge = {
-  __typename: 'ChannelEdge'
+  __typename?: 'ChannelEdge'
   node: Channel
   cursor: Scalars['String']
 }
 
 export type ChannelConnection = {
-  __typename: 'ChannelConnection'
+  __typename?: 'ChannelConnection'
   edges: Array<ChannelEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
@@ -200,13 +200,13 @@ export enum VideoOrderByInput {
 }
 
 export type VideoEdge = {
-  __typename: 'VideoEdge'
+  __typename?: 'VideoEdge'
   node: Video
   cursor: Scalars['String']
 }
 
 export type VideoConnection = {
-  __typename: 'VideoConnection'
+  __typename?: 'VideoConnection'
   edges: Array<VideoEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
@@ -218,7 +218,7 @@ export enum FeaturedVideoOrderByInput {
 }
 
 export type Query = {
-  __typename: 'Query'
+  __typename?: 'Query'
   /** Get follows counts for a list of channels */
   batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
   /** Get views counts for a list of channels */
@@ -314,19 +314,19 @@ export type QueryVideosConnectionArgs = {
 }
 
 export type ChannelFollowsInfo = {
-  __typename: 'ChannelFollowsInfo'
+  __typename?: 'ChannelFollowsInfo'
   follows: Scalars['Int']
   id: Scalars['ID']
 }
 
 export type EntityViewsInfo = {
-  __typename: 'EntityViewsInfo'
+  __typename?: 'EntityViewsInfo'
   id: Scalars['ID']
   views: Scalars['Int']
 }
 
 export type Mutation = {
-  __typename: 'Mutation'
+  __typename?: 'Mutation'
   /** Add a single view to the target video's count */
   addVideoView: EntityViewsInfo
   /** Add a single follow to the target channel */

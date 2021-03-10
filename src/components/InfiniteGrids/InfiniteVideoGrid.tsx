@@ -4,7 +4,12 @@ import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 import { Grid, Text, Placeholder } from '@/shared/components'
 import VideoPreview from '@/components/VideoPreview'
-import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoWhereInput,
+} from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
@@ -34,11 +39,13 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   className,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const queryVariables = {
-    ...(channelId ? { channelId } : {}),
-    ...(channelIdIn ? { channelIdIn } : {}),
-    ...(createdAtGte ? { createdAtGte } : {}),
-    ...(categoryId ? { categoryId } : {}),
+  const queryVariables: { where: VideoWhereInput } = {
+    where: {
+      ...(channelId ? { channelId_eq: channelId } : {}),
+      ...(channelIdIn ? { channelId_in: channelIdIn } : {}),
+      ...(createdAtGte ? { createdAt_gte: createdAtGte } : {}),
+      ...(categoryId ? { categoryId_eq: categoryId } : {}),
+    },
   }
 
   const [targetRowsCountByCategory, setTargetRowsCountByCategory] = useState<Record<string, number>>({
@@ -115,6 +122,8 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     return null
   }
 
+  // TODO: We should probably postpone doing first fetch until `onResize` gets called.
+  // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
       {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}

@@ -14,7 +14,7 @@ type VideoOpts = QueryHookOptions<GetVideoQuery>
 export const useVideo = (id: string, opts?: VideoOpts) => {
   const { data, ...queryRest } = useGetVideoQuery({
     ...opts,
-    variables: { id },
+    variables: { where: { id } },
   })
 
   return {

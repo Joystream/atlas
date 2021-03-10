@@ -5,26 +5,26 @@ import { gql } from '@apollo/client'
 
 import * as Apollo from '@apollo/client'
 export type VideoMediaFieldsFragment = {
-  __typename: 'VideoMedia'
+  __typename?: 'VideoMedia'
   id: string
   pixelHeight: number
   pixelWidth: number
   location:
-    | { __typename: 'JoystreamMediaLocation'; dataObjectId: string }
-    | { __typename: 'HttpMediaLocation'; url: string }
+    | { __typename?: 'JoystreamMediaLocation'; dataObjectId: string }
+    | { __typename?: 'HttpMediaLocation'; url: string }
 }
 
 export type LicenseFieldsFragment = {
-  __typename: 'LicenseEntity'
+  __typename?: 'LicenseEntity'
   id: string
   attribution?: Types.Maybe<string>
   type:
-    | { __typename: 'UserDefinedLicense'; content: string }
-    | { __typename: 'KnownLicense'; code: string; url?: Types.Maybe<string> }
+    | { __typename?: 'UserDefinedLicense'; content: string }
+    | { __typename?: 'KnownLicense'; code: string; url?: Types.Maybe<string> }
 }
 
 export type VideoFieldsFragment = {
-  __typename: 'Video'
+  __typename?: 'Video'
   id: string
   title: string
   description: string
@@ -32,72 +32,75 @@ export type VideoFieldsFragment = {
   duration: number
   thumbnailUrl: string
   createdAt: Date
-  category: { __typename: 'Category'; id: string }
-  media: { __typename: 'VideoMedia' } & VideoMediaFieldsFragment
-  channel: { __typename: 'Channel'; id: string; avatarPhotoUrl?: Types.Maybe<string>; handle: string }
-  license: { __typename: 'LicenseEntity' } & LicenseFieldsFragment
+  category: { __typename?: 'Category'; id: string }
+  media: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
+  channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
+  license: { __typename?: 'LicenseEntity' } & LicenseFieldsFragment
 }
 
 export type GetVideoQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']
+  where: Types.VideoWhereUniqueInput
 }>
 
 export type GetVideoQuery = {
-  __typename: 'Query'
-  video?: Types.Maybe<
-    { __typename: 'Video'; channel: { __typename: 'Channel' } & BasicChannelFieldsFragment } & VideoFieldsFragment
-  >
+  __typename?: 'Query'
+  video?: Types.Maybe<{ __typename?: 'Video' } & VideoFieldsFragment>
 }
 
 export type GetVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  categoryId?: Types.Maybe<Types.Scalars['ID']>
-  channelId?: Types.Maybe<Types.Scalars['ID']>
-  channelIdIn?: Types.Maybe<Array<Types.Maybe<Types.Scalars['ID']>> | Types.Maybe<Types.Scalars['ID']>>
-  createdAtGte?: Types.Maybe<Types.Scalars['Date']>
   orderBy?: Types.Maybe<Types.VideoOrderByInput>
+  where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
 export type GetVideosConnectionQuery = {
-  __typename: 'Query'
+  __typename?: 'Query'
   videosConnection: {
-    __typename: 'VideoConnection'
+    __typename?: 'VideoConnection'
     totalCount: number
-    edges: Array<{ __typename: 'VideoEdge'; cursor: string; node: { __typename: 'Video' } & VideoFieldsFragment }>
-    pageInfo: { __typename: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    edges: Array<{ __typename?: 'VideoEdge'; cursor: string; node: { __typename?: 'Video' } & VideoFieldsFragment }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
 }
 
 export type GetVideosQueryVariables = Types.Exact<{
   offset?: Types.Maybe<Types.Scalars['Int']>
   limit?: Types.Maybe<Types.Scalars['Int']>
-  id_in?: Types.Maybe<Array<Types.Maybe<Types.Scalars['ID']>> | Types.Maybe<Types.Scalars['ID']>>
-  channelId?: Types.Maybe<Types.Scalars['ID']>
+  where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
 export type GetVideosQuery = {
-  __typename: 'Query'
-  videos?: Types.Maybe<Array<{ __typename: 'Video' } & VideoFieldsFragment>>
+  __typename?: 'Query'
+  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetFeaturedVideosQuery = {
-  __typename: 'Query'
-  featuredVideos: Array<{ __typename: 'FeaturedVideo'; video: { __typename: 'Video' } & VideoFieldsFragment }>
+  __typename?: 'Query'
+  featuredVideos: Array<{ __typename?: 'FeaturedVideo'; video: { __typename?: 'Video' } & VideoFieldsFragment }>
 }
 
 export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetCoverVideoQuery = {
-  __typename: 'Query'
+  __typename?: 'Query'
   coverVideo: {
-    __typename: 'CoverVideo'
+    __typename?: 'CoverVideo'
     coverDescription: string
-    video: { __typename: 'Video' } & VideoFieldsFragment
-    coverCutMedia: { __typename: 'VideoMedia' } & VideoMediaFieldsFragment
+    video: { __typename?: 'Video' } & VideoFieldsFragment
+    coverCutMedia: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
   }
+}
+
+export type GetVideoViewsQueryVariables = Types.Exact<{
+  videoId: Types.Scalars['ID']
+}>
+
+export type GetVideoViewsQuery = {
+  __typename?: 'Query'
+  videoViews?: Types.Maybe<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -106,8 +109,8 @@ export type AddVideoViewMutationVariables = Types.Exact<{
 }>
 
 export type AddVideoViewMutation = {
-  __typename: 'Mutation'
-  addVideoView: { __typename: 'EntityViewsInfo'; id: string; views: number }
+  __typename?: 'Mutation'
+  addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
 }
 
 export const VideoMediaFieldsFragmentDoc = gql`
@@ -156,28 +159,23 @@ export const VideoFieldsFragmentDoc = gql`
       ...VideoMediaFields
     }
     channel {
-      id
-      avatarPhotoUrl
-      handle
+      ...BasicChannelFields
     }
     license {
       ...LicenseFields
     }
   }
   ${VideoMediaFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `
 export const GetVideoDocument = gql`
-  query GetVideo($id: ID!) {
-    video(where: { id: $id }) {
+  query GetVideo($where: VideoWhereUniqueInput!) {
+    video(where: $where) {
       ...VideoFields
-      channel {
-        ...BasicChannelFields
-      }
     }
   }
   ${VideoFieldsFragmentDoc}
-  ${BasicChannelFieldsFragmentDoc}
 `
 
 /**
@@ -192,7 +190,7 @@ export const GetVideoDocument = gql`
  * @example
  * const { data, loading, error } = useGetVideoQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -209,24 +207,10 @@ export const GetVideosConnectionDocument = gql`
   query GetVideosConnection(
     $first: Int
     $after: String
-    $categoryId: ID
-    $channelId: ID
-    $channelIdIn: [ID]
-    $createdAtGte: Date
     $orderBy: VideoOrderByInput = createdAt_DESC
+    $where: VideoWhereInput
   ) {
-    videosConnection(
-      first: $first
-      after: $after
-      where: {
-        categoryId_eq: $categoryId
-        channelId_eq: $channelId
-        isCurated_eq: false
-        channelId_in: $channelIdIn
-        createdAt_gte: $createdAtGte
-      }
-      orderBy: $orderBy
-    ) {
+    videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {
         cursor
         node {
@@ -257,11 +241,8 @@ export const GetVideosConnectionDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
- *      categoryId: // value for 'categoryId'
- *      channelId: // value for 'channelId'
- *      channelIdIn: // value for 'channelIdIn'
- *      createdAtGte: // value for 'createdAtGte'
  *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -288,8 +269,8 @@ export type GetVideosConnectionQueryResult = Apollo.QueryResult<
   GetVideosConnectionQueryVariables
 >
 export const GetVideosDocument = gql`
-  query GetVideos($offset: Int, $limit: Int, $id_in: [ID], $channelId: ID) {
-    videos(offset: $offset, limit: $limit, where: { id_in: $id_in, channelId_eq: $channelId }) {
+  query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput) {
+    videos(offset: $offset, limit: $limit, where: $where) {
       ...VideoFields
     }
   }
@@ -310,8 +291,7 @@ export const GetVideosDocument = gql`
  *   variables: {
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
- *      id_in: // value for 'id_in'
- *      channelId: // value for 'channelId'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -415,6 +395,44 @@ export function useGetCoverVideoLazyQuery(
 export type GetCoverVideoQueryHookResult = ReturnType<typeof useGetCoverVideoQuery>
 export type GetCoverVideoLazyQueryHookResult = ReturnType<typeof useGetCoverVideoLazyQuery>
 export type GetCoverVideoQueryResult = Apollo.QueryResult<GetCoverVideoQuery, GetCoverVideoQueryVariables>
+export const GetVideoViewsDocument = gql`
+  query GetVideoViews($videoId: ID!) {
+    videoViews(videoId: $videoId) {
+      id
+      views
+    }
+  }
+`
+
+/**
+ * __useGetVideoViewsQuery__
+ *
+ * To run a query within a React component, call `useGetVideoViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideoViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVideoViewsQuery({
+ *   variables: {
+ *      videoId: // value for 'videoId'
+ *   },
+ * });
+ */
+export function useGetVideoViewsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
+) {
+  return Apollo.useQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, baseOptions)
+}
+export function useGetVideoViewsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, baseOptions)
+}
+export type GetVideoViewsQueryHookResult = ReturnType<typeof useGetVideoViewsQuery>
+export type GetVideoViewsLazyQueryHookResult = ReturnType<typeof useGetVideoViewsLazyQuery>
+export type GetVideoViewsQueryResult = Apollo.QueryResult<GetVideoViewsQuery, GetVideoViewsQueryVariables>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: ID!, $channelId: ID!) {
     addVideoView(videoId: $videoId, channelId: $channelId) {

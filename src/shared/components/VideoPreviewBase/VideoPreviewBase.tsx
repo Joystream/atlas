@@ -212,21 +212,21 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     ) : (
                       <CoverNoImage />
                     )}
+                    {publisherMode && isAnyVideoSelected && checkboxNode}
+                    {videoPublishState !== 'default' && (
+                      <CoverVideoPublishingStateOverlay>
+                        {videoPublishState === 'draft' && <DraftIcon />}
+                        {videoPublishState === 'unlisted' && <UnlistedIcon />}
+                        {videoPublishState}
+                      </CoverVideoPublishingStateOverlay>
+                    )}
+                    {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                    <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                      {publisherMode && checkboxNode}
+                      {!isAnyVideoSelected && hoverIconNode}
+                      {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
+                    </CoverHoverOverlay>
                   </Anchor>
-                  {publisherMode && isAnyVideoSelected && checkboxNode}
-                  {videoPublishState !== 'default' && (
-                    <CoverVideoPublishingStateOverlay>
-                      {videoPublishState === 'draft' && <DraftIcon />}
-                      {videoPublishState === 'unlisted' && <UnlistedIcon />}
-                      {videoPublishState}
-                    </CoverVideoPublishingStateOverlay>
-                  )}
-                  {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                  <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                    {publisherMode && checkboxNode}
-                    {!isAnyVideoSelected && hoverIconNode}
-                    {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
-                  </CoverHoverOverlay>
                   {!!progress && (
                     <ProgressOverlay>
                       <ProgressBar style={{ width: `${progress}%` }} />
