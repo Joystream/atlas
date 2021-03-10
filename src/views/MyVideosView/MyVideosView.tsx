@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import styled from '@emotion/styled'
-import { useVideos, useVideosConnection } from '@/api/hooks'
+import { useVideos } from '@/api/hooks'
 import { VideoPreview } from '@/components'
 import { useDrafts } from '@/hooks'
-import { Grid, Pagination, Tabs, DismissibleMessage } from '@/shared/components'
-import { colors, sizes } from '@/shared/theme'
+import { Grid, Pagination, Tabs } from '@/shared/components'
 import ActionBarMyVideos from './ActionBarMyVideos'
-import { StyledText, ViewContainer } from './MyVideos.styles'
+import {
+  PaginationContainer,
+  StyledDismissibleMessage,
+  StyledText,
+  TabsContainer,
+  ViewContainer,
+} from './MyVideos.styles'
 
-const tabs = ['All Videos', 'Published', 'Drafts', 'Unlisted']
-
-const testChannelId = '100'
+const testChannelId = '100' // staging test channel id
+const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted']
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
 // TODO: adjust action bar to the real fee
@@ -63,7 +66,7 @@ export const MyVideosView = () => {
     }
   }, [])
 
-  const currentTabName = tabs[currentTab]
+  const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (totalCount ?? 0) > 0)
   const isActionBarActive = selectedVideosIds.length > 0
@@ -104,7 +107,7 @@ export const MyVideosView = () => {
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
       <TabsContainer>
-        <Tabs initialIndex={0} tabs={tabs} onSelectTab={setCurrentTab} />
+        <Tabs initialIndex={0} tabs={TABS} onSelectTab={setCurrentTab} />
       </TabsContainer>
       {isDraftTab && (
         // Should this really be dismissable?
@@ -215,22 +218,3 @@ const useVideoSelection = (currentTab: number) => {
   }, [currentTab])
   return { selectedVideosIds, setselectedVideosIds, deselectVideos }
 }
-
-const TabsContainer = styled.div`
-  padding-top: ${sizes(8)};
-  margin-bottom: ${sizes(8)};
-  border-bottom: solid 1px ${colors.gray[800]};
-`
-
-type PaginationContainerProps = { extraPaddingBottom?: boolean }
-const PaginationContainer = styled.div<PaginationContainerProps>`
-  padding-top: ${sizes(6)};
-  padding-bottom: ${({ extraPaddingBottom }) => (extraPaddingBottom ? sizes(24) : sizes(16))};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const StyledDismissibleMessage = styled(DismissibleMessage)`
-  margin-bottom: ${sizes(8)};
-`
