@@ -45,8 +45,8 @@ const routesMap = [
   { path: routes.videos(), Component: VideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
-  { path: routes.playground(), Component: PlaygroundView },
-  { path: routes.studio(), Component: StudioView },
+  { path: routes.playground() + '/*', Component: PlaygroundView },
+  { path: routes.studio() + '/*', Component: StudioView },
 ]
 
 const LayoutWithRouting: React.FC = () => {

@@ -2,6 +2,7 @@ import React from 'react'
 import { SerializedStyles } from '@emotion/react'
 import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
+import { To } from 'history'
 
 export type ButtonProps = {
   children?: React.ReactNode
@@ -10,7 +11,7 @@ export type ButtonProps = {
   containerCss?: SerializedStyles
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  to?: string
+  to?: To
   as?: React.ElementType
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
 

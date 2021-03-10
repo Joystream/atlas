@@ -16,7 +16,7 @@ export default {
   channel: (id = ':id') => `/channel/${id}`,
   videos: () => '/videos',
   channels: () => '/channels',
-  playground: () => '/playground/*',
+  playground: () => '/playground',
   studio: () => `/studio`,
 }
 
