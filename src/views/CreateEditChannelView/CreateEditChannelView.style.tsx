@@ -1,7 +1,11 @@
 import styled from '@emotion/styled'
-import { sizes, breakpoints } from '@/shared/theme'
+import { sizes, breakpoints, transitions } from '@/shared/theme'
 import { Textarea, ActionBarTransaction, Avatar, FormField } from '@/shared/components'
 import { TitleSection } from '../ChannelView/ChannelView.style'
+
+type AtionBarProps = {
+  isActive?: boolean
+}
 
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
@@ -41,7 +45,9 @@ export const StyledTextarea = styled(Textarea)`
   }
 `
 
-export const StyledActionBarTransaction = styled(ActionBarTransaction)`
+export const StyledActionBarTransaction = styled(ActionBarTransaction)<AtionBarProps>`
+  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
   @media screen and (min-width: ${breakpoints.large}) {
     padding: ${sizes(3)} 144px;
   }

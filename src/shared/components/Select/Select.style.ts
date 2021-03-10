@@ -53,7 +53,9 @@ type SelectMenuProps = {
 
 export const SelectMenu = styled.ul<SelectMenuProps>`
   width: 100%;
+  max-height: 300px;
   position: absolute;
+  overflow-y: scroll;
   z-index: 1;
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};

@@ -63,6 +63,12 @@ export const StyledButtonsContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  button:hover {
+    cursor: pointer;
+  }
+  button:nth-of-type(1) {
+    margin-right: ${sizes(2)};
+  }
 `
 
 export const StyledTooltip = styled(Tooltip)`
@@ -85,17 +91,5 @@ export const StyledDetailsTextContainer = styled.div`
     margin-left: ${sizes(2)};
     width: 16px;
     height: 16px;
-  }
-`
-
-export const StyledSecondaryButton = styled(Button)`
-  border: none;
-  background-color: ${colors.transparent};
-  margin-right: ${sizes(2)};
-  &:hover {
-    background-color: ${colors.gray[700]};
-  }
-  &:active {
-    background-color: ${colors.gray[800]};
   }
 `

@@ -14,6 +14,8 @@ export default {
     return basePath
   },
   channel: (id = ':id') => `/channel/${id}`,
+  newChannel: () => '/studio/channel/new',
+  editChannel: (id = ':id') => `/studio/channel/${id}`,
   videos: () => '/videos',
   channels: () => '/channels',
   playground: () => '/playground',

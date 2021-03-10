@@ -7,7 +7,6 @@ import {
   StyledTooltip,
   StyledDetailsTextContainer,
   StyledButtonsContainer,
-  StyledSecondaryButton,
 } from './ActionBar.style'
 import { Button, Icon } from '@/shared/components'
 import type { IconType } from '../Icon'
@@ -54,9 +53,9 @@ const ActionBar: React.FC<ActionBarProps> = ({
           </StyledTooltip>
         )}
         {secondaryButtonText && !detailsText && (
-          <StyledSecondaryButton icon={secondaryButtonIcon} onClick={onCancelClick}>
+          <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="tertiary">
             {secondaryButtonText}
-          </StyledSecondaryButton>
+          </Button>
         )}
         {primaryButtonText && <Button onClick={onConfirmClick}>{primaryButtonText}</Button>}
       </StyledButtonsContainer>

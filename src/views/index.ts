@@ -6,4 +6,13 @@ import ChannelsView from './consumer/ChannelsView'
 import SearchOverlayView from './consumer/SearchOverlayView'
 import PlaygroundView from './playground/PlaygroundView'
 
-export { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView }
+export {
+  HomeView,
+  VideoView,
+  SearchOverlayView,
+  ChannelView,
+  VideosView,
+  ChannelsView,
+  CreateEditChannelView,
+  PlaygroundView,
+}

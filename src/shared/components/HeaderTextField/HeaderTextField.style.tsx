@@ -32,7 +32,7 @@ export const StyledInput = styled.input<StyledInputProps>`
   border: none;
   min-width: 100px;
   max-width: calc(100vw - 150px);
-  width: ${({ widthSize }) => (widthSize ? widthSize + 'ch' : '100%')};
+  width: ${({ widthSize }) => (widthSize ? `calc(${widthSize}ch + ${sizes(2.5)})` : '100%')};
   height: ${sizes(13)};
   &:hover {
     filter: brightness(80%);
