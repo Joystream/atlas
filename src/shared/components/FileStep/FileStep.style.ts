@@ -10,6 +10,7 @@ type StepProps = {
 }
 
 export const StepWrapper = styled.div<StepProps>`
+  height: ${sizes(14)};
   padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
   display: flex;
@@ -68,6 +69,8 @@ export const FileName = styled(Text)`
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.caption};
   width: 180px;
+  height: 100%;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `

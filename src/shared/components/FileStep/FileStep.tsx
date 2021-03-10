@@ -19,8 +19,8 @@ export type FileStepProps = {
   onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   step: Step
   fileName?: string
-  thumbnail?: string
-  onChangeStep?: (step: Step) => void
+  thumbnail?: string | null
+  onSelect?: (step: Step) => void
   overhead?: string
   subtitle?: string
   progress?: number
@@ -34,14 +34,14 @@ const FileStep: React.FC<FileStepProps> = ({
   step,
   onDelete,
   thumbnail,
-  onChangeStep,
+  onSelect,
   overhead,
   subtitle,
   progress = 0,
   disabled,
 }) => {
   const handleChangeStep = () => {
-    !disabled && onChangeStep?.(step)
+    !disabled && onSelect?.(step)
   }
   return (
     <StepWrapper aria-disabled={disabled} active={active} onClick={handleChangeStep}>

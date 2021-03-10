@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Icon from '../Icon'
 import Text from '../Text'
@@ -14,15 +14,18 @@ type ProgressBarProps = {
   progress?: number
 }
 
+export const FileDropWrapper = styled.div`
+  max-width: 640px;
+  height: 100%;
+`
+
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   position: relative;
 
   background-color: ${darken(0.16, colors.gray[600])};
-  cursor: pointer;
   width: 100%;
-  height: calc(100vw * 0.5625);
-  max-width: 640px;
-  max-height: 400px;
+  height: 0;
+  padding-top: 56.25%;
   display: flex;
   justify-content: center;
 
@@ -39,11 +42,30 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   }
 `
 
+export const InnerContainer = styled.div`
+  position: absolute;
+  top: 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  text-align: center;
+  max-width: 300px;
+  height: 100%;
+
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: block;
+    margin-top: ${sizes(10)};
+    max-width: 350px;
+  }
+`
+
 export const ProgressBar = styled.div<ProgressBarProps>`
   width: 100%;
   height: 100%;
   background-color: ${colors.blue[500]};
   opacity: 0.2;
+  top: 0;
   position: absolute;
 
   transition: transform 100ms ${transitions.easing};
@@ -58,7 +80,7 @@ export const ErrorContainer = styled.div`
   z-index: 2;
 
   width: 100%;
-  padding: ${sizes(4)} 0;
+  padding: ${sizes(2)} 0;
   background-color: rgba(255, 56, 97, 0.08);
 
   display: flex;
@@ -67,6 +89,8 @@ export const ErrorContainer = styled.div`
 `
 
 export const Thumbnail = styled.img`
+  position: absolute;
+  top: 0;
   object-fit: cover;
   max-width: 100%;
   height: 100%;
@@ -80,34 +104,13 @@ export const ErrorIcon = styled(Icon)`
 
 export const ErrorText = styled(Text)``
 
-export const DismissButton = styled.button`
-  cursor: pointer;
-  border: none;
-  background: none;
-  color: white;
-  margin-top: ${sizes(1)};
+export const DismissButton = styled(Button)`
   margin-left: 10px;
-`
-
-export const InnerContainer = styled.div`
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  display: flex;
-  text-align: center;
-  max-width: 200px;
-  height: 100%;
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: block;
-    margin-top: ${sizes(10)};
-    max-width: 350px;
-  }
 `
 
 export const StyledIcon = styled(Icon)`
   color: ${colors.gray[300]};
-  width: ${sizes(14)};
+  width: ${sizes(10)};
   @media screen and (min-width: ${breakpoints.small}) {
     width: ${sizes(18)};
   }
@@ -116,34 +119,45 @@ export const StyledIcon = styled(Icon)`
 export const Title = styled(Text)`
   line-height: 1.2;
   margin-top: ${sizes(2)};
+  font-size: ${typography.sizes.h6};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(4)};
+    font-size: ${typography.sizes.h5};
   }
 `
 
 export const Paragraph = styled(Text)`
-  margin-top: ${sizes(4)};
+  margin-top: ${sizes(3)};
   line-height: ${sizes(5)};
+  font-size: ${typography.sizes.caption};
   @media screen and (min-width: ${breakpoints.small}) {
+    font-size: ${typography.sizes.subtitle2};
     margin-top: ${sizes(8)};
   }
 `
 
 export const ButtonsGroup = styled.div`
-  display: none;
+  margin-top: ${sizes(3)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(8)};
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 `
 export const UploadButton = styled(Button)`
-  cursor: pointer;
+  padding: var(--vertical-padding-small) var(--horizontal-padding-small);
+  @media screen and (min-width: ${breakpoints.small}) {
+    padding: var(--vertical-padding-large) var(--horizontal-padding-large);
+  }
 `
 
 export const DragDropText = styled(Text)`
-  margin-right: ${sizes(5)};
-  color: ${colors.gray[300]};
-  text-decoration: underline;
+  display: none;
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: initial;
+    margin-right: ${sizes(5)};
+    color: ${colors.gray[300]};
+    text-decoration: underline;
+  }
 `

@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react'
-import { DropzoneOptions, FileError, useDropzone, FileRejection } from 'react-dropzone'
+import React, { useCallback } from 'react'
+import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import Icon from '../Icon'
 import {
   ButtonsGroup,
   DismissButton,
@@ -10,6 +9,7 @@ import {
   ErrorContainer,
   ErrorIcon,
   ErrorText,
+  FileDropWrapper,
   InnerContainer,
   Paragraph,
   ProgressBar,
@@ -18,26 +18,27 @@ import {
   Title,
   UploadButton,
 } from './FileDrop.style'
-import { Step } from '../MultiFileSelect'
 
 export type FileDropProps = {
-  step: Step
+  fileType: string
+  accept: string
   onUploadFile: (file: File) => void
   icon: 'video-dnd' | 'image-dnd'
   title: string
   paragraph: string
-  thumbnail?: string
+  thumbnail?: string | null
   progress?: number
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: React.Dispatch<React.SetStateAction<string>>
-  error?: string
+  onError?: (error: string | null) => void
+  error?: string | null
   maxSize?: number
 }
 
 const FileDrop: React.FC<FileDropProps> = ({
   onUploadFile,
-  step,
+  fileType,
+  accept,
   maxSize,
   icon,
   title,
@@ -57,13 +58,15 @@ const FileDrop: React.FC<FileDropProps> = ({
     [onUploadFile]
   )
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
     onDropAccepted,
     onDropRejected,
-    accept: step + '/*',
     maxFiles: 1,
     multiple: false,
+    accept,
     maxSize,
+    noClick: true,
+    noKeyboard: true,
   })
 
   const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
@@ -72,38 +75,45 @@ const FileDrop: React.FC<FileDropProps> = ({
   }
 
   return (
-    <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <ProgressBar progress={progress} />
-      <input {...getInputProps()} />
-      {thumbnail && step === 'image' ? (
-        <Thumbnail src={thumbnail} alt="video thumbnail" onClick={handleReAdjustThumbnail} title="Click to readjust" />
-      ) : (
-        <SwitchTransition>
-          <CSSTransition key={step === 'video' ? 'video' : 'image'} classNames="fade" timeout={100}>
-            <InnerContainer>
-              <StyledIcon name={icon} />
-              <Title variant="h5">{title}</Title>
-              <Paragraph variant="subtitle2" as="p">
-                {paragraph}
-              </Paragraph>
-              <ButtonsGroup>
-                <DragDropText variant="body2">Drag and drop or </DragDropText>
-                <UploadButton icon="upload">Select a file</UploadButton>
-              </ButtonsGroup>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
-      )}
-      {error && (
-        <ErrorContainer onClick={(e) => e.stopPropagation()}>
-          <ErrorIcon name="error-second" />
-          <ErrorText variant="body2">{error}</ErrorText>
-          <DismissButton onClick={() => onError?.('')}>
-            <Icon name="close" />
-          </DismissButton>
-        </ErrorContainer>
-      )}
-    </DragAndDropArea>
+    <FileDropWrapper>
+      <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
+        <ProgressBar progress={progress} />
+        <input {...getInputProps()} />
+        {thumbnail && fileType === 'image' ? (
+          <Thumbnail
+            src={thumbnail}
+            alt="video thumbnail"
+            onClick={handleReAdjustThumbnail}
+            title="Click to readjust"
+          />
+        ) : (
+          <SwitchTransition>
+            <CSSTransition key={fileType} classNames="fade" timeout={100}>
+              <InnerContainer>
+                <StyledIcon name={icon} />
+                <Title variant="h5">{title}</Title>
+                <Paragraph variant="subtitle2" as="p">
+                  {paragraph}
+                </Paragraph>
+                <ButtonsGroup>
+                  <DragDropText variant="body2">Drag and drop or </DragDropText>
+                  <UploadButton onClick={() => open()} icon="upload">
+                    Select a file
+                  </UploadButton>
+                </ButtonsGroup>
+              </InnerContainer>
+            </CSSTransition>
+          </SwitchTransition>
+        )}
+        {error && (
+          <ErrorContainer onClick={(e) => e.stopPropagation()}>
+            <ErrorIcon name="error-second" />
+            <ErrorText variant="body2">{error}</ErrorText>
+            <DismissButton variant="tertiary" icon={'close'} onClick={() => onError?.('')}></DismissButton>
+          </ErrorContainer>
+        )}
+      </DragAndDropArea>
+    </FileDropWrapper>
   )
 }
 

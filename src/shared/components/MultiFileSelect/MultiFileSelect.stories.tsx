@@ -17,12 +17,12 @@ export default {
 } as Meta
 
 const Template: Story<MultiFileSelectProps> = (args) => {
-  const [error, setError] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileState>({
     video: null,
     image: null,
   })
-  const [croppedImageUrl, setCroppedImageUrl] = useState('')
+  const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null)
 
   const handleFileRejections = (fileRejections: FileRejection[]) => {
     if (fileRejections.length) {

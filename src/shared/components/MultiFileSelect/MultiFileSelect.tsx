@@ -12,15 +12,15 @@ export type FileState = {
 }
 
 export type MultiFileSelectProps = {
-  onChangeFiles: React.Dispatch<React.SetStateAction<FileState>>
+  onChangeFiles: (fileState: FileState) => void
   files: FileState
-  onCropImage?: React.Dispatch<React.SetStateAction<string>>
-  croppedImageUrl?: string
+  onCropImage?: (image: string | null) => void
+  croppedImageUrl?: string | null
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
   onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: React.Dispatch<React.SetStateAction<string>>
-  error?: string
+  onError?: (error: string | null) => void
+  error?: string | null
 }
 
 export type Step = 'video' | 'image'
@@ -59,14 +59,14 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }, [isLoading, progress])
 
   const handleUploadFile = (file: File) => {
-    if (file.type.includes('video')) {
+    if (step === 'video') {
       onChangeFiles({
         ...files,
         video: file,
       })
       setIsLoading(true)
     }
-    if (file.type.includes('image')) {
+    if (step === 'image') {
       onChangeFiles({
         ...files,
         image: file,
@@ -90,18 +90,19 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     setIsLoading(false)
     setProgress(0)
     if (fileType === 'image') {
-      onCropImage?.('')
+      onCropImage?.(null)
     }
   }
 
   return (
     <MultiFileSelectContainer>
       <FileDrop
+        accept={step + '/*'}
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
         progress={progress}
-        step={step}
+        fileType={step}
         icon={step === 'video' ? 'video-dnd' : 'image-dnd'}
         title={step === 'video' ? 'Select Video File' : 'Add Thumbnail Image'}
         thumbnail={croppedImageUrl}
@@ -123,7 +124,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           fileName={files.video?.name}
           step="video"
           onDelete={() => handleDeleteFile('video')}
-          onChangeStep={handleChangeStep}
+          onSelect={handleChangeStep}
           progress={progress}
         />
         <StepDivider>
@@ -137,7 +138,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           fileName={files.image?.name}
           step="image"
           onDelete={() => handleDeleteFile('image')}
-          onChangeStep={handleChangeStep}
+          onSelect={handleChangeStep}
           thumbnail={croppedImageUrl}
         />
       </StepsContainer>
