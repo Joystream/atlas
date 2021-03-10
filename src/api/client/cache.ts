@@ -1,6 +1,5 @@
-import { VideoQueryArgs } from '@/mocking/server/resolvers'
 import { InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
+import { relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 
 const cache = new InMemoryCache({
@@ -16,7 +15,7 @@ const cache = new InMemoryCache({
           const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
 
           // only for counting videos in HomeView
-          if (args?.where.channelId_in && !args?.first) {
+          if (args?.where?.channelId_in && !args?.first) {
             return `${createdAtGte}:${channelIdIn}`
           }
 

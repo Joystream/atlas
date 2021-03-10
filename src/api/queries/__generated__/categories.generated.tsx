@@ -1,8 +1,7 @@
 import * as Types from './baseTypes.generated'
 
-import * as Apollo from '@apollo/client'
 import { gql } from '@apollo/client'
-
+import * as Apollo from '@apollo/client'
 export type CategoryFieldsFragment = { __typename?: 'Category'; id: string; name: string }
 
 export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>

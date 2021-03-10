@@ -36,7 +36,9 @@ export const MyVideosView = () => {
     {
       limit: videosPerPage,
       offset: videosPerPage * (currentPage - 1),
-      channelId: testChannelId,
+      where: {
+        channelId_eq: testChannelId,
+      },
     },
     {
       // notifyOnNetworkStatusChange: true,

@@ -1,8 +1,7 @@
 import * as Types from './baseTypes.generated'
 
-import * as Apollo from '@apollo/client'
 import { gql } from '@apollo/client'
-
+import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
