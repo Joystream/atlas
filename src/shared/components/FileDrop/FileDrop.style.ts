@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Icon from '../Icon'
 import Text from '../Text'
@@ -30,14 +30,25 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   justify-content: center;
 
   transition: all ${transitions.timings.routing} ${transitions.easing};
-  border: 1px dashed
-    ${({ isDragAccept, isFileDialogActive }) =>
-      isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
+
   background: ${({ isDragAccept }) =>
     isDragAccept && `radial-gradient(55.47% 148.24% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(64, 56, 255, 0.2) 100%);`};
 
-  :hover,
-  :focus {
+  :after {
+    content: '';
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(100% - 1px);
+    width: calc(100% - 1px);
+    border: 1px dashed
+      ${({ isDragAccept, isFileDialogActive }) =>
+        isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
+  }
+
+  :hover:after,
+  :focus:after {
     border: 1px dashed ${colors.blue[500]};
   }
 
@@ -48,6 +59,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
 
 export const InnerContainer = styled.div`
   position: absolute;
+  z-index: 1;
   top: 0;
   justify-content: center;
   align-items: center;
@@ -95,11 +107,14 @@ export const ErrorContainer = styled.div`
 export const Thumbnail = styled.img`
   position: absolute;
   top: 0;
-  object-fit: contain;
   max-width: 100%;
   height: 100%;
+  object-fit: contain;
   cursor: pointer;
   display: block;
+  @media screen and (min-width: 450px) {
+    object-fit: initial;
+  }
 `
 
 export const ErrorIcon = styled(Icon)`
@@ -122,17 +137,13 @@ export const StyledIcon = styled(Icon)`
 `
 
 export const Title = styled(Text)`
-  line-height: 1.2;
   margin-top: ${sizes(2)};
-  font-size: ${typography.sizes.h5};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(4)};
   }
 `
 
 export const Paragraph = styled(Text)`
-  line-height: ${sizes(5)};
-  font-size: ${typography.sizes.subtitle2};
   margin-top: ${sizes(4)};
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: ${sizes(8)};
@@ -148,7 +159,6 @@ export const ButtonsGroup = styled.div`
     margin-top: ${sizes(8)};
   }
 `
-export const UploadButton = styled(Button)``
 
 export const DragDropText = styled(Text)`
   display: none;

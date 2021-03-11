@@ -1,3 +1,4 @@
+import { FileType } from '@/types/files'
 import React from 'react'
 import Icon from '../Icon'
 import {
@@ -6,21 +7,20 @@ import {
   StepNumber,
   StepDetails,
   DeleteButton,
-  FileType,
+  Overhead,
   FileName,
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
-import { Step } from '../MultiFileSelect'
 
 export type FileStepProps = {
   stepNumber: number
   active: boolean
   onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  step: Step
+  step: FileType
   fileName?: string
   thumbnail?: string | null
-  onSelect?: (step: Step) => void
+  onSelect?: (step: FileType) => void
   overhead?: string
   subtitle?: string
   progress?: number
@@ -57,7 +57,7 @@ const FileStep: React.FC<FileStepProps> = ({
             </Thumbnail>
           ))}
         <StepDetails>
-          <FileType variant="overhead">{fileName ? overhead : `Step ${stepNumber}`}</FileType>
+          <Overhead variant="overhead">{fileName ? overhead : `Step ${stepNumber}`}</Overhead>
           <FileName variant="subtitle2">{fileName || subtitle}</FileName>
         </StepDetails>
       </StepStatus>

@@ -6,11 +6,8 @@ export default {
   title: 'Shared/FileDrop',
   component: FileDrop,
   argTypes: {
-    step: {
+    fileType: {
       defaultValue: 'video',
-    },
-    icon: {
-      defaultValue: 'video-dnd',
     },
     title: {
       defaultValue: 'Select Video File',

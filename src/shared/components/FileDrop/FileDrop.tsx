@@ -1,6 +1,8 @@
+import { FileType } from '@/types/files'
 import React, { useCallback } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import Button from '../Button'
 import {
   ButtonsGroup,
   DismissButton,
@@ -16,17 +18,14 @@ import {
   StyledIcon,
   Thumbnail,
   Title,
-  UploadButton,
 } from './FileDrop.style'
 
 export type FileDropProps = {
-  fileType: string
-  accept: string
+  fileType: FileType
   onUploadFile: (file: File) => void
-  icon: 'video-dnd' | 'image-dnd'
   title: string
   paragraph: string
-  thumbnail?: string | null
+  thumbnailUrl?: string | null
   progress?: number
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
@@ -38,12 +37,10 @@ export type FileDropProps = {
 const FileDrop: React.FC<FileDropProps> = ({
   onUploadFile,
   fileType,
-  accept,
   maxSize,
-  icon,
   title,
   paragraph,
-  thumbnail,
+  thumbnailUrl,
   onReAdjustThumbnail,
   onDropRejected,
   progress,
@@ -63,7 +60,7 @@ const FileDrop: React.FC<FileDropProps> = ({
     onDropRejected,
     maxFiles: 1,
     multiple: false,
-    accept,
+    accept: fileType + '/*',
     maxSize,
     noClick: true,
     noKeyboard: true,
@@ -79,9 +76,9 @@ const FileDrop: React.FC<FileDropProps> = ({
       <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
         <ProgressBar progress={progress} />
         <input {...getInputProps()} />
-        {thumbnail && fileType === 'image' ? (
+        {thumbnailUrl && fileType === 'image' ? (
           <Thumbnail
-            src={thumbnail}
+            src={thumbnailUrl}
             alt="video thumbnail"
             onClick={handleReAdjustThumbnail}
             title="Click to readjust"
@@ -90,16 +87,16 @@ const FileDrop: React.FC<FileDropProps> = ({
           <SwitchTransition>
             <CSSTransition key={fileType} classNames="fade" timeout={100}>
               <InnerContainer>
-                <StyledIcon name={icon} />
+                <StyledIcon name={fileType === 'video' ? 'video-dnd' : 'image-dnd'} />
                 <Title variant="h5">{title}</Title>
                 <Paragraph variant="subtitle2" as="p">
                   {paragraph}
                 </Paragraph>
                 <ButtonsGroup>
                   <DragDropText variant="body2">Drag and drop or </DragDropText>
-                  <UploadButton onClick={() => open()} icon="upload">
+                  <Button onClick={() => open()} icon="upload">
                     Select a file
-                  </UploadButton>
+                  </Button>
                 </ButtonsGroup>
               </InnerContainer>
             </CSSTransition>
@@ -109,7 +106,7 @@ const FileDrop: React.FC<FileDropProps> = ({
           <ErrorContainer onClick={(e) => e.stopPropagation()}>
             <ErrorIcon name="error-second" />
             <ErrorText variant="body2">{error}</ErrorText>
-            <DismissButton variant="tertiary" icon={'close'} onClick={() => onError?.('')}></DismissButton>
+            <DismissButton variant="tertiary" icon={'close'} onClick={() => onError?.(null)}></DismissButton>
           </ErrorContainer>
         )}
       </DragAndDropArea>

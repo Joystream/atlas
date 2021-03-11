@@ -1,4 +1,5 @@
 import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
+import { FileType } from '@/types/files'
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import FileDrop from '../FileDrop'
@@ -23,8 +24,6 @@ export type MultiFileSelectProps = {
   error?: string | null
 }
 
-export type Step = 'video' | 'image'
-
 const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onChangeFiles,
   files,
@@ -37,7 +36,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   maxVideoSize,
 }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const [step, setStep] = useState<Step>('video')
+  const [step, setStep] = useState<FileType>('video')
   const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -81,11 +80,11 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
   }
 
-  const handleChangeStep = (step: Step) => {
+  const handleChangeStep = (step: FileType) => {
     setStep(step)
   }
 
-  const handleDeleteFile = (fileType: 'video' | 'image') => {
+  const handleDeleteFile = (fileType: FileType) => {
     onChangeFiles({ ...files, [fileType]: null })
     setIsLoading(false)
     setProgress(0)
@@ -97,15 +96,13 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   return (
     <MultiFileSelectContainer>
       <FileDrop
-        accept={step + '/*'}
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
         progress={progress}
         fileType={step}
-        icon={step === 'video' ? 'video-dnd' : 'image-dnd'}
         title={step === 'video' ? 'Select Video File' : 'Add Thumbnail Image'}
-        thumbnail={croppedImageUrl}
+        thumbnailUrl={croppedImageUrl}
         paragraph={
           step === 'video'
             ? `16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.`

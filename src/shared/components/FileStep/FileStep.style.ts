@@ -57,7 +57,7 @@ export const StepDetails = styled.div`
   width: 100%;
 `
 
-export const FileType = styled(Text)`
+export const Overhead = styled(Text)`
   display: block;
   color: ${colors.gray[300]};
   font-weight: ${typography.weights.regular};
