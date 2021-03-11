@@ -1,7 +1,8 @@
+import React from 'react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { TopbarBase, Avatar, Text, Icon, Button, TOP_NAVBAR_HEIGHT } from '@/shared/components'
+import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { TopbarBase, Avatar, Text, Button, TOP_NAVBAR_HEIGHT, TopbarBaseProps } from '@/shared/components'
 
 type ChannelInfoProps = {
   active?: boolean
@@ -15,7 +16,7 @@ type DrawerButtonProps = {
   isActive?: boolean
 }
 
-export const StyledTopbarBase = styled(TopbarBase)`
+export const StyledTopbarBase = styled((props: TopbarBaseProps) => <TopbarBase {...props} />)`
   display: flex;
   justify-content: space-between;
   @media screen and (min-width: ${breakpoints.small}) {
@@ -79,6 +80,9 @@ export const StudioContainer = styled.div`
   svg {
     width: auto;
     height: auto;
+  }
+  button {
+    cursor: pointer;
   }
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;

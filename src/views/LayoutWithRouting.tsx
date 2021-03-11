@@ -5,7 +5,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import { GlobalStyle } from '@/shared/components'
-import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
+import { Topbar, StudioTopbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
@@ -54,6 +54,7 @@ const LayoutWithRouting: React.FC = () => {
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: routes.search() })
   const [cachedLocation, setCachedLocation] = useState(location)
+  const [isStudioView, setStudioView] = useState(false)
 
   useEffect(() => {
     if (location === cachedLocation) {
@@ -74,15 +75,22 @@ const LayoutWithRouting: React.FC = () => {
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, parseInt(transitions.timings.routing))
-  }, [location, cachedLocation])
+  }, [location, cachedLocation, isStudioView])
+
+  useEffect(() => {
+    if (location.pathname.includes('/studio')) {
+      setStudioView(true)
+    } else {
+      setStudioView(false)
+    }
+  }, [location.pathname])
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
-
   return (
     <>
       <GlobalStyle additionalStyles={routingTransitions} />
-      <TopNavbar />
+      {isStudioView ? <StudioTopbar /> : <Topbar />}
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <ErrorBoundary
