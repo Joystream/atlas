@@ -47,6 +47,7 @@ export { ReactComponent as ErrorSecond } from './error-second.svg'
 export { ReactComponent as VideoCamera } from './video-camera.svg'
 export { ReactComponent as Padlock } from './padlock.svg'
 export { ReactComponent as Upload } from './upload.svg'
+export { ReactComponent as External } from './external.svg'
 
 const icons = [
   'bars',
@@ -98,6 +99,7 @@ const icons = [
   'video-camera',
   'padlock',
   'upload',
+  'external',
 ] as const
 
 export type IconType = typeof icons[number]

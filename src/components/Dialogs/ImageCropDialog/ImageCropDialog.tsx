@@ -13,11 +13,12 @@ import {
   StyledSlider,
 } from './ImageCropDialog.style'
 import { Icon } from '@/shared/components'
+import { ImageCropData } from '@/types/cropper'
 import { useCropper, CropperImageType } from './cropper'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: ImageCropData) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
@@ -75,9 +76,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   }
 
   const handleConfirmClick = async () => {
-    const [blob, url] = await cropImage()
+    const [blob, url, imageCropData] = await cropImage()
     resetDialog()
-    onConfirm(blob, url)
+    onConfirm(blob, url, imageCropData)
   }
 
   const zoomControlNode = (
