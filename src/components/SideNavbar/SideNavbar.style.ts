@@ -1,8 +1,9 @@
-import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../shared/theme'
-import React from 'react'
-import { Link, LinkProps } from 'react-router-dom'
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
+import { Button } from '@/shared/components'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import isPropValid from '@emotion/is-prop-valid'
+import styled from '@emotion/styled'
+import { Link, LinkProps } from 'react-router-dom'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -55,13 +56,27 @@ export const SidebarNavList = styled.ul`
   padding: 0;
 `
 
+export const ButtonGroup = styled.div`
+  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  margin-bottom: ${sizes(10)};
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`
+
+export const ButtonLink = styled(Button)`
+  margin: 0 ${NAVBAR_LEFT_PADDING}px;
+  border: 1px solid ${colors.gray[400]};
+`
+
 export const SidebarNavItem = styled.li`
   width: 100%;
   display: flex;
   flex-direction: column;
 `
 
-export const SidebarNavLink = styled(({ expanded, ...props }: SidebarNavLinkProps) => <Link {...props} />)`
+export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
   color: ${colors.white};
   text-decoration: none;
@@ -140,7 +155,7 @@ export const SubItem = styled.li`
   }
 `
 
-export const LegalLink = styled(({ expanded, ...props }: SidebarNavLinkProps) => <Link {...props} />)`
+export const LegalLink = styled(Link)<ExpandableElementProps>`
   margin: ${sizes(4)} ${NAVBAR_LEFT_PADDING}px 0 ${NAVBAR_LEFT_PADDING}px;
   padding: ${sizes(4)} ${0}px ${sizes(6)} ${0}px;
   width: 312px;
