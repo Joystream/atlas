@@ -35,7 +35,7 @@ const cache = new InMemoryCache({
               } = {},
             }
           ) {
-            return existing && existing.slice(offset, offset + limit)
+            return existing?.slice(offset, offset + limit)
           },
           keyArgs: false,
           // @ts-ignore not too sure how to type this
