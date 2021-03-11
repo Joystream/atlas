@@ -1,6 +1,6 @@
 import React from 'react'
 import { Checkbox, Button } from '@/shared/components'
-import ActionBar, { ActionBarProps } from '../../shared/components/ActionBar/ActionBar'
+import ActionBar, { ActionBarProps } from '../../../shared/components/ActionBar/ActionBar'
 import styled from '@emotion/styled'
 import { sizes } from '@/shared/theme'
 
