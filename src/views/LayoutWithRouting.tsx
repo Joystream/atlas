@@ -6,16 +6,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import {
-  HomeView,
-  VideoView,
-  SearchOverlayView,
-  ChannelView,
-  VideosView,
-  ChannelsView,
-  PlaygroundView,
-  MyVideosView,
-} from '@/views'
+import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'

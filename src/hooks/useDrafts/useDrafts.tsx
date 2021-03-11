@@ -29,7 +29,7 @@ type DraftState = {
 
 type DraftsContextValue = {
   draftsState: DraftState
-  fetchDrafts: (channelId?: string) => Promise<void>
+  fetchDrafts: () => Promise<void>
 }
 
 const DraftsContext = React.createContext<undefined | DraftsContextValue>(undefined)
@@ -40,18 +40,14 @@ export const DraftsProvider: React.FC = ({ children }) => {
     videos: [],
   })
 
-  const fetchDrafts = useCallback(
-    async (channelId?: string) => {
-      const currentDrafts = await getDrafts()
-      const videos = currentDrafts
-        .filter((draft): draft is VideoDraft => draft.type === 'video')
-        .filter((draft) => (channelId ? draft.channelId === channelId : true))
-      setDraftsState({
-        videos,
-      })
-    },
-    [setDraftsState]
-  )
+  const fetchDrafts = useCallback(async () => {
+    const currentDrafts = await getDrafts()
+    const videos = currentDrafts.filter((draft): draft is VideoDraft => draft.type === 'video')
+
+    setDraftsState({
+      videos,
+    })
+  }, [setDraftsState])
 
   useEffect(() => {
     fetchDrafts()
@@ -79,39 +75,40 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   const updateSingleDraft = useCallback(
     async (draftId: string, draftProps: RawDraft) => {
       const updatedDraft = await updateDraft(draftId, draftProps)
-      fetchDrafts(channelId)
+      fetchDrafts()
       return updatedDraft
     },
-    [channelId, fetchDrafts]
+    [fetchDrafts]
   )
 
   const createSingleDraft = useCallback(
     async (draft: RawDraft) => {
       const newDraft = await addDraft({ ...draft, type })
-      fetchDrafts(channelId)
+      fetchDrafts()
       return newDraft
     },
-    [channelId, fetchDrafts, type]
+    [fetchDrafts, type]
   )
 
   const discardDraft = useCallback(
     async (draftIds: string | string[]) => {
       await removeDraft(draftIds)
-      fetchDrafts(channelId)
+      fetchDrafts()
     },
-    [channelId, fetchDrafts]
+    [fetchDrafts]
   )
 
   const discardAllDrafts = useCallback(
     async (channelId?: string) => {
       await clearDrafts(channelId)
-      fetchDrafts(channelId)
+      fetchDrafts()
     },
     [fetchDrafts]
   )
 
   return {
-    drafts: type === 'video' ? draftsState.videos : [],
+    drafts:
+      type === 'video' ? draftsState.videos.filter((draft) => (channelId ? draft.channelId === channelId : true)) : [],
     updateDraft: updateSingleDraft,
     addDraft: createSingleDraft,
     getDraft: getSingleDraft,
