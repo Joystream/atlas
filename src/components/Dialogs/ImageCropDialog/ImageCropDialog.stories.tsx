@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
 import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
+import { ImageCropData } from '@/types/cropper'
 import { Avatar, Placeholder } from '@/shared/components'
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+import { OverlayManagerProvider, UploadingFilesDataProvider, useUploadingFilesData } from '@/hooks'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
@@ -16,13 +17,16 @@ export default {
   decorators: [
     (Story) => (
       <OverlayManagerProvider>
-        <Story />
+        <UploadingFilesDataProvider>
+          <Story />
+        </UploadingFilesDataProvider>
       </OverlayManagerProvider>
     ),
   ],
 } as Meta
 
 const RegularTemplate: Story<ImageCropDialogProps> = () => {
+  const { addUploadingFileData } = useUploadingFilesData()
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -30,15 +34,27 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
+    addUploadingFileData({
+      hash: `${blob.size}${blob.type}`,
+      storageProvider: 'storage',
+      type: 'avatar',
+      imageCropData,
+      size: blob.size,
+      parentObject: {
+        type: 'channel',
+        id: `${blob.size}${blob.size}${blob.size}${blob.size}`,
+      },
+      status: 'inProgress',
+    })
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string) => {
+  const handleThumbnailConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string) => {
+  const handleCoverConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
     setCoverImageUrl(url)
   }
 

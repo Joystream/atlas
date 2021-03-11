@@ -16,3 +16,5 @@ export { default as SideNavbar, EXPANDED_SIDENAVBAR_WIDTH, NavItem } from './Sid
 export { default as InterruptedVideosGallery } from './InterruptedVideosGallery'
 export { default as ViewWrapper } from './ViewWrapper'
 export { default as Portal } from './Portal'
+export { default as ImageCropDialog } from './Dialogs/ImageCropDialog'
+export type { ImageCropDialogProps, ImageCropDialogImperativeHandle } from './Dialogs/ImageCropDialog'
