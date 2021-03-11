@@ -37,6 +37,7 @@ fragment VideoFields on Video {
   duration
   thumbnailUrl
   createdAt
+  isPublic
   media {
     ...VideoMediaFields
   }

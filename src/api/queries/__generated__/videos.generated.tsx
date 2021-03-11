@@ -32,6 +32,7 @@ export type VideoFieldsFragment = {
   duration: number
   thumbnailUrl: string
   createdAt: Date
+  isPublic: boolean
   category: { __typename?: 'Category'; id: string }
   media: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
@@ -155,6 +156,7 @@ export const VideoFieldsFragmentDoc = gql`
     duration
     thumbnailUrl
     createdAt
+    isPublic
     media {
       ...VideoMediaFields
     }

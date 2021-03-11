@@ -6,6 +6,7 @@ import VideoPreviewBase, {
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
+import { copyToClipboard } from '@/utils/broswer'
 
 export type VideoPreviewProps = {
   id?: string
@@ -16,15 +17,15 @@ export type VideoPreviewProps = {
   VideoPreviewPublisherProps
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
-  const [loadOnMount, setloadOnMount] = useState(true)
+  const [loadOnMount, setLoadOnMount] = useState(true)
   const { drafts } = useDrafts('video')
   const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
 
   useEffect(() => {
-    setloadOnMount(false)
+    setLoadOnMount(false)
   }, [])
 
-  const _isLoading = loading || id === undefined || isLoading || loadOnMount
+  const _isLoading = loading || !id || isLoading || loadOnMount
   const isDraft = metaProps.videoPublishState === 'draft'
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   const videoHref = id ? routes.video(id) : undefined
@@ -41,9 +42,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = 
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={_isLoading}
       className={className}
-      onCopyVideoURLClick={
-        isDraft ? undefined : () => navigator.clipboard.writeText(videoHref ? location.origin + videoHref : '')
-      }
+      onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       {...metaProps}
     />
   )
