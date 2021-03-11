@@ -27,8 +27,11 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps }) => {
       <StepsContainer>
         {steps.map((step, idx) => (
           <Step key={step.title + idx} onClick={step.onClick}>
-            <StepState completed={step.completed}>{step.completed && <CheckIcon name="check" />}</StepState>{' '}
-            <Text variant="body2">{step.title}</Text>)
+            <StepInnerContainer>
+              <StepState completed={step.completed}>{step.completed && <CheckIcon name="check" />}</StepState>{' '}
+              <Text variant="body2">{step.title}</Text>
+            </StepInnerContainer>
+            <Icon name="chevron-right" />
           </Step>
         ))}
       </StepsContainer>
@@ -88,6 +91,14 @@ const StepState = styled.div<StepStateProps>`
 `
 
 const Step = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const StepInnerContainer = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
@@ -97,4 +108,4 @@ const CheckIcon = styled(Icon)`
   position: relative;
   top: 1px;
 `
-export const StyledPlayIcon = ({ ...svgProps }) => <CheckIcon name="check" {...svgProps} />
+const StyledCheckIcon = ({ ...svgProps }) => <CheckIcon name="check" {...svgProps} />

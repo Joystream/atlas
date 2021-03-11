@@ -1,7 +1,7 @@
 import React from 'react'
 import Checkout, { CheckoutProps } from './Checkout'
 import { Meta, Story } from '@storybook/react'
-import { WithValue } from '.storybook/WithValue'
+import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
   title: 'Shared/Checkout',
@@ -13,7 +13,7 @@ const SingleTemplate: Story<CheckoutProps> = (args) => (
   <WithValue
     initial={[
       { title: 'Add Channel Title', onClick: () => alert('Add Channel Title'), completed: true },
-      { title: 'Add Description', onClick: () => alert('Add Description'), completed: false },
+      { title: 'Add Description', onClick: () => alert('Add Description'), completed: true },
       { title: 'Add Avatar', onClick: () => alert('Add Avatar'), completed: false },
       { title: 'Add Cover Image', onClick: () => alert('Add Cover Image'), completed: false },
     ]}
