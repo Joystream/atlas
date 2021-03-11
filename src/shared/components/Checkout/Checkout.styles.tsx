@@ -46,7 +46,7 @@ export const StepState = styled.div<StepStateProps>`
   border-radius: 100%;
   ${({ completed }) => [
     completed &&
-      `background-color: #4038FF;
+      `background-color: ${colors.blue[500]};
       border: 2px solid transparent;`,
     completed === false && `border: 2px solid ${colors.gray[300]}`,
   ]};
