@@ -3,6 +3,7 @@ import { SerializedStyles } from '@emotion/react'
 import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
 import { To } from 'history'
+import { Link } from 'react-router-dom'
 
 export type ButtonProps = {
   children?: React.ReactNode
@@ -12,7 +13,6 @@ export type ButtonProps = {
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
-  as?: React.ElementType
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
 
 const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -26,7 +26,6 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     containerCss,
     className,
     onClick,
-    as,
     to = '',
   },
   ref
@@ -36,7 +35,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
 
   return (
     <StyledButton
-      as={as}
+      as={to ? Link : undefined}
       to={to}
       css={containerCss}
       className={className}
