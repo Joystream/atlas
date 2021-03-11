@@ -16,9 +16,8 @@ import {
   StyledAvatar,
   InnerFormContainer,
 } from './CreateEditChannelView.style'
-import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '../ChannelView/ChannelView.style'
-
-import { requiredValidation, textFieldValidation } from '../Playgrounds/formValidationOptions'
+import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/consumer/ChannelView/ChannelView.style'
+import { requiredValidation, textFieldValidation } from '@/views/playground/Playgrounds/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 
 const languages: SelectedItem[] = [
@@ -69,9 +68,10 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
-const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = () => {
-  const { id } = useParams()
-  const newChannel = id === undefined
+const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
+  // TODO Add hook for fetching currently active channel
+  const id = newChannel ? null : '1494'
+
   const { channel, loading, error } = useChannel(id || '')
   const {
     register,

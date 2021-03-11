@@ -14,12 +14,15 @@ export default {
     return basePath
   },
   channel: (id = ':id') => `/channel/${id}`,
-  newChannel: () => '/studio/channel/new',
-  editChannel: (id = ':id') => `/studio/channel/${id}`,
   videos: () => '/videos',
   channels: () => '/channels',
   playground: () => '/playground',
   studio: () => `/studio`,
+}
+
+export const studioRoutes = {
+  newChannel: () => '/channel/new',
+  editChannel: () => `/channel`,
 }
 
 export const QUERY_PARAMS = {

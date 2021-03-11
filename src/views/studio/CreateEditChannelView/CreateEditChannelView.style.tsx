@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { sizes, breakpoints, transitions } from '@/shared/theme'
 import { Textarea, ActionBarTransaction, Avatar, FormField } from '@/shared/components'
-import { TitleSection } from '../ChannelView/ChannelView.style'
+import { TitleSection } from '@/views/consumer/ChannelView/ChannelView.style'
 
 type AtionBarProps = {
   isActive?: boolean
