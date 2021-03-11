@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { TopbarBase, Avatar, Text, Icon, Button, TOP_NAVBAR_HEIGHT } from '@/shared/components'
 
@@ -79,14 +80,23 @@ export const StudioContainer = styled.div`
     width: auto;
     height: auto;
   }
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: flex;
+  }
   ${ChannelInfoContainer} {
     &:hover {
       background-color: ${colors.transparent};
     }
+    ${TextContainer} {
+      display: none;
+      @media screen and (min-width: ${breakpoints.medium}) {
+        display: flex;
+      }
+    }
   }
 `
 
-export const NavDrawerContainer = styled.div<NavDrawerProps>`
+export const DrawerContainer = styled.div<NavDrawerProps>`
   position: absolute;
   right: 10px;
   top: 0;
@@ -132,6 +142,10 @@ export const MemberTitleText = styled(Text)`
   margin-left: 12px;
 `
 
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+`
+
 export const NewChannel = styled.div`
   display: flex;
   align-items: center;
@@ -140,6 +154,7 @@ export const NewChannel = styled.div`
   p:nth-of-type(1) {
     font-size: ${typography.sizes.body1};
     color: ${colors.white};
+    text-decoration: none;
   }
   &:hover {
     cursor: pointer;

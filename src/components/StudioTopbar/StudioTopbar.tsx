@@ -10,9 +10,10 @@ import {
   ChannelInfoContainer,
   StyledAvatar,
   TextContainer,
-  NavDrawerContainer,
+  DrawerContainer,
   NewChannel,
   NewChannelIconContainer,
+  StyledLink,
   LogoutButton,
 } from './StudioTopbar.style'
 
@@ -126,7 +127,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
   handleCurrentChannelChange,
 }) => {
   return (
-    <NavDrawerContainer active={active}>
+    <DrawerContainer active={active}>
       <MemberInfo memberName={memberName} memberAvatar={memberAvatar} />
       <Text variant="h6">My Channels</Text>
       {channels.map((channel) => (
@@ -138,16 +139,18 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           onClick={() => handleCurrentChannelChange(channel)}
         />
       ))}
-      <NewChannel>
-        <NewChannelIconContainer>
-          <Icon name="new-channel" />
-        </NewChannelIconContainer>
-        <Text>New Channel</Text>
-      </NewChannel>
+      <StyledLink to="studio/channel/new">
+        <NewChannel>
+          <NewChannelIconContainer>
+            <Icon name="new-channel" />
+          </NewChannelIconContainer>
+          <Text>New Channel</Text>
+        </NewChannel>
+      </StyledLink>
       <LogoutButton icon="logout" variant="secondary">
         Log out as a member
       </LogoutButton>
-    </NavDrawerContainer>
+    </DrawerContainer>
   )
 }
 
