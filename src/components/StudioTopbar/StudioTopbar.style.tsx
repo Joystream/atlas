@@ -23,17 +23,6 @@ export const StyledTopbarBase = styled(TopbarBase)`
   }
 `
 
-export const StudioContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  margin-right: ${sizes(3)};
-  svg {
-    width: auto;
-    height: auto;
-  }
-`
-
 export const DrawerButton = styled(Button)<DrawerButtonProps>`
   svg {
     transform: rotate(${({ isActive }) => (isActive ? '180deg' : '0')});
@@ -45,10 +34,9 @@ export const ChannelInfoContainer = styled.div<ChannelInfoProps>`
   display: flex;
   align-items: center;
   background-color: ${({ active }) => active && colors.gray[600]};
-
   &:hover {
     cursor: pointer;
-    background-color: ${({ active }) => active && colors.gray[600]};
+    background-color: ${({ active }) => (active ? colors.gray[600] : colors.gray[700])};
   }
   svg {
     margin-left: auto;
@@ -82,6 +70,22 @@ export const TextContainer = styled.div`
   }
 `
 
+export const StudioContainer = styled.div`
+  display: none;
+  align-items: center;
+  margin-left: auto;
+  margin-right: ${sizes(3)};
+  svg {
+    width: auto;
+    height: auto;
+  }
+  ${ChannelInfoContainer} {
+    &:hover {
+      background-color: ${colors.transparent};
+    }
+  }
+`
+
 export const NavDrawerContainer = styled.div<NavDrawerProps>`
   position: absolute;
   right: 10px;
@@ -96,9 +100,6 @@ export const NavDrawerContainer = styled.div<NavDrawerProps>`
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   ${ChannelInfoContainer} {
     padding: ${sizes(2)};
-    &:hover {
-      background-color: ${colors.gray[700]};
-    }
   }
   ${StyledAvatar} {
     margin-left: 0;
@@ -161,4 +162,5 @@ export const NewChannelIconContainer = styled.div`
 
 export const LogoutButton = styled(Button)`
   background-color: transparent;
+  cursor: pointer;
 `

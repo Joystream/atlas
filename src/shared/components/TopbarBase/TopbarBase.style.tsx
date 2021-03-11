@@ -6,9 +6,14 @@ import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogoDefault } from '@/assets/full-logo.svg'
 import { ReactComponent as UnstyledFullLogoStudio } from '@/assets/full-logo-studio.svg'
 import { Link } from 'react-router-dom'
+import { TopbarVariant } from './TopbarBase'
 
 type TopNavbarStyleProps = {
   hasFocus?: boolean
+}
+
+type LogoContainerProps = {
+  variant?: TopbarVariant
 }
 
 export const TOP_NAVBAR_HEIGHT = 81
@@ -67,7 +72,6 @@ export const ShortLogo = styled(UnstyledShortLogo)`
 
 const fullLogoStyles = () =>
   css`
-    display: none;
     height: ${sizes(8)};
     @media screen and (min-width: ${breakpoints.medium}) {
       display: block;
@@ -75,20 +79,20 @@ const fullLogoStyles = () =>
   `
 
 export const FullLogo = styled(UnstyledFullLogoDefault)`
+  display: none;
   ${fullLogoStyles}
 `
 
 export const FullLogoStudio = styled(UnstyledFullLogoStudio)`
-  ${fullLogoStyles}
+  display: block;
 `
 
-export const NavigationContainer = styled.div`
+export const LogoContainer = styled.div<LogoContainerProps>`
   margin-left: ${sizes(10)};
   margin-top: ${sizes(1)};
-  display: none;
-  align-items: flex-start;
+  display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
+  align-items: center;
   @media screen and (min-width: ${breakpoints.small}) {
-    align-items: center;
     display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
   }
