@@ -18,28 +18,20 @@ export const PlaygroundUploadingFilesData = () => {
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, fileName: string, cropData: CropBoxData) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
     addUploadingFileData({
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
       type: 'avatar',
       cropData,
-      fileName,
+      size: blob.size,
       parentObject: {
         type: 'channel',
         id: `${blob.size}${blob.size}${blob.size}${blob.size}`,
       },
-      status: 'notCompleted',
+      status: 'inProgress',
     })
     setAvatarImageUrl(url)
-  }
-
-  const handleStatusChange = (id: string, currentStatus: 'completed' | 'notCompleted') => {
-    if (currentStatus === 'notCompleted') {
-      updateUploadingFileStatus(id, 'completed')
-    } else {
-      updateUploadingFileStatus(id, 'notCompleted')
-    }
   }
 
   return (
@@ -58,11 +50,12 @@ export const PlaygroundUploadingFilesData = () => {
                 hash: `${metadata.sizeInBytes}${metadata.duration}${metadata.width}${metadata.height}`,
                 storageProvider: 'storage',
                 type: 'video',
+                size: metadata.sizeInBytes,
                 parentObject: {
                   type: 'channel',
                   id: `${metadata.sizeInBytes}${metadata.sizeInBytes}${metadata.sizeInBytes}${metadata.sizeInBytes}`,
                 },
-                status: 'notCompleted',
+                status: 'inProgress',
               })
             } catch (err) {
               seterror(err)
@@ -83,12 +76,12 @@ export const PlaygroundUploadingFilesData = () => {
             {cropData && (
               <>
                 <p>Crop data:</p>
-                <p>x:{cropData.x}</p>
-                <p>y:{cropData.y}</p> <p>width:{cropData.width}</p> <p>height:{cropData.height}</p>
+                <p>left:{cropData.left}</p>
+                <p>top:{cropData.top}</p> <p>width:{cropData.width}</p> <p>height:{cropData.height}</p>
               </>
             )}
             <p>status: {status}</p>
-            <Button onClick={() => handleStatusChange(id, status)}>Change status</Button>
+            <Button onClick={() => updateUploadingFileStatus(id, 'completed')}>Change status</Button>
           </StyledDataContainer>
         ))
       ) : (

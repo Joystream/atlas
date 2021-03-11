@@ -34,27 +34,27 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, fileName: string, cropData: CropBoxData) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
     addUploadingFileData({
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
       type: 'avatar',
       cropData,
-      fileName,
+      size: blob.size,
       parentObject: {
         type: 'channel',
         id: `${blob.size}${blob.size}${blob.size}${blob.size}`,
       },
-      status: 'notCompleted',
+      status: 'inProgress',
     })
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string, fileName: string, cropData: CropBoxData) => {
+  const handleThumbnailConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string, fileName: string, cropData: CropBoxData) => {
+  const handleCoverConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
     setCoverImageUrl(url)
   }
 

@@ -11,20 +11,24 @@ import { CropData } from '@/components'
 
 type ParentObjectType = 'video' | 'channel'
 type UploadingFileType = 'video' | 'thumbnail' | 'cover' | 'avatar'
-export type StatusType = 'completed' | 'notCompleted'
+export type StatusType = 'completed' | 'inProgress' | 'error'
 export type UploadingFile = {
   id: string
   hash: string
   storageProvider: string
-  fileName?: string
   type: UploadingFileType
   status: StatusType
+  size: number
   cropData?: CropData
+  updatedAt: string
+  metadata?: string
   parentObject: {
     type: ParentObjectType
     id: string
   }
 }
+
+export type RawUploadingFile = Omit<UploadingFile, 'id' | 'updatedAt'>
 
 type UploadingFilesState = {
   uploadingFiles: UploadingFile[]
@@ -85,7 +89,7 @@ export const useUploadingFilesData = () => {
   )
 
   const addUploadingFileData = useCallback(
-    async (fileData: Omit<UploadingFile, 'id'>) => {
+    async (fileData: RawUploadingFile) => {
       const newFileData = await addUploadingFileDataFn(fileData)
       fetchUploadingFiles()
       return newFileData
