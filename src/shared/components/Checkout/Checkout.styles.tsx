@@ -6,7 +6,7 @@ import { Icon } from '..'
 export const Container = styled.div`
   padding: 24px;
   width: 312px;
-  background-color: #181c20;
+  background-color: ${colors.gray[800]};
   color: ${colors.white};
 `
 
