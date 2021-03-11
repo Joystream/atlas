@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
+import { useUploadingFilesData } from '@/hooks'
 import 'cropperjs/dist/cropper.min.css'
 
 const MAX_ZOOM = 3
@@ -9,6 +10,7 @@ export type CropperImageType = 'avatar' | 'videoThumbnail' | 'cover'
 type UseCropperOpts = {
   imageEl: HTMLImageElement | null
   imageType: CropperImageType
+  fileName: string
 }
 
 const ASPECT_RATIO_PER_TYPE: Record<CropperImageType, number> = {
@@ -44,20 +46,13 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
   },
 }
 
-export type CropData = {
-  height: number
-  rotate: number
-  scaleX: number
-  scaleY: number
-  width: number
-  x: number
-  y: number
-}
+export type CropBoxData = Cropper.CropBoxData
 
-export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
+export const useCropper = ({ imageEl, imageType, fileName }: UseCropperOpts) => {
   const [cropper, setCropper] = useState<Cropper | null>(null)
   const [currentZoom, setCurrentZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState<[number, number]>([0, 1])
+  const { uploadingFilesData } = useUploadingFilesData()
 
   const zoomStep = (zoomRange[1] - zoomRange[0]) / 20
 
@@ -84,6 +79,14 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
 
       const middleZoom = minZoom + (maxZoom - minZoom) / 2
       cropper.zoomTo(middleZoom)
+
+      // Cropper restores cropBoxData based on a saved filename - to be changed
+      const savedFile = uploadingFilesData.find((file) => file.fileName === fileName)
+      if (savedFile) {
+        cropper
+          .setCropBoxData(savedFile.cropData as Cropper.CropBoxData)
+          .setCanvasData(savedFile.cropData as Cropper.CanvasData)
+      }
     }
 
     const cropper = new Cropper(imageEl, {
@@ -104,7 +107,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     return () => {
       cropper.destroy()
     }
-  }, [imageEl, imageType])
+  }, [fileName, imageEl, imageType, uploadingFilesData])
 
   // handle zoom event
   useEffect(() => {
@@ -132,20 +135,20 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     }
   }, [imageEl, zoomRange])
 
-  const cropImage = async (): Promise<[Blob, string, CropData]> => {
+  const cropImage = async (): Promise<[Blob, string, CropBoxData]> => {
     return new Promise((resolve, reject) => {
       if (!cropper) {
         reject(new Error('No cropper instance'))
         return
       }
-      const cropData = cropper.getData()
+      const cropBoxData = cropper.getCropBoxData()
       cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType]).toBlob((blob) => {
         if (!blob) {
           console.error('Empty blob from cropped canvas', { blob })
           return
         }
         const url = URL.createObjectURL(blob)
-        resolve([blob, url, cropData])
+        resolve([blob, url, cropBoxData])
       })
     })
   }

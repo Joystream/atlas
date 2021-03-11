@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
 import { Avatar, Text, Button } from '@/shared/components'
 import { getVideoMetadata } from '@/utils/video'
-import { CropData } from '@/components/Dialogs/ImageCropDialog/cropper'
+import { CropBoxData } from '@/components/Dialogs/ImageCropDialog/cropper'
 
 export const PlaygroundUploadingFilesData = () => {
   const {
@@ -18,12 +18,17 @@ export const PlaygroundUploadingFilesData = () => {
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropData) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, fileName: string, cropData: CropBoxData) => {
     addUploadingFileData({
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
       type: 'avatar',
       cropData,
+      fileName,
+      parentObject: {
+        type: 'channel',
+        id: `${blob.size}${blob.size}${blob.size}${blob.size}`,
+      },
       status: 'notCompleted',
     })
     setAvatarImageUrl(url)
@@ -53,6 +58,10 @@ export const PlaygroundUploadingFilesData = () => {
                 hash: `${metadata.sizeInBytes}${metadata.duration}${metadata.width}${metadata.height}`,
                 storageProvider: 'storage',
                 type: 'video',
+                parentObject: {
+                  type: 'channel',
+                  id: `${metadata.sizeInBytes}${metadata.sizeInBytes}${metadata.sizeInBytes}${metadata.sizeInBytes}`,
+                },
                 status: 'notCompleted',
               })
             } catch (err) {

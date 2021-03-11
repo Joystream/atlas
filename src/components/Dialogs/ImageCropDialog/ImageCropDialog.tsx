@@ -13,11 +13,11 @@ import {
   StyledSlider,
 } from './ImageCropDialog.style'
 import { Icon } from '@/shared/components'
-import { useCropper, CropperImageType, CropData } from './cropper'
+import { useCropper, CropperImageType, CropBoxData } from './cropper'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string, cropData: CropData) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, fileName: string, cropBoxData: CropBoxData) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
@@ -31,8 +31,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
+  const [fileName, setFileName] = useState('')
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
-  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType })
+  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType, fileName })
 
   // not great - ideally we'd have a data flow trigger this via prop change
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
@@ -64,14 +65,15 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
     }
     const selectedFile = files[0]
     const fileUrl = URL.createObjectURL(selectedFile)
+    setFileName(selectedFile.name)
     setEditedImageHref(fileUrl)
     setShowDialog(true)
   }
 
   const handleConfirmClick = async () => {
-    const [blob, url, cropData] = await cropImage()
+    const [blob, url, cropBoxData] = await cropImage()
     resetDialog()
-    onConfirm(blob, url, cropData)
+    onConfirm(blob, url, fileName, cropBoxData)
   }
 
   const zoomControlNode = (

@@ -9,15 +9,21 @@ import {
 } from './utils'
 import { CropData } from '@/components'
 
+type ParentObjectType = 'video' | 'channel'
 type UploadingFileType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 export type StatusType = 'completed' | 'notCompleted'
 export type UploadingFile = {
   id: string
   hash: string
   storageProvider: string
+  fileName?: string
   type: UploadingFileType
   status: StatusType
   cropData?: CropData
+  parentObject: {
+    type: ParentObjectType
+    id: string
+  }
 }
 
 type UploadingFilesState = {
