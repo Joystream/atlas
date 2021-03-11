@@ -2,21 +2,24 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
-import { DraftsProvider } from '@/hooks'
+import { DraftsProvider, UploadingFilesDataProvider } from '@/hooks'
 import PlaygroundRouter from './PlaygroundRouter'
 
 export const PlaygroundView = () => {
   return (
     <DraftsProvider>
-      <Container>
-        <Text variant="h2">Internal testing view</Text>
-        <LinksContainer>
-          <Link to="./validation-form">Validation Form</Link>
-          <Link to="./drafts">Drafts</Link>
-          <Link to="./video-metadata">Video Metadata</Link>
-        </LinksContainer>
-        <PlaygroundRouter />
-      </Container>
+      <UploadingFilesDataProvider>
+        <Container>
+          <Text variant="h2">Internal testing view</Text>
+          <LinksContainer>
+            <Link to="./validation-form">Validation Form</Link>
+            <Link to="./drafts">Drafts</Link>
+            <Link to="./video-metadata">Video Metadata</Link>
+            <Link to="./uploading-files-data">Uploading Files Data</Link>
+          </LinksContainer>
+          <PlaygroundRouter />
+        </Container>
+      </UploadingFilesDataProvider>
     </DraftsProvider>
   )
 }
