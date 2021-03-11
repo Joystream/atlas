@@ -14,12 +14,11 @@ export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
 export const SignInWrapper = styled.div`
   margin-top: ${sizes(20)};
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 200px;
+  overflow-x: hidden;
 `
-
-export const Header = styled.header``
+export const Header = styled.header`
+  max-width: 710px;
+`
 
 export const ButtonGroup = styled.div`
   margin-top: ${sizes(12)};
@@ -37,10 +36,33 @@ export const SubTitle = styled(Text)`
   color: ${colors.gray[400]};
 `
 
-export const VideoImage = styled.div`
+export const CompositionWrapper = styled.div`
+  position: absolute;
+  max-width: 50%;
+  left: 50%;
+  top: 73px;
+  z-index: ${zIndex.background};
+`
+export const VideoImageWrapper = styled.div`
+  margin-top: ${sizes(10)};
   background-color: ${colors.gray[800]};
   border-radius: ${sizes(1)};
-  box-shadow: 0px 8px 16px 0px #000000 12%, 0px 4px 4px 0px #000000 10%; ;
 `
 
-export const Tile = styled.div``
+export const Tile = styled.img`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+`
+
+export const Overlay = styled.div`
+  z-index: ${zIndex.background};
+  position: absolute;
+  top: 73px;
+  left: 30%;
+  background: radial-gradient(101.07% 169.48% at 0% 100%, black 0%, rgba(0, 0, 0, 0) 100%);
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+`
