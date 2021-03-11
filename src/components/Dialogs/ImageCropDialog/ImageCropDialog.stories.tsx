@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
 import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
-import { CropBoxData } from './cropper'
+import { ImageCropData } from '@/types/cropper'
 import { Avatar, Placeholder } from '@/shared/components'
 import { OverlayManagerProvider, UploadingFilesDataProvider, useUploadingFilesData } from '@/hooks'
 import { css } from '@emotion/react'
@@ -34,12 +34,12 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
     addUploadingFileData({
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
       type: 'avatar',
-      cropData,
+      imageCropData,
       size: blob.size,
       parentObject: {
         type: 'channel',
@@ -50,11 +50,11 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
+  const handleThumbnailConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
+  const handleCoverConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
     setCoverImageUrl(url)
   }
 

@@ -1,3 +1,3 @@
 import Cropper from 'cropperjs'
 
-export type CropBoxData = Cropper.CropBoxData
+export type ImageCropData = Cropper.CropBoxData

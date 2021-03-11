@@ -7,7 +7,7 @@ import {
   removeUploadingFileData as removeUploadingFileDataFn,
   clearUploadingFilesData as clearUploadingFilesDataFn,
 } from './utils'
-import { CropData } from '@/components'
+import { ImageCropData } from '@/types/cropper'
 
 type ParentObjectType = 'video' | 'channel'
 type UploadingFileType = 'video' | 'thumbnail' | 'cover' | 'avatar'
@@ -19,7 +19,7 @@ export type UploadingFile = {
   type: UploadingFileType
   status: StatusType
   size: number
-  cropData?: CropData
+  imageCropData?: ImageCropData
   updatedAt: string
   metadata?: string
   parentObject: {

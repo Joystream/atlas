@@ -1,5 +1,4 @@
-import ImageCropDialog, { ImageCropDialogProps } from './ImageCropDialog'
-import { CropData } from './cropper'
+import ImageCropDialog, { ImageCropDialogProps, ImageCropDialogImperativeHandle } from './ImageCropDialog'
 
 export default ImageCropDialog
-export type { ImageCropDialogProps, CropData }
+export type { ImageCropDialogProps, ImageCropDialogImperativeHandle }

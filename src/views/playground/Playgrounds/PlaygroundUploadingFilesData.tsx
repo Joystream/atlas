@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react'
 import { useUploadingFilesData } from '@/hooks'
 import styled from '@emotion/styled'
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog/ImageCropDialog'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/'
 import { Avatar, Text, Button } from '@/shared/components'
 import { getVideoMetadata } from '@/utils/video'
-import { CropBoxData } from '@/components/Dialogs/ImageCropDialog/cropper'
+import { ImageCropData } from '@/types/cropper'
 
 export const PlaygroundUploadingFilesData = () => {
   const {
@@ -18,7 +18,7 @@ export const PlaygroundUploadingFilesData = () => {
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, cropData: CropBoxData) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, cropData: ImageCropData) => {
     addUploadingFileData({
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
