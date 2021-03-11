@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Checkout, { CheckoutProps } from './Checkout'
 import { Meta, Story } from '@storybook/react'
 import { WithValue } from '../../../../.storybook/WithValue'
@@ -9,19 +9,20 @@ export default {
   argTypes: {},
 } as Meta
 
-const SingleTemplate: Story<CheckoutProps> = (args) => (
-  <WithValue
-    initial={[
-      { title: 'Add Channel Title', onClick: () => alert('Add Channel Title'), completed: true },
-      { title: 'Add Description', onClick: () => alert('Add Description'), completed: true },
-      { title: 'Add Avatar', onClick: () => alert('Add Avatar'), completed: false },
-      { title: 'Add Cover Image', onClick: () => alert('Add Cover Image'), completed: false },
-    ]}
-    actionName="onChange"
-  >
-    {(value, setValue) => <Checkout {...args} steps={value}></Checkout>}
-  </WithValue>
-)
+const SingleTemplate: Story<CheckoutProps> = (args) => {
+  const [addChannel, setaddChannel] = useState(true)
+  const [addDescription, setaddDescription] = useState(false)
+  const [addAvatar, setaddAvatar] = useState(false)
+  const [addCoverImage, setaddCoverImage] = useState(false)
+
+  const steps = [
+    { title: 'Add Channel Title', onClick: () => setaddChannel((value) => !value), completed: addChannel },
+    { title: 'Add Description', onClick: () => setaddDescription((value) => !value), completed: addDescription },
+    { title: 'Add Avatar', onClick: () => setaddAvatar((value) => !value), completed: addAvatar },
+    { title: 'Add Cover Image', onClick: () => setaddCoverImage((value) => !value), completed: addCoverImage },
+  ]
+  return <Checkout {...args} steps={steps}></Checkout>
+}
 
 export const Single = SingleTemplate.bind({})
 Single.args = {}

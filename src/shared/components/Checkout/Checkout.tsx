@@ -1,9 +1,18 @@
 import React from 'react'
-import styled from '@emotion/styled'
-import { colors } from '@/shared/theme'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
 import Icon from '../Icon'
+import {
+  Container,
+  TopRowContainer,
+  StepsProgressContainer,
+  ProgressbarContainer,
+  StepsContainer,
+  Step,
+  StepInnerContainer,
+  StepState,
+  CheckIcon,
+} from './Checkout.styles'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type CheckoutProps = {
@@ -40,72 +49,3 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps }) => {
 }
 
 export default Checkout
-
-const Container = styled.div`
-  padding: 24px;
-  width: 312px;
-  background-color: #181c20;
-  color: ${colors.white};
-`
-
-const ProgressbarContainer = styled.div`
-  width: 24px;
-  height: 24px;
-`
-
-const StepsProgressContainer = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-`
-
-const TopRowContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-`
-
-const StepsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-`
-
-type StepStateProps = {
-  completed: boolean
-}
-const StepState = styled.div<StepStateProps>`
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 100%;
-  ${({ completed }) => [
-    completed &&
-      `background-color: #4038FF;
-      border: 2px solid transparent;`,
-    completed === false && `border: 2px solid #7B8A95`,
-  ]};
-`
-
-const Step = styled.div`
-  cursor: pointer;
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const StepInnerContainer = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-`
-
-const CheckIcon = styled(Icon)`
-  position: relative;
-  top: 1px;
-`
-const StyledCheckIcon = ({ ...svgProps }) => <CheckIcon name="check" {...svgProps} />
