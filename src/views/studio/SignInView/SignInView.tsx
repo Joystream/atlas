@@ -2,7 +2,7 @@ import Multistepper from '@/components/Dialogs/Multistepper'
 import { useCheckBrowser } from '@/hooks'
 import { Text } from '@/shared/components'
 import React, { useState } from 'react'
-import { AddPolkaDot, CreateOrSelectAccount, TermsAndConditions } from './SignInSteps'
+import { ExtensionStep, AccountStep, TermsStep } from './SignInSteps'
 import {
   ButtonGroup,
   HowItWorksButton,
@@ -34,15 +34,15 @@ const SignInView = () => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <AddPolkaDot browser={browser} onStepChange={handleStepChange} currentStepIdx={currentStepIdx} />,
+      element: <ExtensionStep browser={browser} onStepChange={handleStepChange} currentStepIdx={currentStepIdx} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <CreateOrSelectAccount />,
+      element: <AccountStep />,
     },
     {
       title: 'Get FREE tokens and start a channel',
-      element: <TermsAndConditions />,
+      element: <TermsStep />,
     },
   ]
   return (
