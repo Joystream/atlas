@@ -39,6 +39,7 @@ export { ReactComponent as ZoomOut } from './zoom-out.svg'
 export { ReactComponent as Warning } from './warning.svg'
 export { ReactComponent as Gear } from './gear.svg'
 export { ReactComponent as Unlisted } from './unlisted.svg'
+export { ReactComponent as External } from './external.svg'
 
 const icons = [
   'bars',
@@ -82,6 +83,7 @@ const icons = [
   'unlisted',
   'zoom-in',
   'zoom-out',
+  'external',
 ] as const
 
 export type IconType = typeof icons[number]
