@@ -1,8 +1,17 @@
 import React from 'react'
-import { Routes } from 'react-router'
+import { Route, Routes } from 'react-router'
+import { MyVideosView } from '..'
+
+const routesMap = [{ path: './videos', Component: MyVideosView }]
 
 const StudioRouter = () => {
-  return <Routes>{/* routes for studio here */}</Routes>
+  return (
+    <>
+      {routesMap.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
+    </>
+  )
 }
 
 export default StudioRouter

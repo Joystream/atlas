@@ -52,7 +52,6 @@ const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
   { path: routes.videos(), Component: VideosView },
-  { path: routes.myVideos(), Component: MyVideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
   { path: routes.playground() + '/*', Component: PlaygroundView },

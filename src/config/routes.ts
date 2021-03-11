@@ -14,10 +14,10 @@ export default {
   },
   channel: (id = ':id') => `/channel/${id}`,
   channels: () => '/channels',
+  playground: () => '/playground',
   video: (id = ':id') => `/video/${id}`,
   videos: () => '/videos',
-  myVideos: () => '/studio/my-videos',
-  playground: () => '/playground',
+  myVideos: () => '/studio/videos',
   studio: () => `/studio`,
 }
 
