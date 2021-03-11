@@ -1,10 +1,10 @@
-import HomeView from './HomeView'
-import VideoView from './VideoView'
-import ChannelView from './ChannelView'
-import VideosView from './VideosView'
-import ChannelsView from './ChannelsView'
-import SearchOverlayView from './SearchOverlayView'
-import PlaygroundView from './PlaygroundView'
-import MyVideosView from './MyVideosView'
+import MyVideosView from './studio/MyVideosView'
+import HomeView from './consumer/HomeView'
+import VideoView from './consumer/VideoView'
+import ChannelView from './consumer/ChannelView'
+import VideosView from './consumer/VideosView'
+import ChannelsView from './consumer/ChannelsView'
+import SearchOverlayView from './consumer/SearchOverlayView'
+import PlaygroundView from './playground/PlaygroundView'
 
 export { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, MyVideosView, ChannelsView, PlaygroundView }

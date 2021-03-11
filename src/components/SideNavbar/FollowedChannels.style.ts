@@ -18,7 +18,7 @@ export const ChannelsWrapper = styled.div`
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 `
 
 export const ChannelsList = styled.ul`
