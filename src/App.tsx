@@ -3,7 +3,7 @@ import { ApolloProvider } from '@apollo/client'
 
 import { createApolloClient } from '@/api'
 import LayoutWithRouting from '@/views/LayoutWithRouting'
-import { PersonalDataProvider, OverlayManagerProvider, DraftsProvider } from '@/hooks'
+import { PersonalDataProvider, OverlayManagerProvider } from '@/hooks'
 
 export default function App() {
   // create client on render so the mocking setup is done if needed
@@ -14,9 +14,7 @@ export default function App() {
     <ApolloProvider client={apolloClient}>
       <PersonalDataProvider>
         <OverlayManagerProvider>
-          <DraftsProvider>
-            <LayoutWithRouting />
-          </DraftsProvider>
+          <LayoutWithRouting />
         </OverlayManagerProvider>
       </PersonalDataProvider>
     </ApolloProvider>

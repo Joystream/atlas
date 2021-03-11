@@ -14,7 +14,7 @@ import {
 
 const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted']
-const INITIAL_VIDEOS_PER_ROW = 4
+const INITIAL_VIDEOS_PER_ROW = 5
 // not yet doable
 // TODO: adjust action bar to the real fee
 // TODO: Unlisted videos
