@@ -70,8 +70,6 @@ export const InnerContainer = styled.div`
   height: 100%;
 
   @media screen and (min-width: ${breakpoints.small}) {
-    display: block;
-    margin-top: ${sizes(10)};
     max-width: 350px;
   }
 `
