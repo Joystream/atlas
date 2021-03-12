@@ -49,6 +49,11 @@ const routesMap = [
   { path: routes.studio() + '/*', Component: StudioView },
 ]
 
+const topbarRoutesMap = [
+  { path: '*', Component: Topbar },
+  { path: routes.studio() + '/*', Component: StudioTopbar },
+]
+
 const LayoutWithRouting: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
@@ -77,20 +82,16 @@ const LayoutWithRouting: React.FC = () => {
     }, parseInt(transitions.timings.routing))
   }, [location, cachedLocation, isStudioView])
 
-  useEffect(() => {
-    if (location.pathname.includes('/studio')) {
-      setStudioView(true)
-    } else {
-      setStudioView(false)
-    }
-  }, [location.pathname])
-
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
   return (
     <>
       <GlobalStyle additionalStyles={routingTransitions} />
-      {isStudioView ? <StudioTopbar /> : <Topbar />}
+      <Routes>
+        {topbarRoutesMap.map(({ path, Component }) => (
+          <Route key={path} path={path} element={<Component />} />
+        ))}
+      </Routes>
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <ErrorBoundary

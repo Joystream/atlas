@@ -76,7 +76,7 @@ export const StudioContainer = styled.div`
   display: none;
   align-items: center;
   margin-left: auto;
-  margin-right: ${sizes(3)};
+  margin-right: 12px;
   svg {
     width: auto;
     height: auto;
@@ -104,13 +104,13 @@ export const DrawerContainer = styled.div<NavDrawerProps>`
   position: absolute;
   right: 10px;
   top: 0;
-  transform: translateY(${({ active }) => (active ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
+  width: 332px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 12px;
+  transform: translateY(${({ active }) => (active ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
   background-color: ${colors.gray[800]};
-  min-width: 300px;
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   ${ChannelInfoContainer} {
     padding: ${sizes(2)};
@@ -124,6 +124,7 @@ export const MemberInfoContainer = styled.div`
   display: flex;
   align-items: center;
   margin: calc(-1 * 12px);
+  margin-bottom: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   padding: 20px;
   ${StyledAvatar} {

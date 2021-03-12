@@ -39,7 +39,8 @@ type NavDrawerProps = {
   memberAvatar: string
   channels: Channel[]
   currentChannel: Channel
-  handleCurrentChannelChange: (channel: Channel) => void
+  onCurrentChannelChange: (channel: Channel) => void
+  onLogoutClick: () => void
 }
 
 const member = {
@@ -55,9 +56,15 @@ const member = {
 const StudioTopbar: React.FC = () => {
   const [isDrawerActive, setDrawerActive] = useState(false)
 
+  // TODO Change that to use hook for saving/getting currently active channel
   const [currentChannel, setCurrentChannel] = useState(member.channels[0])
   const handleCurrentChannelChange: (channel: Channel) => void = (channel) => {
     setCurrentChannel(channel)
+  }
+
+  const handleLogout = () => {
+    // TODO add logic for Logout
+    window.alert("You've been logged out!")
   }
 
   useEffect(() => {
@@ -87,7 +94,8 @@ const StudioTopbar: React.FC = () => {
         memberAvatar={member.avatar}
         channels={member.channels}
         currentChannel={currentChannel}
-        handleCurrentChannelChange={handleCurrentChannelChange}
+        onCurrentChannelChange={handleCurrentChannelChange}
+        onLogoutClick={handleLogout}
       />
     </>
   )
@@ -124,7 +132,8 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
   memberAvatar,
   channels,
   currentChannel,
-  handleCurrentChannelChange,
+  onCurrentChannelChange,
+  onLogoutClick,
 }) => {
   return (
     <DrawerContainer active={active}>
@@ -136,10 +145,10 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           channel={channel}
           member={memberName}
           active={channel.name === currentChannel.name}
-          onClick={() => handleCurrentChannelChange(channel)}
+          onClick={() => onCurrentChannelChange(channel)}
         />
       ))}
-      <StyledLink to="studio/channel/new">
+      <StyledLink to="channel/new">
         <NewChannel>
           <NewChannelIconContainer>
             <Icon name="new-channel" />
@@ -147,7 +156,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({
           <Text>New Channel</Text>
         </NewChannel>
       </StyledLink>
-      <LogoutButton icon="logout" variant="secondary">
+      <LogoutButton icon="logout" variant="secondary" onClick={onLogoutClick}>
         Log out as a member
       </LogoutButton>
     </DrawerContainer>
