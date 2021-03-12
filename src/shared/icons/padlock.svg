@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+  <defs/>
+  <rect width="12" height="8" x="2" y="7" fill="#fff" rx="1"/>
+  <path stroke="#fff" stroke-width="2" d="M11 8V5a3 3 0 00-3-3v0a3 3 0 00-3 3v3"/>
+  <path fill="#202020" d="M6 12v-2h4v2z"/>
+</svg>
