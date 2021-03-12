@@ -60,6 +60,7 @@ export { ReactComponent as MyChannel } from './my-channel.svg'
 export { ReactComponent as MyUploads } from './my-uploads.svg'
 export { ReactComponent as Chrome } from './chrome.svg'
 export { ReactComponent as Firefox } from './firefox.svg'
+export { ReactComponent as ArrowDown } from './arrow-down.svg'
 
 const icons = [
   'bring-up',
@@ -125,6 +126,7 @@ const icons = [
   'chrome',
   'chrome',
   'firefox',
+  'arrow-down',
 ] as const
 
 export type IconType = typeof icons[number]
