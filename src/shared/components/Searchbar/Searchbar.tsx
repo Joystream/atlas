@@ -54,7 +54,7 @@ const Searchbar: React.FC<SearchbarProps> = ({
         data-hj-allow
         {...htmlProps}
       />
-      {showCancelButton && <CancelButton onClick={handleCancel} variant="tertiary" icon="times" size="smaller" />}
+      {showCancelButton && <CancelButton onClick={handleCancel} variant="tertiary" icon="close" size="small" />}
     </Container>
   )
 }

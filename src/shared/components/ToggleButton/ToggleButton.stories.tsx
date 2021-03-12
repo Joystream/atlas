@@ -20,9 +20,9 @@ export default {
 
 const Template: Story<ToggleButtonProps> = (args) => (
   <>
-    <ToggleButton {...args} size="regular" />
+    <ToggleButton {...args} size="large" />
+    <ToggleButton {...args} size="medium" />
     <ToggleButton {...args} size="small" />
-    <ToggleButton {...args} size="smaller" />
   </>
 )
 

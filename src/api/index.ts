@@ -1,3 +1,1 @@
-import '@/mocking/server'
-
-export { default as client } from './client'
+export { default as createApolloClient } from './client'

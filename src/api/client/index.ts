@@ -1,32 +1,61 @@
 import { ApolloClient } from '@apollo/client'
 import { wrapSchema } from '@graphql-tools/wrap'
 import { mergeSchemas } from '@graphql-tools/merge'
-import { buildASTSchema } from 'graphql'
+import { buildASTSchema, GraphQLFieldResolver } from 'graphql'
 import { SchemaLink } from '@apollo/client/link/schema'
 
 import extendedQueryNodeSchema from '../schemas/extendedQueryNode.graphql'
 import orionSchema from '../schemas/orion.graphql'
 
 import cache from './cache'
-import { orionExecutor, queryNodeExecutor } from './executors'
 import { queryNodeStitchingResolvers } from './resolvers'
+import { createExecutors } from '@/api/client/executors'
+import { delegateToSchema } from '@graphql-tools/delegate'
+import { CreateProxyingResolverFn } from '@graphql-tools/delegate/types'
 
-const executableQueryNodeSchema = wrapSchema({
-  schema: buildASTSchema(extendedQueryNodeSchema),
-  executor: queryNodeExecutor,
-})
-const executableOrionSchema = wrapSchema({
-  schema: buildASTSchema(orionSchema),
-  executor: orionExecutor,
-})
+// we do this so that operationName is passed along with the queries
+// this is needed for our mocking backend to operate
+const createProxyingResolver: CreateProxyingResolverFn = ({
+  subschemaConfig,
+  operation,
+  transformedSchema,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}): GraphQLFieldResolver<any, any> => {
+  return (_parent, _args, context, info) => {
+    return delegateToSchema({
+      schema: subschemaConfig,
+      operationName: info?.operation?.name?.value,
+      operation,
+      context,
+      info,
+      transformedSchema,
+    })
+  }
+}
 
-const mergedSchema = mergeSchemas({
-  schemas: [executableQueryNodeSchema, executableOrionSchema],
-  resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
-})
+const createApolloClient = () => {
+  const { queryNodeExecutor, orionExecutor } = createExecutors()
 
-const link = new SchemaLink({ schema: mergedSchema })
+  const executableQueryNodeSchema = wrapSchema({
+    schema: buildASTSchema(extendedQueryNodeSchema),
+    executor: queryNodeExecutor,
+    createProxyingResolver,
+  })
 
-const apolloClient = new ApolloClient({ link, cache })
+  const executableOrionSchema = wrapSchema({
+    schema: buildASTSchema(orionSchema),
+    executor: orionExecutor,
+    createProxyingResolver,
+  })
 
-export default apolloClient
+  const mergedSchema = mergeSchemas({
+    schemas: [executableQueryNodeSchema, executableOrionSchema],
+    resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
+  })
+
+  const link = new SchemaLink({ schema: mergedSchema })
+
+  return new ApolloClient({ link, cache })
+}
+
+export default createApolloClient

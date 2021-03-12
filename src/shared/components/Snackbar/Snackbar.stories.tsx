@@ -25,7 +25,7 @@ const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, variant,
   const { displaySnackbar } = useSnackbar()
   return (
     <>
-      <Button size="smaller" onClick={() => displaySnackbar({ message, variant, time, buttonText })}>
+      <Button size="small" onClick={() => displaySnackbar({ message, variant, time, buttonText })}>
         Show snackbar
       </Button>
     </>

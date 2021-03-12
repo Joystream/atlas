@@ -20,6 +20,7 @@ const createResolverWithTransforms = (
     delegateToSchema({
       schema,
       operation: 'query',
+      operationName: info?.operation?.name?.value,
       fieldName,
       args,
       context,
@@ -33,18 +34,22 @@ export const queryNodeStitchingResolvers = (
   orionSchema: GraphQLSchema
 ): IResolvers => ({
   Query: {
+    // video queries
+    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
     videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
     featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
+    // channel queries
+    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
+    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
+    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
+      RemoveQueryNodeFollowsField,
+    ]),
+    // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
       RemoveQueryNodeViewsField,
       RemoveQueryNodeFollowsField,
     ]),
-    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
-    channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
-      RemoveQueryNodeFollowsField,
-    ]),
-    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
   },
   Video: {
     // TODO: Resolve the views count in parallel to the videosConnection query
@@ -55,6 +60,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetVideoViews',
           fieldName: ORION_VIEWS_QUERY_NAME,
           args: {
             videoId: parent.id,
@@ -75,6 +82,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetChannelFollows',
           fieldName: ORION_FOLLOWS_QUERY_NAME,
           args: {
             channelId: parent.id,

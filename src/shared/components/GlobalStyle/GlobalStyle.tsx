@@ -10,7 +10,7 @@ const globalStyles = css`
   body {
     font-family: ${typography.fonts.base};
     background: ${colors.black};
-    color: ${colors.gray[500]};
+    color: ${colors.gray[50]};
   }
 
   *,

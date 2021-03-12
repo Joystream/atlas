@@ -2,6 +2,8 @@ import React from 'react'
 import { SerializedStyles } from '@emotion/react'
 import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
+import { To } from 'history'
+import { Link } from 'react-router-dom'
 
 export type ButtonProps = {
   children?: React.ReactNode
@@ -10,6 +12,7 @@ export type ButtonProps = {
   containerCss?: SerializedStyles
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  to?: To
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
 
 const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -19,25 +22,24 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     variant = 'primary',
     disabled = false,
     full = false,
-    size = 'regular',
+    size = 'medium',
     containerCss,
     className,
     onClick,
+    to = '',
   },
   ref
 ) => {
   const clickable = !!onClick
   const hasText = !!children
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!onClick) return
-    onClick(e)
-  }
 
   return (
     <StyledButton
+      as={to ? Link : undefined}
+      to={to}
       css={containerCss}
       className={className}
-      onClick={handleClick}
+      onClick={onClick}
       disabled={disabled}
       variant={variant}
       clickable={clickable}
@@ -46,7 +48,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       size={size}
       ref={ref}
     >
-      {icon && <StyledIcon disabled={disabled} name={icon} />}
+      {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
       {children && <span>{children}</span>}
     </StyledButton>
   )

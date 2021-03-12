@@ -26,6 +26,8 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, progress, className, ..
       progress={progress}
       isLoading={isLoading}
       className={className}
+      // TODO: handle menu contextMenuCallbacks
+      // contextMenuCallbacks={{}}
       {...metaProps}
     />
   )

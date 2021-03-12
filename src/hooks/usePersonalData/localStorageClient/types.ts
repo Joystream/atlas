@@ -4,6 +4,7 @@ type WatchedVideoFields = {
 
 export const INTERRUPTED_VIDEO = 'INTERRUPTED'
 export const COMPLETED_VIDEO = 'COMPLETED'
+export const REMOVED_VIDEO = 'REMOVED'
 
 export type InterruptedVideo = WatchedVideoFields & {
   __typename: typeof INTERRUPTED_VIDEO
@@ -13,7 +14,12 @@ export type CompletedVideo = WatchedVideoFields & {
   __typename: typeof COMPLETED_VIDEO
   id: string
 }
-export type WatchedVideo = InterruptedVideo | CompletedVideo
+
+export type RemovedVideo = WatchedVideoFields & {
+  __typename: typeof REMOVED_VIDEO
+  id: string
+}
+export type WatchedVideo = InterruptedVideo | CompletedVideo | RemovedVideo
 
 export type FollowedChannel = {
   id: string
@@ -22,6 +28,10 @@ export type FollowedChannel = {
 export type RecentSearch = {
   id: string
   type: 'video' | 'channel'
+}
+
+export type DismissedMessage = {
+  id: string
 }
 
 export interface PersonalDataClient {
@@ -41,7 +51,7 @@ export interface PersonalDataClient {
 
   // mark the video as interrupted or completed
   setWatchedVideo: (
-    __typename: typeof INTERRUPTED_VIDEO | typeof COMPLETED_VIDEO,
+    __typename: typeof INTERRUPTED_VIDEO | typeof COMPLETED_VIDEO | typeof REMOVED_VIDEO,
     id: string,
     timestamp?: number
   ) => Promise<void>
@@ -64,4 +74,12 @@ export interface PersonalDataClient {
 
   // add a recent search
   setRecentSearch: (id: string, type: 'video' | 'channel') => Promise<void>
+
+  // === dismissed messages ===
+
+  // get all dismissed messages
+  dismissedMessages: () => Promise<DismissedMessage[]>
+
+  // add a dismissed message
+  setDismissedMessage: (id: string, add?: boolean) => Promise<void>
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMatch } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
   SidebarNav,
@@ -11,6 +11,8 @@ import {
   SubItemsWrapper,
   Logo,
   LogoLink,
+  ButtonGroup,
+  ButtonLink,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -18,6 +20,7 @@ import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
+import routes from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -33,6 +36,8 @@ type SidenavProps = {
 }
 
 const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
+  const isStudio = useMatch(routes.studio())
+
   const {
     state: { followedChannels },
   } = usePersonalData()
@@ -52,7 +57,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
       <SidebarNav expanded={expanded}>
-        <LogoLink to="/" onClick={closeSideNav}>
+        <LogoLink to="/" onClick={closeSideNav} tabIndex={expanded ? 0 : -1}>
           <Logo />
         </LogoLink>
         <SidebarNavList>
@@ -73,6 +78,23 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         {followedChannels.length > 0 && (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
         )}
+        <ButtonGroup>
+          <CSSTransition
+            in={expanded}
+            unmountOnExit
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            <ButtonLink
+              variant="tertiary"
+              onClick={closeSideNav}
+              icon="external"
+              to={isStudio ? routes.index() : routes.studio()}
+            >
+              Joystream {!isStudio && 'studio'}
+            </ButtonLink>
+          </CSSTransition>
+        </ButtonGroup>
       </SidebarNav>
     </>
   )

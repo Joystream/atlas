@@ -10,16 +10,30 @@ const INTERRUPTED_VIDEOS_COUNT = 16
 const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
+    updateWatchedVideos,
   } = usePersonalData()
 
   const interruptedVideosState = watchedVideos
     .filter((video) => video.__typename === 'INTERRUPTED')
+    // display the newest videos first
+    .reverse()
     .slice(-INTERRUPTED_VIDEOS_COUNT)
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
+  const anyInterruptedVideos = interruptedVideosId.length > 0
 
-  const { videos, error, loading, refetch } = useVideos({
-    id_in: interruptedVideosId,
-  })
+  const videoOrderMap = interruptedVideosId.reduce((acc, videoId, idx) => {
+    acc[videoId] = idx
+    return acc
+  }, {} as Record<string, number>)
+
+  const { videos, error, loading, refetch } = useVideos(
+    {
+      where: { id_in: interruptedVideosId },
+    },
+    { skip: !anyInterruptedVideos }
+  )
+
+  const sortedVideos = videos?.slice().sort((v1, v2) => videoOrderMap[v1.id] - videoOrderMap[v2.id])
 
   const videoTimestampsMap = interruptedVideosState.reduce((acc, video) => {
     if (video.__typename === 'INTERRUPTED') {
@@ -28,17 +42,31 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     return acc
   }, {} as Record<string, number>)
 
-  const interruptedVideos = videos?.map((video) => ({
+  const interruptedSortedVideos = sortedVideos?.map((video) => ({
     ...video,
-    progress: (videoTimestampsMap[video.id] / video.duration) * 100,
+    progress: video.duration ? Math.min((videoTimestampsMap[video.id] / video.duration) * 100, 100) : 0,
   }))
 
+  const onRemoveButtonClick = (id: string) => {
+    updateWatchedVideos('REMOVED', id)
+  }
+
   const hasInterruptedVideosError = error && !loading
+
+  if (!anyInterruptedVideos) {
+    return null
+  }
 
   return (
     <>
       {!hasInterruptedVideosError ? (
-        <VideoGallery title="Continue watching" loading={loading} videos={interruptedVideos} />
+        <VideoGallery
+          title="Continue watching"
+          loading={loading}
+          videos={interruptedSortedVideos}
+          removeButton
+          onRemoveButtonClick={onRemoveButtonClick}
+        />
       ) : (
         <ErrorFallback error={error} resetError={() => refetch()} />
       )}
