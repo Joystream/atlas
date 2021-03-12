@@ -40,8 +40,8 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     position: absolute;
     top: 0;
     left: 0;
-    height: calc(100% - 1px);
-    width: calc(100% - 1px);
+    height: 100%;
+    width: 100%;
     border: 1px dashed
       ${({ isDragAccept, isFileDialogActive }) =>
         isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};

@@ -2,7 +2,7 @@ import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/D
 import { FileType } from '@/types/files'
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
-import FileDrop from '../FileDrop'
+import FileSelect from '../FileSelect'
 import FileStep from '../FileStep'
 import Icon from '../Icon'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
@@ -95,7 +95,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
 
   return (
     <MultiFileSelectContainer>
-      <FileDrop
+      <FileSelect
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
@@ -105,8 +105,8 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         thumbnailUrl={croppedImageUrl}
         paragraph={
           step === 'video'
-            ? `16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.`
-            : `Accepting JPG, PNG formats. Can't exceed 20MB (Example data).`
+            ? `Minimum 480p. Accepts any format supported by your browser.`
+            : `Maximum 10MB. Accepts any format supported by your browser.`
         }
         onDropRejected={onDropRejected}
         onError={onError}

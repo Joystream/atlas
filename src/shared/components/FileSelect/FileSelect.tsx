@@ -20,7 +20,7 @@ import {
   Title,
 } from './FileDrop.style'
 
-export type FileDropProps = {
+export type FileSelectProps = {
   fileType: FileType
   onUploadFile: (file: File) => void
   title: string
@@ -34,7 +34,7 @@ export type FileDropProps = {
   maxSize?: number
 }
 
-const FileDrop: React.FC<FileDropProps> = ({
+const FileSelect: React.FC<FileSelectProps> = ({
   onUploadFile,
   fileType,
   maxSize,
@@ -106,7 +106,7 @@ const FileDrop: React.FC<FileDropProps> = ({
           <ErrorContainer onClick={(e) => e.stopPropagation()}>
             <ErrorIcon name="error-second" />
             <ErrorText variant="body2">{error}</ErrorText>
-            <DismissButton variant="tertiary" icon={'close'} onClick={() => onError?.(null)}></DismissButton>
+            <DismissButton variant="tertiary" icon="close" onClick={() => onError?.(null)}></DismissButton>
           </ErrorContainer>
         )}
       </DragAndDropArea>
@@ -114,4 +114,4 @@ const FileDrop: React.FC<FileDropProps> = ({
   )
 }
 
-export default FileDrop
+export default FileSelect

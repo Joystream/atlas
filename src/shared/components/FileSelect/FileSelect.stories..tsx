@@ -1,10 +1,10 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
-import FileDrop, { FileDropProps } from './FileDrop'
+import FileSelect, { FileSelectProps } from './FileSelect'
 
 export default {
-  title: 'Shared/FileDrop',
-  component: FileDrop,
+  title: 'Shared/FileSelect',
+  component: FileSelect,
   argTypes: {
     fileType: {
       defaultValue: 'video',
@@ -18,11 +18,11 @@ export default {
   },
 } as Meta
 
-const Template: Story<FileDropProps> = (args) => {
+const Template: Story<FileSelectProps> = (args) => {
   const [videofile, setVideoFile] = useState<null | File>(null)
   return (
     <>
-      <FileDrop {...args} onUploadFile={(file) => setVideoFile(file)} />
+      <FileSelect {...args} onUploadFile={(file) => setVideoFile(file)} />
       <p>{videofile ? 'File' : 'No uploaded file'}</p>
       {videofile && (
         <ul>
