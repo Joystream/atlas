@@ -204,12 +204,12 @@ input CategoryWhereUniqueInput {
 
 input VideoWhereInput {
   categoryId_eq: ID
-  channelId_in: [ID]
+  channelId_in: [ID!]
   channelId_eq: ID
   createdAt_gte: Date
   isCurated_eq: Boolean
   isPublic_eq: Boolean
-  id_in: [ID]
+  id_in: [ID!]
 }
 
 input VideoWhereUniqueInput {
