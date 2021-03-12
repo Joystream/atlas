@@ -1,44 +1,34 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { TopbarBase, Avatar, Text, Button, TOP_NAVBAR_HEIGHT, TopbarBaseProps } from '@/shared/components'
 
-type ChannelInfoProps = {
-  active?: boolean
-}
-
-type NavDrawerProps = {
-  active?: boolean
-}
-
-type DrawerButtonProps = {
+type CommonStudioTopbarProps = {
   isActive?: boolean
 }
 
 export const StyledTopbarBase = styled((props: TopbarBaseProps) => <TopbarBase {...props} />)`
-  display: flex;
-  justify-content: space-between;
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
     justify-content: space-between;
   }
 `
 
-export const DrawerButton = styled(Button)<DrawerButtonProps>`
+export const DrawerButton = styled(Button)<CommonStudioTopbarProps>`
   svg {
     transform: rotate(${({ isActive }) => (isActive ? '180deg' : '0')});
     transition: transform ${transitions.timings.regular} ${transitions.easing};
   }
 `
 
-export const ChannelInfoContainer = styled.div<ChannelInfoProps>`
+export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
-  background-color: ${({ active }) => active && colors.gray[600]};
+  background-color: ${({ isActive }) => isActive && colors.gray[600]};
   &:hover {
     cursor: pointer;
-    background-color: ${({ active }) => (active ? colors.gray[600] : colors.gray[700])};
+    background-color: ${({ isActive }) => (isActive ? colors.gray[600] : colors.gray[700])};
   }
   svg {
     margin-left: auto;
@@ -47,8 +37,6 @@ export const ChannelInfoContainer = styled.div<ChannelInfoProps>`
 `
 
 export const StyledAvatar = styled(Avatar)`
-  width: 42px;
-  height: 42px;
   margin-left: 20px;
   margin-right: 10px;
 `
@@ -100,18 +88,22 @@ export const StudioContainer = styled.div`
   }
 `
 
-export const DrawerContainer = styled.div<NavDrawerProps>`
+export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   position: absolute;
   right: 10px;
   top: 0;
-  width: 332px;
+  width: 280px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 12px;
-  transform: translateY(${({ active }) => (active ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
+  transform: translateY(${({ isActive }) => (isActive ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
   background-color: ${colors.gray[800]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
+  z-index: ${zIndex.nearOverlay};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    width: 328px;
+  }
   ${ChannelInfoContainer} {
     padding: ${sizes(2)};
   }
@@ -123,14 +115,10 @@ export const DrawerContainer = styled.div<NavDrawerProps>`
 export const MemberInfoContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: calc(-1 * 12px);
+  margin: -12px;
   margin-bottom: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   padding: 20px;
-  ${StyledAvatar} {
-    width: 32px;
-    height: 32px;
-  }
 `
 
 export const MemberTextContainer = styled.div`
@@ -140,8 +128,7 @@ export const MemberTextContainer = styled.div`
 
 export const MemberTitleText = styled(Text)`
   background-color: ${colors.gray[400]};
-  color: ${colors.white};
-  font-size: 10px;
+  font-size: ${typography.sizes.caption};
   padding: 4px;
   opacity: 0.6;
   margin-left: 12px;

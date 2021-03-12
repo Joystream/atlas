@@ -1,5 +1,5 @@
 import React from 'react'
-import { FullLogo, FullLogoStudio, Header, LogoLink, LogoContainer, ShortLogo } from './TopbarBase.style'
+import { FullLogo, Header, LogoLink, StudioText, LogoContainer, ShortLogo } from './TopbarBase.style'
 
 export type TopbarVariant = 'default' | 'studio'
 export type TopbarBaseProps = {
@@ -9,12 +9,15 @@ export type TopbarBaseProps = {
 }
 
 const StudioTopbar: React.FC<TopbarBaseProps> = ({ children, variant = 'default', hasFocus, className }) => {
+  const isStudio = variant === 'studio'
+  const logoLink = isStudio ? '/studio' : '/'
   return (
     <Header hasFocus={hasFocus} className={className}>
       <LogoContainer variant={variant}>
-        <LogoLink to={variant === 'default' ? '/' : '/studio'}>
-          {variant === 'default' && <ShortLogo />}
-          {variant === 'default' ? <FullLogo /> : <FullLogoStudio />}
+        <LogoLink to={logoLink}>
+          {!isStudio && <ShortLogo />}
+          <FullLogo variant={variant} />
+          {isStudio && <StudioText>studio</StudioText>}
         </LogoLink>
       </LogoContainer>
       {children}

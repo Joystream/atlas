@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Text, Icon } from '@/shared/components'
 import {
   StyledTopbarBase,
@@ -47,48 +47,76 @@ const member = {
   name: 'Mikael Cowan',
   avatar: 'https://picsum.photos/300/300',
   channels: [
-    { name: 'Wild Crypto Fan16', avatar: 'https://picsum.photos/200/300' },
-    { name: 'Mild Crypto Skeptic', avatar: 'https://picsum.photos/200/300' },
-    { name: 'Average Cryptocurrency Enjoyer', avatar: 'https://picsum.photos/200/300' },
+    { name: 'Wild Crypto Fan16', avatar: 'https://picsum.photos/201/300' },
+    { name: 'Mild Crypto Skeptic', avatar: 'https://picsum.photos/202/300' },
+    { name: 'Average Cryptocurrency Enjoyer', avatar: 'https://picsum.photos/203/300' },
   ],
 }
 
 const StudioTopbar: React.FC = () => {
   const [isDrawerActive, setDrawerActive] = useState(false)
-
   // TODO Change that to use hook for saving/getting currently active channel
   const [currentChannel, setCurrentChannel] = useState(member.channels[0])
+
+  const drawerRef = useRef<HTMLDivElement | null>(null)
+  const channelInfoRef = useRef<HTMLDivElement | null>(null)
+  const drawerButtonRef = useRef<HTMLButtonElement | null>(null)
+
   const handleCurrentChannelChange: (channel: Channel) => void = (channel) => {
     setCurrentChannel(channel)
+    setDrawerActive(false)
   }
 
   const handleLogout = () => {
     // TODO add logic for Logout
-    window.alert("You've been logged out!")
+  }
+
+  const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+    e.stopPropagation()
+    setDrawerActive(!isDrawerActive)
+  }
+
+  const handleClickOutside = (event: Event) => {
+    if (
+      channelInfoRef.current?.contains(event.target as Node) ||
+      drawerButtonRef.current?.contains(event.target as Node)
+    ) {
+      return
+    }
+    if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+      setDrawerActive(false)
+    }
   }
 
   useEffect(() => {
-    if (!isDrawerActive) {
-      return
+    document.addEventListener('click', handleClickOutside, true)
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
     }
-    document.addEventListener('click', () => setDrawerActive(false), { once: true })
-  }, [isDrawerActive])
+  })
 
   return (
     <>
       <StyledTopbarBase variant="studio">
         <StudioContainer>
           <Button icon="add-video" />
-          <ChannelInfo channel={currentChannel} member={member.name} onClick={() => setDrawerActive(!isDrawerActive)} />
+          <ChannelInfo
+            channel={currentChannel}
+            member={member.name}
+            onClick={handleDrawerToggle}
+            ref={channelInfoRef}
+          />
           <DrawerButton
             isActive={isDrawerActive}
             icon="chevron-down"
             variant="tertiary"
-            onClick={() => setDrawerActive(!isDrawerActive)}
+            onClick={handleDrawerToggle}
+            ref={drawerButtonRef}
           />
         </StudioContainer>
       </StyledTopbarBase>
       <NavDrawer
+        ref={drawerRef}
         active={isDrawerActive}
         memberName={member.name}
         memberAvatar={member.avatar}
@@ -113,54 +141,52 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar }) => 
   )
 }
 
-const ChannelInfo: React.FC<ChannelInfoProps> = ({ active = false, channel, member, onClick }) => {
-  return (
-    <ChannelInfoContainer onClick={onClick} active={active}>
-      <StyledAvatar imageUrl={channel.avatar} />
-      <TextContainer>
-        <Text>{channel.name}</Text>
-        <Text>{member}</Text>
-      </TextContainer>
-      {active && <Icon name="check" />}
-    </ChannelInfoContainer>
-  )
-}
+const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
+  ({ active = false, channel, member, onClick }, ref) => {
+    return (
+      <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
+        <StyledAvatar size="medium" imageUrl={channel.avatar} />
+        <TextContainer>
+          <Text>{channel.name}</Text>
+          <Text>{member}</Text>
+        </TextContainer>
+        {active && <Icon name="check" />}
+      </ChannelInfoContainer>
+    )
+  }
+)
+ChannelInfo.displayName = 'ChannelInfo'
 
-const NavDrawer: React.FC<NavDrawerProps> = ({
-  active,
-  memberName,
-  memberAvatar,
-  channels,
-  currentChannel,
-  onCurrentChannelChange,
-  onLogoutClick,
-}) => {
-  return (
-    <DrawerContainer active={active}>
-      <MemberInfo memberName={memberName} memberAvatar={memberAvatar} />
-      <Text variant="h6">My Channels</Text>
-      {channels.map((channel) => (
-        <ChannelInfo
-          key={channel.name}
-          channel={channel}
-          member={memberName}
-          active={channel.name === currentChannel.name}
-          onClick={() => onCurrentChannelChange(channel)}
-        />
-      ))}
-      <StyledLink to="channel/new">
-        <NewChannel>
-          <NewChannelIconContainer>
-            <Icon name="new-channel" />
-          </NewChannelIconContainer>
-          <Text>New Channel</Text>
-        </NewChannel>
-      </StyledLink>
-      <LogoutButton icon="logout" variant="secondary" onClick={onLogoutClick}>
-        Log out as a member
-      </LogoutButton>
-    </DrawerContainer>
-  )
-}
+const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
+  ({ active, memberName, memberAvatar, channels, currentChannel, onCurrentChannelChange, onLogoutClick }, ref) => {
+    return (
+      <DrawerContainer ref={ref} isActive={active}>
+        <MemberInfo memberName={memberName} memberAvatar={memberAvatar} />
+        <Text variant="h6">My Channels</Text>
+        {channels.map((channel) => (
+          <ChannelInfo
+            key={channel.name}
+            channel={channel}
+            member={memberName}
+            active={channel.name === currentChannel.name}
+            onClick={() => onCurrentChannelChange(channel)}
+          />
+        ))}
+        <StyledLink to="channel/new">
+          <NewChannel>
+            <NewChannelIconContainer>
+              <Icon name="new-channel" />
+            </NewChannelIconContainer>
+            <Text>New Channel</Text>
+          </NewChannel>
+        </StyledLink>
+        <LogoutButton icon="logout" variant="secondary" onClick={onLogoutClick}>
+          Log out as a member
+        </LogoutButton>
+      </DrawerContainer>
+    )
+  }
+)
+NavDrawer.displayName = 'NavDrawer'
 
 export default StudioTopbar

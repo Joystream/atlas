@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
+import { Text } from '@/shared/components'
 import { StyledSearchbar } from '@/components/Topbar/Topbar.style'
-import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogoDefault } from '@/assets/full-logo.svg'
-import { ReactComponent as UnstyledFullLogoStudio } from '@/assets/full-logo-studio.svg'
 import { Link } from 'react-router-dom'
 import { TopbarVariant } from './TopbarBase'
 
@@ -51,8 +50,11 @@ export const Header = styled.header<TopNavbarStyleProps>`
 `
 
 export const LogoLink = styled(Link)`
+  display: flex;
   padding: 0 ${sizes(5)};
   margin-right: ${sizes(1)};
+  text-decoration: none;
+  color: ${colors.gray[300]};
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(5)};
   }
@@ -60,6 +62,11 @@ export const LogoLink = styled(Link)`
     padding: 0;
     margin-left: 2px;
   }
+`
+
+export const StudioText = styled(Text)`
+  font-family: ${typography.fonts.headers};
+  margin-left: 6px;
 `
 
 export const ShortLogo = styled(UnstyledShortLogo)`
@@ -70,26 +77,17 @@ export const ShortLogo = styled(UnstyledShortLogo)`
   }
 `
 
-const fullLogoStyles = () =>
-  css`
-    height: ${sizes(8)};
-    @media screen and (min-width: ${breakpoints.medium}) {
-      display: block;
-    }
-  `
-
-export const FullLogo = styled(UnstyledFullLogoDefault)`
-  display: none;
-  ${fullLogoStyles}
-`
-
-export const FullLogoStudio = styled(UnstyledFullLogoStudio)`
-  display: block;
+export const FullLogo = styled(UnstyledFullLogoDefault)<LogoContainerProps>`
+  display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
+  height: ${sizes(8)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    display: ${({ variant }) => (variant === 'default' ? 'block' : 'flex')};
+  }
 `
 
 export const LogoContainer = styled.div<LogoContainerProps>`
-  margin-left: ${sizes(10)};
-  margin-top: ${sizes(1)};
+  margin-left: ${({ variant }) => (variant === 'default' ? sizes(10) : sizes(12))};
+  margin-top: ${({ variant }) => (variant === 'default' ? sizes(1) : '0')};
   display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
   align-items: center;
   @media screen and (min-width: ${breakpoints.small}) {
