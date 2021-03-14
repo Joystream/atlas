@@ -13,10 +13,9 @@ export const TabsContainer = styled.div`
   border-bottom: solid 1px ${colors.gray[800]};
 `
 
-type PaginationContainerProps = { extraPaddingBottom?: boolean }
-export const PaginationContainer = styled.div<PaginationContainerProps>`
+export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
-  padding-bottom: ${({ extraPaddingBottom }) => (extraPaddingBottom ? sizes(24) : sizes(16))};
+  padding-bottom: ${sizes(16)};
   display: flex;
   align-items: center;
   justify-content: center;

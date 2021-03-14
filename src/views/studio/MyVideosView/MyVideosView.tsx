@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useVideos } from '@/api/hooks'
-import { VideoPreview } from '@/components'
+import { VideoPreviewPublisher } from '@/components'
 import { useDrafts } from '@/hooks'
 import { Grid, Pagination, Tabs } from '@/shared/components'
-import ActionBarMyVideos from './ActionBarMyVideos'
+
 import {
   PaginationContainer,
   StyledDismissibleMessage,
@@ -30,7 +30,6 @@ export const MyVideosView = () => {
   const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const { selectedVideosIds, setselectedVideosIds, deselectVideos } = useVideoSelection(currentTab)
   const videosPerPage = 2 * videosPerRow
   const { loading, videos, error, totalCount, fetchMore } = useVideos(
     {
@@ -71,7 +70,6 @@ export const MyVideosView = () => {
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (totalCount ?? 0) > 0)
-  const isActionBarActive = selectedVideosIds.length > 0
   const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
     id: undefined,
     progress: undefined,
@@ -90,21 +88,7 @@ export const MyVideosView = () => {
   //   currentPage,
   // })
 
-  const handleVideoSelect = (id: string, isSelected: boolean) => {
-    if (selectedVideosIds.includes(id)) {
-      setselectedVideosIds(selectedVideosIds.filter((_id) => _id !== id))
-    } else {
-      setselectedVideosIds([...selectedVideosIds, id])
-    }
-  }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const handleDeselect = () => deselectVideos()
-  const handleDelete = () => {
-    if (isDraftTab) {
-      removeDraft(selectedVideosIds)
-      handleDeselect()
-    }
-  }
   return (
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
@@ -127,17 +111,11 @@ export const MyVideosView = () => {
             // this makes for a smoother transition between pages
             .slice(0, videosPerPage)
             .map((video, idx) => (
-              <VideoPreview
+              <VideoPreviewPublisher
                 key={idx + '-' + currentTabName + '-' + currentPage}
                 id={video.id}
                 showChannel={false}
                 isLoading={loading}
-                publisherMode
-                isSelected={!!video.id && selectedVideosIds.includes(video.id)}
-                isAnyVideoSelected={selectedVideosIds.length > 0}
-                onSelectClick={(isSelected) => {
-                  video.id && handleVideoSelect(video.id, isSelected)
-                }}
               />
             ))}
         </Grid>
@@ -148,17 +126,11 @@ export const MyVideosView = () => {
             // pagination slice
             .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
             .map((draft, idx) => (
-              <VideoPreview
+              <VideoPreviewPublisher
                 key={idx + '-' + currentTabName + '-' + currentPage}
                 id={draft.id}
                 showChannel={false}
-                publisherMode
-                videoPublishState="draft"
-                isSelected={selectedVideosIds.includes(draft.id)}
-                isAnyVideoSelected={selectedVideosIds.length > 0}
-                onSelectClick={(isSelected) => {
-                  draft.id && handleVideoSelect(draft.id, isSelected)
-                }}
+                isDraft
                 onEditVideoClick={() => ({})}
                 onDeleteVideoClick={() => {
                   removeDraft(draft.id)
@@ -167,7 +139,7 @@ export const MyVideosView = () => {
             ))}
         </Grid>
       )}
-      <PaginationContainer extraPaddingBottom={isActionBarActive}>
+      <PaginationContainer>
         <Pagination
           onChangePage={(page) => {
             setCurrentPage(page)
@@ -187,15 +159,6 @@ export const MyVideosView = () => {
           totalCount={isDraftTab ? drafts.length : totalCount}
         ></Pagination>
       </PaginationContainer>
-      {isActionBarActive && (
-        <ActionBarMyVideos
-          videosSelectedCount={selectedVideosIds.length}
-          fee={isDraftTab ? 0 : 0.2} // fake fee for now
-          onDelete={handleDelete}
-          onCancel={handleDeselect}
-          onDeselect={handleDeselect}
-        />
-      )}
     </ViewContainer>
   )
 }
@@ -209,14 +172,4 @@ const usePagination = (currentTab: number) => {
     setCurrentPage(1)
   }, [currentTab])
   return { currentPage, setCurrentPage }
-}
-
-const useVideoSelection = (currentTab: number) => {
-  const [selectedVideosIds, setselectedVideosIds] = useState<string[]>([])
-  const deselectVideos = () => setselectedVideosIds([])
-  // reset the video selection when changing tabs
-  useEffect(() => {
-    setselectedVideosIds([])
-  }, [currentTab])
-  return { selectedVideosIds, setselectedVideosIds, deselectVideos }
 }
