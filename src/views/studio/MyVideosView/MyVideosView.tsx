@@ -12,6 +12,7 @@ import {
   VideosContainer,
   ViewContainer,
 } from './MyVideos.styles'
+import { AddVideoView } from './AddVideoView'
 
 const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
@@ -94,9 +95,9 @@ export const MyVideosView = () => {
         />
       )}
       <VideosContainer>
-        {currentTabName !== 'Drafts' && (
-          <Grid onResize={handleOnResizeGrid}>
-            {videosWPlaceholders
+        <Grid onResize={handleOnResizeGrid}>
+          {!isDraftTab &&
+            videosWPlaceholders
               // this makes for a smoother transition between pages
               .slice(0, videosPerPage)
               .map((video, idx) => (
@@ -107,11 +108,8 @@ export const MyVideosView = () => {
                   isLoading={loading}
                 />
               ))}
-          </Grid>
-        )}
-        {isDraftTab && (
-          <Grid onResize={handleOnResizeGrid}>
-            {drafts
+          {isDraftTab &&
+            drafts
               // pagination slice
               .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
               .map((draft, idx) => (
@@ -126,8 +124,8 @@ export const MyVideosView = () => {
                   }}
                 />
               ))}
-          </Grid>
-        )}
+        </Grid>
+        {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0)) && <AddVideoView />}
       </VideosContainer>
       <PaginationContainer>
         <Pagination
