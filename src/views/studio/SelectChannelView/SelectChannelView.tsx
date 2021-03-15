@@ -1,5 +1,4 @@
 import { ChannelCard, StudioHeader } from '@/shared/components'
-import Spinner from '@/shared/components/Spinner/Spinner'
 import React from 'react'
 import { MemberChannelGrid, Wrapper } from './SelectChannelView.style'
 

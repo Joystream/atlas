@@ -1,65 +1,25 @@
+import { Checkbox } from '@/shared/components'
+import Text from '@/shared/components/Text'
+import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
+import { StepTitle, StepWrapper } from '../SignInView.style'
 import {
-  BrowserIcon,
+  TermsBox,
+  TextWrapper,
+  TermsParagraph,
+  TermsOverlay,
+  ScrollButton,
   CheckboxWrapper,
   ContinueButton,
-  ScrollButton,
-  StepButton,
-  StepSubTitle,
-  StepTitle,
-  StepWrapper,
-  TermsBox,
-  TermsOverlay,
-  TermsParagraph,
-  TextWrapper,
-} from './SignInSteps.style'
-import Text from '@/shared/components/Text'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { Checkbox } from '@/shared/components'
+} from './TermsStep.style'
 
-type CommonStepProps = {
+type TermsStepProps = {
   onStepChange: (idx: number) => void
   currentStepIdx: number
 }
 
-type ExtensionStepProps = {
-  browser: 'chrome' | 'firefox' | null
-} & CommonStepProps
-
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser, currentStepIdx, onStepChange }) => {
-  return (
-    <StepWrapper centered>
-      {browser && <BrowserIcon name={browser} />}
-      <StepTitle variant="h4">Add polkadot extension</StepTitle>
-      <StepSubTitle variant="body2">
-        Please enable Polkadot extension or install it using one of the following plugin links.
-      </StepSubTitle>
-      {browser && (
-        <StepButton icon={browser} onClick={() => onStepChange(currentStepIdx + 1)}>
-          Add polkadot plugin
-        </StepButton>
-      )}
-    </StepWrapper>
-  )
-}
-
-type Account = {
-  name: string
-  img: string
-  balance: number
-}
-
-const AccountStep = () => {
-  const [accounts, checkAccounts] = useState<null | Account[]>()
-  return (
-    <StepWrapper>
-      <StepTitle variant="h4">Waiting for account creation</StepTitle>
-    </StepWrapper>
-  )
-}
-
-const TermsStep = () => {
+const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) => {
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isRead, setIsRead] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
@@ -149,10 +109,12 @@ const TermsStep = () => {
             label="I’ve read and accept Terms And Conditions"
           />
         </CSSTransition>
-        <ContinueButton disabled={!isAccepted}>Continue</ContinueButton>
+        <ContinueButton disabled={!isAccepted} onClick={() => onStepChange(currentStepIdx + 1)}>
+          Continue
+        </ContinueButton>
       </CheckboxWrapper>
     </StepWrapper>
   )
 }
 
-export { ExtensionStep, AccountStep, TermsStep }
+export default TermsStep
