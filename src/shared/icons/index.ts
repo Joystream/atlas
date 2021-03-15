@@ -40,6 +40,14 @@ export { ReactComponent as ZoomOut } from './zoom-out.svg'
 export { ReactComponent as Warning } from './warning.svg'
 export { ReactComponent as Gear } from './gear.svg'
 export { ReactComponent as Unlisted } from './unlisted.svg'
+export { ReactComponent as VideoDnd } from './video-dnd.svg'
+export { ReactComponent as ImageDnd } from './image-dnd.svg'
+export { ReactComponent as TrashFill } from './trash-fill.svg'
+export { ReactComponent as PlaySmall } from './play-small.svg'
+export { ReactComponent as ErrorSecond } from './error-second.svg'
+export { ReactComponent as VideoCamera } from './video-camera.svg'
+export { ReactComponent as Padlock } from './padlock.svg'
+export { ReactComponent as Upload } from './upload.svg'
 export { ReactComponent as External } from './external.svg'
 
 const icons = [
@@ -85,6 +93,14 @@ const icons = [
   'unlisted',
   'zoom-in',
   'zoom-out',
+  'video-dnd',
+  'image-dnd',
+  'trash-fill',
+  'play-small',
+  'error-second',
+  'video-camera',
+  'padlock',
+  'upload',
   'external',
 ] as const
 

@@ -1,4 +1,4 @@
-import ImageCropDialog, { ImageCropDialogProps } from './ImageCropDialog'
+import ImageCropDialog, { ImageCropDialogProps, ImageCropDialogImperativeHandle } from './ImageCropDialog'
 
 export default ImageCropDialog
-export type { ImageCropDialogProps }
+export type { ImageCropDialogProps, ImageCropDialogImperativeHandle }

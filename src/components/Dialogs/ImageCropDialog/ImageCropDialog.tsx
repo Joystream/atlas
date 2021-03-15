@@ -13,15 +13,16 @@ import {
   StyledSlider,
 } from './ImageCropDialog.style'
 import { Icon } from '@/shared/components'
+import { ImageCropData } from '@/types/cropper'
 import { useCropper, CropperImageType } from './cropper'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: ImageCropData) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
-  open: () => void
+  open: (file?: File) => void
 }
 
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
@@ -38,8 +39,14 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
   useImperativeHandle(ref, () => ({
-    open: () => {
-      inputRef.current?.click()
+    open: (file) => {
+      if (file) {
+        const fileUrl = URL.createObjectURL(file)
+        setEditedImageHref(fileUrl)
+        setShowDialog(true)
+      } else {
+        inputRef.current?.click()
+      }
     },
   }))
 
@@ -69,9 +76,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   }
 
   const handleConfirmClick = async () => {
-    const [blob, url] = await cropImage()
+    const [blob, url, imageCropData] = await cropImage()
     resetDialog()
-    onConfirm(blob, url)
+    onConfirm(blob, url, imageCropData)
   }
 
   const zoomControlNode = (
