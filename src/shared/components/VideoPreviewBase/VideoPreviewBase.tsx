@@ -31,7 +31,6 @@ import {
   KebabMenuIconContainer,
   CoverRemoveButton,
   CoverTopLeftContainer,
-  BringUpIcon,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -40,6 +39,7 @@ import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { ContextMenu, ContextMenuItem, Icon, Placeholder } from '..'
 import { useContextMenu } from '@/hooks'
+import { PullUp } from './PullUp'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -57,7 +57,7 @@ export type VideoPreviewPublisherProps =
       publisherMode: true
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
-      onSelectClick?: (value: boolean) => void
+      onPullupClick?: () => void
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: () => void
@@ -66,7 +66,7 @@ export type VideoPreviewPublisherProps =
       publisherMode?: false
       videoPublishState?: undefined
       isDraft?: undefined
-      onSelectClick?: undefined
+      onPullupClick?: undefined
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: () => void
@@ -120,7 +120,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   publisherMode = false,
   isDraft,
   onChannelClick,
-  onSelectClick,
+  onPullupClick,
   onClick,
   onRemoveButtonClick,
   className,
@@ -207,10 +207,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                       {publisherMode && (
                         <CoverTopLeftContainer>
-                          <BringUpIcon
+                          <PullUp
+                            // set to true when video is already on the snackbar
+                            disabled={false}
                             onClick={(e) => {
                               e.preventDefault()
-                              alert('xd')
+                              onPullupClick && onPullupClick()
                             }}
                           />
                         </CoverTopLeftContainer>

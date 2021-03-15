@@ -206,7 +206,7 @@ export const CoverEditIcon = ({ ...props }) => (
 export const DraftIcon = ({ ...props }) => <Icon name="page" {...props} />
 export const UnlistedIcon = ({ ...props }) => <Icon name="unlisted" {...props} />
 export const KebabMenuIcon = ({ ...props }) => <Icon name="kebab-menu" {...props} />
-export const BringUpIcon: React.FC<Omit<IconProps, 'name'>> = ({ ...props }) => <Icon name="bring-up" {...props} />
+
 export const CoverRemoveButton = ({ ...props }) => (
   <RemoveButton {...props}>
     <Icon name="close" />
@@ -297,7 +297,6 @@ export const CoverTopLeftContainer = styled.div`
   position: absolute;
   top: ${sizes(2)};
   left: ${sizes(2)};
-  padding: ${sizes(2)} ${sizes(2)};
 `
 
 export const KebabMenuIconContainer = styled.div`

@@ -53,7 +53,6 @@ export const MyVideosView = () => {
         await addDraft({
           channelId: testChannelId,
           title: i.toString(),
-          // title: Math.random().toString(36),
           description: 'string',
           isPublic: true,
           hasMarketing: false,
@@ -75,19 +74,6 @@ export const MyVideosView = () => {
     progress: undefined,
   }))
   const videosWPlaceholders = [...(videos || []), ...placeholderItems]
-  // console.log({
-  //   videosWPlaceholders,
-  //   drafts,
-  //   placeholderItems,
-  //   videos,
-  //   totalCount,
-  //   loading,
-  //   isLoading,
-  //   error,
-  //   currentTabName,
-  //   currentPage,
-  // })
-
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   return (
     <ViewContainer>
