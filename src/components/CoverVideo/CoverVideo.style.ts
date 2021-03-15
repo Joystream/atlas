@@ -221,6 +221,8 @@ export const PlayButton = styled(Button)<{ playing: boolean }>`
 
   svg {
     margin-left: ${sizes(3)};
+    width: auto;
+    height: auto;
   }
 
   span {
