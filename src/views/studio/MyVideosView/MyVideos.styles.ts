@@ -24,3 +24,7 @@ export const PaginationContainer = styled.div`
 export const StyledDismissibleMessage = styled(DismissibleMessage)`
   margin-bottom: ${sizes(8)};
 `
+
+export const VideosContainer = styled.div`
+  min-height: 568px;
+`

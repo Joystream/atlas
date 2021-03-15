@@ -6,7 +6,6 @@ const StudioView = () => {
   return (
     <>
       <DraftsProvider>
-        <h1>Studio view here</h1>
         <StudioRouter />
       </DraftsProvider>
     </>

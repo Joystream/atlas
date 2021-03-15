@@ -36,9 +36,9 @@ const Container = styled.div<StateProps>`
     ${({ disabled }) => !disabled && `background: ${transparentize(0.8, colors.blue[100])};`}
   }
   &:active {
-    ${({ disabled }) => !disabled && `background: ${transparentize(0.8, colors.gray[300])};`}
+    ${({ disabled }) => !disabled && `background: ${transparentize(0.8, colors.blue[300])};`}
     path {
-      ${({ disabled }) => !disabled && `stroke: ${colors.blue[100]};`}
+      ${({ disabled }) => !disabled && `stroke: ${colors.gray[100]};`}
     }
   }
 `

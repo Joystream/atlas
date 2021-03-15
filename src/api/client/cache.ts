@@ -11,6 +11,7 @@ const cache = new InMemoryCache({
           // make sure queries asking for a specific category are separated in cache
           const channelId = args?.where?.channelId_eq || ''
           const categoryId = args?.where?.categoryId_eq || ''
+          const isPublic = args?.where?.isPublic_eq || ''
           const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
           const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
 
@@ -19,7 +20,7 @@ const cache = new InMemoryCache({
             return `${createdAtGte}:${channelIdIn}`
           }
 
-          return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}`
+          return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
         }),
         videos: {
           read(
@@ -37,7 +38,9 @@ const cache = new InMemoryCache({
           ) {
             return existing?.slice(offset, offset + limit)
           },
-          keyArgs: false,
+          keyArgs: (args) => {
+            return `${args?.where?.isPublic_eq}`
+          },
           // @ts-ignore not too sure how to type this
           merge(existing, incoming, { args: { offset = 0 } }) {
             const merged = existing ? existing.slice(0) : []

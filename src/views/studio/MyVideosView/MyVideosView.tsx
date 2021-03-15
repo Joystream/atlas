@@ -9,11 +9,12 @@ import {
   StyledDismissibleMessage,
   StyledText,
   TabsContainer,
+  VideosContainer,
   ViewContainer,
 } from './MyVideos.styles'
 
 const testChannelId = '100' // staging test channel id
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted']
+const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 5
 // not yet doable
 // TODO: adjust action bar to the real fee
@@ -31,17 +32,19 @@ export const MyVideosView = () => {
   const [currentTab, setCurrentTab] = useState(0)
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const videosPerPage = 2 * videosPerRow
+  const currentTabName = TABS[currentTab]
   const { loading, videos, error, totalCount, fetchMore } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * (currentPage - 1),
       where: {
         channelId_eq: testChannelId,
+        isPublic_eq: currentTabName !== 'Unlisted',
       },
     },
     {
       // notifyOnNetworkStatusChange: true,
-      nextFetchPolicy: 'cache-first',
+      fetchPolicy: 'cache-first',
     }
   )
 
@@ -66,7 +69,6 @@ export const MyVideosView = () => {
     }
   }, [])
 
-  const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isLoading = loading || (videos?.length === 0 && (totalCount ?? 0) > 0)
   const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
@@ -79,7 +81,7 @@ export const MyVideosView = () => {
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
       <TabsContainer>
-        <Tabs initialIndex={0} tabs={TABS} onSelectTab={setCurrentTab} />
+        <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
       </TabsContainer>
       {isDraftTab && (
         // Should this really be dismissable?
@@ -91,40 +93,42 @@ export const MyVideosView = () => {
           }
         />
       )}
-      {currentTabName !== 'Drafts' && (
-        <Grid onResize={handleOnResizeGrid}>
-          {videosWPlaceholders
-            // this makes for a smoother transition between pages
-            .slice(0, videosPerPage)
-            .map((video, idx) => (
-              <VideoPreviewPublisher
-                key={idx + '-' + currentTabName + '-' + currentPage}
-                id={video.id}
-                showChannel={false}
-                isLoading={loading}
-              />
-            ))}
-        </Grid>
-      )}
-      {isDraftTab && (
-        <Grid onResize={handleOnResizeGrid}>
-          {drafts
-            // pagination slice
-            .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
-            .map((draft, idx) => (
-              <VideoPreviewPublisher
-                key={idx + '-' + currentTabName + '-' + currentPage}
-                id={draft.id}
-                showChannel={false}
-                isDraft
-                onEditVideoClick={() => ({})}
-                onDeleteVideoClick={() => {
-                  removeDraft(draft.id)
-                }}
-              />
-            ))}
-        </Grid>
-      )}
+      <VideosContainer>
+        {currentTabName !== 'Drafts' && (
+          <Grid onResize={handleOnResizeGrid}>
+            {videosWPlaceholders
+              // this makes for a smoother transition between pages
+              .slice(0, videosPerPage)
+              .map((video, idx) => (
+                <VideoPreviewPublisher
+                  key={idx + '-' + currentTabName + '-' + currentPage}
+                  id={video.id}
+                  showChannel={false}
+                  isLoading={loading}
+                />
+              ))}
+          </Grid>
+        )}
+        {isDraftTab && (
+          <Grid onResize={handleOnResizeGrid}>
+            {drafts
+              // pagination slice
+              .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
+              .map((draft, idx) => (
+                <VideoPreviewPublisher
+                  key={idx + '-' + currentTabName + '-' + currentPage}
+                  id={draft.id}
+                  showChannel={false}
+                  isDraft
+                  onEditVideoClick={() => ({})}
+                  onDeleteVideoClick={() => {
+                    removeDraft(draft.id)
+                  }}
+                />
+              ))}
+          </Grid>
+        )}
+      </VideosContainer>
       <PaginationContainer>
         <Pagination
           onChangePage={(page) => {
