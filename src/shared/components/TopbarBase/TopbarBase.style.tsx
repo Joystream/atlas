@@ -65,22 +65,26 @@ export const LogoLink = styled(Link)`
 `
 
 export const StudioText = styled(Text)`
+  display: none;
   font-family: ${typography.fonts.headers};
   margin-left: 6px;
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: block;
+  }
 `
 
 export const ShortLogo = styled(UnstyledShortLogo)`
   display: block;
   height: ${sizes(8)};
-  @media screen and (min-width: ${breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.small}) {
     display: none;
   }
 `
 
 export const FullLogo = styled(UnstyledFullLogoDefault)<LogoContainerProps>`
-  display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
+  display: none;
   height: ${sizes(8)};
-  @media screen and (min-width: ${breakpoints.medium}) {
+  @media screen and (min-width: ${breakpoints.small}) {
     display: ${({ variant }) => (variant === 'default' ? 'block' : 'flex')};
   }
 `

@@ -4,6 +4,7 @@ import {
   StyledTopbarBase,
   StudioContainer,
   DrawerButton,
+  AddVideoButton,
   MemberInfoContainer,
   MemberTitleText,
   MemberTextContainer,
@@ -99,7 +100,7 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioContainer>
-          <Button icon="add-video" />
+          <AddVideoButton icon="add-video" />
           <ChannelInfo
             channel={currentChannel}
             member={member.name}

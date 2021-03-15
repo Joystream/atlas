@@ -15,7 +15,7 @@ const StudioTopbar: React.FC<TopbarBaseProps> = ({ children, variant = 'default'
     <Header hasFocus={hasFocus} className={className}>
       <LogoContainer variant={variant}>
         <LogoLink to={logoLink}>
-          {!isStudio && <ShortLogo />}
+          <ShortLogo />
           <FullLogo variant={variant} />
           {isStudio && <StudioText>studio</StudioText>}
         </LogoLink>

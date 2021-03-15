@@ -61,7 +61,7 @@ export const TextContainer = styled.div`
 `
 
 export const StudioContainer = styled.div`
-  display: none;
+  display: flex;
   align-items: center;
   margin-left: auto;
   margin-right: 12px;
@@ -71,9 +71,6 @@ export const StudioContainer = styled.div`
   }
   button {
     cursor: pointer;
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: flex;
   }
   ${ChannelInfoContainer} {
     &:hover {
@@ -85,6 +82,13 @@ export const StudioContainer = styled.div`
         display: flex;
       }
     }
+  }
+`
+
+export const AddVideoButton = styled(Button)`
+  display: none;
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: flex;
   }
 `
 
