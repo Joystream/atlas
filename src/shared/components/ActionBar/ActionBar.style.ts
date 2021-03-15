@@ -17,6 +17,13 @@ export const StyledActionBarContainer = styled.div`
   }
 `
 
+export const StyledInnerContainer = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: var(--max-inner-width);
+  margin: 0 auto;
+`
+
 export const StyledInfoContainer = styled.div`
   display: none;
   width: auto;
@@ -63,10 +70,7 @@ export const StyledButtonsContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  button:hover {
-    cursor: pointer;
-  }
-  button:nth-of-type(1) {
+  > *:not(:last-child) {
     margin-right: ${sizes(2)};
   }
 `

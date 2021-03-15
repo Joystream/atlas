@@ -3,6 +3,11 @@ fragment BasicChannelFields on Channel {
   handle
   avatarPhotoUrl
   createdAt
+  description
+  isPublic
+  language {
+    name
+  }
 }
 
 fragment AllChannelFields on Channel {

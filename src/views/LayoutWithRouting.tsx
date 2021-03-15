@@ -128,6 +128,7 @@ const RouterWrapper = () => {
 }
 
 const MainContainer = styled.main`
+  --max-inner-width: 1440px;
   position: relative;
   padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
   margin-left: var(--sidenav-collapsed-width);

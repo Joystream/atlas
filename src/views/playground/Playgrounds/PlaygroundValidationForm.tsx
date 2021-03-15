@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { isValid } from 'date-fns'
-import { textFieldValidation, requiredValidation } from './formValidationOptions'
+import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import styled from '@emotion/styled'
 import {
   Button as _Button,

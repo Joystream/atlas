@@ -1,14 +1,16 @@
 import * as Types from './baseTypes.generated'
 
-import * as Apollo from '@apollo/client'
 import { gql } from '@apollo/client'
-
+import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
   handle: string
   avatarPhotoUrl?: Types.Maybe<string>
   createdAt: Date
+  description: string
+  isPublic: boolean
+  language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
 }
 
 export type AllChannelFieldsFragment = {
@@ -105,6 +107,11 @@ export const BasicChannelFieldsFragmentDoc = gql`
     handle
     avatarPhotoUrl
     createdAt
+    description
+    isPublic
+    language {
+      name
+    }
   }
 `
 export const AllChannelFieldsFragmentDoc = gql`

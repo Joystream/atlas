@@ -25,16 +25,18 @@ export const TitleContainer = styled.div`
 
 export const InnerFormContainer = styled.div`
   width: 100%;
-  max-width: 760px;
-  margin-top: 50px;
-  padding-bottom: 200px;
-  @media screen and (min-width: ${breakpoints.large}) {
-    margin-left: calc(144px - var(--global-horizontal-padding));
+  max-width: var(--max-inner-width);
+  margin: 50px auto 0 auto;
+  padding-bottom: 100px;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding-bottom: 200px;
   }
 `
 
 export const StyledFormField = styled(FormField)`
   margin-top: 40px;
+  width: 100%;
+  max-width: 760px;
 `
 
 export const StyledTextarea = styled(Textarea)`
@@ -48,9 +50,6 @@ export const StyledTextarea = styled(Textarea)`
 export const StyledActionBarTransaction = styled(ActionBarTransaction)<AtionBarProps>`
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
-  @media screen and (min-width: ${breakpoints.large}) {
-    padding: ${sizes(3)} 144px;
-  }
 `
 export const StyledAvatar = styled(Avatar)`
   position: relative;

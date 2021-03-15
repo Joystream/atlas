@@ -12,12 +12,20 @@ export type Scalars = {
   Date: Date
 }
 
-export enum Language {
-  Chinese = 'Chinese',
-  English = 'English',
-  Arabic = 'Arabic',
-  Portugese = 'Portugese',
-  French = 'French',
+export type Language = {
+  __typename?: 'Language'
+  id: Scalars['ID']
+  createdAt: Scalars['Date']
+  createdById: Scalars['String']
+  updatedAt?: Maybe<Scalars['Date']>
+  updatedById?: Maybe<Scalars['String']>
+  deletedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  name: Scalars['String']
+  code: Scalars['String']
+  happenedInId: Scalars['String']
+  channellanguage?: Maybe<Array<Channel>>
+  videolanguage?: Maybe<Array<Video>>
 }
 
 export type Member = {

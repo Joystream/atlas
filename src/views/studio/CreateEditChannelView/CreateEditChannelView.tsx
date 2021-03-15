@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { useForm, Controller, FieldError } from 'react-hook-form'
 import { useChannel } from '@/api/hooks'
+
+import { languages } from '@/config/languages'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle, ViewWrapper } from '@/components'
 import { ChannelCover, FormField, Select, SelectedItem, HeaderTextField, Tooltip } from '@/shared/components'
@@ -17,39 +18,16 @@ import {
   InnerFormContainer,
 } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/consumer/ChannelView/ChannelView.style'
-import { requiredValidation, textFieldValidation } from '@/views/playground/Playgrounds/formValidationOptions'
+
+import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 
-const languages: SelectedItem[] = [
-  { name: 'English', value: 'en' },
-  { name: 'Chinese', value: 'zh' },
-  { name: 'Spanish', value: 'es' },
-  { name: 'Hindi', value: 'hi' },
-  { name: 'Arabic', value: 'ar' },
-  { name: 'Portuguese', value: 'pt' },
-  { name: 'Russian', value: 'ru' },
-  { name: 'Japanese', value: 'ja' },
-  { name: 'German', value: 'de' },
-  { name: 'Korean', value: 'ko' },
-  { name: 'French', value: 'fr' },
-  { name: 'Turkish', value: 'tr' },
-  { name: 'Italian', value: 'it' },
-  { name: 'Danish', value: 'dk' },
-  { name: 'Finnish', value: 'fi' },
-  { name: 'Norwegian', value: 'no' },
-  { name: 'Vietnamese', value: 'vi' },
-  { name: 'Greek', value: 'el' },
-  { name: 'Dutch', value: 'nl' },
-  { name: 'Estonian', value: 'et' },
-  { name: 'Swedish', value: 'sv' },
-]
-
-const isPublic: SelectedItem[] = [
+const isPublicSelect: SelectedItem[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
   { name: 'Unlisted', value: false },
 ]
 
-const FEE = 1
+const FEE = 0
 
 type ImageAsset = {
   url: string | null
@@ -70,9 +48,9 @@ type CreateEditChannelViewProps = {
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   // TODO Add hook for fetching currently active channel
-  const id = newChannel ? null : '1494'
+  const id = '1494'
+  const { channel, loading, error } = useChannel(id, { skip: newChannel })
 
-  const { channel, loading, error } = useChannel(id || '')
   const {
     register,
     handleSubmit: useHandleSubmit,
@@ -80,6 +58,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     setValue,
     getValues,
     formState: { isDirty },
+    reset,
+    watch,
     errors,
   } = useForm<Inputs>({
     defaultValues: {
@@ -88,24 +68,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       channelName: '',
       description: '',
       selectedLanguage: languages[0],
-      isPublic: isPublic[0],
+      isPublic: isPublicSelect[0],
     },
   })
-
-  useEffect(() => {
-    if (loading || newChannel) {
-      return
-    }
-    setValue('avatar', { blob: null, url: channel?.avatarPhotoUrl })
-    setValue('cover', { blob: null, url: channel?.coverPhotoUrl })
-    setValue('channelName', channel?.handle)
-    // TODO Add setValue for description, language and publicness after Channel fields update
-  }, [loading, newChannel, setValue, channel?.avatarPhotoUrl, channel?.coverPhotoUrl, channel?.handle])
-
-  useEffect(() => {
-    setAvatarImageUrl(getValues('avatar')?.url)
-    setCoverImageUrl(getValues('cover')?.url)
-  }, [getValues, loading])
 
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -113,6 +78,31 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const [avatarImageUrl, setAvatarImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
   const [isActionBarActive, setActionBarActive] = useState(false)
+
+  useEffect(() => {
+    if (loading || newChannel) {
+      return
+    }
+    if (!channel) {
+      return
+    }
+    const { avatarPhotoUrl, coverPhotoUrl, handle, description, isPublic, language } = channel
+    const foundLanguage = languages.find(({ name }) => name === language?.name)
+    reset({
+      ...getValues(),
+      avatar: { blob: null, url: avatarPhotoUrl },
+      cover: { blob: null, url: coverPhotoUrl },
+      channelName: handle,
+      description: description,
+      isPublic: isPublic ? isPublicSelect[0] : isPublicSelect[1],
+      selectedLanguage: foundLanguage || languages[0],
+    })
+  }, [channel, getValues, loading, newChannel, reset])
+
+  useEffect(() => {
+    setAvatarImageUrl(watch().avatar.url)
+    setCoverImageUrl(watch().cover.url)
+  }, [watch])
 
   const handleSubmit = useHandleSubmit((data) => {
     console.log(data)
@@ -166,7 +156,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <Controller
                 name="channelName"
                 control={control}
-                rules={textFieldValidation('Channel name', 3, 20)}
+                rules={textFieldValidation('Channel name', 3, 40, true)}
                 render={(props) =>
                   channel || newChannel ? (
                     <>
@@ -243,7 +233,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               rules={requiredValidation('Publicness')}
               render={({ value, onChange }) => (
                 <Select
-                  items={isPublic}
+                  items={isPublicSelect}
                   label="Publicness"
                   value={value}
                   onChange={(e) => onChange(e.selectedItem)}
@@ -260,9 +250,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             secondaryButtonText="Cancel"
             onCancelClick={(e) => {
               e.preventDefault()
-              // For reseting selects field, avatar and cover
-              window.location.reload()
             }}
+            onConfirmClick={handleSubmit}
           />
         </InnerFormContainer>
         <Controller
