@@ -61,20 +61,32 @@ export const useContextMember = () => {
 export const useMember = () => {
   const { memberState, fetchMember } = useContextMember()
 
-  const addMember = useCallback(async (memberData: Member) => {
-    const member = await addMemberFn(memberData)
-    return member
-  }, [])
+  const addMember = useCallback(
+    async (memberData: Member) => {
+      const member = await addMemberFn(memberData)
+      fetchMember()
+      return member
+    },
+    [fetchMember]
+  )
 
-  const addChannel = useCallback(async (channelData: Channel) => {
-    const updatedMember = await addChannelFn(channelData)
-    return updatedMember
-  }, [])
+  const addChannel = useCallback(
+    async (channelData: Channel) => {
+      const updatedMember = await addChannelFn(channelData)
+      fetchMember()
+      return updatedMember
+    },
+    [fetchMember]
+  )
 
-  const setActiveChannel = useCallback(async (channelId: string) => {
-    const updatedMember = await setActiveChannelFn(channelId)
-    return updatedMember
-  }, [])
+  const setActiveChannel = useCallback(
+    async (channelId: string) => {
+      const updatedMember = await setActiveChannelFn(channelId)
+      fetchMember()
+      return updatedMember
+    },
+    [fetchMember]
+  )
 
   const removeMember = useCallback(async () => {
     removeMemberFn()
@@ -82,7 +94,7 @@ export const useMember = () => {
   }, [fetchMember])
 
   return {
-    getMember: memberState,
+    member: memberState,
     addMember,
     addChannel,
     setActiveChannel,
