@@ -10,12 +10,15 @@ import {
 export type Member = {
   id: string
   handle: string
+  avatarUrl: string
   channels: Channel[]
   activeChannel: Channel
 }
 
 export type Channel = {
   id: string
+  handle: string
+  avatarUrl: string
 }
 
 type MemberState = {
