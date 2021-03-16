@@ -8,7 +8,7 @@ type SelectMemberDialogProps = {
   onExit?: () => void
   showDialog?: boolean
   onSelectMember?: (member: Membership) => void
-  onCreateNewMember?: () => void
+  onAddNewMember?: () => void
 }
 
 const SelectMemberDialog: React.FC<SelectMemberDialogProps> = ({
@@ -16,14 +16,14 @@ const SelectMemberDialog: React.FC<SelectMemberDialogProps> = ({
   onExit,
   showDialog,
   onSelectMember,
-  onCreateNewMember,
+  onAddNewMember,
 }) => {
   return (
     <StyledDialog showDialog={showDialog} onExitClick={onExit}>
       <Text variant="h4">Select Membership</Text>
       <DialogSubtitle variant="body2">Select your membership account</DialogSubtitle>
       <Underline />
-      <AccountBar blank name="New Member" secondary="Create New Member" onClick={onCreateNewMember} />
+      <AccountBar blank name="New Member" secondary="Create New Member" onClick={onAddNewMember} />
       {memberships.map((member) => (
         <AccountBar
           avatarUrl={member.avatarUri}

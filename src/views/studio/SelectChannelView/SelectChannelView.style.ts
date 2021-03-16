@@ -29,6 +29,7 @@ export const SubTitle = styled(Text)`
 export const MemberChannelGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
   @media screen and (min-width: ${breakpoints.medium}) {
     max-width: 600px;
   }

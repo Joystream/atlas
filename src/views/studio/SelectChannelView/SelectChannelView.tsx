@@ -1,30 +1,17 @@
 import { ChannelCard, StudioHeader } from '@/shared/components'
-import React from 'react'
+import React, { useState } from 'react'
 import { MemberChannelGrid, Wrapper } from './SelectChannelView.style'
 
-const channels = [
-  {
-    id: 1,
-    handle: 'My awesome channel',
-    follows: 2331,
-    avatarPhotoUrl: 'https://picsum.photos/300/300',
-  },
-  {
-    id: 2,
-    handle: 'My second awesome channel',
-    follows: 2331,
-    avatarPhotoUrl: 'https://picsum.photos/300/300',
-  },
-  {
-    id: 3,
-    handle: 'My third awesome channe',
-    follows: 23,
-    avatarPhotoUrl: 'https://picsum.photos/300/300',
-  },
-]
+type Channel = {
+  id: number
+  handle: string
+  follows: number
+  avatarPhotoUrl: string
+}
 
 const SelectChannelView = () => {
-  const hasChannels = !!channels.length
+  const [channels, setChannels] = useState<Channel[] | null>(null)
+  const hasChannels = !!channels?.length
   return (
     <Wrapper>
       <StudioHeader
@@ -37,7 +24,7 @@ const SelectChannelView = () => {
       />
 
       <MemberChannelGrid>
-        {channels.map((channel) => (
+        {channels?.map((channel) => (
           <ChannelCard
             key={channel.id}
             avatarPhotoUrl={channel.avatarPhotoUrl}

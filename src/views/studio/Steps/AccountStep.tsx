@@ -1,27 +1,20 @@
 import accountCreation from '@/assets/account-creation.png'
-import { Text } from '@/shared/components'
+import { AccountBar, Placeholder } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 import { StepSubTitle, StepTitle, StepWrapper } from '../SignInView.style'
-import {
-  AccountAvatar,
-  AccountBalance,
-  AccountCreationImg,
-  AccountInfo,
-  AccountWrapper,
-  StyledButton,
-  StyledSpinner,
-} from './AccountStep.style'
+import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
 
 const fakeAccounts = [
   {
     balance: 0.4,
     name: 'Myaccountname',
-    avatarUrl: 'https://picsum.photos/200',
+    avatarUrl: '',
   },
   {
     balance: 12.3,
     name: 'MySecondAccount',
-    avatarUrl: 'https://picsum.photos/200',
+    avatarUrl: '',
   },
 ]
 
@@ -37,13 +30,12 @@ type Account = {
 }
 
 const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
   const [accounts, setAccounts] = useState<null | Account[]>()
   const [loading, setLoading] = useState(true)
 
   const fetchAccounts = async () => {
-    // some function to fetch all accounts
-    // for example
-    // const accounts = await getAllAccounts()
+    // TODO some function to fetch all accounts
     setLoading(false)
     setAccounts(fakeAccounts)
     console.log('fetched')
@@ -62,7 +54,10 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
 
   return loading && !accounts?.length ? (
     <StepWrapper centered>
-      <AccountCreationImg src={accountCreation} />
+      {!imageLoaded && <Placeholder height="180px" width="320px" />}
+      <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
+        <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
+      </CSSTransition>
       <StepTitle variant="h4">Waiting for account creation</StepTitle>
       <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle>
       <StyledSpinner />
@@ -74,31 +69,18 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
         Select account you would like to assign to your new Joystream membership cccount. (Showing only accounts with
         sufficient amount of funds to start a channel.)
       </StepSubTitle>
-      {accounts?.map(({ balance, name, avatarUrl }, idx) => (
-        <Account key={idx} balance={balance} name={name} onSelectAccount={handleSelectAccount} avatarUrl={avatarUrl} />
-      ))}
+      <AccountsWrapper>
+        {accounts?.map(({ balance, name, avatarUrl }, idx) => (
+          <AccountBar
+            key={idx}
+            secondary={balance + ' JOY'}
+            name={name}
+            onClick={handleSelectAccount}
+            avatarUrl={avatarUrl}
+          />
+        ))}
+      </AccountsWrapper>
     </StepWrapper>
-  )
-}
-
-type AccountProps = {
-  onSelectAccount: () => void
-} & Account
-
-const Account: React.FC<AccountProps> = ({ name, balance, avatarUrl, onSelectAccount }) => {
-  return (
-    <AccountWrapper>
-      <AccountInfo>
-        <AccountAvatar src={avatarUrl} />
-        <div>
-          <Text variant="h6">{name}</Text>
-          <AccountBalance variant="body2">{balance} JOY</AccountBalance>
-        </div>
-      </AccountInfo>
-      <StyledButton variant="tertiary" size="medium" onClick={onSelectAccount}>
-        Select Account
-      </StyledButton>
-    </AccountWrapper>
   )
 }
 
