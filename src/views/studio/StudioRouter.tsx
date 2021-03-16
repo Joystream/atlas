@@ -4,11 +4,9 @@ import { Routes } from 'react-router'
 
 const StudioRouter = () => {
   return (
-    <>
-      <Container>
-        <Routes></Routes>
-      </Container>
-    </>
+    <Container>
+      <Routes></Routes>
+    </Container>
   )
 }
 
