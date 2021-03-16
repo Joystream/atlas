@@ -8,7 +8,7 @@ import {
 
 export type Member = {
   id: string
-  activeChannel: string
+  activeChannelId: string
 }
 export type MemberState = Member | null
 

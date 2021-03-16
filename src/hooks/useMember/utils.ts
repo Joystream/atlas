@@ -15,7 +15,7 @@ export const setActiveChannel = async (channelId: string) => {
   if (!member?.id) {
     throw new Error('Member must be setted first.')
   }
-  const updatedMember = { ...member, activeChannel: channelId }
+  const updatedMember = { ...member, activeChannelId: channelId }
   writeToLocalStorage('member', updatedMember)
   const newMember = await getMember()
   return newMember

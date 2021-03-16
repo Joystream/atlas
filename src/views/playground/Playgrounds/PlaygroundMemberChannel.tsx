@@ -4,7 +4,7 @@ import { Button, RadioButton } from '@/shared/components'
 
 const mockMember = {
   id: '1234',
-  activeChannel: '5678',
+  activeChannelId: '5678',
 }
 const channels = ['103123213', '1230123021', '123912399132']
 
