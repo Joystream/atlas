@@ -4,11 +4,9 @@ import StudioRouter from './StudioRouter'
 
 const StudioView = () => {
   return (
-    <>
-      <DraftsProvider>
-        <StudioRouter />
-      </DraftsProvider>
-    </>
+    <DraftsProvider>
+      <StudioRouter />
+    </DraftsProvider>
   )
 }
 
