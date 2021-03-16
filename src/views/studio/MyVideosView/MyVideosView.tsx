@@ -16,7 +16,7 @@ import { AddVideoView } from './AddVideoView'
 
 const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
-const INITIAL_VIDEOS_PER_ROW = 5
+const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
 // TODO: adjust action bar to the real fee
 // TODO: Unlisted videos
