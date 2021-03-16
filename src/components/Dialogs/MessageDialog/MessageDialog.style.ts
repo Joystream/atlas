@@ -19,12 +19,13 @@ export const StyledDescriptionText = styled(Text)`
 
 export const Spinner = styled.div`
   position: relative;
+  display: inline-block;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: 2px solid ${colors.blue[500]};
   border-left: 2px solid ${colors.gray[200]};
-  margin-bottom: ${sizes(3)};
+  margin-bottom: ${sizes(4)};
   transform: translateZ(0);
   animation: load 1s infinite linear;
   @keyframes load {

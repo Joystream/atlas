@@ -16,11 +16,9 @@ export default {
     primaryButtonText: { defaultValue: 'Confirm' },
     secondaryButtonText: { defaultValue: 'Cancel' },
     showDialog: { table: { disable: true } },
-    additionalActionsNode: { table: { disable: true } },
     warning: { defaultValue: false },
     error: { defaultValue: false },
-    icon: { control: { type: 'select', options: ['success', 'error', 'warning', 'info'] } },
-    spinner: { defaultValue: false },
+    variant: { control: { type: 'select', options: ['info', 'success', 'warning', 'error', 'spinner'] } },
   },
   decorators: [
     (Story) => (

@@ -5,8 +5,8 @@ import {
   ButtonsContainer,
   AdditionalActionsContainer,
   StyledPrimaryButton,
-  StyledSecondaryButton,
 } from './ActionDialog.style'
+import { Button } from '@/shared/components'
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
@@ -44,9 +44,9 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
               </StyledPrimaryButton>
             )}
             {secondaryButtonText && (
-              <StyledSecondaryButton variant="secondary" onClick={onSecondaryButtonClick}>
+              <Button variant="secondary" onClick={onSecondaryButtonClick}>
                 {secondaryButtonText}
-              </StyledSecondaryButton>
+              </Button>
             )}
           </ButtonsContainer>
         </ActionsContainer>

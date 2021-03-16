@@ -17,6 +17,9 @@ export const ButtonsContainer = styled.div`
   > * + * {
     margin-top: ${sizes(2)};
   }
+  button {
+    font-weight: ${typography.weights.bold};
+  }
 
   @media screen and (min-width: ${BREAKPOINT}) {
     flex-direction: row-reverse;
@@ -56,55 +59,54 @@ export const AdditionalActionsContainer = styled.div`
 `
 
 const buttonColorsFromProps = ({ error, warning }: ButtonProps) => {
-  let color, bgColor, borderColor, bgColorHover, borderColorHover
+  let color, bgColor, borderColor, bgActiveColor, borderActiveColor
+
   if (warning) {
     color = 'var(--warning-font-color)'
     bgColor = 'var(--warning-bg-color)'
     borderColor = 'var(--warning-bg-color)'
-    bgColorHover = 'var(--warning-bg-hover-color)'
-    borderColorHover = 'var(--warning-border-hover-color)'
+    bgActiveColor = 'var(--warning-bg-active-color)'
+    borderActiveColor = 'var(--warning-border-active-color)'
   }
   if (error) {
     color = 'var(--error-font-color)'
     bgColor = 'var(--error-bg-color)'
     borderColor = 'var(--error-bg-color)'
-    bgColorHover = 'var(--error-bg-hover-color)'
-    borderColorHover = 'var(--error-border-hover-color)'
+    bgActiveColor = 'var(--error-bg-active-color)'
+    borderActiveColor = 'var(--error-border-active-color)'
   }
+
+  const boxShadow = error || warning ? `inset 0px 0px 0px 1px ${borderActiveColor}` : 'none'
+
   return css`
     color: ${color};
     background-color: ${bgColor};
     border-color: ${borderColor};
     &:hover {
       color: ${color};
-      background-color: ${bgColorHover};
-      border-color: ${borderColorHover};
-      box-shadow: inset 0px 0px 0px 1px ${borderColorHover};
-    }
-    &:active {
-      color: ${color};
       background-color: ${bgColor};
       border-color: ${borderColor};
       box-shadow: none;
+    }
+    &:active {
+      color: ${color};
+      background-color: ${bgActiveColor};
+      border-color: ${borderActiveColor};
+      box-shadow: ${boxShadow};
     }
   `
 }
 
 export const StyledPrimaryButton = styled(Button)<ButtonProps>`
   --warning-bg-color: #f49525;
-  --warning-bg-hover-color: #da7b0b;
-  --warning-border-hover-color: #49290440;
+  --warning-bg-active-color: #da7b0b;
+  --warning-border-active-color: #49290440;
   --warning-font-color: #492904;
 
   --error-bg-color: #e53333;
-  --error-bg-hover-color: #cc1a1a;
-  --error-border-hover-color: #44090966;
+  --error-bg-active-color: #cc1a1a;
+  --error-border-active-color: #44090966;
   --error-font-color: #440909;
 
-  font-weight: ${typography.weights.bold};
   ${buttonColorsFromProps}
-`
-
-export const StyledSecondaryButton = styled(Button)`
-  background-color: ${colors.transparent};
 `

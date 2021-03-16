@@ -22,11 +22,4 @@ export const StyledExitButton = styled(Button)`
   position: absolute;
   top: var(--dialog-padding);
   right: var(--dialog-padding);
-  background-color: ${colors.transparent};
-  border: none;
-  &:hover {
-    background-color: ${colors.transparent};
-  }
-
-  padding: ${sizes(3)};
 `
