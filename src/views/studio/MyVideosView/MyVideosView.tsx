@@ -95,7 +95,7 @@ export const MyVideosView = () => {
         />
       )}
       <VideosContainer>
-        <Grid onResize={handleOnResizeGrid}>
+        <Grid maxColumns={null} onResize={handleOnResizeGrid}>
           {!isDraftTab &&
             videosWPlaceholders
               // this makes for a smoother transition between pages
