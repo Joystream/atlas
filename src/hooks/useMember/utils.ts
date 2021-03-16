@@ -1,26 +1,26 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { Member } from './useMember'
+import { ActiveMember } from './useMember'
 
-export const getMember = promisify(() => readFromLocalStorage<Member>('member') || null)
+export const getMember = promisify(() => readFromLocalStorage<ActiveMember>('activeMember') || null)
 
-export const setMember = async (member: Member) => {
-  writeToLocalStorage('member', member)
+export const setMember = async (member: ActiveMember) => {
+  writeToLocalStorage('activeMember', member)
   const newMember = await getMember()
   return newMember
 }
 
 export const setActiveChannel = async (channelId: string) => {
   const member = await getMember()
-  if (!member?.id) {
-    throw new Error('Member must be setted first.')
+  if (!member) {
+    return
   }
   const updatedMember = { ...member, activeChannelId: channelId }
-  writeToLocalStorage('member', updatedMember)
+  writeToLocalStorage('activeMember', updatedMember)
   const newMember = await getMember()
   return newMember
 }
 
 export const removeMember = () => {
-  writeToLocalStorage('member', null)
+  writeToLocalStorage('activeMember', null)
 }

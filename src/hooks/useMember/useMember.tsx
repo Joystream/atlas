@@ -6,14 +6,14 @@ import {
   removeMember as removeMemberFn,
 } from './utils'
 
-export type Member = {
+export type ActiveMember = {
   id: string
   activeChannelId: string
 }
-export type MemberState = Member | null
+export type ActiveMemberState = ActiveMember | null
 
 type MemberContextValue = {
-  memberState: MemberState
+  memberState: ActiveMemberState
   fetchMember: () => Promise<void>
 }
 
@@ -21,7 +21,7 @@ const MemberContext = React.createContext<undefined | MemberContextValue>(undefi
 MemberContext.displayName = 'MemberContext'
 
 export const MemberProvider: React.FC = ({ children }) => {
-  const [memberState, setMemberState] = useState<MemberState>(null)
+  const [memberState, setMemberState] = useState<ActiveMemberState>(null)
 
   const fetchMember = useCallback(async () => {
     const member = await getMemberFn()
@@ -46,8 +46,8 @@ export const useContextMember = () => {
 export const useMember = () => {
   const { memberState, fetchMember } = useContextMember()
 
-  const setMember = useCallback(
-    async (memberData: Member) => {
+  const setActiveMember = useCallback(
+    async (memberData: ActiveMember) => {
       const member = await setMemberFn(memberData)
       fetchMember()
       return member
@@ -64,15 +64,15 @@ export const useMember = () => {
     [fetchMember]
   )
 
-  const removeMember = useCallback(async () => {
+  const removeActiveMember = useCallback(async () => {
     removeMemberFn()
     fetchMember()
   }, [fetchMember])
 
   return {
-    member: memberState,
-    setMember,
+    activeMember: memberState,
+    setActiveMember,
     setActiveChannel,
-    removeMember,
+    removeActiveMember,
   }
 }

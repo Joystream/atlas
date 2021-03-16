@@ -9,23 +9,23 @@ const mockMember = {
 const channels = ['103123213', '1230123021', '123912399132']
 
 const PlaygroundMemberChannel = () => {
-  const { member, setMember, removeMember, setActiveChannel } = useMember()
+  const { activeMember, setActiveMember, removeActiveMember, setActiveChannel } = useMember()
 
   const [selected, setSelected] = useState<string | number>('')
   const [memberString, setMemberString] = useState('')
 
-  const handleActiveChannelChange: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
-    const element = e.currentTarget as HTMLInputElement
+  const handleActiveChannelChange = (e: React.MouseEvent<HTMLInputElement>) => {
+    const element = e.currentTarget
     setSelected(element.value)
     setActiveChannel(element.value)
   }
   const handleAddMember = () => {
-    setMember(mockMember)
+    setActiveMember(mockMember)
   }
 
   useEffect(() => {
-    setMemberString(JSON.stringify(member, null, 4))
-  }, [member])
+    setMemberString(JSON.stringify(activeMember, null, 4))
+  }, [activeMember])
 
   return (
     <>
@@ -46,7 +46,7 @@ const PlaygroundMemberChannel = () => {
           />
         ))}
       </div>
-      <Button onClick={removeMember}>Remove member</Button>
+      <Button onClick={removeActiveMember}>Remove member</Button>
     </>
   )
 }
