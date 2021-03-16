@@ -207,11 +207,7 @@ export const CoverEditIcon = ({ ...props }) => (
 export const DraftIcon = ({ ...props }) => <Icon name="page" {...props} />
 export const UnlistedIcon = ({ ...props }) => <Icon name="unlisted" {...props} />
 export const KebabMenuIcon = ({ ...props }) => <Icon name="kebab-menu" {...props} />
-export const CoverRemoveButton = ({ ...props }) => (
-  <RemoveButton {...props}>
-    <Icon name="close" />
-  </RemoveButton>
-)
+export const CoverRemoveButton = ({ ...props }) => <RemoveButton {...props} icon="close" />
 
 export const ProgressOverlay = styled.div`
   position: absolute;
