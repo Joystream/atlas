@@ -32,6 +32,7 @@ export const CancelButton = styled(Button)`
   position: absolute;
   right: 0;
   border: none;
+  margin-right: ${sizes(2)};
   color: ${colors.white};
   :focus,
   :hover {
