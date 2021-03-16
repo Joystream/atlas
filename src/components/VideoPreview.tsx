@@ -16,15 +16,7 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
-  const [loadOnMount, setLoadOnMount] = useState(true)
-  const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
-
-  useEffect(() => {
-    setLoadOnMount(false)
-  }, [])
-
-  const internalLoadingState = loading || !id || isLoading || loadOnMount
-  const videoHref = id ? routes.video(id) : undefined
+  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id)
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -37,7 +29,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = 
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
-      isLoading={internalLoadingState}
+      isLoading={internalIsLoadingState}
       className={className}
       {...metaProps}
     />
@@ -63,16 +55,8 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   isDraft,
   ...metaProps
 }) => {
-  const [loadOnMount, setLoadOnMount] = useState(true)
+  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id)
   const { drafts } = useDrafts('video')
-  const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
-
-  useEffect(() => {
-    setLoadOnMount(false)
-  }, [])
-  // a bit complex loading state but can't come up with a better name
-  const internalLoadingState = loading || !id || isLoading || loadOnMount
-  const videoHref = id ? routes.video(id) : undefined
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   return (
     <VideoPreviewBase
@@ -86,7 +70,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
-      isLoading={internalLoadingState}
+      isLoading={internalIsLoadingState}
       className={className}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
@@ -94,4 +78,18 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       {...metaProps}
     />
   )
+}
+
+const useSharedLogic = (id?: string, isLoading?: boolean) => {
+  const [loadOnMount, setLoadOnMount] = useState(true)
+  const { video, loading } = useVideo(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+  useEffect(() => {
+    setLoadOnMount(false)
+  }, [])
+
+  // a bit complex loading state but couldn't come up with a better name
+  const internalIsLoadingState = loading || !id || isLoading || loadOnMount
+  const videoHref = id ? routes.video(id) : undefined
+
+  return { video, internalIsLoadingState, videoHref }
 }
