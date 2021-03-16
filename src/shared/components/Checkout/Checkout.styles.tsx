@@ -2,6 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { colors } from '@/shared/theme'
 import { Icon } from '..'
+import { css } from '@emotion/react'
 
 export const Container = styled.div`
   padding: 24px;
@@ -41,6 +42,7 @@ export const StepState = styled.div<StepStateProps>`
   width: 24px;
   height: 24px;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: 100%;
@@ -70,4 +72,14 @@ export const CheckIcon = styled(Icon)`
   position: relative;
   top: 1px;
 `
+
+export const ChecvronIcon = () => (
+  <Icon
+    css={css`
+      flex-shrink: 0;
+    `}
+    name="chevron-right"
+  />
+)
+
 export const StyledCheckIcon = ({ ...svgProps }) => <CheckIcon name="check" {...svgProps} />

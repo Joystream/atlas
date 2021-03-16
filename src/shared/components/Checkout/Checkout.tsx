@@ -12,6 +12,7 @@ import {
   StepInnerContainer,
   StepState,
   CheckIcon,
+  ChecvronIcon,
 } from './Checkout.styles'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
@@ -40,7 +41,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps }) => {
               <StepState completed={step.completed}>{step.completed && <CheckIcon name="check" />}</StepState>{' '}
               <Text variant="body2">{step.title}</Text>
             </StepInnerContainer>
-            <Icon name="chevron-right" />
+            <ChecvronIcon />
           </Step>
         ))}
       </StepsContainer>
