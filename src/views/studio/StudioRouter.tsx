@@ -6,7 +6,6 @@ const StudioRouter = () => {
   return (
     <>
       <Container>
-        <h1>Studio view here</h1>
         <Routes></Routes>
       </Container>
     </>
