@@ -4,29 +4,12 @@ import { Button, RadioButton } from '@/shared/components'
 
 const mockMember = {
   id: '1234',
-  handle: 'Channel name',
-  avatarUrl: 'https://picsum.photos/200/300',
-  channels: [
-    {
-      id: '5678',
-      handle: 'My channel',
-      avatarUrl: 'https://picsum.photos/200/300',
-    },
-    {
-      id: '9101120',
-      handle: 'My channel #2',
-      avatarUrl: 'https://picsum.photos/200/300',
-    },
-  ],
-  activeChannel: {
-    id: '5678',
-    handle: 'My channel',
-    avatarUrl: 'https://picsum.photos/200/300',
-  },
+  activeChannel: '5678',
 }
+const channels = ['103123213', '1230123021', '123912399132']
 
 const PlaygroundMemberChannel = () => {
-  const { member, addMember, removeMember, setActiveChannel } = useMember()
+  const { member, setMember, removeMember, setActiveChannel } = useMember()
 
   const [selected, setSelected] = useState<string | number>('')
   const [memberString, setMemberString] = useState('')
@@ -37,7 +20,7 @@ const PlaygroundMemberChannel = () => {
     setActiveChannel(element.value)
   }
   const handleAddMember = () => {
-    addMember(mockMember)
+    setMember(mockMember)
   }
 
   useEffect(() => {
@@ -47,19 +30,19 @@ const PlaygroundMemberChannel = () => {
   return (
     <>
       <h1>Member data from local storage</h1>
-      <Button onClick={handleAddMember}>Add member</Button>
+      <Button onClick={handleAddMember}>Set member</Button>
       <pre>{memberString}</pre>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <p>Select active channel:</p>
-        {mockMember.channels.map((channel) => (
+        {channels.map((channel) => (
           <RadioButton
-            key={channel.id}
+            key={channel}
             name="radio-group"
-            value={channel.id}
+            value={channel}
             selectedValue={selected}
             onClick={handleActiveChannelChange}
-            label={channel.handle}
+            label={channel}
           />
         ))}
       </div>

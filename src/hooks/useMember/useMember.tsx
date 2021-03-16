@@ -1,29 +1,16 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   getMember as getMemberFn,
-  addMember as addMemberFn,
+  setMember as setMemberFn,
   setActiveChannel as setActiveChannelFn,
   removeMember as removeMemberFn,
-  addChannel as addChannelFn,
 } from './utils'
 
 export type Member = {
   id: string
-  handle: string
-  avatarUrl: string
-  channels: Channel[]
-  activeChannel: Channel
+  activeChannel: string
 }
-
-export type Channel = {
-  id: string
-  handle: string
-  avatarUrl: string
-}
-
-type MemberState = {
-  member: Member | null
-}
+export type MemberState = Member | null
 
 type MemberContextValue = {
   memberState: MemberState
@@ -34,13 +21,11 @@ const MemberContext = React.createContext<undefined | MemberContextValue>(undefi
 MemberContext.displayName = 'MemberContext'
 
 export const MemberProvider: React.FC = ({ children }) => {
-  const [memberState, setMemberState] = useState<MemberState>({
-    member: null,
-  })
+  const [memberState, setMemberState] = useState<MemberState>(null)
 
   const fetchMember = useCallback(async () => {
     const member = await getMemberFn()
-    setMemberState({ member })
+    setMemberState(member)
   }, [setMemberState])
 
   useEffect(() => {
@@ -61,20 +46,11 @@ export const useContextMember = () => {
 export const useMember = () => {
   const { memberState, fetchMember } = useContextMember()
 
-  const addMember = useCallback(
+  const setMember = useCallback(
     async (memberData: Member) => {
-      const member = await addMemberFn(memberData)
+      const member = await setMemberFn(memberData)
       fetchMember()
       return member
-    },
-    [fetchMember]
-  )
-
-  const addChannel = useCallback(
-    async (channelData: Channel) => {
-      const updatedMember = await addChannelFn(channelData)
-      fetchMember()
-      return updatedMember
     },
     [fetchMember]
   )
@@ -95,8 +71,7 @@ export const useMember = () => {
 
   return {
     member: memberState,
-    addMember,
-    addChannel,
+    setMember,
     setActiveChannel,
     removeMember,
   }
