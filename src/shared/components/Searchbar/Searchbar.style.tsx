@@ -32,16 +32,11 @@ export const CancelButton = styled(Button)`
   position: absolute;
   right: 0;
   border: none;
-  padding: 14px ${sizes(3)};
+  margin-right: ${sizes(2)};
   color: ${colors.white};
   :focus,
   :hover {
     color: ${colors.white};
-  }
-  > svg {
-    width: 100%;
-    max-width: 17px;
-    max-height: 17px;
   }
 `
 

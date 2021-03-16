@@ -27,6 +27,7 @@ export const StyledPlaceholder = styled(Placeholder)`
 `
 
 export const StyledToggleButton = styled(ToggleButton)`
+  min-width: auto;
   margin: 0 ${sizes(3)} ${sizes(3)} 0;
   ${fadeInAnimation}
 `
