@@ -14,9 +14,6 @@ const roundedCropperCss = css`
     border-radius: 50%;
   }
 `
-export const StyledZoomButton = styled(Button)`
-  cursor: pointer;
-`
 
 export const HeaderContainer = styled.div`
   padding-bottom: ${sizes(4)};

@@ -1,4 +1,4 @@
-import { Icon } from '@/shared/components'
+import { Button, Icon } from '@/shared/components'
 import { ImageCropData } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
@@ -13,7 +13,6 @@ import {
   StyledActionDialog,
   StyledImage,
   StyledSlider,
-  StyledZoomButton,
   ZoomControl,
 } from './ImageCropDialog.style'
 
@@ -84,7 +83,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <StyledZoomButton icon="zoom-out" variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} />
+      <Button icon="zoom-out" variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} />
       <StyledSlider
         value={currentZoom}
         onChange={handleZoomChange}
@@ -92,7 +91,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         max={zoomRange[1]}
         step={zoomStep}
       />
-      <StyledZoomButton icon="zoom-in" variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} />
+      <Button icon="zoom-in" variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} />
     </ZoomControl>
   )
 
