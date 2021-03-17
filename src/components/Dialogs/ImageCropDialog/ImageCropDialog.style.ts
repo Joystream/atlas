@@ -17,7 +17,7 @@ const roundedCropperCss = css`
 
 export const HeaderContainer = styled.div`
   padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${colors.gray['500']};
+  border-bottom: 1px solid ${colors.gray[500]};
 `
 
 export const HeaderText = styled(Text)`
@@ -68,13 +68,12 @@ export const CropContainer = styled.div<{ rounded?: boolean }>`
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
 
-      box-shadow: inset 0 0 0 2px rgba(256, 256, 256, 0.32);
+      box-shadow: inset 0 0 0 2px ${colors.transparentWhite[300]};
     }
   }
 
   .cropper-modal {
-    background-color: ${colors.black};
-    opacity: 0.54;
+    background-color: ${colors.transparentBlack[200]};
   }
 `
 

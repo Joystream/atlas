@@ -25,6 +25,22 @@ export default {
     50: '#E0E1FF',
   },
   success: '#1CCB00',
+  transparentSuccess: 'rgba(0, 219, 176, 0.08)',
   error: '#FF3861',
+  transparentError: 'rgba(255, 56, 97, 0.08)',
   warning: '#EB4F1E',
+  transparentWhite: {
+    100: 'rgba(255,255,255, 0.04)',
+    200: 'rgba(255,255,255, 0.06)',
+    300: 'rgba(255,255,255, 0.32)',
+  },
+  transparentBlack: {
+    100: 'rgba(0,0,0, 0.24)',
+    200: 'rgba(0,0,0, 0.54)',
+    300: 'rgba(0,0,0, 0.66)',
+  },
+  transparentPrimary: {
+    100: 'rgba(180, 187, 255, 0.06)',
+    200: 'rgba(180, 187, 255, 0.12)',
+  },
 }
