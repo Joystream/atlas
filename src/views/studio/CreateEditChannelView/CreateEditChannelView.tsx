@@ -48,7 +48,7 @@ type CreateEditChannelViewProps = {
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   // TODO Add hook for fetching currently active channel
-  const id = '1494'
+  const id = 'aea96cc5-0b81-4025-9b1f-25e5f7ecfaf3'
   const { channel, loading, error } = useChannel(id, { skip: newChannel })
 
   const {
@@ -93,7 +93,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       avatar: { blob: null, url: avatarPhotoUrl },
       cover: { blob: null, url: coverPhotoUrl },
       channelName: handle,
-      description: description,
+      description: description || '',
       isPublic: isPublic ? isPublicSelect[0] : isPublicSelect[1],
       selectedLanguage: foundLanguage || languages[0],
     })

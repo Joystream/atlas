@@ -42,6 +42,7 @@ export const StyledFormField = styled(FormField)`
 export const StyledTextarea = styled(Textarea)`
   position: relative;
   width: 100%;
+  max-width: 760px;
   textarea {
     height: 120px;
   }

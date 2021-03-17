@@ -14,18 +14,7 @@ export type Scalars = {
 
 export type Language = {
   __typename?: 'Language'
-  id: Scalars['ID']
-  createdAt: Scalars['Date']
-  createdById: Scalars['String']
-  updatedAt?: Maybe<Scalars['Date']>
-  updatedById?: Maybe<Scalars['String']>
-  deletedById?: Maybe<Scalars['String']>
-  version: Scalars['Int']
   name: Scalars['String']
-  code: Scalars['String']
-  happenedInId: Scalars['String']
-  channellanguage?: Maybe<Array<Channel>>
-  videolanguage?: Maybe<Array<Video>>
 }
 
 export type Member = {
@@ -39,7 +28,7 @@ export type Channel = {
   id: Scalars['ID']
   createdAt: Scalars['Date']
   handle: Scalars['String']
-  description: Scalars['String']
+  description?: Maybe<Scalars['String']>
   coverPhotoUrl?: Maybe<Scalars['String']>
   avatarPhotoUrl?: Maybe<Scalars['String']>
   owner: Member

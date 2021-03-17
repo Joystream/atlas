@@ -3,11 +3,6 @@ fragment BasicChannelFields on Channel {
   handle
   avatarPhotoUrl
   createdAt
-  description
-  isPublic
-  language {
-    name
-  }
 }
 
 fragment AllChannelFields on Channel {
@@ -25,6 +20,11 @@ query GetBasicChannel($where: ChannelWhereUniqueInput!) {
 query GetChannel($where: ChannelWhereUniqueInput!) {
   channel(where: $where) {
     ...AllChannelFields
+    description
+    isPublic
+    language {
+      name
+    }
   }
 }
 

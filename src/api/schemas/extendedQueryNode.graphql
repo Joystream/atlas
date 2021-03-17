@@ -1,18 +1,7 @@
 scalar Date
 
 type Language {
-  id: ID!
-  createdAt: Date!
-  createdById: String!
-  updatedAt: Date
-  updatedById: String
-  deletedById: String
-  version: Int!
   name: String!
-  code: String!
-  happenedInId: String!
-  channellanguage: [Channel!]
-  videolanguage: [Video!]
 }
 
 type Member {
@@ -27,7 +16,7 @@ type Channel {
 
   handle: String!
 
-  description: String!
+  description: String
 
   coverPhotoUrl: String
 
