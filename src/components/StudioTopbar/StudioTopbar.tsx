@@ -77,19 +77,18 @@ const StudioTopbar: React.FC = () => {
     setDrawerActive(!isDrawerActive)
   }
 
-  const handleClickOutside = (event: Event) => {
-    if (
-      channelInfoRef.current?.contains(event.target as Node) ||
-      drawerButtonRef.current?.contains(event.target as Node)
-    ) {
-      return
-    }
-    if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-      setDrawerActive(false)
-    }
-  }
-
   useEffect(() => {
+    const handleClickOutside = (event: Event) => {
+      if (
+        channelInfoRef.current?.contains(event.target as Node) ||
+        drawerButtonRef.current?.contains(event.target as Node)
+      ) {
+        return
+      }
+      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+        setDrawerActive(false)
+      }
+    }
     document.addEventListener('click', handleClickOutside, true)
     return () => {
       document.removeEventListener('click', handleClickOutside, true)
