@@ -13,7 +13,7 @@ export const StyledContainer = styled.div`
   min-height: 150px;
   margin: ${sizes(32)} auto;
   color: ${colors.white};
-  background-color: ${colors.gray[600]};
+  background-color: ${colors.gray[700]};
   padding: var(--dialog-padding);
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 24px 40px rgba(0, 0, 0, 0.16);
 `
