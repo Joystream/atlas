@@ -14,8 +14,8 @@ import {
 } from './MyVideos.styles'
 import { AddVideoView } from './AddVideoView'
 
-const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
-// const testChannelId = '100' // staging test channel id
+// const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
+const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
