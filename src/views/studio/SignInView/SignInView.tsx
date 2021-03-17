@@ -22,22 +22,8 @@ type SignInViewProps = {
 
 const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
   return (
-    <SignInWrapper>
-      <Header>
-        <Text variant="h1">Start your Joystream channel for free!</Text>
-        <SubTitle variant="h3">
-          Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
-        </SubTitle>
-        <StyledBackgroundPattern />
-        <ButtonGroup>
-          <SignInButton onClick={() => onOpenModal(true)} size="large">
-            Sign in For Free
-          </SignInButton>
-          <HowItWorksButton variant="secondary" size="large">
-            How it works?
-          </HowItWorksButton>
-        </ButtonGroup>
-      </Header>
+    <>
+      <StyledBackgroundPattern />
       <CompositionWrapper>
         <VideoImageWrapper>
           <img src={videoImg} />
@@ -45,7 +31,23 @@ const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
         <Tile src={tileImg} />
       </CompositionWrapper>
       <Overlay />
-    </SignInWrapper>
+      <SignInWrapper>
+        <Header>
+          <Text variant="h1">Start your Joystream channel for free!</Text>
+          <SubTitle variant="h3">
+            Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
+          </SubTitle>
+          <ButtonGroup>
+            <SignInButton onClick={() => onOpenModal(true)} size="large">
+              Sign in For Free
+            </SignInButton>
+            <HowItWorksButton variant="secondary" size="large">
+              How it works?
+            </HowItWorksButton>
+          </ButtonGroup>
+        </Header>
+      </SignInWrapper>
+    </>
   )
 }
 

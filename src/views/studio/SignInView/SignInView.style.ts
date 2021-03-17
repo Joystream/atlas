@@ -35,7 +35,7 @@ export const StepButton = styled(Button)`
 
 export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
   position: absolute;
-  top: 73px;
+  top: 0;
   left: 0;
   z-index: ${zIndex.background};
   max-width: 100%;
@@ -47,11 +47,11 @@ export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
 `
 
 export const SignInWrapper = styled.div`
-  margin-top: ${sizes(20)};
   width: 100%;
   overflow-x: hidden;
 `
 export const Header = styled.header`
+  margin-top: ${sizes(20)};
   max-width: 710px;
 `
 
@@ -75,7 +75,7 @@ export const CompositionWrapper = styled.div`
   position: absolute;
   z-index: ${zIndex.background};
   right: ${sizes(8)};
-  top: 73px;
+  top: 0;
 `
 
 export const VideoImageWrapper = styled.div`
@@ -103,11 +103,11 @@ export const Tile = styled.img`
 export const Overlay = styled.div`
   z-index: ${zIndex.background};
   position: absolute;
-  top: 73px;
-  left: 0%;
+  top: 0;
+  left: calc(0px - var(--global-horizontal-padding));
   background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0.4) 100%);
   width: 100%;
-  height: 120%;
+  height: 150%;
   overflow: hidden;
   @media screen and (min-width: ${breakpoints.small}) {
     left: 0;

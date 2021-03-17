@@ -2,7 +2,7 @@ import accountCreation from '@/assets/account-creation.png'
 import { AccountBar, Placeholder } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { StepSubTitle, StepTitle, StepWrapper } from '../SignInView.style'
+import { StepSubTitle, StepTitle, StepWrapper } from '../SignInView/SignInView.style'
 import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
 
 const fakeAccounts = [

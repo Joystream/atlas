@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserIcon } from './ExtensionStep.style'
-import { StepButton, StepSubTitle, StepTitle, StepWrapper } from '../SignInView.style'
+import { StepButton, StepSubTitle, StepTitle, StepWrapper } from '../SignInView/SignInView.style'
 
 type ExtensionStepProps = {
   browser: 'chrome' | 'firefox' | null

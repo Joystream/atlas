@@ -61,6 +61,12 @@ const VIEWER_SIDENAVBAR_ITEMS: NavItemType[] = [
   },
 ]
 
+const StudioRouter = loadable(() => import('./studio/StudioRouter'), {
+  fallback: <div>Loading...</div>,
+})
+
+StudioRouter.displayName = 'StudioRouter'
+
 const routesMap = [
   { path: '*', Component: HomeView },
   { path: routes.video(), Component: VideoView },
@@ -68,7 +74,7 @@ const routesMap = [
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
   { path: routes.playground() + '/*', Component: PlaygroundView },
-  { path: routes.studio() + '/*', Component: StudioView },
+  { path: routes.studio() + '/*', Component: StudioRouter },
 ]
 
 const barsRoutesMap = [

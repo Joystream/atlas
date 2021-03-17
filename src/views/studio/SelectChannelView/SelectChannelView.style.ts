@@ -3,7 +3,6 @@ import { breakpoints, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const Wrapper = styled.div`
-  max-width: calc(1440px - 72px - 64px);
   display: flex;
   margin-left: auto;
   margin-right: auto;

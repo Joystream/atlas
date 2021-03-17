@@ -3,7 +3,7 @@ import Text from '@/shared/components/Text'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { StepTitle, StepWrapper } from '../SignInView.style'
+import { StepTitle, StepWrapper } from '../SignInView/SignInView.style'
 import {
   TermsBox,
   TextWrapper,
