@@ -8,11 +8,9 @@ const routesMap = [{ path: './videos', Component: MyVideosView }]
 const StudioRouter = () => {
   return (
     <Container>
-      <Routes>
-        {routesMap.map(({ path, Component }) => (
-          <Route key={path} path={path} element={<Component />} />
-        ))}
-      </Routes>
+      {routesMap.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
     </Container>
   )
 }
