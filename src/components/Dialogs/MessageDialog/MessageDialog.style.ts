@@ -26,7 +26,6 @@ export const Spinner = styled.div`
   border: 2px solid ${colors.blue[500]};
   border-left: 2px solid ${colors.gray[200]};
   margin-bottom: ${sizes(4)};
-  transform: translateZ(0);
   animation: load 1s infinite linear;
   @keyframes load {
     0% {
