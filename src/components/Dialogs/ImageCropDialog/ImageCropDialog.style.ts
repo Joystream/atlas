@@ -1,8 +1,8 @@
+import { Button, Placeholder, Slider, Text } from '@/shared/components'
+import { colors, sizes } from '@/shared/theme'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import ActionDialog from '../ActionDialog'
-import { css } from '@emotion/react'
-import { Placeholder, Slider, Text } from '@/shared/components'
-import { colors, sizes } from '@/shared/theme'
 
 export const StyledActionDialog = styled(ActionDialog)`
   max-width: 536px;
@@ -17,7 +17,7 @@ const roundedCropperCss = css`
 
 export const HeaderContainer = styled.div`
   padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${colors.gray['500']};
+  border-bottom: 1px solid ${colors.gray[500]};
 `
 
 export const HeaderText = styled(Text)`
@@ -68,13 +68,12 @@ export const CropContainer = styled.div<{ rounded?: boolean }>`
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
 
-      box-shadow: inset 0 0 0 2px rgba(187, 231, 255, 0.48);
+      box-shadow: inset 0 0 0 2px ${colors.transparentWhite[32]};
     }
   }
 
   .cropper-modal {
-    background-color: #5a666f;
-    opacity: 0.8;
+    background-color: ${colors.transparentBlack[54]};
   }
 `
 
