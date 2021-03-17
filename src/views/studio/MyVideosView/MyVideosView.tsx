@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useVideos } from '@/api/hooks'
+import { useVideos, useVideosOffsetLimitPagination } from '@/api/hooks'
 import { VideoPreviewPublisher } from '@/components'
 import { useDrafts } from '@/hooks'
 import { Grid, Pagination, Tabs } from '@/shared/components'
@@ -29,7 +29,7 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const videosPerPage = 2 * videosPerRow
   const currentTabName = TABS[currentTab]
-  const { loading, videos, error, totalCount, fetchMore } = useVideos(
+  const { loading, videos, error, totalCount, fetchMore } = useVideosOffsetLimitPagination(
     {
       limit: videosPerPage,
       offset: videosPerPage * (currentPage - 1),
