@@ -1,6 +1,12 @@
 import React from 'react'
 import { Route, Routes } from 'react-router'
-import { PlaygroundDrafts, PlaygroundValidationForm, VideoMetaData, PlaygroundUploadingFilesData } from './Playgrounds'
+import {
+  PlaygroundDrafts,
+  PlaygroundValidationForm,
+  VideoMetaData,
+  PlaygroundUploadingFilesData,
+  PlaygroundMemberChannel,
+} from './Playgrounds'
 
 const PlaygroundRouter = () => {
   return (
@@ -9,6 +15,7 @@ const PlaygroundRouter = () => {
       <Route key="drafts" path="/drafts" element={<PlaygroundDrafts />} />
       <Route key="metadata" path="/video-metadata" element={<VideoMetaData />} />
       <Route key="uploading-files-data" path="/uploading-files-data" element={<PlaygroundUploadingFilesData />} />
+      <Route key="member-active-channel" path="/member-active-channel" element={<PlaygroundMemberChannel />} />
     </Routes>
   )
 }
