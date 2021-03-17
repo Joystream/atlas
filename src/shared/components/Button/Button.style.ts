@@ -12,6 +12,8 @@ export type ButtonStyleProps = {
   hasText?: boolean
   clickable?: boolean
   to?: string
+  href?: string
+  target?: string
 }
 
 export type IconStyleProps = {

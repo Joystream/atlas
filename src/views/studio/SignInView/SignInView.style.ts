@@ -60,10 +60,6 @@ export const ButtonGroup = styled.div`
 `
 export const SignInButton = styled(Button)`
   margin-right: ${sizes(3)};
-  cursor: pointer;
-`
-export const HowItWorksButton = styled(Button)`
-  cursor: pointer;
 `
 
 export const SubTitle = styled(Text)`

@@ -30,13 +30,16 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
   },
   ref
 ) => {
-  const clickable = !!onClick
+  const clickable = !!onClick || !!to
   const hasText = !!children
 
+  const isLinkExternal = to.includes('http')
   return (
     <StyledButton
-      as={to ? Link : undefined}
+      as={to ? (isLinkExternal ? 'a' : Link) : undefined}
       to={to}
+      target={isLinkExternal ? '_blank' : undefined}
+      href={to}
       css={containerCss}
       className={className}
       onClick={onClick}

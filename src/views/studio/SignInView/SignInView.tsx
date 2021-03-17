@@ -1,12 +1,11 @@
 import tileImg from '@/assets/tile-example.png'
 import videoImg from '@/assets/video-example.png'
-import { Text } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
   ButtonGroup,
   CompositionWrapper,
   Header,
-  HowItWorksButton,
   Overlay,
   SignInButton,
   SignInWrapper,
@@ -41,9 +40,9 @@ const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
             <SignInButton onClick={() => onOpenModal(true)} size="large">
               Sign in For Free
             </SignInButton>
-            <HowItWorksButton variant="secondary" size="large">
+            <Button variant="secondary" size="large" to="https://www.joystream.org/">
               How it works?
-            </HowItWorksButton>
+            </Button>
           </ButtonGroup>
         </Header>
       </SignInWrapper>
