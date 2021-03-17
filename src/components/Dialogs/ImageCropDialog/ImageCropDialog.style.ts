@@ -68,12 +68,12 @@ export const CropContainer = styled.div<{ rounded?: boolean }>`
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
 
-      box-shadow: inset 0 0 0 2px ${colors.transparentWhite[300]};
+      box-shadow: inset 0 0 0 2px ${colors.transparentWhite[32]};
     }
   }
 
   .cropper-modal {
-    background-color: ${colors.transparentBlack[200]};
+    background-color: ${colors.transparentBlack[54]};
   }
 `
 
