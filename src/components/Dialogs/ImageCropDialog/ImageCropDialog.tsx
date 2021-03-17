@@ -84,7 +84,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <StyledZoomButton icon="zoom-out" variant="tertiary" onClick={() => handleZoomChange(currentZoom - 0.1)} />
+      <StyledZoomButton icon="zoom-out" variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} />
       <StyledSlider
         value={currentZoom}
         onChange={handleZoomChange}
@@ -92,7 +92,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         max={zoomRange[1]}
         step={zoomStep}
       />
-      <StyledZoomButton icon="zoom-in" variant="tertiary" onClick={() => handleZoomChange(currentZoom + 0.1)} />
+      <StyledZoomButton icon="zoom-in" variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} />
     </ZoomControl>
   )
 
