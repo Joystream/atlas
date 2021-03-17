@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useVideos, useVideosOffsetLimitPagination } from '@/api/hooks'
-import { VideoPreviewPublisher } from '@/components'
+import { useVideosOffsetLimitPagination } from '@/api/hooks'
 import { useDrafts } from '@/hooks'
+import { VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs } from '@/shared/components'
 
 import {
@@ -73,6 +73,15 @@ export const MyVideosView = () => {
   }))
   const videosWPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
+
+  const FetchMoreVideos = (page: number) =>
+    fetchMore({
+      variables: {
+        // substract 1 coz offset index starts at 0
+        offset: videosPerPage * (page - 1),
+        limit: videosPerPage,
+      },
+    })
   return (
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
@@ -126,16 +135,10 @@ export const MyVideosView = () => {
         <Pagination
           onChangePage={(page) => {
             setCurrentPage(page)
+            currentTabName !== 'Drafts' && FetchMoreVideos(page)
           }}
           onMouseEnterPage={(page) => {
-            currentTabName !== 'Drafts' &&
-              fetchMore({
-                variables: {
-                  // substract 1 coz offset index starts at 0
-                  offset: videosPerPage * (page - 1),
-                  limit: videosPerPage,
-                },
-              })
+            currentTabName !== 'Drafts' && FetchMoreVideos(page)
           }}
           page={currentPage}
           itemsPerPage={videosPerPage}
