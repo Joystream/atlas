@@ -1,37 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import { useMember } from '@/hooks'
+import { useActiveUser } from '@/hooks'
 import { Button, RadioButton } from '@/shared/components'
 
-const mockMember = {
-  id: '1234',
-  activeChannelId: '5678',
+const mockActiveUser = {
+  accountId: '1234',
+  memberId: '9101112',
+  channelId: '5678',
 }
 const channels = ['103123213', '1230123021', '123912399132']
+const members = ['213124655', '21412412412', '12412412412']
 
 const PlaygroundMemberChannel = () => {
-  const { activeMember, setActiveMember, removeActiveMember, setActiveChannel } = useMember()
+  const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
 
-  const [selected, setSelected] = useState<string | number>('')
-  const [memberString, setMemberString] = useState('')
+  const [selectedChannel, setSelectedChannel] = useState<string | number>('')
+  const [selectedMember, setSelectedMember] = useState<string | number>('')
+  const [activeUserString, setActiveUserString] = useState('')
 
   const handleActiveChannelChange = (e: React.MouseEvent<HTMLInputElement>) => {
     const element = e.currentTarget
-    setSelected(element.value)
+    setSelectedChannel(element.value)
     setActiveChannel(element.value)
   }
-  const handleAddMember = () => {
-    setActiveMember(mockMember)
+  const handleActiveMemberChange = (e: React.MouseEvent<HTMLInputElement>) => {
+    const element = e.currentTarget
+    setSelectedMember(element.value)
+    setActiveMember(element.value)
+  }
+  const handleAddUser = () => {
+    setActiveUser(mockActiveUser)
   }
 
   useEffect(() => {
-    setMemberString(JSON.stringify(activeMember, null, 4))
-  }, [activeMember])
+    setActiveUserString(JSON.stringify(activeUser, null, 4))
+  }, [activeUser])
 
   return (
     <>
-      <h1>Member data from local storage</h1>
-      <Button onClick={handleAddMember}>Set member</Button>
-      <pre>{memberString}</pre>
+      <h1>Account/Member/Channel ID from local storage</h1>
+      <Button onClick={handleAddUser}>Set User</Button>
+      <pre>{activeUserString}</pre>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <p>Select active channel:</p>
@@ -40,13 +48,26 @@ const PlaygroundMemberChannel = () => {
             key={channel}
             name="radio-group"
             value={channel}
-            selectedValue={selected}
+            selectedValue={selectedChannel}
             onClick={handleActiveChannelChange}
             label={channel}
           />
         ))}
       </div>
-      <Button onClick={removeActiveMember}>Remove member</Button>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <p>Select active member:</p>
+        {members.map((member) => (
+          <RadioButton
+            key={member}
+            name="radio-group"
+            value={member}
+            selectedValue={selectedMember}
+            onClick={handleActiveMemberChange}
+            label={member}
+          />
+        ))}
+      </div>
+      <Button onClick={removeActiveUser}>Remove user</Button>
     </>
   )
 }

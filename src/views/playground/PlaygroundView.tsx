@@ -2,14 +2,14 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
-import { DraftsProvider, UploadingFilesDataProvider, MemberProvider } from '@/hooks'
+import { DraftsProvider, UploadingFilesDataProvider, ActiveUserProvider } from '@/hooks'
 import PlaygroundRouter from './PlaygroundRouter'
 
 export const PlaygroundView = () => {
   return (
     <DraftsProvider>
       <UploadingFilesDataProvider>
-        <MemberProvider>
+        <ActiveUserProvider>
           <Container>
             <Text variant="h2">Internal testing view</Text>
             <LinksContainer>
@@ -17,11 +17,11 @@ export const PlaygroundView = () => {
               <Link to="./drafts">Drafts</Link>
               <Link to="./video-metadata">Video Metadata</Link>
               <Link to="./uploading-files-data">Uploading Files Data</Link>
-              <Link to="./member-active-channel">Member/Active channel</Link>
+              <Link to="./member-active-channel">Active user/member/channel</Link>
             </LinksContainer>
             <PlaygroundRouter />
           </Container>
-        </MemberProvider>
+        </ActiveUserProvider>
       </UploadingFilesDataProvider>
     </DraftsProvider>
   )
