@@ -14,7 +14,8 @@ import {
 } from './MyVideos.styles'
 import { AddVideoView } from './AddVideoView'
 
-const testChannelId = '100' // staging test channel id
+const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
+// const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
@@ -35,7 +36,7 @@ export const MyVideosView = () => {
       offset: videosPerPage * (currentPage - 1),
       where: {
         channelId_eq: testChannelId,
-        isPublic_eq: currentTabName !== 'Unlisted',
+        isPublic_eq: getPublicness(currentTabName),
       },
     },
     {
@@ -82,6 +83,7 @@ export const MyVideosView = () => {
         limit: videosPerPage,
       },
     })
+  // console.log({ videos, totalCount })
   return (
     <ViewContainer>
       <StyledText variant="h2">My Videos</StyledText>
@@ -158,4 +160,17 @@ const usePagination = (currentTab: number) => {
     setCurrentPage(1)
   }, [currentTab])
   return { currentPage, setCurrentPage }
+}
+
+const getPublicness = (currentTabName: typeof TABS[number]) => {
+  console.log(currentTabName)
+  switch (currentTabName) {
+    case 'Published':
+      return true
+    case 'Unlisted':
+      return false
+    case 'All Videos':
+    default:
+      return undefined
+  }
 }

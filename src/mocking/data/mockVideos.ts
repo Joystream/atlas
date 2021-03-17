@@ -22,6 +22,7 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],
+    isPublic: Boolean(Math.round(Math.random())),
   } as MockVideo
 })
 
@@ -35,6 +36,7 @@ const coverMockVideo: MockVideo = {
   media: rawCoverVideo.videoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[0],
+  isPublic: true,
 }
 
 const mockVideos: MockVideo[] = [...regularMockVideos, coverMockVideo]
