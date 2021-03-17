@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
 import { sizes, breakpoints, transitions } from '@/shared/theme'
 import { Textarea, ActionBarTransaction, Avatar, FormField } from '@/shared/components'
-import { TitleSection } from '@/views/consumer/ChannelView/ChannelView.style'
+import { Header, TitleSection } from '@/views/consumer/ChannelView/ChannelView.style'
 
 type AtionBarProps = {
   isActive?: boolean
 }
+
+export const StyledHeader = styled(Header)``
 
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
@@ -25,8 +27,7 @@ export const TitleContainer = styled.div`
 
 export const InnerFormContainer = styled.div`
   width: 100%;
-  max-width: var(--max-inner-width);
-  margin: 50px auto 0 auto;
+  margin-top: 50px;
   padding-bottom: 100px;
   @media screen and (min-width: ${breakpoints.medium}) {
     padding-bottom: 200px;
@@ -40,9 +41,6 @@ export const StyledFormField = styled(FormField)`
 `
 
 export const StyledTextarea = styled(Textarea)`
-  position: relative;
-  width: 100%;
-  max-width: 760px;
   textarea {
     height: 120px;
   }

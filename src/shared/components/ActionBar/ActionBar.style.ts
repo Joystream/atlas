@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
 import { Text, Button, Tooltip } from '@/shared/components'
+import { StudioContainer } from '@/components'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;
@@ -17,11 +18,9 @@ export const StyledActionBarContainer = styled.div`
   }
 `
 
-export const StyledInnerContainer = styled.div`
+export const StyledInnerContainer = styled(StudioContainer)`
   display: flex;
   width: 100%;
-  max-width: var(--max-inner-width);
-  margin: 0 auto;
 `
 
 export const StyledInfoContainer = styled.div`

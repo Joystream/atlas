@@ -4,7 +4,7 @@ import { useChannel } from '@/api/hooks'
 
 import { languages } from '@/config/languages'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle, ViewWrapper } from '@/components'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
 import { ChannelCover, FormField, Select, SelectedItem, HeaderTextField, Tooltip } from '@/shared/components'
 
 import { transitions } from '@/shared/theme'
@@ -48,7 +48,7 @@ type CreateEditChannelViewProps = {
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   // TODO Add hook for fetching currently active channel
-  const id = 'aea96cc5-0b81-4025-9b1f-25e5f7ecfaf3'
+  const id = '1494'
   const { channel, loading, error } = useChannel(id, { skip: newChannel })
 
   const {
@@ -128,67 +128,66 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   }
 
   return (
-    <ViewWrapper>
-      <form onSubmit={handleSubmit}>
-        <Header>
-          <ChannelCover
-            coverPhotoUrl={coverImageUrl}
-            onCoverEditClick={(e) => {
+    <form onSubmit={handleSubmit}>
+      <Header>
+        <ChannelCover
+          coverPhotoUrl={coverImageUrl}
+          onCoverEditClick={(e) => {
+            e.preventDefault()
+            coverDialogRef.current?.open()
+          }}
+          onCoverRemoveClick={handleCoverRemove}
+          editable
+        />
+
+        <StyledTitleSection className={transitions.names.slide}>
+          <StyledAvatar
+            imageUrl={avatarImageUrl}
+            size="fill"
+            onEditClick={(e) => {
               e.preventDefault()
-              coverDialogRef.current?.open()
+              avatarDialogRef.current?.open()
             }}
-            onCoverRemoveClick={handleCoverRemove}
             editable
           />
 
-          <StyledTitleSection className={transitions.names.slide}>
-            <StyledAvatar
-              imageUrl={avatarImageUrl}
-              size="fill"
-              onEditClick={(e) => {
-                e.preventDefault()
-                avatarDialogRef.current?.open()
-              }}
-              editable
+          <TitleContainer>
+            <Controller
+              name="channelName"
+              control={control}
+              rules={textFieldValidation('Channel name', 3, 40, true)}
+              render={(props) =>
+                channel || newChannel ? (
+                  <>
+                    <Tooltip text="Click to edit channel title">
+                      <HeaderTextField
+                        placeholder="Add Channel Title"
+                        value={props.value}
+                        onChange={(e) => {
+                          props.onChange(e.currentTarget.value)
+                        }}
+                        error={!!errors.channelName}
+                        helperText={errors.channelName?.message}
+                      />
+                    </Tooltip>
+                    {!newChannel && (
+                      <SubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                    )}
+                  </>
+                ) : (
+                  <TitlePlaceholder>
+                    <TitlePlaceholder />
+                    <SubTitlePlaceholder />
+                  </TitlePlaceholder>
+                )
+              }
             />
-
-            <TitleContainer>
-              <Controller
-                name="channelName"
-                control={control}
-                rules={textFieldValidation('Channel name', 3, 40, true)}
-                render={(props) =>
-                  channel || newChannel ? (
-                    <>
-                      <Tooltip text="Click to edit channel title">
-                        <HeaderTextField
-                          placeholder="Add Channel Title"
-                          value={props.value}
-                          onChange={(e) => {
-                            props.onChange(e.currentTarget.value)
-                          }}
-                          error={!!errors.channelName}
-                          helperText={errors.channelName?.message}
-                        />
-                      </Tooltip>
-                      {!newChannel && (
-                        <SubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                      )}
-                    </>
-                  ) : (
-                    <TitlePlaceholder>
-                      <TitlePlaceholder />
-                      <SubTitlePlaceholder />
-                    </TitlePlaceholder>
-                  )
-                }
-              />
-            </TitleContainer>
-          </StyledTitleSection>
-        </Header>
-
+          </TitleContainer>
+        </StyledTitleSection>
+      </Header>
+      <StudioContainer>
         <InnerFormContainer>
-          <FormField title="Description">
+          <StyledFormField title="Description">
             <Tooltip text="Click to edit channel description" offsetY={-50}>
               <StyledTextarea
                 name="description"
@@ -201,7 +200,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 helperText={errors.description?.message}
               />
             </Tooltip>
-          </FormField>
+          </StyledFormField>
           <StyledFormField
             title="Change Language"
             description="Channel language is the main language of the content you publish on your channel"
@@ -254,18 +253,18 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             onConfirmClick={handleSubmit}
           />
         </InnerFormContainer>
-        <Controller
-          name="avatar"
-          control={control}
-          render={() => <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />}
-        />
-        <Controller
-          name="cover"
-          control={control}
-          render={() => <ImageCropDialog imageType="cover" onConfirm={handleCoverConfirm} ref={coverDialogRef} />}
-        />
-      </form>
-    </ViewWrapper>
+      </StudioContainer>
+      <Controller
+        name="avatar"
+        control={control}
+        render={() => <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />}
+      />
+      <Controller
+        name="cover"
+        control={control}
+        render={() => <ImageCropDialog imageType="cover" onConfirm={handleCoverConfirm} ref={coverDialogRef} />}
+      />
+    </form>
   )
 }
 
