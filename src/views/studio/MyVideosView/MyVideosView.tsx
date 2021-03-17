@@ -18,14 +18,9 @@ const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
-// TODO: adjust action bar to the real fee
-// TODO: Unlisted videos
 // TODO: on edit video callbacks
 // TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
-// TODO: No videos screen (this was deleted from figma?)
-// doable
-// TODO: how is the action bar supossed to work?
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   // Drafts calls can run into race conditions
