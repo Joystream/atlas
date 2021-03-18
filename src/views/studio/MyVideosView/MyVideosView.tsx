@@ -145,7 +145,7 @@ export const MyVideosView = () => {
                   />
                 ))}
           </Grid>
-          {/* {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && <AddVideo />} */}
+          {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && <AddVideo />}
           <PaginationContainer>
             <Pagination
               onChangePage={(page) => {
