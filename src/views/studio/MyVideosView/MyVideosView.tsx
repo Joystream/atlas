@@ -13,8 +13,8 @@ import {
 } from './MyVideos.styles'
 import { AddVideo, AddVideoView } from './AddVideoView'
 
-const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
-// const testChannelId = '100' // staging test channel id
+// const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
+const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 // not yet doable
@@ -28,7 +28,7 @@ export const MyVideosView = () => {
   const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const videosPerPage = 2 * videosPerRow
+  const videosPerPage = 4 * videosPerRow
   const currentTabName = TABS[currentTab]
   const isPublic_eq = getPublicness(currentTabName)
   const { loading, videos, error, totalCount, fetchMore } = useVideosOffsetLimitPagination(
