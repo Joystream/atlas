@@ -2,11 +2,11 @@ import React from 'react'
 import styled from '@emotion/styled'
 import bgIllustration, { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
 import { Button, Text } from '@/shared/components'
-import { sizes, colors } from '@/shared/theme'
+import { sizes, colors, breakpoints } from '@/shared/theme'
 import { css } from '@emotion/react'
 
 // for when there is absolutely no videos available
-export const AddVideoView = () => {
+export const EmptyVideosView = () => {
   return (
     <ContainerView>
       <InnerContainerView>
@@ -22,18 +22,29 @@ export const AddVideoView = () => {
           <Button icon="video-camera">Upload video</Button>
         </div>
       </InnerContainerView>
-      <WellIllustration />
+      <StyledWellIllustration />
     </ContainerView>
   )
 }
 
+const StyledWellIllustration = styled(WellIllustration)`
+  max-width: 300px;
+  margin: 0 auto;
+  grid-row-start: 1;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    max-width: initial;
+    grid-row-start: initial;
+  }
+`
+
 const ContainerView = styled.div`
-  height: 50vh;
-  margin: ${sizes(20)} auto 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  > svg {
-    max-width: 650px;
+  padding: 0 0 ${sizes(10)} 0;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: 50vh;
+    grid-template-columns: 1fr 1fr;
+    margin: ${sizes(20)} auto 0;
   }
 `
 
@@ -47,22 +58,21 @@ const MessageView = styled.div`
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-top: 48px;
+  margin-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-top: ${sizes(12)};
+  }
 `
 
 // for tabs
-export const AddVideo = () => {
+export const EmptyVideos = () => {
   return (
     <Container>
       <WellIllustration />
       <Message>
-        <Text variant="h5">Add your first video</Text>
-        <Subtitle variant="body2">
-          No videos available. Start the publisher journey by
-          <br />
-          adding you very first video to Joystream.
-        </Subtitle>
+        <Text variant="h5">No videos found...</Text>
+        {/* <Subtitle variant="body2">No videos found..</Subtitle> */}
       </Message>
       <Button icon="video-camera">Upload video</Button>
     </Container>

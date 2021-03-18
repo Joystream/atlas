@@ -5,7 +5,7 @@ import { VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
-import { AddVideo, AddVideoView } from './AddVideoView'
+import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 
 // const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
 const testChannelId = '100' // staging test channel id
@@ -90,7 +90,7 @@ export const MyVideosView = () => {
     <ViewContainer>
       <Text variant="h2">My Videos</Text>
       {hasAnyVideos === false ? (
-        <AddVideoView />
+        <EmptyVideosView />
       ) : (
         <>
           <TabsContainer>
@@ -135,7 +135,7 @@ export const MyVideosView = () => {
                   />
                 ))}
           </Grid>
-          {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && <AddVideo />}
+          {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && <EmptyVideos />}
           <PaginationContainer>
             <Pagination
               onChangePage={(page) => {
