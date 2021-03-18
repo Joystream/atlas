@@ -9,7 +9,6 @@ import {
   StyledDismissibleMessage,
   StyledText,
   TabsContainer,
-  VideosContainer,
   ViewContainer,
 } from './MyVideos.styles'
 import { AddVideo, AddVideoView } from './AddVideoView'
