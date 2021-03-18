@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Text, Icon } from '@/shared/components'
+import { Text, Icon } from '@/shared/components'
 import {
   StyledTopbarBase,
   StudioContainer,
@@ -42,6 +42,7 @@ type NavDrawerProps = {
   currentChannel: Channel
   onCurrentChannelChange: (channel: Channel) => void
   onLogoutClick: () => void
+  handleClose: () => void
 }
 
 const member = {
@@ -70,6 +71,7 @@ const StudioTopbar: React.FC = () => {
 
   const handleLogout = () => {
     // TODO add logic for Logout
+    window.alert("You've been logged out")
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -124,6 +126,7 @@ const StudioTopbar: React.FC = () => {
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
+        handleClose={() => setDrawerActive(false)}
       />
     </>
   )
@@ -158,7 +161,10 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
 ChannelInfo.displayName = 'ChannelInfo'
 
 const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
-  ({ active, memberName, memberAvatar, channels, currentChannel, onCurrentChannelChange, onLogoutClick }, ref) => {
+  (
+    { active, memberName, memberAvatar, channels, currentChannel, onCurrentChannelChange, onLogoutClick, handleClose },
+    ref
+  ) => {
     return (
       <DrawerContainer ref={ref} isActive={active}>
         <MemberInfo memberName={memberName} memberAvatar={memberAvatar} />
@@ -172,7 +178,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             onClick={() => onCurrentChannelChange(channel)}
           />
         ))}
-        <StyledLink to="channel/new">
+        <StyledLink to="channel/new" onClick={handleClose}>
           <NewChannel>
             <NewChannelIconContainer>
               <Icon name="new-channel" />
