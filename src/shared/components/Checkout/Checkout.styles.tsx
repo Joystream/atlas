@@ -56,15 +56,17 @@ export const StepState = styled.div<StepStateProps>`
 
 export const Step = styled.div`
   cursor: pointer;
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 12px;
   justify-content: space-between;
   align-items: center;
 `
 
 export const StepInnerContainer = styled.div`
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 12px;
   align-items: center;
 `
 
