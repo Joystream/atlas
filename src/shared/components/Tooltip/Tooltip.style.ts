@@ -7,6 +7,7 @@ type TooltipProps = {
   arrowDisabled?: boolean
   above?: boolean
   right?: boolean
+  offsetY?: number
 }
 
 type ChildrenContainerProps = {
@@ -28,17 +29,18 @@ const positionFromProps = ({ above, right: rightProp, isActive }: TooltipProps) 
   `
 }
 
-const transformTooltipFromProps = ({ above, isActive }: TooltipProps) => {
-  const translate = above ? '-100%' : 'calc(100% + 10px)'
-
+const transformTooltipFromProps = ({ above, offsetY = 0, isActive }: TooltipProps) => {
+  const translate = above ? `calc(-100% + ${offsetY}px)` : `calc(100% + 10px + ${offsetY}px)`
   return css`
     transform: translateY(${translate}) scale(${isActive ? 1 : 1.1});
   `
 }
 
-const transformArrowFromProps = ({ above, isActive }: TooltipProps) => {
+const transformArrowFromProps = ({ above, offsetY = 0, isActive }: TooltipProps) => {
   const rotate = above ? '-90deg' : '90deg'
-  const translateX = above ? [0, sizes(2)] : [sizes(3), sizes(5)]
+  const translateX = above
+    ? [`calc(0px - ${offsetY}px)`, `calc(8px - ${offsetY}px)`]
+    : [`calc(12px + ${offsetY}px)`, '20px']
 
   return css`
     transform: rotate(${rotate}) translateX(${isActive ? translateX[0] : translateX[1]});
@@ -48,6 +50,7 @@ const transformArrowFromProps = ({ above, isActive }: TooltipProps) => {
 export const StyledTooltip = styled.div<TooltipProps>`
   position: relative;
   display: inline-block;
+  width: 100%;
   height: 100%;
   &::before {
     position: absolute;
@@ -82,8 +85,9 @@ export const StyledTooltip = styled.div<TooltipProps>`
 `
 
 export const ChildrenContainer = styled.div<ChildrenContainerProps>`
-  transition: filter 200ms ${transitions.easing};
   display: inline-block;
+  width: 100%;
+  transition: filter 200ms ${transitions.easing};
   &:hover {
     filter: ${({ darkenContent }) => darkenContent && 'brightness(90%)'};
   }

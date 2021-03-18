@@ -20,6 +20,11 @@ export default {
   studio: () => `/studio`,
 }
 
+export const studioRoutes = {
+  newChannel: () => '/channel/new',
+  editChannel: () => `/channel`,
+}
+
 export const QUERY_PARAMS = {
   SEARCH: 'query',
 }

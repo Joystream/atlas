@@ -1,8 +1,7 @@
 import * as Types from './baseTypes.generated'
 
-import * as Apollo from '@apollo/client'
 import { gql } from '@apollo/client'
-
+import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
@@ -32,7 +31,14 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channel?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
+  channel?: Types.Maybe<
+    {
+      __typename?: 'Channel'
+      description?: Types.Maybe<string>
+      isPublic: boolean
+      language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
+    } & AllChannelFieldsFragment
+  >
 }
 
 export type GetChannelVideoCountQueryVariables = Types.Exact<{
@@ -157,6 +163,11 @@ export const GetChannelDocument = gql`
   query GetChannel($where: ChannelWhereUniqueInput!) {
     channel(where: $where) {
       ...AllChannelFields
+      description
+      isPublic
+      language {
+        name
+      }
     }
   }
   ${AllChannelFieldsFragmentDoc}
