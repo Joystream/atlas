@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import { colors, sizes } from '@/shared/theme'
-import { DismissibleMessage, Text } from '@/shared/components'
+import { DismissibleMessage } from '@/shared/components'
 
 export const ViewContainer = styled.div`
   padding-top: ${sizes(8)};
 `
-export const StyledText = styled(Text)``
 
 export const TabsContainer = styled.div`
   padding-top: ${sizes(8)};

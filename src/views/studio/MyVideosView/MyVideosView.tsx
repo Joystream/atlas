@@ -2,15 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useVideosOffsetLimitPagination } from '@/api/hooks'
 import { useDrafts } from '@/hooks'
 import { VideoPreviewPublisher } from '@/components'
-import { Grid, Pagination, Tabs } from '@/shared/components'
+import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
-import {
-  PaginationContainer,
-  StyledDismissibleMessage,
-  StyledText,
-  TabsContainer,
-  ViewContainer,
-} from './MyVideos.styles'
+import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { AddVideo, AddVideoView } from './AddVideoView'
 
 // const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
@@ -94,8 +88,7 @@ export const MyVideosView = () => {
   // console.log({ videos, totalCount, hasAnyVideos, isLoading, isPublic_eq })
   return (
     <ViewContainer>
-      <StyledText variant="h2">My Videos</StyledText>
-
+      <Text variant="h2">My Videos</Text>
       {hasAnyVideos === false ? (
         <AddVideoView />
       ) : (
