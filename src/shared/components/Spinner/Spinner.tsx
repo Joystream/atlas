@@ -1,8 +1,13 @@
 import React from 'react'
 import { SpinnerWrapper } from './Spinner.style'
 
-const Spinner: React.FC<{ className?: string }> = ({ className }) => {
-  return <SpinnerWrapper className={className} />
+export type SpinnerProps = {
+  size?: number
+  className?: string
+}
+
+const Spinner: React.FC<SpinnerProps> = ({ className, size }) => {
+  return <SpinnerWrapper className={className} size={size} />
 }
 
 export default Spinner

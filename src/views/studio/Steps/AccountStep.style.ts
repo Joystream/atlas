@@ -10,7 +10,6 @@ export const AccountStepImg = styled.img`
 export const StyledSpinner = styled(Spinner)`
   margin-top: ${sizes(8)};
   margin-bottom: ${sizes(5)};
-  font-size: 40px;
 `
 export const AccountsWrapper = styled.div`
   width: 100%;

@@ -1,33 +1,27 @@
-import { colors } from '@/shared/theme'
-import { keyframes } from '@emotion/react'
+import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 // based on https://github.com/lukehaas/css-loaders licensed under MIT
 
-const load8 = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`
+type SpinnerWrapperProps = {
+  size?: number
+}
 
-export const SpinnerWrapper = styled.div`
+// to adjust size of the spinner, change the font-size value
+export const SpinnerWrapper = styled.div<SpinnerWrapperProps>`
   border-radius: 50%;
+  font-size: ${({ size = 32 }) => size}px;
   width: 1em;
   height: 1em;
-  font-size: 50px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 0.1em solid rgba(255, 255, 255, 0.4);
-  border-right: 0.1em solid rgba(255, 255, 255, 0.4);
-  border-bottom: 0.1em solid rgba(255, 255, 255, 0.4);
+  border: 0.1em solid ${colors.transparentWhite[32]};
   border-left: 0.1em solid ${colors.white};
-  transform: translateZ(0);
-  animation: ${load8} 1.1s infinite linear;
-  ::after {
-    border-radius: 50%;
-    width: 0.1em;
-    height: 0.1em;
+  margin-bottom: ${sizes(4)};
+  animation: load 1s infinite linear;
+  @keyframes load {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `

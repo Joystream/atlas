@@ -1,7 +1,8 @@
 import accountCreation from '@/assets/account-creation.png'
 import { AccountBar, Placeholder } from '@/shared/components'
+import { transitions } from '@/shared/theme'
 import React, { useEffect, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { StepSubTitle, StepTitle, StepWrapper } from '../SignInView/SignInView.style'
 import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
 
@@ -52,35 +53,45 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
     onStepChange(currentStepIdx + 1)
   }
 
-  return loading && !accounts?.length ? (
-    <StepWrapper centered>
-      {!imageLoaded && <Placeholder height="180px" width="320px" />}
-      <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
-        <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
+  return (
+    <SwitchTransition>
+      <CSSTransition
+        key={loading && !accounts?.length ? 'loading' : 'accounts'}
+        classNames={transitions.names.fadeAndSlide}
+        timeout={parseInt(transitions.timings.routing)}
+      >
+        {loading && !accounts?.length ? (
+          <StepWrapper centered>
+            {!imageLoaded && <Placeholder height="180px" width="320px" />}
+            <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
+              <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
+            </CSSTransition>
+            <StepTitle variant="h4">Waiting for account creation</StepTitle>
+            <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle>
+            <StyledSpinner size={50} />
+          </StepWrapper>
+        ) : (
+          <StepWrapper>
+            <StepTitle variant="h4">Select Account</StepTitle>
+            <StepSubTitle>
+              Select account you would like to assign to your new Joystream membership cccount. (Showing only accounts
+              with sufficient amount of funds to start a channel.)
+            </StepSubTitle>
+            <AccountsWrapper>
+              {accounts?.map(({ balance, name, avatarUrl }, idx) => (
+                <AccountBar
+                  key={idx}
+                  secondary={balance + ' JOY'}
+                  name={name}
+                  onClick={handleSelectAccount}
+                  avatarUrl={avatarUrl}
+                />
+              ))}
+            </AccountsWrapper>
+          </StepWrapper>
+        )}
       </CSSTransition>
-      <StepTitle variant="h4">Waiting for account creation</StepTitle>
-      <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle>
-      <StyledSpinner />
-    </StepWrapper>
-  ) : (
-    <StepWrapper>
-      <StepTitle variant="h4">Select Account</StepTitle>
-      <StepSubTitle>
-        Select account you would like to assign to your new Joystream membership cccount. (Showing only accounts with
-        sufficient amount of funds to start a channel.)
-      </StepSubTitle>
-      <AccountsWrapper>
-        {accounts?.map(({ balance, name, avatarUrl }, idx) => (
-          <AccountBar
-            key={idx}
-            secondary={balance + ' JOY'}
-            name={name}
-            onClick={handleSelectAccount}
-            avatarUrl={avatarUrl}
-          />
-        ))}
-      </AccountsWrapper>
-    </StepWrapper>
+    </SwitchTransition>
   )
 }
 
