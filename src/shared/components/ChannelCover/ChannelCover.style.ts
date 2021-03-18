@@ -34,6 +34,7 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
 `
 
 export const CoverImage = styled.div<CoverImageProps>`
@@ -130,6 +131,9 @@ export const EditableControls = styled.div`
   }
   :hover button {
     opacity: 1;
+  }
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    height: 70%;
   }
 `
 

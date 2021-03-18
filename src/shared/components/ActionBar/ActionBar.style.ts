@@ -1,13 +1,14 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
 import { Text, Button, Tooltip } from '@/shared/components'
+import { StudioContainer } from '@/components'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: var(--sidenav-collapsed-width);
+  right: 0;
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   @media screen and (min-width: ${breakpoints.medium}) {
@@ -17,17 +18,21 @@ export const StyledActionBarContainer = styled.div`
   }
 `
 
+export const StyledInnerContainer = styled(StudioContainer)`
+  display: flex;
+  width: 100%;
+`
+
 export const StyledInfoContainer = styled.div`
   display: none;
-  width: auto;
-  flex-direction: column;
+  width: 100%;
+  flex-direction: row;
   align-items: flex-start;
   padding-bottom: 0;
   @media screen and (min-width: ${breakpoints.medium}) {
     display: flex;
   }
   @media screen and (min-width: ${breakpoints.large}) {
-    flex-direction: row;
     align-items: center;
     width: 100%;
   }
@@ -63,6 +68,9 @@ export const StyledButtonsContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  > *:not(:last-child) {
+    margin-right: ${sizes(2)};
+  }
 `
 
 export const StyledTooltip = styled(Tooltip)`
@@ -81,21 +89,10 @@ export const StyledTooltip = styled(Tooltip)`
 export const StyledDetailsTextContainer = styled.div`
   color: ${colors.gray[200]};
   font-size: ${typography.sizes.body2};
+  margin-left: auto;
   svg {
     margin-left: ${sizes(2)};
     width: 16px;
     height: 16px;
-  }
-`
-
-export const StyledSecondaryButton = styled(Button)`
-  border: none;
-  background-color: ${colors.transparent};
-  margin-right: ${sizes(2)};
-  &:hover {
-    background-color: ${colors.gray[700]};
-  }
-  &:active {
-    background-color: ${colors.gray[800]};
   }
 `

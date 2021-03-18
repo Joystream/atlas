@@ -10,7 +10,8 @@ export const StyledTextArea = styled.textarea`
   width: 100%;
   resize: none;
   color: ${colors.gray[300]};
-  font-size: ${typography.sizes.subtitle2};
+  font-size: ${typography.sizes.body1};
+  line-height: ${typography.lineHeights.body1};
   border: none;
   border-bottom: 1px solid ${colors.gray[900]};
   transition: all ${transitions.timings.loading} ${transitions.easing};
