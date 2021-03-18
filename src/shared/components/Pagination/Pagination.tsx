@@ -25,6 +25,8 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const pages = generatePaginationArray(page, maxPaginationLinks, totalPages)
 
+  if (totalPages <= 1) return null
+
   return (
     <PaginationWrapper>
       <PaginationButton

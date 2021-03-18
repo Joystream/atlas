@@ -7,7 +7,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   // make sure queries asking for a specific category are separated in cache
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
-  const isPublic = args?.where?.isPublic_eq || ''
+  const isPublic = args?.where?.isPublic_eq
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
 
