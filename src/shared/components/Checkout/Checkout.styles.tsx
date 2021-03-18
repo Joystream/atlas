@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { colors } from '@/shared/theme'
-import { Icon } from '..'
 import { css } from '@emotion/react'
+import { colors } from '@/shared/theme'
+import Text from '../Text'
+import { Icon } from '..'
 
 export const Container = styled.div`
   padding: 24px;
@@ -64,6 +65,10 @@ export const Step = styled.div`
   align-items: center;
 `
 
+export const StepsCompletedText = styled(Text)`
+  min-width: 25px;
+  text-align: right;
+`
 export const StepInnerContainer = styled.div`
   display: grid;
   grid-auto-flow: column;

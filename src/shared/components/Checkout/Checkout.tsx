@@ -1,7 +1,6 @@
 import React from 'react'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
-import Icon from '../Icon'
 import {
   Container,
   TopRowContainer,
@@ -13,6 +12,7 @@ import {
   StepState,
   CheckIcon,
   ChecvronIcon,
+  StepsCompletedText,
 } from './Checkout.styles'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
@@ -29,9 +29,9 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps }) => {
           <ProgressbarContainer>
             <CircularProgressbar value={stepsCompletedNumber} maxValue={steps.length}></CircularProgressbar>
           </ProgressbarContainer>
-          <Text variant="body2">
+          <StepsCompletedText variant="body2">
             {stepsCompletedNumber}/{steps.length}
-          </Text>
+          </StepsCompletedText>
         </StepsProgressContainer>
       </TopRowContainer>
       <StepsContainer>
