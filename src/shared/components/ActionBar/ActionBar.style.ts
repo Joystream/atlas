@@ -25,15 +25,14 @@ export const StyledInnerContainer = styled(StudioContainer)`
 
 export const StyledInfoContainer = styled.div`
   display: none;
-  width: auto;
-  flex-direction: column;
+  width: 100%;
+  flex-direction: row;
   align-items: flex-start;
   padding-bottom: 0;
   @media screen and (min-width: ${breakpoints.medium}) {
     display: flex;
   }
   @media screen and (min-width: ${breakpoints.large}) {
-    flex-direction: row;
     align-items: center;
     width: 100%;
   }
@@ -90,6 +89,7 @@ export const StyledTooltip = styled(Tooltip)`
 export const StyledDetailsTextContainer = styled.div`
   color: ${colors.gray[200]};
   font-size: ${typography.sizes.body2};
+  margin-left: auto;
   svg {
     margin-left: ${sizes(2)};
     width: 16px;

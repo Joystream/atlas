@@ -19,12 +19,12 @@ export const Container = styled.div`
 `
 
 export const StyledInput = styled.input<StyledInputProps>`
-  --input-max-width: 220px;
+  --input-max-width: 60vw;
   @media screen and (min-width: ${breakpoints.small}) {
-    --input-max-width: 270px;
+    --input-max-width: 400px;
   }
   @media screen and (min-width: ${breakpoints.medium}) {
-    --input-max-width: 400px;
+    --input-max-width: 600px;
   }
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};

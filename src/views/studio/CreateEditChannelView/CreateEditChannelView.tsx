@@ -11,7 +11,6 @@ import { transitions } from '@/shared/theme'
 import {
   StyledTitleSection,
   TitleContainer,
-  StyledFormField,
   StyledTextarea,
   StyledActionBarTransaction,
   StyledAvatar,
@@ -36,7 +35,7 @@ type ImageAsset = {
 type Inputs = {
   channelName?: string
   description?: string
-  isPublic: SelectedItem
+  isPublic: boolean
   selectedLanguage: SelectedItem
   avatar: ImageAsset
   cover: ImageAsset
@@ -59,7 +58,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     getValues,
     formState: { isDirty },
     reset,
-    watch,
     errors,
   } = useForm<Inputs>({
     defaultValues: {
@@ -68,7 +66,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       channelName: '',
       description: '',
       selectedLanguage: languages[0],
-      isPublic: isPublicSelect[0],
+      isPublic: true,
     },
   })
 
@@ -80,10 +78,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const [isActionBarActive, setActionBarActive] = useState(false)
 
   useEffect(() => {
-    if (loading || newChannel) {
-      return
-    }
-    if (!channel) {
+    if (loading || newChannel || !channel) {
       return
     }
     const { avatarPhotoUrl, coverPhotoUrl, handle, description, isPublic, language } = channel
@@ -94,15 +89,16 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       cover: { blob: null, url: coverPhotoUrl },
       channelName: handle,
       description: description || '',
-      isPublic: isPublic ? isPublicSelect[0] : isPublicSelect[1],
+      isPublic,
       selectedLanguage: foundLanguage || languages[0],
     })
+    if (avatarPhotoUrl) {
+      setAvatarImageUrl(avatarPhotoUrl)
+    }
+    if (coverPhotoUrl) {
+      setCoverImageUrl(coverPhotoUrl)
+    }
   }, [channel, getValues, loading, newChannel, reset])
-
-  useEffect(() => {
-    setAvatarImageUrl(watch().avatar.url)
-    setCoverImageUrl(watch().cover.url)
-  }, [watch])
 
   const handleSubmit = useHandleSubmit((data) => {
     console.log(data)
@@ -187,7 +183,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       </Header>
       <StudioContainer>
         <InnerFormContainer>
-          <StyledFormField title="Description">
+          <FormField title="Description">
             <Tooltip text="Click to edit channel description" offsetY={-50}>
               <StyledTextarea
                 name="description"
@@ -200,8 +196,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 helperText={errors.description?.message}
               />
             </Tooltip>
-          </StyledFormField>
-          <StyledFormField
+          </FormField>
+          <FormField
             title="Change Language"
             description="Channel language is the main language of the content you publish on your channel"
           >
@@ -220,28 +216,27 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 />
               )}
             />
-          </StyledFormField>
+          </FormField>
 
-          <StyledFormField
+          <FormField
             title="Publicness"
             description="Publicness dictates whether your channel will be displayed in users' feeds"
           >
             <Controller
               name="isPublic"
               control={control}
-              rules={requiredValidation('Publicness')}
               render={({ value, onChange }) => (
                 <Select
                   items={isPublicSelect}
                   label="Publicness"
-                  value={value}
-                  onChange={(e) => onChange(e.selectedItem)}
+                  value={value ? isPublicSelect[0] : isPublicSelect[1]}
+                  onChange={(e) => onChange(e.selectedItem?.value)}
                   error={!!errors.isPublic && !value}
                   helperText={(errors.isPublic as FieldError)?.message}
                 />
               )}
             />
-          </StyledFormField>
+          </FormField>
           <StyledActionBarTransaction
             fee={FEE}
             isActive={isDirty || isActionBarActive || newChannel}

@@ -5,6 +5,7 @@ import Text from '../Text'
 export const FormFieldWrapper = styled.div`
   margin-top: ${sizes(2)};
   width: 100%;
+  max-width: 760px;
 `
 
 export const FormFieldTitle = styled(Text)`
