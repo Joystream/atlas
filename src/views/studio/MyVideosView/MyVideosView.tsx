@@ -39,7 +39,6 @@ export const MyVideosView = () => {
       fetchPolicy: 'cache-first',
     }
   )
-
   useEffect(() => {
     if ((typeof totalCount === 'number' && totalCount > 0) || drafts.length > 0) {
       setHasAnyVideos(true)
@@ -77,6 +76,7 @@ export const MyVideosView = () => {
   }))
   const videosWPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
+  const hasAnyVideo = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
@@ -126,7 +126,7 @@ export const MyVideosView = () => {
   return (
     <ViewContainer>
       <Text variant="h2">My Videos</Text>
-      {hasAnyVideos === false ? (
+      {hasAnyVideo ? (
         <EmptyVideosView />
       ) : (
         <>
