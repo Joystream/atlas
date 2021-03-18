@@ -59,7 +59,6 @@ const LayoutWithRouting: React.FC = () => {
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: routes.search() })
   const [cachedLocation, setCachedLocation] = useState(location)
-  const [isStudioView, setStudioView] = useState(false)
 
   useEffect(() => {
     if (location === cachedLocation) {
@@ -80,7 +79,7 @@ const LayoutWithRouting: React.FC = () => {
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, parseInt(transitions.timings.routing))
-  }, [location, cachedLocation, isStudioView])
+  }, [location, cachedLocation])
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
