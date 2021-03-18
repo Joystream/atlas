@@ -1,6 +1,6 @@
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
 import { breakpoints, sizes, colors, typography } from '@/shared/theme'
-import { fluidRange, transparentize } from 'polished'
+import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
 import { ChannelLink } from '@/components'
 
