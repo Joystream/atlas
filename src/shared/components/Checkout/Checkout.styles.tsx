@@ -17,8 +17,9 @@ export const ProgressbarContainer = styled.div`
 `
 
 export const StepsProgressContainer = styled.div`
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 12px;
   align-items: center;
 `
 
@@ -30,9 +31,9 @@ export const TopRowContainer = styled.div`
 `
 
 export const StepsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 14px;
 `
 
 type StepStateProps = {
