@@ -3,6 +3,7 @@ import { useVideo } from '@/api/hooks'
 import routes from '@/config/routes'
 import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
+  VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
@@ -10,10 +11,8 @@ import { copyToClipboard } from '@/utils/broswer'
 
 export type VideoPreviewProps = {
   id?: string
-  progress?: number
-  isLoading?: boolean
-  className?: string
-} & VideoPreviewBaseMetaProps
+} & VideoPreviewBaseMetaProps &
+  Pick<VideoPreviewBaseProps, 'progress' | 'isLoading' | 'className'>
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
   const { video, internalIsLoadingState, videoHref } = useSharedLogic(id)
