@@ -42,7 +42,7 @@ const colorsFromProps = ({ variant, hasText }: ButtonStyleProps) => {
     case 'secondary': {
       styles = css`
         color: ${colors.white};
-        background-color: ${colors.black};
+        background-color: transparent;
         border-color: ${colors.gray[500]};
         &:hover {
           border-color: ${colors.white};
