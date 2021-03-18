@@ -1,6 +1,6 @@
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
 import { breakpoints, sizes, colors, typography } from '@/shared/theme'
-import { fluidRange } from 'polished'
+import { fluidRange, transparentize } from 'polished'
 import styled from '@emotion/styled'
 import { ChannelLink } from '@/components'
 
@@ -109,9 +109,10 @@ export const SubTitlePlaceholder = styled(Placeholder)`
 export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
   z-index: 2;
+  background-color: ${transparentize(0.4, colors.black)};
+
   @media screen and (min-width: ${breakpoints.small}) {
     margin-top: 0;
-    padding-left: ${sizes(6)};
     margin-left: auto;
     align-self: center;
   }

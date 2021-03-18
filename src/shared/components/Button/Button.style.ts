@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { transparentize } from 'polished'
 import { colors, typography } from '../../theme'
 import Icon from '../Icon'
 import isPropValid from '@emotion/is-prop-valid'
@@ -43,7 +42,7 @@ const colorsFromProps = ({ variant, hasText }: ButtonStyleProps) => {
     case 'secondary': {
       styles = css`
         color: ${colors.white};
-        background-color: ${transparentize(0.3, colors.black)};
+        background-color: transparent;
         border-color: ${colors.gray[500]};
         &:hover {
           border-color: ${colors.white};
