@@ -23,7 +23,7 @@ const INITIAL_VIDEOS_PER_ROW = 4
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [hasAnyVideos, sethasAnyVideos] = useState<boolean>()
+  const [hasAnyVideos, setHasAnyVideos] = useState<boolean>()
   // Drafts calls can run into race conditions
   const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
@@ -41,16 +41,15 @@ export const MyVideosView = () => {
       },
     },
     {
-      // notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-first',
     }
   )
 
   useEffect(() => {
     if (typeof totalCount === 'number' && totalCount > 0) {
-      sethasAnyVideos(true)
+      setHasAnyVideos(true)
     } else if (typeof totalCount === 'number' && hasAnyVideos === undefined) {
-      sethasAnyVideos(false)
+      setHasAnyVideos(false)
     }
   }, [hasAnyVideos, totalCount])
 
@@ -84,7 +83,7 @@ export const MyVideosView = () => {
   const videosWPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
 
-  const FetchMoreVideos = (page: number) =>
+  const fetchMoreVideos = (page: number) =>
     fetchMore({
       variables: {
         // substract 1 coz offset index starts at 0
@@ -105,7 +104,6 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
           </TabsContainer>
           {isDraftTab && (
-            // Should this really be dismissable?
             <StyledDismissibleMessage
               id="video-draft-saved-locally-warning"
               title={'Video Drafts are saved locally'}
@@ -149,10 +147,10 @@ export const MyVideosView = () => {
             <Pagination
               onChangePage={(page) => {
                 setCurrentPage(page)
-                currentTabName !== 'Drafts' && FetchMoreVideos(page)
+                currentTabName !== 'Drafts' && fetchMoreVideos(page)
               }}
               onMouseEnterPage={(page) => {
-                currentTabName !== 'Drafts' && FetchMoreVideos(page)
+                currentTabName !== 'Drafts' && fetchMoreVideos(page)
               }}
               page={currentPage}
               itemsPerPage={videosPerPage}
