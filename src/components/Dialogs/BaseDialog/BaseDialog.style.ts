@@ -11,6 +11,7 @@ export const StyledContainer = styled.div`
   width: 90%;
   max-width: 440px;
   min-height: 150px;
+  overflow: hidden;
   margin: ${sizes(32)} auto;
   color: ${colors.white};
   background-color: ${colors.gray[700]};

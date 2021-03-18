@@ -16,23 +16,3 @@ export const StyledDescriptionText = styled(Text)`
   color: ${colors.gray[300]};
   word-wrap: break-word;
 `
-
-export const Spinner = styled.div`
-  position: relative;
-  display: inline-block;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  border: 2px solid ${colors.blue[500]};
-  border-left: 2px solid ${colors.gray[200]};
-  margin-bottom: ${sizes(4)};
-  animation: load 1s infinite linear;
-  @keyframes load {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`

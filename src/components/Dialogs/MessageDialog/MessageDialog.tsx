@@ -1,12 +1,12 @@
 import React from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { StyledIcon, StyledTitleText, StyledDescriptionText, Spinner } from './MessageDialog.style'
-import * as Icons from '@/shared/icons'
+import { StyledIcon, StyledTitleText, StyledDescriptionText } from './MessageDialog.style'
+import { IconType } from '@/shared/components/Icon'
 
 export type MessageDialogProps = {
   title: string
   description: string
-  variant?: 'success' | 'warning' | 'error' | 'info' | 'spinner'
+  variant?: 'success' | 'warning' | 'error' | 'info'
 } & ActionDialogProps
 
 const MessageDialog: React.FC<MessageDialogProps> = ({
@@ -16,13 +16,11 @@ const MessageDialog: React.FC<MessageDialogProps> = ({
   ...actionDialogProps
 }) => {
   const hasIcon = ['success', 'warning', 'error'].includes(variant)
-  const icon = `dialog-${variant}` as Icons.IconType
-  const hasSpinner = variant === 'spinner'
+  const icon = `dialog-${variant}` as IconType
 
   return (
     <ActionDialog {...actionDialogProps}>
       {hasIcon && <StyledIcon name={icon} />}
-      {hasSpinner && <Spinner />}
       {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
       <StyledDescriptionText variant="body2">{description}</StyledDescriptionText>
     </ActionDialog>

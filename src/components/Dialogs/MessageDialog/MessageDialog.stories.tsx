@@ -18,7 +18,7 @@ export default {
     showDialog: { table: { disable: true } },
     warning: { defaultValue: false },
     error: { defaultValue: false },
-    variant: { control: { type: 'select', options: ['info', 'success', 'warning', 'error', 'spinner'] } },
+    variant: { control: { type: 'select', options: ['info', 'success', 'warning', 'error'] } },
   },
   decorators: [
     (Story) => (
