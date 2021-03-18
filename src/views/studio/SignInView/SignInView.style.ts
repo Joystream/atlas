@@ -60,6 +60,7 @@ export const ButtonGroup = styled.div`
 `
 export const SignInButton = styled(Button)`
   margin-right: ${sizes(3)};
+  margin-bottom: ${sizes(3)};
 `
 
 export const SubTitle = styled(Text)`
@@ -101,7 +102,7 @@ export const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: calc(0px - var(--global-horizontal-padding));
-  background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0.4) 100%);
+  background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0.53) 100%);
   width: 100%;
   height: 150%;
   overflow: hidden;
