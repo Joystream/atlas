@@ -32,7 +32,7 @@ const SelectChannelView = () => {
             handle={channel.handle}
           />
         ))}
-        <ChannelCard createCard />
+        <ChannelCard blank />
       </MemberChannelGrid>
     </Wrapper>
   )

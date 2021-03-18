@@ -1,11 +1,7 @@
-import { BaseDialog } from '@/components/Dialogs'
 import { Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-export const StyledDialog = styled(BaseDialog)`
-  background: ${colors.gray[700]};
-`
 export const DialogSubtitle = styled(Text)`
   margin-top: ${sizes(2)};
   color: ${colors.gray[200]};

@@ -1,8 +1,6 @@
 import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { Button, Text } from '..'
-import Avatar from '../Avatar'
-import Icon from '../Icon'
+import { Button, Text, Avatar } from '@/shared/components'
 
 type AccountWrapperProps = {
   blank?: boolean

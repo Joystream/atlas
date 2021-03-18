@@ -1,5 +1,5 @@
 import React from 'react'
-import Text from '../Text'
+import { Text, Icon } from '@/shared/components'
 import {
   AccountAvatar,
   AccountInfo,
@@ -8,7 +8,6 @@ import {
   IconWrapper,
   StyledButton,
 } from './AccountBar.style'
-import Icon from '../Icon'
 
 export type AccountBarProps = {
   name: string

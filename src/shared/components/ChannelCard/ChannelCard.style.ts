@@ -3,7 +3,7 @@ import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 type CardWrapperProps = {
-  createCard?: boolean
+  blank?: boolean
 }
 
 export const CardWrapper = styled.div<CardWrapperProps>`
@@ -17,7 +17,7 @@ export const CardWrapper = styled.div<CardWrapperProps>`
   margin-bottom: ${sizes(4)};
   align-items: center;
   overflow: hidden;
-  background-color: ${({ createCard }) => (createCard ? colors.gray[900] : colors.gray[800])};
+  background-color: ${({ blank }) => (blank ? colors.gray[900] : colors.gray[800])};
 `
 export const HandleText = styled(Text)`
   margin-top: ${sizes(6)};

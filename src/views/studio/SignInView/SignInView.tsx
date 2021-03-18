@@ -1,5 +1,3 @@
-import tileImg from '@/assets/tile-example.png'
-import videoImg from '@/assets/video-example.png'
 import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
@@ -11,8 +9,8 @@ import {
   SignInWrapper,
   StyledBackgroundPattern,
   SubTitle,
-  Tile,
-  VideoImageWrapper,
+  TileImgBg,
+  VideoImgBg,
 } from './SignInView.style'
 
 type SignInViewProps = {
@@ -24,10 +22,8 @@ const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
     <>
       <StyledBackgroundPattern />
       <CompositionWrapper>
-        <VideoImageWrapper>
-          <img src={videoImg} />
-        </VideoImageWrapper>
-        <Tile src={tileImg} />
+        <VideoImgBg />
+        <TileImgBg />
       </CompositionWrapper>
       <Overlay />
       <SignInWrapper>

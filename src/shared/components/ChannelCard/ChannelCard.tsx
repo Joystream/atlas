@@ -5,15 +5,15 @@ export type ChannelCardProps = {
   handle?: string
   follows?: number
   avatarPhotoUrl?: string
-  createCard?: boolean
+  blank?: boolean
 }
 
-const ChannelCard: React.FC<ChannelCardProps> = ({ handle, follows, avatarPhotoUrl, createCard }) => {
+const ChannelCard: React.FC<ChannelCardProps> = ({ handle, follows, avatarPhotoUrl, blank }) => {
   return (
-    <CardWrapper createCard={createCard}>
+    <CardWrapper blank={blank}>
       <StyledAvatar imageUrl={avatarPhotoUrl} />
-      <HandleText variant={createCard ? 'h5' : 'h4'}>{createCard ? 'Create a Channel' : handle}</HandleText>
-      {!createCard && <Follows variant="body2">{follows} Followers</Follows>}
+      <HandleText variant={blank ? 'h5' : 'h4'}>{blank ? 'Create a Channel' : handle}</HandleText>
+      {!blank && <Follows variant="body2">{follows} Followers</Follows>}
     </CardWrapper>
   )
 }

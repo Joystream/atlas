@@ -1,7 +1,8 @@
+import { BaseDialog } from '@/components/Dialogs'
 import { AccountBar, Text } from '@/shared/components'
 import React from 'react'
 import { Membership } from '../StudioView'
-import { Underline, StyledDialog, DialogSubtitle } from './SelectMemberDialog.style'
+import { Underline, DialogSubtitle } from './SelectMemberDialog.style'
 
 type SelectMemberDialogProps = {
   memberships: Membership[]
@@ -19,7 +20,7 @@ const SelectMemberDialog: React.FC<SelectMemberDialogProps> = ({
   onAddNewMember,
 }) => {
   return (
-    <StyledDialog showDialog={showDialog} onExitClick={onExit}>
+    <BaseDialog showDialog={showDialog} onExitClick={onExit}>
       <Text variant="h4">Select Membership</Text>
       <DialogSubtitle variant="body2">Select your membership account</DialogSubtitle>
       <Underline />
@@ -32,7 +33,7 @@ const SelectMemberDialog: React.FC<SelectMemberDialogProps> = ({
           key={member.id}
         />
       ))}
-    </StyledDialog>
+    </BaseDialog>
   )
 }
 
