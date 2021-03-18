@@ -1,3 +1,4 @@
 import StudioView from './StudioView'
+import CreateEditChannelView from './CreateEditChannelView'
 
-export { StudioView }
+export { StudioView, CreateEditChannelView }

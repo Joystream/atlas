@@ -13,6 +13,7 @@ export type TextAreaProps = {
   warning?: boolean
   error?: boolean
   rows?: number
+  spellcheck?: boolean
 }
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   {
@@ -26,6 +27,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
     helperText = '\u00A0',
     warning,
     error,
+    spellcheck = true,
   },
   ref
 ) => {
@@ -66,6 +68,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
         onChange={handleOnChange}
         value={value}
         rows={rows}
+        spellCheck={spellcheck}
       />
       <HelperTextsWrapper>
         <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>

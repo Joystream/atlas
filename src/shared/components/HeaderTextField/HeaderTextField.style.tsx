@@ -19,6 +19,13 @@ export const Container = styled.div`
 `
 
 export const StyledInput = styled.input<StyledInputProps>`
+  --input-max-width: 60vw;
+  @media screen and (min-width: ${breakpoints.small}) {
+    --input-max-width: 400px;
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    --input-max-width: 600px;
+  }
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
@@ -31,14 +38,11 @@ export const StyledInput = styled.input<StyledInputProps>`
   font-weight: ${typography.weights.bold};
   border: none;
   min-width: 100px;
-  max-width: 100vw;
-  width: ${({ widthSize }) => (widthSize ? widthSize + 'ch' : '100%')};
+  max-width: var(--input-max-width);
+  width: ${({ widthSize }) => (widthSize ? `${widthSize}ch` : '100%')};
   height: ${sizes(13)};
   &:hover {
     filter: brightness(80%);
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    max-width: 600px;
   }
 `
 
