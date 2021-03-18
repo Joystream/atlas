@@ -7,8 +7,8 @@ import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 
-// const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
-const testChannelId = '100' // staging test channel id
+const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
+// const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -41,12 +41,12 @@ export const MyVideosView = () => {
   )
 
   useEffect(() => {
-    if (typeof totalCount === 'number' && totalCount > 0) {
+    if ((typeof totalCount === 'number' && totalCount > 0) || drafts.length > 0) {
       setHasAnyVideos(true)
     } else if (typeof totalCount === 'number' && hasAnyVideos === undefined) {
       setHasAnyVideos(false)
     }
-  }, [hasAnyVideos, totalCount])
+  }, [drafts.length, hasAnyVideos, totalCount])
 
   // hook to tests draft should be deleted before final
   useEffect(() => {
