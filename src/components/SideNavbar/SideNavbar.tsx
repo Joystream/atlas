@@ -89,7 +89,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             classNames={transitions.names.fade}
           >
             <ButtonLink
-              variant="tertiary"
+              variant="secondary"
               onClick={closeSideNav}
               icon="external"
               to={isStudio ? routes.index() : routes.studio()}
