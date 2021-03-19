@@ -1,4 +1,5 @@
 import rawCoverVideo from './raw/coverVideo.json'
+import mockCategories from './mockCategories'
 import { MockVideo } from '@/mocking/data/mockVideos'
 import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
 import { MockChannel } from '@/mocking/data/mockChannels'
@@ -7,21 +8,36 @@ import { CoverVideo } from '@/api/queries'
 
 export const mockCoverVideoChannel: MockChannel = {
   ...rawCoverVideo.channel,
+  createdAt: new Date(rawCoverVideo.channel.createdAt),
   __typename: 'Channel',
+}
+
+export const mockCoverVideoLicense: MockLicense = {
+  __typename: 'LicenseEntity',
+  ...rawCoverVideo.license,
+  type: {
+    ...rawCoverVideo.license.type,
+    __typename: 'UserDefinedLicense',
+  },
+}
+export const mockCoverVideoMedia: MockVideoMedia = {
+  ...rawCoverVideo.videoMedia,
+  __typename: 'VideoMedia',
+  location: {
+    ...rawCoverVideo.videoMedia.location,
+    __typename: 'HttpMediaLocation',
+  },
 }
 
 export const mockCoverVideo: MockVideo = {
   ...rawCoverVideo.video,
   __typename: 'Video',
-}
-
-export const mockCoverVideoMedia: MockVideoMedia = {
-  ...rawCoverVideo.videoMedia,
-  __typename: 'VideoMedia',
-  location: {
-    __typename: 'HttpMediaLocation',
-    ...rawCoverVideo.videoMedia.location,
-  },
+  createdAt: new Date(rawCoverVideo.video.createdAt),
+  channel: mockCoverVideoChannel,
+  license: mockCoverVideoLicense,
+  media: mockCoverVideoMedia,
+  duration: rawCoverVideo.videoMedia.duration,
+  category: mockCategories[mockCategories.length],
 }
 
 export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
@@ -35,14 +51,5 @@ export const mockCoverVideoInfo: CoverInfo = {
       __typename: 'HttpMediaLocation',
       ...rawCoverVideo.cover.coverCutMedia.location,
     },
-  },
-}
-
-export const mockCoverVideoLicense: MockLicense = {
-  __typename: 'LicenseEntity',
-  ...rawCoverVideo.license,
-  type: {
-    ...rawCoverVideo.license.type,
-    __typename: 'UserDefinedLicense',
   },
 }
