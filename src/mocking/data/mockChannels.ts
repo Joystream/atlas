@@ -1,5 +1,6 @@
 import { channelAvatarSources, channelPosterSources } from './mockImages'
 import rawChannels from './raw/channels.json'
+import rawMemberships from './raw/memberships.json'
 import rawCoverVideo from './raw/coverVideo.json'
 import { AllChannelFieldsFragment } from '@/api/queries'
 import { languages } from '@/config/languages'
@@ -14,12 +15,12 @@ const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => 
   createdAt: new Date(rawChannel.createdAt),
   isPublic: true,
   language: languages[Math.floor(Math.random() * languages.length)],
+  member: rawMemberships[Math.floor(Math.random() * rawMemberships.length)],
 }))
 
 export const coverMockChannel: MockChannel = {
   ...rawCoverVideo.channel,
   createdAt: new Date(rawCoverVideo.channel.createdAt),
-  isPublic: true,
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]

@@ -4,9 +4,12 @@ type Language {
   name: String!
 }
 
-type Member {
+type Membership {
   id: ID!
+
   handle: String!
+
+  avatarUri: String
 }
 
 type Channel {
@@ -22,7 +25,7 @@ type Channel {
 
   avatarPhotoUrl: String
 
-  owner: Member!
+  member: Membership!
 
   isPublic: Boolean!
 
@@ -171,6 +174,7 @@ type PageInfo {
 input ChannelWhereInput {
   isCurated_eq: Boolean
   isPublic_eq: Boolean
+  memberId_eq: ID
   id_in: [ID!]
 }
 
@@ -212,6 +216,10 @@ input VideoWhereUniqueInput {
   id: ID!
 }
 
+input MembershipWhereUniqueInput {
+  id: ID!
+}
+
 enum VideoOrderByInput {
   createdAt_ASC
   createdAt_DESC
@@ -234,6 +242,9 @@ enum FeaturedVideoOrderByInput {
 }
 
 type Query {
+  # Lookup a membership by its ID
+  membership(where: MembershipWhereUniqueInput!): Membership
+
   # Lookup a channel by its ID
   channel(where: ChannelWhereUniqueInput!): Channel
 

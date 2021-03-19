@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useMembership } from '@/api/hooks'
 import { useActiveUser } from '@/hooks'
 import { Button, RadioButton } from '@/shared/components'
 
@@ -11,6 +12,7 @@ const channels = ['103123213', '1230123021', '123912399132']
 const members = ['213124655', '21412412412', '12412412412']
 
 const PlaygroundMemberChannel = () => {
+  const { membership, loading, error } = useMembership('adb0010c-f4d6-4104-b2e6-2f785ecc1fa4')
   const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
 
   const [selectedChannel, setSelectedChannel] = useState<string | number>('')
@@ -34,6 +36,16 @@ const PlaygroundMemberChannel = () => {
   useEffect(() => {
     setActiveUserString(JSON.stringify(activeUser, null, 4))
   }, [activeUser])
+
+  useEffect(() => {
+    if (loading) {
+      return
+    }
+    if (error) {
+      console.log(error)
+    }
+    console.log(membership)
+  }, [error, loading, membership])
 
   return (
     <>

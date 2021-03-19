@@ -1,0 +1,11 @@
+fragment BasicMembershipFields on Membership {
+  id
+  handle
+  avatarUri
+}
+
+query GetMembership($where: MembershipWhereUniqueInput!) {
+  membership(where: $where) {
+    ...BasicMembershipFields
+  }
+}
