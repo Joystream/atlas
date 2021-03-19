@@ -6,33 +6,14 @@ import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import { ActiveUserProvider } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
-import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, SideNavbar } from '@/components'
+import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, PublishingSideNav, ViewerSideNav } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { TOP_NAVBAR_HEIGHT } from '@/shared/components/'
-import { NavItemType } from '@/components/SideNavbar'
 import loadable from '@loadable/component'
-
-const SIDENAVBAR_ITEMS: NavItemType[] = [
-  {
-    icon: 'home-fill',
-    name: 'Home',
-    to: routes.index(),
-  },
-  {
-    icon: 'videos',
-    name: 'Videos',
-    to: routes.videos(),
-  },
-  {
-    icon: 'channels',
-    name: 'Channels',
-    to: routes.channels(),
-  },
-]
 
 const StudioView = loadable(() => import('./studio/StudioView'), {
   fallback: <div>Loading...</div>,
@@ -50,9 +31,25 @@ const routesMap = [
   { path: routes.studio() + '/*', Component: StudioView },
 ]
 
-const topbarRoutesMap = [
-  { path: '*', Component: ViewerTopbar },
-  { path: routes.studio() + '/*', Component: PublishingTopbar },
+const barsRoutesMap = [
+  {
+    path: '*',
+    Component: (
+      <>
+        <ViewerTopbar />
+        <ViewerSideNav />
+      </>
+    ),
+  },
+  {
+    path: routes.studio() + '/*',
+    Component: (
+      <>
+        <PublishingTopbar />
+        <PublishingSideNav />
+      </>
+    ),
+  },
 ]
 
 const LayoutWithRouting: React.FC = () => {
@@ -89,8 +86,8 @@ const LayoutWithRouting: React.FC = () => {
       <GlobalStyle additionalStyles={routingTransitions} />
       <ActiveUserProvider>
         <Routes>
-          {topbarRoutesMap.map(({ path, Component }) => (
-            <Route key={path} path={path} element={<Component />} />
+          {barsRoutesMap.map(({ path, Component }) => (
+            <Route key={path} path={path} element={Component} />
           ))}
         </Routes>
       </ActiveUserProvider>
