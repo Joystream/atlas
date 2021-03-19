@@ -62,6 +62,11 @@ const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
   } = usePersonalData()
   const [expanded, setExpanded] = useState(false)
 
+  const handleNewVideoOpen = () => {
+    // TODO add logic for opening new video view
+    setExpanded(false)
+  }
+
   const closeSideNav = () => setExpanded(false)
   const navItems = items || SIDENAVBAR_ITEMS
   return (
@@ -115,7 +120,9 @@ const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video">New Video</Button>
+            <Button icon="add-video" onClick={handleNewVideoOpen}>
+              New Video
+            </Button>
           </ButtonGroup>
         </CSSTransition>
       </SidebarNav>

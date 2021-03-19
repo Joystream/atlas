@@ -77,10 +77,9 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-`
-
-export const ButtonLink = styled(Button)`
-  margin: 0 ${NAVBAR_LEFT_PADDING}px;
+  button:not(:first-child) {
+    margin-top: ${sizes(4)};
+  }
 `
 
 export const SidebarNavItem = styled.li`
