@@ -6,7 +6,7 @@ import { sizes, colors, breakpoints } from '@/shared/theme'
 import { css } from '@emotion/react'
 
 // for when there is absolutely no videos available
-export const EmptyVideosView = () => {
+export const EmptyVideosView: React.FC = () => {
   return (
     <ContainerView>
       <InnerContainerView>
