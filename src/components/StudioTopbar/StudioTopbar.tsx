@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Text, Icon } from '@/shared/components'
+import { useActiveUser } from '@/hooks'
+import routes from '@/config/routes'
+import { Text, Icon, Button } from '@/shared/components'
 import {
   StyledTopbarBase,
   StudioContainer,
   DrawerButton,
-  AddVideoButton,
   MemberInfoContainer,
   MemberTitleText,
   MemberTextContainer,
@@ -15,7 +16,6 @@ import {
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
-  LogoutButton,
 } from './StudioTopbar.style'
 
 type Channel = {
@@ -56,9 +56,11 @@ const member = {
 }
 
 const StudioTopbar: React.FC = () => {
-  const [isDrawerActive, setDrawerActive] = useState(false)
-  // TODO Change that to use hook for saving/getting currently active channel
+  const { activeUser, setActiveChannel } = useActiveUser()
+  // TODO Add member fetching
   const [currentChannel, setCurrentChannel] = useState(member.channels[0])
+
+  const [isDrawerActive, setDrawerActive] = useState(false)
 
   const drawerRef = useRef<HTMLDivElement | null>(null)
   const channelInfoRef = useRef<HTMLDivElement | null>(null)
@@ -95,13 +97,13 @@ const StudioTopbar: React.FC = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside, true)
     }
-  })
+  }, [])
 
   return (
     <>
       <StyledTopbarBase variant="studio">
         <StudioContainer>
-          <AddVideoButton icon="add-video" />
+          <Button icon="add-video" />
           <ChannelInfo
             channel={currentChannel}
             member={member.name}
@@ -178,7 +180,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             onClick={() => onCurrentChannelChange(channel)}
           />
         ))}
-        <StyledLink to="channel/new" onClick={handleClose}>
+        <StyledLink to={routes.studioNewChannel()} onClick={handleClose}>
           <NewChannel>
             <NewChannelIconContainer>
               <Icon name="new-channel" />
@@ -186,9 +188,9 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             <Text>New Channel</Text>
           </NewChannel>
         </StyledLink>
-        <LogoutButton icon="logout" variant="secondary" onClick={onLogoutClick}>
+        <Button icon="logout" variant="secondary" onClick={onLogoutClick}>
           Log out as a member
-        </LogoutButton>
+        </Button>
       </DrawerContainer>
     )
   }

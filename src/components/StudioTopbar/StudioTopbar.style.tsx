@@ -1,14 +1,14 @@
-import React from 'react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { TopbarBase, Avatar, Text, Button, TOP_NAVBAR_HEIGHT, TopbarBaseProps } from '@/shared/components'
+import { Avatar, Text, Button, TOP_NAVBAR_HEIGHT } from '@/shared/components'
+import TopbarBase from '../../shared/components/TopbarBase'
 
 type CommonStudioTopbarProps = {
   isActive?: boolean
 }
 
-export const StyledTopbarBase = styled((props: TopbarBaseProps) => <TopbarBase {...props} />)`
+export const StyledTopbarBase = styled(TopbarBase)`
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
     justify-content: space-between;
@@ -83,19 +83,12 @@ export const StudioContainer = styled.div`
   }
 `
 
-export const AddVideoButton = styled(Button)`
-  display: none;
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: flex;
-  }
-`
-
 export const MemberInfoContainer = styled.div`
   display: flex;
   align-items: center;
   margin: calc(-1 * ${sizes(3)});
   margin-bottom: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid ${colors.transparentWhite[18]};
   padding: ${sizes(5)};
 `
 
@@ -114,11 +107,6 @@ export const MemberTitleText = styled(Text)`
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
-`
-
-export const LogoutButton = styled(Button)`
-  background-color: transparent;
-  cursor: pointer;
 `
 
 export const NewChannel = styled.div`
@@ -151,7 +139,7 @@ export const NewChannelIconContainer = styled.div`
 `
 
 export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
-  position: absolute;
+  position: fixed;
   right: ${sizes(2.5)};
   top: 0;
   width: 280px;

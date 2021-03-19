@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
+import { ActiveUserProvider } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
 import { Topbar, StudioTopbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
@@ -86,11 +87,13 @@ const LayoutWithRouting: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={routingTransitions} />
-      <Routes>
-        {topbarRoutesMap.map(({ path, Component }) => (
-          <Route key={path} path={path} element={<Component />} />
-        ))}
-      </Routes>
+      <ActiveUserProvider>
+        <Routes>
+          {topbarRoutesMap.map(({ path, Component }) => (
+            <Route key={path} path={path} element={<Component />} />
+          ))}
+        </Routes>
+      </ActiveUserProvider>
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <ErrorBoundary
