@@ -5,7 +5,7 @@ import { breakpoints, colors, sizes, transitions, typography } from '@/shared/th
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'medium'
 
 type ContainerProps = {
   size: AvatarSize
@@ -44,6 +44,12 @@ const viewAvatarCss = css`
   }
 `
 
+const mediumAvatarCss = css`
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+`
+
 const defaultAvatarCss = css`
   width: 32px;
   min-width: 32px;
@@ -65,6 +71,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return viewAvatarCss
     case 'fill':
       return fillAvatarCss
+    case 'medium':
+      return mediumAvatarCss
     default:
       return defaultAvatarCss
   }

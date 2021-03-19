@@ -56,17 +56,16 @@ export const SidebarNavList = styled.ul`
   padding: 0;
 `
 
+export const SidebarNavFooter = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 ${NAVBAR_LEFT_PADDING}px;
+`
+
 export const ButtonGroup = styled.div`
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
-  margin-bottom: ${sizes(10)};
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-`
-
-export const ButtonLink = styled(Button)`
-  margin: 0 ${NAVBAR_LEFT_PADDING}px;
 `
 
 export const SidebarNavItem = styled.li`
@@ -154,16 +153,14 @@ export const SubItem = styled.li`
   }
 `
 
-export const LegalLink = styled(Link)<ExpandableElementProps>`
-  margin: ${sizes(4)} ${NAVBAR_LEFT_PADDING}px 0 ${NAVBAR_LEFT_PADDING}px;
-  padding: ${sizes(4)} ${0}px ${sizes(6)} ${0}px;
-  width: 312px;
+export const LegalLink = styled(Link)`
+  margin-top: ${sizes(8)};
+  padding: ${sizes(4)} 0 ${sizes(6)};
   color: ${colors.gray[300]};
   text-decoration: none;
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.subtitle2};
   border-top: 1px solid ${colors.gray[300]};
-  display: ${({ expanded }) => (expanded ? 'block' : 'none')};
   &:hover {
     color: ${colors.gray[400]};
   }

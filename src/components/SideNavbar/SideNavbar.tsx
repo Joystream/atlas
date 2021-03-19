@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useMatch } from 'react-router-dom'
+import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
   SidebarNav,
@@ -12,15 +12,15 @@ import {
   Logo,
   LogoLink,
   ButtonGroup,
-  ButtonLink,
   LegalLink,
+  SidebarNavFooter,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import Icon, { IconType } from '@/shared/components/Icon'
+import { Button, HamburgerButton } from '@/shared/components'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
-import HamburgerButton from '@/shared/components/HamburgerButton'
 import routes from '@/config/routes'
 
 type NavSubitem = {
@@ -81,26 +81,29 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         ) : (
           <div />
         )}
-        <ButtonGroup>
-          <CSSTransition
-            in={expanded}
-            unmountOnExit
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-          >
-            <ButtonLink
-              variant="secondary"
-              onClick={closeSideNav}
-              icon="external"
-              to={isStudio ? routes.index() : routes.studio()}
-            >
-              Joystream {!isStudio && 'studio'}
-            </ButtonLink>
-          </CSSTransition>
-        </ButtonGroup>
-        <LegalLink onClick={closeSideNav} expanded={expanded} to="/legal" content="xd">
-          Copyright Policy
-        </LegalLink>
+
+        <CSSTransition
+          in={expanded}
+          unmountOnExit
+          timeout={parseInt(transitions.timings.loading)}
+          classNames={transitions.names.fade}
+        >
+          <SidebarNavFooter>
+            <ButtonGroup>
+              <Button
+                variant="secondary"
+                onClick={closeSideNav}
+                icon="external"
+                to={isStudio ? routes.index() : routes.studio()}
+              >
+                Joystream {!isStudio && 'studio'}
+              </Button>
+            </ButtonGroup>
+            <LegalLink onClick={closeSideNav} to="/legal">
+              Copyright Policy
+            </LegalLink>
+          </SidebarNavFooter>
+        </CSSTransition>
       </SidebarNav>
     </>
   )
