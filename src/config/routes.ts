@@ -19,11 +19,12 @@ export default {
   legal: () => '/legal',
   playground: () => '/playground',
   studio: () => `/studio`,
+  studioNewChannel: () => '/studio/channel/new',
 }
 
 export const studioRoutes = {
   newChannel: () => '/channel/new',
-  editChannel: () => `/channel`,
+  editChannel: () => '/channel',
 }
 
 export const QUERY_PARAMS = {

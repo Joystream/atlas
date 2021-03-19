@@ -1,18 +1,11 @@
 import routes, { QUERY_PARAMS } from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import {
-  FullLogo,
-  Header,
-  LogoLink,
-  NavigationContainer,
-  SearchbarContainer,
-  ShortLogo,
-  StyledSearchbar,
-} from './TopNavbar.style'
+import { TopbarBase } from '@/shared/components'
+import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
 import { RoutingState } from '@/types/routing'
 
-const TopNavbar: React.FC = () => {
+const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
@@ -77,13 +70,7 @@ const TopNavbar: React.FC = () => {
     navigate(overlaidLocation)
   }
   return (
-    <Header hasFocus={isFocused}>
-      <NavigationContainer>
-        <LogoLink to="/">
-          <ShortLogo />
-          <FullLogo />
-        </LogoLink>
-      </NavigationContainer>
+    <TopbarBase hasFocus={isFocused}>
       <SearchbarContainer>
         <StyledSearchbar
           placeholder="Search..."
@@ -96,8 +83,8 @@ const TopNavbar: React.FC = () => {
           controlled
         />
       </SearchbarContainer>
-    </Header>
+    </TopbarBase>
   )
 }
 
-export default TopNavbar
+export default ViewerTopbar

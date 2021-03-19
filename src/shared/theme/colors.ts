@@ -32,6 +32,7 @@ export default {
   transparentWhite: {
     4: 'rgba(255,255,255, 0.04)',
     6: 'rgba(255,255,255, 0.06)',
+    18: 'rgba(255, 255, 255, 0.18)',
     32: 'rgba(255,255,255, 0.32)',
   },
   transparentBlack: {
