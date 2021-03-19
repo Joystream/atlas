@@ -7,8 +7,8 @@ import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 
-const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
-// const testChannelId = '100' // staging test channel id
+// const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
+const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -74,7 +74,7 @@ export const MyVideosView = () => {
     id: undefined,
     progress: undefined,
   }))
-  const videosWPlaceholders = [...(videos || []), ...placeholderItems]
+  const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasAnyVideo = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
 
@@ -102,23 +102,22 @@ export const MyVideosView = () => {
                 id={draft.id}
                 showChannel={false}
                 isDraft
+                isPullupDisabled={false}
                 onEditVideoClick={() => ({})}
                 onDeleteVideoClick={() => {
                   removeDraft(draft.id)
                 }}
               />
             ))
-        : videosWPlaceholders
-            // this makes for a smoother transition between pages
-            .slice(0, videosPerPage)
-            .map((video, idx) => (
-              <VideoPreviewPublisher
-                key={idx + '-' + currentTabName + '-' + currentPage}
-                id={video.id}
-                showChannel={false}
-                isLoading={loading}
-              />
-            ))}
+        : videosWithPlaceholders.map((video, idx) => (
+            <VideoPreviewPublisher
+              key={idx + '-' + currentTabName + '-' + currentPage}
+              id={video.id}
+              showChannel={false}
+              isLoading={loading}
+              isPullupDisabled={false}
+            />
+          ))}
     </>
   )
 

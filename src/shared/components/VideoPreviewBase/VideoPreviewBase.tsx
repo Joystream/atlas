@@ -55,6 +55,7 @@ export type VideoPreviewBaseMetaProps = {
 export type VideoPreviewPublisherProps =
   | {
       publisherMode: true
+      isPullupDisabled?: boolean
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
       onPullupClick?: () => void
@@ -64,12 +65,13 @@ export type VideoPreviewPublisherProps =
     }
   | {
       publisherMode?: false
-      videoPublishState?: undefined
+      isPullupDisabled?: undefined
       isDraft?: undefined
+      videoPublishState?: undefined
       onPullupClick?: undefined
-      onEditVideoClick?: () => void
-      onCopyVideoURLClick?: () => void
-      onDeleteVideoClick?: () => void
+      onEditVideoClick?: undefined
+      onCopyVideoURLClick?: undefined
+      onDeleteVideoClick?: undefined
     }
 
 export type VideoPreviewBaseProps = {
@@ -127,6 +129,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onEditVideoClick,
   onCopyVideoURLClick,
   onDeleteVideoClick,
+  isPullupDisabled,
 }) => {
   const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -209,7 +212,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                         <CoverTopLeftContainer>
                           <PullUp
                             // set to true when video is already on the snackbar
-                            disabled={false}
+                            disabled={!!isPullupDisabled}
                             onClick={(e) => {
                               e.preventDefault()
                               onPullupClick && onPullupClick()

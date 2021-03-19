@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
-import { sizes, transitions, colors } from '@/shared/theme'
-import Icon from '../Icon/Icon'
-import { Tooltip } from '..'
+import { transitions, colors } from '@/shared/theme'
+import { Button, Tooltip } from '..'
 
 type StateProps = {
   disabled: boolean
@@ -15,7 +14,7 @@ type PullUpProps = StateProps & {
 export const PullUp: React.FC<PullUpProps> = ({ disabled, onClick, ...props }) => (
   <Tooltip above text={disabled ? 'Video already added to edit list' : 'Open in new tab'}>
     <Container disabled={disabled} onClick={onClick}>
-      <BringUpIcon name="bring-up" {...props} />
+      <StyledButton disabled={disabled} variant="tertiary" icon="bring-up" />
     </Container>
   </Tooltip>
 )
@@ -23,13 +22,15 @@ export const PullUp: React.FC<PullUpProps> = ({ disabled, onClick, ...props }) =
 const Container = styled.div<StateProps>`
   display: flex;
   position: relative;
-  width: max-content;
-  padding: ${sizes(4)};
+`
+const StyledButton = styled(Button)`
   border-radius: 100%;
   transition: all ${transitions.timings.routing} ${transitions.easing};
+  cursor: pointer;
   path {
-    ${({ disabled }) => disabled && `stroke: ${transparentize(0.4, colors.gray[100])};`}
+    ${({ disabled }) => disabled && `stroke: ${transparentize(0.1, colors.gray[100])};`}
   }
+  ${({ disabled }) => disabled && `background: none;`}
   ${({ disabled }) => disabled && `cursor: not-allowed;`}
 
   &:hover {
@@ -42,4 +43,3 @@ const Container = styled.div<StateProps>`
     }
   }
 `
-const BringUpIcon = styled(Icon)``

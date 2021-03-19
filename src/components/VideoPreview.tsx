@@ -14,8 +14,8 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   Pick<VideoPreviewBaseProps, 'progress' | 'isLoading' | 'className'>
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = false, ...metaProps }) => {
-  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id)
+const VideoPreview: React.FC<VideoPreviewProps> = ({ id, isLoading = false, ...metaProps }) => {
+  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id, isLoading)
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -29,7 +29,6 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = 
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={internalIsLoadingState}
-      className={className}
       {...metaProps}
     />
   )
@@ -37,24 +36,15 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, className, isLoading = 
 
 export default VideoPreview
 
-export type VideoPreviewWPublisherProps = Omit<
-  {
-    id?: string
-    progress?: number
-    isLoading?: boolean
-    className?: string
-  } & VideoPreviewBaseMetaProps &
-    VideoPreviewPublisherProps,
-  'publisherMode' | 'videoPublishState'
->
+export type VideoPreviewWPublisherProps = VideoPreviewProps &
+  Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   id,
-  className,
   isLoading = false,
   isDraft,
   ...metaProps
 }) => {
-  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id)
+  const { video, internalIsLoadingState, videoHref } = useSharedLogic(id, isLoading)
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   return (
@@ -70,7 +60,6 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
       isLoading={internalIsLoadingState}
-      className={className}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}
