@@ -16,7 +16,7 @@ import { transitions } from '@/shared/theme'
 
 export type ChannelPreviewBaseProps = {
   avatarUrl?: string
-  handle?: string
+  title?: string
   videoCount?: number
   channelHref?: string
   className?: string
@@ -26,7 +26,7 @@ export type ChannelPreviewBaseProps = {
 
 const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   avatarUrl,
-  handle,
+  title,
   videoCount,
   loading = true,
   channelHref,
@@ -60,7 +60,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                 {loading ? (
                   <Placeholder width="140px" height="16px" />
                 ) : (
-                  <NameHeader variant="h6">{handle || '\u00A0'}</NameHeader>
+                  <NameHeader variant="h6">{title || '\u00A0'}</NameHeader>
                 )}
                 <VideoCountContainer>
                   {loading ? (

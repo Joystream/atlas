@@ -26,13 +26,48 @@ export type Membership = {
   channels: Array<Channel>
 }
 
+export type Asset = AssetUrl | AssetStorage
+
+export type AssetUrl = {
+  __typename?: 'AssetUrl'
+  url: Scalars['String']
+}
+
+export type AssetStorage = {
+  __typename?: 'AssetStorage'
+  uploadStatus: AssetStorageUploadStatus
+}
+
+export type AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
+
+export type AssetDataObject = {
+  __typename?: 'AssetDataObject'
+  joystreamContentId: Scalars['String']
+}
+
+export type AssetUploadStatus = {
+  __typename?: 'AssetUploadStatus'
+  dummy: Scalars['Int']
+}
+
+export type AssetDeleted = {
+  __typename?: 'AssetDeleted'
+  dummy: Scalars['Int']
+}
+
+export type AssetNeverProvided = {
+  __typename?: 'AssetNeverProvided'
+  dummy: Scalars['Int']
+}
+
 export type Channel = {
   __typename?: 'Channel'
   id: Scalars['ID']
   createdAt: Scalars['Date']
-  handle: Scalars['String']
+  title: Scalars['String']
   description?: Maybe<Scalars['String']>
   coverPhotoUrl?: Maybe<Scalars['String']>
+  coverPhoto?: Maybe<Asset>
   avatarPhotoUrl?: Maybe<Scalars['String']>
   ownerMember?: Maybe<Membership>
   isPublic: Scalars['Boolean']
@@ -97,6 +132,10 @@ export type Video = {
   __typename?: 'Video'
   id: Scalars['ID']
   channel: Channel
+  createdById: Scalars['String']
+  updatedAt?: Maybe<Scalars['Date']>
+  updatedById?: Maybe<Scalars['String']>
+  deletedAt?: Maybe<Scalars['Date']>
   category: Category
   title: Scalars['String']
   description: Scalars['String']

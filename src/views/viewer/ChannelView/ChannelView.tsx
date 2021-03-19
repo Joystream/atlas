@@ -22,6 +22,7 @@ import {
 const ChannelView: React.FC = () => {
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
+  console.log(channel)
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const {
@@ -69,7 +70,7 @@ const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant="h1">{channel.handle}</Title>
+                <Title variant="h1">{channel.title}</Title>
                 <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (

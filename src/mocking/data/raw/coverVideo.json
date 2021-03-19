@@ -21,7 +21,7 @@
   },
   "channel": {
     "id": "102",
-    "handle": "SCHISM",
+    "title": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
     "coverPhotoUrl": null,
     "follows": 48717,

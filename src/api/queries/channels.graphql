@@ -1,13 +1,56 @@
+fragment CoverPhoto on Channel {
+  coverPhoto {
+    ... on AssetUrl {
+      url
+    }
+    ... on AssetStorage {
+      uploadStatus {
+        ... on AssetNeverProvided {
+          dummy
+        }
+        ... on AssetDeleted {
+          dummy
+        }
+        ... on AssetUploadStatus {
+          dummy
+        }
+      }
+    }
+  }
+}
+
+fragment AvatarPhoto on Channel {
+  avatarPhoto {
+    ... on AssetUrl {
+      url
+    }
+    ... on AssetStorage {
+      uploadStatus {
+        ... on AssetNeverProvided {
+          dummy
+        }
+        ... on AssetDeleted {
+          dummy
+        }
+        ... on AssetUploadStatus {
+          dummy
+        }
+      }
+    }
+  }
+}
+
 fragment BasicChannelFields on Channel {
   id
-  handle
-  avatarPhotoUrl
+  title
   createdAt
+  avatarPhotoUrl
+  ...AvatarPhoto
 }
 
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
-  coverPhotoUrl
+  ...CoverPhoto
   follows
   isPublic
 }
@@ -22,6 +65,10 @@ query GetChannel($where: ChannelWhereUniqueInput!) {
   channel(where: $where) {
     ...AllChannelFields
     description
+    isPublic
+    isCensored
+    coverPhotoUrl
+    ...CoverPhoto
     language {
       name
     }

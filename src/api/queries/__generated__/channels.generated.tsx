@@ -2,17 +2,44 @@ import * as Types from './baseTypes.generated'
 
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+export type CoverPhotoFragment = {
+  __typename?: 'Channel'
+  coverPhoto?: Types.Maybe<
+    | { __typename?: 'AssetUrl'; url: string }
+    | {
+        __typename?: 'AssetStorage'
+        uploadStatus:
+          | { __typename?: 'AssetNeverProvided'; dummy: number }
+          | { __typename?: 'AssetDeleted'; dummy: number }
+          | { __typename?: 'AssetUploadStatus'; dummy: number }
+      }
+  >
+}
+
+export type AvatarPhotoFragment = {
+  __typename?: 'Channel'
+  avatarPhoto?: Types.Maybe<
+    | { __typename?: 'AssetUrl'; url: string }
+    | {
+        __typename?: 'AssetStorage'
+        uploadStatus:
+          | { __typename?: 'AssetNeverProvided'; dummy: number }
+          | { __typename?: 'AssetDeleted'; dummy: number }
+          | { __typename?: 'AssetUploadStatus'; dummy: number }
+      }
+  >
+}
+
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
-  handle: string
-  avatarPhotoUrl?: Types.Maybe<string>
+  title: string
   createdAt: Date
-}
+  avatarPhotoUrl?: Types.Maybe<string>
+} & AvatarPhotoFragment
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
-  coverPhotoUrl?: Types.Maybe<string>
   follows?: Types.Maybe<number>
   isPublic: boolean
 } & BasicChannelFieldsFragment
@@ -37,7 +64,8 @@ export type GetChannelQuery = {
       __typename?: 'Channel'
       description?: Types.Maybe<string>
       language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
-    } & AllChannelFieldsFragment
+    } & AllChannelFieldsFragment &
+      CoverPhotoFragment
   >
 }
 
@@ -105,22 +133,69 @@ export type UnfollowChannelMutation = {
   unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
 }
 
+export const AvatarPhotoFragmentDoc = gql`
+  fragment AvatarPhoto on Channel {
+    avatarPhoto {
+      ... on AssetUrl {
+        url
+      }
+      ... on AssetStorage {
+        uploadStatus {
+          ... on AssetNeverProvided {
+            dummy
+          }
+          ... on AssetDeleted {
+            dummy
+          }
+          ... on AssetUploadStatus {
+            dummy
+          }
+        }
+      }
+    }
+  }
+`
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
-    handle
-    avatarPhotoUrl
+    title
     createdAt
+    avatarPhotoUrl
+    ...AvatarPhoto
+  }
+  ${AvatarPhotoFragmentDoc}
+`
+export const CoverPhotoFragmentDoc = gql`
+  fragment CoverPhoto on Channel {
+    coverPhoto {
+      ... on AssetUrl {
+        url
+      }
+      ... on AssetStorage {
+        uploadStatus {
+          ... on AssetNeverProvided {
+            dummy
+          }
+          ... on AssetDeleted {
+            dummy
+          }
+          ... on AssetUploadStatus {
+            dummy
+          }
+        }
+      }
+    }
   }
 `
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
-    coverPhotoUrl
+    ...CoverPhoto
     follows
     isPublic
   }
   ${BasicChannelFieldsFragmentDoc}
+  ${CoverPhotoFragmentDoc}
 `
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
@@ -171,6 +246,7 @@ export const GetChannelDocument = gql`
     }
   }
   ${AllChannelFieldsFragmentDoc}
+  ${CoverPhotoFragmentDoc}
 `
 
 /**

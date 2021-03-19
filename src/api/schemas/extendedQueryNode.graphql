@@ -16,24 +16,58 @@ type Membership {
   channels: [Channel!]!
 }
 
+union Asset = AssetUrl | AssetStorage
+
+type AssetUrl {
+  # The http url pointing to the media
+  url: String!
+}
+
+type AssetStorage {
+  # Upload to content directory status
+  uploadStatus: AssetStorageUploadStatus!
+}
+
+union AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
+
+type AssetDataObject {
+  joystreamContentId: String!
+}
+
+type AssetUploadStatus {
+  # Working group identifier
+  dummy: Int!
+}
+type AssetDeleted {
+  # This is needed to prevent generating schema error
+  dummy: Int!
+}
+
+type AssetNeverProvided {
+  # This is needed to prevent generating schema error
+  dummy: Int!
+}
+
 type Channel {
   id: ID!
 
   createdAt: Date!
 
-  handle: String!
+  title: String!
 
   description: String
 
   coverPhotoUrl: String
+  coverPhoto: Asset
 
   avatarPhotoUrl: String
+  avatarPhoto: Asset
 
   ownerMember: Membership
 
-  isPublic: Boolean!
+  isPublic: Boolean
 
-  isCurated: Boolean!
+  isCensored: Boolean
 
   language: Language
 
@@ -100,6 +134,11 @@ type Video {
   id: ID!
 
   channel: Channel!
+
+  createdById: String!
+  updatedAt: Date
+  updatedById: String
+  deletedAt: Date
 
   category: Category!
 

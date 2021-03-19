@@ -11,7 +11,7 @@ const generateChannel = () => {
   const descriptionWordsCount = randomRange(0, 30)
   return {
     id: faker.random.uuid(),
-    handle: faker.lorem.words(handleWordsCount),
+    title: faker.lorem.words(handleWordsCount),
     description: faker.lorem.words(descriptionWordsCount),
     follows: faker.random.number(150000),
     createdAt: faker.date.past(10),

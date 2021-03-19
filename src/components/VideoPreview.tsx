@@ -20,7 +20,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
     <VideoPreviewBase
       publisherMode={false}
       title={video?.title}
-      channelHandle={video?.channel.handle}
+      channelTitle={video?.channel.title}
       channelAvatarUrl={video?.channel.avatarPhotoUrl}
       createdAt={video?.createdAt}
       duration={video?.duration}

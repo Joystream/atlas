@@ -29,7 +29,7 @@
     "mocking:memberships": "node scripts/mocking/generateMemberships.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
     "codegen:generate": "graphql-codegen --config codegen.config.yml",
-    "codegen:watch": "yarn queries:codegen --watch",
+    "codegen:watch": "yarn codegen:generate --watch",
     "postinstall": "patch-package"
   },
   "lint-staged": {

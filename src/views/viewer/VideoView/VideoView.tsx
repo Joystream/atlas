@@ -187,7 +187,7 @@ const VideoView: React.FC = () => {
         </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
-            {video ? `More from ${video.channel.handle}` : <Placeholder height={23} width={300} />}
+            {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
           <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
         </MoreVideosContainer>

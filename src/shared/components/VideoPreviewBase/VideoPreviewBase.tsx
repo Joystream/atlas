@@ -76,7 +76,7 @@ export type VideoPreviewPublisherProps =
 
 export type VideoPreviewBaseProps = {
   title?: string
-  channelHandle?: string
+  channelTitle?: string
   channelAvatarUrl?: string | null
   createdAt?: Date
   duration?: number
@@ -104,7 +104,7 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
 
 const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   title,
-  channelHandle,
+  channelTitle,
   channelAvatarUrl,
   createdAt,
   duration,
@@ -197,7 +197,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
                         ref={imgRef}
-                        alt={`${title} by ${channelHandle} thumbnail`}
+                        alt={`${title} by ${channelTitle} thumbnail`}
                       />
                     ) : (
                       <CoverNoImage />
@@ -286,7 +286,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                       onClick={handleChannelClick}
                       scalingFactor={scalingFactor}
                     >
-                      {channelHandle}
+                      {channelTitle}
                     </ChannelHandle>
                   </Anchor>
                 ))}
