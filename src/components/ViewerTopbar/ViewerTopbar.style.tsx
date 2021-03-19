@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Searchbar } from '@/shared/components'
-import { breakpoints, colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { breakpoints, sizes, transitions } from '@/shared/theme'
 
 export const SearchbarContainer = styled.div`
   max-width: 1156px;

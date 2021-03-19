@@ -16,7 +16,7 @@ import {
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
-} from './StudioTopbar.style'
+} from './PublishingTopbar.style'
 
 type Channel = {
   name: string
@@ -55,7 +55,7 @@ const member = {
   ],
 }
 
-const StudioTopbar: React.FC = () => {
+const PublishingTopbar: React.FC = () => {
   const { activeUser, setActiveChannel } = useActiveUser()
   // TODO Add member fetching
   const [currentChannel, setCurrentChannel] = useState(member.channels[0])
@@ -63,8 +63,6 @@ const StudioTopbar: React.FC = () => {
   const [isDrawerActive, setDrawerActive] = useState(false)
 
   const drawerRef = useRef<HTMLDivElement | null>(null)
-  const channelInfoRef = useRef<HTMLDivElement | null>(null)
-  const drawerButtonRef = useRef<HTMLButtonElement | null>(null)
 
   const handleCurrentChannelChange: (channel: Channel) => void = (channel) => {
     setCurrentChannel(channel)
@@ -73,7 +71,7 @@ const StudioTopbar: React.FC = () => {
 
   const handleLogout = () => {
     // TODO add logic for Logout
-    window.alert("You've been logged out")
+    setDrawerActive(false)
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -82,14 +80,15 @@ const StudioTopbar: React.FC = () => {
   }
 
   useEffect(() => {
+    if (!isDrawerActive) {
+      return
+    }
     const handleClickOutside = (event: Event) => {
-      if (
-        channelInfoRef.current?.contains(event.target as Node) ||
-        drawerButtonRef.current?.contains(event.target as Node)
-      ) {
-        return
-      }
       if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+        // stop propagation so drawer doesn't get triggered again on button click
+        // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
+        event.preventDefault()
+        event.stopPropagation()
         setDrawerActive(false)
       }
     }
@@ -97,26 +96,15 @@ const StudioTopbar: React.FC = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside, true)
     }
-  }, [])
+  }, [isDrawerActive])
 
   return (
     <>
       <StyledTopbarBase variant="studio">
         <StudioContainer>
           <Button icon="add-video" />
-          <ChannelInfo
-            channel={currentChannel}
-            member={member.name}
-            onClick={handleDrawerToggle}
-            ref={channelInfoRef}
-          />
-          <DrawerButton
-            isActive={isDrawerActive}
-            icon="chevron-down"
-            variant="tertiary"
-            onClick={handleDrawerToggle}
-            ref={drawerButtonRef}
-          />
+          <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
+          <DrawerButton isActive={isDrawerActive} icon="chevron-down" variant="tertiary" onClick={handleDrawerToggle} />
         </StudioContainer>
       </StyledTopbarBase>
       <NavDrawer
@@ -197,4 +185,4 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
 )
 NavDrawer.displayName = 'NavDrawer'
 
-export default StudioTopbar
+export default PublishingTopbar

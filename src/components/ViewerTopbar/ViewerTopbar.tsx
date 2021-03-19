@@ -2,10 +2,10 @@ import routes, { QUERY_PARAMS } from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { TopbarBase } from '@/shared/components'
-import { SearchbarContainer, StyledSearchbar } from './Topbar.style'
+import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
 import { RoutingState } from '@/types/routing'
 
-const TopNavbar: React.FC = () => {
+const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
@@ -87,4 +87,4 @@ const TopNavbar: React.FC = () => {
   )
 }
 
-export default TopNavbar
+export default ViewerTopbar

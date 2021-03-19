@@ -1,11 +1,11 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import StudioTopbar from './StudioTopbar'
+import PublishingTopbar from './PublishingTopbar'
 import { Story, Meta } from '@storybook/react'
 
 export default {
-  title: 'General/StudioTopbar',
-  component: StudioTopbar,
+  title: 'General/PublishingTopbar',
+  component: PublishingTopbar,
   decorators: [
     (Story) => (
       <BrowserRouter>
@@ -16,7 +16,7 @@ export default {
 } as Meta
 
 const RegularTemplate: Story = () => {
-  return <StudioTopbar />
+  return <PublishingTopbar />
 }
 
 export const Regular = RegularTemplate.bind({})

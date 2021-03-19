@@ -8,7 +8,7 @@ export type TopbarBaseProps = {
   className?: string
 }
 
-const StudioTopbar: React.FC<TopbarBaseProps> = ({ children, variant = 'default', hasFocus, className }) => {
+const TopbarBase: React.FC<TopbarBaseProps> = ({ children, variant = 'default', hasFocus, className }) => {
   const isStudio = variant === 'studio'
   const logoLink = isStudio ? '/studio' : '/'
   return (
@@ -25,4 +25,4 @@ const StudioTopbar: React.FC<TopbarBaseProps> = ({ children, variant = 'default'
   )
 }
 
-export default StudioTopbar
+export default TopbarBase

@@ -6,7 +6,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import { ActiveUserProvider } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
-import { Topbar, StudioTopbar, ViewErrorFallback, SideNavbar } from '@/components'
+import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
@@ -51,8 +51,8 @@ const routesMap = [
 ]
 
 const topbarRoutesMap = [
-  { path: '*', Component: Topbar },
-  { path: routes.studio() + '/*', Component: StudioTopbar },
+  { path: '*', Component: ViewerTopbar },
+  { path: routes.studio() + '/*', Component: PublishingTopbar },
 ]
 
 const LayoutWithRouting: React.FC = () => {
