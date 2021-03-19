@@ -1,11 +1,7 @@
 scalar Date
 
-enum Language {
-  Chinese
-  English
-  Arabic
-  Portugese
-  French
+type Language {
+  name: String!
 }
 
 type Member {
@@ -20,7 +16,7 @@ type Channel {
 
   handle: String!
 
-  description: String!
+  description: String
 
   coverPhotoUrl: String
 

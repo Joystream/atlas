@@ -31,7 +31,14 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channel?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
+  channel?: Types.Maybe<
+    {
+      __typename?: 'Channel'
+      description?: Types.Maybe<string>
+      isPublic: boolean
+      language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
+    } & AllChannelFieldsFragment
+  >
 }
 
 export type GetVideoCountQueryVariables = Types.Exact<{
@@ -156,6 +163,11 @@ export const GetChannelDocument = gql`
   query GetChannel($where: ChannelWhereUniqueInput!) {
     channel(where: $where) {
       ...AllChannelFields
+      description
+      isPublic
+      language {
+        name
+      }
     }
   }
   ${AllChannelFieldsFragmentDoc}

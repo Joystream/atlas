@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useVideosOffsetLimitPagination } from '@/api/hooks'
 import { useDrafts } from '@/hooks'
-import { VideoPreviewPublisher } from '@/components'
+import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
@@ -123,39 +123,43 @@ export const MyVideosView = () => {
 
   // console.log({ videos, totalCount, hasAnyVideos, isLoading, isPublic_eq })
   return (
-    <ViewContainer>
-      <Text variant="h2">My Videos</Text>
-      {hasAnyVideo ? (
-        <EmptyVideosView />
-      ) : (
-        <>
-          <TabsContainer>
-            <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
-          </TabsContainer>
-          {isDraftTab && (
-            <StyledDismissibleMessage
-              id="video-draft-saved-locally-warning"
-              title={'Video Drafts are saved locally'}
-              description={
-                'This mean you can only access one on the device you used to create it. Clearing your browser history will delete all your drafts.'
-              }
-            />
-          )}
-          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-            {gridContent}
-          </Grid>
-          {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && <EmptyVideos />}
-          <PaginationContainer>
-            <Pagination
-              onChangePage={handleChangePage}
-              page={currentPage}
-              itemsPerPage={videosPerPage}
-              totalCount={isDraftTab ? drafts.length : totalCount}
-            ></Pagination>
-          </PaginationContainer>
-        </>
-      )}
-    </ViewContainer>
+    <StudioContainer>
+      <ViewContainer>
+        <Text variant="h2">My Videos</Text>
+        {hasAnyVideo ? (
+          <EmptyVideosView />
+        ) : (
+          <>
+            <TabsContainer>
+              <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
+            </TabsContainer>
+            {isDraftTab && (
+              <StyledDismissibleMessage
+                id="video-draft-saved-locally-warning"
+                title={'Video Drafts are saved locally'}
+                description={
+                  'This mean you can only access one on the device you used to create it. Clearing your browser history will delete all your drafts.'
+                }
+              />
+            )}
+            <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+              {gridContent}
+            </Grid>
+            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && (
+              <EmptyVideos />
+            )}
+            <PaginationContainer>
+              <Pagination
+                onChangePage={handleChangePage}
+                page={currentPage}
+                itemsPerPage={videosPerPage}
+                totalCount={isDraftTab ? drafts.length : totalCount}
+              ></Pagination>
+            </PaginationContainer>
+          </>
+        )}
+      </ViewContainer>
+    </StudioContainer>
   )
 }
 

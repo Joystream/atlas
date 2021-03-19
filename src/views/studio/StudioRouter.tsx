@@ -1,24 +1,22 @@
-import styled from '@emotion/styled'
 import React from 'react'
-import { Route, Routes } from 'react-router'
-import { MyVideosView } from '..'
+import { Routes, Route } from 'react-router'
+import { studioRoutes } from '@/config/routes'
+import { CreateEditChannelView, MyVideosView } from '@/views/studio'
 
-const routesMap = [{ path: './videos', Component: MyVideosView }]
+const routesMap = [
+  { path: studioRoutes.newChannel(), Component: <CreateEditChannelView newChannel /> },
+  { path: studioRoutes.editChannel(), Component: <CreateEditChannelView /> },
+  { path: studioRoutes.myVideos(), Component: <MyVideosView /> },
+]
 
 const StudioRouter = () => {
   return (
-    <Container>
+    <Routes>
       {routesMap.map(({ path, Component }) => (
-        <Route key={path} path={path} element={<Component />} />
+        <Route key={path} path={path} element={Component} />
       ))}
-    </Container>
+    </Routes>
   )
 }
 
 export default StudioRouter
-
-const Container = styled.div`
-  --max-inner-width: calc(1440px - var(--sidenav-collapsed-width) - calc(2 * var(--global-horizontal-padding)));
-  max-width: var(--max-inner-width);
-  margin: 0 auto;
-`

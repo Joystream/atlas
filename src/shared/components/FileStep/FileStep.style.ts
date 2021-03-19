@@ -1,4 +1,4 @@
-import { colors, sizes, transitions, typography } from '@/shared/theme'
+import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Button from '../Button'
 import CircularProgressbar from '../CircularProgressbar'
@@ -68,11 +68,14 @@ export const FileName = styled(Text)`
   display: block;
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.caption};
-  width: 180px;
   height: 100%;
+  width: 160px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media screen and (min-width: ${breakpoints.small}) {
+    width: 200px;
+  }
 `
 
 type DeleteButtonProps = {

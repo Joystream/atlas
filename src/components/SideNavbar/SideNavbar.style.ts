@@ -68,7 +68,6 @@ export const ButtonGroup = styled.div`
 
 export const ButtonLink = styled(Button)`
   margin: 0 ${NAVBAR_LEFT_PADDING}px;
-  border: 1px solid ${colors.gray[400]};
 `
 
 export const SidebarNavItem = styled.li`

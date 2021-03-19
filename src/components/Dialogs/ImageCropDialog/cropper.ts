@@ -53,8 +53,23 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
   const zoomStep = (zoomRange[1] - zoomRange[0]) / 20
 
   const handleZoomChange = (zoom: number) => {
-    setCurrentZoom(zoom)
-    cropper?.zoomTo(zoom)
+    const [minZoom, maxZoom] = zoomRange
+
+    // keep zoom value in zoom range
+    const getCorrectZoomValue = (zoom: number) => {
+      if (zoom <= minZoom) {
+        return minZoom
+      }
+      if (zoom >= maxZoom) {
+        return maxZoom
+      }
+      return zoom
+    }
+
+    const correctZoom = getCorrectZoomValue(zoom)
+
+    setCurrentZoom(correctZoom)
+    cropper?.zoomTo(correctZoom)
   }
 
   // initialize
