@@ -16,7 +16,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
+  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${args?.offset}`
 }
 
 const cache = new InMemoryCache({

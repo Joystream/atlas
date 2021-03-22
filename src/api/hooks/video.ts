@@ -38,9 +38,8 @@ export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts
 export const useVideosOffsetLimitPagination = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
   const { videos, totalCount, ...rest } = useVideos(variables, opts)
   const limit = variables?.limit ?? videos?.length ?? 0
-  const offset = variables?.offset ?? 0
   return {
-    videos: videos?.slice(offset, offset + limit),
+    videos: videos?.slice(0, limit),
     totalCount,
     ...rest,
   }
