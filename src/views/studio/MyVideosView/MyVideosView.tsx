@@ -26,19 +26,14 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
   const isPublic_eq = getPublicness(currentTabName)
-  const { loading, videos, error, totalCount, fetchMore } = useVideosOffsetLimitPagination(
-    {
-      limit: videosPerPage,
-      offset: videosPerPage * (currentPage - 1),
-      where: {
-        channelId_eq: testChannelId,
-        isPublic_eq,
-      },
+  const { loading, videos, error, totalCount, fetchMore } = useVideosOffsetLimitPagination({
+    limit: videosPerPage,
+    offset: videosPerPage * currentPage,
+    where: {
+      channelId_eq: testChannelId,
+      isPublic_eq,
     },
-    {
-      fetchPolicy: 'cache-first',
-    }
-  )
+  })
   useEffect(() => {
     if ((typeof totalCount === 'number' && totalCount > 0) || drafts.length > 0) {
       setHasAnyVideos(true)
@@ -83,8 +78,7 @@ export const MyVideosView = () => {
     currentTabName !== 'Drafts' &&
       fetchMore({
         variables: {
-          // substract 1 coz offset index starts at 0
-          offset: videosPerPage * (page - 1),
+          offset: videosPerPage * page,
           limit: videosPerPage,
         },
       })
@@ -95,7 +89,7 @@ export const MyVideosView = () => {
       {isDraftTab
         ? drafts
             // pagination slice
-            .slice(videosPerPage * (currentPage - 1), (currentPage - 1) * videosPerPage + videosPerPage)
+            .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
             .map((draft, idx) => (
               <VideoPreviewPublisher
                 key={idx + '-' + currentTabName + '-' + currentPage}
@@ -111,7 +105,7 @@ export const MyVideosView = () => {
             ))
         : videosWithPlaceholders.map((video, idx) => (
             <VideoPreviewPublisher
-              key={idx + '-' + currentTabName + '-' + currentPage}
+              key={idx + '-' + currentTabName}
               id={video.id}
               showChannel={false}
               isLoading={loading}
@@ -121,7 +115,6 @@ export const MyVideosView = () => {
     </>
   )
 
-  // console.log({ videos, totalCount, hasAnyVideos, isLoading, isPublic_eq })
   return (
     <StudioContainer>
       <ViewContainer>
@@ -166,10 +159,10 @@ export const MyVideosView = () => {
 export default MyVideosView
 
 const usePagination = (currentTab: number) => {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(0)
   // reset the pagination when changing tabs
   useEffect(() => {
-    setCurrentPage(1)
+    setCurrentPage(0)
   }, [currentTab])
   return { currentPage, setCurrentPage }
 }
