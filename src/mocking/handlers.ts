@@ -56,7 +56,6 @@ import {
   createSingleItemAccessor,
   createTotalCountAccessor,
   createVideoViewsAccessor,
-  filterAndSortGenericData,
 } from './accessors'
 import { createStore } from './store'
 import {
