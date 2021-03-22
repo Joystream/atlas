@@ -12,6 +12,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { getImageUrlFromAsset } from '@/utils/image'
 
 type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment
@@ -27,7 +28,7 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={video?.thumbnailUrl} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={getImageUrlFromAsset(video?.thumbnail)} /> : <VideoImagePlaceholder />}
             <div>
               {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
               {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}

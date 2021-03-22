@@ -83,7 +83,7 @@ export type VideoPreviewBaseProps = {
   // video watch progress in percent (0-100)
   progress?: number
   views?: number | null
-  thumbnailUrl?: string
+  thumbnailUrl?: string | null
   isLoading?: boolean
   videoHref?: string
   channelHref?: string

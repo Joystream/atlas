@@ -140,7 +140,6 @@ export type Video = {
   description: Scalars['String']
   duration: Scalars['Int']
   thumbnail?: Maybe<Asset>
-  thumbnailUrl: Scalars['String']
   Language?: Maybe<Language>
   hasMarketing?: Maybe<Scalars['Boolean']>
   publishedBeforeJoystream?: Maybe<Scalars['String']>

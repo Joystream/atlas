@@ -12,7 +12,7 @@ export type VideoJsConfig = {
   fluid?: boolean
   fill?: boolean
   muted?: boolean
-  posterUrl?: string
+  posterUrl?: string | null
   startTime?: number
   onDataLoaded?: () => void
   onPlay?: () => void

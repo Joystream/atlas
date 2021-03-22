@@ -23,6 +23,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
+import { getImageUrlFromAsset } from '@/utils/image'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -126,7 +127,7 @@ const VideoView: React.FC = () => {
               playing={playing}
               src={video.media}
               fill
-              posterUrl={video.thumbnailUrl}
+              posterUrl={getImageUrlFromAsset(video.thumbnail)}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}

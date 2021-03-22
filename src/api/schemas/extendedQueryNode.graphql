@@ -137,7 +137,6 @@ type Video {
   # In seconds
   duration: Int!
   thumbnail: Asset
-  thumbnailUrl: String!
   Language: Language
   hasMarketing: Boolean
   # Possible time when videło was published before Joystream

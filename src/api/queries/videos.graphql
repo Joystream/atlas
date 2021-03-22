@@ -21,7 +21,14 @@ fragment VideoFields on Video {
   }
   views
   duration
-  thumbnailUrl
+  thumbnail {
+    ... on AssetUrl {
+      url
+    }
+    ... on AssetStorage {
+      ...AssetUploadStatusFields
+    }
+  }
   createdAt
   isPublic
   mediaMetadata {

@@ -36,6 +36,10 @@ export const mockCoverVideo: MockVideo = {
     __typename: 'AssetUrl',
     url: rawCoverVideo.cover.coverCutMedia.url,
   },
+  thumbnail: {
+    __typename: 'AssetUrl',
+    url: rawCoverVideo.video.thumbnail.url,
+  },
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[mockCategories.length],
 }

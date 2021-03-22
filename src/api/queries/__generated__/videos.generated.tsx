@@ -28,10 +28,13 @@ export type VideoFieldsFragment = {
   description: string
   views?: Types.Maybe<number>
   duration: number
-  thumbnailUrl: string
   createdAt: Date
   isPublic: boolean
   category: { __typename?: 'Category'; id: string }
+  thumbnail?: Types.Maybe<
+    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
+    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
+  >
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
   media?: Types.Maybe<
     | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
@@ -142,7 +145,14 @@ export const VideoFieldsFragmentDoc = gql`
     }
     views
     duration
-    thumbnailUrl
+    thumbnail {
+      ... on AssetUrl {
+        url
+      }
+      ... on AssetStorage {
+        ...AssetUploadStatusFields
+      }
+    }
     createdAt
     isPublic
     mediaMetadata {
@@ -163,8 +173,8 @@ export const VideoFieldsFragmentDoc = gql`
       ...LicenseFields
     }
   }
-  ${VideoMediaFieldsFragmentDoc}
   ${AssetUploadStatusFieldsFragmentDoc}
+  ${VideoMediaFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `

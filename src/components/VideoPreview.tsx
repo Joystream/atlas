@@ -26,9 +26,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
       createdAt={video?.createdAt}
       duration={video?.duration}
       views={video?.views}
-      thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
+      thumbnailUrl={getImageUrlFromAsset(video?.thumbnail)}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
