@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 import { useFeaturedVideos, useCategories } from '@/api/hooks'
 
 import { ErrorFallback, BackgroundPattern, VideoGallery } from '@/components'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+import { TOP_NAVBAR_HEIGHT, Text } from '@/shared/components'
 import {
   StyledViewWrapper,
   StyledCategoryPicker,
@@ -16,7 +16,6 @@ import {
   CategoriesVideosContainer,
   FeaturedVideosContainer,
 } from './VideosView.style'
-import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 const VideosView: React.FC = () => {

@@ -19,6 +19,7 @@ export default {
   videos: () => '/videos',
   myVideos: () => '/studio/videos',
   studio: () => `/studio`,
+  studioNewChannel: () => '/studio/channel/new',
 }
 
 export const studioRoutes = {
