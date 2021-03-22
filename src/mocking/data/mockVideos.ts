@@ -18,7 +18,7 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     createdAt: new Date(rawVideo.createdAt),
     thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
     duration: mockVideosMedia[mediaIndex].duration,
-    media: mockVideosMedia[mediaIndex],
+    mediaMetadata: mockVideosMedia[mediaIndex],
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],
@@ -30,10 +30,9 @@ const coverMockVideo: MockVideo = {
   ...rawCoverVideo.video,
   createdAt: new Date(rawCoverVideo.video.createdAt),
   channel: coverMockChannel,
-  // @ts-ignore __typename not matching, whatever
   license: rawCoverVideo.license,
   // @ts-ignore __typename not matching, whatever
-  media: rawCoverVideo.videoMedia,
+  mediaMetadata: rawCoverVideo.videoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[0],
   isPublic: true,

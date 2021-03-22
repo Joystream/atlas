@@ -13,16 +13,12 @@ export const mockCoverVideoChannel: MockChannel = {
 }
 
 export const mockCoverVideoLicense: MockLicense = {
-  __typename: 'LicenseEntity',
+  __typename: 'License',
   ...rawCoverVideo.license,
-  type: {
-    ...rawCoverVideo.license.type,
-    __typename: 'UserDefinedLicense',
-  },
 }
 export const mockCoverVideoMedia: MockVideoMedia = {
   ...rawCoverVideo.videoMedia,
-  __typename: 'VideoMedia',
+  __typename: 'VideoMediaMetadata',
   location: {
     ...rawCoverVideo.videoMedia.location,
     __typename: 'HttpMediaLocation',
@@ -35,7 +31,7 @@ export const mockCoverVideo: MockVideo = {
   createdAt: new Date(rawCoverVideo.video.createdAt),
   channel: mockCoverVideoChannel,
   license: mockCoverVideoLicense,
-  media: mockCoverVideoMedia,
+  mediaMetadata: mockCoverVideoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[mockCategories.length],
 }
@@ -45,7 +41,7 @@ export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
 export const mockCoverVideoInfo: CoverInfo = {
   ...rawCoverVideo.cover,
   coverCutMedia: {
-    __typename: 'VideoMedia',
+    __typename: 'VideoMediaMetadata',
     ...rawCoverVideo.cover.coverCutMedia,
     location: {
       __typename: 'HttpMediaLocation',

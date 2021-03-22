@@ -9,7 +9,7 @@ export type MockVideoMedia = VideoMediaFieldsFragment & {
 const mockVideosMedia: MockVideoMedia[] = rawVideosMedia.map((rawVideoMedia) => {
   return {
     ...rawVideoMedia,
-    __typename: 'VideoMedia',
+    __typename: 'VideoMediaMetadata',
     location: {
       __typename: 'HttpMediaLocation',
       ...rawVideoMedia.location,

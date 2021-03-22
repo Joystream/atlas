@@ -31,7 +31,7 @@ const useCoverVideo: UseCoverVideo = () => {
           id: 'random_category',
         },
         duration: mockCoverVideoMedia.duration,
-        media: mockCoverVideoMedia,
+        mediaMetadata: mockCoverVideoMedia,
         channel: mockCoverVideoChannel,
       },
     },

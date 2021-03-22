@@ -1,32 +1,20 @@
 import * as Types from './baseTypes.generated'
 
+import { AssetUploadStatusFieldsFragment, AssetUploadStatusFieldsFragmentDoc } from './shared.generated'
 import { gql } from '@apollo/client'
+
 import * as Apollo from '@apollo/client'
-export type CoverPhotoFragment = {
+export type CoverPhotoFieldsFragment = {
   __typename?: 'Channel'
   coverPhoto?: Types.Maybe<
-    | { __typename?: 'AssetUrl'; url: string }
-    | {
-        __typename?: 'AssetStorage'
-        uploadStatus:
-          | { __typename?: 'AssetNeverProvided'; dummy: number }
-          | { __typename?: 'AssetDeleted'; dummy: number }
-          | { __typename?: 'AssetUploadStatus'; dummy: number }
-      }
+    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
   >
 }
 
-export type AvatarPhotoFragment = {
+export type AvatarPhotoFieldsFragment = {
   __typename?: 'Channel'
   avatarPhoto?: Types.Maybe<
-    | { __typename?: 'AssetUrl'; url: string }
-    | {
-        __typename?: 'AssetStorage'
-        uploadStatus:
-          | { __typename?: 'AssetNeverProvided'; dummy: number }
-          | { __typename?: 'AssetDeleted'; dummy: number }
-          | { __typename?: 'AssetUploadStatus'; dummy: number }
-      }
+    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
   >
 }
 
@@ -36,7 +24,7 @@ export type BasicChannelFieldsFragment = {
   title: string
   createdAt: Date
   avatarPhotoUrl?: Types.Maybe<string>
-} & AvatarPhotoFragment
+} & AvatarPhotoFieldsFragment
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
@@ -64,8 +52,7 @@ export type GetChannelQuery = {
       __typename?: 'Channel'
       description?: Types.Maybe<string>
       language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
-    } & AllChannelFieldsFragment &
-      CoverPhotoFragment
+    } & AllChannelFieldsFragment
   >
 }
 
@@ -133,27 +120,18 @@ export type UnfollowChannelMutation = {
   unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
 }
 
-export const AvatarPhotoFragmentDoc = gql`
-  fragment AvatarPhoto on Channel {
+export const AvatarPhotoFieldsFragmentDoc = gql`
+  fragment AvatarPhotoFields on Channel {
     avatarPhoto {
       ... on AssetUrl {
         url
       }
       ... on AssetStorage {
-        uploadStatus {
-          ... on AssetNeverProvided {
-            dummy
-          }
-          ... on AssetDeleted {
-            dummy
-          }
-          ... on AssetUploadStatus {
-            dummy
-          }
-        }
+        ...AssetUploadStatusFields
       }
     }
   }
+  ${AssetUploadStatusFieldsFragmentDoc}
 `
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
@@ -161,41 +139,32 @@ export const BasicChannelFieldsFragmentDoc = gql`
     title
     createdAt
     avatarPhotoUrl
-    ...AvatarPhoto
+    ...AvatarPhotoFields
   }
-  ${AvatarPhotoFragmentDoc}
+  ${AvatarPhotoFieldsFragmentDoc}
 `
-export const CoverPhotoFragmentDoc = gql`
-  fragment CoverPhoto on Channel {
+export const CoverPhotoFieldsFragmentDoc = gql`
+  fragment CoverPhotoFields on Channel {
     coverPhoto {
       ... on AssetUrl {
         url
       }
       ... on AssetStorage {
-        uploadStatus {
-          ... on AssetNeverProvided {
-            dummy
-          }
-          ... on AssetDeleted {
-            dummy
-          }
-          ... on AssetUploadStatus {
-            dummy
-          }
-        }
+        ...AssetUploadStatusFields
       }
     }
   }
+  ${AssetUploadStatusFieldsFragmentDoc}
 `
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
-    ...CoverPhoto
+    ...CoverPhotoFields
     follows
     isPublic
   }
   ${BasicChannelFieldsFragmentDoc}
-  ${CoverPhotoFragmentDoc}
+  ${CoverPhotoFieldsFragmentDoc}
 `
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
@@ -246,7 +215,6 @@ export const GetChannelDocument = gql`
     }
   }
   ${AllChannelFieldsFragmentDoc}
-  ${CoverPhotoFragmentDoc}
 `
 
 /**

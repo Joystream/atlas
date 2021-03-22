@@ -1,0 +1,52 @@
+fragment AssetDataObjectFields on AssetDataObject {
+  id
+  createdAt
+  size
+  liaisonId
+  liaisonJudgement
+  ipfsContentId
+  joystreamContentId
+}
+
+fragment BlockFields on Block {
+  id
+  block
+}
+
+fragment AssetUploadStatusFields on AssetStorage {
+  uploadStatus {
+    ... on AssetNeverProvided {
+      dataObject {
+        ...AssetDataObjectFields
+      }
+      oldDataObject {
+        ...AssetDataObjectFields
+      }
+      happenedIn {
+        ...BlockFields
+      }
+    }
+    ... on AssetDeleted {
+      dataObject {
+        ...AssetDataObjectFields
+      }
+      oldDataObject {
+        ...AssetDataObjectFields
+      }
+      happenedIn {
+        ...BlockFields
+      }
+    }
+    ... on AssetUploadStatus {
+      dataObject {
+        ...AssetDataObjectFields
+      }
+      oldDataObject {
+        ...AssetDataObjectFields
+      }
+      happenedIn {
+        ...BlockFields
+      }
+    }
+  }
+}

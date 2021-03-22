@@ -30,58 +30,72 @@ type AssetStorage {
 
 union AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
 
+enum LiaisonJudgement {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 type AssetDataObject {
+  id: ID!
+  createdAt: Date!
+  size: Int!
+  # id of storage provider
+  liaisonId: Int!
+  # Storage provider as liaison judgment
+  liaisonJudgement: LiaisonJudgement!
+  # IPFS content id
+  ipfsContentId: String!
+  # Joystream runtime content
   joystreamContentId: String!
 }
 
-type AssetUploadStatus {
-  # Working group identifier
-  dummy: Int!
+type Block {
+  id: ID!
+  block: Int!
 }
+
+type AssetUploadStatus {
+  dataObject: AssetDataObject!
+  oldDataObject: AssetDataObject
+  happenedIn: Block!
+}
+
 type AssetDeleted {
-  # This is needed to prevent generating schema error
-  dummy: Int!
+  dataObject: AssetDataObject!
+  oldDataObject: AssetDataObject
+  happenedIn: Block!
 }
 
 type AssetNeverProvided {
-  # This is needed to prevent generating schema error
-  dummy: Int!
+  dataObject: AssetDataObject!
+  oldDataObject: AssetDataObject
+  happenedIn: Block!
 }
 
 type Channel {
   id: ID!
-
   createdAt: Date!
-
   title: String!
-
   description: String
-
   coverPhotoUrl: String
   coverPhoto: Asset
-
   avatarPhotoUrl: String
   avatarPhoto: Asset
-
   ownerMember: Membership
-
   isPublic: Boolean
-
   isCensored: Boolean
-
   language: Language
-
   videos: [Video!]!
 
   # extended from Orion
   follows: Int
 }
 
+# Should I name this VideosCategory?
 type Category {
   id: ID!
-
   name: String!
-
   videos: [Video!]
 }
 
@@ -96,26 +110,18 @@ type HttpMediaLocation {
 # In the future we can add IPFS, Dat, etc.
 union MediaLocation = JoystreamMediaLocation | HttpMediaLocation
 
-type KnownLicense {
-  code: String!
-  name: String
-  description: String
-  url: String
-}
-
-type UserDefinedLicense {
-  content: String!
-}
-
-union License = UserDefinedLicense | KnownLicense
-
-type LicenseEntity {
+type License {
   id: ID!
-  type: License!
+  # Should be Int?
+  code: String
+  url: String
   attribution: String
   videoLicense: [Video!]
+  customText: String
 }
-type VideoMedia {
+
+# TODO needs to be updated
+type VideoMediaMetadata {
   id: ID!
 
   # Resolution width
@@ -132,50 +138,38 @@ type VideoMedia {
 
 type Video {
   id: ID!
-
   channel: Channel!
-
+  createdAt: Date!
   createdById: String!
   updatedAt: Date
   updatedById: String
   deletedAt: Date
-
+  # Should I name this VideoCategory?
   category: Category!
-
   title: String!
-
   description: String!
-
-  # extended from Orion
-  views: Int
-
   # In seconds
   duration: Int!
-
-  # In intro
-  skippableIntroDuration: Int
-
+  thumbnail: Asset
   thumbnailUrl: String!
   Language: Language
-
-  media: VideoMedia!
-
   hasMarketing: Boolean
-
-  # Timestamp of block
-  createdAt: Date!
-  createdAtBlockHeight: Float!
-
-  # Possible time when video was published before Joystream
+  # Possible time when videło was published before Joystream
   publishedBeforeJoystream: String
-
   isPublic: Boolean!
-
-  isCurated: Boolean!
-
+  isCensored: Boolean!
   isExplicit: Boolean!
+  # In intro
+  media: Asset
+  mediaMetadata: VideoMediaMetadata!
+  license: License!
+  isFeatured: Boolean!
 
-  license: LicenseEntity!
+  skippableIntroDuration: Int
+  # Timestamp of block
+  createdAtBlockHeight: Float!
+  # extended from Orion
+  views: Int
 }
 
 type CoverVideo {
@@ -185,7 +179,7 @@ type CoverVideo {
 
   coverDescription: String!
 
-  coverCutMedia: VideoMedia!
+  coverCutMedia: VideoMediaMetadata!
 }
 
 type FeaturedVideo {
@@ -250,7 +244,7 @@ input VideoWhereInput {
   channelId_in: [ID!]
   channelId_eq: ID
   createdAt_gte: Date
-  isCurated_eq: Boolean
+  isFeatured_eq: Boolean
   isPublic_eq: Boolean
   id_in: [ID!]
 }

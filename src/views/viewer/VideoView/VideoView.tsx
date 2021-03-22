@@ -124,7 +124,7 @@ const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               playing={playing}
-              src={video.media.location}
+              src={video.mediaMetadata.location}
               fill
               posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}
@@ -170,15 +170,14 @@ const VideoView: React.FC = () => {
           {video ? (
             <>
               <p>
-                License:{' '}
-                {video.license.type.__typename === 'KnownLicense' ? (
-                  <a href={video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
-                    {video.license.type.code}
+                License:
+                {video.license.url && (
+                  <a href={video.license.url} target="_blank" rel="noopener noreferrer">
+                    {video.license.code}
                   </a>
-                ) : video.license.type.__typename === 'UserDefinedLicense' ? (
-                  video.license.type.content
-                ) : null}
+                )}
               </p>
+              <p>{video.license.customText}</p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>
           ) : (

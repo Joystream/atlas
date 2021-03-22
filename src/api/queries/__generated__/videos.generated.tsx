@@ -1,11 +1,12 @@
 import * as Types from './baseTypes.generated'
 
+import { AssetUploadStatusFieldsFragment, AssetUploadStatusFieldsFragmentDoc } from './shared.generated'
 import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { gql } from '@apollo/client'
 
 import * as Apollo from '@apollo/client'
 export type VideoMediaFieldsFragment = {
-  __typename?: 'VideoMedia'
+  __typename?: 'VideoMediaMetadata'
   id: string
   pixelHeight: number
   pixelWidth: number
@@ -15,12 +16,12 @@ export type VideoMediaFieldsFragment = {
 }
 
 export type LicenseFieldsFragment = {
-  __typename?: 'LicenseEntity'
+  __typename?: 'License'
   id: string
+  code?: Types.Maybe<string>
   attribution?: Types.Maybe<string>
-  type:
-    | { __typename?: 'UserDefinedLicense'; content: string }
-    | { __typename?: 'KnownLicense'; code: string; url?: Types.Maybe<string> }
+  customText?: Types.Maybe<string>
+  url?: Types.Maybe<string>
 }
 
 export type VideoFieldsFragment = {
@@ -34,9 +35,12 @@ export type VideoFieldsFragment = {
   createdAt: Date
   isPublic: boolean
   category: { __typename?: 'Category'; id: string }
-  media: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
+  mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
+  media?: Types.Maybe<
+    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
+  >
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
-  license: { __typename?: 'LicenseEntity' } & LicenseFieldsFragment
+  license: { __typename?: 'License' } & LicenseFieldsFragment
 }
 
 export type GetVideoQueryVariables = Types.Exact<{
@@ -91,7 +95,7 @@ export type GetCoverVideoQuery = {
     __typename?: 'CoverVideo'
     coverDescription: string
     video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMedia: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
+    coverCutMedia: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
   }
 }
 
@@ -115,7 +119,7 @@ export type AddVideoViewMutation = {
 }
 
 export const VideoMediaFieldsFragmentDoc = gql`
-  fragment VideoMediaFields on VideoMedia {
+  fragment VideoMediaFields on VideoMediaMetadata {
     id
     pixelHeight
     pixelWidth
@@ -130,18 +134,12 @@ export const VideoMediaFieldsFragmentDoc = gql`
   }
 `
 export const LicenseFieldsFragmentDoc = gql`
-  fragment LicenseFields on LicenseEntity {
+  fragment LicenseFields on License {
     id
+    code
     attribution
-    type {
-      ... on KnownLicense {
-        code
-        url
-      }
-      ... on UserDefinedLicense {
-        content
-      }
-    }
+    customText
+    url
   }
 `
 export const VideoFieldsFragmentDoc = gql`
@@ -157,8 +155,16 @@ export const VideoFieldsFragmentDoc = gql`
     thumbnailUrl
     createdAt
     isPublic
-    media {
+    mediaMetadata {
       ...VideoMediaFields
+    }
+    media {
+      ... on AssetUrl {
+        url
+      }
+      ... on AssetStorage {
+        ...AssetUploadStatusFields
+      }
     }
     channel {
       ...BasicChannelFields
@@ -168,6 +174,7 @@ export const VideoFieldsFragmentDoc = gql`
     }
   }
   ${VideoMediaFieldsFragmentDoc}
+  ${AssetUploadStatusFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `

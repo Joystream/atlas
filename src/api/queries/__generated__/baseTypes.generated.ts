@@ -28,6 +28,12 @@ export type Membership = {
 
 export type Asset = AssetUrl | AssetStorage
 
+export enum LiaisonJudgement {
+  Pending = 'PENDING',
+  Accepted = 'ACCEPTED',
+  Rejected = 'REJECTED',
+}
+
 export type AssetUrl = {
   __typename?: 'AssetUrl'
   url: Scalars['String']
@@ -42,22 +48,40 @@ export type AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | Asset
 
 export type AssetDataObject = {
   __typename?: 'AssetDataObject'
+  id: Scalars['ID']
+  createdAt: Scalars['Date']
+  size: Scalars['Int']
+  liaisonId: Scalars['Int']
+  liaisonJudgement: LiaisonJudgement
+  ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']
+}
+
+export type Block = {
+  __typename?: 'Block'
+  id: Scalars['ID']
+  block: Scalars['Int']
 }
 
 export type AssetUploadStatus = {
   __typename?: 'AssetUploadStatus'
-  dummy: Scalars['Int']
+  dataObject: AssetDataObject
+  oldDataObject?: Maybe<AssetDataObject>
+  happenedIn: Block
 }
 
 export type AssetDeleted = {
   __typename?: 'AssetDeleted'
-  dummy: Scalars['Int']
+  dataObject: AssetDataObject
+  oldDataObject?: Maybe<AssetDataObject>
+  happenedIn: Block
 }
 
 export type AssetNeverProvided = {
   __typename?: 'AssetNeverProvided'
-  dummy: Scalars['Int']
+  dataObject: AssetDataObject
+  oldDataObject?: Maybe<AssetDataObject>
+  happenedIn: Block
 }
 
 export type Channel = {
@@ -96,31 +120,18 @@ export type HttpMediaLocation = {
 
 export type MediaLocation = JoystreamMediaLocation | HttpMediaLocation
 
-export type KnownLicense = {
-  __typename?: 'KnownLicense'
-  code: Scalars['String']
-  name?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  url?: Maybe<Scalars['String']>
-}
-
-export type UserDefinedLicense = {
-  __typename?: 'UserDefinedLicense'
-  content: Scalars['String']
-}
-
-export type License = UserDefinedLicense | KnownLicense
-
-export type LicenseEntity = {
-  __typename?: 'LicenseEntity'
+export type License = {
+  __typename?: 'License'
   id: Scalars['ID']
-  type: License
+  code?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
   attribution?: Maybe<Scalars['String']>
   videoLicense?: Maybe<Array<Video>>
+  customText?: Maybe<Scalars['String']>
 }
 
-export type VideoMedia = {
-  __typename?: 'VideoMedia'
+export type VideoMediaMetadata = {
+  __typename?: 'VideoMediaMetadata'
   id: Scalars['ID']
   pixelWidth: Scalars['Int']
   pixelHeight: Scalars['Int']
@@ -132,6 +143,7 @@ export type Video = {
   __typename?: 'Video'
   id: Scalars['ID']
   channel: Channel
+  createdAt: Scalars['Date']
   createdById: Scalars['String']
   updatedAt?: Maybe<Scalars['Date']>
   updatedById?: Maybe<Scalars['String']>
@@ -139,20 +151,22 @@ export type Video = {
   category: Category
   title: Scalars['String']
   description: Scalars['String']
-  views?: Maybe<Scalars['Int']>
   duration: Scalars['Int']
-  skippableIntroDuration?: Maybe<Scalars['Int']>
+  thumbnail?: Maybe<Asset>
   thumbnailUrl: Scalars['String']
   Language?: Maybe<Language>
-  media: VideoMedia
   hasMarketing?: Maybe<Scalars['Boolean']>
-  createdAt: Scalars['Date']
-  createdAtBlockHeight: Scalars['Float']
   publishedBeforeJoystream?: Maybe<Scalars['String']>
   isPublic: Scalars['Boolean']
-  isCurated: Scalars['Boolean']
+  isCensored: Scalars['Boolean']
   isExplicit: Scalars['Boolean']
-  license: LicenseEntity
+  media?: Maybe<Asset>
+  mediaMetadata: VideoMediaMetadata
+  license: License
+  isFeatured: Scalars['Boolean']
+  skippableIntroDuration?: Maybe<Scalars['Int']>
+  createdAtBlockHeight: Scalars['Float']
+  views?: Maybe<Scalars['Int']>
 }
 
 export type CoverVideo = {
@@ -160,7 +174,7 @@ export type CoverVideo = {
   id: Scalars['ID']
   video: Video
   coverDescription: Scalars['String']
-  coverCutMedia: VideoMedia
+  coverCutMedia: VideoMediaMetadata
 }
 
 export type FeaturedVideo = {
@@ -225,7 +239,7 @@ export type VideoWhereInput = {
   channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
   createdAt_gte?: Maybe<Scalars['Date']>
-  isCurated_eq?: Maybe<Scalars['Boolean']>
+  isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
 }

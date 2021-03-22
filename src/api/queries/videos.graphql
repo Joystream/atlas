@@ -1,4 +1,4 @@
-fragment VideoMediaFields on VideoMedia {
+fragment VideoMediaFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
@@ -12,18 +12,12 @@ fragment VideoMediaFields on VideoMedia {
   }
 }
 
-fragment LicenseFields on LicenseEntity {
+fragment LicenseFields on License {
   id
+  code
   attribution
-  type {
-    ... on KnownLicense {
-      code
-      url
-    }
-    ... on UserDefinedLicense {
-      content
-    }
-  }
+  customText
+  url
 }
 
 fragment VideoFields on Video {
@@ -38,8 +32,16 @@ fragment VideoFields on Video {
   thumbnailUrl
   createdAt
   isPublic
-  media {
+  mediaMetadata {
     ...VideoMediaFields
+  }
+  media {
+    ... on AssetUrl {
+      url
+    }
+    ... on AssetStorage {
+      ...AssetUploadStatusFields
+    }
   }
   channel {
     ...BasicChannelFields
