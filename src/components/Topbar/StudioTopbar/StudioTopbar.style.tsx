@@ -7,6 +7,7 @@ import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
 
 type CommonStudioTopbarProps = {
   isActive?: boolean
+  hasChannels?: boolean
 }
 
 export const StyledTopbarBase = styled(TopbarBase)`
@@ -31,9 +32,13 @@ export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
     cursor: pointer;
     background-color: ${({ isActive }) => (isActive ? colors.gray[600] : colors.gray[700])};
   }
-  svg {
-    margin-left: auto;
-    margin-right: ${sizes(3)};
+  button {
+    margin: 0 ${sizes(2)} 0 ${sizes(5)};
+    opacity: 0.4;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 `
 
@@ -46,6 +51,7 @@ export const TextContainer = styled.div`
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
+  margin-right: auto;
   width: 160px;
   p:nth-of-type(1) {
     font-size: ${typography.sizes.body1};
@@ -84,13 +90,13 @@ export const StudioContainer = styled.div`
   }
 `
 
-export const MemberInfoContainer = styled.div`
+export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
-  margin: calc(-1 * ${sizes(3)});
+  margin: 0 calc(-1 * ${sizes(3)});
   margin-bottom: 0;
-  border-bottom: 1px solid ${colors.transparentWhite[18]};
-  padding: ${sizes(5)};
+  border-top: ${({ hasChannels }) => hasChannels && `1px solid ${colors.transparentWhite[18]}`};
+  padding: ${sizes(4)} ${sizes(5)} 0;
 `
 
 export const MemberTextContainer = styled.div`
@@ -108,6 +114,7 @@ export const MemberTitleText = styled(Text)`
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
+  color: white;
 `
 
 export const NewChannel = styled.div`
@@ -147,7 +154,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: ${sizes(4)};
-  padding: ${sizes(3)};
+  padding: ${({ hasChannels }) => (hasChannels ? sizes(3) : `0 ${sizes(3)} ${sizes(3)}`)};
   transform: translateY(${({ isActive }) => (isActive ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
   background-color: ${colors.gray[800]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
@@ -157,6 +164,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   }
   ${ChannelInfoContainer} {
     padding: ${sizes(2)};
+    padding-right: ${sizes(4)};
   }
   ${StyledAvatar} {
     margin-left: 0;
