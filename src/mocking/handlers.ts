@@ -35,11 +35,17 @@ import {
   GetVideoViewsDocument,
   GetVideoViewsQuery,
   GetVideoViewsQueryVariables,
+  GetMembershipQuery,
+  GetMembershipsQuery,
+  GetMembershipQueryVariables,
+  GetMembershipsQueryVariables,
+  GetMembershipDocument,
+  GetMembershipsDocument,
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
 } from '@/api/queries'
-import { FEATURED_VIDEOS_INDEXES, mockCategories, mockChannels, mockVideos } from '@/mocking/data'
+import { FEATURED_VIDEOS_INDEXES, mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
 import { createQueryHandler } from './queries'
 import {
   createChannelFollowsAccessor,
@@ -50,6 +56,7 @@ import {
   createSingleItemAccessor,
   createTotalCountAccessor,
   createVideoViewsAccessor,
+  filterAndSortGenericData,
 } from './accessors'
 import { createStore } from './store'
 import {
@@ -111,6 +118,18 @@ const queryNodeHandlers = [
     queryNode,
     GetChannelsConnectionDocument,
     createCursorPaginationAccessor<GetChannelsConnectionQuery['channelsConnection']>(mockChannels)
+  ),
+
+  // memberships
+  createQueryHandler<GetMembershipQuery, GetMembershipQueryVariables>(
+    queryNode,
+    GetMembershipDocument,
+    createSingleItemAccessor(mockMemberships)
+  ),
+  createQueryHandler<GetMembershipsQuery, GetMembershipsQueryVariables>(
+    queryNode,
+    GetMembershipsDocument,
+    createOffsetLimitPaginationAccessor(mockMemberships)
   ),
 
   // misc

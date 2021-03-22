@@ -2,10 +2,17 @@ fragment BasicMembershipFields on Membership {
   id
   handle
   avatarUri
+  controllerAccount
 }
 
 query GetMembership($where: MembershipWhereUniqueInput!) {
   membership(where: $where) {
+    ...BasicMembershipFields
+  }
+}
+
+query GetMemberships($where: MembershipWhereInput) {
+  memberships(where: $where) {
     ...BasicMembershipFields
   }
 }

@@ -10,6 +10,8 @@ type Membership {
   handle: String!
 
   avatarUri: String
+
+  controllerAccount: ID!
 }
 
 type Channel {
@@ -220,6 +222,10 @@ input MembershipWhereUniqueInput {
   id: ID!
 }
 
+input MembershipWhereInput {
+  accountId_eq: ID
+}
+
 enum VideoOrderByInput {
   createdAt_ASC
   createdAt_DESC
@@ -244,6 +250,9 @@ enum FeaturedVideoOrderByInput {
 type Query {
   # Lookup a membership by its ID
   membership(where: MembershipWhereUniqueInput!): Membership
+
+  # List all memberships by given account ID
+  memberships(where: MembershipWhereInput): [Membership!]!
 
   # Lookup a channel by its ID
   channel(where: ChannelWhereUniqueInput!): Channel

@@ -13,14 +13,15 @@ const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => 
   avatarPhotoUrl: channelAvatarSources[idx % channelAvatarSources.length],
   coverPhotoUrl: channelPosterSources[idx % channelPosterSources.length],
   createdAt: new Date(rawChannel.createdAt),
-  isPublic: true,
   language: languages[Math.floor(Math.random() * languages.length)],
   member: rawMemberships[Math.floor(Math.random() * rawMemberships.length)],
+  isPublic: true,
 }))
 
 export const coverMockChannel: MockChannel = {
   ...rawCoverVideo.channel,
   createdAt: new Date(rawCoverVideo.channel.createdAt),
+  isPublic: true,
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]
