@@ -65,7 +65,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
         player.pause()
       }
     }
-  })
+  }, [player, playing])
 
   useEffect(() => {
     if (!player) {
@@ -81,7 +81,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     return () => {
       player.off('play', handler)
     }
-  })
+  }, [player])
 
   useEffect(() => {
     if (!externalRef) {
@@ -92,7 +92,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     } else {
       externalRef.current = playerRef.current
     }
-  })
+  }, [externalRef, playerRef])
 
   const handlePlayOverlayClick = () => {
     if (!player) {
