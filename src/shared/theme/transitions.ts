@@ -12,6 +12,7 @@ const transitions = {
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
     slideDown: 'slide-down',
+    slideUp: 'slide-up',
     dialog: 'dialog',
   },
 }

@@ -45,4 +45,37 @@ export const routingTransitions = css`
     transition: transform ${transitions.timings.routingSearchOverlay} ${transitions.routingEasing};
     transform: translateY(-100%);
   }
+
+  .${transitions.names.slideUp}-appear {
+  }
+
+  .${transitions.names.slideUp}-appear-done {
+    display: block !important;
+  }
+
+  .${transitions.names.slideUp}-enter {
+    transform: translateY(calc(100% - var(--upload-video-action-sheet-bar-height))) !important;
+  }
+
+  .${transitions.names.slideUp}-enter-active {
+    transition: transform ${transitions.timings.routing} ${transitions.routingEasing};
+    transform: translateY(0%) !important;
+  }
+
+  .${transitions.names.slideUp}-enter-done {
+    transform: translateY(0%) !important;
+  }
+
+  .${transitions.names.slideUp}-exit {
+    transform: translateY(0%) !important;
+  }
+
+  .${transitions.names.slideUp}-exit-active {
+    transition: transform ${transitions.timings.routing} ${transitions.routingEasing};
+    transform: translateY(calc(100% - var(--upload-video-action-sheet-bar-height))) !important;
+  }
+
+  /* .${transitions.names.slideUp}-exit-done {
+    transform: translateY(90%);
+  } */
 `
