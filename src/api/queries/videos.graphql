@@ -2,14 +2,6 @@ fragment VideoMediaFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
-  location {
-    ... on HttpMediaLocation {
-      url
-    }
-    ... on JoystreamMediaLocation {
-      dataObjectId
-    }
-  }
 }
 
 fragment LicenseFields on License {
@@ -98,7 +90,7 @@ query GetCoverVideo {
       ...VideoFields
     }
     coverDescription
-    coverCutMedia {
+    coverCutMediaMetadata {
       ...VideoMediaFields
     }
   }

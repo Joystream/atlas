@@ -24,7 +24,6 @@ fragment BasicChannelFields on Channel {
   id
   title
   createdAt
-  avatarPhotoUrl
   ...AvatarPhotoFields
 }
 
@@ -47,7 +46,6 @@ query GetChannel($where: ChannelWhereUniqueInput!) {
     description
     isPublic
     isCensored
-    coverPhotoUrl
     language {
       name
     }

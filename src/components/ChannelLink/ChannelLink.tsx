@@ -4,6 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { getImageUrlFromAsset } from '@/utils/image'
 
 type ChannelLinkProps = {
   id?: string
@@ -29,14 +30,14 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const displayedChannel = overrideChannel || channel
 
+  const avatarPhotoUrl = displayedChannel?.avatarPhoto && getImageUrlFromAsset(displayedChannel.avatarPhoto)
+
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && (
-        <Avatar imageUrl={displayedChannel?.avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />
-      )}
+      {!hideAvatar && <Avatar imageUrl={avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />}
       {!hideHandle &&
         (displayedChannel ? (
-          <Handle withAvatar={!hideAvatar}>{displayedChannel.handle}</Handle>
+          <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
         ) : (
           <HandlePlaceholder withAvatar={!hideAvatar} height={16} width={150} />
         ))}

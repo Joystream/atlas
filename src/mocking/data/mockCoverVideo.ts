@@ -9,6 +9,10 @@ import { CoverVideo } from '@/api/queries'
 export const mockCoverVideoChannel: MockChannel = {
   ...rawCoverVideo.channel,
   createdAt: new Date(rawCoverVideo.channel.createdAt),
+  avatarPhoto: {
+    __typename: 'AssetUrl',
+    url: rawCoverVideo.channel.avatarPhoto.url,
+  },
   __typename: 'Channel',
 }
 
@@ -19,10 +23,6 @@ export const mockCoverVideoLicense: MockLicense = {
 export const mockCoverVideoMedia: MockVideoMedia = {
   ...rawCoverVideo.videoMedia,
   __typename: 'VideoMediaMetadata',
-  location: {
-    ...rawCoverVideo.videoMedia.location,
-    __typename: 'HttpMediaLocation',
-  },
 }
 
 export const mockCoverVideo: MockVideo = {
@@ -32,6 +32,10 @@ export const mockCoverVideo: MockVideo = {
   channel: mockCoverVideoChannel,
   license: mockCoverVideoLicense,
   mediaMetadata: mockCoverVideoMedia,
+  media: {
+    __typename: 'AssetUrl',
+    url: rawCoverVideo.cover.coverCutMedia.url,
+  },
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[mockCategories.length],
 }
@@ -40,12 +44,8 @@ export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
 
 export const mockCoverVideoInfo: CoverInfo = {
   ...rawCoverVideo.cover,
-  coverCutMedia: {
+  coverCutMediaMetadata: {
     __typename: 'VideoMediaMetadata',
-    ...rawCoverVideo.cover.coverCutMedia,
-    location: {
-      __typename: 'HttpMediaLocation',
-      ...rawCoverVideo.cover.coverCutMedia.location,
-    },
+    ...rawCoverVideo.cover.coverCutMediaMetadata,
   },
 }

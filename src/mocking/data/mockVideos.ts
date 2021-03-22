@@ -6,6 +6,7 @@ import mockVideosMedia from './mockVideosMedia'
 import mockChannels, { coverMockChannel } from './mockChannels'
 import mockCategories from './mockCategories'
 import mockLicenses from './mockLicenses'
+import { STORAGE_NODE_URL } from '@/config/urls'
 
 export type MockVideo = VideoFieldsFragment
 
@@ -19,6 +20,11 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
     duration: mockVideosMedia[mediaIndex].duration,
     mediaMetadata: mockVideosMedia[mediaIndex],
+    media: {
+      __typename: 'AssetUrl',
+      // @ts-ignore unable to generate new videosMedia.json
+      url: mockVideosMedia[mediaIndex].location.url,
+    },
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],
@@ -31,7 +37,10 @@ const coverMockVideo: MockVideo = {
   createdAt: new Date(rawCoverVideo.video.createdAt),
   channel: coverMockChannel,
   license: rawCoverVideo.license,
-  // @ts-ignore __typename not matching, whatever
+  media: {
+    __typename: 'AssetUrl',
+    url: rawCoverVideo.video.media.url,
+  },
   mediaMetadata: rawCoverVideo.videoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[0],

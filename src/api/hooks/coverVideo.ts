@@ -12,7 +12,7 @@ type UseCoverVideo = () => {
   data: {
     __typename: 'CoverVideo'
     coverDescription: CoverVideo['coverDescription']
-    coverCutMedia: CoverVideo['coverCutMedia']
+    coverCutMediaMetadata: CoverVideo['coverCutMediaMetadata']
     video: MockVideo & { channel: AllChannelFieldsFragment }
   }
 }
@@ -22,7 +22,7 @@ const useCoverVideo: UseCoverVideo = () => {
     data: {
       __typename: 'CoverVideo',
       coverDescription: mockCoverVideoInfo.coverDescription,
-      coverCutMedia: mockCoverVideoInfo.coverCutMedia,
+      coverCutMediaMetadata: mockCoverVideoInfo.coverCutMediaMetadata,
       video: {
         ...mockCoverVideo,
         createdAt: new Date(),

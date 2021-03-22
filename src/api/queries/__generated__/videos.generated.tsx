@@ -10,9 +10,6 @@ export type VideoMediaFieldsFragment = {
   id: string
   pixelHeight: number
   pixelWidth: number
-  location:
-    | { __typename?: 'JoystreamMediaLocation'; dataObjectId: string }
-    | { __typename?: 'HttpMediaLocation'; url: string }
 }
 
 export type LicenseFieldsFragment = {
@@ -37,7 +34,8 @@ export type VideoFieldsFragment = {
   category: { __typename?: 'Category'; id: string }
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
   media?: Types.Maybe<
-    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
+    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
+    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
   >
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
   license: { __typename?: 'License' } & LicenseFieldsFragment
@@ -95,7 +93,7 @@ export type GetCoverVideoQuery = {
     __typename?: 'CoverVideo'
     coverDescription: string
     video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMedia: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
+    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
   }
 }
 
@@ -123,14 +121,6 @@ export const VideoMediaFieldsFragmentDoc = gql`
     id
     pixelHeight
     pixelWidth
-    location {
-      ... on HttpMediaLocation {
-        url
-      }
-      ... on JoystreamMediaLocation {
-        dataObjectId
-      }
-    }
   }
 `
 export const LicenseFieldsFragmentDoc = gql`
@@ -367,7 +357,7 @@ export const GetCoverVideoDocument = gql`
         ...VideoFields
       }
       coverDescription
-      coverCutMedia {
+      coverCutMediaMetadata {
         ...VideoMediaFields
       }
     }

@@ -124,7 +124,7 @@ const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               playing={playing}
-              src={video.mediaMetadata.location}
+              src={video.media}
               fill
               posterUrl={video.thumbnailUrl}
               onEnd={handleVideoEnd}

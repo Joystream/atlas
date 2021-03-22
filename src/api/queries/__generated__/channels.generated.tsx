@@ -7,14 +7,16 @@ import * as Apollo from '@apollo/client'
 export type CoverPhotoFieldsFragment = {
   __typename?: 'Channel'
   coverPhoto?: Types.Maybe<
-    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
+    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
+    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
   >
 }
 
 export type AvatarPhotoFieldsFragment = {
   __typename?: 'Channel'
   avatarPhoto?: Types.Maybe<
-    { __typename?: 'AssetUrl'; url: string } | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
+    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
+    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
   >
 }
 
@@ -23,7 +25,6 @@ export type BasicChannelFieldsFragment = {
   id: string
   title: string
   createdAt: Date
-  avatarPhotoUrl?: Types.Maybe<string>
 } & AvatarPhotoFieldsFragment
 
 export type AllChannelFieldsFragment = {
@@ -138,7 +139,6 @@ export const BasicChannelFieldsFragmentDoc = gql`
     id
     title
     createdAt
-    avatarPhotoUrl
     ...AvatarPhotoFields
   }
   ${AvatarPhotoFieldsFragmentDoc}

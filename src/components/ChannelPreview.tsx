@@ -3,6 +3,7 @@ import { ChannelPreviewBase } from '@/shared/components'
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
 import { absoluteRoutes } from '@/config/routes'
+import { getImageUrlFromAsset } from '@/utils/image'
 
 type ChannelPreviewProps = {
   id?: string
@@ -20,7 +21,7 @@ export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, o
   return (
     <ChannelPreviewBase
       className={className}
-      avatarUrl={channel?.avatarPhotoUrl ?? undefined}
+      avatarUrl={getImageUrlFromAsset(channel?.coverPhoto)}
       title={channel?.title}
       channelHref={id ? absoluteRoutes.viewer.channel(id) : undefined}
       videoCount={videoCount}

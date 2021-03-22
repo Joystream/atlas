@@ -15,7 +15,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 
 export type ChannelPreviewBaseProps = {
-  avatarUrl?: string
+  avatarUrl?: string | null
   title?: string
   videoCount?: number
   channelHref?: string

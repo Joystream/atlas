@@ -8,6 +8,7 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
+import { getImageUrlFromAsset } from '@/utils/image'
 
 export type VideoPreviewProps = {
   id?: string
@@ -21,7 +22,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
       publisherMode={false}
       title={video?.title}
       channelTitle={video?.channel.title}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelAvatarUrl={getImageUrlFromAsset(video?.channel.avatarPhoto)}
       createdAt={video?.createdAt}
       duration={video?.duration}
       views={video?.views}
@@ -47,8 +48,8 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
     <VideoPreviewBase
       publisherMode
       title={isDraft ? draft?.title : video?.title}
-      channelHandle={video?.channel.handle}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelTitle={video?.channel.title}
+      channelAvatarUrl={getImageUrlFromAsset(video?.channel.avatarPhoto)}
       createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}

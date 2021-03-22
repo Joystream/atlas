@@ -28,15 +28,9 @@ export type Membership = {
 
 export type Asset = AssetUrl | AssetStorage
 
-export enum LiaisonJudgement {
-  Pending = 'PENDING',
-  Accepted = 'ACCEPTED',
-  Rejected = 'REJECTED',
-}
-
 export type AssetUrl = {
   __typename?: 'AssetUrl'
-  url: Scalars['String']
+  url?: Maybe<Scalars['String']>
 }
 
 export type AssetStorage = {
@@ -45,6 +39,12 @@ export type AssetStorage = {
 }
 
 export type AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
+
+export enum LiaisonJudgement {
+  Pending = 'PENDING',
+  Accepted = 'ACCEPTED',
+  Rejected = 'REJECTED',
+}
 
 export type AssetDataObject = {
   __typename?: 'AssetDataObject'
@@ -108,18 +108,6 @@ export type Category = {
   videos?: Maybe<Array<Video>>
 }
 
-export type JoystreamMediaLocation = {
-  __typename?: 'JoystreamMediaLocation'
-  dataObjectId: Scalars['String']
-}
-
-export type HttpMediaLocation = {
-  __typename?: 'HttpMediaLocation'
-  url: Scalars['String']
-}
-
-export type MediaLocation = JoystreamMediaLocation | HttpMediaLocation
-
 export type License = {
   __typename?: 'License'
   id: Scalars['ID']
@@ -136,7 +124,6 @@ export type VideoMediaMetadata = {
   pixelWidth: Scalars['Int']
   pixelHeight: Scalars['Int']
   size?: Maybe<Scalars['Float']>
-  location: MediaLocation
 }
 
 export type Video = {
@@ -174,7 +161,8 @@ export type CoverVideo = {
   id: Scalars['ID']
   video: Video
   coverDescription: Scalars['String']
-  coverCutMedia: VideoMediaMetadata
+  coverCutMediaMetadata: VideoMediaMetadata
+  coverCutMedia?: Maybe<Asset>
 }
 
 export type FeaturedVideo = {

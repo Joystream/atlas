@@ -20,7 +20,7 @@ union Asset = AssetUrl | AssetStorage
 
 type AssetUrl {
   # The http url pointing to the media
-  url: String!
+  url: String
 }
 
 type AssetStorage {
@@ -99,17 +99,6 @@ type Category {
   videos: [Video!]
 }
 
-type JoystreamMediaLocation {
-  dataObjectId: String!
-}
-
-type HttpMediaLocation {
-  url: String!
-}
-
-# In the future we can add IPFS, Dat, etc.
-union MediaLocation = JoystreamMediaLocation | HttpMediaLocation
-
 type License {
   id: ID!
   # Should be Int?
@@ -131,9 +120,6 @@ type VideoMediaMetadata {
   pixelHeight: Int!
   # Size in bytes
   size: Float
-
-  # where to find
-  location: MediaLocation!
 }
 
 type Video {
@@ -174,12 +160,10 @@ type Video {
 
 type CoverVideo {
   id: ID!
-
   video: Video!
-
   coverDescription: String!
-
-  coverCutMedia: VideoMediaMetadata!
+  coverCutMediaMetadata: VideoMediaMetadata!
+  coverCutMedia: Asset
 }
 
 type FeaturedVideo {

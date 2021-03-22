@@ -71,7 +71,7 @@ const CoverVideo: React.FC = () => {
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                src={data.coverCutMedia.location}
+                src={data.video.media}
               />
             ) : (
               <PlayerPlaceholder />
