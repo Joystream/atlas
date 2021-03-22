@@ -37,7 +37,7 @@ import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
-import { ContextMenu, ContextMenuItem, Icon, Placeholder } from '..'
+import { ContextMenu, ContextMenuItem, Placeholder } from '..'
 import { useContextMenu } from '@/hooks'
 import { PullUp } from './PullUp'
 
@@ -87,6 +87,7 @@ export type VideoPreviewBaseProps = {
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
+  contentKey?: string
   className?: string
 } & VideoPreviewBaseMetaProps &
   VideoPreviewPublisherProps
@@ -125,6 +126,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onPullupClick,
   onClick,
   onRemoveButtonClick,
+  contentKey,
   className,
   onEditVideoClick,
   onCopyVideoURLClick,
@@ -180,7 +182,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading ? 'placeholder' : 'content'}
+              key={isLoading ? 'placeholder' : `content-${contentKey}`}
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
@@ -237,7 +239,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       </CoverWrapper>
       <SwitchTransition>
         <CSSTransition
-          key={isLoading ? 'placeholder' : 'content'}
+          key={isLoading ? 'placeholder' : `content-${contentKey}`}
           timeout={parseInt(transitions.timings.sharp)}
           classNames={transitions.names.fade}
         >

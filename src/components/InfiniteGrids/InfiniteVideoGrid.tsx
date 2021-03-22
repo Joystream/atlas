@@ -109,12 +109,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     createdAtGte,
   ])
 
-  const serializedVariables = JSON.stringify(queryVariables)
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
       {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
-        <VideoPreview id={video.id} key={idx + serializedVariables} showChannel={showChannel} />
+        <VideoPreview id={video.id} key={idx} showChannel={showChannel} />
       ))}
     </>
   )
