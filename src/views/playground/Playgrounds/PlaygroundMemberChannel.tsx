@@ -6,11 +6,11 @@ import { Button, RadioButton } from '@/shared/components'
 const account = 'POLKADOT_ACCOUNT'
 
 const PlaygroundMemberChannel = () => {
-  const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
-
   const [selectedChannel, setSelectedChannel] = useState('')
   const [selectedMember, setSelectedMember] = useState('')
   const [activeUserString, setActiveUserString] = useState('')
+
+  const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
 
   const { memberships, loading: membershipsLoading, error: membershipsError } = useMemberships({
     where: { accountId_eq: account },
