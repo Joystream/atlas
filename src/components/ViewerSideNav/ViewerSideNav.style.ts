@@ -96,13 +96,13 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
   &:hover {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[4] : 'rgba(0,0,0,0.12)')};
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[4] : 'rgba(0, 0, 0, 0.12)')};
   }
   &:focus {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : 'rgba(0,0,0,0.24)')};
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
   }
   &:active {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[32] : 'rgba(0,0,0,0.4)')};
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[32] : colors.transparentBlack[54])};
   }
   > svg {
     @media screen and (min-width: ${breakpoints.medium}) {
@@ -118,7 +118,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     line-height: 1;
   }
   &[data-active='true'] {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : 'rgba(0,0,0,0.24)')};
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
   }
   :after {
     @media screen and (min-width: ${breakpoints.medium}) {

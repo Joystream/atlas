@@ -1,5 +1,5 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0)">
+<g>
 <circle cx="12" cy="9" r="3" stroke="white" stroke-width="2"/>
 <path d="M10 22L17 22C17.5523 22 18 21.5523 18 21L18 20C18 17.7909 16.2091 16 14 16L10 16C7.79086 16 6 17.7909 6 20L6 22" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
 <path d="M5 24L11 24" stroke="#202020" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { studioRoutes } from '@/config/routes'
+import routes from '@/config/routes'
 import { ViewerSideNav } from '@/components'
 import { NavItemType } from '@/components/ViewerSideNav'
 
@@ -8,19 +8,19 @@ const PUBLISHING_SIDENAVBAR_ITEMS: NavItemType[] = [
     icon: 'my-videos',
     name: 'Videos',
     expandedName: 'My Videos',
-    to: studioRoutes.videos(),
+    to: routes.studioVideos(),
   },
   {
     icon: 'my-channel',
     name: 'Channel',
     expandedName: 'My Channel',
-    to: studioRoutes.editChannel(),
+    to: routes.studioEditChannel(),
   },
   {
     icon: 'my-uploads',
     name: 'Uploads',
     expandedName: 'My Uploads',
-    to: studioRoutes.uploads(),
+    to: routes.studioUploads(),
   },
 ]
 

@@ -91,7 +91,6 @@ const LayoutWithRouting: React.FC = () => {
           ))}
         </Routes>
       </ActiveUserProvider>
-      <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <ErrorBoundary
           fallback={ViewErrorFallback}
