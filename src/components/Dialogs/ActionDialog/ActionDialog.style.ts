@@ -17,9 +17,6 @@ export const ButtonsContainer = styled.div`
   > * + * {
     margin-top: ${sizes(2)};
   }
-  button {
-    font-weight: ${typography.weights.bold};
-  }
 
   @media screen and (min-width: ${BREAKPOINT}) {
     flex-direction: row-reverse;

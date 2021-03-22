@@ -1,13 +1,12 @@
 import React from 'react'
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
+import ActionDialog from '../ActionDialog/ActionDialog'
+import { TransactionDialogProps } from '../TransactionDialog/TransactionDialog'
 import { StyledIcon, StyledTitleText, StyledDescriptionText } from './MessageDialog.style'
 import { IconType } from '@/shared/components/Icon'
 
 export type MessageDialogProps = {
-  title: string
-  description: string
   variant?: 'success' | 'warning' | 'error' | 'info'
-} & ActionDialogProps
+} & TransactionDialogProps
 
 const MessageDialog: React.FC<MessageDialogProps> = ({
   title,
