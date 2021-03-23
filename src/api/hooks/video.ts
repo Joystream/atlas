@@ -35,7 +35,7 @@ export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts
   }
 }
 
-export const useVideosOffsetLimitPagination = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
+export const useVideosPage = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
   const { videos, totalCount, ...rest } = useVideos(variables, opts)
   const limit = variables?.limit ?? videos?.length ?? 0
   return {
