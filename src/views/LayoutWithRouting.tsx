@@ -4,15 +4,16 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate, useMatch } from
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
+import { ActiveUserProvider } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
-import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
+import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import { UploadEditVideoActionSheet } from '@/views/studio'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
+import { TOP_NAVBAR_HEIGHT } from '@/shared/components/'
 import { NavItemType } from '@/components/SideNavbar'
 import loadable from '@loadable/component'
 
@@ -50,6 +51,11 @@ const routesMap = [
   { path: routes.studio() + '/*', Component: StudioView },
 ]
 
+const topbarRoutesMap = [
+  { path: '*', Component: ViewerTopbar },
+  { path: routes.studio() + '/*', Component: PublishingTopbar },
+]
+
 const LayoutWithRouting: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
@@ -79,11 +85,16 @@ const LayoutWithRouting: React.FC = () => {
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
-
   return (
     <>
       <GlobalStyle additionalStyles={routingTransitions} />
-      <TopNavbar />
+      <ActiveUserProvider>
+        <Routes>
+          {topbarRoutesMap.map(({ path, Component }) => (
+            <Route key={path} path={path} element={<Component />} />
+          ))}
+        </Routes>
+      </ActiveUserProvider>
       <SideNavbar items={SIDENAVBAR_ITEMS} />
       <MainContainer>
         <ErrorBoundary

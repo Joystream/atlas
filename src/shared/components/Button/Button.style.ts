@@ -184,7 +184,7 @@ export const StyledButton = styled('button', { shouldForwardProp: isPropValid })
   text-decoration: none;
   border-style: solid;
   font-family: ${typography.fonts.headers};
-  font-weight: ${typography.weights.medium};
+  font-weight: ${typography.weights.bold};
   line-height: 1;
   display: inline-flex;
   justify-content: center;
