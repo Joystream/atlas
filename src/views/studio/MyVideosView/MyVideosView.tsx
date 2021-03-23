@@ -25,7 +25,7 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
   const isPublic_eq = getPublicness(currentTabName)
-  const { loading, videos, totalCount, fetchMore } = useVideosPage({
+  const { loading, videos, totalCount, error, fetchMore } = useVideosPage({
     limit: videosPerPage,
     offset: videosPerPage * currentPage,
     where: {
@@ -103,6 +103,10 @@ export const MyVideosView = () => {
             ))}
     </>
   )
+
+  if (error) {
+    throw error
+  }
 
   return (
     <StudioContainer>
