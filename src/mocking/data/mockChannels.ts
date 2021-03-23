@@ -15,7 +15,7 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
   },
   avatarPhoto: {
     __typename: 'AssetUrl',
-    url: channelPosterSources[idx % channelAvatarSources.length],
+    url: channelAvatarSources[idx % channelAvatarSources.length],
   },
   createdAt: new Date(rawChannel.createdAt),
   isPublic: true,
@@ -26,11 +26,11 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
 export const coverMockChannel: MockChannel = {
   ...rawCoverVideo.channel,
   __typename: 'Channel',
-  avatarPhoto: {
-    ...rawCoverVideo.channel.avatarPhoto,
-    __typename: 'AssetUrl',
-  },
   createdAt: new Date(rawCoverVideo.channel.createdAt),
+  avatarPhoto: {
+    __typename: 'AssetUrl',
+    url: rawCoverVideo.channel.avatarPhoto.url,
+  },
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]
