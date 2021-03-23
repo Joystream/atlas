@@ -63,7 +63,7 @@ export const MyVideosView = () => {
   }))
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const hasAnyVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+  const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
@@ -105,7 +105,7 @@ export const MyVideosView = () => {
     <StudioContainer>
       <ViewContainer>
         <Text variant="h2">My Videos</Text>
-        {hasAnyVideos ? (
+        {hasNoVideos ? (
           <EmptyVideosView />
         ) : (
           <>
