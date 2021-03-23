@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { transparentize } from 'polished'
 import { transitions, colors } from '@/shared/theme'
 import { Button, Tooltip } from '..'
+import { css } from '@emotion/react'
 
 type StateProps = {
   disabled: boolean
@@ -23,23 +23,30 @@ const Container = styled.div<StateProps>`
   display: flex;
   position: relative;
 `
-const StyledButton = styled(Button)`
-  border-radius: 100%;
-  transition: all ${transitions.timings.routing} ${transitions.easing};
-  cursor: pointer;
-  path {
-    ${({ disabled }) => disabled && `stroke: ${transparentize(0.1, colors.gray[100])};`}
-  }
-  ${({ disabled }) => disabled && `background: none;`}
-  ${({ disabled }) => disabled && `cursor: not-allowed;`}
 
+const disabledStyle = css`
+  background: none;
+  cursor: not-allowed;
+  path {
+    stroke: ${colors.transparentWhite[32]};
+  }
   &:hover {
-    ${({ disabled }) => !disabled && `background: ${transparentize(0.8, colors.blue[100])};`}
+    background: none;
+  }
+`
+
+const enabledStyle = css`
+  &:hover {
+    background: ${colors.transparentPrimary[12]};
   }
   &:active {
-    ${({ disabled }) => !disabled && `background: ${transparentize(0.8, colors.blue[300])};`}
-    path {
-      ${({ disabled }) => !disabled && `stroke: ${colors.gray[100]};`}
-    }
+    background: ${colors.transparentPrimary[6]};
+    stroke: ${colors.gray[100]};
   }
+`
+
+const StyledButton = styled(Button)`
+  transition: all ${transitions.timings.routing} ${transitions.easing};
+  cursor: pointer;
+  ${({ disabled }) => [disabled && disabledStyle, !disabled && enabledStyle]}
 `
