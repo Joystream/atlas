@@ -37,7 +37,7 @@ export type SidenavProps = {
   isStudio?: boolean
 }
 
-const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
+const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
   const {
     state: { followedChannels },
   } = usePersonalData()
@@ -149,5 +149,5 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
   )
 }
 
-export { ViewerSideNavbar as default, NavItem }
+export { Sidenav as default, NavItem }
 export type { NavItemType }
