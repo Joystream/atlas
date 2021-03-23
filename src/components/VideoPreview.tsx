@@ -15,7 +15,7 @@ export type VideoPreviewProps = {
   Pick<VideoPreviewBaseProps, 'progress' | 'isLoading' | 'className'>
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, isLoading = false, ...metaProps }) => {
-  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading)
+  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading, false)
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -45,7 +45,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   isDraft,
   ...metaProps
 }) => {
-  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading)
+  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading, isDraft)
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   return (
@@ -70,8 +70,8 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   )
 }
 
-const useVideoSharedLogic = (id?: string, isLoading?: boolean) => {
-  const { video, loading } = useVideo(id ?? '', { skip: !id })
+const useVideoSharedLogic = (id?: string, isLoading?: boolean, isDraft?: boolean) => {
+  const { video, loading } = useVideo(id ?? '', { skip: !id || isDraft })
   const internalIsLoadingState = loading || !id || isLoading
   const videoHref = id ? routes.video(id) : undefined
   return { video, internalIsLoadingState, videoHref }
