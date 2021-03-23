@@ -179,7 +179,7 @@ export type CategoryWhereUniqueInput = {
 
 export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
-  channelId_in?: Maybe<Array<Maybe<Scalars['ID']>>>
+  channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
   createdAt_gte?: Maybe<Scalars['Date']>
   isCurated_eq?: Maybe<Scalars['Boolean']>
@@ -237,7 +237,7 @@ export type Query = {
   video?: Maybe<Video>
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>
-  videos: Array<Video>
+  videos?: Maybe<Array<Video>>
   videosConnection: VideoConnection
 }
 
@@ -298,6 +298,8 @@ export type QueryVideoViewsArgs = {
 }
 
 export type QueryVideosArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
   where?: Maybe<VideoWhereInput>
 }
 

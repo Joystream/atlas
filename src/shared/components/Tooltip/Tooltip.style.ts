@@ -57,6 +57,7 @@ export const StyledTooltip = styled.div<TooltipProps>`
     display: inline-block;
     content: attr(data-text);
     min-width: 100px;
+    width: max-content;
     max-width: 250px;
     font-size: ${typography.sizes.caption};
     font-weight: ${typography.weights.thin};

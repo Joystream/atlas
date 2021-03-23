@@ -12,7 +12,7 @@ export const getDraft = async (id: string) => {
 export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
-  const id = new Date().getTime().toString()
+  const id = Math.random().toString(36).substr(2, 11)
   const newDraft = { ...draftProps, updatedAt, id }
   const newDrafts = [newDraft, ...currentDrafts]
   writeToLocalStorage('drafts', newDrafts)
@@ -29,12 +29,22 @@ export const updateDraft = async (draftId: string, draftProps: RawDraft) => {
   return newDrafts.find((draft) => draft.id === draftId)
 }
 
-export const removeDraft = async (id: string) => {
+export const removeDraft = async (ids: string | string[]) => {
   const currentDrafts = await getDrafts()
-  const newDrafts = currentDrafts.filter((draft) => draft.id !== id)
+  let newDrafts
+  if (Array.isArray(ids)) {
+    newDrafts = currentDrafts.filter((draft) => !ids.includes(draft.id))
+  } else {
+    newDrafts = currentDrafts.filter((draft) => draft.id !== ids)
+  }
   writeToLocalStorage('drafts', newDrafts)
 }
 
-export const clearDrafts = () => {
-  writeToLocalStorage('drafts', [])
+export const clearDrafts = async (channelId?: string) => {
+  const currentDrafts = await getDrafts()
+  if (channelId) {
+    writeToLocalStorage('drafts', [...currentDrafts.filter((draft) => draft.channelId !== channelId)])
+  } else {
+    writeToLocalStorage('drafts', [])
+  }
 }
