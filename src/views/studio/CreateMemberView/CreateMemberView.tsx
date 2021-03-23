@@ -1,14 +1,9 @@
 import { StudioHeader, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import React, { useState } from 'react'
-import { Membership } from '../StudioView'
-import { Wrapper, Form, StyledButton } from './AddMemberView.style'
+import { Form, StyledButton, Wrapper } from './CreateMemberView.style'
 
-type AddMemberViewProps = {
-  onSubmit?: (member: Omit<Membership, 'id'>) => void
-}
-
-const AddMemberView: React.FC<AddMemberViewProps> = ({ onSubmit }) => {
+const CreateMemberView = () => {
   const [form, setForm] = useState({
     handle: '',
     userName: '',
@@ -24,7 +19,7 @@ const AddMemberView: React.FC<AddMemberViewProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit?.(form)
+    // do something here
   }
 
   return (
@@ -43,4 +38,4 @@ const AddMemberView: React.FC<AddMemberViewProps> = ({ onSubmit }) => {
   )
 }
 
-export default AddMemberView
+export default CreateMemberView
