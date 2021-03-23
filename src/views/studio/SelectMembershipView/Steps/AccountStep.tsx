@@ -1,4 +1,5 @@
 import accountCreation from '@/assets/account-creation.png'
+import { useActiveUser } from '@/hooks'
 import { AccountBar, Placeholder } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useState } from 'react'
@@ -10,12 +11,12 @@ const fakeAccounts = [
   {
     balance: 0.4,
     name: 'Myaccountname',
-    avatarUrl: '',
+    id: 'some unique id',
   },
   {
     balance: 12.3,
     name: 'MySecondAccount',
-    avatarUrl: '',
+    id: 'some unique id2',
   },
 ]
 
@@ -25,12 +26,13 @@ type AccountStepProps = {
 }
 
 type Account = {
+  id: string
   name: string
   balance: number
-  avatarUrl: string
 }
 
 const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
+  const { activeUser, setActiveUser } = useActiveUser()
   const [imageLoaded, setImageLoaded] = useState(false)
   const [accounts, setAccounts] = useState<null | Account[]>()
   const [loading, setLoading] = useState(true)
@@ -50,7 +52,12 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
     return () => clearInterval(interval)
   }, [])
 
-  const handleSelectAccount = () => {
+  const handleSelectAccount = (id: string) => {
+    setActiveUser({
+      accountId: id,
+      memberId: null,
+      channelId: null,
+    })
     onStepChange(currentStepIdx + 1)
   }
 
@@ -79,14 +86,8 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
               with sufficient amount of funds to start a channel.)
             </StepSubTitle>
             <AccountsWrapper>
-              {accounts?.map(({ balance, name, avatarUrl }, idx) => (
-                <AccountBar
-                  key={idx}
-                  secondary={balance + ' JOY'}
-                  name={name}
-                  onClick={handleSelectAccount}
-                  avatarUrl={avatarUrl}
-                />
+              {accounts?.map(({ balance, name, id }) => (
+                <AccountBar key={id} secondary={balance + ' JOY'} name={name} onClick={() => handleSelectAccount(id)} />
               ))}
             </AccountsWrapper>
           </StepWrapper>

@@ -1,31 +1,35 @@
 import { ActionDialog } from '@/components/Dialogs'
 import { Spinner, StudioHeader, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
+import { textFieldValidation } from '@/utils/formValidationOptions'
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { Form, StyledButton, Wrapper, StyledText } from './CreateMemberView.style'
 
+type Inputs = {
+  handle: string
+  avatarUri: string
+  about: string
+}
+
 const CreateMemberView = () => {
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-  const [form, setForm] = useState({
-    handle: '',
-    userName: '',
-    about: '',
+  const { register, handleSubmit, errors } = useForm<Inputs>({
+    shouldFocusError: false,
+    defaultValues: {
+      handle: '',
+      avatarUri: '',
+      about: '',
+    },
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({
-      ...form,
-      [e.currentTarget.name as 'avatarUri' | 'handle' | 'about']: e.currentTarget.value,
-    })
-  }
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!loading) {
       return
     }
-
     const timeout = setTimeout(() => {
       setLoading(false)
       navigate('/studio/membership')
@@ -36,11 +40,9 @@ const CreateMemberView = () => {
     }
   }, [loading, navigate])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // do something here
+  const onSubmit = handleSubmit((data) => {
     setLoading(true)
-  }
+  })
 
   return (
     <Wrapper>
@@ -48,10 +50,23 @@ const CreateMemberView = () => {
         title="Add Member Details"
         subtitle="Customize your membership details to easily spot the member account you would like to use when signing in."
       />
-      <Form onSubmit={handleSubmit}>
-        <TextField name="avatarUri" label="Avatar url" onChange={handleChange} />
-        <TextField name="handle" label="Member Name" onChange={handleChange} />
-        <TextArea name="about" placeholder="About" onChange={handleChange} />
+      <Form onSubmit={onSubmit}>
+        <TextField name="avatarUri" label="Avatar url" ref={register} />
+        <TextField
+          name="handle"
+          label="Member Name"
+          ref={register(textFieldValidation('Member name', 3, 20, true))}
+          error={!!errors.handle}
+          helperText={errors.handle?.message}
+        />
+        <TextArea
+          name="about"
+          placeholder="About"
+          maxLength={100}
+          ref={register(textFieldValidation('About', 0, 100))}
+          error={!!errors.about}
+          helperText={errors.about?.message}
+        />
         <StyledButton>Next</StyledButton>
       </Form>
       <ActionDialog showDialog={loading} exitButton={false}>

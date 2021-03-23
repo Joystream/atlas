@@ -14,11 +14,7 @@ import {
   VideoImgBg,
 } from './SignInView.style'
 
-type SignInViewProps = {
-  onOpenModal: (val: boolean) => void
-}
-
-const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
+const SignInView = () => {
   return (
     <>
       <StyledBackgroundPattern />
