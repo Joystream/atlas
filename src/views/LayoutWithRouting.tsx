@@ -127,6 +127,9 @@ const LayoutWithRouting: React.FC = () => {
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
+
+  const isStudioOrPlayground =
+    displayedLocation.pathname.includes('studio') || displayedLocation.pathname.includes('playground')
   return (
     <>
       <GlobalStyle additionalStyles={routingTransitions} />
@@ -146,8 +149,9 @@ const LayoutWithRouting: React.FC = () => {
         >
           <SwitchTransition>
             <CSSTransition
-              timeout={parseInt(transitions.timings.routing)}
-              classNames={transitions.names.fadeAndSlide}
+              // turn off transition for /studio and /playground
+              timeout={isStudioOrPlayground ? 0 : parseInt(transitions.timings.routing)}
+              classNames={isStudioOrPlayground ? '' : transitions.names.fadeAndSlide}
               key={displayedLocation.pathname}
             >
               <Routes location={displayedLocation}>
