@@ -67,7 +67,7 @@ export const MyVideosView = () => {
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
-    currentTabName !== 'Drafts' &&
+    !isDraftTab &&
       fetchMore({
         variables: {
           offset: videosPerPage * page,
