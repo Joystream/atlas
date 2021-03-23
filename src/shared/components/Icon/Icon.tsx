@@ -3,7 +3,7 @@ import * as Icons from '../../icons'
 import { camelCase } from 'lodash'
 
 type IconType = Icons.IconType
-type IconProps = {
+export type IconProps = {
   name: IconType
 } & React.SVGProps<SVGSVGElement>
 
