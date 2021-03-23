@@ -95,9 +95,12 @@ export const MyVideosView = () => {
                 }}
               />
             ))
-        : videosWithPlaceholders.map((video, idx) => (
-            <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
-          ))}
+        : videosWithPlaceholders
+            // slice off the placeholder items that appar if user clicks the same page twice
+            .slice(0, videosPerPage)
+            .map((video, idx) => (
+              <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
+            ))}
     </>
   )
 

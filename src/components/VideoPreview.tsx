@@ -12,10 +12,10 @@ import { copyToClipboard } from '@/utils/broswer'
 export type VideoPreviewProps = {
   id?: string
 } & VideoPreviewBaseMetaProps &
-  Pick<VideoPreviewBaseProps, 'progress' | 'isLoading' | 'className'>
+  Pick<VideoPreviewBaseProps, 'progress' | 'className'>
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, isLoading = false, ...metaProps }) => {
-  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading, false)
+const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
+  const { video, loading, videoHref } = useVideoSharedLogic(id, false)
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -28,7 +28,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, isLoading = false, ...m
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
-      isLoading={internalIsLoadingState}
+      isLoading={loading}
       contentKey={id}
       {...metaProps}
     />
@@ -39,13 +39,8 @@ export default VideoPreview
 
 export type VideoPreviewWPublisherProps = VideoPreviewProps &
   Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>
-export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
-  id,
-  isLoading = false,
-  isDraft,
-  ...metaProps
-}) => {
-  const { video, internalIsLoadingState, videoHref } = useVideoSharedLogic(id, isLoading, isDraft)
+export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ id, isDraft, ...metaProps }) => {
+  const { video, loading, videoHref } = useVideoSharedLogic(id, isDraft)
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   return (
@@ -60,7 +55,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? routes.channel(video?.channel.id) : undefined}
-      isLoading={internalIsLoadingState}
+      isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}
@@ -70,9 +65,9 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   )
 }
 
-const useVideoSharedLogic = (id?: string, isLoading?: boolean, isDraft?: boolean) => {
+const useVideoSharedLogic = (id?: string, isDraft?: boolean) => {
   const { video, loading } = useVideo(id ?? '', { skip: !id || isDraft })
-  const internalIsLoadingState = loading || !id || isLoading
+  const internalIsLoadingState = loading || !id
   const videoHref = id ? routes.video(id) : undefined
-  return { video, internalIsLoadingState, videoHref }
+  return { video, loading: internalIsLoadingState, videoHref }
 }
