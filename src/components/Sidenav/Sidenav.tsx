@@ -13,7 +13,7 @@ import {
   LogoLink,
   ButtonGroup,
   StudioText,
-} from './ViewerSideNav.style'
+} from './Sidenav.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { Button } from '@/shared/components'
@@ -25,7 +25,6 @@ import routes from '@/config/routes'
 
 type NavSubitem = {
   name: string
-  expandedName?: string
 }
 type NavItemType = {
   subitems?: NavSubitem[]
@@ -34,27 +33,9 @@ type NavItemType = {
 } & NavSubitem
 
 export type SidenavProps = {
-  items?: NavItemType[]
+  items: NavItemType[]
   isStudio?: boolean
 }
-
-const SIDENAVBAR_ITEMS: NavItemType[] = [
-  {
-    icon: 'home-fill',
-    name: 'Home',
-    to: routes.index(),
-  },
-  {
-    icon: 'videos',
-    name: 'Videos',
-    to: routes.videos(),
-  },
-  {
-    icon: 'channels',
-    name: 'Channels',
-    to: routes.channels(),
-  },
-]
 
 const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
   const {
@@ -68,7 +49,6 @@ const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
   }
 
   const closeSideNav = () => setExpanded(false)
-  const navItems = items || SIDENAVBAR_ITEMS
   return (
     <>
       <CSSTransition
@@ -86,7 +66,7 @@ const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
           {isStudio && <StudioText>studio</StudioText>}
         </LogoLink>
         <SidebarNavList>
-          {navItems.map((item) => (
+          {items.map((item) => (
             <NavItem
               key={item.name}
               to={item.to}
@@ -97,7 +77,7 @@ const ViewerSideNavbar: React.FC<SidenavProps> = ({ items, isStudio }) => {
               isStudio={isStudio}
             >
               <Icon name={item.icon} />
-              <span>{expanded && item.expandedName ? item.expandedName : item.name}</span>
+              <span>{item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>

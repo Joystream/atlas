@@ -6,13 +6,14 @@ import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import { ActiveUserProvider } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
-import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, PublishingSideNav, ViewerSideNav } from '@/components'
+import { ViewerTopbar, PublishingTopbar, ViewErrorFallback, Sidenav } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { TOP_NAVBAR_HEIGHT } from '@/shared/components/'
+import { NavItemType } from '@/components/Sidenav'
 import loadable from '@loadable/component'
 
 const StudioView = loadable(() => import('./studio/StudioView'), {
@@ -20,6 +21,42 @@ const StudioView = loadable(() => import('./studio/StudioView'), {
 })
 
 StudioView.displayName = 'StudioView'
+
+const PUBLISHING_SIDENAVBAR_ITEMS: NavItemType[] = [
+  {
+    icon: 'my-videos',
+    name: 'My Videos',
+    to: routes.studioVideos(),
+  },
+  {
+    icon: 'my-channel',
+    name: 'My Channel',
+    to: routes.studioEditChannel(),
+  },
+  {
+    icon: 'my-uploads',
+    name: 'My Uploads',
+    to: routes.studioUploads(),
+  },
+]
+
+const VIEWER_SIDENAVBAR_ITEMS: NavItemType[] = [
+  {
+    icon: 'home-fill',
+    name: 'Home',
+    to: routes.index(),
+  },
+  {
+    icon: 'videos',
+    name: 'Videos',
+    to: routes.videos(),
+  },
+  {
+    icon: 'channels',
+    name: 'Channels',
+    to: routes.channels(),
+  },
+]
 
 const routesMap = [
   { path: '*', Component: HomeView },
@@ -37,7 +74,7 @@ const barsRoutesMap = [
     Component: (
       <>
         <ViewerTopbar />
-        <ViewerSideNav />
+        <Sidenav items={VIEWER_SIDENAVBAR_ITEMS} />
       </>
     ),
   },
@@ -46,7 +83,7 @@ const barsRoutesMap = [
     Component: (
       <>
         <PublishingTopbar />
-        <PublishingSideNav />
+        <Sidenav isStudio items={PUBLISHING_SIDENAVBAR_ITEMS} />
       </>
     ),
   },
