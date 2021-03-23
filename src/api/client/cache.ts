@@ -16,7 +16,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${args?.offset}`
+  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
 }
 
 const cache = new InMemoryCache({
@@ -25,7 +25,12 @@ const cache = new InMemoryCache({
       fields: {
         channelsConnection: relayStylePagination(),
         videosConnection: relayStylePagination(getVideoKeyArgs),
-        videos: offsetLimitPagination(getVideoKeyArgs),
+        videos: {
+          ...offsetLimitPagination(getVideoKeyArgs),
+          read: (existing, { args: { offset, limit } }: { args: GetVideosQueryVariables }) => {
+            return existing && existing.slice(offset ?? 0, (offset ?? 0) + (limit ?? 0))
+          },
+        },
         channel(existing, { toReference, args }) {
           return (
             existing ||

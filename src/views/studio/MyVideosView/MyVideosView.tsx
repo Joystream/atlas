@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useVideosPage } from '@/api/hooks'
+import { useVideos } from '@/api/hooks'
 import { useDrafts } from '@/hooks'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
@@ -18,21 +18,44 @@ const ROWS_AMOUNT = 4
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  // Drafts calls can run into race conditions
-  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
-  const { currentPage, setCurrentPage } = usePagination(currentTab)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
+  const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
-  const { loading, videos, totalCount, error, fetchMore } = useVideosPage({
-    limit: videosPerPage,
-    offset: videosPerPage * currentPage,
-    where: {
-      channelId_eq: testChannelId,
-      isPublic_eq,
+
+  // Drafts calls can run into race conditions
+  const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
+  const { loading, videos, totalCount, error, fetchMore } = useVideos(
+    {
+      limit: videosPerPage,
+      offset: videosPerPage * currentPage,
+      where: {
+        channelId_eq: testChannelId,
+        isPublic_eq,
+      },
     },
-  })
+    { notifyOnNetworkStatusChange: true }
+  )
+
+  useEffect(() => {
+    if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
+      return
+    }
+
+    const currentOffset = currentPage * videosPerPage
+    const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
+    if (videos.length < targetDisplayedCount) {
+      const missingCount = videosPerPage - videos.length
+      fetchMore({
+        variables: {
+          offset: currentOffset + videos.length,
+          limit: missingCount,
+        },
+      })
+    }
+  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
 
   // hook to tests draft should be deleted before final
   useEffect(() => {
@@ -55,9 +78,7 @@ export const MyVideosView = () => {
     }
   }, [])
 
-  const isDraftTab = currentTabName === 'Drafts'
-  const isLoading = loading || (videos?.length === 0 && (totalCount ?? 0) > 0)
-  const placeholderItems = Array.from({ length: isLoading ? videosPerPage : 0 }, () => ({
+  const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
@@ -67,13 +88,6 @@ export const MyVideosView = () => {
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
-    !isDraftTab &&
-      fetchMore({
-        variables: {
-          offset: videosPerPage * page,
-          limit: videosPerPage,
-        },
-      })
   }
 
   const gridContent = (
@@ -95,12 +109,9 @@ export const MyVideosView = () => {
                 }}
               />
             ))
-        : videosWithPlaceholders
-            // slice off the placeholder items that appar if user clicks the same page twice
-            .slice(0, videosPerPage)
-            .map((video, idx) => (
-              <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
-            ))}
+        : videosWithPlaceholders.map((video, idx) => (
+            <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
+          ))}
     </>
   )
 
@@ -131,9 +142,7 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !isLoading)) && (
-              <EmptyVideos />
-            )}
+            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && <EmptyVideos />}
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}
