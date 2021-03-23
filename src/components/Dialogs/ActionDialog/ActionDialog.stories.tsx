@@ -16,6 +16,8 @@ export default {
     secondaryButtonText: { defaultValue: 'my old friend' },
     showDialog: { table: { disable: true } },
     additionalActionsNode: { table: { disable: true } },
+    warning: { defaultValue: false },
+    error: { defaultValue: false },
   },
   decorators: [
     (Story) => (

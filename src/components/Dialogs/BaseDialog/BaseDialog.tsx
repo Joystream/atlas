@@ -62,7 +62,9 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
     <Portal containerRef={overlayContainerRef}>
       <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
         <StyledContainer className={className}>
-          {exitButton && <StyledExitButton aria-label="close dialog" onClick={onExitClick} icon="close" />}
+          {exitButton && (
+            <StyledExitButton aria-label="close dialog" onClick={onExitClick} icon="close" variant="tertiary" />
+          )}
           {children}
         </StyledContainer>
       </CSSTransition>

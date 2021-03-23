@@ -11,6 +11,7 @@ export const StyledContainer = styled.div`
   width: 90%;
   max-width: 440px;
   min-height: 150px;
+  overflow: hidden;
   margin: ${sizes(32)} auto;
   color: ${colors.white};
   background-color: ${colors.gray[700]};
@@ -22,11 +23,4 @@ export const StyledExitButton = styled(Button)`
   position: absolute;
   top: var(--dialog-padding);
   right: var(--dialog-padding);
-  background-color: ${colors.transparent};
-  border: none;
-  &:hover {
-    background-color: ${colors.transparent};
-  }
-
-  padding: ${sizes(3)};
 `
