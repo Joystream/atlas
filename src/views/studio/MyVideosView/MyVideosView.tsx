@@ -147,7 +147,7 @@ export const MyVideosView = () => {
                 page={currentPage}
                 itemsPerPage={videosPerPage}
                 totalCount={isDraftTab ? drafts.length : totalCount}
-              ></Pagination>
+              />
             </PaginationContainer>
           </>
         )}
