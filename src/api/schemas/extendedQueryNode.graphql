@@ -92,7 +92,6 @@ type Channel {
   follows: Int
 }
 
-# Should I name this VideosCategory?
 type Category {
   id: ID!
   name: String!
@@ -130,7 +129,6 @@ type Video {
   updatedAt: Date
   updatedById: String
   deletedAt: Date
-  # Should I name this VideoCategory?
   category: Category!
   title: String!
   description: String!
@@ -139,12 +137,11 @@ type Video {
   thumbnail: Asset
   Language: Language
   hasMarketing: Boolean
-  # Possible time when videło was published before Joystream
+  # Possible time when video was published before Joystream
   publishedBeforeJoystream: String
   isPublic: Boolean!
   isCensored: Boolean!
   isExplicit: Boolean!
-  # In intro
   media: Asset
   mediaMetadata: VideoMediaMetadata!
   license: License!
