@@ -10,9 +10,3 @@ query GetMembership($where: MembershipWhereUniqueInput!) {
     ...BasicMembershipFields
   }
 }
-
-query GetMemberships($where: MembershipWhereInput) {
-  memberships(where: $where) {
-    ...BasicMembershipFields
-  }
-}

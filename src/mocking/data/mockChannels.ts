@@ -7,6 +7,8 @@ import { languages } from '@/config/languages'
 
 export type MockChannel = AllChannelFieldsFragment
 
+const memberships = Array(3).fill(rawMemberships).flat()
+
 const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => ({
   ...rawChannel,
   __typename: 'Channel',
@@ -14,7 +16,7 @@ const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => 
   coverPhotoUrl: channelPosterSources[idx % channelPosterSources.length],
   createdAt: new Date(rawChannel.createdAt),
   language: languages[Math.floor(Math.random() * languages.length)],
-  member: rawMemberships[Math.floor(Math.random() * rawMemberships.length)],
+  member: memberships[idx],
   isPublic: true,
 }))
 

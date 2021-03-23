@@ -1,30 +1,20 @@
 import { QueryHookOptions } from '@apollo/client'
 import {
+  BasicMembershipFieldsFragment,
   GetMembershipQuery,
   useGetMembershipQuery,
-  GetMembershipsQuery,
-  GetMembershipsQueryVariables,
-  useGetMembershipsQuery,
+  GetMembershipQueryVariables,
 } from '@/api/queries'
 
 type MembershipOpts = QueryHookOptions<GetMembershipQuery>
 
-export const useMembership = (id: string, opts?: MembershipOpts) => {
+export const useMembership = (variables: GetMembershipQueryVariables, opts?: MembershipOpts) => {
   const { data, ...rest } = useGetMembershipQuery({
     ...opts,
-    variables: { where: { id } },
+    variables,
   })
   return {
-    membership: data?.membership,
-    ...rest,
-  }
-}
-
-type MembershipsOpts = QueryHookOptions<GetMembershipsQuery>
-export const useMemberships = (variables?: GetMembershipsQueryVariables, opts?: MembershipsOpts) => {
-  const { data, ...rest } = useGetMembershipsQuery({ ...opts, variables })
-  return {
-    memberships: data?.memberships,
+    membership: data?.membership as BasicMembershipFieldsFragment | undefined,
     ...rest,
   }
 }

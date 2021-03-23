@@ -6,7 +6,7 @@ const regularMockMemberships: BasicMembershipFieldsFragment[] = rawMemberships.m
   ...rawMembership,
   __typename: 'Membership',
   avatarUri: channelAvatarSources[idx % channelAvatarSources.length],
-  controllerAccount: 'POLKADOT_ACCOUNT',
+  controllerAccount: `POLKADOT_ACCOUNT_${idx}`,
 }))
 
 export default regularMockMemberships

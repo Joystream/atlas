@@ -195,11 +195,7 @@ export type VideoWhereUniqueInput = {
 }
 
 export type MembershipWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
-export type MembershipWhereInput = {
-  accountId_eq?: Maybe<Scalars['ID']>
+  controllerAccount: Scalars['ID']
 }
 
 export enum VideoOrderByInput {
@@ -245,7 +241,6 @@ export type Query = {
   coverVideo: CoverVideo
   featuredVideos: Array<FeaturedVideo>
   membership?: Maybe<Membership>
-  memberships: Array<Membership>
   search: Array<SearchFtsOutput>
   video?: Maybe<Video>
   /** Get views count for a single video */
@@ -299,10 +294,6 @@ export type QueryFeaturedVideosArgs = {
 
 export type QueryMembershipArgs = {
   where: MembershipWhereUniqueInput
-}
-
-export type QueryMembershipsArgs = {
-  where?: Maybe<MembershipWhereInput>
 }
 
 export type QuerySearchArgs = {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
+import { useMembership, useChannels } from '@/api/hooks'
+import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import routes from '@/config/routes'
 import { Text, Icon, Button } from '@/shared/components'
 import {
@@ -19,55 +21,47 @@ import {
   StyledLink,
 } from './StudioTopbar.style'
 
-type Channel = {
-  name: string
-  avatar: string
-}
 type ChannelInfoProps = {
   active?: boolean
-  member: string
-  channel: Channel
+  memberName?: string
+  channel: BasicChannelFieldsFragment | undefined
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 type MemberInfoProps = {
-  memberName: string
-  memberAvatar: string
-  hasChannels?: boolean
+  member: BasicMembershipFieldsFragment | undefined
 }
 
 type NavDrawerProps = {
   active?: boolean
-  memberName: string
-  memberAvatar: string
-  channels: Channel[]
-  currentChannel: Channel
-  onCurrentChannelChange: (channel: Channel) => void
+  channels: BasicChannelFieldsFragment[] | undefined
+  currentChannel: BasicChannelFieldsFragment | undefined
+  onCurrentChannelChange: (channelId: string) => void
   onLogoutClick: () => void
   handleClose: () => void
-}
-
-const member = {
-  name: 'Mikael Cowan',
-  avatar: 'https://picsum.photos/300/300',
-  channels: [
-    { name: 'Wild Crypto Fan16', avatar: 'https://picsum.photos/201/300' },
-    { name: 'Mild Crypto Skeptic', avatar: 'https://picsum.photos/202/300' },
-    { name: 'Average Cryptocurrency Enjoyer', avatar: 'https://picsum.photos/203/300' },
-  ],
-}
+} & MemberInfoProps
 
 const StudioTopbar: React.FC = () => {
   const { activeUser, setActiveChannel } = useActiveUser()
-  // TODO Add member fetching
-  const [currentChannel, setCurrentChannel] = useState(member.channels[0])
+  const { channels, error: channelsError } = useChannels(
+    {
+      where: { memberId_eq: activeUser?.memberId },
+    },
+    { skip: activeUser?.memberId === undefined }
+  )
+  const { membership, error: membershipsError } = useMembership(
+    { where: { controllerAccount: activeUser?.accountId as string } },
+    {
+      skip: activeUser?.accountId === undefined,
+    }
+  )
 
+  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const [isDrawerActive, setDrawerActive] = useState(false)
-
   const drawerRef = useRef<HTMLDivElement | null>(null)
 
-  const handleCurrentChannelChange: (channel: Channel) => void = (channel) => {
-    setCurrentChannel(channel)
+  const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
+    setActiveChannel(channelId)
     setDrawerActive(false)
   }
 
@@ -84,6 +78,14 @@ const StudioTopbar: React.FC = () => {
     e.stopPropagation()
     setDrawerActive(!isDrawerActive)
   }
+
+  useEffect(() => {
+    const currentChannel = channels?.find((channel) => channel.id === activeUser?.channelId)
+    if (!currentChannel) {
+      return
+    }
+    setCurrentChannel(currentChannel)
+  }, [activeUser?.channelId, channels])
 
   useEffect(() => {
     if (!isDrawerActive) {
@@ -103,6 +105,13 @@ const StudioTopbar: React.FC = () => {
       document.removeEventListener('click', handleClickOutside, true)
     }
   }, [isDrawerActive])
+
+  if (membershipsError) {
+    throw membershipsError
+  }
+  if (channelsError) {
+    throw channelsError
+  }
 
   return (
     <>
@@ -126,9 +135,8 @@ const StudioTopbar: React.FC = () => {
       <NavDrawer
         ref={drawerRef}
         active={isDrawerActive}
-        memberName={member.name}
-        memberAvatar={member.avatar}
-        channels={member.channels}
+        member={membership}
+        channels={channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
@@ -138,12 +146,12 @@ const StudioTopbar: React.FC = () => {
   )
 }
 
-const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasChannels }) => {
+const MemberInfo: React.FC<MemberInfoProps> = ({ member }) => {
   return (
-    <MemberInfoContainer hasChannels={hasChannels}>
-      <StyledAvatar imageUrl={memberAvatar} />
+    <MemberInfoContainer>
+      <StyledAvatar imageUrl={member?.avatarUri} />
       <MemberTextContainer>
-        <Text>{memberName}</Text>
+        <Text>{member?.handle}</Text>
         <MemberTitleText>Member</MemberTitleText>
       </MemberTextContainer>
     </MemberInfoContainer>
@@ -151,10 +159,10 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 }
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
-  ({ active = false, channel, member, onClick }, ref) => {
+  ({ active = false, channel, memberName, onClick }, ref) => {
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="medium" imageUrl={channel.avatar} />
+        <StyledAvatar size="medium" imageUrl={channel?.avatarPhotoUrl} />
         <TextContainer>
           <Text>{channel ? channel.name : 'New Channel'}</Text>
           <Text>{member}</Text>

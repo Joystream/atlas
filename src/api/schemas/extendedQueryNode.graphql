@@ -219,11 +219,7 @@ input VideoWhereUniqueInput {
 }
 
 input MembershipWhereUniqueInput {
-  id: ID!
-}
-
-input MembershipWhereInput {
-  accountId_eq: ID
+  controllerAccount: ID!
 }
 
 enum VideoOrderByInput {
@@ -248,11 +244,8 @@ enum FeaturedVideoOrderByInput {
 }
 
 type Query {
-  # Lookup a membership by its ID
+  # Lookup a membership by given constraints
   membership(where: MembershipWhereUniqueInput!): Membership
-
-  # List all memberships by given account ID
-  memberships(where: MembershipWhereInput): [Membership!]!
 
   # Lookup a channel by its ID
   channel(where: ChannelWhereUniqueInput!): Channel
