@@ -2,15 +2,16 @@ import { Checkbox } from '@/shared/components'
 import Text from '@/shared/components/Text'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import { StepTitle, StepWrapper } from '../SignInView/SignInView.style'
+import { StepTitle, StepWrapper } from './Steps.style'
 import {
   TermsBox,
   TextWrapper,
   TermsParagraph,
   TermsOverlay,
   ScrollButton,
-  CheckboxWrapper,
+  TermsForm,
   ContinueButton,
 } from './TermsStep.style'
 
@@ -20,6 +21,7 @@ type TermsStepProps = {
 }
 
 const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) => {
+  const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isRead, setIsRead] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
@@ -41,6 +43,13 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
       setIsCheckboxVisible(false)
     }
   }, [scrollPosition])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // do something here
+    onStepChange(currentStepIdx + 1)
+    navigate('new')
+  }
 
   return (
     <StepWrapper>
@@ -96,7 +105,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>
-      <CheckboxWrapper>
+      <TermsForm onSubmit={handleSubmit}>
         <CSSTransition
           in={isRead}
           timeout={parseInt(transitions.timings.loading)}
@@ -109,10 +118,8 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
             label="I’ve read and accept Terms And Conditions"
           />
         </CSSTransition>
-        <ContinueButton disabled={!isAccepted} onClick={() => onStepChange(currentStepIdx + 1)}>
-          Continue
-        </ContinueButton>
-      </CheckboxWrapper>
+        <ContinueButton disabled={!isAccepted}>Continue</ContinueButton>
+      </TermsForm>
     </StepWrapper>
   )
 }

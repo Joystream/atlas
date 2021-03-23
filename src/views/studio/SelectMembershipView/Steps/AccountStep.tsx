@@ -3,8 +3,8 @@ import { AccountBar, Placeholder } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { StepSubTitle, StepTitle, StepWrapper } from '../SignInView/SignInView.style'
 import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
+import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 
 const fakeAccounts = [
   {
@@ -43,6 +43,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
   }
 
   useEffect(() => {
+    // temporary
     const interval = setInterval(() => {
       fetchAccounts()
     }, 2000)

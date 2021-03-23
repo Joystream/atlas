@@ -1,3 +1,4 @@
+import { studioRoutes } from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
@@ -33,7 +34,7 @@ const SignInView: React.FC<SignInViewProps> = ({ onOpenModal }) => {
             Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
           </SubTitle>
           <ButtonGroup>
-            <SignInButton onClick={() => onOpenModal(true)} size="large">
+            <SignInButton to={studioRoutes.selectMembership()} size="large">
               Sign in For Free
             </SignInButton>
             <Button variant="secondary" size="large" to="https://www.joystream.org/">

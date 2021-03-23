@@ -35,7 +35,7 @@ export const ScrollButton = styled(Button)`
   bottom: ${sizes(6)};
   cursor: pointer;
 `
-export const CheckboxWrapper = styled.div`
+export const TermsForm = styled.form`
   margin-top: ${sizes(4)};
   width: 100%;
   display: flex;

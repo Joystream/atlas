@@ -1,4 +1,4 @@
-import { ChannelCard, StudioHeader } from '@/shared/components'
+import { StudioCard, StudioHeader } from '@/shared/components'
 import React, { useState } from 'react'
 import { MemberChannelGrid, Wrapper } from './SelectChannelView.style'
 
@@ -25,14 +25,14 @@ const SelectChannelView = () => {
 
       <MemberChannelGrid>
         {channels?.map((channel) => (
-          <ChannelCard
+          <StudioCard
             key={channel.id}
             avatarPhotoUrl={channel.avatarPhotoUrl}
             follows={channel.follows}
             handle={channel.handle}
           />
         ))}
-        <ChannelCard blank />
+        <StudioCard blank />
       </MemberChannelGrid>
     </Wrapper>
   )
