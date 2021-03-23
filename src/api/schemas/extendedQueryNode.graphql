@@ -244,7 +244,7 @@ enum FeaturedVideoOrderByInput {
 }
 
 type Query {
-  # Lookup a membership by given constraints
+  # Lookup a membership by account ID
   membership(where: MembershipWhereUniqueInput!): Membership
 
   # Lookup a channel by its ID
