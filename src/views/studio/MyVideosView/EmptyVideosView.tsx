@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import bgIllustration, { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
+import { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
+import { ReactComponent as EmptyIllustration } from '@/assets/empty-videos-illustration.svg'
 import { Button, Text } from '@/shared/components'
 import { sizes, colors, breakpoints } from '@/shared/theme'
-import { css } from '@emotion/react'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {
@@ -22,18 +22,30 @@ export const EmptyVideosView: React.FC = () => {
           <Button icon="video-camera">Upload video</Button>
         </div>
       </InnerContainerView>
-      <StyledWellIllustration />
+      <StyledWEmptyIllustration />
     </ContainerView>
   )
 }
 
-const StyledWellIllustration = styled(WellIllustration)`
-  max-width: 300px;
+const StyledWEmptyIllustration = styled(EmptyIllustration)`
   margin: 0 auto;
   grid-row-start: 1;
+
+  max-height: 50vh;
+  max-width: 75vw;
+
   @media screen and (min-width: ${breakpoints.medium}) {
     max-width: initial;
     grid-row-start: initial;
+    max-height: 60vh;
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
+  }
+  @media screen and (min-width: ${breakpoints.xlarge}) {
+    max-height: 70vh;
+  }
+  @media screen and (min-width: ${breakpoints.xxlarge}) {
+    transform: scale(1.2);
   }
 `
 
@@ -42,8 +54,9 @@ const ContainerView = styled.div`
   padding: 0 0 ${sizes(10)} 0;
 
   @media screen and (min-width: ${breakpoints.medium}) {
-    height: 50vh;
-    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    grid-template-columns: auto 1fr;
     margin: ${sizes(20)} auto 0;
   }
 `
@@ -52,15 +65,22 @@ const InnerContainerView = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  align-items: center;
+  @media screen and (min-width: ${breakpoints.medium}) {
+    align-items: initial;
+  }
 `
 
 const MessageView = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: left;
+  text-align: center;
   margin-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
+
   @media screen and (min-width: ${breakpoints.medium}) {
+    text-align: left;
     margin-top: ${sizes(12)};
   }
 `
