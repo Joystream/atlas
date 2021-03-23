@@ -27,8 +27,12 @@ const cache = new InMemoryCache({
         videosConnection: relayStylePagination(getVideoKeyArgs),
         videos: {
           ...offsetLimitPagination(getVideoKeyArgs),
-          read: (existing, { args: { offset, limit } }: { args: GetVideosQueryVariables }) => {
-            return existing && existing.slice(offset ?? 0, (offset ?? 0) + (limit ?? 0))
+          read(existing, { args }: { args: Record<string, GetVideosQueryVariables> | null }) {
+            // Default to returning the entire cached list,
+            // if offset and limit are not provided.
+            const offset = args?.offset ?? 0
+            const limit = args?.limit ?? existing?.length
+            return existing?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
