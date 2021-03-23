@@ -41,7 +41,6 @@ const Template: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
 
 const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
-  const [value, setvalue] = useState(false)
 
   const handler = () => {
     console.log('called')
@@ -51,17 +50,12 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
       <OverlayManagerProvider>
         <Wrapper main={args.main}>
           <VideoPreviewBase
-            isAnyVideoSelected={false}
             {...args}
             publisherMode
-            isSelected={value}
-            onSelectClick={setvalue}
             createdAt={createdAtDate}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
         </Wrapper>
       </OverlayManagerProvider>
@@ -77,7 +71,6 @@ Regular.args = {
   channelAvatarUrl: '',
   createdAt: new Date(),
   publisherMode: false,
-  videoPublishState: 'default',
   showChannel: true,
   showMeta: true,
   duration: 100,
@@ -99,7 +92,6 @@ PublisherDefault.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  isAnyVideoSelected: false,
   videoPublishState: 'default',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
@@ -112,13 +104,11 @@ PublisherDraft.args = {
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
+  isDraft: true,
   showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,
-  publisherMode: true,
-  isAnyVideoSelected: false,
-  videoPublishState: 'draft',
   thumbnailUrl: undefined,
 }
 
@@ -135,17 +125,12 @@ PublisherUnlisted.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  isAnyVideoSelected: false,
   videoPublishState: 'unlisted',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
 const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
-  const [value, setvalue] = useState(false)
-  const [value2, setvalue2] = useState(false)
-  const [value3, setvalue3] = useState(false)
-  const isAnySelected = value || value2 || value3
   const handler = () => {
     console.log('called')
   }
@@ -157,43 +142,28 @@ const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
             {...args}
             publisherMode
             videoPublishState={'default'}
-            isSelected={value2}
-            onSelectClick={setvalue2}
             createdAt={createdAtDate}
-            isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
           <VideoPreviewBase
             {...args}
             publisherMode
-            videoPublishState={'draft'}
-            isSelected={value3}
-            onSelectClick={setvalue3}
+            isDraft
             createdAt={createdAtDate}
             thumbnailUrl={undefined}
-            isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onDeleteVideoClick={handler}
           />
           <VideoPreviewBase
             {...args}
             publisherMode
             videoPublishState={'unlisted'}
-            isSelected={value}
-            onSelectClick={setvalue}
             createdAt={createdAtDate}
-            isAnyVideoSelected={isAnySelected}
-            contextMenuCallbacks={{
-              onEditVideoClick: handler,
-              onCopyVideoURLClick: handler,
-              onDeleteVideoClick: handler,
-            }}
+            onEditVideoClick={handler}
+            onCopyVideoURLClick={handler}
+            onDeleteVideoClick={handler}
           />
         </ContainerMix>
       </OverlayManagerProvider>

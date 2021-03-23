@@ -1,12 +1,12 @@
-import styled from '@emotion/styled'
 import React from 'react'
 import { Routes, Route } from 'react-router'
 import { studioRoutes } from '@/config/routes'
-import { CreateEditChannelView } from '@/views/studio'
+import { CreateEditChannelView, MyVideosView } from '@/views/studio'
 
 const routesMap = [
   { path: studioRoutes.newChannel(), Component: <CreateEditChannelView newChannel /> },
   { path: studioRoutes.editChannel(), Component: <CreateEditChannelView /> },
+  { path: studioRoutes.myVideos(), Component: <MyVideosView /> },
 ]
 
 const StudioRouter = () => {

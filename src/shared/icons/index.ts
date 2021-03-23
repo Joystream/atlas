@@ -8,6 +8,7 @@ export { ReactComponent as BinocularFill } from './binocular-fill.svg'
 export { ReactComponent as Browse } from './browse.svg'
 export { ReactComponent as Books } from './books.svg'
 export { ReactComponent as Block } from './block.svg'
+export { ReactComponent as BringUp } from './bring-up.svg'
 export { ReactComponent as Channels } from './channels.svg'
 export { ReactComponent as ChevronDown } from './chevron-down-big.svg'
 export { ReactComponent as ChevronUp } from './chevron-up-big.svg'
@@ -56,6 +57,7 @@ export { ReactComponent as DialogWarning } from './dialog-warning.svg'
 export { ReactComponent as DialogError } from './dialog-error.svg'
 
 const icons = [
+  'bring-up',
   'bars',
   'bars-play',
   'bars-plus',

@@ -25,12 +25,12 @@ import {
   CoverEditIcon,
   DraftIcon,
   UnlistedIcon,
-  CoverCheckboxContainer,
   CoverNoImage,
   KebabMenuIcon,
   ContextMenuContainer,
   KebabMenuIconContainer,
   CoverRemoveButton,
+  CoverTopLeftContainer,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -38,8 +38,8 @@ import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { ContextMenu, ContextMenuItem, Placeholder } from '..'
-import Checkbox from '../Checkbox'
 import { useContextMenu } from '@/hooks'
+import { PullUp } from './PullUp'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -52,29 +52,27 @@ export type VideoPreviewBaseMetaProps = {
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-type VideoPreviewPublisherProps =
+export type VideoPreviewPublisherProps =
   | {
       publisherMode: true
-      videoPublishState?: 'default' | 'draft' | 'unlisted'
-      isSelected: boolean
-      isAnyVideoSelected: boolean
-      onSelectClick: (value: boolean) => void
-      contextMenuCallbacks: ContextMenuCallbacks
+      isPullupDisabled?: boolean
+      isDraft?: boolean
+      videoPublishState?: 'default' | 'unlisted'
+      onPullupClick?: () => void
+      onEditVideoClick?: () => void
+      onCopyVideoURLClick?: () => void
+      onDeleteVideoClick?: () => void
     }
   | {
-      publisherMode?: false | undefined
-      videoPublishState?: undefined | 'default'
-      isSelected?: undefined
-      isAnyVideoSelected?: undefined
-      onSelectClick?: undefined
-      contextMenuCallbacks?: undefined
+      publisherMode?: false
+      isPullupDisabled?: undefined
+      isDraft?: undefined
+      videoPublishState?: undefined
+      onPullupClick?: undefined
+      onEditVideoClick?: undefined
+      onCopyVideoURLClick?: undefined
+      onDeleteVideoClick?: undefined
     }
-
-type ContextMenuCallbacks = {
-  onEditVideoClick?: () => void
-  onCopyVideoURLClick?: () => void
-  onDeleteVideoClick?: () => void
-}
 
 export type VideoPreviewBaseProps = {
   title?: string
@@ -89,6 +87,7 @@ export type VideoPreviewBaseProps = {
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
+  contentKey?: string
   className?: string
 } & VideoPreviewBaseMetaProps &
   VideoPreviewPublisherProps
@@ -122,14 +121,17 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   removeButton = false,
   videoPublishState = 'default',
   publisherMode = false,
-  isSelected,
-  isAnyVideoSelected,
+  isDraft,
   onChannelClick,
-  onSelectClick,
+  onPullupClick,
   onClick,
   onRemoveButtonClick,
+  contentKey,
   className,
-  contextMenuCallbacks = {},
+  onEditVideoClick,
+  onCopyVideoURLClick,
+  onDeleteVideoClick,
+  isPullupDisabled,
 }) => {
   const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -149,13 +151,6 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
-  const checkboxNode = (
-    <CoverCheckboxContainer>
-      <Checkbox value={!!isSelected} onChange={onSelectClick} />
-    </CoverCheckboxContainer>
-  )
-  const hoverIconNode = publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />
-
   const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
@@ -164,16 +159,12 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   }
 
   const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!href || isAnyVideoSelected) {
+    if (!href) {
       e.preventDefault()
     }
   }
   const handleCoverHoverOverlayClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (isAnyVideoSelected) {
-      onSelectClick?.(!isSelected)
-    } else {
-      onClick?.(e)
-    }
+    onClick?.(e)
   }
   const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
     if (onRemoveButtonClick) {
@@ -192,8 +183,8 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading ? 'placeholder' : 'content'}
-              timeout={parseInt(transitions.timings.regular)}
+              key={isLoading ? 'placeholder' : `content-${contentKey}`}
+              timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
               {isLoading ? (
@@ -203,8 +194,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
-                        darkenImg={videoPublishState !== 'default'}
-                        isAnyVideoSelected={!!isAnyVideoSelected}
+                        darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
                         ref={imgRef}
@@ -213,18 +203,27 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     ) : (
                       <CoverNoImage />
                     )}
-                    {publisherMode && isAnyVideoSelected && checkboxNode}
-                    {videoPublishState !== 'default' && (
+                    {(videoPublishState === 'unlisted' || isDraft) && (
                       <CoverVideoPublishingStateOverlay>
-                        {videoPublishState === 'draft' && <DraftIcon />}
-                        {videoPublishState === 'unlisted' && <UnlistedIcon />}
-                        {videoPublishState}
+                        {isDraft ? <DraftIcon /> : <UnlistedIcon />}
+                        {isDraft ? 'Draft' : 'Unlisted'}
                       </CoverVideoPublishingStateOverlay>
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                      {publisherMode && checkboxNode}
-                      {!isAnyVideoSelected && hoverIconNode}
+                      {publisherMode && (
+                        <CoverTopLeftContainer>
+                          <PullUp
+                            // set to true when video is already on the snackbar
+                            disabled={!!isPullupDisabled}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              onPullupClick && onPullupClick()
+                            }}
+                          />
+                        </CoverTopLeftContainer>
+                      )}
+                      {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
                       {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
                     </CoverHoverOverlay>
                   </Anchor>
@@ -241,8 +240,8 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       </CoverWrapper>
       <SwitchTransition>
         <CSSTransition
-          key={isLoading ? 'placeholder' : 'content'}
-          timeout={parseInt(transitions.timings.regular)}
+          key={isLoading ? 'placeholder' : `content-${contentKey}`}
+          timeout={parseInt(transitions.timings.sharp)}
           classNames={transitions.names.fade}
         >
           <InfoContainer main={main}>
@@ -298,7 +297,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
                     <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
-                      {videoPublishState === 'draft'
+                      {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
                     </MetaText>
@@ -312,19 +311,19 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <KebabMenuIcon />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {contextMenuCallbacks.onEditVideoClick && (
-                    <ContextMenuItem iconName="pencil-fill" onClick={contextMenuCallbacks.onEditVideoClick}>
-                      {videoPublishState === 'draft' ? 'Edit Draft' : 'Edit Video'}
+                  {onEditVideoClick && (
+                    <ContextMenuItem iconName="pencil-fill" onClick={onEditVideoClick}>
+                      {isDraft ? 'Edit Draft' : 'Edit Video'}
                     </ContextMenuItem>
                   )}
-                  {contextMenuCallbacks.onCopyVideoURLClick && (
-                    <ContextMenuItem iconName="link" onClick={contextMenuCallbacks.onCopyVideoURLClick}>
+                  {onCopyVideoURLClick && (
+                    <ContextMenuItem iconName="link" onClick={onCopyVideoURLClick}>
                       Copy Video URL
                     </ContextMenuItem>
                   )}
-                  {contextMenuCallbacks.onDeleteVideoClick && (
-                    <ContextMenuItem iconName="trash" onClick={contextMenuCallbacks.onDeleteVideoClick}>
-                      {videoPublishState === 'draft' ? 'Delete Draft' : 'Delete Video'}
+                  {onDeleteVideoClick && (
+                    <ContextMenuItem iconName="trash" onClick={onDeleteVideoClick}>
+                      {isDraft ? 'Delete Draft' : 'Delete Video'}
                     </ContextMenuItem>
                   )}
                 </ContextMenu>
