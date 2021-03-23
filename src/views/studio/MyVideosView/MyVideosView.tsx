@@ -18,7 +18,6 @@ const ROWS_AMOUNT = 4
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [hasAnyVideos, setHasAnyVideos] = useState<boolean>()
   // Drafts calls can run into race conditions
   const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
   const [currentTab, setCurrentTab] = useState(0)
@@ -34,13 +33,6 @@ export const MyVideosView = () => {
       isPublic_eq,
     },
   })
-  useEffect(() => {
-    if ((typeof totalCount === 'number' && totalCount > 0) || drafts.length > 0) {
-      setHasAnyVideos(true)
-    } else if (typeof totalCount === 'number' && hasAnyVideos === undefined) {
-      setHasAnyVideos(false)
-    }
-  }, [drafts.length, hasAnyVideos, totalCount])
 
   // hook to tests draft should be deleted before final
   useEffect(() => {
@@ -71,7 +63,7 @@ export const MyVideosView = () => {
   }))
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const hasAnyVideo = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+  const hasAnyVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
@@ -92,7 +84,7 @@ export const MyVideosView = () => {
             .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
             .map((draft, idx) => (
               <VideoPreviewPublisher
-                key={idx + '-' + currentTabName + '-' + currentPage}
+                key={idx}
                 id={draft.id}
                 showChannel={false}
                 isDraft
@@ -104,13 +96,7 @@ export const MyVideosView = () => {
               />
             ))
         : videosWithPlaceholders.map((video, idx) => (
-            <VideoPreviewPublisher
-              key={idx + '-' + currentTabName}
-              id={video.id}
-              showChannel={false}
-              isLoading={loading}
-              isPullupDisabled={false}
-            />
+            <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
           ))}
     </>
   )
@@ -119,7 +105,7 @@ export const MyVideosView = () => {
     <StudioContainer>
       <ViewContainer>
         <Text variant="h2">My Videos</Text>
-        {hasAnyVideo ? (
+        {hasAnyVideos ? (
           <EmptyVideosView />
         ) : (
           <>
