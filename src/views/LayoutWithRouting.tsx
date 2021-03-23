@@ -7,6 +7,7 @@ import { Location } from 'history'
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
 import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, PlaygroundView } from '@/views'
+import { UploadEditVideoActionSheet } from '@/views/studio'
 import routes from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { transitions } from '@/shared/theme'
@@ -113,6 +114,7 @@ const LayoutWithRouting: React.FC = () => {
           >
             <Route path={routes.search()} element={<SearchOverlayView />} />
           </CSSTransition>
+          <UploadEditVideoActionSheet />
         </ErrorBoundary>
       </MainContainer>
     </>

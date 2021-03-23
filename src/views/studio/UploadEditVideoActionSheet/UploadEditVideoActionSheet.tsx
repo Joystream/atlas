@@ -1,23 +1,50 @@
 import React, { useState } from 'react'
 
 import styled from '@emotion/styled'
-import { colors, sizes, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopNavbar'
 import { Button } from '@/shared/components'
 import { useMatch, useNavigate } from 'react-router-dom'
 import { studioRoutes } from '@/config/routes'
+import { animated, config, useSpring, useTransition } from 'react-spring'
+import useMeasure from 'react-use-measure'
 
-export const UploadEditVideoActionSheet: React.FC = () => {
-  const [isMinimized, setIsMinimized] = useState(false)
+export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
+
+export type SheetState = 'closed' | 'open' | 'minimized'
+type UploadEditVideoActionSheetProps = {
+  // setSheetState?: (sheetState: SheetState) => void
+  // sheetState: SheetState
+}
+export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProps> = () => {
+  const [sheetState, setSheetState] = useState<SheetState>('minimized')
   const navigate = useNavigate()
   const uploadVideoMatch = useMatch({ path: `${studioRoutes.uploadVideo()}` })
+  const [ref, bounds] = useMeasure()
+  const { ...props } = useSpring({
+    duration: transitions.timings.sharp,
+    transform:
+      sheetState === 'open'
+        ? `translateY(0)`
+        : sheetState === 'closed'
+        ? `translateY(${bounds.height}px)`
+        : `translateY(${bounds.height ? bounds.height - UploadEditVideoActionSheetBarHeight : 10000}px)`,
+  })
+  console.log({ uploadVideoMatch, sheetState, vw: bounds.height - UploadEditVideoActionSheetBarHeight })
 
   return (
-    <Container role="dialog" minimize={!!uploadVideoMatch}>
+    <Container ref={ref} role="dialog" style={{ ...props }}>
       <Topbar>
         <TabsContainer>
           tab 1
-          <Button variant="tertiary" onClick={() => {}}>
+          <Button
+            variant="tertiary"
+            onClick={() => {
+              navigate('/studio')
+              setSheetState?.('open')
+              console.log('open')
+            }}
+          >
             +
           </Button>
         </TabsContainer>
@@ -25,7 +52,15 @@ export const UploadEditVideoActionSheet: React.FC = () => {
           <Button
             variant="tertiary"
             onClick={() => {
-              navigate('/studio')
+              if (sheetState === 'open') {
+                setSheetState?.('minimized')
+                navigate('/studio')
+                console.log('minimize')
+              } else if (sheetState === 'minimized') {
+                setSheetState?.('open')
+                navigate('/studio/upload')
+                console.log('minimize')
+              }
             }}
           >
             -
@@ -34,6 +69,8 @@ export const UploadEditVideoActionSheet: React.FC = () => {
             variant="tertiary"
             onClick={() => {
               navigate('/studio')
+              setSheetState?.('closed')
+              console.log('close')
             }}
           >
             x
@@ -44,11 +81,15 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   )
 }
 
-type ContainerProps = { minimize?: boolean }
-const Container = styled.div<ContainerProps>`
-  --upload-video-action-sheet-bar-height: ${sizes(14)};
-  ${({ minimize }) => !minimize && `transform: translateY(calc(100% - var(--upload-video-action-sheet-bar-height)))`};
+const getViewportHeight = (v: number) => {
+  const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+  return (v * h) / 100
+}
 
+type ContainerProps = { minimize?: boolean }
+const Container = styled(animated.div)`
+  --upload-video-action-sheet-bar-height: ${UploadEditVideoActionSheetBarHeight}px;
+  transform: translateY(100%);
   position: fixed;
   z-index: ${zIndex.nearOverlay};
   top: ${TOP_NAVBAR_HEIGHT}px;

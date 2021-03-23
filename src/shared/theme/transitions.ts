@@ -6,13 +6,13 @@ const transitions = {
     regular: '400ms',
     routingSearchOverlay: '400ms',
     routing: '300ms',
+    sharp: '125ms',
   },
   names: {
     fade: 'fade',
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
     slideDown: 'slide-down',
-    slideUp: 'slide-up',
     dialog: 'dialog',
   },
 }
