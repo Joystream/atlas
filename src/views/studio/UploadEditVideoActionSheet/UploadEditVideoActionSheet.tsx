@@ -28,7 +28,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
         ? `translateY(0)`
         : sheetState === 'closed'
         ? `translateY(${bounds.height}px)`
-        : `translateY(${bounds.height ? bounds.height - UploadEditVideoActionSheetBarHeight : 10000}px)`,
+        : `translateY(${bounds.height ? bounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000}px)`,
   })
   console.log({ uploadVideoMatch, sheetState, vw: bounds.height - UploadEditVideoActionSheetBarHeight })
 
