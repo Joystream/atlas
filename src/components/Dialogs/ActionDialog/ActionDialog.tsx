@@ -1,6 +1,11 @@
 import React from 'react'
 import BaseDialog, { BaseDialogProps } from '../BaseDialog'
-import { ActionsContainer, ButtonsContainer, AdditionalActionsContainer } from './ActionDialog.style'
+import {
+  ActionsContainer,
+  ButtonsContainer,
+  AdditionalActionsContainer,
+  StyledPrimaryButton,
+} from './ActionDialog.style'
 import { Button } from '@/shared/components'
 
 export type ActionDialogProps = {
@@ -9,6 +14,8 @@ export type ActionDialogProps = {
   secondaryButtonText?: string
   onPrimaryButtonClick?: (e: React.MouseEvent) => void
   onSecondaryButtonClick?: (e: React.MouseEvent) => void
+  warning?: boolean
+  error?: boolean
 } & BaseDialogProps
 
 const ActionDialog: React.FC<ActionDialogProps> = ({
@@ -17,6 +24,8 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   secondaryButtonText,
   onPrimaryButtonClick,
   onSecondaryButtonClick,
+  warning,
+  error,
   children,
   ...baseDialogProps
 }) => {
@@ -29,7 +38,11 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
-            {primaryButtonText && <Button onClick={onPrimaryButtonClick}>{primaryButtonText}</Button>}
+            {primaryButtonText && (
+              <StyledPrimaryButton onClick={onPrimaryButtonClick} warning={warning} error={error}>
+                {primaryButtonText}
+              </StyledPrimaryButton>
+            )}
             {secondaryButtonText && (
               <Button variant="secondary" onClick={onSecondaryButtonClick}>
                 {secondaryButtonText}
