@@ -51,6 +51,9 @@ export { ReactComponent as External } from './external.svg'
 export { ReactComponent as AddVideo } from './add-video.svg'
 export { ReactComponent as NewChannel } from './new-channel.svg'
 export { ReactComponent as Logout } from './logout.svg'
+export { ReactComponent as DialogSuccess } from './dialog-success.svg'
+export { ReactComponent as DialogWarning } from './dialog-warning.svg'
+export { ReactComponent as DialogError } from './dialog-error.svg'
 
 const icons = [
   'bars',
@@ -106,6 +109,9 @@ const icons = [
   'add-video',
   'new-channel',
   'logout',
+  'dialog-success',
+  'dialog-warning',
+  'dialog-error',
 ] as const
 
 export type IconType = typeof icons[number]
