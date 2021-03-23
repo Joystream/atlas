@@ -1,8 +1,9 @@
-import { Button } from '@/shared/components'
-import { breakpoints } from '@/shared/theme'
+import { StudioContainer } from '@/components'
+import { Button, Text } from '@/shared/components'
+import { breakpoints, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(StudioContainer)`
   display: flex;
   flex-wrap: wrap;
   margin-left: auto;
@@ -27,6 +28,11 @@ export const Form = styled.form`
 export const StyledButton = styled(Button)`
   display: block;
   cursor: pointer;
-  margin-top: 50px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   margin-left: auto;
+`
+export const StyledText = styled(Text)`
+  color: ${colors.gray[300]};
+  margin-top: ${sizes(3)};
 `

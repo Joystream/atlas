@@ -23,7 +23,7 @@ export const AccountAvatar = styled(Avatar)`
   margin-right: ${sizes(3)};
 `
 export const IconWrapper = styled.div`
-  background-color: rgba(256, 256, 256, 0.06);
+  background-color: ${colors.transparentWhite[6]};
   border-radius: 100%;
   margin-right: ${sizes(3)};
   width: ${sizes(12)};
@@ -34,7 +34,7 @@ export const IconWrapper = styled.div`
   svg {
     width: ${sizes(4)};
     height: ${sizes(4)};
-    color: rgba(256, 256, 256, 0.32);
+    color: ${colors.transparentWhite[32]};
   }
 `
 

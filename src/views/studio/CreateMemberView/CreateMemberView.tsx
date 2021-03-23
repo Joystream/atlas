@@ -1,9 +1,13 @@
-import { StudioHeader, TextField } from '@/shared/components'
+import { ActionDialog } from '@/components/Dialogs'
+import { Spinner, StudioHeader, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
-import React, { useState } from 'react'
-import { Form, StyledButton, Wrapper } from './CreateMemberView.style'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { Form, StyledButton, Wrapper, StyledText } from './CreateMemberView.style'
 
 const CreateMemberView = () => {
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     handle: '',
     userName: '',
@@ -17,9 +21,25 @@ const CreateMemberView = () => {
     })
   }
 
+  useEffect(() => {
+    if (!loading) {
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      setLoading(false)
+      navigate('/studio/membership')
+    }, 3000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [loading, navigate])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // do something here
+    setLoading(true)
   }
 
   return (
@@ -34,6 +54,14 @@ const CreateMemberView = () => {
         <TextArea name="about" placeholder="About" onChange={handleChange} />
         <StyledButton>Next</StyledButton>
       </Form>
+      <ActionDialog showDialog={loading} exitButton={false}>
+        <Spinner />
+        <Text variant="h4">Creating Membership...</Text>
+        <StyledText variant="body2">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero rem facilis assumenda consequuntur nostrum
+          inventore earum molestias ab quidem odio!
+        </StyledText>
+      </ActionDialog>
     </Wrapper>
   )
 }

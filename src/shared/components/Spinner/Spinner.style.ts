@@ -12,8 +12,8 @@ export const SpinnerWrapper = styled.div<SpinnerWrapperProps>`
   font-size: ${({ size = 32 }) => size}px;
   width: 1em;
   height: 1em;
-  border: 0.1em solid ${colors.transparentWhite[32]};
-  border-left: 0.1em solid ${colors.white};
+  border: 0.09em solid ${colors.gray[500]};
+  border-left: 0.09em solid ${colors.blue[500]};
   margin-bottom: ${sizes(4)};
   animation: load 1s infinite linear;
   @keyframes load {

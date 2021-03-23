@@ -36,3 +36,17 @@ export const StyledAvatar = styled(Avatar)`
   width: 120px;
   height: 120px;
 `
+export const IconWrapper = styled.div`
+  background-color: ${colors.transparentWhite[6]};
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    width: ${sizes(6)};
+    height: ${sizes(6)};
+    color: ${colors.transparentWhite[32]};
+  }
+`
