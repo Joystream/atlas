@@ -1,8 +1,9 @@
+import { StudioContainer } from '@/components'
 import { Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(StudioContainer)`
   display: flex;
   margin-left: auto;
   margin-right: auto;

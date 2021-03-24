@@ -1,3 +1,4 @@
+import routes from '@/config/routes'
 import { StudioCard, StudioHeader } from '@/shared/components'
 import React, { useState } from 'react'
 import { MemberChannelGrid, Wrapper } from './SelectChannelView.style'
@@ -26,13 +27,14 @@ const SelectChannelView = () => {
       <MemberChannelGrid>
         {channels?.map((channel) => (
           <StudioCard
+            variant="channel"
             key={channel.id}
             avatarPhotoUrl={channel.avatarPhotoUrl}
             follows={channel.follows}
             handle={channel.handle}
           />
         ))}
-        <StudioCard blank />
+        <StudioCard blank variant="channel" handle="Create a Channel" to={routes.newChannel()} />
       </MemberChannelGrid>
     </Wrapper>
   )
