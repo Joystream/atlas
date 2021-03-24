@@ -18,7 +18,6 @@ export default {
   playground: () => '/playground',
   video: (id = ':id') => `/video/${id}`,
   videos: () => '/videos',
-  myVideos: () => '/studio/videos',
   studio: () => `/studio`,
   studioNewChannel: () => '/studio/channel/new',
   studioEditChannel: () => '/studio/channel',
