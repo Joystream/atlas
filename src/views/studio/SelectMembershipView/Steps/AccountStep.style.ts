@@ -14,7 +14,6 @@ export const StyledSpinner = styled(Spinner)`
 export const AccountsWrapper = styled.div`
   width: 100%;
   max-height: 300px;
-  padding-right: 24px;
   overflow-y: auto;
   margin-bottom: 30px;
 `
