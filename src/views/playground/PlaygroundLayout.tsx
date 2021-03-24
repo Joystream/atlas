@@ -3,9 +3,16 @@ import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
 import { DraftsProvider, UploadingFilesDataProvider, ActiveUserProvider } from '@/hooks'
-import PlaygroundRouter from './PlaygroundRouter'
+import { Route, Routes } from 'react-router'
+import {
+  PlaygroundDrafts,
+  PlaygroundMemberChannel,
+  PlaygroundUploadingFilesData,
+  PlaygroundValidationForm,
+  VideoMetaData,
+} from './Playgrounds'
 
-export const PlaygroundView = () => {
+export const PlaygroundLayout = () => {
   return (
     <DraftsProvider>
       <UploadingFilesDataProvider>
@@ -19,7 +26,13 @@ export const PlaygroundView = () => {
               <Link to="./uploading-files-data">Uploading Files Data</Link>
               <Link to="./member-active-channel">Active user/member/channel</Link>
             </LinksContainer>
-            <PlaygroundRouter />
+            <Routes>
+              <Route path="/validation-form" element={<PlaygroundValidationForm />} />
+              <Route path="/drafts" element={<PlaygroundDrafts />} />
+              <Route path="/video-metadata" element={<VideoMetaData />} />
+              <Route path="/uploading-files-data" element={<PlaygroundUploadingFilesData />} />
+              <Route path="/member-active-channel" element={<PlaygroundMemberChannel />} />
+            </Routes>
           </Container>
         </ActiveUserProvider>
       </UploadingFilesDataProvider>
@@ -41,4 +54,4 @@ const LinksContainer = styled.div`
   }
 `
 
-export default PlaygroundView
+export default PlaygroundLayout

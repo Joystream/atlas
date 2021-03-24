@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { Avatar, Text, Button, TOP_NAVBAR_HEIGHT } from '@/shared/components'
-import TopbarBase from '../../shared/components/TopbarBase'
+import { Avatar, Text, Button } from '@/shared/components'
+import TopbarBase from '../TopbarBase'
+import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
 
 type CommonStudioTopbarProps = {
   isActive?: boolean

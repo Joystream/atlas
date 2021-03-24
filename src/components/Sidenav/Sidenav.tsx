@@ -24,8 +24,8 @@ import HamburgerButton from '@/shared/components/HamburgerButton'
 import routes from '@/config/routes'
 
 type NavSubitem = {
-  name?: string
-  expandedName: string
+  name: string
+  expandedName?: string
 }
 type NavItemType = {
   subitems?: NavSubitem[]
@@ -73,12 +73,12 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               to={item.to}
               expanded={expanded}
               subitems={item.subitems}
-              itemName={item.name || item.expandedName}
+              itemName={item.name}
               onClick={closeSideNav}
               isStudio={isStudio}
             >
               <Icon name={item.icon} />
-              <span>{item.expandedName}</span>
+              <span>{item.expandedName || item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>
@@ -97,7 +97,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               variant="secondary"
               onClick={closeSideNav}
               icon="external"
-              to={isStudio ? routes.index() : routes.studio()}
+              to={isStudio ? routes.viewer.index() : routes.studio.index()}
             >
               Joystream {!isStudio && 'studio'}
             </Button>
