@@ -21,12 +21,16 @@ export default {
   myVideos: () => '/studio/videos',
   studio: () => `/studio`,
   studioNewChannel: () => '/studio/channel/new',
+  studioEditChannel: () => '/studio/channel',
+  studioVideos: () => '/studio/videos',
+  studioUploads: () => '/studio/uploads',
 }
 
 export const studioRoutes = {
   newChannel: () => '/channel/new',
-  editChannel: () => `/channel`,
-  myVideos: () => '/videos',
+  editChannel: () => '/channel',
+  videos: () => '/videos',
+  uploads: () => '/uploads',
 }
 
 export const QUERY_PARAMS = {
