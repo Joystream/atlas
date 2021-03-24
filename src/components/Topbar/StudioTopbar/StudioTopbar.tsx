@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
-import { useMembership, useChannels } from '@/api/hooks'
+import { useMemberships } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import routes from '@/config/routes'
 import { Text, Icon, Button } from '@/shared/components'
@@ -43,25 +43,32 @@ type NavDrawerProps = {
 
 const StudioTopbar: React.FC = () => {
   const { activeUser, setActiveChannel } = useActiveUser()
-  const { channels, error: channelsError } = useChannels(
+  const { memberships, loading, error } = useMemberships(
     {
-      where: { memberId_eq: activeUser?.memberId },
+      where: { controllerAccount_eq: activeUser?.accountId as string },
     },
-    { skip: activeUser?.memberId === undefined }
-  )
-  const { membership, error: membershipsError } = useMembership(
-    { where: { controllerAccount: activeUser?.accountId as string } },
     {
       skip: activeUser?.accountId === undefined,
+      onCompleted: () => {
+        const member = memberships?.find((member) => member.id === activeUser?.memberId)
+        const channel = member?.channels.find((channel) => channel.id === activeUser?.channelId)
+        setCurrentMember(member)
+        setCurrentChannel(channel)
+      },
     }
   )
-
+  const [currentMember, setCurrentMember] = useState<BasicMembershipFieldsFragment>()
   const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
 
   const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
+    const channel = currentMember?.channels.find((channel) => channel.id === channelId)
+    if (!channel) {
+      return
+    }
     setActiveChannel(channelId)
+    setCurrentChannel(channel)
     setDrawerActive(false)
   }
 
@@ -78,14 +85,6 @@ const StudioTopbar: React.FC = () => {
     e.stopPropagation()
     setDrawerActive(!isDrawerActive)
   }
-
-  useEffect(() => {
-    const currentChannel = channels?.find((channel) => channel.id === activeUser?.channelId)
-    if (!currentChannel) {
-      return
-    }
-    setCurrentChannel(currentChannel)
-  }, [activeUser?.channelId, channels])
 
   useEffect(() => {
     if (!isDrawerActive) {
@@ -106,11 +105,8 @@ const StudioTopbar: React.FC = () => {
     }
   }, [isDrawerActive])
 
-  if (membershipsError) {
-    throw membershipsError
-  }
-  if (channelsError) {
-    throw channelsError
+  if (error) {
+    throw error
   }
 
   return (
@@ -135,8 +131,8 @@ const StudioTopbar: React.FC = () => {
       <NavDrawer
         ref={drawerRef}
         active={isDrawerActive}
-        member={membership}
-        channels={channels}
+        member={currentMember}
+        channels={currentMember?.channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}

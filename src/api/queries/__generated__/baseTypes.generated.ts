@@ -23,6 +23,7 @@ export type Membership = {
   handle: Scalars['String']
   avatarUri?: Maybe<Scalars['String']>
   controllerAccount: Scalars['ID']
+  channels: Array<Channel>
 }
 
 export type Channel = {
@@ -33,7 +34,6 @@ export type Channel = {
   description?: Maybe<Scalars['String']>
   coverPhotoUrl?: Maybe<Scalars['String']>
   avatarPhotoUrl?: Maybe<Scalars['String']>
-  member: Membership
   isPublic: Scalars['Boolean']
   isCurated: Scalars['Boolean']
   language?: Maybe<Language>
@@ -195,7 +195,11 @@ export type VideoWhereUniqueInput = {
 }
 
 export type MembershipWhereUniqueInput = {
-  controllerAccount: Scalars['ID']
+  id: Scalars['ID']
+}
+
+export type MembershipWhereInput = {
+  controllerAccount_eq: Scalars['ID']
 }
 
 export enum VideoOrderByInput {
@@ -241,6 +245,7 @@ export type Query = {
   coverVideo: CoverVideo
   featuredVideos: Array<FeaturedVideo>
   membership?: Maybe<Membership>
+  memberships: Array<Membership>
   search: Array<SearchFtsOutput>
   video?: Maybe<Video>
   /** Get views count for a single video */
@@ -294,6 +299,10 @@ export type QueryFeaturedVideosArgs = {
 
 export type QueryMembershipArgs = {
   where: MembershipWhereUniqueInput
+}
+
+export type QueryMembershipsArgs = {
+  where: MembershipWhereInput
 }
 
 export type QuerySearchArgs = {

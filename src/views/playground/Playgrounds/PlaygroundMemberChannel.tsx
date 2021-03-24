@@ -1,47 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import { useMembership, useChannels } from '@/api/hooks'
+import { useMemberships } from '@/api/hooks'
 import { useActiveUser } from '@/hooks'
+import { BasicMembershipFieldsFragment, BasicChannelFieldsFragment } from '@/api/queries'
 import { Button, RadioButton } from '@/shared/components'
 
-const accounts = Array(4)
-  .fill('')
-  .map((_, idx) => `POLKADOT_ACCOUNT_${idx}`)
+const account = 'POLKADOT_ACCOUNT'
 
 const PlaygroundMemberChannel = () => {
-  const [selectedAccount, setSelectedAccount] = useState('')
-  const [selectedChannel, setSelectedChannel] = useState('')
+  const [selectedChannel, setSelectedChannel] = useState<BasicChannelFieldsFragment>()
+  const [selectedMember, setSelectedMember] = useState<BasicMembershipFieldsFragment>()
   const [activeUserString, setActiveUserString] = useState('')
 
-  const { activeUser, setActiveUser, setActiveChannel, removeActiveUser } = useActiveUser()
-  const { membership, loading: membershipsLoading, error: membershipsError } = useMembership(
-    {
-      where: { controllerAccount: selectedAccount },
-    },
-    { skip: selectedAccount === '' }
-  )
-  const { channels, loading: channelsLoading, error: channelsError } = useChannels(
-    {
-      where: { memberId_eq: membership?.id },
-    },
-    { skip: membership?.id === undefined }
-  )
+  const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
+  const { memberships, loading: membershipsLoading, error: membershipsError } = useMemberships({
+    where: { controllerAccount_eq: account },
+  })
 
-  const handleActiveAccountChange = (e: React.MouseEvent<HTMLInputElement>) => {
+  const handleActiveMemberChange = (e: React.MouseEvent<HTMLInputElement>) => {
     const element = e.currentTarget
-    setSelectedAccount(element.value)
-    if (!membership) {
+    const member = memberships?.find((membership) => membership.id === element.value)
+    if (!member) {
       return
     }
-    setActiveUser({ accountId: element.value, memberId: membership?.id, channelId: null })
+    setSelectedMember(member)
+    setActiveMember(member?.id)
   }
   const handleActiveChannelChange = (e: React.MouseEvent<HTMLInputElement>) => {
     const element = e.currentTarget
-    setSelectedChannel(element.value)
-    setActiveChannel(element.value)
+    const channel = selectedMember?.channels.find((channel) => channel.id === element.value)
+    if (!channel) {
+      return
+    }
+    setSelectedChannel(channel)
+    setActiveChannel(channel.id)
   }
 
   const handleAddUser = () => {
-    setActiveUser({ accountId: selectedAccount, memberId: membership?.id || null, channelId: selectedChannel })
+    setActiveUser({ accountId: account, memberId: selectedMember?.id || null, channelId: selectedChannel?.id || null })
   }
 
   useEffect(() => {
@@ -51,42 +46,37 @@ const PlaygroundMemberChannel = () => {
   if (membershipsError) {
     throw membershipsError
   }
-  if (channelsError) {
-    throw channelsError
-  }
 
   return (
     <>
       <h1>Account/Member/Channel ID from local storage</h1>
       <pre>{activeUserString}</pre>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <p>Select active account:</p>
-        {accounts.map((account) => (
-          <RadioButton
-            key={account}
-            name="radio-group"
-            value={account}
-            selectedValue={selectedAccount}
-            onClick={handleActiveAccountChange}
-            label={account}
-          />
-        ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <p>Selected membership:</p>
-        {membershipsLoading ? 'Loading...' : membership?.handle}
+        <p>Select active member:</p>
+        {membershipsLoading
+          ? 'Loading...'
+          : memberships?.map((member) => (
+              <RadioButton
+                key={member.id}
+                name="radio-group"
+                value={member.id}
+                selectedValue={selectedMember?.id}
+                onClick={handleActiveMemberChange}
+                label={member.handle}
+              />
+            ))}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <p>Select active channel:</p>
-        {channelsLoading
+        {membershipsLoading
           ? 'Loading...'
-          : channels &&
-            channels.map((channel) => (
+          : selectedMember &&
+            selectedMember.channels.map((channel) => (
               <RadioButton
                 key={channel.id}
                 name="radio-group"
                 value={channel.id}
-                selectedValue={selectedChannel}
+                selectedValue={selectedChannel?.id}
                 onClick={handleActiveChannelChange}
                 label={channel.handle}
               />

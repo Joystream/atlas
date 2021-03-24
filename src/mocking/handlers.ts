@@ -38,6 +38,9 @@ import {
   GetMembershipQuery,
   GetMembershipQueryVariables,
   GetMembershipDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
+  GetMembershipsDocument,
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
@@ -53,7 +56,7 @@ import {
   createSingleItemAccessor,
   createTotalCountAccessor,
   createVideoViewsAccessor,
-  createMembershipAccessor,
+  createMembershipsAccessor,
 } from './accessors'
 import { createStore } from './store'
 import {
@@ -121,7 +124,12 @@ const queryNodeHandlers = [
   createQueryHandler<GetMembershipQuery, GetMembershipQueryVariables>(
     queryNode,
     GetMembershipDocument,
-    createMembershipAccessor(mockMemberships)
+    createSingleItemAccessor(mockMemberships)
+  ),
+  createQueryHandler<GetMembershipsQuery, GetMembershipsQueryVariables>(
+    queryNode,
+    GetMembershipsDocument,
+    createMembershipsAccessor(mockMemberships)
   ),
 
   // misc
