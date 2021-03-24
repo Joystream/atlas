@@ -25,17 +25,20 @@ StudioView.displayName = 'StudioView'
 const PUBLISHING_SIDENAVBAR_ITEMS: NavItemType[] = [
   {
     icon: 'my-videos',
-    name: 'My Videos',
+    name: 'Videos',
+    expandedName: 'My Videos',
     to: routes.studioVideos(),
   },
   {
     icon: 'my-channel',
-    name: 'My Channel',
+    name: 'Channel',
+    expandedName: 'My Channel',
     to: routes.studioEditChannel(),
   },
   {
     icon: 'my-uploads',
-    name: 'My Uploads',
+    name: 'Uploads',
+    expandedName: 'My Uploads',
     to: routes.studioUploads(),
   },
 ]
@@ -43,17 +46,17 @@ const PUBLISHING_SIDENAVBAR_ITEMS: NavItemType[] = [
 const VIEWER_SIDENAVBAR_ITEMS: NavItemType[] = [
   {
     icon: 'home-fill',
-    name: 'Home',
+    expandedName: 'Home',
     to: routes.index(),
   },
   {
     icon: 'videos',
-    name: 'Videos',
+    expandedName: 'Videos',
     to: routes.videos(),
   },
   {
     icon: 'channels',
-    name: 'Channels',
+    expandedName: 'Channels',
     to: routes.channels(),
   },
 ]
