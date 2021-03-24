@@ -32,6 +32,7 @@ export type VideoFieldsFragment = {
   duration: number
   thumbnailUrl: string
   createdAt: Date
+  isPublic: boolean
   category: { __typename?: 'Category'; id: string }
   media: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
@@ -65,10 +66,15 @@ export type GetVideosConnectionQuery = {
 }
 
 export type GetVideosQueryVariables = Types.Exact<{
+  offset?: Types.Maybe<Types.Scalars['Int']>
+  limit?: Types.Maybe<Types.Scalars['Int']>
   where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
-export type GetVideosQuery = { __typename?: 'Query'; videos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> }
+export type GetVideosQuery = {
+  __typename?: 'Query'
+  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
+}
 
 export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never }>
 
@@ -150,6 +156,7 @@ export const VideoFieldsFragmentDoc = gql`
     duration
     thumbnailUrl
     createdAt
+    isPublic
     media {
       ...VideoMediaFields
     }
@@ -264,8 +271,8 @@ export type GetVideosConnectionQueryResult = Apollo.QueryResult<
   GetVideosConnectionQueryVariables
 >
 export const GetVideosDocument = gql`
-  query GetVideos($where: VideoWhereInput) {
-    videos(where: $where) {
+  query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput) {
+    videos(offset: $offset, limit: $limit, where: $where) {
       ...VideoFields
     }
   }
@@ -284,6 +291,8 @@ export const GetVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetVideosQuery({
  *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *      where: // value for 'where'
  *   },
  * });

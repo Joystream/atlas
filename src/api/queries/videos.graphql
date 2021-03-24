@@ -37,6 +37,7 @@ fragment VideoFields on Video {
   duration
   thumbnailUrl
   createdAt
+  isPublic
   media {
     ...VideoMediaFields
   }
@@ -75,8 +76,8 @@ query GetVideosConnection(
   }
 }
 
-query GetVideos($where: VideoWhereInput) {
-  videos(where: $where) {
+query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput) {
+  videos(offset: $offset, limit: $limit, where: $where) {
     ...VideoFields
   }
 }

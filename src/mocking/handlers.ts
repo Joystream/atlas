@@ -17,9 +17,9 @@ import {
   GetChannelsConnectionQueryVariables,
   GetChannelsDocument,
   GetChannelsQuery,
-  GetChannelVideoCountDocument,
-  GetChannelVideoCountQuery,
-  GetChannelVideoCountQueryVariables,
+  GetVideoCountDocument,
+  GetVideoCountQuery,
+  GetVideoCountQueryVariables,
   GetFeaturedVideosDocument,
   GetFeaturedVideosQuery,
   GetFeaturedVideosQueryVariables,
@@ -80,9 +80,9 @@ const queryNodeHandlers = [
     GetVideosConnectionDocument,
     createCursorPaginationAccessor<GetVideosConnectionQuery['videosConnection']>(mockVideos)
   ),
-  createQueryHandler<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
+  createQueryHandler<GetVideoCountQuery, GetVideoCountQueryVariables>(
     queryNode,
-    GetChannelVideoCountDocument,
+    GetVideoCountDocument,
     createTotalCountAccessor(mockVideos)
   ),
   createQueryHandler<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>(

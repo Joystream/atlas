@@ -3,6 +3,7 @@ import { addDraft, clearDrafts, getDraft, getDrafts, removeDraft, updateDraft } 
 
 export type CommonDraftProps = {
   id: string
+  channelId: string
   updatedAt: string
 }
 
@@ -42,6 +43,7 @@ export const DraftsProvider: React.FC = ({ children }) => {
   const fetchDrafts = useCallback(async () => {
     const currentDrafts = await getDrafts()
     const videos = currentDrafts.filter((draft): draft is VideoDraft => draft.type === 'video')
+
     setDraftsState({
       videos,
     })
@@ -62,7 +64,7 @@ export const useContextDrafts = () => {
   return ctx
 }
 
-export const useDrafts = (type: DraftType) => {
+export const useDrafts = (type: DraftType, channelId?: string) => {
   const { draftsState, fetchDrafts } = useContextDrafts()
 
   const getSingleDraft = useCallback(async (draftId: string) => {
@@ -89,24 +91,28 @@ export const useDrafts = (type: DraftType) => {
   )
 
   const discardDraft = useCallback(
-    async (draftId: string) => {
-      await removeDraft(draftId)
+    async (draftIds: string | string[]) => {
+      await removeDraft(draftIds)
       fetchDrafts()
     },
     [fetchDrafts]
   )
 
-  const discardAllDrafts = useCallback(async () => {
-    clearDrafts()
-    fetchDrafts()
-  }, [fetchDrafts])
+  const discardAllDrafts = useCallback(
+    async (channelId?: string) => {
+      await clearDrafts(channelId)
+      fetchDrafts()
+    },
+    [fetchDrafts]
+  )
 
   return {
-    drafts: type === 'video' ? draftsState.videos : [],
+    drafts:
+      type === 'video' ? draftsState.videos.filter((draft) => (channelId ? draft.channelId === channelId : true)) : [],
     updateDraft: updateSingleDraft,
     addDraft: createSingleDraft,
     getDraft: getSingleDraft,
     removeDraft: discardDraft,
     removeAllDrafts: discardAllDrafts,
-  }
+  } as const
 }

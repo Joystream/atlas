@@ -28,7 +28,7 @@ query GetChannel($where: ChannelWhereUniqueInput!) {
   }
 }
 
-query GetChannelVideoCount($where: VideoWhereInput) {
+query GetVideoCount($where: VideoWhereInput) {
   videosConnection(first: 0, where: $where) {
     totalCount
   }
