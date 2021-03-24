@@ -1,5 +1,5 @@
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
-import { Button } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
@@ -12,16 +12,20 @@ type ExpandableElementProps = {
   expanded?: boolean
 }
 
+type SidebarNavProps = {
+  isStudio?: boolean
+} & ExpandableElementProps
+
 type SubItemProps = {
   subitemsHeight?: number
 } & ExpandableElementProps
 
 type SidebarNavLinkProps = {
   content: string
-} & ExpandableElementProps &
+} & SidebarNavProps &
   LinkProps
 
-export const SidebarNav = styled.nav<ExpandableElementProps>`
+export const SidebarNav = styled.nav<SidebarNavProps>`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -34,12 +38,14 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
 
   overflow: hidden;
   color: ${colors.white};
-  background-color: ${colors.gray[700]};
+  background-color: ${({ isStudio }) => (isStudio ? colors.gray[800] : colors.gray[700])};
 `
 
 export const LogoLink = styled(Link)`
+  display: flex;
   margin-top: 24px;
   margin-left: 80px;
+  text-decoration: none;
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-left: 86px;
   }
@@ -47,6 +53,12 @@ export const LogoLink = styled(Link)`
 
 export const Logo = styled(UnstyledFullLogo)`
   height: ${sizes(8)};
+`
+
+export const StudioText = styled(Text)`
+  color: ${colors.gray[300]};
+  font-family: ${typography.fonts.headers};
+  margin-left: 6px;
 `
 
 export const SidebarNavList = styled.ul`
@@ -66,6 +78,9 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  button:not(:first-child) {
+    margin-top: ${sizes(4)};
+  }
 `
 
 export const SidebarNavItem = styled.li`
@@ -82,13 +97,13 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[4] : 'rgba(0, 0, 0, 0.12)')};
   }
   &:focus {
-    background-color: rgba(0, 0, 0, 0.24);
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
   }
   &:active {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[32] : colors.transparentBlack[54])};
   }
   > svg {
     @media screen and (min-width: ${breakpoints.medium}) {
@@ -104,7 +119,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     line-height: 1;
   }
   &[data-active='true'] {
-    background-color: rgba(0, 0, 0, 0.24);
+    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
   }
   :after {
     @media screen and (min-width: ${breakpoints.medium}) {
