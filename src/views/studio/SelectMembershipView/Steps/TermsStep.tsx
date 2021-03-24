@@ -47,7 +47,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // do something here
-    onStepChange(currentStepIdx + 1)
+    onStepChange(0)
     navigate('new')
   }
 

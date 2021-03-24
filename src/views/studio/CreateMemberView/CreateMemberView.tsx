@@ -1,10 +1,12 @@
 import { ActionDialog } from '@/components/Dialogs'
+import { useActiveUser } from '@/hooks'
 import { Spinner, StudioHeader, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import { createFakeMembership } from '../SignInView/fakeUtils'
 import { Form, StyledButton, Wrapper, StyledText } from './CreateMemberView.style'
 
 type Inputs = {
@@ -14,6 +16,9 @@ type Inputs = {
 }
 
 const CreateMemberView = () => {
+  const { activeUser } = useActiveUser()
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const { register, handleSubmit, errors } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
@@ -23,9 +28,6 @@ const CreateMemberView = () => {
     },
   })
 
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-
   useEffect(() => {
     if (!loading) {
       return
@@ -34,7 +36,6 @@ const CreateMemberView = () => {
       setLoading(false)
       navigate('/studio/membership')
     }, 3000)
-
     return () => {
       clearTimeout(timeout)
     }
@@ -42,6 +43,14 @@ const CreateMemberView = () => {
 
   const onSubmit = handleSubmit((data) => {
     setLoading(true)
+    if (activeUser?.accountId) {
+      // temporary
+      createFakeMembership(activeUser?.accountId, {
+        handle: data.handle,
+        avatarUri: data?.avatarUri,
+        about: data?.about,
+      })
+    }
   })
 
   return (

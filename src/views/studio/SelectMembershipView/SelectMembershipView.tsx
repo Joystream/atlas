@@ -1,83 +1,64 @@
 import { Multistepper } from '@/components/Dialogs'
-import { useCheckBrowser } from '@/hooks'
+import routes, { studioRoutes } from '@/config/routes'
+import { useActiveUser, useCheckBrowser } from '@/hooks'
 import { StudioCard, StudioHeader } from '@/shared/components'
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import React, { useEffect, useState } from 'react'
-import { Membership } from '../StudioView'
+import React, { useCallback, useEffect, useState } from 'react'
+import { checkPolkadot, getAccountMemberships } from '../SignInView/fakeUtils'
+import { Membership } from '../SignInView/SignInView'
 import { MemberChannelGrid, Wrapper } from './SelectMembershipView.style'
 import { AccountStep, ExtensionStep, TermsStep } from './Steps'
 
-type DialogStep = number
-
-export const getDialogStep = promisify(() => readFromLocalStorage<DialogStep>('dialogStep') || 0)
-
-export const updateStep = async (dialogStep: DialogStep) => {
-  writeToLocalStorage('dialogStep', dialogStep)
+type DialogStep = {
+  step: number
+  isActive?: boolean
 }
 
 const SelectMembershipView = () => {
-  const [memberships, setMemberships] = useState<Membership[] | null>(null)
+  const [memberships, setMemberships] = useState<Membership[]>()
 
-  const [selectedAccount, setSelectedAccount] = useState('')
-  const [termsAccepted, setTermsAccepted] = useState(false)
-  const [currentStepIdx, setCurrentStep] = useState(0)
-  const [modalVisible, setModalVisible] = useState(false)
   const browser = useCheckBrowser()
+  const { activeUser } = useActiveUser()
+  const { dialogVisible, openDialog, closeDialog, changeDialogStep, step } = useSteps()
 
-  const fetchDialogStep = async () => {
-    const dialogStep = await getDialogStep()
-    setCurrentStep(dialogStep)
-  }
-
-  useEffect(() => {
-    // TODO check if polkadot is installed
-    fetchDialogStep()
-    if (currentStepIdx) {
-      setModalVisible(true)
-    }
-  }, [currentStepIdx])
-
-  const handleStepChange = async (idx: number) => {
-    if (idx < 0 || idx > steps.length - 1) {
+  // temporary
+  const getMemberShips = useCallback(async () => {
+    if (!activeUser?.accountId) {
       return
     }
-    await updateStep(idx)
-    setCurrentStep(idx)
-  }
+    const memberships = await getAccountMemberships(activeUser.accountId)
+    setMemberships(memberships)
+  }, [activeUser?.accountId])
 
-  const handleCloseDialog = () => {
-    setModalVisible(false)
-    handleStepChange(0)
-  }
+  // temporary
+  const checkIfExtensionIsIntalled = useCallback(async () => {
+    const isInstalled = await checkPolkadot()
+    if (isInstalled && step < 1) {
+      changeDialogStep(1)
+    }
+  }, [changeDialogStep, step])
 
-  const handleSelectAccount = (idx: number) => {
-    // TODO some localstorage function here
-    handleStepChange(idx)
-    setSelectedAccount('dummy account')
-  }
-
-  const handleAcceptTerms = (idx: number) => {
-    // TODO some async function here
-    handleStepChange(idx)
-    setTermsAccepted(true)
-    handleCloseDialog()
-  }
+  useEffect(() => {
+    checkIfExtensionIsIntalled()
+    getMemberShips()
+  }, [checkIfExtensionIsIntalled, getMemberShips])
 
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <ExtensionStep browser={browser} onStepChange={handleStepChange} currentStepIdx={currentStepIdx} />,
+      element: <ExtensionStep browser={browser} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <AccountStep onStepChange={handleSelectAccount} currentStepIdx={currentStepIdx} />,
+      element: <AccountStep onStepChange={changeDialogStep} currentStepIdx={step} />,
     },
     {
       title: 'Accept terms and conditions',
-      element: <TermsStep onStepChange={handleAcceptTerms} currentStepIdx={currentStepIdx} />,
+      element: <TermsStep onStepChange={changeDialogStep} currentStepIdx={step} />,
     },
   ]
+
   const hasMemberships = memberships?.length
 
   return (
@@ -92,18 +73,63 @@ const SelectMembershipView = () => {
       />
       <MemberChannelGrid>
         {memberships?.map((membership) => (
-          <StudioCard key={membership.id} avatarPhotoUrl={membership.avatarUri} handle={membership.handle} />
+          <StudioCard
+            to={routes.selectChannel()}
+            variant="membership"
+            key={membership.id}
+            avatarPhotoUrl={membership.avatarUri}
+            handle={membership.handle}
+          />
         ))}
-        <StudioCard blank handle="Create a membership" onClick={() => setModalVisible(true)} />
+        <StudioCard variant="membership" blank handle="Create a membership" onClick={openDialog} />
       </MemberChannelGrid>
-      <Multistepper
-        currentStepIdx={currentStepIdx}
-        steps={steps}
-        showDialog={modalVisible}
-        onExitClick={handleCloseDialog}
-      />
+      <Multistepper currentStepIdx={step} steps={steps} showDialog={dialogVisible} onExitClick={closeDialog} />
     </Wrapper>
   )
+}
+
+const getDialogState = promisify(() => readFromLocalStorage<DialogStep>('dialogStep') || { step: 0, isActive: false })
+
+const updateDialogState = async (dialogStep: DialogStep) => {
+  writeToLocalStorage('dialogStep', dialogStep)
+}
+
+const useSteps = () => {
+  const [step, setCurrentStep] = useState(0)
+  const [dialogVisible, setDialogVisible] = useState(false)
+
+  const fetchDialogState = useCallback(async () => {
+    const { step, isActive } = await getDialogState()
+    setCurrentStep(step)
+    setDialogVisible(isActive || false)
+  }, [])
+
+  useEffect(() => {
+    fetchDialogState()
+  }, [fetchDialogState])
+
+  const openDialog = () => {
+    setDialogVisible(true)
+    updateDialogState({ step: step, isActive: true })
+  }
+
+  const closeDialog = () => {
+    setDialogVisible(false)
+    updateDialogState({ step: 0, isActive: false })
+  }
+
+  const changeDialogStep = useCallback((newStep: number) => {
+    setCurrentStep(newStep)
+    updateDialogState({ step: newStep })
+  }, [])
+
+  return {
+    openDialog,
+    closeDialog,
+    changeDialogStep,
+    dialogVisible,
+    step,
+  }
 }
 
 export default SelectMembershipView

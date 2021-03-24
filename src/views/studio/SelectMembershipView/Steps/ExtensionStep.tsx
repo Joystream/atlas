@@ -1,20 +1,17 @@
-import { Text } from '@/shared/components'
 import React from 'react'
+import { installPolkadot } from '../../SignInView/fakeUtils'
 import { BrowserIcon, RefreshText, StyledButton } from './ExtensionStep.style'
-import { StepTitle, StepSubTitle, StepWrapper } from './Steps.style'
+import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 
 type ExtensionStepProps = {
   browser: 'chrome' | 'firefox' | null
-  onStepChange: (idx: number) => void
-  currentStepIdx: number
 }
 
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser, onStepChange, currentStepIdx }) => {
-  const handleChangeStep = () => {
+const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser }) => {
+  const handleRefresh = () => {
+    // temporary, normally user will be installing polkadot manually
+    installPolkadot()
     window.location.reload()
-    // TODO Need to change
-    // let's just assume for now that after refreshing page user has polkadot installed
-    onStepChange(currentStepIdx + 1)
   }
   return (
     <StepWrapper centered>
@@ -28,7 +25,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser, onStepChange, cu
           Add polkadot plugin
         </StyledButton>
       )}
-      <RefreshText variant="h4" onClick={handleChangeStep}>
+      <RefreshText variant="h4" onClick={handleRefresh}>
         Refresh page to use
       </RefreshText>
     </StepWrapper>

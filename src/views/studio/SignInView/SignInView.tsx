@@ -1,4 +1,5 @@
-import { studioRoutes } from '@/config/routes'
+import { StudioContainer } from '@/components'
+import routes from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
@@ -14,9 +15,16 @@ import {
   VideoImgBg,
 } from './SignInView.style'
 
+export type Membership = {
+  id: string
+  handle: string
+  about?: string
+  avatarUri?: string
+}
+
 const SignInView = () => {
   return (
-    <>
+    <StudioContainer>
       <StyledBackgroundPattern />
       <CompositionWrapper>
         <VideoImgBg />
@@ -30,7 +38,7 @@ const SignInView = () => {
             Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
           </SubTitle>
           <ButtonGroup>
-            <SignInButton to={studioRoutes.selectMembership()} size="large">
+            <SignInButton to={routes.selectMembership()} size="large">
               Sign in For Free
             </SignInButton>
             <Button variant="secondary" size="large" to="https://www.joystream.org/">
@@ -39,7 +47,7 @@ const SignInView = () => {
           </ButtonGroup>
         </Header>
       </SignInWrapper>
-    </>
+    </StudioContainer>
   )
 }
 

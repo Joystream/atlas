@@ -2,58 +2,44 @@ import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser } from '@/hooks'
 import { AccountBar, Placeholder } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { createFakeAccount, getAccounts, Account } from '../../SignInView/fakeUtils'
 import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
 import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
-
-const fakeAccounts = [
-  {
-    balance: 0.4,
-    name: 'Myaccountname',
-    id: 'some unique id',
-  },
-  {
-    balance: 12.3,
-    name: 'MySecondAccount',
-    id: 'some unique id2',
-  },
-]
 
 type AccountStepProps = {
   onStepChange: (idx: number) => void
   currentStepIdx: number
 }
 
-type Account = {
-  id: string
-  name: string
-  balance: number
-}
-
 const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
-  const { activeUser, setActiveUser } = useActiveUser()
+  const { setActiveUser, activeUser } = useActiveUser()
   const [imageLoaded, setImageLoaded] = useState(false)
   const [accounts, setAccounts] = useState<null | Account[]>()
   const [loading, setLoading] = useState(true)
 
-  const fetchAccounts = async () => {
-    // TODO some function to fetch all accounts
+  // this is temporary. Normally user will do this inside polkadot
+  useEffect(() => {
+    createFakeAccount('fake name', 20)
+  }, [])
+
+  const fetchAccounts = useCallback(async () => {
+    // also temporary - some function to fetch polkadot account
+    const accountsFromLocalStorage = await getAccounts()
+    setAccounts(accountsFromLocalStorage)
     setLoading(false)
-    setAccounts(fakeAccounts)
-    console.log('fetched')
-  }
+  }, [])
 
   useEffect(() => {
-    // temporary
     const interval = setInterval(() => {
       fetchAccounts()
     }, 2000)
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchAccounts])
 
-  const handleSelectAccount = (id: string) => {
-    setActiveUser({
+  const handleSelectAccount = async (id: string) => {
+    await setActiveUser({
       accountId: id,
       memberId: null,
       channelId: null,
@@ -86,8 +72,13 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
               with sufficient amount of funds to start a channel.)
             </StepSubTitle>
             <AccountsWrapper>
-              {accounts?.map(({ balance, name, id }) => (
-                <AccountBar key={id} secondary={balance + ' JOY'} name={name} onClick={() => handleSelectAccount(id)} />
+              {accounts?.map(({ accountBalance, accountName, accountId }) => (
+                <AccountBar
+                  key={accountId}
+                  secondary={accountBalance + ' JOY'}
+                  name={accountName}
+                  onClick={() => handleSelectAccount(accountId)}
+                />
               ))}
             </AccountsWrapper>
           </StepWrapper>
