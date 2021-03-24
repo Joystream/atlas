@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 type CardWrapperProps = {
   blank?: boolean
+  to?: string
 }
 
 export const CardWrapper = styled.div<CardWrapperProps>`
@@ -18,6 +19,7 @@ export const CardWrapper = styled.div<CardWrapperProps>`
   align-items: center;
   overflow: hidden;
   background-color: ${({ blank }) => (blank ? colors.gray[900] : colors.gray[800])};
+  text-decoration: none;
 `
 export const HandleText = styled(Text)`
   margin-top: ${sizes(6)};

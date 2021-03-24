@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Icon from '../Icon'
 import { CardWrapper, Follows, HandleText, StyledAvatar, IconWrapper } from './StudioCard.style'
 
@@ -9,11 +10,12 @@ export type StudioCardProps = {
   avatarPhotoUrl?: string
   blank?: boolean
   onClick?: () => void
+  to?: string
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, follows, avatarPhotoUrl, blank, onClick, variant }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, follows, avatarPhotoUrl, blank, onClick, variant, to }) => {
   return (
-    <CardWrapper blank={blank} onClick={onClick}>
+    <CardWrapper blank={blank} onClick={onClick} as={to ? Link : 'div'} to={to}>
       {blank ? (
         <IconWrapper>
           <Icon name="profile" />

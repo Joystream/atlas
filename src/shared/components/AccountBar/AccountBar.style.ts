@@ -44,7 +44,5 @@ export const AccountSecondary = styled(Text)`
 `
 
 export const StyledButton = styled(Button)`
-  border: 1px solid ${colors.gray[400]};
-  padding: ${sizes(2)} ${sizes(3)};
   align-self: center;
 `

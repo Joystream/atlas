@@ -34,7 +34,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, secondary, avatarUrl, onC
         </div>
       </AccountInfo>
       {!blank && (
-        <StyledButton variant="tertiary" size="medium" onClick={onClick}>
+        <StyledButton variant="secondary" size="medium" onClick={onClick}>
           Select Account
         </StyledButton>
       )}
