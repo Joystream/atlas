@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useMatch } from 'react-router-dom'
+import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
   SidebarNav,
@@ -12,10 +12,11 @@ import {
   Logo,
   LogoLink,
   ButtonGroup,
-  ButtonLink,
-} from './SideNavbar.style'
+  StudioText,
+} from './Sidenav.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import { Button } from '@/shared/components'
 import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
@@ -23,7 +24,8 @@ import HamburgerButton from '@/shared/components/HamburgerButton'
 import routes from '@/config/routes'
 
 type NavSubitem = {
-  name: string
+  name?: string
+  expandedName: string
 }
 type NavItemType = {
   subitems?: NavSubitem[]
@@ -31,20 +33,23 @@ type NavItemType = {
   to: string
 } & NavSubitem
 
-type SidenavProps = {
+export type SidenavProps = {
   items: NavItemType[]
+  isStudio?: boolean
 }
 
-const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
-  const isStudio = useMatch(routes.studio())
-
+const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
   const {
     state: { followedChannels },
   } = usePersonalData()
   const [expanded, setExpanded] = useState(false)
 
-  const closeSideNav = () => setExpanded(false)
+  const handleNewVideoOpen = () => {
+    // TODO add logic for opening new video view
+    setExpanded(false)
+  }
 
+  const closeSideNav = () => setExpanded(false)
   return (
     <>
       <CSSTransition
@@ -56,9 +61,10 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
         <DrawerOverlay onClick={closeSideNav} />
       </CSSTransition>
       <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
-      <SidebarNav expanded={expanded}>
+      <SidebarNav expanded={expanded} isStudio={isStudio}>
         <LogoLink to="/" onClick={closeSideNav} tabIndex={expanded ? 0 : -1}>
           <Logo />
+          {isStudio && <StudioText>studio</StudioText>}
         </LogoLink>
         <SidebarNavList>
           {items.map((item) => (
@@ -67,34 +73,39 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
               to={item.to}
               expanded={expanded}
               subitems={item.subitems}
-              itemName={item.name}
+              itemName={item.name || item.expandedName}
               onClick={closeSideNav}
+              isStudio={isStudio}
             >
               <Icon name={item.icon} />
-              <span>{item.name}</span>
+              <span>{item.expandedName}</span>
             </NavItem>
           ))}
         </SidebarNavList>
-        {followedChannels.length > 0 && (
+        {!isStudio && followedChannels.length > 0 && (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
         )}
-        <ButtonGroup>
-          <CSSTransition
-            in={expanded}
-            unmountOnExit
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-          >
-            <ButtonLink
+
+        <CSSTransition
+          in={expanded}
+          unmountOnExit
+          timeout={parseInt(transitions.timings.loading)}
+          classNames={transitions.names.fade}
+        >
+          <ButtonGroup>
+            <Button
               variant="secondary"
               onClick={closeSideNav}
               icon="external"
               to={isStudio ? routes.index() : routes.studio()}
             >
               Joystream {!isStudio && 'studio'}
-            </ButtonLink>
-          </CSSTransition>
-        </ButtonGroup>
+            </Button>
+            <Button icon="add-video" onClick={handleNewVideoOpen}>
+              New Video
+            </Button>
+          </ButtonGroup>
+        </CSSTransition>
       </SidebarNav>
     </>
   )
@@ -105,10 +116,11 @@ type NavItemProps = {
   expanded: boolean
   to: string
   itemName: string
+  isStudio?: boolean
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName }) => {
+const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName, isStudio }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const match = useMatch(to)
   return (
@@ -119,6 +131,7 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
         to={to}
         expanded={expanded || undefined}
         content={itemName}
+        isStudio={isStudio}
       >
         {children}
       </SidebarNavLink>
@@ -137,5 +150,5 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
   )
 }
 
-export { SideNavbar as default, NavItem }
+export { Sidenav as default, NavItem }
 export type { NavItemType }

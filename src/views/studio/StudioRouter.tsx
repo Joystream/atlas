@@ -7,7 +7,7 @@ import { CreateEditChannelView, MyVideosView } from '@/views/studio'
 const routesMap = [
   { path: studioRoutes.newChannel(), Component: <CreateEditChannelView newChannel /> },
   { path: studioRoutes.editChannel(), Component: <CreateEditChannelView /> },
-  { path: studioRoutes.myVideos(), Component: <MyVideosView /> },
+  { path: studioRoutes.videos(), Component: <MyVideosView /> },
 ]
 
 const StudioRouter: React.FC = () => {

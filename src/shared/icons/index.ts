@@ -55,6 +55,9 @@ export { ReactComponent as Logout } from './logout.svg'
 export { ReactComponent as DialogSuccess } from './dialog-success.svg'
 export { ReactComponent as DialogWarning } from './dialog-warning.svg'
 export { ReactComponent as DialogError } from './dialog-error.svg'
+export { ReactComponent as MyVideos } from './my-videos.svg'
+export { ReactComponent as MyChannel } from './my-channel.svg'
+export { ReactComponent as MyUploads } from './my-uploads.svg'
 
 const icons = [
   'bring-up',
@@ -114,6 +117,9 @@ const icons = [
   'dialog-success',
   'dialog-warning',
   'dialog-error',
+  'my-videos',
+  'my-channel',
+  'my-uploads',
 ] as const
 
 export type IconType = typeof icons[number]
