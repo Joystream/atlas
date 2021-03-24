@@ -3,6 +3,7 @@ import Icon from '../Icon'
 import { CardWrapper, Follows, HandleText, StyledAvatar, IconWrapper } from './StudioCard.style'
 
 export type StudioCardProps = {
+  variant: 'membership' | 'channel'
   handle?: string
   follows?: number
   avatarPhotoUrl?: string
@@ -10,10 +11,10 @@ export type StudioCardProps = {
   onClick?: () => void
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, follows, avatarPhotoUrl, blank, onClick }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, follows, avatarPhotoUrl, blank, onClick, variant }) => {
   return (
     <CardWrapper blank={blank} onClick={onClick}>
-      {blank || !avatarPhotoUrl ? (
+      {blank ? (
         <IconWrapper>
           <Icon name="profile" />
         </IconWrapper>
@@ -21,7 +22,7 @@ const StudioCard: React.FC<StudioCardProps> = ({ handle, follows, avatarPhotoUrl
         <StyledAvatar imageUrl={avatarPhotoUrl} />
       )}
       <HandleText variant={blank ? 'h5' : 'h4'}>{handle}</HandleText>
-      {!blank && <Follows variant="body2">{follows} Followers</Follows>}
+      {!blank && variant === 'channel' && <Follows variant="body2">{follows} Followers</Follows>}
     </CardWrapper>
   )
 }
