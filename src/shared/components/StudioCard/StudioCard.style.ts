@@ -1,13 +1,13 @@
 import { Avatar, Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
+import isPropValid from '@emotion/is-prop-valid'
 
 type CardWrapperProps = {
   blank?: boolean
   to?: string
 }
-
-export const CardWrapper = styled.div<CardWrapperProps>`
+export const CardWrapper = styled('div', { shouldForwardProp: isPropValid })<CardWrapperProps>`
   width: 256px;
   height: 256px;
   cursor: pointer;
