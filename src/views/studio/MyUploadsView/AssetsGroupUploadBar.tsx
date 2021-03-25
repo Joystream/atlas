@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { formatBytes } from '@/utils/size'
 import {
   Container,
   AssetsGroupBarUploadContainer,
@@ -8,28 +7,23 @@ import {
   AssetsInfoContainer,
   UploadInfoContainer,
   AssetsDrawerContainer,
-  FileLineContainer,
-  FileLinePoint,
-  FileLineLastPoint,
-  FileStatusContainer,
-  FileInfoContainer,
-  FileInfoType,
-  StatusMessage,
 } from './AssetsGroupUploadBar.style'
-import { Icon, Text, Button, CircularProgressbar } from '@/shared/components'
+import { AssetLine } from './AssetLine'
+import { Icon, Text } from '@/shared/components'
 import { DrawerButton } from '@/components/PublishingTopbar/PublishingTopbar.style'
 
-export type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
+type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
 export type Asset = {
   type: AssetType
   progress: number
   status: 'uploading' | 'pending' | 'failed' | 'completed'
-  dimension: string
+  width: number
+  height: number
   size: number
   statusMessage?: string
 }
 
-export type UploadDataType = 'channel' | 'video'
+type UploadDataType = 'channel' | 'video'
 export type UploadData = {
   type: UploadDataType
   title?: string
@@ -84,54 +78,10 @@ const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
       </AssetsGroupBarUploadContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive}>
         {files.map((file, idx) => (
-          <FileLine key={file.type + idx} asset={file} isLast={files.length === idx + 1} />
+          <AssetLine key={file.type + idx} asset={file} isLast={files.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>
-  )
-}
-
-type FileLineProps = {
-  isLast?: boolean
-  asset: Asset
-}
-
-const FileLine: React.FC<FileLineProps> = ({ isLast = false, asset }) => {
-  const isVideo = asset.type === 'video'
-  const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
-  let fileStatus
-  let fileStatusMessage = ''
-  switch (asset.status) {
-    case 'uploading':
-      fileStatus = <CircularProgressbar value={asset.progress} />
-      break
-    case 'pending':
-      fileStatus = <CircularProgressbar value={0} />
-      break
-    case 'failed':
-      fileStatus = <Icon name="error" />
-      fileStatusMessage = asset.statusMessage || ''
-      break
-    case 'completed':
-      fileStatus = <Icon name="success" />
-      break
-    default:
-      fileStatus = <CircularProgressbar value={asset.progress} />
-  }
-  return (
-    <FileLineContainer isLast={isLast}>
-      {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
-      <FileStatusContainer>{fileStatus}</FileStatusContainer>
-      <FileInfoContainer>
-        <FileInfoType>
-          <Icon name={isVideo ? 'video-file' : 'image-file'} />
-          <Text variant="body2">{fileTypeText}</Text>
-        </FileInfoType>
-        <Text variant="body2">1920x1080</Text>
-        <Text>{formatBytes(asset.size)}</Text>
-      </FileInfoContainer>
-      <StatusMessage variant="subtitle2">{fileStatusMessage}</StatusMessage>
-    </FileLineContainer>
   )
 }
 
