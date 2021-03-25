@@ -91,7 +91,7 @@ const CoverVideo: React.FC = () => {
         <TitleContainer>
           {data ? (
             <>
-              <Link to={routes.video(data.video.id)}>
+              <Link to={routes.viewer.video(data.video.id)}>
                 <Title variant="h2">{data.video.title}</Title>
               </Link>
               <span>{data.coverDescription}</span>
