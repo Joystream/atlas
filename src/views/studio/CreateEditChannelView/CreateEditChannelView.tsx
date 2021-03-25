@@ -16,7 +16,7 @@ import {
   StyledAvatar,
   InnerFormContainer,
 } from './CreateEditChannelView.style'
-import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/consumer/ChannelView/ChannelView.style'
+import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'

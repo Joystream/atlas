@@ -1,34 +1,33 @@
 export default {
-  index: () => '/',
-  searchOverlay: () => `/search`,
-  search: ({ query }: { query?: string } = {}) => {
-    const basePath = '/search'
+  viewer: {
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}`,
+    searchOverlay: () => `search`,
+    search: ({ query }: { query?: string } = {}) => {
+      const basePath = 'search'
 
-    if (query) {
-      const searchQueryParams = new URLSearchParams()
-      searchQueryParams.set(QUERY_PARAMS.SEARCH, query.trim())
-      return `${basePath}?${searchQueryParams.toString()}`
-    }
+      if (query) {
+        const searchQueryParams = new URLSearchParams()
+        searchQueryParams.set(QUERY_PARAMS.SEARCH, query.trim())
+        return `${basePath}?${searchQueryParams.toString()}`
+      }
 
-    return basePath
+      return basePath
+    },
+    channel: (id = ':id') => `channel/${id}`,
+    channels: () => 'channels',
+    video: (id = ':id') => `video/${id}`,
+    videos: () => 'videos',
   },
-  channel: (id = ':id') => `/channel/${id}`,
-  channels: () => '/channels',
-  playground: () => '/playground',
-  video: (id = ':id') => `/video/${id}`,
-  videos: () => '/videos',
-  studio: () => `/studio`,
-  studioNewChannel: () => '/studio/channel/new',
-  studioEditChannel: () => '/studio/channel',
-  studioVideos: () => '/studio/videos',
-  studioUploads: () => '/studio/uploads',
-}
-
-export const studioRoutes = {
-  newChannel: () => '/channel/new',
-  editChannel: () => '/channel',
-  videos: () => '/videos',
-  uploads: () => '/uploads',
+  studio: {
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}studio`,
+    newChannel: () => 'channel/new',
+    editChannel: () => 'channel',
+    videos: () => 'videos',
+    uploads: () => 'uploads',
+  },
+  playground: {
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}playground`,
+  },
 }
 
 export const QUERY_PARAMS = {

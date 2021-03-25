@@ -16,7 +16,7 @@ import {
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
-} from './PublishingTopbar.style'
+} from './StudioTopbar.style'
 
 type Channel = {
   name: string
@@ -55,7 +55,7 @@ const member = {
   ],
 }
 
-const PublishingTopbar: React.FC = () => {
+const StudioTopbar: React.FC = () => {
   const { activeUser, setActiveChannel } = useActiveUser()
   // TODO Add member fetching
   const [currentChannel, setCurrentChannel] = useState(member.channels[0])
@@ -168,7 +168,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             onClick={() => onCurrentChannelChange(channel)}
           />
         ))}
-        <StyledLink to={routes.studioNewChannel()} onClick={handleClose}>
+        <StyledLink to={routes.studio.newChannel()} onClick={handleClose}>
           <NewChannel>
             <NewChannelIconContainer>
               <Icon name="new-channel" />
@@ -185,4 +185,4 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
 )
 NavDrawer.displayName = 'NavDrawer'
 
-export default PublishingTopbar
+export default StudioTopbar
