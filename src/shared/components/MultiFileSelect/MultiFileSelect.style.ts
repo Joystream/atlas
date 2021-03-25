@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 export const MultiFileSelectContainer = styled.div`
   width: 100%;
-  max-width: 640px;
+  /* max-width: 640px; */
 `
 
 export const StepsContainer = styled.div`

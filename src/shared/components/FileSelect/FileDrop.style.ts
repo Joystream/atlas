@@ -15,7 +15,7 @@ type ProgressBarProps = {
 }
 
 export const FileDropWrapper = styled.div`
-  max-width: 640px;
+  /* max-width: 640px; */
   height: 100%;
 `
 
