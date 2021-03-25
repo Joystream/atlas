@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Text } from '@/shared/components'
 import { colors, sizes, zIndex, breakpoints, transitions } from '@/shared/theme'
 
 type FileLineProps = {
@@ -26,6 +27,9 @@ export const AssetsGroupBarUploadContainer = styled.div`
   padding: ${sizes(4)};
   width: 100%;
   height: ${sizes(20)};
+  background-color: ${colors.black};
+  z-index: ${zIndex.overlay};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
 `
 export const ProgressBar = styled.div<ProgressbarProps>`
   --progress-bar-color: #b4bbff33;
@@ -36,7 +40,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   height: 100%;
   background-color: var(--progress-bar-color);
   transition: width 1s linear;
-  animation: load 5s infinite ease-in-out;
+  animation: load 2.5s infinite ease-in-out;
   @keyframes load {
     0% {
       opacity: 1;
@@ -87,7 +91,7 @@ export const UploadInfoContainer = styled.div`
   text-align: right;
   button {
     margin-left: ${sizes(4)};
-    z-index: ${zIndex.nearOverlay};
+    z-index: ${zIndex.overlay};
     svg {
       width: auto;
       height: auto;
@@ -97,13 +101,17 @@ export const UploadInfoContainer = styled.div`
 
 export const AssetsDrawerContainer = styled.div<DrawerProps>`
   position: relative;
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
-  padding: ${sizes(2)};
-  padding-left: ${sizes(13)};
+  top: 0;
   width: 100%;
+  height: ${({ isActive }) => (isActive ? 'auto' : 0)};
+  padding: ${sizes(2)} ${sizes(6)} ${sizes(2)} ${sizes(13)};
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  transform: translateY(${({ isActive }) => (isActive ? 0 : '-100%')});
   background-color: ${colors.gray[800]};
   overflow: hidden;
+  transition: all ${transitions.timings.regular} ${transitions.easing};
 `
 
 export const FileLineContainer = styled.div<FileLineProps>`
@@ -111,6 +119,11 @@ export const FileLineContainer = styled.div<FileLineProps>`
   align-items: center;
   height: ${sizes(12)};
   margin-bottom: ${({ isLast }) => !isLast && sizes(6)};
+`
+
+export const StatusMessage = styled(Text)`
+  margin-left: auto;
+  color: ${colors.gray[300]};
 `
 
 export const FileLinePoint = styled.div`

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StudioContainer } from '@/components'
+import PlaceholderItems from './PlaceholderItems'
 import AssetsGroupUploadBar, { UploadData } from './AssetsGroupUploadBar'
 import { StyledText } from './MyUploadsView.style'
 
@@ -13,6 +14,7 @@ const uploadedFiles = [
         dimension: '360x420',
         size: 178400,
         status: 'failed',
+        statusMessage: 'Trying to reconnect',
       },
     ],
   },
@@ -29,22 +31,52 @@ const uploadedFiles = [
       },
       {
         type: 'video',
-        progress: 70,
+        progress: 60,
         dimension: '1920x1080',
         size: 1735993000,
         status: 'uploading',
       },
     ],
   },
+  {
+    type: 'video',
+    title: 'Lost in the Woods? EP3',
+    files: [
+      {
+        type: 'thumbnail',
+        progress: 0,
+        dimension: '1920x1080',
+        size: 478400,
+        status: 'pending',
+      },
+      {
+        type: 'video',
+        progress: 0,
+        dimension: '1920x1080',
+        size: 3735993000,
+        status: 'pending',
+      },
+    ],
+  },
 ] as UploadData[]
 
 const MyUploadsView = () => {
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 700)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <StudioContainer>
       <StyledText variant="h2">My Uploads</StyledText>
-      {uploadedFiles.map((files, idx) => (
-        <AssetsGroupUploadBar key={files.type + idx} uploadData={files} />
-      ))}
+      {loading ? (
+        <PlaceholderItems />
+      ) : (
+        uploadedFiles.map((files, idx) => <AssetsGroupUploadBar key={files.type + idx} uploadData={files} />)
+      )}
     </StudioContainer>
   )
 }
