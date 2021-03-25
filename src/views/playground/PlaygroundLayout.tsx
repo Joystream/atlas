@@ -12,6 +12,14 @@ import {
   VideoMetaData,
 } from './Playgrounds'
 
+const playgroundRoutes = [
+  { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
+  { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
+  { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
+  { path: 'uploading-files-data', element: <PlaygroundUploadingFilesData />, name: 'Uploading Files Data' },
+  { path: 'member-active-channel', element: <PlaygroundMemberChannel />, name: 'Active user/member/channel' },
+]
+
 export const PlaygroundLayout = () => {
   return (
     <DraftsProvider>
@@ -20,18 +28,17 @@ export const PlaygroundLayout = () => {
           <Container>
             <Text variant="h2">Internal testing view</Text>
             <LinksContainer>
-              <Link to="./validation-form">Validation Form</Link>
-              <Link to="./drafts">Drafts</Link>
-              <Link to="./video-metadata">Video Metadata</Link>
-              <Link to="./uploading-files-data">Uploading Files Data</Link>
-              <Link to="./member-active-channel">Active user/member/channel</Link>
+              {playgroundRoutes.map((route) => (
+                <Link key={route.path} to={route.path}>
+                  {route.name}
+                </Link>
+              ))}
             </LinksContainer>
+
             <Routes>
-              <Route path="/validation-form" element={<PlaygroundValidationForm />} />
-              <Route path="/drafts" element={<PlaygroundDrafts />} />
-              <Route path="/video-metadata" element={<VideoMetaData />} />
-              <Route path="/uploading-files-data" element={<PlaygroundUploadingFilesData />} />
-              <Route path="/member-active-channel" element={<PlaygroundMemberChannel />} />
+              {playgroundRoutes.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
             </Routes>
           </Container>
         </ActiveUserProvider>
