@@ -1,4 +1,4 @@
-scalar Date
+scalar DateTime
 
 type Language {
   name: String!
@@ -38,7 +38,7 @@ enum LiaisonJudgement {
 
 type AssetDataObject {
   id: ID!
-  createdAt: Date!
+  createdAt: DateTime!
   size: Int!
   # id of storage provider
   liaisonId: Int!
@@ -75,7 +75,7 @@ type AssetNeverProvided {
 
 type Channel {
   id: ID!
-  createdAt: Date!
+  createdAt: DateTime!
   title: String!
   description: String
   coverPhoto: Asset
@@ -120,11 +120,11 @@ type VideoMediaMetadata {
 type Video {
   id: ID!
   channel: Channel!
-  createdAt: Date!
+  createdAt: DateTime!
   createdById: String!
-  updatedAt: Date
+  updatedAt: DateTime
   updatedById: String
-  deletedAt: Date
+  deletedAt: DateTime
   category: VideoCategory!
   title: String!
   description: String!
@@ -219,7 +219,7 @@ input VideoWhereInput {
   categoryId_eq: ID
   channelId_in: [ID!]
   channelId_eq: ID
-  createdAt_gte: Date
+  createdAt_gte: DateTime
   isFeatured_eq: Boolean
   isPublic_eq: Boolean
   id_in: [ID!]

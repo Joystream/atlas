@@ -9,7 +9,7 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  Date: Date
+  DateTime: Date
 }
 
 export type Language = {
@@ -49,7 +49,7 @@ export enum LiaisonJudgement {
 export type AssetDataObject = {
   __typename?: 'AssetDataObject'
   id: Scalars['ID']
-  createdAt: Scalars['Date']
+  createdAt: Scalars['DateTime']
   size: Scalars['Int']
   liaisonId: Scalars['Int']
   liaisonJudgement: LiaisonJudgement
@@ -87,7 +87,7 @@ export type AssetNeverProvided = {
 export type Channel = {
   __typename?: 'Channel'
   id: Scalars['ID']
-  createdAt: Scalars['Date']
+  createdAt: Scalars['DateTime']
   title: Scalars['String']
   description?: Maybe<Scalars['String']>
   coverPhoto?: Maybe<Asset>
@@ -129,11 +129,11 @@ export type Video = {
   __typename?: 'Video'
   id: Scalars['ID']
   channel: Channel
-  createdAt: Scalars['Date']
+  createdAt: Scalars['DateTime']
   createdById: Scalars['String']
-  updatedAt?: Maybe<Scalars['Date']>
+  updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['String']>
-  deletedAt?: Maybe<Scalars['Date']>
+  deletedAt?: Maybe<Scalars['DateTime']>
   category: VideoCategory
   title: Scalars['String']
   description: Scalars['String']
@@ -223,7 +223,7 @@ export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
   channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
-  createdAt_gte?: Maybe<Scalars['Date']>
+  createdAt_gte?: Maybe<Scalars['DateTime']>
   isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
