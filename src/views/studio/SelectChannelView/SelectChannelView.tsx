@@ -34,7 +34,7 @@ const SelectChannelView = () => {
             handle={channel.handle}
           />
         ))}
-        <StudioCard blank variant="channel" handle="Create a Channel" to={routes.newChannel()} />
+        <StudioCard blank variant="channel" handle="Create a Channel" to={routes.studio.newChannel(true)} />
       </MemberChannelGrid>
     </Wrapper>
   )

@@ -49,7 +49,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
     e.preventDefault()
     // do something here
     onStepChange(0)
-    navigate(routes.newMembership())
+    navigate(routes.studio.newMembership(true))
   }
 
   return (

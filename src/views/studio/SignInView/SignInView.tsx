@@ -38,7 +38,7 @@ const SignInView = () => {
             Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
           </SubTitle>
           <ButtonGroup>
-            <SignInButton to={routes.selectMembership()} size="large">
+            <SignInButton to={routes.studio.selectMembership(true)} size="large">
               Sign in For Free
             </SignInButton>
             <Button variant="secondary" size="large" to="https://www.joystream.org/">

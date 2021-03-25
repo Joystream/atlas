@@ -8,6 +8,10 @@ import { CreateEditChannelView, MyVideosView } from '.'
 import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import SignInView from './SignInView'
+import SelectMembershipView from './SelectMembershipView'
+import SelectChannelView from './SelectChannelView'
+import CreateMemberView from './CreateMemberView'
 
 const studioRoutes = [
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },

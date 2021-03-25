@@ -1,4 +1,5 @@
 import { ActionDialog } from '@/components/Dialogs'
+import routes from '@/config/routes'
 import { useActiveUser } from '@/hooks'
 import { Spinner, StudioHeader, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
@@ -34,7 +35,7 @@ const CreateMemberView = () => {
     }
     const timeout = setTimeout(() => {
       setLoading(false)
-      navigate('/studio/membership')
+      navigate(routes.studio.selectMembership(true))
     }, 3000)
     return () => {
       clearTimeout(timeout)
