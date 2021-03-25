@@ -30,7 +30,7 @@ export type VideoFieldsFragment = {
   duration: number
   createdAt: Date
   isPublic: boolean
-  category: { __typename?: 'Category'; id: string }
+  category: { __typename?: 'VideoCategory'; id: string }
   thumbnail?: Types.Maybe<
     | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
     | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)

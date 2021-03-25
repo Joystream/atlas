@@ -90,21 +90,20 @@ export type Channel = {
   createdAt: Scalars['Date']
   title: Scalars['String']
   description?: Maybe<Scalars['String']>
-  coverPhotoUrl?: Maybe<Scalars['String']>
   coverPhoto?: Maybe<Asset>
-  avatarPhotoUrl?: Maybe<Scalars['String']>
-  ownerMember?: Maybe<Membership>
-  isPublic: Scalars['Boolean']
-  isCurated: Scalars['Boolean']
+  avatarPhoto?: Maybe<Asset>
+  owner: Member
+  isPublic?: Maybe<Scalars['Boolean']>
+  isCensored?: Maybe<Scalars['Boolean']>
   language?: Maybe<Language>
   videos: Array<Video>
   follows?: Maybe<Scalars['Int']>
 }
 
-export type Category = {
-  __typename?: 'Category'
+export type VideoCategory = {
+  __typename?: 'VideoCategory'
   id: Scalars['ID']
-  name: Scalars['String']
+  name?: Maybe<Scalars['String']>
   videos?: Maybe<Array<Video>>
 }
 
@@ -135,7 +134,7 @@ export type Video = {
   updatedAt?: Maybe<Scalars['Date']>
   updatedById?: Maybe<Scalars['String']>
   deletedAt?: Maybe<Scalars['Date']>
-  category: Category
+  category: VideoCategory
   title: Scalars['String']
   description: Scalars['String']
   duration: Scalars['Int']
@@ -216,7 +215,7 @@ export type ChannelConnection = {
   totalCount: Scalars['Int']
 }
 
-export type CategoryWhereUniqueInput = {
+export type VideoCategoryWhereUniqueInput = {
   id: Scalars['ID']
 }
 
@@ -273,8 +272,8 @@ export type Query = {
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   /** Get views counts for a list of videos */
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categories: Array<Category>
-  category?: Maybe<Category>
+  categories: Array<VideoCategory>
+  category?: Maybe<VideoCategory>
   channel?: Maybe<Channel>
   /** Get follows count for a single channel */
   channelFollows?: Maybe<ChannelFollowsInfo>
@@ -307,7 +306,7 @@ export type QueryBatchedVideoViewsArgs = {
 }
 
 export type QueryCategoryArgs = {
-  where: CategoryWhereUniqueInput
+  where: VideoCategoryWhereUniqueInput
 }
 
 export type QueryChannelArgs = {

@@ -78,9 +78,7 @@ type Channel {
   createdAt: Date!
   title: String!
   description: String
-  coverPhotoUrl: String
   coverPhoto: Asset
-  avatarPhotoUrl: String
   avatarPhoto: Asset
   ownerMember: Membership
   isPublic: Boolean
@@ -92,9 +90,9 @@ type Channel {
   follows: Int
 }
 
-type Category {
+type VideoCategory {
   id: ID!
-  name: String!
+  name: String
   videos: [Video!]
 }
 
@@ -127,7 +125,7 @@ type Video {
   updatedAt: Date
   updatedById: String
   deletedAt: Date
-  category: Category!
+  category: VideoCategory!
   title: String!
   description: String!
   # In seconds
@@ -213,7 +211,7 @@ type ChannelConnection {
   totalCount: Int!
 }
 
-input CategoryWhereUniqueInput {
+input VideoCategoryWhereUniqueInput {
   id: ID!
 }
 
@@ -282,10 +280,10 @@ type Query {
   ): ChannelConnection!
 
   # Lookup a channel by its ID
-  category(where: CategoryWhereUniqueInput!): Category
+  category(where: VideoCategoryWhereUniqueInput!): VideoCategory
 
   # List all categories
-  categories: [Category!]!
+  categories: [VideoCategory!]!
 
   # Lookup video by its ID
   video(where: VideoWhereUniqueInput!): Video
