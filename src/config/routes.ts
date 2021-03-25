@@ -1,6 +1,6 @@
 export default {
   viewer: {
-    index: () => '',
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}`,
     searchOverlay: () => `search`,
     search: ({ query }: { query?: string } = {}) => {
       const basePath = 'search'
@@ -19,14 +19,14 @@ export default {
     videos: () => 'videos',
   },
   studio: {
-    index: () => 'studio',
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}studio`,
     newChannel: () => 'channel/new',
     editChannel: () => 'channel',
     videos: () => 'videos',
     uploads: () => 'uploads',
   },
   playground: {
-    index: () => 'playground',
+    index: (absolute?: boolean) => `${absolute ? '/' : ''}playground`,
   },
 }
 

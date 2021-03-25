@@ -97,7 +97,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               variant="secondary"
               onClick={closeSideNav}
               icon="external"
-              to={isStudio ? routes.viewer.index() : routes.studio.index()}
+              to={isStudio ? routes.viewer.index(true) : routes.studio.index(true)}
             >
               Joystream {!isStudio && 'studio'}
             </Button>
