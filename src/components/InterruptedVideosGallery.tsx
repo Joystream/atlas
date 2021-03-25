@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
 
 import { usePersonalData } from '@/hooks'
@@ -18,6 +18,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     // display the newest videos first
     .reverse()
     .slice(-INTERRUPTED_VIDEOS_COUNT)
+
   const interruptedVideosId = interruptedVideosState.map((video) => video.id)
   const anyInterruptedVideos = interruptedVideosId.length > 0
 
@@ -32,6 +33,10 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     },
     { skip: !anyInterruptedVideos }
   )
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   const sortedVideos = videos?.slice().sort((v1, v2) => videoOrderMap[v1.id] - videoOrderMap[v2.id])
 
