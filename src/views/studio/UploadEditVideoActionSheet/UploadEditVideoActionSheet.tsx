@@ -11,17 +11,16 @@ import {
   Select,
   SelectedItem,
   Textarea,
-  TextField,
-  TOP_NAVBAR_HEIGHT,
 } from '@/shared/components'
 import { useMatch, useNavigate } from 'react-router-dom'
-import { studioRoutes } from '@/config/routes'
-import { animated, config, useSpring, useTransition } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { FileRejection } from 'react-dropzone'
 import { Controller, useForm } from 'react-hook-form'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
+import routes from '@/config/routes'
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 
@@ -48,7 +47,7 @@ type UploadEditVideoActionSheetProps = {
 export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProps> = () => {
   // sheet state
   const navigate = useNavigate()
-  const uploadVideoMatch = useMatch({ path: `${studioRoutes.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
   const [sheetState, setSheetState] = useState<SheetState>()
   const [ref, bounds] = useMeasure()
   const transform = bounds.height ? bounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
@@ -110,7 +109,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           <Button
             variant="tertiary"
             onClick={() => {
-              navigate('/studio')
+              navigate(routes.studio.index())
               setSheetState?.('open')
               console.log('open')
             }}
@@ -124,11 +123,11 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             onClick={() => {
               if (sheetState === 'open') {
                 setSheetState?.('minimized')
-                navigate('/studio')
+                navigate(routes.studio.index())
                 console.log('minimize')
               } else {
                 setSheetState?.('open')
-                navigate('/studio/upload')
+                navigate(routes.studio.uploadVideo())
                 console.log('minimize')
               }
             }}
@@ -138,7 +137,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           <Button
             variant="tertiary"
             onClick={() => {
-              navigate('/studio')
+              navigate(routes.studio.index())
               setSheetState?.('closed')
               console.log('close')
             }}

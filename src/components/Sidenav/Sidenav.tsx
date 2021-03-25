@@ -45,7 +45,6 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
   const [expanded, setExpanded] = useState(false)
 
   const handleNewVideoOpen = () => {
-    // TODO add logic for opening new video view
     setExpanded(false)
   }
 
@@ -101,7 +100,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video" onClick={handleNewVideoOpen}>
+            <Button icon="add-video" to={routes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
               New Video
             </Button>
           </ButtonGroup>

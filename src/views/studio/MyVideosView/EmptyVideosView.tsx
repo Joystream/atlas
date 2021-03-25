@@ -4,6 +4,7 @@ import { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
 import { ReactComponent as EmptyIllustration } from '@/assets/empty-videos-illustration.svg'
 import { Button, Text } from '@/shared/components'
 import { sizes, colors, breakpoints } from '@/shared/theme'
+import routes from '@/config/routes'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {
@@ -19,7 +20,9 @@ export const EmptyVideosView: React.FC = () => {
           </Subtitle>
         </MessageView>
         <div>
-          <Button icon="video-camera">Upload video</Button>
+          <Button icon="video-camera" to={routes.studio.uploadVideo()}>
+            Upload video
+          </Button>
         </div>
       </InnerContainerView>
       <StyledWEmptyIllustration />
@@ -94,7 +97,9 @@ export const EmptyVideos = () => {
         <Text variant="h5">No videos found...</Text>
         {/* <Subtitle variant="body2">No videos found..</Subtitle> */}
       </Message>
-      <Button icon="video-camera">Upload video</Button>
+      <Button icon="video-camera" to={routes.studio.uploadVideo()}>
+        Upload video
+      </Button>
     </Container>
   )
 }

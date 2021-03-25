@@ -102,7 +102,7 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioContainer>
-          <Button icon="add-video" />
+          <Button icon="add-video" to={routes.studio.uploadVideo()} />
           <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
           <DrawerButton isActive={isDrawerActive} icon="chevron-down" variant="tertiary" onClick={handleDrawerToggle} />
         </StudioContainer>

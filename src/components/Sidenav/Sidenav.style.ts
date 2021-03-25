@@ -77,7 +77,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  button:not(:first-child) {
+  a:not(:first-child) {
     margin-top: ${sizes(4)};
   }
 `
