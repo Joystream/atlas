@@ -100,23 +100,21 @@ type Category {
 
 type License {
   id: ID!
-  # Should be Int?
-  code: String
+  code: Int
   url: String
   attribution: String
   videoLicense: [Video!]
   customText: String
 }
 
-# TODO needs to be updated
 type VideoMediaMetadata {
   id: ID!
 
   # Resolution width
-  pixelWidth: Int!
+  pixelWidth: Int
 
   # Resolution height
-  pixelHeight: Int!
+  pixelHeight: Int
   # Size in bytes
   size: Float
 }
@@ -149,11 +147,11 @@ type Video {
 
   skippableIntroDuration: Int
   # Timestamp of block
-  createdAtBlockHeight: Float!
   # extended from Orion
   views: Int
 }
 
+# Isn't provided by query node yet
 type CoverVideo {
   id: ID!
   video: Video!

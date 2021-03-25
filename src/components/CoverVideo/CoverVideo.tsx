@@ -23,7 +23,7 @@ import { Placeholder, VideoPlayer } from '@/shared/components'
 import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
-import { getImageUrlFromAsset } from '@/utils/image'
+import { getUrlFromAsset } from '@/utils/asset'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -68,11 +68,11 @@ const CoverVideo: React.FC = () => {
                 isInBackground
                 muted={soundMuted}
                 playing={videoPlaying}
-                posterUrl={getImageUrlFromAsset(data.video.thumbnail)}
+                posterUrl={getUrlFromAsset(data.video.thumbnail)}
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                src={data.video.media}
+                src={getUrlFromAsset(data.video.media)}
               />
             ) : (
               <PlayerPlaceholder />

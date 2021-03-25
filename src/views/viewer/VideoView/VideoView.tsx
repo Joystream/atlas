@@ -23,7 +23,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
-import { getImageUrlFromAsset } from '@/utils/image'
+import { getUrlFromAsset } from '@/utils/asset'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -125,9 +125,9 @@ const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               playing={playing}
-              src={video.media}
+              src={getUrlFromAsset(video.media)}
               fill
-              posterUrl={getImageUrlFromAsset(video.thumbnail)}
+              posterUrl={getUrlFromAsset(video.thumbnail)}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}
@@ -172,11 +172,7 @@ const VideoView: React.FC = () => {
             <>
               <p>
                 License:
-                {video.license.url && (
-                  <a href={video.license.url} target="_blank" rel="noopener noreferrer">
-                    {video.license.code}
-                  </a>
-                )}
+                {video.license.url && <a href={video.license.url} target="_blank" rel="noopener noreferrer"></a>}
               </p>
               <p>{video.license.customText}</p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}

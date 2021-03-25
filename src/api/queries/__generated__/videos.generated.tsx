@@ -8,14 +8,14 @@ import * as Apollo from '@apollo/client'
 export type VideoMediaFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
   id: string
-  pixelHeight: number
-  pixelWidth: number
+  pixelHeight?: Types.Maybe<number>
+  pixelWidth?: Types.Maybe<number>
 }
 
 export type LicenseFieldsFragment = {
   __typename?: 'License'
   id: string
-  code?: Types.Maybe<string>
+  code?: Types.Maybe<number>
   attribution?: Types.Maybe<string>
   customText?: Types.Maybe<string>
   url?: Types.Maybe<string>

@@ -111,7 +111,7 @@ export type Category = {
 export type License = {
   __typename?: 'License'
   id: Scalars['ID']
-  code?: Maybe<Scalars['String']>
+  code?: Maybe<Scalars['Int']>
   url?: Maybe<Scalars['String']>
   attribution?: Maybe<Scalars['String']>
   videoLicense?: Maybe<Array<Video>>
@@ -121,8 +121,8 @@ export type License = {
 export type VideoMediaMetadata = {
   __typename?: 'VideoMediaMetadata'
   id: Scalars['ID']
-  pixelWidth: Scalars['Int']
-  pixelHeight: Scalars['Int']
+  pixelWidth?: Maybe<Scalars['Int']>
+  pixelHeight?: Maybe<Scalars['Int']>
   size?: Maybe<Scalars['Float']>
 }
 
@@ -151,7 +151,6 @@ export type Video = {
   license: License
   isFeatured: Scalars['Boolean']
   skippableIntroDuration?: Maybe<Scalars['Int']>
-  createdAtBlockHeight: Scalars['Float']
   views?: Maybe<Scalars['Int']>
 }
 
