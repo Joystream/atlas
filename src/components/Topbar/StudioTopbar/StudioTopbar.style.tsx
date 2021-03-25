@@ -65,7 +65,7 @@ export const TextContainer = styled.div`
   }
 `
 
-export const StudioContainer = styled.div`
+export const StudioTopbarContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -73,9 +73,6 @@ export const StudioContainer = styled.div`
   svg {
     width: auto;
     height: auto;
-  }
-  button {
-    cursor: pointer;
   }
   ${ChannelInfoContainer} {
     &:hover {
@@ -87,6 +84,15 @@ export const StudioContainer = styled.div`
         display: flex;
       }
     }
+  }
+`
+
+export const NewChannelButtonLink = styled(Button)`
+  opacity: 0.4;
+  margin: 0 ${sizes(2)} 0 ${sizes(5)};
+  svg {
+    width: 20px;
+    height: 20px;
   }
 `
 

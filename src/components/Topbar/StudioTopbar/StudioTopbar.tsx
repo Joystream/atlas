@@ -4,12 +4,13 @@ import routes from '@/config/routes'
 import { Text, Icon, Button } from '@/shared/components'
 import {
   StyledTopbarBase,
-  StudioContainer,
+  StudioTopbarContainer,
   DrawerButton,
   MemberInfoContainer,
   MemberTitleText,
   MemberTextContainer,
   ChannelInfoContainer,
+  NewChannelButtonLink,
   StyledAvatar,
   TextContainer,
   DrawerContainer,
@@ -102,23 +103,30 @@ const StudioTopbar: React.FC = () => {
   return (
     <>
       <StyledTopbarBase variant="studio">
-        <StudioContainer>
+        <StudioTopbarContainer>
           <Button icon="add-video" />
           {member.channels.length ? (
             <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
           ) : (
-            <StyledLink to={routes.studioNewChannel()}>
-              <ChannelInfoContainer>
-                <Button icon="new-channel" variant="tertiary" size="large" />
-                <TextContainer>
-                  <Text>New Channel</Text>
-                  <Text>{member.name}</Text>
-                </TextContainer>
-              </ChannelInfoContainer>
-            </StyledLink>
+            <>
+              <NewChannelButtonLink
+                icon="new-channel"
+                variant="tertiary"
+                size="large"
+                to={routes.studio.newChannel()}
+              />
+              <StyledLink to={routes.studio.newChannel()}>
+                <ChannelInfoContainer>
+                  <TextContainer>
+                    <Text>New Channel</Text>
+                    <Text>{member.name}</Text>
+                  </TextContainer>
+                </ChannelInfoContainer>
+              </StyledLink>
+            </>
           )}
           <DrawerButton isActive={isDrawerActive} icon="chevron-down" variant="tertiary" onClick={handleDrawerToggle} />
-        </StudioContainer>
+        </StudioTopbarContainer>
       </StyledTopbarBase>
       <NavDrawer
         ref={drawerRef}
@@ -171,26 +179,27 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
     const hasChannels = !!channels.length
     return (
       <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
-        {hasChannels && <Text variant="h6">My Channels</Text>}
-        {hasChannels &&
-          channels.map((channel) => (
-            <ChannelInfo
-              key={channel.name}
-              channel={channel}
-              member={memberName}
-              active={channel.name === currentChannel.name}
-              onClick={() => onCurrentChannelChange(channel)}
-            />
-          ))}
         {hasChannels && (
-          <StyledLink to={routes.studio.newChannel()} onClick={handleClose}>
-            <NewChannel>
-              <NewChannelIconContainer>
-                <Icon name="new-channel" />
-              </NewChannelIconContainer>
-              <Text>New Channel</Text>
-            </NewChannel>
-          </StyledLink>
+          <>
+            <Text variant="h6">My Channels</Text>
+            {channels.map((channel) => (
+              <ChannelInfo
+                key={channel.name}
+                channel={channel}
+                member={memberName}
+                active={channel.name === currentChannel.name}
+                onClick={() => onCurrentChannelChange(channel)}
+              />
+            ))}
+            <StyledLink to={routes.studio.newChannel()} onClick={handleClose}>
+              <NewChannel>
+                <NewChannelIconContainer>
+                  <Icon name="new-channel" />
+                </NewChannelIconContainer>
+                <Text>New Channel</Text>
+              </NewChannel>
+            </StyledLink>
+          </>
         )}
         <MemberInfo memberName={memberName} memberAvatar={memberAvatar} hasChannels={hasChannels} />
         <Button icon="logout" variant="secondary" onClick={onLogoutClick}>
