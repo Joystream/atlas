@@ -1,4 +1,4 @@
-import { sizes, colors } from '@/shared/theme'
+import { sizes, colors, breakpoints } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Text from '../Text'
 
@@ -8,7 +8,11 @@ export const Header = styled.header`
 `
 
 export const Hero = styled(Text)`
-  font-size: 72px;
+  font-size: 54px;
+  word-break: break-word;
+  @media screen and (min-width: ${breakpoints.small}) {
+    font-size: 72px;
+  }
 `
 
 export const SubTitle = styled(Text)`

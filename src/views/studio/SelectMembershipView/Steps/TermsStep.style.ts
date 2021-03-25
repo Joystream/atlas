@@ -47,4 +47,5 @@ export const TermsForm = styled.form`
 
 export const ContinueButton = styled(Button)`
   margin-left: auto;
+  cursor: pointer;
 `
