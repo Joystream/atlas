@@ -57,27 +57,6 @@ export const MyVideosView = () => {
     }
   }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
 
-  // hook to tests draft should be deleted before final
-  useEffect(() => {
-    const createDrafts = async () => {
-      await removeAllDrafts()
-      for (let i = 0; i < 32; i++) {
-        await addDraft({
-          channelId: testChannelId,
-          title: i.toString(),
-          description: 'string',
-          isPublic: true,
-          hasMarketing: false,
-          isExplicit: false,
-        })
-      }
-    }
-    createDrafts()
-    return () => {
-      removeAllDrafts()
-    }
-  }, [])
-
   const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
     id: undefined,
     progress: undefined,

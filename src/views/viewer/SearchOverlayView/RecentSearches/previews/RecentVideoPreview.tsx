@@ -19,7 +19,7 @@ type RecentVideoPreviewProps = {
 
 const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
   return (
-    <PreviewContainer to={routes.video(video?.id)}>
+    <PreviewContainer to={routes.viewer.video(video?.id)}>
       <SwitchTransition>
         <CSSTransition
           key={video ? 'placeholder' : 'content'}

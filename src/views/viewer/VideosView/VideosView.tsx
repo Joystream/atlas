@@ -4,8 +4,8 @@ import { ErrorBoundary } from '@sentry/react'
 import { useInView } from 'react-intersection-observer'
 import { useFeaturedVideos, useCategories } from '@/api/hooks'
 
-import { ErrorFallback, BackgroundPattern, VideoGallery } from '@/components'
-import { TOP_NAVBAR_HEIGHT, Text } from '@/shared/components'
+import { ErrorFallback, BackgroundPattern, VideoGallery, TOP_NAVBAR_HEIGHT } from '@/components'
+import { Text } from '@/shared/components'
 import {
   StyledViewWrapper,
   StyledCategoryPicker,

@@ -4,7 +4,7 @@ import RecentSearches from './RecentSearches'
 import SearchResults from './SearchResults'
 import styled from '@emotion/styled'
 import { colors, zIndex } from '@/shared/theme'
-import { TOP_NAVBAR_HEIGHT } from '@/shared/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { QUERY_PARAMS } from '@/config/routes'
 
 const SearchOverlayView: React.FC = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, StyledViewWrapper } from '@/views/consumer/VideosView/VideosView.style'
+import { Header, StyledViewWrapper } from '@/views/viewer/VideosView/VideosView.style'
 import { BackgroundPattern, InfiniteChannelGrid } from '@/components'
 import { transitions } from '@/shared/theme'
 
