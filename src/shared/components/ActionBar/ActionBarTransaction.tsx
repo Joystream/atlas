@@ -5,7 +5,11 @@ export type ActionBarTransactionProps = {
   fee: number
 } & Omit<ActionBarProps, 'primaryText' | 'secondaryText'>
 
-const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({ fee, primaryButtonText, ...actionBarArgs }) => {
+const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
+  fee,
+  primaryButtonText = '',
+  ...actionBarArgs
+}) => {
   return (
     <ActionBar
       {...actionBarArgs}

@@ -27,7 +27,7 @@ export default {
 export const studioRoutes = {
   newChannel: () => '/channel/new',
   editChannel: () => '/channel',
-  uploadVideo: () => `/studio/upload`,
+  uploadVideo: () => '/upload',
   videos: () => '/videos',
   uploads: () => '/uploads',
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import {
+  ActionBarTransaction,
   Button,
   FormField,
   HeaderTextField,
@@ -213,9 +214,15 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           </FormField>
         </div>
       </Content>
+      <StyledActionBar fee={99} />
     </Container>
   )
 }
+
+const StyledActionBar = styled(ActionBarTransaction)`
+  left: 0;
+  border-top: solid 1px ${colors.gray[700]};
+`
 
 const Container = styled(animated.div)`
   --upload-video-action-sheet-bar-height: ${UploadEditVideoActionSheetBarHeight}px;

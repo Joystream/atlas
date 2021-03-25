@@ -1,13 +1,8 @@
-import { DraftsProvider } from '@/hooks'
 import React from 'react'
-import StudioRouter from './StudioRouter'
+import { StudioRouter } from './StudioRouter'
 
 const StudioView = () => {
-  return (
-    <DraftsProvider>
-      <StudioRouter />
-    </DraftsProvider>
-  )
+  return <StudioRouter />
 }
 
 export default StudioView
