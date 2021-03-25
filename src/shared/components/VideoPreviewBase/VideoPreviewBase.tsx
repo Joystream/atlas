@@ -167,7 +167,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   }
   const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
     if (onRemoveButtonClick) {
-      e.stopPropagation()
+      e.preventDefault()
       onRemoveButtonClick(e)
     }
   }

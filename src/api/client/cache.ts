@@ -10,13 +10,14 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   const isPublic = args?.where?.isPublic_eq
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const idIn = args?.where?.id_in ? JSON.stringify(args.where.id_in) : ''
 
   // only for counting videos in HomeView
   if (args?.where?.channelId_in && !args?.first) {
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
+  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idIn}`
 }
 
 const cache = new InMemoryCache({
