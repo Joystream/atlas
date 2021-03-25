@@ -1,5 +1,5 @@
-import StudioView from './StudioView'
+import StudioLayout from './StudioLayout'
 import CreateEditChannelView from './CreateEditChannelView'
 import MyVideosView from './MyVideosView'
 
-export { StudioView, CreateEditChannelView, MyVideosView }
+export { StudioLayout, CreateEditChannelView, MyVideosView }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
-import { StyledSearchbar } from '@/components/ViewerTopbar/ViewerTopbar.style'
+import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
 import { ReactComponent as UnstyledFullLogoDefault } from '@/assets/full-logo.svg'

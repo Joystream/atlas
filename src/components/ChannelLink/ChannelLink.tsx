@@ -30,7 +30,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   const displayedChannel = overrideChannel || channel
 
   return (
-    <Container to={routes.channel(id)} disabled={!id || noLink} className={className}>
+    <Container to={routes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
         <Avatar imageUrl={displayedChannel?.avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />
       )}
