@@ -56,7 +56,6 @@ import {
   createSingleItemAccessor,
   createTotalCountAccessor,
   createVideoViewsAccessor,
-  createMembershipsAccessor,
 } from './accessors'
 import { createStore } from './store'
 import {
@@ -129,7 +128,7 @@ const queryNodeHandlers = [
   createQueryHandler<GetMembershipsQuery, GetMembershipsQueryVariables>(
     queryNode,
     GetMembershipsDocument,
-    createMembershipsAccessor(mockMemberships)
+    createOffsetLimitPaginationAccessor(mockMemberships)
   ),
 
   // misc
