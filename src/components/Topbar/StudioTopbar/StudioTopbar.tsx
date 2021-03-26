@@ -76,6 +76,10 @@ const StudioTopbar: React.FC = () => {
     setDrawerActive(false)
   }
 
+  const handleAddVideoViewOpen = () => {
+    // TODO add logic for opening Add Video View
+  }
+
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
     e.stopPropagation()
     setDrawerActive(!isDrawerActive)
@@ -104,7 +108,7 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <Button icon="add-video" />
+          <Button icon="add-video" onClick={handleAddVideoViewOpen} />
           {member.channels.length ? (
             <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
           ) : (

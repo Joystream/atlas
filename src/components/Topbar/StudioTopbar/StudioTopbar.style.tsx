@@ -108,7 +108,7 @@ export const MemberTitleText = styled(Text)`
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
-  color: white;
+  color: ${colors.white};
 `
 
 export const NewChannel = styled.div`
