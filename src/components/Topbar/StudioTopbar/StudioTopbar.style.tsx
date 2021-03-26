@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { Avatar, Text, Button } from '@/shared/components'
+import { Avatar, Text, Button, Icon } from '@/shared/components'
 import TopbarBase from '../TopbarBase'
 import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
 
@@ -19,6 +19,8 @@ export const StyledTopbarBase = styled(TopbarBase)`
 
 export const DrawerButton = styled(Button)<CommonStudioTopbarProps>`
   svg {
+    width: auto;
+    height: auto;
     transform: rotate(${({ isActive }) => (isActive ? '180deg' : '0')});
     transition: transform ${transitions.timings.regular} ${transitions.easing};
   }
@@ -31,14 +33,6 @@ export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   &:hover {
     cursor: pointer;
     background-color: ${({ isActive }) => (isActive ? colors.gray[600] : colors.gray[700])};
-  }
-  button {
-    margin: 0 ${sizes(2)} 0 ${sizes(5)};
-    opacity: 0.4;
-    svg {
-      width: 20px;
-      height: 20px;
-    }
   }
 `
 
@@ -70,10 +64,6 @@ export const StudioTopbarContainer = styled.div`
   align-items: center;
   margin-left: auto;
   margin-right: ${sizes(3)};
-  svg {
-    width: auto;
-    height: auto;
-  }
   ${ChannelInfoContainer} {
     &:hover {
       background-color: ${colors.transparent};
@@ -87,13 +77,11 @@ export const StudioTopbarContainer = styled.div`
   }
 `
 
-export const NewChannelButtonLink = styled(Button)`
+export const NewChannelIcon = styled(Icon)`
   opacity: 0.4;
-  margin: 0 ${sizes(2)} 0 ${sizes(5)};
-  svg {
-    width: 20px;
-    height: 20px;
-  }
+  margin: 0 ${sizes(4)} 0 ${sizes(5)};
+  height: 20px;
+  width: 20px;
 `
 
 export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`

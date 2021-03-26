@@ -10,7 +10,7 @@ import {
   MemberTitleText,
   MemberTextContainer,
   ChannelInfoContainer,
-  NewChannelButtonLink,
+  NewChannelIcon,
   StyledAvatar,
   TextContainer,
   DrawerContainer,
@@ -108,22 +108,13 @@ const StudioTopbar: React.FC = () => {
           {member.channels.length ? (
             <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
           ) : (
-            <>
-              <NewChannelButtonLink
-                icon="new-channel"
-                variant="tertiary"
-                size="large"
-                to={routes.studio.newChannel()}
-              />
-              <StyledLink to={routes.studio.newChannel()}>
-                <ChannelInfoContainer>
-                  <TextContainer>
-                    <Text>New Channel</Text>
-                    <Text>{member.name}</Text>
-                  </TextContainer>
-                </ChannelInfoContainer>
-              </StyledLink>
-            </>
+            <ChannelInfoContainer onClick={handleDrawerToggle}>
+              <NewChannelIcon name="new-channel" />
+              <TextContainer>
+                <Text>New Channel</Text>
+                <Text>{member.name}</Text>
+              </TextContainer>
+            </ChannelInfoContainer>
           )}
           <DrawerButton isActive={isDrawerActive} icon="chevron-down" variant="tertiary" onClick={handleDrawerToggle} />
         </StudioTopbarContainer>
