@@ -10,7 +10,7 @@ import {
 } from './AssetsGroupUploadBar.style'
 import { AssetLine } from '../AssetLine'
 import { Icon, Text } from '@/shared/components'
-import { DrawerButton } from '@/components/PublishingTopbar/PublishingTopbar.style'
+import { DrawerButton } from '@/components/Topbar/StudioTopbar/StudioTopbar.style'
 
 type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
 type AssetStatus = 'completed' | 'uploading' | 'pending' | 'failed' | 'reconnecting'
