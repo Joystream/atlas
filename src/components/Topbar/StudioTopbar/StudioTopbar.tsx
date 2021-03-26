@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Text, Icon, Button, Placeholder } from '@/shared/components'
 import {
   StyledTopbarBase,
@@ -196,7 +196,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 onClick={() => onCurrentChannelChange(channel.id)}
               />
             ))}
-            <StyledLink to={routes.studio.newChannel()} onClick={handleClose}>
+            <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>
                   <Icon name="new-channel" />

@@ -1,4 +1,4 @@
-import routes, { QUERY_PARAMS } from '@/config/routes'
+import { absoluteRoutes, QUERY_PARAMS } from '@/config/routes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { RoutingState } from '@/types/routing'
@@ -16,13 +16,13 @@ const ViewerTopbar: React.FC = () => {
 
   useEffect(() => {
     // close the searchbar on external navigation
-    if (isFocused && !location.pathname.includes(routes.viewer.search())) {
+    if (isFocused && !location.pathname.includes(absoluteRoutes.viewer.search())) {
       setSearchQuery('')
       setIsFocused(false)
     }
 
     // focus the searchbar when visiting search (e.g. from a link)
-    if (!isFocused && location.pathname.includes(routes.viewer.search())) {
+    if (!isFocused && location.pathname.includes(absoluteRoutes.viewer.search())) {
       setIsFocused(true)
       if (location.search) {
         const params = new URLSearchParams(location.search)
@@ -37,7 +37,7 @@ const ViewerTopbar: React.FC = () => {
       const state: RoutingState = { overlaidLocation }
 
       // navigate to search results
-      navigate(routes.viewer.search({ query: searchQuery.trim() }), { state })
+      navigate(absoluteRoutes.viewer.search({ query: searchQuery.trim() }), { state })
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
       handleCancel()
@@ -54,10 +54,10 @@ const ViewerTopbar: React.FC = () => {
     setIsFocused(true)
 
     // open the search overlay if not already visible
-    if (!location.pathname.includes(routes.viewer.search())) {
+    if (!location.pathname.includes(absoluteRoutes.viewer.search())) {
       const state: RoutingState = { overlaidLocation }
 
-      navigate(routes.viewer.search(), { state })
+      navigate(absoluteRoutes.viewer.search(), { state })
     }
   }
 
@@ -66,7 +66,7 @@ const ViewerTopbar: React.FC = () => {
     setIsFocused(false)
 
     // navigate to overlaid view or home on searchbar close
-    const overlaidLocation = locationState?.overlaidLocation || { pathname: routes.viewer.index() }
+    const overlaidLocation = locationState?.overlaidLocation || { pathname: absoluteRoutes.viewer.index() }
     navigate(overlaidLocation)
   }
   return (

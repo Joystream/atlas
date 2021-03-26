@@ -21,7 +21,7 @@ import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -97,7 +97,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               variant="secondary"
               onClick={closeSideNav}
               icon="external"
-              to={isStudio ? routes.viewer.index(true) : routes.studio.index(true)}
+              to={isStudio ? absoluteRoutes.viewer.index() : absoluteRoutes.studio.index()}
             >
               Joystream {!isStudio && 'studio'}
             </Button>

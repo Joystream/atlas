@@ -1,8 +1,15 @@
-export default {
+export const BASE_PATHS = {
+  // must be empty so we don't get double '/' after joining paths
+  viewer: '',
+  studio: '/studio',
+  playground: '/playground',
+} as const
+
+export const relativeRoutes = {
   viewer: {
-    index: () => '/',
+    index: () => '',
     search: ({ query }: { query?: string } = {}) => {
-      const basePath = '/search'
+      const basePath = 'search'
 
       if (query) {
         const searchQueryParams = new URLSearchParams()
@@ -12,22 +19,38 @@ export default {
 
       return basePath
     },
-    channel: (id = ':id') => `/channel/${id}`,
-    channels: () => '/channels',
-    video: (id = ':id') => `/video/${id}`,
-    videos: () => '/videos',
+    channel: (id = ':id') => `channel/${id}`,
+    channels: () => 'channels',
+    video: (id = ':id') => `video/${id}`,
+    videos: () => 'videos',
   },
   studio: {
-    index: () => '/studio',
-    newChannel: () => '/studio/channel/new',
-    editChannel: () => '/studio/channel',
-    videos: () => '/studio/videos',
-    uploads: () => '/studio/uploads',
+    index: () => '',
+    newChannel: () => 'channel/new',
+    editChannel: () => 'channel',
+    videos: () => '/videos',
+    uploads: () => 'uploads',
   },
   playground: {
-    index: () => '/playground',
+    index: () => '',
   },
 }
+
+export const absoluteRoutes = Object.keys(BASE_PATHS).reduce((absoluteRoutesAcc, basePathKeyStr) => {
+  const basePathKey = basePathKeyStr as keyof typeof BASE_PATHS
+  const basePath = BASE_PATHS[basePathKey]
+
+  const routes = relativeRoutes[basePathKey]
+
+  // @ts-ignore typing this is too much work ¯\_(ツ)_/¯
+  absoluteRoutesAcc[basePathKey] = Object.keys(routes).reduce((routesAcc, routeKeyStr) => {
+    // @ts-ignore typing this is too much work
+    routesAcc[routeKeyStr] = (...params: never[]) => [basePath, routes[routeKeyStr](...params)].join('/')
+    return routesAcc
+  }, {} as typeof routes)
+
+  return absoluteRoutesAcc
+}, {} as typeof relativeRoutes)
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',
