@@ -3,11 +3,15 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 import {
+  ActionBar,
   ActionBarTransaction,
   Button,
+  Checkbox,
+  Datepicker,
   FormField,
   HeaderTextField,
   MultiFileSelect,
+  RadioButton,
   Select,
   SelectedItem,
   Textarea,
@@ -21,18 +25,20 @@ import { Controller, useForm } from 'react-hook-form'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import routes from '@/config/routes'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { isValid } from 'date-fns'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 
 const items: SelectedItem[] = [
   { name: 'Public (Anyone can see this video)', value: 'public' },
-  { name: 'Private', value: 'private' },
+  { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
 
 type Inputs = {
   title: string
   selectedVideoVisibility: string | null
   selectedVideoLanguage: string | null
+  selectedVideoCategory: string | null
   check: boolean
   date: Date | null
   description: string
@@ -88,6 +94,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
       title: '',
       selectedVideoVisibility: null,
       selectedVideoLanguage: null,
+      selectedVideoCategory: null,
       description: '',
       check: false,
       date: null,
@@ -158,7 +165,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             onCropImage={setCroppedImageUrl}
           />
         </div>
-        <div>
+        <FormContainer>
           <HeaderTextField
             name="title"
             ref={register(textFieldValidation('Video Title', 3, 20))}
@@ -197,7 +204,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             <Controller
               name="selectedVideoLanguage"
               control={control}
-              rules={requiredValidation('Video visibility')}
+              rules={requiredValidation('Video language')}
               render={({ value }) => (
                 <Select
                   items={items}
@@ -211,15 +218,101 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               )}
             />
           </FormField>
-        </div>
+          <FormField title="Video Category">
+            <Controller
+              name="selectedVideoCategory"
+              control={control}
+              rules={requiredValidation('Video category')}
+              render={({ value }) => (
+                <Select
+                  items={items}
+                  onChange={(e) => {
+                    setValue('selectedVideoLanguage', e.selectedItem?.value)
+                    clearErrors('selectedVideoLanguage')
+                  }}
+                  error={!!errors.selectedVideoCategory && !value}
+                  helperText={errors.selectedVideoCategory?.message}
+                />
+              )}
+            />
+          </FormField>
+          <FormField
+            title="Published Before"
+            description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
+          >
+            <Controller
+              name="date"
+              control={control}
+              rules={{ validate: (date) => isValid(date) }}
+              render={() => (
+                <Datepicker
+                  onChange={(date) => setValue('date', date)}
+                  onBlur={() => clearErrors('date')}
+                  error={!!errors.date}
+                />
+              )}
+            />
+          </FormField>
+          <FormField title="Marketing" description="to be added ???">
+            <StyledCheckboxContainer>
+              <Controller
+                as={Checkbox}
+                name="check"
+                rules={{ required: true }}
+                error={!!errors.check}
+                control={control}
+                value={false}
+                label="My video features a paid promotion material"
+              />
+            </StyledCheckboxContainer>
+          </FormField>
+          <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
+            <Controller
+              name="radioGroup"
+              control={control}
+              rules={{ required: true }}
+              render={(props) => (
+                <StyledRadioContainer>
+                  <RadioButton
+                    value="all"
+                    label="All audiences"
+                    onChange={(e) => {
+                      clearErrors('radioGroup')
+                      setValue('radioGroup', e.currentTarget.value)
+                    }}
+                    selectedValue={props.value}
+                    error={!!errors.radioGroup}
+                  />
+                  <RadioButton
+                    value="mature"
+                    label="Mature"
+                    onChange={(e) => {
+                      clearErrors('radioGroup')
+                      setValue('radioGroup', e.currentTarget.value)
+                    }}
+                    selectedValue={props.value}
+                    error={!!errors.radioGroup}
+                  />
+                </StyledRadioContainer>
+              )}
+            />
+          </FormField>
+        </FormContainer>
       </Content>
-      <StyledActionBar fee={99} />
+      <StyledActionBar
+        primaryText={`Fee: ${99} Joy`}
+        secondaryText="Every change to the blockchain requires making a nominal transaction."
+        primaryButtonText={`Start Publishing`}
+        detailsText="Video details saved as draft (2 min ago)"
+        tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
+        detailsTextIcon="info"
+      />
     </Container>
   )
 }
 
-const StyledActionBar = styled(ActionBarTransaction)`
-  left: 0;
+const StyledActionBar = styled(ActionBar)`
+  position: initial;
   border-top: solid 1px ${colors.gray[700]};
 `
 
@@ -255,4 +348,22 @@ const Content = styled.div`
   grid-gap: ${sizes(12)};
   grid-template-columns: 1fr 1fr;
   padding: ${sizes(8)};
+`
+
+const StyledCheckboxContainer = styled.div`
+  display: flex;
+  margin-bottom: 50px;
+  p {
+    margin-left: 20px;
+  }
+`
+
+const StyledRadioContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+const FormContainer = styled.div`
+  overflow-y: auto;
 `

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
-import { CreateEditChannelView, MyVideosView } from '.'
+import { CreateEditChannelView, MyVideosView, UploadEditVideoActionSheet } from '.'
 import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
 import routes from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
@@ -62,6 +62,7 @@ const StudioLayout = () => {
               </Routes>
             </ErrorBoundary>
           </MainContainer>
+          <UploadEditVideoActionSheet />
         </ActiveUserProvider>
       </PersonalDataProvider>
     </DraftsProvider>

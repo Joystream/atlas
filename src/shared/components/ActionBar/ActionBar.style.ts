@@ -18,7 +18,7 @@ export const StyledActionBarContainer = styled.div`
   }
 `
 
-export const StyledInnerContainer = styled(StudioContainer)`
+export const StyledInnerContainer = styled.div`
   display: flex;
   width: 100%;
 `
@@ -69,7 +69,10 @@ export const StyledButtonsContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   > *:not(:last-child) {
-    margin-right: ${sizes(2)};
+    margin-right: ${sizes(8)};
+  }
+  > button {
+    flex-shrink: 0;
   }
 `
 
