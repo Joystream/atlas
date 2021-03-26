@@ -31,8 +31,8 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   position: absolute;
   top: 0;
   left: 0;
-  width: ${({ progress }) => progress && `${progress}%`};
   height: 100%;
+  width: ${({ progress }) => progress && `${progress}%`};
   background-color: var(--progress-bar-color);
   transition: width 1s linear;
   animation: load 2.5s infinite ease-in-out;
@@ -60,8 +60,8 @@ export const Thumbnail = styled.div`
   height: ${sizes(12)};
   background-color: ${colors.gray[700]};
   svg {
-    width: 24px;
-    height: 24px;
+    width: ${sizes(6)};
+    height: ${sizes(6)};
   }
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;

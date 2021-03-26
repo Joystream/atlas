@@ -71,7 +71,7 @@ export const FileStatusContainer = styled.div`
 export const FileInfoContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 3fr;
+  grid-template-rows: 1fr;
   width: 100%;
   max-width: 600px;
   margin-left: ${sizes(2)};
@@ -83,19 +83,18 @@ export const FileInfoContainer = styled.div`
   }
   @media screen and (min-width: ${breakpoints.small}) {
     margin-left: ${sizes(6)};
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 `
 
 export const FileInfoType = styled.div`
   display: flex;
   align-items: center;
-  height: 24px;
+  height: ${sizes(6)};
   color: ${colors.white};
   svg {
-    width: 16px;
-    height: 16px;
+    width: ${sizes(6)};
+    height: ${sizes(6)};
     margin-right: 10px;
   }
 `
