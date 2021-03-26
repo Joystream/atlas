@@ -172,6 +172,8 @@ input ChannelWhereInput {
   isCurated_eq: Boolean
   isPublic_eq: Boolean
   ownerMemberId_eq: ID
+  coverPhotoAvailability_eq: AssetAvailability
+  avatarPhotoAvailability_eq: AssetAvailability
   id_in: [ID!]
 }
 
@@ -203,6 +205,8 @@ input VideoWhereInput {
   categoryId_eq: ID
   channelId_in: [ID!]
   channelId_eq: ID
+  thumbnailAvailability_eq: AssetAvailability
+  mediaAvailability_eq: AssetAvailability
   createdAt_gte: DateTime
   isFeatured_eq: Boolean
   isPublic_eq: Boolean
