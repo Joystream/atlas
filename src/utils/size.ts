@@ -1,11 +1,10 @@
-const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-export const formatBytes = (x: number) => {
-  let l = 0
-
-  while (x >= 1024 && ++l) {
-    x = x / 1024
+const units = ['bytes', 'KB', 'MB', 'GB']
+export const formatBytes = (size: number) => {
+  let i = 0
+  while (size >= 1024 && ++i) {
+    size = size / 1024
   }
   // include a decimal point and a tenths-place digit if presenting
   // less than ten of KB or greater units
-  return x.toFixed(x < 10 && l > 0 ? 1 : 0) + units[l]
+  return size.toFixed(size < 10 && i > 0 ? 1 : 0) + units[i]
 }

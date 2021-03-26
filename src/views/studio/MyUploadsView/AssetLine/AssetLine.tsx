@@ -8,17 +8,18 @@ import {
   FileInfoContainer,
   FileInfoType,
   StatusMessage,
-} from './AssetsGroupUploadBar.style'
+} from './AssetLine.style'
 import { Icon, Text, CircularProgressbar } from '@/shared/components'
-import { Asset } from './AssetsGroupUploadBar'
+import { Asset } from '../AssetsGroupUploadBar/AssetsGroupUploadBar'
 
 type AssetLineProps = {
   isLast?: boolean
   asset: Asset
 }
 
-export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
+const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const isVideo = asset.type === 'video'
+  const fileInfoIcon = isVideo ? 'video-file' : 'image-file'
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
   const resolution = `${asset.width}x${asset.height}`
   const size = formatBytes(asset.size)
@@ -33,22 +34,26 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
       fileStatus = <CircularProgressbar value={0} />
       break
     case 'failed':
-      fileStatus = <Icon name="error" />
-      fileStatusMessage = asset.statusMessage || ''
+      fileStatus = <Icon name="error-second" />
       break
     case 'completed':
       fileStatus = <Icon name="success" />
       break
+    case 'reconnecting':
+      fileStatus = <Icon name="error-second" />
+      fileStatusMessage = 'Reconnecting...'
+      break
     default:
       fileStatus = <CircularProgressbar value={asset.progress} />
   }
+
   return (
     <FileLineContainer isLast={isLast}>
       {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
       <FileStatusContainer>{fileStatus}</FileStatusContainer>
       <FileInfoContainer>
         <FileInfoType>
-          <Icon name={isVideo ? 'video-file' : 'image-file'} />
+          <Icon name={fileInfoIcon} />
           <Text variant="body2">{fileTypeText}</Text>
         </FileInfoType>
         <Text variant="body2">{resolution}</Text>
@@ -58,3 +63,5 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
     </FileLineContainer>
   )
 }
+
+export default AssetLine

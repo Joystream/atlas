@@ -8,19 +8,20 @@ import {
   UploadInfoContainer,
   AssetsDrawerContainer,
 } from './AssetsGroupUploadBar.style'
-import { AssetLine } from './AssetLine'
+import { AssetLine } from '../AssetLine'
 import { Icon, Text } from '@/shared/components'
 import { DrawerButton } from '@/components/PublishingTopbar/PublishingTopbar.style'
 
 type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
+type AssetStatus = 'completed' | 'uploading' | 'pending' | 'failed' | 'reconnecting'
 export type Asset = {
+  id: string
   type: AssetType
   progress: number
-  status: 'uploading' | 'pending' | 'failed' | 'completed'
+  status: AssetStatus
   width: number
   height: number
   size: number
-  statusMessage?: string
 }
 
 type UploadDataType = 'channel' | 'video'
@@ -39,19 +40,19 @@ const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
 
   const isChannelType = type === 'channel'
   const isPending = files.every((file) => file.status === 'pending')
-  const hasErrorNumber = files.filter((file) => file.status === 'failed').length
+  const hasErrorNumber = files.filter(({ status }) => status === 'failed' || status === 'reconnecting').length
 
   const allAssetsSize = files.reduce((acc, file) => (acc = acc + file.size), 0)
   const alreadyUploadedSize = files.reduce((acc, file) => (acc = acc + (file.size * file.progress) / 100), 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const assetsGroupIconName = hasErrorNumber ? 'error' : isChannelType ? 'my-channel' : 'play'
+  const assetsGroupIconName = hasErrorNumber ? 'error-second' : isChannelType ? 'my-channel' : 'play'
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : title
   const assetsGroupNumberText = `${files.length} asset${files.length > 1 ? 's' : ''}`
   const assetsGroupInfoText = isPending
     ? 'Waiting for upload...'
     : hasErrorNumber
-    ? `(${hasErrorNumber}) Asset upload failed`
+    ? `(${hasErrorNumber}) Asset${hasErrorNumber > 1 ? 's' : ''} upload failed`
     : `Uploaded (${masterProgress}%)`
 
   return (
@@ -78,7 +79,7 @@ const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
       </AssetsGroupBarUploadContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive}>
         {files.map((file, idx) => (
-          <AssetLine key={file.type + idx} asset={file} isLast={files.length === idx + 1} />
+          <AssetLine key={file.id} asset={file} isLast={files.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>

@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { StudioContainer } from '@/components'
 import { Text } from '@/shared/components'
-import PlaceholderItems from './PlaceholderItems'
-import AssetsGroupUploadBar, { UploadData } from './AssetsGroupUploadBar'
+import { placeholderItems } from './PlaceholderItems'
+import { AssetsGroupUploadBar, UploadData } from './AssetsGroupUploadBar'
 import { StyledText } from './MyUploadsView.style'
 
-const uploadedFiles = [
+const uploadingFiles = [
   {
     type: 'channel',
     files: [
       {
+        id: '768dad7c-6fea-4496-ae90-3a1ee4281bd4',
         type: 'avatar',
         progress: 0,
         width: 360,
         height: 420,
         size: 178400,
-        status: 'failed',
-        statusMessage: 'Trying to reconnect',
+        status: 'reconnecting',
       },
       {
+        id: '0c2672ff-8d19-43df-975f-5c089aed5dde',
         type: 'cover',
         progress: 100,
         width: 1300,
@@ -33,6 +34,7 @@ const uploadedFiles = [
     title: 'Lost in the Woods? EP2',
     files: [
       {
+        id: 'd6d7be77-a908-412f-9a9d-e6664d11f596',
         type: 'thumbnail',
         progress: 100,
         width: 1920,
@@ -41,6 +43,7 @@ const uploadedFiles = [
         status: 'completed',
       },
       {
+        id: 'eae3c720-de6c-4434-82ef-02629f052074',
         type: 'video',
         progress: 60,
         width: 1920,
@@ -55,6 +58,7 @@ const uploadedFiles = [
     title: 'Lost in the Woods? EP3',
     files: [
       {
+        id: 'e7627036-bfa4-4fa4-bf49-8f6f688ea7b7',
         type: 'thumbnail',
         progress: 0,
         width: 1920,
@@ -63,6 +67,7 @@ const uploadedFiles = [
         status: 'pending',
       },
       {
+        id: 'f93c9f18-32e4-4e5e-8076-92a90bd5d2b2',
         type: 'video',
         progress: 0,
         width: 1920,
@@ -75,6 +80,7 @@ const uploadedFiles = [
 ] as UploadData[]
 
 const MyUploadsView = () => {
+  // To be removed, faking loading state
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 700)
@@ -83,15 +89,15 @@ const MyUploadsView = () => {
     }
   }, [])
 
-  const hasUploads = uploadedFiles.length > 0
+  const hasUploads = uploadingFiles.length > 0
 
   return (
     <StudioContainer>
       <StyledText variant="h2">My Uploads</StyledText>
       {loading ? (
-        <PlaceholderItems />
+        placeholderItems.map((item) => item)
       ) : hasUploads ? (
-        uploadedFiles.map((files, idx) => <AssetsGroupUploadBar key={files.type + idx} uploadData={files} />)
+        uploadingFiles.map((files, idx) => <AssetsGroupUploadBar key={files.type + idx} uploadData={files} />)
       ) : (
         <Text variant="h3">No uploads...</Text>
       )}
