@@ -1,35 +1,21 @@
-fragment CoverPhotoFields on Channel {
-  coverPhoto {
-    ... on AssetUrl {
-      url
-    }
-    ... on AssetStorage {
-      ...AssetUploadStatusFields
-    }
-  }
-}
-
-fragment AvatarPhotoFields on Channel {
-  avatarPhoto {
-    ... on AssetUrl {
-      url
-    }
-    ... on AssetStorage {
-      ...AssetUploadStatusFields
-    }
-  }
-}
-
 fragment BasicChannelFields on Channel {
   id
   title
   createdAt
-  ...AvatarPhotoFields
+  avatarPhotoUrl
+  avatarPhotoAvailability
+  avatarPhotoDataObject {
+    ...DataObjectFields
+  }
 }
 
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
-  ...CoverPhotoFields
+  coverPhotoUrl
+  coverPhotoAvailability
+  coverPhotoDataObject {
+    ...DataObjectFields
+  }
   follows
   isPublic
 }

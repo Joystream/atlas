@@ -1,6 +1,6 @@
 import * as Types from './baseTypes.generated'
 
-import { AssetUploadStatusFieldsFragment, AssetUploadStatusFieldsFragmentDoc } from './shared.generated'
+import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
 import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { gql } from '@apollo/client'
 
@@ -28,18 +28,16 @@ export type VideoFieldsFragment = {
   description: string
   views?: Types.Maybe<number>
   duration: number
+  thumbnailUrl?: Types.Maybe<string>
+  thumbnailAvailability: Types.AssetAvailability
   createdAt: Date
   isPublic: boolean
+  mediaUrl?: Types.Maybe<string>
+  mediaAvailability: Types.AssetAvailability
   category: { __typename?: 'VideoCategory'; id: string }
-  thumbnail?: Types.Maybe<
-    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
-    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
-  >
+  thumbnailDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
-  media?: Types.Maybe<
-    | { __typename?: 'AssetUrl'; url?: Types.Maybe<string> }
-    | ({ __typename?: 'AssetStorage' } & AssetUploadStatusFieldsFragment)
-  >
+  mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
   license: { __typename?: 'License' } & LicenseFieldsFragment
 }
@@ -145,26 +143,20 @@ export const VideoFieldsFragmentDoc = gql`
     }
     views
     duration
-    thumbnail {
-      ... on AssetUrl {
-        url
-      }
-      ... on AssetStorage {
-        ...AssetUploadStatusFields
-      }
+    thumbnailUrl
+    thumbnailAvailability
+    thumbnailDataObject {
+      ...DataObjectFields
     }
     createdAt
     isPublic
     mediaMetadata {
       ...VideoMediaFields
     }
-    media {
-      ... on AssetUrl {
-        url
-      }
-      ... on AssetStorage {
-        ...AssetUploadStatusFields
-      }
+    mediaUrl
+    mediaAvailability
+    mediaDataObject {
+      ...DataObjectFields
     }
     channel {
       ...BasicChannelFields
@@ -173,7 +165,7 @@ export const VideoFieldsFragmentDoc = gql`
       ...LicenseFields
     }
   }
-  ${AssetUploadStatusFieldsFragmentDoc}
+  ${DataObjectFieldsFragmentDoc}
   ${VideoMediaFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}

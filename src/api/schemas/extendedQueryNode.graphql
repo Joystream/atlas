@@ -16,19 +16,11 @@ type Membership {
   channels: [Channel!]!
 }
 
-union Asset = AssetUrl | AssetStorage
-
-type AssetUrl {
-  # The http url pointing to the media
-  url: String
+enum AssetAvailability {
+  ACCEPTED
+  PENDING
+  INVALID
 }
-
-type AssetStorage {
-  # Upload to content directory status
-  uploadStatus: AssetStorageUploadStatus!
-}
-
-union AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
 
 enum LiaisonJudgement {
   PENDING
@@ -36,7 +28,7 @@ enum LiaisonJudgement {
   REJECTED
 }
 
-type AssetDataObject {
+type DataObject {
   id: ID!
   createdAt: DateTime!
   size: Int!
@@ -55,31 +47,17 @@ type Block {
   block: Int!
 }
 
-type AssetUploadStatus {
-  dataObject: AssetDataObject!
-  oldDataObject: AssetDataObject
-  happenedIn: Block!
-}
-
-type AssetDeleted {
-  dataObject: AssetDataObject!
-  oldDataObject: AssetDataObject
-  happenedIn: Block!
-}
-
-type AssetNeverProvided {
-  dataObject: AssetDataObject!
-  oldDataObject: AssetDataObject
-  happenedIn: Block!
-}
-
 type Channel {
   id: ID!
   createdAt: DateTime!
   title: String!
   description: String
-  coverPhoto: Asset
-  avatarPhoto: Asset
+  coverPhotoDataObject: DataObject
+  coverPhotoUrl: String
+  coverPhotoAvailability: AssetAvailability!
+  avatarPhotoDataObject: DataObject
+  avatarPhotoUrl: String
+  avatarPhotoAvailability: AssetAvailability!
   ownerMember: Membership
   isPublic: Boolean
   isCensored: Boolean
@@ -130,7 +108,9 @@ type Video {
   description: String!
   # In seconds
   duration: Int!
-  thumbnail: Asset
+  thumbnailDataObject: DataObject
+  thumbnailUrl: String
+  thumbnailAvailability: AssetAvailability!
   Language: Language
   hasMarketing: Boolean
   # Possible time when video was published before Joystream
@@ -138,7 +118,9 @@ type Video {
   isPublic: Boolean!
   isCensored: Boolean!
   isExplicit: Boolean!
-  media: Asset
+  mediaDataObject: DataObject
+  mediaUrl: String
+  mediaAvailability: AssetAvailability!
   mediaMetadata: VideoMediaMetadata!
   license: License!
   isFeatured: Boolean!
@@ -155,7 +137,9 @@ type CoverVideo {
   video: Video!
   coverDescription: String!
   coverCutMediaMetadata: VideoMediaMetadata!
-  coverCutMedia: Asset
+  coverCutmediaDataObject: DataObject
+  coverCutmediaUrl: String
+  coverCutmediaAvailability: AssetAvailability!
 }
 
 type FeaturedVideo {

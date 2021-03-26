@@ -26,19 +26,11 @@ export type Membership = {
   channels: Array<Channel>
 }
 
-export type Asset = AssetUrl | AssetStorage
-
-export type AssetUrl = {
-  __typename?: 'AssetUrl'
-  url?: Maybe<Scalars['String']>
+export enum AssetAvailability {
+  Accepted = 'ACCEPTED',
+  Pending = 'PENDING',
+  Invalid = 'INVALID',
 }
-
-export type AssetStorage = {
-  __typename?: 'AssetStorage'
-  uploadStatus: AssetStorageUploadStatus
-}
-
-export type AssetStorageUploadStatus = AssetNeverProvided | AssetDeleted | AssetUploadStatus
 
 export enum LiaisonJudgement {
   Pending = 'PENDING',
@@ -46,8 +38,8 @@ export enum LiaisonJudgement {
   Rejected = 'REJECTED',
 }
 
-export type AssetDataObject = {
-  __typename?: 'AssetDataObject'
+export type DataObject = {
+  __typename?: 'DataObject'
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   size: Scalars['Int']
@@ -63,35 +55,18 @@ export type Block = {
   block: Scalars['Int']
 }
 
-export type AssetUploadStatus = {
-  __typename?: 'AssetUploadStatus'
-  dataObject: AssetDataObject
-  oldDataObject?: Maybe<AssetDataObject>
-  happenedIn: Block
-}
-
-export type AssetDeleted = {
-  __typename?: 'AssetDeleted'
-  dataObject: AssetDataObject
-  oldDataObject?: Maybe<AssetDataObject>
-  happenedIn: Block
-}
-
-export type AssetNeverProvided = {
-  __typename?: 'AssetNeverProvided'
-  dataObject: AssetDataObject
-  oldDataObject?: Maybe<AssetDataObject>
-  happenedIn: Block
-}
-
 export type Channel = {
   __typename?: 'Channel'
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   title: Scalars['String']
   description?: Maybe<Scalars['String']>
-  coverPhoto?: Maybe<Asset>
-  avatarPhoto?: Maybe<Asset>
+  coverPhotoDataObject?: Maybe<DataObject>
+  coverPhotoUrl?: Maybe<Scalars['String']>
+  coverPhotoAvailability: AssetAvailability
+  avatarPhotoDataObject?: Maybe<DataObject>
+  avatarPhotoUrl?: Maybe<Scalars['String']>
+  avatarPhotoAvailability: AssetAvailability
   owner: Member
   isPublic?: Maybe<Scalars['Boolean']>
   isCensored?: Maybe<Scalars['Boolean']>
@@ -138,14 +113,18 @@ export type Video = {
   title: Scalars['String']
   description: Scalars['String']
   duration: Scalars['Int']
-  thumbnail?: Maybe<Asset>
+  thumbnailDataObject?: Maybe<DataObject>
+  thumbnailUrl?: Maybe<Scalars['String']>
+  thumbnailAvailability: AssetAvailability
   Language?: Maybe<Language>
   hasMarketing?: Maybe<Scalars['Boolean']>
   publishedBeforeJoystream?: Maybe<Scalars['String']>
   isPublic: Scalars['Boolean']
   isCensored: Scalars['Boolean']
   isExplicit: Scalars['Boolean']
-  media?: Maybe<Asset>
+  mediaDataObject?: Maybe<DataObject>
+  mediaUrl?: Maybe<Scalars['String']>
+  mediaAvailability: AssetAvailability
   mediaMetadata: VideoMediaMetadata
   license: License
   isFeatured: Scalars['Boolean']
@@ -159,7 +138,9 @@ export type CoverVideo = {
   video: Video
   coverDescription: Scalars['String']
   coverCutMediaMetadata: VideoMediaMetadata
-  coverCutMedia?: Maybe<Asset>
+  coverCutmediaDataObject?: Maybe<DataObject>
+  coverCutmediaUrl?: Maybe<Scalars['String']>
+  coverCutmediaAvailability: AssetAvailability
 }
 
 export type FeaturedVideo = {

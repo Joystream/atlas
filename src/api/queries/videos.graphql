@@ -21,26 +21,20 @@ fragment VideoFields on Video {
   }
   views
   duration
-  thumbnail {
-    ... on AssetUrl {
-      url
-    }
-    ... on AssetStorage {
-      ...AssetUploadStatusFields
-    }
+  thumbnailUrl
+  thumbnailAvailability
+  thumbnailDataObject {
+    ...DataObjectFields
   }
   createdAt
   isPublic
   mediaMetadata {
     ...VideoMediaFields
   }
-  media {
-    ... on AssetUrl {
-      url
-    }
-    ... on AssetStorage {
-      ...AssetUploadStatusFields
-    }
+  mediaUrl
+  mediaAvailability
+  mediaDataObject {
+    ...DataObjectFields
   }
   channel {
     ...BasicChannelFields

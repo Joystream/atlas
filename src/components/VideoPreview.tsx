@@ -8,7 +8,6 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
-import { getUrlFromAsset } from '@/utils/asset'
 
 export type VideoPreviewProps = {
   id?: string
@@ -22,13 +21,13 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
       publisherMode={false}
       title={video?.title}
       channelTitle={video?.channel.title}
-      channelAvatarUrl={getUrlFromAsset(video?.channel.avatarPhoto)}
+      channelAvatarUrl={video?.channel.avatarPhotoUrl}
       createdAt={video?.createdAt}
       duration={video?.duration}
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
-      thumbnailUrl={getUrlFromAsset(video?.thumbnail)}
+      thumbnailUrl={video?.thumbnailUrl}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
@@ -49,11 +48,11 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       publisherMode
       title={isDraft ? draft?.title : video?.title}
       channelTitle={video?.channel.title}
-      channelAvatarUrl={getUrlFromAsset(video?.channel.avatarPhoto)}
+      channelAvatarUrl={video?.channel.avatarPhotoUrl}
       createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}
-      thumbnailUrl={getUrlFromAsset(video?.thumbnail)}
+      thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}

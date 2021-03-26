@@ -1,7 +1,7 @@
 import { thumbnailSources } from './mockImages'
 import rawVideos from './raw/videos.json'
 import rawCoverVideo from './raw/coverVideo.json'
-import { VideoFieldsFragment } from '@/api/queries'
+import { AssetAvailability, VideoFieldsFragment } from '@/api/queries'
 import mockVideosMedia from './mockVideosMedia'
 import mockChannels, { coverMockChannel } from './mockChannels'
 import mockCategories from './mockCategories'
@@ -16,18 +16,13 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     ...rawVideo,
     __typename: 'Video',
     createdAt: new Date(rawVideo.createdAt),
-    thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
     duration: mockVideosMedia[mediaIndex].duration,
     mediaMetadata: mockVideosMedia[mediaIndex],
-    media: {
-      __typename: 'AssetUrl',
-      // @ts-ignore unable to generate new videosMedia.json
-      url: mockVideosMedia[mediaIndex].location.url,
-    },
-    thumbnail: {
-      __typename: 'AssetUrl',
-      url: thumbnailSources[idx % thumbnailSources.length],
-    },
+    // @ts-ignore unable to generate new videosMedia.json
+    mediaUrl: mockVideosMedia[mediaIndex].location.url,
+    mediaAvailability: 'ACCEPTED',
+    thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
+    thumbnailAvailability: 'ACCEPTED',
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],
@@ -40,14 +35,10 @@ const coverMockVideo: MockVideo = {
   createdAt: new Date(rawCoverVideo.video.createdAt),
   channel: coverMockChannel,
   license: rawCoverVideo.license,
-  media: {
-    __typename: 'AssetUrl',
-    url: rawCoverVideo.video.media.url,
-  },
-  thumbnail: {
-    __typename: 'AssetUrl',
-    url: rawCoverVideo.video.thumbnail.url,
-  },
+  mediaAvailability: AssetAvailability.Accepted,
+  mediaUrl: rawCoverVideo.video.mediaUrl,
+  thumbnailUrl: rawCoverVideo.video.thumbnailUrl,
+  thumbnailAvailability: AssetAvailability.Accepted,
   mediaMetadata: rawCoverVideo.videoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[0],
