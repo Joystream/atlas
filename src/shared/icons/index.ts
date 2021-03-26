@@ -47,6 +47,7 @@ export { ReactComponent as PlaySmall } from './play-small.svg'
 export { ReactComponent as ErrorSecond } from './error-second.svg'
 export { ReactComponent as VideoCamera } from './video-camera.svg'
 export { ReactComponent as Padlock } from './padlock.svg'
+export { ReactComponent as Plus } from './plus.svg'
 export { ReactComponent as Upload } from './upload.svg'
 export { ReactComponent as External } from './external.svg'
 export { ReactComponent as AddVideo } from './add-video.svg'
@@ -58,12 +59,14 @@ export { ReactComponent as DialogError } from './dialog-error.svg'
 export { ReactComponent as MyVideos } from './my-videos.svg'
 export { ReactComponent as MyChannel } from './my-channel.svg'
 export { ReactComponent as MyUploads } from './my-uploads.svg'
+export { ReactComponent as Minus } from './minus.svg'
 
 const icons = [
   'bring-up',
   'bars',
   'bars-play',
   'bars-plus',
+  'plus',
   'home',
   'home-fill',
   'binocular',
@@ -120,6 +123,7 @@ const icons = [
   'my-videos',
   'my-channel',
   'my-uploads',
+  'minus',
 ] as const
 
 export type IconType = typeof icons[number]

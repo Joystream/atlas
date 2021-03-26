@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react'
-
 import styled from '@emotion/styled'
+import { isValid } from 'date-fns'
+import { useLocation, useMatch, useNavigate } from 'react-router-dom'
+import { animated, useSpring } from 'react-spring'
+import useMeasure from 'react-use-measure'
+import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { FileRejection } from 'react-dropzone'
+import { Controller, useForm } from 'react-hook-form'
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { Location } from 'history'
 import {
   ActionBar,
-  ActionBarTransaction,
   Button,
   Checkbox,
   Datepicker,
   FormField,
   HeaderTextField,
+  Icon,
   MultiFileSelect,
   RadioButton,
   Select,
   SelectedItem,
   Textarea,
 } from '@/shared/components'
-import { useMatch, useNavigate } from 'react-router-dom'
-import { animated, useSpring } from 'react-spring'
-import useMeasure from 'react-use-measure'
-import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { FileRejection } from 'react-dropzone'
-import { Controller, useForm } from 'react-hook-form'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import routes from '@/config/routes'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { isValid } from 'date-fns'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 
@@ -53,10 +53,12 @@ type UploadEditVideoActionSheetProps = {
 export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProps> = () => {
   // sheet state
   const navigate = useNavigate()
-  const uploadVideoMatch = useMatch({ path: `/studio/${routes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
   const [sheetState, setSheetState] = useState<SheetState>()
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
+  const location = useLocation()
+  const [cachedLocation, setCachedLocation] = useState<Location>()
 
   const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
   const { ...props } = useSpring({
@@ -76,6 +78,13 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
       setSheetState('minimized')
     }
   }, [uploadVideoMatch, sheetState])
+
+  useEffect(() => {
+    console.log({ cachedLocation, location, uploadVideoMatch })
+    if (!uploadVideoMatch) {
+      setCachedLocation(location)
+    }
+  }, [location, cachedLocation, uploadVideoMatch])
 
   // forms state
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -117,16 +126,18 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
         <TabsContainer>
-          tab 1
-          <Button
-            variant="tertiary"
-            onClick={() => {
-              navigate(routes.studio.index())
-              setSheetState?.('open')
-              console.log('open')
-            }}
-          >
-            +
+          <Tab>
+            This is a tab
+            <Button
+              icon="close"
+              variant="tertiary"
+              onClick={() => {
+                console.log('close tab')
+              }}
+            ></Button>
+          </Tab>
+          <Button variant="tertiary" onClick={() => {}}>
+            <Icon name="plus" />
           </Button>
         </TabsContainer>
         <ButtonsContainer>
@@ -135,26 +146,26 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             onClick={() => {
               if (sheetState === 'open') {
                 setSheetState?.('minimized')
-                navigate(routes.studio.index())
+                navigate(cachedLocation?.pathname ?? routes.studio.index(true))
                 console.log('minimize')
               } else {
                 setSheetState?.('open')
                 navigate(routes.studio.uploadVideo())
-                console.log('minimize')
+                console.log('open')
               }
             }}
           >
-            -
+            <Icon name="minus" />
           </Button>
           <Button
             variant="tertiary"
             onClick={() => {
-              navigate(routes.studio.index())
+              navigate(cachedLocation?.pathname ?? routes.studio.index(true))
               setSheetState?.('closed')
               console.log('close')
             }}
           >
-            x
+            <Icon name="close" />
           </Button>
         </ButtonsContainer>
       </Topbar>
@@ -342,9 +353,14 @@ const Topbar = styled.div`
   border-bottom: solid 1px ${colors.gray[700]};
 `
 
-const TabsContainer = styled.div``
+const TabsContainer = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+`
 
 const ButtonsContainer = styled.div`
+  display: grid;
+  grid-auto-flow: column;
   border-left: solid 1px ${colors.gray[700]};
 `
 
@@ -377,4 +393,11 @@ const FormContainer = styled.div<{ height: number }>`
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 0;
   scroll-padding: 0 0 ${sizes(24)} 0;
+`
+
+const Tab = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  padding: 0 ${sizes(4)};
+  align-items: center;
 `
