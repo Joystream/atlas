@@ -53,7 +53,7 @@ const ViewerLayout: React.FC = () => {
 
     if (
       cachedLocation.state?.overlaidLocation?.pathname === location.pathname ||
-      location.pathname === [routes.viewer.index(), routes.viewer.search()].join('/')
+      location.pathname === routes.viewer.search()
     ) {
       // if exiting routing overlay, skip scroll to top
       return
