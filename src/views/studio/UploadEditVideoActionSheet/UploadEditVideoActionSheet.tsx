@@ -53,22 +53,27 @@ type UploadEditVideoActionSheetProps = {
 export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProps> = () => {
   // sheet state
   const navigate = useNavigate()
-  const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: `/studio/${routes.studio.uploadVideo()}` })
   const [sheetState, setSheetState] = useState<SheetState>()
-  const [ref, bounds] = useMeasure()
-  const transform = bounds.height ? bounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
+  const [containerRef, containerBounds] = useMeasure()
+  const [actionBarRef, actionBarBounds] = useMeasure()
+
+  const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
   const { ...props } = useSpring({
     duration: transitions.timings.sharp,
     transform:
       sheetState === 'open'
         ? `translateY(0)`
         : sheetState === 'closed'
-        ? `translateY(${bounds.height}px)`
+        ? `translateY(${containerBounds.height}px)`
         : `translateY(${transform}px)`,
   })
   useEffect(() => {
-    if (!!uploadVideoMatch && sheetState !== 'open') {
+    console.log({ uploadVideoMatch, sheetState })
+    if (uploadVideoMatch) {
       setSheetState('open')
+    } else if (sheetState === 'open') {
+      setSheetState('minimized')
     }
   }, [uploadVideoMatch, sheetState])
 
@@ -102,14 +107,14 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     },
   })
 
-  console.log({
-    uploadVideoMatch,
-    sheetState,
-    height: bounds.height,
-    transform,
-  })
+  // console.log({
+  //   uploadVideoMatch,
+  //   sheetState,
+  //   height: containerBounds.height,
+  //   transform,
+  // })
   return (
-    <Container ref={ref} role="dialog" style={{ ...props }}>
+    <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
         <TabsContainer>
           tab 1
@@ -154,7 +159,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
         </ButtonsContainer>
       </Topbar>
       <Content>
-        <div>
+        <FileDropperContainer>
           <MultiFileSelect
             files={files}
             error={fileSelectError}
@@ -164,8 +169,8 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             croppedImageUrl={croppedImageUrl}
             onCropImage={setCroppedImageUrl}
           />
-        </div>
-        <FormContainer>
+        </FileDropperContainer>
+        <FormContainer height={transform - actionBarBounds.height - 0 * 2}>
           <HeaderTextField
             name="title"
             ref={register(textFieldValidation('Video Title', 3, 20))}
@@ -177,7 +182,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           <Textarea
             name="description"
             ref={register(textFieldValidation('Description', 3, 20))}
-            maxLength={20}
+            maxLength={2160}
             placeholder="Add video description"
             error={!!errors.description}
             helperText={errors.description?.message}
@@ -300,6 +305,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
         </FormContainer>
       </Content>
       <StyledActionBar
+        ref={actionBarRef}
         primaryText={`Fee: ${99} Joy`}
         secondaryText="Every change to the blockchain requires making a nominal transaction."
         primaryButtonText={`Start Publishing`}
@@ -327,7 +333,6 @@ const Container = styled(animated.div)`
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
 
   background-color: ${colors.gray[900]};
-  overflow: auto;
 `
 
 const Topbar = styled.div`
@@ -347,7 +352,6 @@ const Content = styled.div`
   display: grid;
   grid-gap: ${sizes(12)};
   grid-template-columns: 1fr 1fr;
-  padding: ${sizes(8)};
 `
 
 const StyledCheckboxContainer = styled.div`
@@ -364,6 +368,13 @@ const StyledRadioContainer = styled.div`
   align-items: flex-start;
 `
 
-const FormContainer = styled.div`
+const FileDropperContainer = styled.div`
+  padding: ${sizes(8)} 0 ${sizes(8)} ${sizes(8)};
+`
+
+const FormContainer = styled.div<{ height: number }>`
   overflow-y: auto;
+  height: ${({ height }) => height}px;
+  padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 0;
+  scroll-padding: 0 0 ${sizes(24)} 0;
 `

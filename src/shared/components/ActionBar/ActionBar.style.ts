@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, breakpoints } from '@/shared/theme'
-import { Text, Button, Tooltip } from '@/shared/components'
-import { StudioContainer } from '@/components'
+import { Text, Tooltip } from '@/shared/components'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;

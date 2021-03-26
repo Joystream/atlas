@@ -24,7 +24,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
     maxLength,
     className,
     rows = 10,
-    helperText = '\u00A0',
+    helperText,
     warning,
     error,
     spellcheck = true,
@@ -43,7 +43,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       return
     }
 
-    const warningLength = maxLength * 0.8
+    const warningLength = maxLength * 1
     const currentLength = e.target.value.length
 
     setCharactersCount(currentLength)
@@ -54,9 +54,9 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       setCharactersWarning(null)
     }
 
-    if (currentLength > maxLength) {
-      setCharactersWarning('error')
-    }
+    // if (currentLength > maxLength) {
+    //   setCharactersWarning('error')
+    // }
   }
 
   return (
@@ -71,12 +71,10 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
         spellCheck={spellcheck}
       />
       <HelperTextsWrapper>
-        <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
-        {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-          <HelperTextCount helperTextVariant={charactersWarning}>
-            {charactersCount}/{maxLength}
-          </HelperTextCount>
-        )}
+        <HelperText helperTextVariant={getVariant(warning, error)}>{helperText ?? 'Text too long'}</HelperText>
+        <HelperTextCount helperTextVariant={charactersWarning ?? undefined}>
+          {charactersCount}/{maxLength}
+        </HelperTextCount>
       </HelperTextsWrapper>
     </TextAreaWrapper>
   )

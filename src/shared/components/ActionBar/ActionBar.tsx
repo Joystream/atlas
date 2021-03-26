@@ -26,44 +26,51 @@ export type ActionBarProps = {
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const ActionBar: React.FC<ActionBarProps> = ({
-  primaryText,
-  secondaryText,
-  primaryButtonText,
-  secondaryButtonText,
-  detailsText,
-  tooltipText,
-  detailsTextIcon,
-  secondaryButtonIcon,
-  className,
-  onConfirmClick,
-  onCancelClick,
-}) => {
-  return (
-    <StyledActionBarContainer className={className}>
-      <StyledInnerContainer>
-        <StyledInfoContainer>
-          <StyledPrimaryText>{primaryText}</StyledPrimaryText>
-          <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
-        </StyledInfoContainer>
-        <StyledButtonsContainer>
-          {detailsText && tooltipText && (
-            <StyledTooltip text={tooltipText} above right>
-              <StyledDetailsTextContainer>
-                {detailsText} <Icon name={detailsTextIcon || 'info'} />
-              </StyledDetailsTextContainer>
-            </StyledTooltip>
-          )}
-          {secondaryButtonText && !detailsText && (
-            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="tertiary">
-              {secondaryButtonText}
-            </Button>
-          )}
-          {primaryButtonText && <Button onClick={onConfirmClick}>{primaryButtonText}</Button>}
-        </StyledButtonsContainer>
-      </StyledInnerContainer>
-    </StyledActionBarContainer>
-  )
-}
+const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
+  (
+    {
+      primaryText,
+      secondaryText,
+      primaryButtonText,
+      secondaryButtonText,
+      detailsText,
+      tooltipText,
+      detailsTextIcon,
+      secondaryButtonIcon,
+      className,
+      onConfirmClick,
+      onCancelClick,
+    },
+    ref
+  ) => {
+    return (
+      <StyledActionBarContainer ref={ref} className={className}>
+        <StyledInnerContainer>
+          <StyledInfoContainer>
+            <StyledPrimaryText>{primaryText}</StyledPrimaryText>
+            <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
+          </StyledInfoContainer>
+          <StyledButtonsContainer>
+            {detailsText && tooltipText && (
+              <StyledTooltip text={tooltipText} above right>
+                <StyledDetailsTextContainer>
+                  {detailsText} <Icon name={detailsTextIcon || 'info'} />
+                </StyledDetailsTextContainer>
+              </StyledTooltip>
+            )}
+            {secondaryButtonText && !detailsText && (
+              <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="tertiary">
+                {secondaryButtonText}
+              </Button>
+            )}
+            {primaryButtonText && <Button onClick={onConfirmClick}>{primaryButtonText}</Button>}
+          </StyledButtonsContainer>
+        </StyledInnerContainer>
+      </StyledActionBarContainer>
+    )
+  }
+)
+
+ActionBar.displayName = 'ActionBar'
 
 export default ActionBar
