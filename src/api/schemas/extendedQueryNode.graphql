@@ -11,7 +11,7 @@ type Membership {
 
   avatarUri: String
 
-  controllerAccount: ID!
+  controllerAccount: String!
 
   channels: [Channel!]!
 }
@@ -28,6 +28,8 @@ type Channel {
   coverPhotoUrl: String
 
   avatarPhotoUrl: String
+
+  ownerMember: Membership
 
   isPublic: Boolean!
 
@@ -176,7 +178,7 @@ type PageInfo {
 input ChannelWhereInput {
   isCurated_eq: Boolean
   isPublic_eq: Boolean
-  memberId_eq: ID
+  ownerMemberId_eq: ID
   id_in: [ID!]
 }
 
@@ -219,11 +221,11 @@ input VideoWhereUniqueInput {
 }
 
 input MembershipWhereUniqueInput {
-  id: ID!
+  id: ID
 }
 
 input MembershipWhereInput {
-  controllerAccount_eq: ID!
+  controllerAccount_eq: ID
 }
 
 enum VideoOrderByInput {

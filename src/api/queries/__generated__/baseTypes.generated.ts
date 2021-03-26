@@ -22,7 +22,7 @@ export type Membership = {
   id: Scalars['ID']
   handle: Scalars['String']
   avatarUri?: Maybe<Scalars['String']>
-  controllerAccount: Scalars['ID']
+  controllerAccount: Scalars['String']
   channels: Array<Channel>
 }
 
@@ -34,6 +34,7 @@ export type Channel = {
   description?: Maybe<Scalars['String']>
   coverPhotoUrl?: Maybe<Scalars['String']>
   avatarPhotoUrl?: Maybe<Scalars['String']>
+  ownerMember?: Maybe<Membership>
   isPublic: Scalars['Boolean']
   isCurated: Scalars['Boolean']
   language?: Maybe<Language>
@@ -150,7 +151,7 @@ export type PageInfo = {
 export type ChannelWhereInput = {
   isCurated_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
-  memberId_eq?: Maybe<Scalars['ID']>
+  ownerMemberId_eq?: Maybe<Scalars['ID']>
   id_in?: Maybe<Array<Scalars['ID']>>
 }
 
@@ -195,11 +196,11 @@ export type VideoWhereUniqueInput = {
 }
 
 export type MembershipWhereUniqueInput = {
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
 }
 
 export type MembershipWhereInput = {
-  controllerAccount_eq: Scalars['ID']
+  controllerAccount_eq?: Maybe<Scalars['ID']>
 }
 
 export enum VideoOrderByInput {

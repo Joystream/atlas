@@ -16,7 +16,7 @@ export const useMembership = (variables: GetMembershipQueryVariables, opts?: Mem
     variables,
   })
   return {
-    membership: data?.membership as BasicMembershipFieldsFragment | undefined,
+    membership: data?.membership,
     ...rest,
   }
 }
@@ -27,7 +27,7 @@ export const useMemberships = (variables: GetMembershipsQueryVariables, opts?: M
     variables,
   })
   return {
-    memberships: data?.memberships as BasicMembershipFieldsFragment[] | undefined,
+    memberships: data?.memberships,
     ...rest,
   }
 }

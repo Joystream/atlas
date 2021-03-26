@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
-import { useMemberships } from '@/api/hooks'
+import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import routes from '@/config/routes'
 import { Text, Icon, Button } from '@/shared/components'
@@ -24,46 +24,44 @@ import {
 type ChannelInfoProps = {
   active?: boolean
   memberName?: string
-  channel: BasicChannelFieldsFragment | undefined
+  channel?: BasicChannelFieldsFragment
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 type MemberInfoProps = {
-  member: BasicMembershipFieldsFragment | undefined
+  member?: BasicMembershipFieldsFragment
 }
 
 type NavDrawerProps = {
   active?: boolean
-  channels: BasicChannelFieldsFragment[] | undefined
-  currentChannel: BasicChannelFieldsFragment | undefined
+  channels?: BasicChannelFieldsFragment[]
+  currentChannel?: BasicChannelFieldsFragment
   onCurrentChannelChange: (channelId: string) => void
   onLogoutClick: () => void
   handleClose: () => void
 } & MemberInfoProps
 
 const StudioTopbar: React.FC = () => {
+  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const { activeUser, setActiveChannel } = useActiveUser()
-  const { memberships, loading, error } = useMemberships(
+  const { membership, loading, error } = useMembership(
     {
-      where: { controllerAccount_eq: activeUser?.accountId as string },
+      where: { id: activeUser?.memberId },
     },
     {
-      skip: activeUser?.accountId === undefined,
+      skip: !activeUser?.memberId,
       onCompleted: () => {
-        const member = memberships?.find((member) => member.id === activeUser?.memberId)
-        const channel = member?.channels.find((channel) => channel.id === activeUser?.channelId)
-        setCurrentMember(member)
+        const channel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
         setCurrentChannel(channel)
       },
     }
   )
-  const [currentMember, setCurrentMember] = useState<BasicMembershipFieldsFragment>()
-  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
+
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
 
   const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
-    const channel = currentMember?.channels.find((channel) => channel.id === channelId)
+    const channel = membership?.channels.find((channel) => channel.id === channelId)
     if (!channel) {
       return
     }
@@ -131,8 +129,8 @@ const StudioTopbar: React.FC = () => {
       <NavDrawer
         ref={drawerRef}
         active={isDrawerActive}
-        member={currentMember}
-        channels={currentMember?.channels}
+        member={membership}
+        channels={membership?.channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
