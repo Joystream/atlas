@@ -1,7 +1,13 @@
-export default {
+export const BASE_PATHS = {
+  // must be empty so we don't get double '/' after joining paths
+  viewer: '',
+  studio: '/studio',
+  playground: '/playground',
+} as const
+
+export const relativeRoutes = {
   viewer: {
-    index: (absolute?: boolean) => `${absolute ? '/' : ''}`,
-    searchOverlay: () => `search`,
+    index: () => '',
     search: ({ query }: { query?: string } = {}) => {
       const basePath = 'search'
 
@@ -19,16 +25,29 @@ export default {
     videos: () => 'videos',
   },
   studio: {
-    index: (absolute?: boolean) => `${absolute ? '/' : ''}studio`,
+    index: () => '',
     newChannel: () => 'channel/new',
     editChannel: () => 'channel',
-    videos: () => 'videos',
+    videos: () => '/videos',
     uploads: () => 'uploads',
   },
   playground: {
-    index: (absolute?: boolean) => `${absolute ? '/' : ''}playground`,
+    index: () => '',
   },
 }
+
+export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesAcc, [basePathKey, basePath]) => {
+  const routes = relativeRoutes[basePathKey as keyof typeof BASE_PATHS]
+
+  // @ts-ignore typing this is too much work ¯\_(ツ)_/¯
+  absoluteRoutesAcc[basePathKey] = Object.keys(routes).reduce((routesAcc, routeKeyStr) => {
+    // @ts-ignore typing this is too much work
+    routesAcc[routeKeyStr] = (...params: never[]) => [basePath, routes[routeKeyStr](...params)].join('/')
+    return routesAcc
+  }, {} as typeof routes)
+
+  return absoluteRoutesAcc
+}, {} as typeof relativeRoutes)
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',

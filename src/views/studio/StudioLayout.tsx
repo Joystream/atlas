@@ -6,13 +6,13 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { CreateEditChannelView, MyVideosView } from '.'
 import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
-import routes from '@/config/routes'
+import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
 
 const studioRoutes = [
-  { path: routes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
-  { path: routes.studio.editChannel(), element: <CreateEditChannelView /> },
-  { path: routes.studio.videos(), element: <MyVideosView /> },
+  { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
+  { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
+  { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
 ]
 
 const studioNavbarItems: NavItemType[] = [
@@ -20,19 +20,19 @@ const studioNavbarItems: NavItemType[] = [
     icon: 'my-videos',
     name: 'Videos',
     expandedName: 'My Videos',
-    to: routes.studio.videos(),
+    to: absoluteRoutes.studio.videos(),
   },
   {
     icon: 'my-channel',
     name: 'Channel',
     expandedName: 'My Channel',
-    to: routes.studio.editChannel(),
+    to: absoluteRoutes.studio.editChannel(),
   },
   {
     icon: 'my-uploads',
     name: 'Uploads',
     expandedName: 'My Uploads',
-    to: routes.studio.uploads(),
+    to: absoluteRoutes.studio.uploads(),
   },
 ]
 
@@ -52,7 +52,7 @@ const StudioLayout = () => {
             <ErrorBoundary
               fallback={ViewErrorFallback}
               onReset={() => {
-                navigate(routes.studio.index())
+                navigate(absoluteRoutes.studio.index())
               }}
             >
               <Routes>

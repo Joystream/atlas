@@ -2,7 +2,7 @@ import React from 'react'
 import { ChannelPreviewBase } from '@/shared/components'
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 
 type ChannelPreviewProps = {
   id?: string
@@ -22,7 +22,7 @@ export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, o
       className={className}
       avatarUrl={channel?.avatarPhotoUrl ?? undefined}
       handle={channel?.handle}
-      channelHref={id ? routes.viewer.channel(id) : undefined}
+      channelHref={id ? absoluteRoutes.viewer.channel(id) : undefined}
       videoCount={videoCount}
       loading={isLoading}
       onClick={onClick}
