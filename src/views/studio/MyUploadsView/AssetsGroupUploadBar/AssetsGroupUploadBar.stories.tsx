@@ -1,10 +1,10 @@
 import { Meta, Story } from '@storybook/react'
-import AssetsGroupBarUpload, { AssetsGroupBarUploadProps } from './AssetsGroupUploadBar'
+import AssetsGroupUploadBar, { AssetsGroupBarUploadProps } from './AssetsGroupUploadBar'
 import React from 'react'
 
 export default {
-  title: 'General/AssetsGroupBarUpload',
-  component: AssetsGroupBarUpload,
+  title: 'General/AssetsGroupUploadBar',
+  component: AssetsGroupUploadBar,
   argTypes: {
     uploadData: {
       defaultValue: {
@@ -52,6 +52,6 @@ export default {
   },
 } as Meta
 
-const Template: Story<AssetsGroupBarUploadProps> = (args) => <AssetsGroupBarUpload {...args} />
+const Template: Story<AssetsGroupBarUploadProps> = (args) => <AssetsGroupUploadBar {...args} />
 
 export const Default = Template.bind({})
