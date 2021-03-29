@@ -9,6 +9,7 @@ fragment AllChannelFields on Channel {
   ...BasicChannelFields
   coverPhotoUrl
   follows
+  isPublic
 }
 
 query GetBasicChannel($where: ChannelWhereUniqueInput!) {
@@ -21,7 +22,6 @@ query GetChannel($where: ChannelWhereUniqueInput!) {
   channel(where: $where) {
     ...AllChannelFields
     description
-    isPublic
     language {
       name
     }
