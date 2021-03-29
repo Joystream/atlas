@@ -71,7 +71,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
         : `translateY(${transform}px)`,
   })
   useEffect(() => {
-    console.log({ uploadVideoMatch, sheetState })
+    // console.log({ uploadVideoMatch, sheetState })
     if (uploadVideoMatch) {
       setSheetState('open')
     } else if (sheetState === 'open') {
@@ -80,7 +80,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   }, [uploadVideoMatch, sheetState])
 
   useEffect(() => {
-    console.log({ cachedLocation, location, uploadVideoMatch })
+    // console.log({ cachedLocation, location, uploadVideoMatch })
     if (!uploadVideoMatch) {
       setCachedLocation(location)
     }
