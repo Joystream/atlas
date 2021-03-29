@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Container,
   AssetsGroupBarUploadContainer,
@@ -38,6 +38,8 @@ type AssetsGroupBarUploadProps = {
 const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData: { type, title, files } }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
 
+  const drawer = useRef<HTMLDivElement>(null)
+
   const isChannelType = type === 'channel'
   const isPending = files.every((file) => file.status === 'pending')
   const hasErrorNumber = files.filter(({ status }) => status === 'failed' || status === 'reconnecting').length
@@ -57,7 +59,7 @@ const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
 
   return (
     <Container>
-      <AssetsGroupBarUploadContainer>
+      <AssetsGroupBarUploadContainer onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}>
         <ProgressBar progress={masterProgress} />
         <Thumbnail>
           <Icon name={assetsGroupIconName} />
@@ -77,7 +79,7 @@ const AssetsGroupBarUpload: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
           />
         </UploadInfoContainer>
       </AssetsGroupBarUploadContainer>
-      <AssetsDrawerContainer isActive={isAssetsDrawerActive}>
+      <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {files.map((file, idx) => (
           <AssetLine key={file.id} asset={file} isLast={files.length === idx + 1} />
         ))}

@@ -7,12 +7,12 @@ type ProgressbarProps = {
 
 type DrawerProps = {
   isActive?: boolean
+  maxHeight?: number
 }
 
 export const Container = styled.div`
   position: relative;
-  background-color: ${colors.black};
-  padding-bottom: ${sizes(6)};
+  margin-bottom: ${sizes(6)};
 `
 
 export const AssetsGroupBarUploadContainer = styled.div`
@@ -23,7 +23,7 @@ export const AssetsGroupBarUploadContainer = styled.div`
   width: 100%;
   height: ${sizes(20)};
   background-color: ${colors.black};
-  z-index: ${zIndex.overlay};
+  cursor: pointer;
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `
 export const ProgressBar = styled.div<ProgressbarProps>`
@@ -74,6 +74,7 @@ export const AssetsInfoContainer = styled.div`
   margin-left: ${sizes(4)};
   height: ${sizes(12)};
   color: ${colors.gray[300]};
+  z-index: ${zIndex.overlay};
 `
 
 export const UploadInfoContainer = styled.div`
@@ -84,9 +85,9 @@ export const UploadInfoContainer = styled.div`
   height: ${sizes(12)};
   color: ${colors.gray[300]};
   text-align: right;
+  z-index: ${zIndex.overlay};
   button {
     margin-left: ${sizes(4)};
-    z-index: ${zIndex.overlay};
     svg {
       width: auto;
       height: auto;
@@ -100,17 +101,8 @@ export const AssetsDrawerContainer = styled.div<DrawerProps>`
   flex-direction: column;
   top: 0;
   width: 100%;
-  height: ${({ isActive }) => (isActive ? 'auto' : 0)};
-  padding: ${sizes(6)} ${sizes(2)};
-  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
-  transform: translateY(${({ isActive }) => (isActive ? 0 : '-100%')});
+  max-height: ${({ isActive, maxHeight }) => (isActive ? `${maxHeight}px` : '0px')};
   background-color: ${colors.gray[800]};
   overflow: hidden;
-  transition: all ${transitions.timings.sharp} ${transitions.easing};
-  @media screen and (min-width: ${breakpoints.small}) {
-    padding: ${sizes(6)} ${sizes(4)};
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
-    padding: ${sizes(2)} ${sizes(6)} ${sizes(2)} ${sizes(13)};
-  }
+  transition: max-height ${transitions.timings.loading} ${transitions.easing};
 `

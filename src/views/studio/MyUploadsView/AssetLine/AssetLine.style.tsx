@@ -9,16 +9,15 @@ type FileLineProps = {
 export const FileLineContainer = styled.div<FileLineProps>`
   display: flex;
   align-items: center;
-  height: ${sizes(12)};
-  margin-bottom: ${({ isLast }) => !isLast && sizes(12)};
+  margin: ${sizes(6)} 0;
   @media screen and (min-width: ${breakpoints.small}) {
-    margin-bottom: ${({ isLast }) => !isLast && sizes(6)};
+    margin: ${sizes(2)} 0;
   }
 `
 
 export const FileLinePoint = styled.div`
   display: none;
-  width: 37px;
+  width: 35px;
   height: 32px;
   border-left: 2px solid ${colors.gray[500]};
   flex-shrink: 0;
@@ -32,6 +31,10 @@ export const FileLinePoint = styled.div`
   }
   @media screen and (min-width: ${breakpoints.small}) {
     display: block;
+    margin-left: ${sizes(4)};
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: ${sizes(13)};
   }
 `
 
@@ -45,6 +48,10 @@ export const FileLineLastPoint = styled.div`
   transform: translateY(calc(-50% + 1px));
   @media screen and (min-width: ${breakpoints.small}) {
     display: block;
+    margin-left: ${sizes(4)};
+  }
+  @media screen and (min-width: ${breakpoints.medium}) {
+    margin-left: ${sizes(13)};
   }
 `
 export const StatusMessage = styled(Text)`
@@ -52,6 +59,7 @@ export const StatusMessage = styled(Text)`
   max-width: ${sizes(16)};
   height: 48px;
   margin-left: auto;
+  margin-right: ${sizes(6)};
   color: ${colors.gray[300]};
   display: flex;
   align-items: center;
@@ -62,6 +70,8 @@ export const StatusMessage = styled(Text)`
 `
 
 export const FileStatusContainer = styled.div`
+  display: flex;
+  justify-content: center;
   width: ${sizes(6)};
   height: ${sizes(6)};
   margin-left: ${sizes(4)};
@@ -93,8 +103,11 @@ export const FileInfoType = styled.div`
   height: ${sizes(6)};
   color: ${colors.white};
   svg {
-    width: ${sizes(6)};
-    height: ${sizes(6)};
     margin-right: 10px;
   }
+`
+
+export const ProgressbarContainer = styled.div`
+  width: ${sizes(5)};
+  height: ${sizes(5)};
 `

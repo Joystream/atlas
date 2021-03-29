@@ -8,6 +8,7 @@ import {
   FileInfoContainer,
   FileInfoType,
   StatusMessage,
+  ProgressbarContainer,
 } from './AssetLine.style'
 import { Icon, Text, CircularProgressbar } from '@/shared/components'
 import { Asset } from '../AssetsGroupUploadBar/AssetsGroupUploadBar'
@@ -28,10 +29,18 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   let fileStatusMessage = ''
   switch (asset.status) {
     case 'uploading':
-      fileStatus = <CircularProgressbar value={asset.progress} />
+      fileStatus = (
+        <ProgressbarContainer>
+          <CircularProgressbar value={asset.progress} />
+        </ProgressbarContainer>
+      )
       break
     case 'pending':
-      fileStatus = <CircularProgressbar value={0} />
+      fileStatus = (
+        <ProgressbarContainer>
+          <CircularProgressbar value={0} />
+        </ProgressbarContainer>
+      )
       break
     case 'failed':
       fileStatus = <Icon name="error-second" />

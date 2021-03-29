@@ -54,6 +54,29 @@ const uploadingFiles = [
     ],
   },
   {
+    type: 'channel',
+    files: [
+      {
+        id: 'd6d7be77-a908-412f-9a9d-e6664d11f596',
+        type: 'cover',
+        progress: 80,
+        width: 1920,
+        height: 1080,
+        size: 378400,
+        status: 'uploading',
+      },
+      {
+        id: 'eae3c720-de6c-4434-82ef-02629f052074',
+        type: 'avatar',
+        progress: 60,
+        width: 500,
+        height: 600,
+        size: 173565,
+        status: 'uploading',
+      },
+    ],
+  },
+  {
     type: 'video',
     title: 'Lost in the Woods? EP3',
     files: [
@@ -95,7 +118,7 @@ const MyUploadsView = () => {
     <StudioContainer>
       <StyledText variant="h2">My Uploads</StyledText>
       {loading ? (
-        placeholderItems.map((item) => item)
+        placeholderItems.map((Placeholder, idx) => <Placeholder key={`placeholder-${idx}`} />)
       ) : hasUploads ? (
         uploadingFiles.map((files, idx) => <AssetsGroupUploadBar key={files.type + idx} uploadData={files} />)
       ) : (

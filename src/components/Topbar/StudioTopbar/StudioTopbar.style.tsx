@@ -18,6 +18,7 @@ export const StyledTopbarBase = styled(TopbarBase)`
 `
 
 export const DrawerButton = styled(Button)<CommonStudioTopbarProps>`
+  flex-shrink: 0;
   svg {
     width: auto;
     height: auto;
