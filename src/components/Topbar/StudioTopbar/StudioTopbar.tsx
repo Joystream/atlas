@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
+import { useMembership } from '@/api/hooks'
+import { BasicChannelFieldsFragment } from '@/api/queries'
 import routes from '@/config/routes'
-import { Text, Icon, Button } from '@/shared/components'
+import { Text, Icon, Button, Placeholder } from '@/shared/components'
 import {
   StyledTopbarBase,
   StudioTopbarContainer,
@@ -17,56 +19,58 @@ import {
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
+  AvatarPlaceholder,
 } from './StudioTopbar.style'
 
-type Channel = {
-  name: string
-  avatar: string
-}
 type ChannelInfoProps = {
   active?: boolean
-  member: string
-  channel: Channel
+  memberName?: string
+  channel?: BasicChannelFieldsFragment
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 type MemberInfoProps = {
-  memberName: string
-  memberAvatar: string
+  memberName?: string
+  memberAvatar?: string
   hasChannels?: boolean
 }
 
 type NavDrawerProps = {
   active?: boolean
-  memberName: string
-  memberAvatar: string
-  channels: Channel[]
-  currentChannel: Channel
-  onCurrentChannelChange: (channel: Channel) => void
+  channels?: BasicChannelFieldsFragment[]
+  memberName?: string
+  memberAvatar?: string
+  currentChannel?: BasicChannelFieldsFragment
+  onCurrentChannelChange: (channelId: string) => void
   onLogoutClick: () => void
   handleClose: () => void
 }
 
-const member = {
-  name: 'Mikael Cowan',
-  avatar: 'https://picsum.photos/300/300',
-  channels: [
-    { name: 'Wild Crypto Fan16', avatar: 'https://picsum.photos/201/300' },
-    { name: 'Mild Crypto Skeptic', avatar: 'https://picsum.photos/202/300' },
-    { name: 'Average Cryptocurrency Enjoyer', avatar: 'https://picsum.photos/203/300' },
-  ],
-}
-
 const StudioTopbar: React.FC = () => {
+  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const { activeUser, setActiveChannel } = useActiveUser()
-  // TODO Add member fetching
-  const [currentChannel, setCurrentChannel] = useState(member.channels[0])
+  const { membership, loading, error } = useMembership(
+    {
+      where: { id: activeUser?.memberId },
+    },
+    {
+      skip: !activeUser?.memberId,
+      onCompleted: () => {
+        const channel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
+        setCurrentChannel(channel)
+      },
+    }
+  )
 
   const [isDrawerActive, setDrawerActive] = useState(false)
-
   const drawerRef = useRef<HTMLDivElement | null>(null)
 
-  const handleCurrentChannelChange: (channel: Channel) => void = (channel) => {
+  const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
+    const channel = membership?.channels.find((channel) => channel.id === channelId)
+    if (!channel) {
+      return
+    }
+    setActiveChannel(channelId)
     setCurrentChannel(channel)
     setDrawerActive(false)
   }
@@ -104,19 +108,25 @@ const StudioTopbar: React.FC = () => {
     }
   }, [isDrawerActive])
 
+  if (error) {
+    throw error
+  }
+
   return (
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
           <Button icon="add-video" onClick={handleAddVideoViewOpen} />
-          {member.channels.length ? (
-            <ChannelInfo channel={currentChannel} member={member.name} onClick={handleDrawerToggle} />
+          {loading ? (
+            <ChannelInfoPlaceholder />
+          ) : membership?.channels.length ? (
+            <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
           ) : (
             <ChannelInfoContainer onClick={handleDrawerToggle}>
               <NewChannelIcon name="new-channel" />
               <TextContainer>
                 <Text>New Channel</Text>
-                <Text>{member.name}</Text>
+                <Text>{membership?.handle}</Text>
               </TextContainer>
             </ChannelInfoContainer>
           )}
@@ -126,9 +136,9 @@ const StudioTopbar: React.FC = () => {
       <NavDrawer
         ref={drawerRef}
         active={isDrawerActive}
-        memberName={member.name}
-        memberAvatar={member.avatar}
-        channels={member.channels}
+        memberName={membership?.handle}
+        memberAvatar={membership?.avatarUri as string | undefined}
+        channels={membership?.channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
@@ -151,13 +161,13 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 }
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
-  ({ active = false, channel, member, onClick }, ref) => {
+  ({ active = false, channel, memberName, onClick }, ref) => {
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="medium" imageUrl={channel.avatar} />
+        <StyledAvatar size="medium" imageUrl={channel?.avatarPhotoUrl} />
         <TextContainer>
-          <Text>{channel ? channel.name : 'New Channel'}</Text>
-          <Text>{member}</Text>
+          <Text>{channel ? channel.handle : 'New Channel'}</Text>
+          <Text>{memberName}</Text>
         </TextContainer>
         {active && <Icon name="check" />}
       </ChannelInfoContainer>
@@ -171,19 +181,19 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
     { active, memberName, memberAvatar, channels, currentChannel, onCurrentChannelChange, onLogoutClick, handleClose },
     ref
   ) => {
-    const hasChannels = !!channels.length
+    const hasChannels = !!channels?.length
     return (
       <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
         {hasChannels && (
           <>
             <Text variant="h6">My Channels</Text>
-            {channels.map((channel) => (
+            {channels?.map((channel) => (
               <ChannelInfo
-                key={channel.name}
+                key={channel.id}
                 channel={channel}
-                member={memberName}
-                active={channel.name === currentChannel.name}
-                onClick={() => onCurrentChannelChange(channel)}
+                memberName={memberName}
+                active={channel.handle === currentChannel?.handle}
+                onClick={() => onCurrentChannelChange(channel.id)}
               />
             ))}
             <StyledLink to={routes.studio.newChannel()} onClick={handleClose}>
@@ -205,5 +215,17 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
   }
 )
 NavDrawer.displayName = 'NavDrawer'
+
+const ChannelInfoPlaceholder = () => {
+  return (
+    <ChannelInfoContainer>
+      <AvatarPlaceholder />
+      <TextContainer>
+        <Placeholder width="100%" height="15px" bottomSpace="6px" />
+        <Placeholder width="70%" height="10px" />
+      </TextContainer>
+    </ChannelInfoContainer>
+  )
+}
 
 export default StudioTopbar
