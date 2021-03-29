@@ -18,7 +18,6 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     createdAt: new Date(rawVideo.createdAt),
     duration: mockVideosMedia[mediaIndex].duration,
     mediaMetadata: mockVideosMedia[mediaIndex],
-    // @ts-ignore unable to generate new videosMedia.json
     mediaUrl: mockVideosMedia[mediaIndex].location.url,
     mediaAvailability: AssetAvailability.Accepted,
     thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],

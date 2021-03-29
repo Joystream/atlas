@@ -42,11 +42,6 @@ type DataObject {
   joystreamContentId: String!
 }
 
-type Block {
-  id: ID!
-  block: Int!
-}
-
 type Channel {
   id: ID!
   createdAt: DateTime!
@@ -133,9 +128,9 @@ type CoverVideo {
   video: Video!
   coverDescription: String!
   coverCutMediaMetadata: VideoMediaMetadata!
-  coverCutmediaDataObject: DataObject
-  coverCutmediaUrl: String
-  coverCutmediaAvailability: AssetAvailability!
+  coverCutMediaDataObject: DataObject
+  coverCutMediaAvailability: AssetAvailability!
+  coverCutMediaUrl: String
 }
 
 type FeaturedVideo {

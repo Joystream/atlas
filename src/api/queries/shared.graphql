@@ -7,8 +7,3 @@ fragment DataObjectFields on DataObject {
   ipfsContentId
   joystreamContentId
 }
-
-fragment BlockFields on Block {
-  id
-  block
-}

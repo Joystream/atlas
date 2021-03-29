@@ -7,6 +7,7 @@ export const createUrlFromAsset = (
   dataObject?: DataObject | null
 ) => {
   if (availability !== AssetAvailability.Accepted) {
+    console.warn('Trying to create URL for non-accepted asset')
     return
   }
   if (dataObject?.joystreamContentId) {

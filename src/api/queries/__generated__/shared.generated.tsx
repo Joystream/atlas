@@ -12,8 +12,6 @@ export type DataObjectFieldsFragment = {
   joystreamContentId: string
 }
 
-export type BlockFieldsFragment = { __typename?: 'Block'; id: string; block: number }
-
 export const DataObjectFieldsFragmentDoc = gql`
   fragment DataObjectFields on DataObject {
     id
@@ -23,11 +21,5 @@ export const DataObjectFieldsFragmentDoc = gql`
     liaisonJudgement
     ipfsContentId
     joystreamContentId
-  }
-`
-export const BlockFieldsFragmentDoc = gql`
-  fragment BlockFields on Block {
-    id
-    block
   }
 `

@@ -49,12 +49,6 @@ export type DataObject = {
   joystreamContentId: Scalars['String']
 }
 
-export type Block = {
-  __typename?: 'Block'
-  id: Scalars['ID']
-  block: Scalars['Int']
-}
-
 export type Channel = {
   __typename?: 'Channel'
   id: Scalars['ID']
@@ -136,9 +130,9 @@ export type CoverVideo = {
   video: Video
   coverDescription: Scalars['String']
   coverCutMediaMetadata: VideoMediaMetadata
-  coverCutmediaDataObject?: Maybe<DataObject>
-  coverCutmediaUrl?: Maybe<Scalars['String']>
-  coverCutmediaAvailability: AssetAvailability
+  coverCutMediaDataObject?: Maybe<DataObject>
+  coverCutMediaAvailability: AssetAvailability
+  coverCutMediaUrl?: Maybe<Scalars['String']>
 }
 
 export type FeaturedVideo = {

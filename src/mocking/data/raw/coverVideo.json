@@ -32,9 +32,11 @@
       "pixelWidth": 2560,
       "pixelHeight": 1440,
       "duration": 29,
-      "size": 44851016
-    },
-    "coverCutMediaUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4"
+      "size": 44851016,
+      "location": {
+        "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/cut.mp4"
+      }
+    }
   },
   "license": {
     "id": "1503",
