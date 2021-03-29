@@ -59,7 +59,7 @@ export type Channel = {
   __typename?: 'Channel'
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
-  title: Scalars['String']
+  title?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
   coverPhotoDataObject?: Maybe<DataObject>
   coverPhotoUrl?: Maybe<Scalars['String']>
@@ -69,7 +69,7 @@ export type Channel = {
   avatarPhotoAvailability: AssetAvailability
   owner: Member
   isPublic?: Maybe<Scalars['Boolean']>
-  isCensored?: Maybe<Scalars['Boolean']>
+  isCensored: Scalars['Boolean']
   language?: Maybe<Language>
   videos: Array<Video>
   follows?: Maybe<Scalars['Int']>
@@ -105,28 +105,26 @@ export type Video = {
   id: Scalars['ID']
   channel: Channel
   createdAt: Scalars['DateTime']
-  createdById: Scalars['String']
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedById?: Maybe<Scalars['String']>
   deletedAt?: Maybe<Scalars['DateTime']>
   category: VideoCategory
-  title: Scalars['String']
-  description: Scalars['String']
-  duration: Scalars['Int']
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  duration?: Maybe<Scalars['Int']>
   thumbnailDataObject?: Maybe<DataObject>
   thumbnailUrl?: Maybe<Scalars['String']>
   thumbnailAvailability: AssetAvailability
-  Language?: Maybe<Language>
+  language?: Maybe<Language>
   hasMarketing?: Maybe<Scalars['Boolean']>
-  publishedBeforeJoystream?: Maybe<Scalars['String']>
-  isPublic: Scalars['Boolean']
+  publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
+  isPublic?: Maybe<Scalars['Boolean']>
   isCensored: Scalars['Boolean']
-  isExplicit: Scalars['Boolean']
+  isExplicit?: Maybe<Scalars['Boolean']>
   mediaDataObject?: Maybe<DataObject>
   mediaUrl?: Maybe<Scalars['String']>
   mediaAvailability: AssetAvailability
   mediaMetadata: VideoMediaMetadata
-  license: License
+  license?: Maybe<License>
   isFeatured: Scalars['Boolean']
   skippableIntroDuration?: Maybe<Scalars['Int']>
   views?: Maybe<Scalars['Int']>

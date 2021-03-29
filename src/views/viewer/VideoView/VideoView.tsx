@@ -23,7 +23,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
-import knownLicenses from '@/mocking/data/raw/knownLicenses.json'
+import knownLicenses from '@/data/knownLicenses.json'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -118,7 +118,7 @@ const VideoView: React.FC = () => {
     return <p>Video not found</p>
   }
 
-  const licenseName = knownLicenses.find((license) => license.code === video?.license.code)?.name
+  const licenseName = knownLicenses.find((license) => license.code === video?.license?.code)?.name
 
   return (
     <StyledViewWrapper>
@@ -156,7 +156,7 @@ const VideoView: React.FC = () => {
         <DescriptionContainer>
           {video ? (
             <>
-              {video.description.split('\n').map((line, idx) => (
+              {video.description?.split('\n').map((line, idx) => (
                 <p key={idx}>{line}</p>
               ))}
             </>
@@ -172,12 +172,12 @@ const VideoView: React.FC = () => {
         <LicenseContainer>
           {video ? (
             <>
+              License:{' '}
+              <a href={video.license?.url || ''} target="_blank" rel="noopener noreferrer">
+                {licenseName}
+              </a>
               <p>
-                License:{' '}
-                <a href={video.license.url || ''} target="_blank" rel="noopener noreferrer">
-                  {licenseName}
-                </a>
-                <p>{video.license.customText}</p>
+                <p>{video.license?.customText}</p>
               </p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>

@@ -24,14 +24,14 @@ export type LicenseFieldsFragment = {
 export type VideoFieldsFragment = {
   __typename?: 'Video'
   id: string
-  title: string
-  description: string
+  title?: Types.Maybe<string>
+  description?: Types.Maybe<string>
   views?: Types.Maybe<number>
-  duration: number
+  duration?: Types.Maybe<number>
   thumbnailUrl?: Types.Maybe<string>
   thumbnailAvailability: Types.AssetAvailability
   createdAt: Date
-  isPublic: boolean
+  isPublic?: Types.Maybe<boolean>
   mediaUrl?: Types.Maybe<string>
   mediaAvailability: Types.AssetAvailability
   category: { __typename?: 'VideoCategory'; id: string }
@@ -39,7 +39,7 @@ export type VideoFieldsFragment = {
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
   mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
-  license: { __typename?: 'License' } & LicenseFieldsFragment
+  license?: Types.Maybe<{ __typename?: 'License' } & LicenseFieldsFragment>
 }
 
 export type GetVideoQueryVariables = Types.Exact<{

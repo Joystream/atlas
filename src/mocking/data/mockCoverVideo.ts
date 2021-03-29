@@ -2,18 +2,9 @@ import rawCoverVideo from './raw/coverVideo.json'
 import mockCategories from './mockCategories'
 import { MockVideo } from '@/mocking/data/mockVideos'
 import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
-import { MockChannel } from '@/mocking/data/mockChannels'
+import { coverMockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
 import { AssetAvailability, CoverVideo } from '@/api/queries'
-
-export const mockCoverVideoChannel: MockChannel = {
-  ...rawCoverVideo.channel,
-  createdAt: new Date(rawCoverVideo.channel.createdAt),
-  coverPhotoAvailability: AssetAvailability.Accepted,
-  avatarPhotoUrl: rawCoverVideo.channel.avatarPhotoUrl,
-  avatarPhotoAvailability: AssetAvailability.Accepted,
-  __typename: 'Channel',
-}
 
 export const mockCoverVideoLicense: MockLicense = {
   __typename: 'License',
@@ -28,7 +19,7 @@ export const mockCoverVideo: MockVideo = {
   ...rawCoverVideo.video,
   __typename: 'Video',
   createdAt: new Date(rawCoverVideo.video.createdAt),
-  channel: mockCoverVideoChannel,
+  channel: coverMockChannel,
   license: mockCoverVideoLicense,
   mediaMetadata: mockCoverVideoMedia,
   mediaAvailability: AssetAvailability.Accepted,
@@ -36,7 +27,7 @@ export const mockCoverVideo: MockVideo = {
   thumbnailUrl: rawCoverVideo.video.thumbnailUrl,
   thumbnailAvailability: AssetAvailability.Accepted,
   duration: rawCoverVideo.videoMedia.duration,
-  category: mockCategories[mockCategories.length],
+  category: mockCategories[mockCategories.length - 1],
   isPublic: true,
 }
 

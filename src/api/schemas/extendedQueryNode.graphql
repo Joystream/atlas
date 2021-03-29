@@ -50,7 +50,7 @@ type Block {
 type Channel {
   id: ID!
   createdAt: DateTime!
-  title: String!
+  title: String
   description: String
   coverPhotoDataObject: DataObject
   coverPhotoUrl: String
@@ -60,7 +60,7 @@ type Channel {
   avatarPhotoAvailability: AssetAvailability!
   ownerMember: Membership
   isPublic: Boolean
-  isCensored: Boolean
+  isCensored: Boolean!
   language: Language
   videos: [Video!]!
 
@@ -99,34 +99,30 @@ type Video {
   id: ID!
   channel: Channel!
   createdAt: DateTime!
-  createdById: String!
   updatedAt: DateTime
-  updatedById: String
   deletedAt: DateTime
   category: VideoCategory!
-  title: String!
-  description: String!
+  title: String
+  description: String
   # In seconds
-  duration: Int!
+  duration: Int
   thumbnailDataObject: DataObject
   thumbnailUrl: String
   thumbnailAvailability: AssetAvailability!
-  Language: Language
+  language: Language
   hasMarketing: Boolean
   # Possible time when video was published before Joystream
-  publishedBeforeJoystream: String
-  isPublic: Boolean!
+  publishedBeforeJoystream: DateTime
+  isPublic: Boolean
   isCensored: Boolean!
-  isExplicit: Boolean!
+  isExplicit: Boolean
   mediaDataObject: DataObject
   mediaUrl: String
   mediaAvailability: AssetAvailability!
   mediaMetadata: VideoMediaMetadata!
-  license: License!
+  license: License
   isFeatured: Boolean!
-
   skippableIntroDuration: Int
-  # Timestamp of block
   # extended from Orion
   views: Int
 }

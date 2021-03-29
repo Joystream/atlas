@@ -9,16 +9,8 @@ export type MockChannel = AllChannelFieldsFragment
 export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, idx) => ({
   ...rawChannel,
   __typename: 'Channel',
-  coverPhoto: {
-    __typename: 'AssetUrl',
-    url: channelPosterSources[idx % channelPosterSources.length],
-  },
   coverPhotoUrl: channelPosterSources[idx % channelPosterSources.length],
   coverPhotoAvailability: AssetAvailability.Accepted,
-  avatarPhoto: {
-    __typename: 'AssetUrl',
-    url: channelAvatarSources[idx % channelAvatarSources.length],
-  },
   avatarPhotoUrl: channelAvatarSources[idx % channelAvatarSources.length],
   avatarPhotoAvailability: AssetAvailability.Accepted,
   createdAt: new Date(rawChannel.createdAt),
@@ -32,8 +24,8 @@ export const coverMockChannel: MockChannel = {
   __typename: 'Channel',
   createdAt: new Date(rawCoverVideo.channel.createdAt),
   avatarPhotoUrl: rawCoverVideo.channel.avatarPhotoUrl,
-  coverPhotoAvailability: AssetAvailability.Accepted,
   avatarPhotoAvailability: AssetAvailability.Accepted,
+  coverPhotoAvailability: AssetAvailability.Invalid,
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]

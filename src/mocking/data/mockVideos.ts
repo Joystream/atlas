@@ -20,9 +20,9 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     mediaMetadata: mockVideosMedia[mediaIndex],
     // @ts-ignore unable to generate new videosMedia.json
     mediaUrl: mockVideosMedia[mediaIndex].location.url,
-    mediaAvailability: 'ACCEPTED',
+    mediaAvailability: AssetAvailability.Accepted,
     thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
-    thumbnailAvailability: 'ACCEPTED',
+    thumbnailAvailability: AssetAvailability.Accepted,
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],

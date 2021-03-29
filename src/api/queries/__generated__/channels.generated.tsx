@@ -7,7 +7,7 @@ import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
-  title: string
+  title?: Types.Maybe<string>
   createdAt: Date
   avatarPhotoUrl?: Types.Maybe<string>
   avatarPhotoAvailability: Types.AssetAvailability

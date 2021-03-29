@@ -1,12 +1,8 @@
 import { CoverVideo, AllChannelFieldsFragment } from '@/api/queries'
 import { MockVideo } from '@/mocking/data/mockVideos'
 
-import {
-  mockCoverVideo,
-  mockCoverVideoChannel,
-  mockCoverVideoInfo,
-  mockCoverVideoMedia,
-} from '@/mocking/data/mockCoverVideo'
+import { mockCoverVideo, mockCoverVideoInfo, mockCoverVideoMedia } from '@/mocking/data/mockCoverVideo'
+import { coverMockChannel } from '@/mocking/data/mockChannels'
 
 type UseCoverVideo = () => {
   data: {
@@ -27,12 +23,12 @@ const useCoverVideo: UseCoverVideo = () => {
         ...mockCoverVideo,
         createdAt: new Date(),
         category: {
-          __typename: 'Category',
+          __typename: 'VideoCategory',
           id: 'random_category',
         },
         duration: mockCoverVideoMedia.duration,
         mediaMetadata: mockCoverVideoMedia,
-        channel: mockCoverVideoChannel,
+        channel: coverMockChannel,
       },
     },
   }

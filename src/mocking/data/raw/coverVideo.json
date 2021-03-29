@@ -21,7 +21,8 @@
     "title": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
     "follows": 48717,
-    "createdAt": "2018-01-27T08:59:19.385Z"
+    "createdAt": "2018-01-27T08:59:19.385Z",
+    "isCensored": false
   },
   "cover": {
     "coverDescription": "How We Lost Trust In Authority, And Authority Taught Us To Distrust Ourselves",
