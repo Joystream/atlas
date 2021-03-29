@@ -26,10 +26,12 @@ import {
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import routes from '@/config/routes'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { useCategories } from '@/api/hooks'
+import { languages } from '@/config/languages'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 
-const items: SelectedItem[] = [
+const visibilityOptions: SelectedItem[] = [
   { name: 'Public (Anyone can see this video)', value: 'public' },
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
@@ -87,6 +89,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   }, [location, cachedLocation, uploadVideoMatch])
 
   // forms state
+  const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileState>({
     video: null,
@@ -116,12 +119,13 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     },
   })
 
-  // console.log({
-  //   uploadVideoMatch,
-  //   sheetState,
-  //   height: containerBounds.height,
-  //   transform,
-  // })
+  console.log({
+    uploadVideoMatch,
+    sheetState,
+    height: containerBounds.height,
+    transform,
+    categories,
+  })
   return (
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
@@ -205,7 +209,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video visibility')}
               render={({ value }) => (
                 <Select
-                  items={items}
+                  items={visibilityOptions}
                   onChange={(e) => {
                     setValue('selectedVideoVisibility', e.selectedItem?.value)
                     clearErrors('selectedVideoVisibility')
@@ -223,7 +227,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video language')}
               render={({ value }) => (
                 <Select
-                  items={items}
+                  items={[...languages]}
                   onChange={(e) => {
                     setValue('selectedVideoLanguage', e.selectedItem?.value)
                     clearErrors('selectedVideoLanguage')
@@ -241,7 +245,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video category')}
               render={({ value }) => (
                 <Select
-                  items={items}
+                  items={categories?.map((category) => ({ name: category.name, value: category.id })) ?? []}
                   onChange={(e) => {
                     setValue('selectedVideoLanguage', e.selectedItem?.value)
                     clearErrors('selectedVideoLanguage')
@@ -372,7 +376,7 @@ const Content = styled.div`
 
 const StyledCheckboxContainer = styled.div`
   display: flex;
-  margin-bottom: 50px;
+  margin-bottom: 32px;
   p {
     margin-left: 20px;
   }
@@ -389,6 +393,8 @@ const FileDropperContainer = styled.div`
 `
 
 const FormContainer = styled.div<{ height: number }>`
+  display: grid;
+  grid-auto-flow: row;
   overflow-y: auto;
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 0;
