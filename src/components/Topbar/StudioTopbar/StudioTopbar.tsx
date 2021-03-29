@@ -58,7 +58,6 @@ const StudioTopbar: React.FC = () => {
       onCompleted: () => {
         const channel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
         setCurrentChannel(channel)
-        console.log(membership)
       },
     }
   )
