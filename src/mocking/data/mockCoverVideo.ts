@@ -28,7 +28,6 @@ export const mockCoverVideo: MockVideo = {
   thumbnailAvailability: AssetAvailability.Accepted,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[mockCategories.length - 1],
-  isPublic: true,
 }
 
 export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
