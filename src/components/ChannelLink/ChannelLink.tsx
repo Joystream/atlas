@@ -1,6 +1,6 @@
 import React from 'react'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
@@ -30,7 +30,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   const displayedChannel = overrideChannel || channel
 
   return (
-    <Container to={routes.viewer.channel(id)} disabled={!id || noLink} className={className}>
+    <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
         <Avatar imageUrl={displayedChannel?.avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />
       )}

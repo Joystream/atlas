@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import loadable from '@loadable/component'
 import { GlobalStyle } from '@/shared/components'
-import routes from '@/config/routes'
+import { BASE_PATHS } from '@/config/routes'
 import { ViewerLayout } from './views/viewer'
 import { PlaygroundLayout } from './views/playground'
 
@@ -17,9 +17,9 @@ const MainLayout: React.FC = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path={`${routes.viewer.index()}/*`} element={<ViewerLayout />} />
-          <Route path={`${routes.studio.index()}/*`} element={<LoadableStudioLayout />} />
-          <Route path={`${routes.playground.index()}/*`} element={<PlaygroundLayout />} />
+          <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
+          <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
+          <Route path={BASE_PATHS.playground + '/*'} element={<PlaygroundLayout />} />
         </Routes>
       </BrowserRouter>
     </>
