@@ -22,21 +22,26 @@ import {
   Select,
   SelectedItem,
   Textarea,
+  Text,
 } from '@/shared/components'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import routes from '@/config/routes'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
+import { Draft, useDrafts } from '@/hooks'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
+const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
 const visibilityOptions: SelectedItem[] = [
   { name: 'Public (Anyone can see this video)', value: 'public' },
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
 
-type Inputs = {
+type Tab = Draft
+
+type FormInputs = {
   title: string
   selectedVideoVisibility: string | null
   selectedVideoLanguage: string | null
@@ -62,6 +67,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   const location = useLocation()
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
+  // 1 extra px to account for the border
   const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
   const { ...props } = useSpring({
     duration: transitions.timings.sharp,
@@ -88,6 +94,11 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     }
   }, [location, cachedLocation, uploadVideoMatch])
 
+  // Tabs
+  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', channelId)
+  const [tabs, setTabs] = useState<Tab[]>([])
+  const [selectedTab, setSelectedTab] = useState<Tab>()
+
   // forms state
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -105,7 +116,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<Inputs>({
+  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<FormInputs>({
     shouldFocusError: false,
     defaultValues: {
       title: '',
@@ -119,6 +130,21 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     },
   })
 
+  const handleAddNewTab = async () => {
+    const newDraft = await addDraft({
+      channelId: channelId,
+      title: 'New Draft',
+      description: 'test',
+    })
+    setTabs((tabs) => [newDraft, ...tabs])
+    setSelectedTab(newDraft)
+  }
+  const handleRemoveTab = (id: string) => {
+    setTabs((tabs) => tabs.filter((tab) => tab.id !== id))
+  }
+  const handleTabClick = (tab: Tab) => {
+    setSelectedTab(tab)
+  }
   console.log({
     uploadVideoMatch,
     sheetState,
@@ -130,19 +156,15 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
         <TabsContainer>
-          <Tab>
-            This is a tab
-            <Button
-              icon="close"
-              variant="tertiary"
-              onClick={() => {
-                console.log('close tab')
-              }}
-            ></Button>
-          </Tab>
-          <Button variant="tertiary" onClick={() => {}}>
+          <Button variant="tertiary" onClick={handleAddNewTab}>
             <Icon name="plus" />
           </Button>
+          {tabs.map((tab) => (
+            <Tab key={tab.id} selected={tab.id === selectedTab?.id} onClick={() => handleTabClick(tab)}>
+              <TabTitle variant="subtitle2">{tab.title}</TabTitle>
+              <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab.id)}></Button>
+            </Tab>
+          ))}
         </TabsContainer>
         <ButtonsContainer>
           <Button
@@ -360,6 +382,8 @@ const Topbar = styled.div`
 const TabsContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  overflow: auto hidden;
 `
 
 const ButtonsContainer = styled.div`
@@ -398,12 +422,22 @@ const FormContainer = styled.div<{ height: number }>`
   overflow-y: auto;
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 0;
-  scroll-padding: 0 0 ${sizes(24)} 0;
 `
 
-const Tab = styled.div`
+const Tab = styled.div<{ selected: boolean }>`
   display: grid;
+  max-width: 168px;
   grid-auto-flow: column;
   padding: 0 ${sizes(4)};
   align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  ${({ selected }) => selected && `border-bottom: 3px solid ${colors.blue[500]};`}
+`
+
+const TabTitle = styled(Text)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
