@@ -25,6 +25,7 @@
     "build-storybook": "build-storybook -s public",
     "mocking:videos": "node scripts/mocking/generateVideos.js",
     "mocking:videosMedia": "node scripts/mocking/generateVideosMedia.js",
+    "mocking:memberships": "node scripts/mocking/generateMemberships.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
     "queries:codegen": "graphql-codegen --config codegen.config.yml",
     "postinstall": "patch-package"
