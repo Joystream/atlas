@@ -36,11 +36,8 @@ export const relativeRoutes = {
   },
 }
 
-export const absoluteRoutes = Object.keys(BASE_PATHS).reduce((absoluteRoutesAcc, basePathKeyStr) => {
-  const basePathKey = basePathKeyStr as keyof typeof BASE_PATHS
-  const basePath = BASE_PATHS[basePathKey]
-
-  const routes = relativeRoutes[basePathKey]
+export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesAcc, [basePathKey, basePath]) => {
+  const routes = relativeRoutes[basePathKey as keyof typeof BASE_PATHS]
 
   // @ts-ignore typing this is too much work ¯\_(ツ)_/¯
   absoluteRoutesAcc[basePathKey] = Object.keys(routes).reduce((routesAcc, routeKeyStr) => {
