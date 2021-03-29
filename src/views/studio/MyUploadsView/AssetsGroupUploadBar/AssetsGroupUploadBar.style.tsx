@@ -32,9 +32,11 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   top: 0;
   left: 0;
   height: 100%;
-  width: ${({ progress }) => progress && `${progress}%`};
+  width: 100%;
   background-color: var(--progress-bar-color);
-  transition: width 1s linear;
+  transform-origin: 0 0;
+  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
+  transition: transform 1s linear;
   animation: load 2.5s infinite ease-in-out;
   @keyframes load {
     0% {

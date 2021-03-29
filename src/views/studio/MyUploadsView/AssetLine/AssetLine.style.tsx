@@ -72,6 +72,7 @@ export const StatusMessage = styled(Text)`
 export const FileStatusContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: ${sizes(6)};
   height: ${sizes(6)};
   margin-left: ${sizes(4)};

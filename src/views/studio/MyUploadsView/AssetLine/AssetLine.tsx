@@ -20,46 +20,41 @@ type AssetLineProps = {
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const isVideo = asset.type === 'video'
+
   const fileInfoIcon = isVideo ? 'video-file' : 'image-file'
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
+  const fileStatusMessage = asset.status === 'reconnecting' ? 'Reconnecting...' : ''
+
   const resolution = `${asset.width}x${asset.height}`
   const size = formatBytes(asset.size)
 
-  let fileStatus
-  let fileStatusMessage = ''
-  switch (asset.status) {
-    case 'uploading':
-      fileStatus = (
-        <ProgressbarContainer>
-          <CircularProgressbar value={asset.progress} />
-        </ProgressbarContainer>
-      )
-      break
-    case 'pending':
-      fileStatus = (
-        <ProgressbarContainer>
-          <CircularProgressbar value={0} />
-        </ProgressbarContainer>
-      )
-      break
-    case 'failed':
-      fileStatus = <Icon name="error-second" />
-      break
-    case 'completed':
-      fileStatus = <Icon name="success" />
-      break
-    case 'reconnecting':
-      fileStatus = <Icon name="error-second" />
-      fileStatusMessage = 'Reconnecting...'
-      break
-    default:
-      fileStatus = <CircularProgressbar value={asset.progress} />
+  const renderStatusIndicator = (asset: Asset) => {
+    switch (asset.status) {
+      case 'pending':
+        return (
+          <ProgressbarContainer>
+            <CircularProgressbar value={0} />
+          </ProgressbarContainer>
+        )
+      case 'failed':
+        return <Icon name="error-second" />
+      case 'completed':
+        return <Icon name="success" />
+      case 'reconnecting':
+        return <Icon name="error-second" />
+      default:
+        return (
+          <ProgressbarContainer>
+            <CircularProgressbar value={asset.progress} />
+          </ProgressbarContainer>
+        )
+    }
   }
 
   return (
     <FileLineContainer isLast={isLast}>
       {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
-      <FileStatusContainer>{fileStatus}</FileStatusContainer>
+      <FileStatusContainer>{renderStatusIndicator(asset)}</FileStatusContainer>
       <FileInfoContainer>
         <FileInfoType>
           <Icon name={fileInfoIcon} />

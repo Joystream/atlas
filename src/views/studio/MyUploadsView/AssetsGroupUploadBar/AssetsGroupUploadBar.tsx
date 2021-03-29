@@ -31,7 +31,7 @@ export type UploadData = {
   files: Asset[]
 }
 
-type AssetsGroupBarUploadProps = {
+export type AssetsGroupBarUploadProps = {
   uploadData: UploadData
 }
 
