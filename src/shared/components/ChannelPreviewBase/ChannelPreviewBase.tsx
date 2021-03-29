@@ -16,7 +16,7 @@ import { transitions } from '@/shared/theme'
 
 export type ChannelPreviewBaseProps = {
   avatarUrl?: string | null
-  title?: string
+  title?: string | null
   videoCount?: number
   channelHref?: string
   className?: string

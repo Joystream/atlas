@@ -8,6 +8,7 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
+import { createUrlFromAsset } from '@/utils/asset'
 
 export type VideoPreviewProps = {
   id?: string
@@ -16,18 +17,25 @@ export type VideoPreviewProps = {
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, false)
+
+  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+  const avatarPhotoUrl = createUrlFromAsset(
+    video?.channel?.avatarPhotoAvailability,
+    video?.channel?.avatarPhotoUrl,
+    video?.channel?.avatarPhotoDataObject
+  )
   return (
     <VideoPreviewBase
       publisherMode={false}
       title={video?.title}
       channelTitle={video?.channel.title}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelAvatarUrl={avatarPhotoUrl}
       createdAt={video?.createdAt}
       duration={video?.duration}
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
-      thumbnailUrl={video?.thumbnailUrl}
+      thumbnailUrl={thumbnailUrl}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
@@ -43,12 +51,18 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   const { video, loading, videoHref } = useVideoSharedLogic(id, isDraft)
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
+
+  const avatarPhotoUrl = createUrlFromAsset(
+    video?.channel.avatarPhotoAvailability,
+    video?.channel.avatarPhotoUrl,
+    video?.channel.avatarPhotoDataObject
+  )
   return (
     <VideoPreviewBase
       publisherMode
       title={isDraft ? draft?.title : video?.title}
       channelTitle={video?.channel.title}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelAvatarUrl={avatarPhotoUrl}
       createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}

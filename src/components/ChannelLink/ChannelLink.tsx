@@ -4,6 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { createUrlFromAsset } from '@/utils/asset'
 
 type ChannelLinkProps = {
   id?: string
@@ -28,6 +29,12 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   const { channel } = useBasicChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
 
   const displayedChannel = overrideChannel || channel
+
+  const avatarPhotoUrl = createUrlFromAsset(
+    displayedChannel?.avatarPhotoAvailability,
+    displayedChannel?.avatarPhotoUrl,
+    displayedChannel?.avatarPhotoDataObject
+  )
 
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>

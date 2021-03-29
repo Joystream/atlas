@@ -75,11 +75,11 @@ export type VideoPreviewPublisherProps =
     }
 
 export type VideoPreviewBaseProps = {
-  title?: string
-  channelTitle?: string
+  title?: string | null
+  channelTitle?: string | null
   channelAvatarUrl?: string | null
   createdAt?: Date
-  duration?: number
+  duration?: number | null
   // video watch progress in percent (0-100)
   progress?: number
   views?: number | null

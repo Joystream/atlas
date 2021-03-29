@@ -24,6 +24,7 @@ import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
 import knownLicenses from '@/data/knownLicenses.json'
+import { createUrlFromAsset } from '@/utils/asset'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -120,6 +121,9 @@ const VideoView: React.FC = () => {
 
   const licenseName = knownLicenses.find((license) => license.code === video?.license?.code)?.name
 
+  const mediaUrl = createUrlFromAsset(video?.mediaAvailability, video?.mediaUrl, video?.mediaDataObject)
+  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+
   return (
     <StyledViewWrapper>
       <PlayerWrapper>
@@ -127,9 +131,9 @@ const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               playing={playing}
-              src={video.mediaUrl}
+              src={mediaUrl}
               fill
-              posterUrl={video.thumbnailUrl}
+              posterUrl={thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}
@@ -172,13 +176,11 @@ const VideoView: React.FC = () => {
         <LicenseContainer>
           {video ? (
             <>
-              License:{' '}
+              License:
               <a href={video.license?.url || ''} target="_blank" rel="noopener noreferrer">
                 {licenseName}
               </a>
-              <p>
-                <p>{video.license?.customText}</p>
-              </p>
+              <p>{video.license?.customText}</p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>
           ) : (
