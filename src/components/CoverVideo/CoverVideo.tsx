@@ -18,7 +18,7 @@ import {
   ButtonsContainer,
 } from './CoverVideo.style'
 import { CSSTransition } from 'react-transition-group'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
@@ -91,7 +91,7 @@ const CoverVideo: React.FC = () => {
         <TitleContainer>
           {data ? (
             <>
-              <Link to={routes.viewer.video(data.video.id)}>
+              <Link to={absoluteRoutes.viewer.video(data.video.id)}>
                 <Title variant="h2">{data.video.title}</Title>
               </Link>
               <span>{data.coverDescription}</span>

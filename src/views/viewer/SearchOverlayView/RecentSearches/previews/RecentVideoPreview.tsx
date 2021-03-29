@@ -8,7 +8,7 @@ import {
   PreviewTitlePlaceholder,
   PreviewSubtext,
 } from './previews.style'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -19,7 +19,7 @@ type RecentVideoPreviewProps = {
 
 const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
   return (
-    <PreviewContainer to={routes.viewer.video(video?.id)}>
+    <PreviewContainer to={absoluteRoutes.viewer.video(video?.id)}>
       <SwitchTransition>
         <CSSTransition
           key={video ? 'placeholder' : 'content'}

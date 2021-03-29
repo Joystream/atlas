@@ -1,6 +1,6 @@
 import React from 'react'
 import { useVideo } from '@/api/hooks'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
@@ -27,7 +27,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
       views={video?.views}
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
-      channelHref={id ? routes.viewer.channel(video?.channel.id) : undefined}
+      channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
@@ -54,7 +54,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       views={video?.views}
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
-      channelHref={id ? routes.viewer.channel(video?.channel.id) : undefined}
+      channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
@@ -68,6 +68,6 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
 const useVideoSharedLogic = (id?: string, isDraft?: boolean) => {
   const { video, loading } = useVideo(id ?? '', { skip: !id || isDraft })
   const internalIsLoadingState = loading || !id
-  const videoHref = id ? routes.viewer.video(id) : undefined
+  const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
   return { video, loading: internalIsLoadingState, videoHref }
 }
