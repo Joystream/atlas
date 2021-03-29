@@ -19,7 +19,8 @@ export type AllChannelFieldsFragment = {
   coverPhotoUrl?: Types.Maybe<string>
   coverPhotoAvailability: Types.AssetAvailability
   follows?: Types.Maybe<number>
-  isPublic: boolean
+  isPublic?: Types.Maybe<boolean>
+  coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 } & BasicChannelFieldsFragment
 
 export type GetBasicChannelQueryVariables = Types.Exact<{
@@ -41,6 +42,8 @@ export type GetChannelQuery = {
     {
       __typename?: 'Channel'
       description?: Types.Maybe<string>
+      isPublic?: Types.Maybe<boolean>
+      isCensored: boolean
       language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
     } & AllChannelFieldsFragment
   >
@@ -180,6 +183,8 @@ export const GetChannelDocument = gql`
     channel(where: $where) {
       ...AllChannelFields
       description
+      isPublic
+      isCensored
       language {
         name
       }

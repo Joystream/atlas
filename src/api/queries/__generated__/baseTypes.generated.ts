@@ -67,7 +67,7 @@ export type Channel = {
   avatarPhotoDataObject?: Maybe<DataObject>
   avatarPhotoUrl?: Maybe<Scalars['String']>
   avatarPhotoAvailability: AssetAvailability
-  owner: Member
+  ownerMember?: Maybe<Membership>
   isPublic?: Maybe<Scalars['Boolean']>
   isCensored: Scalars['Boolean']
   language?: Maybe<Language>
@@ -169,6 +169,8 @@ export type ChannelWhereInput = {
   isCurated_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
   ownerMemberId_eq?: Maybe<Scalars['ID']>
+  coverPhotoAvailability_eq?: Maybe<AssetAvailability>
+  avatarPhotoAvailability_eq?: Maybe<AssetAvailability>
   id_in?: Maybe<Array<Scalars['ID']>>
 }
 
