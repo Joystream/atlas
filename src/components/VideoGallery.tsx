@@ -11,9 +11,16 @@ interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
 }
 
+type VideoWithIdAndProgress = {
+  id: string
+  progress?: number
+}
+
+type CustomVideosType = VideoFieldsWithProgress[] | VideoWithIdAndProgress[]
+
 type VideoGalleryProps = {
   title?: string
-  videos?: VideoFieldsWithProgress[]
+  videos?: CustomVideosType
   loading?: boolean
   removeButton?: boolean
   onRemoveButtonClick?: (id: string) => void
