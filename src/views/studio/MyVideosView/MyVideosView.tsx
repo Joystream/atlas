@@ -6,6 +6,9 @@ import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
+import { useNavigate } from 'react-router-dom'
+import routes from '@/config/routes'
+import { useUploadVideoActionSheet } from '../UploadEditVideoActionSheet/useVideoActionSheet'
 
 const testChannelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 // const testChannelId = '100' // staging test channel id
@@ -17,6 +20,8 @@ const ROWS_AMOUNT = 4
 // TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
+  const navigate = useNavigate()
+  const { videoTabs, addVideoTab, setSelectedVideoTab } = useUploadVideoActionSheet()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -81,8 +86,23 @@ export const MyVideosView = () => {
                 id={draft.id}
                 showChannel={false}
                 isDraft
-                isPullupDisabled={false}
-                onEditVideoClick={() => ({})}
+                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                  navigate(routes.studio.editVideo())
+                }}
+                onPullupClick={(e) => {
+                  e.stopPropagation()
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                }}
+                onEditVideoClick={() => {
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                  navigate(routes.studio.editVideo())
+                }}
                 onDeleteVideoClick={() => {
                   removeDraft(draft.id)
                 }}

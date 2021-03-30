@@ -30,6 +30,7 @@ import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { Draft, useDrafts } from '@/hooks'
+import { TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
 
 export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
@@ -39,16 +40,14 @@ const visibilityOptions: SelectedItem[] = [
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
 
-type TabType = Draft
-
 type FormInputs = {
   title: string
   description: string
-  selectedVideoVisibility: SelectedItem | null
-  selectedVideoLanguage: SelectedItem | null
-  selectedVideoCategory: SelectedItem | null
+  selectedVideoVisibility: string | null
+  selectedVideoLanguage: string | null
+  selectedVideoCategory: string | null
   hasMarketing: boolean
-  updatedAt: Date | null
+  publishedBeforeJoystream: Date | null
   isExplicit: string
 }
 
@@ -96,9 +95,16 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
 
   // Tabs
   const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
-  const [tabs, setTabs] = useState<TabType[]>([])
-  const [selectedTab, setSelectedTab] = useState<TabType>()
-
+  // const [tabs, setTabs] = useState<TabType[]>([])
+  // const [selectedTab, setSelectedTab] = useState<TabType>()
+  const {
+    videoTabs,
+    addVideoTab,
+    removeVideoTab,
+    resetVideoTabs,
+    selectedVideoTab,
+    setSelectedVideoTab,
+  } = useUploadVideoActionSheet()
   // forms state
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -122,12 +128,12 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     shouldFocusError: true,
     defaultValues: {
       title: '',
-      selectedVideoVisibility: null,
-      selectedVideoLanguage: null,
+      selectedVideoVisibility: 'public',
+      selectedVideoLanguage: 'en',
       selectedVideoCategory: null,
       description: '',
       hasMarketing: false,
-      updatedAt: null,
+      publishedBeforeJoystream: null,
       isExplicit: '',
     },
   })
@@ -137,48 +143,50 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     const newDraft = await addDraft({
       channelId: channelId,
       title: 'New Draft',
-      isPublic: true,
-      language: { name: 'en' },
-      category: { id: '123', name: 'sports' },
+      isPublic: false,
+      language: 'es',
+      categoryId: '02c287dc-0b35-41f8-a494-9d98e312fbff',
       description: 'asdgasdgjkahskldhjklahjskldhjlhjskljlkhjsdljal;sjdlja;sdj;ajl;dj;ajsd;ljal;d',
       hasMarketing: true,
       isExplicit: true,
+      publishedBeforeJoystream: '28/12/1994',
     })
-    setTabs((tabs) => [newDraft, ...tabs])
+    addVideoTab(newDraft)
     handleTabSelect(newDraft)
   }
-  const handleRemoveTab = (id: string) => {
-    setTabs((tabs) => tabs.filter((tab) => tab.id !== id))
+  const handleRemoveTab = (tab: TabType) => {
+    removeVideoTab(tab)
   }
   const handleTabSelect = (tab: TabType) => {
-    reset({
-      title: '',
-      selectedVideoVisibility: null,
-      selectedVideoLanguage: null,
-      selectedVideoCategory: null,
-      description: '',
-      hasMarketing: false,
-      updatedAt: null,
-      isExplicit: '',
-    })
-    setSelectedTab(tab)
+    console.log({ tab })
+    // reset({
+    //   title: '',
+    //   selectedVideoVisibility: null,
+    //   selectedVideoLanguage: null,
+    //   selectedVideoCategory: null,
+    //   description: '',
+    //   hasMarketing: false,
+    //   publishedBeforeJoystream: null,
+    //   isExplicit: '',
+    // })
+    setSelectedVideoTab(tab)
     setFormValue('title', tab.title)
     setFormValue('description', tab.description)
-    setFormValue('selectedVideoVisibility', tab.isPublic ?? null)
-    setFormValue('selectedVideoLanguage', tab.language?.name ?? null)
-    setFormValue('selectedVideoCategory', tab.category?.name ?? null)
-    setFormValue('updatedAt', tab.updatedAt ?? null)
+    setFormValue('selectedVideoVisibility', tab.isPublic ? 'public' : 'unlisted' ?? null)
+    setFormValue('selectedVideoLanguage', tab.language ?? null)
+    setFormValue('selectedVideoCategory', tab.categoryId ?? null)
+    setFormValue('publishedBeforeJoystream', tab.publishedBeforeJoystream ?? null)
     setFormValue('hasMarketing', tab.hasMarketing)
-    setFormValue('isExplicit', tab.isExplicit)
+    setFormValue('isExplicit', tab.isExplicit ? 'mature' : 'all')
   }
-  console.log({
-    uploadVideoMatch,
-    sheetState,
-    height: containerBounds.height,
-    transform,
-    categories,
-    watchAllFormFields,
-  })
+  // console.log({
+  //   uploadVideoMatch,
+  //   sheetState,
+  //   height: containerBounds.height,
+  //   transform,
+  //   categories,
+  //   watchAllFormFields,
+  // })
   return (
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
@@ -186,10 +194,10 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           <Button variant="tertiary" onClick={handleAddNewTab}>
             <Icon name="plus" />
           </Button>
-          {tabs.map((tab) => (
-            <Tab key={tab.id} selected={tab.id === selectedTab?.id} onClick={() => handleTabSelect(tab)}>
+          {videoTabs.map((tab) => (
+            <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
               <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-              <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab.id)}></Button>
+              <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
             </Tab>
           ))}
         </TabsContainer>
@@ -258,10 +266,10 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video visibility')}
               render={({ value }) => (
                 <Select
-                  value={watchAllFormFields.selectedVideoVisibility}
+                  value={visibilityOptions.find((o) => o.value === value) ?? null}
                   items={visibilityOptions}
                   onChange={(e) => {
-                    setFormValue('selectedVideoVisibility', e.selectedItem)
+                    setFormValue('selectedVideoVisibility', e.selectedItem?.value)
                     clearErrors('selectedVideoVisibility')
                   }}
                   error={!!errors.selectedVideoVisibility && !value}
@@ -277,10 +285,10 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video language')}
               render={({ value }) => (
                 <Select
-                  value={watchAllFormFields.selectedVideoLanguage}
+                  value={languages.find((l) => l.value === value) ?? null}
                   items={[...languages]}
                   onChange={(e) => {
-                    setFormValue('selectedVideoLanguage', e.selectedItem)
+                    setFormValue('selectedVideoLanguage', e.selectedItem?.value)
                     clearErrors('selectedVideoLanguage')
                   }}
                   error={!!errors.selectedVideoLanguage && !value}
@@ -296,10 +304,14 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video category')}
               render={({ value }) => (
                 <Select
-                  value={watchAllFormFields.selectedVideoCategory}
+                  value={
+                    categories
+                      ?.map((category) => ({ name: category.name, value: category.id }))
+                      ?.find((c) => c.value === value) ?? null
+                  }
                   items={categories?.map((category) => ({ name: category.name, value: category.id })) ?? []}
                   onChange={(e) => {
-                    setFormValue('selectedVideoCategory', e.selectedItem)
+                    setFormValue('selectedVideoCategory', e.selectedItem?.value)
                     clearErrors('selectedVideoCategory')
                   }}
                   error={!!errors.selectedVideoCategory && !value}
@@ -313,14 +325,17 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
           >
             <Controller
-              name="updatedAt"
+              name="publishedBeforeJoystream"
               control={control}
-              rules={{ validate: (updatedAt) => isValid(updatedAt) }}
-              render={() => (
+              rules={{ validate: (publishedBeforeJoystream) => isValid(publishedBeforeJoystream) }}
+              render={({ value }) => (
                 <Datepicker
-                  onChange={(updatedAt) => setFormValue('updatedAt', updatedAt)}
-                  onBlur={() => clearErrors('updatedAt')}
-                  error={!!errors.updatedAt}
+                  value={value}
+                  onChange={(publishedBeforeJoystream) =>
+                    setFormValue('publishedBeforeJoystream', publishedBeforeJoystream)
+                  }
+                  onBlur={() => clearErrors('publishedBeforeJoystream')}
+                  error={!!errors.publishedBeforeJoystream}
                 />
               )}
             />
@@ -413,6 +428,7 @@ const TabsContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+  scrollbar-width: thin;
   overflow: auto hidden;
 `
 
@@ -450,12 +466,14 @@ const FormContainer = styled.form<{ height: number }>`
   display: grid;
   grid-auto-flow: row;
   overflow-y: auto;
+  scrollbar-width: thin;
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
 `
 
 const Tab = styled.div<{ selected: boolean }>`
   display: grid;
+  height: 100%;
   max-width: 168px;
   grid-auto-flow: column;
   padding: 0 0 0 ${sizes(4)};

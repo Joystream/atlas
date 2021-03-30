@@ -20,8 +20,8 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string
   hasMarketing?: boolean
   isExplicit?: boolean
-  language?: Language
-  category?: Category
+  language?: Language['name']
+  categoryId?: Category['id']
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>

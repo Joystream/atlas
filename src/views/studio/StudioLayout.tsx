@@ -8,6 +8,7 @@ import { CreateEditChannelView, MyVideosView, UploadEditVideoActionSheet } from 
 import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
 import routes from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import { VideoActionSheetProvider } from './UploadEditVideoActionSheet/useVideoActionSheet'
 
 const studioRoutes = [
   { path: routes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
@@ -43,29 +44,31 @@ const StudioLayout = () => {
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
   return (
-    <DraftsProvider>
-      <PersonalDataProvider>
-        <ActiveUserProvider>
-          <StudioTopbar />
-          <Sidenav items={studioNavbarItems} isStudio />
-          <MainContainer>
-            <ErrorBoundary
-              fallback={ViewErrorFallback}
-              onReset={() => {
-                navigate(routes.studio.index())
-              }}
-            >
-              <Routes>
-                {studioRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
-                ))}
-              </Routes>
-            </ErrorBoundary>
-          </MainContainer>
-          <UploadEditVideoActionSheet />
-        </ActiveUserProvider>
-      </PersonalDataProvider>
-    </DraftsProvider>
+    <VideoActionSheetProvider>
+      <DraftsProvider>
+        <PersonalDataProvider>
+          <ActiveUserProvider>
+            <StudioTopbar />
+            <Sidenav items={studioNavbarItems} isStudio />
+            <MainContainer>
+              <ErrorBoundary
+                fallback={ViewErrorFallback}
+                onReset={() => {
+                  navigate(routes.studio.index())
+                }}
+              >
+                <Routes>
+                  {studioRoutes.map((route) => (
+                    <Route key={route.path} {...route} />
+                  ))}
+                </Routes>
+              </ErrorBoundary>
+            </MainContainer>
+            <UploadEditVideoActionSheet />
+          </ActiveUserProvider>
+        </PersonalDataProvider>
+      </DraftsProvider>
+    </VideoActionSheetProvider>
   )
 }
 

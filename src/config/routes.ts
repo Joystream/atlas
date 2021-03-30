@@ -24,7 +24,7 @@ export default {
     editChannel: () => 'channel',
     videos: () => 'videos',
     uploadVideo: () => '/studio/new-video',
-    editVideo: () => '/studio/new-video',
+    editVideo: () => `/studio/new-video`,
     uploads: () => 'uploads',
   },
   playground: {
