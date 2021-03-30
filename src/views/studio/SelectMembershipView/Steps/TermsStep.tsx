@@ -1,4 +1,4 @@
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Checkbox } from '@/shared/components'
 import Text from '@/shared/components/Text'
 import { transitions } from '@/shared/theme'
@@ -49,7 +49,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
     e.preventDefault()
     // do something here
     onStepChange(0)
-    navigate(routes.studio.newMembership(true))
+    navigate(absoluteRoutes.studio.newMembership())
   }
 
   return (

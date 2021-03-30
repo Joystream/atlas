@@ -31,9 +31,9 @@ export const relativeRoutes = {
     videos: () => '/videos',
     uploads: () => 'uploads',
     signIn: () => 'signIn',
-    selectMembership: (absolute?: boolean) => `${absolute ? '/studio/' : ''}memberships`,
-    newMembership: (absolute?: boolean) => `${absolute ? '/studio/' : ''}memberships/new`,
-    selectChannel: (absolute?: boolean) => `${absolute ? '/studio/' : ''}channels`,
+    newMembership: () => 'membership/new',
+    selectMembership: () => 'memberships',
+    selectChannel: () => 'channels',
   },
   playground: {
     index: () => '',

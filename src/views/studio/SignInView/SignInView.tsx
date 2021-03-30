@@ -1,5 +1,5 @@
 import { StudioContainer } from '@/components'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
@@ -38,7 +38,7 @@ const SignInView = () => {
             Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
           </SubTitle>
           <ButtonGroup>
-            <SignInButton to={routes.studio.selectMembership(true)} size="large">
+            <SignInButton to={absoluteRoutes.studio.selectMembership()} size="large">
               Sign in For Free
             </SignInButton>
             <Button variant="secondary" size="large" to="https://www.joystream.org/">

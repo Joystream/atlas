@@ -17,6 +17,10 @@ const studioRoutes = [
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
   { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
   { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
+  { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
+  { path: relativeRoutes.studio.selectMembership(), element: <SelectMembershipView /> },
+  { path: relativeRoutes.studio.selectChannel(), element: <SelectChannelView /> },
+  { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
 ]
 
 const studioNavbarItems: NavItemType[] = [

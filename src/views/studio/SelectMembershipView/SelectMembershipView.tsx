@@ -1,5 +1,5 @@
 import { Multistepper } from '@/components/Dialogs'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser, useCheckBrowser } from '@/hooks'
 import { StudioCard, StudioHeader } from '@/shared/components'
 import { promisify } from '@/utils/data'
@@ -74,7 +74,7 @@ const SelectMembershipView = () => {
       <MemberChannelGrid>
         {memberships?.map((membership) => (
           <StudioCard
-            to={routes.studio.selectChannel(true)}
+            to={absoluteRoutes.studio.selectChannel()}
             variant="membership"
             key={membership.id}
             avatarPhotoUrl={membership.avatarUri}

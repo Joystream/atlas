@@ -1,4 +1,4 @@
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { StudioCard, StudioHeader } from '@/shared/components'
 import React, { useState } from 'react'
 import { MemberChannelGrid, Wrapper } from './SelectChannelView.style'
@@ -34,7 +34,7 @@ const SelectChannelView = () => {
             handle={channel.handle}
           />
         ))}
-        <StudioCard blank variant="channel" handle="Create a Channel" to={routes.studio.newChannel(true)} />
+        <StudioCard blank variant="channel" handle="Create a Channel" to={absoluteRoutes.studio.newChannel()} />
       </MemberChannelGrid>
     </Wrapper>
   )
