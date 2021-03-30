@@ -26,7 +26,8 @@ export const MyVideosView = () => {
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
+  const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', testChannelId)
+
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
@@ -64,9 +65,22 @@ export const MyVideosView = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+  const unseenDraftsLength = drafts.filter((draft) => draft.seen === false).length
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
+  }
+
+  const handleSetCurrentTab = async (tab: number) => {
+    if (TABS[tab] === 'Drafts') {
+      setCurrentTab(tab)
+      for (const draft of drafts) {
+        if (draft.seen === true) {
+          return
+        }
+        await updateDraft(draft.id, { ...draft, seen: true }, false)
+      }
+    }
   }
 
   const gridContent = (
@@ -107,7 +121,12 @@ export const MyVideosView = () => {
         ) : (
           <>
             <TabsContainer>
-              <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
+              <Tabs
+                initialIndex={0}
+                tabs={[...TABS]}
+                onSelectTab={handleSetCurrentTab}
+                badges={[{ name: 'Drafts', number: unseenDraftsLength }]}
+              />
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage

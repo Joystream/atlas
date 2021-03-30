@@ -19,6 +19,7 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string
   hasMarketing?: boolean
   isExplicit?: boolean
+  seen?: boolean
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>
@@ -73,8 +74,8 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   }, [])
 
   const updateSingleDraft = useCallback(
-    async (draftId: string, draftProps: RawDraft) => {
-      const updatedDraft = await updateDraft(draftId, draftProps)
+    async (draftId: string, draftProps: RawDraft, setUpdatedDate = true) => {
+      const updatedDraft = await updateDraft(draftId, draftProps, setUpdatedDate)
       fetchDrafts()
       return updatedDraft
     },

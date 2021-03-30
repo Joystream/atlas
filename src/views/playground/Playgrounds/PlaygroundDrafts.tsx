@@ -7,7 +7,7 @@ import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
 const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
-  channelId: '123',
+  channelId: '100',
   title: '',
   description: '',
   isExplicit: undefined,

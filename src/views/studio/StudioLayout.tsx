@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
 import { CreateEditChannelView, MyVideosView, MyUploadsView } from '.'
-import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider, useDrafts } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
@@ -46,32 +46,47 @@ const studioNavbarItems: NavItemType[] = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const { drafts } = useDrafts('video')
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
+
+  const unseenDraftsLength = drafts.filter((draft) => draft.seen === false).length
+  const badges = [
+    { name: studioNavbarItems[0].name, number: unseenDraftsLength },
+    { name: studioNavbarItems[1].name, number: 0 },
+    { name: studioNavbarItems[2].name, number: 0 },
+  ]
+
+  return (
+    <>
+      <StudioTopbar />
+      <Sidenav items={studioNavbarItems} isStudio badges={badges} />
+      <MainContainer>
+        <ErrorBoundary
+          fallback={ViewErrorFallback}
+          onReset={() => {
+            navigate(absoluteRoutes.studio.index())
+          }}
+        >
+          <Routes>
+            {studioRoutes.map((route) => (
+              <Route key={route.path} {...route} />
+            ))}
+          </Routes>
+        </ErrorBoundary>
+      </MainContainer>
+    </>
+  )
+}
+
+const StudioLayoutWrapper = () => {
   return (
     <DraftsProvider>
       <PersonalDataProvider>
         <ActiveUserProvider>
-          <JoystreamProvider>
-            <StudioTopbar />
-            <Sidenav items={studioNavbarItems} isStudio />
-            <MainContainer>
-              <ErrorBoundary
-                fallback={ViewErrorFallback}
-                onReset={() => {
-                  navigate(absoluteRoutes.studio.index())
-                }}
-              >
-                <Routes>
-                  {studioRoutes.map((route) => (
-                    <Route key={route.path} {...route} />
-                  ))}
-                </Routes>
-              </ErrorBoundary>
-            </MainContainer>
-          </JoystreamProvider>
+          <StudioLayout />
         </ActiveUserProvider>
       </PersonalDataProvider>
     </DraftsProvider>
@@ -84,4 +99,4 @@ const MainContainer = styled.main`
   margin-left: var(--sidenav-collapsed-width);
 `
 
-export default StudioLayout
+export default StudioLayoutWrapper

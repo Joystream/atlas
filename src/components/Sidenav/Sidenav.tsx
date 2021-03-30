@@ -22,6 +22,7 @@ import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
 import { absoluteRoutes } from '@/config/routes'
+import { BadgeType } from '@/shared/components/Tabs/Tabs'
 
 type NavSubitem = {
   name: string
@@ -36,9 +37,10 @@ type NavItemType = {
 export type SidenavProps = {
   items: NavItemType[]
   isStudio?: boolean
+  badges?: BadgeType[]
 }
 
-const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
+const Sidenav: React.FC<SidenavProps> = ({ items, isStudio, badges }) => {
   const {
     state: { followedChannels },
   } = usePersonalData()
@@ -76,6 +78,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               itemName={item.name}
               onClick={closeSideNav}
               isStudio={isStudio}
+              badge={badges?.find((badge) => badge.name === item.name)}
             >
               <Icon name={item.icon} />
               <span>{item.expandedName || item.name}</span>
@@ -117,14 +120,24 @@ type NavItemProps = {
   to: string
   itemName: string
   isStudio?: boolean
+  badge?: BadgeType
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName, isStudio }) => {
+const NavItem: React.FC<NavItemProps> = ({
+  expanded = false,
+  subitems,
+  children,
+  to,
+  onClick,
+  itemName,
+  isStudio,
+  badge,
+}) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const match = useMatch(to)
   return (
-    <SidebarNavItem>
+    <SidebarNavItem data-badge={badge?.name === itemName ? badge.number : 0} expanded={expanded}>
       <SidebarNavLink
         onClick={onClick}
         data-active={match ? 'true' : ''}

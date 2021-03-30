@@ -9,21 +9,21 @@ export const getDraft = async (id: string) => {
   return currentDrafts.find((d) => d.id === id) ?? null
 }
 
-export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
+export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id' | 'seen'>) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
   const id = Math.random().toString(36).substr(2, 11)
-  const newDraft = { ...draftProps, updatedAt, id }
+  const newDraft = { ...draftProps, updatedAt, id, seen: false }
   const newDrafts = [newDraft, ...currentDrafts]
   writeToLocalStorage('drafts', newDrafts)
   return newDraft
 }
 
-export const updateDraft = async (draftId: string, draftProps: RawDraft) => {
+export const updateDraft = async (draftId: string, draftProps: RawDraft, setUpdatedDate: boolean) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
   const newDrafts = currentDrafts.map((draft) =>
-    draft.id === draftId ? { ...draft, ...draftProps, updatedAt } : draft
+    draft.id === draftId ? { ...draft, ...draftProps, updatedAt: setUpdatedDate ? updatedAt : draft.updatedAt } : draft
   )
   writeToLocalStorage('drafts', newDrafts)
   return newDrafts.find((draft) => draft.id === draftId)
