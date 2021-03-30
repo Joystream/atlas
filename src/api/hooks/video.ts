@@ -16,7 +16,6 @@ export const useVideo = (id: string, opts?: VideoOpts) => {
     ...opts,
     variables: { where: { id } },
   })
-
   return {
     video: data?.video,
     ...queryRest,

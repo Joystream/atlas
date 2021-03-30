@@ -5,7 +5,8 @@
     "description": "How We Lost Trust In Authority, And Authority Taught Us To Distrust Ourselves",
     "views": 132,
     "createdAt": "2020-11-04T15:59:55.820Z",
-    "thumbnailUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg"
+    "thumbnailUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg",
+    "mediaUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm"
   },
   "videoMedia": {
     "id": "4551c421-8edd-4d3b-8357-9fe825742775",
@@ -13,23 +14,19 @@
     "pixelWidth": 2560,
     "pixelHeight": 1440,
     "duration": 29,
-    "size": 44851016,
-    "location": {
-      "__typename": "HttpMediaLocation",
-      "url": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm"
-    }
+    "size": 44851016
   },
   "channel": {
     "id": "102",
-    "handle": "SCHISM",
+    "title": "SCHISM",
     "avatarPhotoUrl": "https://eu-central-1.linodeobjects.com/joystream/schismavatar_black.png",
-    "coverPhotoUrl": null,
     "follows": 48717,
-    "createdAt": "2018-01-27T08:59:19.385Z"
+    "createdAt": "2018-01-27T08:59:19.385Z",
+    "isCensored": false
   },
   "cover": {
     "coverDescription": "How We Lost Trust In Authority, And Authority Taught Us To Distrust Ourselves",
-    "coverCutMedia": {
+    "coverCutMediaMetadata": {
       "id": "4551c421-8edd-4d3b-8357-9fe825742775",
       "codec": "H264_mpeg4",
       "pixelWidth": 2560,
@@ -43,10 +40,7 @@
   },
   "license": {
     "id": "1503",
-    "attribution": null,
-    "type": {
-      "__typename": "UserDefinedLicense",
-      "content": "Free to consume and share, no derivatives or adaptations, copyright Jamie King 2020\n"
-    }
+    "customText": "Free to consume and share, no derivatives or adaptations",
+    "attribution": "Jamie King 2020"
   }
 }

@@ -16,7 +16,7 @@ const PlaceholderTemplate: Story<ChannelPreviewBaseProps> = (args) => <ChannelPr
 
 export const Regular = Template.bind({})
 Regular.args = {
-  handle: 'Test channel',
+  title: 'Test channel',
   avatarUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg',
   videoCount: 0,
   loading: false,

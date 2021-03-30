@@ -1,10 +1,10 @@
-fragment CategoryFields on Category {
+fragment VideoCategoryFields on VideoCategory {
   id
   name
 }
 
 query GetCategories {
   categories {
-    ...CategoryFields
+    ...VideoCategoryFields
   }
 }
