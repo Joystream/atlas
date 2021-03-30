@@ -3,7 +3,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser } from '@/hooks'
 import { Spinner, StudioHeader, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation } from '@/utils/formValidationOptions'
+import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
@@ -61,7 +61,13 @@ const CreateMemberView = () => {
         subtitle="Customize your membership details to easily spot the member account you would like to use when signing in."
       />
       <Form onSubmit={onSubmit}>
-        <TextField name="avatarUri" label="Avatar url" ref={register} />
+        <TextField
+          name="avatarUri"
+          label="Avatar url"
+          ref={register(urlValidation('Avatar url'))}
+          error={!!errors.avatarUri}
+          helperText={errors.avatarUri?.message}
+        />
         <TextField
           name="handle"
           label="Member Name"

@@ -74,7 +74,7 @@ const SelectMembershipView = () => {
       <MemberChannelGrid>
         {memberships?.map((membership) => (
           <StudioCard
-            to={absoluteRoutes.studio.selectChannel()}
+            to={absoluteRoutes.studio.newChannel()}
             variant="membership"
             key={membership.id}
             avatarPhotoUrl={membership.avatarUri}
