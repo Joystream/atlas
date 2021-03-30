@@ -22,7 +22,7 @@ export const AssetsGroupBarUploadContainer = styled.div`
   padding: ${sizes(4)};
   width: 100%;
   height: ${sizes(20)};
-  background-color: ${colors.black};
+  background-color: ${colors.gray[900]};
   cursor: pointer;
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `
