@@ -5,7 +5,7 @@ import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './cha
 import { gql } from '@apollo/client'
 
 import * as Apollo from '@apollo/client'
-export type VideoMediaFieldsFragment = {
+export type VideoMediaMetadataFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
   id: string
   pixelHeight?: Types.Maybe<number>
@@ -36,7 +36,7 @@ export type VideoFieldsFragment = {
   mediaAvailability: Types.AssetAvailability
   category: { __typename?: 'VideoCategory'; id: string }
   thumbnailDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
-  mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
+  mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
   license?: Types.Maybe<{ __typename?: 'License' } & LicenseFieldsFragment>
@@ -94,7 +94,7 @@ export type GetCoverVideoQuery = {
     __typename?: 'CoverVideo'
     coverDescription: string
     video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaFieldsFragment
+    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   }
 }
 
@@ -117,8 +117,8 @@ export type AddVideoViewMutation = {
   addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
 }
 
-export const VideoMediaFieldsFragmentDoc = gql`
-  fragment VideoMediaFields on VideoMediaMetadata {
+export const VideoMediaMetadataFieldsFragmentDoc = gql`
+  fragment VideoMediaMetadataFields on VideoMediaMetadata {
     id
     pixelHeight
     pixelWidth
@@ -151,7 +151,7 @@ export const VideoFieldsFragmentDoc = gql`
     createdAt
     isPublic
     mediaMetadata {
-      ...VideoMediaFields
+      ...VideoMediaMetadataFields
     }
     mediaUrl
     mediaAvailability
@@ -166,7 +166,7 @@ export const VideoFieldsFragmentDoc = gql`
     }
   }
   ${DataObjectFieldsFragmentDoc}
-  ${VideoMediaFieldsFragmentDoc}
+  ${VideoMediaMetadataFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `
@@ -360,12 +360,12 @@ export const GetCoverVideoDocument = gql`
       }
       coverDescription
       coverCutMediaMetadata {
-        ...VideoMediaFields
+        ...VideoMediaMetadataFields
       }
     }
   }
   ${VideoFieldsFragmentDoc}
-  ${VideoMediaFieldsFragmentDoc}
+  ${VideoMediaMetadataFieldsFragmentDoc}
 `
 
 /**

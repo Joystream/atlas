@@ -6,6 +6,9 @@ export const createUrlFromAsset = (
   assetUrl?: string | null,
   dataObject?: DataObject | null
 ) => {
+  if (!availability) {
+    return
+  }
   if (availability !== AssetAvailability.Accepted) {
     console.warn('Trying to create URL for non-accepted asset')
     return

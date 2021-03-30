@@ -4,16 +4,27 @@ type Language {
   name: String!
 }
 
-type Membership {
+type VideoCategory {
   id: ID!
+  name: String
+  videos: [Video!]
+}
 
-  handle: String!
+type License {
+  id: ID!
+  code: Int
+  url: String
+  attribution: String
+  videoLicense: [Video!]
+  customText: String
+}
 
-  avatarUri: String
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 
-  controllerAccount: String!
-
-  channels: [Channel!]!
+  startCursor: String
+  endCursor: String
 }
 
 enum AssetAvailability {
@@ -32,140 +43,65 @@ type DataObject {
   id: ID!
   createdAt: DateTime!
   size: Int!
-  # id of storage provider
+  # id of assigned storage provider
   liaisonId: Int!
-  # Storage provider as liaison judgment
+  # status of asset as reported by liaison
   liaisonJudgement: LiaisonJudgement!
   # IPFS content id
   ipfsContentId: String!
-  # Joystream runtime content
+  # Joystream runtime content id
   joystreamContentId: String!
+}
+
+type Membership {
+  id: ID!
+  handle: String!
+  avatarUri: String
+  controllerAccount: String!
+  channels: [Channel!]!
+}
+
+input MembershipWhereUniqueInput {
+  id: ID
+}
+
+input MembershipWhereInput {
+  controllerAccount_eq: ID
 }
 
 type Channel {
   id: ID!
   createdAt: DateTime!
+
+  ownerMember: Membership
+  videos: [Video!]!
+  isCensored: Boolean!
+
+  # === metadata ===
   title: String
   description: String
+  isPublic: Boolean
+  language: Language
+
+  # === assets ===
   coverPhotoDataObject: DataObject
   coverPhotoUrl: String
   coverPhotoAvailability: AssetAvailability!
   avatarPhotoDataObject: DataObject
   avatarPhotoUrl: String
   avatarPhotoAvailability: AssetAvailability!
-  ownerMember: Membership
-  isPublic: Boolean
-  isCensored: Boolean!
-  language: Language
-  videos: [Video!]!
 
-  # extended from Orion
+  # === extended from Orion ===
   follows: Int
 }
 
-type VideoCategory {
-  id: ID!
-  name: String
-  videos: [Video!]
-}
-
-type License {
-  id: ID!
-  code: Int
-  url: String
-  attribution: String
-  videoLicense: [Video!]
-  customText: String
-}
-
-type VideoMediaMetadata {
-  id: ID!
-
-  # Resolution width
-  pixelWidth: Int
-
-  # Resolution height
-  pixelHeight: Int
-  # Size in bytes
-  size: Float
-}
-
-type Video {
-  id: ID!
-  channel: Channel!
-  createdAt: DateTime!
-  updatedAt: DateTime
-  deletedAt: DateTime
-  category: VideoCategory!
-  title: String
-  description: String
-  # In seconds
-  duration: Int
-  thumbnailDataObject: DataObject
-  thumbnailUrl: String
-  thumbnailAvailability: AssetAvailability!
-  language: Language
-  hasMarketing: Boolean
-  # Possible time when video was published before Joystream
-  publishedBeforeJoystream: DateTime
-  isPublic: Boolean
-  isCensored: Boolean!
-  isExplicit: Boolean
-  mediaDataObject: DataObject
-  mediaUrl: String
-  mediaAvailability: AssetAvailability!
-  mediaMetadata: VideoMediaMetadata!
-  license: License
-  isFeatured: Boolean!
-  skippableIntroDuration: Int
-  # extended from Orion
-  views: Int
-}
-
-# Isn't provided by query node yet
-type CoverVideo {
-  id: ID!
-  video: Video!
-  coverDescription: String!
-  coverCutMediaMetadata: VideoMediaMetadata!
-  coverCutMediaDataObject: DataObject
-  coverCutMediaAvailability: AssetAvailability!
-  coverCutMediaUrl: String
-}
-
-type FeaturedVideo {
-  id: ID!
-
-  video: Video!
-}
-
-union SearchResult = Video | Channel
-
-type SearchFTSOutput {
-  item: SearchResult!
-
-  rank: Float!
-
-  isTypeOf: String!
-
-  highlight: String!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-
-  startCursor: String
-  endCursor: String
-}
-
 input ChannelWhereInput {
+  id_in: [ID!]
+  ownerMemberId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
-  ownerMemberId_eq: ID
   coverPhotoAvailability_eq: AssetAvailability
   avatarPhotoAvailability_eq: AssetAvailability
-  id_in: [ID!]
 }
 
 input ChannelWhereUniqueInput {
@@ -188,6 +124,50 @@ type ChannelConnection {
   totalCount: Int!
 }
 
+type VideoMediaMetadata {
+  id: ID!
+
+  pixelWidth: Int
+  pixelHeight: Int
+  # Size in bytes
+  size: Int
+}
+
+type Video {
+  id: ID!
+  createdAt: DateTime!
+  channel: Channel!
+  isCensored: Boolean!
+  isFeatured: Boolean!
+  publishedBeforeJoystream: DateTime
+
+  # === metadata ===
+  title: String
+  description: String
+  category: VideoCategory!
+  language: Language
+  hasMarketing: Boolean
+  isExplicit: Boolean
+  isPublic: Boolean
+  license: License
+
+  # === assets ===
+  thumbnailDataObject: DataObject
+  thumbnailUrl: String
+  thumbnailAvailability: AssetAvailability!
+  mediaDataObject: DataObject
+  mediaUrl: String
+  mediaAvailability: AssetAvailability!
+
+  mediaMetadata: VideoMediaMetadata!
+  # In seconds
+  duration: Int
+  skippableIntroDuration: Int
+
+  # === extended from Orion ===
+  views: Int
+}
+
 input VideoCategoryWhereUniqueInput {
   id: ID!
 }
@@ -208,14 +188,6 @@ input VideoWhereUniqueInput {
   id: ID!
 }
 
-input MembershipWhereUniqueInput {
-  id: ID
-}
-
-input MembershipWhereInput {
-  controllerAccount_eq: ID
-}
-
 enum VideoOrderByInput {
   createdAt_ASC
   createdAt_DESC
@@ -232,9 +204,34 @@ type VideoConnection {
   totalCount: Int!
 }
 
+# Isn't provided by query node yet
+type CoverVideo {
+  id: ID!
+  video: Video!
+  coverDescription: String!
+  coverCutMediaMetadata: VideoMediaMetadata!
+  coverCutMediaDataObject: DataObject
+  coverCutMediaAvailability: AssetAvailability!
+  coverCutMediaUrl: String
+}
+
+type FeaturedVideo {
+  id: ID!
+  video: Video!
+}
+
 enum FeaturedVideoOrderByInput {
   createdAt_ASC
   createdAt_DESC
+}
+
+union SearchResult = Video | Channel
+
+type SearchFTSOutput {
+  item: SearchResult!
+  rank: Float!
+  isTypeOf: String!
+  highlight: String!
 }
 
 type Query {

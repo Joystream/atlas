@@ -1,4 +1,4 @@
-fragment VideoMediaFields on VideoMediaMetadata {
+fragment VideoMediaMetadataFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
@@ -29,7 +29,7 @@ fragment VideoFields on Video {
   createdAt
   isPublic
   mediaMetadata {
-    ...VideoMediaFields
+    ...VideoMediaMetadataFields
   }
   mediaUrl
   mediaAvailability
@@ -92,7 +92,7 @@ query GetCoverVideo {
     }
     coverDescription
     coverCutMediaMetadata {
-      ...VideoMediaFields
+      ...VideoMediaMetadataFields
     }
   }
 }
