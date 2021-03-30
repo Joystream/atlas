@@ -18,10 +18,9 @@ import {
 
 type TermsStepProps = {
   onStepChange: (idx: number) => void
-  currentStepIdx: number
 }
 
-const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) => {
+const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
   const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isRead, setIsRead] = useState(false)
@@ -38,6 +37,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
     const boxHeight = termsBoxRef.current.clientHeight
 
     if (scrollPosition === scrollHeight - boxHeight) {
+      // hide scroll button, show checkbox
       setIsCheckboxVisible(true)
       setIsRead(true)
     } else {
@@ -50,6 +50,11 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
     // do something here
     onStepChange(0)
     navigate(absoluteRoutes.studio.newMembership())
+  }
+
+  const handleScrollToBottom = () => {
+    if (!termsBoxRef?.current) return
+    termsBoxRef?.current?.scrollTo(0, termsBoxRef.current.scrollHeight)
   }
 
   return (
@@ -96,13 +101,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange, currentStepIdx }) =
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ScrollButton
-              icon="arrow-down"
-              onClick={() => {
-                if (!termsBoxRef?.current) return
-                termsBoxRef?.current?.scrollTo(0, scrollPosition + 150)
-              }}
-            />
+            <ScrollButton icon="arrow-down" onClick={handleScrollToBottom} />
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>

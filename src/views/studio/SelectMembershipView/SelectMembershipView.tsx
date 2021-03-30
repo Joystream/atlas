@@ -55,7 +55,7 @@ const SelectMembershipView = () => {
     },
     {
       title: 'Accept terms and conditions',
-      element: <TermsStep onStepChange={changeDialogStep} currentStepIdx={step} />,
+      element: <TermsStep onStepChange={changeDialogStep} />,
     },
   ]
 

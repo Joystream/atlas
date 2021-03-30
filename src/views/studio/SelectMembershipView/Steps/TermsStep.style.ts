@@ -3,12 +3,13 @@ import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const TermsBox = styled.div`
+  scroll-behavior: smooth;
   text-align: left;
   margin-top: ${sizes(6)};
   position: relative;
   height: 300px;
   width: 100%;
-  background-color: ${colors.gray[700]};
+  background-color: ${colors.gray[800]};
   overflow: auto;
 `
 export const TextWrapper = styled.div`
