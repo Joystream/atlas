@@ -4,3 +4,4 @@ dist/
 storybook-static/
 .coverage
 tsconfig.json
+public/mockServiceWorker.js
