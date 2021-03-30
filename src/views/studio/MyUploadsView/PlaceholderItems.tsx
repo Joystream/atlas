@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { breakpoints } from '@/shared/theme'
+import { breakpoints, colors } from '@/shared/theme'
 import { Placeholder } from '@/shared/components'
 import {
   Container,
@@ -12,7 +12,7 @@ import {
 const Placeholders = () => {
   return (
     <Container>
-      <AssetsGroupBarUploadContainer>
+      <AssetsGroupBarUploadContainer style={{ backgroundColor: `${colors.gray[800]}` }}>
         <StyledPlaceholderThumbnail width="72px" height="48px" />
         <AssetsInfoContainer>
           <Placeholder width="120px" height="14px" />
