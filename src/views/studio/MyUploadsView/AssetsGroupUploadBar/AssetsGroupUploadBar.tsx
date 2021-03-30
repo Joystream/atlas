@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Container,
-  AssetsGroupBarUploadContainer,
+  AssetsGroupUploadBarContainer,
   ProgressBar,
   Thumbnail,
   AssetsInfoContainer,
@@ -59,7 +59,10 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
 
   return (
     <Container>
-      <AssetsGroupBarUploadContainer onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}>
+      <AssetsGroupUploadBarContainer
+        onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
+        isActive={isAssetsDrawerActive}
+      >
         <ProgressBar progress={masterProgress} />
         <Thumbnail>
           <Icon name={assetsGroupIconName} />
@@ -78,7 +81,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
           />
         </UploadInfoContainer>
-      </AssetsGroupBarUploadContainer>
+      </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {files.map((file, idx) => (
           <AssetLine key={file.id} asset={file} isLast={files.length === idx + 1} />

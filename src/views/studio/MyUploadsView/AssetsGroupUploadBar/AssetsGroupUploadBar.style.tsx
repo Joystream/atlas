@@ -5,26 +5,32 @@ type ProgressbarProps = {
   progress: number
 }
 
-type DrawerProps = {
+type AssetsGroupUploadBarProps = {
   isActive?: boolean
-  maxHeight?: number
 }
+
+type DrawerProps = {
+  maxHeight?: number
+} & AssetsGroupUploadBarProps
 
 export const Container = styled.div`
   position: relative;
   margin-bottom: ${sizes(6)};
 `
 
-export const AssetsGroupBarUploadContainer = styled.div`
+export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProps>`
   position: relative;
   display: flex;
   align-items: center;
   padding: ${sizes(4)};
   width: 100%;
   height: ${sizes(20)};
-  background-color: ${colors.gray[900]};
+  background-color: ${({ isActive }) => (isActive ? colors.gray[900] : colors.black)};
   cursor: pointer;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
+  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+  &:hover {
+    background-color: ${colors.gray[900]};
+  }
 `
 export const ProgressBar = styled.div<ProgressbarProps>`
   --progress-bar-color: #b4bbff33;
