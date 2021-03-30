@@ -27,7 +27,7 @@ const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) 
           classNames={transitions.names.fade}
         >
           <div>
-            {channel ? <Text variant="h6">{channel.handle}</Text> : <PreviewTitlePlaceholder />}
+            {channel ? <Text variant="h6">{channel.title}</Text> : <PreviewTitlePlaceholder />}
             {channel ? <PreviewSubtext>Channel</PreviewSubtext> : <PreviewSubtextPlaceholder />}
           </div>
         </CSSTransition>

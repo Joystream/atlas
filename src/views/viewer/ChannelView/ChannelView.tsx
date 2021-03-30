@@ -3,6 +3,7 @@ import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { createUrlFromAsset } from '@/utils/asset'
 import { formatNumberShort } from '@/utils/number'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -57,8 +58,11 @@ const ChannelView: React.FC = () => {
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
-
-  const coverPhotoUrl = channel?.coverPhotoUrl
+  const coverPhotoUrl = createUrlFromAsset(
+    channel?.coverPhotoAvailability,
+    channel?.coverPhotoUrl,
+    channel?.coverPhotoDataObject
+  )
 
   return (
     <ViewWrapper>
@@ -69,7 +73,7 @@ const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant="h1">{channel.handle}</Title>
+                <Title variant="h1">{channel.title}</Title>
                 <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (

@@ -36,7 +36,7 @@ const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
   <BrowserRouter>
     <Tooltip {...args}>
       <ChannelPreviewBase
-        handle="Lorem"
+        title="Lorem"
         avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
         loading={false}
       />

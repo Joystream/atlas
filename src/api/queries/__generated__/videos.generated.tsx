@@ -1,42 +1,45 @@
 import * as Types from './baseTypes.generated'
 
+import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
 import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { gql } from '@apollo/client'
 
 import * as Apollo from '@apollo/client'
-export type VideoMediaFieldsFragment = {
-  __typename?: 'VideoMedia'
+export type VideoMediaMetadataFieldsFragment = {
+  __typename?: 'VideoMediaMetadata'
   id: string
-  pixelHeight: number
-  pixelWidth: number
-  location:
-    | { __typename?: 'JoystreamMediaLocation'; dataObjectId: string }
-    | { __typename?: 'HttpMediaLocation'; url: string }
+  pixelHeight?: Types.Maybe<number>
+  pixelWidth?: Types.Maybe<number>
 }
 
 export type LicenseFieldsFragment = {
-  __typename?: 'LicenseEntity'
+  __typename?: 'License'
   id: string
+  code?: Types.Maybe<number>
   attribution?: Types.Maybe<string>
-  type:
-    | { __typename?: 'UserDefinedLicense'; content: string }
-    | { __typename?: 'KnownLicense'; code: string; url?: Types.Maybe<string> }
+  customText?: Types.Maybe<string>
+  url?: Types.Maybe<string>
 }
 
 export type VideoFieldsFragment = {
   __typename?: 'Video'
   id: string
-  title: string
-  description: string
+  title?: Types.Maybe<string>
+  description?: Types.Maybe<string>
   views?: Types.Maybe<number>
-  duration: number
-  thumbnailUrl: string
+  duration?: Types.Maybe<number>
+  thumbnailUrl?: Types.Maybe<string>
+  thumbnailAvailability: Types.AssetAvailability
   createdAt: Date
-  isPublic: boolean
-  category: { __typename?: 'Category'; id: string }
-  media: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
+  isPublic?: Types.Maybe<boolean>
+  mediaUrl?: Types.Maybe<string>
+  mediaAvailability: Types.AssetAvailability
+  category: { __typename?: 'VideoCategory'; id: string }
+  thumbnailDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
+  mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
-  license: { __typename?: 'LicenseEntity' } & LicenseFieldsFragment
+  license?: Types.Maybe<{ __typename?: 'License' } & LicenseFieldsFragment>
 }
 
 export type GetVideoQueryVariables = Types.Exact<{
@@ -91,7 +94,7 @@ export type GetCoverVideoQuery = {
     __typename?: 'CoverVideo'
     coverDescription: string
     video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMedia: { __typename?: 'VideoMedia' } & VideoMediaFieldsFragment
+    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   }
 }
 
@@ -114,34 +117,20 @@ export type AddVideoViewMutation = {
   addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
 }
 
-export const VideoMediaFieldsFragmentDoc = gql`
-  fragment VideoMediaFields on VideoMedia {
+export const VideoMediaMetadataFieldsFragmentDoc = gql`
+  fragment VideoMediaMetadataFields on VideoMediaMetadata {
     id
     pixelHeight
     pixelWidth
-    location {
-      ... on HttpMediaLocation {
-        url
-      }
-      ... on JoystreamMediaLocation {
-        dataObjectId
-      }
-    }
   }
 `
 export const LicenseFieldsFragmentDoc = gql`
-  fragment LicenseFields on LicenseEntity {
+  fragment LicenseFields on License {
     id
+    code
     attribution
-    type {
-      ... on KnownLicense {
-        code
-        url
-      }
-      ... on UserDefinedLicense {
-        content
-      }
-    }
+    customText
+    url
   }
 `
 export const VideoFieldsFragmentDoc = gql`
@@ -155,10 +144,19 @@ export const VideoFieldsFragmentDoc = gql`
     views
     duration
     thumbnailUrl
+    thumbnailAvailability
+    thumbnailDataObject {
+      ...DataObjectFields
+    }
     createdAt
     isPublic
-    media {
-      ...VideoMediaFields
+    mediaMetadata {
+      ...VideoMediaMetadataFields
+    }
+    mediaUrl
+    mediaAvailability
+    mediaDataObject {
+      ...DataObjectFields
     }
     channel {
       ...BasicChannelFields
@@ -167,7 +165,8 @@ export const VideoFieldsFragmentDoc = gql`
       ...LicenseFields
     }
   }
-  ${VideoMediaFieldsFragmentDoc}
+  ${DataObjectFieldsFragmentDoc}
+  ${VideoMediaMetadataFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `
@@ -360,13 +359,13 @@ export const GetCoverVideoDocument = gql`
         ...VideoFields
       }
       coverDescription
-      coverCutMedia {
-        ...VideoMediaFields
+      coverCutMediaMetadata {
+        ...VideoMediaMetadataFields
       }
     }
   }
   ${VideoFieldsFragmentDoc}
-  ${VideoMediaFieldsFragmentDoc}
+  ${VideoMediaMetadataFieldsFragmentDoc}
 `
 
 /**

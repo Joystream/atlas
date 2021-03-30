@@ -10,8 +10,10 @@ export const createSearchAccessor = <TData extends GenericData>({ videos, channe
   const { text: queryText } = variables
   const matchString = (s: string) => s.includes(queryText) || queryText.includes(s)
 
-  const matchedVideos = videos.filter((v) => matchString(v.title) || matchString(v.description))
-  const matchedChannels = channels.filter((c) => matchString(c.handle))
+  const matchedVideos = videos.filter(
+    (v) => (v.title && matchString(v.title)) || (v.description && matchString(v.description))
+  )
+  const matchedChannels = channels.filter((c) => c.title && matchString(c.title))
 
   const matchedItems = [...matchedVideos, ...matchedChannels]
   return matchedItems.map((i) => ({

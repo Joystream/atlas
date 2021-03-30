@@ -1,7 +1,7 @@
 import { thumbnailSources } from './mockImages'
 import rawVideos from './raw/videos.json'
 import rawCoverVideo from './raw/coverVideo.json'
-import { VideoFieldsFragment } from '@/api/queries'
+import { AssetAvailability, VideoFieldsFragment } from '@/api/queries'
 import mockVideosMedia from './mockVideosMedia'
 import mockChannels, { coverMockChannel } from './mockChannels'
 import mockCategories from './mockCategories'
@@ -16,9 +16,12 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
     ...rawVideo,
     __typename: 'Video',
     createdAt: new Date(rawVideo.createdAt),
-    thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
     duration: mockVideosMedia[mediaIndex].duration,
-    media: mockVideosMedia[mediaIndex],
+    mediaMetadata: mockVideosMedia[mediaIndex],
+    mediaUrl: mockVideosMedia[mediaIndex].location.url,
+    mediaAvailability: AssetAvailability.Accepted,
+    thumbnailUrl: thumbnailSources[idx % thumbnailSources.length],
+    thumbnailAvailability: AssetAvailability.Accepted,
     channel: mockChannels[idx % mockChannels.length],
     category: mockCategories[idx % mockCategories.length],
     license: mockLicenses[idx % mockLicenses.length],
@@ -30,10 +33,12 @@ const coverMockVideo: MockVideo = {
   ...rawCoverVideo.video,
   createdAt: new Date(rawCoverVideo.video.createdAt),
   channel: coverMockChannel,
-  // @ts-ignore __typename not matching, whatever
   license: rawCoverVideo.license,
-  // @ts-ignore __typename not matching, whatever
-  media: rawCoverVideo.videoMedia,
+  mediaAvailability: AssetAvailability.Accepted,
+  mediaUrl: rawCoverVideo.video.mediaUrl,
+  thumbnailUrl: rawCoverVideo.video.thumbnailUrl,
+  thumbnailAvailability: AssetAvailability.Accepted,
+  mediaMetadata: rawCoverVideo.videoMedia,
   duration: rawCoverVideo.videoMedia.duration,
   category: mockCategories[0],
   isPublic: true,

@@ -3,17 +3,15 @@ import { VideoMediaFieldsFragment } from '@/api/queries'
 
 export type MockVideoMedia = VideoMediaFieldsFragment & {
   duration: number
-  coverCutLocation?: VideoMediaFieldsFragment['location']
+  location: {
+    url: string
+  }
 }
 
 const mockVideosMedia: MockVideoMedia[] = rawVideosMedia.map((rawVideoMedia) => {
   return {
     ...rawVideoMedia,
-    __typename: 'VideoMedia',
-    location: {
-      __typename: 'HttpMediaLocation',
-      ...rawVideoMedia.location,
-    },
+    __typename: 'VideoMediaMetadata',
   }
 })
 

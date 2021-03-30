@@ -16,10 +16,7 @@ const Template: Story<VideoPlayerProps> = (args) => (
 )
 export const Regular = Template.bind({})
 Regular.args = {
-  src: {
-    __typename: 'HttpMediaLocation',
-    url: 'https://eu-central-1.linodeobjects.com/atlas-assets/videos/1.mp4',
-  },
+  src: 'https://eu-central-1.linodeobjects.com/atlas-assets/videos/1.mp4',
   fill: true,
 }
 
