@@ -69,7 +69,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
         <SidebarNavList>
           {items.map((item) => (
             <NavItem
-              key={item.expandedName}
+              key={item.name}
               to={item.to}
               expanded={expanded}
               subitems={item.subitems}
