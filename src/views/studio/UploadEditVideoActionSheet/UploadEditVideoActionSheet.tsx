@@ -39,17 +39,17 @@ const visibilityOptions: SelectedItem[] = [
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
 
-type Tab = Draft
+type TabType = Draft
 
 type FormInputs = {
   title: string
-  selectedVideoVisibility: string | null
-  selectedVideoLanguage: string | null
-  selectedVideoCategory: string | null
-  check: boolean
-  date: Date | null
   description: string
-  radioGroup: string
+  selectedVideoVisibility: SelectedItem | null
+  selectedVideoLanguage: SelectedItem | null
+  selectedVideoCategory: SelectedItem | null
+  hasMarketing: boolean
+  updatedAt: Date | null
+  isExplicit: string
 }
 
 export type SheetState = 'closed' | 'open' | 'minimized'
@@ -95,9 +95,9 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   }, [location, cachedLocation, uploadVideoMatch])
 
   // Tabs
-  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', channelId)
-  const [tabs, setTabs] = useState<Tab[]>([])
-  const [selectedTab, setSelectedTab] = useState<Tab>()
+  const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
+  const [tabs, setTabs] = useState<TabType[]>([])
+  const [selectedTab, setSelectedTab] = useState<TabType>()
 
   // forms state
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
@@ -116,34 +116,60 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<FormInputs>({
-    shouldFocusError: false,
+  const { register, watch, handleSubmit, control, setValue: setFormValue, reset, clearErrors, errors } = useForm<
+    FormInputs
+  >({
+    shouldFocusError: true,
     defaultValues: {
       title: '',
       selectedVideoVisibility: null,
       selectedVideoLanguage: null,
       selectedVideoCategory: null,
       description: '',
-      check: false,
-      date: null,
-      radioGroup: '',
+      hasMarketing: false,
+      updatedAt: null,
+      isExplicit: '',
     },
   })
+  const watchAllFormFields = watch()
 
   const handleAddNewTab = async () => {
     const newDraft = await addDraft({
       channelId: channelId,
       title: 'New Draft',
-      description: 'test',
+      isPublic: true,
+      language: { name: 'en' },
+      category: { id: '123', name: 'sports' },
+      description: 'asdgasdgjkahskldhjklahjskldhjlhjskljlkhjsdljal;sjdlja;sdj;ajl;dj;ajsd;ljal;d',
+      hasMarketing: true,
+      isExplicit: true,
     })
     setTabs((tabs) => [newDraft, ...tabs])
-    setSelectedTab(newDraft)
+    handleTabSelect(newDraft)
   }
   const handleRemoveTab = (id: string) => {
     setTabs((tabs) => tabs.filter((tab) => tab.id !== id))
   }
-  const handleTabClick = (tab: Tab) => {
+  const handleTabSelect = (tab: TabType) => {
+    reset({
+      title: '',
+      selectedVideoVisibility: null,
+      selectedVideoLanguage: null,
+      selectedVideoCategory: null,
+      description: '',
+      hasMarketing: false,
+      updatedAt: null,
+      isExplicit: '',
+    })
     setSelectedTab(tab)
+    setFormValue('title', tab.title)
+    setFormValue('description', tab.description)
+    setFormValue('selectedVideoVisibility', tab.isPublic ?? null)
+    setFormValue('selectedVideoLanguage', tab.language?.name ?? null)
+    setFormValue('selectedVideoCategory', tab.category?.name ?? null)
+    setFormValue('updatedAt', tab.updatedAt ?? null)
+    setFormValue('hasMarketing', tab.hasMarketing)
+    setFormValue('isExplicit', tab.isExplicit)
   }
   console.log({
     uploadVideoMatch,
@@ -151,6 +177,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     height: containerBounds.height,
     transform,
     categories,
+    watchAllFormFields,
   })
   return (
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
@@ -160,7 +187,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             <Icon name="plus" />
           </Button>
           {tabs.map((tab) => (
-            <Tab key={tab.id} selected={tab.id === selectedTab?.id} onClick={() => handleTabClick(tab)}>
+            <Tab key={tab.id} selected={tab.id === selectedTab?.id} onClick={() => handleTabSelect(tab)}>
               <TabTitle variant="subtitle2">{tab.title}</TabTitle>
               <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab.id)}></Button>
             </Tab>
@@ -218,7 +245,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           />
           <Textarea
             name="description"
-            ref={register(textFieldValidation('Description', 3, 20))}
+            ref={register(textFieldValidation('Description', 0, 2160))}
             maxLength={2160}
             placeholder="Add video description"
             error={!!errors.description}
@@ -231,9 +258,10 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video visibility')}
               render={({ value }) => (
                 <Select
+                  value={watchAllFormFields.selectedVideoVisibility}
                   items={visibilityOptions}
                   onChange={(e) => {
-                    setValue('selectedVideoVisibility', e.selectedItem?.value)
+                    setFormValue('selectedVideoVisibility', e.selectedItem)
                     clearErrors('selectedVideoVisibility')
                   }}
                   error={!!errors.selectedVideoVisibility && !value}
@@ -249,9 +277,10 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video language')}
               render={({ value }) => (
                 <Select
+                  value={watchAllFormFields.selectedVideoLanguage}
                   items={[...languages]}
                   onChange={(e) => {
-                    setValue('selectedVideoLanguage', e.selectedItem?.value)
+                    setFormValue('selectedVideoLanguage', e.selectedItem)
                     clearErrors('selectedVideoLanguage')
                   }}
                   error={!!errors.selectedVideoLanguage && !value}
@@ -267,10 +296,11 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               rules={requiredValidation('Video category')}
               render={({ value }) => (
                 <Select
+                  value={watchAllFormFields.selectedVideoCategory}
                   items={categories?.map((category) => ({ name: category.name, value: category.id })) ?? []}
                   onChange={(e) => {
-                    setValue('selectedVideoLanguage', e.selectedItem?.value)
-                    clearErrors('selectedVideoLanguage')
+                    setFormValue('selectedVideoCategory', e.selectedItem)
+                    clearErrors('selectedVideoCategory')
                   }}
                   error={!!errors.selectedVideoCategory && !value}
                   helperText={errors.selectedVideoCategory?.message}
@@ -283,14 +313,14 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
           >
             <Controller
-              name="date"
+              name="updatedAt"
               control={control}
-              rules={{ validate: (date) => isValid(date) }}
+              rules={{ validate: (updatedAt) => isValid(updatedAt) }}
               render={() => (
                 <Datepicker
-                  onChange={(date) => setValue('date', date)}
-                  onBlur={() => clearErrors('date')}
-                  error={!!errors.date}
+                  onChange={(updatedAt) => setFormValue('updatedAt', updatedAt)}
+                  onBlur={() => clearErrors('updatedAt')}
+                  error={!!errors.updatedAt}
                 />
               )}
             />
@@ -299,9 +329,9 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             <StyledCheckboxContainer>
               <Controller
                 as={Checkbox}
-                name="check"
+                name="hasMarketing"
                 rules={{ required: true }}
-                error={!!errors.check}
+                error={!!errors.hasMarketing}
                 control={control}
                 value={false}
                 label="My video features a paid promotion material"
@@ -310,7 +340,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           </FormField>
           <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
             <Controller
-              name="radioGroup"
+              name="isExplicit"
               control={control}
               rules={{ required: true }}
               render={(props) => (
@@ -319,21 +349,21 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
                     value="all"
                     label="All audiences"
                     onChange={(e) => {
-                      clearErrors('radioGroup')
-                      setValue('radioGroup', e.currentTarget.value)
+                      clearErrors('isExplicit')
+                      setFormValue('isExplicit', e.currentTarget.value)
                     }}
                     selectedValue={props.value}
-                    error={!!errors.radioGroup}
+                    error={!!errors.isExplicit}
                   />
                   <RadioButton
                     value="mature"
                     label="Mature"
                     onChange={(e) => {
-                      clearErrors('radioGroup')
-                      setValue('radioGroup', e.currentTarget.value)
+                      clearErrors('isExplicit')
+                      setFormValue('isExplicit', e.currentTarget.value)
                     }}
                     selectedValue={props.value}
-                    error={!!errors.radioGroup}
+                    error={!!errors.isExplicit}
                   />
                 </StyledRadioContainer>
               )}
@@ -416,24 +446,26 @@ const FileDropperContainer = styled.div`
   padding: ${sizes(8)} 0 ${sizes(8)} ${sizes(8)};
 `
 
-const FormContainer = styled.div<{ height: number }>`
+const FormContainer = styled.form<{ height: number }>`
   display: grid;
   grid-auto-flow: row;
   overflow-y: auto;
   height: ${({ height }) => height}px;
-  padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 0;
+  padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
 `
 
 const Tab = styled.div<{ selected: boolean }>`
   display: grid;
   max-width: 168px;
   grid-auto-flow: column;
-  padding: 0 ${sizes(4)};
+  padding: 0 0 0 ${sizes(4)};
   align-items: center;
   cursor: pointer;
   user-select: none;
-
   ${({ selected }) => selected && `border-bottom: 3px solid ${colors.blue[500]};`}
+  > button {
+    margin-left: ${sizes(1)};
+  }
 `
 
 const TabTitle = styled(Text)`
