@@ -1,2 +1,2 @@
-export * from './hook'
+export * from './useJoystream'
 export * from './provider'
