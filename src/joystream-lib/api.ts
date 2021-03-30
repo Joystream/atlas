@@ -108,7 +108,7 @@ export class JoystreamJs {
   }
 
   private logWarn(msg: string) {
-    console.log(`[JoystreamJS] ${msg}`)
+    console.warn(`[JoystreamJS] ${msg}`)
   }
 
   private logError(msg: string) {
