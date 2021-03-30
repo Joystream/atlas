@@ -67,7 +67,7 @@ export const Regular = Template.bind({})
 Regular.args = {
   isLoading: false,
   title: 'Example Video',
-  channelHandle: 'Example Channel',
+  channelTitle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
   publisherMode: false,
@@ -83,7 +83,7 @@ export const PublisherDefault = Publisher.bind({})
 PublisherDefault.args = {
   isLoading: false,
   title: 'Example Video',
-  channelHandle: 'Example Channel',
+  channelTitle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
@@ -100,7 +100,7 @@ export const PublisherDraft = Publisher.bind({})
 PublisherDraft.args = {
   isLoading: false,
   title: 'Example Video',
-  channelHandle: 'Example Channel',
+  channelTitle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
@@ -116,7 +116,7 @@ export const PublisherUnlisted = Publisher.bind({})
 PublisherUnlisted.args = {
   isLoading: false,
   title: 'Example Video',
-  channelHandle: 'Example Channel',
+  channelTitle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
@@ -174,7 +174,7 @@ export const Mixed = Mix.bind({})
 Mixed.args = {
   isLoading: false,
   title: 'Example Video',
-  channelHandle: 'Example Channel',
+  channelTitle: 'Example Channel',
   channelAvatarUrl: '',
   createdAt: new Date('2021'),
   showChannel: false,
