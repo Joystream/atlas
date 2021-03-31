@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Account, JoystreamJs } from '@/joystream-lib'
 import { useActiveUser } from '@/hooks'
+import useConnectionStatus from '../useConnectionStatus'
 
 // TODO: provide via env variables
 const NODE_URL = 'ws://127.0.0.1:9944'
@@ -16,6 +17,7 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeUser } = useActiveUser()
+  const { setConnectionStatus } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -39,10 +41,12 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream = await JoystreamJs.build(APP_NAME, NODE_URL)
         setJoystream(joystream)
         setAccounts(joystream.accounts)
+        setConnectionStatus('connected')
 
         joystream.onAccountsUpdate = handleAccountsUpdate
         joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
       } catch (e) {
+        setConnectionStatus('disconnected')
         console.error('Failed to create JoystreamJs instance', e)
       }
     }
@@ -52,7 +56,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleAccountsUpdate, handleExtensionConnectedUpdate])
+  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, setConnectionStatus])
 
   useEffect(() => {
     if (!joystream || !activeUser || !accountsSet) {
