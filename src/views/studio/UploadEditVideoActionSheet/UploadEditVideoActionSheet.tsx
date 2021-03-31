@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { isValid } from 'date-fns'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
@@ -93,18 +93,6 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     }
   }, [location, cachedLocation, uploadVideoMatch])
 
-  // Tabs
-  const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
-  // const [tabs, setTabs] = useState<TabType[]>([])
-  // const [selectedTab, setSelectedTab] = useState<TabType>()
-  const {
-    videoTabs,
-    addVideoTab,
-    removeVideoTab,
-    resetVideoTabs,
-    selectedVideoTab,
-    setSelectedVideoTab,
-  } = useUploadVideoActionSheet()
   // forms state
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -139,45 +127,67 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   })
   const watchAllFormFields = watch()
 
+  // Tabs
+  const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
+  // const [tabs, setTabs] = useState<TabType[]>([])
+  // const [selectedTab, setSelectedTab] = useState<TabType>()
+  const {
+    videoTabs,
+    addVideoTab,
+    removeVideoTab,
+    resetVideoTabs,
+    selectedVideoTab,
+    setSelectedVideoTab,
+  } = useUploadVideoActionSheet()
+  const handleTabSelect = useCallback(
+    (tab?: TabType) => {
+      console.log({ tab })
+      // reset({
+      //   title: '',
+      //   selectedVideoVisibility: null,
+      //   selectedVideoLanguage: null,
+      //   selectedVideoCategory: null,
+      //   description: '',
+      //   hasMarketing: false,
+      //   publishedBeforeJoystream: null,
+      //   isExplicit: '',
+      // })
+      if (tab) {
+        setSelectedVideoTab(tab)
+        setFormValue('title', tab?.title)
+        setFormValue('description', tab.description)
+        setFormValue('selectedVideoVisibility', tab.isPublic ? 'public' : 'unlisted' ?? null)
+        setFormValue('selectedVideoLanguage', tab.language ?? null)
+        setFormValue('selectedVideoCategory', tab.categoryId ?? null)
+        setFormValue('publishedBeforeJoystream', tab.publishedBeforeJoystream ?? null)
+        setFormValue('hasMarketing', tab.hasMarketing)
+        // this condition probably should be simpler
+        setFormValue('isExplicit', tab.isExplicit === undefined ? undefined : tab.isExplicit ? 'mature' : 'all')
+      }
+    },
+    [setFormValue, setSelectedVideoTab]
+  )
+  useEffect(() => {
+    handleTabSelect(selectedVideoTab)
+  }, [handleTabSelect, selectedVideoTab])
+
   const handleAddNewTab = async () => {
     const newDraft = await addDraft({
       channelId: channelId,
       title: 'New Draft',
-      isPublic: false,
-      language: 'es',
-      categoryId: '02c287dc-0b35-41f8-a494-9d98e312fbff',
-      description: 'asdgasdgjkahskldhjklahjskldhjlhjskljlkhjsdljal;sjdlja;sdj;ajl;dj;ajsd;ljal;d',
-      hasMarketing: true,
-      isExplicit: true,
-      publishedBeforeJoystream: '28/12/1994',
+      // description: 'asdgasdgjkahskldhjklahjskldhjlhjskljlkhjsdljal;sjdlja;sdj;ajl;dj;ajsd;ljal;d',
+      // isPublic: false,
+      // language: 'es',
+      // categoryId: '02c287dc-0b35-41f8-a494-9d98e312fbff',
+      // hasMarketing: true,
+      // isExplicit: true,
+      // publishedBeforeJoystream: '28/12/1994',
     })
     addVideoTab(newDraft)
     handleTabSelect(newDraft)
   }
   const handleRemoveTab = (tab: TabType) => {
     removeVideoTab(tab)
-  }
-  const handleTabSelect = (tab: TabType) => {
-    console.log({ tab })
-    // reset({
-    //   title: '',
-    //   selectedVideoVisibility: null,
-    //   selectedVideoLanguage: null,
-    //   selectedVideoCategory: null,
-    //   description: '',
-    //   hasMarketing: false,
-    //   publishedBeforeJoystream: null,
-    //   isExplicit: '',
-    // })
-    setSelectedVideoTab(tab)
-    setFormValue('title', tab.title)
-    setFormValue('description', tab.description)
-    setFormValue('selectedVideoVisibility', tab.isPublic ? 'public' : 'unlisted' ?? null)
-    setFormValue('selectedVideoLanguage', tab.language ?? null)
-    setFormValue('selectedVideoCategory', tab.categoryId ?? null)
-    setFormValue('publishedBeforeJoystream', tab.publishedBeforeJoystream ?? null)
-    setFormValue('hasMarketing', tab.hasMarketing)
-    setFormValue('isExplicit', tab.isExplicit ? 'mature' : 'all')
   }
   // console.log({
   //   uploadVideoMatch,
@@ -223,6 +233,7 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             onClick={() => {
               navigate(cachedLocation?.pathname ?? routes.studio.index(true))
               setSheetState?.('closed')
+              resetVideoTabs()
               console.log('close')
             }}
           >
