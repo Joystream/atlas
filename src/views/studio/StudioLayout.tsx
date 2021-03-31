@@ -1,8 +1,9 @@
-import React from 'react'
-import { Route, Routes } from 'react-router'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes, useLocation, useMatch } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
+import { Location } from 'history'
 
 import { CreateEditChannelView, MyVideosView, UploadEditVideoActionSheet } from '.'
 import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
@@ -39,10 +40,20 @@ const studioNavbarItems: NavItemType[] = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const [cachedLocation, setCachedLocation] = useState<Location>()
+  const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!uploadVideoMatch) {
+      setCachedLocation(location)
+    }
+  }, [cachedLocation, location, uploadVideoMatch])
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
+  const displayedLocation = uploadVideoMatch ? cachedLocation : location
   return (
     <VideoActionSheetProvider>
       <DraftsProvider>
@@ -57,7 +68,7 @@ const StudioLayout = () => {
                   navigate(routes.studio.index())
                 }}
               >
-                <Routes>
+                <Routes location={displayedLocation}>
                   {studioRoutes.map((route) => (
                     <Route key={route.path} {...route} />
                   ))}

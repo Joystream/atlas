@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from '@emotion/styled'
 import { isValid } from 'date-fns'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
-import { animated, useSpring } from 'react-spring'
+import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { FileRejection } from 'react-dropzone'
 import { Controller, useForm } from 'react-hook-form'
-import { colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { transitions } from '@/shared/theme'
 import { Location } from 'history'
 import {
-  ActionBar,
   Button,
   Checkbox,
   Datepicker,
@@ -22,17 +20,29 @@ import {
   Select,
   SelectedItem,
   Textarea,
-  Text,
 } from '@/shared/components'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import routes from '@/config/routes'
-import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { Draft, useDrafts } from '@/hooks'
+import { useDrafts } from '@/hooks'
 import { TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
+import {
+  ButtonsContainer,
+  Container,
+  Content,
+  FileDropperContainer,
+  FormContainer,
+  StyledActionBar,
+  StyledCheckboxContainer,
+  StyledRadioContainer,
+  Tab,
+  TabsContainer,
+  TabTitle,
+  Topbar,
+  UploadEditVideoActionSheetBarHeight,
+} from './UploadEditVideoActionSheet.style'
 
-export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
 const visibilityOptions: SelectedItem[] = [
@@ -46,55 +56,46 @@ type FormInputs = {
   selectedVideoVisibility: string | null
   selectedVideoLanguage: string | null
   selectedVideoCategory: string | null
-  hasMarketing: boolean
+  hasMarketing: boolean | null
   publishedBeforeJoystream: Date | null
-  isExplicit: string
+  isExplicit: boolean | null
 }
 
 export type SheetState = 'closed' | 'open' | 'minimized'
-type UploadEditVideoActionSheetProps = {
-  // setSheetState?: (sheetState: SheetState) => void
-  // sheetState: SheetState
-}
-export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProps> = () => {
-  // sheet state
+export const UploadEditVideoActionSheet: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  // sheet state
   const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
-  const [sheetState, setSheetState] = useState<SheetState>()
+  const [sheetState, setSheetState] = useState<SheetState>('closed')
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
-  const location = useLocation()
   const [cachedLocation, setCachedLocation] = useState<Location>()
-
   // 1 extra px to account for the border
   const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
+
   const { ...props } = useSpring({
     duration: transitions.timings.sharp,
     transform:
       sheetState === 'open'
         ? `translateY(0)`
         : sheetState === 'closed'
-        ? `translateY(${containerBounds.height}px)`
+        ? `translateY(${containerBounds.height || 10000}px)`
         : `translateY(${transform}px)`,
   })
-  useEffect(() => {
-    // console.log({ uploadVideoMatch, sheetState })
-    if (uploadVideoMatch) {
-      setSheetState('open')
-    } else if (sheetState === 'open') {
-      setSheetState('minimized')
-    }
-  }, [uploadVideoMatch, sheetState])
 
-  useEffect(() => {
-    // console.log({ cachedLocation, location, uploadVideoMatch })
-    if (!uploadVideoMatch) {
-      setCachedLocation(location)
-    }
-  }, [location, cachedLocation, uploadVideoMatch])
+  // const { ...props } = useSpring({
+  //   duration: transitions.timings.sharp,
+  //   transform:
+  //     sheetState === 'open'
+  //       ? `translateY(0)`
+  //       : sheetState === 'closed'
+  //       ? `translateY(${containerBounds.height}px)`
+  //       : `translateY(${transform}px)`,
+  // })
 
   // forms state
-  const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
+  const { categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileState>({
     video: null,
@@ -122,15 +123,13 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
       description: '',
       hasMarketing: false,
       publishedBeforeJoystream: null,
-      isExplicit: '',
+      isExplicit: null,
     },
   })
   const watchAllFormFields = watch()
 
   // Tabs
   const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
-  // const [tabs, setTabs] = useState<TabType[]>([])
-  // const [selectedTab, setSelectedTab] = useState<TabType>()
   const {
     videoTabs,
     addVideoTab,
@@ -141,7 +140,6 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
   } = useUploadVideoActionSheet()
   const handleTabSelect = useCallback(
     (tab?: TabType) => {
-      console.log({ tab })
       // reset({
       //   title: '',
       //   selectedVideoVisibility: null,
@@ -160,18 +158,17 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
         setFormValue('selectedVideoLanguage', tab.language ?? null)
         setFormValue('selectedVideoCategory', tab.categoryId ?? null)
         setFormValue('publishedBeforeJoystream', tab.publishedBeforeJoystream ?? null)
-        setFormValue('hasMarketing', tab.hasMarketing)
-        // this condition probably should be simpler
-        setFormValue('isExplicit', tab.isExplicit === undefined ? undefined : tab.isExplicit ? 'mature' : 'all')
+        setFormValue('hasMarketing', tab.hasMarketing ?? null)
+        setFormValue('isExplicit', tab.isExplicit === undefined ? null : tab.isExplicit)
       }
     },
     [setFormValue, setSelectedVideoTab]
   )
-  useEffect(() => {
-    handleTabSelect(selectedVideoTab)
-  }, [handleTabSelect, selectedVideoTab])
-
-  const handleAddNewTab = async () => {
+  const handleClose = useCallback(() => {
+    navigate(cachedLocation?.pathname ?? routes.studio.index(true))
+    setSheetState('closed')
+  }, [cachedLocation?.pathname, navigate])
+  const handleAddNewTab = useCallback(async () => {
     const newDraft = await addDraft({
       channelId: channelId,
       title: 'New Draft',
@@ -185,18 +182,56 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     })
     addVideoTab(newDraft)
     handleTabSelect(newDraft)
-  }
+  }, [addDraft, addVideoTab, handleTabSelect])
+
+  useEffect(() => {
+    if (uploadVideoMatch) {
+      setSheetState('open')
+      if (videoTabs.length === 0) {
+        // handleAddNewTab()
+        console.log('new tab on open')
+      }
+    } else if (sheetState === 'open') {
+      setSheetState('minimized')
+    }
+  }, [uploadVideoMatch, sheetState, handleAddNewTab, videoTabs.length])
+  useEffect(() => {
+    handleTabSelect(selectedVideoTab)
+  }, [handleTabSelect, selectedVideoTab])
+  useEffect(() => {
+    if (!uploadVideoMatch) {
+      setCachedLocation(location)
+    }
+  }, [location, cachedLocation, uploadVideoMatch])
+
   const handleRemoveTab = (tab: TabType) => {
     removeVideoTab(tab)
+    console.log('remove tab')
+    // we are closing the last tab
+    if (videoTabs.length === 1) {
+      handleClose()
+      console.log('close if no tabs')
+    }
   }
-  // console.log({
-  //   uploadVideoMatch,
-  //   sheetState,
-  //   height: containerBounds.height,
-  //   transform,
-  //   categories,
-  //   watchAllFormFields,
-  // })
+  console.log({
+    uploadVideoMatch,
+    sheetState,
+    height: containerBounds.height,
+    transform,
+    categories,
+    watchAllFormFields,
+  })
+  const handleMinimize = () => {
+    setSheetState?.('minimized')
+    navigate(cachedLocation?.pathname ?? routes.studio.index(true))
+  }
+  const handleOpen = () => {
+    if (videoTabs.length === 0) handleAddNewTab()
+    setSheetState?.('open')
+    navigate(routes.studio.uploadVideo())
+  }
+
+  // if (categoriesError) throw categoriesError
   return (
     <Container ref={containerRef} role="dialog" style={{ ...props }}>
       <Topbar>
@@ -216,13 +251,9 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
             variant="tertiary"
             onClick={() => {
               if (sheetState === 'open') {
-                setSheetState?.('minimized')
-                navigate(cachedLocation?.pathname ?? routes.studio.index(true))
-                console.log('minimize')
+                handleMinimize()
               } else {
-                setSheetState?.('open')
-                navigate(routes.studio.uploadVideo())
-                console.log('open')
+                handleOpen()
               }
             }}
           >
@@ -231,10 +262,8 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
           <Button
             variant="tertiary"
             onClick={() => {
-              navigate(cachedLocation?.pathname ?? routes.studio.index(true))
-              setSheetState?.('closed')
+              handleClose()
               resetVideoTabs()
-              console.log('close')
             }}
           >
             <Icon name="close" />
@@ -369,26 +398,26 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
               name="isExplicit"
               control={control}
               rules={{ required: true }}
-              render={(props) => (
+              render={({ value }) => (
                 <StyledRadioContainer>
                   <RadioButton
-                    value="all"
+                    value={'false'}
                     label="All audiences"
                     onChange={(e) => {
                       clearErrors('isExplicit')
-                      setFormValue('isExplicit', e.currentTarget.value)
+                      setFormValue('isExplicit', false)
                     }}
-                    selectedValue={props.value}
+                    selectedValue={value?.toString()}
                     error={!!errors.isExplicit}
                   />
                   <RadioButton
-                    value="mature"
+                    value={'true'}
                     label="Mature"
                     onChange={(e) => {
                       clearErrors('isExplicit')
-                      setFormValue('isExplicit', e.currentTarget.value)
+                      setFormValue('isExplicit', true)
                     }}
-                    selectedValue={props.value}
+                    selectedValue={value?.toString()}
                     error={!!errors.isExplicit}
                   />
                 </StyledRadioContainer>
@@ -409,96 +438,3 @@ export const UploadEditVideoActionSheet: React.FC<UploadEditVideoActionSheetProp
     </Container>
   )
 }
-
-const StyledActionBar = styled(ActionBar)`
-  position: initial;
-  border-top: solid 1px ${colors.gray[700]};
-`
-
-const Container = styled(animated.div)`
-  --upload-video-action-sheet-bar-height: ${UploadEditVideoActionSheetBarHeight}px;
-  transform: translateY(100%);
-  position: fixed;
-  z-index: ${zIndex.nearOverlay};
-  top: ${TOP_NAVBAR_HEIGHT}px;
-  left: var(--sidenav-collapsed-width);
-  right: 0;
-  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
-
-  background-color: ${colors.gray[900]};
-`
-
-const Topbar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  height: var(--upload-video-action-sheet-bar-height);
-  border-bottom: solid 1px ${colors.gray[700]};
-`
-
-const TabsContainer = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  scrollbar-width: thin;
-  overflow: auto hidden;
-`
-
-const ButtonsContainer = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  border-left: solid 1px ${colors.gray[700]};
-`
-
-const Content = styled.div`
-  display: grid;
-  grid-gap: ${sizes(12)};
-  grid-template-columns: 1fr 1fr;
-`
-
-const StyledCheckboxContainer = styled.div`
-  display: flex;
-  margin-bottom: 32px;
-  p {
-    margin-left: 20px;
-  }
-`
-
-const StyledRadioContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`
-
-const FileDropperContainer = styled.div`
-  padding: ${sizes(8)} 0 ${sizes(8)} ${sizes(8)};
-`
-
-const FormContainer = styled.form<{ height: number }>`
-  display: grid;
-  grid-auto-flow: row;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  height: ${({ height }) => height}px;
-  padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
-`
-
-const Tab = styled.div<{ selected: boolean }>`
-  display: grid;
-  height: 100%;
-  max-width: 168px;
-  grid-auto-flow: column;
-  padding: 0 0 0 ${sizes(4)};
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  ${({ selected }) => selected && `border-bottom: 3px solid ${colors.blue[500]};`}
-  > button {
-    margin-left: ${sizes(1)};
-  }
-`
-
-const TabTitle = styled(Text)`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
