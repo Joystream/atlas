@@ -58,6 +58,10 @@ export { ReactComponent as DialogError } from './dialog-error.svg'
 export { ReactComponent as MyVideos } from './my-videos.svg'
 export { ReactComponent as MyChannel } from './my-channel.svg'
 export { ReactComponent as MyUploads } from './my-uploads.svg'
+export { ReactComponent as Chrome } from './chrome.svg'
+export { ReactComponent as Firefox } from './firefox.svg'
+export { ReactComponent as ArrowDown } from './arrow-down.svg'
+export { ReactComponent as Profile } from './profile.svg'
 
 const icons = [
   'bring-up',
@@ -120,6 +124,10 @@ const icons = [
   'my-videos',
   'my-channel',
   'my-uploads',
+  'chrome',
+  'firefox',
+  'arrow-down',
+  'profile',
 ] as const
 
 export type IconType = typeof icons[number]
