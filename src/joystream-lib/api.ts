@@ -277,6 +277,6 @@ export class JoystreamJs {
 
     const contentEvents = events.filter((event) => event.section === 'content')
     const channelId = contentEvents[0].data[1]
-    return new BN(channelId as never).toNumber().toString()
+    return new BN(channelId as never).toString()
   }
 }
