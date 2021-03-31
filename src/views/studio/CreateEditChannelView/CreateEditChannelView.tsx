@@ -87,7 +87,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       ...getValues(),
       avatar: { blob: null, url: avatarPhotoUrl },
       cover: { blob: null, url: coverPhotoUrl },
-      channelName: title,
+      channelName: title || '',
       description: description || '',
       isPublic,
       selectedLanguage: foundLanguage || languages[0],
