@@ -34,8 +34,8 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
 
   const hasText = !!children
 
-  const internalLink = to ? (props: LinkProps) => <Link {...props} to={to} /> : undefined
-  const externalLink =
+  const as = to ? (props: LinkProps) => <Link {...props} to={to} /> : undefined
+  const externalLinkProps =
     typeof to === 'string' && to.includes('http')
       ? ({ as: 'a', href: to, rel: 'noopener noreferrer', target: '_blank' } as const)
       : undefined
@@ -43,7 +43,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
   return (
     <StyledButton
       css={containerCss}
-      as={internalLink}
+      as={as}
       className={className}
       onClick={onClick}
       disabled={disabled}
@@ -53,7 +53,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       full={full}
       size={size}
       ref={ref}
-      {...externalLink}
+      {...externalLinkProps}
     >
       {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
       {children && <span>{children}</span>}
