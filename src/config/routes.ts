@@ -28,8 +28,11 @@ export const relativeRoutes = {
     index: () => '',
     newChannel: () => 'channel/new',
     editChannel: () => 'channel',
-    videos: () => '/videos',
+    videos: () => 'videos',
     uploads: () => 'uploads',
+    signIn: () => 'signIn',
+    newMembership: () => 'membership/new',
+    selectMembership: () => 'memberships',
   },
   playground: {
     index: () => '',

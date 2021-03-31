@@ -3,7 +3,8 @@ import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { Text, Icon, Button, Placeholder } from '@/shared/components'
+import { Placeholder, Text, Icon, Button } from '@/shared/components'
+
 import {
   StyledTopbarBase,
   StudioTopbarContainer,
