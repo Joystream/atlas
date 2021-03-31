@@ -23,6 +23,8 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
+import knownLicenses from '@/data/knownLicenses.json'
+import { createUrlFromAsset } from '@/utils/asset'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -117,6 +119,11 @@ const VideoView: React.FC = () => {
     return <p>Video not found</p>
   }
 
+  const licenseName = knownLicenses.find((license) => license.code === video?.license?.code)?.name
+
+  const mediaUrl = createUrlFromAsset(video?.mediaAvailability, video?.mediaUrl, video?.mediaDataObject)
+  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+
   return (
     <StyledViewWrapper>
       <PlayerWrapper>
@@ -124,9 +131,9 @@ const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               playing={playing}
-              src={video.media.location}
+              src={mediaUrl}
               fill
-              posterUrl={video.thumbnailUrl}
+              posterUrl={thumbnailUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}
@@ -153,7 +160,7 @@ const VideoView: React.FC = () => {
         <DescriptionContainer>
           {video ? (
             <>
-              {video.description.split('\n').map((line, idx) => (
+              {video.description?.split('\n').map((line, idx) => (
                 <p key={idx}>{line}</p>
               ))}
             </>
@@ -169,16 +176,11 @@ const VideoView: React.FC = () => {
         <LicenseContainer>
           {video ? (
             <>
-              <p>
-                License:{' '}
-                {video.license.type.__typename === 'KnownLicense' ? (
-                  <a href={video.license.type.url || ''} target="_blank" rel="noopener noreferrer">
-                    {video.license.type.code}
-                  </a>
-                ) : video.license.type.__typename === 'UserDefinedLicense' ? (
-                  video.license.type.content
-                ) : null}
-              </p>
+              License:
+              <a href={video.license?.url || ''} target="_blank" rel="noopener noreferrer">
+                {licenseName}
+              </a>
+              <p>{video.license?.customText}</p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>
           ) : (
@@ -187,7 +189,7 @@ const VideoView: React.FC = () => {
         </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
-            {video ? `More from ${video.channel.handle}` : <Placeholder height={23} width={300} />}
+            {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
           <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
         </MoreVideosContainer>

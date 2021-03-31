@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
 import { CreateEditChannelView, MyVideosView } from '.'
-import { ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+import { ActiveUserProvider, DraftsProvider, PersonalDataProvider, JoystreamProvider } from '@/hooks'
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
 import SignInView from './SignInView'
@@ -52,22 +52,24 @@ const StudioLayout = () => {
     <DraftsProvider>
       <PersonalDataProvider>
         <ActiveUserProvider>
-          <StudioTopbar />
-          <Sidenav items={studioNavbarItems} isStudio />
-          <MainContainer>
-            <ErrorBoundary
-              fallback={ViewErrorFallback}
-              onReset={() => {
-                navigate(absoluteRoutes.studio.index())
-              }}
-            >
-              <Routes>
-                {studioRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
-                ))}
-              </Routes>
-            </ErrorBoundary>
-          </MainContainer>
+          <JoystreamProvider>
+            <StudioTopbar />
+            <Sidenav items={studioNavbarItems} isStudio />
+            <MainContainer>
+              <ErrorBoundary
+                fallback={ViewErrorFallback}
+                onReset={() => {
+                  navigate(absoluteRoutes.studio.index())
+                }}
+              >
+                <Routes>
+                  {studioRoutes.map((route) => (
+                    <Route key={route.path} {...route} />
+                  ))}
+                </Routes>
+              </ErrorBoundary>
+            </MainContainer>
+          </JoystreamProvider>
         </ActiveUserProvider>
       </PersonalDataProvider>
     </DraftsProvider>

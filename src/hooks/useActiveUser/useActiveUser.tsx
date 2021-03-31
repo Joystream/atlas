@@ -5,11 +5,12 @@ import {
   setData,
   removeActiveUser as removeActiveUserFn,
 } from './utils'
+import { AccountId, ChannelId, MemberId } from '@/joystream-lib'
 
 export type ActiveUser = {
-  accountId: string | null
-  memberId: string | null
-  channelId: string | null
+  accountId: AccountId | null
+  memberId: MemberId | null
+  channelId: ChannelId | null
 }
 export type ActiveUserState = ActiveUser | null
 

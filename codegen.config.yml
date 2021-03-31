@@ -7,7 +7,7 @@ documents:
 
 config:
   scalars:
-    Date: Date
+    DateTime: Date
   preResolveTypes: true # avoid using Pick
 
 generates:

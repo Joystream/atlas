@@ -1,29 +1,15 @@
-fragment VideoMediaFields on VideoMedia {
+fragment VideoMediaMetadataFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
-  location {
-    ... on HttpMediaLocation {
-      url
-    }
-    ... on JoystreamMediaLocation {
-      dataObjectId
-    }
-  }
 }
 
-fragment LicenseFields on LicenseEntity {
+fragment LicenseFields on License {
   id
+  code
   attribution
-  type {
-    ... on KnownLicense {
-      code
-      url
-    }
-    ... on UserDefinedLicense {
-      content
-    }
-  }
+  customText
+  url
 }
 
 fragment VideoFields on Video {
@@ -36,10 +22,19 @@ fragment VideoFields on Video {
   views
   duration
   thumbnailUrl
+  thumbnailAvailability
+  thumbnailDataObject {
+    ...DataObjectFields
+  }
   createdAt
   isPublic
-  media {
-    ...VideoMediaFields
+  mediaMetadata {
+    ...VideoMediaMetadataFields
+  }
+  mediaUrl
+  mediaAvailability
+  mediaDataObject {
+    ...DataObjectFields
   }
   channel {
     ...BasicChannelFields
@@ -96,8 +91,8 @@ query GetCoverVideo {
       ...VideoFields
     }
     coverDescription
-    coverCutMedia {
-      ...VideoMediaFields
+    coverCutMediaMetadata {
+      ...VideoMediaMetadataFields
     }
   }
 }

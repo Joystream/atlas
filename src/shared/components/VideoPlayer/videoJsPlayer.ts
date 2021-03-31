@@ -2,28 +2,20 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
-import { STORAGE_NODE_URL } from '@/config/urls'
-import { MediaLocation } from '@/api/queries'
-
 export type VideoJsConfig = {
-  src: MediaLocation
+  src?: string | null
   width?: number
   height?: number
   fluid?: boolean
   fill?: boolean
   muted?: boolean
-  posterUrl?: string
+  posterUrl?: string | null
   startTime?: number
   onDataLoaded?: () => void
   onPlay?: () => void
   onPause?: () => void
   onEnd?: () => void
   onTimeUpdated?: (time: number) => void
-}
-
-const createJoystreamStorageUrl = (dataObjectId: string) => {
-  const url = new URL(dataObjectId, STORAGE_NODE_URL)
-  return url.href
 }
 
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
@@ -45,8 +37,6 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   const playerRef = useRef<HTMLVideoElement>(null)
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
-  const parsedSource = src.__typename === 'HttpMediaLocation' ? src.url : createJoystreamStorageUrl(src.dataObjectId)
-
   useEffect(() => {
     const videoJsOptions: VideoJsPlayerOptions = {
       controls: true,
@@ -63,15 +53,14 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   }, [])
 
   useEffect(() => {
-    if (!player) {
+    if (!player || !src) {
       return
     }
-
     player.src({
-      src: parsedSource,
+      src: src,
       type: 'video/mp4',
     })
-  }, [player, parsedSource])
+  }, [player, src])
 
   useEffect(() => {
     if (!player || !width) {
