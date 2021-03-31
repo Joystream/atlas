@@ -33,13 +33,12 @@ export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProp
   }
 `
 export const ProgressBar = styled.div<ProgressbarProps>`
-  --progress-bar-color: #b4bbff33;
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: var(--progress-bar-color);
+  background-color: ${colors.transparentPrimary[20]};
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
