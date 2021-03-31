@@ -23,7 +23,6 @@ type TermsStepProps = {
 const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
   const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
-  const [isRead, setIsRead] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
@@ -39,9 +38,6 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
     if (scrollPosition === scrollHeight - boxHeight) {
       // hide scroll button, show checkbox
       setIsCheckboxVisible(true)
-      setIsRead(true)
-    } else {
-      setIsCheckboxVisible(false)
     }
   }, [scrollPosition])
 
@@ -107,7 +103,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
       </TermsBox>
       <TermsForm onSubmit={handleSubmit}>
         <CSSTransition
-          in={isRead}
+          in={isCheckboxVisible}
           timeout={parseInt(transitions.timings.loading)}
           classNames={transitions.names.fade}
           unmountOnExit

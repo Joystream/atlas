@@ -1,11 +1,20 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser } from '@/hooks'
-import { AccountBar, Placeholder } from '@/shared/components'
+import { Icon, Placeholder, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { createFakeAccount, getAccounts, Account } from '../../SignInView/fakeUtils'
-import { AccountStepImg, AccountsWrapper, StyledSpinner } from './AccountStep.style'
+import {
+  AccountStepImg,
+  AccountsWrapper,
+  StyledSpinner,
+  AccountWrapper,
+  AccountInfo,
+  IconWrapper,
+  AccountSecondary,
+  StyledButton,
+} from './AccountStep.style'
 import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 
 type AccountStepProps = {
@@ -62,7 +71,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
             </CSSTransition>
             <StepTitle variant="h4">Waiting for account creation</StepTitle>
             <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle>
-            <StyledSpinner size={50} />
+            <StyledSpinner />
           </StepWrapper>
         ) : (
           <StepWrapper>
@@ -85,6 +94,32 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
         )}
       </CSSTransition>
     </SwitchTransition>
+  )
+}
+
+export type AccountBarProps = {
+  name: string
+  secondary?: string
+  avatarUrl?: string
+  onClick?: () => void
+}
+
+const AccountBar: React.FC<AccountBarProps> = ({ name, secondary, onClick }) => {
+  return (
+    <AccountWrapper>
+      <AccountInfo>
+        <IconWrapper>
+          <Icon name="profile" />
+        </IconWrapper>
+        <div>
+          <Text variant="h6">{name}</Text>
+          <AccountSecondary variant="body2">{secondary}</AccountSecondary>
+        </div>
+      </AccountInfo>
+      <StyledButton variant="secondary" size="medium" onClick={onClick}>
+        Select Account
+      </StyledButton>
+    </AccountWrapper>
   )
 }
 

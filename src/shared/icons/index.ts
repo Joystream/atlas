@@ -125,7 +125,6 @@ const icons = [
   'my-channel',
   'my-uploads',
   'chrome',
-  'chrome',
   'firefox',
   'arrow-down',
   'profile',

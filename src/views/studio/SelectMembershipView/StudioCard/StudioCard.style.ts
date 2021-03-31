@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import isPropValid from '@emotion/is-prop-valid'
 
 type CardWrapperProps = {
-  blank?: boolean
+  empty?: boolean
   to?: string
 }
 export const CardWrapper = styled('div', { shouldForwardProp: isPropValid })<CardWrapperProps>`
@@ -18,7 +18,7 @@ export const CardWrapper = styled('div', { shouldForwardProp: isPropValid })<Car
   margin-bottom: ${sizes(4)};
   align-items: center;
   overflow: hidden;
-  background-color: ${({ blank }) => (blank ? colors.gray[900] : colors.gray[800])};
+  background-color: ${({ empty }) => (empty ? colors.gray[900] : colors.gray[800])};
   text-decoration: none;
 `
 export const HandleText = styled(Text)`
@@ -28,10 +28,6 @@ export const HandleText = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-export const Follows = styled(Text)`
-  color: ${colors.gray[300]};
-  margin-top: ${sizes(1)};
 `
 
 export const StyledAvatar = styled(Avatar)`

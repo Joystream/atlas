@@ -1,14 +1,14 @@
 import { Multistepper } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser, useCheckBrowser } from '@/hooks'
-import { StudioCard, StudioHeader } from '@/shared/components'
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 import React, { useCallback, useEffect, useState } from 'react'
 import { checkPolkadot, getAccountMemberships } from '../SignInView/fakeUtils'
 import { Membership } from '../SignInView/SignInView'
-import { MemberChannelGrid, Wrapper } from './SelectMembershipView.style'
+import { MemberChannelGrid, Wrapper, Header, Hero, SubTitle } from './SelectMembershipView.style'
 import { AccountStep, ExtensionStep, TermsStep } from './Steps'
+import StudioCard from './StudioCard'
 
 type DialogStep = {
   step: number
@@ -63,25 +63,24 @@ const SelectMembershipView = () => {
 
   return (
     <Wrapper>
-      <StudioHeader
-        title="Select Membership"
-        subtitle={
-          hasMemberships
+      <Header>
+        <Hero variant="hero">Select Membership</Hero>
+        <SubTitle variant="body2">
+          {hasMemberships
             ? 'Select a membership from the list of your memberships. Click create a membership to create and publish a brand new membership.'
-            : 'You have no memberships yet. Click Create a membership to become a member'
-        }
-      />
+            : 'You have no memberships yet. Click Create a membership to become a member'}
+        </SubTitle>
+      </Header>
       <MemberChannelGrid>
         {memberships?.map((membership) => (
           <StudioCard
             to={absoluteRoutes.studio.newChannel()}
-            variant="membership"
             key={membership.id}
             avatarPhotoUrl={membership.avatarUri}
             handle={membership.handle}
           />
         ))}
-        <StudioCard variant="membership" blank handle="Create a membership" onClick={openDialog} />
+        <StudioCard empty handle="Create a membership" onClick={openDialog} />
       </MemberChannelGrid>
       <Multistepper currentStepIdx={step} steps={steps} showDialog={dialogVisible} onExitClick={closeDialog} />
     </Wrapper>
