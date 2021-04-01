@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { addDraft, clearDrafts, getDraft, getDrafts, removeDraft, updateDraft } from './utils'
-import { Category, Language } from '@/api/queries'
+import { Language, VideoCategory } from '@/api/queries'
 
 export type CommonDraftProps = {
   id: string
@@ -21,7 +21,7 @@ export type VideoDraft = {
   hasMarketing?: boolean
   isExplicit?: boolean
   language?: Language['name']
-  categoryId?: Category['id']
+  categoryId?: VideoCategory['id']
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>

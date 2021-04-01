@@ -207,7 +207,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               rules={requiredValidation('Language')}
               render={({ value, onChange }) => (
                 <Select
-                  items={languages}
+                  items={[...languages]}
                   label="Channel Language"
                   value={value}
                   onChange={(e) => onChange(e.selectedItem)}
