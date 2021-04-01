@@ -100,7 +100,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video" to={routes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
+            <Button icon="add-video" to={absoluteRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
               New Video
             </Button>
           </ButtonGroup>

@@ -67,7 +67,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const location = useLocation()
   // sheet state
   const uploadVideoMatch = useMatch({ path: `${absoluteRoutes.studio.uploadVideo()}` })
-  const [sheetState, setSheetState] = useState<SheetState>('closed')
+  const [sheetState, setSheetState] = useState<SheetState>('open')
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()

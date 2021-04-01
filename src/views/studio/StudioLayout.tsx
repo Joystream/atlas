@@ -47,7 +47,7 @@ const studioNavbarItems: NavItemType[] = [
 const StudioLayout = () => {
   const navigate = useNavigate()
   const [cachedLocation, setCachedLocation] = useState<Location>()
-  const uploadVideoMatch = useMatch({ path: `${absoluteRoutes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
   const location = useLocation()
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const StudioLayout = () => {
                 <ErrorBoundary
                   fallback={ViewErrorFallback}
                   onReset={() => {
-                    navigate(absoluteRoutes.studio.index())
+                    navigate(relativeRoutes.studio.index())
                   }}
                 >
                   <Routes location={displayedLocation}>
