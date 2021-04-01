@@ -8,7 +8,7 @@
     "thumbnailUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg",
     "mediaUrl": "https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/video.webm"
   },
-  "videoMedia": {
+  "videoMediaMetadata": {
     "id": "4551c421-8edd-4d3b-8357-9fe825742775",
     "codec": "H264_mpeg4",
     "pixelWidth": 2560,

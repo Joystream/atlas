@@ -16,10 +16,13 @@ export type BasicChannelFieldsFragment = {
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
-  coverPhotoUrl?: Types.Maybe<string>
-  coverPhotoAvailability: Types.AssetAvailability
+  description?: Types.Maybe<string>
   follows?: Types.Maybe<number>
   isPublic?: Types.Maybe<boolean>
+  isCensored: boolean
+  coverPhotoUrl?: Types.Maybe<string>
+  coverPhotoAvailability: Types.AssetAvailability
+  language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
   coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 } & BasicChannelFieldsFragment
 
@@ -38,15 +41,7 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channel?: Types.Maybe<
-    {
-      __typename?: 'Channel'
-      description?: Types.Maybe<string>
-      isPublic?: Types.Maybe<boolean>
-      isCensored: boolean
-      language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
-    } & AllChannelFieldsFragment
-  >
+  channel?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
 }
 
 export type GetVideoCountQueryVariables = Types.Exact<{
@@ -129,13 +124,18 @@ export const BasicChannelFieldsFragmentDoc = gql`
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
+    description
+    follows
+    isPublic
+    isCensored
+    language {
+      name
+    }
     coverPhotoUrl
     coverPhotoAvailability
     coverPhotoDataObject {
       ...DataObjectFields
     }
-    follows
-    isPublic
   }
   ${BasicChannelFieldsFragmentDoc}
   ${DataObjectFieldsFragmentDoc}
@@ -182,12 +182,6 @@ export const GetChannelDocument = gql`
   query GetChannel($where: ChannelWhereUniqueInput!) {
     channel(where: $where) {
       ...AllChannelFields
-      description
-      isPublic
-      isCensored
-      language {
-        name
-      }
     }
   }
   ${AllChannelFieldsFragmentDoc}

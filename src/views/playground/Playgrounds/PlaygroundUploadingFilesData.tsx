@@ -23,7 +23,7 @@ export const PlaygroundUploadingFilesData = () => {
       hash: `${blob.size}${blob.type}`,
       storageProvider: 'storage',
       type: 'avatar',
-      cropData,
+      imageCropData: cropData,
       size: blob.size,
       parentObject: {
         type: 'channel',
@@ -62,22 +62,22 @@ export const PlaygroundUploadingFilesData = () => {
             }
           }
         }}
-      ></input>
+      />
       <Text>{error?.message}</Text>
       <h2>Uploading files data:</h2>
       {uploadingFilesData.length > 0 ? (
-        uploadingFilesData.map(({ id, hash, storageProvider, type, status, cropData }) => (
+        uploadingFilesData.map(({ id, hash, storageProvider, type, status, imageCropData }) => (
           <StyledDataContainer key={id}>
             <StyledButton aria-label="close dialog" onClick={() => removeUploadingFileData(id)} icon="close" />
             <p>ID: {id}</p>
             <p>Hash: {hash}</p>
             <p>Storage Provider: {storageProvider}</p>
             <p>Type: {type}</p>
-            {cropData && (
+            {imageCropData && (
               <>
                 <p>Crop data:</p>
-                <p>left:{cropData.left}</p>
-                <p>top:{cropData.top}</p> <p>width:{cropData.width}</p> <p>height:{cropData.height}</p>
+                <p>left:{imageCropData.left}</p>
+                <p>top:{imageCropData.top}</p> <p>width:{imageCropData.width}</p> <p>height:{imageCropData.height}</p>
               </>
             )}
             <p>status: {status}</p>
