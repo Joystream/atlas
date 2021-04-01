@@ -7,7 +7,7 @@ import {
   PreviewTitlePlaceholder,
   PreviewSubtextPlaceholder,
 } from './previews.style'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -18,7 +18,7 @@ type RecentChannelPreviewProps = {
 
 const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
   return (
-    <PreviewContainer to={routes.viewer.channel(channel?.id)}>
+    <PreviewContainer to={absoluteRoutes.viewer.channel(channel?.id)}>
       <StyledChannelAvatar imageUrl={channel?.avatarPhotoUrl} loading={!channel} />
       <SwitchTransition>
         <CSSTransition
@@ -27,7 +27,7 @@ const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) 
           classNames={transitions.names.fade}
         >
           <div>
-            {channel ? <Text variant="h6">{channel.handle}</Text> : <PreviewTitlePlaceholder />}
+            {channel ? <Text variant="h6">{channel.title}</Text> : <PreviewTitlePlaceholder />}
             {channel ? <PreviewSubtext>Channel</PreviewSubtext> : <PreviewSubtextPlaceholder />}
           </div>
         </CSSTransition>

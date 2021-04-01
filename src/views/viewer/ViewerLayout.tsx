@@ -5,7 +5,7 @@ import { Location } from 'history'
 import { ErrorBoundary } from '@sentry/react'
 
 import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, VideoView } from '.'
-import routes from '@/config/routes'
+import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { transitions } from '@/shared/theme'
 import { Sidenav, NavItemType, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
@@ -13,35 +13,35 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { PersonalDataProvider } from '@/hooks'
 
 const viewerRoutes = [
-  { path: routes.viewer.index(), element: <HomeView /> },
-  { path: routes.viewer.video(), element: <VideoView /> },
-  { path: routes.viewer.videos(), element: <VideosView /> },
-  { path: routes.viewer.channels(), element: <ChannelsView /> },
-  { path: routes.viewer.channel(), element: <ChannelView /> },
+  { path: relativeRoutes.viewer.index(), element: <HomeView /> },
+  { path: relativeRoutes.viewer.video(), element: <VideoView /> },
+  { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
+  { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
+  { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
 ]
 
 const viewerSidenavItems: NavItemType[] = [
   {
     icon: 'home-fill',
     name: 'Home',
-    to: '/',
+    to: absoluteRoutes.viewer.index(),
   },
   {
     icon: 'videos',
     name: 'Videos',
-    to: routes.viewer.videos(),
+    to: absoluteRoutes.viewer.videos(),
   },
   {
     icon: 'channels',
     name: 'Channels',
-    to: routes.viewer.channels(),
+    to: absoluteRoutes.viewer.channels(),
   },
 ]
 
 const ViewerLayout: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
-  const searchMatch = useMatch({ path: routes.viewer.search() })
+  const searchMatch = useMatch({ path: absoluteRoutes.viewer.search() })
   const [cachedLocation, setCachedLocation] = useState(location)
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const ViewerLayout: React.FC = () => {
 
     if (
       cachedLocation.state?.overlaidLocation?.pathname === location.pathname ||
-      location.pathname === [routes.viewer.index(), routes.viewer.search()].join('/')
+      location.pathname === absoluteRoutes.viewer.search()
     ) {
       // if exiting routing overlay, skip scroll to top
       return
@@ -75,7 +75,7 @@ const ViewerLayout: React.FC = () => {
         <ErrorBoundary
           fallback={ViewErrorFallback}
           onReset={() => {
-            navigate(routes.viewer.index())
+            navigate(absoluteRoutes.viewer.index())
           }}
         >
           <SwitchTransition>
@@ -98,7 +98,7 @@ const ViewerLayout: React.FC = () => {
             unmountOnExit
             mountOnEnter
           >
-            <Route path={routes.viewer.search()} element={<SearchOverlayView />} />
+            <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
           </CSSTransition>
         </ErrorBoundary>
       </MainContainer>

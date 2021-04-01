@@ -8,18 +8,21 @@ import {
   PreviewTitlePlaceholder,
   PreviewSubtext,
 } from './previews.style'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { createUrlFromAsset } from '@/utils/asset'
 
 type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment
 }
 
 const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
+  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+
   return (
-    <PreviewContainer to={routes.viewer.video(video?.id)}>
+    <PreviewContainer to={absoluteRoutes.viewer.video(video?.id)}>
       <SwitchTransition>
         <CSSTransition
           key={video ? 'placeholder' : 'content'}
@@ -27,7 +30,7 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={video?.thumbnailUrl} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={thumbnailUrl} /> : <VideoImagePlaceholder />}
             <div>
               {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
               {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}

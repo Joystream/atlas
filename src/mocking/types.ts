@@ -1,7 +1,13 @@
 import { graphql } from 'msw'
-import { AllChannelFieldsFragment, VideoFieldsFragment, VideoWhereInput, VideoWhereUniqueInput } from '@/api/queries'
+import {
+  AllChannelFieldsFragment,
+  VideoFieldsFragment,
+  VideoWhereInput,
+  VideoWhereUniqueInput,
+  MembershipWhereInput,
+} from '@/api/queries'
 
-export type FilteringArgs<TWhere = VideoWhereInput | VideoWhereUniqueInput> = {
+export type FilteringArgs<TWhere = VideoWhereInput | VideoWhereUniqueInput | MembershipWhereInput> = {
   where?: TWhere | null
 }
 export type SortingArgs = {
@@ -18,6 +24,9 @@ export type VideosChannelsData = {
 }
 export type HasId = {
   id: string
+}
+export type HasControllerAccount = {
+  controllerAccount: string
 }
 export type MocksStore = {
   videoViews: Record<string, number>

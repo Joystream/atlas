@@ -1,4 +1,3 @@
-import MultiFileSelect, { Step } from './MultiFileSelect'
+import MultiFileSelect from './MultiFileSelect'
 
 export default MultiFileSelect
-export type { Step }

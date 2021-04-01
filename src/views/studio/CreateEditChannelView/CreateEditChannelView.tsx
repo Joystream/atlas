@@ -35,7 +35,7 @@ type ImageAsset = {
 type Inputs = {
   channelName?: string
   description?: string
-  isPublic: boolean
+  isPublic?: boolean | null
   selectedLanguage: SelectedItem
   avatar: ImageAsset
   cover: ImageAsset
@@ -81,13 +81,13 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     if (loading || newChannel || !channel) {
       return
     }
-    const { avatarPhotoUrl, coverPhotoUrl, handle, description, isPublic, language } = channel
+    const { avatarPhotoUrl, coverPhotoUrl, title, description, isPublic, language } = channel
     const foundLanguage = languages.find(({ name }) => name === language?.name)
     reset({
       ...getValues(),
       avatar: { blob: null, url: avatarPhotoUrl },
       cover: { blob: null, url: coverPhotoUrl },
-      channelName: handle,
+      channelName: title,
       description: description || '',
       isPublic,
       selectedLanguage: foundLanguage || languages[0],

@@ -5,11 +5,12 @@ import {
   setData,
   removeActiveUser as removeActiveUserFn,
 } from './utils'
+import { AccountId, ChannelId, MemberId } from '@/joystream-lib'
 
 export type ActiveUser = {
-  accountId: string | null
-  memberId: string | null
-  channelId: string | null
+  accountId: AccountId | null
+  memberId: MemberId | null
+  channelId: ChannelId | null
 }
 export type ActiveUserState = ActiveUser | null
 
@@ -41,7 +42,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 export const useContextActiveUser = () => {
   const ctx = useContext(ActiveUserContext)
   if (ctx === undefined) {
-    throw new Error('useMember must be used within a MemberProvider')
+    throw new Error('useMember must be used within a ActiveUserProvider')
   }
   return ctx
 }

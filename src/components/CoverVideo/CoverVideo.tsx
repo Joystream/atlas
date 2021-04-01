@@ -18,11 +18,12 @@ import {
   ButtonsContainer,
 } from './CoverVideo.style'
 import { CSSTransition } from 'react-transition-group'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
+import { createUrlFromAsset } from '@/utils/asset'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -56,6 +57,13 @@ const CoverVideo: React.FC = () => {
     setVideoPlaying(false)
   }
 
+  const thumbnailUrl = createUrlFromAsset(
+    data.video?.thumbnailAvailability,
+    data.video?.thumbnailUrl,
+    data.video?.thumbnailDataObject
+  )
+  const mediaUrl = createUrlFromAsset(data.video?.mediaAvailability, data.video?.mediaUrl, data.video?.mediaDataObject)
+
   return (
     <Container>
       <MediaWrapper>
@@ -67,11 +75,11 @@ const CoverVideo: React.FC = () => {
                 isInBackground
                 muted={soundMuted}
                 playing={videoPlaying}
-                posterUrl={data.video.thumbnailUrl}
+                posterUrl={thumbnailUrl}
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                src={data.coverCutMedia.location}
+                src={mediaUrl}
               />
             ) : (
               <PlayerPlaceholder />
@@ -91,7 +99,7 @@ const CoverVideo: React.FC = () => {
         <TitleContainer>
           {data ? (
             <>
-              <Link to={routes.viewer.video(data.video.id)}>
+              <Link to={absoluteRoutes.viewer.video(data.video.id)}>
                 <Title variant="h2">{data.video.title}</Title>
               </Link>
               <span>{data.coverDescription}</span>

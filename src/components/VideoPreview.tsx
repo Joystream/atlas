@@ -1,6 +1,6 @@
 import React from 'react'
 import { useVideo } from '@/api/hooks'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
@@ -8,6 +8,7 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
+import { createUrlFromAsset } from '@/utils/asset'
 
 export type VideoPreviewProps = {
   id?: string
@@ -16,18 +17,25 @@ export type VideoPreviewProps = {
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, false)
+
+  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+  const avatarPhotoUrl = createUrlFromAsset(
+    video?.channel?.avatarPhotoAvailability,
+    video?.channel?.avatarPhotoUrl,
+    video?.channel?.avatarPhotoDataObject
+  )
   return (
     <VideoPreviewBase
       publisherMode={false}
       title={video?.title}
-      channelHandle={video?.channel.handle}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelTitle={video?.channel.title}
+      channelAvatarUrl={avatarPhotoUrl}
       createdAt={video?.createdAt}
       duration={video?.duration}
       views={video?.views}
-      thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
-      channelHref={id ? routes.viewer.channel(video?.channel.id) : undefined}
+      channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
+      thumbnailUrl={thumbnailUrl}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
@@ -43,18 +51,24 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   const { video, loading, videoHref } = useVideoSharedLogic(id, isDraft)
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
+
+  const avatarPhotoUrl = createUrlFromAsset(
+    video?.channel.avatarPhotoAvailability,
+    video?.channel.avatarPhotoUrl,
+    video?.channel.avatarPhotoDataObject
+  )
   return (
     <VideoPreviewBase
       publisherMode
       title={isDraft ? draft?.title : video?.title}
-      channelHandle={video?.channel.handle}
-      channelAvatarUrl={video?.channel.avatarPhotoUrl}
+      channelTitle={video?.channel.title}
+      channelAvatarUrl={avatarPhotoUrl}
       createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={video?.thumbnailUrl}
       videoHref={videoHref}
-      channelHref={id ? routes.viewer.channel(video?.channel.id) : undefined}
+      channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
@@ -68,6 +82,6 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
 const useVideoSharedLogic = (id?: string, isDraft?: boolean) => {
   const { video, loading } = useVideo(id ?? '', { skip: !id || isDraft })
   const internalIsLoadingState = loading || !id
-  const videoHref = id ? routes.viewer.video(id) : undefined
+  const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
   return { video, loading: internalIsLoadingState, videoHref }
 }

@@ -1,19 +1,26 @@
 import * as Types from './baseTypes.generated'
 
+import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
 import { gql } from '@apollo/client'
+
 import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
-  handle: string
-  avatarPhotoUrl?: Types.Maybe<string>
+  title?: Types.Maybe<string>
   createdAt: Date
+  avatarPhotoUrl?: Types.Maybe<string>
+  avatarPhotoAvailability: Types.AssetAvailability
+  avatarPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 }
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
   coverPhotoUrl?: Types.Maybe<string>
+  coverPhotoAvailability: Types.AssetAvailability
   follows?: Types.Maybe<number>
+  isPublic?: Types.Maybe<boolean>
+  coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 } & BasicChannelFieldsFragment
 
 export type GetBasicChannelQueryVariables = Types.Exact<{
@@ -35,7 +42,8 @@ export type GetChannelQuery = {
     {
       __typename?: 'Channel'
       description?: Types.Maybe<string>
-      isPublic: boolean
+      isPublic?: Types.Maybe<boolean>
+      isCensored: boolean
       language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
     } & AllChannelFieldsFragment
   >
@@ -108,18 +116,29 @@ export type UnfollowChannelMutation = {
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
-    handle
-    avatarPhotoUrl
+    title
     createdAt
+    avatarPhotoUrl
+    avatarPhotoAvailability
+    avatarPhotoDataObject {
+      ...DataObjectFields
+    }
   }
+  ${DataObjectFieldsFragmentDoc}
 `
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
     coverPhotoUrl
+    coverPhotoAvailability
+    coverPhotoDataObject {
+      ...DataObjectFields
+    }
     follows
+    isPublic
   }
   ${BasicChannelFieldsFragmentDoc}
+  ${DataObjectFieldsFragmentDoc}
 `
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
@@ -165,6 +184,7 @@ export const GetChannelDocument = gql`
       ...AllChannelFields
       description
       isPublic
+      isCensored
       language {
         name
       }

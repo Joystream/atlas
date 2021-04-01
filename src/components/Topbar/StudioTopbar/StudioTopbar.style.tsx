@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { Avatar, Text, Button, Icon } from '@/shared/components'
+import { Avatar, Text, Button, Icon, Placeholder } from '@/shared/components'
 import TopbarBase from '../TopbarBase'
 import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
 
@@ -168,4 +168,12 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
       width: 200px;
     }
   }
+`
+
+export const AvatarPlaceholder = styled(Placeholder)`
+  border-radius: 100%;
+  width: 42px;
+  height: 42px;
+  margin-left: ${sizes(5)};
+  margin-right: ${sizes(2.5)};
 `

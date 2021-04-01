@@ -36,3 +36,10 @@ export const requiredValidation: (name: string) => RegisterOptions = (name) => (
     message: `${name} must be selected`,
   },
 })
+
+export const urlValidation: (name: string) => RegisterOptions = (name) => ({
+  pattern: {
+    value: /[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)?/gi,
+    message: `${name} must be a valid url`,
+  },
+})

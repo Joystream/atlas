@@ -2,17 +2,17 @@ import * as Types from './baseTypes.generated'
 
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
-export type CategoryFieldsFragment = { __typename?: 'Category'; id: string; name: string }
+export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }
 
 export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetCategoriesQuery = {
   __typename?: 'Query'
-  categories: Array<{ __typename?: 'Category' } & CategoryFieldsFragment>
+  categories: Array<{ __typename?: 'VideoCategory' } & VideoCategoryFieldsFragment>
 }
 
-export const CategoryFieldsFragmentDoc = gql`
-  fragment CategoryFields on Category {
+export const VideoCategoryFieldsFragmentDoc = gql`
+  fragment VideoCategoryFields on VideoCategory {
     id
     name
   }
@@ -20,10 +20,10 @@ export const CategoryFieldsFragmentDoc = gql`
 export const GetCategoriesDocument = gql`
   query GetCategories {
     categories {
-      ...CategoryFields
+      ...VideoCategoryFields
     }
   }
-  ${CategoryFieldsFragmentDoc}
+  ${VideoCategoryFieldsFragmentDoc}
 `
 
 /**
