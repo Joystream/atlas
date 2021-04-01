@@ -5,7 +5,7 @@ import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { FileRejection } from 'react-dropzone'
-import { Controller, useForm } from 'react-hook-form'
+import { Control, Controller, DeepMap, FieldError, useForm, UseFormMethods } from 'react-hook-form'
 import { transitions } from '@/shared/theme'
 import { Location } from 'history'
 import {
@@ -27,6 +27,7 @@ import { languages } from '@/config/languages'
 import { useDrafts } from '@/hooks'
 import { TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
 import {
+  ACTION_SHEET_BAR_HEIGHT,
   ButtonsContainer,
   Container,
   Content,
@@ -39,9 +40,9 @@ import {
   TabsContainer,
   TabTitle,
   Topbar,
-  UploadEditVideoActionSheetBarHeight,
 } from './UploadEditVideoActionSheet.style'
 import { relativeRoutes } from '@/config/routes'
+import { UseSelectStateChange } from 'downshift'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -74,7 +75,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
 
   // animations
   // 1 extra px to account for the border
-  const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
+  const transform = containerBounds.height ? containerBounds.height - ACTION_SHEET_BAR_HEIGHT + 1 : 10000
   const [animationProps, set] = useSpring(() => ({
     from: { transform: 'translateY(10000px)' },
     duration: transitions.timings.sharp,
@@ -87,7 +88,6 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   }, [containerBounds.height, set, sheetState, transform])
 
   // forms state
-  const { categories, error: categoriesError } = useCategories()
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileState>({
     video: null,
@@ -224,45 +224,20 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   //   watchAllFormFields,
   // })
 
-  if (categoriesError) throw categoriesError
   return (
     <Container ref={containerRef} role="dialog" style={{ ...animationProps }}>
-      <Topbar>
-        <TabsContainer>
-          <Button variant="tertiary" onClick={handleAddNewTab}>
-            <Icon name="plus" />
-          </Button>
-          {videoTabs.map((tab) => (
-            <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
-              <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-              <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
-            </Tab>
-          ))}
-        </TabsContainer>
-        <ButtonsContainer>
-          <Button
-            variant="tertiary"
-            onClick={() => {
-              if (sheetState === 'open') {
-                handleMinimize()
-              } else {
-                handleOpen()
-              }
-            }}
-          >
-            <Icon name="minus" />
-          </Button>
-          <Button
-            variant="tertiary"
-            onClick={() => {
-              handleClose()
-              resetVideoTabs()
-            }}
-          >
-            <Icon name="close" />
-          </Button>
-        </ButtonsContainer>
-      </Topbar>
+      <TabsBar
+        sheetState={sheetState}
+        videoTabs={videoTabs}
+        selectedVideoTab={selectedVideoTab}
+        handleAddNewTab={handleAddNewTab}
+        handleRemoveTab={handleRemoveTab}
+        handleTabSelect={handleTabSelect}
+        handleResetVideoTabs={resetVideoTabs}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        handleMinimize={handleMinimize}
+      />
       <Content>
         <FileDropperContainer>
           <MultiFileSelect
@@ -275,152 +250,15 @@ export const UploadEditVideoActionSheet: React.FC = () => {
             onCropImage={setCroppedImageUrl}
           />
         </FileDropperContainer>
-        <FormContainer height={transform - actionBarBounds.height - 0 * 2}>
-          <HeaderTextField
-            name="title"
-            ref={register(textFieldValidation('Video Title', 3, 20))}
-            value=""
-            placeholder="Insert Video Title"
-            error={!!errors.title}
-            helperText={errors.title?.message}
-          />
-          <Textarea
-            name="description"
-            ref={register(textFieldValidation('Description', 0, 2160))}
-            maxLength={2160}
-            placeholder="Add video description"
-            error={!!errors.description}
-            helperText={errors.description?.message}
-          />
-          <FormField title="Video Visibility">
-            <Controller
-              name="selectedVideoVisibility"
-              control={control}
-              rules={requiredValidation('Video visibility')}
-              render={({ value }) => (
-                <Select
-                  value={visibilityOptions.find((o) => o.value === value) ?? null}
-                  items={visibilityOptions}
-                  onChange={(e) => {
-                    setFormValue('selectedVideoVisibility', e.selectedItem?.value)
-                    clearErrors('selectedVideoVisibility')
-                  }}
-                  error={!!errors.selectedVideoVisibility && !value}
-                  helperText={errors.selectedVideoVisibility?.message}
-                />
-              )}
-            />
-          </FormField>
-          <FormField title="Video Language">
-            <Controller
-              name="selectedVideoLanguage"
-              control={control}
-              rules={requiredValidation('Video language')}
-              render={({ value }) => (
-                <Select
-                  value={languages.find((l) => l.value === value) ?? null}
-                  items={[...languages]}
-                  onChange={(e) => {
-                    setFormValue('selectedVideoLanguage', e.selectedItem?.value)
-                    clearErrors('selectedVideoLanguage')
-                  }}
-                  error={!!errors.selectedVideoLanguage && !value}
-                  helperText={errors.selectedVideoLanguage?.message}
-                />
-              )}
-            />
-          </FormField>
-          <FormField title="Video Category">
-            <Controller
-              name="selectedVideoCategory"
-              control={control}
-              rules={requiredValidation('Video category')}
-              render={({ value }) => (
-                <Select
-                  value={
-                    (categories
-                      ?.map((category) => ({ name: category.name, value: category.id }))
-                      ?.find((c) => c.value === value) as SelectedItem) ?? null
-                  }
-                  items={
-                    (categories?.map((category) => ({ name: category.name, value: category.id })) as SelectedItem[]) ??
-                    []
-                  }
-                  onChange={(e) => {
-                    setFormValue('selectedVideoCategory', e.selectedItem?.value)
-                    clearErrors('selectedVideoCategory')
-                  }}
-                  error={!!errors.selectedVideoCategory && !value}
-                  helperText={errors.selectedVideoCategory?.message}
-                />
-              )}
-            />
-          </FormField>
-          <FormField
-            title="Published Before"
-            description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
-          >
-            <Controller
-              name="publishedBeforeJoystream"
-              control={control}
-              rules={{ validate: (publishedBeforeJoystream) => isValid(publishedBeforeJoystream) }}
-              render={({ value }) => (
-                <Datepicker
-                  value={value}
-                  onChange={(publishedBeforeJoystream) =>
-                    setFormValue('publishedBeforeJoystream', publishedBeforeJoystream)
-                  }
-                  onBlur={() => clearErrors('publishedBeforeJoystream')}
-                  error={!!errors.publishedBeforeJoystream}
-                />
-              )}
-            />
-          </FormField>
-          <FormField title="Marketing" description="to be added ???">
-            <StyledCheckboxContainer>
-              <Controller
-                as={Checkbox}
-                name="hasMarketing"
-                rules={{ required: true }}
-                error={!!errors.hasMarketing}
-                control={control}
-                value={false}
-                label="My video features a paid promotion material"
-              />
-            </StyledCheckboxContainer>
-          </FormField>
-          <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
-            <Controller
-              name="isExplicit"
-              control={control}
-              rules={{ required: true }}
-              render={({ value }) => (
-                <StyledRadioContainer>
-                  <RadioButton
-                    value={'false'}
-                    label="All audiences"
-                    onChange={(e) => {
-                      clearErrors('isExplicit')
-                      setFormValue('isExplicit', false)
-                    }}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                  />
-                  <RadioButton
-                    value={'true'}
-                    label="Mature"
-                    onChange={(e) => {
-                      clearErrors('isExplicit')
-                      setFormValue('isExplicit', true)
-                    }}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                  />
-                </StyledRadioContainer>
-              )}
-            />
-          </FormField>
-        </FormContainer>
+        <Form
+          control={control}
+          titleRef={register(textFieldValidation('Video Title', 3, 20))}
+          descriptionRef={register(textFieldValidation('Description', 0, 2160))}
+          height={transform - actionBarBounds.height}
+          errors={errors}
+          clearErrors={clearErrors}
+          setFormValue={setFormValue}
+        />
       </Content>
       <StyledActionBar
         ref={actionBarRef}
@@ -432,5 +270,229 @@ export const UploadEditVideoActionSheet: React.FC = () => {
         detailsTextIcon="info"
       />
     </Container>
+  )
+}
+
+type TabsBarProps = {
+  sheetState: SheetState
+  videoTabs: TabType[]
+  selectedVideoTab?: TabType
+  handleAddNewTab: () => void
+  handleRemoveTab: (tab: TabType) => void
+  handleResetVideoTabs: () => void
+  handleTabSelect: (tab: TabType) => void
+  handleMinimize: () => void
+  handleOpen: () => void
+  handleClose: () => void
+}
+const TabsBar: React.FC<TabsBarProps> = ({
+  videoTabs,
+  handleAddNewTab,
+  handleTabSelect,
+  handleRemoveTab,
+  handleResetVideoTabs,
+  handleMinimize,
+  handleOpen,
+  handleClose,
+  sheetState,
+  selectedVideoTab,
+}) => (
+  <Topbar>
+    <TabsContainer>
+      <Button variant="tertiary" onClick={handleAddNewTab}>
+        <Icon name="plus" />
+      </Button>
+      {videoTabs.map((tab) => (
+        <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
+          <TabTitle variant="subtitle2">{tab.title}</TabTitle>
+          <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
+        </Tab>
+      ))}
+    </TabsContainer>
+    <ButtonsContainer>
+      <Button
+        variant="tertiary"
+        onClick={() => {
+          if (sheetState === 'open') {
+            handleMinimize()
+          } else {
+            handleOpen()
+          }
+        }}
+      >
+        <Icon name="minus" />
+      </Button>
+      <Button
+        variant="tertiary"
+        onClick={() => {
+          handleClose()
+          handleResetVideoTabs()
+        }}
+      >
+        <Icon name="close" />
+      </Button>
+    </ButtonsContainer>
+  </Topbar>
+)
+
+type FormProps = {
+  height: number
+  titleRef: React.Ref<HTMLInputElement> | undefined
+  descriptionRef: React.Ref<HTMLTextAreaElement> | undefined
+  errors: DeepMap<FormInputs, FieldError>
+  control: Control<FormInputs>
+  clearErrors: UseFormMethods<FormInputs>['clearErrors']
+  setFormValue: UseFormMethods<FormInputs>['setValue']
+}
+const Form: React.FC<FormProps> = ({
+  height,
+  errors,
+  control,
+  descriptionRef,
+  titleRef,
+  setFormValue,
+  clearErrors,
+}) => {
+  const { categories, error: categoriesError } = useCategories()
+  const createFormSelectFieldHandler = (name: keyof FormInputs) => (changes: UseSelectStateChange<SelectedItem>) => {
+    setFormValue(name, changes.selectedItem?.value)
+    clearErrors(name)
+  }
+  const createIsExplicitHandler = (value: boolean) => () => {
+    clearErrors('isExplicit')
+    setFormValue('isExplicit', value)
+  }
+  if (categoriesError) throw categoriesError
+  return (
+    <FormContainer height={height}>
+      <HeaderTextField
+        name="title"
+        ref={titleRef}
+        value=""
+        placeholder="Insert Video Title"
+        error={!!errors.title}
+        helperText={errors.title?.message}
+      />
+      <Textarea
+        name="description"
+        ref={descriptionRef}
+        maxLength={2160}
+        placeholder="Add video description"
+        error={!!errors.description}
+        helperText={errors.description?.message}
+      />
+      <FormField title="Video Visibility">
+        <Controller
+          name="selectedVideoVisibility"
+          control={control}
+          rules={requiredValidation('Video visibility')}
+          render={({ value }) => (
+            <Select
+              value={visibilityOptions.find((o) => o.value === value) ?? null}
+              items={visibilityOptions}
+              onChange={createFormSelectFieldHandler('selectedVideoVisibility')}
+              error={!!errors.selectedVideoVisibility && !value}
+              helperText={errors.selectedVideoVisibility?.message}
+            />
+          )}
+        />
+      </FormField>
+      <FormField title="Video Language">
+        <Controller
+          name="selectedVideoLanguage"
+          control={control}
+          rules={requiredValidation('Video language')}
+          render={({ value }) => (
+            <Select
+              value={languages.find((l) => l.value === value) ?? null}
+              items={[...languages]}
+              onChange={createFormSelectFieldHandler('selectedVideoLanguage')}
+              error={!!errors.selectedVideoLanguage && !value}
+              helperText={errors.selectedVideoLanguage?.message}
+            />
+          )}
+        />
+      </FormField>
+      <FormField title="Video Category">
+        <Controller
+          name="selectedVideoCategory"
+          control={control}
+          rules={requiredValidation('Video category')}
+          render={({ value }) => (
+            <Select
+              value={
+                (categories
+                  ?.map((category) => ({ name: category.name, value: category.id }))
+                  ?.find((c) => c.value === value) as SelectedItem) ?? null
+              }
+              items={
+                (categories?.map((category) => ({ name: category.name, value: category.id })) as SelectedItem[]) ?? []
+              }
+              onChange={createFormSelectFieldHandler('selectedVideoCategory')}
+              error={!!errors.selectedVideoCategory && !value}
+              helperText={errors.selectedVideoCategory?.message}
+            />
+          )}
+        />
+      </FormField>
+      <FormField
+        title="Published Before"
+        description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
+      >
+        <Controller
+          name="publishedBeforeJoystream"
+          control={control}
+          rules={{ validate: (publishedBeforeJoystream) => isValid(publishedBeforeJoystream) }}
+          render={({ value }) => (
+            <Datepicker
+              value={value}
+              onChange={(publishedBeforeJoystream) =>
+                setFormValue('publishedBeforeJoystream', publishedBeforeJoystream)
+              }
+              onBlur={() => clearErrors('publishedBeforeJoystream')}
+              error={!!errors.publishedBeforeJoystream}
+            />
+          )}
+        />
+      </FormField>
+      <FormField title="Marketing" description="to be added ???">
+        <StyledCheckboxContainer>
+          <Controller
+            as={Checkbox}
+            name="hasMarketing"
+            rules={{ required: true }}
+            error={!!errors.hasMarketing}
+            control={control}
+            value={false}
+            label="My video features a paid promotion material"
+          />
+        </StyledCheckboxContainer>
+      </FormField>
+      <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
+        <Controller
+          name="isExplicit"
+          control={control}
+          rules={{ required: true }}
+          render={({ value }) => (
+            <StyledRadioContainer>
+              <RadioButton
+                value={'false'}
+                label="All audiences"
+                onChange={createIsExplicitHandler(false)}
+                selectedValue={value?.toString()}
+                error={!!errors.isExplicit}
+              />
+              <RadioButton
+                value={'true'}
+                label="Mature"
+                onChange={createIsExplicitHandler(true)}
+                selectedValue={value?.toString()}
+                error={!!errors.isExplicit}
+              />
+            </StyledRadioContainer>
+          )}
+        />
+      </FormField>
+    </FormContainer>
   )
 }

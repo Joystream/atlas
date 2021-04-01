@@ -9,9 +9,9 @@ export const StyledActionBar = styled(ActionBar)`
   border-top: solid 1px ${colors.gray[700]};
 `
 
-export const UploadEditVideoActionSheetBarHeight = sizes(14, true)
+export const ACTION_SHEET_BAR_HEIGHT = sizes(14, true)
 export const Container = styled(animated.div)`
-  --upload-video-action-sheet-bar-height: ${UploadEditVideoActionSheetBarHeight}px;
+  --upload-video-action-sheet-bar-height: ${ACTION_SHEET_BAR_HEIGHT}px;
   transform: translateY(100%);
   position: fixed;
   z-index: ${zIndex.nearOverlay};
@@ -72,7 +72,6 @@ export const FormContainer = styled.form<{ height: number }>`
   display: grid;
   grid-auto-flow: row;
   overflow-y: auto;
-  scrollbar-width: thin;
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
 `
