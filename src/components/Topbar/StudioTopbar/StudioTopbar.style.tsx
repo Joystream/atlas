@@ -17,13 +17,6 @@ export const StyledTopbarBase = styled(TopbarBase)`
   }
 `
 
-export const DrawerButton = styled(Button)`
-  svg {
-    width: auto;
-    height: auto;
-  }
-`
-
 export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;

@@ -9,7 +9,7 @@ import {
   AssetsDrawerContainer,
 } from './AssetsGroupUploadBar.style'
 import { AssetLine } from '../AssetLine'
-import { Icon, Text, Button } from '@/shared/components'
+import { Icon, Text, ExpandButton } from '@/shared/components'
 
 type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
 type AssetStatus = 'completed' | 'uploading' | 'pending' | 'failed' | 'reconnecting'
@@ -72,13 +72,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
         </AssetsInfoContainer>
         <UploadInfoContainer>
           <Text variant="subtitle2">{assetsGroupInfoText}</Text>
-          <Button
-            rotateIcon={isAssetsDrawerActive}
-            variant="tertiary"
-            icon="chevron-down"
-            size="large"
-            onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
-          />
+          <ExpandButton expanded={isAssetsDrawerActive} onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)} />
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>

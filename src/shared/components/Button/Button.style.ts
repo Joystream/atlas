@@ -10,7 +10,6 @@ export type ButtonStyleProps = {
   disabled?: boolean
   full?: boolean
   hasText?: boolean
-  rotateIcon?: boolean
   clickable?: boolean
 }
 
@@ -190,9 +189,6 @@ export const StyledButton = styled('button', { shouldForwardProp: isPropValid })
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
-  transform: rotate(${({ rotateIcon }) => (rotateIcon ? '180deg' : '0')});
-  transform-origin: center;
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
   &:hover {
     cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
   }

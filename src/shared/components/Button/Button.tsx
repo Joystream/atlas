@@ -11,7 +11,6 @@ export type ButtonProps = {
   disabled?: boolean
   containerCss?: SerializedStyles
   className?: string
-  rotateIcon?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
@@ -25,7 +24,6 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     full = false,
     size = 'medium',
     containerCss,
-    rotateIcon,
     className,
     onClick,
     to,
@@ -52,7 +50,6 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       variant={variant}
       clickable={clickable}
       hasText={hasText}
-      rotateIcon={rotateIcon}
       full={full}
       size={size}
       ref={ref}
