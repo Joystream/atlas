@@ -81,7 +81,7 @@ export const Tab = styled.div<{ selected: boolean }>`
   height: 100%;
   max-width: 168px;
   grid-auto-flow: column;
-  padding: 0 0 0 ${sizes(4)};
+  padding-right: ${sizes(4)};
   align-items: center;
   cursor: pointer;
   user-select: none;

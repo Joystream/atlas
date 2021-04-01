@@ -19,7 +19,6 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   ref
 ) => {
   const handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void = (e) => {
-    console.log(e.target.value)
     if (!e.target.value) {
       onChange(null)
     } else {
