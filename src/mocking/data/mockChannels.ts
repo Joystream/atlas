@@ -26,6 +26,8 @@ export const coverMockChannel: MockChannel = {
   avatarPhotoUrl: rawCoverVideo.channel.avatarPhotoUrl,
   avatarPhotoAvailability: AssetAvailability.Accepted,
   coverPhotoAvailability: AssetAvailability.Invalid,
+  isPublic: true,
+  isCensored: false,
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]

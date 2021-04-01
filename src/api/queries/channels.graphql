@@ -2,6 +2,7 @@ fragment BasicChannelFields on Channel {
   id
   title
   createdAt
+
   avatarPhotoUrl
   avatarPhotoAvailability
   avatarPhotoDataObject {
@@ -11,13 +12,19 @@ fragment BasicChannelFields on Channel {
 
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
+  description
+  follows
+  isPublic
+  isCensored
+  language {
+    name
+  }
+
   coverPhotoUrl
   coverPhotoAvailability
   coverPhotoDataObject {
     ...DataObjectFields
   }
-  follows
-  isPublic
 }
 
 query GetBasicChannel($where: ChannelWhereUniqueInput!) {
@@ -29,12 +36,6 @@ query GetBasicChannel($where: ChannelWhereUniqueInput!) {
 query GetChannel($where: ChannelWhereUniqueInput!) {
   channel(where: $where) {
     ...AllChannelFields
-    description
-    isPublic
-    isCensored
-    language {
-      name
-    }
   }
 }
 

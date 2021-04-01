@@ -5,8 +5,8 @@ export type Account = {
   id: AccountId
   name: string
 }
-export type MemberId = number
-export type ChannelId = number
+export type MemberId = string
+export type ChannelId = string
 
 export type AssetMetadata = {
   size: number

@@ -38,8 +38,8 @@ const coverMockVideo: MockVideo = {
   mediaUrl: rawCoverVideo.video.mediaUrl,
   thumbnailUrl: rawCoverVideo.video.thumbnailUrl,
   thumbnailAvailability: AssetAvailability.Accepted,
-  mediaMetadata: rawCoverVideo.videoMedia,
-  duration: rawCoverVideo.videoMedia.duration,
+  mediaMetadata: rawCoverVideo.videoMediaMetadata,
+  duration: rawCoverVideo.videoMediaMetadata.duration,
   category: mockCategories[0],
   isPublic: true,
 }
