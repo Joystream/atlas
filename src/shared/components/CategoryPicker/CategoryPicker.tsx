@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
-import { CategoryFieldsFragment } from '@/api/queries'
+import { VideoCategoryFieldsFragment } from '@/api/queries'
 
 type CategoryPickerProps = {
-  categories?: CategoryFieldsFragment[]
+  categories?: VideoCategoryFieldsFragment[]
   selectedCategoryId: string | null
   loading?: boolean
   onChange: (categoryId: string | null) => void

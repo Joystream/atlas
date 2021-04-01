@@ -163,7 +163,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
         <StyledAvatar size="medium" imageUrl={channel?.avatarPhotoUrl} />
         <TextContainer>
-          <Text>{channel ? channel.handle : 'New Channel'}</Text>
+          <Text>{channel ? channel.title : 'New Channel'}</Text>
           <Text>{memberName}</Text>
         </TextContainer>
         {active && <Icon name="check" />}
@@ -189,7 +189,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 key={channel.id}
                 channel={channel}
                 memberName={memberName}
-                active={channel.handle === currentChannel?.handle}
+                active={channel.title === currentChannel?.title}
                 onClick={() => onCurrentChannelChange(channel.id)}
               />
             ))}

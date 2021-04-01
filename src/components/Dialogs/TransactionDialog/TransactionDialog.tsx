@@ -3,7 +3,9 @@ import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { TextContainer, StyledTransactionIllustration, Spinner } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 
-const TransactionDialog: React.FC<ActionDialogProps> = ({ ...actionDialogProps }) => {
+export type TransactionDialogProps = ActionDialogProps
+
+const TransactionDialog: React.FC<TransactionDialogProps> = ({ ...actionDialogProps }) => {
   return (
     <ActionDialog {...actionDialogProps} secondaryButtonText="Cancel" exitButton={false}>
       <StyledTransactionIllustration />
