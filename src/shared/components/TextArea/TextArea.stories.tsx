@@ -12,6 +12,9 @@ export default {
     label: {
       defaultValue: 'Some label',
     },
+    placeholder: {
+      defaultValue: 'Some placeholder',
+    },
   },
 } as Meta
 

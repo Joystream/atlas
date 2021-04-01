@@ -8,6 +8,7 @@ export type InputBaseProps = {
   disabled?: boolean
   className?: string
   label?: string
+  isSelect?: boolean
 }
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -26,10 +27,11 @@ const InputBase: React.FC<InputBaseProps> = ({
   disabled,
   className,
   label,
+  isSelect,
 }) => {
-  console.log(error)
   return (
-    <FormGroup disabled={disabled} className={className} error={error}>
+    // Select component needs to have own label
+    <FormGroup as={isSelect ? 'div' : 'label'} disabled={disabled} className={className} error={error}>
       <LabelText>{label}</LabelText>
       {children}
       <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>

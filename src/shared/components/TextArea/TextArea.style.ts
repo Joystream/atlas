@@ -1,4 +1,4 @@
-import { colors, sizes } from '@/shared/theme'
+import { colors, sizes, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const TextAreaWrapper = styled.div`
@@ -7,7 +7,6 @@ export const TextAreaWrapper = styled.div`
 
 export const StyledTextArea = styled.textarea`
   width: 100%;
-  resize: none;
 `
 type HelperTextProps = {
   helperTextVariant?: 'default' | 'error' | 'warning'
@@ -21,14 +20,15 @@ const helperVariants = {
 
 export const HelperText = styled.p<HelperTextProps>`
   margin-right: ${sizes(4)};
+  margin: 0;
   color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
   word-break: break-all;
 `
 
 export const HelperTextsWrapper = styled.div`
   margin-left: 4px;
-  margin-top: 10px;
-  font-size: ${sizes(3)};
+  margin-top: 8px;
+  font-size: ${typography.sizes.body2};
   display: flex;
   align-items: center;
   justify-content: space-between;

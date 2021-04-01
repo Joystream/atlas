@@ -20,7 +20,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   {
     onChange,
     name,
-    placeholder = 'Something should be here',
+    placeholder,
     value,
     maxLength,
     className,
