@@ -41,7 +41,7 @@ import {
   Topbar,
   UploadEditVideoActionSheetBarHeight,
 } from './UploadEditVideoActionSheet.style'
-import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { relativeRoutes } from '@/config/routes'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -71,28 +71,20 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()
+
+  // animations
   // 1 extra px to account for the border
   const transform = containerBounds.height ? containerBounds.height - UploadEditVideoActionSheetBarHeight + 1 : 10000
-
-  const { ...props } = useSpring({
+  const [animationProps, set] = useSpring(() => ({
+    from: { transform: 'translateY(10000px)' },
     duration: transitions.timings.sharp,
-    transform:
-      sheetState === 'open'
-        ? `translateY(0)`
-        : sheetState === 'closed'
-        ? `translateY(${containerBounds.height}px)`
-        : `translateY(${transform}px)`,
-  })
-
-  // const { ...props } = useSpring({
-  //   duration: transitions.timings.sharp,
-  //   transform:
-  //     sheetState === 'open'
-  //       ? `translateY(0)`
-  //       : sheetState === 'closed'
-  //       ? `translateY(${containerBounds.height}px)`
-  //       : `translateY(${transform}px)`,
-  // })
+    transform: 'translateY(10000px)',
+  }))
+  useEffect(() => {
+    if (sheetState === 'open') set({ transform: 'translateY(0)' })
+    if (sheetState === 'minimized') set({ transform: `translateY(${transform}px)` })
+    if (sheetState === 'closed') set({ transform: `translateY(${containerBounds.height || 10000}px)` })
+  }, [containerBounds.height, set, sheetState, transform])
 
   // forms state
   const { categories, error: categoriesError } = useCategories()
@@ -165,7 +157,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     [setFormValue, setSelectedVideoTab]
   )
   const handleClose = useCallback(() => {
-    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
+    navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
     setSheetState('closed')
   }, [cachedLocation?.pathname, navigate])
   const handleAddNewTab = useCallback(async () => {
@@ -183,18 +175,28 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     addVideoTab(newDraft)
     handleTabSelect(newDraft)
   }, [addDraft, addVideoTab, handleTabSelect])
+  const handleMinimize = useCallback(() => {
+    setSheetState?.('minimized')
+    navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
+  }, [cachedLocation?.pathname, navigate])
+  const handleOpen = useCallback(() => {
+    if (sheetState !== 'open') {
+      if (videoTabs.length === 0) {
+        console.log('new tab on open')
+        handleAddNewTab()
+      }
+      setSheetState('open')
+      navigate(relativeRoutes.studio.uploadVideo())
+    }
+  }, [handleAddNewTab, navigate, sheetState, videoTabs.length])
 
   useEffect(() => {
     if (uploadVideoMatch) {
-      setSheetState('open')
-      if (videoTabs.length === 0) {
-        // handleAddNewTab()
-        console.log('new tab on open')
-      }
+      handleOpen()
     } else if (sheetState === 'open') {
-      setSheetState('minimized')
+      handleMinimize()
     }
-  }, [uploadVideoMatch, sheetState, handleAddNewTab, videoTabs.length])
+  }, [uploadVideoMatch, sheetState, handleOpen, handleMinimize])
   useEffect(() => {
     handleTabSelect(selectedVideoTab)
   }, [handleTabSelect, selectedVideoTab])
@@ -213,27 +215,18 @@ export const UploadEditVideoActionSheet: React.FC = () => {
       console.log('close if no tabs')
     }
   }
-  console.log({
-    uploadVideoMatch,
-    sheetState,
-    height: containerBounds.height,
-    transform,
-    categories,
-    watchAllFormFields,
-  })
-  const handleMinimize = () => {
-    setSheetState?.('minimized')
-    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
-  }
-  const handleOpen = () => {
-    if (videoTabs.length === 0) handleAddNewTab()
-    setSheetState?.('open')
-    navigate(absoluteRoutes.studio.uploadVideo())
-  }
+  // console.log({
+  //   uploadVideoMatch,
+  //   sheetState,
+  //   height: containerBounds.height,
+  //   transform,
+  //   categories,
+  //   watchAllFormFields,
+  // })
 
-  // if (categoriesError) throw categoriesError
+  if (categoriesError) throw categoriesError
   return (
-    <Container ref={containerRef} role="dialog" style={{ ...props }}>
+    <Container ref={containerRef} role="dialog" style={{ ...animationProps }}>
       <Topbar>
         <TabsContainer>
           <Button variant="tertiary" onClick={handleAddNewTab}>
