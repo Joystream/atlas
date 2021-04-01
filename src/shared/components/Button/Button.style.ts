@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors, typography } from '../../theme'
+import { colors, typography, transitions } from '../../theme'
 import Icon from '../Icon'
 import isPropValid from '@emotion/is-prop-valid'
 
@@ -186,6 +186,7 @@ export const StyledButton = styled('button', { shouldForwardProp: isPropValid })
   font-weight: ${typography.weights.bold};
   line-height: 1;
   display: inline-flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   &:hover {
