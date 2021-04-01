@@ -23,11 +23,11 @@ export default {
 
 const Template: Story<SnackbarProps> = (args) => <Snackbar {...args} />
 
-const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, icon, buttonText }) => {
+const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ message, icon }) => {
   const { displaySnackbar } = useSnackbar()
   return (
     <>
-      <Button size="small" onClick={() => displaySnackbar({ message, icon: 'success', time, buttonText })}>
+      <Button size="small" onClick={() => displaySnackbar({ message, icon: 'success', actionText: 'GO!' })}>
         Show snackbar
       </Button>
       <Button
@@ -36,9 +36,10 @@ const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, icon, bu
           displaySnackbar({
             message: 'hej',
             icon: 'success',
-            time,
+            time: 2000,
             variant: 'primary',
-            subMessage: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
+            subMessage:
+              'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
             actionText: 'Go to channel',
           })
         }

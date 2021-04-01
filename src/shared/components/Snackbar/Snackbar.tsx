@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Text } from '@/shared/components'
 import {
+  StyledInnerWrapper,
   SnackbarButton,
   SnackbarParagraph,
   SnackbarHeader,
   SnackbarWrapper,
   SnackbarAction,
   StyledIcon,
+  Submessage,
 } from './Snackbar.style'
 
 export type SnackbarVariant = 'primary' | 'secondary'
@@ -41,13 +43,13 @@ const Snackbar: React.FC<SnackbarProps> = ({
   return (
     <>
       <SnackbarWrapper variant={variant} hasSubMessage={!!subMessage} snackbarHeight={height}>
-        <div ref={ref}>
+        <StyledInnerWrapper ref={ref}>
           <SnackbarParagraph variant={variant} hasSubMessage={!!subMessage}>
             <SnackbarHeader hasSubMessage={!!subMessage}>
               {icon && <StyledIcon name={icon} />}
-              <Text>{message}</Text>
+              <Text variant="body2">{message}</Text>
             </SnackbarHeader>
-            {subMessage && <Text>{subMessage}</Text>}
+            {subMessage && <Submessage>{subMessage}</Submessage>}
             {actionText && (
               <SnackbarAction variant="tertiary" onClick={onActionClick} hasSubMessage={!!subMessage}>
                 {actionText}
@@ -55,7 +57,7 @@ const Snackbar: React.FC<SnackbarProps> = ({
             )}
           </SnackbarParagraph>
           <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
-        </div>
+        </StyledInnerWrapper>
       </SnackbarWrapper>
     </>
   )
