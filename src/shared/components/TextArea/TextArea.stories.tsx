@@ -9,6 +9,9 @@ export default {
   component: TextArea,
   argTypes: {
     value: { table: { disable: true } },
+    label: {
+      defaultValue: 'Some label',
+    },
   },
 } as Meta
 

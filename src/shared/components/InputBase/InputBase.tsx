@@ -1,13 +1,13 @@
 import React from 'react'
-import { FormGroup, HelperText } from './InputBase.styles'
+import { FormGroup, HelperText, LabelText } from './InputBase.styles'
 
 export type InputBaseProps = {
-  label?: string
   error?: boolean
   warning?: boolean
   helperText?: string
   disabled?: boolean
   className?: string
+  label?: string
 }
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -25,9 +25,12 @@ const InputBase: React.FC<InputBaseProps> = ({
   error,
   disabled,
   className,
+  label,
 }) => {
+  console.log(error)
   return (
-    <FormGroup disabled={disabled} className={className}>
+    <FormGroup disabled={disabled} className={className} error={error}>
+      <LabelText>{label}</LabelText>
       {children}
       <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
     </FormGroup>

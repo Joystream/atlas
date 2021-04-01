@@ -1,4 +1,4 @@
 import InputBase, { InputBaseProps, getVariant } from './InputBase'
-import { LabelText, labelOnTop, styledinputStates } from './InputBase.styles'
-export { LabelText, labelOnTop, styledinputStates, getVariant, InputBase as default }
+import { LabelText, styledinputStates } from './InputBase.styles'
+export { LabelText, styledinputStates, getVariant, InputBase as default }
 export type { InputBaseProps }

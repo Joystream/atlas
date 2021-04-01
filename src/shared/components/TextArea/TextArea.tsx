@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react'
-import { getVariant } from '../InputBase'
+import InputBase, { getVariant, InputBaseProps } from '../InputBase'
 import { HelperText, HelperTextCount, HelperTextsWrapper, StyledTextArea, TextAreaWrapper } from './TextArea.style'
 
 export type TextAreaProps = {
@@ -11,10 +11,11 @@ export type TextAreaProps = {
   className?: string
   helperText?: string
   warning?: boolean
+  disabled?: boolean
   error?: boolean
   rows?: number
   spellcheck?: boolean
-}
+} & InputBaseProps
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   {
     onChange,
@@ -27,7 +28,9 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
     helperText = '\u00A0',
     warning,
     error,
+    disabled,
     spellcheck = true,
+    label,
   },
   ref
 ) => {
@@ -60,25 +63,27 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   }
 
   return (
-    <TextAreaWrapper className={className}>
-      <StyledTextArea
-        name={name}
-        ref={ref}
-        placeholder={placeholder}
-        onChange={handleOnChange}
-        value={value}
-        rows={rows}
-        spellCheck={spellcheck}
-      />
-      <HelperTextsWrapper>
-        <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
-        {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-          <HelperTextCount helperTextVariant={charactersWarning}>
-            {charactersCount}/{maxLength}
-          </HelperTextCount>
-        )}
-      </HelperTextsWrapper>
-    </TextAreaWrapper>
+    <InputBase label={label} warning={warning} disabled={disabled} error={error}>
+      <TextAreaWrapper className={className}>
+        <StyledTextArea
+          name={name}
+          ref={ref}
+          placeholder={placeholder}
+          onChange={handleOnChange}
+          value={value}
+          rows={rows}
+          spellCheck={spellcheck}
+        />
+        <HelperTextsWrapper>
+          <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
+          {(charactersWarning === 'warning' || charactersWarning === 'error') && (
+            <HelperTextCount helperTextVariant={charactersWarning}>
+              {charactersCount}/{maxLength}
+            </HelperTextCount>
+          )}
+        </HelperTextsWrapper>
+      </TextAreaWrapper>
+    </InputBase>
   )
 }
 

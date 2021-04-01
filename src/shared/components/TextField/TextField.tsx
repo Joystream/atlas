@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import InputBase, { InputBaseProps, LabelText } from '../InputBase'
+import InputBase, { InputBaseProps } from '../InputBase'
 import { TextInput } from './TextField.style'
 
 export type TextFieldProps = {
@@ -11,31 +11,29 @@ export type TextFieldProps = {
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   required?: boolean
   className?: string
+  placeholder?: string
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
-  { name, type = 'text', label, value, onChange, onBlur, onFocus, error, disabled, required, ...inputBaseProps },
+  { name, type = 'text', value, onChange, onBlur, onFocus, error, disabled, required, placeholder, ...inputBaseProps },
   ref
 ) => {
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>
-      <label>
-        <TextInput
-          ref={ref}
-          name={name}
-          value={value}
-          disabled={disabled}
-          error={error}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          placeholder={label}
-          type={type}
-          required={required}
-          tabIndex={disabled ? -1 : 0}
-        />
-        <LabelText>{label}</LabelText>
-      </label>
+      <TextInput
+        ref={ref}
+        name={name}
+        value={value}
+        disabled={disabled}
+        error={error}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        type={type}
+        required={required}
+        tabIndex={disabled ? -1 : 0}
+      />
     </InputBase>
   )
 }
