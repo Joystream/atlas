@@ -17,15 +17,6 @@ export const StyledTopbarBase = styled(TopbarBase)`
   }
 `
 
-export const DrawerButton = styled(Button)<CommonStudioTopbarProps>`
-  svg {
-    width: auto;
-    height: auto;
-    transform: rotate(${({ isActive }) => (isActive ? '180deg' : '0')});
-    transition: transform ${transitions.timings.regular} ${transitions.easing};
-  }
-`
-
 export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;

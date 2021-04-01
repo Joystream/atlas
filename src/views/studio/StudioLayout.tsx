@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
-import { CreateEditChannelView, MyVideosView } from '.'
-import { ActiveUserProvider, DraftsProvider, PersonalDataProvider, JoystreamProvider } from '@/hooks'
+import { CreateEditChannelView, MyVideosView, MyUploadsView } from '.'
+import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
 import SignInView from './SignInView'
@@ -19,6 +20,7 @@ const studioRoutes = [
   { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
   { path: relativeRoutes.studio.selectMembership(), element: <SelectMembershipView /> },
   { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
+  { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]
 
 const studioNavbarItems: NavItemType[] = [

@@ -43,5 +43,6 @@ export default {
   transparentPrimary: {
     6: 'rgba(180, 187, 255, 0.06)',
     12: 'rgba(180, 187, 255, 0.12)',
+    20: 'rgba(180, 187, 255, 0.20)',
   },
 }
