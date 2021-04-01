@@ -3,12 +3,11 @@ import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { Placeholder, Text, Icon, Button } from '@/shared/components'
+import { Placeholder, Text, Icon, Button, ExpandButton } from '@/shared/components'
 
 import {
   StyledTopbarBase,
   StudioTopbarContainer,
-  DrawerButton,
   MemberInfoContainer,
   MemberTitleText,
   MemberTextContainer,
@@ -131,7 +130,7 @@ const StudioTopbar: React.FC = () => {
               </TextContainer>
             </ChannelInfoContainer>
           )}
-          <DrawerButton isActive={isDrawerActive} icon="chevron-down" variant="tertiary" onClick={handleDrawerToggle} />
+          <ExpandButton expanded={isDrawerActive} onClick={handleDrawerToggle} />
         </StudioTopbarContainer>
       </StyledTopbarBase>
       <NavDrawer
