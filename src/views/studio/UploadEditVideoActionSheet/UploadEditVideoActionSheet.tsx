@@ -41,7 +41,7 @@ import {
   Topbar,
   UploadEditVideoActionSheetBarHeight,
 } from './UploadEditVideoActionSheet.style'
-import { absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -66,8 +66,8 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // sheet state
-  const uploadVideoMatch = useMatch({ path: `${absoluteRoutes.studio.uploadVideo()}` })
-  const [sheetState, setSheetState] = useState<SheetState>('open')
+  const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
+  const [sheetState, setSheetState] = useState<SheetState>('closed')
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()
@@ -80,7 +80,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
       sheetState === 'open'
         ? `translateY(0)`
         : sheetState === 'closed'
-        ? `translateY(${containerBounds.height || 10000}px)`
+        ? `translateY(${containerBounds.height}px)`
         : `translateY(${transform}px)`,
   })
 

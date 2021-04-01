@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { Placeholder, Text, Icon, Button, ExpandButton } from '@/shared/components'
 
 import {
@@ -112,7 +112,7 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <Button icon="add-video" to={absoluteRoutes.studio.uploadVideo()} />
+          <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} />
           {loading ? (
             <ChannelInfoPlaceholder />
           ) : membership?.channels.length ? (

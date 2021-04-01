@@ -48,10 +48,9 @@ const studioNavbarItems: NavItemType[] = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [cachedLocation, setCachedLocation] = useState<Location>()
   const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
-  const location = useLocation()
-
   useEffect(() => {
     if (!uploadVideoMatch) {
       setCachedLocation(location)
@@ -77,7 +76,7 @@ const StudioLayout = () => {
                     navigate(relativeRoutes.studio.index())
                   }}
                 >
-                  <Routes>
+                  <Routes location={displayedLocation}>
                     {studioRoutes.map((route) => (
                       <Route key={route.path} {...route} />
                     ))}

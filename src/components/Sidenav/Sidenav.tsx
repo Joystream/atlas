@@ -21,7 +21,7 @@ import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
-import { absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -100,7 +100,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video" to={absoluteRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
+            <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
               New Video
             </Button>
           </ButtonGroup>
