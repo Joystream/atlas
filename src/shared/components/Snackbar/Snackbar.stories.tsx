@@ -30,7 +30,19 @@ const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, icon, bu
       <Button size="small" onClick={() => displaySnackbar({ message, icon: 'success', time, buttonText })}>
         Show snackbar
       </Button>
-      <Button size="small" onClick={() => displaySnackbar({ message: 'hej', icon, time, buttonText })}>
+      <Button
+        size="small"
+        onClick={() =>
+          displaySnackbar({
+            message: 'hej',
+            icon: 'success',
+            time,
+            variant: 'primary',
+            subMessage: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
+            actionText: 'Go to channel',
+          })
+        }
+      >
         Show snackbar
       </Button>
     </>

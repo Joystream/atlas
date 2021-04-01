@@ -21,26 +21,29 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   align-items: center;
   max-width: 360px;
   width: 100%;
+  height: 0;
   position: relative;
   z-index: ${zIndex.overlay};
   overflow: hidden;
+  transform: translateY(500px) translateX(0);
   &.snackbar-enter {
-    height: ${({ snackbarHeight }) => snackbarHeight}px;
-    transform: translateY(400px) translateX(0);
+    transform: translateY(500px) translateX(0);
+    height: 0;
     margin-bottom: 0;
   }
   &.snackbar-enter-active {
-    height: ${({ snackbarHeight }) => snackbarHeight}px;
     transform: translateY(0) translateX(0);
+    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: 12px;
   }
   &.snackbar-enter-done {
-    height: ${({ snackbarHeight }) => snackbarHeight}px;
+    transform: translateY(0) translateX(0);
+    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: 12px;
   }
   &.snackbar-exit {
     transform: translateY(0) translateX(0);
-    height: ${({ snackbarHeight }) => snackbarHeight}px;
+    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: 12px;
   }
   &.snackbar-exit-active {
@@ -54,7 +57,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     margin-bottom: 0;
   }
   &.snackbar-enter-active {
-    transition: transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
+    transition: transform ${transitions.timings.regular} ${transitions.easing},
       height ${transitions.timings.regular} ${transitions.easing},
       margin-bottom ${transitions.timings.regular} ${transitions.easing};
   }
@@ -101,7 +104,6 @@ export const SnackbarHeader = styled.div<ActionButtonProps>`
   margin-bottom: ${({ hasSubMessage }) => hasSubMessage && sizes(2)};
   color: ${({ hasSubMessage }) => hasSubMessage && colors.white};
   height: 24px;
-  padding: 40px 0;
 `
 
 export const StyledIcon = styled(Icon)`

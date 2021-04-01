@@ -6,9 +6,12 @@ import styled from '@emotion/styled'
 
 export type DisplaySnackbarArgs = {
   time?: number
+  variant?: 'primary' | 'secondary'
   icon?: 'success' | 'error' | 'info'
   buttonText?: string
   message: string
+  subMessage?: string
+  actionText?: string
 }
 
 type SnackbarContextValue = {
@@ -24,9 +27,11 @@ const SnackbarsContainer = styled.div`
   display: grid;
 `
 type SnackbarProps = {
-  id?: number
   isVisible?: boolean
   message?: string
+  subMessage?: string
+  actionText?: string
+  variant?: 'primary' | 'secondary'
   icon?: 'success' | 'error' | 'info'
   closeSnackbar?: () => void
 }
@@ -37,11 +42,11 @@ SnackbarContext.displayName = 'SnackbarContext'
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarProps[]>([])
 
-  const displaySnackbar = ({ time, icon, message, buttonText }: DisplaySnackbarArgs) => {
-    setSnackbars([...snackbars, { isVisible: true, message, icon }])
+  const displaySnackbar = ({ time, icon, message, subMessage, variant, actionText }: DisplaySnackbarArgs) => {
+    setSnackbars([...snackbars, { isVisible: true, message, icon, subMessage, variant, actionText }])
   }
 
-  const handleRemoveSnackbar = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+  const handleRemoveSnackbar = (index: number) => {
     const newSnackbars = snackbars.map((snackbar, idx) => {
       if (index === idx) {
         snackbar.isVisible = false
@@ -62,10 +67,18 @@ export const SnackbarProvider: React.FC = ({ children }) => {
                 key={`transition-${idx}`}
                 in={item.isVisible}
                 unmountOnExit
-                timeout={2 * parseInt(transitions.timings.loading)}
+                mountOnEnter
+                timeout={2 * parseInt(transitions.timings.regular)}
                 classNames={'snackbar'}
               >
-                <Snackbar message={item.message || ''} icon={item.icon} onClick={(e) => handleRemoveSnackbar(e, idx)} />
+                <Snackbar
+                  message={item.message || ''}
+                  subMessage={item.subMessage}
+                  variant={item.variant}
+                  actionText={item.actionText}
+                  icon={item.icon}
+                  onClick={() => handleRemoveSnackbar(idx)}
+                />
               </CSSTransition>
             ))}
         </SnackbarsContainer>

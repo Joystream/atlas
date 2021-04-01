@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Text } from '@/shared/components'
 import {
   SnackbarButton,
@@ -16,7 +16,6 @@ export type SnackbarProps = {
   message: string
   subMessage?: string
   actionText?: string
-  positionFromBottom?: number
   onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -33,28 +32,30 @@ const Snackbar: React.FC<SnackbarProps> = ({
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
 
-  useLayoutEffect(() => {
-    if (ref.current && ref.current.offsetHeight > 0) {
-      setHeight(ref.current.offsetHeight)
+  useEffect(() => {
+    if (ref.current) {
+      setHeight(ref.current.clientHeight)
     }
   }, [])
 
   return (
     <>
-      <SnackbarWrapper ref={ref} variant={variant} hasSubMessage={!!subMessage} snackbarHeight={height}>
-        <SnackbarParagraph variant={variant} hasSubMessage={!!subMessage}>
-          <SnackbarHeader hasSubMessage={!!subMessage}>
-            {icon && <StyledIcon name={icon} />}
-            <Text>{message}</Text>
-          </SnackbarHeader>
-          {subMessage && <Text>{subMessage}</Text>}
-          {actionText && (
-            <SnackbarAction variant="tertiary" onClick={onActionClick} hasSubMessage={!!subMessage}>
-              {actionText}
-            </SnackbarAction>
-          )}
-        </SnackbarParagraph>
-        <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+      <SnackbarWrapper variant={variant} hasSubMessage={!!subMessage} snackbarHeight={height}>
+        <div ref={ref}>
+          <SnackbarParagraph variant={variant} hasSubMessage={!!subMessage}>
+            <SnackbarHeader hasSubMessage={!!subMessage}>
+              {icon && <StyledIcon name={icon} />}
+              <Text>{message}</Text>
+            </SnackbarHeader>
+            {subMessage && <Text>{subMessage}</Text>}
+            {actionText && (
+              <SnackbarAction variant="tertiary" onClick={onActionClick} hasSubMessage={!!subMessage}>
+                {actionText}
+              </SnackbarAction>
+            )}
+          </SnackbarParagraph>
+          <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+        </div>
       </SnackbarWrapper>
     </>
   )
