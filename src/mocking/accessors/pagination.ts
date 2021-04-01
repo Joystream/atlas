@@ -19,8 +19,8 @@ export type CursorPaginatedDataArgs = {
 }
 
 type OffsetLimitPaginatedDataArgs = {
-  offset?: number
-  limit?: number
+  offset?: number | null
+  limit?: number | null
 }
 
 const indexToCursor = (idx: number): string => btoa(idx.toString())
@@ -59,7 +59,9 @@ export const createOffsetLimitPaginationAccessor = <TData extends GenericData>(d
 ): TData[] => {
   const filteredData = filterAndSortGenericData<TData>(data, variables)
 
-  const { limit = 50, offset = 0 } = variables
+  const { limit: rawLimit, offset: rawOffset } = variables
+  const limit = rawLimit ?? 50
+  const offset = rawOffset ?? 0
 
   return filteredData.slice(offset, offset + limit)
 }

@@ -78,7 +78,7 @@ const PlaygroundMemberChannel = () => {
                 value={channel.id}
                 selectedValue={selectedChannel?.id}
                 onClick={handleActiveChannelChange}
-                label={channel.handle}
+                label={channel.title || 'Unknown'}
               />
             ))}
       </div>
