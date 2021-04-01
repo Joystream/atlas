@@ -5,8 +5,9 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 
-import { CreateEditChannelView, MyVideosView, UploadEditVideoActionSheet } from '.'
-import { ActiveUserProvider, DraftsProvider, PersonalDataProvider, JoystreamProvider } from '@/hooks'
+import { CreateEditChannelView, MyVideosView, MyUploadsView, UploadEditVideoActionSheet } from '.'
+import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
 import SignInView from './SignInView'
@@ -21,6 +22,7 @@ const studioRoutes = [
   { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
   { path: relativeRoutes.studio.selectMembership(), element: <SelectMembershipView /> },
   { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
+  { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]
 
 const studioNavbarItems: NavItemType[] = [
@@ -75,7 +77,7 @@ const StudioLayout = () => {
                     navigate(relativeRoutes.studio.index())
                   }}
                 >
-                  <Routes location={displayedLocation}>
+                  <Routes>
                     {studioRoutes.map((route) => (
                       <Route key={route.path} {...route} />
                     ))}
