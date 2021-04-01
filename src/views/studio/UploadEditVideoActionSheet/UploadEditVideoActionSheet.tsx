@@ -22,7 +22,6 @@ import {
   Textarea,
 } from '@/shared/components'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
-import routes from '@/config/routes'
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { useDrafts } from '@/hooks'
@@ -42,6 +41,7 @@ import {
   Topbar,
   UploadEditVideoActionSheetBarHeight,
 } from './UploadEditVideoActionSheet.style'
+import { absoluteRoutes } from '@/config/routes'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -66,7 +66,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // sheet state
-  const uploadVideoMatch = useMatch({ path: `${routes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: `${absoluteRoutes.studio.uploadVideo()}` })
   const [sheetState, setSheetState] = useState<SheetState>('closed')
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
@@ -165,7 +165,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     [setFormValue, setSelectedVideoTab]
   )
   const handleClose = useCallback(() => {
-    navigate(cachedLocation?.pathname ?? routes.studio.index(true))
+    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
     setSheetState('closed')
   }, [cachedLocation?.pathname, navigate])
   const handleAddNewTab = useCallback(async () => {
@@ -223,12 +223,12 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   })
   const handleMinimize = () => {
     setSheetState?.('minimized')
-    navigate(cachedLocation?.pathname ?? routes.studio.index(true))
+    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
   }
   const handleOpen = () => {
     if (videoTabs.length === 0) handleAddNewTab()
     setSheetState?.('open')
-    navigate(routes.studio.uploadVideo())
+    navigate(absoluteRoutes.studio.uploadVideo())
   }
 
   // if (categoriesError) throw categoriesError
@@ -345,11 +345,14 @@ export const UploadEditVideoActionSheet: React.FC = () => {
               render={({ value }) => (
                 <Select
                   value={
-                    categories
+                    (categories
                       ?.map((category) => ({ name: category.name, value: category.id }))
-                      ?.find((c) => c.value === value) ?? null
+                      ?.find((c) => c.value === value) as SelectedItem) ?? null
                   }
-                  items={categories?.map((category) => ({ name: category.name, value: category.id })) ?? []}
+                  items={
+                    (categories?.map((category) => ({ name: category.name, value: category.id })) as SelectedItem[]) ??
+                    []
+                  }
                   onChange={(e) => {
                     setFormValue('selectedVideoCategory', e.selectedItem?.value)
                     clearErrors('selectedVideoCategory')

@@ -7,8 +7,8 @@ import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { useNavigate } from 'react-router-dom'
-import routes from '@/config/routes'
 import { useUploadVideoActionSheet } from '../UploadEditVideoActionSheet/useVideoActionSheet'
+import { absoluteRoutes } from '@/config/routes'
 
 const testChannelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 // const testChannelId = '100' // staging test channel id
@@ -91,7 +91,7 @@ export const MyVideosView = () => {
                   e.preventDefault()
                   addVideoTab(draft)
                   setSelectedVideoTab(draft)
-                  navigate(routes.studio.editVideo())
+                  navigate(absoluteRoutes.studio.editVideo())
                 }}
                 onPullupClick={(e) => {
                   e.stopPropagation()
@@ -101,7 +101,7 @@ export const MyVideosView = () => {
                 onEditVideoClick={() => {
                   addVideoTab(draft)
                   setSelectedVideoTab(draft)
-                  navigate(routes.studio.editVideo())
+                  navigate(absoluteRoutes.studio.editVideo())
                 }}
                 onDeleteVideoClick={() => {
                   removeDraft(draft.id)
