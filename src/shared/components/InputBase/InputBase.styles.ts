@@ -7,7 +7,7 @@ type FormGroupProps = {
 }
 
 export const FormGroup = styled.label<FormGroupProps>`
-  display: block;
+  display: inline-block;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
@@ -63,21 +63,4 @@ export const LabelText = styled.span`
   color: ${colors.gray[200]};
   background-color: none;
   font-size: ${typography.sizes.body2};
-`
-
-type HelperTextProps = {
-  helperTextVariant?: 'default' | 'error' | 'warning'
-}
-
-const helperVariants = {
-  default: colors.gray[400],
-  error: colors.error,
-  warning: colors.warning,
-}
-
-export const HelperText = styled.p<HelperTextProps>`
-  font-size: ${sizes(3)};
-  margin-top: 10px;
-  margin-left: 12px;
-  color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
 `

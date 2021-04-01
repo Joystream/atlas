@@ -25,7 +25,6 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
         name={name}
         value={value}
         disabled={disabled}
-        error={error}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}

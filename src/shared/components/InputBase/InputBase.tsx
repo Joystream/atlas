@@ -1,5 +1,6 @@
 import React from 'react'
-import { FormGroup, HelperText, LabelText } from './InputBase.styles'
+import HelperText from '../HelperText/HelperText'
+import { FormGroup, LabelText } from './InputBase.styles'
 
 export type InputBaseProps = {
   error?: boolean
@@ -9,14 +10,8 @@ export type InputBaseProps = {
   className?: string
   label?: string
   isSelect?: boolean
-}
-export const getVariant = (warning?: boolean, error?: boolean) => {
-  if (error) {
-    return 'error'
-  }
-  if (warning && !error) {
-    return 'warning'
-  }
+  charactersCount?: number
+  maxLength?: number
 }
 
 const InputBase: React.FC<InputBaseProps> = ({
@@ -28,13 +23,20 @@ const InputBase: React.FC<InputBaseProps> = ({
   className,
   label,
   isSelect,
+  charactersCount,
+  maxLength,
 }) => {
   return (
-    // Select component needs to have own label
     <FormGroup as={isSelect ? 'div' : 'label'} disabled={disabled} className={className} error={error}>
       <LabelText>{label}</LabelText>
       {children}
-      <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
+      <HelperText
+        warning={warning}
+        error={error}
+        helperText={helperText}
+        charactersCount={charactersCount}
+        maxLength={maxLength}
+      />
     </FormGroup>
   )
 }

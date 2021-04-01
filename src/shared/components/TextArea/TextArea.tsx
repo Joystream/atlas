@@ -1,6 +1,7 @@
 import React, { forwardRef, useState } from 'react'
-import InputBase, { getVariant, InputBaseProps } from '../InputBase'
-import { HelperText, HelperTextCount, HelperTextsWrapper, StyledTextArea, TextAreaWrapper } from './TextArea.style'
+import HelperText from '../HelperText/HelperText'
+import InputBase, { InputBaseProps } from '../InputBase'
+import { StyledTextArea, TextAreaWrapper } from './TextArea.style'
 
 export type TextAreaProps = {
   name?: string
@@ -34,54 +35,34 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   },
   ref
 ) => {
-  const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
   const [charactersCount, setCharactersCount] = useState(0)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (onChange) {
-      onChange(e)
-    }
-
-    if (!maxLength) {
-      return
-    }
-
-    const warningLength = maxLength * 0.8
-    const currentLength = e.target.value.length
-
-    setCharactersCount(currentLength)
-
-    if (currentLength > warningLength) {
-      setCharactersWarning('warning')
-    } else {
-      setCharactersWarning(null)
-    }
-
-    if (currentLength > maxLength) {
-      setCharactersWarning('error')
-    }
+    setCharactersCount(e.target.value.length)
+    onChange?.(e)
   }
 
   return (
-    <InputBase label={label} warning={warning} disabled={disabled} error={error}>
+    <InputBase
+      label={label}
+      warning={warning}
+      disabled={disabled}
+      error={error}
+      helperText={helperText}
+      charactersCount={charactersCount}
+      maxLength={maxLength}
+    >
       <TextAreaWrapper className={className}>
         <StyledTextArea
           name={name}
           ref={ref}
+          disabled={disabled}
           placeholder={placeholder}
           onChange={handleOnChange}
           value={value}
           rows={rows}
           spellCheck={spellcheck}
         />
-        <HelperTextsWrapper>
-          <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
-          {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-            <HelperTextCount helperTextVariant={charactersWarning}>
-              {charactersCount}/{maxLength}
-            </HelperTextCount>
-          )}
-        </HelperTextsWrapper>
       </TextAreaWrapper>
     </InputBase>
   )
