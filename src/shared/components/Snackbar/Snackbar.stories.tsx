@@ -8,7 +8,9 @@ export default {
   title: 'Shared/Snackbar',
   component: Snackbar,
   args: {
-    message: 'Hello from snackbar',
+    message: '(2) Videos added to edit',
+    subMessage: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
+    actionText: 'Action',
   },
   decorators: [
     (Story) => (
@@ -21,11 +23,14 @@ export default {
 
 const Template: Story<SnackbarProps> = (args) => <Snackbar {...args} />
 
-const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, variant, buttonText }) => {
+const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, icon, buttonText }) => {
   const { displaySnackbar } = useSnackbar()
   return (
     <>
-      <Button size="small" onClick={() => displaySnackbar({ message, variant, time, buttonText })}>
+      <Button size="small" onClick={() => displaySnackbar({ message, icon: 'success', time, buttonText })}>
+        Show snackbar
+      </Button>
+      <Button size="small" onClick={() => displaySnackbar({ message: 'hej', icon, time, buttonText })}>
         Show snackbar
       </Button>
     </>
