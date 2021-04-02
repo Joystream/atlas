@@ -32,7 +32,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
   },
   ref
 ) => {
-  const clickable = !!onClick || !!to
+  const clickable = !!onClick || !!to || type === 'submit'
 
   const hasText = !!children
 

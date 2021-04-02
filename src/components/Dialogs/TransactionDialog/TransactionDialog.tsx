@@ -4,10 +4,7 @@ import { TextContainer, StyledTransactionIllustration, Spinner } from './Transac
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
 
-export type TransactionDialogProps = Omit<
-  ActionDialogProps,
-  'additionalActionsNode' | 'primaryButtonText' | 'onPrimaryButtonClick' | 'secondaryButtonText' | 'showDialog'
-> & {
+export type TransactionDialogProps = Pick<ActionDialogProps, 'onEnter' | 'onExit' | 'className'> & {
   onCancel?: () => void
   status: ExtrinsicStatus | null
 }
