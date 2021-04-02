@@ -75,7 +75,7 @@ const PlaygroundValidationForm = () => {
           <Controller
             name="selectedVideoVisibility"
             control={control}
-            rules={requiredValidation('Video visibility')}
+            rules={{ validate: (data) => data === true || data === false }}
             render={({ value, onChange }) => (
               <Select
                 items={items}

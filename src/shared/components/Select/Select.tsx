@@ -51,7 +51,7 @@ const Select = <T,>({
         <SelectButton
           disabled={disabled}
           error={error}
-          filled={!!selectedItemValue}
+          filled={selectedItemValue != null}
           isOpen={isOpen}
           type="button"
           {...getToggleButtonProps()}
