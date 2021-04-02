@@ -30,7 +30,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
   const displaySnackbar = ({ ...args }: DisplaySnackbarArgs) => {
-    const id = faker.random.uuid()
+    const id = faker.datatype.uuid()
     setSnackbars([...snackbars, { id, ...args }])
   }
 

@@ -1,4 +1,4 @@
-import Snackbar, { SnackbarProps } from './Snackbar'
+import Snackbar, { IconsType } from './Snackbar'
 import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import Button from '../Button'
@@ -23,9 +23,13 @@ export default {
 
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
+  const icons = ['info', 'error', 'success'] as IconsType[]
   return (
     <>
-      <Button size="small" onClick={() => displaySnackbar({ ...args })}>
+      <Button
+        size="small"
+        onClick={() => displaySnackbar({ ...args, icon: icons[Math.floor(Math.random() * icons.length)] })}
+      >
         Show snackbar
       </Button>
     </>

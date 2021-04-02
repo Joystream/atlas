@@ -12,9 +12,10 @@ import {
 } from './Snackbar.style'
 
 export type SnackbarVariant = 'primary' | 'secondary'
+export type IconsType = 'error' | 'success' | 'info'
 export type SnackbarProps = {
   variant?: SnackbarVariant
-  icon?: 'error' | 'success' | 'info'
+  icon?: IconsType
   message: string
   subMessage?: string
   actionText?: string
