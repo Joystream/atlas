@@ -7,10 +7,18 @@ import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/hooks/useS
 export default {
   title: 'Shared/Snackbar',
   component: Snackbar,
-  args: {
-    message: 'Lorem ipsul dolor',
-    subMessage: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
-    actionText: 'Action',
+  argTypes: {
+    message: { defaultValue: 'Lorem ipsul dolor' },
+    subMessage: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
+    actionText: { defaultValue: 'Action' },
+    variant: {
+      control: { type: 'select' },
+      options: ['primary', 'secondary'],
+    },
+    icon: {
+      control: { type: 'select' },
+      options: [null, 'error', 'success', 'info'],
+    },
   },
   decorators: [
     (Story) => (
@@ -23,13 +31,9 @@ export default {
 
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
-  const icons = ['info', 'error', 'success'] as IconsType[]
   return (
     <>
-      <Button
-        size="small"
-        onClick={() => displaySnackbar({ ...args, icon: icons[Math.floor(Math.random() * icons.length)] })}
-      >
+      <Button size="small" onClick={() => displaySnackbar({ ...args })}>
         Show snackbar
       </Button>
     </>

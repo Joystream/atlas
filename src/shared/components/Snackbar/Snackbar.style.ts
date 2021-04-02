@@ -1,5 +1,5 @@
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { Button, Text } from '@/shared/components'
 import Icon from '../Icon'
 import { SnackbarVariant } from './Snackbar'
@@ -15,14 +15,14 @@ type InnerWrapperProps = {
 
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
-  max-width: 360px;
   width: 100%;
   height: 0;
   background-color: ${({ variant }) => (variant === 'secondary' ? colors.gray[700] : colors.blue[500])};
   z-index: ${zIndex.overlay};
   overflow: hidden;
+  transform: translateY(500px) translateX(0);
   &.snackbar-enter {
-    transform: translateY(200%) translateX(0);
+    transform: translateY(500px) translateX(0);
     height: 0;
     margin-bottom: 0;
   }
@@ -42,19 +42,15 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     margin-bottom: ${sizes(3)};
   }
   &.snackbar-exit-active {
-    transform: translateY(0) translateX(-115%);
+    transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
   }
-  &.snackbar-exit-active-done {
-    transform: translateY(0) translateX(-115%);
-    height: 0;
-    margin-bottom: 0;
-  }
+
   &.snackbar-enter-active {
-    transition: transform ${transitions.timings.regular} ${transitions.easing},
-      height ${transitions.timings.regular} ${transitions.easing},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing};
+    transition: height ${transitions.timings.regular} ${transitions.easing},
+      margin-bottom ${transitions.timings.regular} ${transitions.easing},
+      transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
   &.snackbar-exit-active {
     transition: transform ${transitions.timings.regular} ${transitions.easing},
