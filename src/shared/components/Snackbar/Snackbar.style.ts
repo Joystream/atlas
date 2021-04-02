@@ -7,9 +7,9 @@ import { SnackbarVariant } from './Snackbar'
 type SnackbarWrapperProps = {
   variant?: SnackbarVariant
   snackbarHeight?: number
-} & ActionButtonProps
+}
 
-type ActionButtonProps = {
+type InnerWrapperProps = {
   hasSubMessage?: boolean
 }
 
@@ -22,7 +22,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   z-index: ${zIndex.overlay};
   overflow: hidden;
   &.snackbar-enter {
-    transform: translateY(100%) translateX(0);
+    transform: translateY(200%) translateX(0);
     height: 0;
     margin-bottom: 0;
   }
@@ -63,47 +63,44 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   }
 `
 
-export const StyledInnerWrapper = styled.div`
-  padding: ${sizes(3)} ${sizes(5)};
-  width: 100%;
-`
-
 export const SnackbarButton = styled(Button)`
   position: absolute;
   top: ${sizes(3)};
   right: ${sizes(5)};
+  &:hover {
+    background-color: ${colors.transparent};
+  }
 `
 
-export const SnackbarAction = styled(Button)<ActionButtonProps>`
+export const SnackbarAction = styled(Button)`
   display: flex;
   align-items: center;
   padding: 0;
   min-width: auto;
   height: ${sizes(8)};
   font-size: ${sizes(3)};
-  margin-left: ${({ hasSubMessage }) => (hasSubMessage ? '0' : 'auto')};
   margin-right: ${sizes(10)};
   font-size: 16px;
   span {
     margin-top: -4px;
+  }
+  &:hover {
+    background-color: ${colors.transparent};
   }
 `
 
 export const SnackbarParagraph = styled.div<SnackbarWrapperProps>`
   display: flex;
   align-items: center;
-  flex-direction: ${({ hasSubMessage }) => (hasSubMessage ? 'column' : 'row')};
   width: 100%;
   font-size: ${typography.sizes.body2};
   color: ${({ variant }) => (variant === 'secondary' ? colors.gray[300] : colors.blue[100])};
-  align-items: ${({ hasSubMessage }) => (hasSubMessage ? 'flex-start' : 'center')};
   word-break: break-all;
 `
 
-export const SnackbarHeader = styled.div<ActionButtonProps>`
+export const SnackbarHeader = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ hasSubMessage }) => hasSubMessage && colors.white};
   height: 32px;
 `
 
@@ -117,4 +114,19 @@ export const StyledIcon = styled(Icon)`
   margin-right: ${sizes(2)};
   width: ${sizes(6)};
   height: ${sizes(6)};
+`
+
+export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
+  padding: ${sizes(3)} ${sizes(5)};
+  width: 100%;
+  ${SnackbarHeader} {
+    color: ${({ hasSubMessage }) => hasSubMessage && colors.white};
+  }
+  ${SnackbarParagraph} {
+    flex-direction: ${({ hasSubMessage }) => (hasSubMessage ? 'column' : 'row')};
+    align-items: ${({ hasSubMessage }) => (hasSubMessage ? 'flex-start' : 'center')};
+  }
+  ${SnackbarAction} {
+    margin-left: ${({ hasSubMessage }) => (hasSubMessage ? '0' : 'auto')};
+  }
 `
