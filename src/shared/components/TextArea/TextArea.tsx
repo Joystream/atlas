@@ -1,7 +1,6 @@
 import React, { forwardRef, useState } from 'react'
-import HelperText from '../HelperText/HelperText'
 import InputBase, { InputBaseProps } from '../InputBase'
-import { StyledTextArea, TextAreaWrapper } from './TextArea.style'
+import { StyledTextArea } from './TextArea.style'
 
 export type TextAreaProps = {
   name?: string
@@ -52,18 +51,17 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
       charactersCount={charactersCount}
       maxLength={maxLength}
     >
-      <TextAreaWrapper className={className}>
-        <StyledTextArea
-          name={name}
-          ref={ref}
-          disabled={disabled}
-          placeholder={placeholder}
-          onChange={handleOnChange}
-          value={value}
-          rows={rows}
-          spellCheck={spellcheck}
-        />
-      </TextAreaWrapper>
+      <StyledTextArea
+        className={className}
+        name={name}
+        ref={ref}
+        disabled={disabled}
+        placeholder={placeholder}
+        onChange={handleOnChange}
+        value={value}
+        rows={rows}
+        spellCheck={spellcheck}
+      />
     </InputBase>
   )
 }

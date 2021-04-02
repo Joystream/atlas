@@ -8,6 +8,7 @@ type FormGroupProps = {
 
 export const FormGroup = styled.label<FormGroupProps>`
   display: inline-block;
+  width: 100%;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
