@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import resizer from '../../icons/resizer.svg'
+import resizer from '@/shared/icons/resizer.svg'
 
 export const StyledTextArea = styled.textarea`
   width: 100%;
