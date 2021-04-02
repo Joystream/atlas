@@ -17,7 +17,7 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeUser } = useActiveUser()
-  const { setConnectionStatus } = useConnectionStatus()
+  const { setNodeConnection } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -41,12 +41,12 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream = await JoystreamJs.build(APP_NAME, NODE_URL)
         setJoystream(joystream)
         setAccounts(joystream.accounts)
-        setConnectionStatus('connected')
+        setNodeConnection('connected')
 
         joystream.onAccountsUpdate = handleAccountsUpdate
         joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
       } catch (e) {
-        setConnectionStatus('disconnected')
+        setNodeConnection('disconnected')
         console.error('Failed to create JoystreamJs instance', e)
       }
     }
@@ -56,7 +56,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, setConnectionStatus])
+  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeUser || !accountsSet) {

@@ -6,16 +6,16 @@ const ConnectionStatusContext = React.createContext<undefined | ConnectionStatus
 ConnectionStatusContext.displayName = 'ConnectionStatusContext'
 
 type ConnectionStatusValue = {
-  setConnectionStatus: (connection: ConnectionStatus) => void
+  setNodeConnection: (connection: ConnectionStatus) => void
   connectionStatus: ConnectionStatus
 }
 
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
-  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connecting')
+  const [connectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
 
   useEffect(() => {
     const connectionHandler = () => {
-      setConnectionStatus(window.navigator.onLine ? 'connecting' : 'no-internet')
+      setNodeConnection(window.navigator.onLine ? 'connecting' : 'no-internet')
     }
     window.addEventListener('offline', connectionHandler)
     window.addEventListener('online', connectionHandler)
@@ -26,10 +26,10 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  const setNodeConnection = useCallback(
+  const handleChangeNodeconnection = useCallback(
     (connection: ConnectionStatus) => {
       if (connectionStatus !== 'no-internet') {
-        setConnectionStatus(connection)
+        setNodeConnection(connection)
       }
     },
     [connectionStatus]
@@ -39,7 +39,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     <ConnectionStatusContext.Provider
       value={{
         connectionStatus,
-        setConnectionStatus: setNodeConnection,
+        setNodeConnection: handleChangeNodeconnection,
       }}
     >
       {children}

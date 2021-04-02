@@ -11,14 +11,14 @@ const fakeNodeConnection = async () => {
 }
 
 const PlaygroundConnectionState = () => {
-  const { connectionStatus, setConnectionStatus } = useConnectionStatus()
+  const { connectionStatus, setNodeConnection } = useConnectionStatus()
 
   const connectToNode = useCallback(async () => {
     const isConnected = await fakeNodeConnection()
     if (!isConnected) {
-      setConnectionStatus('disconnected')
+      setNodeConnection('disconnected')
     }
-  }, [setConnectionStatus])
+  }, [setNodeConnection])
 
   useEffect(() => {
     connectToNode()
