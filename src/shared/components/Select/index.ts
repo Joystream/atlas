@@ -1,3 +1,3 @@
-import Select, { SelectProps, SelectedItem } from './Select'
+import Select, { SelectProps, SelectItem } from './Select'
 export default Select
-export type { SelectProps, SelectedItem }
+export type { SelectProps, SelectItem }

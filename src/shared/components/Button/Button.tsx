@@ -13,6 +13,7 @@ export type ButtonProps = {
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
+  type?: 'button' | 'submit'
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
 
 const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -27,6 +28,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     className,
     onClick,
     to,
+    type = 'button',
   },
   ref
 ) => {
@@ -45,6 +47,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       css={containerCss}
       as={as}
       className={className}
+      type={type}
       onClick={onClick}
       disabled={disabled}
       variant={variant}

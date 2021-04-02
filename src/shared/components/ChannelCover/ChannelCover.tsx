@@ -19,6 +19,7 @@ import {
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
   editable?: boolean
+  disabled?: boolean
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onCoverRemoveClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -26,13 +27,14 @@ export type ChannelCoverProps = {
 const ChannelCover: React.FC<ChannelCoverProps> = ({
   coverPhotoUrl,
   editable,
+  disabled,
   onCoverEditClick,
   onCoverRemoveClick,
 }) => {
   return (
     <CoverWrapper>
       <MediaWrapper>
-        {editable && (
+        {editable && !disabled && (
           <EditableControls>
             <EditCoverButton onClick={onCoverEditClick}>
               <EditIconWrapper>

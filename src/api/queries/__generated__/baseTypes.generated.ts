@@ -14,7 +14,7 @@ export type Scalars = {
 
 export type Language = {
   __typename?: 'Language'
-  name: Scalars['String']
+  iso: Scalars['String']
 }
 
 export type VideoCategory = {

@@ -46,8 +46,8 @@ const PlaygroundDrafts = () => {
             placeholder="drafts"
             label="change draft"
             items={draftsIds}
-            value={{ name: currentDraftId, value: currentDraftId }}
-            onChange={({ selectedItem }) => selectedItem?.value && setCurrentDraft(selectedItem.value as string)}
+            value={currentDraftId}
+            onChange={(value) => setCurrentDraft(value ?? '')}
           />
         </FormField>
       )}
@@ -68,10 +68,8 @@ const PlaygroundDrafts = () => {
           placeholder="rating"
           label="rating"
           items={CONTENT_RATING}
-          value={{ value: form.isExplicit as boolean, name: form.isExplicit ? 'mature' : 'all' }}
-          onChange={({ selectedItem }) =>
-            selectedItem && setForm({ ...form, isExplicit: selectedItem.value as boolean })
-          }
+          value={form.isExplicit}
+          onChange={(value) => setForm({ ...form, isExplicit: value ?? false })}
         />
       </FormField>
       <div style={{ display: 'flex', gap: '20px' }}>
