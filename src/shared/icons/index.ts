@@ -64,6 +64,7 @@ export { ReactComponent as ArrowDown } from './arrow-down.svg'
 export { ReactComponent as Profile } from './profile.svg'
 export { ReactComponent as VideoFile } from './video-file.svg'
 export { ReactComponent as ImageFile } from './image-file.svg'
+export { ReactComponent as Resizer } from './resizer.svg'
 
 const icons = [
   'bring-up',
@@ -132,6 +133,7 @@ const icons = [
   'profile',
   'video-file',
   'image-file',
+  'resizer',
 ] as const
 
 export type IconType = typeof icons[number]
