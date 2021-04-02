@@ -19,6 +19,7 @@ export default {
       control: { type: 'select', options: [null, 'error', 'success', 'info'] },
       defaultValue: null,
     },
+    time: { control: { type: 'number' }, defaultValue: null },
   },
   decorators: [
     (Story) => (
@@ -32,11 +33,9 @@ export default {
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
   return (
-    <>
-      <Button size="small" onClick={() => displaySnackbar({ ...args })}>
-        Show snackbar
-      </Button>
-    </>
+    <Button size="small" onClick={() => displaySnackbar({ ...args })}>
+      Show snackbar
+    </Button>
   )
 }
 

@@ -26,11 +26,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     height: 0;
     margin-bottom: 0;
   }
-  &.snackbar-enter-active {
-    transform: translateY(0) translateX(0);
-    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
-    margin-bottom: ${sizes(3)};
-  }
+  &.snackbar-enter-active,
   &.snackbar-enter-done {
     transform: translateY(0) translateX(0);
     height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
@@ -108,8 +104,8 @@ export const Submessage = styled(Text)`
 export const StyledIcon = styled(Icon)`
   margin-left: 2px;
   margin-right: ${sizes(2)};
-  width: ${sizes(6)};
-  height: ${sizes(6)};
+  width: ${sizes(5)};
+  height: ${sizes(5)};
 `
 
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`

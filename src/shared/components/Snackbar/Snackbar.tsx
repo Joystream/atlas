@@ -42,25 +42,23 @@ const Snackbar: React.FC<SnackbarProps> = ({
   }, [])
 
   return (
-    <>
-      <SnackbarWrapper variant={variant} snackbarHeight={height}>
-        <StyledInnerWrapper ref={ref} hasSubMessage={!!subMessage}>
-          <SnackbarParagraph variant={variant}>
-            <SnackbarHeader>
-              {icon && <StyledIcon name={icon} />}
-              <Text variant="body2">{message}</Text>
-            </SnackbarHeader>
-            {subMessage && <Submessage>{subMessage}</Submessage>}
-            {actionText && (
-              <SnackbarAction variant="tertiary" onClick={onActionClick}>
-                {actionText}
-              </SnackbarAction>
-            )}
-          </SnackbarParagraph>
-          <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
-        </StyledInnerWrapper>
-      </SnackbarWrapper>
-    </>
+    <SnackbarWrapper variant={variant} snackbarHeight={height}>
+      <StyledInnerWrapper ref={ref} hasSubMessage={!!subMessage}>
+        <SnackbarParagraph variant={variant}>
+          <SnackbarHeader>
+            {icon && <StyledIcon name={icon} />}
+            <Text variant="body2">{message}</Text>
+          </SnackbarHeader>
+          {subMessage && <Submessage>{subMessage}</Submessage>}
+          {actionText && (
+            <SnackbarAction variant="tertiary" onClick={onActionClick}>
+              {actionText}
+            </SnackbarAction>
+          )}
+        </SnackbarParagraph>
+        <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+      </StyledInnerWrapper>
+    </SnackbarWrapper>
   )
 }
 
