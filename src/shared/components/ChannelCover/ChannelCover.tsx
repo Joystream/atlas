@@ -6,21 +6,21 @@ import Icon from '../Icon'
 import {
   CoverImage,
   EditableControls,
-  EditCoverButton,
-  EditIconWrapper,
+  EditCoverDesktopOverlay,
   EditButtonMessage,
   Media,
   MediaWrapper,
-  RemoveCoverButton,
+  RemoveCoverDesktopButton,
   CoverWrapper,
-  EditIcon,
+  RemoveCoverMobileButton,
+  EditCoverMobileButton,
 } from './ChannelCover.style'
 
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
   editable?: boolean
   disabled?: boolean
-  onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
   onCoverRemoveClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
@@ -36,21 +36,20 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
       <MediaWrapper>
         {editable && !disabled && (
           <EditableControls>
-            <EditCoverButton onClick={onCoverEditClick}>
-              <EditIconWrapper>
-                <EditIcon variant="desktop" name="camera" />
-                <EditIcon variant="mobile" name="gear" />
-              </EditIconWrapper>
-              <EditButtonMessage>
-                Click Anywhere to {coverPhotoUrl ? 'Edit ' : 'Add '}
-                Cover Image
+            <EditCoverDesktopOverlay onClick={onCoverEditClick}>
+              <Icon name="camera" />
+              <EditButtonMessage variant="subtitle2">
+                {`${coverPhotoUrl ? 'Edit ' : 'Add '} cover image`}
               </EditButtonMessage>
-            </EditCoverButton>
+            </EditCoverDesktopOverlay>
+            <EditCoverMobileButton onClick={onCoverEditClick} icon="gear" variant="tertiary" />
             {coverPhotoUrl && (
-              <RemoveCoverButton onClick={onCoverRemoveClick}>
-                <Icon name="trash" />
-                <span>Remove cover</span>
-              </RemoveCoverButton>
+              <>
+                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon="trash" variant="tertiary">
+                  Remove cover
+                </RemoveCoverDesktopButton>
+                <RemoveCoverMobileButton onClick={onCoverRemoveClick} icon="trash" variant="tertiary" />
+              </>
             )}
           </EditableControls>
         )}
