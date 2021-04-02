@@ -37,7 +37,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   snackbarsRef.current = snackbars
 
   const displaySnackbar = ({ time, ...args }: DisplaySnackbarArgs) => {
-    const id = faker.datatype.uuid()
+    const id = faker.random.uuid()
     setSnackbars([...snackbars, { id, ...args }])
 
     if (time) {
