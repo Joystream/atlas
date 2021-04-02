@@ -74,6 +74,11 @@ export const FormContainer = styled.form<{ height: number }>`
   overflow-y: auto;
   height: ${({ height }) => height}px;
   padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
+
+  /* title */
+  > div:first-of-type {
+    margin-bottom: ${sizes(4)};
+  }
 `
 
 export const Tab = styled.div<{ selected: boolean }>`

@@ -80,11 +80,12 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     from: { transform: 'translateY(10000px)' },
     duration: transitions.timings.sharp,
     transform: 'translateY(10000px)',
+    opacity: '1',
   }))
   useEffect(() => {
-    if (sheetState === 'open') set({ transform: 'translateY(0)' })
-    if (sheetState === 'minimized') set({ transform: `translateY(${transform}px)` })
-    if (sheetState === 'closed') set({ transform: `translateY(${containerBounds.height || 10000}px)` })
+    if (sheetState === 'open') set({ transform: 'translateY(0)', opacity: 1 })
+    if (sheetState === 'minimized') set({ transform: `translateY(${transform}px)`, opacity: 1 })
+    if (sheetState === 'closed') set({ transform: `translateY(${containerBounds.height || 10000}px)`, opacity: 0 })
   }, [containerBounds.height, set, sheetState, transform])
 
   // forms state
