@@ -12,12 +12,12 @@ export default {
     subMessage: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
     actionText: { defaultValue: 'Action' },
     variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary'],
+      control: { type: 'select', options: ['primary', 'secondary'] },
+      defaultValue: 'secondary',
     },
     icon: {
-      control: { type: 'select' },
-      options: [null, 'error', 'success', 'info'],
+      control: { type: 'select', options: [null, 'error', 'success', 'info'] },
+      defaultValue: null,
     },
   },
   decorators: [
