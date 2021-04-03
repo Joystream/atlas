@@ -1,6 +1,7 @@
-import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { StudioContainer, TOP_NAVBAR_HEIGHT } from '@/components'
+import { StudioContainerStyle } from '@/components/StudioContainer'
 import { ActionBar, Text } from '@/shared/components'
-import { colors, zIndex, sizes } from '@/shared/theme'
+import { colors, zIndex, sizes, breakpoints } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
@@ -36,6 +37,11 @@ export const TabsContainer = styled.div`
   grid-auto-columns: max-content;
   scrollbar-width: thin;
   overflow: auto hidden;
+  align-items: center;
+
+  &:first-child {
+    margin: 0px 8px;
+  }
 `
 
 export const ButtonsContainer = styled.div`
@@ -44,10 +50,20 @@ export const ButtonsContainer = styled.div`
   border-left: solid 1px ${colors.gray[700]};
 `
 
-export const Content = styled.div`
+export const Content = styled.div<{ height: number }>`
+  ${StudioContainerStyle}
   display: grid;
-  grid-gap: ${sizes(12)};
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: max-content max-content;
+  grid-template-columns: 100%;
+  height: ${({ height }) => height}px;
+  overflow-y: auto;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    height: initial;
+    grid-gap: ${sizes(12)};
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 export const StyledCheckboxContainer = styled.div`
@@ -65,19 +81,33 @@ export const StyledRadioContainer = styled.div`
 `
 
 export const FileDropperContainer = styled.div`
-  padding: ${sizes(8)} 0 ${sizes(8)} ${sizes(8)};
+  padding: ${sizes(8)} ${sizes(4)} 0 ${sizes(4)};
+  @media screen and (min-width: ${breakpoints.medium}) {
+    padding: ${sizes(8)} 0 ${sizes(8)} ${sizes(8)};
+  }
 `
 
 export const FormContainer = styled.form<{ height: number }>`
   display: grid;
   grid-auto-flow: row;
-  overflow-y: auto;
-  height: ${({ height }) => height}px;
-  padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
+  padding: ${sizes(12)} ${sizes(4)} ${sizes(8)} ${sizes(4)};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    overflow-y: auto;
+    height: ${({ height }) => height}px;
+    padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
+  }
 
   /* title */
   > div:first-of-type {
     margin-bottom: ${sizes(4)};
+  }
+
+  textarea {
+    height: 3em;
+    @media screen and (min-width: ${breakpoints.small}) {
+      height: initial;
+    }
   }
 `
 

@@ -147,7 +147,10 @@ export const UploadEditVideoActionSheet: React.FC = () => {
         setSelectedVideoTab(tab)
         setFormValue('title', tab?.title)
         setFormValue('description', tab.description)
-        setFormValue('selectedVideoVisibility', tab.isPublic ? 'public' : 'unlisted' ?? null)
+        setFormValue(
+          'selectedVideoVisibility',
+          tab.isPublic === undefined ? null : tab.isPublic ? 'public' : 'unlisted'
+        )
         setFormValue('selectedVideoLanguage', tab.language ?? null)
         setFormValue('selectedVideoCategory', tab.categoryId ?? null)
         setFormValue('publishedBeforeJoystream', tab.publishedBeforeJoystream ?? null)
@@ -239,7 +242,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
         handleClose={handleClose}
         handleMinimize={handleMinimize}
       />
-      <Content>
+      <Content height={transform - actionBarBounds.height}>
         <FileDropperContainer>
           <MultiFileSelect
             files={files}
@@ -300,9 +303,7 @@ const TabsBar: React.FC<TabsBarProps> = ({
 }) => (
   <Topbar>
     <TabsContainer>
-      <Button variant="tertiary" onClick={handleAddNewTab}>
-        <Icon name="plus" />
-      </Button>
+      <Button variant="tertiary" icon="plus" onClick={handleAddNewTab} />
       {videoTabs.map((tab) => (
         <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
           <TabTitle variant="subtitle2">{tab.title}</TabTitle>

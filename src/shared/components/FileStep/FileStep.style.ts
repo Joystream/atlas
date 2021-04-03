@@ -69,13 +69,9 @@ export const FileName = styled(Text)`
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.caption};
   height: 100%;
-  width: 160px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  @media screen and (min-width: ${breakpoints.small}) {
-    width: 200px;
-  }
 `
 
 type DeleteButtonProps = {
