@@ -307,12 +307,13 @@ const TabsBar: React.FC<TabsBarProps> = ({
       {videoTabs.map((tab) => (
         <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
           <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-          <Button icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
+          <Button size="small" icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
         </Tab>
       ))}
     </TabsContainer>
     <ButtonsContainer>
       <Button
+        icon="minus"
         variant="tertiary"
         onClick={() => {
           if (sheetState === 'open') {
@@ -321,18 +322,15 @@ const TabsBar: React.FC<TabsBarProps> = ({
             handleOpen()
           }
         }}
-      >
-        <Icon name="minus" />
-      </Button>
+      ></Button>
       <Button
+        icon="close"
         variant="tertiary"
         onClick={() => {
           handleClose()
           handleResetVideoTabs()
         }}
-      >
-        <Icon name="close" />
-      </Button>
+      ></Button>
     </ButtonsContainer>
   </Topbar>
 )

@@ -46,8 +46,16 @@ export const TabsContainer = styled.div`
 
 export const ButtonsContainer = styled.div`
   display: grid;
+  align-items: center;
   grid-auto-flow: column;
+  grid-gap: ${sizes(1)};
+  padding: 0 ${sizes(3)};
   border-left: solid 1px ${colors.gray[700]};
+
+  @media screen and (min-width: ${breakpoints.small}) {
+    grid-gap: ${sizes(4)};
+    padding: 0 ${sizes(6)};
+  }
 `
 
 export const Content = styled.div<{ height: number }>`
@@ -112,11 +120,12 @@ export const FormContainer = styled.form<{ height: number }>`
 `
 
 export const Tab = styled.div<{ selected: boolean }>`
-  display: grid;
   height: 100%;
-  max-width: 168px;
+  max-width: 178px;
+  display: grid;
   grid-auto-flow: column;
-  padding-right: ${sizes(4)};
+  justify-content: space-around;
+  padding: 0 0 0 ${sizes(3)};
   align-items: center;
   cursor: pointer;
   user-select: none;
