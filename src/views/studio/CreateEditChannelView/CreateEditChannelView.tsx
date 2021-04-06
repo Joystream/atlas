@@ -141,10 +141,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <>
                 <ChannelCover
                   coverPhotoUrl={loading ? null : value.url}
-                  onCoverEditClick={(e) => {
-                    e.preventDefault()
-                    coverDialogRef.current?.open()
-                  }}
+                  onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
                   disabled={loading}
@@ -167,10 +164,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   <StyledAvatar
                     imageUrl={value.url}
                     size="fill"
-                    onEditClick={(e) => {
-                      e.preventDefault()
-                      avatarDialogRef.current?.open()
-                    }}
+                    onEditClick={() => avatarDialogRef.current?.open()}
                     editable
                     loading={loading}
                   />
