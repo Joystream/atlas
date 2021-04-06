@@ -2,6 +2,7 @@ import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { StudioContainerStyle } from '@/components/StudioContainer'
 import { ActionBar, Text } from '@/shared/components'
 import { colors, zIndex, sizes, breakpoints } from '@/shared/theme'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
@@ -149,4 +150,9 @@ export const DrawerOverlay = styled(animated.div)`
   left: 0;
   background-color: ${colors.transparentBlack[66]};
   pointer-events: none;
+`
+
+export const plusIconStyle = css`
+  width: initial;
+  height: initial;
 `

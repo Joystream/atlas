@@ -52,6 +52,9 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   }
 
   @media screen and (min-width: 450px) {
+    padding-top: 62.25%;
+  }
+  @media screen and (min-width: ${breakpoints.large}) {
     padding-top: 56.25%;
   }
 `
@@ -93,7 +96,6 @@ export const ErrorContainer = styled.div`
   z-index: 2;
 
   width: 100%;
-  padding: ${sizes(2)} 0;
   background-color: rgba(255, 56, 97, 0.08);
 
   display: flex;
@@ -151,9 +153,9 @@ export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: ${sizes(4)};
+  margin: ${sizes(4)} 0 ${sizes(2)} 0;
   @media screen and (min-width: ${breakpoints.small}) {
-    margin-top: ${sizes(8)};
+    margin: ${sizes(8)} 0 ${sizes(4)} 0;
   }
 `
 

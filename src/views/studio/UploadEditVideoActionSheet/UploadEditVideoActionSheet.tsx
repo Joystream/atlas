@@ -34,6 +34,7 @@ import {
   DrawerOverlay,
   FileDropperContainer,
   FormContainer,
+  plusIconStyle,
   StyledActionBar,
   StyledCheckboxContainer,
   StyledRadioContainer,
@@ -233,15 +234,6 @@ export const UploadEditVideoActionSheet: React.FC = () => {
       console.log('close if no tabs')
     }
   }
-  // console.log({
-  //   uploadVideoMatch,
-  //   sheetState,
-  //   height: containerBounds.height,
-  //   transform,
-  //   categories,
-  //   watchAllFormFields,
-  // })
-
   return (
     <>
       <DrawerOverlay style={{ ...DrawerOverlayAnimationProps }} />
@@ -320,7 +312,7 @@ const TabsBar: React.FC<TabsBarProps> = ({
 }) => (
   <Topbar>
     <TabsContainer>
-      <Button variant="tertiary" icon="plus" onClick={handleAddNewTab} />
+      <Button variant="tertiary" icon="plus" iconCss={plusIconStyle} onClick={handleAddNewTab} />
       {videoTabs.map((tab) => (
         <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
           <TabTitle variant="subtitle2">{tab.title}</TabTitle>

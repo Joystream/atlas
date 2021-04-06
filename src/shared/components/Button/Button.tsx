@@ -10,6 +10,7 @@ export type ButtonProps = {
   icon?: IconType
   disabled?: boolean
   containerCss?: SerializedStyles
+  iconCss?: SerializedStyles
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
@@ -24,6 +25,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
     full = false,
     size = 'medium',
     containerCss,
+    iconCss,
     className,
     onClick,
     to,
@@ -55,7 +57,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       ref={ref}
       {...externalLinkProps}
     >
-      {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
+      {icon && <StyledIcon css={iconCss} disabled={disabled} name={icon} size={size} hasText={hasText} />}
       {children && <span>{children}</span>}
     </StyledButton>
   )

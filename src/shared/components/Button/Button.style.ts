@@ -161,8 +161,8 @@ const disabled = ({ disabled, variant }: ButtonStyleProps) => {
 export const StyledIcon = styled(Icon, { shouldForwardProp: isPropValid })<IconStyleProps>`
   display: block;
   flex-shrink: 0;
-  max-width: ${typography.sizes.icon.small};
-  max-height: ${typography.sizes.icon.small};
+  width: ${typography.sizes.icon.small};
+  height: ${typography.sizes.icon.small};
   margin: calc(-1 * var(--vertical-padding-small)) 0;
   & + * {
     margin-left: 10px;
