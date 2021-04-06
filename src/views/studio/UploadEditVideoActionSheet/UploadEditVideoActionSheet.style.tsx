@@ -1,4 +1,4 @@
-import { StudioContainer, TOP_NAVBAR_HEIGHT } from '@/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { StudioContainerStyle } from '@/components/StudioContainer'
 import { ActionBar, Text } from '@/shared/components'
 import { colors, zIndex, sizes, breakpoints } from '@/shared/theme'
@@ -139,4 +139,14 @@ export const TabTitle = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+export const DrawerOverlay = styled(animated.div)`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: ${colors.transparentBlack[66]};
+  pointer-events: none;
 `

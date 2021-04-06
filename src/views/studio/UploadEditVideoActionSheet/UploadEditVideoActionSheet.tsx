@@ -31,6 +31,7 @@ import {
   ButtonsContainer,
   Container,
   Content,
+  DrawerOverlay,
   FileDropperContainer,
   FormContainer,
   StyledActionBar,
@@ -73,20 +74,33 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
-  // animations
+  // animations overlay
+  const [DrawerOverlayAnimationProps, setDrawerOverlayAnimationProps] = useSpring(() => ({
+    from: { opacity: '0' },
+    duration: transitions.timings.sharp,
+    opacity: '0',
+  }))
+  useEffect(() => {
+    if (sheetState === 'open') setDrawerOverlayAnimationProps({ opacity: 1 })
+    if (sheetState === 'minimized') setDrawerOverlayAnimationProps({ opacity: 0 })
+    if (sheetState === 'closed') setDrawerOverlayAnimationProps({ opacity: 0 })
+  }, [setDrawerOverlayAnimationProps, sheetState])
+
+  // animations sheet
   // 1 extra px to account for the border
   const transform = containerBounds.height ? containerBounds.height - ACTION_SHEET_BAR_HEIGHT + 1 : 10000
-  const [animationProps, set] = useSpring(() => ({
+  const [animationProps, setAnimationProps] = useSpring(() => ({
     from: { transform: 'translateY(10000px)' },
     duration: transitions.timings.sharp,
     transform: 'translateY(10000px)',
     opacity: '1',
   }))
   useEffect(() => {
-    if (sheetState === 'open') set({ transform: 'translateY(0)', opacity: 1 })
-    if (sheetState === 'minimized') set({ transform: `translateY(${transform}px)`, opacity: 1 })
-    if (sheetState === 'closed') set({ transform: `translateY(${containerBounds.height || 10000}px)`, opacity: 0 })
-  }, [containerBounds.height, set, sheetState, transform])
+    if (sheetState === 'open') setAnimationProps({ transform: 'translateY(0)', opacity: 1 })
+    if (sheetState === 'minimized') setAnimationProps({ transform: `translateY(${transform}px)`, opacity: 1 })
+    if (sheetState === 'closed')
+      setAnimationProps({ transform: `translateY(${containerBounds.height || 10000}px)`, opacity: 0 })
+  }, [containerBounds.height, setAnimationProps, sheetState, transform])
 
   // forms state
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -229,51 +243,54 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   // })
 
   return (
-    <Container ref={containerRef} role="dialog" style={{ ...animationProps }}>
-      <TabsBar
-        sheetState={sheetState}
-        videoTabs={videoTabs}
-        selectedVideoTab={selectedVideoTab}
-        handleAddNewTab={handleAddNewTab}
-        handleRemoveTab={handleRemoveTab}
-        handleTabSelect={handleTabSelect}
-        handleResetVideoTabs={resetVideoTabs}
-        handleOpen={handleOpen}
-        handleClose={handleClose}
-        handleMinimize={handleMinimize}
-      />
-      <Content height={transform - actionBarBounds.height}>
-        <FileDropperContainer>
-          <MultiFileSelect
-            files={files}
-            error={fileSelectError}
-            onError={setFileSelectError}
-            onDropRejected={handleFileRejections}
-            onChangeFiles={setFiles}
-            croppedImageUrl={croppedImageUrl}
-            onCropImage={setCroppedImageUrl}
-          />
-        </FileDropperContainer>
-        <Form
-          control={control}
-          titleRef={register(textFieldValidation('Video Title', 3, 20))}
-          descriptionRef={register(textFieldValidation('Description', 0, 2160))}
-          height={transform - actionBarBounds.height}
-          errors={errors}
-          clearErrors={clearErrors}
-          setFormValue={setFormValue}
+    <>
+      <DrawerOverlay style={{ ...DrawerOverlayAnimationProps }} />
+      <Container ref={containerRef} role="dialog" style={{ ...animationProps }}>
+        <TabsBar
+          sheetState={sheetState}
+          videoTabs={videoTabs}
+          selectedVideoTab={selectedVideoTab}
+          handleAddNewTab={handleAddNewTab}
+          handleRemoveTab={handleRemoveTab}
+          handleTabSelect={handleTabSelect}
+          handleResetVideoTabs={resetVideoTabs}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          handleMinimize={handleMinimize}
         />
-      </Content>
-      <StyledActionBar
-        ref={actionBarRef}
-        primaryText={`Fee: ${99} Joy`}
-        secondaryText="Every change to the blockchain requires making a nominal transaction."
-        primaryButtonText={`Start Publishing`}
-        detailsText="Video details saved as draft (2 min ago)"
-        tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
-        detailsTextIcon="info"
-      />
-    </Container>
+        <Content height={transform - actionBarBounds.height}>
+          <FileDropperContainer>
+            <MultiFileSelect
+              files={files}
+              error={fileSelectError}
+              onError={setFileSelectError}
+              onDropRejected={handleFileRejections}
+              onChangeFiles={setFiles}
+              croppedImageUrl={croppedImageUrl}
+              onCropImage={setCroppedImageUrl}
+            />
+          </FileDropperContainer>
+          <Form
+            control={control}
+            titleRef={register(textFieldValidation('Video Title', 3, 20))}
+            descriptionRef={register(textFieldValidation('Description', 0, 2160))}
+            height={transform - actionBarBounds.height}
+            errors={errors}
+            clearErrors={clearErrors}
+            setFormValue={setFormValue}
+          />
+        </Content>
+        <StyledActionBar
+          ref={actionBarRef}
+          primaryText={`Fee: ${99} Joy`}
+          secondaryText="Every change to the blockchain requires making a nominal transaction."
+          primaryButtonText={`Start Publishing`}
+          detailsText="Video details saved as draft (2 min ago)"
+          tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
+          detailsTextIcon="info"
+        />
+      </Container>
+    </>
   )
 }
 
