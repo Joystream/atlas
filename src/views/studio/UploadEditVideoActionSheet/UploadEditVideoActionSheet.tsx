@@ -440,7 +440,7 @@ const Form: React.FC<FormProps> = ({
       </FormField>
       <FormField
         title="Published Before"
-        description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
+        description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
       >
         <Controller
           name="publishedBeforeJoystream"
@@ -458,7 +458,7 @@ const Form: React.FC<FormProps> = ({
           )}
         />
       </FormField>
-      <FormField title="Marketing" description="to be added ???">
+      <FormField title="Marketing" description="Please select whether your video contains paid promotions">
         <StyledCheckboxContainer>
           <Controller
             as={Checkbox}
@@ -471,7 +471,7 @@ const Form: React.FC<FormProps> = ({
           />
         </StyledCheckboxContainer>
       </FormField>
-      <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
+      <FormField title="Content Rating" description="Please select whether your video contains explicit material (sex, violence, etc.)">
         <Controller
           name="isExplicit"
           control={control}
