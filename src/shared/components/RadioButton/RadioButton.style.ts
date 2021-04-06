@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { Text } from '@/shared/components'
+import Text from '../Text/Text'
 import { LabelText } from '../Checkbox/Checkbox.styles'
 import { colors, sizes, transitions } from '../../theme'
 
