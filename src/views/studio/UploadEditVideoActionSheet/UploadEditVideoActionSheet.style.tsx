@@ -40,7 +40,7 @@ export const TabsContainer = styled.div`
   overflow: auto hidden;
   align-items: center;
 
-  &:first-child {
+  *:first-of-type {
     margin: 0px 8px;
   }
 `
