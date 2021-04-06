@@ -29,8 +29,8 @@ export const MyVideosView = () => {
   const {
     drafts,
     removeDraft,
-    draftsSeenStatusState,
-    updateDraftSeenStatusState,
+    unseenDrafts,
+    removeAllUnseenDrafts,
     removeAllDrafts,
     addDraft,
     updateDraft,
@@ -73,20 +73,16 @@ export const MyVideosView = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
-  const unseenDraftsLength = draftsSeenStatusState.filter((draft) => draft.seen === false).length
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
   }
 
   const handleSetCurrentTab = async (tab: number) => {
+    setCurrentTab(tab)
     if (TABS[tab] === 'Drafts') {
-      setCurrentTab(tab)
-      for (const draft of drafts) {
-        if (draft.seen === true) {
-          return
-        }
-        await updateDraftSeenStatusState(draft.id, true)
+      if (unseenDrafts.length > 0) {
+        await removeAllUnseenDrafts()
       }
     }
   }
@@ -120,6 +116,8 @@ export const MyVideosView = () => {
     throw error
   }
 
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badge: tab === 'Drafts' ? unseenDrafts.length : 0 }))
+
   return (
     <StudioContainer>
       <ViewContainer>
@@ -129,12 +127,7 @@ export const MyVideosView = () => {
         ) : (
           <>
             <TabsContainer>
-              <Tabs
-                initialIndex={0}
-                tabs={[...TABS]}
-                onSelectTab={handleSetCurrentTab}
-                badges={[{ name: 'Drafts', number: unseenDraftsLength }]}
-              />
+              <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage

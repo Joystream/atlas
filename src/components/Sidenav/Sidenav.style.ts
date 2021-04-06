@@ -4,7 +4,7 @@ import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/s
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
-import { badgeStyles } from '@/shared/components/Tabs/Tabs.styles'
+import { badgeStyles } from '@/shared/components/Badge'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24

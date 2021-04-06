@@ -10,7 +10,7 @@ import { RoutingState } from '@/types/routing'
 import { transitions } from '@/shared/theme'
 import { Sidenav, NavItemType, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { PersonalDataProvider } from '@/hooks'
+import { PersonalDataProvider, DraftsProvider } from '@/hooks'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
@@ -67,41 +67,46 @@ const ViewerLayout: React.FC = () => {
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
+
+  // TODO: remove dependency on Draftsrovider
+  //  similarly to StudioLayout, we need DraftsProvider because Sidenav depends on it for drafts badges
   return (
     <PersonalDataProvider>
-      <ViewerTopbar />
-      <Sidenav items={viewerSidenavItems} />
-      <MainContainer>
-        <ErrorBoundary
-          fallback={ViewErrorFallback}
-          onReset={() => {
-            navigate(absoluteRoutes.viewer.index())
-          }}
-        >
-          <SwitchTransition>
-            <CSSTransition
-              timeout={parseInt(transitions.timings.routing)}
-              classNames={transitions.names.fadeAndSlide}
-              key={displayedLocation.pathname}
-            >
-              <Routes location={displayedLocation}>
-                {viewerRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
-                ))}
-              </Routes>
-            </CSSTransition>
-          </SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(transitions.timings.routingSearchOverlay)}
-            classNames={transitions.names.slideDown}
-            in={!!searchMatch}
-            unmountOnExit
-            mountOnEnter
+      <DraftsProvider>
+        <ViewerTopbar />
+        <Sidenav items={viewerSidenavItems} />
+        <MainContainer>
+          <ErrorBoundary
+            fallback={ViewErrorFallback}
+            onReset={() => {
+              navigate(absoluteRoutes.viewer.index())
+            }}
           >
-            <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
-          </CSSTransition>
-        </ErrorBoundary>
-      </MainContainer>
+            <SwitchTransition>
+              <CSSTransition
+                timeout={parseInt(transitions.timings.routing)}
+                classNames={transitions.names.fadeAndSlide}
+                key={displayedLocation.pathname}
+              >
+                <Routes location={displayedLocation}>
+                  {viewerRoutes.map((route) => (
+                    <Route key={route.path} {...route} />
+                  ))}
+                </Routes>
+              </CSSTransition>
+            </SwitchTransition>
+            <CSSTransition
+              timeout={parseInt(transitions.timings.routingSearchOverlay)}
+              classNames={transitions.names.slideDown}
+              in={!!searchMatch}
+              unmountOnExit
+              mountOnEnter
+            >
+              <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
+            </CSSTransition>
+          </ErrorBoundary>
+        </MainContainer>
+      </DraftsProvider>
     </PersonalDataProvider>
   )
 }

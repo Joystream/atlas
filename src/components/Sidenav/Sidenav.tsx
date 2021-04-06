@@ -19,10 +19,9 @@ import { transitions } from '@/shared/theme'
 import { Button } from '@/shared/components'
 import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
-import { usePersonalData } from '@/hooks'
+import { usePersonalData, useDrafts } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
 import { absoluteRoutes } from '@/config/routes'
-import { BadgeType } from '@/shared/components/Tabs/Tabs'
 
 type NavSubitem = {
   name: string
@@ -37,13 +36,13 @@ type NavItemType = {
 export type SidenavProps = {
   items: NavItemType[]
   isStudio?: boolean
-  badges?: BadgeType[]
 }
 
-const Sidenav: React.FC<SidenavProps> = ({ items, isStudio, badges }) => {
+const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
   const {
     state: { followedChannels },
   } = usePersonalData()
+  const { unseenDrafts } = useDrafts('video')
   const [expanded, setExpanded] = useState(false)
 
   const handleNewVideoOpen = () => {
@@ -78,7 +77,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio, badges }) => {
               itemName={item.name}
               onClick={closeSideNav}
               isStudio={isStudio}
-              badge={badges?.find((badge) => badge.name === item.name)}
+              badgeNumber={isStudio && item.name === 'Videos' ? unseenDrafts.length : 0}
             >
               <Icon name={item.icon} />
               <span>{item.expandedName || item.name}</span>
@@ -119,8 +118,8 @@ type NavItemProps = {
   expanded: boolean
   to: string
   itemName: string
+  badgeNumber?: number
   isStudio?: boolean
-  badge?: BadgeType
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
@@ -131,13 +130,13 @@ const NavItem: React.FC<NavItemProps> = ({
   to,
   onClick,
   itemName,
+  badgeNumber,
   isStudio,
-  badge,
 }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const match = useMatch(to)
   return (
-    <SidebarNavItem data-badge={badge?.name === itemName ? badge.number : 0} expanded={expanded}>
+    <SidebarNavItem data-badge={badgeNumber} expanded={expanded}>
       <SidebarNavLink
         onClick={onClick}
         data-active={match ? 'true' : ''}

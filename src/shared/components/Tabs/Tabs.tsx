@@ -4,20 +4,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Tabs.styles'
 
-export type BadgeType = {
+type TabItem = {
   name: string
-  number: number
+  badge?: number
 }
 export type TabsProps = {
-  tabs: string[]
+  tabs: TabItem[]
   initialIndex?: number
   onSelectTab: (idx: number) => void
-  badges?: BadgeType[]
 }
 
 const SCROLL_SHADOW_OFFSET = 10
 
-const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1, badges }) => {
+const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [isContentOverflown, setIsContentOverflown] = useState(false)
   const tabsRef = useRef<HTMLDivElement>(null)
@@ -81,8 +80,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1, badge
       </CSSTransition>
       <TabsGroup ref={tabsRef}>
         {tabs.map((tab, idx) => (
-          <Tab onClick={createClickHandler(idx)} key={`${tab}-${idx}`} selected={selected === idx}>
-            <span data-badge={badges?.find((badge) => badge.name === tab)?.number}>{tab}</span>
+          <Tab onClick={createClickHandler(idx)} key={`${tab.name}-${idx}`} selected={selected === idx}>
+            <span data-badge={tab.badge}>{tab.name}</span>
           </Tab>
         ))}
       </TabsGroup>

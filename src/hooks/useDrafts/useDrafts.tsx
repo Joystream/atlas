@@ -2,13 +2,13 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import {
   addDraft,
   clearDrafts,
+  clearUnseenDrafts,
   getDraft,
   getDrafts,
   removeDraft,
   updateDraft,
-  getDraftsSeenStatus,
-  addDraftSeenStatus,
-  updateDraftSeenStatus,
+  getUnseenDrafts,
+  addUnseenDraft,
 } from './utils'
 
 export type CommonDraftProps = {
@@ -29,7 +29,6 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string
   hasMarketing?: boolean
   isExplicit?: boolean
-  seen?: boolean
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>
@@ -38,13 +37,13 @@ type DraftState = {
   videos: VideoDraft[]
 }
 
-export type DraftsSeenStatusState = { id: string; seen: boolean }[]
+export type UnseenDrafts = { draftId: string; channelId: string }[]
 
 type DraftsContextValue = {
   draftsState: DraftState
   fetchDrafts: () => Promise<void>
-  draftsSeenStatusState: DraftsSeenStatusState
-  fetchSeenDraftsStatus: () => Promise<void>
+  unseenDrafts: UnseenDrafts
+  fetchUnseenDrafts: () => Promise<void>
 }
 
 const DraftsContext = React.createContext<undefined | DraftsContextValue>(undefined)
@@ -54,7 +53,7 @@ export const DraftsProvider: React.FC = ({ children }) => {
   const [draftsState, setDraftsState] = useState<DraftState>({
     videos: [],
   })
-  const [draftsSeenStatusState, setDraftsSeenStatusState] = useState<DraftsSeenStatusState>([])
+  const [unseenDrafts, setUnseenDrafts] = useState<UnseenDrafts>([])
 
   const fetchDrafts = useCallback(async () => {
     const currentDrafts = await getDrafts()
@@ -65,21 +64,21 @@ export const DraftsProvider: React.FC = ({ children }) => {
     })
   }, [setDraftsState])
 
-  const fetchSeenDraftsStatus = useCallback(async () => {
-    const fetchSeenDraftsStatus = await getDraftsSeenStatus()
-    setDraftsSeenStatusState(fetchSeenDraftsStatus)
-  }, [setDraftsSeenStatusState])
+  const fetchUnseenDrafts = useCallback(async () => {
+    const unseenDrafts = await getUnseenDrafts()
+    setUnseenDrafts(unseenDrafts)
+  }, [setUnseenDrafts])
 
   useEffect(() => {
     fetchDrafts()
   }, [fetchDrafts])
 
   useEffect(() => {
-    fetchSeenDraftsStatus()
-  }, [fetchSeenDraftsStatus])
+    fetchUnseenDrafts()
+  }, [fetchUnseenDrafts])
 
   return (
-    <DraftsContext.Provider value={{ draftsState, fetchDrafts, draftsSeenStatusState, fetchSeenDraftsStatus }}>
+    <DraftsContext.Provider value={{ draftsState, fetchDrafts, unseenDrafts, fetchUnseenDrafts }}>
       {children}
     </DraftsContext.Provider>
   )
@@ -94,7 +93,7 @@ export const useContextDrafts = () => {
 }
 
 export const useDrafts = (type: DraftType, channelId?: string) => {
-  const { draftsState, fetchDrafts, draftsSeenStatusState, fetchSeenDraftsStatus } = useContextDrafts()
+  const { draftsState, fetchDrafts, unseenDrafts, fetchUnseenDrafts } = useContextDrafts()
 
   const getSingleDraft = useCallback(async (draftId: string) => {
     const draft = await getDraft(draftId)
@@ -102,31 +101,23 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   }, [])
 
   const updateSingleDraft = useCallback(
-    async (draftId: string, draftProps: RawDraft, setUpdatedDate = true) => {
-      const updatedDraft = await updateDraft(draftId, draftProps, setUpdatedDate)
+    async (draftId: string, draftProps: RawDraft) => {
+      const updatedDraft = await updateDraft(draftId, draftProps)
       fetchDrafts()
       return updatedDraft
     },
     [fetchDrafts]
   )
 
-  const updateDraftSeenStatusState = useCallback(
-    async (draftId: string, isSeen: boolean) => {
-      const updatedDraftSeenStatus = await updateDraftSeenStatus(draftId, isSeen)
-      fetchSeenDraftsStatus()
-      return updatedDraftSeenStatus
-    },
-    [fetchSeenDraftsStatus]
-  )
-
   const createSingleDraft = useCallback(
     async (draft: RawDraft) => {
       const newDraft = await addDraft({ ...draft, type })
-      await addDraftSeenStatus(newDraft.id)
+      await addUnseenDraft(newDraft.id, newDraft.channelId)
+      fetchUnseenDrafts()
       fetchDrafts()
       return newDraft
     },
-    [fetchDrafts, type]
+    [fetchDrafts, fetchUnseenDrafts, type]
   )
 
   const discardDraft = useCallback(
@@ -135,6 +126,14 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
       fetchDrafts()
     },
     [fetchDrafts]
+  )
+
+  const removeAllUnseenDrafts = useCallback(
+    async (channelId?: string) => {
+      await clearUnseenDrafts(channelId)
+      fetchUnseenDrafts()
+    },
+    [fetchUnseenDrafts]
   )
 
   const discardAllDrafts = useCallback(
@@ -148,12 +147,12 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   return {
     drafts:
       type === 'video' ? draftsState.videos.filter((draft) => (channelId ? draft.channelId === channelId : true)) : [],
-    draftsSeenStatusState,
-    updateDraftSeenStatusState,
+    unseenDrafts,
     updateDraft: updateSingleDraft,
     addDraft: createSingleDraft,
     getDraft: getSingleDraft,
     removeDraft: discardDraft,
     removeAllDrafts: discardAllDrafts,
+    removeAllUnseenDrafts,
   } as const
 }
