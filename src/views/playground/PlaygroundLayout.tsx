@@ -5,6 +5,7 @@ import Link from '@/components/Link'
 import { DraftsProvider, UploadingFilesDataProvider, ActiveUserProvider } from '@/hooks'
 import { Route, Routes } from 'react-router'
 import {
+  FileHashing,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
   PlaygroundUploadingFilesData,
@@ -18,6 +19,7 @@ const playgroundRoutes = [
   { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
   { path: 'uploading-files-data', element: <PlaygroundUploadingFilesData />, name: 'Uploading Files Data' },
   { path: 'member-active-channel', element: <PlaygroundMemberChannel />, name: 'Active user/member/channel' },
+  { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
 ]
 
 export const PlaygroundLayout = () => {
