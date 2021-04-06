@@ -12,17 +12,6 @@ export const FormGroup = styled.label<FormGroupProps>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  textarea:-webkit-autofill,
-  textarea:-webkit-autofill:hover,
-  textarea:-webkit-autofill:focus {
-    // This is madness, but basically, it will make autofill transparent for a long time.
-    // Changing background-color and color won't work
-    transition: color 99999s, background-color 99999s;
-    transition-delay: 99999s;
-  }
   input:-webkit-autofill::first-line,
   textarea:-webkit-autofill::first-line {
     font-size: 1rem;
@@ -31,7 +20,7 @@ export const FormGroup = styled.label<FormGroupProps>`
   input,
   button,
   textarea {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
+    transition: border ${transitions.timings.regular} ${transitions.easing};
     background: none;
     padding: 10px ${sizes(4)};
     font-size: ${typography.sizes.body1};
@@ -52,6 +41,9 @@ export const FormGroup = styled.label<FormGroupProps>`
   input,
   textarea {
     color: ${colors.gray[50]};
+  }
+  :disabled {
+    cursor: not-allowed;
   }
 `
 

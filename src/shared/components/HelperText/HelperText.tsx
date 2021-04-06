@@ -50,7 +50,7 @@ const HelperText: React.FC<HelperTextProps> = ({
         {helperText}
       </StyledHelperText>
       {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-        <HelperTextCount variant="caption" as="span" helperTextVariant={charactersWarning}>
+        <HelperTextCount variant="caption" helperTextVariant={charactersWarning}>
           {charactersCount}/{maxLength}
         </HelperTextCount>
       )}
