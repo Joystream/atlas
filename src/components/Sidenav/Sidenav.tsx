@@ -22,6 +22,7 @@ import FollowedChannels from './FollowedChannels'
 import { usePersonalData } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { useUploadVideoActionSheet } from '@/views/studio/UploadEditVideoActionSheet/useVideoActionSheet'
 
 type NavSubitem = {
   name: string
@@ -44,10 +45,10 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
   } = usePersonalData()
   const [expanded, setExpanded] = useState(false)
 
+  const { sheetState } = useUploadVideoActionSheet()
   const handleNewVideoOpen = () => {
     setExpanded(false)
   }
-
   const closeSideNav = () => setExpanded(false)
   return (
     <>
@@ -100,9 +101,16 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
-              New Video
-            </Button>
+            <CSSTransition
+              in={sheetState === 'closed'}
+              unmountOnExit
+              timeout={parseInt(transitions.timings.loading)}
+              classNames={transitions.names.fade}
+            >
+              <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
+                New Video
+              </Button>
+            </CSSTransition>
           </ButtonGroup>
         </CSSTransition>
       </SidebarNav>
