@@ -1,7 +1,8 @@
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import Icon from '../Icon'
+import Text from '../Text'
+import Button from '../Button'
 
 export const CONTENT_OVERLAP_MAP = {
   BASE: 0,
@@ -13,10 +14,6 @@ export const CONTENT_OVERLAP_MAP = {
 }
 const GRADIENT_OVERLAP = 50
 const GRADIENT_HEIGHT = 100
-
-type EditIconProps = {
-  variant: 'mobile' | 'desktop'
-}
 
 type CoverImageProps = {
   src: string
@@ -34,7 +31,6 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
 `
 
 export const CoverImage = styled.div<CoverImageProps>`
@@ -126,119 +122,77 @@ export const EditableControls = styled.div`
   display: flex;
   justify-content: center;
 
-  :hover + ${Media} {
-    opacity: 0.5;
+  transition: opacity ${transitions.timings.loading} ${transitions.easing};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    background-color: ${colors.transparentBlack[54]};
+    opacity: 0;
+    :hover {
+      opacity: 1;
+    }
   }
-  :hover button {
-    opacity: 1;
-  }
+
   @media screen and (min-width: ${breakpoints.xlarge}) {
     height: 70%;
   }
 `
 
-const commonButtonStyles = css`
-  border: none;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 100%;
-  height: 32px;
-  width: 32px;
-  cursor: pointer;
+const removeButtonStyles = css`
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${colors.white};
-  @media screen and (min-width: ${breakpoints.small}) {
-    border-radius: 0;
-    background: none;
-    font-size: ${typography.sizes.subtitle2};
-  }
-`
-
-export const RemoveCoverButton = styled.button`
-  ${commonButtonStyles};
   top: ${sizes(1)};
   right: var(--global-horizontal-padding);
-  opacity: 1;
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  span {
-    display: none;
-  }
-  svg {
-    width: 14px;
-    fill: ${colors.white};
-  }
-
-  @media screen and (min-width: ${breakpoints.small}) {
-    top: ${sizes(4)};
-    bottom: initial;
-    opacity: 0;
-    width: unset;
-    span {
-      display: inline;
-      margin-left: 10px;
-    }
-    svg {
-      width: ${sizes(4)};
-      fill: ${colors.white};
-    }
-  }
 `
 
-export const EditCoverButton = styled.button`
-  ${commonButtonStyles};
-  top: ${sizes(1)};
-  left: var(--global-horizontal-padding);
-  transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  display: flex;
-  align-items: center;
+export const RemoveCoverDesktopButton = styled(Button)`
+  ${removeButtonStyles};
 
-  @media screen and (min-width: ${breakpoints.small}) {
-    left: initial;
-    bottom: initial;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    color: ${colors.gray[200]};
-    opacity: 0;
-  }
-`
-
-export const EditIconWrapper = styled.span`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-  }
-  @media screen and (min-width: ${breakpoints.small}) {
-    width: 40px;
-    height: 40px;
-    margin-right: 12px;
-    border: 2px solid ${colors.gray[200]};
-    border-radius: 100%;
-    svg {
-    }
-  }
-`
-export const EditIcon = styled(Icon)<EditIconProps>`
-  display: ${({ variant }) => (variant === 'mobile' ? 'inline' : 'none')};
-  height: 14px;
-  @media screen and (min-width: ${breakpoints.small}) {
-    display: ${({ variant }) => (variant === 'desktop' ? 'inline' : 'none')};
-    width: 18px;
-    margin: 0;
-    fill: ${colors.gray[200]};
-  }
-`
-
-export const EditButtonMessage = styled.span`
   display: none;
   @media screen and (min-width: ${breakpoints.small}) {
-    text-align: left;
-    display: inline;
-    width: 160px;
-    line-height: ${sizes(5)};
+    display: flex;
   }
+`
+
+export const RemoveCoverMobileButton = styled(Button)`
+  ${removeButtonStyles};
+
+  background-color: ${colors.gray[800]};
+
+  @media screen and (min-width: ${breakpoints.small}) {
+    display: none;
+  }
+`
+
+export const EditCoverDesktopOverlay = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: ${colors.gray[200]};
+  display: none;
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    display: flex;
+    cursor: pointer;
+  }
+`
+
+export const EditCoverMobileButton = styled(Button)`
+  position: absolute;
+  left: var(--global-horizontal-padding);
+  top: ${sizes(1)};
+
+  background-color: ${colors.gray[800]};
+
+  @media screen and (min-width: ${breakpoints.medium}) {
+    display: none;
+  }
+`
+
+export const EditButtonMessage = styled(Text)`
+  font-weight: 700;
+  font-family: ${typography.fonts.headers};
+  line-height: 1;
+  color: ${colors.gray[100]};
+  margin-top: ${sizes(1)};
 `

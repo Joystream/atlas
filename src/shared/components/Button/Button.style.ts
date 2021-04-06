@@ -28,9 +28,9 @@ const colorsFromProps = ({ variant, hasText }: ButtonStyleProps) => {
         background-color: transparent;
         border-color: transparent;
         color: ${colors.white};
+        border-radius: ${circleRadius};
         &:hover {
           background-color: ${colors.gray[800]};
-          border-radius: ${circleRadius};
         }
         &:active {
           background-color: ${colors.gray[900]};

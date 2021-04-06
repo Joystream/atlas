@@ -14,11 +14,11 @@ import {
   Datepicker,
   RadioButton,
 } from '@/shared/components'
-import { SelectedItem } from '@/shared/components/Select'
+import { SelectItem } from '@/shared/components/Select'
 
-const items: SelectedItem[] = [
-  { name: 'Public (Anyone can see this video', value: 'public' },
-  { name: 'Private', value: 'private' },
+const items: SelectItem<boolean>[] = [
+  { name: 'Public (Anyone can see this video', value: true },
+  { name: 'Private', value: false },
 ]
 
 type Inputs = {
@@ -75,14 +75,11 @@ const PlaygroundValidationForm = () => {
           <Controller
             name="selectedVideoVisibility"
             control={control}
-            rules={requiredValidation('Video visibility')}
-            render={({ value }) => (
+            rules={{ validate: (data) => data === true || data === false }}
+            render={({ value, onChange }) => (
               <Select
                 items={items}
-                onChange={(e) => {
-                  setValue('selectedVideoVisibility', e.selectedItem?.value)
-                  clearErrors('selectedVideoVisibility')
-                }}
+                onChange={onChange}
                 error={!!errors.selectedVideoVisibility && !value}
                 helperText={errors.selectedVideoVisibility?.message}
               />
@@ -161,7 +158,7 @@ const PlaygroundValidationForm = () => {
           />
         </FormField>
 
-        <Button>Submit</Button>
+        <Button type="submit">Submit</Button>
       </form>
     </>
   )

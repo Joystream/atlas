@@ -16,7 +16,9 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
   createdAt: new Date(rawChannel.createdAt),
   isPublic: true,
   isCensored: false,
-  language: languages[Math.floor(Math.random() * languages.length)],
+  language: {
+    iso: languages[Math.floor(Math.random() * languages.length)].value,
+  },
 }))
 
 export const coverMockChannel: MockChannel = {

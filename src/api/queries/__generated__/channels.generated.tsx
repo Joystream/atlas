@@ -22,7 +22,7 @@ export type AllChannelFieldsFragment = {
   isCensored: boolean
   coverPhotoUrl?: Types.Maybe<string>
   coverPhotoAvailability: Types.AssetAvailability
-  language?: Types.Maybe<{ __typename?: 'Language'; name: string }>
+  language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
   coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 } & BasicChannelFieldsFragment
 
@@ -129,7 +129,7 @@ export const AllChannelFieldsFragmentDoc = gql`
     isPublic
     isCensored
     language {
-      name
+      iso
     }
     coverPhotoUrl
     coverPhotoAvailability

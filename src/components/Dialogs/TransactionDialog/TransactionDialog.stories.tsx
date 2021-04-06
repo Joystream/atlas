@@ -1,8 +1,9 @@
 import React from 'react'
 import TransactionDialog from './TransactionDialog'
 import { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { Story, Meta } from '@storybook/react'
+import { Meta, Story } from '@storybook/react'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+import { ExtrinsicStatus } from '@/joystream-lib'
 
 export default {
   title: 'General/TransactionDialog',
@@ -17,6 +18,6 @@ export default {
 } as Meta
 
 const RegularTemplate: Story<ActionDialogProps> = ({ ...args }) => {
-  return <TransactionDialog {...args} showDialog={true} />
+  return <TransactionDialog {...args} status={ExtrinsicStatus.Unsigned} />
 }
 export const Regular = RegularTemplate.bind({})
