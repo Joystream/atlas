@@ -1,11 +1,7 @@
 import styled from '@emotion/styled'
-import { sizes, breakpoints, transitions } from '@/shared/theme'
-import { Textarea, ActionBarTransaction, Avatar } from '@/shared/components'
+import { sizes, breakpoints } from '@/shared/theme'
+import { Textarea, Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
-
-type AtionBarProps = {
-  isActive?: boolean
-}
 
 export const StyledHeader = styled(Header)``
 
@@ -40,10 +36,6 @@ export const StyledTextarea = styled(Textarea)`
   }
 `
 
-export const StyledActionBarTransaction = styled(ActionBarTransaction)<AtionBarProps>`
-  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
-`
 export const StyledAvatar = styled(Avatar)`
   position: relative;
   margin-right: ${sizes(4)};

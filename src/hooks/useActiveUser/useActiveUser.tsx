@@ -12,10 +12,8 @@ export type ActiveUser = {
   memberId: MemberId | null
   channelId: ChannelId | null
 }
-export type ActiveUserState = ActiveUser | null
-
 type ActiveUserContextValue = {
-  activeUserState: ActiveUserState
+  activeUser: ActiveUser
   fetchActiveUser: () => Promise<void>
 }
 
@@ -23,19 +21,25 @@ const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
-  const [activeUserState, setActiveUserState] = useState<ActiveUserState>(null)
+  const [activeUser, setActiveUser] = useState<ActiveUser>({
+    channelId: null,
+    accountId: null,
+    memberId: null,
+  })
 
   const fetchActiveUser = useCallback(async () => {
     const activeUser = await getActiveUser()
-    setActiveUserState(activeUser)
-  }, [setActiveUserState])
+    setActiveUser(activeUser)
+  }, [setActiveUser])
 
   useEffect(() => {
     fetchActiveUser()
   }, [fetchActiveUser])
 
   return (
-    <ActiveUserContext.Provider value={{ activeUserState, fetchActiveUser }}>{children}</ActiveUserContext.Provider>
+    <ActiveUserContext.Provider value={{ activeUser: activeUser, fetchActiveUser }}>
+      {children}
+    </ActiveUserContext.Provider>
   )
 }
 
@@ -48,7 +52,7 @@ export const useContextActiveUser = () => {
 }
 
 export const useActiveUser = () => {
-  const { activeUserState, fetchActiveUser } = useContextActiveUser()
+  const { activeUser, fetchActiveUser } = useContextActiveUser()
 
   const setActiveUser = useCallback(
     async (userData: ActiveUser) => {
@@ -83,7 +87,7 @@ export const useActiveUser = () => {
   }, [fetchActiveUser])
 
   return {
-    activeUser: activeUserState,
+    activeUser,
     setActiveUser,
     setActiveMember,
     setActiveChannel,

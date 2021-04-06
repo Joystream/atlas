@@ -19,10 +19,12 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
+  const [accountsSet, setAccountsSet] = useState(false)
   const [extensionConnected, setExtensionConnected] = useState(false)
 
   const handleAccountsUpdate = useCallback((accounts: Account[]) => {
     setAccounts(accounts)
+    setAccountsSet(true)
   }, [])
 
   const handleExtensionConnectedUpdate = useCallback((connected: boolean) => {
@@ -53,7 +55,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [handleAccountsUpdate, handleExtensionConnectedUpdate])
 
   useEffect(() => {
-    if (!joystream || !activeUser) {
+    if (!joystream || !activeUser || !accountsSet) {
       return
     }
 
@@ -62,7 +64,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     }
 
     joystream.setAccount(activeUser.accountId)
-  }, [joystream, activeUser])
+  }, [joystream, activeUser, accountsSet])
 
   return (
     <JoystreamContext.Provider value={{ accounts, joystream, extensionConnected }}>

@@ -22,7 +22,7 @@ export const textFieldValidation: (
   },
   minLength: {
     value: minLength,
-    message: `${name} must be longer than ${minLength} characters.`,
+    message: `${name} must be at least ${minLength} characters.`,
   },
   maxLength: {
     value: maxLength,

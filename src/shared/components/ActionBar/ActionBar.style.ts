@@ -1,8 +1,12 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, breakpoints } from '@/shared/theme'
+import { colors, sizes, typography, breakpoints, transitions } from '@/shared/theme'
 import { Text, Tooltip } from '@/shared/components'
 
-export const StyledActionBarContainer = styled.div`
+type ActionBarContainerProps = {
+  isActive?: boolean
+}
+
+export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   display: flex;
   position: fixed;
   bottom: 0;
@@ -13,8 +17,11 @@ export const StyledActionBarContainer = styled.div`
   @media screen and (min-width: ${breakpoints.medium}) {
     flex-direction: row;
     justify-content: space-between;
-    padding: ${sizes(3)} ${sizes(8)};
+    padding: ${sizes(4)} ${sizes(8)};
   }
+
+  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
 `
 
 export const StyledInnerContainer = styled.div`
@@ -68,11 +75,12 @@ export const StyledButtonsContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   > *:not(:last-child) {
-    margin-right: ${sizes(8)};
+    margin-right: ${sizes(4)};
+    /* margin-right: ${sizes(8)}; */
   }
-  > button {
+  /* > button {
     flex-shrink: 0;
-  }
+  } */
 `
 
 export const StyledTooltip = styled(Tooltip)`

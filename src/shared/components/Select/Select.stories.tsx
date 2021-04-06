@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Select, { SelectProps, SelectedItem } from '.'
+import Select, { SelectProps, SelectItem } from '.'
 import { Story, Meta } from '@storybook/react'
 import { css } from '@emotion/react'
 
-const items: SelectedItem[] = [
+const items: SelectItem[] = [
   { name: 'first', value: 'first' },
   { name: 'second', value: 'second' },
   { name: 'third', value: 'third' },
@@ -33,12 +33,12 @@ const Template: Story<SelectProps> = (args) => (
 )
 
 const TemplateWithControlledInput: Story<SelectProps> = (args) => {
-  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null)
+  const [value, setValue] = useState<string | null>(null)
   return (
     <Select
       {...args}
-      onChange={({ selectedItem }) => selectedItem && setSelectedItem(selectedItem)}
-      value={selectedItem}
+      onChange={(value) => setValue(value ?? null)}
+      value={value}
       css={css`
         max-width: 400px;
       `}

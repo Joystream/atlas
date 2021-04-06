@@ -1,7 +1,7 @@
 scalar DateTime
 
 type Language {
-  name: String!
+  iso: String!
 }
 
 type VideoCategory {
