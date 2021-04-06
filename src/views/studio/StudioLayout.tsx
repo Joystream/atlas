@@ -14,11 +14,11 @@ import {
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { ViewErrorFallback, StudioTopbar, StudioSidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
+
 import SignInView from './SignInView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
-import NoConnectionIndicator from '@/components/NoConnectionIndicator/NoConnectionIndicator'
 
 const studioRoutes = [
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
