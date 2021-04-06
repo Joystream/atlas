@@ -20,7 +20,7 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string
   hasMarketing?: boolean
   isExplicit?: boolean
-  language?: Language['name']
+  language?: Language['iso']
   categoryId?: VideoCategory['id']
 } & CommonDraftProps
 

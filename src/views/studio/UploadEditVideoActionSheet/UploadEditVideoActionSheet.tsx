@@ -3,11 +3,11 @@ import { isValid } from 'date-fns'
 import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
-import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { FileRejection } from 'react-dropzone'
 import { Control, Controller, DeepMap, FieldError, useForm, UseFormMethods } from 'react-hook-form'
-import { transitions } from '@/shared/theme'
 import { Location } from 'history'
+import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { transitions } from '@/shared/theme'
 import {
   Button,
   Checkbox,
@@ -18,14 +18,13 @@ import {
   MultiFileSelect,
   RadioButton,
   Select,
-  SelectedItem,
   Textarea,
 } from '@/shared/components'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { useDrafts } from '@/hooks'
-import { TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
+import { SheetState, TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
 import {
   ACTION_SHEET_BAR_HEIGHT,
   ButtonsContainer,
@@ -44,11 +43,11 @@ import {
   Topbar,
 } from './UploadEditVideoActionSheet.style'
 import { relativeRoutes } from '@/config/routes'
-import { UseSelectStateChange } from 'downshift'
+import { SelectItem } from '@/shared/components/Select/Select'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
-const visibilityOptions: SelectedItem[] = [
+const visibilityOptions: SelectItem<string>[] = [
   { name: 'Public (Anyone can see this video)', value: 'public' },
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
@@ -64,17 +63,24 @@ type FormInputs = {
   isExplicit: boolean | null
 }
 
-export type SheetState = 'closed' | 'open' | 'minimized'
 export const UploadEditVideoActionSheet: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // sheet state
   const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
-  const [sheetState, setSheetState] = useState<SheetState>('closed')
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()
-
+  const {
+    sheetState,
+    setSheetState,
+    videoTabs,
+    addVideoTab,
+    removeVideoTab,
+    resetVideoTabs,
+    selectedVideoTab,
+    setSelectedVideoTab,
+  } = useUploadVideoActionSheet()
   // animations overlay
   const [DrawerOverlayAnimationProps, setDrawerOverlayAnimationProps] = useSpring(() => ({
     from: { opacity: '0' },
@@ -138,14 +144,6 @@ export const UploadEditVideoActionSheet: React.FC = () => {
 
   // Tabs
   const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
-  const {
-    videoTabs,
-    addVideoTab,
-    removeVideoTab,
-    resetVideoTabs,
-    selectedVideoTab,
-    setSelectedVideoTab,
-  } = useUploadVideoActionSheet()
   const handleTabSelect = useCallback(
     (tab?: TabType) => {
       // reset({
@@ -178,7 +176,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const handleClose = useCallback(() => {
     navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
     setSheetState('closed')
-  }, [cachedLocation?.pathname, navigate])
+  }, [cachedLocation?.pathname, navigate, setSheetState])
   const handleAddNewTab = useCallback(async () => {
     const newDraft = await addDraft({
       channelId: channelId,
@@ -197,7 +195,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const handleMinimize = useCallback(() => {
     setSheetState?.('minimized')
     navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
-  }, [cachedLocation?.pathname, navigate])
+  }, [cachedLocation?.pathname, navigate, setSheetState])
   const handleOpen = useCallback(() => {
     if (sheetState !== 'open') {
       if (videoTabs.length === 0) {
@@ -207,7 +205,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
       setSheetState('open')
       navigate(relativeRoutes.studio.uploadVideo())
     }
-  }, [handleAddNewTab, navigate, sheetState, videoTabs.length])
+  }, [handleAddNewTab, navigate, setSheetState, sheetState, videoTabs.length])
 
   useEffect(() => {
     if (uploadVideoMatch) {
@@ -363,8 +361,8 @@ const Form: React.FC<FormProps> = ({
   clearErrors,
 }) => {
   const { categories, error: categoriesError } = useCategories()
-  const createFormSelectFieldHandler = (name: keyof FormInputs) => (changes: UseSelectStateChange<SelectedItem>) => {
-    setFormValue(name, changes.selectedItem?.value)
+  const createFormSelectFieldHandler = (name: keyof FormInputs) => (value?: string | null) => {
+    setFormValue(name, value)
     clearErrors(name)
   }
   const createIsExplicitHandler = (value: boolean) => () => {
@@ -397,7 +395,7 @@ const Form: React.FC<FormProps> = ({
           rules={requiredValidation('Video visibility')}
           render={({ value }) => (
             <Select
-              value={visibilityOptions.find((o) => o.value === value) ?? null}
+              value={value}
               items={visibilityOptions}
               onChange={createFormSelectFieldHandler('selectedVideoVisibility')}
               error={!!errors.selectedVideoVisibility && !value}
@@ -413,7 +411,7 @@ const Form: React.FC<FormProps> = ({
           rules={requiredValidation('Video language')}
           render={({ value }) => (
             <Select
-              value={languages.find((l) => l.value === value) ?? null}
+              value={value ?? null}
               items={[...languages]}
               onChange={createFormSelectFieldHandler('selectedVideoLanguage')}
               error={!!errors.selectedVideoLanguage && !value}
@@ -429,13 +427,9 @@ const Form: React.FC<FormProps> = ({
           rules={requiredValidation('Video category')}
           render={({ value }) => (
             <Select
-              value={
-                (categories
-                  ?.map((category) => ({ name: category.name, value: category.id }))
-                  ?.find((c) => c.value === value) as SelectedItem) ?? null
-              }
+              value={value ?? null}
               items={
-                (categories?.map((category) => ({ name: category.name, value: category.id })) as SelectedItem[]) ?? []
+                (categories?.map((category) => ({ name: category.name, value: category.id })) as SelectItem[]) ?? []
               }
               onChange={createFormSelectFieldHandler('selectedVideoCategory')}
               error={!!errors.selectedVideoCategory && !value}

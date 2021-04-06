@@ -6,6 +6,8 @@ type ContextValue = {
   setVideoTabs: React.Dispatch<React.SetStateAction<TabType[]>>
   selectedVideoTab: TabType | undefined
   setSelectedVideoTab: React.Dispatch<React.SetStateAction<TabType | undefined>>
+  sheetState: SheetState
+  setSheetState: React.Dispatch<React.SetStateAction<SheetState>>
 }
 const VideoActionSheetContext = React.createContext<ContextValue | undefined>(undefined)
 VideoActionSheetContext.displayName = 'VideoActionSheetContext'
@@ -13,9 +15,12 @@ VideoActionSheetContext.displayName = 'VideoActionSheetContext'
 export const VideoActionSheetProvider: React.FC = ({ children }) => {
   const [videoTabs, setVideoTabs] = useState<TabType[]>([])
   const [selectedVideoTab, setSelectedVideoTab] = useState<TabType>()
+  const [sheetState, setSheetState] = useState<SheetState>('closed')
 
   return (
-    <VideoActionSheetContext.Provider value={{ videoTabs, setVideoTabs, selectedVideoTab, setSelectedVideoTab }}>
+    <VideoActionSheetContext.Provider
+      value={{ videoTabs, setVideoTabs, selectedVideoTab, setSelectedVideoTab, sheetState, setSheetState }}
+    >
       {children}
     </VideoActionSheetContext.Provider>
   )
@@ -29,8 +34,16 @@ export const useVideoActionSheetContext = () => {
   return ctx
 }
 
+export type SheetState = 'closed' | 'open' | 'minimized'
 export const useUploadVideoActionSheet = () => {
-  const { videoTabs, setVideoTabs, selectedVideoTab, setSelectedVideoTab } = useVideoActionSheetContext()
+  const {
+    videoTabs,
+    setVideoTabs,
+    selectedVideoTab,
+    setSelectedVideoTab,
+    sheetState,
+    setSheetState,
+  } = useVideoActionSheetContext()
 
   const addVideoTab = useCallback(
     (tab: TabType) => {
@@ -49,6 +62,8 @@ export const useUploadVideoActionSheet = () => {
   const resetVideoTabs = useCallback(() => setVideoTabs([]), [setVideoTabs])
 
   return {
+    sheetState,
+    setSheetState,
     videoTabs,
     addVideoTab,
     removeVideoTab,
