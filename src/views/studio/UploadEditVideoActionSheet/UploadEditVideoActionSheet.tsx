@@ -477,7 +477,7 @@ const Form: React.FC<FormProps> = ({
           />
         </StyledCheckboxContainer>
       </FormField>
-      <FormField title="Content Rating" description="Lorem ipsum dolor sit amet.">
+      <FormField title="Content Rating" description="Please select whether your video contains explicit material (sex, violence, etc.)">
         <Controller
           name="isExplicit"
           control={control}
