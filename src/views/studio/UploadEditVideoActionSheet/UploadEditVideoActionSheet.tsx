@@ -464,7 +464,7 @@ const Form: React.FC<FormProps> = ({
           )}
         />
       </FormField>
-      <FormField title="Marketing" description="to be added ???">
+      <FormField title="Marketing" description="Please select whether your video contains paid promotions">
         <StyledCheckboxContainer>
           <Controller
             as={Checkbox}
