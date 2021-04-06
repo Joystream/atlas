@@ -446,7 +446,7 @@ const Form: React.FC<FormProps> = ({
       </FormField>
       <FormField
         title="Published Before"
-        description="If the content you are publishng originaly was published in the past for the first time insert the original publication date here."
+        description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
       >
         <Controller
           name="publishedBeforeJoystream"
