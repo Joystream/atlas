@@ -47,7 +47,6 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC = () => {
-  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const { activeUser, setActiveChannel } = useActiveUser()
   const { membership, loading, error } = useMembership(
     {
@@ -55,12 +54,10 @@ const StudioTopbar: React.FC = () => {
     },
     {
       skip: !activeUser?.memberId,
-      onCompleted: () => {
-        const channel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
-        setCurrentChannel(channel)
-      },
     }
   )
+
+  const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
@@ -71,7 +68,6 @@ const StudioTopbar: React.FC = () => {
       return
     }
     setActiveChannel(channelId)
-    setCurrentChannel(channel)
     setDrawerActive(false)
   }
 
@@ -192,7 +188,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 key={channel.id}
                 channel={channel}
                 memberName={memberName}
-                active={channel.title === currentChannel?.title}
+                active={channel.id === currentChannel?.id}
                 onClick={() => onCurrentChannelChange(channel.id)}
               />
             ))}

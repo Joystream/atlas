@@ -15,6 +15,7 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   right: 0;
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
+  border-top: 1px solid ${colors.gray[700]};
   @media screen and (min-width: ${breakpoints.medium}) {
     flex-direction: row;
     justify-content: space-between;
@@ -34,9 +35,8 @@ export const StyledInfoContainer = styled.div`
   display: none;
   width: 100%;
   flex-direction: row;
-  align-items: flex-start;
-  padding-bottom: 0;
-  @media screen and (min-width: ${breakpoints.medium}) {
+  align-items: center;
+  @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
   }
   @media screen and (min-width: ${breakpoints.large}) {
@@ -51,7 +51,6 @@ export const StyledPrimaryText = styled(Text)`
   font-size: ${typography.sizes.h5};
   font-weight: ${typography.weights.bold};
   text-align: right;
-  padding-bottom: ${sizes(2)};
   @media screen and (min-width: ${breakpoints.medium}) {
     margin-right: ${sizes(4)};
   }
@@ -62,10 +61,9 @@ export const StyledSecondaryText = styled(Text)`
   font-size: ${typography.sizes.body2};
   line-height: 20px;
   max-width: 280px;
-  text-align: right;
-  align-self: center;
+  display: none;
   @media screen and (min-width: ${breakpoints.medium}) {
-    text-align: left;
+    display: block;
   }
 `
 

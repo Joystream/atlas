@@ -291,6 +291,9 @@ export class JoystreamJs {
     })
 
     const tx = this.api.tx.content.createChannel(contentActor, params)
+
+    cb?.(ExtrinsicStatus.Unsigned)
+
     const events = await this.sendExtrinsic(tx, cb)
 
     const contentEvents = events.filter((event) => event.section === 'content')

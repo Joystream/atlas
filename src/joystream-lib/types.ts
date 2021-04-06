@@ -24,5 +24,6 @@ export enum ExtrinsicStatus {
   Unsigned,
   Signed,
   Completed,
+  Error,
 }
 export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus) => void

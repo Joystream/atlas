@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import { languages } from '@/config/languages'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer, TransactionDialog } from '@/components'
@@ -15,12 +16,13 @@ import {
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel } from '@/api/hooks'
+import { useChannel, useMembership } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
-import { useActiveUser } from '@/hooks'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { useActiveUser, useJoystream, useSnackbar } from '@/hooks'
+import { CreateChannelMetadata, ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
+import { absoluteRoutes } from '@/config/routes'
 import TextArea from '@/shared/components/TextArea'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
@@ -49,16 +51,27 @@ type CreateEditChannelViewProps = {
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const {
-    activeUser: { channelId },
+    activeUser: { channelId, memberId },
+    setActiveChannel,
   } = useActiveUser()
+  const { joystream } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
   const { channel, loading, error } = useChannel(channelId || '', { skip: newChannel || !channelId })
+  // use membership query so we can trigger refetch once the channels are updated
+  const { refetch: refetchMember } = useMembership(
+    {
+      where: { id: memberId },
+    },
+    { skip: !memberId }
+  )
 
   const {
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty },
     reset,
     errors,
   } = useForm<Inputs>({
@@ -111,13 +124,44 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   }, [channel, loading, newChannel, reset])
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    console.log({ dirtyFields })
-    console.log({ data })
-    setTransactionStatus(ExtrinsicStatus.Unsigned)
+    if (!joystream || !memberId) {
+      return
+    }
+
+    const metadata: CreateChannelMetadata = {
+      title: data.title ?? '',
+      description: data.description ?? '',
+      language: data.language,
+      isPublic: data.isPublic,
+    }
+    try {
+      const newChannelId = await joystream.createChannel(memberId, metadata, {}, (status) => {
+        setTransactionStatus(status)
+      })
+
+      setTransactionStatus(ExtrinsicStatus.Completed)
+      await refetchMember()
+      await setActiveChannel(newChannelId)
+    } catch (e) {
+      if (e instanceof ExtensionSignCancelledError) {
+        console.warn('Sign cancelled')
+        setTransactionStatus(null)
+        displaySnackbar({ variant: 'error', message: 'Transaction signing cancelled' })
+      } else {
+        setTransactionStatus(ExtrinsicStatus.Error)
+      }
+    }
   })
 
-  const handleTransactionCancel = () => {
-    setTransactionStatus(null)
+  const handleTransactionClose = async () => {
+    if (transactionStatus !== ExtrinsicStatus.Completed) {
+      // closed on waiting for signature or error state
+      setTransactionStatus(null)
+      return
+    }
+
+    // TODO: handle channel update
+    navigate(absoluteRoutes.studio.videos())
   }
 
   if (error) {
@@ -126,7 +170,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   return (
     <>
-      <TransactionDialog status={transactionStatus} onCancel={handleTransactionCancel} />
+      <TransactionDialog
+        status={transactionStatus}
+        successTitle="Channel successfully created!"
+        successDescription="Your channel was created and saved on the blockchain. Feel free to start using it!"
+        onClose={handleTransactionClose}
+      />
       <form onSubmit={handleSubmit}>
         <Header>
           <Controller
