@@ -26,7 +26,15 @@ export const MyVideosView = () => {
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', testChannelId)
+  const {
+    drafts,
+    removeDraft,
+    draftsSeenStatusState,
+    updateDraftSeenStatusState,
+    removeAllDrafts,
+    addDraft,
+    updateDraft,
+  } = useDrafts('video', testChannelId)
 
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
@@ -65,7 +73,7 @@ export const MyVideosView = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
-  const unseenDraftsLength = drafts.filter((draft) => draft.seen === false).length
+  const unseenDraftsLength = draftsSeenStatusState.filter((draft) => draft.seen === false).length
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
@@ -78,7 +86,7 @@ export const MyVideosView = () => {
         if (draft.seen === true) {
           return
         }
-        await updateDraft(draft.id, { ...draft, seen: true }, false)
+        await updateDraftSeenStatusState(draft.id, true)
       }
     }
   }

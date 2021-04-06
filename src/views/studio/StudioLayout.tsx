@@ -46,13 +46,13 @@ const studioNavbarItems: NavItemType[] = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
-  const { drafts } = useDrafts('video')
+  const { draftsSeenStatusState } = useDrafts('video')
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
 
-  const unseenDraftsLength = drafts.filter((draft) => draft.seen === false).length
+  const unseenDraftsLength = draftsSeenStatusState.filter((draft) => draft.seen === false).length
   const badges = [
     { name: studioNavbarItems[0].name, number: unseenDraftsLength },
     { name: studioNavbarItems[1].name, number: 0 },
@@ -86,7 +86,9 @@ const StudioLayoutWrapper = () => {
     <DraftsProvider>
       <PersonalDataProvider>
         <ActiveUserProvider>
-          <StudioLayout />
+          <JoystreamProvider>
+            <StudioLayout />
+          </JoystreamProvider>
         </ActiveUserProvider>
       </PersonalDataProvider>
     </DraftsProvider>

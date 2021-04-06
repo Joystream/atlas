@@ -1,8 +1,12 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { Draft, RawDraft } from './useDrafts'
+import { Draft, RawDraft, DraftsSeenStatusState } from './useDrafts'
 
 export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
+
+export const getDraftsSeenStatus = promisify(
+  () => readFromLocalStorage<DraftsSeenStatusState>('draftsSeenStatus') || []
+)
 
 export const getDraft = async (id: string) => {
   const currentDrafts = await getDrafts()
@@ -19,6 +23,14 @@ export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id' | 'see
   return newDraft
 }
 
+export const addDraftSeenStatus = async (id: string) => {
+  const currentDraftsSeenStatus = await getDraftsSeenStatus()
+  const newDraftSeenStatus = { id, seen: false }
+  const newDraftsSeenStatus = [newDraftSeenStatus, ...currentDraftsSeenStatus]
+  writeToLocalStorage('draftsSeenStatus', newDraftsSeenStatus)
+  return newDraftSeenStatus
+}
+
 export const updateDraft = async (draftId: string, draftProps: RawDraft, setUpdatedDate: boolean) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
@@ -27,6 +39,15 @@ export const updateDraft = async (draftId: string, draftProps: RawDraft, setUpda
   )
   writeToLocalStorage('drafts', newDrafts)
   return newDrafts.find((draft) => draft.id === draftId)
+}
+
+export const updateDraftSeenStatus = async (draftId: string, seen: boolean) => {
+  const currentDraftsSeenStatus = await getDraftsSeenStatus()
+  const newDraftsSeenStatus = currentDraftsSeenStatus.map((draft) =>
+    draft.id === draftId ? { ...draft, seen } : draft
+  )
+  writeToLocalStorage('draftsSeenStatus', newDraftsSeenStatus)
+  return newDraftsSeenStatus.find((draft) => draft.id === draftId)
 }
 
 export const removeDraft = async (ids: string | string[]) => {
