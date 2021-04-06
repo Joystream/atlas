@@ -21,6 +21,8 @@ export type ChannelAssets = {
 }
 
 export enum ExtrinsicStatus {
+  Unsigned,
   Signed,
+  Completed,
 }
 export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus) => void

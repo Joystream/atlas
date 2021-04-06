@@ -2,12 +2,22 @@ import React from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { TextContainer, StyledTransactionIllustration, Spinner } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
+import { ExtrinsicStatus } from '@/joystream-lib'
 
-export type TransactionDialogProps = ActionDialogProps
+export type TransactionDialogProps = Pick<ActionDialogProps, 'onEnter' | 'onExit' | 'className'> & {
+  onCancel?: () => void
+  status: ExtrinsicStatus | null
+}
 
-const TransactionDialog: React.FC<TransactionDialogProps> = ({ ...actionDialogProps }) => {
+const TransactionDialog: React.FC<TransactionDialogProps> = ({ onCancel, status, ...actionDialogProps }) => {
   return (
-    <ActionDialog {...actionDialogProps} secondaryButtonText="Cancel" exitButton={false}>
+    <ActionDialog
+      showDialog={status != null}
+      onSecondaryButtonClick={onCancel}
+      secondaryButtonText="Cancel"
+      exitButton={false}
+      {...actionDialogProps}
+    >
       <StyledTransactionIllustration />
       <Spinner />
       <TextContainer>

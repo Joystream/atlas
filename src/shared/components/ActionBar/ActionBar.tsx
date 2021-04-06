@@ -19,6 +19,7 @@ export type ActionBarProps = {
   detailsText?: string
   tooltipText?: string
   detailsTextIcon?: IconType
+  isActive?: boolean
   secondaryButtonText?: string
   secondaryButtonIcon?: IconType
   className?: string
@@ -34,13 +35,14 @@ const ActionBar: React.FC<ActionBarProps> = ({
   detailsText,
   tooltipText,
   detailsTextIcon,
+  isActive = true,
   secondaryButtonIcon,
   className,
   onConfirmClick,
   onCancelClick,
 }) => {
   return (
-    <StyledActionBarContainer className={className}>
+    <StyledActionBarContainer className={className} isActive={isActive}>
       <StyledInnerContainer>
         <StyledInfoContainer>
           <StyledPrimaryText>{primaryText}</StyledPrimaryText>
@@ -55,11 +57,15 @@ const ActionBar: React.FC<ActionBarProps> = ({
             </StyledTooltip>
           )}
           {secondaryButtonText && !detailsText && (
-            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="tertiary">
+            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
               {secondaryButtonText}
             </Button>
           )}
-          {primaryButtonText && <Button onClick={onConfirmClick}>{primaryButtonText}</Button>}
+          {primaryButtonText && (
+            <Button onClick={onConfirmClick} size="large" type="submit">
+              {primaryButtonText}
+            </Button>
+          )}
         </StyledButtonsContainer>
       </StyledInnerContainer>
     </StyledActionBarContainer>

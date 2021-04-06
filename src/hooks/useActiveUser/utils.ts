@@ -4,7 +4,9 @@ import { ActiveUser } from './useActiveUser'
 
 type Key = 'memberId' | 'channelId'
 
-export const getActiveUser = promisify(() => readFromLocalStorage<ActiveUser>('activeUser') || null)
+export const getActiveUser = promisify(
+  () => readFromLocalStorage<ActiveUser>('activeUser') || { channelId: null, accountId: null, memberId: null }
+)
 
 export const setActiveUser = async (activeUser: ActiveUser) => {
   writeToLocalStorage('activeUser', activeUser)
