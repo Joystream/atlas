@@ -1,5 +1,4 @@
-import { shade } from 'polished'
-import { sizes, colors, transitions } from '@/shared/theme'
+import { sizes, colors, transitions, typography } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 import Text from '../Text'
@@ -16,11 +15,12 @@ export const CheckboxLabel = styled.label<CheckboxLabelProps>`
 `
 
 export const LabelText = styled(Text)`
-  margin-left: 10px;
-  color: ${colors.gray[400]};
+  color: ${colors.gray[50]};
+  line-height: ${sizes(7)};
 `
 
 export const Container = styled.div<CheckboxStateProps>`
+  --hoverColor: ${colors.transparentPrimary[12]};
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
@@ -29,13 +29,8 @@ export const Container = styled.div<CheckboxStateProps>`
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
-  ${({ isFocused, selected, disabled }) =>
-    isFocused && !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
   &:hover {
-    ${({ selected, disabled, error }) => [
-      !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`,
-      error && `background: ${shade(0.7, colors.error)};`,
-    ]}
+    ${({ disabled }) => [!disabled && `background: var(--hoverColor)`]}
   }
 `
 
@@ -51,10 +46,13 @@ const disabledStyles = (props: CheckboxStateProps) =>
     ? [
         css`
           cursor: not-allowed;
+          opacity: 0.5;
+          border: 1px solid ${colors.gray[200]};
+          background-color: ${colors.gray[400]};
         `,
         props.selected &&
           css`
-            background-color: ${props.disabled ? colors.gray[700] : 'transparent'};
+            background-color: ${colors.gray[700]};
             border: 1px solid ${colors.gray[700]};
             color: ${colors.gray[400]};
           `,
@@ -108,4 +106,20 @@ export const Checkmark = styled.div`
   width: 18px;
   height: 18px;
   border-radius: 1px;
+`
+
+export const TextContainer = styled.div`
+  margin-left: ${sizes(4)};
+  position: relative;
+`
+
+type CaptionProps = {
+  error?: boolean
+}
+
+export const Caption = styled(Text)<CaptionProps>`
+  display: block;
+  font-size: ${typography.sizes.caption};
+  color: ${({ error }) => (error ? colors.error : colors.gray[300])};
+  position: absolute;
 `
