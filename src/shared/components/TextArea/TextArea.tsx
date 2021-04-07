@@ -13,7 +13,7 @@ export type TextAreaProps = {
 } & InputBaseProps
 
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  { onChange, name, placeholder, value, className, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
+  { onChange, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
@@ -26,7 +26,6 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   return (
     <InputBase disabled={disabled} charactersCount={charactersCount} {...inputBaseProps}>
       <StyledTextArea
-        className={className}
         name={name}
         ref={ref}
         disabled={disabled}

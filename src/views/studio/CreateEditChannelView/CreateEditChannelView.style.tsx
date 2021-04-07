@@ -30,10 +30,6 @@ export const InnerFormContainer = styled.div`
   }
 `
 
-export const StyledTextarea = styled(Textarea)`
-  height: 120px;
-`
-
 export const StyledAvatar = styled(Avatar)`
   position: relative;
   margin-right: ${sizes(4)};
