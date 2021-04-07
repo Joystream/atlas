@@ -18,7 +18,14 @@ export default {
   },
 } as Meta
 
-const Template: Story<TextAreaProps> = (args) => <TextArea {...args} css={css``} />
+const Template: Story<TextAreaProps> = (args) => (
+  <TextArea
+    {...args}
+    css={css`
+      max-width: 400px;
+    `}
+  />
+)
 
 const TemplateWithControlledInput: Story<TextAreaProps> = (args) => {
   const [value, setValue] = useState('')
