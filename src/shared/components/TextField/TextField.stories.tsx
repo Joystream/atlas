@@ -10,6 +10,7 @@ export default {
   component: TextField,
   args: {
     label: 'label text',
+    placeholder: 'placeholder text',
   },
   argTypes: {
     value: { table: { disable: true } },
