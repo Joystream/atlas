@@ -9,6 +9,12 @@ export default {
   component: TextArea,
   argTypes: {
     value: { table: { disable: true } },
+    label: {
+      defaultValue: 'Some label',
+    },
+    placeholder: {
+      defaultValue: 'Some placeholder',
+    },
   },
 } as Meta
 

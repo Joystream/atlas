@@ -81,7 +81,7 @@ export const styledVariants = {
     line-height: ${typography.lineHeights.body2};
     font-weight: ${typography.weights.regular};
   `,
-  caption: styled.caption`
+  caption: styled.span`
     ${baseStyles};
     font-size: ${typography.sizes.caption};
     line-height: ${typography.lineHeights.caption};

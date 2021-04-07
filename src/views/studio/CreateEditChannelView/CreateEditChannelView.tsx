@@ -13,13 +13,7 @@ import {
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import {
-  InnerFormContainer,
-  StyledAvatar,
-  StyledTextarea,
-  StyledTitleSection,
-  TitleContainer,
-} from './CreateEditChannelView.style'
+import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 import { useChannel } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -27,6 +21,7 @@ import { formatNumberShort } from '@/utils/number'
 import { useActiveUser } from '@/hooks'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
+import TextArea from '@/shared/components/TextArea'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -215,11 +210,11 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           <InnerFormContainer>
             <FormField title="Description">
               <Tooltip text="Click to edit channel description" offsetY={-50}>
-                <StyledTextarea
+                <TextArea
                   name="description"
                   placeholder="Add description"
                   spellcheck={false}
-                  rows={200}
+                  rows={8}
                   ref={register(textFieldValidation('Description', 3, 1000))}
                   maxLength={1000}
                   error={!!errors.description}
