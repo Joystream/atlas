@@ -1,25 +1,11 @@
 import styled from '@emotion/styled'
-import resizer from '@/shared/icons/resizer.svg'
-import Icon from '../Icon'
+import resizer from '@/assets/resizer.svg'
 
 export const StyledTextArea = styled.textarea`
   width: 100%;
-  ::-webkit-resizer {
-    display: none;
-  }
-`
-
-export const TextAreaWrapper = styled.div`
+  display: block;
   position: relative;
-  display: inline-block;
-
-  ::after {
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+  ::-webkit-resizer {
     background: url(${resizer}) no-repeat;
-    width: 20px;
-    height: 20px;
   }
 `

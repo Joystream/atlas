@@ -31,9 +31,7 @@ export const InnerFormContainer = styled.div`
 `
 
 export const StyledTextarea = styled(Textarea)`
-  textarea {
-    height: 120px;
-  }
+  height: 120px;
 `
 
 export const StyledAvatar = styled(Avatar)`

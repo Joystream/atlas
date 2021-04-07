@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
-import { StyledTextArea, TextAreaWrapper } from './TextArea.style'
+import { StyledTextArea } from './TextArea.style'
 
 export type TextAreaProps = {
   name?: string
@@ -13,7 +13,7 @@ export type TextAreaProps = {
 } & InputBaseProps
 
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  { onChange, name, placeholder, value, className, rows = 10, disabled, spellcheck = true, ...inputBaseProps },
+  { onChange, name, placeholder, value, className, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
@@ -25,19 +25,17 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
 
   return (
     <InputBase disabled={disabled} charactersCount={charactersCount} {...inputBaseProps}>
-      <TextAreaWrapper className={className}>
-        <StyledTextArea
-          className={className}
-          name={name}
-          ref={ref}
-          disabled={disabled}
-          placeholder={placeholder}
-          onChange={handleOnChange}
-          value={value}
-          rows={rows}
-          spellCheck={spellcheck}
-        />
-      </TextAreaWrapper>
+      <StyledTextArea
+        className={className}
+        name={name}
+        ref={ref}
+        disabled={disabled}
+        placeholder={placeholder}
+        onChange={handleOnChange}
+        value={value}
+        rows={rows}
+        spellCheck={spellcheck}
+      />
     </InputBase>
   )
 }
