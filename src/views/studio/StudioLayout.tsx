@@ -8,7 +8,7 @@ import { CreateEditChannelView, MyVideosView, MyUploadsView } from '.'
 import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewErrorFallback, StudioTopbar, StudioSidenav, TOP_NAVBAR_HEIGHT } from '@/components'
 import SignInView from './SignInView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
@@ -23,33 +23,12 @@ const studioRoutes = [
   { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]
 
-const studioNavbarItems: NavItemType[] = [
-  {
-    icon: 'my-videos',
-    name: 'Videos',
-    expandedName: 'My Videos',
-    to: absoluteRoutes.studio.videos(),
-  },
-  {
-    icon: 'my-channel',
-    name: 'Channel',
-    expandedName: 'My Channel',
-    to: absoluteRoutes.studio.editChannel(),
-  },
-  {
-    icon: 'my-uploads',
-    name: 'Uploads',
-    expandedName: 'My Uploads',
-    to: absoluteRoutes.studio.uploads(),
-  },
-]
-
 const StudioLayout = () => {
   const navigate = useNavigate()
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
-  //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
+  //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
 
   return (
     <DraftsProvider>
@@ -57,7 +36,7 @@ const StudioLayout = () => {
         <ActiveUserProvider>
           <JoystreamProvider>
             <StudioTopbar />
-            <Sidenav items={studioNavbarItems} isStudio />
+            <StudioSidenav />
             <MainContainer>
               <ErrorBoundary
                 fallback={ViewErrorFallback}

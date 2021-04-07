@@ -8,9 +8,9 @@ import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, Vid
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { transitions } from '@/shared/theme'
-import { Sidenav, NavItemType, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewerSidenav, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { PersonalDataProvider, DraftsProvider } from '@/hooks'
+import { PersonalDataProvider } from '@/hooks'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
@@ -18,24 +18,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
-]
-
-const viewerSidenavItems: NavItemType[] = [
-  {
-    icon: 'home-fill',
-    name: 'Home',
-    to: absoluteRoutes.viewer.index(),
-  },
-  {
-    icon: 'videos',
-    name: 'Videos',
-    to: absoluteRoutes.viewer.videos(),
-  },
-  {
-    icon: 'channels',
-    name: 'Channels',
-    to: absoluteRoutes.viewer.channels(),
-  },
 ]
 
 const ViewerLayout: React.FC = () => {
@@ -68,45 +50,41 @@ const ViewerLayout: React.FC = () => {
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
 
-  // TODO: remove dependency on Draftsrovider
-  //  similarly to StudioLayout, we need DraftsProvider because Sidenav depends on it for drafts badges
   return (
     <PersonalDataProvider>
-      <DraftsProvider>
-        <ViewerTopbar />
-        <Sidenav items={viewerSidenavItems} />
-        <MainContainer>
-          <ErrorBoundary
-            fallback={ViewErrorFallback}
-            onReset={() => {
-              navigate(absoluteRoutes.viewer.index())
-            }}
-          >
-            <SwitchTransition>
-              <CSSTransition
-                timeout={parseInt(transitions.timings.routing)}
-                classNames={transitions.names.fadeAndSlide}
-                key={displayedLocation.pathname}
-              >
-                <Routes location={displayedLocation}>
-                  {viewerRoutes.map((route) => (
-                    <Route key={route.path} {...route} />
-                  ))}
-                </Routes>
-              </CSSTransition>
-            </SwitchTransition>
+      <ViewerTopbar />
+      <ViewerSidenav />
+      <MainContainer>
+        <ErrorBoundary
+          fallback={ViewErrorFallback}
+          onReset={() => {
+            navigate(absoluteRoutes.viewer.index())
+          }}
+        >
+          <SwitchTransition>
             <CSSTransition
-              timeout={parseInt(transitions.timings.routingSearchOverlay)}
-              classNames={transitions.names.slideDown}
-              in={!!searchMatch}
-              unmountOnExit
-              mountOnEnter
+              timeout={parseInt(transitions.timings.routing)}
+              classNames={transitions.names.fadeAndSlide}
+              key={displayedLocation.pathname}
             >
-              <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
+              <Routes location={displayedLocation}>
+                {viewerRoutes.map((route) => (
+                  <Route key={route.path} {...route} />
+                ))}
+              </Routes>
             </CSSTransition>
-          </ErrorBoundary>
-        </MainContainer>
-      </DraftsProvider>
+          </SwitchTransition>
+          <CSSTransition
+            timeout={parseInt(transitions.timings.routingSearchOverlay)}
+            classNames={transitions.names.slideDown}
+            in={!!searchMatch}
+            unmountOnExit
+            mountOnEnter
+          >
+            <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
+          </CSSTransition>
+        </ErrorBoundary>
+      </MainContainer>
     </PersonalDataProvider>
   )
 }

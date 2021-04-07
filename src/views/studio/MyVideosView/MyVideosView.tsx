@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useVideos } from '@/api/hooks'
-import { useDrafts } from '@/hooks'
+import { useDrafts, useActiveUser } from '@/hooks'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
@@ -26,6 +26,8 @@ export const MyVideosView = () => {
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ? activeUser.channelId : undefined
   const {
     drafts,
     removeDraft,
@@ -34,7 +36,7 @@ export const MyVideosView = () => {
     removeAllDrafts,
     addDraft,
     updateDraft,
-  } = useDrafts('video', testChannelId)
+  } = useDrafts('video', channelId)
 
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
@@ -82,7 +84,7 @@ export const MyVideosView = () => {
     setCurrentTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        await removeAllUnseenDrafts()
+        await removeAllUnseenDrafts(channelId)
       }
     }
   }
@@ -115,8 +117,8 @@ export const MyVideosView = () => {
   if (error) {
     throw error
   }
-
-  const mappedTabs = TABS.map((tab) => ({ name: tab, badge: tab === 'Drafts' ? unseenDrafts.length : 0 }))
+  const channelUnseenDrafts = unseenDrafts.filter((draft) => draft.channelId === channelId)
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badge: tab === 'Drafts' ? channelUnseenDrafts.length : 0 }))
 
   return (
     <StudioContainer>

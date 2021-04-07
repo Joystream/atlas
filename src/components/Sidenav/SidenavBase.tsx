@@ -13,13 +13,12 @@ import {
   LogoLink,
   ButtonGroup,
   StudioText,
-} from './Sidenav.style'
+} from './SidenavBase.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { Button } from '@/shared/components'
 import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
-import { usePersonalData, useDrafts } from '@/hooks'
 import HamburgerButton from '@/shared/components/HamburgerButton'
 import { absoluteRoutes } from '@/config/routes'
 
@@ -36,19 +35,19 @@ type NavItemType = {
 export type SidenavProps = {
   items: NavItemType[]
   isStudio?: boolean
+  unseenDraftsNumber?: number
+  followedChannels?: { id: string }[]
+  onNewVideoOpenClick?: () => void
 }
 
-const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
-  const {
-    state: { followedChannels },
-  } = usePersonalData()
-  const { unseenDrafts } = useDrafts('video')
+const SidenavBase: React.FC<SidenavProps> = ({
+  items,
+  isStudio,
+  unseenDraftsNumber,
+  followedChannels,
+  onNewVideoOpenClick,
+}) => {
   const [expanded, setExpanded] = useState(false)
-
-  const handleNewVideoOpen = () => {
-    // TODO add logic for opening new video view
-    setExpanded(false)
-  }
 
   const closeSideNav = () => setExpanded(false)
   return (
@@ -77,14 +76,14 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               itemName={item.name}
               onClick={closeSideNav}
               isStudio={isStudio}
-              badgeNumber={isStudio && item.name === 'Videos' ? unseenDrafts.length : 0}
+              badgeNumber={isStudio && item.name === 'Videos' ? unseenDraftsNumber : 0}
             >
               <Icon name={item.icon} />
               <span>{item.expandedName || item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>
-        {!isStudio && followedChannels.length > 0 && (
+        {!isStudio && followedChannels && followedChannels.length > 0 && (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
         )}
 
@@ -103,7 +102,7 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
             >
               Joystream {!isStudio && 'studio'}
             </Button>
-            <Button icon="add-video" onClick={handleNewVideoOpen}>
+            <Button icon="add-video" onClick={onNewVideoOpenClick}>
               New Video
             </Button>
           </ButtonGroup>
@@ -162,5 +161,5 @@ const NavItem: React.FC<NavItemProps> = ({
   )
 }
 
-export { Sidenav as default, NavItem }
+export { SidenavBase as default, NavItem }
 export type { NavItemType }
