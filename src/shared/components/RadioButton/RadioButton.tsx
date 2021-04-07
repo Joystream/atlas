@@ -12,14 +12,14 @@ import {
 type RadioButtonProps = Partial<{
   selectedValue: string | number
   label: string
-  caption?: string
+  helperText?: string
 }> &
   Omit<RadioButtonStyleProps, 'clickable'> &
   React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
 
 const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
-  ({ value, selectedValue, label, caption, disabled, error, ...props }, ref) => {
+  ({ value, selectedValue, label, helperText, disabled, error, ...props }, ref) => {
     const isSelected = value === selectedValue
 
     return (
@@ -30,9 +30,9 @@ const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
           </StyledInput>
           {label && <StyledLabelText variant="body1">{label}</StyledLabelText>}
         </Label>
-        {caption && (
+        {helperText && (
           <StyledCaptionText variant="caption" error={error}>
-            {caption}
+            {helperText}
           </StyledCaptionText>
         )}
       </RadioButtonWrapper>

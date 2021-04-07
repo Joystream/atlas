@@ -7,7 +7,7 @@ export default {
   component: RadioButton,
   args: {
     label: 'Hello there',
-    caption: 'Caption',
+    helperText: 'Caption',
   },
 } as Meta
 
