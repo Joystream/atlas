@@ -20,7 +20,6 @@ export const LabelText = styled(Text)`
 `
 
 export const Container = styled.div<CheckboxStateProps>`
-  --hoverColor: ${colors.transparentPrimary[12]};
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
@@ -30,7 +29,7 @@ export const Container = styled.div<CheckboxStateProps>`
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
   &:hover {
-    ${({ disabled }) => [!disabled && `background: var(--hoverColor)`]}
+    ${({ disabled }) => [!disabled && colors.transparentPrimary[12]]}
   }
 `
 
@@ -80,6 +79,7 @@ export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
   color: ${colors.white};
   border: 1px solid ${colors.gray[300]};
+  border-radius: 1px;
   ${selectedStyles}
   ${errorStyles}
   ${disabledStyles}
