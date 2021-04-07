@@ -6,13 +6,17 @@ import { CSSTransition } from 'react-transition-group'
 import { IndicatorWrapper, StyledSubTitle, StyledTitle, TextWrapper } from './NoConnectionIndicator.style'
 
 export type NoConnectionIndicatorProps = {
-  connectionStatus: ConnectionStatus
+  nodeConnectionStatus: ConnectionStatus
+  isConnectedToInternet: boolean
 }
 
-const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({ connectionStatus }) => {
+const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
+  nodeConnectionStatus,
+  isConnectedToInternet,
+}) => {
   return (
     <CSSTransition
-      in={connectionStatus === 'no-internet' || connectionStatus === 'disconnected'}
+      in={nodeConnectionStatus === 'disconnected' || !isConnectedToInternet}
       timeout={200}
       classNames={transitions.names.fade}
       mountOnEnter
@@ -21,10 +25,13 @@ const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({ connectio
       <IndicatorWrapper>
         <Spinner size="small" />
         <TextWrapper>
-          {connectionStatus === 'no-internet' && (
+          {!isConnectedToInternet ? (
             <StyledTitle variant="subtitle2">No connection to internet...</StyledTitle>
+          ) : (
+            nodeConnectionStatus === 'disconnected' && (
+              <StyledTitle variant="body2">Disconnected from node...</StyledTitle>
+            )
           )}
-          {connectionStatus === 'disconnected' && <StyledTitle variant="body2">Disconnected from node...</StyledTitle>}
           <StyledSubTitle variant="body2">Wait to restore connection</StyledSubTitle>
         </TextWrapper>
       </IndicatorWrapper>

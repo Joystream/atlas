@@ -32,7 +32,7 @@ const studioRoutes = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
-  const { connectionStatus } = useConnectionStatus()
+  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -43,7 +43,10 @@ const StudioLayout = () => {
       <PersonalDataProvider>
         <ActiveUserProvider>
           <JoystreamProvider>
-            <NoConnectionIndicator connectionStatus={connectionStatus} />
+            <NoConnectionIndicator
+              nodeConnectionStatus={nodeConnectionStatus}
+              isConnectedToInternet={isUserConnectedToInternet}
+            />
             <StudioTopbar />
             <StudioSidenav />
             <MainContainer>

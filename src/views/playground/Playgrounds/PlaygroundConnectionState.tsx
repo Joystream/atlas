@@ -11,7 +11,7 @@ const fakeNodeConnection = async () => {
 }
 
 const PlaygroundConnectionState = () => {
-  const { connectionStatus, setNodeConnection } = useConnectionStatus()
+  const { nodeConnectionStatus, setNodeConnection, isUserConnectedToInternet } = useConnectionStatus()
 
   const connectToNode = useCallback(async () => {
     const isConnected = await fakeNodeConnection()
@@ -26,19 +26,16 @@ const PlaygroundConnectionState = () => {
   return (
     <div>
       <Text variant="h3">Connection state</Text>
-      <Text variant="body1">{connectionStatus}</Text>
-      <BaseDialog
-        exitButton={false}
-        showDialog={connectionStatus === 'disconnected' || connectionStatus === 'no-internet'}
-      >
-        {connectionStatus === 'disconnected' && (
+      <Text variant="body1">{nodeConnectionStatus}</Text>
+      <BaseDialog exitButton={false} showDialog={nodeConnectionStatus === 'disconnected'}>
+        {nodeConnectionStatus === 'disconnected' && (
           <>
             <Text variant="h3">Disconnected from node</Text>
             <Text variant="body2">Waiting to reconnect...</Text>
             <Button to={absoluteRoutes.viewer.index()}>Back to homepage</Button>
           </>
         )}
-        {connectionStatus === 'no-internet' && (
+        {isUserConnectedToInternet && (
           <>
             <Text variant="h3">No internet</Text>
             <Text variant="body2">Waiting to reconnect...</Text>
