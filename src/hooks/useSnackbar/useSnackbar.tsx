@@ -32,17 +32,13 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  // Snackbars state reference is needed for setTimeout to read
-  const snackbarsRef = useRef(snackbars)
-  snackbarsRef.current = snackbars
-
   const displaySnackbar = ({ timeout, ...args }: DisplaySnackbarArgs) => {
     const id = createId()
     setSnackbars([...snackbars, { id, ...args }])
 
     if (timeout) {
       setTimeout(() => {
-        setSnackbars(snackbarsRef.current.filter((snackbar) => snackbar.id !== id))
+        setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
       }, timeout)
     }
   }
@@ -54,7 +50,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
       setTimeout(() => {
-        setSnackbars(snackbarsRef.current.slice(1))
+        setSnackbars((currentSnackbars) => currentSnackbars.slice(1))
       }, 500)
     }
   }, [snackbars])

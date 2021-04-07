@@ -91,7 +91,7 @@ export const SnackbarActionButton = styled(Button)`
   margin-right: ${sizes(2)};
   font-size: ${typography.sizes.body1};
   span {
-    /* margin-top: calc(-1 * ${sizes(1)}); */
+    margin-top: calc(-1 * ${sizes(1)});
   }
   &:hover {
     background-color: ${colors.transparent};
