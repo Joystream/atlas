@@ -23,14 +23,9 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const nextArrowRef = useRef<HTMLButtonElement>(null)
   const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const {
-    ref,
-    getContainerProps,
-    getGliderProps,
-    getTrackProps,
-    getPrevArrowProps,
-    getNextArrowProps,
-  } = useGlider<HTMLDivElement>({
+  const { ref, getContainerProps, getGliderProps, getTrackProps, getPrevArrowProps, getNextArrowProps } = useGlider<
+    HTMLDivElement
+  >({
     slidesToShow,
     arrows: { prev: prevArrowRef.current, next: nextArrowRef.current },
     ...gliderOptions,
