@@ -37,12 +37,15 @@ type DraftState = {
   videos: VideoDraft[]
 }
 
-export type UnseenDrafts = { draftId: string; channelId: string }[]
+export type UnseenDraft = {
+  draftId: string
+  channelId: string
+}
 
 type DraftsContextValue = {
   draftsState: DraftState
   fetchDrafts: () => Promise<void>
-  unseenDrafts: UnseenDrafts
+  unseenDrafts: UnseenDraft[]
   fetchUnseenDrafts: () => Promise<void>
 }
 
@@ -53,7 +56,7 @@ export const DraftsProvider: React.FC = ({ children }) => {
   const [draftsState, setDraftsState] = useState<DraftState>({
     videos: [],
   })
-  const [unseenDrafts, setUnseenDrafts] = useState<UnseenDrafts>([])
+  const [unseenDrafts, setUnseenDrafts] = useState<UnseenDraft[]>([])
 
   const fetchDrafts = useCallback(async () => {
     const currentDrafts = await getDrafts()
@@ -147,7 +150,7 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   return {
     drafts:
       type === 'video' ? draftsState.videos.filter((draft) => (channelId ? draft.channelId === channelId : true)) : [],
-    unseenDrafts,
+    unseenDrafts: unseenDrafts.filter((draft) => (channelId ? draft.channelId === channelId : true)),
     updateDraft: updateSingleDraft,
     addDraft: createSingleDraft,
     getDraft: getSingleDraft,

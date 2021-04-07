@@ -9,7 +9,7 @@ import {
 } from './FollowedChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
-import Icon from '../../shared/components/Icon'
+import { Icon } from '@/shared/components'
 import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
 
 const MAX_CHANNELS = 4

@@ -1,10 +1,10 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { Draft, RawDraft, UnseenDrafts } from './useDrafts'
+import { Draft, RawDraft, UnseenDraft } from './useDrafts'
 
 export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
 
-export const getUnseenDrafts = promisify(() => readFromLocalStorage<UnseenDrafts>('unseenDrafts') || [])
+export const getUnseenDrafts = promisify(() => readFromLocalStorage<UnseenDraft[]>('unseenDrafts') || [])
 
 export const getDraft = async (id: string) => {
   const currentDrafts = await getDrafts()

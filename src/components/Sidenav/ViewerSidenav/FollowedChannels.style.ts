@@ -1,8 +1,8 @@
 import { sizes, colors, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import ChannelLink from '../ChannelLink'
-import Text from '../../shared/components/Text'
-import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from './SidenavBase.style'
+import ChannelLink from '../../ChannelLink'
+import { Text } from '@/shared/components'
+import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from '../SidenavBase.style'
 
 export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};

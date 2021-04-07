@@ -31,7 +31,7 @@ const PlaygroundDrafts = () => {
       const { title, description, isExplicit, channelId } = draft
       setForm({ title, description, isExplicit, channelId: activeUser.channelId || channelId })
     } else {
-      setForm(INITIAL_STATE)
+      setForm({ ...INITIAL_STATE, channelId: activeUser.channelId || INITIAL_STATE.channelId })
     }
   }
 
