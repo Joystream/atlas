@@ -46,8 +46,11 @@ const Select = <T,>({
   const selectedItem = items.find((item) => item.value === selectedItemValue)
 
   return (
-    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
+    <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
       <SelectWrapper>
+        <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
+          <StyledLabelText>{label}</StyledLabelText>
+        </label>
         <SelectButton
           disabled={disabled}
           error={error}
@@ -60,9 +63,6 @@ const Select = <T,>({
           {selectedItem?.name || placeholder}
           <Icon name="chevron-down" />
         </SelectButton>
-        <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
-          <StyledLabelText>{label}</StyledLabelText>
-        </label>
         <SelectMenu isOpen={isOpen} {...getMenuProps()}>
           {isOpen &&
             items.map((item, index) => (

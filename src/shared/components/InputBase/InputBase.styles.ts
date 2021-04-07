@@ -1,5 +1,4 @@
 import { colors, sizes, transitions, typography } from '@/shared/theme'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 type FormGroupProps = {
@@ -7,95 +6,54 @@ type FormGroupProps = {
   disabled?: boolean
 }
 
-export const FormGroup = styled.div<FormGroupProps>`
-  position: relative;
+export const FormGroup = styled.label<FormGroupProps>`
+  display: inline-block;
+  width: 100%;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
-  input,
-  button {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
-    background: none;
-    padding: ${sizes(3)};
-    font-size: ${typography.sizes.subtitle2};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+
+  input:-webkit-autofill::first-line,
+  textarea:-webkit-autofill::first-line {
+    font-size: 1rem;
   }
 
   input,
   button,
-  label {
-    cursor: edit;
+  textarea {
+    transition: border ${transitions.timings.regular} ${transitions.easing};
+    background: none;
+    padding: 10px ${sizes(4)};
+    font-size: ${typography.sizes.body1};
+    line-height: 28px;
+    ::placeholder {
+      color: ${colors.gray[300]};
+    }
+    :not(:placeholder-shown) {
+      border: 1px solid ${colors.gray[200]};
+    }
+    :focus {
+      border: 1px solid ${colors.blue[500]};
+    }
+    :not(:focus) {
+      border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
+    }
   }
-
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      input,
-      button,
-      label {
-        pointer-events: none;
-      }
-    `};
+  input,
+  textarea {
+    color: ${colors.gray[50]};
+  }
+  :disabled {
+    cursor: not-allowed;
+  }
 `
 
 export const LabelText = styled.span`
-  position: absolute;
-  top: 12px;
-  left: 9px;
-  padding: 1px ${sizes(1)};
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-
-  color: ${colors.gray[400]};
+  margin-bottom: ${sizes(2)};
+  color: ${colors.gray[200]};
   background-color: none;
-  font-size: ${typography.sizes.subtitle2};
-
-  transition: all ${transitions.timings.regular} ${transitions.easing}, background-color 250ms;
-`
-
-export const labelOnTop = css`
-  transform: translateY(-19px);
-  background-color: ${colors.black};
-  font-size: ${sizes(3)};
-  color: ${colors.gray[300]};
-`
-
-export const styledinputStates = {
-  default: css`
-    border: 1px solid ${colors.gray[400]};
-  `,
-  activated: css`
-    border: 1px solid ${colors.gray[200]};
-    color: ${colors.gray[200]};
-  `,
-  focused: css`
-    border: 1px solid ${colors.blue[500]};
-    color: ${colors.white};
-  `,
-  filled: css`
-    border: 1px solid ${colors.gray[300]};
-    color: ${colors.gray[300]};
-  `,
-  disabled: css`
-    border: 1px solid ${colors.gray[700]};
-    color: ${colors.gray[700]};
-  `,
-  error: css`
-    border: 1px solid ${colors.error};
-  `,
-}
-
-type HelperTextProps = {
-  helperTextVariant?: 'default' | 'error' | 'warning'
-}
-
-const helperVariants = {
-  default: colors.gray[400],
-  error: colors.error,
-  warning: colors.warning,
-}
-
-export const HelperText = styled.p<HelperTextProps>`
-  font-size: ${sizes(3)};
-  margin-top: 10px;
-  margin-left: 12px;
-  color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
+  font-size: ${typography.sizes.body2};
 `
