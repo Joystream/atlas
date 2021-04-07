@@ -19,7 +19,7 @@ export default {
       control: { type: 'select', options: [null, 'error', 'success', 'info'] },
       defaultValue: null,
     },
-    time: { control: { type: 'number' }, defaultValue: null },
+    timeout: { control: { type: 'number' }, defaultValue: null },
   },
   decorators: [
     (Story) => (

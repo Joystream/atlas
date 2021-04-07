@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useState, useRef, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styled from '@emotion/styled'
-import faker from 'faker'
-import Snackbar from '@/shared/components/Snackbar/Snackbar'
+import { Snackbar } from '@/shared/components'
 import { transitions, sizes } from '@/shared/theme'
 
 export type DisplaySnackbarArgs = {
-  time?: number
+  timeout?: number
   variant?: 'primary' | 'secondary'
   icon?: 'success' | 'error' | 'info'
   message: string
@@ -36,14 +35,14 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   const snackbarsRef = useRef(snackbars)
   snackbarsRef.current = snackbars
 
-  const displaySnackbar = ({ time, ...args }: DisplaySnackbarArgs) => {
-    const id = faker.random.uuid()
+  const displaySnackbar = ({ timeout, ...args }: DisplaySnackbarArgs) => {
+    const id = Math.random().toString(36).substr(2, 11)
     setSnackbars([...snackbars, { id, ...args }])
 
-    if (time) {
+    if (timeout) {
       setTimeout(() => {
         setSnackbars(snackbarsRef.current.filter((snackbar) => snackbar.id !== id))
-      }, time)
+      }, timeout)
     }
   }
 
@@ -64,17 +63,9 @@ export const SnackbarProvider: React.FC = ({ children }) => {
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
-          {snackbars.map((item) => (
-            <CSSTransition key={item.id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
-              <Snackbar
-                message={item.message}
-                subMessage={item.subMessage}
-                variant={item.variant}
-                actionText={item.actionText}
-                onActionClick={item.onActionClick}
-                icon={item.icon}
-                onClick={() => closeSnackbar(item.id)}
-              />
+          {snackbars.map(({ id, ...snackbarProps }) => (
+            <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
+              <Snackbar {...snackbarProps} onClick={() => closeSnackbar(id)} />
             </CSSTransition>
           ))}
         </TransitionGroup>
