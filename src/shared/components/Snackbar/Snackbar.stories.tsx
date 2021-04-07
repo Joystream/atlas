@@ -8,8 +8,8 @@ export default {
   title: 'Shared/Snackbar',
   component: Snackbar,
   argTypes: {
-    message: { defaultValue: 'Lorem ipsul dolor' },
-    subMessage: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
+    title: { defaultValue: 'Lorem ipsul dolor' },
+    description: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
     actionText: { defaultValue: 'Action' },
     variant: {
       control: { type: 'select', options: ['primary', 'secondary'] },

@@ -11,7 +11,7 @@ type SnackbarWrapperProps = {
 
 type InnerWrapperProps = {
   hasSubMessage?: boolean
-}
+} & Omit<SnackbarWrapperProps, 'snackbarHeight'>
 
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
@@ -55,70 +55,57 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   }
 `
 
-export const SnackbarButton = styled(Button)`
-  position: absolute;
-  top: ${sizes(3)};
-  right: ${sizes(5)};
-  &:hover {
-    background-color: ${colors.transparent};
-  }
-`
-
-export const SnackbarAction = styled(Button)`
-  display: flex;
-  align-items: center;
-  padding: 0;
-  min-width: auto;
-  height: ${sizes(8)};
-  font-size: ${sizes(3)};
-  margin-right: ${sizes(10)};
-  font-size: 16px;
-  span {
-    margin-top: -4px;
-  }
-  &:hover {
-    background-color: ${colors.transparent};
-  }
-`
-
-export const SnackbarParagraph = styled.div<SnackbarWrapperProps>`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  font-size: ${typography.sizes.body2};
-  color: ${({ variant }) => (variant === 'secondary' ? colors.gray[300] : colors.blue[100])};
-  word-break: break-all;
-`
-
 export const SnackbarHeader = styled.div`
   display: flex;
   align-items: center;
-  height: 32px;
-`
-
-export const Submessage = styled(Text)`
-  margin-top: 10px;
-  margin-bottom: 16px;
-`
-
-export const StyledIcon = styled(Icon)`
-  margin-left: 2px;
-  margin-right: ${sizes(2)};
-  width: ${sizes(5)};
-  height: ${sizes(5)};
+  width: 100%;
 `
 
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
-  padding: ${sizes(3)} ${sizes(5)};
+  width: 100%;
+  color: ${({ variant }) => (variant === 'secondary' ? colors.gray[300] : colors.blue[100])};
+  padding: ${({ hasSubMessage }) => (hasSubMessage ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   width: 100%;
   ${SnackbarHeader} {
     color: ${({ hasSubMessage }) => hasSubMessage && colors.white};
   }
-  ${SnackbarParagraph} {
-    flex-direction: ${({ hasSubMessage }) => (hasSubMessage ? 'column' : 'row')};
-    align-items: ${({ hasSubMessage }) => (hasSubMessage ? 'flex-start' : 'center')};
+`
+
+export const SnackbarButtonsContainer = styled.div`
+  display: flex;
+  margin-left: auto;
+`
+
+export const SnackbarExitButton = styled(Button)`
+  &:hover {
+    background-color: ${colors.transparent};
   }
-  ${SnackbarAction} {
-    margin-left: ${({ hasSubMessage }) => (hasSubMessage ? '0' : 'auto')};
+`
+
+export const SnackbarActionButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  padding: 0;
+  min-width: auto;
+  font-size: ${sizes(3)};
+  margin-right: ${sizes(2)};
+  font-size: ${typography.sizes.body1};
+  span {
+    /* margin-top: calc(-1 * ${sizes(1)}); */
   }
+  &:hover {
+    background-color: ${colors.transparent};
+  }
+`
+
+export const SnackbarDescription = styled(Text)`
+  margin-top: ${sizes(1)};
+  margin-bottom: ${sizes(4)};
+`
+
+export const SnackbarIcon = styled(Icon)`
+  margin-left: 2px;
+  margin-right: ${sizes(2)};
+  width: ${sizes(5)};
+  height: ${sizes(5)};
 `

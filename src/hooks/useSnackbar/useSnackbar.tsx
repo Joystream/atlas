@@ -3,13 +3,14 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styled from '@emotion/styled'
 import { Snackbar } from '@/shared/components'
 import { transitions, sizes } from '@/shared/theme'
+import { createId } from '@/utils/createId'
 
 export type DisplaySnackbarArgs = {
   timeout?: number
   variant?: 'primary' | 'secondary'
   icon?: 'success' | 'error' | 'info'
-  message: string
-  subMessage?: string
+  title: string
+  description?: string
   actionText?: string
   onActionClick?: () => void
 }
@@ -36,7 +37,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   snackbarsRef.current = snackbars
 
   const displaySnackbar = ({ timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = Math.random().toString(36).substr(2, 11)
+    const id = createId()
     setSnackbars([...snackbars, { id, ...args }])
 
     if (timeout) {

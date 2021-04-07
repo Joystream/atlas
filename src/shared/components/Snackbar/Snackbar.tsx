@@ -1,14 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Text } from '@/shared/components'
 import {
-  StyledInnerWrapper,
-  SnackbarButton,
-  SnackbarParagraph,
-  SnackbarHeader,
   SnackbarWrapper,
-  SnackbarAction,
-  StyledIcon,
-  Submessage,
+  StyledInnerWrapper,
+  SnackbarHeader,
+  SnackbarButtonsContainer,
+  SnackbarExitButton,
+  SnackbarActionButton,
+  SnackbarIcon,
+  SnackbarDescription,
 } from './Snackbar.style'
 
 export type SnackbarVariant = 'primary' | 'secondary'
@@ -16,8 +16,8 @@ export type IconsType = 'error' | 'success' | 'info'
 export type SnackbarProps = {
   variant?: SnackbarVariant
   icon?: IconsType
-  message: string
-  subMessage?: string
+  title: string
+  description?: string
   actionText?: string
   onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -26,8 +26,8 @@ export type SnackbarProps = {
 const Snackbar: React.FC<SnackbarProps> = ({
   variant = 'secondary',
   icon,
-  message,
-  subMessage,
+  title,
+  description,
   actionText,
   onActionClick,
   onClick,
@@ -43,20 +43,25 @@ const Snackbar: React.FC<SnackbarProps> = ({
 
   return (
     <SnackbarWrapper variant={variant} snackbarHeight={height}>
-      <StyledInnerWrapper ref={ref} hasSubMessage={!!subMessage}>
-        <SnackbarParagraph variant={variant}>
-          <SnackbarHeader>
-            {icon && <StyledIcon name={icon} />}
-            <Text variant="body2">{message}</Text>
-          </SnackbarHeader>
-          {subMessage && <Submessage>{subMessage}</Submessage>}
-          {actionText && (
-            <SnackbarAction variant="tertiary" onClick={onActionClick}>
-              {actionText}
-            </SnackbarAction>
-          )}
-        </SnackbarParagraph>
-        <SnackbarButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+      <StyledInnerWrapper ref={ref} hasSubMessage={!!description} variant={variant}>
+        <SnackbarHeader>
+          {icon && <SnackbarIcon name={icon} />}
+          <Text variant="body2">{title}</Text>
+          <SnackbarButtonsContainer>
+            {actionText && !description && (
+              <SnackbarActionButton variant="tertiary" onClick={onActionClick}>
+                {actionText}
+              </SnackbarActionButton>
+            )}
+            <SnackbarExitButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+          </SnackbarButtonsContainer>
+        </SnackbarHeader>
+        {description && <SnackbarDescription>{description}</SnackbarDescription>}
+        {actionText && description && (
+          <SnackbarActionButton variant="tertiary" onClick={onActionClick}>
+            {actionText}
+          </SnackbarActionButton>
+        )}
       </StyledInnerWrapper>
     </SnackbarWrapper>
   )

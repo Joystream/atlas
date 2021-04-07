@@ -1,6 +1,7 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 import { Draft, RawDraft, UnseenDraft } from './useDrafts'
+import { createId } from '@/utils/createId'
 
 export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
 
@@ -14,7 +15,7 @@ export const getDraft = async (id: string) => {
 export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
-  const id = Math.random().toString(36).substr(2, 11)
+  const id = createId()
   const newDraft = { ...draftProps, updatedAt, id }
   const newDrafts = [newDraft, ...currentDrafts]
   writeToLocalStorage('drafts', newDrafts)
