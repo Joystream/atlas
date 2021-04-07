@@ -118,7 +118,7 @@ export const MyVideosView = () => {
     throw error
   }
   const channelUnseenDrafts = unseenDrafts.filter((draft) => draft.channelId === channelId)
-  const mappedTabs = TABS.map((tab) => ({ name: tab, badge: tab === 'Drafts' ? channelUnseenDrafts.length : 0 }))
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? channelUnseenDrafts.length : 0 }))
 
   return (
     <StudioContainer>

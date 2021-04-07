@@ -21,6 +21,7 @@ import Icon, { IconType } from '@/shared/components/Icon'
 import FollowedChannels from './FollowedChannels'
 import HamburgerButton from '@/shared/components/HamburgerButton'
 import { absoluteRoutes } from '@/config/routes'
+import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
 
 type NavSubitem = {
   name: string
@@ -36,7 +37,7 @@ export type SidenavProps = {
   items: NavItemType[]
   isStudio?: boolean
   unseenDraftsNumber?: number
-  followedChannels?: { id: string }[]
+  followedChannels?: FollowedChannel[]
   onNewVideoOpenClick?: () => void
 }
 

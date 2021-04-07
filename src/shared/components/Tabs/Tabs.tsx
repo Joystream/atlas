@@ -6,7 +6,7 @@ import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Ta
 
 type TabItem = {
   name: string
-  badge?: number
+  badgeNumber?: number
 }
 export type TabsProps = {
   tabs: TabItem[]
@@ -81,7 +81,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
       <TabsGroup ref={tabsRef}>
         {tabs.map((tab, idx) => (
           <Tab onClick={createClickHandler(idx)} key={`${tab.name}-${idx}`} selected={selected === idx}>
-            <span data-badge={tab.badge}>{tab.name}</span>
+            <span data-badge={tab.badgeNumber}>{tab.name}</span>
           </Tab>
         ))}
       </TabsGroup>
