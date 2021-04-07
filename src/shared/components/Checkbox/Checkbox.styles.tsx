@@ -28,8 +28,8 @@ export const Container = styled.div<CheckboxStateProps>`
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
-  &:hover {
-    ${({ disabled }) => [!disabled && colors.transparentPrimary[12]]}
+  :hover {
+    background: ${({ disabled }) => !disabled && colors.transparentPrimary[12]};
   }
 `
 

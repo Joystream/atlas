@@ -92,7 +92,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         <TextContainer>
           {label && <LabelText variant="subtitle2">{label}</LabelText>}
           {helperText && (
-            <Caption error={error} variant="subtitle2">
+            <Caption error={error} variant="caption">
               {helperText}
             </Caption>
           )}
