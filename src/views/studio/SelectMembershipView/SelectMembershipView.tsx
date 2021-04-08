@@ -50,3 +50,5 @@ const SelectMembershipView = () => {
     </Wrapper>
   )
 }
+
+export default SelectMembershipView

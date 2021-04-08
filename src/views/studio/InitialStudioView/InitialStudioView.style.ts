@@ -19,7 +19,7 @@ export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
   }
 `
 
-export const SignInWrapper = styled.div`
+export const Wrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
 `

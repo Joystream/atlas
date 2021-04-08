@@ -15,17 +15,26 @@ import {
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
+import {
+  ViewErrorFallback,
+  StudioTopbar,
+  StudioSidenav,
+  NoConnectionIndicator,
+  NavItemType,
+  TOP_NAVBAR_HEIGHT,
+} from '@/components'
 
-import SignInView from './SignInView'
+import InitialStudioView from './InitialStudioView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
+import SignInProccessView from './SignInProccessView'
 
 const studioRoutes = [
+  { path: relativeRoutes.studio.index(), element: <InitialStudioView /> },
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
   { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
   { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
-  { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
+  { path: relativeRoutes.studio.signIn(), element: <SignInProccessView /> },
   { path: relativeRoutes.studio.selectMembership(), element: <SelectMembershipView /> },
   { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
   { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },

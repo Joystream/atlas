@@ -2,7 +2,7 @@
 
 import { writeToLocalStorage, readFromLocalStorage } from '@/utils/localStorage'
 import { promisify } from '@/utils/data'
-import { Membership } from './SignInView'
+import { Membership } from './InitialStudioView/InitialStudioView'
 
 export type Account = {
   accountId: string
