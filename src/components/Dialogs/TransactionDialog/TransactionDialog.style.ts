@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, sizes, breakpoints } from '@/shared/theme'
+import { sizes, breakpoints } from '@/shared/theme'
 import { ReactComponent as TransactionIllustration } from '@/assets/transaction-illustration.svg'
+import Spinner from '@/shared/components/Spinner'
 
 export const TextContainer = styled.div`
   margin-top: ${sizes(38)};
@@ -16,23 +17,7 @@ export const StyledTransactionIllustration = styled(TransactionIllustration)`
   }
 `
 
-export const Spinner = styled.div`
-  position: absolute;
-  display: inline-block;
+export const StyledSpinner = styled(Spinner)`
   top: ${sizes(6)};
   left: ${sizes(6)};
-  width: ${sizes(8)};
-  height: ${sizes(8)};
-  border-radius: 50%;
-  border: 2px solid ${colors.blue[500]};
-  border-left: 2px solid ${colors.gray[200]};
-  animation: load 1s infinite linear;
-  @keyframes load {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
 `
