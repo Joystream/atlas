@@ -1,5 +1,5 @@
 import React from 'react'
-import { PaginationWrapper, PaginationButton, ChevronButton } from './Pagination.style'
+import { PaginationWrapper, PaginationButton, ChevronButton, ThreeDotsWrapper } from './Pagination.style'
 
 export type PaginationProps = {
   itemsPerPage?: number
@@ -26,12 +26,9 @@ const Pagination: React.FC<PaginationProps> = ({
 
   if (totalPages <= 1) return null
 
-  const handleChangePage = (pageItem: number | '...', idx: number) => {
-    if (pageItem !== '...') {
+  const handleChangePage = (pageItem: number | string) => {
+    if (typeof pageItem === 'number') {
       onChangePage(pageItem - 1)
-    } else {
-      // if pageItem === '...' switch to the next/prev page
-      onChangePage(idx === 1 ? internalPage - 2 : internalPage)
     }
   }
 
@@ -39,22 +36,27 @@ const Pagination: React.FC<PaginationProps> = ({
     <PaginationWrapper>
       <ChevronButton
         variant="secondary"
+        size="large"
         icon="chevron-left"
         onClick={() => onChangePage(prevPage - 1)}
         disabled={internalPage <= 1}
       />
-
-      {pages.map((pageItem, idx) => (
-        <PaginationButton
-          isActive={internalPage ? internalPage === pageItem : pageItem === 1}
-          key={idx}
-          onClick={() => handleChangePage(pageItem, idx)}
-        >
-          {pageItem}
-        </PaginationButton>
-      ))}
+      {pages.map((pageItem, idx) =>
+        typeof pageItem === 'number' ? (
+          <PaginationButton
+            isActive={internalPage ? internalPage === pageItem : pageItem === 1}
+            key={idx}
+            onClick={() => handleChangePage(pageItem)}
+          >
+            {pageItem}
+          </PaginationButton>
+        ) : (
+          <ThreeDotsWrapper key={idx}>{pageItem}</ThreeDotsWrapper>
+        )
+      )}
       <ChevronButton
         icon="chevron-right"
+        size="large"
         variant="secondary"
         onClick={() => (internalPage ? onChangePage(nextPage - 1) : onChangePage(2))}
         disabled={internalPage >= totalPages}
