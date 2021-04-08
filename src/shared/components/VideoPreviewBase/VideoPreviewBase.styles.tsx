@@ -9,7 +9,6 @@ import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
 import Button from '@/shared/components/Button'
-import { IconProps } from '../Icon/Icon'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -268,7 +267,6 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
-  line-height: 1.25rem;
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `

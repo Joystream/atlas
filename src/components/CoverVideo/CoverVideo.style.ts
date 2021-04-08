@@ -214,20 +214,13 @@ export const ButtonsContainer = styled.div`
   display: flex;
 `
 
-export const PlayButton = styled(Button)<{ playing: boolean }>`
+export const PlayButton = styled(Button)`
   width: 140px;
   height: ${BUTTONS_HEIGHT_PX};
-  justify-content: flex-start;
 
   svg {
-    margin-left: ${sizes(3)};
     width: auto;
     height: auto;
-  }
-
-  span {
-    margin-top: -3px;
-    margin-left: ${({ playing }) => (playing ? sizes(2) : sizes(3))};
   }
 `
 
