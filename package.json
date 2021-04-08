@@ -1,8 +1,7 @@
 {
   "name": "atlas-app",
-  "version": "1.0.0",
-  "description": "A user governed video platform",
-  "license": "ISC",
+  "description": "UI for consuming Joystream - a user governed video platform",
+  "license": "GPL-3.0",
   "directories": {
     "src": "src"
   },
