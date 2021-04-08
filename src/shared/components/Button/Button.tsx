@@ -1,9 +1,10 @@
 import React from 'react'
 import { SerializedStyles } from '@emotion/react'
-import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
+import { ButtonSize, ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
 import type { IconType } from '../Icon'
 import { To } from 'history'
 import { Link, LinkProps } from 'react-router-dom'
+import Text, { TextVariant } from '../Text'
 
 export type ButtonProps = {
   children?: React.ReactNode
@@ -15,6 +16,12 @@ export type ButtonProps = {
   to?: To
   type?: 'button' | 'submit'
 } & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
+
+const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
+  large: 'button1',
+  medium: 'button2',
+  small: 'button3',
+}
 
 const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   {
@@ -59,7 +66,7 @@ const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonP
       {...externalLinkProps}
     >
       {icon && <StyledIcon disabled={disabled} name={icon} size={size} hasText={hasText} />}
-      {children && <span>{children}</span>}
+      {children && <Text variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]}>{children}</Text>}
     </StyledButton>
   )
 }
