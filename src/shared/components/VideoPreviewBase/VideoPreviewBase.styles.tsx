@@ -269,7 +269,6 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
-  line-height: 1.25rem;
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
