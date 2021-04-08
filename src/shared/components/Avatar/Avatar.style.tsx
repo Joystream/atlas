@@ -5,7 +5,7 @@ import { breakpoints, colors, sizes, transitions, typography } from '@/shared/th
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'bar'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
 type ContainerProps = {
   size: AvatarSize
@@ -43,7 +43,7 @@ const viewAvatarCss = css`
   }
 `
 
-const barAvatarCss = css`
+const smallAvatarCss = css`
   width: 42px;
   min-width: 42px;
   height: 42px;
@@ -70,8 +70,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return viewAvatarCss
     case 'fill':
       return fillAvatarCss
-    case 'bar':
-      return barAvatarCss
+    case 'small':
+      return smallAvatarCss
     default:
       return defaultAvatarCss
   }
@@ -114,11 +114,11 @@ export const EditButton = styled.button<EditButtonProps>`
     border: 2px solid ${colors.blue[500]};
   }
   span {
-    ${({ size }) => size === 'bar' && 'display: none'};
+    ${({ size }) => size === 'small' && 'display: none'};
   }
   svg {
     fill: ${colors.gray[300]};
-    margin-bottom: ${({ size }) => (size === 'bar' ? 0 : sizes(1))};
+    margin-bottom: ${({ size }) => (size === 'small' ? 0 : sizes(1))};
     ${({ size }) =>
       size === 'cover' &&
       css`
