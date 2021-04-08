@@ -12,7 +12,7 @@ import {
   MemberTitleText,
   MemberTextContainer,
   ChannelInfoContainer,
-  NewChannelIcon,
+  NewChannelAvatar,
   StyledAvatar,
   TextContainer,
   DrawerContainer,
@@ -123,7 +123,7 @@ const StudioTopbar: React.FC = () => {
             <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
           ) : (
             <ChannelInfoContainer onClick={handleDrawerToggle}>
-              <NewChannelIcon name="new-channel" />
+              <NewChannelAvatar newChannel size="bar" />
               <TextContainer>
                 <Text>New Channel</Text>
                 <Text>{membership?.handle}</Text>
@@ -164,7 +164,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="medium" imageUrl={channel?.avatarPhotoUrl} />
+        <StyledAvatar size="bar" imageUrl={channel?.avatarPhotoUrl} />
         <TextContainer>
           <Text>{channel ? channel.title : 'New Channel'}</Text>
           <Text>{memberName}</Text>

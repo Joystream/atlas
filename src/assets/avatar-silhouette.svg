@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 136">
-  <defs/>
-  <mask id="a" width="136" height="136" x="0" y="0" maskUnits="userSpaceOnUse">
-    <circle cx="68" cy="68" r="68" fill="white"/>
-  </mask>
-  <g mask="url(#a)">
-    <circle cx="68" cy="68" r="68" fill="#0E1113"/>
-    <circle cx="68" cy="60" r="28" fill="#1F2529"/>
-    <circle cx="68" cy="164" r="68" fill="#1F2529"/>
-  </g>
+<svg width="136" height="136" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="68" cy="68" r="68" fill="#181C20"/>
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="136" height="136">
+<circle cx="68" cy="68" r="68" fill="#181C20"/>
+</mask>
+<g mask="url(#mask0)">
+<ellipse cx="68" cy="54.4" rx="24.1778" ry="24.1778" fill="#424E57"/>
+<path d="M25.6889 120.889C25.6889 104.198 39.2199 90.6667 55.9111 90.6667H80.0889C96.7802 90.6667 110.311 104.198 110.311 120.889V179.822C110.311 196.514 96.7802 210.044 80.0889 210.044H55.9111C39.2199 210.044 25.6889 196.514 25.6889 179.822V120.889Z" fill="#424E57"/>
+</g>
+<circle cx="68" cy="68" r="67" stroke="#181C20" stroke-width="2"/>
 </svg>
