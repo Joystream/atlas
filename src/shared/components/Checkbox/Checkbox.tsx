@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import Icon from '../Icon'
 import {
-  Caption,
   CheckboxLabel,
   Checkmark,
   Container,
   InnerContainer,
   Input,
   LabelText,
-  TextContainer,
+  StyledHelperText,
 } from './Checkbox.styles'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
@@ -71,33 +70,29 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     }
 
     return (
-      <CheckboxLabel disabled={disabled}>
-        <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
-          <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
-            <Input
-              name={name}
-              ref={ref}
-              type="checkbox"
-              data-multiple="false"
-              checked={isSelected}
-              disabled={disabled}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              {...props}
-            />
-            <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
-          </InnerContainer>
-        </Container>
-        <TextContainer>
-          {label && <LabelText variant="subtitle2">{label}</LabelText>}
-          {helperText && (
-            <Caption error={error} variant="caption">
-              {helperText}
-            </Caption>
-          )}
-        </TextContainer>
-      </CheckboxLabel>
+      <>
+        <CheckboxLabel disabled={disabled}>
+          <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
+            <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
+              <Input
+                name={name}
+                ref={ref}
+                type="checkbox"
+                data-multiple="false"
+                checked={isSelected}
+                disabled={disabled}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                {...props}
+              />
+              <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
+            </InnerContainer>
+          </Container>
+          {label && <LabelText variant="body1">{label}</LabelText>}
+        </CheckboxLabel>
+        <StyledHelperText helperText={helperText} error={error} />
+      </>
     )
   }
 )
