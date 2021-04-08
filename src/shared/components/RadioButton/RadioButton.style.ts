@@ -110,12 +110,12 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
 `
 
 export const StyledLabelText = styled(LabelText)`
-  width: calc(100% - var(--radio-size) - ${sizes(2)});
-  margin-left: ${sizes(2)};
+  width: calc(100% - var(--radio-size) - ${sizes(4)});
+  margin-left: ${sizes(4)};
   color: ${colors.gray[50]};
 `
 
 export const StyledHelperText = styled(HelperText)`
-  margin-left: ${sizes(6)};
+  margin-left: ${sizes(8)};
   margin-top: 0;
 `
