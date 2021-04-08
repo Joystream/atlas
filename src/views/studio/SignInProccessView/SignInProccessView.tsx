@@ -1,48 +1,75 @@
-import { StudioContainer } from '@/components'
-import { Button, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
 import React from 'react'
-import { ReactComponent as CoinsIllustration } from '@/assets/coins.svg'
+import {
+  HeroContainer,
+  ListContainer,
+  OrderedItem,
+  OrderedList,
+  StyledButton,
+  StyledCoinsIllustrations,
+  StyledStudioContainer,
+  UnOrderedItem,
+  UnOrderedList,
+} from './SignInProccessView.style'
 
 const SignInProccessView = () => {
   return (
     <>
-      <StudioContainer>
-        <div>
-          <Text variant="hero">How to start your publisher journey</Text>
-        </div>
-        <div>
-          <ol>
-            <li>
+      <StyledStudioContainer>
+        <HeroContainer>
+          <Text variant="h2">How to start your publisher journey?</Text>
+        </HeroContainer>
+        <ListContainer>
+          <OrderedList>
+            <OrderedItem variant="h4" as="li">
               Install Polkadot extension
-              <ul>
-                <li>Create a polkadot account</li>
-                <li>Make your first transaction & join the blockchain</li>
-                <li>Connect it to your joystream membership</li>
-              </ul>
-            </li>
-            <li>
+              <UnOrderedList>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Create a polkadot account
+                </UnOrderedItem>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Make your first transaction & join the blockchain
+                </UnOrderedItem>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Connect it to your joystream membership
+                </UnOrderedItem>
+              </UnOrderedList>
+            </OrderedItem>
+            <OrderedItem variant="h4" as="li">
               Create joystream membership account
-              <ul>
-                <li>One Joystream membership allows you to create multiple channels</li>
-                <li>Creating a membership is free!</li>
-                <li>Membership never expires & there are no fees!</li>
-              </ul>
-            </li>
-            <li>
+              <UnOrderedList>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  One Joystream membership allows you to create multiple channels
+                </UnOrderedItem>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Creating a membership is free!
+                </UnOrderedItem>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Membership never expires & there are no fees!
+                </UnOrderedItem>
+              </UnOrderedList>
+            </OrderedItem>
+            <OrderedItem variant="h4" as="li">
               Create your first channel
-              <ul>
-                <li>Add unlimited content</li>
-                <li>Gather your own audience & be heard!</li>
-              </ul>
-            </li>
-            <li>Publish your content on Joystream</li>
-          </ol>
-          <Button size="large" icon="chevron-right">
+              <UnOrderedList>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Add unlimited content
+                </UnOrderedItem>
+                <UnOrderedItem secondary variant="body2" as="li">
+                  Gather your own audience & be heard!
+                </UnOrderedItem>
+              </UnOrderedList>
+            </OrderedItem>
+            <OrderedItem variant="h4" as="li">
+              Publish your content on Joystream
+            </OrderedItem>
+          </OrderedList>
+          <StyledButton size="large" icon="chevron-right">
             Join now
-          </Button>
-        </div>
-      </StudioContainer>
-      <CoinsIllustration />
+          </StyledButton>
+        </ListContainer>
+      </StyledStudioContainer>
+      <StyledCoinsIllustrations />
     </>
   )
 }

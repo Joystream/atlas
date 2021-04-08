@@ -58,7 +58,7 @@ const CreateMemberView = () => {
     <Wrapper>
       <Header>
         <Hero variant="h2">Create Joystream membership</Hero>
-        <SubTitle variant="body1">
+        <SubTitle variant="body1" secondary>
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
       </Header>

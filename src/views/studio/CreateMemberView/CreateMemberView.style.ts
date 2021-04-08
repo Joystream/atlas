@@ -15,7 +15,6 @@ export const Hero = styled(Text)`
 
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
-  color: ${colors.gray[300]};
 `
 
 export const Wrapper = styled(StudioContainer)`
