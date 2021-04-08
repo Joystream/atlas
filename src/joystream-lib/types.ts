@@ -13,14 +13,14 @@ export type AssetMetadata = {
   ipfsContentId: string
 }
 
-export type UpdateChannelMetadata = Omit<ChannelMetadata.AsObject, 'coverPhoto' | 'avatarPhoto' | 'category'>
-export type CreateChannelMetadata = Required<UpdateChannelMetadata>
+export type CreateChannelMetadata = Omit<ChannelMetadata.AsObject, 'coverPhoto' | 'avatarPhoto' | 'category'>
 export type ChannelAssets = {
   cover?: AssetMetadata
   avatar?: AssetMetadata
 }
 
 export enum ExtrinsicStatus {
+  ProcessingAssets,
   Unsigned,
   Signed,
   Completed,

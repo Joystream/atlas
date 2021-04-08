@@ -5,11 +5,12 @@ const { saveToFile, randomRange } = require('./utils')
 
 const OUTPUT_FILENAME = 'memberships.json'
 const MEMBERSHIPS_COUNT = 4
+let nextMemberId = 0
 
 const generateMembership = () => {
   const handleWordsCount = randomRange(1, 4)
   return {
-    id: faker.random.uuid(),
+    id: (nextMemberId++).toString(),
     handle: faker.lorem.words(handleWordsCount),
   }
 }

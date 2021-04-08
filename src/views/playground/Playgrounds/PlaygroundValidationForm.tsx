@@ -9,7 +9,7 @@ import {
   TextField,
   Select,
   Checkbox,
-  Textarea,
+  TextArea,
   HeaderTextField,
   Datepicker,
   RadioButton,
@@ -149,7 +149,7 @@ const PlaygroundValidationForm = () => {
         </FormField>
 
         <FormField title="Description">
-          <Textarea
+          <TextArea
             name="textarea"
             ref={register(textFieldValidation('Description', 3, 20))}
             maxLength={20}

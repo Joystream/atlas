@@ -13,6 +13,11 @@ export type TransactionDialogProps = Pick<ActionDialogProps, 'onEnter' | 'onExit
 }
 
 const TRANSACTION_STEPS_DETAILS = {
+  [ExtrinsicStatus.ProcessingAssets]: {
+    title: 'Processing assets...',
+    description:
+      "Please wait till all your assets get processed. This can take up to 1 minute, depending on asset size and your machine's computing power.",
+  },
   [ExtrinsicStatus.Unsigned]: {
     title: 'Waiting for signature...',
     description: 'Please sign the transaction using the Polkadot browser extension.',
@@ -61,12 +66,14 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
 
   const stepDetails = status != null ? TRANSACTION_STEPS_DETAILS[status] : null
 
+  const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
+
   return (
     <ActionDialog
       showDialog={status != null}
       onSecondaryButtonClick={onClose}
       secondaryButtonText="Cancel"
-      secondaryButtonDisabled={status !== ExtrinsicStatus.Unsigned}
+      secondaryButtonDisabled={!canCancel}
       exitButton={false}
       {...actionDialogProps}
     >
