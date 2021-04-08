@@ -121,12 +121,7 @@ const CoverVideo: React.FC = () => {
             appear
           >
             <ButtonsContainer>
-              <PlayButton
-                onClick={handlePlayPauseClick}
-                icon={videoPlaying ? 'pause' : 'play'}
-                playing={videoPlaying}
-                size="large"
-              >
+              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? 'pause' : 'play'} size="large">
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
               <SoundButton
