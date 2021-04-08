@@ -34,7 +34,7 @@ export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProp
   }
 `
 
-const progressAnimation = keyframes`
+const pulse = keyframes`
   0% {
     opacity: 1;
   }
@@ -59,7 +59,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  animation: ${progressAnimation} 2.5s infinite ease-in-out;
+  animation: ${pulse} 2.5s infinite ease-in-out;
 `
 
 export const Thumbnail = styled.div`

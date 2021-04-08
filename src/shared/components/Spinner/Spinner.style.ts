@@ -28,7 +28,7 @@ const spinnerSizes = (size: SpinnerSize) => {
   }
 }
 
-const spinnerAnimation = keyframes`
+const spin = keyframes`
   0% {
     transform: rotate(0deg);
   }
@@ -43,8 +43,8 @@ export const SpinnerWrapper = styled.div<SpinnerWrapperProps>`
   width: 1em;
   height: 1em;
   border: 0.09em solid ${colors.blue[500]};
-  border-left: 0.09em solid ${colors.gray[200]};
+  border-left: 0.09em solid ${colors.gray[100]};
   margin-bottom: ${sizes(4)};
-  animation: ${spinnerAnimation} 1s infinite linear;
+  animation: ${spin} 1s infinite linear;
   ${({ size }) => spinnerSizes(size)};
 `
