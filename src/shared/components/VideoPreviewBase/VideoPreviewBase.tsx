@@ -133,7 +133,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onDeleteVideoClick,
   isPullupDisabled,
 }) => {
-  const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
+  const { openContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
@@ -285,6 +285,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
                       scalingFactor={scalingFactor}
+                      secondary
                     >
                       {channelTitle}
                     </ChannelHandle>
@@ -295,7 +296,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   {isLoading ? (
                     <SpacedPlaceholder height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
-                    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor}>
+                    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor} secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
