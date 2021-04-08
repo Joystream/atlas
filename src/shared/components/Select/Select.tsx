@@ -49,7 +49,7 @@ const Select = <T,>({
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
       <SelectWrapper>
         <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
-          <StyledLabelText>{label}</StyledLabelText>
+          {label && <StyledLabelText>{label}</StyledLabelText>}
         </label>
         <SelectButton
           disabled={disabled}

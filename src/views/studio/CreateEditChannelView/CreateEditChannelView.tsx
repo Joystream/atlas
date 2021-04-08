@@ -12,7 +12,7 @@ import {
   Select,
   SelectItem,
   Tooltip,
-  TextArea
+  TextArea,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
@@ -347,7 +347,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 render={({ value, onChange }) => (
                   <Select
                     items={languages}
-                    label="Channel Language"
                     disabled={loading}
                     value={value}
                     onChange={onChange}
@@ -368,7 +367,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 render={({ value, onChange }) => (
                   <Select
                     items={PUBLIC_SELECT_ITEMS}
-                    label="Publicness"
                     disabled={loading}
                     value={value}
                     onChange={onChange}

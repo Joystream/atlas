@@ -54,6 +54,5 @@ export const LabelText = styled.span`
   max-width: 100%;
   margin-bottom: ${sizes(2)};
   color: ${colors.gray[200]};
-  background-color: none;
   font-size: ${typography.sizes.body2};
 `
