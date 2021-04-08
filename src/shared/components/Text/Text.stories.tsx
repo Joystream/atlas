@@ -59,6 +59,15 @@ const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
     <Text {...args} variant="overhead">
       Overhead
     </Text>
+    <Text {...args} variant="button1">
+      Button 1
+    </Text>
+    <Text {...args} variant="button2">
+      Button 2
+    </Text>
+    <Text {...args} variant="button3">
+      Button 3
+    </Text>
   </div>
 )
 
