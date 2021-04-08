@@ -81,20 +81,11 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   box-sizing: border-box;
   width: 18px;
   height: 18px;
-  &::before {
-    content: '';
-    top: -8px;
-    bottom: -8px;
-    left: -8px;
-    right: -8px;
-    border-radius: 50%;
-    position: absolute;
-    z-index: -1;
-  }
   ${colorFromProps};
   & + span {
     color: ${(props) => (props.checked ? colors.white : '')};
   }
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 `
 
 export const RadioButtonWrapper = styled.div`
@@ -108,7 +99,7 @@ export const Label = styled.label<RadioButtonStyleProps>`
   align-items: center;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   & > span:nth-of-type(1) {
-    margin: 8px;
+    margin: ${sizes(2)};
   }
 `
 export const StyledLabelText = styled(LabelText)`
@@ -118,5 +109,4 @@ export const StyledLabelText = styled(LabelText)`
 export const StyledCaptionText = styled(Text)<RadioButtonCaptionProps>`
   color: ${({ error }) => (error ? colors.error : colors.gray[300])};
   margin: ${sizes(1)} 0 0 ${sizes(7)};
-  text-align: left;
 `
