@@ -13,7 +13,6 @@ type ContainerProps = {
 
 type EditButtonProps = {
   size: Omit<AvatarSize, 'default'>
-  withAvatar?: boolean
 }
 
 const previewAvatarCss = css`
@@ -106,7 +105,7 @@ export const EditButton = styled.button<EditButtonProps>`
   justify-content: center;
   align-items: center;
   transition: background-color ${transitions.timings.loading} ${transitions.easing};
-  opacity: ${({ withAvatar }) => (withAvatar ? 0 : 1)};
+  opacity: 0;
   :hover {
     background-color: ${colors.transparentBlack[54]};
     opacity: 1;

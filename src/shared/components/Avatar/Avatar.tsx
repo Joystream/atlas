@@ -44,7 +44,7 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <Container onClick={onClick} size={size} className={className}>
       {isEditable && (
-        <EditButton size={size} withAvatar={!!imageUrl} onClick={handleEditClick}>
+        <EditButton size={size} onClick={handleEditClick}>
           <Icon name="camera" />
           <span>{imageUrl ? 'Edit Avatar' : 'Add avatar'}</span>
         </EditButton>
