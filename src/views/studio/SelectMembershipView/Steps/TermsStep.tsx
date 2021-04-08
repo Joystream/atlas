@@ -117,7 +117,9 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
             label="I’ve read and accept Terms And Conditions"
           />
         </CSSTransition>
-        <ContinueButton disabled={!isAccepted}>Continue</ContinueButton>
+        <ContinueButton type="submit" disabled={!isAccepted}>
+          Continue
+        </ContinueButton>
       </TermsForm>
     </StepWrapper>
   )
