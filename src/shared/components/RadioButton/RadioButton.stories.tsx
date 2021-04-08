@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Meta, Story } from '@storybook/react'
 import RadioButton from './RadioButton'
+import { template } from 'lodash'
 
 export default {
   title: 'Shared/RadioButton',
@@ -18,7 +19,7 @@ const Template: Story = (args) => {
     setSelected(element.value)
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridGap: '12px' }}>
       <RadioButton {...args} name="radio-group" value="1" selectedValue={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="2" selectedValue={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="3" selectedValue={selected} onClick={handleClick} />

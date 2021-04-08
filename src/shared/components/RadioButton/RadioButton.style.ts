@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import Text from '../Text/Text'
+import { colors, sizes, transitions } from '@/shared/theme'
 import { LabelText } from '../Checkbox/Checkbox.styles'
-import { colors, sizes, transitions } from '../../theme'
+import HelperText from '../HelperText/HelperText'
 
 export type RadioButtonStyleProps = Partial<{
   disabled: boolean
@@ -70,6 +70,17 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
   }
 }
 
+export const Label = styled.label<RadioButtonStyleProps>`
+  --radio-size: 18px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+  & > span:nth-of-type(1) {
+    margin: ${sizes(2)};
+  }
+`
+
 export const StyledInput = styled.div<RadioButtonStyleProps>`
   position: relative;
   border-radius: 50%;
@@ -79,8 +90,18 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   background-clip: content-box;
   padding: 3px;
   box-sizing: border-box;
-  width: 18px;
-  height: 18px;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  &::before {
+    content: '';
+    top: -8px;
+    bottom: -8px;
+    left: -8px;
+    right: -8px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: -1;
+  }
   ${colorFromProps};
   & + span {
     color: ${(props) => (props.checked ? colors.white : '')};
@@ -88,25 +109,13 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   transition: background-color 0.25s ease, border-color 0.25s ease;
 `
 
-export const RadioButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: ${sizes(4)};
-`
-
-export const Label = styled.label<RadioButtonStyleProps>`
-  display: inline-flex;
-  align-items: center;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  & > span:nth-of-type(1) {
-    margin: ${sizes(2)};
-  }
-`
 export const StyledLabelText = styled(LabelText)`
+  width: calc(100% - var(--radio-size) - ${sizes(2)});
+  margin-left: ${sizes(2)};
   color: ${colors.gray[50]};
 `
 
-export const StyledCaptionText = styled(Text)<RadioButtonCaptionProps>`
-  color: ${({ error }) => (error ? colors.error : colors.gray[300])};
-  margin: ${sizes(1)} 0 0 ${sizes(7)};
+export const StyledHelperText = styled(HelperText)`
+  margin-left: ${sizes(6)};
+  margin-top: 0;
 `
