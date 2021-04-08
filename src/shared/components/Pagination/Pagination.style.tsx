@@ -24,7 +24,6 @@ const buttonActiveState = css`
 `
 
 export const ChevronButton = styled(Button)`
-  color: ${colors.gray[300]};
   width: ${sizes(12)};
   height: ${sizes(12)};
   @media screen and (min-width: ${breakpoints.small}) {
@@ -38,7 +37,7 @@ export const ChevronButton = styled(Button)`
 `
 
 export const PaginationButton = styled.button<PaginationButtonProps>`
-  /* show only one button on mobile */
+  /* show only one active button on mobile */
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   border: none;
   cursor: pointer;
@@ -58,7 +57,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   :hover,
   :focus,
   :active {
-    color: ${colors.white};
+    color: ${colors.gray[50]};
     background-color: ${colors.gray[600]};
   }
   ${({ isActive }) => isActive && buttonActiveState}
