@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, zIndex, breakpoints, transitions } from '@/shared/theme'
+import { keyframes } from '@emotion/react'
 
 type ProgressbarProps = {
   progress: number
@@ -32,6 +33,22 @@ export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProp
     background-color: ${colors.gray[900]};
   }
 `
+
+const pulse = keyframes`
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+`
+
 export const ProgressBar = styled.div<ProgressbarProps>`
   position: absolute;
   top: 0;
@@ -42,21 +59,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  animation: load 2.5s infinite ease-in-out;
-  @keyframes load {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 1;
-    }
-    75% {
-      opacity: 0.7;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+  animation: ${pulse} 2.5s infinite ease-in-out;
 `
 
 export const Thumbnail = styled.div`

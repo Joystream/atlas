@@ -1,6 +1,6 @@
 import React from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { TextContainer, StyledTransactionIllustration, Spinner } from './TransactionDialog.style'
+import { TextContainer, StyledTransactionIllustration, StyledSpinner } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
 
@@ -19,7 +19,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({ onCancel, status,
       {...actionDialogProps}
     >
       <StyledTransactionIllustration />
-      <Spinner />
+      <StyledSpinner size="small" />
       <TextContainer>
         <StyledTitleText variant="h4">Waiting for funds...</StyledTitleText>
         <StyledDescriptionText variant="body2">
