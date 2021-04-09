@@ -4,6 +4,7 @@ import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/s
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
+import { badgeStyles } from '@/shared/components/Badge'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -82,10 +83,20 @@ export const ButtonGroup = styled.div`
   }
 `
 
-export const SidebarNavItem = styled.li`
+export const SidebarNavItem = styled.li<ExpandableElementProps>`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
+  ${badgeStyles}
+  &[data-badge]:after {
+    left: ${sizes(10)};
+    top: ${sizes(3)};
+    @media screen and (min-width: ${breakpoints.medium}) {
+      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
+      transition: transform ${transitions.timings.regular} ${transitions.easing};
+    }
+  }
 `
 
 export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`

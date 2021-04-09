@@ -8,7 +8,7 @@ import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, Vid
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { transitions } from '@/shared/theme'
-import { Sidenav, NavItemType, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewerSidenav, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { PersonalDataProvider } from '@/hooks'
 
@@ -18,24 +18,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
-]
-
-const viewerSidenavItems: NavItemType[] = [
-  {
-    icon: 'home-fill',
-    name: 'Home',
-    to: absoluteRoutes.viewer.index(),
-  },
-  {
-    icon: 'videos',
-    name: 'Videos',
-    to: absoluteRoutes.viewer.videos(),
-  },
-  {
-    icon: 'channels',
-    name: 'Channels',
-    to: absoluteRoutes.viewer.channels(),
-  },
 ]
 
 const ViewerLayout: React.FC = () => {
@@ -67,10 +49,11 @@ const ViewerLayout: React.FC = () => {
 
   const locationState = location.state as RoutingState
   const displayedLocation = locationState?.overlaidLocation || location
+
   return (
     <PersonalDataProvider>
       <ViewerTopbar />
-      <Sidenav items={viewerSidenavItems} />
+      <ViewerSidenav />
       <MainContainer>
         <ErrorBoundary
           fallback={ViewErrorFallback}
