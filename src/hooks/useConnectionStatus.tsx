@@ -11,24 +11,14 @@ type ConnectionStatusValue = {
   isUserConnectedToInternet: boolean
 }
 
+const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
+  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
+  return await Promise.race([timeoutPromise, promise])
+}
+
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
-  const [navigatorOnline, setNavigatorOnline] = useState(true)
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
-
-  useEffect(() => {
-    const connectionHandler = () => {
-      setNavigatorOnline(window.navigator.onLine)
-    }
-
-    window.addEventListener('offline', connectionHandler)
-    window.addEventListener('online', connectionHandler)
-
-    return () => {
-      window.removeEventListener('offline', connectionHandler)
-      window.removeEventListener('online', connectionHandler)
-    }
-  }, [])
 
   useEffect(() => {
     // ping google every three seconds to check if user is connected to internet
@@ -38,14 +28,17 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     return () => {
       clearInterval(interval)
     }
-  }, [navigatorOnline])
+  }, [])
 
   const checkConnection = async () => {
     try {
-      const res = await fetch('https://google.com', {
-        method: 'HEAD',
-        mode: 'no-cors',
-      })
+      const res = await withTimeout(
+        fetch('https://google.com', {
+          method: 'HEAD',
+          mode: 'no-cors',
+        }),
+        5000
+      )
       if (res) {
         setIsUserConnectedToInternet(true)
       }
