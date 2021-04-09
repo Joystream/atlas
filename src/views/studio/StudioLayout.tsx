@@ -4,11 +4,18 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
-import { CreateEditChannelView, MyVideosView, MyUploadsView } from '.'
-import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+import { CreateEditChannelView, MyUploadsView, MyVideosView } from '.'
+import {
+  JoystreamProvider,
+  ActiveUserProvider,
+  DraftsProvider,
+  PersonalDataProvider,
+  useConnectionStatus,
+} from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { ViewErrorFallback, StudioTopbar, StudioSidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
+
 import SignInView from './SignInView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
@@ -25,6 +32,7 @@ const studioRoutes = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -35,6 +43,10 @@ const StudioLayout = () => {
       <PersonalDataProvider>
         <ActiveUserProvider>
           <JoystreamProvider>
+            <NoConnectionIndicator
+              nodeConnectionStatus={nodeConnectionStatus}
+              isConnectedToInternet={isUserConnectedToInternet}
+            />
             <StudioTopbar />
             <StudioSidenav />
             <MainContainer>

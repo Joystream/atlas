@@ -11,7 +11,7 @@ const spinnerSizes = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
       return css`
-        font-size: 32px;
+        font-size: 25px;
       `
     case 'medium':
       return css`
