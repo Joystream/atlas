@@ -9,8 +9,8 @@ type CheckboxLabelProps = {
 
 export const CheckboxLabel = styled.label<CheckboxLabelProps>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  display: grid;
-  grid-template-columns: 24px 1fr;
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   grid-column-gap: ${sizes(4)};
   grid-row-gap: ${sizes(1)};
