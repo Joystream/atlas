@@ -167,7 +167,6 @@ export const StyledButton = styled('button', { shouldForwardProp: isPropValid })
   --horizontal-padding-large: 20px;
 
   border-width: 1px;
-  color: ${colors.gray[50]};
   text-decoration: none;
   border-style: solid;
   display: inline-flex;
