@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Text } from '@/shared/components'
 import {
   SnackbarWrapper,
   StyledInnerWrapper,
   SnackbarHeader,
+  SnackbarTitle,
   SnackbarButtonsContainer,
   SnackbarExitButton,
   SnackbarActionButton,
@@ -42,11 +42,18 @@ const Snackbar: React.FC<SnackbarProps> = ({
   }, [])
 
   return (
-    <SnackbarWrapper variant={variant} snackbarHeight={height}>
-      <StyledInnerWrapper ref={ref} hasDescription={!!description} hasActionButton={!!actionText} variant={variant}>
+    <SnackbarWrapper colorVariant={variant} snackbarHeight={height}>
+      <StyledInnerWrapper
+        ref={ref}
+        hasDescription={!!description}
+        hasActionButton={!!actionText}
+        colorVariant={variant}
+      >
         <SnackbarHeader>
           {icon && <SnackbarIcon name={icon} />}
-          <Text variant="body2">{title}</Text>
+          <SnackbarTitle variant="body2" hasDescription={!!description} colorVariant={variant}>
+            {title}
+          </SnackbarTitle>
           <SnackbarButtonsContainer>
             {actionText && !description && (
               <SnackbarActionButton variant="tertiary" onClick={onActionClick}>

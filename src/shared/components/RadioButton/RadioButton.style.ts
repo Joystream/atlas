@@ -49,13 +49,13 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
       &:focus {
         border-color: ${checked ? 'transparent' : colors.gray[700]};
         &::before {
-          background-color: ${checked ? colors.blue[100] : colors.gray[50]};
+          background-color: ${checked ? colors.blue[200] : colors.gray[50]};
         }
       }
       &:active {
         border-color: ${checked ? '' : colors.gray[700]};
         &::before {
-          background-color: ${checked ? colors.blue[100] : colors.gray[100]};
+          background-color: ${checked ? colors.blue[200] : colors.gray[100]};
         }
       }
     `

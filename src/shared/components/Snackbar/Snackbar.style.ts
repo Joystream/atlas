@@ -5,7 +5,7 @@ import Icon from '../Icon'
 import { SnackbarVariant } from './Snackbar'
 
 type SnackbarWrapperProps = {
-  variant?: SnackbarVariant
+  colorVariant?: SnackbarVariant
   snackbarHeight?: number
 }
 
@@ -14,11 +14,13 @@ type InnerWrapperProps = {
   hasActionButton?: boolean
 } & Omit<SnackbarWrapperProps, 'snackbarHeight'>
 
+type TitleProps = Omit<InnerWrapperProps, 'hasActionButton'>
+
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
   width: 100%;
   height: 0;
-  background-color: ${({ variant }) => (variant === 'secondary' ? colors.gray[700] : colors.blue[500])};
+  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? colors.gray[700] : colors.blue[500])};
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
@@ -62,20 +64,23 @@ export const SnackbarHeader = styled.div`
   width: 100%;
 `
 
+export const SnackbarTitle = styled(Text)<TitleProps>`
+  color: ${({ colorVariant, hasDescription }) =>
+    hasDescription ? colors.white : colorVariant === 'primary' ? colors.blue[200] : colors.gray[300]};
+`
+
 export const SnackbarDescription = styled(Text)`
   padding: ${sizes(1)} 0;
 `
 
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
-  color: ${({ variant }) => (variant === 'secondary' ? colors.gray[300] : colors.blue[100])};
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   width: 100%;
-  ${SnackbarHeader} {
-    color: ${({ hasDescription }) => hasDescription && colors.white};
-  }
+  color: white;
   ${SnackbarDescription} {
     ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
+    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
   }
 `
 
