@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import Text from '../Text'
 import { colors, sizes, transitions } from '@/shared/theme'
-import { LabelText } from '../Checkbox/Checkbox.styles'
 import HelperText from '../HelperText/HelperText'
 
 export type RadioButtonStyleProps = Partial<{
@@ -118,7 +118,7 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   transition: background-color 0.25s ease, border-color 0.25s ease;
 `
 
-export const StyledLabelText = styled(LabelText)`
+export const StyledLabelText = styled(Text)`
   width: calc(100% - var(--radio-button-container-size) - ${sizes(3)});
   margin-left: ${sizes(3)};
   color: ${colors.gray[50]};
