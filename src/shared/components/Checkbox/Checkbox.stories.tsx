@@ -48,6 +48,9 @@ Single.argTypes = {
   indeterminate: { table: { disable: false } },
   disabled: { table: { disable: false } },
   error: { table: { disable: false } },
+  helperText: {
+    defaultValue: 'With helper text',
+  },
 }
 
 export const Regular = Template.bind({})
