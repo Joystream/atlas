@@ -12,7 +12,7 @@ export const CheckboxLabel = styled.label<CheckboxLabelProps>`
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  grid-column-gap: ${sizes(4)};
+  grid-column-gap: ${sizes(3)};
   grid-row-gap: ${sizes(1)};
 `
 
@@ -20,7 +20,7 @@ export const Container = styled.div<CheckboxStateProps>`
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
-  margin: -${sizes(2)};
+  margin: -${sizes(1)};
   cursor: pointer;
   border-radius: 100%;
   color: ${colors.gray[300]};
