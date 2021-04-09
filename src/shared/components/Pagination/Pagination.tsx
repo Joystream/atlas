@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import Icon from '../Icon'
-import { PaginationWrapper, PaginationButton } from './Pagination.style'
+import React from 'react'
+import { PaginationWrapper, PaginationButton, ChevronButton, ThreeDotsWrapper } from './Pagination.style'
 
 export type PaginationProps = {
   itemsPerPage?: number
@@ -27,33 +26,41 @@ const Pagination: React.FC<PaginationProps> = ({
 
   if (totalPages <= 1) return null
 
+  const handleChangePage = (pageItem: number | string) => {
+    if (typeof pageItem === 'number') {
+      onChangePage(pageItem - 1)
+    }
+  }
+
   return (
     <PaginationWrapper>
-      <PaginationButton
-        isHidden={internalPage <= 1}
-        isChevron={true}
+      <ChevronButton
+        variant="secondary"
+        size="large"
+        icon="chevron-left"
         onClick={() => onChangePage(prevPage - 1)}
-        tabIndex={internalPage <= 1 ? -1 : 0}
-      >
-        <Icon name="chevron-left" />
-      </PaginationButton>
-      {pages.map((pageItem) => (
-        <PaginationButton
-          isActive={internalPage ? internalPage === pageItem : pageItem === 1}
-          key={pageItem}
-          onClick={() => onChangePage(pageItem - 1)}
-        >
-          {pageItem}
-        </PaginationButton>
-      ))}
-      <PaginationButton
-        isHidden={nextPage > totalPages}
-        isChevron={true}
+        disabled={internalPage <= 1}
+      />
+      {pages.map((pageItem, idx) =>
+        typeof pageItem === 'number' ? (
+          <PaginationButton
+            isActive={internalPage ? internalPage === pageItem : pageItem === 1}
+            key={idx}
+            onClick={() => handleChangePage(pageItem)}
+          >
+            {pageItem}
+          </PaginationButton>
+        ) : (
+          <ThreeDotsWrapper key={idx}>{pageItem}</ThreeDotsWrapper>
+        )
+      )}
+      <ChevronButton
+        icon="chevron-right"
+        size="large"
+        variant="secondary"
         onClick={() => (internalPage ? onChangePage(nextPage - 1) : onChangePage(2))}
-        tabIndex={nextPage <= totalPages ? -1 : 0}
-      >
-        <Icon name="chevron-right" />
-      </PaginationButton>
+        disabled={internalPage >= totalPages}
+      />
     </PaginationWrapper>
   )
 }
@@ -62,13 +69,37 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
   const paginationArray = Array.from({ length: totalPages }).map((_, idx) => idx + 1)
   const center = Math.floor(maxPaginationLinks / 2)
 
+  let slicedArray: Array<number>
   if (currentPage + center <= totalPages) {
     const start = Math.max(currentPage - 1 - center, 0)
     const end = start + maxPaginationLinks
-    return paginationArray.slice(start, end)
+    slicedArray = paginationArray.slice(start, end)
   } else {
-    return paginationArray.slice(-maxPaginationLinks)
+    slicedArray = paginationArray.slice(-maxPaginationLinks)
   }
+  if (maxPaginationLinks <= 3) {
+    return slicedArray
+  }
+
+  const arrayWithDots = slicedArray.map((el, idx) => {
+    // always show the first and the last one page
+    if (idx === 0) {
+      return 1
+    }
+    if (idx === slicedArray.length - 1) {
+      return totalPages
+    }
+    // show left "..."
+    if (idx === 1 && el - 1 !== 1) {
+      return '...'
+    }
+    // show right "..."
+    if (idx === slicedArray.length - 2 && el + 1 !== totalPages) {
+      return '...'
+    }
+    return el
+  })
+  return arrayWithDots
 }
 
 export default Pagination
