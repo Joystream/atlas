@@ -10,7 +10,8 @@ type SnackbarWrapperProps = {
 }
 
 type InnerWrapperProps = {
-  hasSubMessage?: boolean
+  hasDescription?: boolean
+  hasActionButton?: boolean
 } & Omit<SnackbarWrapperProps, 'snackbarHeight'>
 
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
@@ -61,13 +62,20 @@ export const SnackbarHeader = styled.div`
   width: 100%;
 `
 
+export const SnackbarDescription = styled(Text)`
+  padding: ${sizes(1)} 0;
+`
+
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
   color: ${({ variant }) => (variant === 'secondary' ? colors.gray[300] : colors.blue[100])};
-  padding: ${({ hasSubMessage }) => (hasSubMessage ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
+  padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   width: 100%;
   ${SnackbarHeader} {
-    color: ${({ hasSubMessage }) => hasSubMessage && colors.white};
+    color: ${({ hasDescription }) => hasDescription && colors.white};
+  }
+  ${SnackbarDescription} {
+    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
   }
 `
 
@@ -96,11 +104,6 @@ export const SnackbarActionButton = styled(Button)`
   &:hover {
     background-color: ${colors.transparent};
   }
-`
-
-export const SnackbarDescription = styled(Text)`
-  margin-top: ${sizes(1)};
-  margin-bottom: ${sizes(4)};
 `
 
 export const SnackbarIcon = styled(Icon)`

@@ -20,7 +20,7 @@ type SnackbarsState = {
 } & Omit<DisplaySnackbarArgs, 'time'>
 
 type SnackbarContextValue = {
-  displaySnackbar: (args: DisplaySnackbarArgs) => void
+  displaySnackbar: (args: DisplaySnackbarArgs) => string
   closeSnackbar: (id: string) => void
 }
 
@@ -41,6 +41,8 @@ export const SnackbarProvider: React.FC = ({ children }) => {
         setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
       }, timeout)
     }
+
+    return id
   }
 
   const closeSnackbar = (id: string) => {

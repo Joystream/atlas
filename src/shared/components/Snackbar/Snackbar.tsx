@@ -43,7 +43,7 @@ const Snackbar: React.FC<SnackbarProps> = ({
 
   return (
     <SnackbarWrapper variant={variant} snackbarHeight={height}>
-      <StyledInnerWrapper ref={ref} hasSubMessage={!!description} variant={variant}>
+      <StyledInnerWrapper ref={ref} hasDescription={!!description} hasActionButton={!!actionText} variant={variant}>
         <SnackbarHeader>
           {icon && <SnackbarIcon name={icon} />}
           <Text variant="body2">{title}</Text>
