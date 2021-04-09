@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Meta, Story } from '@storybook/react'
 import RadioButton from './RadioButton'
-import { template } from 'lodash'
 
 export default {
   title: 'Shared/RadioButton',

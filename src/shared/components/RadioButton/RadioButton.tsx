@@ -1,6 +1,7 @@
 import React from 'react'
 import {
-  Label,
+  RadioButtonLabel,
+  RadioButtonContainer,
   Input,
   StyledInput,
   StyledLabelText,
@@ -22,13 +23,15 @@ const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
     const isSelected = value === selectedValue
 
     return (
-      <Label disabled={disabled}>
-        <StyledInput checked={isSelected} error={error} disabled={disabled}>
-          <Input ref={ref} value={value} type="radio" disabled={disabled} {...props} checked={isSelected} />
-        </StyledInput>
+      <RadioButtonLabel disabled={disabled}>
+        <RadioButtonContainer>
+          <StyledInput checked={isSelected} error={error} disabled={disabled}>
+            <Input ref={ref} value={value} type="radio" disabled={disabled} {...props} checked={isSelected} />
+          </StyledInput>
+        </RadioButtonContainer>
         {label && <StyledLabelText variant="body1">{label}</StyledLabelText>}
         {helperText && <StyledHelperText helperText={helperText} error={error} />}
-      </Label>
+      </RadioButtonLabel>
     )
   }
 )

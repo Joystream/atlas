@@ -70,8 +70,9 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
   }
 }
 
-export const Label = styled.label<RadioButtonStyleProps>`
-  --radio-size: 18px;
+export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
+  --radio-button-size: 18px;
+  --radio-button-container-size: ${sizes(6)};
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
@@ -79,6 +80,14 @@ export const Label = styled.label<RadioButtonStyleProps>`
   & > span:nth-of-type(1) {
     margin: ${sizes(2)};
   }
+`
+
+export const RadioButtonContainer = styled.div`
+  width: var(--radio-button-container-size);
+  height: var(--radio-button-container-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const StyledInput = styled.div<RadioButtonStyleProps>`
@@ -90,8 +99,8 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   background-clip: content-box;
   padding: 3px;
   box-sizing: border-box;
-  width: var(--radio-size);
-  height: var(--radio-size);
+  width: var(--radio-button-size);
+  height: var(--radio-button-size);
   &::before {
     content: '';
     top: -8px;
@@ -110,12 +119,12 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
 `
 
 export const StyledLabelText = styled(LabelText)`
-  width: calc(100% - var(--radio-size) - ${sizes(4)});
-  margin-left: ${sizes(4)};
+  width: calc(100% - var(--radio-button-container-size) - ${sizes(3)});
+  margin-left: ${sizes(3)};
   color: ${colors.gray[50]};
 `
 
 export const StyledHelperText = styled(HelperText)`
-  margin-left: ${sizes(8)};
+  margin-left: calc(var(--radio-button-container-size) + ${sizes(3)});
   margin-top: 0;
 `
