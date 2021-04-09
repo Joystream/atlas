@@ -17,7 +17,7 @@ export const CheckboxLabel = styled.label<CheckboxLabelProps>`
 `
 
 export const LabelText = styled(Text)`
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(4)};
   color: ${colors.gray[50]};
 `
 
@@ -25,7 +25,7 @@ export const Container = styled.div<CheckboxStateProps>`
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
-  margin: -${sizes(1)};
+  margin: -${sizes(2)};
   cursor: pointer;
   border-radius: 100%;
   color: ${colors.gray[300]};
@@ -113,5 +113,5 @@ export const Checkmark = styled.div`
 export const StyledHelperText = styled(HelperText)`
   margin-top: ${sizes(1)};
   flex-basis: 100%;
-  margin-left: ${sizes(10)};
+  margin-left: 38px;
 `
