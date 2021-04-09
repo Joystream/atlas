@@ -24,7 +24,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     // ping google every three seconds to check if user is connected to internet
     const interval = setInterval(() => {
       checkConnection()
-    }, 3000)
+    }, 5000)
     return () => {
       clearInterval(interval)
     }
@@ -37,7 +37,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
           method: 'HEAD',
           mode: 'no-cors',
         }),
-        5000
+        4000
       )
       if (res) {
         setIsUserConnectedToInternet(true)
