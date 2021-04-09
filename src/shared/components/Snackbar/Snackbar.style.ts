@@ -77,7 +77,6 @@ export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   width: 100%;
-  color: white;
   ${SnackbarDescription} {
     ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
     ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
