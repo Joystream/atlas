@@ -1,14 +1,7 @@
 import React, { useState } from 'react'
 import Icon from '../Icon'
-import {
-  CheckboxLabel,
-  Checkmark,
-  Container,
-  InnerContainer,
-  Input,
-  LabelText,
-  StyledHelperText,
-} from './Checkbox.styles'
+import Text from '../Text'
+import { CheckboxLabel, Checkmark, Container, InnerContainer, Input, StyledHelperText } from './Checkbox.styles'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
@@ -88,7 +81,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
           </InnerContainer>
         </Container>
-        {label && <LabelText variant="body1">{label}</LabelText>}
+        {label && <Text variant="body1">{label}</Text>}
         {helperText && <StyledHelperText helperText={helperText} error={error} />}
       </CheckboxLabel>
     )

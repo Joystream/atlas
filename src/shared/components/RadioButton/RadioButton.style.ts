@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { LabelText } from '../Checkbox/Checkbox.styles'
+import Text from '../Text'
 import { colors, sizes, typography, transitions } from '../../theme'
 
 export type RadioButtonStyleProps = Partial<{
@@ -98,6 +98,6 @@ export const Label = styled.label<RadioButtonStyleProps>`
     margin: 8px;
   }
 `
-export const StyledLabelText = styled(LabelText)`
+export const StyledLabelText = styled(Text)`
   font-size: ${typography.sizes.subtitle2};
 `

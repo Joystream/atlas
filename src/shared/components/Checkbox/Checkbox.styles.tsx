@@ -2,7 +2,6 @@ import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 import HelperText from '../HelperText'
-import Text from '../Text'
 
 type CheckboxLabelProps = {
   disabled?: boolean
@@ -10,15 +9,11 @@ type CheckboxLabelProps = {
 
 export const CheckboxLabel = styled.label<CheckboxLabelProps>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  margin: 0;
+  display: grid;
+  grid-template-columns: 24px 1fr;
   align-items: center;
-  display: inline-flex;
-  flex-wrap: wrap;
-`
-
-export const LabelText = styled(Text)`
-  margin-left: ${sizes(4)};
-  color: ${colors.gray[50]};
+  grid-column-gap: ${sizes(4)};
+  grid-row-gap: ${sizes(1)};
 `
 
 export const Container = styled.div<CheckboxStateProps>`
@@ -111,7 +106,6 @@ export const Checkmark = styled.div`
 `
 
 export const StyledHelperText = styled(HelperText)`
-  margin-top: ${sizes(1)};
-  flex-basis: 100%;
-  margin-left: 38px;
+  margin: 0;
+  grid-column-start: 2;
 `
