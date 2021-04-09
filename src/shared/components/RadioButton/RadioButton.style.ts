@@ -124,7 +124,10 @@ export const StyledLabelText = styled(Text)`
   color: ${colors.gray[50]};
 `
 
-export const StyledHelperText = styled(HelperText)`
+export const StyledHelperText = styled(HelperText)<RadioButtonCaptionProps>`
   margin-left: calc(var(--radio-button-container-size) + ${sizes(3)});
-  margin-top: 0;
+  margin-top: ${sizes(1)};
+  span {
+    ${({ error }) => !error && `color: ${colors.gray[300]}`};
+  }
 `
