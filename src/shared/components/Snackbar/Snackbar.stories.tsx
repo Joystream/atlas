@@ -1,4 +1,4 @@
-import Snackbar, { SnackbarProps } from './Snackbar'
+import Snackbar, { IconsType } from './Snackbar'
 import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import Button from '../Button'
@@ -7,8 +7,19 @@ import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/hooks/useS
 export default {
   title: 'Shared/Snackbar',
   component: Snackbar,
-  args: {
-    message: 'Hello from snackbar',
+  argTypes: {
+    title: { defaultValue: 'Lorem ipsul dolor' },
+    description: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
+    actionText: { defaultValue: 'Action' },
+    variant: {
+      control: { type: 'select', options: ['primary', 'secondary'] },
+      defaultValue: 'secondary',
+    },
+    icon: {
+      control: { type: 'select', options: [null, 'error', 'success', 'info'] },
+      defaultValue: null,
+    },
+    timeout: { control: { type: 'number' }, defaultValue: null },
   },
   decorators: [
     (Story) => (
@@ -19,23 +30,13 @@ export default {
   ],
 } as Meta
 
-const Template: Story<SnackbarProps> = (args) => <Snackbar {...args} />
-
-const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ time, message, variant, buttonText }) => {
+const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
   return (
-    <>
-      <Button size="small" onClick={() => displaySnackbar({ message, variant, time, buttonText })}>
-        Show snackbar
-      </Button>
-    </>
+    <Button size="small" onClick={() => displaySnackbar({ ...args })}>
+      Show snackbar
+    </Button>
   )
 }
 
-export const Default = Template.bind({})
-
 export const Clickable = ClickableTemplate.bind({})
-
-Clickable.argTypes = {
-  time: { type: 'number' },
-}

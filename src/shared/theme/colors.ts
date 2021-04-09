@@ -21,7 +21,7 @@ export default {
     500: '#4038FF',
     400: '#5252FF',
     300: '#6C6CFF',
-    100: '#B4BBFF',
+    200: '#B4BBFF',
     50: '#E0E1FF',
   },
   success: '#1CCB00',
