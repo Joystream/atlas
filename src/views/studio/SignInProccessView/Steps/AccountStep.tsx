@@ -14,8 +14,10 @@ import {
   IconWrapper,
   AccountSecondary,
   StyledButton,
+  OrderedSteps,
+  OrderedStep,
 } from './AccountStep.style'
-import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { BottomBarContainer, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 
 type AccountStepProps = {
   onStepChange: (idx: number) => void
@@ -41,10 +43,10 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAccounts()
-    }, 2000)
-    return () => clearInterval(interval)
+    // const interval = setInterval(() => {
+    //   fetchAccounts()
+    // }, 2000)
+    // return () => clearInterval(interval)
   }, [fetchAccounts])
 
   const handleSelectAccount = async (id: string) => {
@@ -70,8 +72,28 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
               <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
             </CSSTransition>
             <StepTitle variant="h4">Waiting for account creation</StepTitle>
-            <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle>
-            <StyledSpinner />
+            <Text variant="body2" secondary>
+              Follow instructions to create an account:
+            </Text>
+            <OrderedSteps>
+              <OrderedStep secondary variant="caption" as="li">
+                Open the extension with the icon in your browser bar.
+              </OrderedStep>
+              <OrderedStep secondary variant="caption" as="li">
+                Click the plus icon
+              </OrderedStep>
+              <OrderedStep secondary variant="caption" as="li">
+                Continue with instructions presented on the screen
+              </OrderedStep>
+            </OrderedSteps>
+            {/* <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle> */}
+            {/* <StyledSpinner /> */}
+            <BottomBarContainer>
+              <BottomBarIcon name="dialog-warning"></BottomBarIcon>
+              <Text variant="body2" secondary>
+                Make sure to safely save your seed phrase!
+              </Text>
+            </BottomBarContainer>
           </StepWrapper>
         ) : (
           <StepWrapper>

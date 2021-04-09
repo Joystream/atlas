@@ -41,8 +41,8 @@ export const StyledCoinsIllustrations = styled(CoinsIllustration)`
 
 export const OrderedList = styled.ol`
   counter-reset: ordered-list-counter;
-  position: relative;
   list-style: none;
+  position: relative;
   ::before {
     position: absolute;
     content: '';

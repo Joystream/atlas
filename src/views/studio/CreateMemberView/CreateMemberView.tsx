@@ -7,7 +7,7 @@ import { textFieldValidation, urlValidation } from '@/utils/formValidationOption
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { createFakeMembership } from '../SignInView/fakeUtils'
+import { createFakeMembership } from '../fakeUtils'
 import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
 
 type Inputs = {

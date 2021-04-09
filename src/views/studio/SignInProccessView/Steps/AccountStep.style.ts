@@ -1,5 +1,5 @@
 import { Spinner, Button, Text } from '@/shared/components'
-import { sizes, colors } from '@/shared/theme'
+import { sizes, colors, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const AccountStepImg = styled.img`
@@ -51,4 +51,36 @@ export const AccountSecondary = styled(Text)`
 
 export const StyledButton = styled(Button)`
   align-self: center;
+`
+
+export const OrderedSteps = styled.ol`
+  counter-reset: ordered-steps-counter;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+`
+export const OrderedStep = styled(Text)`
+  margin: 10px 30px;
+  counter-increment: ordered-list-counter;
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  max-width: 170px;
+  flex-direction: column;
+  ::before {
+    margin-bottom: ${sizes(2)};
+    content: '0' counter(ordered-list-counter);
+    width: 36px;
+    height: 36px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${colors.gray[50]};
+    font-family: ${typography.fonts.headers};
+    font-size: ${typography.sizes.h6};
+    background-color: ${colors.gray[600]};
+  }
 `

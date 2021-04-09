@@ -1,13 +1,15 @@
 import React from 'react'
 import { installPolkadot } from '../../fakeUtils'
-import { BrowserIcon, RefreshText, StyledButton } from './ExtensionStep.style'
-import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { StyledButton } from './ExtensionStep.style'
+import { BottomBarContainer, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import polkadotIcon from '@/assets/polkadot.png'
+import { Text } from '@/shared/components'
 
 type ExtensionStepProps = {
   browser: 'chrome' | 'firefox' | null
 }
 
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser }) => {
+const ExtensionStep: React.FC<ExtensionStepProps> = () => {
   const handleRefresh = () => {
     // temporary, normally user will be installing polkadot manually
     installPolkadot()
@@ -15,19 +17,20 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser }) => {
   }
   return (
     <StepWrapper centered>
-      {browser && <BrowserIcon name={browser} />}
+      <img src={polkadotIcon} alt="polkadot icon" />
       <StepTitle variant="h4">Add polkadot extension</StepTitle>
-      <StepSubTitle variant="body2">
-        Please enable Polkadot extension or install it using one of the following plugin links.
+      <StepSubTitle secondary variant="body2">
+        Please enable Polkadot extension or install it using following plugin link.
       </StepSubTitle>
-      {browser && (
-        <StyledButton icon="external" to="https://polkadot.js.org/extension/">
-          Add polkadot plugin
-        </StyledButton>
-      )}
-      <RefreshText variant="h4" onClick={handleRefresh}>
-        Refresh page to use
-      </RefreshText>
+      <StyledButton icon="external" to="https://polkadot.js.org/extension/">
+        Install extension
+      </StyledButton>
+      <BottomBarContainer onClick={handleRefresh}>
+        <BottomBarIcon name="dialog-warning" />
+        <Text variant="body2" secondary>
+          Prease reload the page after installing the plugin
+        </Text>
+      </BottomBarContainer>
     </StepWrapper>
   )
 }

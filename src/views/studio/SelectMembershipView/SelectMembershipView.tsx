@@ -9,7 +9,6 @@ import StudioCard from './StudioCard'
 const SelectMembershipView = () => {
   const [memberships, setMemberships] = useState<Membership[]>()
 
-  const browser = useCheckBrowser()
   const { activeUser } = useActiveUser()
 
   // temporary

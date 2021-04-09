@@ -1,5 +1,11 @@
+import { Membership } from '@/api/queries'
+import { Multistepper } from '@/components'
+import { useCheckBrowser, useActiveUser } from '@/hooks'
 import { Text } from '@/shared/components'
-import React from 'react'
+import { promisify } from '@/utils/data'
+import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
+import React, { useCallback, useEffect, useState } from 'react'
+import { checkPolkadot, getAccountMemberships } from '../fakeUtils'
 import {
   HeroContainer,
   ListContainer,
@@ -11,8 +17,52 @@ import {
   UnOrderedItem,
   UnOrderedList,
 } from './SignInProccessView.style'
+import { ExtensionStep, AccountStep, TermsStep } from './Steps'
 
 const SignInProccessView = () => {
+  const [memberships, setMemberships] = useState<Membership[]>()
+
+  const browser = useCheckBrowser()
+  const { activeUser } = useActiveUser()
+  const { dialogVisible, openDialog, closeDialog, changeDialogStep, step } = useSteps()
+
+  // temporary
+  // const getMemberShips = useCallback(async () => {
+  //   if (!activeUser?.accountId) {
+  //     return
+  //   }
+  //   const memberships = await getAccountMemberships(activeUser.accountId)
+  //   setMemberships(memberships)
+  // }, [activeUser?.accountId])
+
+  // temporary
+  const checkIfExtensionIsIntalled = useCallback(async () => {
+    const isInstalled = await checkPolkadot()
+    if (isInstalled && step < 1) {
+      changeDialogStep(1)
+    }
+  }, [changeDialogStep, step])
+
+  useEffect(() => {
+    checkIfExtensionIsIntalled()
+  }, [checkIfExtensionIsIntalled])
+
+  const steps = [
+    {
+      title: 'Add Polkadot plugin',
+      element: <ExtensionStep browser={browser} />,
+    },
+    {
+      title: 'Create or select a polkadot account',
+      element: <AccountStep onStepChange={changeDialogStep} currentStepIdx={step} />,
+    },
+    {
+      title: 'Accept terms and conditions',
+      element: <TermsStep onStepChange={changeDialogStep} />,
+    },
+  ]
+
+  const hasMemberships = memberships?.length
   return (
     <>
       <StyledStudioContainer>
@@ -64,14 +114,64 @@ const SignInProccessView = () => {
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton size="large" icon="chevron-right">
+          <StyledButton size="large" icon="chevron-right" onClick={openDialog}>
             Join now
           </StyledButton>
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
+      <Multistepper currentStepIdx={step} steps={steps} showDialog={dialogVisible} onExitClick={closeDialog} />
     </>
   )
+}
+
+type DialogStep = {
+  step: number
+  isActive?: boolean
+}
+
+const getDialogState = promisify(() => readFromLocalStorage<DialogStep>('dialogStep') || { step: 0, isActive: false })
+
+const updateDialogState = async (dialogStep: DialogStep) => {
+  writeToLocalStorage('dialogStep', dialogStep)
+}
+
+const useSteps = () => {
+  const [step, setCurrentStep] = useState(0)
+  const [dialogVisible, setDialogVisible] = useState(false)
+
+  const fetchDialogState = useCallback(async () => {
+    const { step, isActive } = await getDialogState()
+    setCurrentStep(step)
+    setDialogVisible(isActive || false)
+  }, [])
+
+  useEffect(() => {
+    fetchDialogState()
+  }, [fetchDialogState])
+
+  const openDialog = () => {
+    setDialogVisible(true)
+    updateDialogState({ step: step, isActive: true })
+  }
+
+  const closeDialog = () => {
+    setDialogVisible(false)
+    updateDialogState({ step: 0, isActive: false })
+  }
+
+  const changeDialogStep = useCallback((newStep: number) => {
+    setCurrentStep(newStep)
+    updateDialogState({ step: newStep })
+  }, [])
+
+  return {
+    openDialog,
+    closeDialog,
+    changeDialogStep,
+    dialogVisible,
+    step,
+  }
 }
 
 export default SignInProccessView
