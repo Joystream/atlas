@@ -33,13 +33,17 @@ export const updateDraft = async (draftId: string, draftProps: RawDraft) => {
 
 export const removeDraft = async (ids: string | string[]) => {
   const currentDrafts = await getDrafts()
-  let newDrafts
+  const currentUnseenDrafts = await getUnseenDrafts()
+  let newDrafts, newUnseenDrafts
   if (Array.isArray(ids)) {
     newDrafts = currentDrafts.filter((draft) => !ids.includes(draft.id))
+    newUnseenDrafts = currentUnseenDrafts.filter(({ draftId }) => !ids.includes(draftId))
   } else {
     newDrafts = currentDrafts.filter((draft) => draft.id !== ids)
+    newUnseenDrafts = currentUnseenDrafts.filter(({ draftId }) => draftId !== ids)
   }
   writeToLocalStorage('drafts', newDrafts)
+  writeToLocalStorage('unseenDrafts', newUnseenDrafts)
 }
 
 export const clearDrafts = async (channelId?: string) => {
