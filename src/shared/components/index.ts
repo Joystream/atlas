@@ -1,6 +1,7 @@
 export { default as Placeholder } from './Placeholder'
 export { default as Avatar } from './Avatar'
 export { default as Button } from './Button'
+export { default as IconButton } from './IconButton'
 export { default as Carousel, CAROUSEL_ARROW_HEIGHT } from './Carousel'
 export { default as NavButton } from './NavButton'
 export { default as RadioButton } from './RadioButton'

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { darken, fluidRange } from 'polished'
 
-import { Button, Placeholder, Text } from '@/shared/components'
+import { Button, IconButton, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
 import { css, keyframes } from '@emotion/react'
 import ChannelLink from '../ChannelLink'
@@ -224,7 +224,7 @@ export const PlayButton = styled(Button)`
   }
 `
 
-export const SoundButton = styled(Button)`
+export const SoundButton = styled(IconButton)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
   width: ${BUTTONS_HEIGHT_PX};
