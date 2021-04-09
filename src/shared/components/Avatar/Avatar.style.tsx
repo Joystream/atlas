@@ -5,7 +5,7 @@ import { breakpoints, colors, sizes, transitions, typography } from '@/shared/th
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'medium'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
 type ContainerProps = {
   size: AvatarSize
@@ -13,7 +13,6 @@ type ContainerProps = {
 
 type EditButtonProps = {
   size: Omit<AvatarSize, 'default'>
-  withAvatar?: boolean
 }
 
 const previewAvatarCss = css`
@@ -44,7 +43,7 @@ const viewAvatarCss = css`
   }
 `
 
-const mediumAvatarCss = css`
+const smallAvatarCss = css`
   width: 42px;
   min-width: 42px;
   height: 42px;
@@ -71,8 +70,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return viewAvatarCss
     case 'fill':
       return fillAvatarCss
-    case 'medium':
-      return mediumAvatarCss
+    case 'small':
+      return smallAvatarCss
     default:
       return defaultAvatarCss
   }
@@ -96,7 +95,7 @@ export const EditButton = styled.button<EditButtonProps>`
   border: none;
   position: absolute;
   z-index: 3;
-  color: ${colors.gray[300]};
+  color: ${colors.gray[100]};
   font-family: ${typography.fonts.headers};
   font-weight: ${typography.weights.bold};
   font-size: ${typography.sizes.subtitle2};
@@ -105,16 +104,21 @@ export const EditButton = styled.button<EditButtonProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: all ${transitions.timings.loading} ${transitions.easing};
-  opacity: ${({ withAvatar }) => (withAvatar ? 0 : 1)};
+  transition: background-color ${transitions.timings.loading} ${transitions.easing};
+  opacity: 0;
   :hover {
-    background-color: rgba(11, 12, 15, 0.7);
+    background-color: ${colors.transparentBlack[54]};
     opacity: 1;
+  }
+  :active {
+    border: 2px solid ${colors.blue[500]};
+  }
+  span {
+    ${({ size }) => size === 'small' && 'display: none'};
   }
   svg {
     fill: ${colors.gray[300]};
-    width: 17px;
-    margin-bottom: ${sizes(3)};
+    margin-bottom: ${({ size }) => (size === 'small' ? 0 : sizes(1))};
     ${({ size }) =>
       size === 'cover' &&
       css`
@@ -148,4 +152,15 @@ export const SilhouetteAvatar = styled(Silhouette)`
   position: absolute;
   width: 100%;
   height: 100%;
+`
+
+export const NewChannelAvatar = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  background-color: ${colors.gray[800]};
 `

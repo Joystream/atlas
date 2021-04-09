@@ -8,6 +8,7 @@ import {
   StyledPlaceholder,
   SilhouetteAvatar,
   EditButton,
+  NewChannelAvatar,
 } from './Avatar.style'
 import { transitions } from '@/shared/theme'
 import Icon from '../Icon'
@@ -20,6 +21,7 @@ export type AvatarProps = {
   className?: string
   size?: AvatarSize
   editable?: boolean
+  newChannel?: boolean
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -30,6 +32,7 @@ const Avatar: React.FC<AvatarProps> = ({
   onEditClick,
   className,
   editable,
+  newChannel,
 }) => {
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation()
@@ -41,20 +44,26 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <Container onClick={onClick} size={size} className={className}>
       {isEditable && (
-        <EditButton size={size} withAvatar={!!imageUrl} onClick={handleEditClick}>
+        <EditButton size={size} onClick={handleEditClick}>
           <Icon name="camera" />
-          <span>{imageUrl ? 'Edit' : 'Add avatar'}</span>
+          <span>{imageUrl ? 'Edit Avatar' : 'Add avatar'}</span>
         </EditButton>
       )}
-      <StyledTransitionGroup>
-        <CSSTransition
-          key={loading ? 'placeholder' : 'content'}
-          timeout={parseInt(transitions.timings.loading)}
-          classNames={transitions.names.fade}
-        >
-          {loading ? <StyledPlaceholder rounded /> : imageUrl ? <StyledImage src={imageUrl} /> : <SilhouetteAvatar />}
-        </CSSTransition>
-      </StyledTransitionGroup>
+      {newChannel && !isEditable ? (
+        <NewChannelAvatar>
+          <Icon name="new-channel" />
+        </NewChannelAvatar>
+      ) : (
+        <StyledTransitionGroup>
+          <CSSTransition
+            key={loading ? 'placeholder' : 'content'}
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            {loading ? <StyledPlaceholder rounded /> : imageUrl ? <StyledImage src={imageUrl} /> : <SilhouetteAvatar />}
+          </CSSTransition>
+        </StyledTransitionGroup>
+      )}
     </Container>
   )
 }

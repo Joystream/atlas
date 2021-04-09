@@ -7,6 +7,7 @@ export default {
   component: Avatar,
   argTypes: {
     size: {
+      control: { type: 'select', options: ['preview', 'cover', 'view', 'default', 'fill', 'bar'] },
       defaultValue: 'cover',
     },
   },
