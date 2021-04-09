@@ -56,7 +56,7 @@ const Snackbar: React.FC<SnackbarProps> = ({
             <SnackbarExitButton onClick={onClick} icon="close" variant="tertiary" size="small" />
           </SnackbarButtonsContainer>
         </SnackbarHeader>
-        {description && <SnackbarDescription>{description}</SnackbarDescription>}
+        {description && <SnackbarDescription secondary>{description}</SnackbarDescription>}
         {actionText && description && (
           <SnackbarActionButton variant="tertiary" onClick={onActionClick}>
             {actionText}
