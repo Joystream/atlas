@@ -13,6 +13,7 @@ export const CheckboxLabel = styled.label<CheckboxLabelProps>`
   margin: 0;
   align-items: center;
   display: inline-flex;
+  flex-wrap: wrap;
 `
 
 export const LabelText = styled(Text)`
@@ -107,13 +108,10 @@ export const Checkmark = styled.div`
   width: 18px;
   height: 18px;
   border-radius: 1px;
-  position: relative;
-  svg {
-    position: absolute;
-  }
 `
 
 export const StyledHelperText = styled(HelperText)`
-  margin-top: 0;
+  margin-top: ${sizes(1)};
+  flex-basis: 100%;
   margin-left: ${sizes(10)};
 `

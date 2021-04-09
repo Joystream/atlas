@@ -70,29 +70,27 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     }
 
     return (
-      <>
-        <CheckboxLabel disabled={disabled}>
-          <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
-            <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
-              <Input
-                name={name}
-                ref={ref}
-                type="checkbox"
-                data-multiple="false"
-                checked={isSelected}
-                disabled={disabled}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                {...props}
-              />
-              <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
-            </InnerContainer>
-          </Container>
-          {label && <LabelText variant="body1">{label}</LabelText>}
-        </CheckboxLabel>
-        <StyledHelperText helperText={helperText} error={error} />
-      </>
+      <CheckboxLabel disabled={disabled}>
+        <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
+          <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
+            <Input
+              name={name}
+              ref={ref}
+              type="checkbox"
+              data-multiple="false"
+              checked={isSelected}
+              disabled={disabled}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              {...props}
+            />
+            <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
+          </InnerContainer>
+        </Container>
+        {label && <LabelText variant="body1">{label}</LabelText>}
+        {helperText && <StyledHelperText helperText={helperText} error={error} />}
+      </CheckboxLabel>
     )
   }
 )
