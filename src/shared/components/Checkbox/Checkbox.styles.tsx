@@ -1,41 +1,32 @@
-import { shade } from 'polished'
 import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
-import Text from '../Text'
+import HelperText from '../HelperText'
 
 type CheckboxLabelProps = {
   disabled?: boolean
 }
 
 export const CheckboxLabel = styled.label<CheckboxLabelProps>`
-  padding: ${sizes(2)} 0;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  display: inline-flex;
-`
-
-export const LabelText = styled(Text)`
-  margin-left: 10px;
-  color: ${colors.gray[400]};
+  grid-column-gap: ${sizes(3)};
+  grid-row-gap: ${sizes(1)};
 `
 
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
-  margin: -${sizes(2)};
+  margin: -${sizes(1)};
   cursor: pointer;
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
-  ${({ isFocused, selected, disabled }) =>
-    isFocused && !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`}
-  &:hover {
-    ${({ selected, disabled, error }) => [
-      !disabled && `background: ${selected ? colors.blue[900] : colors.gray[800]};`,
-      error && `background: ${shade(0.7, colors.error)};`,
-    ]}
+  :hover {
+    background: ${({ disabled }) => !disabled && colors.transparentPrimary[12]};
   }
 `
 
@@ -51,10 +42,13 @@ const disabledStyles = (props: CheckboxStateProps) =>
     ? [
         css`
           cursor: not-allowed;
+          opacity: 0.5;
+          border: 1px solid ${colors.gray[200]};
+          background-color: ${colors.gray[400]};
         `,
         props.selected &&
           css`
-            background-color: ${props.disabled ? colors.gray[700] : 'transparent'};
+            background-color: ${colors.gray[700]};
             border: 1px solid ${colors.gray[700]};
             color: ${colors.gray[400]};
           `,
@@ -82,6 +76,7 @@ export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
   color: ${colors.white};
   border: 1px solid ${colors.gray[300]};
+  border-radius: 1px;
   ${selectedStyles}
   ${errorStyles}
   ${disabledStyles}
@@ -108,4 +103,9 @@ export const Checkmark = styled.div`
   width: 18px;
   height: 18px;
   border-radius: 1px;
+`
+
+export const StyledHelperText = styled(HelperText)`
+  margin: 0;
+  grid-column-start: 2;
 `
