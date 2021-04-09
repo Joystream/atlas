@@ -48,10 +48,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
     return <EmptyFallback />
   }
 
+  const mappedTabs = tabs.map((tab) => ({ name: tab }))
+
   return (
     <ViewWrapper>
       <Container>
-        <Tabs tabs={tabs} onSelectTab={setSelectedIndex} initialIndex={0} />
+        <Tabs tabs={mappedTabs} onSelectTab={setSelectedIndex} initialIndex={0} />
         {selectedIndex === 0 && (
           <AllResultsTab
             key={query}
