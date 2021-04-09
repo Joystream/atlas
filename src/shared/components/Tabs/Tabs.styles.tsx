@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, zIndex } from '@/shared/theme'
+import { css } from '@emotion/react'
+import { colors, zIndex, sizes, typography } from '@/shared/theme'
+import { badgeStyles } from '@/shared/components/Badge'
 
 type TabProps = {
   selected: boolean
@@ -38,6 +40,12 @@ export const Tab = styled.div<TabProps>`
   border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : 'none')};
   :hover {
     cursor: pointer;
+  }
+  span {
+    ${badgeStyles}
+    &[data-badge]:after {
+      margin-top: calc(-1 * ${sizes(2)});
+    }
   }
 `
 

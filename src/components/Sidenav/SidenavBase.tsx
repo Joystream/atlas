@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
@@ -15,14 +15,11 @@ import {
   LegalLink,
   SidebarNavFooter,
   StudioText,
-} from './Sidenav.style'
+} from './SidenavBase.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import Icon, { IconType } from '@/shared/components/Icon'
-import { Button, HamburgerButton } from '@/shared/components'
-import FollowedChannels from './FollowedChannels'
-import { usePersonalData } from '@/hooks'
-import { absoluteRoutes } from '@/config/routes'
+import { HamburgerButton } from '@/shared/components'
 
 type NavSubitem = {
   name: string
@@ -32,25 +29,26 @@ type NavItemType = {
   subitems?: NavSubitem[]
   icon: IconType
   to: string
+  badgeNumber?: number
 } & NavSubitem
 
 export type SidenavProps = {
   items: NavItemType[]
   isStudio?: boolean
+  additionalContent?: React.ReactNode
+  buttonsContent?: React.ReactNode
+  expanded: boolean
+  toggleSideNav: (value: boolean) => void
 }
 
-const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
-  const {
-    state: { followedChannels },
-  } = usePersonalData()
-  const [expanded, setExpanded] = useState(false)
-
-  const handleNewVideoOpen = () => {
-    // TODO add logic for opening new video view
-    setExpanded(false)
-  }
-
-  const closeSideNav = () => setExpanded(false)
+const SidenavBase: React.FC<SidenavProps> = ({
+  expanded,
+  items,
+  isStudio,
+  additionalContent,
+  buttonsContent,
+  toggleSideNav,
+}) => {
   return (
     <>
       <CSSTransition
@@ -59,11 +57,11 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <DrawerOverlay onClick={closeSideNav} />
+        <DrawerOverlay onClick={() => toggleSideNav(false)} />
       </CSSTransition>
-      <HamburgerButton active={expanded} onClick={() => setExpanded(!expanded)} />
+      <HamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
       <SidebarNav expanded={expanded} isStudio={isStudio}>
-        <LogoLink to="/" onClick={closeSideNav} tabIndex={expanded ? 0 : -1}>
+        <LogoLink to="./" onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
           <Logo />
           {isStudio && <StudioText>studio</StudioText>}
         </LogoLink>
@@ -75,20 +73,16 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
               expanded={expanded}
               subitems={item.subitems}
               itemName={item.name}
-              onClick={closeSideNav}
+              onClick={() => toggleSideNav(false)}
               isStudio={isStudio}
+              badgeNumber={item.badgeNumber}
             >
               <Icon name={item.icon} />
               <span>{item.expandedName || item.name}</span>
             </NavItem>
           ))}
         </SidebarNavList>
-        {!isStudio && followedChannels.length > 0 ? (
-          <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
-        ) : (
-          <div />
-        )}
-
+        {additionalContent || <div />}
         <CSSTransition
           in={expanded}
           unmountOnExit
@@ -96,20 +90,8 @@ const Sidenav: React.FC<SidenavProps> = ({ items, isStudio }) => {
           classNames={transitions.names.fade}
         >
           <SidebarNavFooter>
-            <ButtonGroup>
-              <Button
-                variant="secondary"
-                onClick={closeSideNav}
-                icon="external"
-                to={isStudio ? absoluteRoutes.viewer.index(true) : absoluteRoutes.studio.index(true)}
-              >
-                Joystream {!isStudio && 'studio'}
-              </Button>
-              <Button icon="add-video" onClick={handleNewVideoOpen}>
-                New Video
-              </Button>
-            </ButtonGroup>
-            <LegalLink onClick={closeSideNav} to="/legal">
+            <ButtonGroup>{buttonsContent}</ButtonGroup>
+            <LegalLink onClick={() => toggleSideNav(false)} to="/legal">
               Copyright Policy
             </LegalLink>
           </SidebarNavFooter>
@@ -124,15 +106,25 @@ type NavItemProps = {
   expanded: boolean
   to: string
   itemName: string
+  badgeNumber?: number
   isStudio?: boolean
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
-const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children, to, onClick, itemName, isStudio }) => {
+const NavItem: React.FC<NavItemProps> = ({
+  expanded = false,
+  subitems,
+  children,
+  to,
+  onClick,
+  itemName,
+  badgeNumber,
+  isStudio,
+}) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const match = useMatch(to)
   return (
-    <SidebarNavItem>
+    <SidebarNavItem data-badge={badgeNumber} expanded={expanded}>
       <SidebarNavLink
         onClick={onClick}
         data-active={match ? 'true' : ''}
@@ -158,5 +150,5 @@ const NavItem: React.FC<NavItemProps> = ({ expanded = false, subitems, children,
   )
 }
 
-export { Sidenav as default, NavItem }
+export { SidenavBase as default, NavItem }
 export type { NavItemType }

@@ -1,5 +1,7 @@
-import Sidenav, { NavItem, NavItemType } from './Sidenav'
-import { EXPANDED_SIDENAVBAR_WIDTH } from './Sidenav.style'
+import SidenavBase, { NavItem, NavItemType } from './SidenavBase'
+import { EXPANDED_SIDENAVBAR_WIDTH } from './SidenavBase.style'
 
-export { Sidenav as default, EXPANDED_SIDENAVBAR_WIDTH, NavItem }
+export { SidenavBase as default, EXPANDED_SIDENAVBAR_WIDTH, NavItem }
 export type { NavItemType }
+export { StudioSidenav } from './StudioSidenav'
+export { ViewerSidenav } from './ViewerSidenav'

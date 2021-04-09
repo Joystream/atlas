@@ -1,8 +1,10 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { Draft, RawDraft } from './useDrafts'
+import { Draft, RawDraft, UnseenDraft } from './useDrafts'
 
 export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
+
+export const getUnseenDrafts = promisify(() => readFromLocalStorage<UnseenDraft[]>('unseenDrafts') || [])
 
 export const getDraft = async (id: string) => {
   const currentDrafts = await getDrafts()
@@ -46,5 +48,21 @@ export const clearDrafts = async (channelId?: string) => {
     writeToLocalStorage('drafts', [...currentDrafts.filter((draft) => draft.channelId !== channelId)])
   } else {
     writeToLocalStorage('drafts', [])
+  }
+}
+
+export const addUnseenDraft = async (draftId: string, channelId: string) => {
+  const currentUnseenDrafts = await getUnseenDrafts()
+  const newUnseenDrafts = [{ draftId, channelId }, ...currentUnseenDrafts]
+  writeToLocalStorage('unseenDrafts', newUnseenDrafts)
+  return newUnseenDrafts
+}
+
+export const clearUnseenDrafts = async (channelId?: string) => {
+  const currentUnseenDrafts = await getUnseenDrafts()
+  if (channelId) {
+    writeToLocalStorage('unseenDrafts', [...currentUnseenDrafts.filter((draft) => draft.channelId !== channelId)])
+  } else {
+    writeToLocalStorage('unseenDrafts', [])
   }
 }
