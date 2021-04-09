@@ -17,8 +17,6 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout
-    let interval: NodeJS.Timeout
     const connectionHandler = () => {
       setNavigatorOnline(window.navigator.onLine)
     }
@@ -27,35 +25,18 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     window.addEventListener('online', connectionHandler)
 
     return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
       window.removeEventListener('offline', connectionHandler)
       window.removeEventListener('online', connectionHandler)
     }
   }, [])
 
   useEffect(() => {
-    if (!navigatorOnline) {
-      return
-    }
-    // when navigator.online ping google every three seconds to check if user is connected to internet
+    // ping google every three seconds to check if user is connected to internet
     const interval = setInterval(() => {
       checkConnection()
     }, 3000)
     return () => {
       clearInterval(interval)
-    }
-  }, [navigatorOnline])
-
-  useEffect(() => {
-    if (navigatorOnline) {
-      return
-    }
-    const timeout = setTimeout(() => {
-      setIsUserConnectedToInternet(false)
-    }, 3000)
-    return () => {
-      clearInterval(timeout)
     }
   }, [navigatorOnline])
 

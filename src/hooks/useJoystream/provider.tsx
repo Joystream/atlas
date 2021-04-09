@@ -46,6 +46,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream.onAccountsUpdate = handleAccountsUpdate
         joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
       } catch (e) {
+        // TODO: listen to connection events to handle disconnect/reconnect
         setNodeConnection('disconnected')
         console.error('Failed to create JoystreamJs instance', e)
       }
