@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 
 const previewSubtextCss = css`
   margin-top: ${sizes(1)};
@@ -43,7 +43,7 @@ export const PreviewContainer = styled(Link)`
   > * + * {
     margin-left: ${sizes(3)};
 
-    @media screen and (min-width: ${breakpoints.small}) {
+    ${media.small} {
       margin-left: ${sizes(6)};
     }
   }

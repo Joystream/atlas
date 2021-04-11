@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { breakpoints, colors } from '@/shared/theme'
+import { colors, media } from '@/shared/theme'
 import { Placeholder } from '@/shared/components'
 import {
   Container,
@@ -29,7 +29,8 @@ const Placeholders = () => {
 
 const StyledPlaceholderThumbnail = styled(Placeholder)`
   display: none;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: block;
   }
 `

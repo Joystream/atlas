@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import Text from '../Text'
@@ -47,7 +47,8 @@ export const CoverImage = styled.div<CoverImageProps>`
   // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
   // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
   background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     background-image: linear-gradient(
         0deg,
         black 0%,
@@ -56,7 +57,8 @@ export const CoverImage = styled.div<CoverImageProps>`
       ),
       url(${({ src }) => src});
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     background-image: linear-gradient(
         0deg,
         black 0%,
@@ -65,7 +67,8 @@ export const CoverImage = styled.div<CoverImageProps>`
       ),
       url(${({ src }) => src});
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     background-image: linear-gradient(
         0deg,
         black 0%,
@@ -74,7 +77,8 @@ export const CoverImage = styled.div<CoverImageProps>`
       ),
       url(${({ src }) => src});
   }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     background-image: linear-gradient(
         0deg,
         black 0%,
@@ -83,7 +87,8 @@ export const CoverImage = styled.div<CoverImageProps>`
       ),
       url(${({ src }) => src});
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     background-image: linear-gradient(
         0deg,
         black 0%,
@@ -99,19 +104,23 @@ export const CoverWrapper = styled.div`
   // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
   // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
   margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
   }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
   }
 `
@@ -122,10 +131,9 @@ export const EditableControls = styled.div`
   position: absolute;
   display: flex;
   justify-content: center;
-
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     background-color: ${colors.transparentBlack[54]};
     opacity: 0;
     :hover {
@@ -133,7 +141,7 @@ export const EditableControls = styled.div`
     }
   }
 
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+  ${media.xlarge} {
     height: 70%;
   }
 `
@@ -148,7 +156,8 @@ export const RemoveCoverDesktopButton = styled(Button)`
   ${removeButtonStyles};
 
   display: none;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: flex;
   }
 `
@@ -158,7 +167,7 @@ export const RemoveCoverMobileButton = styled(IconButton)`
 
   background-color: ${colors.gray[800]};
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     display: none;
   }
 `
@@ -172,7 +181,7 @@ export const EditCoverDesktopOverlay = styled.div`
   color: ${colors.gray[200]};
   display: none;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     display: flex;
     cursor: pointer;
   }
@@ -185,7 +194,7 @@ export const EditCoverMobileButton = styled(IconButton)`
 
   background-color: ${colors.gray[800]};
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     display: none;
   }
 `

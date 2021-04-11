@@ -1,6 +1,6 @@
 import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Text } from '@/shared/components'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
@@ -48,7 +48,8 @@ export const LogoLink = styled(Link)`
   margin-top: 24px;
   margin-left: 80px;
   text-decoration: none;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-left: 86px;
   }
 `
@@ -92,7 +93,8 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
   &[data-badge]:after {
     left: ${sizes(10)};
     top: ${sizes(3)};
-    @media screen and (min-width: ${breakpoints.medium}) {
+
+    ${media.medium} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
     }
@@ -116,7 +118,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[32] : colors.transparentBlack[54])};
   }
   > svg {
-    @media screen and (min-width: ${breakpoints.medium}) {
+    ${media.medium} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
     }
@@ -132,7 +134,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
   }
   :after {
-    @media screen and (min-width: ${breakpoints.medium}) {
+    ${media.medium} {
       content: ${({ content }) => `'${content}'`};
       position: absolute;
       font-size: 12px;

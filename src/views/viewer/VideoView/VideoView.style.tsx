@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ViewWrapper } from '@/components'
 import { Placeholder, Text } from '@/shared/components'
-import { sizes, colors, typography, breakpoints } from '@/shared/theme'
+import { sizes, colors, typography, breakpoints, media } from '@/shared/theme'
 import { fluidRange } from 'polished'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
@@ -12,7 +12,8 @@ export const StyledViewWrapper = styled(ViewWrapper)`
 export const PlayerContainer = styled.div`
   width: 100%;
   height: calc(100vw * 0.5625);
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     height: 70vh;
   }
 `
@@ -59,7 +60,8 @@ export const DescriptionContainer = styled.div`
   p {
     font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
-    @media screen and (min-width: ${breakpoints.small}) {
+
+    ${media.small} {
       font-size: 1rem;
       color: ${colors.gray[300]};
       line-height: 175%;

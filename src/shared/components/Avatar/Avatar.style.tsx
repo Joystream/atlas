@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
-import { breakpoints, colors, transitions, typography } from '@/shared/theme'
+import { breakpoints, colors, transitions, typography, media } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
@@ -25,7 +25,8 @@ const coverAvatarCss = css`
   width: 64px;
   min-width: 64px;
   height: 64px;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     width: 88px;
     min-width: 88px;
     height: 88px;
