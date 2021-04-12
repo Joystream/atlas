@@ -79,9 +79,6 @@ export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
   grid-column-gap: ${sizes(3)};
   grid-row-gap: ${sizes(1)};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  & > span:nth-of-type(1) {
-    margin: ${sizes(2)};
-  }
 `
 
 export const RadioButtonContainer = styled.div`
