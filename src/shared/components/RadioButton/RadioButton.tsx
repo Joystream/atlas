@@ -13,17 +13,18 @@ type RadioButtonProps = Partial<{
   selectedValue: string | number
   label: string
   helperText?: string
+  className?: string
 }> &
   Omit<RadioButtonStyleProps, 'clickable'> &
   React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
 
 const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
-  ({ value, selectedValue, label, helperText, disabled, error, ...props }, ref) => {
+  ({ value, selectedValue, label, helperText, className, disabled, error, ...props }, ref) => {
     const isSelected = value === selectedValue
 
     return (
-      <RadioButtonLabel disabled={disabled}>
+      <RadioButtonLabel disabled={disabled} className={className}>
         <RadioButtonContainer>
           <StyledInput checked={isSelected} error={error} disabled={disabled}>
             <Input ref={ref} value={value} type="radio" disabled={disabled} {...props} checked={isSelected} />

@@ -73,9 +73,11 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
 export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
   --radio-button-size: 18px;
   --radio-button-container-size: ${sizes(6)};
-  display: inline-flex;
-  flex-wrap: wrap;
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
+  grid-column-gap: ${sizes(3)};
+  grid-row-gap: ${sizes(1)};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   & > span:nth-of-type(1) {
     margin: ${sizes(2)};
@@ -119,14 +121,12 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
 `
 
 export const StyledLabelText = styled(Text)`
-  width: calc(100% - var(--radio-button-container-size) - ${sizes(3)});
-  margin-left: ${sizes(3)};
   color: ${colors.gray[50]};
 `
 
 export const StyledHelperText = styled(HelperText)<RadioButtonCaptionProps>`
-  margin-left: calc(var(--radio-button-container-size) + ${sizes(3)});
-  margin-top: ${sizes(1)};
+  margin: 0;
+  grid-column-start: 2;
   span {
     ${({ error }) => !error && `color: ${colors.gray[300]}`};
   }
