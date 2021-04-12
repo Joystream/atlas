@@ -6,10 +6,16 @@ import { BASE_PATHS } from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { ViewerLayout } from './views/viewer'
 import { PlaygroundLayout } from './views/playground'
+import { TopbarBase, LoadingStudio } from '@/components'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   // TODO: improve
-  fallback: <div>Loading...</div>,
+  fallback: (
+    <div>
+      <TopbarBase variant="studio" />
+      <LoadingStudio />
+    </div>
+  ),
 })
 
 const MainLayout: React.FC = () => {
