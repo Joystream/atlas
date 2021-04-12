@@ -11,25 +11,11 @@ export type Account = {
   memberships: Membership[]
 }
 
-export const installPolkadot = () => {
-  writeToLocalStorage('fakePolkaDot', true)
-}
-export const checkPolkadot = promisify(() => readFromLocalStorage<boolean>('fakePolkaDot') || false)
-
 export const getAccounts = promisify(() => readFromLocalStorage<Account[]>('accounts') || [])
 
 export const getAccount = async (accountId: string) => {
   const accounts = await getAccounts()
   return accounts.find((account) => account.accountId === accountId)
-}
-
-export const createFakeAccount = async (accountName: string, accountBalance = 0) => {
-  const fakeId = Date.now().toString()
-  const presentAccounts = await getAccounts()
-  writeToLocalStorage('accounts', [
-    ...presentAccounts,
-    { accountId: fakeId, accountName, accountBalance, memberships: [] },
-  ])
 }
 
 export const createFakeMembership = async (accountId: string, membership: Omit<Membership, 'id'>) => {

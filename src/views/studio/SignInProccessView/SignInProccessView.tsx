@@ -4,8 +4,8 @@ import { useCheckBrowser, useActiveUser } from '@/hooks'
 import { Text } from '@/shared/components'
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
+import { web3Enable } from '@polkadot/extension-dapp'
 import React, { useCallback, useEffect, useState } from 'react'
-import { checkPolkadot, getAccountMemberships } from '../fakeUtils'
 import {
   HeroContainer,
   ListContainer,
@@ -21,27 +21,17 @@ import { ExtensionStep, AccountStep, TermsStep } from './Steps'
 
 const SignInProccessView = () => {
   const [memberships, setMemberships] = useState<Membership[]>()
-
-  const browser = useCheckBrowser()
-  const { activeUser } = useActiveUser()
   const { dialogVisible, openDialog, closeDialog, changeDialogStep, step } = useSteps()
 
-  // temporary
-  // const getMemberShips = useCallback(async () => {
-  //   if (!activeUser?.accountId) {
-  //     return
-  //   }
-  //   const memberships = await getAccountMemberships(activeUser.accountId)
-  //   setMemberships(memberships)
-  // }, [activeUser?.accountId])
-
-  // temporary
   const checkIfExtensionIsIntalled = useCallback(async () => {
-    const isInstalled = await checkPolkadot()
-    if (isInstalled && step < 1) {
-      changeDialogStep(1)
+    const extensions = await web3Enable('Joystream Atlas')
+    if (extensions.length) {
+      const polkadotJs = extensions.find((e) => e.name === 'polkadot-js')
+      if (polkadotJs) {
+        changeDialogStep(1)
+      }
     }
-  }, [changeDialogStep, step])
+  }, [changeDialogStep])
 
   useEffect(() => {
     checkIfExtensionIsIntalled()
@@ -50,7 +40,7 @@ const SignInProccessView = () => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <ExtensionStep browser={browser} />,
+      element: <ExtensionStep />,
     },
     {
       title: 'Create or select a polkadot account',

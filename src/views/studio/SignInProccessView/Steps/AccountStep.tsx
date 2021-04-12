@@ -1,23 +1,26 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser } from '@/hooks'
-import { Icon, Placeholder, Text } from '@/shared/components'
+import { Button, Icon, Placeholder, Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { createFakeAccount, getAccounts, Account } from '../../fakeUtils'
 import {
   AccountStepImg,
   AccountsWrapper,
-  StyledSpinner,
   AccountWrapper,
   AccountInfo,
   IconWrapper,
-  AccountSecondary,
-  StyledButton,
   OrderedSteps,
   OrderedStep,
+  IconGroup,
+  AccountAddress,
+  StyledRadioButton,
 } from './AccountStep.style'
+import polkadotIcon from '@/assets/polkadot.png'
+import joystreamIcon from '@/assets/logo.png'
 import { BottomBarContainer, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
 type AccountStepProps = {
   onStepChange: (idx: number) => void
@@ -27,50 +30,56 @@ type AccountStepProps = {
 const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
   const { setActiveUser, activeUser } = useActiveUser()
   const [imageLoaded, setImageLoaded] = useState(false)
-  const [accounts, setAccounts] = useState<null | Account[]>()
+  const [accounts, setAccounts] = useState<null | InjectedAccountWithMeta[]>()
   const [loading, setLoading] = useState(true)
-
-  // this is temporary. Normally user will do this inside polkadot
-  useEffect(() => {
-    createFakeAccount('fake name', 20)
-  }, [])
+  const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
   const fetchAccounts = useCallback(async () => {
-    // also temporary - some function to fetch polkadot account
-    const accountsFromLocalStorage = await getAccounts()
-    setAccounts(accountsFromLocalStorage)
-    setLoading(false)
+    const extension = await web3Enable('Joystream Atlas')
+    const accounts = await web3Accounts()
+    if (accounts.length) {
+      setAccounts(accounts)
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
-    // const interval = setInterval(() => {
-    //   fetchAccounts()
-    // }, 2000)
-    // return () => clearInterval(interval)
+    const interval = setInterval(() => {
+      fetchAccounts()
+    }, 2000)
+    return () => clearInterval(interval)
   }, [fetchAccounts])
 
-  const handleSelectAccount = async (id: string) => {
-    await setActiveUser({
-      accountId: id,
-      memberId: null,
-      channelId: null,
-    })
-    onStepChange(currentStepIdx + 1)
+  const handleSubmitSelectedAccount = async () => {
+    if (selectedAccountAddress) {
+      await setActiveUser({
+        accountId: selectedAccountAddress,
+        memberId: null,
+        channelId: null,
+      })
+      onStepChange(currentStepIdx + 1)
+    }
+  }
+
+  const handleSelect: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+    const element = e.currentTarget as HTMLInputElement
+    setSelectedAccountAddress(element.value)
   }
 
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading && !accounts?.length ? 'loading' : 'accounts'}
+        key={!accounts?.length ? 'loading' : 'accounts'}
         classNames={transitions.names.fadeAndSlide}
         timeout={parseInt(transitions.timings.routing)}
       >
-        {loading && !accounts?.length ? (
+        {!accounts?.length ? (
           <StepWrapper centered>
             {!imageLoaded && <Placeholder height="180px" width="320px" />}
             <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
               <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
             </CSSTransition>
+            <Spinner size="small" />
             <StepTitle variant="h4">Waiting for account creation</StepTitle>
             <Text variant="body2" secondary>
               Follow instructions to create an account:
@@ -86,8 +95,6 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
                 Continue with instructions presented on the screen
               </OrderedStep>
             </OrderedSteps>
-            {/* <StepSubTitle variant="body2">Open Polka Dot Extension and create your first account.</StepSubTitle> */}
-            {/* <StyledSpinner /> */}
             <BottomBarContainer>
               <BottomBarIcon name="dialog-warning"></BottomBarIcon>
               <Text variant="body2" secondary>
@@ -96,23 +103,33 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
             </BottomBarContainer>
           </StepWrapper>
         ) : (
-          <StepWrapper>
-            <StepTitle variant="h4">Select Account</StepTitle>
-            <StepSubTitle>
-              Select account you would like to assign to your new Joystream membership cccount. (Showing only accounts
-              with sufficient amount of funds to start a channel.)
-            </StepSubTitle>
-            <AccountsWrapper>
-              {accounts?.map(({ accountBalance, accountName, accountId }) => (
-                <AccountBar
-                  key={accountId}
-                  secondary={accountBalance + ' JOY'}
-                  name={accountName}
-                  onClick={() => handleSelectAccount(accountId)}
-                />
-              ))}
-            </AccountsWrapper>
-          </StepWrapper>
+          <form onSubmit={handleSubmitSelectedAccount}>
+            <StepWrapper centered>
+              <IconGroup>
+                <img src={polkadotIcon} alt="" />
+                <Icon name="connect" />
+                <img src={joystreamIcon} alt="" />
+              </IconGroup>
+              <StepTitle variant="h4">Connect accounts</StepTitle>
+              <StepSubTitle secondary>
+                Select polkadot account which you want to connect to your new joystream membership.
+              </StepSubTitle>
+              <AccountsWrapper>
+                {accounts?.map(({ address, meta: { name } }) => (
+                  <AccountBar
+                    key={address}
+                    address={address}
+                    name={name}
+                    onSelect={handleSelect}
+                    selectedValue={selectedAccountAddress}
+                  />
+                ))}
+              </AccountsWrapper>
+            </StepWrapper>
+            <Button type="submit" disabled={!selectedAccountAddress}>
+              Connect accounts
+            </Button>
+          </form>
         )}
       </CSSTransition>
     </SwitchTransition>
@@ -120,27 +137,27 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
 }
 
 export type AccountBarProps = {
-  name: string
-  secondary?: string
-  avatarUrl?: string
-  onClick?: () => void
+  name?: string
+  address?: string
+  onSelect?: (e: React.MouseEvent<HTMLElement>) => void
+  selectedValue?: string
 }
 
-const AccountBar: React.FC<AccountBarProps> = ({ name, secondary, onClick }) => {
+const AccountBar: React.FC<AccountBarProps> = ({ name, address, onSelect, selectedValue }) => {
   return (
-    <AccountWrapper>
+    <AccountWrapper isSelected={selectedValue === address}>
       <AccountInfo>
         <IconWrapper>
           <Icon name="profile" />
         </IconWrapper>
         <div>
-          <Text variant="h6">{name}</Text>
-          <AccountSecondary variant="body2">{secondary}</AccountSecondary>
+          <Text variant="subtitle1">{name}</Text>
+          <AccountAddress secondary variant="caption">
+            {address}
+          </AccountAddress>
         </div>
       </AccountInfo>
-      <StyledButton variant="secondary" size="medium" onClick={onClick}>
-        Select Account
-      </StyledButton>
+      <StyledRadioButton value={address} onClick={onSelect} selectedValue={selectedValue} />
     </AccountWrapper>
   )
 }

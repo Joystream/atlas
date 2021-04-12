@@ -1,18 +1,11 @@
 import React from 'react'
-import { installPolkadot } from '../../fakeUtils'
 import { StyledButton } from './ExtensionStep.style'
 import { BottomBarContainer, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import { Text } from '@/shared/components'
 
-type ExtensionStepProps = {
-  browser: 'chrome' | 'firefox' | null
-}
-
-const ExtensionStep: React.FC<ExtensionStepProps> = () => {
+const ExtensionStep: React.FC = () => {
   const handleRefresh = () => {
-    // temporary, normally user will be installing polkadot manually
-    installPolkadot()
     window.location.reload()
   }
   return (

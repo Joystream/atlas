@@ -18,11 +18,12 @@ export const StepWrapper = styled.div<StepWrapperProps>`
 `
 
 export const StepTitle = styled(Text)`
-  margin-top: ${sizes(4)};
+  margin-top: ${sizes(2)};
 `
 
 export const StepSubTitle = styled(Text)`
   margin-top: ${sizes(2)};
+  max-width: 400px;
 `
 
 export const BottomBarContainer = styled.div`

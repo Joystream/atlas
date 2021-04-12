@@ -1,16 +1,26 @@
-import { Spinner, Button, Text } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { Spinner, Button, Text, RadioButton } from '@/shared/components'
+import { sizes, colors, typography, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+type AccountWrapperProps = {
+  isSelected?: boolean
+}
+
+export const IconGroup = styled.div`
+  display: flex;
+  align-items: center;
+  img,
+  svg {
+    display: block;
+    margin: 0 ${sizes(2)};
+  }
+`
 
 export const AccountStepImg = styled.img`
   object-fit: cover;
   max-width: 100%;
 `
 
-export const StyledSpinner = styled(Spinner)`
-  margin-top: ${sizes(8)};
-  margin-bottom: ${sizes(5)};
-`
 export const AccountsWrapper = styled.div`
   width: 100%;
   max-height: 300px;
@@ -18,11 +28,22 @@ export const AccountsWrapper = styled.div`
   margin-bottom: 30px;
 `
 
-export const AccountWrapper = styled.div`
+export const AccountWrapper = styled.label<AccountWrapperProps>`
+  background-color: ${colors.transparentPrimary[6]};
+  cursor: pointer;
+  text-align: left;
   display: flex;
   width: 100%;
   justify-content: space-between;
   margin-top: ${sizes(8)};
+  padding: ${sizes(2)};
+  border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : 'transparent')};
+  transition: border ${transitions.timings.sharp} ${transitions.easing},
+    background-color ${transitions.timings.sharp} ${transitions.easing};
+  :hover {
+    border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : colors.gray[50])};
+    background-color: ${colors.transparentPrimary[12]};
+  }
 `
 export const AccountInfo = styled.div`
   display: flex;
@@ -44,9 +65,24 @@ export const IconWrapper = styled.div`
   }
 `
 
-export const AccountSecondary = styled(Text)`
+export const AccountAddress = styled(Text)`
   margin-top: ${sizes(1)};
-  color: ${colors.gray[200]};
+  display: block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+export const StyledRadioButton = styled(RadioButton)`
+  display: block;
+  align-self: center;
+  margin: 0;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  input {
+  }
 `
 
 export const StyledButton = styled(Button)`
