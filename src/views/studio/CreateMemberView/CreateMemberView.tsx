@@ -35,7 +35,7 @@ const CreateMemberView = () => {
     }
     const timeout = setTimeout(() => {
       setLoading(false)
-      navigate(absoluteRoutes.studio.selectMembership())
+      navigate(absoluteRoutes.studio.signIn())
     }, 3000)
     return () => {
       clearTimeout(timeout)

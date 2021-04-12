@@ -30,9 +30,9 @@ export const relativeRoutes = {
     editChannel: () => 'channel',
     videos: () => 'videos',
     uploads: () => 'uploads',
-    signIn: () => 'signIn',
+    signIn: () => 'signin',
+    join: () => 'signin/join',
     newMembership: () => 'membership/new',
-    selectMembership: () => 'memberships',
   },
   playground: {
     index: () => '',

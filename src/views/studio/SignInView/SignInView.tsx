@@ -3,10 +3,22 @@ import { useActiveUser } from '@/hooks'
 import React, { useCallback, useEffect, useState } from 'react'
 import { getAccountMemberships } from '../fakeUtils'
 import { Membership } from '../InitialStudioView/InitialStudioView'
-import { Header, Hero, MemberChannelGrid, SubTitle, Wrapper, StyledButton } from './SelectMembershipView.style'
-import StudioCard from './StudioCard'
+import {
+  Header,
+  Hero,
+  MemberChannelGrid,
+  SubTitle,
+  Wrapper,
+  StyledButton,
+  CardWrapper,
+  HandleText,
+  StyledAvatar,
+  IconWrapper,
+} from './SignInView.style'
+import { Link } from 'react-router-dom'
+import Icon from '@/shared/components/Icon'
 
-const SelectMembershipView = () => {
+const SignInView = () => {
   const [memberships, setMemberships] = useState<Membership[]>()
 
   const { activeUser } = useActiveUser()
@@ -54,4 +66,28 @@ const SelectMembershipView = () => {
   )
 }
 
-export default SelectMembershipView
+export type StudioCardProps = {
+  handle?: string
+  follows?: number
+  avatarPhotoUrl?: string
+  empty?: boolean
+  onClick?: () => void
+  to?: string
+}
+
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarPhotoUrl, empty, onClick, to }) => {
+  return (
+    <CardWrapper empty={empty} onClick={onClick} as={to ? Link : 'div'} to={to}>
+      {empty ? (
+        <IconWrapper>
+          <Icon name="profile" />
+        </IconWrapper>
+      ) : (
+        <StyledAvatar imageUrl={avatarPhotoUrl} />
+      )}
+      <HandleText variant={empty ? 'h5' : 'h4'}>{handle}</HandleText>
+    </CardWrapper>
+  )
+}
+
+export default SignInView
