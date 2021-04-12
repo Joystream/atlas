@@ -30,11 +30,9 @@ export const TermsOverlay = styled.div`
   background: linear-gradient(180deg, transparent 0%, ${colors.gray[800]} 100%);
 `
 export const ScrollButton = styled(Button)`
-  border-radius: 100%;
   position: absolute;
   right: ${sizes(6)};
   bottom: ${sizes(6)};
-  cursor: pointer;
 `
 export const TermsForm = styled.form`
   margin-top: ${sizes(4)};

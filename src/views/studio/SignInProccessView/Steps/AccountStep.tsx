@@ -1,6 +1,6 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser } from '@/hooks'
-import { Button, Icon, Placeholder, Spinner, Text } from '@/shared/components'
+import { Icon, Placeholder, Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -15,6 +15,7 @@ import {
   IconGroup,
   AccountAddress,
   StyledRadioButton,
+  StyledButton,
 } from './AccountStep.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
@@ -28,18 +29,16 @@ type AccountStepProps = {
 }
 
 const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
-  const { setActiveUser, activeUser } = useActiveUser()
+  const { setActiveUser } = useActiveUser()
   const [imageLoaded, setImageLoaded] = useState(false)
   const [accounts, setAccounts] = useState<null | InjectedAccountWithMeta[]>()
-  const [loading, setLoading] = useState(true)
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
   const fetchAccounts = useCallback(async () => {
-    const extension = await web3Enable('Joystream Atlas')
+    await web3Enable('Joystream Atlas')
     const accounts = await web3Accounts()
     if (accounts.length) {
       setAccounts(accounts)
-      setLoading(false)
     }
   }, [])
 
@@ -74,7 +73,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accounts?.length ? (
-          <StepWrapper centered>
+          <StepWrapper centered withBottomBar>
             {!imageLoaded && <Placeholder height="180px" width="320px" />}
             <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
               <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
@@ -126,9 +125,9 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
                 ))}
               </AccountsWrapper>
             </StepWrapper>
-            <Button type="submit" disabled={!selectedAccountAddress}>
+            <StyledButton type="submit" disabled={!selectedAccountAddress}>
               Connect accounts
-            </Button>
+            </StyledButton>
           </form>
         )}
       </CSSTransition>

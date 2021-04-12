@@ -9,7 +9,7 @@ const ExtensionStep: React.FC = () => {
     window.location.reload()
   }
   return (
-    <StepWrapper centered>
+    <StepWrapper centered withBottomBar>
       <img src={polkadotIcon} alt="polkadot icon" />
       <StepTitle variant="h4">Add polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">

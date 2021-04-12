@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 type StepWrapperProps = {
   centered?: boolean
+  withBottomBar?: boolean
 }
 
 export const StepWrapper = styled.div<StepWrapperProps>`
@@ -14,7 +15,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
   flex-direction: column;
   align-items: ${({ centered }) => (centered ? 'center' : 'flex-start')};
   margin-top: ${({ centered }) => (centered ? sizes(12) : sizes(2))};
-  padding-bottom: 60px;
+  ${({ withBottomBar }) => withBottomBar && 'padding-bottom: 60px;'};
 `
 
 export const StepTitle = styled(Text)`

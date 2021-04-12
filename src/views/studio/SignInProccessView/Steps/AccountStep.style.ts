@@ -81,12 +81,11 @@ export const StyledRadioButton = styled(RadioButton)`
   display: flex;
   align-items: center;
   justify-content: center;
-  input {
-  }
 `
 
 export const StyledButton = styled(Button)`
-  align-self: center;
+  display: block;
+  margin-left: auto;
 `
 
 export const OrderedSteps = styled.ol`
