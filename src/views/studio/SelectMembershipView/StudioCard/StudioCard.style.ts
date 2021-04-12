@@ -14,8 +14,6 @@ export const CardWrapper = styled('div', { shouldForwardProp: isPropValid })<Car
   display: flex;
   flex-direction: column;
   padding: ${sizes(6)};
-  margin-right: ${sizes(4)};
-  margin-bottom: ${sizes(4)};
   align-items: center;
   overflow: hidden;
   background-color: ${({ empty }) => (empty ? colors.gray[900] : colors.gray[800])};

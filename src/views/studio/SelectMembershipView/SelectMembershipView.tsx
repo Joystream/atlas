@@ -1,9 +1,9 @@
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useCheckBrowser } from '@/hooks'
+import { useActiveUser } from '@/hooks'
 import React, { useCallback, useEffect, useState } from 'react'
 import { getAccountMemberships } from '../fakeUtils'
 import { Membership } from '../InitialStudioView/InitialStudioView'
-import { Header, Hero, MemberChannelGrid, SubTitle, Wrapper } from './SelectMembershipView.style'
+import { Header, Hero, MemberChannelGrid, SubTitle, Wrapper, StyledButton } from './SelectMembershipView.style'
 import StudioCard from './StudioCard'
 
 const SelectMembershipView = () => {
@@ -29,11 +29,9 @@ const SelectMembershipView = () => {
   return (
     <Wrapper>
       <Header>
-        <Hero variant="hero">Select Membership</Hero>
-        <SubTitle variant="body2">
-          {hasMemberships
-            ? 'Select a membership from the list of your memberships. Click create a membership to create and publish a brand new membership.'
-            : 'You have no memberships yet. Click Create a membership to become a member'}
+        <Hero variant="hero">Sign in</Hero>
+        <SubTitle variant="body1" secondary>
+          Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
       </Header>
       <MemberChannelGrid>
@@ -45,7 +43,13 @@ const SelectMembershipView = () => {
             handle={membership.handle}
           />
         ))}
+        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
+        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
+        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
       </MemberChannelGrid>
+      <StyledButton icon="new-channel" size="large" variant="secondary">
+        New Member
+      </StyledButton>
     </Wrapper>
   )
 }
