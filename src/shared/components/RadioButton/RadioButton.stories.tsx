@@ -7,6 +7,7 @@ export default {
   component: RadioButton,
   args: {
     label: 'Hello there',
+    helperText: 'Caption',
   },
 } as Meta
 
@@ -17,7 +18,7 @@ const Template: Story = (args) => {
     setSelected(element.value)
   }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridGap: '12px' }}>
       <RadioButton {...args} name="radio-group" value="1" selectedValue={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="2" selectedValue={selected} onClick={handleClick} />
       <RadioButton {...args} name="radio-group" value="3" selectedValue={selected} onClick={handleClick} />
