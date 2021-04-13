@@ -337,7 +337,7 @@ const TabsBar: React.FC<TabsBarProps> = ({
           handleClose()
           handleResetVideoTabs()
         }}
-      ></Button>
+      />
     </ButtonsContainer>
   </Topbar>
 )
