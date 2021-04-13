@@ -26,8 +26,8 @@ import {
   KebabMenuIconContainer,
   CoverTopLeftContainer,
   RemoveButton,
-  CoverIcon,
   PublishingStateText,
+  CoverIconWrapper,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -230,11 +230,13 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                           />
                         </CoverTopLeftContainer>
                       )}
-                      {publisherMode ? (
-                        <CoverIcon as={SvgLargeEdit} />
-                      ) : (
-                        <CoverIcon as={SvgOutlineVideo} width={48} height={48} viewBox="0 0 24 24" />
-                      )}
+                      <CoverIconWrapper>
+                        {publisherMode ? (
+                          <SvgLargeEdit />
+                        ) : (
+                          <SvgOutlineVideo width={48} height={48} viewBox="0 0 24 24" />
+                        )}
+                      </CoverIconWrapper>
                       {removeButton && (
                         <RemoveButton onClick={handleRemoveClick}>
                           <SvgGlyphClose />

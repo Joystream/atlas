@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { colors, sizes } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
-// TODO: change to wrapper
-export const MessageIcon = styled.div`
+export const MessageIconWrapper = styled.div`
   margin-bottom: ${sizes(4)};
 `
 

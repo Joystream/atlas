@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyledButtonBase, StyledText } from './Button.style'
+import { ButtonIconWrapper, StyledButtonBase, StyledText } from './Button.style'
 import { TextVariant } from '../Text'
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 
@@ -18,7 +18,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ icon, children, size = 'medium', ...baseButtonProps }, ref) => {
     return (
       <StyledButtonBase ref={ref} size={size} {...baseButtonProps}>
-        {icon}
+        {icon && <ButtonIconWrapper>{icon}</ButtonIconWrapper>}
         {children && (
           <StyledText variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} size={size}>
             {children}

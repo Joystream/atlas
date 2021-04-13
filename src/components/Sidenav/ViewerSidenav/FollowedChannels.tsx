@@ -6,6 +6,7 @@ import {
   ChannelsItem,
   ShowMoreButton,
   StyledChannelLink,
+  ShowMoreIconWrapper,
 } from './FollowedChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
@@ -52,7 +53,9 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
           </ChannelsList>
           {numberOfChannels > MAX_CHANNELS && (
             <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
-              {isShowingMore ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
+              <ShowMoreIconWrapper>
+                {isShowingMore ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
+              </ShowMoreIconWrapper>
               {isShowingMore ? <span>Show Less</span> : <span>Show {numberOfChannels - MAX_CHANNELS} More</span>}
             </ShowMoreButton>
           )}

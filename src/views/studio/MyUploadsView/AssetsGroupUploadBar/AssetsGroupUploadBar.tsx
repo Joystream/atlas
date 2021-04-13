@@ -7,9 +7,10 @@ import {
   AssetsInfoContainer,
   UploadInfoContainer,
   AssetsDrawerContainer,
+  StyledExpandButton,
 } from './AssetsGroupUploadBar.style'
 import { AssetLine } from '../AssetLine'
-import { Text, ExpandButton } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
@@ -72,7 +73,10 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
         </AssetsInfoContainer>
         <UploadInfoContainer>
           <Text variant="subtitle2">{assetsGroupInfoText}</Text>
-          <ExpandButton expanded={isAssetsDrawerActive} onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)} />
+          <StyledExpandButton
+            expanded={isAssetsDrawerActive}
+            onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
+          />
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>

@@ -6,11 +6,12 @@ import {
   StyledPrimaryText,
   StyledSecondaryText,
   StyledTooltip,
-  StyledDetailsTextContainer,
   StyledButtonsContainer,
+  DetailsIconWrapper,
+  DetailsContainer,
 } from './ActionBar.style'
-import { Button } from '@/shared/components'
-import { SvgAlertInfo } from '@/shared/icons'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphInfo } from '@/shared/icons'
 
 export type ActionBarProps = {
   primaryText?: string
@@ -51,9 +52,12 @@ const ActionBar: React.FC<ActionBarProps> = ({
         <StyledButtonsContainer>
           {detailsText && tooltipText && (
             <StyledTooltip text={tooltipText} above right>
-              <StyledDetailsTextContainer>
-                {detailsText} {detailsTextIcon || <SvgAlertInfo />}
-              </StyledDetailsTextContainer>
+              <DetailsContainer>
+                <Text variant="body2" secondary>
+                  {detailsText}
+                </Text>
+                <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
+              </DetailsContainer>
             </StyledTooltip>
           )}
           {secondaryButtonText && !detailsText && (

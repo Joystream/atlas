@@ -1,7 +1,13 @@
 import { usePersonalData } from '@/hooks'
 import React, { useEffect, useState } from 'react'
-import { MessageWrapper, MessageTitle, MessageButton, MessageDescription } from './DismissibleMessage.style'
-import { SvgGlyphClose, SvgGlyphInfo } from '@/shared/icons'
+import {
+  MessageWrapper,
+  MessageTitle,
+  MessageButton,
+  MessageDescription,
+  StyledSvgGlyphInfo,
+} from './DismissibleMessage.style'
+import { SvgGlyphClose } from '@/shared/icons'
 
 export type DismissibleMessageProps = {
   title?: string
@@ -28,8 +34,8 @@ const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, descript
 
   return (
     <MessageWrapper className={className}>
-      <MessageTitle variant="h6">
-        <SvgGlyphInfo />
+      <MessageTitle variant="subtitle2">
+        <StyledSvgGlyphInfo />
         {title}
       </MessageTitle>
       <MessageButton aria-label="close dialog" onClick={() => updateDismissedMessages(id)} variant="tertiary">

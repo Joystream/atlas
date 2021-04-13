@@ -1,4 +1,4 @@
-import React, { SVGProps } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { fluidRange, transparentize } from 'polished'
 import styled from '@emotion/styled'
@@ -40,7 +40,7 @@ const clickableAnimation = (clickable: boolean) =>
         ${CoverHoverOverlay} {
           opacity: 1;
         }
-        ${CoverIcon} {
+        ${CoverIconWrapper} {
           transform: translateY(0);
         }
         ${ProgressOverlay} {
@@ -164,8 +164,7 @@ export const RemoveButton = styled(IconButton)`
   right: ${sizes(2)};
 `
 
-// TODO: use wrapper
-export const CoverIcon = styled.div<SVGProps<SVGSVGElement>>`
+export const CoverIconWrapper = styled.div`
   transform: translateY(40px);
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `

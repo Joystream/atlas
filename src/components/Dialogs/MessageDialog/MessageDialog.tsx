@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { StyledTitleText, StyledDescriptionText, MessageIcon } from './MessageDialog.style'
+import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
 import { SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/shared/icons'
 
 type DialogVariant = 'success' | 'warning' | 'error' | 'info'
@@ -11,11 +11,10 @@ export type MessageDialogProps = {
   description?: string
 } & ActionDialogProps
 
-// TODO: change to wrapper
 const VARIANT_TO_ICON: Record<DialogVariant, ReactNode | null> = {
-  success: <MessageIcon as={SvgOutlineSuccess} />,
-  warning: <MessageIcon as={SvgOutlineWarning} />,
-  error: <MessageIcon as={SvgOutlineError} />,
+  success: <SvgOutlineSuccess />,
+  warning: <SvgOutlineWarning />,
+  error: <SvgOutlineError />,
   info: null,
 }
 
@@ -29,7 +28,7 @@ const MessageDialog: React.FC<MessageDialogProps> = ({
 
   return (
     <ActionDialog {...actionDialogProps}>
-      {iconNode}
+      {iconNode && <MessageIconWrapper>{iconNode}</MessageIconWrapper>}
       {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
       <StyledDescriptionText variant="body2">{description}</StyledDescriptionText>
     </ActionDialog>

@@ -50,11 +50,10 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles}
   ${sizeOverwriteStyles};
+`
 
-  // TODO: add wrapper
-  svg {
-    margin-right: ${sizes(2)};
-  }
+export const ButtonIconWrapper = styled.span`
+  margin-right: ${sizes(2)};
 `
 
 export const StyledText = styled(Text)<ButtonSizeProps>`
