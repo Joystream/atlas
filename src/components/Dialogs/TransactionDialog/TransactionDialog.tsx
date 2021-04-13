@@ -5,7 +5,7 @@ import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/Message
 import { ExtrinsicStatus } from '@/joystream-lib'
 import MessageDialog from '../MessageDialog'
 
-export type TransactionDialogProps = Pick<ActionDialogProps, 'onEnter' | 'onExit' | 'className'> & {
+export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
   successTitle: string
   successDescription: string
@@ -45,7 +45,6 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
         description="Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help."
         secondaryButtonText="Close"
         onSecondaryButtonClick={onClose}
-        onExit={onClose}
       />
     )
   }
@@ -59,7 +58,6 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
         description={successDescription}
         secondaryButtonText="Close"
         onSecondaryButtonClick={onClose}
-        onExit={onClose}
       />
     )
   }
