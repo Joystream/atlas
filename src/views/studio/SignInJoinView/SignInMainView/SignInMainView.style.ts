@@ -1,31 +1,65 @@
+import { ReactComponent as SignInIllustrationSVG } from '@/assets/signin-illustration.svg'
+import { ReactComponent as SignInPatternSVG } from '@/assets/signin-pattern.svg'
+import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { media, colors, sizes, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { ReactComponent as BackgroundPatternSVG } from '@/assets/bg-pattern.svg'
-import tileImg from '@/assets/tile-example.png'
-import videoImg from '@/assets/video-example.png'
 
-export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: ${zIndex.background};
-  max-width: 100%;
-  transform: translateX(0);
-
-  ${media.small} {
-    left: 50%;
-    transform: translateX(-50%);
+export const StyledContainer = styled(StudioContainer)`
+  margin-top: 64px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  ${media.medium} {
+    text-align: unset;
+    justify-content: space-between;
   }
 `
 
-export const Wrapper = styled.div`
-  width: 100%;
-  overflow-x: hidden;
+export const LogoContainer = styled.div`
+  display: inline-flex;
+  ::after {
+    align-self: center;
+    padding: 2px 4px;
+    margin-left: ${sizes(3)};
+    background-color: ${colors.gray[600]};
+    font-size: 10px;
+    content: 'studio';
+  }
 `
+
 export const Header = styled.header`
-  margin-top: ${sizes(20)};
-  max-width: 710px;
+  margin-top: 60px;
+  max-width: 400px;
+  ${media.medium} {
+    max-width: 540px;
+  }
+  ${media.large} {
+    max-width: 600px;
+  }
+`
+
+export const StyledHero = styled(Text)`
+  margin-top: ${sizes(8)};
+`
+
+export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
+  margin-top: 60px;
+  align-self: center;
+  max-width: 420px;
+  ${media.large} {
+    max-width: unset;
+  }
+`
+
+export const StyledBackgroundPattern = styled(SignInPatternSVG)`
+  position: absolute;
+  top: 0;
+  right: 50px;
+  z-index: ${zIndex.background};
 `
 
 export const ButtonGroup = styled.div`
@@ -38,71 +72,5 @@ export const SignInButton = styled(Button)`
 
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
-  color: ${colors.gray[400]};
-`
-
-export const CompositionWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  z-index: ${zIndex.background};
-  right: ${sizes(8)};
-  top: 0;
-`
-export const VideoImgBg = styled.div`
-  background-image: url(${videoImg});
-  margin-top: ${sizes(10)};
-  position: absolute;
-  width: 100%;
-  height: 250px;
-  left: 30px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top right;
-
-  ${media.small} {
-    left: 0;
-    height: 350px;
-  }
-`
-
-export const TileImgBg = styled.div`
-  margin-top: ${sizes(10)};
-  position: absolute;
-  width: 100%;
-  height: 200px;
-  top: 120px;
-  left: 30px;
-  background: url(${tileImg});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top left;
-
-  ${media.small} {
-    right: 70px;
-    top: 190px;
-    left: initial;
-    width: 340px;
-    height: 280px;
-  }
-`
-
-export const Overlay = styled.div`
-  z-index: ${zIndex.background};
-  position: absolute;
-  top: 0;
-  left: -32px;
-  background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0.53) 100%);
-  width: 100vw;
-  height: 150%;
-  overflow: hidden;
-
-  ${media.small} {
-    width: 100%;
-  }
-
-  ${media.medium} {
-    background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0) 100%);
-    width: 70%;
-    left: 20%;
-  }
+  color: ${colors.gray[200]};
 `

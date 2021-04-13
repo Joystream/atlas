@@ -1,18 +1,17 @@
-import { StudioContainer } from '@/components'
-import { Button, Text } from '@/shared/components'
+import { Button } from '@/shared/components'
 import React from 'react'
 import {
   ButtonGroup,
-  CompositionWrapper,
   Header,
-  Overlay,
+  LogoContainer,
   SignInButton,
-  Wrapper,
   StyledBackgroundPattern,
+  StyledContainer,
+  StyledHero,
+  StyledSignInIllustrationSVG,
   SubTitle,
-  TileImgBg,
-  VideoImgBg,
 } from './SignInMainView.style'
+import { ReactComponent as FullLogoSVG } from '@/assets/full-logo.svg'
 
 export type Membership = {
   id: string
@@ -27,30 +26,27 @@ type SignInMainViewProps = {
 
 const SignInMainView: React.FC<SignInMainViewProps> = ({ onButtonClick }) => {
   return (
-    <StudioContainer>
+    <StyledContainer>
+      <Header>
+        <LogoContainer>
+          <FullLogoSVG />
+        </LogoContainer>
+        <StyledHero variant="hero">Welcome to - Joystream Studio</StyledHero>
+        <SubTitle variant="body1">
+          Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
+        </SubTitle>
+        <ButtonGroup>
+          <SignInButton icon="channel" size="large" onClick={onButtonClick}>
+            Sign in
+          </SignInButton>
+          <Button variant="secondary" icon="informative" size="large" to="https://www.joystream.org/">
+            How it works?
+          </Button>
+        </ButtonGroup>
+      </Header>
+      <StyledSignInIllustrationSVG />
       <StyledBackgroundPattern />
-      <CompositionWrapper>
-        <VideoImgBg />
-        <TileImgBg />
-      </CompositionWrapper>
-      <Overlay />
-      <Wrapper>
-        <Header>
-          <Text variant="h1">Start your Joystream channel for free!</Text>
-          <SubTitle variant="h3">
-            Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
-          </SubTitle>
-          <ButtonGroup>
-            <SignInButton size="large" onClick={onButtonClick}>
-              Sign in For Free
-            </SignInButton>
-            <Button variant="secondary" size="large" to="https://www.joystream.org/">
-              How it works?
-            </Button>
-          </ButtonGroup>
-        </Header>
-      </Wrapper>
-    </StudioContainer>
+    </StyledContainer>
   )
 }
 
