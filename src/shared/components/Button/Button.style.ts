@@ -29,27 +29,32 @@ const sizeOverwriteStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
   }
 }
 
-const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles | null => {
-  if (size === 'medium') {
-    return css`
-      padding: 1px 0;
-    `
+const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
+  // make the text look centered wrt the icon
+  switch (size) {
+    case 'large':
+      return css`
+        margin-top: -2px;
+        padding-bottom: 2px;
+      `
+    case 'medium':
+      return css`
+        padding-bottom: 2px;
+      `
+    case 'small':
+      return css`
+        padding: 1px 0 3px 0;
+      `
   }
-  if (size === 'small') {
-    return css`
-      padding: 2px 0;
-    `
-  }
-  return null
 }
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
-  ${sizeOverwriteStyles};
+  ${sizeOverwriteStyles}
 `
 
 export const StyledText = styled(Text)<ButtonSizeProps>`
   // compensate for line-height being 1
-  ${textPaddingStyles};
+  ${textPaddingStyles}
 `
 
 export const StyledIcon = styled(Icon)`
