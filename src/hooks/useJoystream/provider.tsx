@@ -38,7 +38,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
     const init = async () => {
       try {
-        joystream = await JoystreamJs.build(APP_NAME, NODE_URL)
+        joystream = new JoystreamJs(NODE_URL, APP_NAME)
         setJoystream(joystream)
         setAccounts(joystream.accounts)
         setNodeConnection('connected')
