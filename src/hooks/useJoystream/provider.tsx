@@ -24,6 +24,13 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const [accountsSet, setAccountsSet] = useState(false)
   const [extensionConnected, setExtensionConnected] = useState(false)
 
+  const handleNodeConnectionUpdate = useCallback(
+    (connected: boolean) => {
+      setNodeConnection(connected ? 'connected' : 'disconnected')
+    },
+    [setNodeConnection]
+  )
+
   const handleAccountsUpdate = useCallback((accounts: Account[]) => {
     setAccounts(accounts)
     setAccountsSet(true)
@@ -38,16 +45,16 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
     const init = async () => {
       try {
-        joystream = await JoystreamJs.build(APP_NAME, NODE_URL)
+        setNodeConnection('connecting')
+        joystream = new JoystreamJs(NODE_URL, APP_NAME)
         setJoystream(joystream)
-        setAccounts(joystream.accounts)
-        setNodeConnection('connected')
 
+        setAccounts(joystream.accounts)
         joystream.onAccountsUpdate = handleAccountsUpdate
         joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
+        joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
-        // TODO: listen to connection events to handle disconnect/reconnect
-        setNodeConnection('disconnected')
+        handleNodeConnectionUpdate(false)
         console.error('Failed to create JoystreamJs instance', e)
       }
     }
@@ -57,7 +64,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, setNodeConnection])
+  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, handleNodeConnectionUpdate, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeUser || !accountsSet) {
