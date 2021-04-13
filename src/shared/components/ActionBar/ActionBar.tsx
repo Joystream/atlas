@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {
   StyledActionBarContainer,
   StyledInnerContainer,
@@ -9,8 +9,8 @@ import {
   StyledDetailsTextContainer,
   StyledButtonsContainer,
 } from './ActionBar.style'
-import { Button, Icon } from '@/shared/components'
-import type { IconType } from '../Icon'
+import { Button } from '@/shared/components'
+import { SvgAlertInfo } from '@/shared/icons'
 
 export type ActionBarProps = {
   primaryText?: string
@@ -18,10 +18,10 @@ export type ActionBarProps = {
   primaryButtonText?: string
   detailsText?: string
   tooltipText?: string
-  detailsTextIcon?: IconType
+  detailsTextIcon?: ReactNode
   isActive?: boolean
   secondaryButtonText?: string
-  secondaryButtonIcon?: IconType
+  secondaryButtonIcon?: ReactNode
   className?: string
   onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -52,7 +52,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
           {detailsText && tooltipText && (
             <StyledTooltip text={tooltipText} above right>
               <StyledDetailsTextContainer>
-                {detailsText} <Icon name={detailsTextIcon || 'info'} />
+                {detailsText} {detailsTextIcon || <SvgAlertInfo />}
               </StyledDetailsTextContainer>
             </StyledTooltip>
           )}

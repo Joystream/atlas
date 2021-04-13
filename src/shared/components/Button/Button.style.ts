@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import ButtonBase, { ButtonSize } from '../ButtonBase'
-import Icon from '../Icon'
 import Text from '../Text'
 import { css, SerializedStyles } from '@emotion/react'
 import { sizes } from '@/shared/theme'
@@ -50,13 +49,15 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles}
+  ${sizeOverwriteStyles};
+
+  // TODO: add wrapper
+  svg {
+    margin-right: ${sizes(2)};
+  }
 `
 
 export const StyledText = styled(Text)<ButtonSizeProps>`
   // compensate for line-height being 1
   ${textPaddingStyles}
-`
-
-export const StyledIcon = styled(Icon)`
-  margin-right: ${sizes(2)};
 `

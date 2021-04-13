@@ -9,7 +9,8 @@ import {
   AssetsDrawerContainer,
 } from './AssetsGroupUploadBar.style'
 import { AssetLine } from '../AssetLine'
-import { Icon, Text, ExpandButton } from '@/shared/components'
+import { Text, ExpandButton } from '@/shared/components'
+import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
 type AssetStatus = 'completed' | 'uploading' | 'pending' | 'failed' | 'reconnecting'
@@ -47,7 +48,6 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
   const alreadyUploadedSize = files.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const assetsGroupIconName = hasErrorNumber ? 'error-second' : isChannelType ? 'my-channel' : 'play'
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : title
   const assetsGroupNumberText = `${files.length} asset${files.length > 1 ? 's' : ''}`
   const assetsGroupInfoText = isPending
@@ -64,7 +64,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
       >
         <ProgressBar progress={masterProgress} />
         <Thumbnail>
-          <Icon name={assetsGroupIconName} />
+          {hasErrorNumber ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>

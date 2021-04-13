@@ -76,7 +76,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
       {...actionDialogProps}
     >
       <StyledTransactionIllustration />
-      <StyledSpinner size="small" />
+      <StyledSpinner />
       <TextContainer>
         <StyledTitleText variant="h4">{stepDetails?.title}</StyledTitleText>
         <StyledDescriptionText variant="body2">{stepDetails?.description}</StyledDescriptionText>

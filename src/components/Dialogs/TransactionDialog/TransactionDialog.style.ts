@@ -18,6 +18,7 @@ export const StyledTransactionIllustration = styled(TransactionIllustration)`
 `
 
 export const StyledSpinner = styled(Spinner)`
+  position: absolute;
   top: ${sizes(6)};
   left: ${sizes(6)};
 `

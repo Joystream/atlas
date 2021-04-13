@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { CancelButton, Container, Input, StyledIcon } from './Searchbar.style'
+import { CancelButton, Container, Input, StyledSvgOutlineSearch } from './Searchbar.style'
+import { SvgGlyphClose } from '@/shared/icons'
 
 type SearchbarProps = {
   value: string
@@ -41,7 +42,7 @@ const Searchbar: React.FC<SearchbarProps> = ({
 
   return (
     <Container className={className}>
-      <StyledIcon name="search" />
+      <StyledSvgOutlineSearch />
       <Input
         value={controlled ? externalValue : value}
         placeholder={placeholder}
@@ -54,7 +55,11 @@ const Searchbar: React.FC<SearchbarProps> = ({
         data-hj-allow
         {...htmlProps}
       />
-      {showCancelButton && <CancelButton onClick={handleCancel} variant="tertiary" icon="close" size="small" />}
+      {showCancelButton && (
+        <CancelButton onClick={handleCancel} variant="tertiary" size="small">
+          <SvgGlyphClose />
+        </CancelButton>
+      )}
     </Container>
   )
 }

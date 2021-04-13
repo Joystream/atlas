@@ -11,7 +11,6 @@ import {
   CoverDurationOverlay,
   CoverHoverOverlay,
   CoverImage,
-  CoverPlayIcon,
   MetaText,
   ProgressBar,
   ProgressOverlay,
@@ -22,15 +21,13 @@ import {
   SpacedPlaceholder,
   CoverImageContainer,
   CoverVideoPublishingStateOverlay,
-  CoverEditIcon,
-  DraftIcon,
-  UnlistedIcon,
   CoverNoImage,
-  KebabMenuIcon,
   ContextMenuContainer,
   KebabMenuIconContainer,
-  CoverRemoveButton,
   CoverTopLeftContainer,
+  RemoveButton,
+  CoverIcon,
+  PublishingStateText,
 } from './VideoPreviewBase.styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -40,6 +37,17 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { ContextMenu, ContextMenuItem, Placeholder } from '..'
 import { useContextMenu } from '@/hooks'
 import { PullUp } from './PullUp'
+import {
+  SvgGlyphClose,
+  SvgGlyphCopy,
+  SvgGlyphDraft,
+  SvgGlyphEdit,
+  SvgGlyphHide,
+  SvgGlyphMore,
+  SvgGlyphTrash,
+  SvgLargeEdit,
+  SvgOutlineVideo,
+} from '@/shared/icons'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -204,8 +212,8 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     )}
                     {(videoPublishState === 'unlisted' || isDraft) && (
                       <CoverVideoPublishingStateOverlay>
-                        {isDraft ? <DraftIcon /> : <UnlistedIcon />}
-                        {isDraft ? 'Draft' : 'Unlisted'}
+                        {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
+                        <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
                       </CoverVideoPublishingStateOverlay>
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
@@ -222,8 +230,16 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                           />
                         </CoverTopLeftContainer>
                       )}
-                      {publisherMode ? <CoverEditIcon /> : <CoverPlayIcon />}
-                      {removeButton && <CoverRemoveButton onClick={handleRemoveClick} />}
+                      {publisherMode ? (
+                        <CoverIcon as={SvgLargeEdit} />
+                      ) : (
+                        <CoverIcon as={SvgOutlineVideo} width={48} height={48} viewBox="0 0 24 24" />
+                      )}
+                      {removeButton && (
+                        <RemoveButton onClick={handleRemoveClick}>
+                          <SvgGlyphClose />
+                        </RemoveButton>
+                      )}
                     </CoverHoverOverlay>
                   </Anchor>
                   {!!progress && (
@@ -308,21 +324,21 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
             {publisherMode && !isLoading && (
               <ContextMenuContainer>
                 <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
-                  <KebabMenuIcon />
+                  <SvgGlyphMore />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
                   {onEditVideoClick && (
-                    <ContextMenuItem iconName="pencil-fill" onClick={onEditVideoClick}>
+                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
                       {isDraft ? 'Edit Draft' : 'Edit Video'}
                     </ContextMenuItem>
                   )}
                   {onCopyVideoURLClick && (
-                    <ContextMenuItem iconName="link" onClick={onCopyVideoURLClick}>
+                    <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
                       Copy Video URL
                     </ContextMenuItem>
                   )}
                   {onDeleteVideoClick && (
-                    <ContextMenuItem iconName="trash" onClick={onDeleteVideoClick}>
+                    <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
                       {isDraft ? 'Delete Draft' : 'Delete Video'}
                     </ContextMenuItem>
                   )}

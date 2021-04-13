@@ -1,6 +1,7 @@
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Text from '../Text'
+import { IconButton } from '@/shared/components'
 
 export const MessageWrapper = styled.div`
   position: relative;
@@ -10,20 +11,13 @@ export const MessageWrapper = styled.div`
   max-width: 450px;
 `
 
-export const MessageButton = styled.button`
+export const MessageButton = styled(IconButton)`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};
-  border: none;
-  padding: ${sizes(2)};
-  cursor: pointer;
-  background: none;
-  svg {
-    width: 16px;
-    color: ${colors.white};
-  }
 `
 
+// TODO: check style
 export const MessageTitle = styled(Text)`
   display: flex;
   align-items: center;

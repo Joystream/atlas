@@ -11,7 +11,7 @@ import {
   NewChannelAvatar,
 } from './Avatar.style'
 import { transitions } from '@/shared/theme'
-import Icon from '../Icon'
+import { SvgGlyphImage, SvgGlyphNewChannel } from '@/shared/icons'
 
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -45,13 +45,13 @@ const Avatar: React.FC<AvatarProps> = ({
     <Container onClick={onClick} size={size} className={className}>
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
-          <Icon name="camera" />
+          <SvgGlyphImage />
           <span>{imageUrl ? 'Edit Avatar' : 'Add avatar'}</span>
         </EditButton>
       )}
       {newChannel && !isEditable ? (
         <NewChannelAvatar>
-          <Icon name="new-channel" />
+          <SvgGlyphNewChannel />
         </NewChannelAvatar>
       ) : (
         <StyledTransitionGroup>

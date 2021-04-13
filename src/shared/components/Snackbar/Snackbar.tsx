@@ -1,21 +1,21 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, ReactNode } from 'react'
 import {
   SnackbarWrapper,
   StyledInnerWrapper,
   SnackbarHeader,
   SnackbarTitle,
   SnackbarButtonsContainer,
-  SnackbarExitButton,
   SnackbarActionButton,
-  SnackbarIcon,
   SnackbarDescription,
+  SnackbarIconContainer,
 } from './Snackbar.style'
+import { SvgGlyphClose } from '@/shared/icons'
+import { IconButton } from '@/shared/components'
 
 export type SnackbarVariant = 'primary' | 'secondary'
-export type IconsType = 'error' | 'success' | 'info'
 export type SnackbarProps = {
   variant?: SnackbarVariant
-  icon?: IconsType
+  icon?: ReactNode
   title: string
   description?: string
   actionText?: string
@@ -50,7 +50,7 @@ const Snackbar: React.FC<SnackbarProps> = ({
         colorVariant={variant}
       >
         <SnackbarHeader>
-          {icon && <SnackbarIcon name={icon} />}
+          {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
           <SnackbarTitle variant="body2" hasDescription={!!description} colorVariant={variant}>
             {title}
           </SnackbarTitle>
@@ -60,7 +60,9 @@ const Snackbar: React.FC<SnackbarProps> = ({
                 {actionText}
               </SnackbarActionButton>
             )}
-            <SnackbarExitButton onClick={onClick} icon="close" variant="tertiary" size="small" />
+            <IconButton onClick={onClick} variant="tertiary" size="small">
+              <SvgGlyphClose />
+            </IconButton>
           </SnackbarButtonsContainer>
         </SnackbarHeader>
         {description && <SnackbarDescription secondary>{description}</SnackbarDescription>}

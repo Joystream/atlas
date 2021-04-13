@@ -9,8 +9,8 @@ import {
 } from './FollowedChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
-import { Icon } from '@/shared/components'
 import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
+import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
 
 const MAX_CHANNELS = 4
 
@@ -52,7 +52,7 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
           </ChannelsList>
           {numberOfChannels > MAX_CHANNELS && (
             <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
-              <Icon name={isShowingMore ? 'chevron-up' : 'chevron-down'} />
+              {isShowingMore ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
               {isShowingMore ? <span>Show Less</span> : <span>Show {numberOfChannels - MAX_CHANNELS} More</span>}
             </ShowMoreButton>
           )}

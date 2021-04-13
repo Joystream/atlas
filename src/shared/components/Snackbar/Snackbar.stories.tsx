@@ -1,4 +1,4 @@
-import Snackbar, { IconsType } from './Snackbar'
+import Snackbar from './Snackbar'
 import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import Button from '../Button'
@@ -15,7 +15,7 @@ export default {
       control: { type: 'select', options: ['primary', 'secondary'] },
       defaultValue: 'secondary',
     },
-    icon: {
+    iconType: {
       control: { type: 'select', options: [null, 'error', 'success', 'info'] },
       defaultValue: null,
     },
