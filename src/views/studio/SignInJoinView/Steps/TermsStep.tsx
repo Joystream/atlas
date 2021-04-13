@@ -5,7 +5,7 @@ import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import { StepTitle, StepWrapper } from './Steps.style'
+import { StepFooter, StepTitle, StepWrapper } from './Steps.style'
 import {
   TermsBox,
   TextWrapper,
@@ -101,23 +101,25 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>
-      <TermsForm onSubmit={handleSubmit}>
-        <CSSTransition
-          in={isCheckboxVisible}
-          timeout={parseInt(transitions.timings.loading)}
-          classNames={transitions.names.fade}
-          unmountOnExit
-        >
-          <Checkbox
-            value={isAccepted}
-            onClick={() => setIsAccepted(!isAccepted)}
-            label="I’ve read and accept Terms And Conditions"
-          />
-        </CSSTransition>
-        <ContinueButton type="submit" disabled={!isAccepted}>
-          Continue
-        </ContinueButton>
-      </TermsForm>
+      <StepFooter>
+        <TermsForm onSubmit={handleSubmit}>
+          <CSSTransition
+            in={isCheckboxVisible}
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+            unmountOnExit
+          >
+            <Checkbox
+              value={isAccepted}
+              onClick={() => setIsAccepted(!isAccepted)}
+              label="I’ve read and accept Terms And Conditions"
+            />
+          </CSSTransition>
+          <ContinueButton type="submit" disabled={!isAccepted}>
+            Continue
+          </ContinueButton>
+        </TermsForm>
+      </StepFooter>
     </StepWrapper>
   )
 }

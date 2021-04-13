@@ -19,7 +19,7 @@ import {
 } from './AccountStep.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
-import { BottomBarContainer, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
@@ -94,12 +94,12 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
                 Continue with instructions presented on the screen
               </OrderedStep>
             </OrderedSteps>
-            <BottomBarContainer>
+            <StepFooter>
               <BottomBarIcon name="dialog-warning"></BottomBarIcon>
               <Text variant="body2" secondary>
                 Make sure to safely save your seed phrase!
               </Text>
-            </BottomBarContainer>
+            </StepFooter>
           </StepWrapper>
         ) : (
           <form onSubmit={handleSubmitSelectedAccount}>
@@ -124,10 +124,12 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
                   />
                 ))}
               </AccountsWrapper>
+              <StepFooter>
+                <StyledButton type="submit" disabled={!selectedAccountAddress}>
+                  Connect accounts
+                </StyledButton>
+              </StepFooter>
             </StepWrapper>
-            <StyledButton type="submit" disabled={!selectedAccountAddress}>
-              Connect accounts
-            </StyledButton>
           </form>
         )}
       </CSSTransition>
