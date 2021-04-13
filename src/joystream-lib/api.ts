@@ -49,14 +49,23 @@ export class JoystreamJs {
   // if needed these could become some kind of event emitter
   public onAccountsUpdate?: (accounts: Account[]) => unknown
   public onExtensionConnectedUpdate?: (connected: boolean) => unknown
+  public onNodeConnectionUpdate?: (connected: boolean) => unknown
 
   /* Lifecycle */
   constructor(endpoint: string, appName: string) {
     const provider = new WsProvider(endpoint)
-    this.api = new ApiPromise({ provider, types })
     provider.on('connected', () => {
       this.logConnectionData(endpoint)
+      this.onNodeConnectionUpdate?.(true)
     })
+    provider.on('disconnected', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+    provider.on('error', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+
+    this.api = new ApiPromise({ provider, types })
 
     this.initPolkadotExtension(appName)
   }
