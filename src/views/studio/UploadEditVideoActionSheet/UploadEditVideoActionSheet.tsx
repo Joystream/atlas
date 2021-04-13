@@ -329,7 +329,7 @@ const TabsBar: React.FC<TabsBarProps> = ({
             handleOpen()
           }
         }}
-      ></Button>
+      />
       <Button
         icon="close"
         variant="tertiary"
