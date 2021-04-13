@@ -11,6 +11,7 @@ import { ChannelMetadata } from '@joystream/content-metadata-protobuf'
 import {
   AccountNotFoundError,
   AccountNotSelectedError,
+  ApiNotConnectedError,
   ExtensionSignCancelledError,
   ExtensionUnknownError,
   ExtrinsicFailedError,
@@ -48,10 +49,23 @@ export class JoystreamJs {
   // if needed these could become some kind of event emitter
   public onAccountsUpdate?: (accounts: Account[]) => unknown
   public onExtensionConnectedUpdate?: (connected: boolean) => unknown
+  public onNodeConnectionUpdate?: (connected: boolean) => unknown
 
   /* Lifecycle */
-  private constructor(api: ApiPromise, appName: string) {
-    this.api = api
+  constructor(endpoint: string, appName: string) {
+    const provider = new WsProvider(endpoint)
+    provider.on('connected', () => {
+      this.logConnectionData(endpoint)
+      this.onNodeConnectionUpdate?.(true)
+    })
+    provider.on('disconnected', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+    provider.on('error', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+
+    this.api = new ApiPromise({ provider, types })
 
     this.initPolkadotExtension(appName)
   }
@@ -86,16 +100,6 @@ export class JoystreamJs {
     }
   }
 
-  static async build(appName: string, endpoint: string): Promise<JoystreamJs> {
-    const provider = new WsProvider(endpoint)
-    const api = await ApiPromise.create({ provider, types })
-    await api.isReady
-
-    const lib = new JoystreamJs(api, endpoint)
-    lib.logConnectionData(endpoint)
-    return lib
-  }
-
   destroy() {
     this.api.disconnect()
     this.unsubscribeFromAccountChanges?.()
@@ -115,7 +119,17 @@ export class JoystreamJs {
     console.error(`[JoystreamJS] ${msg}`)
   }
 
+  private async ensureApi() {
+    try {
+      await this.api.isReady
+    } catch (e) {
+      console.error(e)
+      throw new ApiNotConnectedError()
+    }
+  }
+
   private async logConnectionData(endpoint: string) {
+    await this.ensureApi()
     const chain = await this.api.rpc.system.chain()
     this.log(`Connected to chain "${chain}" via "${endpoint}"`)
   }
@@ -222,6 +236,8 @@ export class JoystreamJs {
   }
 
   async getAccountBalance(accountId: AccountId): Promise<number> {
+    await this.ensureApi()
+
     const balance = await this.api.derive.balances.account(accountId)
 
     return new BN(balance.freeBalance).toNumber()
@@ -233,6 +249,8 @@ export class JoystreamJs {
     inputAssets: ChannelAssets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ChannelId> {
+    await this.ensureApi()
+
     // === channel assets ===
     // first avatar, then cover photo
     const inputAssetsList: AssetMetadata[] = [
