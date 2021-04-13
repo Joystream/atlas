@@ -1,8 +1,7 @@
-/* eslint-disable new-cap */
 import BN from 'bn.js'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Bytes, GenericEvent, Raw, Option, Vec, TypeRegistry, u64 } from '@polkadot/types'
+import { Bytes, GenericEvent, Raw, Option, Vec, TypeRegistry, u64 as U64 } from '@polkadot/types'
 import RuntimeAccountId from '@polkadot/types/generic/AccountId'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import { web3AccountsSubscribe, web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
@@ -212,8 +211,8 @@ export class JoystreamJs {
     const content = new ContentParameters(this.api.registry, {
       content_id: ContentId.generate(this.api.registry),
       // hardcoded type_id - it's not used but needs to be one of the allowed values
-      type_id: new u64(this.api.registry, 1),
-      size: new u64(this.api.registry, size),
+      type_id: new U64(this.api.registry, 1),
+      size: new U64(this.api.registry, size),
       ipfs_content_id: new Bytes(this.api.registry, ipfsContentId),
     })
     return new NewAsset(this.api.registry, { upload: content })
