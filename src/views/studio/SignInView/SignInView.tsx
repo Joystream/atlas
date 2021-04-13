@@ -1,8 +1,6 @@
 import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser } from '@/hooks'
-import React, { useCallback, useEffect, useState } from 'react'
-import { getAccountMemberships } from '../fakeUtils'
-import { Membership } from '../InitialStudioView/InitialStudioView'
+import React, { useState } from 'react'
 import {
   Header,
   Hero,
@@ -19,24 +17,9 @@ import { Link } from 'react-router-dom'
 import Icon from '@/shared/components/Icon'
 
 const SignInView = () => {
-  const [memberships, setMemberships] = useState<Membership[]>()
+  const [memberships, setMemberships] = useState()
 
   const { activeUser } = useActiveUser()
-
-  // temporary
-  const getMemberShips = useCallback(async () => {
-    if (!activeUser?.accountId) {
-      return
-    }
-    const memberships = await getAccountMemberships(activeUser.accountId)
-    setMemberships(memberships)
-  }, [activeUser?.accountId])
-
-  useEffect(() => {
-    getMemberShips()
-  }, [getMemberShips])
-
-  const hasMemberships = memberships?.length
 
   return (
     <Wrapper>
@@ -47,14 +30,6 @@ const SignInView = () => {
         </SubTitle>
       </Header>
       <MemberChannelGrid>
-        {memberships?.map((membership) => (
-          <StudioCard
-            to={absoluteRoutes.studio.newChannel()}
-            key={membership.id}
-            avatarPhotoUrl={membership.avatarUri}
-            handle={membership.handle}
-          />
-        ))}
         <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
         <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
         <StudioCard to={absoluteRoutes.studio.newChannel()} empty />

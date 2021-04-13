@@ -17,42 +17,12 @@ import {
   UnOrderedItem,
   UnOrderedList,
 } from './SignInProccessView.style'
-import { ExtensionStep, AccountStep, TermsStep } from './Steps'
 
-const SignInProccessView = () => {
-  const [memberships, setMemberships] = useState<Membership[]>()
-  const { dialogVisible, openDialog, closeDialog, changeDialogStep, step } = useSteps()
+type SignInProccessViewProps = {
+  onOpenDialog?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}
 
-  const checkIfExtensionIsIntalled = useCallback(async () => {
-    const extensions = await web3Enable('Joystream Atlas')
-    if (extensions.length) {
-      const polkadotJs = extensions.find((e) => e.name === 'polkadot-js')
-      if (polkadotJs) {
-        changeDialogStep(1)
-      }
-    }
-  }, [changeDialogStep])
-
-  useEffect(() => {
-    checkIfExtensionIsIntalled()
-  }, [checkIfExtensionIsIntalled])
-
-  const steps = [
-    {
-      title: 'Add Polkadot plugin',
-      element: <ExtensionStep />,
-    },
-    {
-      title: 'Create or select a polkadot account',
-      element: <AccountStep onStepChange={changeDialogStep} currentStepIdx={step} />,
-    },
-    {
-      title: 'Accept terms and conditions',
-      element: <TermsStep onStepChange={changeDialogStep} />,
-    },
-  ]
-
-  const hasMemberships = memberships?.length
+const SignInProccessView: React.FC<SignInProccessViewProps> = ({ onOpenDialog }) => {
   return (
     <>
       <StyledStudioContainer>
@@ -104,64 +74,14 @@ const SignInProccessView = () => {
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton size="large" icon="chevron-right" onClick={openDialog}>
+          <StyledButton size="large" icon="chevron-right" onClick={onOpenDialog}>
             Join now
           </StyledButton>
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
-      <Multistepper currentStepIdx={step} steps={steps} showDialog={dialogVisible} onExitClick={closeDialog} />
     </>
   )
-}
-
-type DialogStep = {
-  step: number
-  isActive?: boolean
-}
-
-const getDialogState = promisify(() => readFromLocalStorage<DialogStep>('dialogStep') || { step: 0, isActive: false })
-
-const updateDialogState = async (dialogStep: DialogStep) => {
-  writeToLocalStorage('dialogStep', dialogStep)
-}
-
-const useSteps = () => {
-  const [step, setCurrentStep] = useState(0)
-  const [dialogVisible, setDialogVisible] = useState(false)
-
-  const fetchDialogState = useCallback(async () => {
-    const { step, isActive } = await getDialogState()
-    setCurrentStep(step)
-    setDialogVisible(isActive || false)
-  }, [])
-
-  useEffect(() => {
-    fetchDialogState()
-  }, [fetchDialogState])
-
-  const openDialog = () => {
-    setDialogVisible(true)
-    updateDialogState({ step: step, isActive: true })
-  }
-
-  const closeDialog = () => {
-    setDialogVisible(false)
-    updateDialogState({ step: 0, isActive: false })
-  }
-
-  const changeDialogStep = useCallback((newStep: number) => {
-    setCurrentStep(newStep)
-    updateDialogState({ step: newStep })
-  }, [])
-
-  return {
-    openDialog,
-    closeDialog,
-    changeDialogStep,
-    dialogVisible,
-    step,
-  }
 }
 
 export default SignInProccessView

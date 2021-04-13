@@ -86,8 +86,6 @@ export const TileImgBg = styled.div`
   }
 `
 
-export const Tile = styled.img``
-
 export const Overlay = styled.div`
   z-index: ${zIndex.background};
   position: absolute;

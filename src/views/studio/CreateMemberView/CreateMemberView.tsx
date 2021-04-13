@@ -1,13 +1,11 @@
 import { ActionDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser } from '@/hooks'
-import { Avatar, Spinner, Text, TextField } from '@/shared/components'
+import { Spinner, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { createFakeMembership } from '../fakeUtils'
 import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
 
 type Inputs = {
@@ -17,7 +15,6 @@ type Inputs = {
 }
 
 const CreateMemberView = () => {
-  const { activeUser } = useActiveUser()
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { register, handleSubmit, errors } = useForm<Inputs>({
@@ -42,16 +39,9 @@ const CreateMemberView = () => {
     }
   }, [loading, navigate])
 
-  const onSubmit = handleSubmit((data) => {
+  const handleCreateMember = handleSubmit((data) => {
     setLoading(true)
-    if (activeUser?.accountId) {
-      // temporary
-      createFakeMembership(activeUser?.accountId, {
-        handle: data.handle,
-        avatarUri: data?.avatarUri,
-        about: data?.about,
-      })
-    }
+    // create member here
   })
 
   return (
@@ -62,7 +52,7 @@ const CreateMemberView = () => {
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
       </Header>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={handleCreateMember}>
         <StyledAvatar size="view" />
         <TextField
           name="avatarUri"

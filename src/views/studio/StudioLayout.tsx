@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
-import { CreateEditChannelView, MyUploadsView, MyVideosView } from '.'
+import { CreateEditChannelView, MyUploadsView, MyVideosView, SignInView, SignInJoinView, CreateMemberView } from '.'
 import {
   JoystreamProvider,
   ActiveUserProvider,
@@ -13,22 +13,15 @@ import {
   useConnectionStatus,
   SnackbarProvider,
 } from '@/hooks'
-
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
 
-import InitialStudioView from './InitialStudioView'
-import CreateMemberView from './CreateMemberView'
-import SignInProccessView from './SignInProccessView'
-import SignInView from './SignInView'
-
 const studioRoutes = [
-  { path: relativeRoutes.studio.index(), element: <InitialStudioView /> },
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
   { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
   { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
   { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
-  { path: relativeRoutes.studio.join(), element: <SignInProccessView /> },
+  { path: relativeRoutes.studio.join(), element: <SignInJoinView /> },
   { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
   { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]
