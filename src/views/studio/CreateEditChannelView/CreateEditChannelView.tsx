@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 import { languages } from '@/config/languages'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer, TransactionDialog } from '@/components'
@@ -11,17 +12,19 @@ import {
   Select,
   SelectItem,
   Tooltip,
+  TextArea,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel } from '@/api/hooks'
+import { useChannel, useMembership } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
-import { useActiveUser } from '@/hooks'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { useActiveUser, useJoystream, useSnackbar } from '@/hooks'
+import { ChannelAssets, CreateChannelMetadata, ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
-import TextArea from '@/shared/components/TextArea'
+import { absoluteRoutes } from '@/config/routes'
+import { computeFileHash } from '@/utils/hashing'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -49,16 +52,30 @@ type CreateEditChannelViewProps = {
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const {
-    activeUser: { channelId },
+    activeUser: { channelId, memberId },
+    setActiveChannel,
   } = useActiveUser()
+  const { joystream } = useJoystream()
+  const { displaySnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
-  const { channel, loading, error } = useChannel(channelId || '', { skip: newChannel || !channelId })
+  const { channel, loading, error, refetch: refetchChannel } = useChannel(channelId || '', {
+    skip: newChannel || !channelId,
+  })
+  // use membership query so we can trigger refetch once the channels are updated
+  const { refetch: refetchMember } = useMembership(
+    {
+      where: { id: memberId },
+    },
+    { skip: !memberId }
+  )
 
   const {
     register,
     handleSubmit: createSubmitHandler,
     control,
     formState: { isDirty, dirtyFields },
+    watch,
     reset,
     errors,
   } = useForm<Inputs>({
@@ -76,6 +93,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
+  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
+  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   useEffect(() => {
     if (loading || newChannel || !channel) {
@@ -110,13 +129,99 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     })
   }, [channel, loading, newChannel, reset])
 
+  const avatarValue = watch('avatar')
+  const coverValue = watch('cover')
+
+  useEffect(() => {
+    if (!dirtyFields.avatar || !avatarValue.blob) {
+      return
+    }
+
+    const hashPromise = computeFileHash(avatarValue.blob)
+    setAvatarHashPromise(hashPromise)
+  }, [dirtyFields.avatar, avatarValue])
+
+  useEffect(() => {
+    if (!dirtyFields.cover || !coverValue.blob) {
+      return
+    }
+
+    const hashPromise = computeFileHash(coverValue.blob)
+    setCoverHashPromise(hashPromise)
+  }, [dirtyFields.cover, coverValue])
+
   const handleSubmit = createSubmitHandler(async (data) => {
-    console.log({ dirtyFields })
-    console.log({ data })
-    setTransactionStatus(ExtrinsicStatus.Unsigned)
+    if (!joystream || !memberId) {
+      return
+    }
+
+    const metadata: CreateChannelMetadata = {
+      ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
+      ...(dirtyFields.description ? { description: data.description ?? '' } : {}),
+      ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
+      ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+    }
+
+    setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
+
+    const assets: ChannelAssets = {}
+    if (dirtyFields.avatar) {
+      if (data.avatar.blob && avatarHashPromise) {
+        assets.avatar = {
+          size: data.avatar.blob.size,
+          ipfsContentId: await avatarHashPromise,
+        }
+      } else {
+        console.warn('Missing avatar data')
+      }
+    }
+
+    if (dirtyFields.cover) {
+      if (data.cover.blob && coverHashPromise) {
+        assets.cover = {
+          size: data.cover.blob.size,
+          ipfsContentId: await coverHashPromise,
+        }
+      } else {
+        console.warn('Missing cover data')
+      }
+    }
+
+    try {
+      if (newChannel) {
+        const newChannelId = await joystream.createChannel(memberId, metadata, assets, (status) => {
+          setTransactionStatus(status)
+        })
+        setTransactionStatus(ExtrinsicStatus.Completed)
+
+        await refetchMember()
+        await setActiveChannel(newChannelId)
+      } else if (channelId) {
+        await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
+          setTransactionStatus(status)
+        })
+        setTransactionStatus(ExtrinsicStatus.Completed)
+
+        await Promise.all([refetchChannel(), refetchMember()])
+      }
+    } catch (e) {
+      if (e instanceof ExtensionSignCancelledError) {
+        console.warn('Sign cancelled')
+        setTransactionStatus(null)
+        displaySnackbar({ title: 'Transaction signing cancelled', icon: 'info' })
+      } else {
+        console.error(e)
+        setTransactionStatus(ExtrinsicStatus.Error)
+      }
+    }
   })
 
-  const handleTransactionCancel = () => {
+  const handleTransactionClose = async () => {
+    if (transactionStatus === ExtrinsicStatus.Completed && newChannel) {
+      navigate(absoluteRoutes.studio.videos())
+      return
+    }
+
     setTransactionStatus(null)
   }
 
@@ -126,7 +231,16 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   return (
     <>
-      <TransactionDialog status={transactionStatus} onCancel={handleTransactionCancel} />
+      <TransactionDialog
+        status={transactionStatus}
+        successTitle={newChannel ? 'Channel successfully created!' : 'Channel successfully updated!'}
+        successDescription={
+          newChannel
+            ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
+            : 'Changes to your channel were saved on the blockchain.'
+        }
+        onClose={handleTransactionClose}
+      />
       <form onSubmit={handleSubmit}>
         <Header>
           <Controller
@@ -233,7 +347,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 render={({ value, onChange }) => (
                   <Select
                     items={languages}
-                    label="Channel Language"
                     disabled={loading}
                     value={value}
                     onChange={onChange}
@@ -254,7 +367,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 render={({ value, onChange }) => (
                   <Select
                     items={PUBLIC_SELECT_ITEMS}
-                    label="Publicness"
                     disabled={loading}
                     value={value}
                     onChange={onChange}
