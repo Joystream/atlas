@@ -76,7 +76,7 @@ const StudioLayout = () => {
       return
     }
     if (!extensionConnected) {
-      navigate(absoluteRoutes.studio.signIn())
+      navigate(absoluteRoutes.studio.signInJoin())
     }
   }, [extensionConnected, extensionConnectionLoading, navigate])
 
@@ -84,7 +84,11 @@ const StudioLayout = () => {
     if (activeUserLoading || channelId || !extensionConnected) {
       return
     }
-    if (!accountId || !memberId) {
+    if (!accountId) {
+      navigate(absoluteRoutes.studio.signInJoin({ step: '2' }))
+      return
+    }
+    if (!memberId) {
       navigate(absoluteRoutes.studio.signIn())
       return
     }
