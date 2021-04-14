@@ -12,6 +12,8 @@ export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
   primaryButtonText?: string
   secondaryButtonText?: string
+  primaryButtonDisabled?: boolean
+  secondaryButtonDisabled?: boolean
   onPrimaryButtonClick?: (e: React.MouseEvent) => void
   onSecondaryButtonClick?: (e: React.MouseEvent) => void
   warning?: boolean
@@ -22,6 +24,8 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   additionalActionsNode,
   primaryButtonText,
   secondaryButtonText,
+  primaryButtonDisabled,
+  secondaryButtonDisabled,
   onPrimaryButtonClick,
   onSecondaryButtonClick,
   warning,
@@ -39,12 +43,17 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
             {primaryButtonText && (
-              <StyledPrimaryButton onClick={onPrimaryButtonClick} warning={warning} error={error}>
+              <StyledPrimaryButton
+                onClick={onPrimaryButtonClick}
+                warning={warning}
+                error={error}
+                disabled={primaryButtonDisabled}
+              >
                 {primaryButtonText}
               </StyledPrimaryButton>
             )}
             {secondaryButtonText && (
-              <Button variant="secondary" onClick={onSecondaryButtonClick}>
+              <Button variant="secondary" onClick={onSecondaryButtonClick} disabled={secondaryButtonDisabled}>
                 {secondaryButtonText}
               </Button>
             )}
