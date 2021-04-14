@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
-import { colors, sizes, breakpoints } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 
 type FileLineProps = {
   isLast?: boolean
@@ -10,7 +10,8 @@ export const FileLineContainer = styled.div<FileLineProps>`
   display: flex;
   align-items: center;
   margin: ${sizes(6)} 0;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin: ${sizes(2)} 0;
   }
 `
@@ -29,11 +30,13 @@ export const FileLinePoint = styled.div`
     height: 32px;
     transform: translateY(calc(50% - 1px));
   }
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: block;
     margin-left: ${sizes(4)};
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-left: ${sizes(13)};
   }
 `
@@ -46,11 +49,13 @@ export const FileLineLastPoint = styled.div`
   border-left: 2px solid ${colors.gray[500]};
   border-bottom: 2px solid ${colors.gray[500]};
   transform: translateY(calc(-50% + 1px));
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: block;
     margin-left: ${sizes(4)};
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-left: ${sizes(13)};
   }
 `
@@ -64,7 +69,8 @@ export const StatusMessage = styled(Text)`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     max-width: ${sizes(42)};
   }
 `
@@ -92,7 +98,8 @@ export const FileInfoContainer = styled.div`
     display: flex;
     align-items: center;
   }
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin-left: ${sizes(6)};
     grid-template-columns: repeat(3, 1fr);
   }

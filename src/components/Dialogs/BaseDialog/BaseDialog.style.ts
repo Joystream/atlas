@@ -1,12 +1,13 @@
 import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
-import { colors, sizes, breakpoints } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 
 export const StyledContainer = styled.div`
   --dialog-padding: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     --dialog-padding: ${sizes(6)};
   }
+
   position: relative;
   width: 90%;
   max-width: 440px;
@@ -18,7 +19,7 @@ export const StyledContainer = styled.div`
   padding: var(--dialog-padding);
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 24px 40px rgba(0, 0, 0, 0.16);
 
-  @media screen and (min-height: 800px) {
+  ${media.medium} {
     margin: ${sizes(32)} auto;
   }
 `

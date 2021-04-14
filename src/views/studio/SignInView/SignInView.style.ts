@@ -1,5 +1,5 @@
 import { Button, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, zIndex } from '@/shared/theme'
+import { media, colors, sizes, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { ReactComponent as BackgroundPatternSVG } from '@/assets/bg-pattern.svg'
 import tileImg from '@/assets/tile-example.png'
@@ -12,7 +12,8 @@ export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
   z-index: ${zIndex.background};
   max-width: 100%;
   transform: translateX(0);
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     left: 50%;
     transform: translateX(-50%);
   }
@@ -57,7 +58,8 @@ export const VideoImgBg = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: top right;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     left: 0;
     height: 350px;
   }
@@ -74,7 +76,8 @@ export const TileImgBg = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: top left;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     right: 70px;
     top: 190px;
     left: initial;
@@ -94,10 +97,12 @@ export const Overlay = styled.div`
   width: 100vw;
   height: 150%;
   overflow: hidden;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     width: 100%;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0) 100%);
     width: 70%;
     left: 20%;

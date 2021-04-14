@@ -1,6 +1,6 @@
 import { StudioContainer } from '@/components'
 import { Text } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const Header = styled.header`
@@ -11,7 +11,8 @@ export const Header = styled.header`
 export const Hero = styled(Text)`
   font-size: 54px;
   word-break: break-word;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     font-size: 72px;
   }
 `
@@ -32,7 +33,8 @@ export const MemberChannelGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     max-width: 600px;
   }
 `

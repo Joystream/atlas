@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { sizes, breakpoints } from '@/shared/theme'
+import { sizes, media } from '@/shared/theme'
 import { ReactComponent as TransactionIllustration } from '@/assets/transaction-illustration.svg'
 import Spinner from '@/shared/components/Spinner'
 
@@ -12,7 +12,8 @@ export const StyledTransactionIllustration = styled(TransactionIllustration)`
   position: absolute;
   top: 0;
   left: -50px;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     left: 0;
   }
 `

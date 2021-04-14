@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { sizes, breakpoints } from '@/shared/theme'
+import { sizes, breakpoints, media } from '@/shared/theme'
 import { Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -25,7 +25,8 @@ export const InnerFormContainer = styled.div`
   width: 100%;
   margin-top: 50px;
   padding-bottom: 100px;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     padding-bottom: 200px;
   }
 `
@@ -36,7 +37,8 @@ export const StyledAvatar = styled(Avatar)`
   flex-shrink: 0;
   width: 80px;
   height: 80px;
-  @media (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     width: 136px;
     height: 136px;
   }

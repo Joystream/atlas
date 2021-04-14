@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
 import { ReactComponent as EmptyIllustration } from '@/assets/empty-videos-illustration.svg'
 import { Button, Text } from '@/shared/components'
-import { sizes, colors, breakpoints } from '@/shared/theme'
+import { sizes, colors, media } from '@/shared/theme'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 
 // for when there is absolutely no videos available
@@ -35,17 +35,17 @@ const StyledWEmptyIllustration = styled(EmptyIllustration)`
   max-height: 50vh;
   max-width: 75vw;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     max-width: initial;
     grid-row-start: initial;
     max-height: 60vh;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
-  }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     max-height: 70vh;
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     transform: scale(1.2);
   }
 `
@@ -54,9 +54,7 @@ const ContainerView = styled.div`
   display: grid;
   padding: 0 0 ${sizes(10)} 0;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
-  }
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     grid-template-columns: auto 1fr;
     margin: ${sizes(20)} auto 0;
   }
@@ -66,9 +64,9 @@ const InnerContainerView = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   align-items: center;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     align-items: initial;
   }
 `
@@ -80,7 +78,7 @@ const MessageView = styled.div`
   margin-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     text-align: left;
     margin-top: ${sizes(12)};
   }

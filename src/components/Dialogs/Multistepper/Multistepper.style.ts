@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import BaseDialog from '../BaseDialog'
 import { Text } from '@/shared/components'
-import { colors, sizes, breakpoints, typography } from '@/shared/theme'
+import { colors, sizes, media, typography } from '@/shared/theme'
 
 type CircleProps = {
   isFilled?: boolean
@@ -26,7 +26,8 @@ export const StyledHeader = styled.div`
   padding-bottom: var(--dialog-padding);
   hr {
     display: none;
-    @media screen and (min-width: ${breakpoints.small}) {
+
+    ${media.small} {
       display: inline;
       width: 16px;
       height: 1px;
@@ -40,7 +41,8 @@ export const StyledHeader = styled.div`
 
 export const StyledStepsInfoContainer = styled.div`
   display: grid;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     grid-template-columns: 1fr 1fr 1fr;
     grid-row-gap: ${sizes(4)};
   }
@@ -49,7 +51,8 @@ export const StyledStepInfo = styled.div<StyledStepInfoProps>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
   margin-right: ${sizes(2)};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: flex;
   }
 `
@@ -72,7 +75,8 @@ export const StyledStepInfoText = styled(Text)<StyledStepInfoProps>`
   font-weight: ${typography.weights.semibold};
   line-height: 16px;
   margin-left: ${sizes(2)};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     max-width: 120px;
     font-size: ${sizes(3)};
   }

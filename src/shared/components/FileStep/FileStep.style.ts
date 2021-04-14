@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { media, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
@@ -72,7 +72,8 @@ export const FileName = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     width: 200px;
   }
 `
