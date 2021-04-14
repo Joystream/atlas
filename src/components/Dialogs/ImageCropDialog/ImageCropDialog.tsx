@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@/shared/components'
+import { IconButton } from '@/shared/components'
 import { ImageCropData } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
@@ -15,6 +15,7 @@ import {
   StyledSlider,
   ZoomControl,
 } from './ImageCropDialog.style'
+import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
@@ -83,7 +84,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <IconButton icon="zoom-out" variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} />
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)}>
+        <SvgGlyphZoomOut />
+      </IconButton>
       <StyledSlider
         value={currentZoom}
         onChange={handleZoomChange}
@@ -91,7 +94,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         max={zoomRange[1]}
         step={zoomStep}
       />
-      <IconButton icon="zoom-in" variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} />
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)}>
+        <SvgGlyphZoomIn />
+      </IconButton>
     </ZoomControl>
   )
 
@@ -109,7 +114,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
           <HeaderText variant="h6">Crop and position</HeaderText>
         </HeaderContainer>
         <AlignInfoContainer>
-          <Icon name="position" />
+          <SvgGlyphPan />
           <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (

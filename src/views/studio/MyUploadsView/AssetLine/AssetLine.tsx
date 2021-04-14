@@ -10,8 +10,9 @@ import {
   StatusMessage,
   ProgressbarContainer,
 } from './AssetLine.style'
-import { Icon, Text, CircularProgressbar } from '@/shared/components'
+import { Text, CircularProgressbar } from '@/shared/components'
 import { Asset } from '../AssetsGroupUploadBar/AssetsGroupUploadBar'
+import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo } from '@/shared/icons'
 
 type AssetLineProps = {
   isLast?: boolean
@@ -21,7 +22,6 @@ type AssetLineProps = {
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const isVideo = asset.type === 'video'
 
-  const fileInfoIcon = isVideo ? 'video-file' : 'image-file'
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
   const fileStatusMessage = asset.status === 'reconnecting' ? 'Reconnecting...' : ''
 
@@ -36,12 +36,12 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
             <CircularProgressbar value={0} />
           </ProgressbarContainer>
         )
-      case 'failed':
-        return <Icon name="error-second" />
       case 'completed':
-        return <Icon name="success" />
+        return <SvgAlertSuccess />
+      case 'failed':
+        return <SvgAlertError />
       case 'reconnecting':
-        return <Icon name="error-second" />
+        return <SvgAlertError />
       default:
         return (
           <ProgressbarContainer>
@@ -57,7 +57,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       <FileStatusContainer>{renderStatusIndicator(asset)}</FileStatusContainer>
       <FileInfoContainer>
         <FileInfoType>
-          <Icon name={fileInfoIcon} />
+          {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
           <Text variant="body2">{fileTypeText}</Text>
         </FileInfoType>
         <Text variant="body2">{resolution}</Text>

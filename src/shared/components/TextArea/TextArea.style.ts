@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import resizer from '@/assets/resizer.svg'
+import resizeIcon from '../../icons/svgs/glyph-resize.svg'
 
 export const StyledTextArea = styled.textarea`
   width: 100%;
   resize: vertical;
   ::-webkit-resizer {
-    background: url(${resizer}) no-repeat;
+    background: url(${resizeIcon}) no-repeat;
   }
 `

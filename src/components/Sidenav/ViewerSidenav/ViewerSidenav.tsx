@@ -4,20 +4,22 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
 import FollowedChannels from './FollowedChannels'
+import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 
 const viewerSidenavItems: NavItemType[] = [
   {
-    icon: 'home-fill',
+    icon: <SvgNavHome />,
     name: 'Home',
     to: absoluteRoutes.viewer.index(),
   },
   {
-    icon: 'videos',
+    icon: <SvgNavVideos />,
     name: 'Videos',
     to: absoluteRoutes.viewer.videos(),
   },
   {
-    icon: 'channels',
+    // TODO: update to channels icon once it exists
+    icon: <SvgNavChannel />,
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
   },
@@ -42,12 +44,12 @@ export const ViewerSidenav: React.FC = () => {
           <Button
             variant="secondary"
             onClick={() => setExpanded(false)}
-            icon="external"
+            icon={<SvgGlyphExternal />}
             to={absoluteRoutes.studio.index()}
           >
             Joystream studio
           </Button>
-          <Button icon="add-video">New Video</Button>
+          <Button icon={<SvgGlyphAddVideo />}>New Video</Button>
         </>
       }
     />

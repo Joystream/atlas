@@ -3,7 +3,8 @@ import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { Placeholder, Text, Icon, Button, ExpandButton, IconButton } from '@/shared/components'
+import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
+import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 
 import {
   StyledTopbarBase,
@@ -112,7 +113,9 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <IconButton icon="add-video" onClick={handleAddVideoViewOpen} />
+          <IconButton onClick={handleAddVideoViewOpen}>
+            <SvgGlyphAddVideo />
+          </IconButton>
           {loading ? (
             <ChannelInfoPlaceholder />
           ) : membership?.channels.length ? (
@@ -165,7 +168,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
           <Text>{channel ? channel.title : 'New Channel'}</Text>
           <Text>{memberName}</Text>
         </TextContainer>
-        {active && <Icon name="check" />}
+        {active && <SvgGlyphCheck />}
       </ChannelInfoContainer>
     )
   }
@@ -195,7 +198,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>
-                  <Icon name="new-channel" />
+                  <SvgGlyphNewChannel />
                 </NewChannelIconContainer>
                 <Text>New Channel</Text>
               </NewChannel>
@@ -203,7 +206,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
           </>
         )}
         <MemberInfo memberName={memberName} memberAvatar={memberAvatar} hasChannels={hasChannels} />
-        <Button icon="logout" variant="secondary" onClick={onLogoutClick}>
+        <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
           Log out as a member
         </Button>
       </DrawerContainer>

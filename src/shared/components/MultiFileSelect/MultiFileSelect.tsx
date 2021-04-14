@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import FileSelect from '../FileSelect'
 import FileStep from '../FileStep'
-import Icon from '../Icon'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 
 export type FileState = {
   video: File | null
@@ -125,7 +125,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           progress={progress}
         />
         <StepDivider>
-          <Icon name="chevron-right" />
+          <SvgGlyphChevronRight />
         </StepDivider>
         <FileStep
           overhead="Thumbnail Image"

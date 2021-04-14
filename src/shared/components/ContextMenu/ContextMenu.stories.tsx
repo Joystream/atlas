@@ -3,6 +3,7 @@ import ContextMenu, { ContextMenuItem } from './ContextMenu'
 import { OverlayManagerProvider, useContextMenu } from '@/hooks'
 import { Button } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
+import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
 export default {
   title: 'Shared/ContextMenu',
@@ -26,13 +27,13 @@ const Template: Story = (args) => {
       </div>
       <div>
         <ContextMenu contextMenuOpts={contextMenuOpts} {...args}>
-          <ContextMenuItem iconName="info" onClick={closeContextMenu}>
+          <ContextMenuItem icon={<SvgGlyphEdit />} onClick={closeContextMenu}>
             Edit video
           </ContextMenuItem>
-          <ContextMenuItem iconName="success" onClick={closeContextMenu}>
+          <ContextMenuItem icon={<SvgGlyphCopy />} onClick={closeContextMenu}>
             Copy video URL
           </ContextMenuItem>
-          <ContextMenuItem iconName="error" onClick={closeContextMenu}>
+          <ContextMenuItem icon={<SvgGlyphTrash />} onClick={closeContextMenu}>
             Delete video
           </ContextMenuItem>
         </ContextMenu>

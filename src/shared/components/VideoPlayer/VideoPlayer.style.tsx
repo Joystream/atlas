@@ -2,7 +2,6 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
-import Icon from '../Icon'
 
 type ContainerProps = {
   isInBackground?: boolean
@@ -212,10 +211,3 @@ export const PlayOverlay = styled.div`
 
   cursor: pointer;
 `
-
-const StyledIcon = styled(Icon)`
-  height: 72px;
-  width: 72px;
-  color: ${colors.white};
-`
-export const StyledPlayIcon = ({ ...svgProps }) => <StyledIcon name="play-outline" {...svgProps} />

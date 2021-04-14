@@ -1,6 +1,5 @@
 import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Icon from '../Icon'
 import Text from '../Text'
 import { darken } from 'polished'
 import { IconButton } from '@/shared/components'
@@ -115,23 +114,12 @@ export const Thumbnail = styled.img`
   }
 `
 
-export const ErrorIcon = styled(Icon)`
-  width: ${sizes(6)};
-  margin-right: ${sizes(4)};
+export const ErrorText = styled(Text)`
+  margin-left: ${sizes(4)};
 `
-
-export const ErrorText = styled(Text)``
 
 export const DismissButton = styled(IconButton)`
   margin-left: 10px;
-`
-
-export const StyledIcon = styled(Icon)`
-  color: ${colors.gray[300]};
-  width: ${sizes(12)};
-  @media screen and (min-width: ${breakpoints.small}) {
-    width: ${sizes(18)};
-  }
 `
 
 export const Title = styled(Text)`

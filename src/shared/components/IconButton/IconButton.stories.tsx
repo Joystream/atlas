@@ -1,14 +1,12 @@
 import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import IconButton, { IconButtonProps } from '.'
+import { SvgGlyphAddVideo } from '@/shared/icons'
 
 export default {
   title: 'Shared/IconButton',
   component: IconButton,
   argTypes: {
-    icon: {
-      defaultValue: 'add-video',
-    },
     size: { table: { disable: true } },
     onClick: { table: { disable: true } },
     className: { table: { disable: true } },
@@ -20,9 +18,15 @@ export default {
 
 const Template: Story<IconButtonProps> = (args) => (
   <>
-    <IconButton {...args} size="large" />
-    <IconButton {...args} size="medium" />
-    <IconButton {...args} size="small" />
+    <IconButton {...args} size="large">
+      <SvgGlyphAddVideo />
+    </IconButton>
+    <IconButton {...args} size="medium">
+      <SvgGlyphAddVideo />
+    </IconButton>
+    <IconButton {...args} size="small">
+      <SvgGlyphAddVideo />
+    </IconButton>
   </>
 )
 
