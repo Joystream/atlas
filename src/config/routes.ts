@@ -31,7 +31,17 @@ export const relativeRoutes = {
     videos: () => 'videos',
     uploads: () => 'uploads',
     signIn: () => 'signin',
-    join: () => 'signin/join',
+    join: ({ step }: { step?: string } = {}) => {
+      const basePath = 'signin/join'
+
+      if (step) {
+        const stepParams = new URLSearchParams()
+        stepParams.set(QUERY_PARAMS.JOIN, step.trim())
+        return `${basePath}?${stepParams.toString()}`
+      }
+
+      return basePath
+    },
     newMembership: () => 'membership/new',
   },
   playground: {
@@ -54,4 +64,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',
+  JOIN: 'step',
 }

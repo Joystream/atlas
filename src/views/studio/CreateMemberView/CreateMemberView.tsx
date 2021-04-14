@@ -16,8 +16,9 @@ type Inputs = {
 
 const CreateMemberView = () => {
   const [loading, setLoading] = useState(false)
+  const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const navigate = useNavigate()
-  const { register, handleSubmit, errors } = useForm<Inputs>({
+  const { register, handleSubmit, errors, getValues } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -40,6 +41,10 @@ const CreateMemberView = () => {
   }, [loading, navigate])
 
   const handleCreateMember = handleSubmit((data) => {
+    const avatarUri = getValues().avatarUri
+    if (avatarUri) {
+      setAvatarImageUrl(avatarUri)
+    }
     setLoading(true)
     // create member here
   })
@@ -53,7 +58,7 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar size="view" />
+        <StyledAvatar size="view" imageUrl={avatarImageUrl} />
         <TextField
           name="avatarUri"
           label="Avatar url"

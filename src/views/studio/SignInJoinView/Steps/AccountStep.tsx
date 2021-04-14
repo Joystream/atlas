@@ -1,8 +1,8 @@
 import accountCreation from '@/assets/account-creation.png'
-import { useActiveUser } from '@/hooks'
+import { useActiveUser, useJoystream } from '@/hooks'
 import { Icon, Placeholder, Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import {
   AccountStepImg,
@@ -22,41 +22,25 @@ import joystreamIcon from '@/assets/logo.png'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+import { useNavigate } from 'react-router'
+import { absoluteRoutes } from '@/config/routes'
 
-type AccountStepProps = {
-  onStepChange: (idx: number) => void
-  currentStepIdx: number
-}
-
-const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange }) => {
+const AccountStep: React.FC = () => {
+  const navigate = useNavigate()
   const { setActiveUser } = useActiveUser()
+  const { accounts } = useJoystream()
   const [imageLoaded, setImageLoaded] = useState(false)
-  const [accounts, setAccounts] = useState<null | InjectedAccountWithMeta[]>()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
-  const fetchAccounts = useCallback(async () => {
-    await web3Enable('Joystream Atlas')
-    const accounts = await web3Accounts()
-    if (accounts.length) {
-      setAccounts(accounts)
-    }
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAccounts()
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [fetchAccounts])
-
-  const handleSubmitSelectedAccount = async () => {
+  const handleSubmitSelectedAccount = async (e: FormEvent) => {
+    e.preventDefault()
     if (selectedAccountAddress) {
       await setActiveUser({
         accountId: selectedAccountAddress,
         memberId: null,
         channelId: null,
       })
-      onStepChange(currentStepIdx + 1)
+      navigate(absoluteRoutes.studio.join({ step: '2' }))
     }
   }
 
@@ -114,10 +98,10 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
                 Select polkadot account which you want to connect to your new joystream membership.
               </StepSubTitle>
               <AccountsWrapper>
-                {accounts?.map(({ address, meta: { name } }) => (
+                {accounts?.map(({ id, name }) => (
                   <AccountBar
-                    key={address}
-                    address={address}
+                    key={id}
+                    id={id}
                     name={name}
                     onSelect={handleSelect}
                     selectedValue={selectedAccountAddress}
@@ -139,14 +123,14 @@ const AccountStep: React.FC<AccountStepProps> = ({ currentStepIdx, onStepChange 
 
 export type AccountBarProps = {
   name?: string
-  address?: string
+  id?: string
   onSelect?: (e: React.MouseEvent<HTMLElement>) => void
   selectedValue?: string
 }
 
-const AccountBar: React.FC<AccountBarProps> = ({ name, address, onSelect, selectedValue }) => {
+const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
   return (
-    <AccountWrapper isSelected={selectedValue === address}>
+    <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
         <IconWrapper>
           <Icon name="profile" />
@@ -154,11 +138,11 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, address, onSelect, select
         <div>
           <Text variant="subtitle1">{name}</Text>
           <AccountAddress secondary variant="caption">
-            {address}
+            {id}
           </AccountAddress>
         </div>
       </AccountInfo>
-      <StyledRadioButton value={address} onClick={onSelect} selectedValue={selectedValue} />
+      <StyledRadioButton value={id} onClick={onSelect} selectedValue={selectedValue} />
     </AccountWrapper>
   )
 }

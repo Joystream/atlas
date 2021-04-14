@@ -17,10 +17,10 @@ import {
 } from './TermsStep.style'
 
 type TermsStepProps = {
-  onStepChange: (idx: number) => void
+  onAcceptTerms: () => void
 }
 
-const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
+const TermsStep: React.FC<TermsStepProps> = ({ onAcceptTerms }) => {
   const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
@@ -44,7 +44,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // do something here
-    onStepChange(0)
+    onAcceptTerms()
     navigate(absoluteRoutes.studio.newMembership())
   }
 

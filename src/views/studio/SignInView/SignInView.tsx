@@ -16,6 +16,30 @@ import {
 import { Link } from 'react-router-dom'
 import Icon from '@/shared/components/Icon'
 
+const fakeMemberShips = [
+  {
+    id: '1',
+    avatarUri: 'https://thispersondoesnotexist.com/image',
+    handle: 'Jane Doe',
+    about:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
+  },
+  {
+    id: '2',
+    avatarUri: 'https://thispersondoesnotexist.com/image',
+    handle: 'Jane Doe',
+    about:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
+  },
+  {
+    id: '3',
+    avatarUri: 'https://thispersondoesnotexist.com/image',
+    handle: 'Jane Doe',
+    about:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
+  },
+]
+
 const SignInView = () => {
   const [memberships, setMemberships] = useState()
 
@@ -30,9 +54,14 @@ const SignInView = () => {
         </SubTitle>
       </Header>
       <MemberChannelGrid>
-        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
-        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
-        <StudioCard to={absoluteRoutes.studio.newChannel()} empty />
+        {fakeMemberShips.map((membership) => (
+          <StudioCard
+            key={membership.id}
+            handle={membership.handle}
+            avatarUri={membership.avatarUri}
+            to={absoluteRoutes.studio.newChannel()}
+          />
+        ))}
       </MemberChannelGrid>
       <StyledButton icon="new-channel" size="large" variant="secondary">
         New Member
@@ -44,23 +73,21 @@ const SignInView = () => {
 export type StudioCardProps = {
   handle?: string
   follows?: number
-  avatarPhotoUrl?: string
-  empty?: boolean
-  onClick?: () => void
+  avatarUri?: string
   to?: string
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarPhotoUrl, empty, onClick, to }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
   return (
-    <CardWrapper empty={empty} onClick={onClick} as={to ? Link : 'div'} to={to}>
-      {empty ? (
+    <CardWrapper as={to ? Link : 'div'} to={to}>
+      {avatarUri ? (
+        <StyledAvatar imageUrl={avatarUri} />
+      ) : (
         <IconWrapper>
           <Icon name="profile" />
         </IconWrapper>
-      ) : (
-        <StyledAvatar imageUrl={avatarPhotoUrl} />
       )}
-      <HandleText variant={empty ? 'h5' : 'h4'}>{handle}</HandleText>
+      <HandleText variant="h4">{handle}</HandleText>
     </CardWrapper>
   )
 }

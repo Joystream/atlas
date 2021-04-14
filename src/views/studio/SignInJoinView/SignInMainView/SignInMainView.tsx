@@ -12,6 +12,7 @@ import {
   SubTitle,
 } from './SignInMainView.style'
 import { ReactComponent as FullLogoSVG } from '@/assets/full-logo.svg'
+import { absoluteRoutes } from '@/config/routes'
 
 export type Membership = {
   id: string
@@ -20,11 +21,7 @@ export type Membership = {
   avatarUri?: string
 }
 
-type SignInMainViewProps = {
-  onButtonClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
-
-const SignInMainView: React.FC<SignInMainViewProps> = ({ onButtonClick }) => {
+const SignInMainView: React.FC = () => {
   return (
     <StyledContainer>
       <Header>
@@ -36,7 +33,7 @@ const SignInMainView: React.FC<SignInMainViewProps> = ({ onButtonClick }) => {
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
         <ButtonGroup>
-          <SignInButton icon="channel" size="large" onClick={onButtonClick}>
+          <SignInButton icon="channel" size="large" to={absoluteRoutes.studio.join({ step: '0' })}>
             Sign in
           </SignInButton>
           <Button variant="secondary" icon="informative" size="large" to="https://www.joystream.org/">
