@@ -4,6 +4,7 @@ import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
 import { StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { transitions } from '@/shared/theme'
+import { SvgGlyphClose } from '@/shared/icons'
 
 export type BaseDialogProps = {
   showDialog?: boolean
@@ -38,7 +39,9 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
       <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
         <StyledContainer className={className}>
           {exitButton && (
-            <StyledExitButton aria-label="close dialog" onClick={onExitClick} icon="close" variant="tertiary" />
+            <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
+              <SvgGlyphClose />
+            </StyledExitButton>
           )}
           {children}
         </StyledContainer>

@@ -208,7 +208,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       if (e instanceof ExtensionSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
-        displaySnackbar({ title: 'Transaction signing cancelled', icon: 'info' })
+        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
       } else {
         console.error(e)
         setTransactionStatus(ExtrinsicStatus.Error)

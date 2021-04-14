@@ -1,14 +1,17 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styled from '@emotion/styled'
 import { Snackbar } from '@/shared/components'
 import { transitions, sizes } from '@/shared/theme'
 import { createId } from '@/utils/createId'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess } from '@/shared/icons'
+
+type SnackbarIconType = 'success' | 'error' | 'info'
 
 export type DisplaySnackbarArgs = {
   timeout?: number
   variant?: 'primary' | 'secondary'
-  icon?: 'success' | 'error' | 'info'
+  iconType?: SnackbarIconType
   title: string
   description?: string
   actionText?: string
@@ -22,6 +25,12 @@ type SnackbarsState = {
 type SnackbarContextValue = {
   displaySnackbar: (args: DisplaySnackbarArgs) => string
   closeSnackbar: (id: string) => void
+}
+
+const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
+  info: <SvgAlertInfo />,
+  success: <SvgAlertSuccess />,
+  error: <SvgAlertError />,
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)
@@ -62,9 +71,13 @@ export const SnackbarProvider: React.FC = ({ children }) => {
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
-          {snackbars.map(({ id, ...snackbarProps }) => (
+          {snackbars.map(({ id, iconType, ...snackbarProps }) => (
             <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
-              <Snackbar {...snackbarProps} onClick={() => closeSnackbar(id)} />
+              <Snackbar
+                {...snackbarProps}
+                icon={iconType && ICON_TYPE_TO_ICON[iconType]}
+                onClick={() => closeSnackbar(id)}
+              />
             </CSSTransition>
           ))}
         </TransitionGroup>

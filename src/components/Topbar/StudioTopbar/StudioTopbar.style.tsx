@@ -123,9 +123,6 @@ export const NewChannelIconContainer = styled.div`
   height: 42px;
   background-color: ${colors.gray[600]};
   border-radius: 100%;
-  svg {
-    opacity: 0.4;
-  }
 `
 
 export const DrawerContainer = styled.div<CommonStudioTopbarProps>`

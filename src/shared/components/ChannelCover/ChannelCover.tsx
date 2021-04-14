@@ -2,7 +2,6 @@ import { BackgroundPattern } from '@/components'
 import { transitions } from '@/shared/theme'
 import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import Icon from '../Icon'
 import {
   CoverImage,
   EditableControls,
@@ -15,6 +14,7 @@ import {
   RemoveCoverMobileButton,
   EditCoverMobileButton,
 } from './ChannelCover.style'
+import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash } from '@/shared/icons'
 
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
@@ -37,18 +37,22 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
         {editable && !disabled && (
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
-              <Icon name="camera" />
+              <SvgGlyphImage />
               <EditButtonMessage variant="subtitle2">
                 {`${coverPhotoUrl ? 'Edit ' : 'Add '} cover image`}
               </EditButtonMessage>
             </EditCoverDesktopOverlay>
-            <EditCoverMobileButton onClick={onCoverEditClick} icon="gear" variant="tertiary" />
+            <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
+              <SvgGlyphFileImage />
+            </EditCoverMobileButton>
             {coverPhotoUrl && (
               <>
-                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon="trash" variant="tertiary">
+                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon={<SvgGlyphTrash />} variant="tertiary">
                   Remove cover
                 </RemoveCoverDesktopButton>
-                <RemoveCoverMobileButton onClick={onCoverRemoveClick} icon="trash" variant="tertiary" />
+                <RemoveCoverMobileButton onClick={onCoverRemoveClick} variant="tertiary">
+                  <SvgGlyphTrash />
+                </RemoveCoverMobileButton>
               </>
             )}
           </EditableControls>

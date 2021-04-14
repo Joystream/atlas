@@ -1,17 +1,17 @@
 import { FileType } from '@/types/files'
 import React from 'react'
-import Icon from '../Icon'
 import {
   StepWrapper,
   StepStatus,
   StepNumber,
   StepDetails,
-  DeleteButton,
   Overhead,
   FileName,
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
+import { IconButton } from '@/shared/components'
+import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 
 export type FileStepProps = {
   stepNumber: number
@@ -52,7 +52,7 @@ const FileStep: React.FC<FileStepProps> = ({
             <StyledProgress value={progress} maxValue={80} />
           ) : (
             <Thumbnail>
-              {step === 'video' && <Icon name="add-video" />}
+              {step === 'video' && <SvgGlyphFileVideo />}
               {step === 'image' && thumbnail && <img src={thumbnail} alt="thumbnail" />}
             </Thumbnail>
           ))}
@@ -62,12 +62,9 @@ const FileStep: React.FC<FileStepProps> = ({
         </StepDetails>
       </StepStatus>
       {fileName && (
-        <DeleteButton
-          variant="tertiary"
-          disabled={disabled}
-          onClick={onDelete}
-          icon={disabled ? 'padlock' : 'trash-fill'}
-        />
+        <IconButton variant="tertiary" disabled={disabled} onClick={onDelete}>
+          {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
+        </IconButton>
       )}
     </StepWrapper>
   )

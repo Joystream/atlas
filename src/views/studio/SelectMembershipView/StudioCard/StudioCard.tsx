@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Icon from '@/shared/components/Icon'
 import { CardWrapper, HandleText, StyledAvatar, IconWrapper } from './StudioCard.style'
+import { SvgGlyphNewChannel } from '@/shared/icons'
 
 export type StudioCardProps = {
   handle?: string
@@ -17,7 +17,7 @@ const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarPhotoUrl, empty, 
     <CardWrapper empty={empty} onClick={onClick} as={to ? Link : 'div'} to={to}>
       {empty ? (
         <IconWrapper>
-          <Icon name="profile" />
+          <SvgGlyphNewChannel />
         </IconWrapper>
       ) : (
         <StyledAvatar imageUrl={avatarPhotoUrl} />

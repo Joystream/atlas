@@ -29,7 +29,7 @@
     "mocking:channels": "node scripts/mocking/generateChannels.js",
     "codegen:graphql": "graphql-codegen --config codegen.config.yml",
     "codegen:graphql-watch": "yarn codegen:graphql --watch",
-    "codegen:icons": "npx @svgr/cli --typescript -d src/shared/new-icons src/shared/new-icons/svgs",
+    "codegen:icons": "svgr --config-file svgr-icons.config.js -d src/shared/icons src/shared/icons/svgs",
     "postinstall": "patch-package"
   },
   "lint-staged": {

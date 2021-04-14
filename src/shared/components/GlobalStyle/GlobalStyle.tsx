@@ -33,6 +33,10 @@ const globalStyles = css`
     color: ${colors.white};
   }
 
+  svg {
+    display: block;
+  }
+
   :root {
     --global-horizontal-padding: ${sizes(4)};
     --sidenav-collapsed-width: 0;

@@ -9,16 +9,15 @@ import {
   DragAndDropArea,
   DragDropText,
   ErrorContainer,
-  ErrorIcon,
   ErrorText,
   FileDropWrapper,
   InnerContainer,
   Paragraph,
   ProgressBar,
-  StyledIcon,
   Thumbnail,
   Title,
 } from './FileDrop.style'
+import { SvgGlyphClose, SvgAlertError, SvgLargeUploadImage, SvgLargeUploadVideo, SvgGlyphUpload } from '@/shared/icons'
 
 export type FileSelectProps = {
   fileType: FileType
@@ -87,14 +86,14 @@ const FileSelect: React.FC<FileSelectProps> = ({
           <SwitchTransition>
             <CSSTransition key={fileType} classNames="fade" timeout={100}>
               <InnerContainer>
-                <StyledIcon name={fileType === 'video' ? 'video-dnd' : 'image-dnd'} />
+                {fileType === 'video' ? <SvgLargeUploadVideo /> : <SvgLargeUploadImage />}
                 <Title variant="h5">{title}</Title>
                 <Paragraph variant="subtitle2" as="p">
                   {paragraph}
                 </Paragraph>
                 <ButtonsGroup>
                   <DragDropText variant="body2">Drag and drop or </DragDropText>
-                  <Button onClick={() => open()} icon="upload">
+                  <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
                     Select a file
                   </Button>
                 </ButtonsGroup>
@@ -104,9 +103,11 @@ const FileSelect: React.FC<FileSelectProps> = ({
         )}
         {error && (
           <ErrorContainer onClick={(e) => e.stopPropagation()}>
-            <ErrorIcon name="error-second" />
+            <SvgAlertError />
             <ErrorText variant="body2">{error}</ErrorText>
-            <DismissButton variant="tertiary" icon="close" onClick={() => onError?.(null)} />
+            <DismissButton variant="tertiary" onClick={() => onError?.(null)}>
+              <SvgGlyphClose />
+            </DismissButton>
           </ErrorContainer>
         )}
       </DragAndDropArea>

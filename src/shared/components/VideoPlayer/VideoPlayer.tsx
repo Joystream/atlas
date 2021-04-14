@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { Container, PlayOverlay, StyledPlayIcon } from './VideoPlayer.style'
+import React, { useEffect, useState } from 'react'
+import { Container, PlayOverlay } from './VideoPlayer.style'
 import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
+import { SvgOutlineVideo } from '@/shared/icons'
 
 export type VideoPlayerProps = {
   className?: string
@@ -105,7 +106,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     <Container className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
         <PlayOverlay onClick={handlePlayOverlayClick}>
-          <StyledPlayIcon />
+          <SvgOutlineVideo width={72} height={72} viewBox="0 0 24 24" />
         </PlayOverlay>
       )}
       <div data-vjs-player>

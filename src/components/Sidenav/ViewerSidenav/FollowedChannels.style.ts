@@ -51,12 +51,9 @@ export const ShowMoreButton = styled.button`
   display: flex;
   align-items: center;
   color: ${colors.white};
-  svg {
-    margin-top: 2px;
-    margin-left: 10px;
-  }
+`
 
-  > span {
-    margin-left: 34px;
-  }
+export const ShowMoreIconWrapper = styled.span`
+  padding: ${sizes(2)};
+  margin-right: ${sizes(6)};
 `

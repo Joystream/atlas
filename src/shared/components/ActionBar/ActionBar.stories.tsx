@@ -2,6 +2,7 @@ import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import ActionBar, { ActionBarProps } from './ActionBar'
 import ActionBarTransaction, { ActionBarTransactionProps } from './ActionBarTransaction'
+import { SvgGlyphInfo } from '@/shared/icons'
 
 export default {
   title: 'Shared/ActionBar',
@@ -12,14 +13,13 @@ export default {
     detailsText: 'Video details saved as draft (2 min ago)',
     tooltipText:
       'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-    detailsTextIcon: 'info',
     primaryButtonText: 'Edit the channel',
     secondaryButtonText: 'Cancel',
     fee: 1,
   },
 } as Meta
 
-const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} />
+const Template: Story<ActionBarProps> = (args) => <ActionBar detailsTextIcon={<SvgGlyphInfo />} {...args} />
 
 export const Default = Template.bind({})
 

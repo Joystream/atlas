@@ -1,6 +1,5 @@
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import IconButton from '../IconButton'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
 
@@ -78,17 +77,6 @@ export const FileName = styled(Text)`
   }
 `
 
-type DeleteButtonProps = {
-  disabled?: boolean
-}
-
-export const DeleteButton = styled(IconButton)<DeleteButtonProps>`
-  flex-shrink: 0;
-  :hover {
-    ${({ disabled }) => disabled && 'cursor: not-allowed'};
-  }
-`
-
 export const StyledProgress = styled(CircularProgressbar)`
   width: ${sizes(7)};
   height: ${sizes(7)};
@@ -98,17 +86,14 @@ export const Thumbnail = styled.div`
   flex-shrink: 0;
   color: white;
   background: ${colors.gray[600]};
-  background-size: 100% 100%;
   width: ${sizes(7)};
   height: ${sizes(6)};
+
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  svg {
-    height: ${sizes(3)};
-    width: ${sizes(3)};
-  }
+
   img {
     object-fit: cover;
     height: 100%;

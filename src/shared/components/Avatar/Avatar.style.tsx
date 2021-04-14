@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { breakpoints, colors, transitions, typography } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
@@ -115,16 +115,6 @@ export const EditButton = styled.button<EditButtonProps>`
   }
   span {
     ${({ size }) => size === 'small' && 'display: none'};
-  }
-  svg {
-    fill: ${colors.gray[300]};
-    margin-bottom: ${({ size }) => (size === 'small' ? 0 : sizes(1))};
-    ${({ size }) =>
-      size === 'cover' &&
-      css`
-        width: 15px;
-        margin-bottom: ${sizes(1)};
-      `};
   }
 `
 

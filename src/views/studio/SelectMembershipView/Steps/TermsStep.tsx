@@ -15,6 +15,7 @@ import {
   TermsForm,
   ContinueButton,
 } from './TermsStep.style'
+import { SvgGlyphChevronDown } from '@/shared/icons'
 
 type TermsStepProps = {
   onStepChange: (idx: number) => void
@@ -97,7 +98,9 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ScrollButton icon="chevron-down" onClick={handleScrollToBottom} />
+            <ScrollButton onClick={handleScrollToBottom}>
+              <SvgGlyphChevronDown />
+            </ScrollButton>
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>

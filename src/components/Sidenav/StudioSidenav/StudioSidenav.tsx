@@ -3,24 +3,25 @@ import { useDrafts, useActiveUser } from '@/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
+import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 
 const studioNavbarItems: NavItemType[] = [
   {
-    icon: 'my-videos',
+    icon: <SvgNavVideos />,
     name: 'Videos',
-    expandedName: 'My Videos',
+    expandedName: 'My videos',
     to: absoluteRoutes.studio.videos(),
   },
   {
-    icon: 'my-channel',
+    icon: <SvgNavChannel />,
     name: 'Channel',
-    expandedName: 'My Channel',
+    expandedName: 'My channel',
     to: absoluteRoutes.studio.editChannel(),
   },
   {
-    icon: 'my-uploads',
+    icon: <SvgNavUpload />,
     name: 'Uploads',
-    expandedName: 'My Uploads',
+    expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
   },
 ]
@@ -50,12 +51,12 @@ export const StudioSidenav: React.FC = () => {
           <Button
             variant="secondary"
             onClick={() => setExpanded(false)}
-            icon="external"
+            icon={<SvgGlyphExternal />}
             to={absoluteRoutes.viewer.index()}
           >
             Joystream
           </Button>
-          <Button icon="add-video" onClick={handleNewVideoOpen}>
+          <Button icon={<SvgGlyphAddVideo />} onClick={handleNewVideoOpen}>
             New Video
           </Button>
         </>
