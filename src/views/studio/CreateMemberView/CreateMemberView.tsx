@@ -3,7 +3,8 @@ import { absoluteRoutes } from '@/config/routes'
 import { Spinner, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
-import React, { useEffect, useState } from 'react'
+import { debounce } from 'lodash'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
@@ -18,7 +19,7 @@ const CreateMemberView = () => {
   const [loading, setLoading] = useState(false)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, getValues } = useForm<Inputs>({
+  const { register, handleSubmit, errors, getValues, trigger } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -40,15 +41,22 @@ const CreateMemberView = () => {
     }
   }, [loading, navigate])
 
-  const handleCreateMember = handleSubmit((data) => {
-    const avatarUri = getValues().avatarUri
-    if (avatarUri) {
-      setAvatarImageUrl(avatarUri)
+  const debounceAvatarChange = debounce(async (value) => {
+    await trigger('avatarUri')
+    if (!errors.avatarUri) {
+      setAvatarImageUrl(value)
     }
+  }, 1000)
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value
+    debounceAvatarChange(value)
+  }
+
+  const handleCreateMember = handleSubmit((data) => {
     setLoading(true)
     // create member here
   })
-
   return (
     <Wrapper>
       <Header>
@@ -61,6 +69,7 @@ const CreateMemberView = () => {
         <StyledAvatar size="view" imageUrl={avatarImageUrl} />
         <TextField
           name="avatarUri"
+          onChange={handleAvatarChange}
           label="Avatar url"
           placeholder="http://link_to_avatar_file"
           ref={register(urlValidation('Avatar url'))}

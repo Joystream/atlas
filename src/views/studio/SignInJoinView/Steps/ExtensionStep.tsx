@@ -17,9 +17,6 @@ const ExtensionStep: React.FC = () => {
     }
   }, [extensionConnected, navigate])
 
-  const handleRefresh = () => {
-    window.location.reload()
-  }
   return (
     <StepWrapper centered withBottomBar>
       <img src={polkadotIcon} alt="polkadot icon" />
@@ -30,7 +27,7 @@ const ExtensionStep: React.FC = () => {
       <StyledButton icon="external" to="https://polkadot.js.org/extension/">
         Install extension
       </StyledButton>
-      <StepFooter onClick={handleRefresh}>
+      <StepFooter>
         <BottomBarIcon name="dialog-warning" />
         <Text variant="body2" secondary>
           Prease reload the page after installing the plugin
