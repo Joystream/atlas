@@ -11,6 +11,7 @@ import {
   DraftsProvider,
   PersonalDataProvider,
   useConnectionStatus,
+  SnackbarProvider,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -39,34 +40,36 @@ const StudioLayout = () => {
   //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
 
   return (
-    <DraftsProvider>
-      <PersonalDataProvider>
-        <ActiveUserProvider>
-          <JoystreamProvider>
-            <NoConnectionIndicator
-              nodeConnectionStatus={nodeConnectionStatus}
-              isConnectedToInternet={isUserConnectedToInternet}
-            />
-            <StudioTopbar />
-            <StudioSidenav />
-            <MainContainer>
-              <ErrorBoundary
-                fallback={ViewErrorFallback}
-                onReset={() => {
-                  navigate(absoluteRoutes.studio.index())
-                }}
-              >
-                <Routes>
-                  {studioRoutes.map((route) => (
-                    <Route key={route.path} {...route} />
-                  ))}
-                </Routes>
-              </ErrorBoundary>
-            </MainContainer>
-          </JoystreamProvider>
-        </ActiveUserProvider>
-      </PersonalDataProvider>
-    </DraftsProvider>
+    <SnackbarProvider>
+      <DraftsProvider>
+        <PersonalDataProvider>
+          <ActiveUserProvider>
+            <JoystreamProvider>
+              <NoConnectionIndicator
+                nodeConnectionStatus={nodeConnectionStatus}
+                isConnectedToInternet={isUserConnectedToInternet}
+              />
+              <StudioTopbar />
+              <StudioSidenav />
+              <MainContainer>
+                <ErrorBoundary
+                  fallback={ViewErrorFallback}
+                  onReset={() => {
+                    navigate(absoluteRoutes.studio.index())
+                  }}
+                >
+                  <Routes>
+                    {studioRoutes.map((route) => (
+                      <Route key={route.path} {...route} />
+                    ))}
+                  </Routes>
+                </ErrorBoundary>
+              </MainContainer>
+            </JoystreamProvider>
+          </ActiveUserProvider>
+        </PersonalDataProvider>
+      </DraftsProvider>
+    </SnackbarProvider>
   )
 }
 

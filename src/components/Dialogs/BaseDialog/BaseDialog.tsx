@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
@@ -9,20 +9,10 @@ export type BaseDialogProps = {
   showDialog?: boolean
   exitButton?: boolean
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onEnter?: () => void
-  onExit?: () => void
   className?: string
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({
-  children,
-  showDialog,
-  exitButton = true,
-  onExitClick,
-  onEnter,
-  onExit,
-  className,
-}) => {
+const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
   const {
     overlayContainerRef,
     lockScroll,
@@ -30,21 +20,6 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
     openOverlayContainer,
     closeOverlayContainer,
   } = useOverlayManager()
-  const [cachedShowDialog, setCachedShowDialog] = useState(showDialog)
-
-  useEffect(() => {
-    if (showDialog === cachedShowDialog) {
-      return
-    }
-
-    setCachedShowDialog(showDialog)
-
-    if (showDialog) {
-      onEnter?.()
-    } else {
-      onExit?.()
-    }
-  }, [showDialog, cachedShowDialog, onEnter, onExit])
 
   useEffect(() => {
     if (!showDialog) {
