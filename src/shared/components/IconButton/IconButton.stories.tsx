@@ -1,11 +1,14 @@
 import React from 'react'
-import Button, { ButtonProps } from './Button'
 import { Meta, Story } from '@storybook/react'
+import IconButton, { IconButtonProps } from '.'
 
 export default {
-  title: 'Shared/Button',
-  component: Button,
+  title: 'Shared/IconButton',
+  component: IconButton,
   argTypes: {
+    icon: {
+      defaultValue: 'add-video',
+    },
     size: { table: { disable: true } },
     onClick: { table: { disable: true } },
     className: { table: { disable: true } },
@@ -15,30 +18,25 @@ export default {
   },
 } as Meta
 
-const Template: Story<ButtonProps> = (args) => (
+const Template: Story<IconButtonProps> = (args) => (
   <>
-    <Button {...args} size="large">
-      Large
-    </Button>
-    <Button {...args} size="medium">
-      Medium
-    </Button>
-    <Button {...args} size="small">
-      Small
-    </Button>
+    <IconButton {...args} size="large" />
+    <IconButton {...args} size="medium" />
+    <IconButton {...args} size="small" />
   </>
 )
 
 export const Primary = Template.bind({})
+Primary.args = {
+  variant: 'primary',
+}
+
 export const Secondary = Template.bind({})
 Secondary.args = {
   variant: 'secondary',
 }
+
 export const Tertiary = Template.bind({})
 Tertiary.args = {
   variant: 'tertiary',
-}
-export const WithIcon = Template.bind({})
-WithIcon.args = {
-  icon: 'add-video',
 }

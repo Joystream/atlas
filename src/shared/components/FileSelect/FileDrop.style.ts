@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import Icon from '../Icon'
 import Text from '../Text'
 import { darken } from 'polished'
-import Button from '../Button'
+import { IconButton } from '@/shared/components'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean
@@ -122,7 +122,7 @@ export const ErrorIcon = styled(Icon)`
 
 export const ErrorText = styled(Text)``
 
-export const DismissButton = styled(Button)`
+export const DismissButton = styled(IconButton)`
   margin-left: 10px;
 `
 

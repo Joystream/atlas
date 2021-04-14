@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { useUploadingFilesData } from '@/hooks'
 import styled from '@emotion/styled'
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/'
-import { Avatar, Text, Button } from '@/shared/components'
+import { Avatar, Text, Button, IconButton } from '@/shared/components'
 import { getVideoMetadata } from '@/utils/video'
 import { ImageCropData } from '@/types/cropper'
 
@@ -100,7 +100,7 @@ const StyledDataContainer = styled.div`
   margin-bottom: 16px;
 `
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(IconButton)`
   position: absolute;
   right: 0;
   top: 0;

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
-  <defs/>
-  <rect width="12" height="12" y="2" fill="#fff" rx="1"/>
-  <path fill="#202020" d="M5 4h2v8H5z"/>
-  <path fill="#202020" d="M2 9V7h8v2z"/>
-  <path fill="#fff" d="M12 7l3-3h1v8h-1l-3-3V7z"/>
-</svg>

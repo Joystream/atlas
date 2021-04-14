@@ -106,7 +106,7 @@ const FileSelect: React.FC<FileSelectProps> = ({
           <ErrorContainer onClick={(e) => e.stopPropagation()}>
             <ErrorIcon name="error-second" />
             <ErrorText variant="body2">{error}</ErrorText>
-            <DismissButton variant="tertiary" icon="close" onClick={() => onError?.(null)}></DismissButton>
+            <DismissButton variant="tertiary" icon="close" onClick={() => onError?.(null)} />
           </ErrorContainer>
         )}
       </DragAndDropArea>

@@ -97,7 +97,7 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ScrollButton icon="arrow-down" onClick={handleScrollToBottom} />
+            <ScrollButton icon="chevron-down" onClick={handleScrollToBottom} />
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>
