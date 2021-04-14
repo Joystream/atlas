@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { breakpoints, sizes, colors, typography } from '@/shared/theme'
+import { media, sizes, colors, typography } from '@/shared/theme'
 import { Button } from '@/shared/components'
-
-const BREAKPOINT = breakpoints.small
 
 type ButtonProps = {
   error?: boolean
@@ -18,7 +16,7 @@ export const ButtonsContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 
-  @media screen and (min-width: ${BREAKPOINT}) {
+  ${media.small} {
     flex-direction: row-reverse;
     margin-left: auto;
 
@@ -39,7 +37,7 @@ export const ActionsContainer = styled.div`
 
   padding-top: ${sizes(6)};
 
-  @media screen and (min-width: ${BREAKPOINT}) {
+  ${media.small} {
     flex-direction: row;
     align-items: center;
   }
@@ -49,7 +47,7 @@ export const AdditionalActionsContainer = styled.div`
   width: 100%;
   margin-bottom: ${sizes(6)};
 
-  @media screen and (min-width: ${BREAKPOINT}) {
+  ${media.small} {
     margin-bottom: 0;
     margin-right: ${sizes(6)};
   }

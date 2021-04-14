@@ -1,5 +1,5 @@
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
-import { breakpoints, sizes, colors, typography } from '@/shared/theme'
+import { breakpoints, sizes, colors, typography, media } from '@/shared/theme'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
 import { ChannelLink } from '@/components'
@@ -8,7 +8,7 @@ export const Header = styled.section`
   position: relative;
   padding-bottom: 50px;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     padding-bottom: 0;
   }
 `
@@ -26,30 +26,36 @@ export const TitleSection = styled.div`
   align-items: start;
   width: 100%;
   margin-top: -64px;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin-top: -100px;
     flex-direction: row;
     align-items: center;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     position: absolute;
     margin-top: 0;
     bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
   }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
 export const TitleContainer = styled.div`
   max-width: 100%;
   overflow: hidden;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     max-width: 60%;
   }
   z-index: 2;
@@ -93,7 +99,8 @@ export const StyledChannelLink = styled(ChannelLink)`
 export const TitlePlaceholder = styled(Placeholder)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     height: ${TITLE_HEIGHT};
   }
 `
@@ -102,7 +109,8 @@ export const SubTitlePlaceholder = styled(Placeholder)`
   width: 140px;
   margin-top: ${sizes(2)};
   height: ${SM_SUBTITLE_HEIGHT};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     height: ${SUBTITLE_HEIGHT};
   }
 `
@@ -111,7 +119,7 @@ export const StyledButtonContainer = styled.div`
   z-index: 2;
   background-color: ${colors.transparentBlack[54]};
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     margin-top: 0;
     margin-left: auto;
     align-self: center;

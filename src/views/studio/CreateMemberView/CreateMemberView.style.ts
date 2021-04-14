@@ -1,6 +1,6 @@
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { media, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const Header = styled.header`
@@ -11,7 +11,8 @@ export const Header = styled.header`
 export const Hero = styled(Text)`
   font-size: 54px;
   word-break: break-word;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     font-size: 72px;
   }
 `
@@ -36,7 +37,7 @@ export const Form = styled.form`
   max-width: 580px;
   height: initial;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     left: 0;
     height: calc(100vh - 300px);
     width: 100%;
