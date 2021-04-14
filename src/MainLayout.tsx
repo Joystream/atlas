@@ -11,10 +11,10 @@ import { TopbarBase, LoadingStudio } from '@/components'
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   // TODO: improve
   fallback: (
-    <div>
+    <>
       <TopbarBase variant="studio" />
       <LoadingStudio />
-    </div>
+    </>
   ),
 })
 
