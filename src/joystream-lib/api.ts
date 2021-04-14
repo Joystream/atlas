@@ -314,9 +314,13 @@ export class JoystreamJs {
       throw AccountNotFoundError
     }
 
-    const accountInjector = await web3FromAddress(accountId)
-    this._selectedAccountId = accountId
-    this.api.setSigner(accountInjector.signer)
+    try {
+      const accountInjector = await web3FromAddress(accountId)
+      this._selectedAccountId = accountId
+      this.api.setSigner(accountInjector.signer)
+    } catch (error) {
+      throw AccountNotFoundError
+    }
   }
 
   async getAccountBalance(accountId: AccountId): Promise<number> {
