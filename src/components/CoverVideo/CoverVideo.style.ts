@@ -217,19 +217,10 @@ export const ButtonsContainer = styled.div`
 export const PlayButton = styled(Button)`
   width: 140px;
   height: ${BUTTONS_HEIGHT_PX};
-
-  svg {
-    width: auto;
-    height: auto;
-  }
 `
 
 export const SoundButton = styled(IconButton)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
   width: ${BUTTONS_HEIGHT_PX};
-  svg {
-    width: auto;
-    height: auto;
-  }
 `

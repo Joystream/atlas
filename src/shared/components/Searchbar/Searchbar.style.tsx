@@ -1,12 +1,7 @@
 import styled from '@emotion/styled'
 import { colors, sizes } from '../../theme'
-import Icon from '../Icon'
 import IconButton from '../IconButton'
-
-export const StyledIcon = styled(Icon)`
-  height: ${sizes(6)};
-  color: ${colors.white};
-`
+import { SvgOutlineSearch } from '@/shared/icons'
 
 export const Input = styled.input`
   width: 100%;
@@ -44,5 +39,13 @@ export const Container = styled.div`
   padding-left: ${sizes(4)};
   :focus-within {
     outline: 1px solid ${colors.gray[500]};
+  }
+`
+
+// TODO: remove override on viewer update
+export const StyledSvgOutlineSearch = styled(SvgOutlineSearch)`
+  circle,
+  path {
+    stroke: ${colors.gray['300']};
   }
 `

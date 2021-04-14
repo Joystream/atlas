@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { StyledIcon, StyledTitleText, StyledDescriptionText } from './MessageDialog.style'
-import { IconType } from '@/shared/components/Icon'
+import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
+import { SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/shared/icons'
+
+type DialogVariant = 'success' | 'warning' | 'error' | 'info'
 
 export type MessageDialogProps = {
-  variant?: 'success' | 'warning' | 'error' | 'info'
+  variant?: DialogVariant
   title?: string
   description?: string
 } & ActionDialogProps
+
+const VARIANT_TO_ICON: Record<DialogVariant, ReactNode | null> = {
+  success: <SvgOutlineSuccess />,
+  warning: <SvgOutlineWarning />,
+  error: <SvgOutlineError />,
+  info: null,
+}
 
 const MessageDialog: React.FC<MessageDialogProps> = ({
   title,
@@ -15,12 +24,11 @@ const MessageDialog: React.FC<MessageDialogProps> = ({
   variant = 'info',
   ...actionDialogProps
 }) => {
-  const hasIcon = ['success', 'warning', 'error'].includes(variant)
-  const icon = `dialog-${variant}` as IconType
+  const iconNode = VARIANT_TO_ICON[variant]
 
   return (
     <ActionDialog {...actionDialogProps}>
-      {hasIcon && <StyledIcon name={icon} />}
+      {iconNode && <MessageIconWrapper>{iconNode}</MessageIconWrapper>}
       {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
       <StyledDescriptionText variant="body2">{description}</StyledDescriptionText>
     </ActionDialog>

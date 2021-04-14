@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { colors, sizes, zIndex, breakpoints, transitions } from '@/shared/theme'
 import { keyframes } from '@emotion/react'
+import { ExpandButton } from '@/shared/components'
 
 type ProgressbarProps = {
   progress: number
@@ -69,10 +70,6 @@ export const Thumbnail = styled.div`
   width: ${sizes(18)};
   height: ${sizes(12)};
   background-color: ${colors.gray[700]};
-  svg {
-    width: ${sizes(6)};
-    height: ${sizes(6)};
-  }
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
   }
@@ -96,13 +93,10 @@ export const UploadInfoContainer = styled.div`
   color: ${colors.gray[300]};
   text-align: right;
   z-index: ${zIndex.overlay};
-  button {
-    margin-left: ${sizes(4)};
-    svg {
-      width: auto;
-      height: auto;
-    }
-  }
+`
+
+export const StyledExpandButton = styled(ExpandButton)`
+  margin-left: ${sizes(4)};
 `
 
 export const AssetsDrawerContainer = styled.div<DrawerProps>`

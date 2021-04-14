@@ -91,13 +91,12 @@ export const StyledTooltip = styled(Tooltip)`
   }
 `
 
-export const StyledDetailsTextContainer = styled.div`
-  color: ${colors.gray[200]};
-  font-size: ${typography.sizes.body2};
+export const DetailsContainer = styled.div`
   margin-left: auto;
-  svg {
-    margin-left: ${sizes(2)};
-    width: 16px;
-    height: 16px;
-  }
+  display: flex;
+  align-items: center;
+`
+
+export const DetailsIconWrapper = styled.span`
+  margin-left: ${sizes(2)};
 `

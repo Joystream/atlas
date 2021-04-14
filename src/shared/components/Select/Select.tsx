@@ -2,7 +2,7 @@ import React from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
-import Icon from '../Icon'
+import { SvgGlyphChevronDown } from '@/shared/icons'
 
 export type SelectItem<T = string> = {
   value: T
@@ -61,7 +61,7 @@ const Select = <T,>({
           tabIndex={disabled ? -1 : 0}
         >
           {selectedItem?.name || placeholder}
-          <Icon name="chevron-down" />
+          <SvgGlyphChevronDown />
         </SelectButton>
         <SelectMenu isOpen={isOpen} {...getMenuProps()}>
           {isOpen &&

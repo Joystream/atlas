@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { css } from '@emotion/react'
 import { colors } from '@/shared/theme'
 import Text from '../Text'
-import { Icon } from '..'
 
 export const Container = styled.div`
   padding: 24px;
@@ -75,19 +73,3 @@ export const StepInnerContainer = styled.div`
   grid-gap: 12px;
   align-items: center;
 `
-
-export const CheckIcon = styled(Icon)`
-  position: relative;
-  top: 1px;
-`
-
-export const ChecvronIcon = () => (
-  <Icon
-    css={css`
-      flex-shrink: 0;
-    `}
-    name="chevron-right"
-  />
-)
-
-export const StyledCheckIcon = ({ ...svgProps }) => <CheckIcon name="check" {...svgProps} />

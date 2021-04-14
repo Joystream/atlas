@@ -1,5 +1,6 @@
 import React from 'react'
 import { PaginationWrapper, PaginationButton, ChevronButton, ThreeDotsWrapper } from './Pagination.style'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
 export type PaginationProps = {
   itemsPerPage?: number
@@ -37,10 +38,11 @@ const Pagination: React.FC<PaginationProps> = ({
       <ChevronButton
         variant="secondary"
         size="large"
-        icon="chevron-left"
         onClick={() => onChangePage(prevPage - 1)}
         disabled={internalPage <= 1}
-      />
+      >
+        <SvgGlyphChevronLeft />
+      </ChevronButton>
       {pages.map((pageItem, idx) =>
         typeof pageItem === 'number' ? (
           <PaginationButton
@@ -55,12 +57,13 @@ const Pagination: React.FC<PaginationProps> = ({
         )
       )}
       <ChevronButton
-        icon="chevron-right"
         size="large"
         variant="secondary"
         onClick={() => (internalPage ? onChangePage(nextPage - 1) : onChangePage(2))}
         disabled={internalPage >= totalPages}
-      />
+      >
+        <SvgGlyphChevronRight />
+      </ChevronButton>
     </PaginationWrapper>
   )
 }

@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks'
 import { CSSTransition } from 'react-transition-group'
-import { StyledContainer, StyledMenuItem, StyledIcon, StyledText, menuTransitions } from './ContextMenu.style'
-import type { IconType } from '../Icon'
+import { StyledContainer, StyledMenuItem, StyledText, menuTransitions } from './ContextMenu.style'
 
 type MenuItemProps = {
-  iconName: IconType
+  icon: ReactNode
   onClick: () => void
 }
 
@@ -17,10 +16,10 @@ type ContextMenuProps = {
   }
 }
 
-export const ContextMenuItem: React.FC<MenuItemProps> = ({ iconName, children, onClick }) => {
+export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onClick }) => {
   return (
     <StyledMenuItem onClick={onClick}>
-      <StyledIcon name={iconName} />
+      {icon}
       <StyledText>{children}</StyledText>
     </StyledMenuItem>
   )

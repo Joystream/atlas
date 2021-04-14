@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import { colors, sizes, transitions, typography } from '../../theme'
-import { Text, Icon } from '@/shared/components'
+import { Text } from '@/shared/components'
 
 type ContainerProps = {
   isActive?: boolean
@@ -29,11 +29,6 @@ export const StyledMenuItem = styled.div`
     cursor: pointer;
     background-color: ${colors.gray[700]};
   }
-`
-
-export const StyledIcon = styled(Icon)`
-  width: 16px;
-  height: 16px;
 `
 
 export const StyledText = styled(Text)`

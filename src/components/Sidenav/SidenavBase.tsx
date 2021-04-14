@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import {
@@ -18,8 +18,7 @@ import {
 } from './SidenavBase.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
-import Icon, { IconType } from '@/shared/components/Icon'
-import { HamburgerButton } from '@/shared/components'
+import HamburgerButton from '@/shared/components/HamburgerButton'
 
 type NavSubitem = {
   name: string
@@ -27,7 +26,7 @@ type NavSubitem = {
 }
 type NavItemType = {
   subitems?: NavSubitem[]
-  icon: IconType
+  icon: ReactNode
   to: string
   badgeNumber?: number
 } & NavSubitem
@@ -77,7 +76,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
               isStudio={isStudio}
               badgeNumber={item.badgeNumber}
             >
-              <Icon name={item.icon} />
+              {item.icon}
               <span>{item.expandedName || item.name}</span>
             </NavItem>
           ))}
