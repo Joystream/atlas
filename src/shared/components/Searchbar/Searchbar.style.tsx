@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { colors, sizes } from '../../theme'
-import Button from '../Button'
-import { Icon } from '@/shared/components'
+import Icon from '../Icon'
+import IconButton from '../IconButton'
 
 export const StyledIcon = styled(Icon)`
   height: ${sizes(6)};
@@ -28,16 +28,11 @@ export const Input = styled.input`
   }
 `
 
-export const CancelButton = styled(Button)`
+export const CancelButton = styled(IconButton)`
   position: absolute;
   right: 0;
   border: none;
   margin-right: ${sizes(2)};
-  color: ${colors.white};
-  :focus,
-  :hover {
-    color: ${colors.white};
-  }
 `
 
 export const Container = styled.div`

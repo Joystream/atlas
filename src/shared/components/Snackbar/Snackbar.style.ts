@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { Button, Text } from '@/shared/components'
+import { Button, IconButton, Text } from '@/shared/components'
 import Icon from '../Icon'
 import { SnackbarVariant } from './Snackbar'
 
@@ -76,7 +76,6 @@ export const SnackbarDescription = styled(Text)`
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
-  width: 100%;
   ${SnackbarDescription} {
     ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
     ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
@@ -88,7 +87,7 @@ export const SnackbarButtonsContainer = styled.div`
   margin-left: auto;
 `
 
-export const SnackbarExitButton = styled(Button)`
+export const SnackbarExitButton = styled(IconButton)`
   &:hover {
     background-color: ${colors.transparent};
   }

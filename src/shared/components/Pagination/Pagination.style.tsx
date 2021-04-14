@@ -1,7 +1,7 @@
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import Button from '../Button'
+import IconButton from '../IconButton'
 
 type PaginationButtonProps = {
   isActive?: boolean
@@ -18,7 +18,7 @@ export const PaginationWrapper = styled.div`
   }
 `
 
-export const ChevronButton = styled(Button)`
+export const ChevronButton = styled(IconButton)`
   @media screen and (min-width: ${breakpoints.small}) {
     &:first-of-type {
       margin-right: ${sizes(8)};
@@ -74,7 +74,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   :active {
     ${buttonActiveState}
   }
-  ${({ isActive }) => isActive && buttonActiveState}
+  ${({ isActive }) => isActive && buttonActiveState};
   @media screen and (min-width: ${breakpoints.small}) {
     display: flex;
   }
