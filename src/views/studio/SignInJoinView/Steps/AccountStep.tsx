@@ -2,7 +2,7 @@ import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser, useJoystream } from '@/hooks'
 import { Icon, Placeholder, Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import React, { FormEvent, useCallback, useEffect, useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import {
   AccountStepImg,
@@ -20,8 +20,6 @@ import {
 import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import { useNavigate } from 'react-router'
 import { absoluteRoutes } from '@/config/routes'
 
@@ -52,7 +50,7 @@ const AccountStep: React.FC = () => {
   return (
     <SwitchTransition>
       <CSSTransition
-        key={!accounts?.length ? 'loading' : 'accounts'}
+        key={!accounts?.length ? 'no-accounts' : 'accounts'}
         classNames={transitions.names.fadeAndSlide}
         timeout={parseInt(transitions.timings.routing)}
       >

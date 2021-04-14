@@ -1,4 +1,4 @@
-import { Button, Text } from '@/shared/components'
+import { Button, IconButton, Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
@@ -29,7 +29,7 @@ export const TermsOverlay = styled.div`
   width: auto;
   background: linear-gradient(180deg, transparent 0%, ${colors.gray[800]} 100%);
 `
-export const ScrollButton = styled(Button)`
+export const ScrollButton = styled(IconButton)`
   position: absolute;
   right: ${sizes(6)};
   bottom: ${sizes(6)};
