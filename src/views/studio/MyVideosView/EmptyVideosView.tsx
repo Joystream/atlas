@@ -19,7 +19,7 @@ export const EmptyVideosView: React.FC = () => {
           </Subtitle>
         </MessageView>
         <div>
-          <Button icon="video-camera">Upload video</Button>
+          <Button icon="add-video">Upload video</Button>
         </div>
       </InnerContainerView>
       <StyledWEmptyIllustration />
@@ -94,7 +94,7 @@ export const EmptyVideos = () => {
         <Text variant="h5">No videos found...</Text>
         {/* <Subtitle variant="body2">No videos found..</Subtitle> */}
       </Message>
-      <Button icon="video-camera">Upload video</Button>
+      <Button icon="add-video">Upload video</Button>
     </Container>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { transitions, colors } from '@/shared/theme'
-import { Button, Tooltip } from '..'
+import { IconButton, Tooltip } from '..'
 import { css } from '@emotion/react'
 
 type StateProps = {
@@ -45,7 +45,7 @@ const enabledStyle = css`
   }
 `
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(IconButton)`
   transition: all ${transitions.timings.routing} ${transitions.easing};
   cursor: pointer;
   ${({ disabled }) => [disabled && disabledStyle, !disabled && enabledStyle]}

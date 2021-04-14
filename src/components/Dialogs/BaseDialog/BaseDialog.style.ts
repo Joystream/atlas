@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button } from '@/shared/components'
+import { IconButton } from '@/shared/components'
 import { colors, sizes, breakpoints } from '@/shared/theme'
 
 export const StyledContainer = styled.div`
@@ -23,7 +23,7 @@ export const StyledContainer = styled.div`
   }
 `
 
-export const StyledExitButton = styled(Button)`
+export const StyledExitButton = styled(IconButton)`
   position: absolute;
   top: var(--dialog-padding);
   right: var(--dialog-padding);

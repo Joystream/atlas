@@ -3,7 +3,7 @@ import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { Placeholder, Text, Icon, Button, ExpandButton } from '@/shared/components'
+import { Placeholder, Text, Icon, Button, ExpandButton, IconButton } from '@/shared/components'
 
 import {
   StyledTopbarBase,
@@ -116,7 +116,7 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <Button icon="add-video" onClick={handleAddVideoViewOpen} />
+          <IconButton icon="add-video" onClick={handleAddVideoViewOpen} />
           {loading ? (
             <ChannelInfoPlaceholder />
           ) : membership?.channels.length ? (

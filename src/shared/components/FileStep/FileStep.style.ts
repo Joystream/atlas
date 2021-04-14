@@ -1,6 +1,6 @@
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Button from '../Button'
+import IconButton from '../IconButton'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
 
@@ -82,7 +82,7 @@ type DeleteButtonProps = {
   disabled?: boolean
 }
 
-export const DeleteButton = styled(Button)<DeleteButtonProps>`
+export const DeleteButton = styled(IconButton)<DeleteButtonProps>`
   flex-shrink: 0;
   :hover {
     ${({ disabled }) => disabled && 'cursor: not-allowed'};

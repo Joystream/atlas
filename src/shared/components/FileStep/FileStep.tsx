@@ -52,8 +52,8 @@ const FileStep: React.FC<FileStepProps> = ({
             <StyledProgress value={progress} maxValue={80} />
           ) : (
             <Thumbnail>
-              {step === 'video' && <Icon name="video-camera" />}
-              {step === 'image' && thumbnail && <img src={thumbnail} alt="thumbnail"></img>}
+              {step === 'video' && <Icon name="add-video" />}
+              {step === 'image' && thumbnail && <img src={thumbnail} alt="thumbnail" />}
             </Thumbnail>
           ))}
         <StepDetails>

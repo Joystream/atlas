@@ -8,7 +8,7 @@ import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import Text from '../Text'
-import Button from '@/shared/components/Button'
+import IconButton from '../IconButton'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -159,20 +159,10 @@ export const CoverHoverOverlay = styled.div`
   align-items: center;
 `
 
-export const RemoveButton = styled(Button)`
+export const RemoveButton = styled(IconButton)`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background-color: ${colors.blue};
-  color: ${colors.white};
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  cursor: pointer;
-  svg {
-    display: block;
-  }
 `
 
 export const CoverIcon = styled(Icon)`
