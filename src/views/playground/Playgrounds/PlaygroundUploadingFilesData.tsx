@@ -2,9 +2,10 @@ import React, { useState, useRef } from 'react'
 import { useUploadingFilesData } from '@/hooks'
 import styled from '@emotion/styled'
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/'
-import { Avatar, Text, Button } from '@/shared/components'
+import { Avatar, Text, Button, IconButton } from '@/shared/components'
 import { getVideoMetadata } from '@/utils/video'
 import { ImageCropData } from '@/types/cropper'
+import { SvgGlyphClose } from '@/shared/icons'
 
 export const PlaygroundUploadingFilesData = () => {
   const {
@@ -68,7 +69,9 @@ export const PlaygroundUploadingFilesData = () => {
       {uploadingFilesData.length > 0 ? (
         uploadingFilesData.map(({ id, hash, storageProvider, type, status, imageCropData }) => (
           <StyledDataContainer key={id}>
-            <StyledButton aria-label="close dialog" onClick={() => removeUploadingFileData(id)} icon="close" />
+            <StyledButton aria-label="close dialog" onClick={() => removeUploadingFileData(id)}>
+              <SvgGlyphClose />
+            </StyledButton>
             <p>ID: {id}</p>
             <p>Hash: {hash}</p>
             <p>Storage Provider: {storageProvider}</p>
@@ -100,7 +103,7 @@ const StyledDataContainer = styled.div`
   margin-bottom: 16px;
 `
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(IconButton)`
   position: absolute;
   right: 0;
   top: 0;

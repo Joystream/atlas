@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Portal } from '@/components'
 import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
 import { StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { transitions } from '@/shared/theme'
+import { SvgGlyphClose } from '@/shared/icons'
 
 export type BaseDialogProps = {
   showDialog?: boolean
   exitButton?: boolean
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onEnter?: () => void
-  onExit?: () => void
   className?: string
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({
-  children,
-  showDialog,
-  exitButton = true,
-  onExitClick,
-  onEnter,
-  onExit,
-  className,
-}) => {
+const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
   const {
     overlayContainerRef,
     lockScroll,
@@ -30,21 +21,6 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
     openOverlayContainer,
     closeOverlayContainer,
   } = useOverlayManager()
-  const [cachedShowDialog, setCachedShowDialog] = useState(showDialog)
-
-  useEffect(() => {
-    if (showDialog === cachedShowDialog) {
-      return
-    }
-
-    setCachedShowDialog(showDialog)
-
-    if (showDialog) {
-      onEnter?.()
-    } else {
-      onExit?.()
-    }
-  }, [showDialog, cachedShowDialog, onEnter, onExit])
 
   useEffect(() => {
     if (!showDialog) {
@@ -63,7 +39,9 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
       <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
         <StyledContainer className={className}>
           {exitButton && (
-            <StyledExitButton aria-label="close dialog" onClick={onExitClick} icon="close" variant="tertiary" />
+            <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
+              <SvgGlyphClose />
+            </StyledExitButton>
           )}
           {children}
         </StyledContainer>

@@ -1,6 +1,6 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser } from '@/hooks'
-import { Icon, Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -16,6 +16,7 @@ import {
   StyledButton,
 } from './AccountStep.style'
 import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { SvgGlyphNewChannel } from '@/shared/icons'
 
 type AccountStepProps = {
   onStepChange: (idx: number) => void
@@ -109,7 +110,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, secondary, onClick }) => 
     <AccountWrapper>
       <AccountInfo>
         <IconWrapper>
-          <Icon name="profile" />
+          <SvgGlyphNewChannel />
         </IconWrapper>
         <div>
           <Text variant="h6">{name}</Text>

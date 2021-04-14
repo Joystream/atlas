@@ -3,7 +3,8 @@ import { useActiveUser } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { Placeholder, Text, Icon, Button, ExpandButton } from '@/shared/components'
+import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
+import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 
 import {
   StyledTopbarBase,
@@ -12,7 +13,7 @@ import {
   MemberTitleText,
   MemberTextContainer,
   ChannelInfoContainer,
-  NewChannelIcon,
+  NewChannelAvatar,
   StyledAvatar,
   TextContainer,
   DrawerContainer,
@@ -47,7 +48,6 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC = () => {
-  const [currentChannel, setCurrentChannel] = useState<BasicChannelFieldsFragment>()
   const { activeUser, setActiveChannel } = useActiveUser()
   const { membership, loading, error } = useMembership(
     {
@@ -55,12 +55,10 @@ const StudioTopbar: React.FC = () => {
     },
     {
       skip: !activeUser?.memberId,
-      onCompleted: () => {
-        const channel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
-        setCurrentChannel(channel)
-      },
     }
   )
+
+  const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
@@ -71,7 +69,6 @@ const StudioTopbar: React.FC = () => {
       return
     }
     setActiveChannel(channelId)
-    setCurrentChannel(channel)
     setDrawerActive(false)
   }
 
@@ -112,14 +109,16 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} />
+          <IconButton to={relativeRoutes.studio.uploadVideo()}>
+            <SvgGlyphAddVideo />
+          </IconButton>
           {loading ? (
             <ChannelInfoPlaceholder />
           ) : membership?.channels.length ? (
             <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
           ) : (
             <ChannelInfoContainer onClick={handleDrawerToggle}>
-              <NewChannelIcon name="new-channel" />
+              <NewChannelAvatar newChannel size="small" />
               <TextContainer>
                 <Text>New Channel</Text>
                 <Text>{membership?.handle}</Text>
@@ -160,12 +159,12 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="medium" imageUrl={channel?.avatarPhotoUrl} />
+        <StyledAvatar size="small" imageUrl={channel?.avatarPhotoUrl} />
         <TextContainer>
           <Text>{channel ? channel.title : 'New Channel'}</Text>
           <Text>{memberName}</Text>
         </TextContainer>
-        {active && <Icon name="check" />}
+        {active && <SvgGlyphCheck />}
       </ChannelInfoContainer>
     )
   }
@@ -188,14 +187,14 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 key={channel.id}
                 channel={channel}
                 memberName={memberName}
-                active={channel.title === currentChannel?.title}
+                active={channel.id === currentChannel?.id}
                 onClick={() => onCurrentChannelChange(channel.id)}
               />
             ))}
             <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>
-                  <Icon name="new-channel" />
+                  <SvgGlyphNewChannel />
                 </NewChannelIconContainer>
                 <Text>New Channel</Text>
               </NewChannel>
@@ -203,7 +202,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
           </>
         )}
         <MemberInfo memberName={memberName} memberAvatar={memberAvatar} hasChannels={hasChannels} />
-        <Button icon="logout" variant="secondary" onClick={onLogoutClick}>
+        <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
           Log out as a member
         </Button>
       </DrawerContainer>

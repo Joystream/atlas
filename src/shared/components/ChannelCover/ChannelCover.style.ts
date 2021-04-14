@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import Text from '../Text'
 import Button from '../Button'
+import { IconButton } from '@/shared/components'
 
 export const CONTENT_OVERLAP_MAP = {
   BASE: 0,
@@ -152,7 +153,7 @@ export const RemoveCoverDesktopButton = styled(Button)`
   }
 `
 
-export const RemoveCoverMobileButton = styled(Button)`
+export const RemoveCoverMobileButton = styled(IconButton)`
   ${removeButtonStyles};
 
   background-color: ${colors.gray[800]};
@@ -177,7 +178,7 @@ export const EditCoverDesktopOverlay = styled.div`
   }
 `
 
-export const EditCoverMobileButton = styled(Button)`
+export const EditCoverMobileButton = styled(IconButton)`
   position: absolute;
   left: var(--global-horizontal-padding);
   top: ${sizes(1)};

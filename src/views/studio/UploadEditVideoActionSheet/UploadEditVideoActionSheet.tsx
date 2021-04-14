@@ -14,11 +14,11 @@ import {
   Datepicker,
   FormField,
   HeaderTextField,
-  Icon,
+  IconButton,
   MultiFileSelect,
   RadioButton,
   Select,
-  Textarea,
+  TextArea,
 } from '@/shared/components'
 import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
 import { useCategories } from '@/api/hooks'
@@ -33,7 +33,6 @@ import {
   DrawerOverlay,
   FileDropperContainer,
   FormContainer,
-  plusIconStyle,
   StyledActionBar,
   StyledCheckboxContainer,
   StyledRadioContainer,
@@ -44,6 +43,7 @@ import {
 } from './UploadEditVideoActionSheet.style'
 import { relativeRoutes } from '@/config/routes'
 import { SelectItem } from '@/shared/components/Select/Select'
+import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -310,17 +310,20 @@ const TabsBar: React.FC<TabsBarProps> = ({
 }) => (
   <Topbar>
     <TabsContainer>
-      <Button variant="tertiary" icon="plus" iconCss={plusIconStyle} onClick={handleAddNewTab} />
+      <IconButton variant="tertiary" onClick={handleAddNewTab}>
+        <SvgGlyphPlus />
+      </IconButton>
       {videoTabs.map((tab) => (
         <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => handleTabSelect(tab)}>
           <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-          <Button size="small" icon="close" variant="tertiary" onClick={() => handleRemoveTab(tab)}></Button>
+          <IconButton size="small" variant="tertiary" onClick={() => handleRemoveTab(tab)}>
+            <SvgGlyphClose />
+          </IconButton>
         </Tab>
       ))}
     </TabsContainer>
     <ButtonsContainer>
-      <Button
-        icon="minus"
+      <IconButton
         variant="tertiary"
         onClick={() => {
           if (sheetState === 'open') {
@@ -329,15 +332,18 @@ const TabsBar: React.FC<TabsBarProps> = ({
             handleOpen()
           }
         }}
-      />
-      <Button
-        icon="close"
+      >
+        <SvgGlyphMinus />
+      </IconButton>
+      <IconButton
         variant="tertiary"
         onClick={() => {
           handleClose()
           handleResetVideoTabs()
         }}
-      />
+      >
+        <SvgGlyphClose />
+      </IconButton>
     </ButtonsContainer>
   </Topbar>
 )
@@ -380,7 +386,7 @@ const Form: React.FC<FormProps> = ({
         error={!!errors.title}
         helperText={errors.title?.message}
       />
-      <Textarea
+      <TextArea
         name="description"
         ref={descriptionRef}
         maxLength={2160}
@@ -471,7 +477,10 @@ const Form: React.FC<FormProps> = ({
           />
         </StyledCheckboxContainer>
       </FormField>
-      <FormField title="Content Rating" description="Please select whether your video contains explicit material (sex, violence, etc.)">
+      <FormField
+        title="Content Rating"
+        description="Please select whether your video contains explicit material (sex, violence, etc.)"
+      >
         <Controller
           name="isExplicit"
           control={control}

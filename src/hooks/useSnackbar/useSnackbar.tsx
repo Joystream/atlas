@@ -1,75 +1,100 @@
-import { snackbarTransitions } from '@/shared/components/Snackbar'
-import Snackbar from '@/shared/components/Snackbar/Snackbar'
-import { transitions } from '@/shared/theme'
-import { Global } from '@emotion/react'
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import styled from '@emotion/styled'
+import { Snackbar } from '@/shared/components'
+import { transitions, sizes } from '@/shared/theme'
+import { createId } from '@/utils/createId'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess } from '@/shared/icons'
+
+type SnackbarIconType = 'success' | 'error' | 'info'
 
 export type DisplaySnackbarArgs = {
-  time?: number
-  variant?: 'success' | 'error' | 'info'
-  buttonText?: string
-  message: string
+  timeout?: number
+  variant?: 'primary' | 'secondary'
+  iconType?: SnackbarIconType
+  title: string
+  description?: string
+  actionText?: string
+  onActionClick?: () => void
 }
 
+type SnackbarsState = {
+  id: string
+} & Omit<DisplaySnackbarArgs, 'time'>
+
 type SnackbarContextValue = {
-  displaySnackbar: (args: DisplaySnackbarArgs) => void
-  closeSnackbar: () => void
+  displaySnackbar: (args: DisplaySnackbarArgs) => string
+  closeSnackbar: (id: string) => void
+}
+
+const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
+  info: <SvgAlertInfo />,
+  success: <SvgAlertSuccess />,
+  error: <SvgAlertError />,
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)
 SnackbarContext.displayName = 'SnackbarContext'
 
-export const SnackbarProvider: React.FC = ({ children }) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [snackbarOpts, setSnackbarOpts] = useState<DisplaySnackbarArgs | null>(null)
+const SNACKBARS_LIMIT = 3
 
-  const displaySnackbar = ({ time, variant, message, buttonText }: DisplaySnackbarArgs) => {
-    setIsVisible(true)
-    setSnackbarOpts({
-      time,
-      variant,
-      message,
-      buttonText,
-    })
+export const SnackbarProvider: React.FC = ({ children }) => {
+  const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
+
+  const displaySnackbar = ({ timeout, ...args }: DisplaySnackbarArgs) => {
+    const id = createId()
+    setSnackbars([...snackbars, { id, ...args }])
+
+    if (timeout) {
+      setTimeout(() => {
+        setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
+      }, timeout)
+    }
+
+    return id
   }
 
-  const closeSnackbar = () => {
-    setIsVisible(false)
+  const closeSnackbar = (id: string) => {
+    setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))
   }
 
   useEffect(() => {
-    if (!snackbarOpts?.time) {
-      return
+    if (snackbars.length > SNACKBARS_LIMIT) {
+      setTimeout(() => {
+        setSnackbars((currentSnackbars) => currentSnackbars.slice(1))
+      }, 500)
     }
-    const timeout = setTimeout(() => closeSnackbar(), snackbarOpts.time)
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [snackbarOpts?.time])
+  }, [snackbars])
 
   return (
     <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
       {children}
-      <Global styles={snackbarTransitions}></Global>
-      <CSSTransition
-        in={isVisible && !!snackbarOpts}
-        unmountOnExit
-        mountOnEnter
-        timeout={parseInt(transitions.timings.loading)}
-        classNames={'snackbar'}
-        onExited={() => setSnackbarOpts(null)}
-      >
-        <Snackbar
-          message={snackbarOpts?.message || ''}
-          variant={snackbarOpts?.variant}
-          onClick={closeSnackbar}
-          buttonText={snackbarOpts?.buttonText}
-        />
-      </CSSTransition>
+      <SnackbarsContainer>
+        <TransitionGroup>
+          {snackbars.map(({ id, iconType, ...snackbarProps }) => (
+            <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
+              <Snackbar
+                {...snackbarProps}
+                icon={iconType && ICON_TYPE_TO_ICON[iconType]}
+                onClick={() => closeSnackbar(id)}
+              />
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
+      </SnackbarsContainer>
     </SnackbarContext.Provider>
   )
 }
+
+const SnackbarsContainer = styled.div`
+  position: fixed;
+  left: var(--sidenav-collapsed-width);
+  bottom: ${sizes(18)};
+  margin-left: ${sizes(4)};
+  max-width: 360px;
+  width: 100%;
+  display: grid;
+`
 
 export const useSnackbar = () => {
   const ctx = useContext(SnackbarContext)

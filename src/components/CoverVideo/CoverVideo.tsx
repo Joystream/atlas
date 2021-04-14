@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
 import { createUrlFromAsset } from '@/utils/asset'
+import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -123,17 +124,14 @@ const CoverVideo: React.FC = () => {
             <ButtonsContainer>
               <PlayButton
                 onClick={handlePlayPauseClick}
-                icon={videoPlaying ? 'pause' : 'play'}
-                playing={videoPlaying}
+                icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
                 size="large"
               >
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
-              <SoundButton
-                onClick={handleSoundToggleClick}
-                icon={!soundMuted ? 'sound-on' : 'sound-off'}
-                size="large"
-              />
+              <SoundButton onClick={handleSoundToggleClick} size="large">
+                {!soundMuted ? <SvgPlayerSoundOn /> : <SvgPlayerSoundOff />}
+              </SoundButton>
             </ButtonsContainer>
           </CSSTransition>
         </ControlsContainer>

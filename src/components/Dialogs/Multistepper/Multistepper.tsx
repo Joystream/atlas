@@ -8,7 +8,7 @@ import {
   StyledCircle,
   StyledStepInfoText,
 } from './Multistepper.style'
-import { Icon } from '@/shared/components'
+import { SvgGlyphCheck } from '@/shared/icons'
 
 type Step = {
   title: string
@@ -33,7 +33,7 @@ const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, 
             return (
               <StyledStepInfo key={step.title} isActive={isActive}>
                 <StyledCircle isFilled={isActive || isCompleted}>
-                  {isCompleted ? <Icon name="check" /> : idx + 1}
+                  {isCompleted ? <SvgGlyphCheck /> : idx + 1}
                 </StyledCircle>
                 <StyledStepInfoText isActive={isActive}>{step.title}</StyledStepInfoText>
                 {isLast ? null : <hr />}

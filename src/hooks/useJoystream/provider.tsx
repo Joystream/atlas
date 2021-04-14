@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Account, JoystreamJs } from '@/joystream-lib'
 import { useActiveUser } from '@/hooks'
+import useConnectionStatus from '../useConnectionStatus'
 
 // TODO: provide via env variables
 const NODE_URL = 'ws://127.0.0.1:9944'
@@ -16,11 +17,19 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeUser } = useActiveUser()
+  const { setNodeConnection } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [accountsSet, setAccountsSet] = useState(false)
   const [extensionConnected, setExtensionConnected] = useState(false)
+
+  const handleNodeConnectionUpdate = useCallback(
+    (connected: boolean) => {
+      setNodeConnection(connected ? 'connected' : 'disconnected')
+    },
+    [setNodeConnection]
+  )
 
   const handleAccountsUpdate = useCallback((accounts: Account[]) => {
     setAccounts(accounts)
@@ -36,13 +45,16 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
     const init = async () => {
       try {
-        joystream = await JoystreamJs.build(APP_NAME, NODE_URL)
+        setNodeConnection('connecting')
+        joystream = new JoystreamJs(NODE_URL, APP_NAME)
         setJoystream(joystream)
-        setAccounts(joystream.accounts)
 
+        setAccounts(joystream.accounts)
         joystream.onAccountsUpdate = handleAccountsUpdate
         joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
+        joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
+        handleNodeConnectionUpdate(false)
         console.error('Failed to create JoystreamJs instance', e)
       }
     }
@@ -52,7 +64,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleAccountsUpdate, handleExtensionConnectedUpdate])
+  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, handleNodeConnectionUpdate, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeUser || !accountsSet) {

@@ -1,10 +1,15 @@
-import { typography } from '../../theme'
+import { colors, typography } from '../../theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 const baseStyles = css`
   font-family: ${typography.fonts.base};
   margin: 0;
+  color: ${colors.gray[50]};
+`
+
+export const secondaryTextStyles = css`
+  color: ${colors.gray[300]};
 `
 
 export const styledVariants = {
@@ -81,7 +86,7 @@ export const styledVariants = {
     line-height: ${typography.lineHeights.body2};
     font-weight: ${typography.weights.regular};
   `,
-  caption: styled.caption`
+  caption: styled.span`
     ${baseStyles};
     font-size: ${typography.sizes.caption};
     line-height: ${typography.lineHeights.caption};
@@ -92,5 +97,26 @@ export const styledVariants = {
     font-size: ${typography.sizes.overhead};
     line-height: ${typography.lineHeights.overhead};
     font-weight: ${typography.weights.semibold};
+  `,
+  button1: styled.span`
+    ${baseStyles};
+    font-size: ${typography.sizes.button.large};
+    line-height: ${typography.lineHeights.button};
+    font-weight: ${typography.weights.bold};
+    font-family: ${typography.fonts.headers};
+  `,
+  button2: styled.span`
+    ${baseStyles};
+    font-size: ${typography.sizes.button.medium};
+    line-height: ${typography.lineHeights.button};
+    font-weight: ${typography.weights.bold};
+    font-family: ${typography.fonts.headers};
+  `,
+  button3: styled.span`
+    ${baseStyles};
+    font-size: ${typography.sizes.button.small};
+    line-height: ${typography.lineHeights.button};
+    font-weight: ${typography.weights.bold};
+    font-family: ${typography.fonts.headers};
   `,
 }

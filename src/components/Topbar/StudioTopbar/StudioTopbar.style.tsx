@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { Avatar, Text, Button, Icon, Placeholder } from '@/shared/components'
+import { Avatar, Text, Placeholder } from '@/shared/components'
 import TopbarBase from '../TopbarBase'
 import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
 
@@ -68,11 +68,8 @@ export const StudioTopbarContainer = styled.div`
   }
 `
 
-export const NewChannelIcon = styled(Icon)`
-  opacity: 0.4;
+export const NewChannelAvatar = styled(Avatar)`
   margin: 0 ${sizes(4)} 0 ${sizes(5)};
-  height: 20px;
-  width: 20px;
 `
 
 export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`
@@ -126,9 +123,6 @@ export const NewChannelIconContainer = styled.div`
   height: 42px;
   background-color: ${colors.gray[600]};
   border-radius: 100%;
-  svg {
-    opacity: 0.4;
-  }
 `
 
 export const DrawerContainer = styled.div<CommonStudioTopbarProps>`

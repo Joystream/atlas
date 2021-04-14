@@ -1,21 +1,17 @@
 import React from 'react'
-import { FormGroup, HelperText } from './InputBase.styles'
+import HelperText from '../HelperText/HelperText'
+import { FormGroup, LabelText } from './InputBase.styles'
 
 export type InputBaseProps = {
-  label?: string
   error?: boolean
   warning?: boolean
   helperText?: string
   disabled?: boolean
   className?: string
-}
-export const getVariant = (warning?: boolean, error?: boolean) => {
-  if (error) {
-    return 'error'
-  }
-  if (warning && !error) {
-    return 'warning'
-  }
+  label?: string
+  isSelect?: boolean
+  charactersCount?: number
+  maxLength?: number
 }
 
 const InputBase: React.FC<InputBaseProps> = ({
@@ -25,11 +21,22 @@ const InputBase: React.FC<InputBaseProps> = ({
   error,
   disabled,
   className,
+  label,
+  isSelect,
+  charactersCount,
+  maxLength,
 }) => {
   return (
-    <FormGroup disabled={disabled} className={className}>
+    <FormGroup as={isSelect ? 'div' : 'label'} disabled={disabled} className={className} error={error}>
+      {label && <LabelText>{label}</LabelText>}
       {children}
-      <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
+      <HelperText
+        warning={warning}
+        error={error}
+        helperText={helperText}
+        charactersCount={charactersCount}
+        maxLength={maxLength}
+      />
     </FormGroup>
   )
 }

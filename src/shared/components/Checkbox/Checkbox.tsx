@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import Icon from '../Icon'
-import { CheckboxLabel, Checkmark, Container, InnerContainer, Input, LabelText } from './Checkbox.styles'
+import Text from '../Text'
+import { CheckboxLabel, Checkmark, Container, InnerContainer, Input, StyledHelperText } from './Checkbox.styles'
+import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
@@ -14,6 +15,7 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void
   onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void
   label?: string
+  helperText?: string
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -29,6 +31,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       error = false,
       className,
       label,
+      helperText,
       ...props
     },
     ref
@@ -37,12 +40,12 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
 
-    const onChangeHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.FocusEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
         onChange(!value)
       }
     }
-    const onFocusHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       if (!disabled) {
         setIsFocused(true)
         if (onFocus) {
@@ -50,7 +53,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         }
       }
     }
-    const onBlurHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       if (!disabled) {
         setIsFocused(false)
         if (onBlur) {
@@ -58,6 +61,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         }
       }
     }
+
     return (
       <CheckboxLabel disabled={disabled}>
         <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
@@ -69,15 +73,16 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               data-multiple="false"
               checked={isSelected}
               disabled={disabled}
-              onChange={onChangeHandler}
-              onFocus={onFocusHandler}
-              onBlur={onBlurHandler}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               {...props}
             />
-            <Checkmark>{isSelected ? <Icon name={isIndeterminate ? 'dash' : 'check'} /> : null}</Checkmark>
+            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgGlyphMinus /> : <SvgGlyphCheck />}</Checkmark>
           </InnerContainer>
         </Container>
-        {label && <LabelText variant="subtitle2">{label}</LabelText>}
+        {label && <Text variant="body1">{label}</Text>}
+        {helperText && <StyledHelperText helperText={helperText} error={error} />}
       </CheckboxLabel>
     )
   }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { installPolkadot } from '../../SignInView/fakeUtils'
-import { BrowserIcon, RefreshText, StyledButton } from './ExtensionStep.style'
+import { RefreshText, StyledButton } from './ExtensionStep.style'
 import { StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 
 type ExtensionStepProps = {
@@ -15,7 +15,6 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ browser }) => {
   }
   return (
     <StepWrapper centered>
-      {browser && <BrowserIcon name={browser} />}
       <StepTitle variant="h4">Add polkadot extension</StepTitle>
       <StepSubTitle variant="body2">
         Please enable Polkadot extension or install it using one of the following plugin links.

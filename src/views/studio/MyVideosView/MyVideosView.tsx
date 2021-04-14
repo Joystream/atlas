@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useVideos } from '@/api/hooks'
-import { useDrafts } from '@/hooks'
+import { useDrafts, useActiveUser } from '@/hooks'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
@@ -31,7 +31,18 @@ export const MyVideosView = () => {
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const { drafts, removeDraft, removeAllDrafts, addDraft } = useDrafts('video', testChannelId)
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ? activeUser.channelId : undefined
+  const {
+    drafts,
+    removeDraft,
+    unseenDrafts,
+    removeAllUnseenDrafts,
+    removeAllDrafts,
+    addDraft,
+    updateDraft,
+  } = useDrafts('video', channelId)
+
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
@@ -72,6 +83,15 @@ export const MyVideosView = () => {
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
+  }
+
+  const handleSetCurrentTab = async (tab: number) => {
+    setCurrentTab(tab)
+    if (TABS[tab] === 'Drafts') {
+      if (unseenDrafts.length > 0) {
+        await removeAllUnseenDrafts(channelId)
+      }
+    }
   }
 
   const gridContent = (
@@ -118,6 +138,8 @@ export const MyVideosView = () => {
     throw error
   }
 
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
+
   return (
     <StudioContainer>
       <ViewContainer>
@@ -127,7 +149,7 @@ export const MyVideosView = () => {
         ) : (
           <>
             <TabsContainer>
-              <Tabs initialIndex={0} tabs={[...TABS]} onSelectTab={setCurrentTab} />
+              <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage

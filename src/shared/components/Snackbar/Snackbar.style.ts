@@ -1,72 +1,104 @@
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { Button, Text } from '@/shared/components'
+import { SnackbarVariant } from './Snackbar'
 
-const SNACKBAR_POSITION = 34
-const SNACKBAR_POSITION_MOBILE = 15
+type SnackbarWrapperProps = {
+  colorVariant?: SnackbarVariant
+  snackbarHeight?: number
+}
 
-export const snackbarTransitions = css`
-  .snackbar-enter {
-    transform: translateX(-200%);
-  }
-  .snackbar-enter-active {
-    transform: translateX(0);
-  }
-  .snackbar-exit {
-    transform: translateX(0);
-  }
-  .snackbar-exit-active {
-    transform: translateX(-200%);
-  }
-  .snackbar-enter-active {
-    transition: transform ${transitions.timings.loading} ${transitions.easing};
-  }
-  .snackbar-exit-active {
-    transition: transform 800ms ${transitions.easing};
-  }
-`
+type InnerWrapperProps = {
+  hasDescription?: boolean
+  hasActionButton?: boolean
+} & Omit<SnackbarWrapperProps, 'snackbarHeight'>
 
-export const SnackbarWrapper = styled.div`
-  background-color: ${colors.gray[800]};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: ${sizes(2)};
-  padding-left: ${sizes(4)};
-  max-width: 300px;
+type TitleProps = Omit<InnerWrapperProps, 'hasActionButton'>
+
+export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
+  position: relative;
   width: 100%;
-  position: fixed;
-  bottom: ${SNACKBAR_POSITION_MOBILE}px;
-  left: ${SNACKBAR_POSITION_MOBILE}px;
+  height: 0;
+  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? colors.gray[700] : colors.blue[500])};
   z-index: ${zIndex.overlay};
-  margin: 0;
-  @media screen and (min-width: ${breakpoints.small}) {
-    padding: ${sizes(3)};
-    padding-left: ${sizes(6)};
-    max-width: 400px;
-    bottom: ${SNACKBAR_POSITION}px;
-    left: ${SNACKBAR_POSITION}px;
+  overflow: hidden;
+  transform: translateY(500px) translateX(0);
+  &.snackbar-enter {
+    transform: translateY(500px) translateX(0);
+    height: 0;
+    margin-bottom: 0;
+  }
+  &.snackbar-enter-active,
+  &.snackbar-enter-done {
+    transform: translateY(0) translateX(0);
+    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
+    margin-bottom: ${sizes(3)};
+  }
+  &.snackbar-exit {
+    transform: translateY(0) translateX(0);
+    height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
+    margin-bottom: ${sizes(3)};
+  }
+  &.snackbar-exit-active {
+    transform: translateY(0) translateX(-150%);
+    height: 0;
+    margin-bottom: 0;
+  }
+
+  &.snackbar-enter-active {
+    transition: height ${transitions.timings.regular} ${transitions.easing},
+      margin-bottom ${transitions.timings.regular} ${transitions.easing},
+      transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
+  }
+  &.snackbar-exit-active {
+    transition: transform ${transitions.timings.regular} ${transitions.easing},
+      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
+      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
 `
 
-export const SnackbarButton = styled.button`
-  border: none;
-  background: none;
-  color: ${colors.gray[300]};
-  padding: ${sizes(3)};
-  cursor: pointer;
-`
-
-export const SnackbarParagraph = styled.p`
-  margin: 0;
-  font-size: ${typography.sizes.body2};
-  color: ${colors.white};
+export const SnackbarHeader = styled.div`
   display: flex;
   align-items: center;
-  word-break: break-all;
-  svg {
-    margin-right: ${sizes(4)};
-    width: ${sizes(6)};
-    height: ${sizes(6)};
+  width: 100%;
+`
+
+export const SnackbarTitle = styled(Text)<TitleProps>`
+  color: ${({ colorVariant, hasDescription }) =>
+    hasDescription ? colors.white : colorVariant === 'primary' ? colors.blue[200] : colors.gray[300]};
+`
+
+export const SnackbarDescription = styled(Text)`
+  padding: ${sizes(1)} 0;
+`
+
+export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
+  width: 100%;
+  padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
+  ${SnackbarDescription} {
+    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
+    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
   }
+`
+
+export const SnackbarButtonsContainer = styled.div`
+  display: flex;
+  margin-left: auto;
+`
+
+export const SnackbarActionButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  padding: 0;
+  min-width: auto;
+  font-size: ${sizes(3)};
+  margin-right: ${sizes(2)};
+  font-size: ${typography.sizes.body1};
+  span {
+    margin-top: calc(-1 * ${sizes(1)});
+  }
+`
+
+export const SnackbarIconContainer = styled.span`
+  margin-right: ${sizes(2)};
 `

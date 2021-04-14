@@ -20,6 +20,4 @@ export const languages = [
   { name: 'Swedish', value: 'sv' },
   { name: 'Turkish', value: 'tr' },
   { name: 'Vietnamese', value: 'vi' },
-] as const
-
-export type Language = typeof languages[number]
+]

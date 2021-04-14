@@ -28,8 +28,9 @@
     "mocking:videosMedia": "node scripts/mocking/generateVideosMedia.js",
     "mocking:memberships": "node scripts/mocking/generateMemberships.js",
     "mocking:channels": "node scripts/mocking/generateChannels.js",
-    "codegen:generate": "graphql-codegen --config codegen.config.yml",
-    "codegen:watch": "yarn codegen:generate --watch",
+    "codegen:graphql": "graphql-codegen --config codegen.config.yml",
+    "codegen:graphql-watch": "yarn codegen:graphql --watch",
+    "codegen:icons": "svgr --config-file svgr-icons.config.js -d src/shared/icons src/shared/icons/svgs",
     "postinstall": "patch-package"
   },
   "lint-staged": {
@@ -122,7 +123,8 @@
     "@storybook/addon-links": "^6.1.16",
     "@storybook/node-logger": "^6.1.16",
     "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/react": "^6.1.16"
+    "@storybook/react": "^6.1.16",
+    "@svgr/cli": "^5.5.0"
   },
   "browserslist": {
     "production": [

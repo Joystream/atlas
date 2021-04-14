@@ -6,10 +6,8 @@ import { css } from '@emotion/react'
 import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
-import Icon from '../Icon'
 import Text from '../Text'
-import Button from '@/shared/components/Button'
-import { IconProps } from '../Icon/Icon'
+import IconButton from '../IconButton'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -42,7 +40,7 @@ const clickableAnimation = (clickable: boolean) =>
         ${CoverHoverOverlay} {
           opacity: 1;
         }
-        ${CoverIcon} {
+        ${CoverIconWrapper} {
           transform: translateY(0);
         }
         ${ProgressOverlay} {
@@ -160,54 +158,16 @@ export const CoverHoverOverlay = styled.div`
   align-items: center;
 `
 
-export const RemoveButton = styled(Button)`
+export const RemoveButton = styled(IconButton)`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background-color: ${colors.blue};
-  color: ${colors.white};
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  cursor: pointer;
-  svg {
-    display: block;
-  }
 `
 
-export const CoverIcon = styled(Icon)`
+export const CoverIconWrapper = styled.div`
   transform: translateY(40px);
   transition: all ${transitions.timings.regular} ${transitions.easing};
-  color: ${colors.white};
 `
-export const CoverPlayIcon = ({ ...props }) => (
-  <CoverIcon
-    css={css`
-      width: 54px;
-      height: 54px;
-    `}
-    name="play-outline"
-    {...props}
-  />
-)
-export const CoverEditIcon = ({ ...props }) => (
-  <CoverIcon
-    css={css`
-      width: 46px;
-      height: 46px;
-      padding-bottom: 6px;
-      border-bottom: 3px solid ${colors.white};
-    `}
-    name="pencil"
-    {...props}
-  />
-)
-export const DraftIcon = ({ ...props }) => <Icon name="page" {...props} />
-export const UnlistedIcon = ({ ...props }) => <Icon name="unlisted" {...props} />
-export const KebabMenuIcon = ({ ...props }) => <Icon name="kebab-menu" {...props} />
-
-export const CoverRemoveButton = ({ ...props }) => <RemoveButton {...props} icon="close" />
 
 export const ProgressOverlay = styled.div`
   position: absolute;
@@ -228,17 +188,20 @@ export const ProgressBar = styled.div`
 `
 
 export const CoverVideoPublishingStateOverlay = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
   position: absolute;
   bottom: ${sizes(2)};
   left: ${sizes(2)};
   padding: ${sizes(1)} ${sizes(2)};
-  background-color: ${transparentize(0.1, colors.black)};
-  color: ${colors.gray[300]};
-  font-size: ${typography.sizes.body2};
-  text-transform: capitalize;
+
+  display: flex;
+  align-items: center;
+
+  background-color: ${colors.gray['900']};
+  opacity: 0.7;
+`
+
+export const PublishingStateText = styled(Text)`
+  margin-left: ${sizes(1.5)};
 `
 
 export const CoverDurationOverlay = styled.div`
@@ -268,7 +231,6 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
-  line-height: 1.25rem;
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `

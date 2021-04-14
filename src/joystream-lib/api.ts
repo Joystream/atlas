@@ -1,16 +1,19 @@
 import BN from 'bn.js'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Bytes, GenericEvent, Raw, TypeRegistry } from '@polkadot/types'
+import { Bytes, GenericEvent, Raw, Option, Vec, TypeRegistry, u64 as U64 } from '@polkadot/types'
+import RuntimeAccountId from '@polkadot/types/generic/AccountId'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import { web3AccountsSubscribe, web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 import { types } from '@joystream/types'
-import { ChannelCreationParameters, ContentActor, NewAsset } from '@joystream/types/content'
+import { ChannelId as RuntimeChannelId } from '@joystream/types/common'
+import { ChannelCreationParameters, ChannelUpdateParameters, ContentActor, NewAsset } from '@joystream/types/content'
 import { ChannelMetadata } from '@joystream/content-metadata-protobuf'
 
 import {
   AccountNotFoundError,
   AccountNotSelectedError,
+  ApiNotConnectedError,
   ExtensionSignCancelledError,
   ExtensionUnknownError,
   ExtrinsicFailedError,
@@ -48,10 +51,23 @@ export class JoystreamJs {
   // if needed these could become some kind of event emitter
   public onAccountsUpdate?: (accounts: Account[]) => unknown
   public onExtensionConnectedUpdate?: (connected: boolean) => unknown
+  public onNodeConnectionUpdate?: (connected: boolean) => unknown
 
   /* Lifecycle */
-  private constructor(api: ApiPromise, appName: string) {
-    this.api = api
+  constructor(endpoint: string, appName: string) {
+    const provider = new WsProvider(endpoint)
+    provider.on('connected', () => {
+      this.logConnectionData(endpoint)
+      this.onNodeConnectionUpdate?.(true)
+    })
+    provider.on('disconnected', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+    provider.on('error', () => {
+      this.onNodeConnectionUpdate?.(false)
+    })
+
+    this.api = new ApiPromise({ provider, types })
 
     this.initPolkadotExtension(appName)
   }
@@ -86,16 +102,6 @@ export class JoystreamJs {
     }
   }
 
-  static async build(appName: string, endpoint: string): Promise<JoystreamJs> {
-    const provider = new WsProvider(endpoint)
-    const api = await ApiPromise.create({ provider, types })
-    await api.isReady
-
-    const lib = new JoystreamJs(api, endpoint)
-    lib.logConnectionData(endpoint)
-    return lib
-  }
-
   destroy() {
     this.api.disconnect()
     this.unsubscribeFromAccountChanges?.()
@@ -115,7 +121,17 @@ export class JoystreamJs {
     console.error(`[JoystreamJS] ${msg}`)
   }
 
+  private async ensureApi() {
+    try {
+      await this.api.isReady
+    } catch (e) {
+      console.error(e)
+      throw new ApiNotConnectedError()
+    }
+  }
+
   private async logConnectionData(endpoint: string) {
+    await this.ensureApi()
     const chain = await this.api.rpc.system.chain()
     this.log(`Connected to chain "${chain}" via "${endpoint}"`)
   }
@@ -132,6 +148,7 @@ export class JoystreamJs {
         return
       }
       try {
+        cb?.(ExtrinsicStatus.Unsigned)
         const unsubscribe = await tx.signAndSend(this.selectedAccountId, (result) => {
           const { status, isError, events } = result
 
@@ -154,7 +171,7 @@ export class JoystreamJs {
                   let errorMsg = dispatchError.toString()
                   if (dispatchError.isModule) {
                     try {
-                      // Need to assert that registry is of TypeRegistry type, since Registry intefrace
+                      // Need to assert that registry is of TypeRegistry type, since Registry interface
                       // seems outdated and doesn't include DispatchErrorModule as possible argument for "findMetaError"
                       const { name, documentation } = (this.api.registry as TypeRegistry).findMetaError(
                         dispatchError.asModule
@@ -194,11 +211,92 @@ export class JoystreamJs {
     const content = new ContentParameters(this.api.registry, {
       content_id: ContentId.generate(this.api.registry),
       // hardcoded type_id - it's not used but needs to be one of the allowed values
-      type_id: this.api.createType('u64', 1),
-      size: this.api.createType('u64', size),
+      type_id: new U64(this.api.registry, 1),
+      size: new U64(this.api.registry, size),
       ipfs_content_id: new Bytes(this.api.registry, ipfsContentId),
     })
     return new NewAsset(this.api.registry, { upload: content })
+  }
+
+  private async _createOrUpdateChannel(
+    updatedChannelId: ChannelId | null = null,
+    memberId: MemberId,
+    inputMetadata: CreateChannelMetadata,
+    inputAssets: ChannelAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ChannelId> {
+    const newChannel = updatedChannelId == null
+
+    // === channel assets ===
+    // first avatar, then cover photo
+    const inputAssetsList: AssetMetadata[] = [
+      ...(inputAssets.avatar ? [inputAssets.avatar] : []),
+      ...(inputAssets.cover ? [inputAssets.cover] : []),
+    ]
+    const newAssetsList = inputAssetsList.map((a) => this.createFileAsset(a))
+
+    // === channel metadata ===
+    const protoMeta = new ChannelMetadata()
+    if (inputMetadata.title != null) {
+      protoMeta.setTitle(inputMetadata.title)
+    }
+    if (inputMetadata.description != null) {
+      protoMeta.setDescription(inputMetadata.description)
+    }
+    if (inputMetadata.isPublic != null) {
+      protoMeta.setIsPublic(inputMetadata.isPublic)
+    }
+    if (inputMetadata.language != null) {
+      protoMeta.setLanguage(inputMetadata.language)
+    }
+    // this needs to match indexes in the `assets` list
+    if (inputAssets.avatar) {
+      protoMeta.setAvatarPhoto(0)
+    }
+    if (inputAssets.cover) {
+      protoMeta.setCoverPhoto(inputAssets.avatar ? 1 : 0)
+    }
+
+    const serializedProtoMeta = protoMeta.serializeBinary()
+    const metaRaw = new Raw(this.api.registry, serializedProtoMeta)
+    const metaBytes = new Bytes(this.api.registry, metaRaw)
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    let tx: SubmittableExtrinsic<'promise'>
+
+    if (newChannel) {
+      const assets = new Vec<NewAsset>(this.api.registry, NewAsset, newAssetsList)
+
+      const params = new ChannelCreationParameters(this.api.registry, {
+        meta: metaBytes,
+        assets: assets,
+        reward_account: new Option<RuntimeAccountId>(this.api.registry, RuntimeAccountId),
+      })
+
+      tx = this.api.tx.content.createChannel(contentActor, params)
+    } else {
+      const optionalMetaBytes = new Option<Bytes>(this.api.registry, Bytes)
+      const optionalAssets = new Option<Vec<NewAsset>>(this.api.registry, Vec, newAssetsList)
+      const optionalRewardAccount = new Option<Option<RuntimeAccountId>>(this.api.registry, Option)
+
+      const params = new ChannelUpdateParameters(this.api.registry, {
+        new_meta: optionalMetaBytes,
+        assets: optionalAssets,
+        reward_account: optionalRewardAccount,
+      })
+
+      const channelId = new RuntimeChannelId(this.api.registry, updatedChannelId)
+
+      tx = this.api.tx.content.updateChannel(contentActor, channelId, params)
+    }
+
+    const events = await this.sendExtrinsic(tx, cb)
+
+    const contentEvents = events.filter((event) => event.section === 'content')
+    const channelId = contentEvents[0].data[1]
+    return new BN(channelId as never).toString()
   }
 
   /* Public */
@@ -222,6 +320,8 @@ export class JoystreamJs {
   }
 
   async getAccountBalance(accountId: AccountId): Promise<number> {
+    await this.ensureApi()
+
     const balance = await this.api.derive.balances.account(accountId)
 
     return new BN(balance.freeBalance).toNumber()
@@ -233,50 +333,20 @@ export class JoystreamJs {
     inputAssets: ChannelAssets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ChannelId> {
-    // === channel assets ===
-    // first avatar, then cover photo
-    const inputAssetsList: AssetMetadata[] = [
-      ...(inputAssets.avatar ? [inputAssets.avatar] : []),
-      ...(inputAssets.cover ? [inputAssets.cover] : []),
-    ]
-    const newAssetsList = inputAssetsList.map((a) => this.createFileAsset(a))
-    const assets = this.api.createType('Vec<NewAsset>', newAssetsList)
+    await this.ensureApi()
 
-    // === channel metadata ===
-    const protoMeta = new ChannelMetadata()
-    protoMeta.setTitle(inputMetadata.title)
-    protoMeta.setDescription(inputMetadata.description)
-    protoMeta.setIsPublic(inputMetadata.isPublic)
-    protoMeta.setLanguage(inputMetadata.language)
+    return this._createOrUpdateChannel(null, memberId, inputMetadata, inputAssets, cb)
+  }
 
-    // this needs to match indexes in the `assets` list
-    if (inputAssets.avatar) {
-      protoMeta.setAvatarPhoto(0)
-    }
-    if (inputAssets.cover) {
-      protoMeta.setCoverPhoto(inputAssets.avatar ? 1 : 0)
-    }
+  async updateChannel(
+    channelId: ChannelId,
+    memberId: MemberId,
+    inputMetadata: CreateChannelMetadata,
+    inputAssets: ChannelAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ChannelId> {
+    await this.ensureApi()
 
-    const serializedProtoMeta = protoMeta.serializeBinary()
-    const metaRaw = new Raw(this.api.registry, serializedProtoMeta)
-    const metaBytes = new Bytes(this.api.registry, metaRaw)
-
-    const rewardAccount = this.api.createType('Option<AccountId>')
-
-    const params = new ChannelCreationParameters(this.api.registry, {
-      meta: metaBytes,
-      assets: assets,
-      reward_account: rewardAccount,
-    })
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-
-    const tx = this.api.tx.content.createChannel(contentActor, params)
-    const events = await this.sendExtrinsic(tx, cb)
-
-    const contentEvents = events.filter((event) => event.section === 'content')
-    const channelId = contentEvents[0].data[1]
-    return new BN(channelId as never).toString()
+    return this._createOrUpdateChannel(channelId, memberId, inputMetadata, inputAssets, cb)
   }
 }

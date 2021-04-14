@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { sizes, breakpoints } from '@/shared/theme'
-import { Textarea, Avatar } from '@/shared/components'
+import { Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
 export const StyledHeader = styled(Header)``
@@ -27,12 +27,6 @@ export const InnerFormContainer = styled.div`
   padding-bottom: 100px;
   @media screen and (min-width: ${breakpoints.medium}) {
     padding-bottom: 200px;
-  }
-`
-
-export const StyledTextarea = styled(Textarea)`
-  textarea {
-    height: 120px;
   }
 `
 

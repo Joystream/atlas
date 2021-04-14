@@ -52,10 +52,6 @@ export default {
     body2: 1.43,
     caption: 1.17,
     overhead: 1.17,
-    button: {
-      large: 1.25,
-      medium: 1.14,
-      small: 1.33,
-    },
+    button: 1,
   },
 }

@@ -1,6 +1,6 @@
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { labelOnTop, LabelText, styledinputStates } from '../InputBase'
+import { LabelText } from '../InputBase'
 
 export const SelectWrapper = styled.div`
   width: 100%;
@@ -21,20 +21,11 @@ export const SelectButton = styled.button<SelectButtonProps>`
   min-height: 42px;
   border: none;
   background: none;
-  color: ${({ filled }) => (filled ? colors.gray[200] : colors.gray[400])};
+  color: ${({ filled }) => (filled ? colors.gray[50] : colors.gray[300])};
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  ${styledinputStates.default}
-
-  ${({ error }) => error && styledinputStates.error};
-  ${({ disabled }) => disabled && styledinputStates.disabled};
-
-  ${({ isOpen }) => isOpen && styledinputStates.focused};
-  :focus {
-    ${styledinputStates.focused};
-  }
 
   svg {
     transition: all ${transitions.timings.regular} ${transitions.easing};
@@ -44,9 +35,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   }
 `
 
-export const StyledLabelText = styled(LabelText)`
-  ${labelOnTop};
-`
+export const StyledLabelText = styled(LabelText)``
 type SelectMenuProps = {
   isOpen?: boolean
 }

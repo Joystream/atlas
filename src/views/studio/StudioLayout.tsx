@@ -5,11 +5,19 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 
-import { CreateEditChannelView, MyVideosView, MyUploadsView, UploadEditVideoActionSheet } from '.'
-import { JoystreamProvider, ActiveUserProvider, DraftsProvider, PersonalDataProvider } from '@/hooks'
+import { CreateEditChannelView, MyUploadsView, MyVideosView, UploadEditVideoActionSheet } from '.'
+import {
+  JoystreamProvider,
+  ActiveUserProvider,
+  DraftsProvider,
+  PersonalDataProvider,
+  useConnectionStatus,
+  SnackbarProvider,
+} from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { ViewErrorFallback, StudioTopbar, NavItemType, Sidenav, TOP_NAVBAR_HEIGHT } from '@/components'
+import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
+
 import SignInView from './SignInView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
@@ -25,29 +33,9 @@ const studioRoutes = [
   { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]
 
-const studioNavbarItems: NavItemType[] = [
-  {
-    icon: 'my-videos',
-    name: 'Videos',
-    expandedName: 'My Videos',
-    to: absoluteRoutes.studio.videos(),
-  },
-  {
-    icon: 'my-channel',
-    name: 'Channel',
-    expandedName: 'My Channel',
-    to: absoluteRoutes.studio.editChannel(),
-  },
-  {
-    icon: 'my-uploads',
-    name: 'Uploads',
-    expandedName: 'My Uploads',
-    to: absoluteRoutes.studio.uploads(),
-  },
-]
-
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
   const location = useLocation()
   const [cachedLocation, setCachedLocation] = useState<Location>()
   const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
@@ -57,38 +45,45 @@ const StudioLayout = () => {
     }
   }, [cachedLocation, location, uploadVideoMatch])
 
+  const displayedLocation = uploadVideoMatch ? cachedLocation : location
+
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
-  //  we need PersonalDataProvider because Sidenav depends on it for FollowedChannel
-  const displayedLocation = uploadVideoMatch ? cachedLocation : location
+  //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
+
   return (
     <VideoActionSheetProvider>
-      <DraftsProvider>
-        <PersonalDataProvider>
-          <ActiveUserProvider>
-            <JoystreamProvider>
-              <StudioTopbar />
-              <Sidenav items={studioNavbarItems} isStudio />
-              <MainContainer>
-                <ErrorBoundary
-                  fallback={ViewErrorFallback}
-                  onReset={() => {
-                    navigate(relativeRoutes.studio.index())
-                  }}
-                >
-                  <Routes location={displayedLocation}>
-                    {studioRoutes.map((route) => (
-                      <Route key={route.path} {...route} />
-                    ))}
-                  </Routes>
-                </ErrorBoundary>
-              </MainContainer>
-
-              <UploadEditVideoActionSheet />
-            </JoystreamProvider>
-          </ActiveUserProvider>
-        </PersonalDataProvider>
-      </DraftsProvider>
+      <SnackbarProvider>
+        <DraftsProvider>
+          <PersonalDataProvider>
+            <ActiveUserProvider>
+              <JoystreamProvider>
+                <NoConnectionIndicator
+                  nodeConnectionStatus={nodeConnectionStatus}
+                  isConnectedToInternet={isUserConnectedToInternet}
+                />
+                <StudioTopbar />
+                <StudioSidenav />
+                <MainContainer>
+                  <ErrorBoundary
+                    fallback={ViewErrorFallback}
+                    onReset={() => {
+                      navigate(absoluteRoutes.studio.index())
+                    }}
+                  >
+                    <Routes location={displayedLocation}>
+                      {studioRoutes.map((route) => (
+                        <Route key={route.path} {...route} />
+                      ))}
+                    </Routes>
+                  </ErrorBoundary>
+                </MainContainer>
+                <UploadEditVideoActionSheet />
+              </JoystreamProvider>
+            </ActiveUserProvider>
+          </PersonalDataProvider>
+        </DraftsProvider>
+      </SnackbarProvider>
     </VideoActionSheetProvider>
   )
 }

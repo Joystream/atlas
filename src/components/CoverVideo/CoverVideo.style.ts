@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { darken, fluidRange } from 'polished'
 
-import { Button, Placeholder, Text } from '@/shared/components'
+import { Button, IconButton, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes } from '@/shared/theme'
 import { css, keyframes } from '@emotion/react'
 import ChannelLink from '../ChannelLink'
@@ -214,29 +214,13 @@ export const ButtonsContainer = styled.div`
   display: flex;
 `
 
-export const PlayButton = styled(Button)<{ playing: boolean }>`
+export const PlayButton = styled(Button)`
   width: 140px;
   height: ${BUTTONS_HEIGHT_PX};
-  justify-content: flex-start;
-
-  svg {
-    margin-left: ${sizes(3)};
-    width: auto;
-    height: auto;
-  }
-
-  span {
-    margin-top: -3px;
-    margin-left: ${({ playing }) => (playing ? sizes(2) : sizes(3))};
-  }
 `
 
-export const SoundButton = styled(Button)`
+export const SoundButton = styled(IconButton)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
   width: ${BUTTONS_HEIGHT_PX};
-  svg {
-    width: auto;
-    height: auto;
-  }
 `

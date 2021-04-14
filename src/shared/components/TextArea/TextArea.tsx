@@ -1,84 +1,41 @@
 import React, { forwardRef, useState } from 'react'
-import { getVariant } from '../InputBase'
-import { HelperText, HelperTextCount, HelperTextsWrapper, StyledTextArea, TextAreaWrapper } from './TextArea.style'
+import InputBase, { InputBaseProps } from '../InputBase'
+import { StyledTextArea } from './TextArea.style'
 
 export type TextAreaProps = {
   name?: string
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
-  maxLength?: number
   className?: string
-  helperText?: string
-  warning?: boolean
-  error?: boolean
   rows?: number
   spellcheck?: boolean
-}
+} & InputBaseProps
+
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  {
-    onChange,
-    name,
-    placeholder = 'Something should be here',
-    value,
-    maxLength,
-    className,
-    rows = 10,
-    helperText = '\u00A0',
-    warning,
-    error,
-    spellcheck = true,
-  },
+  { onChange, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
   ref
 ) => {
-  const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
   const [charactersCount, setCharactersCount] = useState(0)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (onChange) {
-      onChange(e)
-    }
-
-    if (!maxLength) {
-      return
-    }
-
-    const warningLength = maxLength * 0.8
-    const currentLength = e.target.value.length
-
-    setCharactersCount(currentLength)
-
-    if (currentLength > warningLength) {
-      setCharactersWarning('warning')
-    } else {
-      setCharactersWarning(null)
-    }
-
-    if (currentLength > maxLength) {
-      setCharactersWarning('error')
-    }
+    setCharactersCount(e.target.value.length)
+    onChange?.(e)
   }
 
   return (
-    <TextAreaWrapper className={className}>
+    <InputBase disabled={disabled} charactersCount={charactersCount} {...inputBaseProps}>
       <StyledTextArea
         name={name}
         ref={ref}
+        disabled={disabled}
         placeholder={placeholder}
         onChange={handleOnChange}
         value={value}
         rows={rows}
         spellCheck={spellcheck}
       />
-      <HelperTextsWrapper>
-        <HelperText helperTextVariant={getVariant(warning, error)}>{helperText}</HelperText>
-        {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-          <HelperTextCount helperTextVariant={charactersWarning}>
-            {charactersCount}/{maxLength}
-          </HelperTextCount>
-        )}
-      </HelperTextsWrapper>
-    </TextAreaWrapper>
+    </InputBase>
   )
 }
 

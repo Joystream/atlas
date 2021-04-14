@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 16">
-  <defs/>
-  <rect width="12" height="12" x="2.5" y="2" fill="#fff" rx="1"/>
-  <path fill="#202020" d="M12.5 9h-2V6h-3V4h5v5z"/>
-  <path stroke="#202020" stroke-width="2" d="M11.5 5l-5 5"/>
-</svg>

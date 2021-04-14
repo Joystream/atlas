@@ -1,13 +1,18 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { LabelText } from '../Checkbox/Checkbox.styles'
-import { colors, sizes, typography, transitions } from '../../theme'
+import Text from '../Text'
+import { colors, sizes, transitions } from '@/shared/theme'
+import HelperText from '../HelperText/HelperText'
 
 export type RadioButtonStyleProps = Partial<{
-  error: boolean
   disabled: boolean
   checked: boolean
-}>
+}> &
+  RadioButtonCaptionProps
+
+type RadioButtonCaptionProps = {
+  error?: boolean
+}
 
 export const Input = styled.input`
   margin: auto;
@@ -18,49 +23,71 @@ export const Input = styled.input`
 const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => {
   if (disabled) {
     return css`
-      background-color: ${checked ? colors.gray[200] : colors.gray[50]};
-      border: ${checked ? `2px solid ${colors.gray[200]}` : `1px solid ${colors.gray[200]}`};
+      opacity: 0.5;
+      background-color: ${checked ? colors.blue[50] : colors.gray[400]};
+      border: ${checked ? `2px solid ${colors.gray[400]}` : `1px solid ${colors.gray[200]}`};
       background-clip: ${checked ? 'content-box' : 'unset'};
       &::before {
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: ${checked ? colors.gray[50] : 'transparent'};
+        background-color: ${colors.transparent};
       }
     `
   } else if (error) {
     return css`
-      background-color: ${checked ? colors.error : 'transparent'};
+      background-color: ${checked ? colors.error : colors.transparent};
       border: ${checked ? `2px solid ${colors.error}` : `1px solid ${colors.error}`};
     `
   } else {
     return css`
-      border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[300]}`};
-      background-color: ${checked ? colors.blue[500] : 'transparent'};
+      border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
+      background-color: ${checked ? colors.blue[50] : colors.transparent};
       &::before {
         transition: background-color 200ms ${transitions.easing};
       }
       &:hover {
+        border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
         &::before {
-          background-color: ${checked ? colors.blue[50] : colors.gray[50]};
+          background-color: ${colors.transparentPrimary[12]};
         }
       }
       &:focus {
-        border-color: ${checked ? 'transparent' : colors.gray[700]};
+        border-color: ${checked ? colors.transparent : colors.gray[700]};
         &::before {
-          background-color: ${checked ? colors.blue[100] : colors.gray[50]};
+          background-color: ${checked ? colors.blue[200] : colors.gray[50]};
         }
       }
       &:active {
-        border-color: ${checked ? '' : colors.gray[700]};
+        border: 1px solid ${colors.gray[50]};
+        padding: ${checked && '4px'};
         &::before {
-          background-color: ${checked ? colors.blue[100] : colors.gray[100]};
+          background-color: ${colors.transparentPrimary[6]};
         }
       }
     `
   }
 }
+
+export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
+  --radio-button-size: 18px;
+  --radio-button-container-size: ${sizes(6)};
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-column-gap: ${sizes(3)};
+  grid-row-gap: ${sizes(1)};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+`
+
+export const RadioButtonContainer = styled.div`
+  width: var(--radio-button-container-size);
+  height: var(--radio-button-container-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 export const StyledInput = styled.div<RadioButtonStyleProps>`
   position: relative;
@@ -69,10 +96,10 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   justify-content: center;
   align-items: center;
   background-clip: content-box;
-  padding: 2px;
+  padding: 3px;
   box-sizing: border-box;
-  width: 18px;
-  height: 18px;
+  width: var(--radio-button-size);
+  height: var(--radio-button-size);
   &::before {
     content: '';
     top: -8px;
@@ -87,17 +114,17 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
   & + span {
     color: ${(props) => (props.checked ? colors.white : '')};
   }
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 `
 
-export const Label = styled.label<RadioButtonStyleProps>`
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: ${sizes(4)};
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  & > span:nth-of-type(1) {
-    margin: 8px;
-  }
+export const StyledLabelText = styled(Text)`
+  color: ${colors.gray[50]};
 `
-export const StyledLabelText = styled(LabelText)`
-  font-size: ${typography.sizes.subtitle2};
+
+export const StyledHelperText = styled(HelperText)<RadioButtonCaptionProps>`
+  margin: 0;
+  grid-column-start: 2;
+  span {
+    ${({ error }) => !error && `color: ${colors.gray[300]}`};
+  }
 `
