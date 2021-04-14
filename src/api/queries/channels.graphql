@@ -3,7 +3,7 @@ fragment BasicChannelFields on Channel {
   title
   createdAt
 
-  avatarPhotoUrl
+  avatarPhotoUrls
   avatarPhotoAvailability
   avatarPhotoDataObject {
     ...DataObjectFields
@@ -20,7 +20,7 @@ fragment AllChannelFields on Channel {
     iso
   }
 
-  coverPhotoUrl
+  coverPhotoUrls
   coverPhotoAvailability
   coverPhotoDataObject {
     ...DataObjectFields
@@ -28,13 +28,13 @@ fragment AllChannelFields on Channel {
 }
 
 query GetBasicChannel($where: ChannelWhereUniqueInput!) {
-  channel(where: $where) {
+  channelByUniqueInput(where: $where) {
     ...BasicChannelFields
   }
 }
 
 query GetChannel($where: ChannelWhereUniqueInput!) {
-  channel(where: $where) {
+  channelByUniqueInput(where: $where) {
     ...AllChannelFields
   }
 }

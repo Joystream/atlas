@@ -19,7 +19,7 @@ export type GetMembershipQueryVariables = Types.Exact<{
 
 export type GetMembershipQuery = {
   __typename?: 'Query'
-  membership?: Types.Maybe<{ __typename?: 'Membership' } & BasicMembershipFieldsFragment>
+  membershipByUniqueInput?: Types.Maybe<{ __typename?: 'Membership' } & BasicMembershipFieldsFragment>
 }
 
 export type GetMembershipsQueryVariables = Types.Exact<{
@@ -45,7 +45,7 @@ export const BasicMembershipFieldsFragmentDoc = gql`
 `
 export const GetMembershipDocument = gql`
   query GetMembership($where: MembershipWhereUniqueInput!) {
-    membership(where: $where) {
+    membershipByUniqueInput(where: $where) {
       ...BasicMembershipFields
     }
   }

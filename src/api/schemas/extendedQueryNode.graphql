@@ -13,9 +13,7 @@ type VideoCategory {
 type License {
   id: ID!
   code: Int
-  url: String
   attribution: String
-  videoLicense: [Video!]
   customText: String
 }
 
@@ -85,10 +83,10 @@ type Channel {
 
   # === assets ===
   coverPhotoDataObject: DataObject
-  coverPhotoUrl: String
+  coverPhotoUrls: [String!]!
   coverPhotoAvailability: AssetAvailability!
   avatarPhotoDataObject: DataObject
-  avatarPhotoUrl: String
+  avatarPhotoUrls: [String!]!
   avatarPhotoAvailability: AssetAvailability!
 
   # === extended from Orion ===
@@ -152,11 +150,11 @@ type Video {
   license: License
 
   # === assets ===
-  thumbnailDataObject: DataObject
-  thumbnailUrl: String
-  thumbnailAvailability: AssetAvailability!
+  thumbnailPhotoDataObject: DataObject
+  thumbnailPhotoUrls: [String!]!
+  thumbnailPhotoAvailability: AssetAvailability!
   mediaDataObject: DataObject
-  mediaUrl: String
+  mediaUrls: [String!]!
   mediaAvailability: AssetAvailability!
 
   mediaMetadata: VideoMediaMetadata!
@@ -236,13 +234,13 @@ type SearchFTSOutput {
 
 type Query {
   # Lookup a membership by its ID
-  membership(where: MembershipWhereUniqueInput!): Membership
+  membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
 
   # Lookup all memberships by account ID
   memberships(where: MembershipWhereInput!): [Membership!]!
 
   # Lookup a channel by its ID
-  channel(where: ChannelWhereUniqueInput!): Channel
+  channelByUniqueInput(where: ChannelWhereUniqueInput!): Channel
 
   # List all channels by given constraints
   channels(where: ChannelWhereInput): [Channel!]!
@@ -262,7 +260,7 @@ type Query {
   categories: [VideoCategory!]!
 
   # Lookup video by its ID
-  video(where: VideoWhereUniqueInput!): Video
+  videoByUniqueInput(where: VideoWhereUniqueInput!): Video
 
   # Lookup videos by where params
   videos(offset: Int, limit: Int, where: VideoWhereInput): [Video!]

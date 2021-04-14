@@ -22,7 +22,7 @@ export const useBasicChannel = (id: string, opts?: BasicChannelOpts) => {
     variables: { where: { id } },
   })
   return {
-    channel: data?.channel,
+    channel: data?.channelByUniqueInput,
     ...rest,
   }
 }
@@ -34,7 +34,7 @@ export const useChannel = (id: string, opts?: ChannelOpts) => {
     variables: { where: { id } },
   })
   return {
-    channel: data?.channel,
+    channel: data?.channelByUniqueInput,
     ...rest,
   }
 }
