@@ -14,32 +14,11 @@ import {
 } from './SignInView.style'
 import Icon from '@/shared/components/Icon'
 import { To } from 'history'
-
-const fakeMemberShips = [
-  {
-    id: '1',
-    avatarUri: 'https://thispersondoesnotexist.com/image',
-    handle: 'Jane Doe',
-    about:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
-  },
-  {
-    id: '2',
-    avatarUri: 'https://thispersondoesnotexist.com/image',
-    handle: 'Jane Doe',
-    about:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
-  },
-  {
-    id: '3',
-    avatarUri: 'https://thispersondoesnotexist.com/image',
-    handle: 'Jane Doe',
-    about:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias obcaecati distinctio enim in similique totam non necessitatibus minus aliquam qui?',
-  },
-]
+import regularMockMemberships from '@/mocking/data/mockMemberships'
 
 const SignInView = () => {
+  // temporary
+  const fakememberships = regularMockMemberships
   return (
     <Wrapper>
       <Header>
@@ -49,7 +28,7 @@ const SignInView = () => {
         </SubTitle>
       </Header>
       <MemberGrid>
-        {fakeMemberShips.map((membership) => (
+        {fakememberships.map((membership) => (
           <StudioCard
             key={membership.id}
             handle={membership.handle}
@@ -68,7 +47,7 @@ const SignInView = () => {
 export type StudioCardProps = {
   handle?: string
   follows?: number
-  avatarUri?: string
+  avatarUri?: string | null
   to: To
 }
 

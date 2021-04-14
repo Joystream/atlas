@@ -38,6 +38,7 @@ export const StyledButton = styled(Button)`
 `
 
 export const CardWrapper = styled(Link, { shouldForwardProp: isPropValid })`
+  padding: ${sizes(8)};
   width: 272px;
   height: 272px;
   cursor: pointer;
