@@ -1,6 +1,7 @@
 import { absoluteRoutes } from '@/config/routes'
 import { Checkbox } from '@/shared/components'
 import Text from '@/shared/components/Text'
+import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -97,7 +98,9 @@ const TermsStep: React.FC<TermsStepProps> = ({ onAcceptTerms }) => {
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ScrollButton icon="chevron-down" variant="secondary" onClick={handleScrollToBottom} />
+            <ScrollButton variant="secondary" onClick={handleScrollToBottom}>
+              <SvgGlyphChevronDown />
+            </ScrollButton>
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>

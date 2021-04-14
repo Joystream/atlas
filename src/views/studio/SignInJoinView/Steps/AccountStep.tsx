@@ -1,6 +1,6 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser, useJoystream } from '@/hooks'
-import { Icon, Placeholder, Spinner, Text } from '@/shared/components'
+import { Placeholder, Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -22,6 +22,7 @@ import joystreamIcon from '@/assets/logo.png'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import { useNavigate } from 'react-router'
 import { absoluteRoutes } from '@/config/routes'
+import { SvgGlyphChevronDown, SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
 
 const AccountStep: React.FC = () => {
   const navigate = useNavigate()
@@ -77,7 +78,7 @@ const AccountStep: React.FC = () => {
               </OrderedStep>
             </OrderedSteps>
             <StepFooter>
-              <BottomBarIcon name="dialog-warning"></BottomBarIcon>
+              <BottomBarIcon></BottomBarIcon>
               <Text variant="body2" secondary>
                 Make sure to safely save your seed phrase!
               </Text>
@@ -88,7 +89,7 @@ const AccountStep: React.FC = () => {
             <StepWrapper centered>
               <IconGroup>
                 <img src={polkadotIcon} alt="" />
-                <Icon name="connect" />
+                <SvgOutlineConnect />
                 <img src={joystreamIcon} alt="" />
               </IconGroup>
               <StepTitle variant="h4">Connect accounts</StepTitle>
@@ -131,7 +132,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
         <IconWrapper>
-          <Icon name="profile" />
+          <SvgGlyphNewChannel />
         </IconWrapper>
         <div>
           <Text variant="subtitle1">{name}</Text>

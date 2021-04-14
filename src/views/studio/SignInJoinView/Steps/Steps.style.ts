@@ -1,4 +1,5 @@
-import { Icon, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
+import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
 import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
@@ -33,9 +34,8 @@ export const StepFooter = styled.div`
   outline: 24px solid ${colors.gray[800]};
   display: flex;
   justify-content: center;
+  align-items: center;
 `
-export const BottomBarIcon = styled(Icon)`
-  width: 20px;
-  height: 20px;
+export const BottomBarIcon = styled(SvgGlyphWarning)`
   margin-right: 10px;
 `

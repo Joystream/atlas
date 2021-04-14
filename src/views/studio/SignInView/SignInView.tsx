@@ -12,9 +12,9 @@ import {
   StyledAvatar,
   IconWrapper,
 } from './SignInView.style'
-import Icon from '@/shared/components/Icon'
 import { To } from 'history'
 import regularMockMemberships from '@/mocking/data/mockMemberships'
+import { SvgGlyphNewChannel } from '@/shared/icons'
 
 const SignInView = () => {
   // temporary
@@ -37,7 +37,12 @@ const SignInView = () => {
           />
         ))}
       </MemberGrid>
-      <StyledButton icon="new-channel" size="large" variant="secondary" to={absoluteRoutes.studio.newMembership()}>
+      <StyledButton
+        icon={<SvgGlyphNewChannel />}
+        size="large"
+        variant="secondary"
+        to={absoluteRoutes.studio.newMembership()}
+      >
         New Member
       </StyledButton>
     </Wrapper>
@@ -58,7 +63,7 @@ const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
         <StyledAvatar imageUrl={avatarUri} />
       ) : (
         <IconWrapper>
-          <Icon name="profile" />
+          <SvgGlyphNewChannel />
         </IconWrapper>
       )}
       <HandleText variant="h4">{handle}</HandleText>

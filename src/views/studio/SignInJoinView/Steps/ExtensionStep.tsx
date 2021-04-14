@@ -6,6 +6,7 @@ import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'
 import { useJoystream } from '@/hooks'
 import { absoluteRoutes } from '@/config/routes'
+import { SvgGlyphExternal } from '@/shared/icons'
 
 const ExtensionStep: React.FC = () => {
   const navigate = useNavigate()
@@ -24,13 +25,13 @@ const ExtensionStep: React.FC = () => {
       <StepSubTitle secondary variant="body2">
         Please enable Polkadot extension or install it using following plugin link.
       </StepSubTitle>
-      <StyledButton icon="external" to="https://polkadot.js.org/extension/">
+      <StyledButton icon={<SvgGlyphExternal />} to="https://polkadot.js.org/extension/">
         Install extension
       </StyledButton>
       <StepFooter>
-        <BottomBarIcon name="dialog-warning" />
+        <BottomBarIcon />
         <Text variant="body2" secondary>
-          Prease reload the page after installing the plugin
+          Please reload the page after installing the plugin
         </Text>
       </StepFooter>
     </StepWrapper>

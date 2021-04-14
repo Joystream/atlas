@@ -13,6 +13,7 @@ import {
 } from './SignInMainView.style'
 import { ReactComponent as FullLogoSVG } from '@/assets/full-logo.svg'
 import { absoluteRoutes } from '@/config/routes'
+import { SvgGlyphChannel, SvgGlyphInfo } from '@/shared/icons'
 
 export type Membership = {
   id: string
@@ -33,10 +34,10 @@ const SignInMainView: React.FC = () => {
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
         <ButtonGroup>
-          <SignInButton icon="channel" size="large" to={absoluteRoutes.studio.join({ step: '0' })}>
+          <SignInButton icon={<SvgGlyphChannel />} size="large" to={absoluteRoutes.studio.join({ step: '0' })}>
             Sign in
           </SignInButton>
-          <Button variant="secondary" icon="informative" size="large" to="https://www.joystream.org/">
+          <Button variant="secondary" icon={<SvgGlyphInfo />} size="large" to="https://www.joystream.org/">
             How it works?
           </Button>
         </ButtonGroup>

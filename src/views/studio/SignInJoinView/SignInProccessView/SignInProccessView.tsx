@@ -2,6 +2,7 @@ import { Membership } from '@/api/queries'
 import { Multistepper } from '@/components'
 import { useCheckBrowser, useActiveUser } from '@/hooks'
 import { Text } from '@/shared/components'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 import { web3Enable } from '@polkadot/extension-dapp'
@@ -74,7 +75,7 @@ const SignInProccessView: React.FC<SignInProccessViewProps> = ({ onOpenDialog })
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton size="large" icon="chevron-right" onClick={onOpenDialog}>
+          <StyledButton size="large" icon={<SvgGlyphChevronRight />} onClick={onOpenDialog}>
             Join now
           </StyledButton>
         </ListContainer>
