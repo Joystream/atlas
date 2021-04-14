@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const MultiFileSelectContainer = styled.div`
@@ -9,7 +9,8 @@ export const MultiFileSelectContainer = styled.div`
 export const StepsContainer = styled.div`
   width: 100%;
   margin-top: ${sizes(5)};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin-top: ${sizes(10)};
     display: flex;
     justify-content: space-between;
@@ -27,7 +28,8 @@ export const StepDivider = styled.div`
   svg {
     transform: rotate(90deg);
   }
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     width: ${sizes(12)};
     height: initial;
     svg {

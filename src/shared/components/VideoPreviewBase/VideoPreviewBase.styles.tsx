@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { fluidRange, transparentize } from 'polished'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import Avatar from '../Avatar'
 import Text from '../Text'
@@ -61,7 +61,7 @@ export const CoverContainer = styled.div<ClickableProps>`
 `
 
 const mainContainerCss = css`
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     flex-direction: row;
   }
 `
@@ -81,7 +81,7 @@ export const Container = styled.article<MainProps>`
 `
 
 const mainInfoContainerCss = css`
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     margin: ${sizes(8)} 0 0 ${sizes(6)};
   }
 `

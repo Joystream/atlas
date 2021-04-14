@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, transitions, typography, zIndex, media } from '../../theme'
 
 type ContainerProps = {
   isInBackground?: boolean
@@ -46,7 +46,7 @@ export const Container = styled.div<ContainerProps>`
     align-items: center;
     height: ${sizes(16)} !important;
 
-    @media screen and (min-width: ${breakpoints.small}) {
+    ${media.small} {
       padding: 5px ${sizes(8)} 0;
       background-color: rgba(0, 0, 0, 0.3);
     }
@@ -91,7 +91,8 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-picture-in-picture-control {
       display: none;
-      @media screen and (min-width: ${breakpoints.small}) {
+
+      ${media.small} {
         display: block;
         margin-left: auto;
       }
@@ -120,7 +121,7 @@ export const Container = styled.div<ContainerProps>`
       width: 100%;
       bottom: -2px;
 
-      @media screen and (min-width: ${breakpoints.small}) {
+      ${media.small} {
         top: 0;
         left: ${sizes(8)};
         width: calc(100% - 2 * ${sizes(8)});
@@ -145,7 +146,8 @@ export const Container = styled.div<ContainerProps>`
             background: ${colors.blue[500]};
             border-radius: 100%;
             border: 2px solid ${colors.white};
-            @media screen and (min-width: ${breakpoints.small}) {
+
+            ${media.small} {
               display: none;
             }
           }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { breakpoints, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { Avatar, Text, Placeholder } from '@/shared/components'
 import TopbarBase from '../TopbarBase'
 import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
@@ -11,7 +11,7 @@ type CommonStudioTopbarProps = {
 }
 
 export const StyledTopbarBase = styled(TopbarBase)`
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     display: flex;
     justify-content: space-between;
   }
@@ -61,7 +61,8 @@ export const StudioTopbarContainer = styled.div`
     }
     ${TextContainer} {
       display: none;
-      @media screen and (min-width: ${breakpoints.medium}) {
+
+      ${media.medium} {
         display: flex;
       }
     }
@@ -138,7 +139,8 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   background-color: ${colors.gray[800]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   z-index: ${zIndex.nearOverlay};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     width: 328px;
   }
   ${ChannelInfoContainer} {
@@ -149,7 +151,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
     margin-left: 0;
   }
   ${TextContainer} {
-    @media screen and (min-width: ${breakpoints.medium}) {
+    ${media.medium} {
       width: 200px;
     }
   }

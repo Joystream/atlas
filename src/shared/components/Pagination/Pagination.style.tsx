@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import IconButton from '../IconButton'
@@ -12,14 +12,15 @@ export const PaginationWrapper = styled.div`
   display: flex;
   max-width: 400px;
   justify-content: space-between;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     max-width: unset;
     justify-content: unset;
   }
 `
 
 export const ChevronButton = styled(IconButton)`
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     &:first-of-type {
       margin-right: ${sizes(8)};
     }
@@ -31,7 +32,8 @@ export const ChevronButton = styled(IconButton)`
 
 export const ThreeDotsWrapper = styled.div`
   display: none;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     width: ${sizes(12)};
     height: ${sizes(12)};
     color: ${colors.gray[300]};
@@ -74,8 +76,10 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   :active {
     ${buttonActiveState}
   }
+
   ${({ isActive }) => isActive && buttonActiveState};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: flex;
   }
 `
