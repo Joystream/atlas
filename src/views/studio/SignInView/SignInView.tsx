@@ -41,7 +41,7 @@ const SignInView = () => {
         icon={<SvgGlyphNewChannel />}
         size="large"
         variant="secondary"
-        to={absoluteRoutes.studio.newMembership()}
+        to={absoluteRoutes.studio.join({ step: '0' })}
       >
         New Member
       </StyledButton>
