@@ -1,10 +1,9 @@
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser } from '@/hooks'
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Header,
   Hero,
-  MemberChannelGrid,
+  MemberGrid,
   SubTitle,
   Wrapper,
   StyledButton,
@@ -13,8 +12,8 @@ import {
   StyledAvatar,
   IconWrapper,
 } from './SignInView.style'
-import { Link } from 'react-router-dom'
 import Icon from '@/shared/components/Icon'
+import { To } from 'history'
 
 const fakeMemberShips = [
   {
@@ -41,10 +40,6 @@ const fakeMemberShips = [
 ]
 
 const SignInView = () => {
-  const [memberships, setMemberships] = useState()
-
-  const { activeUser } = useActiveUser()
-
   return (
     <Wrapper>
       <Header>
@@ -53,7 +48,7 @@ const SignInView = () => {
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
       </Header>
-      <MemberChannelGrid>
+      <MemberGrid>
         {fakeMemberShips.map((membership) => (
           <StudioCard
             key={membership.id}
@@ -62,8 +57,8 @@ const SignInView = () => {
             to={absoluteRoutes.studio.newChannel()}
           />
         ))}
-      </MemberChannelGrid>
-      <StyledButton icon="new-channel" size="large" variant="secondary">
+      </MemberGrid>
+      <StyledButton icon="new-channel" size="large" variant="secondary" to={absoluteRoutes.studio.newMembership()}>
         New Member
       </StyledButton>
     </Wrapper>
@@ -74,12 +69,12 @@ export type StudioCardProps = {
   handle?: string
   follows?: number
   avatarUri?: string
-  to?: string
+  to: To
 }
 
 const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
   return (
-    <CardWrapper as={to ? Link : 'div'} to={to}>
+    <CardWrapper to={to}>
       {avatarUri ? (
         <StyledAvatar imageUrl={avatarUri} />
       ) : (
