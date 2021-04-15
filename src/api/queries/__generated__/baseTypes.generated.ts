@@ -245,8 +245,6 @@ export type Query = {
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   /** Get views counts for a list of videos */
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categories: Array<VideoCategory>
-  category?: Maybe<VideoCategory>
   channelByUniqueInput?: Maybe<Channel>
   /** Get follows count for a single channel */
   channelFollows?: Maybe<ChannelFollowsInfo>
@@ -260,6 +258,7 @@ export type Query = {
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
   videoByUniqueInput?: Maybe<Video>
+  videoCategories: Array<VideoCategory>
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>
   videos?: Maybe<Array<Video>>
@@ -276,10 +275,6 @@ export type QueryBatchedChannelsViewsArgs = {
 
 export type QueryBatchedVideoViewsArgs = {
   videoIdList: Array<Scalars['ID']>
-}
-
-export type QueryCategoryArgs = {
-  where: VideoCategoryWhereUniqueInput
 }
 
 export type QueryChannelByUniqueInputArgs = {
