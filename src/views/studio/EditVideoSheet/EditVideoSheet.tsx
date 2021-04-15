@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { isValid } from 'date-fns'
-import { useSpring } from 'react-spring'
-import useMeasure from 'react-use-measure'
 import { FileRejection } from 'react-dropzone'
 import { Control, Controller, DeepMap, FieldError, useForm, UseFormMethods } from 'react-hook-form'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { transitions } from '@/shared/theme'
 import {
   Checkbox,
   Datepicker,
@@ -23,7 +20,6 @@ import { languages } from '@/config/languages'
 import { useDrafts } from '@/hooks'
 import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheet } from '@/hooks/useEditVideoSheet'
 import {
-  ACTION_SHEET_BAR_HEIGHT,
   ButtonsContainer,
   Container,
   Content,
@@ -40,6 +36,7 @@ import {
 } from './EditVideoSheet.style'
 import { SelectItem } from '@/shared/components/Select/Select'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
+import { useEditVideoSheetAnimations } from './animations'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
@@ -61,8 +58,6 @@ type FormInputs = {
 
 export const EditVideoSheet: React.FC = () => {
   // sheet state
-  const [containerRef, containerBounds] = useMeasure()
-  const [actionBarRef, actionBarBounds] = useMeasure()
   const {
     sheetState,
     setSheetState,
@@ -73,33 +68,7 @@ export const EditVideoSheet: React.FC = () => {
     selectedVideoTab,
     setSelectedVideoTab,
   } = useEditVideoSheet()
-  // animations overlay
-  const [DrawerOverlayAnimationProps, setDrawerOverlayAnimationProps] = useSpring(() => ({
-    from: { opacity: '0' },
-    duration: transitions.timings.sharp,
-    opacity: '0',
-  }))
-  useEffect(() => {
-    if (sheetState === 'open') setDrawerOverlayAnimationProps({ opacity: 1 })
-    if (sheetState === 'minimized') setDrawerOverlayAnimationProps({ opacity: 0 })
-    if (sheetState === 'closed') setDrawerOverlayAnimationProps({ opacity: 0 })
-  }, [setDrawerOverlayAnimationProps, sheetState])
-
-  // animations sheet
-  // 1 extra px to account for the border
-  const transform = containerBounds.height ? containerBounds.height - ACTION_SHEET_BAR_HEIGHT + 1 : 10000
-  const [animationProps, setAnimationProps] = useSpring(() => ({
-    from: { transform: 'translateY(10000px)' },
-    duration: transitions.timings.sharp,
-    transform: 'translateY(10000px)',
-    opacity: '1',
-  }))
-  useEffect(() => {
-    if (sheetState === 'open') setAnimationProps({ transform: 'translateY(0)', opacity: 1 })
-    if (sheetState === 'minimized') setAnimationProps({ transform: `translateY(${transform}px)`, opacity: 1 })
-    if (sheetState === 'closed')
-      setAnimationProps({ transform: `translateY(${containerBounds.height || 10000}px)`, opacity: 0 })
-  }, [containerBounds.height, setAnimationProps, sheetState, transform])
+  const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
   // forms state
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -217,8 +186,8 @@ export const EditVideoSheet: React.FC = () => {
   }
   return (
     <>
-      <DrawerOverlay style={{ ...DrawerOverlayAnimationProps }} />
-      <Container ref={containerRef} role="dialog" style={{ ...animationProps }}>
+      <DrawerOverlay style={{ ...drawerOverlayAnimationProps }} />
+      <Container role="dialog" style={{ ...sheetAnimationProps }}>
         <TabsBar
           sheetState={sheetState}
           videoTabs={videoTabs}
@@ -231,7 +200,7 @@ export const EditVideoSheet: React.FC = () => {
           handleClose={handleClose}
           handleMinimize={handleMinimize}
         />
-        <Content height={transform - actionBarBounds.height}>
+        <Content>
           <FileDropperContainer>
             <MultiFileSelect
               files={files}
@@ -247,14 +216,12 @@ export const EditVideoSheet: React.FC = () => {
             control={control}
             titleRef={register(textFieldValidation('Video Title', 3, 20))}
             descriptionRef={register(textFieldValidation('Description', 0, 2160))}
-            height={transform - actionBarBounds.height}
             errors={errors}
             clearErrors={clearErrors}
             setFormValue={setFormValue}
           />
         </Content>
         <StyledActionBar
-          ref={actionBarRef}
           primaryText={`Fee: ${99} Joy`}
           secondaryText="Every change to the blockchain requires making a nominal transaction."
           primaryButtonText={`Start Publishing`}
@@ -332,7 +299,6 @@ const TabsBar: React.FC<TabsBarProps> = ({
 )
 
 type FormProps = {
-  height: number
   titleRef: React.Ref<HTMLInputElement> | undefined
   descriptionRef: React.Ref<HTMLTextAreaElement> | undefined
   errors: DeepMap<FormInputs, FieldError>
@@ -340,15 +306,7 @@ type FormProps = {
   clearErrors: UseFormMethods<FormInputs>['clearErrors']
   setFormValue: UseFormMethods<FormInputs>['setValue']
 }
-const Form: React.FC<FormProps> = ({
-  height,
-  errors,
-  control,
-  descriptionRef,
-  titleRef,
-  setFormValue,
-  clearErrors,
-}) => {
+const Form: React.FC<FormProps> = ({ errors, control, descriptionRef, titleRef, setFormValue, clearErrors }) => {
   const { categories, error: categoriesError } = useCategories()
   const createFormSelectFieldHandler = (name: keyof FormInputs) => (value?: string | null) => {
     setFormValue(name, value)
@@ -360,7 +318,7 @@ const Form: React.FC<FormProps> = ({
   }
   if (categoriesError) throw categoriesError
   return (
-    <FormContainer height={height}>
+    <FormContainer>
       <HeaderTextField
         name="title"
         ref={titleRef}

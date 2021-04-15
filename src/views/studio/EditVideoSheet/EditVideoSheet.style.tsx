@@ -59,12 +59,11 @@ export const ButtonsContainer = styled.div`
   }
 `
 
-export const Content = styled.div<{ height: number }>`
-  ${StudioContainerStyle}
+// height: ${({ height }) => height}px;
+export const Content = styled.div`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
-  height: ${({ height }) => height}px;
   overflow-y: auto;
 
   @media screen and (min-width: ${breakpoints.medium}) {
@@ -73,6 +72,7 @@ export const Content = styled.div<{ height: number }>`
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 1fr;
   }
+  ${StudioContainerStyle}
 `
 
 export const StyledCheckboxContainer = styled.div`
@@ -96,14 +96,14 @@ export const FileDropperContainer = styled.div`
   }
 `
 
-export const FormContainer = styled.form<{ height: number }>`
+// height: ${({ height }) => height}px;
+export const FormContainer = styled.form`
   display: grid;
   grid-auto-flow: row;
   padding: ${sizes(12)} ${sizes(4)} ${sizes(8)} ${sizes(4)};
 
   @media screen and (min-width: ${breakpoints.medium}) {
     overflow-y: auto;
-    height: ${({ height }) => height}px;
     padding: ${sizes(8)} ${sizes(24)} ${sizes(8)} 8px;
   }
 
