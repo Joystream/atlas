@@ -21,7 +21,7 @@ export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, o
 
   const avatarPhotoUrl = createUrlFromAsset(
     channel?.avatarPhotoAvailability,
-    channel?.avatarPhotoUrl,
+    channel?.avatarPhotoUrls,
     channel?.avatarPhotoDataObject
   )
   return (

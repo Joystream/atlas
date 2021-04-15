@@ -119,10 +119,14 @@ const VideoView: React.FC = () => {
     return <p>Video not found</p>
   }
 
-  const licenseName = knownLicenses.find((license) => license.code === video?.license?.code)?.name
+  const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
 
-  const mediaUrl = createUrlFromAsset(video?.mediaAvailability, video?.mediaUrl, video?.mediaDataObject)
-  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+  const mediaUrl = createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
+  const thumbnailPhotoUrl = createUrlFromAsset(
+    video?.thumbnailPhotoAvailability,
+    video?.thumbnailPhotoUrls,
+    video?.thumbnailPhotoDataObject
+  )
 
   return (
     <StyledViewWrapper>
@@ -133,7 +137,7 @@ const VideoView: React.FC = () => {
               playing={playing}
               src={mediaUrl}
               fill
-              posterUrl={thumbnailUrl}
+              posterUrl={thumbnailPhotoUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               onPlay={handlePlay}
@@ -177,9 +181,11 @@ const VideoView: React.FC = () => {
           {video ? (
             <>
               License:
-              <a href={video.license?.url || ''} target="_blank" rel="noopener noreferrer">
-                {licenseName}
-              </a>
+              {foundLicense && (
+                <a href={foundLicense.url} target="_blank" rel="noopener noreferrer">
+                  {foundLicense.name}
+                </a>
+              )}
               <p>{video.license?.customText}</p>
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>

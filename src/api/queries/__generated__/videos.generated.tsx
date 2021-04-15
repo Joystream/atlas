@@ -18,7 +18,6 @@ export type LicenseFieldsFragment = {
   code?: Types.Maybe<number>
   attribution?: Types.Maybe<string>
   customText?: Types.Maybe<string>
-  url?: Types.Maybe<string>
 }
 
 export type VideoFieldsFragment = {
@@ -28,14 +27,14 @@ export type VideoFieldsFragment = {
   description?: Types.Maybe<string>
   views?: Types.Maybe<number>
   duration?: Types.Maybe<number>
-  thumbnailUrl?: Types.Maybe<string>
-  thumbnailAvailability: Types.AssetAvailability
+  thumbnailPhotoUrls: Array<string>
+  thumbnailPhotoAvailability: Types.AssetAvailability
   createdAt: Date
   isPublic?: Types.Maybe<boolean>
-  mediaUrl?: Types.Maybe<string>
+  mediaUrls: Array<string>
   mediaAvailability: Types.AssetAvailability
   category: { __typename?: 'VideoCategory'; id: string }
-  thumbnailDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
@@ -48,7 +47,7 @@ export type GetVideoQueryVariables = Types.Exact<{
 
 export type GetVideoQuery = {
   __typename?: 'Query'
-  video?: Types.Maybe<{ __typename?: 'Video' } & VideoFieldsFragment>
+  videoByUniqueInput?: Types.Maybe<{ __typename?: 'Video' } & VideoFieldsFragment>
 }
 
 export type GetVideosConnectionQueryVariables = Types.Exact<{
@@ -130,7 +129,6 @@ export const LicenseFieldsFragmentDoc = gql`
     code
     attribution
     customText
-    url
   }
 `
 export const VideoFieldsFragmentDoc = gql`
@@ -143,9 +141,9 @@ export const VideoFieldsFragmentDoc = gql`
     }
     views
     duration
-    thumbnailUrl
-    thumbnailAvailability
-    thumbnailDataObject {
+    thumbnailPhotoUrls
+    thumbnailPhotoAvailability
+    thumbnailPhotoDataObject {
       ...DataObjectFields
     }
     createdAt
@@ -153,7 +151,7 @@ export const VideoFieldsFragmentDoc = gql`
     mediaMetadata {
       ...VideoMediaMetadataFields
     }
-    mediaUrl
+    mediaUrls
     mediaAvailability
     mediaDataObject {
       ...DataObjectFields
@@ -172,7 +170,7 @@ export const VideoFieldsFragmentDoc = gql`
 `
 export const GetVideoDocument = gql`
   query GetVideo($where: VideoWhereUniqueInput!) {
-    video(where: $where) {
+    videoByUniqueInput(where: $where) {
       ...VideoFields
     }
   }
