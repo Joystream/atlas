@@ -6,6 +6,7 @@ export const TermsBox = styled.div`
   scroll-behavior: smooth;
   text-align: left;
   margin-top: ${sizes(6)};
+  margin-bottom: ${sizes(10)};
   position: relative;
   height: 300px;
   width: 100%;
@@ -35,7 +36,6 @@ export const ScrollButton = styled(IconButton)`
   bottom: ${sizes(6)};
 `
 export const TermsForm = styled.form`
-  margin-top: ${sizes(4)};
   width: 100%;
   display: flex;
   justify-content: space-between;

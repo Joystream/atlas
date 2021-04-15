@@ -28,7 +28,7 @@ export const StepSubTitle = styled(Text)`
 `
 
 export const StepFooter = styled.div`
-  margin-top: 60px;
+  margin-top: 24px;
   background-color: ${colors.gray[800]};
   width: 100%;
   outline: 24px solid ${colors.gray[800]};

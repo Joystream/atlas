@@ -24,8 +24,8 @@ export const AccountStepImg = styled.img`
 export const AccountsWrapper = styled.div`
   width: 100%;
   max-height: 300px;
+  min-height: 200px;
   overflow-y: auto;
-  margin-bottom: 30px;
 `
 
 export const AccountWrapper = styled.label<AccountWrapperProps>`

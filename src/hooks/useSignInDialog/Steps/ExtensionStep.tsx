@@ -14,7 +14,7 @@ const ExtensionStep: React.FC = () => {
 
   useEffect(() => {
     if (extensionConnected) {
-      navigate(absoluteRoutes.studio.join({ step: '1' }))
+      navigate('?step=1')
     }
   }, [extensionConnected, navigate])
 

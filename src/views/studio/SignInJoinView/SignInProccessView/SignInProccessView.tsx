@@ -1,3 +1,5 @@
+import { Multistepper } from '@/components'
+import { useSignInDialog } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import React from 'react'
@@ -13,11 +15,8 @@ import {
   UnOrderedList,
 } from './SignInProccessView.style'
 
-type SignInProccessViewProps = {
-  onOpenDialog?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
-
-const SignInProccessView: React.FC<SignInProccessViewProps> = ({ onOpenDialog }) => {
+const SignInProccessView = () => {
+  const { openDialog, closeDialog, dialogVisible, steps, currentStep } = useSignInDialog()
   return (
     <>
       <StyledStudioContainer>
@@ -69,12 +68,18 @@ const SignInProccessView: React.FC<SignInProccessViewProps> = ({ onOpenDialog })
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton size="large" icon={<SvgGlyphChevronRight />} onClick={onOpenDialog}>
+          <StyledButton size="large" icon={<SvgGlyphChevronRight />} onClick={openDialog}>
             Join now
           </StyledButton>
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
+      <Multistepper
+        currentStepIdx={Number(currentStep)}
+        steps={steps}
+        showDialog={dialogVisible}
+        onExitClick={closeDialog}
+      />
     </>
   )
 }

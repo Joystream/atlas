@@ -39,7 +39,7 @@ const AccountStep: React.FC = () => {
         memberId: null,
         channelId: null,
       })
-      navigate(absoluteRoutes.studio.join({ step: '2' }))
+      navigate('?step=2')
     }
   }
 
