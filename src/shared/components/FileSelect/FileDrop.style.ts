@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions } from '@/shared/theme'
+import { colors, sizes, transitions, media } from '@/shared/theme'
 import styled from '@emotion/styled'
 import Text from '../Text'
 import { darken } from 'polished'
@@ -50,10 +50,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     border: 1px dashed ${colors.blue[500]};
   }
 
-  @media screen and (min-width: 450px) {
-    padding-top: 62.25%;
-  }
-  @media screen and (min-width: ${breakpoints.large}) {
+  ${media.compact} {
     padding-top: 56.25%;
   }
 `
@@ -70,7 +67,7 @@ export const InnerContainer = styled.div`
   max-width: 280px;
   height: 100%;
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     max-width: 350px;
   }
 `
@@ -110,7 +107,8 @@ export const Thumbnail = styled.img`
   object-fit: contain;
   cursor: pointer;
   display: block;
-  @media screen and (min-width: 450px) {
+
+  ${media.compact} {
     object-fit: initial;
   }
 `
@@ -125,14 +123,16 @@ export const DismissButton = styled(IconButton)`
 
 export const Title = styled(Text)`
   margin-top: ${sizes(2)};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin-top: ${sizes(4)};
   }
 `
 
 export const Paragraph = styled(Text)`
   margin-top: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin-top: ${sizes(8)};
   }
 `
@@ -142,14 +142,16 @@ export const ButtonsGroup = styled.div`
   align-items: center;
   justify-content: center;
   margin: ${sizes(4)} 0 ${sizes(2)} 0;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     margin: ${sizes(8)} 0 ${sizes(4)} 0;
   }
 `
 
 export const DragDropText = styled(Text)`
   display: none;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: initial;
     margin-right: ${sizes(5)};
     color: ${colors.gray[300]};

@@ -60,7 +60,7 @@ const ChannelView: React.FC = () => {
   }
   const coverPhotoUrl = createUrlFromAsset(
     channel?.coverPhotoAvailability,
-    channel?.coverPhotoUrl,
+    channel?.coverPhotoUrls,
     channel?.coverPhotoDataObject
   )
 

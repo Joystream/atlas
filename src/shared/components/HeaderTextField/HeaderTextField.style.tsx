@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 import { Text } from '@/shared/components'
-import { colors, sizes, typography, breakpoints } from '@/shared/theme'
+import { colors, sizes, typography, media } from '@/shared/theme'
 
 type HelperTextProps = {
   error?: boolean
@@ -20,10 +20,11 @@ export const Container = styled.div`
 
 export const StyledInput = styled.input<StyledInputProps>`
   --input-max-width: 60vw;
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     --input-max-width: 400px;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     --input-max-width: 600px;
   }
   line-height: 1;

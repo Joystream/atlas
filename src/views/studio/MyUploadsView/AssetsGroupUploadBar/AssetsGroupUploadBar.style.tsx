@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors, sizes, zIndex, breakpoints, transitions } from '@/shared/theme'
+import { colors, sizes, zIndex, media, transitions } from '@/shared/theme'
 import { keyframes } from '@emotion/react'
 import { ExpandButton } from '@/shared/components'
 
@@ -70,7 +70,8 @@ export const Thumbnail = styled.div`
   width: ${sizes(18)};
   height: ${sizes(12)};
   background-color: ${colors.gray[700]};
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: flex;
   }
 `

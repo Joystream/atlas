@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, breakpoints, transitions } from '@/shared/theme'
+import { colors, sizes, typography, transitions, media } from '@/shared/theme'
 import { Text, Tooltip } from '@/shared/components'
 
 type ActionBarContainerProps = {
@@ -15,7 +15,8 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     flex-direction: row;
     justify-content: space-between;
     padding: ${sizes(4)} ${sizes(8)};
@@ -35,10 +36,12 @@ export const StyledInfoContainer = styled.div`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: flex;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     align-items: center;
     width: 100%;
   }
@@ -50,7 +53,8 @@ export const StyledPrimaryText = styled(Text)`
   font-size: ${typography.sizes.h5};
   font-weight: ${typography.weights.bold};
   text-align: right;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-right: ${sizes(4)};
   }
 `
@@ -61,7 +65,8 @@ export const StyledSecondaryText = styled(Text)`
   line-height: 20px;
   max-width: 280px;
   display: none;
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     display: block;
   }
 `
@@ -89,7 +94,8 @@ export const StyledTooltip = styled(Tooltip)`
     height: 100%;
     align-items: center;
   }
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     display: block;
   }
 `

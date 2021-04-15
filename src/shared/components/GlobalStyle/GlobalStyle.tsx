@@ -1,7 +1,7 @@
 import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import React from 'react'
-import { breakpoints, colors, sizes, typography } from '../../theme'
+import { media, colors, sizes, typography } from '../../theme'
 import { transitionStyles } from './transitionStyles'
 
 const globalStyles = css`
@@ -41,7 +41,7 @@ const globalStyles = css`
     --global-horizontal-padding: ${sizes(4)};
     --sidenav-collapsed-width: 0;
 
-    @media screen and (min-width: ${breakpoints.medium}) {
+    ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};
       --sidenav-collapsed-width: 72px;
     }

@@ -25,6 +25,7 @@ import {
 import { useUploadVideoActionSheet } from '@/views/studio/UploadEditVideoActionSheet/useVideoActionSheet'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import { createUrlFromAsset } from '@/utils/asset'
 
 type ChannelInfoProps = {
   active?: boolean
@@ -169,9 +170,15 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
+    const avatarPhotoUrl = createUrlFromAsset(
+      channel?.avatarPhotoAvailability,
+      channel?.avatarPhotoUrls,
+      channel?.avatarPhotoDataObject
+    )
+
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="small" imageUrl={channel?.avatarPhotoUrl} />
+        <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
         <TextContainer>
           <Text>{channel ? channel.title : 'New Channel'}</Text>
           <Text>{memberName}</Text>

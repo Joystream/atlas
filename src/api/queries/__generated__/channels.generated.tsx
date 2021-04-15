@@ -9,7 +9,7 @@ export type BasicChannelFieldsFragment = {
   id: string
   title?: Types.Maybe<string>
   createdAt: Date
-  avatarPhotoUrl?: Types.Maybe<string>
+  avatarPhotoUrls: Array<string>
   avatarPhotoAvailability: Types.AssetAvailability
   avatarPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 }
@@ -20,7 +20,7 @@ export type AllChannelFieldsFragment = {
   follows?: Types.Maybe<number>
   isPublic?: Types.Maybe<boolean>
   isCensored: boolean
-  coverPhotoUrl?: Types.Maybe<string>
+  coverPhotoUrls: Array<string>
   coverPhotoAvailability: Types.AssetAvailability
   language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
   coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
@@ -32,7 +32,7 @@ export type GetBasicChannelQueryVariables = Types.Exact<{
 
 export type GetBasicChannelQuery = {
   __typename?: 'Query'
-  channel?: Types.Maybe<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
+  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
 }
 
 export type GetChannelQueryVariables = Types.Exact<{
@@ -41,7 +41,7 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channel?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
+  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
 }
 
 export type GetVideoCountQueryVariables = Types.Exact<{
@@ -113,7 +113,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
     id
     title
     createdAt
-    avatarPhotoUrl
+    avatarPhotoUrls
     avatarPhotoAvailability
     avatarPhotoDataObject {
       ...DataObjectFields
@@ -131,7 +131,7 @@ export const AllChannelFieldsFragmentDoc = gql`
     language {
       iso
     }
-    coverPhotoUrl
+    coverPhotoUrls
     coverPhotoAvailability
     coverPhotoDataObject {
       ...DataObjectFields
@@ -142,7 +142,7 @@ export const AllChannelFieldsFragmentDoc = gql`
 `
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
-    channel(where: $where) {
+    channelByUniqueInput(where: $where) {
       ...BasicChannelFields
     }
   }
@@ -180,7 +180,7 @@ export type GetBasicChannelLazyQueryHookResult = ReturnType<typeof useGetBasicCh
 export type GetBasicChannelQueryResult = Apollo.QueryResult<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 export const GetChannelDocument = gql`
   query GetChannel($where: ChannelWhereUniqueInput!) {
-    channel(where: $where) {
+    channelByUniqueInput(where: $where) {
       ...AllChannelFields
     }
   }

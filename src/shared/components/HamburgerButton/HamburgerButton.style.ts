@@ -1,7 +1,7 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 
 import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, zIndex } from '../../theme'
+import { colors, sizes, zIndex, media } from '../../theme'
 
 type HamburgerInnerProps = {
   active: boolean
@@ -30,7 +30,8 @@ export const Hamburger = styled.button`
   &:active {
     background-color: rgba(0, 0, 0, 0.4);
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     top: 16px;
     height: ${sizes(12)};
     width: ${sizes(12)};

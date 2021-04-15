@@ -9,7 +9,7 @@ fragment BasicMembershipFields on Membership {
 }
 
 query GetMembership($where: MembershipWhereUniqueInput!) {
-  membership(where: $where) {
+  membershipByUniqueInput(where: $where) {
     ...BasicMembershipFields
   }
 }

@@ -1,4 +1,4 @@
-import { breakpoints, colors, sizes, transitions, typography } from '@/shared/theme'
+import { media, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
