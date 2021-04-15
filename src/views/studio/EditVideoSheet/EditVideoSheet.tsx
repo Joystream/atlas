@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { isValid } from 'date-fns'
-import { useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 import { FileRejection } from 'react-dropzone'
 import { Control, Controller, DeepMap, FieldError, useForm, UseFormMethods } from 'react-hook-form'
-import { Location } from 'history'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { transitions } from '@/shared/theme'
 import {
@@ -23,7 +21,7 @@ import { textFieldValidation, requiredValidation } from '@/utils/formValidationO
 import { useCategories } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { useDrafts } from '@/hooks'
-import { SheetState, TabType, useUploadVideoActionSheet } from './useVideoActionSheet'
+import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheet } from '@/hooks/useEditVideoSheet'
 import {
   ACTION_SHEET_BAR_HEIGHT,
   ButtonsContainer,
@@ -39,14 +37,13 @@ import {
   TabsContainer,
   TabTitle,
   Topbar,
-} from './UploadEditVideoActionSheet.style'
-import { absoluteRoutes } from '@/config/routes'
+} from './EditVideoSheet.style'
 import { SelectItem } from '@/shared/components/Select/Select'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
 
 const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
-const visibilityOptions: SelectItem<string>[] = [
+const visibilityOptions: SelectItem[] = [
   { name: 'Public (Anyone can see this video)', value: 'public' },
   { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
 ]
@@ -62,14 +59,10 @@ type FormInputs = {
   isExplicit: boolean | null
 }
 
-export const UploadEditVideoActionSheet: React.FC = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
+export const EditVideoSheet: React.FC = () => {
   // sheet state
-  const uploadVideoMatch = useMatch({ path: absoluteRoutes.studio.editVideo() })
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
-  const [cachedLocation, setCachedLocation] = useState<Location>()
   const {
     sheetState,
     setSheetState,
@@ -79,7 +72,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     resetVideoTabs,
     selectedVideoTab,
     setSelectedVideoTab,
-  } = useUploadVideoActionSheet()
+  } = useEditVideoSheet()
   // animations overlay
   const [DrawerOverlayAnimationProps, setDrawerOverlayAnimationProps] = useSpring(() => ({
     from: { opacity: '0' },
@@ -144,7 +137,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   // Tabs
   const { drafts, removeDraft, removeAllDrafts, addDraft, updateDraft } = useDrafts('video', channelId)
   const handleTabSelect = useCallback(
-    (tab?: TabType) => {
+    (tab?: EditVideoSheetTab) => {
       // reset({
       //   title: '',
       //   selectedVideoVisibility: null,
@@ -172,10 +165,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     },
     [setFormValue, setSelectedVideoTab]
   )
-  const handleClose = useCallback(() => {
-    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
-    setSheetState('closed')
-  }, [cachedLocation?.pathname, navigate, setSheetState])
+
   const handleAddNewTab = useCallback(async () => {
     const newDraft = await addDraft({
       channelId: channelId,
@@ -191,38 +181,32 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     addVideoTab(newDraft)
     handleTabSelect(newDraft)
   }, [addDraft, addVideoTab, handleTabSelect])
-  const handleMinimize = useCallback(() => {
-    setSheetState?.('minimized')
-    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
-  }, [cachedLocation?.pathname, navigate, setSheetState])
-  const handleOpen = useCallback(() => {
-    if (sheetState !== 'open') {
-      if (videoTabs.length === 0) {
-        console.log('new tab on open')
-        handleAddNewTab()
-      }
-      setSheetState('open')
-      navigate(absoluteRoutes.studio.editVideo())
-    }
-  }, [handleAddNewTab, navigate, setSheetState, sheetState, videoTabs.length])
 
-  useEffect(() => {
-    if (uploadVideoMatch) {
-      handleOpen()
-    } else if (sheetState === 'open') {
-      handleMinimize()
+  const handleOpen = () => {
+    if (sheetState === 'open') {
+      return
     }
-  }, [uploadVideoMatch, sheetState, handleOpen, handleMinimize])
+
+    if (videoTabs.length === 0) {
+      handleAddNewTab()
+    }
+
+    setSheetState('open')
+  }
+
+  const handleMinimize = () => {
+    setSheetState('minimized')
+  }
+
+  const handleClose = () => {
+    setSheetState('closed')
+  }
+
   useEffect(() => {
     handleTabSelect(selectedVideoTab)
   }, [handleTabSelect, selectedVideoTab])
-  useEffect(() => {
-    if (!uploadVideoMatch) {
-      setCachedLocation(location)
-    }
-  }, [location, cachedLocation, uploadVideoMatch])
 
-  const handleRemoveTab = (tab: TabType) => {
+  const handleRemoveTab = (tab: EditVideoSheetTab) => {
     removeVideoTab(tab)
     console.log('remove tab')
     // we are closing the last tab
@@ -284,13 +268,13 @@ export const UploadEditVideoActionSheet: React.FC = () => {
 }
 
 type TabsBarProps = {
-  sheetState: SheetState
-  videoTabs: TabType[]
-  selectedVideoTab?: TabType
+  sheetState: EditVideoSheetState
+  videoTabs: EditVideoSheetTab[]
+  selectedVideoTab?: EditVideoSheetTab
   handleAddNewTab: () => void
-  handleRemoveTab: (tab: TabType) => void
+  handleRemoveTab: (tab: EditVideoSheetTab) => void
   handleResetVideoTabs: () => void
-  handleTabSelect: (tab: TabType) => void
+  handleTabSelect: (tab: EditVideoSheetTab) => void
   handleMinimize: () => void
   handleOpen: () => void
   handleClose: () => void

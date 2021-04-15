@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useActiveUser } from '@/hooks'
+import { useActiveUser, useEditVideoSheet } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -22,7 +22,6 @@ import {
   StyledLink,
   AvatarPlaceholder,
 } from './StudioTopbar.style'
-import { useUploadVideoActionSheet } from '@/views/studio/UploadEditVideoActionSheet/useVideoActionSheet'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
@@ -61,7 +60,7 @@ const StudioTopbar: React.FC = () => {
       skip: !activeUser?.memberId,
     }
   )
-  const { sheetState } = useUploadVideoActionSheet()
+  const { sheetState } = useEditVideoSheet()
 
   const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
 

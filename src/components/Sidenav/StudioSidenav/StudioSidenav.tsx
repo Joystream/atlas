@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useDrafts, useActiveUser } from '@/hooks'
+import { useDrafts, useActiveUser, useEditVideoSheet } from '@/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { CSSTransition } from 'react-transition-group'
-import { useUploadVideoActionSheet } from '@/views/studio/UploadEditVideoActionSheet/useVideoActionSheet'
 import { transitions } from '@/shared/theme'
 
 const studioNavbarItems: NavItemType[] = [
@@ -34,7 +33,7 @@ export const StudioSidenav: React.FC = () => {
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? undefined
   const { unseenDrafts } = useDrafts('video', channelId)
-  const { sheetState } = useUploadVideoActionSheet()
+  const { sheetState } = useEditVideoSheet()
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) =>
     item.to === absoluteRoutes.studio.videos() ? { ...item, badgeNumber: unseenDrafts.length } : item

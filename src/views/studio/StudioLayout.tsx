@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Route, Routes, useLocation, useMatch } from 'react-router'
+import React from 'react'
+import { Route, Routes } from 'react-router'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { Location } from 'history'
 
-import { CreateEditChannelView, MyUploadsView, MyVideosView, UploadEditVideoActionSheet } from '.'
+import { CreateEditChannelView, EditVideoSheet, MyUploadsView, MyVideosView } from '.'
 import {
   JoystreamProvider,
   ActiveUserProvider,
@@ -13,6 +12,8 @@ import {
   PersonalDataProvider,
   useConnectionStatus,
   SnackbarProvider,
+  EditVideoSheetProvider,
+  useVideoEditSheetRouting,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -21,7 +22,6 @@ import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, 
 import SignInView from './SignInView'
 import SelectMembershipView from './SelectMembershipView'
 import CreateMemberView from './CreateMemberView'
-import { VideoActionSheetProvider } from './UploadEditVideoActionSheet/useVideoActionSheet'
 
 const studioRoutes = [
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
@@ -34,57 +34,39 @@ const studioRoutes = [
 ]
 
 const StudioLayout = () => {
-  const navigate = useNavigate()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const location = useLocation()
-  const [cachedLocation, setCachedLocation] = useState<Location>()
-  const uploadVideoMatch = useMatch({ path: absoluteRoutes.studio.editVideo() })
-  useEffect(() => {
-    if (!uploadVideoMatch) {
-      setCachedLocation(location)
-    }
-  }, [cachedLocation, location, uploadVideoMatch])
 
-  const displayedLocation = uploadVideoMatch ? cachedLocation : location
+  const navigate = useNavigate()
+  const displayedLocation = useVideoEditSheetRouting()
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
 
   return (
-    <VideoActionSheetProvider>
-      <SnackbarProvider>
-        <DraftsProvider>
-          <PersonalDataProvider>
-            <ActiveUserProvider>
-              <JoystreamProvider>
-                <NoConnectionIndicator
-                  nodeConnectionStatus={nodeConnectionStatus}
-                  isConnectedToInternet={isUserConnectedToInternet}
-                />
-                <StudioTopbar />
-                <StudioSidenav />
-                <MainContainer>
-                  <ErrorBoundary
-                    fallback={ViewErrorFallback}
-                    onReset={() => {
-                      navigate(absoluteRoutes.studio.index())
-                    }}
-                  >
-                    <Routes location={displayedLocation}>
-                      {studioRoutes.map((route) => (
-                        <Route key={route.path} {...route} />
-                      ))}
-                    </Routes>
-                  </ErrorBoundary>
-                </MainContainer>
-                <UploadEditVideoActionSheet />
-              </JoystreamProvider>
-            </ActiveUserProvider>
-          </PersonalDataProvider>
-        </DraftsProvider>
-      </SnackbarProvider>
-    </VideoActionSheetProvider>
+    <>
+      <NoConnectionIndicator
+        nodeConnectionStatus={nodeConnectionStatus}
+        isConnectedToInternet={isUserConnectedToInternet}
+      />
+      <StudioTopbar />
+      <StudioSidenav />
+      <MainContainer>
+        <ErrorBoundary
+          fallback={ViewErrorFallback}
+          onReset={() => {
+            navigate(absoluteRoutes.studio.index())
+          }}
+        >
+          <Routes location={displayedLocation}>
+            {studioRoutes.map((route) => (
+              <Route key={route.path} {...route} />
+            ))}
+          </Routes>
+        </ErrorBoundary>
+      </MainContainer>
+      <EditVideoSheet />
+    </>
   )
 }
 
@@ -94,4 +76,20 @@ const MainContainer = styled.main`
   margin-left: var(--sidenav-collapsed-width);
 `
 
-export default StudioLayout
+const StudioLayoutWrapper: React.FC = () => (
+  <EditVideoSheetProvider>
+    <SnackbarProvider>
+      <DraftsProvider>
+        <PersonalDataProvider>
+          <ActiveUserProvider>
+            <JoystreamProvider>
+              <StudioLayout />
+            </JoystreamProvider>
+          </ActiveUserProvider>
+        </PersonalDataProvider>
+      </DraftsProvider>
+    </SnackbarProvider>
+  </EditVideoSheetProvider>
+)
+
+export default StudioLayoutWrapper
