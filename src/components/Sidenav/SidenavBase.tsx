@@ -17,8 +17,6 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import HamburgerButton from '@/shared/components/HamburgerButton'
-import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { useUploadVideoActionSheet } from '@/views/studio/UploadEditVideoActionSheet/useVideoActionSheet'
 
 type NavSubitem = {
   name: string
@@ -89,26 +87,6 @@ const SidenavBase: React.FC<SidenavProps> = ({
           classNames={transitions.names.fade}
         >
           <ButtonGroup>{buttonsContent}</ButtonGroup>
-          {/*            <ButtonGroup>
-            <Button
-              variant="secondary"
-              onClick={closeSideNav}
-              icon="external"
-              to={isStudio ? absoluteRoutes.viewer.index() : absoluteRoutes.studio.index()}
-            >
-              Joystream {!isStudio && 'studio'}
-            </Button>
-            <CSSTransition
-              in={sheetState === 'closed'}
-              unmountOnExit
-              timeout={parseInt(transitions.timings.loading)}
-              classNames={transitions.names.fade}
-            >
-              <Button icon="add-video" to={relativeRoutes.studio.uploadVideo()} onClick={handleNewVideoOpen}>
-                New Video
-              </Button>
-            </CSSTransition>
-          </ButtonGroup>*/}
         </CSSTransition>
       </SidebarNav>
     </>

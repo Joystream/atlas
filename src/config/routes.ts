@@ -29,8 +29,7 @@ export const relativeRoutes = {
     newChannel: () => 'channel/new',
     editChannel: () => 'channel',
     videos: () => 'videos',
-    uploadVideo: () => '/studio/new-video',
-    editVideo: () => `/studio/new-video`,
+    editVideo: () => 'edit-video',
     uploads: () => 'uploads',
     signIn: () => 'signIn',
     newMembership: () => 'membership/new',
@@ -47,7 +46,13 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
   // @ts-ignore typing this is too much work ¯\_(ツ)_/¯
   absoluteRoutesAcc[basePathKey] = Object.keys(routes).reduce((routesAcc, routeKeyStr) => {
     // @ts-ignore typing this is too much work
-    routesAcc[routeKeyStr] = (...params: never[]) => [basePath, routes[routeKeyStr](...params)].join('/')
+    routesAcc[routeKeyStr] = (...params: never[]) => {
+      // @ts-ignore typing this is too much work
+      const relativeRoute = routes[routeKeyStr](...params)
+      const absoluteRoute = [basePath, relativeRoute].join('/')
+      // remove trailing slash if the URL is not '/'
+      return absoluteRoute.length > 1 ? absoluteRoute.replace(/\/$/, '') : absoluteRoute
+    }
     return routesAcc
   }, {} as typeof routes)
 

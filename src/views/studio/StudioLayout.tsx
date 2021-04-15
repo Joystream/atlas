@@ -38,7 +38,7 @@ const StudioLayout = () => {
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
   const location = useLocation()
   const [cachedLocation, setCachedLocation] = useState<Location>()
-  const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: absoluteRoutes.studio.editVideo() })
   useEffect(() => {
     if (!uploadVideoMatch) {
       setCachedLocation(location)

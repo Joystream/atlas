@@ -9,7 +9,6 @@ import { Location } from 'history'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { transitions } from '@/shared/theme'
 import {
-  Button,
   Checkbox,
   Datepicker,
   FormField,
@@ -41,7 +40,7 @@ import {
   TabTitle,
   Topbar,
 } from './UploadEditVideoActionSheet.style'
-import { relativeRoutes } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { SelectItem } from '@/shared/components/Select/Select'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
 
@@ -67,7 +66,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // sheet state
-  const uploadVideoMatch = useMatch({ path: `${relativeRoutes.studio.uploadVideo()}` })
+  const uploadVideoMatch = useMatch({ path: absoluteRoutes.studio.editVideo() })
   const [containerRef, containerBounds] = useMeasure()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [cachedLocation, setCachedLocation] = useState<Location>()
@@ -174,7 +173,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
     [setFormValue, setSelectedVideoTab]
   )
   const handleClose = useCallback(() => {
-    navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
+    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
     setSheetState('closed')
   }, [cachedLocation?.pathname, navigate, setSheetState])
   const handleAddNewTab = useCallback(async () => {
@@ -194,7 +193,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
   }, [addDraft, addVideoTab, handleTabSelect])
   const handleMinimize = useCallback(() => {
     setSheetState?.('minimized')
-    navigate(cachedLocation?.pathname ?? relativeRoutes.studio.index())
+    navigate(cachedLocation?.pathname ?? absoluteRoutes.studio.index())
   }, [cachedLocation?.pathname, navigate, setSheetState])
   const handleOpen = useCallback(() => {
     if (sheetState !== 'open') {
@@ -203,7 +202,7 @@ export const UploadEditVideoActionSheet: React.FC = () => {
         handleAddNewTab()
       }
       setSheetState('open')
-      navigate(relativeRoutes.studio.uploadVideo())
+      navigate(absoluteRoutes.studio.editVideo())
     }
   }, [handleAddNewTab, navigate, setSheetState, sheetState, videoTabs.length])
 
