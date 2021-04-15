@@ -102,10 +102,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     }
 
     const {
-      avatarPhotoUrl,
+      avatarPhotoUrls,
       avatarPhotoAvailability,
       avatarPhotoDataObject,
-      coverPhotoUrl,
+      coverPhotoUrls,
       coverPhotoAvailability,
       coverPhotoDataObject,
       title,
@@ -114,14 +114,14 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       language,
     } = channel
 
-    const avatarAssetUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrl, avatarPhotoDataObject)
-    const coverAssetUrl = createUrlFromAsset(coverPhotoAvailability, coverPhotoUrl, coverPhotoDataObject)
+    const avatarPhotoUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
+    const coverPhotoUrl = createUrlFromAsset(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
     reset({
-      avatar: { blob: null, url: avatarAssetUrl },
-      cover: { blob: null, url: coverAssetUrl },
+      avatar: { blob: null, url: avatarPhotoUrl },
+      cover: { blob: null, url: coverPhotoUrl },
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,

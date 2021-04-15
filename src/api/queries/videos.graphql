@@ -9,7 +9,6 @@ fragment LicenseFields on License {
   code
   attribution
   customText
-  url
 }
 
 fragment VideoFields on Video {
@@ -21,9 +20,9 @@ fragment VideoFields on Video {
   }
   views
   duration
-  thumbnailUrl
-  thumbnailAvailability
-  thumbnailDataObject {
+  thumbnailPhotoUrls
+  thumbnailPhotoAvailability
+  thumbnailPhotoDataObject {
     ...DataObjectFields
   }
   createdAt
@@ -31,7 +30,7 @@ fragment VideoFields on Video {
   mediaMetadata {
     ...VideoMediaMetadataFields
   }
-  mediaUrl
+  mediaUrls
   mediaAvailability
   mediaDataObject {
     ...DataObjectFields
@@ -45,7 +44,7 @@ fragment VideoFields on Video {
 }
 
 query GetVideo($where: VideoWhereUniqueInput!) {
-  video(where: $where) {
+  videoByUniqueInput(where: $where) {
     ...VideoFields
   }
 }

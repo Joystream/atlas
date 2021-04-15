@@ -3,8 +3,8 @@ fragment VideoCategoryFields on VideoCategory {
   name
 }
 
-query GetCategories {
-  categories {
+query GetVideoCategories {
+  videoCategories {
     ...VideoCategoryFields
   }
 }

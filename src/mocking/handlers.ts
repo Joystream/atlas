@@ -4,8 +4,6 @@ import {
   GetBasicChannelDocument,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
-  GetCategoriesDocument,
-  GetCategoriesQuery,
   GetChannelDocument,
   GetChannelFollowsDocument,
   GetChannelFollowsQuery,
@@ -44,6 +42,8 @@ import {
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
+  GetVideoCategoriesDocument,
+  GetVideoCategoriesQuery,
 } from '@/api/queries'
 import { FEATURED_VIDEOS_INDEXES, mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
 import { createQueryHandler } from './queries'
@@ -132,7 +132,7 @@ const queryNodeHandlers = [
   ),
 
   // misc
-  createQueryHandler<GetCategoriesQuery>(queryNode, GetCategoriesDocument, () => mockCategories),
+  createQueryHandler<GetVideoCategoriesQuery>(queryNode, GetVideoCategoriesDocument, () => mockCategories),
   createQueryHandler<SearchQuery, SearchQueryVariables>(
     queryNode,
     SearchDocument,

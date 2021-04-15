@@ -58,12 +58,12 @@ const CoverVideo: React.FC = () => {
     setVideoPlaying(false)
   }
 
-  const thumbnailUrl = createUrlFromAsset(
-    data.video?.thumbnailAvailability,
-    data.video?.thumbnailUrl,
-    data.video?.thumbnailDataObject
+  const thumbnailPhotoUrl = createUrlFromAsset(
+    data.video?.thumbnailPhotoAvailability,
+    data.video?.thumbnailPhotoUrls,
+    data.video?.thumbnailPhotoDataObject
   )
-  const mediaUrl = createUrlFromAsset(data.video?.mediaAvailability, data.video?.mediaUrl, data.video?.mediaDataObject)
+  const mediaUrl = createUrlFromAsset(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
 
   return (
     <Container>
@@ -76,7 +76,7 @@ const CoverVideo: React.FC = () => {
                 isInBackground
                 muted={soundMuted}
                 playing={videoPlaying}
-                posterUrl={thumbnailUrl}
+                posterUrl={thumbnailPhotoUrl}
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
