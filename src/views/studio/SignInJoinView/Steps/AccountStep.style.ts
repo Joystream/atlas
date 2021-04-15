@@ -58,11 +58,6 @@ export const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  svg {
-    width: ${sizes(4)};
-    height: ${sizes(4)};
-    color: ${colors.transparentWhite[32]};
-  }
 `
 
 export const AccountAddress = styled(Text)`

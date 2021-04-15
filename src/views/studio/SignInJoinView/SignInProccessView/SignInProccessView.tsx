@@ -1,12 +1,6 @@
-import { Membership } from '@/api/queries'
-import { Multistepper } from '@/components'
-import { useCheckBrowser, useActiveUser } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import { promisify } from '@/utils/data'
-import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
-import { web3Enable } from '@polkadot/extension-dapp'
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import {
   HeroContainer,
   ListContainer,

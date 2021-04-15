@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ReactComponent as CoinsIllustration } from '@/assets/coins.svg'
-import { breakpoints, colors, sizes } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 
@@ -27,14 +27,14 @@ export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   width: 250px;
   margin-top: 50px;
   left: calc(var(--sidenav-collapsed) - 20px);
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     width: 300px;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     width: 350px;
     position: fixed;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+  ${media.large} {
     width: 650px;
   }
 `
