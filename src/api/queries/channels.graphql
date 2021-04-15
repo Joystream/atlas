@@ -51,8 +51,8 @@ query GetChannels($where: ChannelWhereInput) {
   }
 }
 
-query GetChannelsConnection($first: Int, $after: String) {
-  channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
+query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
+  channelsConnection(first: $first, after: $after, where: $where, orderBy: createdAt_DESC) {
     edges {
       cursor
       node {

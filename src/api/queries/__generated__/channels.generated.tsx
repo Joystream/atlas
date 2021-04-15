@@ -65,6 +65,7 @@ export type GetChannelsQuery = {
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetChannelsConnectionQuery = {
@@ -290,8 +291,8 @@ export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>
 export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLazyQuery>
 export type GetChannelsQueryResult = Apollo.QueryResult<GetChannelsQuery, GetChannelsQueryVariables>
 export const GetChannelsConnectionDocument = gql`
-  query GetChannelsConnection($first: Int, $after: String) {
-    channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
+  query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
+    channelsConnection(first: $first, after: $after, where: $where, orderBy: createdAt_DESC) {
       edges {
         cursor
         node {
@@ -322,6 +323,7 @@ export const GetChannelsConnectionDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
