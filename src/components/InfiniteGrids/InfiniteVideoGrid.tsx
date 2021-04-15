@@ -93,7 +93,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   if (error) {
     throw error
   }
-  console.log(displayedItems)
+
   // handle category change
   // TODO potentially move into useInfiniteGrid as a general rule - keep separate targetRowsCount per serialized queryVariables
   useEffect(() => {
