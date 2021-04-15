@@ -19,7 +19,11 @@ type RecentVideoPreviewProps = {
 }
 
 const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
-  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+  const thumbnailPhotoUrl = createUrlFromAsset(
+    video?.thumbnailPhotoAvailability,
+    video?.thumbnailPhotoUrls,
+    video?.thumbnailPhotoDataObject
+  )
 
   return (
     <PreviewContainer to={absoluteRoutes.viewer.video(video?.id)}>
@@ -30,7 +34,7 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={thumbnailUrl} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={thumbnailPhotoUrl} /> : <VideoImagePlaceholder />}
             <div>
               {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
               {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}

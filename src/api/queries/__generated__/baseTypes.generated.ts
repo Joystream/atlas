@@ -28,9 +28,7 @@ export type License = {
   __typename?: 'License'
   id: Scalars['ID']
   code?: Maybe<Scalars['Int']>
-  url?: Maybe<Scalars['String']>
   attribution?: Maybe<Scalars['String']>
-  videoLicense?: Maybe<Array<Video>>
   customText?: Maybe<Scalars['String']>
 }
 
@@ -94,10 +92,10 @@ export type Channel = {
   isPublic?: Maybe<Scalars['Boolean']>
   language?: Maybe<Language>
   coverPhotoDataObject?: Maybe<DataObject>
-  coverPhotoUrl?: Maybe<Scalars['String']>
+  coverPhotoUrls: Array<Scalars['String']>
   coverPhotoAvailability: AssetAvailability
   avatarPhotoDataObject?: Maybe<DataObject>
-  avatarPhotoUrl?: Maybe<Scalars['String']>
+  avatarPhotoUrls: Array<Scalars['String']>
   avatarPhotoAvailability: AssetAvailability
   follows?: Maybe<Scalars['Int']>
 }
@@ -157,11 +155,11 @@ export type Video = {
   isExplicit?: Maybe<Scalars['Boolean']>
   isPublic?: Maybe<Scalars['Boolean']>
   license?: Maybe<License>
-  thumbnailDataObject?: Maybe<DataObject>
-  thumbnailUrl?: Maybe<Scalars['String']>
-  thumbnailAvailability: AssetAvailability
+  thumbnailPhotoDataObject?: Maybe<DataObject>
+  thumbnailPhotoUrls: Array<Scalars['String']>
+  thumbnailPhotoAvailability: AssetAvailability
   mediaDataObject?: Maybe<DataObject>
-  mediaUrl?: Maybe<Scalars['String']>
+  mediaUrls: Array<Scalars['String']>
   mediaAvailability: AssetAvailability
   mediaMetadata: VideoMediaMetadata
   duration?: Maybe<Scalars['Int']>
@@ -247,9 +245,7 @@ export type Query = {
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   /** Get views counts for a list of videos */
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categories: Array<VideoCategory>
-  category?: Maybe<VideoCategory>
-  channel?: Maybe<Channel>
+  channelByUniqueInput?: Maybe<Channel>
   /** Get follows count for a single channel */
   channelFollows?: Maybe<ChannelFollowsInfo>
   /** Get views count for a single channel */
@@ -258,10 +254,11 @@ export type Query = {
   channelsConnection: ChannelConnection
   coverVideo: CoverVideo
   featuredVideos: Array<FeaturedVideo>
-  membership?: Maybe<Membership>
+  membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
-  video?: Maybe<Video>
+  videoByUniqueInput?: Maybe<Video>
+  videoCategories: Array<VideoCategory>
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>
   videos?: Maybe<Array<Video>>
@@ -280,11 +277,7 @@ export type QueryBatchedVideoViewsArgs = {
   videoIdList: Array<Scalars['ID']>
 }
 
-export type QueryCategoryArgs = {
-  where: VideoCategoryWhereUniqueInput
-}
-
-export type QueryChannelArgs = {
+export type QueryChannelByUniqueInputArgs = {
   where: ChannelWhereUniqueInput
 }
 
@@ -311,7 +304,7 @@ export type QueryFeaturedVideosArgs = {
   orderBy?: Maybe<FeaturedVideoOrderByInput>
 }
 
-export type QueryMembershipArgs = {
+export type QueryMembershipByUniqueInputArgs = {
   where: MembershipWhereUniqueInput
 }
 
@@ -324,7 +317,7 @@ export type QuerySearchArgs = {
   text: Scalars['String']
 }
 
-export type QueryVideoArgs = {
+export type QueryVideoByUniqueInputArgs = {
   where: VideoWhereUniqueInput
 }
 

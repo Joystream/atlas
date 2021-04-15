@@ -32,7 +32,7 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const avatarPhotoUrl = createUrlFromAsset(
     displayedChannel?.avatarPhotoAvailability,
-    displayedChannel?.avatarPhotoUrl,
+    displayedChannel?.avatarPhotoUrls,
     displayedChannel?.avatarPhotoDataObject
   )
 

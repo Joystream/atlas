@@ -1,6 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
 import {
-  BasicMembershipFieldsFragment,
   GetMembershipQuery,
   useGetMembershipQuery,
   useGetMembershipsQuery,
@@ -16,7 +15,7 @@ export const useMembership = (variables: GetMembershipQueryVariables, opts?: Mem
     variables,
   })
   return {
-    membership: data?.membership,
+    membership: data?.membershipByUniqueInput,
     ...rest,
   }
 }

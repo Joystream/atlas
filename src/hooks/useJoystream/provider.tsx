@@ -2,10 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Account, JoystreamJs } from '@/joystream-lib'
 import { useActiveUser } from '@/hooks'
 import useConnectionStatus from '../useConnectionStatus'
-
-// TODO: provide via env variables
-const NODE_URL = 'ws://127.0.0.1:9944'
-const APP_NAME = 'Joystream Atlas'
+import { NODE_URL, WEB3_APP_NAME } from '@/config/urls'
 
 type JoystreamContextValue = {
   joystream: JoystreamJs | null
@@ -46,7 +43,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     const init = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamJs(NODE_URL, APP_NAME)
+        joystream = new JoystreamJs(NODE_URL, WEB3_APP_NAME)
         setJoystream(joystream)
 
         setAccounts(joystream.accounts)

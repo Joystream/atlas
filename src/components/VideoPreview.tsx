@@ -18,10 +18,14 @@ export type VideoPreviewProps = {
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, false)
 
-  const thumbnailUrl = createUrlFromAsset(video?.thumbnailAvailability, video?.thumbnailUrl, video?.thumbnailDataObject)
+  const thumbnailPhotoUrl = createUrlFromAsset(
+    video?.thumbnailPhotoAvailability,
+    video?.thumbnailPhotoUrls,
+    video?.thumbnailPhotoDataObject
+  )
   const avatarPhotoUrl = createUrlFromAsset(
     video?.channel?.avatarPhotoAvailability,
-    video?.channel?.avatarPhotoUrl,
+    video?.channel?.avatarPhotoUrls,
     video?.channel?.avatarPhotoDataObject
   )
   return (
@@ -35,7 +39,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
-      thumbnailUrl={thumbnailUrl}
+      thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       contentKey={id}
       {...metaProps}
@@ -52,11 +56,17 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   const { drafts } = useDrafts('video')
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
 
+  const thumbnailPhotoUrl = createUrlFromAsset(
+    video?.thumbnailPhotoAvailability,
+    video?.thumbnailPhotoUrls,
+    video?.thumbnailPhotoDataObject
+  )
   const avatarPhotoUrl = createUrlFromAsset(
     video?.channel.avatarPhotoAvailability,
-    video?.channel.avatarPhotoUrl,
+    video?.channel.avatarPhotoUrls,
     video?.channel.avatarPhotoDataObject
   )
+
   return (
     <VideoPreviewBase
       publisherMode
@@ -66,7 +76,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
       duration={video?.duration}
       views={video?.views}
-      thumbnailUrl={video?.thumbnailUrl}
+      thumbnailUrl={thumbnailPhotoUrl}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}

@@ -3,7 +3,7 @@ import { STORAGE_NODE_URL } from '@/config/urls'
 
 export const createUrlFromAsset = (
   availability?: AssetAvailability,
-  assetUrl?: string | null,
+  assetUrls?: string[],
   dataObject?: DataObject | null
 ) => {
   if (!availability) {
@@ -17,7 +17,7 @@ export const createUrlFromAsset = (
     const url = new URL(dataObject.joystreamContentId, STORAGE_NODE_URL)
     return url.href
   }
-  if (assetUrl) {
-    return assetUrl
+  if (assetUrls?.length) {
+    return assetUrls[0]
   }
 }
