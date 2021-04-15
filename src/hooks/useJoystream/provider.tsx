@@ -7,8 +7,7 @@ import { NODE_URL, WEB3_APP_NAME } from '@/config/urls'
 type JoystreamContextValue = {
   joystream: JoystreamJs | null
   accounts: Account[]
-  extensionConnected: boolean
-  extensionConnectionLoading: boolean
+  extensionConnected: boolean | null
 }
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
@@ -20,8 +19,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [accountsSet, setAccountsSet] = useState(false)
-  const [extensionConnected, setExtensionConnected] = useState(false)
-  const [extensionConnectionLoading, setExtensionConnectionLoading] = useState(true)
+  const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
 
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
@@ -37,7 +35,6 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const handleExtensionConnectedUpdate = useCallback((connected: boolean) => {
     setExtensionConnected(connected)
-    setExtensionConnectionLoading(false)
   }, [])
 
   useEffect(() => {
@@ -79,7 +76,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [joystream, activeUser, accountsSet])
 
   return (
-    <JoystreamContext.Provider value={{ accounts, joystream, extensionConnected, extensionConnectionLoading }}>
+    <JoystreamContext.Provider value={{ accounts, joystream, extensionConnected }}>
       {children}
     </JoystreamContext.Provider>
   )

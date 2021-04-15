@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Spinner, Text } from '@/shared/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 
-export const LoadingStudio = () => {
+export const LoadingStudio: React.FC = () => {
   return (
     <LoadingStudioContainer>
       <Text variant="h1">Loading Studio View</Text>

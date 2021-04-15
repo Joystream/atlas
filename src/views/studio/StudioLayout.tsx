@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
@@ -35,9 +35,11 @@ import {
   NoConnectionIndicator,
   TOP_NAVBAR_HEIGHT,
   LoadingStudio,
+  PrivateRoute,
 } from '@/components'
 
 const studioRoutes = [
+  { path: relativeRoutes.studio.index(), element: <LoadingStudio /> },
   { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
   { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
   { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
@@ -49,9 +51,8 @@ const studioRoutes = [
 
 const StudioLayout = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const { extensionConnected, extensionConnectionLoading } = useJoystream()
+  const { extensionConnected: extensionStatus } = useJoystream()
 
   const {
     activeUser: { accountId, memberId, channelId },
@@ -67,9 +68,13 @@ const StudioLayout = () => {
     }
   )
 
-  const [enterLocation] = useState(location.pathname)
+  const [channelLoading, setChannelLoading] = useState(false)
+  const extensionConnectionLoading = extensionStatus === null
+  const extensionConnected = extensionStatus === true
 
-  const authenticated = !!accountId && !!memberId && !!channelId && extensionConnected
+  const hasAccountId = !!accountId && !memberId && extensionConnected
+  const hasMemberId = !!accountId && !!memberId && extensionConnected
+  const hasChannelId = !!accountId && !!memberId && !!channelId && extensionConnected
 
   useEffect(() => {
     if (extensionConnectionLoading) {
@@ -80,9 +85,9 @@ const StudioLayout = () => {
     }
   }, [extensionConnected, extensionConnectionLoading, navigate])
 
-  useEffect(() => {
-    if (activeUserLoading || channelId || !extensionConnected) {
-      return
+  const authedStudioRoutes = studioRoutes.map((route) => {
+    if (route.path === relativeRoutes.studio.index()) {
+      return { ...route, isAuth: false, redirectTo: channelRoute }
     }
     if (!accountId) {
       navigate(absoluteRoutes.studio.signInJoin({ step: '2' }))
@@ -100,12 +105,16 @@ const StudioLayout = () => {
         navigate(absoluteRoutes.studio.signIn())
       }
     }
-  }, [accountId, activeUserLoading, channelId, extensionConnected, memberId, navigate])
+
+    return { ...route, isAuth: hasMemberId, redirectTo: accountRoute }
+  })
 
   useEffect(() => {
-    if (activeUserLoading || channelId || !extensionConnected || !memberId || !accountId) {
+    if (activeUserLoading || !extensionConnected || channelId || !memberId || !accountId) {
       return
     }
+
+    setChannelLoading(true)
 
     // TODO add lastChannelId and setting that to activeChannel
 
@@ -114,15 +123,18 @@ const StudioLayout = () => {
     }
     if (!membership?.channels.length) {
       navigate(absoluteRoutes.studio.newChannel())
+      setChannelLoading(false)
       return
     }
-    setActiveChannel(membership.channels[0].id)
-    navigate(enterLocation)
+    const setChannel = async () => {
+      await setActiveChannel(membership.channels[0].id)
+      setChannelLoading(false)
+    }
+    setChannel()
   }, [
     accountId,
     activeUserLoading,
     channelId,
-    enterLocation,
     extensionConnected,
     memberId,
     membership,
@@ -156,9 +168,9 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!authenticated} />
-      {authenticated && <StudioSidenav />}
-      {extensionConnectionLoading ? (
+      <StudioTopbar hideChannelInfo={!hasChannelId} />
+      {hasChannelId && <StudioSidenav />}
+      {extensionConnectionLoading || channelLoading ? (
         <LoadingStudio />
       ) : (
         <>
@@ -170,8 +182,8 @@ const StudioLayout = () => {
               }}
             >
               <Routes>
-                {studioRoutes.map((route) => (
-                  <Route key={route.path} {...route} />
+                {authedStudioRoutes.map((route) => (
+                  <PrivateRoute key={route.path} {...route} />
                 ))}
               </Routes>
             </ErrorBoundary>
