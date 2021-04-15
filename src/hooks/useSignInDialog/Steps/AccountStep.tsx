@@ -21,8 +21,7 @@ import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import { useNavigate } from 'react-router'
-import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChevronDown, SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
+import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
 
 const AccountStep: React.FC = () => {
   const navigate = useNavigate()
