@@ -20,10 +20,10 @@ export const StyledTopbarBase = styled(TopbarBase)`
 export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
-  background-color: ${({ isActive }) => isActive && colors.transparentPrimary[12]};
+  background-color: ${({ isActive }) => isActive && colors.transparentPrimary[10]};
   &:hover {
     cursor: pointer;
-    background-color: ${({ isActive }) => (isActive ? colors.transparentPrimary[12] : colors.transparentPrimary[20])};
+    background-color: ${({ isActive }) => (isActive ? colors.transparentPrimary[10] : colors.transparentPrimary[18])};
   }
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
