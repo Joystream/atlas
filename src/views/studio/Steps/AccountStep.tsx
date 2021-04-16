@@ -40,7 +40,7 @@ const AccountStep: React.FC = () => {
       memberId: null,
       channelId: null,
     })
-    navigate('?step=2')
+    navigate({ search: '?step=3' })
   }
 
   const handleSelect = (id: string) => {

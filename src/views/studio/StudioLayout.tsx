@@ -21,7 +21,7 @@ const studioRoutes = [
   { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
   { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
   { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
-  { path: relativeRoutes.studio.join(), element: <SignInJoinView /> },
+  { path: relativeRoutes.studio.signIn(true), element: <SignInJoinView /> },
   { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
   { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
 ]

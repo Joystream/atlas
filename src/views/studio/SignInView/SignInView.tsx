@@ -16,10 +16,28 @@ import { To } from 'history'
 import regularMockMemberships from '@/mocking/data/mockMemberships'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { Multistepper } from '@/components'
-import { useSignInDialog } from '@/hooks'
+import { useRouterQuery } from '@/hooks'
+import { useNavigate } from 'react-router'
+import { AccountStep, ExtensionStep, TermsStep } from '../Steps'
 
 const SignInView = () => {
-  const { openDialog, closeDialog, dialogVisible, steps, currentStep } = useSignInDialog()
+  const navigate = useNavigate()
+  const step = Number(useRouterQuery('step'))
+
+  const steps = [
+    {
+      title: 'Add Polkadot plugin',
+      element: <ExtensionStep />,
+    },
+    {
+      title: 'Create or select a polkadot account',
+      element: <AccountStep />,
+    },
+    {
+      title: 'Accept terms and conditions',
+      element: <TermsStep onAcceptTerms={() => console.log('bla')} />,
+    },
+  ]
 
   // temporary
   const fakememberships = regularMockMemberships
@@ -42,15 +60,20 @@ const SignInView = () => {
             />
           ))}
         </MemberGrid>
-        <StyledButton icon={<SvgGlyphNewChannel />} size="large" variant="secondary" onClick={openDialog}>
+        <StyledButton
+          icon={<SvgGlyphNewChannel />}
+          size="large"
+          variant="secondary"
+          to={absoluteRoutes.studio.signIn(false, { step: '1' })}
+        >
           New Member
         </StyledButton>
       </Wrapper>
       <Multistepper
-        currentStepIdx={Number(currentStep)}
+        currentStepIdx={step <= 0 ? 0 : step - 1}
         steps={steps}
-        showDialog={dialogVisible}
-        onExitClick={closeDialog}
+        showDialog={step >= 1}
+        onExitClick={() => navigate(absoluteRoutes.studio.signIn(false, { step: '0' }))}
       />
     </>
   )

@@ -1,8 +1,11 @@
 import { Multistepper } from '@/components'
-import { useSignInDialog } from '@/hooks'
+import { absoluteRoutes } from '@/config/routes'
+import { useJoystream, useRouterQuery } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router'
+import { ExtensionStep, AccountStep, TermsStep } from '../../Steps'
 import {
   HeroContainer,
   ListContainer,
@@ -16,7 +19,23 @@ import {
 } from './SignInProccessView.style'
 
 const SignInProccessView = () => {
-  const { openDialog, closeDialog, dialogVisible, steps, currentStep } = useSignInDialog()
+  const navigate = useNavigate()
+  const step = Number(useRouterQuery('step'))
+
+  const steps = [
+    {
+      title: 'Add Polkadot plugin',
+      element: <ExtensionStep />,
+    },
+    {
+      title: 'Create or select a polkadot account',
+      element: <AccountStep />,
+    },
+    {
+      title: 'Accept terms and conditions',
+      element: <TermsStep onAcceptTerms={() => console.log('bla')} />,
+    },
+  ]
   return (
     <>
       <StyledStudioContainer>
@@ -68,17 +87,21 @@ const SignInProccessView = () => {
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton size="large" icon={<SvgGlyphChevronRight />} onClick={openDialog}>
+          <StyledButton
+            size="large"
+            icon={<SvgGlyphChevronRight />}
+            to={absoluteRoutes.studio.signIn(true, { step: '1' })}
+          >
             Join now
           </StyledButton>
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
       <Multistepper
-        currentStepIdx={Number(currentStep)}
+        currentStepIdx={step <= 0 ? 0 : step - 1}
         steps={steps}
-        showDialog={dialogVisible}
-        onExitClick={closeDialog}
+        showDialog={step >= 1}
+        onExitClick={() => navigate(absoluteRoutes.studio.signIn(true, { step: '0' }))}
       />
     </>
   )

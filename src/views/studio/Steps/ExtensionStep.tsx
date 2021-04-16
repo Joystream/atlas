@@ -1,22 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { StyledButton } from './ExtensionStep.style'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'
-import { useJoystream } from '@/hooks'
-import { absoluteRoutes } from '@/config/routes'
+import { useJoystream, useRouterQuery } from '@/hooks'
 import { SvgGlyphExternal } from '@/shared/icons'
 
 const ExtensionStep: React.FC = () => {
   const navigate = useNavigate()
+  const step = useRouterQuery('step')
   const { extensionConnected } = useJoystream()
 
   useEffect(() => {
-    if (extensionConnected) {
-      navigate('?step=1')
+    if (extensionConnected && step === '1') {
+      navigate('?step=2')
     }
-  }, [extensionConnected, navigate])
+  }, [extensionConnected, navigate, step])
 
   return (
     <StepWrapper centered withBottomBar>

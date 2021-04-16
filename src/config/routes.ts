@@ -30,9 +30,8 @@ export const relativeRoutes = {
     editChannel: () => 'channel',
     videos: () => 'videos',
     uploads: () => 'uploads',
-    signIn: () => 'signin',
-    join: ({ step }: { step?: string } = {}) => {
-      const basePath = 'signin/join'
+    signIn: (join = false, { step }: { step?: string } = {}) => {
+      const basePath = `signin${join ? '/join' : ''}`
 
       if (step) {
         const stepParams = new URLSearchParams()
