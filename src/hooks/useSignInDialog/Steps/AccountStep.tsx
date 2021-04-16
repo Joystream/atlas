@@ -32,19 +32,19 @@ const AccountStep: React.FC = () => {
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()
-    if (selectedAccountAddress) {
-      await setActiveUser({
-        accountId: selectedAccountAddress,
-        memberId: null,
-        channelId: null,
-      })
-      navigate('?step=2')
+    if (!selectedAccountAddress) {
+      return
     }
+    await setActiveUser({
+      accountId: selectedAccountAddress,
+      memberId: null,
+      channelId: null,
+    })
+    navigate('?step=2')
   }
 
-  const handleSelect: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
-    const element = e.currentTarget as HTMLInputElement
-    setSelectedAccountAddress(element.value)
+  const handleSelect = (id: string) => {
+    setSelectedAccountAddress(id)
   }
 
   return (
@@ -77,7 +77,7 @@ const AccountStep: React.FC = () => {
               </OrderedStep>
             </OrderedSteps>
             <StepFooter>
-              <BottomBarIcon></BottomBarIcon>
+              <BottomBarIcon />
               <Text variant="body2" secondary>
                 Make sure to safely save your seed phrase!
               </Text>
@@ -101,7 +101,7 @@ const AccountStep: React.FC = () => {
                     key={id}
                     id={id}
                     name={name}
-                    onSelect={handleSelect}
+                    onSelect={() => handleSelect(id)}
                     selectedValue={selectedAccountAddress}
                   />
                 ))}

@@ -19,7 +19,7 @@ const CreateMemberView = () => {
   const [loading, setLoading] = useState(false)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, getValues, trigger } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, setError } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -66,7 +66,11 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar size="view" imageUrl={avatarImageUrl} />
+        <StyledAvatar
+          size="view"
+          imageUrl={errors.avatarUri ? undefined : avatarImageUrl}
+          onError={() => setError('avatarUri', { message: 'Image not found' })}
+        />
         <TextField
           name="avatarUri"
           onChange={handleAvatarChange}

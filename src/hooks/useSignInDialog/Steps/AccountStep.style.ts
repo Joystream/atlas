@@ -1,4 +1,4 @@
-import { Spinner, Button, Text, RadioButton } from '@/shared/components'
+import { Button, Text, RadioButton } from '@/shared/components'
 import { sizes, colors, typography, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
 
@@ -9,9 +9,7 @@ type AccountWrapperProps = {
 export const IconGroup = styled.div`
   display: flex;
   align-items: center;
-  img,
-  svg {
-    display: block;
+  > * {
     margin: 0 ${sizes(2)};
   }
 `
@@ -79,7 +77,6 @@ export const StyledRadioButton = styled(RadioButton)`
 `
 
 export const StyledButton = styled(Button)`
-  display: block;
   margin-left: auto;
 `
 

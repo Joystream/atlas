@@ -28,14 +28,16 @@ export const StepSubTitle = styled(Text)`
 `
 
 export const StepFooter = styled.div`
-  margin-top: 24px;
+  position: relative;
   background-color: ${colors.gray[800]};
-  width: 100%;
-  outline: 24px solid ${colors.gray[800]};
+  padding: var(--dialog-padding);
+  width: calc(100% + 2 * var(--dialog-padding));
+  margin: calc(-1 * var(--dialog-padding));
+  margin-top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
 `
 export const BottomBarIcon = styled(SvgGlyphWarning)`
-  margin-right: 10px;
+  margin-right: ${sizes(2)};
 `

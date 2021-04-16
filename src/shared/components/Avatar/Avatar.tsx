@@ -22,6 +22,7 @@ export type AvatarProps = {
   size?: AvatarSize
   editable?: boolean
   newChannel?: boolean
+  onError?: () => void
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -33,6 +34,7 @@ const Avatar: React.FC<AvatarProps> = ({
   className,
   editable,
   newChannel,
+  onError,
 }) => {
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation()
@@ -60,7 +62,13 @@ const Avatar: React.FC<AvatarProps> = ({
             timeout={parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
           >
-            {loading ? <StyledPlaceholder rounded /> : imageUrl ? <StyledImage src={imageUrl} /> : <SilhouetteAvatar />}
+            {loading ? (
+              <StyledPlaceholder rounded />
+            ) : imageUrl ? (
+              <StyledImage src={imageUrl} onError={onError} />
+            ) : (
+              <SilhouetteAvatar />
+            )}
           </CSSTransition>
         </StyledTransitionGroup>
       )}
