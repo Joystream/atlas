@@ -20,11 +20,12 @@ export const StyledTopbarBase = styled(TopbarBase)`
 export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
-  background-color: ${({ isActive }) => isActive && colors.gray[600]};
+  background-color: ${({ isActive }) => isActive && colors.transparentPrimary[12]};
   &:hover {
     cursor: pointer;
-    background-color: ${({ isActive }) => (isActive ? colors.gray[600] : colors.gray[700])};
+    background-color: ${({ isActive }) => (isActive ? colors.transparentPrimary[12] : colors.transparentPrimary[20])};
   }
+  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
 
 export const StyledAvatar = styled(Avatar)`
@@ -75,23 +76,27 @@ export const NewChannelAvatar = styled(Avatar)`
 
 export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
-  align-items: center;
-  margin: 0 calc(-1 * ${sizes(3)});
+  flex-direction: column;
   margin-bottom: 0;
   border-top: ${({ hasChannels }) => hasChannels && `1px solid ${colors.transparentWhite[18]}`};
-  padding: ${sizes(4)} ${sizes(5)} 0;
+`
+export const MemberInnerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: ${sizes(6)} ${sizes(2)};
 `
 
 export const MemberTextContainer = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: space-between;
   align-items: center;
 `
 
 export const MemberTitleText = styled(Text)`
-  background-color: ${colors.gray[400]};
-  font-size: ${typography.sizes.caption};
-  padding: ${sizes(1)};
-  opacity: 0.6;
+  background-color: ${colors.transparentPrimary[20]};
+  color: ${colors.gray[50]};
+  padding: ${sizes(0.5)} ${sizes(1)};
   margin-left: ${sizes(3)};
 `
 
@@ -122,7 +127,7 @@ export const NewChannelIconContainer = styled.div`
   align-items: center;
   width: 42px;
   height: 42px;
-  background-color: ${colors.gray[600]};
+  background-color: ${colors.gray[800]};
   border-radius: 100%;
 `
 
@@ -136,7 +141,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   grid-gap: ${sizes(4)};
   padding: ${({ hasChannels }) => (hasChannels ? sizes(3) : `0 ${sizes(3)} ${sizes(3)}`)};
   transform: translateY(${({ isActive }) => (isActive ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
-  background-color: ${colors.gray[800]};
+  background-color: ${colors.gray[700]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   z-index: ${zIndex.nearOverlay};
 
@@ -145,7 +150,6 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   }
   ${ChannelInfoContainer} {
     padding: ${sizes(2)};
-    padding-right: ${sizes(4)};
   }
   ${StyledAvatar} {
     margin-left: 0;
@@ -163,4 +167,12 @@ export const AvatarPlaceholder = styled(Placeholder)`
   height: 42px;
   margin-left: ${sizes(5)};
   margin-right: ${sizes(2.5)};
+`
+
+export const GlyphCheckContainer = styled.div`
+  width: ${sizes(6)};
+  height: ${sizes(6)};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
