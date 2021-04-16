@@ -97,7 +97,6 @@ export const MemberTitleText = styled(Text)`
   background-color: ${colors.transparentPrimary[20]};
   color: ${colors.gray[50]};
   padding: ${sizes(0.5)} ${sizes(1)};
-  margin-left: ${sizes(3)};
 `
 
 export const StyledLink = styled(Link)`
