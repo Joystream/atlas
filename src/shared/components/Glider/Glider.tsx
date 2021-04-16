@@ -86,6 +86,7 @@ export function useGlider<T extends HTMLElement>({
 function useEventListener<K extends keyof GliderEventMap>(
   element: HTMLElement | undefined | null,
   event: K,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   listener: (event: GliderEvent<GliderEventMap[K]>) => void = () => {}
 ) {
   const savedListener = useRef(listener)
