@@ -5,20 +5,19 @@ export const BASE_PATHS = {
   playground: '/playground',
 } as const
 
+const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
+  if (Object.values(query).length) {
+    const queryParams = new URLSearchParams()
+    Object.entries(query).map(([key, value]) => queryParams.set(key, value))
+    return `${basePath}?${queryParams.toString()}`
+  }
+  return basePath
+}
+
 export const relativeRoutes = {
   viewer: {
     index: () => '',
-    search: ({ query }: { query?: string } = {}) => {
-      const basePath = 'search'
-
-      if (query) {
-        const searchQueryParams = new URLSearchParams()
-        searchQueryParams.set(QUERY_PARAMS.SEARCH, query.trim())
-        return `${basePath}?${searchQueryParams.toString()}`
-      }
-
-      return basePath
-    },
+    search: (query?: { query?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
     video: (id = ':id') => `video/${id}`,
@@ -30,17 +29,8 @@ export const relativeRoutes = {
     editChannel: () => 'channel',
     videos: () => 'videos',
     uploads: () => 'uploads',
-    signIn: (join = false, { step }: { step?: string } = {}) => {
-      const basePath = `signin${join ? '/join' : ''}`
-
-      if (step) {
-        const stepParams = new URLSearchParams()
-        stepParams.set(QUERY_PARAMS.JOIN, step.trim())
-        return `${basePath}?${stepParams.toString()}`
-      }
-
-      return basePath
-    },
+    signIn: (query?: { step?: string }) => withQueryParameters('signin', query),
+    signInJoin: (query?: { step?: string }) => withQueryParameters('signin/join', query),
     newMembership: () => 'membership/new',
   },
   playground: {
