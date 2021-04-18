@@ -7,21 +7,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 import { StepFooter, StepTitle, StepWrapper } from './Steps.style'
-import {
-  TermsBox,
-  TextWrapper,
-  TermsParagraph,
-  TermsOverlay,
-  ScrollButton,
-  TermsForm,
-  ContinueButton,
-} from './TermsStep.style'
+import { TermsBox, TextWrapper, TermsParagraph, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
 
-type TermsStepProps = {
-  onAcceptTerms: () => void
-}
-
-const TermsStep: React.FC<TermsStepProps> = ({ onAcceptTerms }) => {
+const TermsStep: React.FC = () => {
   const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
@@ -41,13 +29,6 @@ const TermsStep: React.FC<TermsStepProps> = ({ onAcceptTerms }) => {
       setIsCheckboxVisible(true)
     }
   }, [scrollPosition])
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // do something here
-    onAcceptTerms()
-    navigate(absoluteRoutes.studio.newMembership())
-  }
 
   const handleScrollToBottom = () => {
     if (!termsBoxRef?.current) return
@@ -105,23 +86,19 @@ const TermsStep: React.FC<TermsStepProps> = ({ onAcceptTerms }) => {
         </TermsOverlay>
       </TermsBox>
       <StepFooter>
-        <TermsForm onSubmit={handleSubmit}>
-          <CSSTransition
-            in={isCheckboxVisible}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-            unmountOnExit
-          >
-            <Checkbox
-              value={isAccepted}
-              onClick={() => setIsAccepted(!isAccepted)}
-              label="I’ve read and accept Terms And Conditions"
-            />
-          </CSSTransition>
-          <ContinueButton type="submit" disabled={!isAccepted}>
-            Continue
-          </ContinueButton>
-        </TermsForm>
+        <CSSTransition
+          in={isCheckboxVisible}
+          timeout={parseInt(transitions.timings.loading)}
+          classNames={transitions.names.fade}
+          unmountOnExit
+        >
+          <Checkbox
+            value={isAccepted}
+            onClick={() => setIsAccepted(!isAccepted)}
+            label="I’ve read and accept Terms And Conditions"
+          />
+        </CSSTransition>
+        <ContinueButton to={absoluteRoutes.studio.newMembership()}>Continue</ContinueButton>
       </StepFooter>
     </StepWrapper>
   )

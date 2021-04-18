@@ -1,9 +1,9 @@
 import { Multistepper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useJoystream, useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router'
 import { ExtensionStep, AccountStep, TermsStep } from '../../Steps'
 import {
@@ -25,15 +25,15 @@ const SignInProccessView = () => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <ExtensionStep />,
+      element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signInJoin({ step: '2' })} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <AccountStep />,
+      element: <AccountStep nextStepPath={absoluteRoutes.studio.signInJoin({ step: '3' })} />,
     },
     {
       title: 'Accept terms and conditions',
-      element: <TermsStep onAcceptTerms={() => console.log('bla')} />,
+      element: <TermsStep />,
     },
   ]
   return (
@@ -90,7 +90,7 @@ const SignInProccessView = () => {
           <StyledButton
             size="large"
             icon={<SvgGlyphChevronRight />}
-            to={absoluteRoutes.studio.signIn(true, { step: '1' })}
+            to={absoluteRoutes.studio.signInJoin({ step: '1' })}
           >
             Join now
           </StyledButton>
@@ -101,7 +101,7 @@ const SignInProccessView = () => {
         currentStepIdx={step <= 0 ? 0 : step - 1}
         steps={steps}
         showDialog={step >= 1}
-        onExitClick={() => navigate(absoluteRoutes.studio.signIn(true, { step: '0' }))}
+        onExitClick={() => navigate(absoluteRoutes.studio.signInJoin({ step: '0' }))}
       />
     </>
   )

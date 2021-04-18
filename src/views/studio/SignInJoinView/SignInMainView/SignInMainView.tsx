@@ -34,7 +34,7 @@ const SignInMainView: React.FC = () => {
           Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
         </SubTitle>
         <ButtonGroup>
-          <SignInButton icon={<SvgGlyphChannel />} size="large" to={absoluteRoutes.studio.signIn(true, { step: '0' })}>
+          <SignInButton icon={<SvgGlyphChannel />} size="large" to={absoluteRoutes.studio.signInJoin({ step: '0' })}>
             Sign in
           </SignInButton>
           <Button variant="secondary" icon={<SvgGlyphInfo />} size="large" to="https://www.joystream.org/">

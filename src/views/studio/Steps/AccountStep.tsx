@@ -23,7 +23,11 @@ import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from 
 import { useNavigate } from 'react-router'
 import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
 
-const AccountStep: React.FC = () => {
+type AccountStepProps = {
+  nextStepPath: string
+}
+
+const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const { setActiveUser } = useActiveUser()
   const { accounts } = useJoystream()
@@ -40,7 +44,7 @@ const AccountStep: React.FC = () => {
       memberId: null,
       channelId: null,
     })
-    navigate({ search: '?step=3' })
+    navigate(nextStepPath)
   }
 
   const handleSelect = (id: string) => {
@@ -122,7 +126,7 @@ const AccountStep: React.FC = () => {
 export type AccountBarProps = {
   name?: string
   id?: string
-  onSelect?: (e: React.MouseEvent<HTMLElement>) => void
+  onSelect?: () => void
   selectedValue?: string
 }
 
@@ -140,7 +144,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
           </AccountAddress>
         </div>
       </AccountInfo>
-      <StyledRadioButton value={id} onClick={onSelect} selectedValue={selectedValue} />
+      <StyledRadioButton value={id} onChange={onSelect} selectedValue={selectedValue} />
     </AccountWrapper>
   )
 }

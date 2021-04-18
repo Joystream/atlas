@@ -7,16 +7,20 @@ import { useNavigate } from 'react-router'
 import { useJoystream, useRouterQuery } from '@/hooks'
 import { SvgGlyphExternal } from '@/shared/icons'
 
-const ExtensionStep: React.FC = () => {
+type ExtensionStepProps = {
+  nextStepPath: string
+}
+
+const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery('step')
   const { extensionConnected } = useJoystream()
 
   useEffect(() => {
     if (extensionConnected && step === '1') {
-      navigate('?step=2')
+      navigate(nextStepPath)
     }
-  }, [extensionConnected, navigate, step])
+  }, [extensionConnected, navigate, nextStepPath, step])
 
   return (
     <StepWrapper centered withBottomBar>

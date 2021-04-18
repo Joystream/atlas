@@ -27,15 +27,15 @@ const SignInView = () => {
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <ExtensionStep />,
+      element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signIn({ step: '2' })} />,
     },
     {
       title: 'Create or select a polkadot account',
-      element: <AccountStep />,
+      element: <AccountStep nextStepPath={absoluteRoutes.studio.signIn({ step: '3' })} />,
     },
     {
       title: 'Accept terms and conditions',
-      element: <TermsStep onAcceptTerms={() => console.log('bla')} />,
+      element: <TermsStep />,
     },
   ]
 
@@ -64,7 +64,7 @@ const SignInView = () => {
           icon={<SvgGlyphNewChannel />}
           size="large"
           variant="secondary"
-          to={absoluteRoutes.studio.signIn(false, { step: '1' })}
+          to={absoluteRoutes.studio.signIn({ step: '1' })}
         >
           New Member
         </StyledButton>
@@ -73,7 +73,7 @@ const SignInView = () => {
         currentStepIdx={step <= 0 ? 0 : step - 1}
         steps={steps}
         showDialog={step >= 1}
-        onExitClick={() => navigate(absoluteRoutes.studio.signIn(false, { step: '0' }))}
+        onExitClick={() => navigate(absoluteRoutes.studio.signIn({ step: '0' }))}
       />
     </>
   )

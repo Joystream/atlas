@@ -35,14 +35,6 @@ export const ScrollButton = styled(IconButton)`
   right: ${sizes(6)};
   bottom: ${sizes(6)};
 `
-export const TermsForm = styled.form`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  label span {
-    color: ${colors.white};
-  }
-`
 
 export const ContinueButton = styled(Button)`
   margin-left: auto;
