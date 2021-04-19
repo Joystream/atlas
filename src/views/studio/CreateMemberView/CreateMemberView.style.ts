@@ -1,6 +1,7 @@
 import { StudioContainer } from '@/components'
-import { Button, Text } from '@/shared/components'
+import { Button, Text, Avatar } from '@/shared/components'
 import { media, colors, sizes } from '@/shared/theme'
+
 import styled from '@emotion/styled'
 
 export const Header = styled.header`
@@ -9,17 +10,11 @@ export const Header = styled.header`
 `
 
 export const Hero = styled(Text)`
-  font-size: 54px;
   word-break: break-word;
-
-  ${media.small} {
-    font-size: 72px;
-  }
 `
 
 export const SubTitle = styled(Text)`
-  margin-top: ${sizes(3)};
-  color: ${colors.gray[300]};
+  margin-top: ${sizes(4)};
 `
 
 export const Wrapper = styled(StudioContainer)`
@@ -31,7 +26,6 @@ export const Wrapper = styled(StudioContainer)`
   justify-content: space-between;
 `
 export const Form = styled.form`
-  margin-top: 20px;
   position: relative;
   width: 100%;
   max-width: 580px;
@@ -42,6 +36,10 @@ export const Form = styled.form`
     height: calc(100vh - 300px);
     width: 100%;
   }
+`
+
+export const StyledAvatar = styled(Avatar)`
+  margin-bottom: ${sizes(4)};
 `
 
 export const StyledButton = styled(Button)`
