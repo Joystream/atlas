@@ -23,7 +23,7 @@ type SubItemProps = {
 
 type SidebarNavLinkProps = {
   content: string
-} & SidebarNavProps &
+} & ExpandableElementProps &
   LinkProps
 
 export const SidebarNav = styled.nav<SidebarNavProps>`
@@ -92,7 +92,7 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
   flex-direction: column;
   ${badgeStyles}
   &[data-badge]:after {
-    left: ${sizes(10)};
+    left: ${sizes(12)};
     top: ${sizes(3)};
 
     ${media.medium} {
@@ -110,13 +110,13 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
   &:hover {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[4] : 'rgba(0, 0, 0, 0.12)')};
+    background-color: ${colors.transparentPrimary[10]};
   }
   &:focus {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
+    background-color: ${colors.transparentPrimary[10]};
   }
   &:active {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[32] : colors.transparentBlack[54])};
+    background-color: ${colors.transparentPrimary[18]};
   }
   > svg {
     ${media.medium} {
@@ -132,7 +132,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     line-height: 1;
   }
   &[data-active='true'] {
-    background-color: ${({ isStudio }) => (isStudio ? colors.transparentWhite[6] : colors.transparentBlack[24])};
+    background-color: ${colors.transparentPrimary[18]};
   }
   :after {
     ${media.medium} {

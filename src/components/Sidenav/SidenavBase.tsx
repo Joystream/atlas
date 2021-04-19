@@ -73,7 +73,6 @@ const SidenavBase: React.FC<SidenavProps> = ({
               subitems={item.subitems}
               itemName={item.name}
               onClick={() => toggleSideNav(false)}
-              isStudio={isStudio}
               badgeNumber={item.badgeNumber}
             >
               {item.icon}
@@ -106,7 +105,6 @@ type NavItemProps = {
   to: string
   itemName: string
   badgeNumber?: number
-  isStudio?: boolean
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
@@ -118,7 +116,6 @@ const NavItem: React.FC<NavItemProps> = ({
   onClick,
   itemName,
   badgeNumber,
-  isStudio,
 }) => {
   const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
   const match = useMatch(to)
@@ -130,7 +127,6 @@ const NavItem: React.FC<NavItemProps> = ({
         to={to}
         expanded={expanded || undefined}
         content={itemName}
-        isStudio={isStudio}
       >
         {children}
       </SidebarNavLink>
