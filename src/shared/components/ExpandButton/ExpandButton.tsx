@@ -6,11 +6,11 @@ import { SvgGlyphChevronDown } from '@/shared/icons'
 
 type ExpandButtonProps = {
   expanded?: boolean
-} & Omit<IconButtonProps, 'icon' | 'size' | 'variant' | 'children'>
+} & Omit<IconButtonProps, 'icon' | 'variant' | 'children'>
 
 const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
   return (
-    <StyledButton {...iconButtonProps} expanded={expanded} variant="tertiary" size="large">
+    <StyledButton {...iconButtonProps} expanded={expanded} variant="tertiary">
       <SvgGlyphChevronDown />
     </StyledButton>
   )
