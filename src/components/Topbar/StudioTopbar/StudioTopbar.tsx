@@ -10,6 +10,7 @@ import {
   StyledTopbarBase,
   StudioTopbarContainer,
   MemberInfoContainer,
+  MemberInnerContainer,
   MemberTitleText,
   MemberTextContainer,
   ChannelInfoContainer,
@@ -21,6 +22,7 @@ import {
   NewChannelIconContainer,
   StyledLink,
   AvatarPlaceholder,
+  GlyphCheckContainer,
 } from './StudioTopbar.style'
 import { createUrlFromAsset } from '@/utils/asset'
 
@@ -32,10 +34,8 @@ type ChannelInfoProps = {
 }
 
 type MemberInfoProps = {
-  memberName?: string
-  memberAvatar?: string
   hasChannels?: boolean
-}
+} & Pick<NavDrawerProps, 'memberAvatar' | 'memberName' | 'onLogoutClick'>
 
 type NavDrawerProps = {
   active?: boolean
@@ -148,14 +148,19 @@ const StudioTopbar: React.FC = () => {
   )
 }
 
-const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasChannels }) => {
+const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasChannels, onLogoutClick }) => {
   return (
     <MemberInfoContainer hasChannels={hasChannels}>
-      <StyledAvatar imageUrl={memberAvatar} />
-      <MemberTextContainer>
-        <Text>{memberName}</Text>
-        <MemberTitleText>Member</MemberTitleText>
-      </MemberTextContainer>
+      <MemberInnerContainer>
+        <StyledAvatar imageUrl={memberAvatar} />
+        <MemberTextContainer>
+          <Text>{memberName}</Text>
+          <MemberTitleText variant="caption">Member</MemberTitleText>
+        </MemberTextContainer>
+      </MemberInnerContainer>
+      <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
+        Log out
+      </Button>
     </MemberInfoContainer>
   )
 }
@@ -172,10 +177,18 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
         <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
         <TextContainer>
-          <Text>{channel ? channel.title : 'New Channel'}</Text>
-          <Text>{memberName}</Text>
+          <Text variant="body1">{channel ? channel.title : 'New Channel'}</Text>
+          {memberName && (
+            <Text variant="caption" secondary>
+              {memberName}
+            </Text>
+          )}
         </TextContainer>
-        {active && <SvgGlyphCheck />}
+        {active && (
+          <GlyphCheckContainer>
+            <SvgGlyphCheck />
+          </GlyphCheckContainer>
+        )}
       </ChannelInfoContainer>
     )
   }
@@ -192,12 +205,10 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
       <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
         {hasChannels && (
           <>
-            <Text variant="h6">My Channels</Text>
             {channels?.map((channel) => (
               <ChannelInfo
                 key={channel.id}
                 channel={channel}
-                memberName={memberName}
                 active={channel.id === currentChannel?.id}
                 onClick={() => onCurrentChannelChange(channel.id)}
               />
@@ -207,15 +218,17 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 <NewChannelIconContainer>
                   <SvgGlyphNewChannel />
                 </NewChannelIconContainer>
-                <Text>New Channel</Text>
+                <Text>Add new Channel</Text>
               </NewChannel>
             </StyledLink>
           </>
         )}
-        <MemberInfo memberName={memberName} memberAvatar={memberAvatar} hasChannels={hasChannels} />
-        <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
-          Log out as a member
-        </Button>
+        <MemberInfo
+          memberName={memberName}
+          memberAvatar={memberAvatar}
+          hasChannels={hasChannels}
+          onLogoutClick={onLogoutClick}
+        />
       </DrawerContainer>
     )
   }
