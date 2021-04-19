@@ -1,6 +1,6 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser, useJoystream } from '@/hooks'
-import { Placeholder, Spinner, Text } from '@/shared/components'
+import { Spinner, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -31,7 +31,6 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const { setActiveUser } = useActiveUser()
   const { accounts } = useJoystream()
-  const [imageLoaded, setImageLoaded] = useState(false)
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
@@ -60,10 +59,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
       >
         {!accounts?.length ? (
           <StepWrapper centered withBottomBar>
-            {!imageLoaded && <Placeholder height="180px" width="320px" />}
-            <CSSTransition in={imageLoaded} classNames="fade" timeout={100}>
-              <AccountStepImg src={accountCreation} onLoad={() => setImageLoaded(true)} />
-            </CSSTransition>
+            <AccountStepImg src={accountCreation} />
             <Spinner size="small" />
             <StepTitle variant="h4">Waiting for account creation</StepTitle>
             <Text variant="body2" secondary>
