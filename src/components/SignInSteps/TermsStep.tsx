@@ -1,27 +1,15 @@
 import { absoluteRoutes } from '@/config/routes'
 import { Checkbox } from '@/shared/components'
 import Text from '@/shared/components/Text'
+import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import { StepTitle, StepWrapper } from './Steps.style'
-import {
-  TermsBox,
-  TextWrapper,
-  TermsParagraph,
-  TermsOverlay,
-  ScrollButton,
-  TermsForm,
-  ContinueButton,
-} from './TermsStep.style'
-import { SvgGlyphChevronDown } from '@/shared/icons'
+import { StepFooter, StepTitle, StepWrapper } from './SignInSteps.style'
+import { TermsBox, TextWrapper, TermsParagraph, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
 
-type TermsStepProps = {
-  onStepChange: (idx: number) => void
-}
-
-const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
+const TermsStep: React.FC = () => {
   const navigate = useNavigate()
   const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
@@ -41,13 +29,6 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
       setIsCheckboxVisible(true)
     }
   }, [scrollPosition])
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // do something here
-    onStepChange(0)
-    navigate(absoluteRoutes.studio.newMembership())
-  }
 
   const handleScrollToBottom = () => {
     if (!termsBoxRef?.current) return
@@ -98,13 +79,13 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ScrollButton onClick={handleScrollToBottom}>
+            <ScrollButton variant="secondary" onClick={handleScrollToBottom}>
               <SvgGlyphChevronDown />
             </ScrollButton>
           </CSSTransition>
         </TermsOverlay>
       </TermsBox>
-      <TermsForm onSubmit={handleSubmit}>
+      <StepFooter>
         <CSSTransition
           in={isCheckboxVisible}
           timeout={parseInt(transitions.timings.loading)}
@@ -117,8 +98,8 @@ const TermsStep: React.FC<TermsStepProps> = ({ onStepChange }) => {
             label="I’ve read and accept Terms And Conditions"
           />
         </CSSTransition>
-        <ContinueButton disabled={!isAccepted}>Continue</ContinueButton>
-      </TermsForm>
+        <ContinueButton to={absoluteRoutes.studio.newMembership()}>Continue</ContinueButton>
+      </StepFooter>
     </StepWrapper>
   )
 }

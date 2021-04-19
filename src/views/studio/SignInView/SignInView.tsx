@@ -1,53 +1,102 @@
-import { StudioContainer } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
-  ButtonGroup,
-  CompositionWrapper,
   Header,
-  Overlay,
-  SignInButton,
-  SignInWrapper,
-  StyledBackgroundPattern,
+  Hero,
+  MemberGrid,
   SubTitle,
-  TileImgBg,
-  VideoImgBg,
+  Wrapper,
+  StyledButton,
+  CardWrapper,
+  HandleText,
+  StyledAvatar,
+  IconWrapper,
 } from './SignInView.style'
-
-export type Membership = {
-  id: string
-  handle: string
-  about?: string
-  avatarUri?: string
-}
+import { To } from 'history'
+import regularMockMemberships from '@/mocking/data/mockMemberships'
+import { SvgGlyphNewChannel } from '@/shared/icons'
+import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
+import { useRouterQuery } from '@/hooks'
+import { useNavigate } from 'react-router'
 
 const SignInView = () => {
+  const navigate = useNavigate()
+  const step = Number(useRouterQuery('step'))
+
+  const steps = [
+    {
+      title: 'Add Polkadot plugin',
+      element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signIn({ step: '2' })} />,
+    },
+    {
+      title: 'Create or select a polkadot account',
+      element: <AccountStep nextStepPath={absoluteRoutes.studio.signIn({ step: '3' })} />,
+    },
+    {
+      title: 'Accept terms and conditions',
+      element: <TermsStep />,
+    },
+  ]
+
+  // temporary
+  const fakememberships = regularMockMemberships
   return (
-    <StudioContainer>
-      <StyledBackgroundPattern />
-      <CompositionWrapper>
-        <VideoImgBg />
-        <TileImgBg />
-      </CompositionWrapper>
-      <Overlay />
-      <SignInWrapper>
+    <>
+      <Wrapper>
         <Header>
-          <Text variant="h1">Start your Joystream channel for free!</Text>
-          <SubTitle variant="h3">
-            Joystream Studio is a space for Joystream Content Creators. Sign in and start publishing now!
+          <Hero variant="hero">Sign in</Hero>
+          <SubTitle variant="body1" secondary>
+            Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
           </SubTitle>
-          <ButtonGroup>
-            <SignInButton to={absoluteRoutes.studio.selectMembership()} size="large">
-              Sign in For Free
-            </SignInButton>
-            <Button variant="secondary" size="large" to="https://www.joystream.org/">
-              How it works?
-            </Button>
-          </ButtonGroup>
         </Header>
-      </SignInWrapper>
-    </StudioContainer>
+        <MemberGrid>
+          {fakememberships.map((membership) => (
+            <StudioCard
+              key={membership.id}
+              handle={membership.handle}
+              avatarUri={membership.avatarUri}
+              to={absoluteRoutes.studio.newChannel()}
+            />
+          ))}
+        </MemberGrid>
+        <StyledButton
+          icon={<SvgGlyphNewChannel />}
+          size="large"
+          variant="secondary"
+          to={absoluteRoutes.studio.signIn({ step: '1' })}
+        >
+          New Member
+        </StyledButton>
+      </Wrapper>
+      <Multistepper
+        currentStepIdx={step <= 0 ? 0 : step - 1}
+        steps={steps}
+        showDialog={step >= 1}
+        onExitClick={() => navigate(absoluteRoutes.studio.signIn({ step: '0' }))}
+      />
+    </>
+  )
+}
+
+export type StudioCardProps = {
+  handle?: string
+  follows?: number
+  avatarUri?: string | null
+  to: To
+}
+
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
+  return (
+    <CardWrapper to={to}>
+      {avatarUri ? (
+        <StyledAvatar imageUrl={avatarUri} />
+      ) : (
+        <IconWrapper>
+          <SvgGlyphNewChannel />
+        </IconWrapper>
+      )}
+      <HandleText variant="h4">{handle}</HandleText>
+    </CardWrapper>
   )
 }
 

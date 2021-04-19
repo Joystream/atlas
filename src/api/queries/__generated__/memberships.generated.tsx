@@ -9,6 +9,7 @@ export type BasicMembershipFieldsFragment = {
   id: string
   handle: string
   avatarUri?: Types.Maybe<string>
+  about?: Types.Maybe<string>
   controllerAccount: string
   channels: Array<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
 }
@@ -36,6 +37,7 @@ export const BasicMembershipFieldsFragmentDoc = gql`
     id
     handle
     avatarUri
+    about
     controllerAccount
     channels {
       ...BasicChannelFields
