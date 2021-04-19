@@ -13,11 +13,12 @@ import {
   IconWrapper,
 } from './SignInView.style'
 import { To } from 'history'
-import regularMockMemberships from '@/mocking/data/mockMemberships'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery, useJoystream } from '@/hooks'
 import { useNavigate } from 'react-router'
+
+import { useMemberships } from '@/api/hooks'
 
 const SignInView = () => {
   const navigate = useNavigate()
@@ -37,9 +38,19 @@ const SignInView = () => {
       element: <TermsStep />,
     },
   ]
+  const { accounts } = useJoystream()
 
-  // temporary
-  const fakememberships = regularMockMemberships
+  const { memberships } = useMemberships(
+    {
+      where: {
+        controllerAccount_in: accounts.map((a) => a.id),
+      },
+    },
+    {
+      fetchPolicy: 'network-only',
+    }
+  )
+
   return (
     <>
       <Wrapper>
@@ -49,8 +60,9 @@ const SignInView = () => {
             Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
           </SubTitle>
         </Header>
+
         <MemberGrid>
-          {fakememberships.map((membership) => (
+          {memberships?.map((membership) => (
             <StudioCard
               key={membership.id}
               handle={membership.handle}

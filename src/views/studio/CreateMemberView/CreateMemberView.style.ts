@@ -16,6 +16,10 @@ export const Hero = styled(Text)`
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
 `
+export const ErrorMessage = styled(Text)`
+  margin-bottom: ${sizes(5)};
+  color: ${colors.error};
+`
 
 export const Wrapper = styled(StudioContainer)`
   display: flex;
