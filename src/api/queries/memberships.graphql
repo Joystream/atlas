@@ -2,6 +2,7 @@ fragment BasicMembershipFields on Membership {
   id
   handle
   avatarUri
+  about
   controllerAccount
   channels {
     ...BasicChannelFields

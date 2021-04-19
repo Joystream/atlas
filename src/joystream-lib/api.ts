@@ -310,7 +310,7 @@ export class JoystreamJs {
       return
     }
 
-    if (!this._accounts.find((a) => a.id)) {
+    if (!this._accounts.find((a) => a.id === accountId)) {
       throw AccountNotFoundError
     }
 
