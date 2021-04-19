@@ -5,6 +5,7 @@ import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import {
+  StyledSpinner,
   AccountStepImg,
   AccountsWrapper,
   AccountWrapper,
@@ -22,6 +23,7 @@ import joystreamIcon from '@/assets/logo.png'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
 import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
+import { useMemberships } from '@/api/hooks'
 
 type AccountStepProps = {
   nextStepPath: string
@@ -32,6 +34,16 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const { setActiveUser } = useActiveUser()
   const { accounts } = useJoystream()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
+
+  const { memberships: accountsWithMemberships, loading } = useMemberships({
+    where: {
+      controllerAccount_in: accounts.map((a) => a.id),
+    },
+  })
+
+  const accountsWithNoMembership = accounts.filter(
+    (el) => !accountsWithMemberships?.map((a) => a.controllerAccount).includes(el.id)
+  )
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()
@@ -49,15 +61,17 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const handleSelect = (id: string) => {
     setSelectedAccountAddress(id)
   }
-
+  if (loading) {
+    return <StyledSpinner />
+  }
   return (
     <SwitchTransition>
       <CSSTransition
-        key={!accounts?.length ? 'no-accounts' : 'accounts'}
+        key={!accountsWithNoMembership?.length ? 'no-accounts' : 'accounts'}
         classNames={transitions.names.fadeAndSlide}
         timeout={parseInt(transitions.timings.routing)}
       >
-        {!accounts?.length ? (
+        {!accountsWithNoMembership?.length ? (
           <StepWrapper centered withBottomBar>
             <AccountStepImg src={accountCreation} />
             <Spinner size="small" />
@@ -96,7 +110,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 Select polkadot account which you want to connect to your new joystream membership.
               </StepSubTitle>
               <AccountsWrapper>
-                {accounts?.map(({ id, name }) => (
+                {accountsWithNoMembership?.map(({ id, name }) => (
                   <AccountBar
                     key={id}
                     id={id}
