@@ -76,6 +76,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
           <StyledExpandButton
             expanded={isAssetsDrawerActive}
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
+            size="large"
           />
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
