@@ -4,15 +4,15 @@ import { EditVideoSheetState } from '@/hooks'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './EditVideoTabsBar'
 
-const screenHeight = window.innerHeight
-const sheetHeight = screenHeight - TOP_NAVBAR_HEIGHT
-const sheetStateToTransform: Record<EditVideoSheetState, number> = {
-  open: 0,
-  minimized: sheetHeight - EDIT_VIDEO_TABS_BAR_HEIGHT,
-  closed: sheetHeight,
-}
-
 export const useEditVideoSheetAnimations = (sheetState: EditVideoSheetState) => {
+  const screenHeight = window.innerHeight
+  const sheetHeight = screenHeight - TOP_NAVBAR_HEIGHT
+  const sheetStateToTransform: Record<EditVideoSheetState, number> = {
+    open: 0,
+    minimized: sheetHeight - EDIT_VIDEO_TABS_BAR_HEIGHT,
+    closed: sheetHeight,
+  }
+
   const drawerOverlayAnimationProps = useSpring({
     duration: transitions.timings.sharp,
     opacity: sheetState === 'open' ? 1 : 0,

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { MultiFileSelect } from '@/shared/components'
 import { textFieldValidation } from '@/utils/formValidationOptions'
-import { EditVideoSheetState, EditVideoSheetTab, useDrafts, useEditVideoSheet } from '@/hooks'
+import { EditVideoSheetState, EditVideoSheetTab, useDrafts, useEditVideoSheet, useOverlayManager } from '@/hooks'
 import { Container, Content, DrawerOverlay, StyledActionBar } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
@@ -25,6 +25,7 @@ export const EditVideoSheet: React.FC = () => {
     selectedVideoTab,
     setSelectedVideoTab,
   } = useEditVideoSheet()
+  const { lockScroll, unlockScroll } = useOverlayManager()
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
@@ -97,8 +98,14 @@ export const EditVideoSheet: React.FC = () => {
       if (videoTabs.length === 0) {
         addNewTab()
       }
+      console.log('lock scroll')
+      lockScroll()
     }
-  }, [sheetState, cachedSheetState, videoTabs.length, addNewTab])
+    if (sheetState === 'closed' || sheetState === 'minimized') {
+      console.log('unlock scroll')
+      unlockScroll()
+    }
+  }, [sheetState, cachedSheetState, videoTabs.length, addNewTab, lockScroll, unlockScroll])
 
   const toggleMinimizedSheet = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
