@@ -13,10 +13,6 @@ type ProgressBarProps = {
   progress?: number
 }
 
-export const FileDropWrapper = styled.div`
-  height: 100%;
-`
-
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   position: relative;
 
@@ -50,7 +46,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     border: 1px dashed ${colors.blue[500]};
   }
 
-  ${media.compact} {
+  ${media.small} {
     padding-top: 56.25%;
   }
 `
@@ -92,6 +88,7 @@ export const ErrorContainer = styled.div`
   z-index: 2;
 
   width: 100%;
+  padding: ${sizes(2)} 0;
   background-color: rgba(255, 56, 97, 0.08);
 
   display: flex;

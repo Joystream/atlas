@@ -57,7 +57,7 @@ export type DataObject = {
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   size: Scalars['Int']
-  liaisonId: Scalars['Int']
+  liaisonId?: Maybe<Scalars['Int']>
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']

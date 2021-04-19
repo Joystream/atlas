@@ -1,5 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react'
 import styled from '@emotion/styled'
+import isPropValid from '@emotion/is-prop-valid'
 import { colors, sizes, transitions } from '../../theme'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
@@ -63,7 +64,7 @@ const sizeStyles = ({ size }: ButtonBaseStyleProps): SerializedStyles => {
   }
 }
 
-export const StyledButtonBase = styled.button<ButtonBaseStyleProps>`
+export const StyledButtonBase = styled('button', { shouldForwardProp: isPropValid })<ButtonBaseStyleProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;

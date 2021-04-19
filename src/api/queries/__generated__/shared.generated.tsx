@@ -6,7 +6,7 @@ export type DataObjectFieldsFragment = {
   id: string
   createdAt: Date
   size: number
-  liaisonId: number
+  liaisonId?: Types.Maybe<number>
   liaisonJudgement: Types.LiaisonJudgement
   ipfsContentId: string
   joystreamContentId: string

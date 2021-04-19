@@ -1,36 +1,28 @@
 import { useSpring } from 'react-spring'
 import { transitions } from '@/shared/theme'
-import { useEffect } from 'react'
 import { EditVideoSheetState } from '@/hooks'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { ACTION_SHEET_BAR_HEIGHT } from './EditVideoSheet.style'
+import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './EditVideoTabsBar'
 
 const screenHeight = window.innerHeight
 const sheetHeight = screenHeight - TOP_NAVBAR_HEIGHT
-const minimizedSheetHeight = ACTION_SHEET_BAR_HEIGHT
+const sheetStateToTransform: Record<EditVideoSheetState, number> = {
+  open: 0,
+  minimized: sheetHeight - EDIT_VIDEO_TABS_BAR_HEIGHT,
+  closed: sheetHeight,
+}
 
 export const useEditVideoSheetAnimations = (sheetState: EditVideoSheetState) => {
-  const [drawerOverlayAnimationProps, setDrawerOverlayAnimationProps] = useSpring(() => ({
+  const drawerOverlayAnimationProps = useSpring({
     duration: transitions.timings.sharp,
-    opacity: '0',
-  }))
-  useEffect(() => {
-    if (sheetState === 'open') setDrawerOverlayAnimationProps({ opacity: 1 })
-    if (sheetState === 'minimized') setDrawerOverlayAnimationProps({ opacity: 0 })
-    if (sheetState === 'closed') setDrawerOverlayAnimationProps({ opacity: 0 })
-  }, [setDrawerOverlayAnimationProps, sheetState])
+    opacity: sheetState === 'open' ? 1 : 0,
+  })
 
-  const [sheetAnimationProps, setSheetAnimationProps] = useSpring(() => ({
+  const sheetAnimationProps = useSpring({
     duration: transitions.timings.sharp,
-    transform: `translateY(${sheetHeight}px)`,
-    opacity: 1,
-  }))
-  useEffect(() => {
-    if (sheetState === 'open') setSheetAnimationProps({ transform: 'translateY(0)', opacity: 1 })
-    if (sheetState === 'minimized')
-      setSheetAnimationProps({ transform: `translateY(${sheetHeight - minimizedSheetHeight}px)`, opacity: 1 })
-    if (sheetState === 'closed') setSheetAnimationProps({ transform: `translateY(${sheetHeight}px)`, opacity: 0 })
-  }, [setSheetAnimationProps, sheetState])
+    transform: `translateY(${sheetStateToTransform[sheetState]}px)`,
+    opacity: sheetState === 'closed' ? 0 : 1,
+  })
 
   return { drawerOverlayAnimationProps, sheetAnimationProps }
 }

@@ -79,16 +79,13 @@ export const StyledButtonsContainer = styled.div`
   justify-content: flex-end;
   > *:not(:last-child) {
     margin-right: ${sizes(4)};
-    /* margin-right: ${sizes(8)}; */
   }
-  /* > button {
-    flex-shrink: 0;
-  } */
 `
 
 export const StyledTooltip = styled(Tooltip)`
   display: none;
-  margin-right: ${sizes(14)};
+  width: fit-content;
+
   div {
     display: flex;
     height: 100%;
@@ -104,6 +101,7 @@ export const DetailsContainer = styled.div`
   margin-left: auto;
   display: flex;
   align-items: center;
+  padding: 0 ${sizes(5)};
 `
 
 export const DetailsIconWrapper = styled.span`

@@ -42,7 +42,7 @@ type DataObject {
   createdAt: DateTime!
   size: Int!
   # id of assigned storage provider
-  liaisonId: Int!
+  liaisonId: Int
   # status of asset as reported by liaison
   liaisonJudgement: LiaisonJudgement!
   # IPFS content id
