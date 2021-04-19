@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
-import { sizes, breakpoints } from '../../theme'
+import { sizes, media } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
 import { css } from '@emotion/react'
 
@@ -55,7 +55,7 @@ type ContainerProps = Required<Pick<GridProps, 'gap' | 'maxColumns' | 'minWidth'
 const maxColumnsCss = ({ maxColumns }: ContainerProps) =>
   maxColumns
     ? css`
-        @media (min-width: ${toPx(breakpoints.xlarge)}) {
+        ${media.xlarge}) {
           grid-template-columns: repeat(${maxColumns}, 1fr);
         }
       `

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { breakpoints, colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
 export const EDIT_VIDEO_TABS_BAR_HEIGHT = sizes(14, true)
@@ -30,7 +30,7 @@ export const ButtonsContainer = styled.div`
   padding: 0 ${sizes(3)};
   border-left: solid 1px ${colors.gray[700]};
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small}) {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
   }

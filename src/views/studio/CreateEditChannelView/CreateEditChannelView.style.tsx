@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { sizes, breakpoints, media } from '@/shared/theme'
+import { sizes, media } from '@/shared/theme'
 import { Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -10,7 +10,7 @@ export const StyledTitleSection = styled(TitleSection)`
   width: auto;
   flex-direction: row;
   padding-top: ${sizes(8)};
-  @media (min-width: ${breakpoints.small}) {
+  ${media.small} {
     padding-top: 0;
   }
 `

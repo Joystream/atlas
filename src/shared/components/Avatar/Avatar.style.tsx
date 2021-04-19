@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
-import { breakpoints, colors, transitions, typography, media } from '@/shared/theme'
+import { colors, transitions, typography, media } from '@/shared/theme'
 import Placeholder from '../Placeholder'
 import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
@@ -37,7 +37,7 @@ const viewAvatarCss = css`
   width: 128px;
   min-width: 128px;
   height: 128px;
-  @media (min-width: ${breakpoints.medium}) {
+  ${media.medium}) {
     width: 136px;
     min-width: 136px;
     height: 136px;
