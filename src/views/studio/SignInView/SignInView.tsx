@@ -15,10 +15,9 @@ import {
 import { To } from 'history'
 import regularMockMemberships from '@/mocking/data/mockMemberships'
 import { SvgGlyphNewChannel } from '@/shared/icons'
-import { Multistepper } from '@/components'
+import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
 import { useRouterQuery } from '@/hooks'
 import { useNavigate } from 'react-router'
-import { AccountStep, ExtensionStep, TermsStep } from '../Steps'
 
 const SignInView = () => {
   const navigate = useNavigate()

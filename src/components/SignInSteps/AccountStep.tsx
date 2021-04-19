@@ -19,7 +19,7 @@ import {
 } from './AccountStep.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
 import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
 

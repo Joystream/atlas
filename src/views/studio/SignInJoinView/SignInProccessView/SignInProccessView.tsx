@@ -1,11 +1,11 @@
-import { Multistepper } from '@/components'
+import { Multistepper, ExtensionStep, AccountStep, TermsStep } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useRouterQuery } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { ExtensionStep, AccountStep, TermsStep } from '../../Steps'
+
 import {
   HeroContainer,
   ListContainer,

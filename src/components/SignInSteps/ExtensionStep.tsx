@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { StyledButton } from './ExtensionStep.style'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './Steps.style'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'

@@ -6,7 +6,7 @@ import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import { StepFooter, StepTitle, StepWrapper } from './Steps.style'
+import { StepFooter, StepTitle, StepWrapper } from './SignInSteps.style'
 import { TermsBox, TextWrapper, TermsParagraph, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
 
 const TermsStep: React.FC = () => {
