@@ -35,15 +35,15 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const { accounts } = useJoystream()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
-  const { memberships: accountsWithMemberships, loading } = useMemberships({
+  const { memberships, loading } = useMemberships({
     where: {
       controllerAccount_in: accounts.map((a) => a.id),
     },
   })
 
-  const accountsWithNoMembership = accounts.filter(
-    (el) => !accountsWithMemberships?.map((a) => a.controllerAccount).includes(el.id)
-  )
+  const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
+
+  const accountsWithNoMembership = accounts.filter((el) => !membershipsControllerAccounts?.includes(el.id))
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()

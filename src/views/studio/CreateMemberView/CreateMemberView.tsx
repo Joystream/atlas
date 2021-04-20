@@ -4,23 +4,14 @@ import { useActiveUser, useConnectionStatus, useSnackbar } from '@/hooks'
 import { Spinner, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
-import { debounce, startCase } from 'lodash'
+import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
-import {
-  Form,
-  StyledButton,
-  Wrapper,
-  StyledText,
-  Header,
-  Hero,
-  SubTitle,
-  ErrorMessage,
-  StyledAvatar,
-} from './CreateMemberView.style'
+import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
 import { useMemberships } from '@/api/hooks'
+import MessageDialog from '@/components/Dialogs/MessageDialog'
 
 type Inputs = {
   handle: string
@@ -46,7 +37,7 @@ const CreateMemberView = () => {
     },
   })
 
-  const [status, setStatus] = useState<'success' | 'error' | undefined>()
+  const [shouldFetchMemberships, setShouldFetchMemberships] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const [isLoadingDialogVisible, setIsLoadingDialogVisible] = useState(false)
@@ -63,21 +54,27 @@ const CreateMemberView = () => {
     debounceAvatarChange(value)
   }
 
+  // error
+  useEffect(() => {
+    if (!error || !isLoadingDialogVisible) {
+      return
+    }
+    setIsLoadingDialogVisible(false)
+  }, [error, isLoadingDialogVisible])
+
+  // success
   useEffect(() => {
     if (!isLoadingDialogVisible) {
       return
     }
-    if (status === 'error' && error) {
-      error.startsWith('Member name') && setInputError('handle', { message: error })
-      setIsLoadingDialogVisible(false)
-    }
-    if (status === 'success') {
+
+    if (shouldFetchMemberships) {
       startPolling(2000)
       if (memberships?.length) {
         navigate(absoluteRoutes.studio.signIn())
       }
     }
-  }, [error, isLoadingDialogVisible, memberships?.length, navigate, setInputError, startPolling, status])
+  }, [isLoadingDialogVisible, memberships?.length, navigate, shouldFetchMemberships, startPolling])
 
   const handleCreateMember = handleSubmit(async (data) => {
     try {
@@ -86,9 +83,8 @@ const CreateMemberView = () => {
       }
       setIsLoadingDialogVisible(true)
       await createNewMember(activeUser.accountId, data)
-      setStatus('success')
+      setShouldFetchMemberships(true)
     } catch (error) {
-      setStatus('error')
       setError(error.message)
     }
   })
@@ -107,7 +103,6 @@ const CreateMemberView = () => {
           imageUrl={errors.avatar ? undefined : avatarImageUrl}
           onError={() => setInputError('avatar', { message: 'Image not found' })}
         />
-        {!error?.startsWith('Member name') && <ErrorMessage>{error}</ErrorMessage>}
         <TextField
           name="avatar"
           onChange={handleAvatarChange}
@@ -146,6 +141,13 @@ const CreateMemberView = () => {
           inventore earum molestias ab quidem odio!
         </StyledText>
       </ActionDialog>
+      <MessageDialog
+        variant="error"
+        title="Some unexpected error occurred. "
+        showDialog={!isLoadingDialogVisible && !!error}
+        description={error}
+        onExitClick={() => setError(undefined)}
+      />
     </Wrapper>
   )
 }
@@ -169,38 +171,7 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     }
     return json
   } catch (error) {
-    const errorMessage = handleFaucetErrors(error.message)
-    throw Error(errorMessage)
-  }
-}
-
-type FaucetErrors =
-  | 'OnlyNewAccountsCanBeUsedForScreenedMembers'
-  | 'InvalidAddress'
-  | 'TransactionError'
-  | 'InternalServerError'
-  | 'HandleTooLong'
-  | 'HandleTooShort'
-  | 'HandleAlreadyRegistered'
-
-const handleFaucetErrors = (errorMessage: FaucetErrors) => {
-  switch (errorMessage) {
-    case 'HandleAlreadyRegistered':
-    case 'HandleTooLong':
-    case 'HandleTooShort': {
-      const message = startCase(errorMessage).toLowerCase().replace('handle', 'Member name is')
-      return message
-    }
-    case 'InvalidAddress':
-      return 'Account address is invalid'
-    case 'OnlyNewAccountsCanBeUsedForScreenedMembers':
-      return 'You can create only one membership per account'
-    case 'TransactionError':
-      return 'Transaction Error'
-    case 'InternalServerError':
-      return 'Server Error'
-    default:
-      return 'Something went wrong'
+    throw Error(error)
   }
 }
 
