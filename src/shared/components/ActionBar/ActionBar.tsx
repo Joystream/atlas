@@ -5,12 +5,11 @@ import {
   StyledInfoContainer,
   StyledPrimaryText,
   StyledSecondaryText,
-  StyledTooltip,
   StyledButtonsContainer,
   DetailsIconWrapper,
   DetailsContainer,
 } from './ActionBar.style'
-import { Button, Text } from '@/shared/components'
+import { Button, Text, Tooltip } from '@/shared/components'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 export type ActionBarProps = {
@@ -55,14 +54,14 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
           </StyledInfoContainer>
           <StyledButtonsContainer>
             {detailsText && tooltipText && (
-              <StyledTooltip text={tooltipText} above right>
+              <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
                 <DetailsContainer>
                   <Text variant="body2" secondary>
                     {detailsText}
                   </Text>
                   <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
                 </DetailsContainer>
-              </StyledTooltip>
+              </Tooltip>
             )}
             {secondaryButtonText && !detailsText && (
               <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
