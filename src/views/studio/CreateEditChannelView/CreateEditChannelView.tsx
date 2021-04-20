@@ -323,7 +323,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         <StudioContainer>
           <InnerFormContainer>
             <FormField title="Description">
-              <Tooltip text="Click to edit channel description" offsetY={-50}>
+              <Tooltip text="Click to edit channel description">
                 <TextArea
                   name="description"
                   placeholder="Add description"
