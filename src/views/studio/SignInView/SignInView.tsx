@@ -23,7 +23,7 @@ import { useMemberships } from '@/api/hooks'
 const SignInView = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
-  const { setActiveMember, setActiveUser, activeUser } = useActiveUser()
+  const { setActiveUser, activeUser } = useActiveUser()
 
   const steps = [
     {
@@ -65,14 +65,13 @@ const SignInView = () => {
         <MemberGrid>
           {memberships?.map((membership) => (
             <StudioCard
-              onClick={() => {
+              onClick={() =>
                 setActiveUser({
                   ...activeUser,
                   accountId: membership.controllerAccount,
                   memberId: membership.id,
                 })
-                setActiveMember(membership.id)
-              }}
+              }
               key={membership.id}
               handle={membership.handle}
               avatarUri={membership.avatarUri}

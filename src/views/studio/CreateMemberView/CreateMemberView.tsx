@@ -1,6 +1,6 @@
 import { ActionDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useConnectionStatus, useSnackbar } from '@/hooks'
+import { useActiveUser, useConnectionStatus } from '@/hooks'
 import { Spinner, Text, TextField } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
