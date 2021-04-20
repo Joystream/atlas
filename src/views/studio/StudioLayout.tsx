@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
@@ -25,7 +25,6 @@ import {
   useActiveUser,
   useJoystream,
 } from '@/hooks'
-import { useMembership } from '@/api/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import {
@@ -34,129 +33,31 @@ import {
   StudioSidenav,
   NoConnectionIndicator,
   TOP_NAVBAR_HEIGHT,
-  LoadingStudio,
+  StudioEntrypoint,
   PrivateRoute,
+  StudioLoading,
 } from '@/components'
 
-const studioRoutes = [
-  { path: relativeRoutes.studio.index(), element: <LoadingStudio /> },
-  { path: relativeRoutes.studio.newChannel(), element: <CreateEditChannelView newChannel /> },
-  { path: relativeRoutes.studio.editChannel(), element: <CreateEditChannelView /> },
-  { path: relativeRoutes.studio.videos(), element: <MyVideosView /> },
-  { path: relativeRoutes.studio.signIn(), element: <SignInView /> },
-  { path: relativeRoutes.studio.signInJoin(), element: <SignInJoinView /> },
-  { path: relativeRoutes.studio.newMembership(), element: <CreateMemberView /> },
-  { path: relativeRoutes.studio.uploads(), element: <MyUploadsView /> },
-]
+const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
   const { extensionConnected: extensionStatus } = useJoystream()
 
   const {
     activeUser: { accountId, memberId, channelId },
-    setActiveChannel,
     loading: activeUserLoading,
   } = useActiveUser()
-  const { membership, loading: membershipLoading, error: membershipError } = useMembership(
-    {
-      where: { id: memberId },
-    },
-    {
-      skip: !memberId,
-    }
-  )
 
-  const [channelLoading, setChannelLoading] = useState(false)
+  const [enterLocation] = useState(location.pathname)
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
 
-  const hasAccountId = !!accountId && !memberId && extensionConnected
-  const hasMemberId = !!accountId && !!memberId && extensionConnected
-  const hasChannelId = !!accountId && !!memberId && !!channelId && extensionConnected
-
-  useEffect(() => {
-    if (extensionConnectionLoading) {
-      return
-    }
-    if (!extensionConnected) {
-      navigate(absoluteRoutes.studio.signInJoin())
-    }
-  }, [extensionConnected, extensionConnectionLoading, navigate])
-
-  const authedStudioRoutes = studioRoutes.map((route) => {
-    if (route.path === relativeRoutes.studio.index()) {
-      return { ...route, isAuth: false, redirectTo: channelRoute }
-    }
-    if (!accountId) {
-      navigate(absoluteRoutes.studio.signInJoin({ step: '2' }))
-      return
-    }
-    if (!memberId) {
-      navigate(absoluteRoutes.studio.signIn())
-      return
-    }
-    if (!memberId) {
-      if (membershipsLoading) {
-        return
-      }
-      if (memberships?.length) {
-        navigate(absoluteRoutes.studio.signIn())
-      }
-    }
-
-    return { ...route, isAuth: hasMemberId, redirectTo: accountRoute }
-  })
-
-  useEffect(() => {
-    if (activeUserLoading || !extensionConnected || channelId || !memberId || !accountId) {
-      return
-    }
-
-    setChannelLoading(true)
-
-    // TODO add lastChannelId and setting that to activeChannel
-
-    if (membershipLoading) {
-      return
-    }
-    if (!membership?.channels.length) {
-      navigate(absoluteRoutes.studio.newChannel())
-      setChannelLoading(false)
-      return
-    }
-    const setChannel = async () => {
-      await setActiveChannel(membership.channels[0].id)
-      setChannelLoading(false)
-    }
-    setChannel()
-  }, [
-    accountId,
-    activeUserLoading,
-    channelId,
-    extensionConnected,
-    memberId,
-    membership,
-    membershipLoading,
-    navigate,
-    setActiveChannel,
-  ])
-
-  const navigate = useNavigate()
-  const displayedLocation = useVideoEditSheetRouting()
-  useEffect(() => {
-    if (activeUserLoading || !authenticated) {
-      return
-    }
-    if (location.pathname === '/studio/') {
-      navigate(absoluteRoutes.studio.videos())
-    }
-  }, [activeUserLoading, authenticated, location, navigate])
-
-  if (membershipError) {
-    throw membershipError
-  }
+  const accountSet = !!accountId && extensionConnected
+  const memberSet = accountSet && !!memberId
+  const channelSet = memberSet && !!channelId
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -168,10 +69,10 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!hasChannelId} />
-      {hasChannelId && <StudioSidenav />}
-      {extensionConnectionLoading || channelLoading ? (
-        <LoadingStudio />
+      <StudioTopbar hideChannelInfo={!channelSet} />
+      {channelSet && <StudioSidenav />}
+      {extensionConnectionLoading || activeUserLoading ? (
+        <StudioLoading />
       ) : (
         <>
           <MainContainer>
@@ -182,9 +83,52 @@ const StudioLayout = () => {
               }}
             >
               <Routes>
-                {authedStudioRoutes.map((route) => (
-                  <PrivateRoute key={route.path} {...route} />
-                ))}
+                <Route
+                  path={relativeRoutes.studio.index()}
+                  element={<StudioEntrypoint enterLocation={enterLocation} />}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.signIn()}
+                  element={<SignInView />}
+                  isAuth={!memberSet && accountSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.signInJoin()}
+                  element={<SignInJoinView />}
+                  isAuth={!memberSet && !accountSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.newChannel()}
+                  element={<CreateEditChannelView newChannel />}
+                  isAuth={memberSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.editChannel()}
+                  element={<CreateEditChannelView />}
+                  isAuth={channelSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.newMembership()}
+                  element={<CreateMemberView />}
+                  isAuth={!memberSet && accountSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.uploads()}
+                  element={<MyUploadsView />}
+                  isAuth={channelSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
+                <PrivateRoute
+                  path={relativeRoutes.studio.videos()}
+                  element={<MyVideosView />}
+                  isAuth={channelSet}
+                  redirectTo={ENTRY_POINT_ROUTE}
+                />
               </Routes>
             </ErrorBoundary>
           </MainContainer>

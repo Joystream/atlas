@@ -6,14 +6,14 @@ import { BASE_PATHS } from '@/config/routes'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { ViewerLayout } from './views/viewer'
 import { PlaygroundLayout } from './views/playground'
-import { TopbarBase, LoadingStudio } from '@/components'
+import { TopbarBase, StudioLoading } from '@/components'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   // TODO: improve
   fallback: (
     <>
       <TopbarBase variant="studio" />
-      <LoadingStudio />
+      <StudioLoading />
     </>
   ),
 })
