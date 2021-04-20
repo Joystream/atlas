@@ -10,6 +10,7 @@ import {
   getUnseenDrafts,
   addUnseenDraft,
 } from './utils'
+import { Language, VideoCategory } from '@/api/queries'
 
 export type CommonDraftProps = {
   id: string
@@ -29,6 +30,8 @@ export type VideoDraft = {
   publishedBeforeJoystream?: string
   hasMarketing?: boolean
   isExplicit?: boolean
+  language?: Language['iso']
+  categoryId?: VideoCategory['id']
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>

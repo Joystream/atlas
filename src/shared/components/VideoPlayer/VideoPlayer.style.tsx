@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { breakpoints, colors, sizes, transitions, typography, zIndex, media } from '../../theme'
+import { colors, sizes, transitions, typography, zIndex, media } from '../../theme'
 
 type ContainerProps = {
   isInBackground?: boolean
@@ -98,7 +98,7 @@ export const Container = styled.div<ContainerProps>`
       }
     }
     .vjs-fullscreen-control {
-      @media screen and (max-width: ${breakpoints.small}) {
+      ${media.small} {
         margin-left: auto;
       }
     }

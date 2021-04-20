@@ -1,5 +1,5 @@
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
-import { breakpoints, sizes, colors, typography, media } from '@/shared/theme'
+import { sizes, colors, typography, media } from '@/shared/theme'
 import { fluidRange } from 'polished'
 import styled from '@emotion/styled'
 import { ChannelLink } from '@/components'
@@ -91,7 +91,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   span {
     font-size: ${typography.sizes.h2};
   }
-  @media (min-width: ${breakpoints.small}) {
+  ${media.small}) {
     margin: 0 ${sizes(6)} 0 0;
   }
 `
