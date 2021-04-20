@@ -10,7 +10,6 @@ import {
   DragDropText,
   ErrorContainer,
   ErrorText,
-  FileDropWrapper,
   InnerContainer,
   Paragraph,
   ProgressBar,
@@ -71,47 +70,45 @@ const FileSelect: React.FC<FileSelectProps> = ({
   }
 
   return (
-    <FileDropWrapper>
-      <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-        <ProgressBar progress={progress} />
-        <input {...getInputProps()} />
-        {thumbnailUrl && fileType === 'image' ? (
-          <Thumbnail
-            src={thumbnailUrl}
-            alt="video thumbnail"
-            onClick={handleReAdjustThumbnail}
-            title="Click to readjust"
-          />
-        ) : (
-          <SwitchTransition>
-            <CSSTransition key={fileType} classNames="fade" timeout={100}>
-              <InnerContainer>
-                {fileType === 'video' ? <SvgLargeUploadVideo /> : <SvgLargeUploadImage />}
-                <Title variant="h5">{title}</Title>
-                <Paragraph variant="subtitle2" as="p">
-                  {paragraph}
-                </Paragraph>
-                <ButtonsGroup>
-                  <DragDropText variant="body2">Drag and drop or </DragDropText>
-                  <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
-                    Select a file
-                  </Button>
-                </ButtonsGroup>
-              </InnerContainer>
-            </CSSTransition>
-          </SwitchTransition>
-        )}
-        {error && (
-          <ErrorContainer onClick={(e) => e.stopPropagation()}>
-            <SvgAlertError />
-            <ErrorText variant="body2">{error}</ErrorText>
-            <DismissButton variant="tertiary" onClick={() => onError?.(null)}>
-              <SvgGlyphClose />
-            </DismissButton>
-          </ErrorContainer>
-        )}
-      </DragAndDropArea>
-    </FileDropWrapper>
+    <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
+      <ProgressBar progress={progress} />
+      <input {...getInputProps()} />
+      {thumbnailUrl && fileType === 'image' ? (
+        <Thumbnail
+          src={thumbnailUrl}
+          alt="video thumbnail"
+          onClick={handleReAdjustThumbnail}
+          title="Click to readjust"
+        />
+      ) : (
+        <SwitchTransition>
+          <CSSTransition key={fileType} classNames="fade" timeout={100}>
+            <InnerContainer>
+              {fileType === 'video' ? <SvgLargeUploadVideo /> : <SvgLargeUploadImage />}
+              <Title variant="h5">{title}</Title>
+              <Paragraph variant="subtitle2" as="p">
+                {paragraph}
+              </Paragraph>
+              <ButtonsGroup>
+                <DragDropText variant="body2">Drag and drop or </DragDropText>
+                <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
+                  Select a file
+                </Button>
+              </ButtonsGroup>
+            </InnerContainer>
+          </CSSTransition>
+        </SwitchTransition>
+      )}
+      {error && (
+        <ErrorContainer onClick={(e) => e.stopPropagation()}>
+          <SvgAlertError />
+          <ErrorText variant="body2">{error}</ErrorText>
+          <DismissButton variant="tertiary" onClick={() => onError?.(null)}>
+            <SvgGlyphClose />
+          </DismissButton>
+        </ErrorContainer>
+      )}
+    </DragAndDropArea>
   )
 }
 

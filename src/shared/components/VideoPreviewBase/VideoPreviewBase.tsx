@@ -66,7 +66,7 @@ export type VideoPreviewPublisherProps =
       isPullupDisabled?: boolean
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
-      onPullupClick?: () => void
+      onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: () => void
@@ -226,7 +226,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                             disabled={!!isPullupDisabled}
                             onClick={(e) => {
                               e.preventDefault()
-                              onPullupClick && onPullupClick()
+                              onPullupClick && onPullupClick(e)
                             }}
                           />
                         </CoverTopLeftContainer>

@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 
-import { CreateEditChannelView, MyUploadsView, MyVideosView, SignInView, SignInJoinView, CreateMemberView } from '.'
+import {
+  CreateEditChannelView,
+  EditVideoSheet,
+  MyUploadsView,
+  MyVideosView,
+  SignInView,
+  SignInJoinView,
+  CreateMemberView,
+} from '.'
 import {
   JoystreamProvider,
   ActiveUserProvider,
@@ -12,6 +20,8 @@ import {
   PersonalDataProvider,
   useConnectionStatus,
   SnackbarProvider,
+  EditVideoSheetProvider,
+  useVideoEditSheetRouting,
 } from '@/hooks'
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { ViewErrorFallback, StudioTopbar, StudioSidenav, NoConnectionIndicator, TOP_NAVBAR_HEIGHT } from '@/components'
@@ -27,44 +37,39 @@ const studioRoutes = [
 ]
 
 const StudioLayout = () => {
-  const navigate = useNavigate()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
+
+  const navigate = useNavigate()
+  const displayedLocation = useVideoEditSheetRouting()
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
 
   return (
-    <SnackbarProvider>
-      <DraftsProvider>
-        <PersonalDataProvider>
-          <ActiveUserProvider>
-            <JoystreamProvider>
-              <NoConnectionIndicator
-                nodeConnectionStatus={nodeConnectionStatus}
-                isConnectedToInternet={isUserConnectedToInternet}
-              />
-              <StudioTopbar />
-              <StudioSidenav />
-              <MainContainer>
-                <ErrorBoundary
-                  fallback={ViewErrorFallback}
-                  onReset={() => {
-                    navigate(absoluteRoutes.studio.index())
-                  }}
-                >
-                  <Routes>
-                    {studioRoutes.map((route) => (
-                      <Route key={route.path} {...route} />
-                    ))}
-                  </Routes>
-                </ErrorBoundary>
-              </MainContainer>
-            </JoystreamProvider>
-          </ActiveUserProvider>
-        </PersonalDataProvider>
-      </DraftsProvider>
-    </SnackbarProvider>
+    <>
+      <NoConnectionIndicator
+        nodeConnectionStatus={nodeConnectionStatus}
+        isConnectedToInternet={isUserConnectedToInternet}
+      />
+      <StudioTopbar />
+      <StudioSidenav />
+      <MainContainer>
+        <ErrorBoundary
+          fallback={ViewErrorFallback}
+          onReset={() => {
+            navigate(absoluteRoutes.studio.index())
+          }}
+        >
+          <Routes location={displayedLocation}>
+            {studioRoutes.map((route) => (
+              <Route key={route.path} {...route} />
+            ))}
+          </Routes>
+        </ErrorBoundary>
+      </MainContainer>
+      <EditVideoSheet />
+    </>
   )
 }
 
@@ -74,4 +79,20 @@ const MainContainer = styled.main`
   margin-left: var(--sidenav-collapsed-width);
 `
 
-export default StudioLayout
+const StudioLayoutWrapper: React.FC = () => (
+  <EditVideoSheetProvider>
+    <SnackbarProvider>
+      <DraftsProvider>
+        <PersonalDataProvider>
+          <ActiveUserProvider>
+            <JoystreamProvider>
+              <StudioLayout />
+            </JoystreamProvider>
+          </ActiveUserProvider>
+        </PersonalDataProvider>
+      </DraftsProvider>
+    </SnackbarProvider>
+  </EditVideoSheetProvider>
+)
+
+export default StudioLayoutWrapper

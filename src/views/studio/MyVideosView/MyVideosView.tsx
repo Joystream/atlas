@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useVideos } from '@/api/hooks'
-import { useDrafts, useActiveUser } from '@/hooks'
+import { useDrafts, useActiveUser, useEditVideoSheet } from '@/hooks'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+import { absoluteRoutes } from '@/config/routes'
 
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 
-// const testChannelId = 'a49fc01c-d369-44d2-b272-bcf0b0d26a5e' // mocking test channel id
-const testChannelId = '100' // staging test channel id
+const testChannelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
+// const testChannelId = '100' // staging test channel id
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -17,6 +19,8 @@ const ROWS_AMOUNT = 4
 // TODO: on delete video callbacks
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
+  const navigate = useNavigate()
+  const { videoTabs, addVideoTab, setSelectedVideoTab } = useEditVideoSheet()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -101,8 +105,23 @@ export const MyVideosView = () => {
                 id={draft.id}
                 showChannel={false}
                 isDraft
-                isPullupDisabled={false}
-                onEditVideoClick={() => ({})}
+                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                  navigate(absoluteRoutes.studio.editVideo())
+                }}
+                onPullupClick={(e) => {
+                  e.stopPropagation()
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                }}
+                onEditVideoClick={() => {
+                  addVideoTab(draft)
+                  setSelectedVideoTab(draft)
+                  navigate(absoluteRoutes.studio.editVideo())
+                }}
                 onDeleteVideoClick={() => {
                   removeDraft(draft.id)
                 }}

@@ -4,7 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
 import FollowedChannels from './FollowedChannels'
-import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { SvgGlyphExternal, SvgNavChannel, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 
 const viewerSidenavItems: NavItemType[] = [
   {
@@ -49,7 +49,6 @@ export const ViewerSidenav: React.FC = () => {
           >
             Joystream studio
           </Button>
-          <Button icon={<SvgGlyphAddVideo />}>New Video</Button>
         </>
       }
     />

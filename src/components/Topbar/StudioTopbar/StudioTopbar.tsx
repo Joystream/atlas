@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useActiveUser } from '@/hooks'
+import { useActiveUser, useEditVideoSheet } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -24,6 +24,8 @@ import {
   AvatarPlaceholder,
   GlyphCheckContainer,
 } from './StudioTopbar.style'
+import { CSSTransition } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
 
 type ChannelInfoProps = {
@@ -58,6 +60,7 @@ const StudioTopbar: React.FC = () => {
       skip: !activeUser?.memberId,
     }
   )
+  const { sheetState } = useEditVideoSheet()
 
   const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
 
@@ -76,10 +79,6 @@ const StudioTopbar: React.FC = () => {
   const handleLogout = () => {
     // TODO add logic for Logout
     setDrawerActive(false)
-  }
-
-  const handleAddVideoViewOpen = () => {
-    // TODO add logic for opening Add Video View
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -114,9 +113,17 @@ const StudioTopbar: React.FC = () => {
     <>
       <StyledTopbarBase variant="studio">
         <StudioTopbarContainer>
-          <IconButton onClick={handleAddVideoViewOpen}>
-            <SvgGlyphAddVideo />
-          </IconButton>
+          <CSSTransition
+            in={sheetState !== 'open'}
+            unmountOnExit
+            mountOnEnter
+            timeout={parseInt(transitions.timings.loading)}
+            classNames={transitions.names.fade}
+          >
+            <IconButton to={absoluteRoutes.studio.editVideo()}>
+              <SvgGlyphAddVideo />
+            </IconButton>
+          </CSSTransition>
           {loading ? (
             <ChannelInfoPlaceholder />
           ) : membership?.channels.length ? (
