@@ -54,7 +54,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
           </StyledInfoContainer>
           <StyledButtonsContainer>
             {detailsText && tooltipText && (
-              <Tooltip text={tooltipText} placement="top-end">
+              <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
                 <DetailsContainer>
                   <Text variant="body2" secondary>
                     {detailsText}
