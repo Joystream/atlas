@@ -5,3 +5,4 @@ export { default as PlaygroundUploadingFilesData } from './PlaygroundUploadingFi
 export { default as PlaygroundMemberChannel } from './PlaygroundMemberChannel'
 export { default as FileHashing } from './FileHashing'
 export { default as PlaygroundConnectionState } from './PlaygroundConnectionState'
+export { default as UploadsManager } from './UploadsManager'

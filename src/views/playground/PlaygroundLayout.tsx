@@ -2,7 +2,13 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import Link from '@/components/Link'
-import { DraftsProvider, UploadingFilesDataProvider, ActiveUserProvider, ConnectionStatusProvider } from '@/hooks'
+import {
+  DraftsProvider,
+  UploadingFilesDataProvider,
+  ActiveUserProvider,
+  ConnectionStatusProvider,
+  UploadManagerProvider,
+} from '@/hooks'
 import { Route, Routes } from 'react-router'
 import {
   FileHashing,
@@ -11,6 +17,7 @@ import {
   PlaygroundMemberChannel,
   PlaygroundUploadingFilesData,
   PlaygroundValidationForm,
+  UploadsManager,
   VideoMetaData,
 } from './Playgrounds'
 
@@ -22,34 +29,37 @@ const playgroundRoutes = [
   { path: 'member-active-channel', element: <PlaygroundMemberChannel />, name: 'Active user/member/channel' },
   { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
   { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
+  { path: 'uploads-manager', element: <UploadsManager />, name: 'Uploads Manager' },
 ]
 
 export const PlaygroundLayout = () => {
   return (
-    <ConnectionStatusProvider>
-      <DraftsProvider>
-        <UploadingFilesDataProvider>
-          <ActiveUserProvider>
-            <Container>
-              <Text variant="h2">Internal testing view</Text>
-              <LinksContainer>
-                {playgroundRoutes.map((route) => (
-                  <Link key={route.path} to={route.path}>
-                    {route.name}
-                  </Link>
-                ))}
-              </LinksContainer>
+    <UploadManagerProvider>
+      <ConnectionStatusProvider>
+        <DraftsProvider>
+          <UploadingFilesDataProvider>
+            <ActiveUserProvider>
+              <Container>
+                <Text variant="h2">Internal testing view</Text>
+                <LinksContainer>
+                  {playgroundRoutes.map((route) => (
+                    <Link key={route.path} to={route.path}>
+                      {route.name}
+                    </Link>
+                  ))}
+                </LinksContainer>
 
-              <Routes>
-                {playgroundRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </Container>
-          </ActiveUserProvider>
-        </UploadingFilesDataProvider>
-      </DraftsProvider>
-    </ConnectionStatusProvider>
+                <Routes>
+                  {playgroundRoutes.map((route) => (
+                    <Route key={route.path} path={route.path} element={route.element} />
+                  ))}
+                </Routes>
+              </Container>
+            </ActiveUserProvider>
+          </UploadingFilesDataProvider>
+        </DraftsProvider>
+      </ConnectionStatusProvider>
+    </UploadManagerProvider>
   )
 }
 
