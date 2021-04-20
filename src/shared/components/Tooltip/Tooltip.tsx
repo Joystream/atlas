@@ -40,7 +40,7 @@ const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs} className={className}>
+          <StyledTooltip {...attrs}>
             {icon && (
               <IconWrapper>
                 <SvgGlyphInfo />
