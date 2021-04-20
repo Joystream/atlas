@@ -98,11 +98,9 @@ export const EditVideoSheet: React.FC = () => {
       if (videoTabs.length === 0) {
         addNewTab()
       }
-      console.log('lock scroll')
       lockScroll()
     }
     if (sheetState === 'closed' || sheetState === 'minimized') {
-      console.log('unlock scroll')
       unlockScroll()
     }
   }, [sheetState, cachedSheetState, videoTabs.length, addNewTab, lockScroll, unlockScroll])
