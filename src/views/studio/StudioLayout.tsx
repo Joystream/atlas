@@ -70,8 +70,8 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!channelSet} />
-      {channelSet && <StudioSidenav />}
+      <StudioTopbar hideChannelInfo={!memberSet} />
+      {memberSet && <StudioSidenav />}
       {extensionConnectionLoading || activeUserLoading ? (
         <StudioLoading />
       ) : (
