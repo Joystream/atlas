@@ -27,6 +27,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
+import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -55,7 +56,8 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { activeUser, setActiveChannel } = useActiveUser()
+  const { activeUser, setActiveChannel, removeActiveUser } = useActiveUser()
+  const navigate = useNavigate()
   const { membership, loading, error } = useMembership(
     {
       where: { id: activeUser?.memberId },
@@ -64,6 +66,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
       skip: !activeUser?.memberId,
     }
   )
+
   const { sheetState } = useEditVideoSheet()
 
   const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
@@ -80,8 +83,9 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
     setDrawerActive(false)
   }
 
-  const handleLogout = () => {
-    // TODO add logic for Logout
+  const handleLogout = async () => {
+    await removeActiveUser()
+    navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)
   }
 

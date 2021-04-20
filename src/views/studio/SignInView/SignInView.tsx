@@ -15,7 +15,7 @@ import {
 import { To } from 'history'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
-import { useRouterQuery, useJoystream } from '@/hooks'
+import { useRouterQuery, useJoystream, useActiveUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
@@ -23,6 +23,7 @@ import { useMemberships } from '@/api/hooks'
 const SignInView = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
+  const { setActiveMember, setActiveUser, activeUser } = useActiveUser()
 
   const steps = [
     {
@@ -64,6 +65,14 @@ const SignInView = () => {
         <MemberGrid>
           {memberships?.map((membership) => (
             <StudioCard
+              onClick={() => {
+                setActiveUser({
+                  ...activeUser,
+                  accountId: membership.controllerAccount,
+                  memberId: membership.id,
+                })
+                setActiveMember(membership.id)
+              }}
               key={membership.id}
               handle={membership.handle}
               avatarUri={membership.avatarUri}
@@ -95,11 +104,12 @@ export type StudioCardProps = {
   follows?: number
   avatarUri?: string | null
   to: To
+  onClick: () => void
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to, onClick }) => {
   return (
-    <CardWrapper to={to}>
+    <CardWrapper to={to} onClick={onClick}>
       {avatarUri ? (
         <StyledAvatar imageUrl={avatarUri} />
       ) : (
