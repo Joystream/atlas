@@ -52,7 +52,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         </CSSTransition>
       )}
     >
-      <span tabIndex={0}>{children}</span>
+      <span tabIndex={0} className={className}>{children}</span>
     </Tippy>
   )
 }
