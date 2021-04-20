@@ -43,6 +43,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const StudioLayout = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
   const { extensionConnected: extensionStatus } = useJoystream()
 
@@ -82,7 +83,7 @@ const StudioLayout = () => {
                 navigate(absoluteRoutes.studio.index())
               }}
             >
-              <Routes>
+              <Routes location={displayedLocation}>
                 <Route
                   path={relativeRoutes.studio.index()}
                   element={<StudioEntrypoint enterLocation={enterLocation} />}
