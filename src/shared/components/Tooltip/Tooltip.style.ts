@@ -33,7 +33,7 @@ export const Arrow = styled.div`
 export const StyledTooltip = styled.div`
   display: inline-flex;
   padding: ${sizes(2)};
-  background-color: ${colors.gray[500]};
+  background-color: ${colors.gray[400]};
   span {
     max-width: 200px;
     line-height: ${typography.lineHeights.subtitle1};
