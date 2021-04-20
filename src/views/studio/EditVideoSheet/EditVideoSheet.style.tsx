@@ -1,5 +1,5 @@
 import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { StudioContainerStyle } from '@/components/StudioContainer'
+import { studioContainerStyle } from '@/components/StudioContainer'
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
@@ -44,7 +44,7 @@ export const Content = styled.div`
     padding: ${sizes(8)} 0 0 0;
   }
 
-  ${StudioContainerStyle}
+  ${studioContainerStyle}
 `
 
 export const DrawerOverlay = styled(animated.div)`
