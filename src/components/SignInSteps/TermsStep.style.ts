@@ -6,6 +6,7 @@ export const TermsBox = styled.div`
   scroll-behavior: smooth;
   text-align: left;
   margin-top: ${sizes(6)};
+  margin-bottom: ${sizes(10)};
   position: relative;
   height: 300px;
   width: 100%;
@@ -30,23 +31,11 @@ export const TermsOverlay = styled.div`
   background: linear-gradient(180deg, transparent 0%, ${colors.gray[800]} 100%);
 `
 export const ScrollButton = styled(IconButton)`
-  border-radius: 100%;
   position: absolute;
   right: ${sizes(6)};
   bottom: ${sizes(6)};
-  cursor: pointer;
-`
-export const TermsForm = styled.form`
-  margin-top: ${sizes(4)};
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  label span {
-    color: ${colors.white};
-  }
 `
 
 export const ContinueButton = styled(Button)`
   margin-left: auto;
-  cursor: pointer;
 `

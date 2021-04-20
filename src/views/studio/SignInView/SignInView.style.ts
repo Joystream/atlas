@@ -1,110 +1,79 @@
-import { Button, Text } from '@/shared/components'
-import { media, colors, sizes, zIndex } from '@/shared/theme'
+import { StudioContainer } from '@/components'
+import { Button, Text, Avatar } from '@/shared/components'
+import { sizes, colors, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { ReactComponent as BackgroundPatternSVG } from '@/assets/bg-pattern.svg'
-import tileImg from '@/assets/tile-example.png'
-import videoImg from '@/assets/video-example.png'
+import isPropValid from '@emotion/is-prop-valid'
+import { Link } from 'react-router-dom'
 
-export const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: ${zIndex.background};
-  max-width: 100%;
-  transform: translateX(0);
-
-  ${media.small} {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-`
-
-export const SignInWrapper = styled.div`
-  width: 100%;
-  overflow-x: hidden;
-`
 export const Header = styled.header`
-  margin-top: ${sizes(20)};
-  max-width: 710px;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 400px;
+  margin-bottom: ${sizes(12)};
 `
 
-export const ButtonGroup = styled.div`
-  margin-top: ${sizes(12)};
-`
-export const SignInButton = styled(Button)`
-  margin-right: ${sizes(3)};
-  margin-bottom: ${sizes(3)};
+export const Hero = styled(Text)`
+  word-break: break-word;
 `
 
 export const SubTitle = styled(Text)`
-  margin-top: ${sizes(4)};
-  color: ${colors.gray[400]};
+  margin-top: ${sizes(6)};
 `
 
-export const CompositionWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  z-index: ${zIndex.background};
-  right: ${sizes(8)};
-  top: 0;
-`
-export const VideoImgBg = styled.div`
-  background-image: url(${videoImg});
-  margin-top: ${sizes(10)};
-  position: absolute;
-  width: 100%;
-  height: 250px;
-  left: 30px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top right;
-
-  ${media.small} {
-    left: 0;
-    height: 350px;
-  }
+export const Wrapper = styled(StudioContainer)`
+  margin: ${sizes(16)} auto;
+  max-width: 600px;
+  text-align: center;
 `
 
-export const TileImgBg = styled.div`
-  margin-top: ${sizes(10)};
-  position: absolute;
-  width: 100%;
-  height: 200px;
-  top: 120px;
-  left: 30px;
-  background: url(${tileImg});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top left;
-
-  ${media.small} {
-    right: 70px;
-    top: 190px;
-    left: initial;
-    width: 340px;
-    height: 280px;
-  }
+export const MemberGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 272px);
+  gap: ${sizes(8)};
+  justify-content: center;
 `
 
-export const Tile = styled.img``
+export const StyledButton = styled(Button)`
+  margin-top: ${sizes(8)};
+`
 
-export const Overlay = styled.div`
-  z-index: ${zIndex.background};
-  position: absolute;
-  top: 0;
-  left: -32px;
-  background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0.53) 100%);
-  width: 100vw;
-  height: 150%;
+export const CardWrapper = styled(Link, { shouldForwardProp: isPropValid })`
+  padding: ${sizes(8)};
+  width: 272px;
+  height: 272px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-
-  ${media.small} {
-    width: 100%;
+  background-color: ${colors.gray[900]};
+  text-decoration: none;
+  transition: background-color ${transitions.timings.routing} ${transitions.easing};
+  :hover {
+    background-color: ${colors.gray[800]};
   }
+`
 
-  ${media.medium} {
-    background: radial-gradient(100% 200% at 0% 100%, black 0%, rgba(0, 0, 0, 0) 100%);
-    width: 70%;
-    left: 20%;
-  }
+export const HandleText = styled(Text)`
+  margin-top: ${sizes(6)};
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+export const StyledAvatar = styled(Avatar)`
+  width: 104px;
+  height: 104px;
+`
+export const IconWrapper = styled.div`
+  background-color: ${colors.transparentWhite[6]};
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `

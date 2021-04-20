@@ -17,7 +17,7 @@ const TopbarBase: React.FC<TopbarBaseProps> = ({ children, variant = 'default', 
         <LogoLink to={logoLink}>
           <ShortLogo />
           <FullLogo variant={variant} />
-          {isStudio && <StudioText>studio</StudioText>}
+          {isStudio && <StudioText secondary>studio</StudioText>}
         </LogoLink>
       </LogoContainer>
       {children}

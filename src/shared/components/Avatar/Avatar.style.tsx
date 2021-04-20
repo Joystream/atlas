@@ -45,9 +45,9 @@ const viewAvatarCss = css`
 `
 
 const smallAvatarCss = css`
-  width: 42px;
-  min-width: 42px;
-  height: 42px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
 `
 
 const defaultAvatarCss = css`

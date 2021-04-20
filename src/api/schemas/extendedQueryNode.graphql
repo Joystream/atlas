@@ -56,6 +56,7 @@ type Membership {
   handle: String!
   avatarUri: String
   controllerAccount: String!
+  about: String
   channels: [Channel!]!
 }
 

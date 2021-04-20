@@ -9,9 +9,11 @@ let nextMemberId = 0
 
 const generateMembership = () => {
   const handleWordsCount = randomRange(1, 4)
+  const aboutWordsCount = randomRange(0, 30)
   return {
     id: (nextMemberId++).toString(),
     handle: faker.lorem.words(handleWordsCount),
+    about: faker.lorem.words(aboutWordsCount),
   }
 }
 

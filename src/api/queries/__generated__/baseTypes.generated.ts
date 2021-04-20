@@ -69,6 +69,7 @@ export type Membership = {
   handle: Scalars['String']
   avatarUri?: Maybe<Scalars['String']>
   controllerAccount: Scalars['String']
+  about?: Maybe<Scalars['String']>
   channels: Array<Channel>
 }
 
