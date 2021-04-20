@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, transitions, media } from '@/shared/theme'
-import { Text, Tooltip } from '@/shared/components'
+import { Text } from '@/shared/components'
 
 type ActionBarContainerProps = {
   isActive?: boolean
@@ -79,21 +79,6 @@ export const StyledButtonsContainer = styled.div`
   justify-content: flex-end;
   > *:not(:last-child) {
     margin-right: ${sizes(4)};
-  }
-`
-
-export const StyledTooltip = styled(Tooltip)`
-  display: none;
-  width: fit-content;
-
-  div {
-    display: flex;
-    height: 100%;
-    align-items: center;
-  }
-
-  ${media.small} {
-    display: block;
   }
 `
 

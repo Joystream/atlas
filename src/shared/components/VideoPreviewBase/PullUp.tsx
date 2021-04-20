@@ -11,7 +11,7 @@ type PullUpProps = StateProps & {
 }
 
 export const PullUp: React.FC<PullUpProps> = ({ disabled, onClick }) => (
-  <Tooltip above text={disabled ? 'Video already added to edit list' : 'Open in new tab'}>
+  <Tooltip text={disabled ? 'Video already added to edit list' : 'Open in new tab'} placement="top-start">
     <Container disabled={disabled} onClick={onClick}>
       <IconButton disabled={disabled} variant="tertiary">
         <SvgGlyphNewTab />

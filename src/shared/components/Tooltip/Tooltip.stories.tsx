@@ -8,11 +8,13 @@ export default {
   title: 'Shared/Tooltip',
   component: Tooltip,
   argTypes: {
-    text: { defaultValue: 'Lorem ipsum dolor sit amet!' },
+    text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },
     arrowDisabled: { defaultValue: false },
-    darkenContent: { defaultValue: true },
-    right: { defaultValue: false },
-    above: { defaultValue: false },
+    placement: {
+      control: { type: 'select', options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'] },
+      defaultValue: 'bottom-start',
+    },
+    icon: { defaultValue: false },
   },
 } as Meta
 
@@ -34,22 +36,26 @@ export const WithHeading = HeadingTooltip.bind({})
 
 const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
   <BrowserRouter>
-    <Tooltip {...args}>
-      <ChannelPreviewBase
-        title="Lorem"
-        avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
-        loading={false}
-      />
-    </Tooltip>
+    <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Tooltip {...args}>
+        <ChannelPreviewBase
+          title="Lorem"
+          avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
+          loading={false}
+        />
+      </Tooltip>
+    </div>
   </BrowserRouter>
 )
 
 export const WithChannelPreview = ChannelPreviewTooltip.bind({})
 
 const ButtonTooltip: Story<TooltipProps> = (args) => (
-  <Tooltip {...args}>
-    <Button>Hover me!</Button>
-  </Tooltip>
+  <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Tooltip {...args}>
+      <Button>Hover me!</Button>
+    </Tooltip>
+  </div>
 )
 
 export const WithButton = ButtonTooltip.bind({})
