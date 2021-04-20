@@ -15,6 +15,8 @@ export default {
       defaultValue: 'bottom-start',
     },
     icon: { defaultValue: false },
+    offsetX: { defaultValue: 0 },
+    offsetY: { defaultValue: 0 },
   },
 } as Meta
 

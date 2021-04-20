@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography } from '@/shared/theme'
+import { Text } from '@/shared/components'
 
 export const IconWrapper = styled.div`
   display: flex;
@@ -29,15 +30,15 @@ export const Arrow = styled.div`
     transform: rotate(45deg);
   }
 `
+export const TooltipText = styled(Text)`
+  max-width: 200px;
+  line-height: ${typography.lineHeights.subtitle1};
+`
 
 export const StyledTooltip = styled.div`
   display: inline-flex;
   padding: ${sizes(2)};
   background-color: ${colors.gray[400]};
-  span {
-    max-width: 200px;
-    line-height: ${typography.lineHeights.subtitle1};
-  }
   &[data-placement^='top-start'] ${Arrow} {
     bottom: -6px;
     left: 12px;
