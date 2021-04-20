@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, LinkProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { To } from 'history'
 import { ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
 
@@ -12,15 +12,23 @@ export type ButtonBaseProps = {
   className?: string
 } & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant'>>
 
+const getLinkPropsFromTo = (to?: To) => {
+  if (!to) {
+    return {}
+  }
+
+  if (typeof to === 'string' && to.includes('http')) {
+    return { as: 'a', href: to, rel: 'noopener noreferrer', target: '_blank' } as const
+  }
+
+  return { as: Link, to: to }
+}
+
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
   ({ onClick, to, type = 'button', children, size = 'medium', variant = 'primary', ...styleProps }, ref) => {
     const clickable = !!onClick || !!to || type === 'submit'
 
-    const as = to ? (props: LinkProps) => <Link {...props} to={to} /> : undefined
-    const externalLinkProps =
-      typeof to === 'string' && to.includes('http')
-        ? ({ as: 'a', href: to, rel: 'noopener noreferrer', target: '_blank' } as const)
-        : undefined
+    const linkProps = getLinkPropsFromTo(to)
 
     return (
       <StyledButtonBase
@@ -28,8 +36,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         type={type}
         onClick={onClick}
         clickable={clickable}
-        as={as}
-        {...externalLinkProps}
+        {...linkProps}
         size={size}
         variant={variant}
         {...styleProps}

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { colors, sizes, typography, transitions, media } from '@/shared/theme'
 import { Text, Tooltip } from '@/shared/components'
-import { StudioContainer } from '@/components'
 
 type ActionBarContainerProps = {
   isActive?: boolean
@@ -27,7 +26,7 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 `
 
-export const StyledInnerContainer = styled(StudioContainer)`
+export const StyledInnerContainer = styled.div`
   display: flex;
   width: 100%;
 `
@@ -85,7 +84,8 @@ export const StyledButtonsContainer = styled.div`
 
 export const StyledTooltip = styled(Tooltip)`
   display: none;
-  margin-right: ${sizes(14)};
+  width: fit-content;
+
   div {
     display: flex;
     height: 100%;
@@ -101,6 +101,7 @@ export const DetailsContainer = styled.div`
   margin-left: auto;
   display: flex;
   align-items: center;
+  padding: 0 ${sizes(5)};
 `
 
 export const DetailsIconWrapper = styled.span`

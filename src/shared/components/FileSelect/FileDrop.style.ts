@@ -13,11 +13,6 @@ type ProgressBarProps = {
   progress?: number
 }
 
-export const FileDropWrapper = styled.div`
-  max-width: 640px;
-  height: 100%;
-`
-
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   position: relative;
 
@@ -51,7 +46,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     border: 1px dashed ${colors.blue[500]};
   }
 
-  ${media.compact} {
+  ${media.small} {
     padding-top: 56.25%;
   }
 `
@@ -143,10 +138,10 @@ export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: ${sizes(4)};
+  margin: ${sizes(4)} 0 ${sizes(2)} 0;
 
   ${media.small} {
-    margin-top: ${sizes(8)};
+    margin: ${sizes(8)} 0 ${sizes(4)} 0;
   }
 `
 

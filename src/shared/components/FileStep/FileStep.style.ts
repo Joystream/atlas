@@ -68,14 +68,9 @@ export const FileName = styled(Text)`
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.caption};
   height: 100%;
-  width: 160px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  ${media.small} {
-    width: 200px;
-  }
 `
 
 export const StyledProgress = styled(CircularProgressbar)`
