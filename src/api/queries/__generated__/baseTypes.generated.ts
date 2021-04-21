@@ -150,7 +150,7 @@ export type Video = {
   publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
   title?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
-  category: VideoCategory
+  category?: Maybe<VideoCategory>
   language?: Maybe<Language>
   hasMarketing?: Maybe<Scalars['Boolean']>
   isExplicit?: Maybe<Scalars['Boolean']>

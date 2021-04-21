@@ -143,7 +143,7 @@ type Video {
   # === metadata ===
   title: String
   description: String
-  category: VideoCategory!
+  category: VideoCategory
   language: Language
   hasMarketing: Boolean
   isExplicit: Boolean
