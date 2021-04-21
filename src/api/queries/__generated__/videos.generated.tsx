@@ -31,6 +31,7 @@ export type VideoFieldsFragment = {
   thumbnailPhotoAvailability: Types.AssetAvailability
   createdAt: Date
   isPublic?: Types.Maybe<boolean>
+  isCensored: boolean
   mediaUrls: Array<string>
   mediaAvailability: Types.AssetAvailability
   category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
@@ -148,6 +149,7 @@ export const VideoFieldsFragmentDoc = gql`
     }
     createdAt
     isPublic
+    isCensored
     mediaMetadata {
       ...VideoMediaMetadataFields
     }

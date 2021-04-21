@@ -106,6 +106,7 @@ export type ChannelWhereInput = {
   ownerMemberId_eq?: Maybe<Scalars['ID']>
   isCurated_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
+  isCensored_eq?: Maybe<Scalars['Boolean']>
   coverPhotoAvailability_eq?: Maybe<AssetAvailability>
   avatarPhotoAvailability_eq?: Maybe<AssetAvailability>
 }
@@ -181,6 +182,7 @@ export type VideoWhereInput = {
   createdAt_gte?: Maybe<Scalars['DateTime']>
   isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
+  isCensored_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
 }
 

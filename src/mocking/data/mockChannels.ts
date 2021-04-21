@@ -14,8 +14,8 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
   avatarPhotoUrls: [channelAvatarSources[idx % channelAvatarSources.length]],
   avatarPhotoAvailability: AssetAvailability.Accepted,
   createdAt: new Date(rawChannel.createdAt),
-  isPublic: true,
-  isCensored: false,
+  isPublic: Boolean(Math.round(Math.random())),
+  isCensored: Boolean(Math.round(Math.random())),
   language: {
     iso: languages[Math.floor(Math.random() * languages.length)].value,
   },
@@ -29,8 +29,8 @@ export const coverMockChannel: MockChannel = {
   coverPhotoUrls: [],
   avatarPhotoAvailability: AssetAvailability.Accepted,
   coverPhotoAvailability: AssetAvailability.Invalid,
-  isPublic: true,
-  isCensored: false,
+  isPublic: Boolean(Math.round(Math.random())),
+  isCensored: Boolean(Math.round(Math.random())),
 }
 
 const mockChannels: MockChannel[] = [...regularMockChannels, coverMockChannel]

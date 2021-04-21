@@ -99,6 +99,7 @@ input ChannelWhereInput {
   ownerMemberId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
+  isCensored_eq: Boolean
   coverPhotoAvailability_eq: AssetAvailability
   avatarPhotoAvailability_eq: AssetAvailability
 }
@@ -180,6 +181,7 @@ input VideoWhereInput {
   createdAt_gte: DateTime
   isFeatured_eq: Boolean
   isPublic_eq: Boolean
+  isCensored_eq: Boolean
   id_in: [ID!]
 }
 
