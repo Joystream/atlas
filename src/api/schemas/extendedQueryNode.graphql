@@ -176,7 +176,7 @@ input VideoWhereInput {
   categoryId_eq: ID
   channelId_in: [ID!]
   channelId_eq: ID
-  thumbnailAvailability_eq: AssetAvailability
+  thumbnailPhotoAvailability_eq: AssetAvailability
   mediaAvailability_eq: AssetAvailability
   createdAt_gte: DateTime
   isFeatured_eq: Boolean
