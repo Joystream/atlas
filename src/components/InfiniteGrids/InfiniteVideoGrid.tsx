@@ -21,7 +21,7 @@ type InfiniteVideoGridProps = {
   createdAtGte?: Date | null
   isPublic?: boolean
   isCensored?: boolean
-  thumbnailAvailability?: AssetAvailability
+  thumbnailPhotoAvailability?: AssetAvailability
   mediaAvailability?: AssetAvailability
   skipCount?: number
   ready?: boolean
@@ -40,7 +40,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   createdAtGte = null,
   isPublic = true,
   isCensored = false,
-  thumbnailAvailability = AssetAvailability.Accepted,
+  thumbnailPhotoAvailability = AssetAvailability.Accepted,
   mediaAvailability = AssetAvailability.Accepted,
   skipCount = 0,
   ready = true,
@@ -54,7 +54,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ...(channelIdIn ? { channelId_in: channelIdIn } : {}),
       ...(createdAtGte ? { createdAt_gte: createdAtGte } : {}),
       ...(categoryId ? { categoryId_eq: categoryId } : {}),
-      ...(thumbnailAvailability ? { thumbnailAvailability_eq: thumbnailAvailability } : {}),
+      ...(thumbnailPhotoAvailability ? { thumbnailPhotoAvailability_eq: thumbnailPhotoAvailability } : {}),
       ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
       isPublic_eq: isPublic,
       isCensored_eq: isCensored,
