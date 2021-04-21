@@ -33,7 +33,7 @@ export type VideoFieldsFragment = {
   isPublic?: Types.Maybe<boolean>
   mediaUrls: Array<string>
   mediaAvailability: Types.AssetAvailability
-  category: { __typename?: 'VideoCategory'; id: string }
+  category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
   thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
