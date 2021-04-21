@@ -11,13 +11,13 @@ import {
   HeaderTextField,
   Select,
   SelectItem,
-  Tooltip,
   TextArea,
+  Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel, useMembership } from '@/api/hooks'
+import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import { useActiveUser, useJoystream, useSnackbar } from '@/hooks'
@@ -51,6 +51,15 @@ type CreateEditChannelViewProps = {
 }
 
 const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
+  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+
+  const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
+  const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
+  const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
+  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
+  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
+
   const {
     activeUser: { channelId, memberId },
     setActiveChannel,
@@ -69,6 +78,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     },
     { skip: !memberId }
   )
+  const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
 
   const {
     register,
@@ -88,13 +98,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: true,
     },
   })
-
-  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-
-  const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
-  const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
-  const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   useEffect(() => {
     if (loading || newChannel || !channel) {
@@ -150,6 +153,17 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     setCoverHashPromise(hashPromise)
   }, [dirtyFields.cover, coverValue])
 
+  useEffect(() => {
+    if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
+      return
+    }
+
+    if (queryNodeState.indexerHead >= transactionBlock) {
+      setTransactionStatus(ExtrinsicStatus.Completed)
+      transactionCallback?.()
+    }
+  }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
+
   const handleSubmit = createSubmitHandler(async (data) => {
     if (!joystream || !memberId) {
       return
@@ -189,20 +203,26 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     try {
       if (newChannel) {
-        const newChannelId = await joystream.createChannel(memberId, metadata, assets, (status) => {
+        const { data: newChannelId, block } = await joystream.createChannel(memberId, metadata, assets, (status) => {
           setTransactionStatus(status)
         })
-        setTransactionStatus(ExtrinsicStatus.Completed)
-
-        await refetchMember()
-        await setActiveChannel(newChannelId)
+        // transaction will be marked as completed once query node processes the block, that's done in useEffect above
+        setTransactionStatus(ExtrinsicStatus.Syncing)
+        setTransactionBlock(block)
+        setTransactionCallback(() => async () => {
+          await refetchMember()
+          await setActiveChannel(newChannelId)
+        })
       } else if (channelId) {
-        await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
+        const { block } = await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
           setTransactionStatus(status)
         })
-        setTransactionStatus(ExtrinsicStatus.Completed)
-
-        await Promise.all([refetchChannel(), refetchMember()])
+        // transaction will be marked as completed once query node processes the block, that's done in useEffect above
+        setTransactionStatus(ExtrinsicStatus.Syncing)
+        setTransactionBlock(block)
+        setTransactionCallback(() => async () => {
+          await Promise.all([refetchChannel(), refetchMember()])
+        })
       }
     } catch (e) {
       if (e instanceof ExtensionSignCancelledError) {

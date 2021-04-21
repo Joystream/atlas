@@ -9,3 +9,4 @@ export { useCoverVideo, useVideosConnection, useFeaturedVideos, useCategories, u
 export * from './channel'
 export * from './video'
 export * from './membership'
+export * from './queryNode'

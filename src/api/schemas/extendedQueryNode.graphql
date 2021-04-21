@@ -233,6 +233,13 @@ type SearchFTSOutput {
   highlight: String!
 }
 
+type ProcessorState {
+  lastCompleteBlock: Float!
+  lastProcessedEvent: String!
+  indexerHead: Float!
+  chainHead: Float!
+}
+
 type Query {
   # Lookup a membership by its ID
   membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
@@ -274,4 +281,8 @@ type Query {
 
   # Free text search across videos and channels
   search(limit: Int, text: String!): [SearchFTSOutput!]!
+}
+
+type Subscription {
+  stateSubscription: ProcessorState!
 }
