@@ -37,6 +37,7 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
+import { useMemberships } from '@/api/hooks'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -45,12 +46,16 @@ const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const { extensionConnected: extensionStatus } = useJoystream()
+  const { extensionConnected: extensionStatus, accounts } = useJoystream()
 
   const {
     activeUser: { accountId, memberId, channelId },
     loading: activeUserLoading,
   } = useActiveUser()
+
+  const { memberships, loading: membershipsLoading } = useMemberships({
+    where: { controllerAccount_in: accounts.map((a) => a.id) },
+  })
 
   const [enterLocation] = useState(location.pathname)
   const extensionConnectionLoading = extensionStatus === null
@@ -70,9 +75,9 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!memberSet} />
-      {memberSet && <StudioSidenav />}
-      {extensionConnectionLoading || activeUserLoading ? (
+      <StudioTopbar hideChannelInfo={!memberSet || !memberships?.length} />
+      {channelSet && !!memberships?.length && <StudioSidenav />}
+      {extensionConnectionLoading || membershipsLoading || activeUserLoading ? (
         <StudioLoading />
       ) : (
         <>
@@ -91,25 +96,25 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.signIn()}
                   element={<SignInView />}
-                  isAuth={!memberSet && accountSet}
+                  isAuth={!!memberships?.length && !memberSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.signInJoin()}
                   element={<SignInJoinView />}
-                  isAuth={!memberSet && !accountSet}
+                  isAuth={!memberships?.length}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.newChannel()}
                   element={<CreateEditChannelView newChannel />}
-                  isAuth={memberSet}
+                  isAuth={memberSet && !!memberships?.length}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.editChannel()}
                   element={<CreateEditChannelView />}
-                  isAuth={channelSet}
+                  isAuth={channelSet && !!memberships?.length}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
@@ -121,13 +126,13 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.uploads()}
                   element={<MyUploadsView />}
-                  isAuth={channelSet}
+                  isAuth={channelSet && !!memberships?.length}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.videos()}
                   element={<MyVideosView />}
-                  isAuth={channelSet}
+                  isAuth={channelSet && !!memberships?.length}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
               </Routes>

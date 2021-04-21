@@ -18,6 +18,7 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
     activeUser: { accountId, memberId, channelId },
     setActiveChannel,
   } = useActiveUser()
+  const { extensionConnected: extensionStatus, accounts } = useJoystream()
 
   const { membership, loading: membershipLoading } = useMembership(
     {
@@ -27,32 +28,38 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
       skip: !memberId,
     }
   )
+
   const { memberships, loading: membershipsLoading } = useMemberships(
     {
-      where: { controllerAccount_eq: accountId },
+      where: { controllerAccount_in: accounts.map((a) => a.id) },
     },
-    { skip: !accountId }
+    {
+      skip: !accounts.length,
+    }
   )
 
-  const { extensionConnected: extensionStatus } = useJoystream()
-
   const extensionConnected = extensionStatus === true
+
+  const hasMemberships = !membershipsLoading && memberships?.length
 
   const accountSet = !!accountId && extensionConnected
   const memberSet = accountSet && !!memberId
   const channelSet = memberSet && !!channelId
 
-  if (!accountSet) {
+  // not signed user with not created memberships and/or no extension
+  if (!hasMemberships) {
+    // go to /signin/join
     return <Navigate to={absoluteRoutes.studio.signInJoin()} />
   }
 
-  if (accountSet && !memberSet && !membershipsLoading) {
-    return (
-      <Navigate to={memberships?.length ? absoluteRoutes.studio.signIn() : absoluteRoutes.studio.newMembership()} />
-    )
+  // not signed user with extension and with created memberships
+  if (hasMemberships && !memberSet) {
+    // go to /signin
+    return <Navigate to={absoluteRoutes.studio.signIn()} />
   }
 
-  if (!membershipLoading && membership?.channels.length && memberSet && !channelSet) {
+  // signed users
+  if (!membershipLoading && memberSet && !channelSet && hasMemberships) {
     if (!membership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.newChannel()} />
     }

@@ -22,11 +22,7 @@ type Inputs = {
 const CreateMemberView = () => {
   const { activeUser } = useActiveUser()
   const { nodeConnectionStatus } = useConnectionStatus()
-  const { memberships, startPolling } = useMemberships({
-    where: {
-      controllerAccount_eq: activeUser.accountId,
-    },
-  })
+
   const navigate = useNavigate()
   const { register, handleSubmit, errors, trigger, setError: setInputError } = useForm<Inputs>({
     shouldFocusError: false,
@@ -69,12 +65,12 @@ const CreateMemberView = () => {
     }
 
     if (shouldFetchMemberships) {
-      startPolling(2000)
-      if (memberships?.length) {
-        navigate(absoluteRoutes.studio.signIn())
-      }
+      // temporary
+      setTimeout(() => {
+        navigate(absoluteRoutes.studio.index())
+      }, 15000)
     }
-  }, [isLoadingDialogVisible, memberships?.length, navigate, shouldFetchMemberships, startPolling])
+  }, [isLoadingDialogVisible, navigate, shouldFetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     try {

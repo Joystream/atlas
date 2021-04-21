@@ -12,18 +12,18 @@ import {
   StyledAvatar,
   IconWrapper,
 } from './SignInView.style'
-import { To } from 'history'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
 import { useRouterQuery, useJoystream, useActiveUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
-  const { setActiveUser, activeUser } = useActiveUser()
+  const { setActiveUser, activeUser, setActiveChannel } = useActiveUser()
 
   const steps = [
     {
@@ -52,6 +52,22 @@ const SignInView = () => {
     }
   )
 
+  const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
+    await setActiveUser({
+      ...activeUser,
+      accountId: membership.controllerAccount,
+      memberId: membership.id,
+    })
+    if (membership.channels.length) {
+      if (!activeUser.channelId) {
+        setActiveChannel(membership.channels[0].id)
+      }
+      navigate(absoluteRoutes.studio.videos())
+    } else {
+      navigate(absoluteRoutes.studio.newChannel())
+    }
+  }
+
   return (
     <>
       <Wrapper>
@@ -65,17 +81,10 @@ const SignInView = () => {
         <MemberGrid>
           {memberships?.map((membership) => (
             <StudioCard
-              onClick={() =>
-                setActiveUser({
-                  ...activeUser,
-                  accountId: membership.controllerAccount,
-                  memberId: membership.id,
-                })
-              }
+              onClick={() => handlePickMembership(membership)}
               key={membership.id}
               handle={membership.handle}
               avatarUri={membership.avatarUri}
-              to={absoluteRoutes.studio.newChannel()}
             />
           ))}
         </MemberGrid>
@@ -102,13 +111,12 @@ export type StudioCardProps = {
   handle?: string
   follows?: number
   avatarUri?: string | null
-  to: To
   onClick: () => void
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to, onClick }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick }) => {
   return (
-    <CardWrapper to={to} onClick={onClick}>
+    <CardWrapper onClick={onClick}>
       {avatarUri ? (
         <StyledAvatar imageUrl={avatarUri} />
       ) : (
