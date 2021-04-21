@@ -27,6 +27,7 @@ fragment VideoFields on Video {
   }
   createdAt
   isPublic
+  isCensored
   mediaMetadata {
     ...VideoMediaMetadataFields
   }
