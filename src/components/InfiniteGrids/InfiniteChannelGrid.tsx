@@ -8,6 +8,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  AssetAvailability,
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
@@ -21,7 +22,14 @@ type InfiniteChannelGridProps = {
 
 const INITIAL_ROWS = 4
 const INITIAL_CHANNELS_PER_ROW = 7
-const QUERY_VARIABLES = {}
+const QUERY_VARIABLES = {
+  where: {
+    isPublic_eq: true,
+    isCensored_eq: false,
+    avatarPhotoAvailability_eq: AssetAvailability.Accepted,
+    coverPhotoAvailability_eq: AssetAvailability.Accepted,
+  },
+}
 
 const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCount = 0, ready = true, className }) => {
   const [channelsPerRow, setChannelsPerRow] = useState(INITIAL_CHANNELS_PER_ROW)

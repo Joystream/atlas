@@ -9,6 +9,7 @@ import {
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
+  AssetAvailability,
 } from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
@@ -18,6 +19,10 @@ type InfiniteVideoGridProps = {
   channelId?: string
   channelIdIn?: string[] | null
   createdAtGte?: Date | null
+  isPublic?: boolean
+  isCensored?: boolean
+  thumbnailAvailability?: AssetAvailability
+  mediaAvailability?: AssetAvailability
   skipCount?: number
   ready?: boolean
   showChannel?: boolean
@@ -33,6 +38,10 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   channelId = null,
   channelIdIn = null,
   createdAtGte = null,
+  isPublic = true,
+  isCensored = false,
+  thumbnailAvailability = AssetAvailability.Accepted,
+  mediaAvailability = AssetAvailability.Accepted,
   skipCount = 0,
   ready = true,
   showChannel = true,
@@ -45,6 +54,10 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ...(channelIdIn ? { channelId_in: channelIdIn } : {}),
       ...(createdAtGte ? { createdAt_gte: createdAtGte } : {}),
       ...(categoryId ? { categoryId_eq: categoryId } : {}),
+      ...(thumbnailAvailability ? { thumbnailAvailability_eq: thumbnailAvailability } : {}),
+      ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
+      isPublic_eq: isPublic,
+      isCensored_eq: isCensored,
     },
   }
 
