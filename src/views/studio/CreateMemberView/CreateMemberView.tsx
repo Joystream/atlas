@@ -38,6 +38,17 @@ const CreateMemberView = () => {
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const [isLoadingDialogVisible, setIsLoadingDialogVisible] = useState(false)
 
+  const { memberships, startPolling } = useMemberships(
+    {
+      where: {
+        controllerAccount_in: [activeUser.accountId || ''],
+      },
+    },
+    {
+      skip: !activeUser.accountId,
+    }
+  )
+
   const debounceAvatarChange = debounce(async (value) => {
     await trigger('avatar')
     if (!errors.avatar) {
@@ -66,11 +77,19 @@ const CreateMemberView = () => {
 
     if (shouldFetchMemberships) {
       // temporary
-      setTimeout(() => {
-        navigate(absoluteRoutes.studio.index())
-      }, 15000)
+      startPolling(2000)
+      if (memberships?.length) {
+        navigate(absoluteRoutes.studio.signIn())
+      }
     }
-  }, [isLoadingDialogVisible, navigate, shouldFetchMemberships])
+  }, [
+    activeUser.accountId,
+    isLoadingDialogVisible,
+    memberships?.length,
+    navigate,
+    startPolling,
+    shouldFetchMemberships,
+  ])
 
   const handleCreateMember = handleSubmit(async (data) => {
     try {
