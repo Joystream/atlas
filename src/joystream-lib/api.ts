@@ -26,6 +26,7 @@ import {
   ChannelAssets,
   ChannelId,
   CreateChannelMetadata,
+  ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   MemberId,
@@ -139,10 +140,10 @@ export class JoystreamJs {
   private async sendExtrinsic(
     tx: SubmittableExtrinsic<'promise'>,
     cb?: ExtrinsicStatusCallbackFn
-  ): Promise<GenericEvent[]> {
+  ): Promise<ExtrinsicResult<GenericEvent[]>> {
     // async executor necessary here since we're listening for a callback
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise<GenericEvent[]>(async (resolve, reject) => {
+    return new Promise<ExtrinsicResult<GenericEvent[]>>(async (resolve, reject) => {
       if (!this.selectedAccountId) {
         reject(new AccountNotSelectedError())
         return
@@ -185,7 +186,11 @@ export class JoystreamJs {
                   this.logError(`Extrinsic failed: "${errorMsg}"`)
                   reject(new ExtrinsicFailedError(event))
                 } else if (event.method === 'ExtrinsicSuccess') {
-                  resolve(unpackedEvents)
+                  const blockHash = status.asFinalized
+                  this.api.rpc.chain
+                    .getHeader(blockHash)
+                    .then(({ number }) => resolve({ block: number.toNumber(), data: unpackedEvents }))
+                    .catch((reason) => reject(new ExtrinsicFailedError(reason)))
                 } else {
                   console.warn('Unknown event method')
                   console.warn(event)
@@ -224,7 +229,7 @@ export class JoystreamJs {
     inputMetadata: CreateChannelMetadata,
     inputAssets: ChannelAssets,
     cb?: ExtrinsicStatusCallbackFn
-  ): Promise<ChannelId> {
+  ): Promise<ExtrinsicResult<ChannelId>> {
     const newChannel = updatedChannelId == null
 
     // === channel assets ===
@@ -292,11 +297,14 @@ export class JoystreamJs {
       tx = this.api.tx.content.updateChannel(contentActor, channelId, params)
     }
 
-    const events = await this.sendExtrinsic(tx, cb)
+    const { data: events, block } = await this.sendExtrinsic(tx, cb)
 
     const contentEvents = events.filter((event) => event.section === 'content')
     const channelId = contentEvents[0].data[1]
-    return new BN(channelId as never).toString()
+    return {
+      data: new BN(channelId as never).toString(),
+      block,
+    }
   }
 
   /* Public */
@@ -332,7 +340,7 @@ export class JoystreamJs {
     inputMetadata: CreateChannelMetadata,
     inputAssets: ChannelAssets,
     cb?: ExtrinsicStatusCallbackFn
-  ): Promise<ChannelId> {
+  ): Promise<ExtrinsicResult<ChannelId>> {
     await this.ensureApi()
 
     return this._createOrUpdateChannel(null, memberId, inputMetadata, inputAssets, cb)
@@ -344,7 +352,7 @@ export class JoystreamJs {
     inputMetadata: CreateChannelMetadata,
     inputAssets: ChannelAssets,
     cb?: ExtrinsicStatusCallbackFn
-  ): Promise<ChannelId> {
+  ): Promise<ExtrinsicResult<ChannelId>> {
     await this.ensureApi()
 
     return this._createOrUpdateChannel(channelId, memberId, inputMetadata, inputAssets, cb)
