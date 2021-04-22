@@ -66,6 +66,7 @@ input MembershipWhereUniqueInput {
 
 input MembershipWhereInput {
   controllerAccount_eq: ID
+  controllerAccount_in: [ID!]
 }
 
 type Channel {

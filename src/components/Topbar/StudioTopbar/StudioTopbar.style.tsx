@@ -10,7 +10,12 @@ type CommonStudioTopbarProps = {
   hasChannels?: boolean
 }
 
-export const StyledTopbarBase = styled(TopbarBase)`
+type StyledTopbarBaseProps = {
+  fullWidth?: boolean
+}
+
+export const StyledTopbarBase = styled(TopbarBase)<StyledTopbarBaseProps>`
+  ${({ fullWidth }) => fullWidth && 'left: 0;'}
   ${media.small} {
     display: flex;
     justify-content: space-between;

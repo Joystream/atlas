@@ -37,6 +37,7 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
+import { useMemberships } from '@/api/hooks'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -45,20 +46,25 @@ const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const { extensionConnected: extensionStatus } = useJoystream()
+  const { extensionConnected: extensionStatus, accounts } = useJoystream()
 
   const {
     activeUser: { accountId, memberId, channelId },
     loading: activeUserLoading,
   } = useActiveUser()
 
+  const { memberships, loading: membershipsLoading } = useMemberships({
+    where: { controllerAccount_in: accounts.map((a) => a.id) },
+  })
+
   const [enterLocation] = useState(location.pathname)
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
+  const hasMembership = !!memberships?.length
 
   const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId
-  const channelSet = memberSet && !!channelId
+  const memberSet = accountSet && !!memberId && hasMembership
+  const channelSet = memberSet && !!channelId && hasMembership
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -70,9 +76,9 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!channelSet} />
+      <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
-      {extensionConnectionLoading || activeUserLoading ? (
+      {extensionConnectionLoading || activeUserLoading || membershipsLoading ? (
         <StudioLoading />
       ) : (
         <>
@@ -91,13 +97,13 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.signIn()}
                   element={<SignInView />}
-                  isAuth={!memberSet && accountSet}
+                  isAuth={!memberSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.signInJoin()}
                   element={<SignInJoinView />}
-                  isAuth={!memberSet && !accountSet}
+                  isAuth={!hasMembership}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
@@ -115,7 +121,7 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.newMembership()}
                   element={<CreateMemberView />}
-                  isAuth={!memberSet && accountSet}
+                  isAuth={accountSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute

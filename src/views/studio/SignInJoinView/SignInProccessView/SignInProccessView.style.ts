@@ -24,15 +24,15 @@ export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   width: 100%;
   z-index: -2;
   bottom: 0;
+  left: 0;
   width: 250px;
+  position: fixed;
   margin-top: 50px;
-  left: calc(var(--sidenav-collapsed) - 20px);
   ${media.small} {
     width: 300px;
   }
   ${media.medium} {
     width: 350px;
-    position: fixed;
   }
   ${media.large} {
     width: 650px;
