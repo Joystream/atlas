@@ -1,9 +1,10 @@
 import { ConnectionStatus } from '@/hooks'
-import { Spinner } from '@/shared/components'
+import { Text } from '@/shared/components'
+import { SvgAlertWarning } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { IndicatorWrapper, StyledSubTitle, StyledTitle, TextWrapper } from './NoConnectionIndicator.style'
+import { IndicatorWrapper, TextWrapper, IconWrapper } from './NoConnectionIndicator.style'
 
 export type NoConnectionIndicatorProps = {
   nodeConnectionStatus: ConnectionStatus
@@ -23,16 +24,18 @@ const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
       unmountOnExit
     >
       <IndicatorWrapper>
-        <Spinner size="small" />
+        <IconWrapper>
+          <SvgAlertWarning />
+        </IconWrapper>
         <TextWrapper>
           {!isConnectedToInternet ? (
-            <StyledTitle variant="subtitle2">No connection to internet...</StyledTitle>
+            <Text variant="subtitle2">No network connection</Text>
           ) : (
-            nodeConnectionStatus === 'disconnected' && (
-              <StyledTitle variant="body2">Disconnected from node...</StyledTitle>
-            )
+            nodeConnectionStatus === 'disconnected' && <Text variant="body2">No node connection</Text>
           )}
-          <StyledSubTitle variant="body2">Wait to restore connection</StyledSubTitle>
+          <Text variant="body2" secondary>
+            Wait for connection to restore
+          </Text>
         </TextWrapper>
       </IndicatorWrapper>
     </CSSTransition>
