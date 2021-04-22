@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
+import { Global, css } from '@emotion/react'
 import { ErrorBoundary } from '@sentry/react'
 
 import {
@@ -75,13 +76,14 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet || !memberships?.length} />
+      <StudioTopbar hideChannelInfo={!memberSet || !memberships?.length} />
       {channelSet && !!memberships?.length && <StudioSidenav />}
       {extensionConnectionLoading || activeUserLoading || membershipsLoading ? (
         <StudioLoading />
       ) : (
         <>
           <MainContainer>
+            {(!channelSet || !memberSet) && <Global styles={fullWidthLayout} />}
             <ErrorBoundary
               fallback={ViewErrorFallback}
               onReset={() => {
@@ -144,6 +146,12 @@ const StudioLayout = () => {
     </>
   )
 }
+
+const fullWidthLayout = css`
+  :root {
+    --sidenav-collapsed-width: 0;
+  }
+`
 
 const MainContainer = styled.main`
   position: relative;

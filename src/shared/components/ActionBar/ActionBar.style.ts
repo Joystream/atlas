@@ -4,14 +4,13 @@ import { Text, Tooltip } from '@/shared/components'
 
 type ActionBarContainerProps = {
   isActive?: boolean
-  fullWidth?: boolean
 }
 
 export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   display: flex;
   position: fixed;
   bottom: 0;
-  left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width);')};
+  left: var(--sidenav-collapsed-width);
   right: 0;
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
