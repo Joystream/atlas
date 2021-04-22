@@ -12,16 +12,18 @@ import {
   StyledAvatar,
   IconWrapper,
 } from './SignInView.style'
-import { To } from 'history'
-import regularMockMemberships from '@/mocking/data/mockMemberships'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery, useJoystream, useActiveUser } from '@/hooks'
 import { useNavigate } from 'react-router'
+
+import { useMemberships } from '@/api/hooks'
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
+  const { setActiveUser, activeUser, setActiveChannel } = useActiveUser()
 
   const steps = [
     {
@@ -37,9 +39,35 @@ const SignInView = () => {
       element: <TermsStep />,
     },
   ]
+  const { accounts } = useJoystream()
 
-  // temporary
-  const fakememberships = regularMockMemberships
+  const { memberships } = useMemberships(
+    {
+      where: {
+        controllerAccount_in: accounts.map((a) => a.id),
+      },
+    },
+    {
+      fetchPolicy: 'network-only',
+    }
+  )
+
+  const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
+    await setActiveUser({
+      ...activeUser,
+      accountId: membership.controllerAccount,
+      memberId: membership.id,
+    })
+    if (membership.channels.length) {
+      if (!activeUser.channelId) {
+        setActiveChannel(membership.channels[0].id)
+      }
+      navigate(absoluteRoutes.studio.videos())
+    } else {
+      navigate(absoluteRoutes.studio.newChannel())
+    }
+  }
+
   return (
     <>
       <Wrapper>
@@ -49,13 +77,14 @@ const SignInView = () => {
             Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
           </SubTitle>
         </Header>
+
         <MemberGrid>
-          {fakememberships.map((membership) => (
+          {memberships?.map((membership) => (
             <StudioCard
+              onClick={() => handlePickMembership(membership)}
               key={membership.id}
               handle={membership.handle}
               avatarUri={membership.avatarUri}
-              to={absoluteRoutes.studio.newChannel()}
             />
           ))}
         </MemberGrid>
@@ -82,12 +111,12 @@ export type StudioCardProps = {
   handle?: string
   follows?: number
   avatarUri?: string | null
-  to: To
+  onClick: () => void
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, to }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick }) => {
   return (
-    <CardWrapper to={to}>
+    <CardWrapper onClick={onClick}>
       {avatarUri ? (
         <StyledAvatar imageUrl={avatarUri} />
       ) : (

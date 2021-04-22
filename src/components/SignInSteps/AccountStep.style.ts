@@ -1,10 +1,15 @@
 import { Button, Text, RadioButton } from '@/shared/components'
+import Spinner from '@/shared/components/Spinner'
 import { sizes, colors, typography, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 type AccountWrapperProps = {
   isSelected?: boolean
 }
+
+export const StyledSpinner = styled(Spinner)`
+  margin: ${sizes(20)} auto;
+`
 
 export const IconGroup = styled.div`
   display: flex;

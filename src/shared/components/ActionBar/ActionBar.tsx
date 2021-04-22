@@ -20,6 +20,7 @@ export type ActionBarProps = {
   tooltipText?: string
   detailsTextIcon?: ReactNode
   isActive?: boolean
+  fullWidth?: boolean
   secondaryButtonText?: string
   secondaryButtonIcon?: ReactNode
   className?: string
@@ -37,6 +38,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       detailsText,
       tooltipText,
       detailsTextIcon,
+      fullWidth,
       isActive = true,
       secondaryButtonIcon,
       className,
@@ -46,7 +48,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     ref
   ) => {
     return (
-      <StyledActionBarContainer className={className} isActive={isActive}>
+      <StyledActionBarContainer className={className} isActive={isActive} fullWidth={fullWidth}>
         <StyledInnerContainer>
           <StyledInfoContainer>
             <StyledPrimaryText>{primaryText}</StyledPrimaryText>

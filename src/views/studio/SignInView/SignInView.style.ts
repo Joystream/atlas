@@ -2,8 +2,6 @@ import { StudioContainer } from '@/components'
 import { Button, Text, Avatar } from '@/shared/components'
 import { sizes, colors, transitions } from '@/shared/theme'
 import styled from '@emotion/styled'
-import isPropValid from '@emotion/is-prop-valid'
-import { Link } from 'react-router-dom'
 
 export const Header = styled.header`
   margin: 0 auto;
@@ -37,7 +35,7 @@ export const StyledButton = styled(Button)`
   margin-top: ${sizes(8)};
 `
 
-export const CardWrapper = styled(Link, { shouldForwardProp: isPropValid })`
+export const CardWrapper = styled.div`
   padding: ${sizes(8)};
   width: 272px;
   height: 272px;
