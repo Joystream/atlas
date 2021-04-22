@@ -79,6 +79,7 @@ export type MembershipWhereUniqueInput = {
 
 export type MembershipWhereInput = {
   controllerAccount_eq?: Maybe<Scalars['ID']>
+  controllerAccount_in?: Maybe<Array<Scalars['ID']>>
 }
 
 export type Channel = {
