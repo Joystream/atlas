@@ -24,6 +24,7 @@ export type ActionBarProps = {
   secondaryButtonText?: string
   secondaryButtonIcon?: ReactNode
   className?: string
+  fullWidth?: boolean
   onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -43,11 +44,12 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       className,
       onConfirmClick,
       onCancelClick,
+      fullWidth,
     },
     ref
   ) => {
     return (
-      <StyledActionBarContainer className={className} isActive={isActive}>
+      <StyledActionBarContainer className={className} isActive={isActive} fullWidth={fullWidth}>
         <StyledInnerContainer>
           <StyledInfoContainer>
             <StyledPrimaryText>{primaryText}</StyledPrimaryText>
