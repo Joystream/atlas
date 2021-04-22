@@ -240,6 +240,14 @@ export type SearchFtsOutput = {
   highlight: Scalars['String']
 }
 
+export type ProcessorState = {
+  __typename?: 'ProcessorState'
+  lastCompleteBlock: Scalars['Float']
+  lastProcessedEvent: Scalars['String']
+  indexerHead: Scalars['Float']
+  chainHead: Scalars['Float']
+}
+
 export type Query = {
   __typename?: 'Query'
   /** Get follows counts for a list of channels */
@@ -339,6 +347,11 @@ export type QueryVideosConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<VideoWhereInput>
   orderBy?: Maybe<VideoOrderByInput>
+}
+
+export type Subscription = {
+  __typename?: 'Subscription'
+  stateSubscription: ProcessorState
 }
 
 export type ChannelFollowsInfo = {

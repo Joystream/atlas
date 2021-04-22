@@ -23,7 +23,12 @@ export enum ExtrinsicStatus {
   ProcessingAssets,
   Unsigned,
   Signed,
+  Syncing,
   Completed,
   Error,
 }
 export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus) => void
+export type ExtrinsicResult<T> = {
+  block: number
+  data: T
+}
