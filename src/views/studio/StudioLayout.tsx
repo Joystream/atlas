@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { Global, css } from '@emotion/react'
 import { ErrorBoundary } from '@sentry/react'
 
 import {
@@ -61,10 +60,11 @@ const StudioLayout = () => {
   const [enterLocation] = useState(location.pathname)
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
+  const hasMembership = !!memberships?.length
 
   const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId
-  const channelSet = memberSet && !!channelId
+  const memberSet = accountSet && !!memberId && hasMembership
+  const channelSet = memberSet && !!channelId && hasMembership
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -76,14 +76,13 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={isUserConnectedToInternet}
       />
-      <StudioTopbar hideChannelInfo={!memberSet || !memberships?.length} />
-      {channelSet && !!memberships?.length && <StudioSidenav />}
+      <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
+      {channelSet && <StudioSidenav />}
       {extensionConnectionLoading || activeUserLoading || membershipsLoading ? (
         <StudioLoading />
       ) : (
         <>
           <MainContainer>
-            {(!channelSet || !memberSet) && <Global styles={fullWidthLayout} />}
             <ErrorBoundary
               fallback={ViewErrorFallback}
               onReset={() => {
@@ -98,43 +97,43 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.signIn()}
                   element={<SignInView />}
-                  isAuth={!!memberships?.length && !memberSet}
+                  isAuth={!memberSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.signInJoin()}
                   element={<SignInJoinView />}
-                  isAuth={!memberships?.length}
+                  isAuth={!hasMembership}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.newChannel()}
                   element={<CreateEditChannelView newChannel />}
-                  isAuth={memberSet && !!memberships?.length}
+                  isAuth={memberSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.editChannel()}
                   element={<CreateEditChannelView />}
-                  isAuth={channelSet && !!memberships?.length}
+                  isAuth={channelSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.newMembership()}
                   element={<CreateMemberView />}
-                  isAuth={!memberSet && accountSet}
+                  isAuth={accountSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.uploads()}
                   element={<MyUploadsView />}
-                  isAuth={channelSet && !!memberships?.length}
+                  isAuth={channelSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
                   path={relativeRoutes.studio.videos()}
                   element={<MyVideosView />}
-                  isAuth={channelSet && !!memberships?.length}
+                  isAuth={channelSet}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
               </Routes>
@@ -146,12 +145,6 @@ const StudioLayout = () => {
     </>
   )
 }
-
-const fullWidthLayout = css`
-  :root {
-    --sidenav-collapsed-width: 0;
-  }
-`
 
 const MainContainer = styled.main`
   position: relative;

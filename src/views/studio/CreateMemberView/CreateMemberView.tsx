@@ -1,4 +1,4 @@
-import { ActionDialog } from '@/components/Dialogs'
+import { ActionDialog, MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser, useConnectionStatus } from '@/hooks'
 import { Spinner, Text, TextField } from '@/shared/components'
@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
 import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
 import { useMemberships } from '@/api/hooks'
-import MessageDialog from '@/components/Dialogs/MessageDialog'
 
 type Inputs = {
   handle: string
@@ -41,6 +40,7 @@ const CreateMemberView = () => {
   const { memberships, startPolling } = useMemberships(
     {
       where: {
+        // We cannot use `controllerAcount_eq` here, because it will not redirect user correctly to `/signin`
         controllerAccount_in: [activeUser.accountId || ''],
       },
     },

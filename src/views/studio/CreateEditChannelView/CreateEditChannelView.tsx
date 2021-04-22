@@ -379,6 +379,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             <ActionBarTransaction
               fee={FEE}
               isActive={newChannel || (!loading && isDirty)}
+              fullWidth={!channelId}
               primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
               secondaryButtonText="Cancel"
               onCancelClick={() => reset()}

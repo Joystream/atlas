@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
+  fullWidth?: boolean
 }
 
 type ChannelInfoProps = {
@@ -55,7 +56,7 @@ type NavDrawerProps = {
   handleClose: () => void
 }
 
-const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const { activeUser, setActiveChannel, removeActiveUser } = useActiveUser()
   const navigate = useNavigate()
   const { membership, loading, error } = useMembership(
@@ -119,7 +120,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
 
   return (
     <>
-      <StyledTopbarBase variant="studio">
+      <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
