@@ -72,7 +72,6 @@ export const EditVideoForm: React.FC<FormProps> = ({
         error={!!errors.title}
         helperText={errors.title?.message}
         onBlur={(e) => {
-          console.log(errors)
           draftId && updateDraft(draftId, { title: e.target.value })
         }}
       />

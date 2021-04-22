@@ -49,7 +49,7 @@ export const EditVideoSheet: React.FC = () => {
   // forms state
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileStateWithDraftId[]>([])
-  const [croppedImageUrl, setCroppedImageUrl] = useState<CroppedImageUrlsWithDraftId[]>([])
+  const [croppedImageUrls, setCroppedImageUrls] = useState<CroppedImageUrlsWithDraftId[]>([])
   const handleFileRejections = (fileRejections: FileRejection[]) => {
     if (fileRejections.length) {
       const { errors } = fileRejections[0]
@@ -59,7 +59,9 @@ export const EditVideoSheet: React.FC = () => {
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const { register, control, setValue: setFormValue, handleSubmit, reset, clearErrors, errors } = useForm<FormInputs>({
+  const { register, control, setValue: setFormValue, handleSubmit, getValues, reset, clearErrors, errors } = useForm<
+    FormInputs
+  >({
     shouldFocusError: true,
     defaultValues: {
       title: '',
@@ -76,15 +78,15 @@ export const EditVideoSheet: React.FC = () => {
     console.log(data)
   })
 
-  const resetFields = (video: VideoDraft) => ({
-    title: video.title,
-    description: video.description,
-    selectedVideoVisibility: video.isPublic === undefined ? null : video.isPublic ? 'public' : 'unlisted',
-    selectedVideoLanguage: video.language ?? null,
-    selectedVideoCategory: video.categoryId ?? null,
-    hasMarketing: video.hasMarketing ?? null,
-    publishedBeforeJoystream: video.publishedBeforeJoystream ?? null,
-    isExplicit: video.isExplicit === undefined ? null : video.isExplicit,
+  const resetFields = (video: VideoDraft | null) => ({
+    title: video?.title,
+    description: video?.description,
+    selectedVideoVisibility: video?.isPublic === undefined ? null : video.isPublic ? 'public' : 'unlisted',
+    selectedVideoLanguage: video?.language ?? null,
+    selectedVideoCategory: video?.categoryId ?? null,
+    hasMarketing: video?.hasMarketing ?? null,
+    publishedBeforeJoystream: video?.publishedBeforeJoystream ?? '',
+    isExplicit: video?.isExplicit === undefined ? null : video.isExplicit,
   })
 
   // Tabs
@@ -93,18 +95,7 @@ export const EditVideoSheet: React.FC = () => {
   const selectTab = useCallback(
     async (tab: EditVideoSheetTab) => {
       const currentDraft = await getDraft(tab.id)
-      currentDraft &&
-        reset({
-          title: currentDraft?.title,
-          description: currentDraft?.description,
-          selectedVideoVisibility:
-            currentDraft?.isPublic === undefined ? null : currentDraft.isPublic ? 'public' : 'unlisted',
-          selectedVideoLanguage: currentDraft?.language ?? null,
-          selectedVideoCategory: currentDraft?.categoryId ?? null,
-          hasMarketing: currentDraft?.hasMarketing ?? null,
-          publishedBeforeJoystream: currentDraft?.publishedBeforeJoystream ?? null,
-          isExplicit: currentDraft?.isExplicit === undefined ? null : currentDraft.isExplicit,
-        })
+      currentDraft && reset(resetFields(currentDraft))
       setSelectedVideoTab(tab)
     },
     [getDraft, reset, setSelectedVideoTab]
@@ -116,8 +107,9 @@ export const EditVideoSheet: React.FC = () => {
       title: 'New Draft',
     })
     addVideoTab(newDraft)
-    selectTab(newDraft)
-  }, [addDraft, addVideoTab, selectTab])
+    reset(resetFields(newDraft))
+    setSelectedVideoTab(newDraft)
+  }, [addDraft, addVideoTab, reset, setSelectedVideoTab])
 
   useEffect(() => {
     if (sheetState === cachedSheetState) {
@@ -136,6 +128,20 @@ export const EditVideoSheet: React.FC = () => {
       unlockScroll()
     }
   }, [sheetState, cachedSheetState, videoTabs.length, addNewTab, lockScroll, unlockScroll, reset, selectedVideoTab])
+
+  useEffect(() => {
+    if (sheetState === 'closed') {
+      return
+    }
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = 'Do you want to leave this page? Changes that you made may not be saved.'
+    }
+    window.addEventListener('beforeunload', beforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload)
+    }
+  }, [sheetState])
 
   const toggleMinimizedSheet = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
@@ -170,17 +176,17 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const handleCropImage = (image: string | null) => {
-    const hasImage = croppedImageUrl.some((item) => item.id === selectedVideoTab?.id)
+    const hasImage = croppedImageUrls.some((item) => item.id === selectedVideoTab?.id)
     if (hasImage) {
-      const newImages = croppedImageUrl.map((item) => {
+      const newImages = croppedImageUrls.map((item) => {
         if (item.id === selectedVideoTab?.id) {
           return { ...item, url: image }
         }
         return item
       })
-      setCroppedImageUrl(newImages)
+      setCroppedImageUrls(newImages)
     } else {
-      setCroppedImageUrl([...croppedImageUrl, { id: selectedVideoTab?.id, url: image }])
+      setCroppedImageUrls([...croppedImageUrls, { id: selectedVideoTab?.id, url: image }])
     }
   }
 
@@ -192,7 +198,7 @@ export const EditVideoSheet: React.FC = () => {
     },
   }
 
-  const currentCroppedImgUrl = croppedImageUrl.find((item) => item.id === selectedVideoTab?.id)?.url || null
+  const currentCroppedImgUrl = croppedImageUrls.find((item) => item.id === selectedVideoTab?.id)?.url || null
 
   const videoTabsWithTitle = videoTabs.map((tab) => {
     const draft = drafts.find((draft) => draft.id === tab.id)
