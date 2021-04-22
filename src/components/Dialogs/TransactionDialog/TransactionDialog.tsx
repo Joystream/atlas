@@ -27,6 +27,11 @@ const TRANSACTION_STEPS_DETAILS = {
     description:
       'Your transaction has been signed and sent. Please wait for the blockchain confirmation. This should take about 15 seconds.',
   },
+  [ExtrinsicStatus.Syncing]: {
+    title: 'Waiting for data propagation...',
+    description:
+      "Your transaction has been accepted and included into the blockchain. Please wait till it's picked up by the indexing node. This should take up to 15 seconds.",
+  },
 }
 
 const TransactionDialog: React.FC<TransactionDialogProps> = ({

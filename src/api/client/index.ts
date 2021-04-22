@@ -1,4 +1,5 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, split } from '@apollo/client'
+import { WebSocketLink } from '@apollo/client/link/ws'
 import { wrapSchema } from '@graphql-tools/wrap'
 import { mergeSchemas } from '@graphql-tools/merge'
 import { buildASTSchema, GraphQLFieldResolver } from 'graphql'
@@ -12,6 +13,8 @@ import { queryNodeStitchingResolvers } from './resolvers'
 import { createExecutors } from '@/api/client/executors'
 import { delegateToSchema } from '@graphql-tools/delegate'
 import { CreateProxyingResolverFn } from '@graphql-tools/delegate/types'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
 
 // we do this so that operationName is passed along with the queries
 // this is needed for our mocking backend to operate
@@ -53,9 +56,24 @@ const createApolloClient = () => {
     resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
   })
 
-  const link = new SchemaLink({ schema: mergedSchema })
+  const queryLink = new SchemaLink({ schema: mergedSchema })
+  const subscriptionLink = new WebSocketLink({
+    uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
+    options: {
+      reconnect: true,
+    },
+  })
 
-  return new ApolloClient({ link, cache })
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
+    },
+    subscriptionLink,
+    queryLink
+  )
+
+  return new ApolloClient({ link: splitLink, cache })
 }
 
 export default createApolloClient
