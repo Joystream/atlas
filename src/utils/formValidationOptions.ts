@@ -46,8 +46,8 @@ export const urlValidation: (name: string) => RegisterOptions = (name) => ({
 })
 
 // Validates DD/MM/YYYY formatted dates
-export const dateValidation = (date: string) => {
-  if (!date) return true
+export const dateValidation = (date: string, required = false) => {
+  if (!date) return !required
 
   const reversedDate = date.split('/').reverse().join('-')
   const parsedDate = parseISO(reversedDate)
