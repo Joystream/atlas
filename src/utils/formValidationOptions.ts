@@ -1,4 +1,5 @@
 import { ValidationRule, Message, Validate } from 'react-hook-form'
+import { isValid, parseISO } from 'date-fns'
 
 type RegisterOptions = Partial<{
   required: Message | ValidationRule<boolean>
@@ -43,3 +44,18 @@ export const urlValidation: (name: string) => RegisterOptions = (name) => ({
     message: `${name} must be a valid url`,
   },
 })
+
+// Validates DD/MM/YYYY formatted dates
+export const dateValidation = (date: string) => {
+  if (!date) return true
+
+  const reversedDate = date.split('/').reverse().join('-')
+  const parsedDate = parseISO(reversedDate)
+
+  if (!isValid(parsedDate)) return false
+
+  const currentDate = new Date()
+  if (currentDate < parsedDate) return false
+
+  return true
+}

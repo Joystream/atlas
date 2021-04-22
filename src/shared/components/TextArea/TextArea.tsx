@@ -6,6 +6,7 @@ export type TextAreaProps = {
   name?: string
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
   rows?: number
@@ -13,7 +14,7 @@ export type TextAreaProps = {
 } & InputBaseProps
 
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  { onChange, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
+  { onChange, onBlur, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
@@ -34,6 +35,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
         value={value}
         rows={rows}
         spellCheck={spellcheck}
+        onBlur={onBlur}
       />
     </InputBase>
   )

@@ -107,7 +107,7 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   }, [])
 
   const updateSingleDraft = useCallback(
-    async (draftId: string, draftProps: RawDraft) => {
+    async (draftId: string, draftProps: Omit<RawDraft, 'channelId'>) => {
       const updatedDraft = await updateDraft(draftId, draftProps)
       fetchDrafts()
       return updatedDraft

@@ -9,11 +9,12 @@ export type HeaderTextFieldProps = {
   error?: boolean
   warning?: boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void
   className?: string
 }
 
 const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
-  ({ name, value, helperText, placeholder, error, warning, onChange, className }, ref) => {
+  ({ name, value, helperText, placeholder, error, warning, onChange, onBlur, className }, ref) => {
     const controlled = onChange?.name === 'onChange'
     return (
       <Container className={className}>
@@ -24,6 +25,7 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
           type="text"
           defaultValue={value}
           onChange={onChange}
+          onBlur={onBlur}
           widthSize={controlled ? value.length : null}
         />
         {helperText && (
