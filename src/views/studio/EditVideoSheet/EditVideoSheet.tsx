@@ -11,14 +11,13 @@ import {
   VideoDraft,
   useEditVideoSheet,
   useOverlayManager,
+  useActiveUser,
 } from '@/hooks'
 import { Container, Content, DrawerOverlay, StyledActionBar } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm, FormInputs } from './EditVideoForm'
 import { SvgGlyphInfo } from '@/shared/icons'
-
-const channelId = 'f636f2fd-c047-424e-baab-6e6cfb3e2780' // mocking test channel id
 
 type FileStateWithDraftId = {
   id?: string
@@ -42,6 +41,8 @@ export const EditVideoSheet: React.FC = () => {
     selectedVideoTab,
     setSelectedVideoTab,
   } = useEditVideoSheet()
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ?? ''
   const { lockScroll, unlockScroll } = useOverlayManager()
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
@@ -59,9 +60,7 @@ export const EditVideoSheet: React.FC = () => {
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const { register, control, setValue: setFormValue, handleSubmit, getValues, reset, clearErrors, errors } = useForm<
-    FormInputs
-  >({
+  const { register, control, setValue: setFormValue, handleSubmit, reset, clearErrors, errors } = useForm<FormInputs>({
     shouldFocusError: true,
     defaultValues: {
       title: '',
@@ -109,7 +108,7 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab(newDraft)
     reset(resetFields(newDraft))
     setSelectedVideoTab(newDraft)
-  }, [addDraft, addVideoTab, reset, setSelectedVideoTab])
+  }, [addDraft, channelId, addVideoTab, reset, setSelectedVideoTab])
 
   useEffect(() => {
     if (sheetState === cachedSheetState) {
@@ -200,14 +199,17 @@ export const EditVideoSheet: React.FC = () => {
 
   const currentCroppedImgUrl = croppedImageUrls.find((item) => item.id === selectedVideoTab?.id)?.url || null
 
-  const videoTabsWithTitle = videoTabs.map((tab) => {
-    const draft = drafts.find((draft) => draft.id === tab.id)
-    const filename = files.find((item) => item.id === tab.id)?.files.video?.name
-    if (draft?.title === 'New Draft' && filename) {
-      return { ...tab, title: filename }
-    }
-    return { ...tab, title: draft?.title }
-  })
+  const videoTabsWithTitle = videoTabs
+    .map((tab) => {
+      const draft = drafts.find((draft) => draft.id === tab.id)
+      const filename = files.find((item) => item.id === tab.id)?.files.video?.name
+
+      if (draft?.title === 'New Draft' && filename) {
+        return { ...tab, title: filename }
+      }
+      return { ...tab, title: draft?.title }
+    })
+    .filter((tab) => tab.title !== undefined)
 
   return (
     <>

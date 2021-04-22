@@ -39,14 +39,7 @@ export type FormProps = {
   draftId?: string
 }
 
-export const EditVideoForm: React.FC<FormProps> = ({
-  errors,
-  control,
-  descriptionRef,
-  titleRef,
-  clearErrors,
-  draftId,
-}) => {
+export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptionRef, titleRef, draftId }) => {
   const { categories, error: categoriesError } = useCategories()
   const { updateDraft } = useDrafts('video')
 
