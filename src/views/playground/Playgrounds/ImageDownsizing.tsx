@@ -1,6 +1,6 @@
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
-import { css } from '@emotion/react'
+import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
 import React, { useRef, useState } from 'react'
 
@@ -54,20 +54,64 @@ const StyledImg = styled.img`
   display: block;
 `
 
+type OriginalImgSize = {
+  height?: number
+  width?: number
+  fileSize?: number
+}
+
 const ImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [avatarSizes, setAvatarSizes] = useState({
+    width: 0,
+    height: 0,
+    fileSize: 0,
+  })
+  const [originalAvatarSizes, setOriginalAvatarSizes] = useState<OriginalImgSize | undefined>()
+
   const [coverUrl, setCoverUrl] = useState('')
+  const [coverSizes, setCoverSizes] = useState({
+    width: 0,
+    height: 0,
+    fileSize: 0,
+  })
+  const [originalCoverSizes, setOriginalCoverSizes] = useState<OriginalImgSize | undefined>()
 
-  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
+  const handleConfirmAvatar = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    imageCropData: Cropper.CropBoxData,
+    originalImgSize?: OriginalImgSize
+  ) => {
+    const { width, height } = imageCropData
     setAvatarUrl(croppedUrl)
+    setAvatarSizes({
+      width,
+      height,
+      fileSize: croppedBlob.size,
+    })
+    setOriginalAvatarSizes(originalImgSize)
   }
 
-  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
+  const handleConfirmCover = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    imageCropData: Cropper.CropBoxData,
+    originalImgSize?: OriginalImgSize
+  ) => {
     setCoverUrl(croppedUrl)
+    const { width, height } = imageCropData
+    setCoverSizes({
+      width,
+      height,
+      fileSize: croppedBlob.size,
+    })
+    setOriginalCoverSizes(originalImgSize)
   }
+
   return (
     <div>
       <Text variant="h3">Large images in terms of file size</Text>
@@ -99,14 +143,29 @@ const ImageDownsizing = () => {
       {avatarUrl && (
         <>
           <StyledImg src={avatarUrl} />
+          <p>
+            Original image size: {originalAvatarSizes?.width} X {originalAvatarSizes?.height}
+          </p>
+          <p>Original image filesize: {formatBytes(originalAvatarSizes?.fileSize || 0)}</p>
+          <p>
+            Cropped image size: {avatarSizes.width} X {avatarSizes.height}
+          </p>
+          <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
         </>
       )}
-
       <StyledButton onClick={() => coverDialogRef.current?.open()}>Upload cover image</StyledButton>
       <ImageCropDialog imageType="cover" onConfirm={handleConfirmCover} ref={coverDialogRef} />
       {coverUrl && (
         <>
           <StyledImg src={coverUrl} />
+          <p>
+            Original image size: {originalCoverSizes?.width} X {originalCoverSizes?.height}
+          </p>
+          <p>Original image filesize: {formatBytes(originalCoverSizes?.fileSize || 0)}</p>
+          <p>
+            Cropped image size: {coverSizes.width} X {coverSizes.height}
+          </p>
+          <p>Cropped image filesize: {formatBytes(coverSizes.fileSize)} </p>
         </>
       )}
     </div>
