@@ -1,6 +1,6 @@
 import { Button, Text, RadioButton } from '@/shared/components'
 import Spinner from '@/shared/components/Spinner'
-import { sizes, colors, typography, transitions } from '@/shared/theme'
+import { sizes, colors, typography, transitions, media } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 type AccountWrapperProps = {
@@ -23,6 +23,10 @@ export const AccountStepImg = styled.img`
   object-fit: cover;
   max-width: 100%;
   height: 180px;
+`
+
+export const SubTitle = styled(Text)`
+  margin-top: ${sizes(2)};
 `
 
 export const AccountsWrapper = styled.div`
@@ -93,9 +97,12 @@ export const OrderedSteps = styled.ol`
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
+  ${media.medium} {
+    justify-content: space-between;
+  }
 `
 export const OrderedStep = styled(Text)`
-  margin: 10px 30px;
+  margin: 10px 10px;
   counter-increment: ordered-list-counter;
   display: flex;
   margin-bottom: 20px;
@@ -112,6 +119,7 @@ export const OrderedStep = styled(Text)`
     align-items: center;
     justify-content: center;
     color: ${colors.gray[50]};
+    padding-bottom: 2px;
     font-family: ${typography.fonts.headers};
     font-size: ${typography.sizes.h6};
     background-color: ${colors.gray[600]};

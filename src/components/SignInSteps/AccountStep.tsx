@@ -1,6 +1,6 @@
 import accountCreation from '@/assets/account-creation.png'
 import { useActiveUser, useJoystream } from '@/hooks'
-import { Spinner, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -17,6 +17,7 @@ import {
   AccountAddress,
   StyledRadioButton,
   StyledButton,
+  SubTitle,
 } from './AccountStep.style'
 import polkadotIcon from '@/assets/polkadot.png'
 import joystreamIcon from '@/assets/logo.png'
@@ -74,11 +75,10 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         {!accountsWithNoMembership?.length ? (
           <StepWrapper centered withBottomBar>
             <AccountStepImg src={accountCreation} />
-            <Spinner size="small" />
-            <StepTitle variant="h4">Waiting for account creation</StepTitle>
-            <Text variant="body2" secondary>
+            <StepTitle variant="h4">Create account</StepTitle>
+            <SubTitle variant="body2" secondary>
               Follow instructions to create an account:
-            </Text>
+            </SubTitle>
             <OrderedSteps>
               <OrderedStep secondary variant="caption" as="li">
                 Open the extension with the icon in your browser bar.
