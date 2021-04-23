@@ -2,7 +2,7 @@ import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const LARGE_FILE_IMAGES = [
   {
