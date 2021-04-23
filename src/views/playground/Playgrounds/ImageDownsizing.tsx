@@ -2,7 +2,7 @@ import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 const LARGE_FILE_IMAGES = [
   {
@@ -63,6 +63,8 @@ type OriginalImgSize = {
 const ImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const avatarImgRef = useRef<HTMLImageElement | null>(null)
+  const coverImgRef = useRef<HTMLImageElement | null>(null)
 
   const [avatarUrl, setAvatarUrl] = useState('')
   const [avatarSizes, setAvatarSizes] = useState({
@@ -72,6 +74,20 @@ const ImageDownsizing = () => {
   })
   const [originalAvatarSizes, setOriginalAvatarSizes] = useState<OriginalImgSize | undefined>()
 
+  useEffect(() => {
+    if (!avatarImgRef.current) {
+      return
+    }
+
+    avatarImgRef.current.addEventListener('load', () => {
+      setAvatarSizes({
+        ...avatarSizes,
+        width: avatarImgRef.current?.naturalWidth || 0,
+        height: avatarImgRef.current?.naturalHeight || 0,
+      })
+    })
+  }, [avatarSizes])
+
   const [coverUrl, setCoverUrl] = useState('')
   const [coverSizes, setCoverSizes] = useState({
     width: 0,
@@ -80,17 +96,29 @@ const ImageDownsizing = () => {
   })
   const [originalCoverSizes, setOriginalCoverSizes] = useState<OriginalImgSize | undefined>()
 
+  useEffect(() => {
+    if (!coverImgRef.current) {
+      return
+    }
+
+    coverImgRef.current.addEventListener('load', () => {
+      setCoverSizes({
+        ...coverSizes,
+        width: coverImgRef.current?.naturalWidth || 0,
+        height: coverImgRef.current?.naturalHeight || 0,
+      })
+    })
+  }, [coverSizes])
+
   const handleConfirmAvatar = (
     croppedBlob: Blob,
     croppedUrl: string,
     imageCropData: Cropper.CropBoxData,
     originalImgSize?: OriginalImgSize
   ) => {
-    const { width, height } = imageCropData
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
-      width,
-      height,
+      ...avatarSizes,
       fileSize: croppedBlob.size,
     })
     setOriginalAvatarSizes(originalImgSize)
@@ -103,10 +131,8 @@ const ImageDownsizing = () => {
     originalImgSize?: OriginalImgSize
   ) => {
     setCoverUrl(croppedUrl)
-    const { width, height } = imageCropData
     setCoverSizes({
-      width,
-      height,
+      ...coverSizes,
       fileSize: croppedBlob.size,
     })
     setOriginalCoverSizes(originalImgSize)
@@ -142,13 +168,14 @@ const ImageDownsizing = () => {
       <ImageCropDialog imageType="avatar" onConfirm={handleConfirmAvatar} ref={avatarDialogRef} />
       {avatarUrl && (
         <>
-          <StyledImg src={avatarUrl} />
+          <StyledImg src={avatarUrl} ref={avatarImgRef} />
           <p>
-            Original image size: {originalAvatarSizes?.width} X {originalAvatarSizes?.height}
+            Original image size: {originalAvatarSizes?.width || 0} X {originalAvatarSizes?.height || 0}
           </p>
           <p>Original image filesize: {formatBytes(originalAvatarSizes?.fileSize || 0)}</p>
-          {/* constant, they are always the same - defined by CANVAS_OPTS_PER_TYPE in cropper.ts  */}
-          <p>Cropped image size: 256 X 256</p>
+          <p>
+            Cropped image size: {avatarSizes.width || 0} X {avatarSizes.height}
+          </p>
           <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
         </>
       )}
@@ -156,13 +183,14 @@ const ImageDownsizing = () => {
       <ImageCropDialog imageType="cover" onConfirm={handleConfirmCover} ref={coverDialogRef} />
       {coverUrl && (
         <>
-          <StyledImg src={coverUrl} />
+          <StyledImg src={coverUrl} ref={coverImgRef} />
           <p>
-            Original image size: {originalCoverSizes?.width} X {originalCoverSizes?.height}
+            Original image size: {originalCoverSizes?.width || 0} X {originalCoverSizes?.height || 0}
           </p>
           <p>Original image filesize: {formatBytes(originalCoverSizes?.fileSize || 0)}</p>
-          {/* constant, they are always the same - defined by CANVAS_OPTS_PER_TYPE in cropper.ts  */}
-          <p>Cropped image size: 1920 X 480 </p>
+          <p>
+            Cropped image size: {coverSizes.width || 0} X {coverSizes.height}
+          </p>
           <p>Cropped image filesize: {formatBytes(coverSizes.fileSize)} </p>
         </>
       )}
