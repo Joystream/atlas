@@ -13,9 +13,8 @@ const uploadsManagerReducer = (state: UploadsManagerState, action: UploadsManage
           return asset
         }
 
-        const assetUpdates = {
-          ...(action.lastStatus ? { lastStatus: action.lastStatus } : {}),
-        }
+        const assetUpdates = action.lastStatus ? { lastStatus: action.lastStatus } : {}
+
         return { ...asset, ...assetUpdates }
       })
     case 'REMOVE_ASSET':

@@ -194,10 +194,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     if (dirtyFields.avatar) {
       if (data.avatar.blob && avatarHashPromise) {
-        ;[assets.avatar, avatarContentId] = joystream.createFileAsset({
+        const [asset, contentId] = joystream.createFileAsset({
           size: data.avatar.blob.size,
           ipfsContentId: await avatarHashPromise,
         })
+        assets.avatar = asset
+        avatarContentId = contentId
       } else {
         console.warn('Missing avatar data')
       }
@@ -205,10 +207,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     if (dirtyFields.cover) {
       if (data.cover.blob && coverHashPromise) {
-        ;[assets.cover, coverContentId] = joystream.createFileAsset({
+        const [asset, contentId] = joystream.createFileAsset({
           size: data.cover.blob.size,
           ipfsContentId: await coverHashPromise,
         })
+        assets.cover = asset
+        coverContentId = contentId
       } else {
         console.warn('Missing cover data')
       }
