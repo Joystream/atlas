@@ -17,20 +17,9 @@ import {
 } from './ImageCropDialog.style'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 
-type OriginalImgSize = {
-  width?: number
-  height?: number
-  fileSize?: number
-}
-
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    imageCropData: ImageCropData,
-    originalImgSize?: OriginalImgSize
-  ) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: ImageCropData) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
@@ -44,7 +33,6 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
-  const [originalFileSize, setOriginalFileSize] = useState<number>()
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
   const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType })
 
@@ -84,7 +72,6 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
     }
     const selectedFile = files[0]
     const fileUrl = URL.createObjectURL(selectedFile)
-    setOriginalFileSize(selectedFile.size)
     setEditedImageHref(fileUrl)
     setShowDialog(true)
   }
@@ -92,12 +79,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const handleConfirmClick = async () => {
     const [blob, url, imageCropData] = await cropImage()
     resetDialog()
-    const originalImageSize = {
-      height: imageEl?.naturalHeight,
-      width: imageEl?.naturalWidth,
-      fileSize: originalFileSize,
-    }
-    onConfirm(blob, url, imageCropData, originalImageSize)
+    onConfirm(blob, url, imageCropData)
   }
 
   const zoomControlNode = (

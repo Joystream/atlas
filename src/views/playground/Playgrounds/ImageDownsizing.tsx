@@ -54,12 +54,6 @@ const StyledImg = styled.img`
   display: block;
 `
 
-type OriginalImgSize = {
-  height?: number
-  width?: number
-  fileSize?: number
-}
-
 const ImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -72,7 +66,6 @@ const ImageDownsizing = () => {
     height: 0,
     fileSize: 0,
   })
-  const [originalAvatarSizes, setOriginalAvatarSizes] = useState<OriginalImgSize | undefined>()
 
   useEffect(() => {
     if (!avatarImgRef.current) {
@@ -94,7 +87,6 @@ const ImageDownsizing = () => {
     height: 0,
     fileSize: 0,
   })
-  const [originalCoverSizes, setOriginalCoverSizes] = useState<OriginalImgSize | undefined>()
 
   useEffect(() => {
     if (!coverImgRef.current) {
@@ -110,32 +102,20 @@ const ImageDownsizing = () => {
     })
   }, [coverSizes])
 
-  const handleConfirmAvatar = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    imageCropData: Cropper.CropBoxData,
-    originalImgSize?: OriginalImgSize
-  ) => {
+  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
       ...avatarSizes,
       fileSize: croppedBlob.size,
     })
-    setOriginalAvatarSizes(originalImgSize)
   }
 
-  const handleConfirmCover = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    imageCropData: Cropper.CropBoxData,
-    originalImgSize?: OriginalImgSize
-  ) => {
+  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
     setCoverUrl(croppedUrl)
     setCoverSizes({
       ...coverSizes,
       fileSize: croppedBlob.size,
     })
-    setOriginalCoverSizes(originalImgSize)
   }
 
   return (
@@ -170,10 +150,6 @@ const ImageDownsizing = () => {
         <>
           <StyledImg src={avatarUrl} ref={avatarImgRef} />
           <p>
-            Original image size: {originalAvatarSizes?.width || 0} X {originalAvatarSizes?.height || 0}
-          </p>
-          <p>Original image filesize: {formatBytes(originalAvatarSizes?.fileSize || 0)}</p>
-          <p>
             Cropped image size: {avatarSizes.width || 0} X {avatarSizes.height}
           </p>
           <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
@@ -184,10 +160,6 @@ const ImageDownsizing = () => {
       {coverUrl && (
         <>
           <StyledImg src={coverUrl} ref={coverImgRef} />
-          <p>
-            Original image size: {originalCoverSizes?.width || 0} X {originalCoverSizes?.height || 0}
-          </p>
-          <p>Original image filesize: {formatBytes(originalCoverSizes?.fileSize || 0)}</p>
           <p>
             Cropped image size: {coverSizes.width || 0} X {coverSizes.height}
           </p>
