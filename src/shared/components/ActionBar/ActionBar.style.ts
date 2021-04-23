@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, transitions, media } from '@/shared/theme'
+import { colors, sizes, typography, transitions, zIndex, media } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
 type ActionBarContainerProps = {
@@ -16,7 +16,7 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
-
+  z-index: ${zIndex.header};
   ${media.medium} {
     flex-direction: row;
     justify-content: space-between;
@@ -25,6 +25,29 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
 
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
+
+  &.actionbar-enter {
+    opacity: 0;
+  }
+
+  &.actionbar-enter-active {
+    opacity: 1;
+  }
+
+  &.actionbar-exit {
+    opacity: 1;
+  }
+
+  &.actionbar-exit-active {
+    opacity: 0;
+  }
+
+  &.actionbar-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} ${transitions.timings.regular};
+  }
+  &.actionbar-exit-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  }
 `
 
 export const StyledInnerContainer = styled.div`
