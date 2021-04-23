@@ -34,6 +34,7 @@ export const AccountsWrapper = styled.div`
   max-height: 300px;
   min-height: 200px;
   overflow-y: auto;
+  margin-top: ${sizes(4)};
 `
 
 export const AccountWrapper = styled.label<AccountWrapperProps>`
@@ -43,7 +44,7 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   display: flex;
   width: 100%;
   justify-content: space-between;
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(4)};
   padding: ${sizes(2)};
   border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
@@ -71,9 +72,12 @@ export const IconWrapper = styled.div`
 export const AccountAddress = styled(Text)`
   margin-top: ${sizes(1)};
   display: block;
-  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 170px;
+  ${media.small} {
+    max-width: initial;
+  }
 `
 
 export const StyledRadioButton = styled(RadioButton)`

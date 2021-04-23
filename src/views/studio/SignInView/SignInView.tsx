@@ -31,11 +31,11 @@ const SignInView = () => {
       element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signIn({ step: '2' })} />,
     },
     {
-      title: 'Create or select a polkadot account',
+      title: 'Connect accounts',
       element: <AccountStep nextStepPath={absoluteRoutes.studio.signIn({ step: '3' })} />,
     },
     {
-      title: 'Accept terms and conditions',
+      title: 'Terms & Conditions',
       element: <TermsStep />,
     },
   ]

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { StyledButton } from './ExtensionStep.style'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
-import polkadotIcon from '@/assets/polkadot.png'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
+import polkadotIcon from '@/assets/polkadot-logo.svg'
 import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'
 import { useJoystream, useRouterQuery } from '@/hooks'
@@ -24,7 +24,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
 
   return (
     <StepWrapper centered withBottomBar>
-      <img src={polkadotIcon} alt="polkadot icon" />
+      <StyledLogo src={polkadotIcon} alt="polkadot icon" />
       <StepTitle variant="h4">Add polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
         Please enable Polkadot extension or install it using following plugin link.

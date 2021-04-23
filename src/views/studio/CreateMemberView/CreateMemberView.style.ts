@@ -1,5 +1,5 @@
 import { StudioContainer } from '@/components'
-import { Button, Text, Avatar } from '@/shared/components'
+import { Button, Text, Avatar, TextField } from '@/shared/components'
 import { media, colors, sizes } from '@/shared/theme'
 
 import styled from '@emotion/styled'
@@ -29,13 +29,9 @@ export const Form = styled.form`
   position: relative;
   width: 100%;
   max-width: 580px;
-  height: initial;
-
-  ${media.medium} {
-    left: 0;
-    height: calc(100vh - 300px);
-    width: 100%;
-  }
+`
+export const StyledTextField = styled(TextField)`
+  margin-bottom: ${sizes(5)};
 `
 
 export const StyledAvatar = styled(Avatar)`

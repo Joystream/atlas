@@ -19,11 +19,11 @@ import {
   StyledButton,
   SubTitle,
 } from './AccountStep.style'
-import polkadotIcon from '@/assets/polkadot.png'
-import joystreamIcon from '@/assets/logo.png'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
+import polkadotIcon from '@/assets/polkadot-logo.svg'
+import joystreamIcon from '@/assets/joystream-logo.svg'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
-import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { useMemberships } from '@/api/hooks'
 
 type AccountStepProps = {
@@ -101,9 +101,9 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
           <form onSubmit={handleSubmitSelectedAccount}>
             <StepWrapper centered>
               <IconGroup>
-                <img src={polkadotIcon} alt="" />
+                <StyledLogo src={polkadotIcon} alt="" />
                 <SvgOutlineConnect />
-                <img src={joystreamIcon} alt="" />
+                <StyledLogo src={joystreamIcon} alt="" />
               </IconGroup>
               <StepTitle variant="h4">Connect accounts</StepTitle>
               <StepSubTitle secondary>
@@ -145,7 +145,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
         <IconWrapper>
-          <SvgGlyphNewChannel />
+          <SvgGlyphChannel />
         </IconWrapper>
         <div>
           <Text variant="subtitle1">{name}</Text>

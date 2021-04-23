@@ -18,6 +18,11 @@ export const StepWrapper = styled.div<StepWrapperProps>`
   margin-top: ${({ centered }) => (centered ? sizes(12) : sizes(2))};
 `
 
+export const StyledLogo = styled.img`
+  height: 40px;
+  width: 40px;
+`
+
 export const StepTitle = styled(Text)`
   margin-top: ${sizes(2)};
 `
