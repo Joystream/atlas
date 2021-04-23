@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import { DraftsProvider, ActiveUserProvider, ConnectionStatusProvider, UploadManagerProvider } from '@/hooks'
 import {
   FileHashing,
+  ImageDownsizing,
   PlaygroundConnectionState,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
@@ -22,6 +23,7 @@ const playgroundRoutes = [
   { path: 'member-active-channel', element: <PlaygroundMemberChannel />, name: 'Active user/member/channel' },
   { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
   { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
+  { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
 ]
 
 export const PlaygroundLayout = () => {

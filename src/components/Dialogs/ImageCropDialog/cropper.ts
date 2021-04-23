@@ -152,7 +152,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
         }
         const url = URL.createObjectURL(blob)
         resolve([blob, url, imageCropData])
-      })
+      }, 'image/jpeg')
     })
   }
 
