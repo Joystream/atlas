@@ -97,7 +97,7 @@ const StudioLayout = () => {
                 <PrivateRoute
                   path={relativeRoutes.studio.signIn()}
                   element={<SignInView />}
-                  isAuth={!memberSet}
+                  isAuth={hasMembership}
                   redirectTo={ENTRY_POINT_ROUTE}
                 />
                 <PrivateRoute
