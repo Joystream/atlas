@@ -145,14 +145,18 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
         return
       }
       const imageCropData = cropper.getCropBoxData()
-      cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType]).toBlob((blob) => {
-        if (!blob) {
-          console.error('Empty blob from cropped canvas', { blob })
-          return
-        }
-        const url = URL.createObjectURL(blob)
-        resolve([blob, url, imageCropData])
-      })
+      cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType]).toBlob(
+        (blob) => {
+          if (!blob) {
+            console.error('Empty blob from cropped canvas', { blob })
+            return
+          }
+          const url = URL.createObjectURL(blob)
+          resolve([blob, url, imageCropData])
+        },
+        'image/jpeg',
+        0.7
+      )
     })
   }
 

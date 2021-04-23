@@ -2,7 +2,7 @@ import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const LARGE_FILE_IMAGES = [
   {
@@ -147,9 +147,8 @@ const ImageDownsizing = () => {
             Original image size: {originalAvatarSizes?.width} X {originalAvatarSizes?.height}
           </p>
           <p>Original image filesize: {formatBytes(originalAvatarSizes?.fileSize || 0)}</p>
-          <p>
-            Cropped image size: {avatarSizes.width} X {avatarSizes.height}
-          </p>
+          {/* constant, they are always the same - defined by CANVAS_OPTS_PER_TYPE in cropper.ts  */}
+          <p>Cropped image size: 256 X 256</p>
           <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
         </>
       )}
@@ -162,9 +161,8 @@ const ImageDownsizing = () => {
             Original image size: {originalCoverSizes?.width} X {originalCoverSizes?.height}
           </p>
           <p>Original image filesize: {formatBytes(originalCoverSizes?.fileSize || 0)}</p>
-          <p>
-            Cropped image size: {coverSizes.width} X {coverSizes.height}
-          </p>
+          {/* constant, they are always the same - defined by CANVAS_OPTS_PER_TYPE in cropper.ts  */}
+          <p>Cropped image size: 1920 X 480 </p>
           <p>Cropped image filesize: {formatBytes(coverSizes.fileSize)} </p>
         </>
       )}
