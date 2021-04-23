@@ -26,27 +26,8 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 
-  &.actionbar-enter {
-    opacity: 0;
-  }
-
-  &.actionbar-enter-active {
-    opacity: 1;
-  }
-
-  &.actionbar-exit {
-    opacity: 1;
-  }
-
-  &.actionbar-exit-active {
-    opacity: 0;
-  }
-
-  &.actionbar-enter-active {
-    transition: opacity ${transitions.timings.loading} ${transitions.easing} ${transitions.timings.regular};
-  }
-  &.actionbar-exit-active {
-    transition: opacity ${transitions.timings.loading} ${transitions.easing};
+  &.${transitions.names.fade}-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} ${transitions.timings.regular} !important;
   }
 `
 

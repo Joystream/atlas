@@ -402,7 +402,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             <CSSTransition
               in={sheetState !== 'open'}
               timeout={2 * parseInt(transitions.timings.loading)}
-              classNames={'actionbar'}
+              classNames={transitions.names.fade}
               unmountOnExit
             >
               <ActionBarTransaction
