@@ -24,6 +24,7 @@ import {
   useConnectionStatus,
   useActiveUser,
   useJoystream,
+  UploadManagerProvider,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -153,19 +154,21 @@ const MainContainer = styled.main`
 `
 
 const StudioLayoutWrapper: React.FC = () => (
-  <EditVideoSheetProvider>
-    <SnackbarProvider>
-      <DraftsProvider>
-        <PersonalDataProvider>
-          <ActiveUserProvider>
-            <JoystreamProvider>
-              <StudioLayout />
-            </JoystreamProvider>
-          </ActiveUserProvider>
-        </PersonalDataProvider>
-      </DraftsProvider>
-    </SnackbarProvider>
-  </EditVideoSheetProvider>
+  <ActiveUserProvider>
+    <PersonalDataProvider>
+      <SnackbarProvider>
+        <UploadManagerProvider>
+          <DraftsProvider>
+            <EditVideoSheetProvider>
+              <JoystreamProvider>
+                <StudioLayout />
+              </JoystreamProvider>
+            </EditVideoSheetProvider>
+          </DraftsProvider>
+        </UploadManagerProvider>
+      </SnackbarProvider>
+    </PersonalDataProvider>
+  </ActiveUserProvider>
 )
 
 export default StudioLayoutWrapper

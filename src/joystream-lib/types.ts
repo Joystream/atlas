@@ -1,4 +1,5 @@
 import { ChannelMetadata } from '@joystream/content-metadata-protobuf'
+import { NewAsset } from '@joystream/types/content'
 
 export type AccountId = string
 export type Account = {
@@ -7,6 +8,7 @@ export type Account = {
 }
 export type MemberId = string
 export type ChannelId = string
+export type VideoId = string
 
 export type AssetMetadata = {
   size: number
@@ -15,8 +17,8 @@ export type AssetMetadata = {
 
 export type CreateChannelMetadata = Omit<ChannelMetadata.AsObject, 'coverPhoto' | 'avatarPhoto' | 'category'>
 export type ChannelAssets = {
-  cover?: AssetMetadata
-  avatar?: AssetMetadata
+  cover?: NewAsset
+  avatar?: NewAsset
 }
 
 export enum ExtrinsicStatus {

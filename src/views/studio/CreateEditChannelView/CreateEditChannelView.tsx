@@ -21,8 +21,14 @@ import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
-import { useActiveUser, useJoystream, useSnackbar, useEditVideoSheet } from '@/hooks'
-import { ChannelAssets, CreateChannelMetadata, ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { useActiveUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
+import {
+  ChannelAssets,
+  ChannelId,
+  CreateChannelMetadata,
+  ExtensionSignCancelledError,
+  ExtrinsicStatus,
+} from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
@@ -80,6 +86,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     { skip: !memberId }
   )
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
+  const { startFileUpload } = useUploadsManager(channelId || '')
 
   const {
     register,
@@ -182,12 +189,17 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
 
     const assets: ChannelAssets = {}
+    let avatarContentId = ''
+    let coverContentId = ''
+
     if (dirtyFields.avatar) {
       if (data.avatar.blob && avatarHashPromise) {
-        assets.avatar = {
+        const [asset, contentId] = joystream.createFileAsset({
           size: data.avatar.blob.size,
           ipfsContentId: await avatarHashPromise,
-        }
+        })
+        assets.avatar = asset
+        avatarContentId = contentId
       } else {
         console.warn('Missing avatar data')
       }
@@ -195,20 +207,26 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     if (dirtyFields.cover) {
       if (data.cover.blob && coverHashPromise) {
-        assets.cover = {
+        const [asset, contentId] = joystream.createFileAsset({
           size: data.cover.blob.size,
           ipfsContentId: await coverHashPromise,
-        }
+        })
+        assets.cover = asset
+        coverContentId = contentId
       } else {
         console.warn('Missing cover data')
       }
     }
+
+    let assetsOwner: ChannelId = channelId || ''
 
     try {
       if (newChannel) {
         const { data: newChannelId, block } = await joystream.createChannel(memberId, metadata, assets, (status) => {
           setTransactionStatus(status)
         })
+        assetsOwner = newChannelId
+
         // transaction will be marked as completed once query node processes the block, that's done in useEffect above
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
@@ -225,6 +243,30 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
           await Promise.all([refetchChannel(), refetchMember()])
+        })
+      }
+
+      // start files upload
+      if (data.avatar.blob && avatarContentId) {
+        startFileUpload(data.avatar.blob, {
+          contentId: avatarContentId,
+          owner: assetsOwner,
+          parentObject: {
+            type: 'channel',
+            id: assetsOwner,
+          },
+          type: 'avatar',
+        })
+      }
+      if (data.cover.blob && coverContentId) {
+        startFileUpload(data.cover.blob, {
+          contentId: coverContentId,
+          owner: assetsOwner,
+          parentObject: {
+            type: 'channel',
+            id: assetsOwner,
+          },
+          type: 'cover',
         })
       }
     } catch (e) {
