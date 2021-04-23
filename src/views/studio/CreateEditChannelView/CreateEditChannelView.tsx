@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { languages } from '@/config/languages'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer, TransactionDialog } from '@/components'
@@ -20,7 +21,7 @@ import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
-import { useActiveUser, useJoystream, useSnackbar } from '@/hooks'
+import { useActiveUser, useJoystream, useSnackbar, useEditVideoSheet } from '@/hooks'
 import { ChannelAssets, CreateChannelMetadata, ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
@@ -98,6 +99,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: true,
     },
   })
+
+  const { sheetState } = useEditVideoSheet()
 
   useEffect(() => {
     if (loading || newChannel || !channel) {
@@ -396,15 +399,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 )}
               />
             </FormField>
-            <ActionBarTransaction
-              fee={FEE}
-              isActive={newChannel || (!loading && isDirty)}
-              fullWidth={!channelId}
-              primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
-              secondaryButtonText="Cancel"
-              onCancelClick={() => reset()}
-              onConfirmClick={handleSubmit}
-            />
+            <CSSTransition
+              in={sheetState !== 'open'}
+              timeout={2 * parseInt(transitions.timings.loading)}
+              classNames={transitions.names.fade}
+              unmountOnExit
+            >
+              <ActionBarTransaction
+                fee={FEE}
+                isActive={newChannel || (!loading && isDirty)}
+                fullWidth={!channelId}
+                primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
+                secondaryButtonText="Cancel"
+                onCancelClick={() => reset()}
+                onConfirmClick={handleSubmit}
+              />
+            </CSSTransition>
           </InnerFormContainer>
         </StudioContainer>
       </form>
