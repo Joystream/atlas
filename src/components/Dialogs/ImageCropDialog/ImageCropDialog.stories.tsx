@@ -3,7 +3,7 @@ import { Story, Meta } from '@storybook/react'
 import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
 import { ImageCropData } from '@/types/cropper'
 import { Avatar, Placeholder } from '@/shared/components'
-import { OverlayManagerProvider, UploadingFilesDataProvider, useUploadingFilesData } from '@/hooks'
+import { OverlayManagerProvider } from '@/hooks'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
@@ -17,16 +17,13 @@ export default {
   decorators: [
     (Story) => (
       <OverlayManagerProvider>
-        <UploadingFilesDataProvider>
-          <Story />
-        </UploadingFilesDataProvider>
+        <Story />
       </OverlayManagerProvider>
     ),
   ],
 } as Meta
 
 const RegularTemplate: Story<ImageCropDialogProps> = () => {
-  const { addUploadingFileData } = useUploadingFilesData()
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -35,18 +32,6 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
   const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: ImageCropData) => {
-    addUploadingFileData({
-      hash: `${blob.size}${blob.type}`,
-      storageProvider: 'storage',
-      type: 'avatar',
-      imageCropData,
-      size: blob.size,
-      parentObject: {
-        type: 'channel',
-        id: `${blob.size}${blob.size}${blob.size}${blob.size}`,
-      },
-      status: 'inProgress',
-    })
     setAvatarImageUrl(url)
   }
 
