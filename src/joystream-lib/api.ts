@@ -212,17 +212,6 @@ export class JoystreamJs {
     })
   }
 
-  private createFileAsset({ ipfsContentId, size }: AssetMetadata): NewAsset {
-    const content = new ContentParameters(this.api.registry, {
-      content_id: ContentId.generate(this.api.registry),
-      // hardcoded type_id - it's not used but needs to be one of the allowed values
-      type_id: new U64(this.api.registry, 1),
-      size: new U64(this.api.registry, size),
-      ipfs_content_id: new Bytes(this.api.registry, ipfsContentId),
-    })
-    return new NewAsset(this.api.registry, { upload: content })
-  }
-
   private async _createOrUpdateChannel(
     updatedChannelId: ChannelId | null = null,
     memberId: MemberId,
@@ -234,11 +223,10 @@ export class JoystreamJs {
 
     // === channel assets ===
     // first avatar, then cover photo
-    const inputAssetsList: AssetMetadata[] = [
+    const newAssetsList: NewAsset[] = [
       ...(inputAssets.avatar ? [inputAssets.avatar] : []),
       ...(inputAssets.cover ? [inputAssets.cover] : []),
     ]
-    const newAssetsList = inputAssetsList.map((a) => this.createFileAsset(a))
 
     // === channel metadata ===
     const protoMeta = new ChannelMetadata()
@@ -282,8 +270,9 @@ export class JoystreamJs {
 
       tx = this.api.tx.content.createChannel(contentActor, params)
     } else {
-      const optionalMetaBytes = new Option<Bytes>(this.api.registry, Bytes)
-      const optionalAssets = new Option<Vec<NewAsset>>(this.api.registry, Vec, newAssetsList)
+      const optionalMetaBytes = new Option<Bytes>(this.api.registry, Bytes, metaBytes)
+      class OptionalAssetsVec extends Option.with(Vec.with(NewAsset)) {}
+      const optionalAssets = new OptionalAssetsVec(this.api.registry, newAssetsList)
       const optionalRewardAccount = new Option<Option<RuntimeAccountId>>(this.api.registry, Option)
 
       const params = new ChannelUpdateParameters(this.api.registry, {
@@ -333,6 +322,18 @@ export class JoystreamJs {
     const balance = await this.api.derive.balances.account(accountId)
 
     return new BN(balance.freeBalance).toNumber()
+  }
+
+  createFileAsset({ ipfsContentId, size }: AssetMetadata): [NewAsset, string] {
+    const contentId = ContentId.generate(this.api.registry)
+    const content = new ContentParameters(this.api.registry, {
+      content_id: contentId,
+      // hardcoded type_id - it's not used but needs to be one of the allowed values
+      type_id: new U64(this.api.registry, 1),
+      size: new U64(this.api.registry, size),
+      ipfs_content_id: new Bytes(this.api.registry, ipfsContentId),
+    })
+    return [new NewAsset(this.api.registry, { upload: content }), contentId.encode()]
   }
 
   async createChannel(
