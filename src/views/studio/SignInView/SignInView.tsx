@@ -10,11 +10,10 @@ import {
   CardWrapper,
   HandleText,
   StyledAvatar,
-  IconWrapper,
 } from './SignInView.style'
 import { SvgGlyphNewChannel } from '@/shared/icons'
-import { Multistepper, AccountStep, ExtensionStep, TermsStep } from '@/components'
-import { useRouterQuery, useJoystream, useActiveUser } from '@/hooks'
+import { SignInStepsStepper } from '@/components'
+import { useJoystream, useActiveUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
@@ -22,23 +21,8 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
-  const step = Number(useRouterQuery('step'))
   const { setActiveUser, activeUser, setActiveChannel } = useActiveUser()
 
-  const steps = [
-    {
-      title: 'Add Polkadot plugin',
-      element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signIn({ step: '2' })} />,
-    },
-    {
-      title: 'Connect accounts',
-      element: <AccountStep nextStepPath={absoluteRoutes.studio.signIn({ step: '3' })} />,
-    },
-    {
-      title: 'Terms & Conditions',
-      element: <TermsStep />,
-    },
-  ]
   const { accounts } = useJoystream()
 
   const { memberships } = useMemberships(
@@ -97,12 +81,7 @@ const SignInView = () => {
           New Member
         </StyledButton>
       </Wrapper>
-      <Multistepper
-        currentStepIdx={step <= 0 ? 0 : step - 1}
-        steps={steps}
-        showDialog={step >= 1}
-        onExitClick={() => navigate(absoluteRoutes.studio.signIn({ step: '0' }))}
-      />
+      <SignInStepsStepper path={absoluteRoutes.studio.signIn} />
     </>
   )
 }
@@ -117,13 +96,7 @@ export type StudioCardProps = {
 const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick }) => {
   return (
     <CardWrapper onClick={onClick}>
-      {avatarUri ? (
-        <StyledAvatar imageUrl={avatarUri} />
-      ) : (
-        <IconWrapper>
-          <SvgGlyphNewChannel />
-        </IconWrapper>
-      )}
+      <StyledAvatar imageUrl={avatarUri} />
       <HandleText variant="h4">{handle}</HandleText>
     </CardWrapper>
   )

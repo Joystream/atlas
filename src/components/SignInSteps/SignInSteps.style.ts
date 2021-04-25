@@ -4,18 +4,17 @@ import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 type StepWrapperProps = {
-  centered?: boolean
   withBottomBar?: boolean
 }
 
 export const StepWrapper = styled.div<StepWrapperProps>`
   width: 100%;
-  text-align: ${({ centered }) => (centered ? 'center' : 'left')};
+  text-align: center;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  align-items: ${({ centered }) => (centered ? 'center' : 'flex-start')};
-  margin-top: ${({ centered }) => (centered ? sizes(12) : sizes(2))};
+  align-items: center;
+  margin-top: ${sizes(10)};
 `
 
 export const StyledLogo = styled.img`

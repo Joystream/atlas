@@ -2,10 +2,15 @@ import { Button, Text, RadioButton } from '@/shared/components'
 import Spinner from '@/shared/components/Spinner'
 import { sizes, colors, typography, transitions, media } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { StepWrapper } from './SignInSteps.style'
 
 type AccountWrapperProps = {
   isSelected?: boolean
 }
+
+export const StyledStepWrapper = styled(StepWrapper)`
+  margin-top: ${sizes(4)};
+`
 
 export const StyledSpinner = styled(Spinner)`
   margin: ${sizes(20)} auto;
@@ -22,7 +27,6 @@ export const IconGroup = styled.div`
 export const AccountStepImg = styled.img`
   object-fit: cover;
   max-width: 100%;
-  height: 180px;
 `
 
 export const SubTitle = styled(Text)`

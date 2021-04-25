@@ -23,7 +23,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   }, [extensionConnected, navigate, nextStepPath, step])
 
   return (
-    <StepWrapper centered withBottomBar>
+    <StepWrapper withBottomBar>
       <StyledLogo src={polkadotIcon} alt="polkadot icon" />
       <StepTitle variant="h4">Add polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">

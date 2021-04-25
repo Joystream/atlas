@@ -1,10 +1,8 @@
-import { Multistepper, ExtensionStep, AccountStep, TermsStep } from '@/components'
+import { SignInStepsStepper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useRouterQuery } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import React from 'react'
-import { useNavigate } from 'react-router'
 
 import {
   HeroContainer,
@@ -19,23 +17,6 @@ import {
 } from './SignInProccessView.style'
 
 const SignInProccessView = () => {
-  const navigate = useNavigate()
-  const step = Number(useRouterQuery('step'))
-
-  const steps = [
-    {
-      title: 'Add Polkadot plugin',
-      element: <ExtensionStep nextStepPath={absoluteRoutes.studio.signInJoin({ step: '2' })} />,
-    },
-    {
-      title: 'Connect accounts',
-      element: <AccountStep nextStepPath={absoluteRoutes.studio.signInJoin({ step: '3' })} />,
-    },
-    {
-      title: 'Terms & Conditions',
-      element: <TermsStep />,
-    },
-  ]
   return (
     <>
       <StyledStudioContainer>
@@ -97,12 +78,7 @@ const SignInProccessView = () => {
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
-      <Multistepper
-        currentStepIdx={step <= 0 ? 0 : step - 1}
-        steps={steps}
-        showDialog={step >= 1}
-        onExitClick={() => navigate(absoluteRoutes.studio.signInJoin({ step: '0' }))}
-      />
+      <SignInStepsStepper path={absoluteRoutes.studio.signInJoin} />
     </>
   )
 }

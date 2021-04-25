@@ -1,4 +1,4 @@
-import accountCreation from '@/assets/account-creation.png'
+import accountCreation from '@/assets/account-creation.svg'
 import { useActiveUser, useJoystream } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -18,6 +18,7 @@ import {
   StyledRadioButton,
   StyledButton,
   SubTitle,
+  StyledStepWrapper,
 } from './AccountStep.style'
 import polkadotIcon from '@/assets/polkadot-logo.svg'
 import joystreamIcon from '@/assets/joystream-logo.svg'
@@ -73,7 +74,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accountsWithNoMembership?.length ? (
-          <StepWrapper centered withBottomBar>
+          <StyledStepWrapper withBottomBar>
             <AccountStepImg src={accountCreation} />
             <StepTitle variant="h4">Create account</StepTitle>
             <SubTitle variant="body2" secondary>
@@ -96,10 +97,10 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
-          </StepWrapper>
+          </StyledStepWrapper>
         ) : (
           <form onSubmit={handleSubmitSelectedAccount}>
-            <StepWrapper centered>
+            <StepWrapper>
               <IconGroup>
                 <StyledLogo src={polkadotIcon} alt="" />
                 <SvgOutlineConnect />
