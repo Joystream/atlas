@@ -42,13 +42,13 @@ const MyUploadsView = () => {
       return acc
     }, {})
   )
-  console.log(uploadsStateGroupedByParentObjectId)
+
   const hasUploads = uploadsState.length > 0
 
   return (
     <StudioContainer>
       <StyledText variant="h2">My Uploads</StyledText>
-      {videosLoading ? (
+      {videosLoading || channelLoading ? (
         placeholderItems.map((Placeholder, idx) => <Placeholder key={`placeholder-${idx}`} />)
       ) : hasUploads ? (
         uploadsStateGroupedByParentObjectId.map((files) => (

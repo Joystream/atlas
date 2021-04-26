@@ -32,6 +32,7 @@ import {
 import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
+import { ImageCropData } from '@/types/cropper'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -66,6 +67,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
+
+  const [avatarCropData, setAvatarCropData] = useState<ImageCropData>()
+  const [coverCropData, setCoverCropData] = useState<ImageCropData>()
 
   const {
     activeUser: { channelId, memberId },
@@ -255,6 +259,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             type: 'channel',
             id: assetsOwner,
           },
+          imageCropData: avatarCropData,
           type: 'avatar',
         })
       }
@@ -266,6 +271,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             type: 'channel',
             id: assetsOwner,
           },
+          imageCropData: coverCropData,
           type: 'cover',
         })
       }
@@ -322,7 +328,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 />
                 <ImageCropDialog
                   imageType="cover"
-                  onConfirm={(blob, url) => onChange({ blob, url })}
+                  onConfirm={(blob, url, coverCropData) => {
+                    onChange({ blob, url })
+                    setCoverCropData(coverCropData)
+                  }}
                   ref={coverDialogRef}
                 />
               </>
@@ -344,7 +353,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   />
                   <ImageCropDialog
                     imageType="avatar"
-                    onConfirm={(blob, url) => onChange({ blob, url })}
+                    onConfirm={(blob, url, avatarCropData) => {
+                      onChange({ blob, url })
+                      setAvatarCropData(avatarCropData)
+                    }}
                     ref={avatarDialogRef}
                   />
                 </>

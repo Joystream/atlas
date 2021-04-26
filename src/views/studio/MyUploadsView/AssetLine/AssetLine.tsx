@@ -26,7 +26,10 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
   const fileStatusMessage = asset.lastStatus === 'error' ? 'Reconnecting...' : ''
 
-  const resolution = `${asset.imageCropData?.width}x${asset.imageCropData?.height}`
+  const resolution =
+    asset.imageCropData?.width && asset.imageCropData.height
+      ? `${Math.floor(asset.imageCropData.width)}x${Math.floor(asset.imageCropData.height)}`
+      : ''
   const size = formatBytes(asset.size)
 
   const renderStatusIndicator = (asset: UploadData) => {
