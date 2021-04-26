@@ -1,5 +1,3 @@
-import AccountStep from './AccountStep'
-import ExtensionStep from './ExtensionStep'
-import TermsStep from './TermsStep'
+import SignInStepsStepper from './SignInStepsStepper'
 
-export { AccountStep, ExtensionStep, TermsStep }
+export default SignInStepsStepper

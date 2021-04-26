@@ -1,11 +1,16 @@
 import { Button, Text, RadioButton } from '@/shared/components'
 import Spinner from '@/shared/components/Spinner'
-import { sizes, colors, typography, transitions } from '@/shared/theme'
+import { sizes, colors, typography, transitions, media } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { StepWrapper } from './SignInSteps.style'
 
 type AccountWrapperProps = {
   isSelected?: boolean
 }
+
+export const StyledStepWrapper = styled(StepWrapper)`
+  margin-top: ${sizes(4)};
+`
 
 export const StyledSpinner = styled(Spinner)`
   margin: ${sizes(20)} auto;
@@ -22,7 +27,11 @@ export const IconGroup = styled.div`
 export const AccountStepImg = styled.img`
   object-fit: cover;
   max-width: 100%;
-  height: 180px;
+  height: 210px;
+`
+
+export const SubTitle = styled(Text)`
+  margin-top: ${sizes(2)};
 `
 
 export const AccountsWrapper = styled.div`
@@ -30,6 +39,7 @@ export const AccountsWrapper = styled.div`
   max-height: 300px;
   min-height: 200px;
   overflow-y: auto;
+  margin-top: ${sizes(4)};
 `
 
 export const AccountWrapper = styled.label<AccountWrapperProps>`
@@ -39,7 +49,7 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   display: flex;
   width: 100%;
   justify-content: space-between;
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(4)};
   padding: ${sizes(2)};
   border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
@@ -67,9 +77,12 @@ export const IconWrapper = styled.div`
 export const AccountAddress = styled(Text)`
   margin-top: ${sizes(1)};
   display: block;
-  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 170px;
+  ${media.small} {
+    max-width: initial;
+  }
 `
 
 export const StyledRadioButton = styled(RadioButton)`
@@ -93,9 +106,12 @@ export const OrderedSteps = styled.ol`
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
+  ${media.medium} {
+    justify-content: space-between;
+  }
 `
 export const OrderedStep = styled(Text)`
-  margin: 10px 30px;
+  margin: 10px 10px;
   counter-increment: ordered-list-counter;
   display: flex;
   margin-bottom: 20px;
@@ -112,6 +128,7 @@ export const OrderedStep = styled(Text)`
     align-items: center;
     justify-content: center;
     color: ${colors.gray[50]};
+    padding-bottom: 2px;
     font-family: ${typography.fonts.headers};
     font-size: ${typography.sizes.h6};
     background-color: ${colors.gray[600]};
