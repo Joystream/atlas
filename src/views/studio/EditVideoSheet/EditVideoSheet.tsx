@@ -89,15 +89,15 @@ export const EditVideoSheet: React.FC = () => {
   })
 
   // Tabs
-  const { addDraft, drafts, getDraft, updateDraft } = useDrafts('video', channelId)
+  const { addDraft, drafts, updateDraft } = useDrafts('video', channelId)
 
   const selectTab = useCallback(
     async (tab: EditVideoSheetTab) => {
-      const currentDraft = await getDraft(tab.id)
+      const currentDraft = drafts.find((draft) => draft.id === tab.id)
       currentDraft && reset(resetFields(currentDraft))
       setSelectedVideoTab(tab)
     },
-    [getDraft, reset, setSelectedVideoTab]
+    [drafts, reset, setSelectedVideoTab]
   )
 
   const addNewTab = useCallback(async () => {
@@ -163,9 +163,8 @@ export const EditVideoSheet: React.FC = () => {
     const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
     const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
     if (draft?.title === 'New Draft') {
-      await updateDraft(draft.id, { title: changeFiles.video?.name })
-      const updatedDraft = await getDraft(draft.id)
-      reset(resetFields(updatedDraft))
+      await updateDraft(draft.id, { title: changeFiles.video?.name, channelId })
+      reset(resetFields(draft))
     }
     if (hasFiles) {
       const newFiles = files.map((f) => {

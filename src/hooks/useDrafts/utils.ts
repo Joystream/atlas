@@ -22,7 +22,7 @@ export const addDraft = async (draftProps: Omit<Draft, 'updatedAt' | 'id'>) => {
   return newDraft
 }
 
-export const updateDraft = async (draftId: string, draftProps: Omit<RawDraft, 'channelId'>) => {
+export const updateDraft = async (draftId: string, draftProps: RawDraft) => {
   const currentDrafts = await getDrafts()
   const updatedAt = new Date().toISOString()
   const newDrafts = currentDrafts.map((draft) =>

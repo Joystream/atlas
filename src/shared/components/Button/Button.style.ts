@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import ButtonBase, { ButtonSize } from '../ButtonBase'
-import { TextColorVariant } from './Button'
 import Text from '../Text'
 import { css, SerializedStyles } from '@emotion/react'
 import { colors, sizes } from '@/shared/theme'
@@ -9,6 +8,7 @@ type ButtonSizeProps = {
   size: ButtonSize
 }
 
+export type TextColorVariant = 'default' | 'error'
 type TextProps = {
   textColorVariant?: TextColorVariant
 } & ButtonSizeProps

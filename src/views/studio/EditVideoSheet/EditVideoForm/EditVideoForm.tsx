@@ -1,9 +1,9 @@
 import React from 'react'
 import { Control, Controller, DeepMap, FieldError, UseFormMethods } from 'react-hook-form'
 import { useCategories } from '@/api/hooks'
-import { useDrafts } from '@/hooks'
+import { useDrafts, useActiveUser } from '@/hooks'
 import { Checkbox, Datepicker, FormField, RadioButton, Select, SelectItem, TextArea } from '@/shared/components'
-import { requiredValidation, dateValidation } from '@/utils/formValidationOptions'
+import { requiredValidation, pastDateValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
 import {
   FormContainer,
@@ -13,9 +13,9 @@ import {
   DeleteVideoButton,
 } from './EditVideoForm.style'
 
-const visibilityOptions: SelectItem[] = [
-  { name: 'Public (Anyone can see this video)', value: 'public' },
-  { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
+const visibilityOptions: SelectItem<boolean>[] = [
+  { name: 'Public (Anyone can see this video)', value: true },
+  { name: 'Unlisted (Only people with a link can see this video)', value: false },
 ]
 
 export type FormInputs = {
@@ -41,6 +41,8 @@ export type FormProps = {
 
 export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptionRef, titleRef, draftId }) => {
   const { categories, error: categoriesError } = useCategories()
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ?? ''
   const { updateDraft } = useDrafts('video')
 
   const categoriesSelectItems: SelectItem[] =
@@ -65,7 +67,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         error={!!errors.title}
         helperText={errors.title?.message}
         onBlur={(e) => {
-          draftId && updateDraft(draftId, { title: e.target.value })
+          draftId && updateDraft(draftId, { title: e.target.value, channelId })
         }}
       />
       <TextArea
@@ -75,24 +77,25 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         placeholder="Add video description"
         error={!!errors.description}
         helperText={errors.description?.message}
-        onBlur={(e) => draftId && updateDraft(draftId, { description: e.target.value })}
+        onBlur={(e) => draftId && updateDraft(draftId, { description: e.target.value, channelId })}
       />
       <FormField title="Video Visibility">
         <Controller
           name="selectedVideoVisibility"
           control={control}
-          rules={requiredValidation('Video visibility')}
+          rules={{
+            validate: (value) => value !== null,
+          }}
           render={({ value, onChange }) => (
             <Select
               value={value}
               items={visibilityOptions}
               onChange={(value) => {
-                const isPublic = value === visibilityOptions[0].value
                 onChange(value)
-                draftId && updateDraft(draftId, { isPublic })
+                draftId && updateDraft(draftId, { isPublic: value, channelId })
               }}
               error={!!errors.selectedVideoVisibility && !value}
-              helperText={errors.selectedVideoVisibility?.message}
+              helperText={errors.selectedVideoVisibility ? 'Video visibility must be selected' : ''}
             />
           )}
         />
@@ -108,7 +111,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
               items={languages}
               onChange={(value) => {
                 onChange(value)
-                draftId && updateDraft(draftId, { language: value })
+                draftId && updateDraft(draftId, { language: value, channelId })
               }}
               error={!!errors.selectedVideoLanguage && !value}
               helperText={errors.selectedVideoLanguage?.message}
@@ -127,7 +130,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
               items={categoriesSelectItems}
               onChange={(value) => {
                 onChange(value)
-                draftId && updateDraft(draftId, { categoryId: value })
+                draftId && updateDraft(draftId, { categoryId: value, channelId })
               }}
               error={!!errors.selectedVideoCategory && !value}
               helperText={errors.selectedVideoCategory?.message}
@@ -143,14 +146,14 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
           name="publishedBeforeJoystream"
           control={control}
           rules={{
-            validate: (publishedBeforeJoystream) => dateValidation(publishedBeforeJoystream),
+            validate: (publishedBeforeJoystream) => pastDateValidation(publishedBeforeJoystream),
           }}
           render={({ value, onChange }) => (
             <Datepicker
               value={value}
               onChange={onChange}
               onBlur={(e) => {
-                draftId && updateDraft(draftId, { publishedBeforeJoystream: e.target.value })
+                draftId && updateDraft(draftId, { publishedBeforeJoystream: e.target.value, channelId })
               }}
               error={!!errors.publishedBeforeJoystream}
               helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
@@ -167,7 +170,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
               value={value}
               label="My video features a paid promotion material"
               onChange={onChange}
-              onBlur={() => draftId && updateDraft(draftId, { hasMarketing: value })}
+              onBlur={() => draftId && updateDraft(draftId, { hasMarketing: value, channelId })}
             />
           )}
         />
@@ -189,7 +192,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
                 label="All audiences"
                 onChange={() => {
                   onChange(false)
-                  draftId && updateDraft(draftId, { isExplicit: false })
+                  draftId && updateDraft(draftId, { isExplicit: false, channelId })
                 }}
                 selectedValue={value?.toString()}
                 error={!!errors.isExplicit}
@@ -200,7 +203,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
                 label="Mature"
                 onChange={() => {
                   onChange(true)
-                  draftId && updateDraft(draftId, { isExplicit: true })
+                  draftId && updateDraft(draftId, { isExplicit: true, channelId })
                 }}
                 selectedValue={value?.toString()}
                 error={!!errors.isExplicit}
