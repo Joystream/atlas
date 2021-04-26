@@ -5,7 +5,6 @@ import styled from '@emotion/styled'
 export const TermsBox = styled.div`
   scroll-behavior: smooth;
   text-align: left;
-  margin-top: ${sizes(6)};
   margin-bottom: ${sizes(10)};
   position: relative;
   height: 300px;

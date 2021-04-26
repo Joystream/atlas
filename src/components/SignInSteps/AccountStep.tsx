@@ -1,6 +1,6 @@
-import accountCreation from '@/assets/account-creation.png'
+import accountCreation from '@/assets/account-creation.svg'
 import { useActiveUser, useJoystream } from '@/hooks'
-import { Spinner, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -17,12 +17,14 @@ import {
   AccountAddress,
   StyledRadioButton,
   StyledButton,
+  SubTitle,
+  StyledStepWrapper,
 } from './AccountStep.style'
-import polkadotIcon from '@/assets/polkadot.png'
-import joystreamIcon from '@/assets/logo.png'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper } from './SignInSteps.style'
+import polkadotIcon from '@/assets/polkadot-logo.svg'
+import joystreamIcon from '@/assets/joystream-logo.svg'
+import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
-import { SvgGlyphNewChannel, SvgOutlineConnect } from '@/shared/icons'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { useMemberships } from '@/api/hooks'
 
 type AccountStepProps = {
@@ -72,13 +74,12 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accountsWithNoMembership?.length ? (
-          <StepWrapper centered withBottomBar>
+          <StyledStepWrapper withBottomBar>
             <AccountStepImg src={accountCreation} />
-            <Spinner size="small" />
-            <StepTitle variant="h4">Waiting for account creation</StepTitle>
-            <Text variant="body2" secondary>
+            <StepTitle variant="h4">Create account</StepTitle>
+            <SubTitle variant="body2" secondary>
               Follow instructions to create an account:
-            </Text>
+            </SubTitle>
             <OrderedSteps>
               <OrderedStep secondary variant="caption" as="li">
                 Open the extension with the icon in your browser bar.
@@ -96,14 +97,14 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
-          </StepWrapper>
+          </StyledStepWrapper>
         ) : (
           <form onSubmit={handleSubmitSelectedAccount}>
-            <StepWrapper centered>
+            <StepWrapper>
               <IconGroup>
-                <img src={polkadotIcon} alt="" />
+                <StyledLogo src={polkadotIcon} alt="" />
                 <SvgOutlineConnect />
-                <img src={joystreamIcon} alt="" />
+                <StyledLogo src={joystreamIcon} alt="" />
               </IconGroup>
               <StepTitle variant="h4">Connect accounts</StepTitle>
               <StepSubTitle secondary>
@@ -145,7 +146,7 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
         <IconWrapper>
-          <SvgGlyphNewChannel />
+          <SvgGlyphChannel />
         </IconWrapper>
         <div>
           <Text variant="subtitle1">{name}</Text>

@@ -1,7 +1,7 @@
 import { ActionDialog, MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser, useConnectionStatus } from '@/hooks'
-import { Spinner, Text, TextField } from '@/shared/components'
+import { Spinner, Text } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import { debounce } from 'lodash'
@@ -9,7 +9,17 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
-import { Form, StyledButton, Wrapper, StyledText, Header, Hero, SubTitle, StyledAvatar } from './CreateMemberView.style'
+import {
+  Form,
+  StyledButton,
+  Wrapper,
+  StyledText,
+  Header,
+  Hero,
+  SubTitle,
+  StyledAvatar,
+  StyledTextField,
+} from './CreateMemberView.style'
 import { useMemberships } from '@/api/hooks'
 
 type Inputs = {
@@ -118,7 +128,7 @@ const CreateMemberView = () => {
           imageUrl={errors.avatar ? undefined : avatarImageUrl}
           onError={() => setInputError('avatar', { message: 'Image not found' })}
         />
-        <TextField
+        <StyledTextField
           name="avatar"
           onChange={handleAvatarChange}
           label="Avatar url"
@@ -127,7 +137,7 @@ const CreateMemberView = () => {
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
-        <TextField
+        <StyledTextField
           name="handle"
           placeholder="Johnny Smith"
           label="Member Name"
