@@ -27,6 +27,7 @@ export const IconGroup = styled.div`
 export const AccountStepImg = styled.img`
   object-fit: cover;
   max-width: 100%;
+  height: 210px;
 `
 
 export const SubTitle = styled(Text)`
