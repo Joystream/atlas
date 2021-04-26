@@ -33,7 +33,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const size = formatBytes(asset.size)
 
   const renderStatusIndicator = (asset: UploadData) => {
-    if (asset.liaisonJudgement === LiaisonJudgement.Pending) {
+    if (asset.liaisonJudgement === LiaisonJudgement.Pending && asset.progress === 0) {
       return (
         <ProgressbarContainer>
           <CircularProgressbar value={0} />

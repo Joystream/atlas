@@ -17,6 +17,7 @@ import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 export type UploadData = {
   liaisonJudgement?: LiaisonJudgement
+  videoTitle?: string
 } & AssetUploadWithProgress
 
 export type AssetsGroupBarUploadProps = {
@@ -30,24 +31,23 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
-  const isPending = uploadData.every((file) => file.liaisonJudgement === LiaisonJudgement.Pending)
+  const isPending = uploadData.every(
+    (file) => file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0
+  )
   const hasErrorNumber = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  // TODO add video title on video type assets
-  const assetsGroupTitleText = isChannelType ? 'Channel assets' : 'Video title'
+  const videoTitle = uploadData.find((asset) => !!asset.videoTitle)?.videoTitle
+  const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
-  const isCompleted = uploadData.every((item) => item.lastStatus === 'completed')
   const assetsGroupInfoText = hasErrorNumber
     ? `(${hasErrorNumber}) Asset${hasErrorNumber > 1 ? 's' : ''} upload failed`
     : isPending
     ? 'Pending'
-    : isCompleted
-    ? 'Completed'
     : `Uploaded (${masterProgress}%)`
 
   return (
