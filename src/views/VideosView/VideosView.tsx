@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import { ErrorBoundary } from '@sentry/react'
 import { useInView } from 'react-intersection-observer'
@@ -28,6 +28,10 @@ const VideosView: React.FC = () => {
     error: featuredVideosError,
     refetch: refetchFeaturedVideos,
   } = useFeaturedVideos({}, { notifyOnNetworkStatusChange: true })
+
+  useEffect(() => {
+    document.title = !featuredVideos ? 'Videos' : `Videos (${featuredVideos?.length})`
+  }, [featuredVideos])
 
   const topicsRef = useRef<HTMLHeadingElement>(null)
   const { ref: targetRef, inView } = useInView({
