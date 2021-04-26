@@ -89,7 +89,7 @@ export const EditVideoSheet: React.FC = () => {
   })
 
   // Tabs
-  const { addDraft, drafts, getDraft } = useDrafts('video', channelId)
+  const { addDraft, drafts, getDraft, updateDraft } = useDrafts('video', channelId)
 
   const selectTab = useCallback(
     async (tab: EditVideoSheetTab) => {
@@ -106,9 +106,11 @@ export const EditVideoSheet: React.FC = () => {
       title: 'New Draft',
     })
     addVideoTab(newDraft)
-    reset(resetFields(newDraft))
-    setSelectedVideoTab(newDraft)
-  }, [addDraft, channelId, addVideoTab, reset, setSelectedVideoTab])
+    if (!videoTabs.length) {
+      setSelectedVideoTab(newDraft)
+      reset(resetFields(newDraft))
+    }
+  }, [addDraft, channelId, addVideoTab, videoTabs.length, setSelectedVideoTab, reset])
 
   useEffect(() => {
     if (sheetState === cachedSheetState) {
@@ -152,15 +154,19 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const removeTab = (tab: EditVideoSheetTab) => {
+    const newTab = videoTabs.find((currentTab) => currentTab.id !== tab.id)
+    newTab ? selectedVideoTab?.id === tab.id && selectTab(newTab) : closeSheet()
     removeVideoTab(tab)
-    // we are closing the last tab
-    if (videoTabs.length === 1) {
-      closeSheet()
-    }
   }
 
-  const handleChangeFiles = (changeFiles: FileState) => {
+  const handleChangeFiles = async (changeFiles: FileState) => {
     const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
+    const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
+    if (draft?.title === 'New Draft') {
+      await updateDraft(draft.id, { title: changeFiles.video?.name })
+      const updatedDraft = await getDraft(draft.id)
+      reset(resetFields(updatedDraft))
+    }
     if (hasFiles) {
       const newFiles = files.map((f) => {
         if (f.id === selectedVideoTab?.id) {
@@ -202,12 +208,10 @@ export const EditVideoSheet: React.FC = () => {
   const videoTabsWithTitle = videoTabs
     .map((tab) => {
       const draft = drafts.find((draft) => draft.id === tab.id)
-      const filename = files.find((item) => item.id === tab.id)?.files.video?.name
-
-      if (draft?.title === 'New Draft' && filename) {
-        return { ...tab, title: filename }
+      if (draft) {
+        return { ...tab, title: draft.title }
       }
-      return { ...tab, title: draft?.title }
+      return { ...tab }
     })
     .filter((tab) => tab.title !== undefined)
 

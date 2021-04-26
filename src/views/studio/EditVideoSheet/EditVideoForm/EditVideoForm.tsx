@@ -210,11 +210,13 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
           )}
         />
       </FormField>
-      <DeleteVideoContainer>
-        <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
-          Delete video
-        </DeleteVideoButton>
-      </DeleteVideoContainer>
+      {!draftId && (
+        <DeleteVideoContainer>
+          <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
+            Delete video
+          </DeleteVideoButton>
+        </DeleteVideoContainer>
+      )}
     </FormContainer>
   )
 }
