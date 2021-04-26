@@ -20,7 +20,9 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useMemberships } from '@/api/hooks'
+import { useMemberships, useQueryNodeStateSubscription } from '@/api/hooks'
+import axios, { AxiosError } from 'axios'
+import { MemberId } from '@/joystream-lib'
 
 type Inputs = {
   handle: string
@@ -42,15 +44,20 @@ const CreateMemberView = () => {
     },
   })
 
-  const [shouldFetchMemberships, setShouldFetchMemberships] = useState(false)
+  const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [error, setError] = useState<string | undefined>()
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [isLoadingDialogVisible, setIsLoadingDialogVisible] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { memberships, startPolling } = useMemberships(
+  const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
+  if (queryNodeStateError) {
+    throw queryNodeStateError
+  }
+
+  const { error: membershipError, refetch: refetchMembership } = useMemberships(
     {
       where: {
-        // We cannot use `controllerAcount_eq` here, because it will not redirect user correctly to `/signin`
+        // `controllerAccount_in` has to be used to trigger refresh on other queries using it
         controllerAccount_in: [activeUser.accountId || ''],
       },
     },
@@ -58,6 +65,40 @@ const CreateMemberView = () => {
       skip: !activeUser.accountId,
     }
   )
+  if (membershipError) {
+    throw membershipError
+  }
+
+  // success
+  useEffect(() => {
+    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeUser.accountId) {
+      return
+    }
+
+    if (queryNodeState.indexerHead >= membershipBlock) {
+      // trigger membership refetch
+      refetchMembership().then(() => {
+        setIsSubmitting(false)
+        navigate(absoluteRoutes.studio.signIn())
+      })
+    }
+  }, [isSubmitting, membershipBlock, queryNodeState, activeUser.accountId, navigate, refetchMembership])
+
+  const handleCreateMember = handleSubmit(async (data) => {
+    if (!activeUser.accountId) {
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      const { block } = await createNewMember(activeUser.accountId, data)
+      setMembershipBlock(block)
+    } catch (error) {
+      setIsSubmitting(false)
+      const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
+      setError(errorMessage)
+    }
+  })
 
   const debounceAvatarChange = debounce(async (value) => {
     await trigger('avatar')
@@ -70,49 +111,6 @@ const CreateMemberView = () => {
     const value = e.currentTarget.value
     debounceAvatarChange(value)
   }
-
-  // error
-  useEffect(() => {
-    if (!error || !isLoadingDialogVisible) {
-      return
-    }
-    setIsLoadingDialogVisible(false)
-  }, [error, isLoadingDialogVisible])
-
-  // success
-  useEffect(() => {
-    if (!isLoadingDialogVisible) {
-      return
-    }
-
-    if (shouldFetchMemberships) {
-      // temporary
-      startPolling(2000)
-      if (memberships?.length) {
-        navigate(absoluteRoutes.studio.signIn())
-      }
-    }
-  }, [
-    activeUser.accountId,
-    isLoadingDialogVisible,
-    memberships?.length,
-    navigate,
-    startPolling,
-    shouldFetchMemberships,
-  ])
-
-  const handleCreateMember = handleSubmit(async (data) => {
-    try {
-      if (!activeUser.accountId) {
-        return
-      }
-      setIsLoadingDialogVisible(true)
-      await createNewMember(activeUser.accountId, data)
-      setShouldFetchMemberships(true)
-    } catch (error) {
-      setError(error.message)
-    }
-  })
 
   return (
     <Wrapper>
@@ -158,7 +156,7 @@ const CreateMemberView = () => {
           Create membership
         </StyledButton>
       </Form>
-      <ActionDialog showDialog={isLoadingDialogVisible} exitButton={false}>
+      <ActionDialog showDialog={isSubmitting} exitButton={false}>
         <Spinner />
         <Text variant="h4">Creating Membership...</Text>
         <StyledText variant="body2">
@@ -169,34 +167,30 @@ const CreateMemberView = () => {
       <MessageDialog
         variant="error"
         title="Some unexpected error occurred. "
-        showDialog={!isLoadingDialogVisible && !!error}
-        description={error}
+        showDialog={!isSubmitting && !!error}
+        description={`Error: ${error}`}
         onExitClick={() => setError(undefined)}
       />
     </Wrapper>
   )
 }
 
+type NewMemberResponse = {
+  memberId: MemberId
+  block: number
+}
+
 const createNewMember = async (accountId: string, inputs: Inputs) => {
-  const body = JSON.stringify({
-    account: accountId,
-    ...inputs,
-  })
   try {
-    const response = await fetch(FAUCET_URL as string, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    })
-    const json = await response.json()
-    if (json.error) {
-      throw Error(json.error)
+    const body = {
+      account: accountId,
+      ...inputs,
     }
-    return json
+    const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
+    return response.data
   } catch (error) {
-    throw Error(error)
+    console.error('Failed to create a new member')
+    throw error
   }
 }
 
