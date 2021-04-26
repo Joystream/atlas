@@ -37,7 +37,6 @@ const TermsStep: React.FC = () => {
 
   return (
     <StepWrapper>
-      <StepTitle variant="h4">Accept Terms and Conditions</StepTitle>
       <TermsBox ref={termsBoxRef} onScroll={(e) => setScrollPosition(e.currentTarget.scrollTop)}>
         <TextWrapper>
           <Text variant="h5">Terms and Conditions</Text>
@@ -98,7 +97,7 @@ const TermsStep: React.FC = () => {
             label="I’ve read and accept Terms And Conditions"
           />
         </CSSTransition>
-        <ContinueButton to={absoluteRoutes.studio.newMembership()}>Continue</ContinueButton>
+        <ContinueButton to={absoluteRoutes.studio.newMembership()}>Accept terms</ContinueButton>
       </StepFooter>
     </StepWrapper>
   )

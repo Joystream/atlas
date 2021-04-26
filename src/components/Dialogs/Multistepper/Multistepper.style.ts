@@ -2,9 +2,11 @@ import styled from '@emotion/styled'
 import BaseDialog from '../BaseDialog'
 import { Text } from '@/shared/components'
 import { colors, sizes, media, typography } from '@/shared/theme'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 
 type CircleProps = {
   isFilled?: boolean
+  isActive?: boolean
 }
 
 type StyledStepInfoProps = {
@@ -50,7 +52,6 @@ export const StyledStepsInfoContainer = styled.div`
 export const StyledStepInfo = styled.div<StyledStepInfoProps>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
-  margin-right: ${sizes(2)};
 
   ${media.small} {
     display: flex;
@@ -64,20 +65,30 @@ export const StyledCircle = styled.div<CircleProps>`
   width: 32px;
   height: 32px;
   border-radius: 100%;
-  border: 1px solid ${colors.gray[400]};
-  background-color: ${({ isFilled }) => (isFilled ? colors.gray[400] : 'transparent')};
-  color: ${({ isFilled }) => (isFilled ? colors.white : colors.gray[300])};
+  background-color: ${colors.gray[400]};
+  background-color: ${({ isActive }) => isActive && colors.blue[500]};
+  color: ${colors.gray[50]};
 `
-export const StyledStepInfoText = styled(Text)<StyledStepInfoProps>`
-  display: inline-block;
-  color: ${({ isActive }) => (isActive ? colors.white : colors.gray[300])};
-  font-size: ${sizes(4)};
+export const StyledStepInfoText = styled.div<StyledStepInfoProps>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   font-weight: ${typography.weights.semibold};
-  line-height: 16px;
   margin-left: ${sizes(2)};
 
   ${media.small} {
     max-width: 120px;
-    font-size: ${sizes(3)};
+  }
+`
+
+export const StyledStepTitle = styled(Text)`
+  margin-top: ${sizes(1)};
+`
+
+export const StyledChevron = styled(SvgGlyphChevronRight)`
+  margin: 0 ${sizes(5)};
+  display: block;
+  > path {
+    stroke: ${colors.gray[500]};
   }
 `
