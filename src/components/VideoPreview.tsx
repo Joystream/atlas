@@ -6,7 +6,7 @@ import VideoPreviewBase, {
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { useDrafts } from '@/hooks'
+import { useDrafts, useActiveUser } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
 import { createUrlFromAsset } from '@/utils/asset'
 
@@ -53,7 +53,9 @@ export type VideoPreviewWPublisherProps = VideoPreviewProps &
   Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ id, isDraft, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, isDraft)
-  const { drafts } = useDrafts('video')
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ?? ''
+  const { drafts } = useDrafts('video', channelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
 
   const thumbnailPhotoUrl = createUrlFromAsset(

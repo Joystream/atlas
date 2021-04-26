@@ -29,7 +29,14 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
       {videoTabs.map((tab) => (
         <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => onTabSelect(tab)}>
           <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-          <IconButton size="small" variant="tertiary" onClick={() => onRemoveTabClick(tab)}>
+          <IconButton
+            size="small"
+            variant="tertiary"
+            onClick={(e) => {
+              e.stopPropagation()
+              onRemoveTabClick(tab)
+            }}
+          >
             <SvgGlyphClose />
           </IconButton>
         </Tab>
