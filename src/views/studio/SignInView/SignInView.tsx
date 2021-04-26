@@ -81,7 +81,7 @@ const SignInView = () => {
           New Member
         </StyledButton>
       </Wrapper>
-      <SignInStepsStepper path={absoluteRoutes.studio.signIn} />
+      <SignInStepsStepper />
     </>
   )
 }

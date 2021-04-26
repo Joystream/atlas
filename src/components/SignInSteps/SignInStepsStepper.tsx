@@ -6,21 +6,18 @@ import AccountStep from './AccountStep'
 import ExtensionStep from './ExtensionStep'
 import TermsStep from './TermsStep'
 
-type SignInStepsStepperProps = {
-  path: (query: { step: string }) => string
-}
-
-const SignInStepsStepper: React.FC<SignInStepsStepperProps> = ({ path }) => {
+const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
+
   const steps = [
     {
       title: 'Add Polkadot plugin',
-      element: <ExtensionStep nextStepPath={path({ step: '2' })} />,
+      element: <ExtensionStep nextStepPath="?step=2" />,
     },
     {
       title: 'Connect accounts',
-      element: <AccountStep nextStepPath={path({ step: '3' })} />,
+      element: <AccountStep nextStepPath="?step=3" />,
     },
     {
       title: 'Terms & Conditions',
@@ -33,7 +30,7 @@ const SignInStepsStepper: React.FC<SignInStepsStepperProps> = ({ path }) => {
       currentStepIdx={step <= 0 ? 0 : step - 1}
       steps={steps}
       showDialog={step >= 1}
-      onExitClick={() => navigate(path({ step: '0' }))}
+      onExitClick={() => navigate('?step=0')}
     />
   )
 }

@@ -78,7 +78,7 @@ const SignInProccessView = () => {
         </ListContainer>
       </StyledStudioContainer>
       <StyledCoinsIllustrations />
-      <SignInStepsStepper path={absoluteRoutes.studio.signInJoin} />
+      <SignInStepsStepper />
     </>
   )
 }
