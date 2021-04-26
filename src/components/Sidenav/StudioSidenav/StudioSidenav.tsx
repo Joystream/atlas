@@ -31,7 +31,7 @@ const studioNavbarItems: NavItemType[] = [
 export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? undefined
+  const channelId = activeUser.channelId ?? ''
   const { unseenDrafts } = useDrafts('video', channelId)
   const { sheetState } = useEditVideoSheet()
 

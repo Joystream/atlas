@@ -31,7 +31,7 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ? activeUser.channelId : undefined
+  const channelId = activeUser.channelId ?? ''
   const {
     drafts,
     removeDraft,

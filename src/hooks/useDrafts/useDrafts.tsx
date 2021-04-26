@@ -98,7 +98,7 @@ export const useContextDrafts = () => {
   return ctx
 }
 
-export const useDrafts = (type: DraftType, channelId?: string) => {
+export const useDrafts = (type: DraftType, channelId: string) => {
   const { draftsState, fetchDrafts, unseenDrafts, fetchUnseenDrafts } = useContextDrafts()
 
   const getSingleDraft = useCallback(async (draftId: string) => {
@@ -107,12 +107,12 @@ export const useDrafts = (type: DraftType, channelId?: string) => {
   }, [])
 
   const updateSingleDraft = useCallback(
-    async (draftId: string, draftProps: RawDraft) => {
-      const updatedDraft = await updateDraft(draftId, draftProps)
+    async (draftId: string, draftProps: Omit<RawDraft, 'channelId'>) => {
+      const updatedDraft = await updateDraft(draftId, { ...draftProps, channelId })
       fetchDrafts()
       return updatedDraft
     },
-    [fetchDrafts]
+    [channelId, fetchDrafts]
   )
 
   const createSingleDraft = useCallback(

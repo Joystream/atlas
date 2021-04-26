@@ -163,7 +163,7 @@ export const EditVideoSheet: React.FC = () => {
     const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
     const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
     if (draft?.title === 'New Draft') {
-      await updateDraft(draft.id, { title: changeFiles.video?.name, channelId })
+      await updateDraft(draft.id, { title: changeFiles.video?.name })
       reset(resetFields(draft))
     }
     if (hasFiles) {
