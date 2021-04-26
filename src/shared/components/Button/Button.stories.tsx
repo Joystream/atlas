@@ -1,6 +1,7 @@
 import React from 'react'
 import Button, { ButtonProps } from './Button'
 import { Meta, Story } from '@storybook/react'
+import { SvgGlyphAddVideo } from '@/shared/icons'
 
 export default {
   title: 'Shared/Button',
@@ -40,5 +41,5 @@ Tertiary.args = {
 }
 export const WithIcon = Template.bind({})
 WithIcon.args = {
-  icon: 'add-video',
+  icon: <SvgGlyphAddVideo />,
 }
