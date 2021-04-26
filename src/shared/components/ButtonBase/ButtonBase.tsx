@@ -33,7 +33,7 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
     return (
       <StyledButtonBase
         ref={ref}
-        type={type}
+        type={to ? undefined : type}
         onClick={onClick}
         clickable={clickable}
         {...linkProps}
