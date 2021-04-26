@@ -137,7 +137,7 @@ export const useVideoEditSheetRouting = (): Location => {
     }
     setCachedSheetState(sheetState)
 
-    if (sheetState === 'minimized' || (sheetState === 'closed' && cachedSheetState !== 'minimized')) {
+    if (sheetState === 'minimized' && cachedSheetState === 'open') {
       // restore the old location when sheet was minimized/closed
       const oldLocation = location.state?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)
