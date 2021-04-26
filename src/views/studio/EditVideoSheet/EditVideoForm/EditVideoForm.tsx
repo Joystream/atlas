@@ -1,15 +1,21 @@
 import React from 'react'
 import { Control, Controller, DeepMap, FieldError, UseFormMethods } from 'react-hook-form'
-import { isValid } from 'date-fns'
 import { useCategories } from '@/api/hooks'
+import { useDrafts, useActiveUser } from '@/hooks'
 import { Checkbox, Datepicker, FormField, RadioButton, Select, SelectItem, TextArea } from '@/shared/components'
-import { requiredValidation } from '@/utils/formValidationOptions'
+import { requiredValidation, pastDateValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
-import { FormContainer, StyledHeaderTextField, StyledRadioContainer } from './EditVideoForm.style'
+import {
+  FormContainer,
+  StyledHeaderTextField,
+  StyledRadioContainer,
+  DeleteVideoContainer,
+  DeleteVideoButton,
+} from './EditVideoForm.style'
 
-const visibilityOptions: SelectItem[] = [
-  { name: 'Public (Anyone can see this video)', value: 'public' },
-  { name: 'Unlisted (Only people with a link can see this video)', value: 'unlisted' },
+const visibilityOptions: SelectItem<boolean>[] = [
+  { name: 'Public (Anyone can see this video)', value: true },
+  { name: 'Unlisted (Only people with a link can see this video)', value: false },
 ]
 
 export type FormInputs = {
@@ -30,16 +36,24 @@ export type FormProps = {
   control: Control<FormInputs>
   clearErrors: UseFormMethods<FormInputs>['clearErrors']
   setFormValue: UseFormMethods<FormInputs>['setValue']
+  draftId?: string
 }
 
-export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptionRef, titleRef, clearErrors }) => {
+export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptionRef, titleRef, draftId }) => {
   const { categories, error: categoriesError } = useCategories()
+  const { activeUser } = useActiveUser()
+  const channelId = activeUser.channelId ?? ''
+  const { updateDraft } = useDrafts('video', channelId)
 
   const categoriesSelectItems: SelectItem[] =
     categories?.map((c) => ({
       name: c.name || 'Unknown category',
       value: c.id,
     })) || []
+
+  const handleDeleteVideo = () => {
+    // TODO add logic for deleting video
+  }
 
   if (categoriesError) throw categoriesError
 
@@ -52,6 +66,9 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         placeholder="Insert Video Title"
         error={!!errors.title}
         helperText={errors.title?.message}
+        onBlur={(e) => {
+          draftId && updateDraft(draftId, { title: e.target.value })
+        }}
       />
       <TextArea
         name="description"
@@ -60,19 +77,25 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         placeholder="Add video description"
         error={!!errors.description}
         helperText={errors.description?.message}
+        onBlur={(e) => draftId && updateDraft(draftId, { description: e.target.value })}
       />
       <FormField title="Video Visibility">
         <Controller
           name="selectedVideoVisibility"
           control={control}
-          rules={requiredValidation('Video visibility')}
+          rules={{
+            validate: (value) => value !== null,
+          }}
           render={({ value, onChange }) => (
             <Select
               value={value}
               items={visibilityOptions}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                draftId && updateDraft(draftId, { isPublic: value })
+              }}
               error={!!errors.selectedVideoVisibility && !value}
-              helperText={errors.selectedVideoVisibility?.message}
+              helperText={errors.selectedVideoVisibility ? 'Video visibility must be selected' : ''}
             />
           )}
         />
@@ -86,7 +109,10 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
             <Select
               value={value ?? null}
               items={languages}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                draftId && updateDraft(draftId, { language: value })
+              }}
               error={!!errors.selectedVideoLanguage && !value}
               helperText={errors.selectedVideoLanguage?.message}
             />
@@ -102,7 +128,10 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
             <Select
               value={value ?? null}
               items={categoriesSelectItems}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                draftId && updateDraft(draftId, { categoryId: value })
+              }}
               error={!!errors.selectedVideoCategory && !value}
               helperText={errors.selectedVideoCategory?.message}
             />
@@ -116,24 +145,34 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         <Controller
           name="publishedBeforeJoystream"
           control={control}
-          rules={{ validate: (publishedBeforeJoystream) => isValid(publishedBeforeJoystream) }}
+          rules={{
+            validate: (publishedBeforeJoystream) => pastDateValidation(publishedBeforeJoystream),
+          }}
           render={({ value, onChange }) => (
             <Datepicker
               value={value}
               onChange={onChange}
-              onBlur={() => clearErrors('publishedBeforeJoystream')}
+              onBlur={(e) => {
+                draftId && updateDraft(draftId, { publishedBeforeJoystream: e.target.value })
+              }}
               error={!!errors.publishedBeforeJoystream}
+              helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
             />
           )}
         />
       </FormField>
       <FormField title="Marketing" description="Please select whether your video contains paid promotions">
         <Controller
-          as={Checkbox}
           name="hasMarketing"
           control={control}
-          value={false}
-          label="My video features a paid promotion material"
+          render={({ value, onChange }) => (
+            <Checkbox
+              value={value}
+              label="My video features a paid promotion material"
+              onChange={onChange}
+              onBlur={() => draftId && updateDraft(draftId, { hasMarketing: value })}
+            />
+          )}
         />
       </FormField>
       <FormField
@@ -143,24 +182,44 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         <Controller
           name="isExplicit"
           control={control}
+          rules={{
+            validate: (value) => value !== null,
+          }}
           render={({ value, onChange }) => (
             <StyledRadioContainer>
               <RadioButton
                 value="false"
                 label="All audiences"
-                onChange={() => onChange(false)}
+                onChange={() => {
+                  onChange(false)
+                  draftId && updateDraft(draftId, { isExplicit: false })
+                }}
                 selectedValue={value?.toString()}
+                error={!!errors.isExplicit}
+                helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
               />
               <RadioButton
                 value="true"
                 label="Mature"
-                onChange={() => onChange(true)}
+                onChange={() => {
+                  onChange(true)
+                  draftId && updateDraft(draftId, { isExplicit: true })
+                }}
                 selectedValue={value?.toString()}
+                error={!!errors.isExplicit}
+                helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
               />
             </StyledRadioContainer>
           )}
         />
       </FormField>
+      {!draftId && (
+        <DeleteVideoContainer>
+          <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
+            Delete video
+          </DeleteVideoButton>
+        </DeleteVideoContainer>
+      )}
     </FormContainer>
   )
 }

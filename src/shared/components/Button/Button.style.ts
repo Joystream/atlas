@@ -2,11 +2,16 @@ import styled from '@emotion/styled'
 import ButtonBase, { ButtonSize } from '../ButtonBase'
 import Text from '../Text'
 import { css, SerializedStyles } from '@emotion/react'
-import { sizes } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 type ButtonSizeProps = {
   size: ButtonSize
 }
+
+export type TextColorVariant = 'default' | 'error'
+type TextProps = {
+  textColorVariant?: TextColorVariant
+} & ButtonSizeProps
 
 const sizeOverwriteStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
   switch (size) {
@@ -56,7 +61,8 @@ export const ButtonIconWrapper = styled.span`
   margin-right: ${sizes(2)};
 `
 
-export const StyledText = styled(Text)<ButtonSizeProps>`
+export const StyledText = styled(Text)<TextProps>`
   // compensate for line-height being 1
   ${textPaddingStyles}
+  color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error}
 `

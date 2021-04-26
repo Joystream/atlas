@@ -20,8 +20,11 @@ const CONTENT_RATING = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts('video')
   const { activeUser } = useActiveUser()
+  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
+    'video',
+    activeUser.channelId || INITIAL_STATE.channelId
+  )
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {

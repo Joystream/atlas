@@ -20,7 +20,7 @@ const ROWS_AMOUNT = 4
 // TODO: dynamic channels (not hardcoded)
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { videoTabs, addVideoTab, setSelectedVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTab } = useEditVideoSheet()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -31,7 +31,7 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ? activeUser.channelId : undefined
+  const channelId = activeUser.channelId ?? ''
   const {
     drafts,
     removeDraft,
@@ -115,6 +115,7 @@ export const MyVideosView = () => {
                 onPullupClick={(e) => {
                   e.stopPropagation()
                   addVideoTab(draft)
+                  setSheetState('minimized')
                   setSelectedVideoTab(draft)
                 }}
                 onEditVideoClick={() => {

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { media, sizes } from '@/shared/theme'
-import { HeaderTextField } from '@/shared/components'
+import { media, sizes, colors } from '@/shared/theme'
+import { HeaderTextField, Button } from '@/shared/components'
 
 export const StyledRadioContainer = styled.div`
   display: flex;
@@ -26,4 +26,17 @@ export const FormContainer = styled.form`
 
 export const StyledHeaderTextField = styled(HeaderTextField)`
   margin-bottom: ${sizes(4)};
+`
+
+export const DeleteVideoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: ${sizes(6)};
+  padding-top: ${sizes(4)};
+  border-top: 1px solid ${colors.gray[400]};
+`
+
+export const DeleteVideoButton = styled(Button)`
+  width: 100%;
 `
