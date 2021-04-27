@@ -37,12 +37,17 @@ enum LiaisonJudgement {
   REJECTED
 }
 
+type StorageProvider {
+  id: ID!
+  metadata: String
+}
+
 type DataObject {
   id: ID!
   createdAt: DateTime!
   size: Int!
-  # id of assigned storage provider
-  liaisonId: Int
+  # storage provider that accepted the asset
+  liaison: StorageProvider
   # status of asset as reported by liaison
   liaisonJudgement: LiaisonJudgement!
   # IPFS content id
