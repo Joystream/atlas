@@ -6,10 +6,10 @@ export type DataObjectFieldsFragment = {
   id: string
   createdAt: Date
   size: number
-  liaisonId?: Types.Maybe<number>
   liaisonJudgement: Types.LiaisonJudgement
   ipfsContentId: string
   joystreamContentId: string
+  liaison?: Types.Maybe<{ __typename?: 'StorageProvider'; id: string; metadata?: Types.Maybe<string> }>
 }
 
 export const DataObjectFieldsFragmentDoc = gql`
@@ -17,7 +17,10 @@ export const DataObjectFieldsFragmentDoc = gql`
     id
     createdAt
     size
-    liaisonId
+    liaison {
+      id
+      metadata
+    }
     liaisonJudgement
     ipfsContentId
     joystreamContentId
