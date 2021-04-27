@@ -15,7 +15,7 @@ export type FileState = {
 export type MultiFileSelectProps = {
   onChangeFiles: (fileState: FileState) => void
   files: FileState
-  onCropImage?: (image: string | null) => void
+  onCropImage?: (imageUrl: string | null, blob?: Blob) => void
   croppedImageUrl?: string | null
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
@@ -142,7 +142,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       <ImageCropDialog
         ref={dialogRef}
         imageType="videoThumbnail"
-        onConfirm={(_, croppedImageUrl) => onCropImage?.(croppedImageUrl)}
+        onConfirm={(blob, croppedImageUrl) => onCropImage?.(croppedImageUrl, blob)}
       />
     </MultiFileSelectContainer>
   )

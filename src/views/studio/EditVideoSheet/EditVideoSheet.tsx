@@ -12,12 +12,35 @@ import {
   useEditVideoSheet,
   useOverlayManager,
   useActiveUser,
+  useJoystream,
+  useUploadsManager,
 } from '@/hooks'
 import { Container, Content, DrawerOverlay, StyledActionBar } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm, FormInputs } from './EditVideoForm'
 import { SvgGlyphInfo } from '@/shared/icons'
+import {
+  CreateVideoMetadata,
+  ExtrinsicStatus,
+  VideoAssets,
+  ExtensionSignCancelledError,
+  VideoId,
+} from '@/joystream-lib'
+import { useCategories, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
+import { TransactionDialog } from '@/components'
+import { computeFileHash } from '@/utils/hashing'
+
+type Asset = {
+  url: string | null
+  blob: Blob | null
+}
+
+type VideoAsset = {
+  duration?: number
+  mediaPixelWidth?: number
+  mediaPixelHeight?: number
+} & Asset
 
 type FileStateWithDraftId = {
   id?: string
@@ -41,8 +64,38 @@ export const EditVideoSheet: React.FC = () => {
     selectedVideoTab,
     setSelectedVideoTab,
   } = useEditVideoSheet()
-  const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? ''
+
+  const { categories, error: categoriesError } = useCategories()
+
+  const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
+  const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
+  const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
+  const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
+  const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
+  const [video, setVideo] = useState<VideoAsset>({
+    url: null,
+    blob: null,
+  })
+  const [thumbnail, setThumbnail] = useState<Asset>({
+    url: null,
+    blob: null,
+  })
+  const {
+    activeUser: { channelId, memberId },
+  } = useActiveUser()
+
+  const { refetch: refetchMember } = useMembership(
+    {
+      where: { id: memberId },
+    },
+    { skip: !memberId }
+  )
+
+  const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
+
+  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { joystream } = useJoystream()
+
   const { lockScroll, unlockScroll } = useOverlayManager()
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
@@ -60,36 +113,177 @@ export const EditVideoSheet: React.FC = () => {
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const { register, control, setValue: setFormValue, handleSubmit, reset, clearErrors, errors } = useForm<FormInputs>({
+  const {
+    register,
+    control,
+    setValue: setFormValue,
+    handleSubmit: createSubmitHandler,
+    reset,
+    clearErrors,
+    errors,
+  } = useForm<FormInputs>({
     shouldFocusError: true,
     defaultValues: {
       title: '',
-      selectedVideoVisibility: 'public',
-      selectedVideoLanguage: 'en',
-      selectedVideoCategory: null,
+      isPublic: 'public',
+      language: 'en',
+      category: null,
       description: '',
       hasMarketing: false,
       publishedBeforeJoystream: null,
       isExplicit: null,
     },
   })
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
+
+  // video hash
+  useEffect(() => {
+    if (!video.blob) {
+      return
+    }
+
+    const hashPromise = computeFileHash(video.blob)
+    setVideoHashPromise(hashPromise)
+  }, [video.blob])
+
+  // thumbnail hash
+  useEffect(() => {
+    if (!thumbnail.blob) {
+      return
+    }
+
+    const hashPromise = computeFileHash(thumbnail.blob)
+    setThumbnailHashPromise(hashPromise)
+  }, [thumbnail.blob])
+
+  useEffect(() => {
+    if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
+      return
+    }
+
+    if (queryNodeState.indexerHead >= transactionBlock) {
+      setTransactionStatus(ExtrinsicStatus.Completed)
+      transactionCallback?.()
+    }
+  }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
+
+  const handleSubmit = createSubmitHandler(async (data) => {
+    if (!video.url || !video.blob || !thumbnail.blob || !thumbnail.url) {
+      setFileSelectError('video or thumbnail was not provided')
+      return
+    }
+    if (!joystream || !memberId || !channelId) {
+      return
+    }
+    // todo create metadata
+
+    const metadata: CreateVideoMetadata = {
+      ...(data.title ? { title: data.title ?? '' } : {}),
+      ...(data.description ? { description: data.description ?? '' } : {}),
+      ...(data.category ? { category: Number(data.category) ?? undefined } : {}),
+      ...(data.isPublic ? { isPublic: data.isPublic === 'true' } : {}),
+      ...(data.hasMarketing ? { hasMarketing: data.hasMarketing || undefined } : {}),
+      ...(data.isExplicit ? { isExplicit: data.isExplicit || undefined } : {}),
+      // todo cannot set video.duration, getting "Assertion failed"
+      // ...(video.duration ? { duration: video.duration || undefined } : {}),
+      ...(video.mediaPixelHeight ? { mediaPixelHeight: video.mediaPixelHeight } : {}),
+      ...(video.mediaPixelWidth ? { mediaPixelWidth: video.mediaPixelWidth } : {}),
+      // todo publishedBeforeJoystream
+    }
+
+    setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
+
+    const assets: VideoAssets = {}
+    let videoContentId = ''
+    let thumbnailContentId = ''
+
+    if (video.blob && videoHashPromise) {
+      const [asset, contentId] = joystream.createFileAsset({
+        size: video.blob.size,
+        ipfsContentId: await videoHashPromise,
+      })
+      assets.video = asset
+      videoContentId = contentId
+    } else {
+      console.warn('Missing video data')
+    }
+
+    if (thumbnail.blob && thumbnailHashPromise) {
+      const [asset, contentId] = joystream.createFileAsset({
+        size: thumbnail.blob.size,
+        ipfsContentId: await thumbnailHashPromise,
+      })
+      assets.thumbnail = asset
+      thumbnailContentId = contentId
+    } else {
+      console.warn('Missing thumbnail data')
+    }
+    let assetsOwner: VideoId = ''
+
+    try {
+      const { data: newVideoId, block } = await joystream.createVideo(
+        memberId,
+        channelId,
+        metadata,
+        assets,
+        (status) => {
+          console.log(assets)
+          setTransactionStatus(status)
+        }
+      )
+      assetsOwner = newVideoId
+
+      setTransactionStatus(ExtrinsicStatus.Syncing)
+      setTransactionBlock(block)
+      setTransactionCallback(() => async () => {
+        await refetchMember()
+      })
+
+      if (video.blob && videoContentId) {
+        startFileUpload(video.blob, {
+          contentId: videoContentId,
+          owner: assetsOwner,
+          parentObject: {
+            type: 'video',
+            id: assetsOwner,
+          },
+          type: 'video',
+        })
+      }
+      if (thumbnail.blob && thumbnailContentId) {
+        startFileUpload(thumbnail.blob, {
+          contentId: thumbnailContentId,
+          owner: assetsOwner,
+          parentObject: {
+            type: 'video',
+            id: assetsOwner,
+          },
+          type: 'thumbnail',
+        })
+      }
+    } catch (e) {
+      if (e instanceof ExtensionSignCancelledError) {
+        console.warn('Sign cancelled')
+        setTransactionStatus(null)
+        // displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
+      } else {
+        console.error(e)
+        setTransactionStatus(ExtrinsicStatus.Error)
+      }
+    }
   })
 
   const resetFields = (video: VideoDraft | null) => ({
     title: video?.title,
     description: video?.description,
-    selectedVideoVisibility: video?.isPublic === undefined ? null : video.isPublic ? 'public' : 'unlisted',
-    selectedVideoLanguage: video?.language ?? null,
-    selectedVideoCategory: video?.categoryId ?? null,
+    isPublic: video?.isPublic === undefined ? null : video.isPublic ? 'public' : 'unlisted',
+    language: video?.language ?? null,
+    category: video?.categoryId ?? null,
     hasMarketing: video?.hasMarketing ?? null,
     publishedBeforeJoystream: video?.publishedBeforeJoystream ?? '',
-    isExplicit: video?.isExplicit === undefined ? null : video.isExplicit,
   })
 
   // Tabs
-  const { addDraft, drafts, updateDraft } = useDrafts('video', channelId)
+  const { addDraft, drafts, updateDraft, removeDraft } = useDrafts('video', channelId || '')
 
   const selectTab = useCallback(
     async (tab: EditVideoSheetTab) => {
@@ -102,7 +296,7 @@ export const EditVideoSheet: React.FC = () => {
 
   const addNewTab = useCallback(async () => {
     const newDraft = await addDraft({
-      channelId: channelId,
+      channelId: channelId || '',
       title: 'New Draft',
     })
     addVideoTab(newDraft)
@@ -177,21 +371,46 @@ export const EditVideoSheet: React.FC = () => {
     } else {
       setFiles([...files, { id: selectedVideoTab?.id, files: changeFiles }])
     }
+
+    if (changeFiles.video) {
+      const fileToBlob = async (file: File) => new Blob([new Uint8Array(await file.arrayBuffer())], { type: file.type })
+
+      const url = URL.createObjectURL(changeFiles.video)
+      const videoEl = document.createElement('video')
+      videoEl.src = url
+
+      videoEl.preload = 'metadata'
+
+      videoEl.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(videoEl.src)
+        const mediaPixelHeight = videoEl.videoHeight
+        const mediaPixelWidth = videoEl.videoWidth
+        const duration = videoEl.duration
+        setVideo((video) => ({ ...video, duration, mediaPixelHeight, mediaPixelWidth }))
+      }
+      const blob = await fileToBlob(changeFiles.video)
+      setVideo((video) => ({ ...video, blob, url }))
+    }
   }
 
-  const handleCropImage = (image: string | null) => {
+  const handleCropImage = (imageUrl: string | null, blob?: Blob) => {
     const hasImage = croppedImageUrls.some((item) => item.id === selectedVideoTab?.id)
     if (hasImage) {
       const newImages = croppedImageUrls.map((item) => {
         if (item.id === selectedVideoTab?.id) {
-          return { ...item, url: image }
+          return { ...item, url: imageUrl }
         }
         return item
       })
       setCroppedImageUrls(newImages)
     } else {
-      setCroppedImageUrls([...croppedImageUrls, { id: selectedVideoTab?.id, url: image }])
+      setCroppedImageUrls([...croppedImageUrls, { id: selectedVideoTab?.id, url: imageUrl }])
     }
+
+    setThumbnail({
+      blob: blob || null,
+      url: imageUrl,
+    })
   }
 
   const currentFilesWithDraftId = files.find((f) => f.id === selectedVideoTab?.id) || {
@@ -214,8 +433,29 @@ export const EditVideoSheet: React.FC = () => {
     })
     .filter((tab) => tab.title !== undefined)
 
+  const handleTransactionClose = async () => {
+    if (transactionStatus === ExtrinsicStatus.Completed) {
+      // todo, temporary. do something here
+      setTransactionStatus(null)
+    }
+    setTransactionStatus(null)
+  }
+
+  // todo handle updating video
+  const newVideo = true
+
   return (
     <>
+      <TransactionDialog
+        status={transactionStatus}
+        successTitle={newVideo ? 'Video successfully created!' : 'Video successfully updated!'}
+        successDescription={
+          newVideo
+            ? 'Your video was created and saved on the blockchain.'
+            : 'Changes to your video were saved on the blockchain.'
+        }
+        onClose={handleTransactionClose}
+      />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
@@ -250,7 +490,7 @@ export const EditVideoSheet: React.FC = () => {
         <StyledActionBar
           fee={99}
           primaryButtonText="Publish video"
-          onConfirmClick={onSubmit}
+          onConfirmClick={handleSubmit}
           detailsText="Drafts are saved automatically"
           tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
           detailsTextIcon={<SvgGlyphInfo />}
