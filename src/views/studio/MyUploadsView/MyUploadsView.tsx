@@ -52,7 +52,7 @@ const MyUploadsView = () => {
   return (
     <StudioContainer>
       <StyledText variant="h2">My Uploads</StyledText>
-      {videosLoading || channelLoading || !uploadsState.length ? (
+      {videosLoading || channelLoading ? (
         placeholderItems.map((Placeholder, idx) => <Placeholder key={`placeholder-${idx}`} />)
       ) : hasUploads ? (
         uploadsStateGroupedByParentObjectId.map((files) => (
