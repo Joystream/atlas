@@ -52,12 +52,18 @@ export enum LiaisonJudgement {
   Rejected = 'REJECTED',
 }
 
+export type StorageProvider = {
+  __typename?: 'StorageProvider'
+  id: Scalars['ID']
+  metadata?: Maybe<Scalars['String']>
+}
+
 export type DataObject = {
   __typename?: 'DataObject'
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   size: Scalars['Int']
-  liaisonId?: Maybe<Scalars['Int']>
+  liaison?: Maybe<StorageProvider>
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']
