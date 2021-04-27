@@ -33,9 +33,9 @@ const MyUploadsView = () => {
   const uploadsStateWithLiaisonJudgement = uploadsState.map((asset) => {
     const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
     if (dataObject) {
-      return { ...asset, liaisonJudgement: dataObject.liaisonJudgement, progress: asset.progress * 100 }
+      return { ...asset, liaisonJudgement: dataObject.liaisonJudgement }
     }
-    return { ...asset, progress: asset.progress * 100 }
+    return { ...asset }
   })
 
   // Grouping all assets by parent id (videos, channel)

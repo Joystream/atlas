@@ -31,10 +31,8 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
-  const isPending = uploadData.every(
-    (file) => file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0
-  )
-  const hasErrorNumber = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
+  const isWaiting = uploadData.every((file) => file.progress === 0)
+  const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
@@ -44,10 +42,10 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
-  const assetsGroupInfoText = hasErrorNumber
-    ? `(${hasErrorNumber}) Asset${hasErrorNumber > 1 ? 's' : ''} upload failed`
-    : isPending
-    ? 'Pending'
+  const assetsGroupInfoText = errorsCount
+    ? `(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} upload failed`
+    : isWaiting
+    ? 'Waiting for upload...'
     : `Uploaded (${masterProgress}%)`
 
   return (
@@ -58,7 +56,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
       >
         <ProgressBar progress={masterProgress} />
         <Thumbnail>
-          {hasErrorNumber ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
+          {errorsCount ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
