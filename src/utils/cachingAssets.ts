@@ -10,10 +10,15 @@ type WriteUrlInCacheArg = {
   url: string | null
 } & ReadUrlFromCacheArg
 
-const fragment = gql`
-  fragment ChannelFileUrlsFields on Channel {
-    cachedAvatarUrl
+const cachedCoverUrlFragment = gql`
+  fragment CoverUrlField on Channel {
     cachedCoverUrl
+  }
+`
+
+const cachedAvatarUrlFragment = gql`
+  fragment AvatarUrlField on Channel {
+    cachedAvatarUrl
   }
 `
 
@@ -21,7 +26,7 @@ export const writeUrlInCache: (arg: WriteUrlInCacheArg) => void = ({ url, fileTy
   const field = fileType === 'avatar' ? 'cachedAvatarUrl' : 'cachedCoverUrl'
   client.writeFragment({
     id: `Channel:${channelId}`,
-    fragment,
+    fragment: fileType === 'avatar' ? cachedAvatarUrlFragment : cachedCoverUrlFragment,
     data: {
       [field]: url,
     },
@@ -32,7 +37,7 @@ export const readUrlFromCache: (arg: ReadUrlFromCacheArg) => string = ({ fileTyp
   const field = fileType === 'avatar' ? 'cachedAvatarUrl' : 'cachedCoverUrl'
   const fields = client.readFragment({
     id: `Channel:${channelId}`,
-    fragment,
+    fragment: fileType === 'avatar' ? cachedAvatarUrlFragment : cachedCoverUrlFragment,
   })
   return fields?.[field]
 }

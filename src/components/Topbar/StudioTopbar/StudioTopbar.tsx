@@ -78,23 +78,19 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
 
   const { sheetState } = useEditVideoSheet()
 
-  const cachedAvatarUrl = readUrlFromCache({
-    fileType: 'avatar',
-    channelId: activeUser?.channelId ?? '',
-    client,
-  })
-
-  const currentChannel = {
-    ...membership?.channels.find((channel) => channel.id === activeUser?.channelId),
-    cachedAvatarUrl,
-  } as ChannelFieldsWithCachedAvatar
-
   const channels = membership?.channels.map((channel) => {
-    if (channel.id === currentChannel.id) {
+    const cachedAvatarUrl = readUrlFromCache({
+      fileType: 'avatar',
+      channelId: channel.id,
+      client,
+    })
+    if (cachedAvatarUrl) {
       return { ...channel, cachedAvatarUrl }
     }
     return channel
   })
+
+  const currentChannel = channels?.find((channel) => channel.id === activeUser?.channelId)
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)

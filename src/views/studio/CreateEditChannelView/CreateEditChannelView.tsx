@@ -140,22 +140,33 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       description,
       isPublic,
       language,
+      id,
     } = channel
 
     const avatarPhotoUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
     const coverPhotoUrl = createUrlFromAsset(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
+    const cachedAvatarPhotoUrl = readUrlFromCache({
+      fileType: 'avatar',
+      channelId: id,
+      client,
+    })
+    const cachedCoverPhotoUrl = readUrlFromCache({
+      fileType: 'cover',
+      channelId: id,
+      client,
+    })
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
     reset({
-      avatar: { blob: null, url: avatarPhotoUrl, imageCropData: null },
-      cover: { blob: null, url: coverPhotoUrl, imageCropData: null },
+      avatar: { blob: null, url: avatarPhotoUrl || cachedAvatarPhotoUrl, imageCropData: null },
+      cover: { blob: null, url: coverPhotoUrl || cachedCoverPhotoUrl, imageCropData: null },
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || languages[0].value,
     })
-  }, [channel, loading, newChannel, reset])
+  }, [channel, channelId, client, loading, newChannel, reset])
 
   const avatarValue = watch('avatar')
   const coverValue = watch('cover')
@@ -248,6 +259,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionCallback(() => async () => {
           await refetchMember()
           await setActiveChannel(newChannelId)
+          if (data.avatar.blob && avatarContentId) {
+            writeUrlInCache({
+              url: data.avatar.url,
+              fileType: 'avatar',
+              channelId: newChannelId,
+              client,
+            })
+          }
+          if (data.cover.blob && coverContentId) {
+            writeUrlInCache({
+              url: data.cover.url,
+              fileType: 'cover',
+              channelId: newChannelId,
+              client,
+            })
+          }
         })
       } else if (channelId) {
         const { block } = await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
@@ -323,17 +350,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     setTransactionStatus(null)
   }
 
-  const cachedAvatarUrl = readUrlFromCache({
-    fileType: 'avatar',
-    channelId,
-    client,
-  })
-  const cachedCoverUrl = readUrlFromCache({
-    fileType: 'cover',
-    channelId,
-    client,
-  })
-
   if (error) {
     throw error
   }
@@ -358,7 +374,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             render={({ value, onChange }) => (
               <>
                 <ChannelCover
-                  coverPhotoUrl={loading ? null : value.url || cachedCoverUrl}
+                  coverPhotoUrl={loading ? null : value.url}
                   onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
@@ -380,7 +396,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               render={({ value, onChange }) => (
                 <>
                   <StyledAvatar
-                    imageUrl={value.url || cachedAvatarUrl}
+                    imageUrl={value.url}
                     size="fill"
                     onEditClick={() => avatarDialogRef.current?.open()}
                     editable
