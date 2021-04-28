@@ -15,7 +15,8 @@ export type FileState = {
 export type MultiFileSelectProps = {
   onChangeFiles: (fileState: FileState) => void
   files: FileState
-  onCropImage?: (image: string | null) => void
+  onDeleteFile?: (filetype: FileType) => void
+  onCropImage?: (imageUrl: string | null, blob?: Blob) => void
   croppedImageUrl?: string | null
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
@@ -31,6 +32,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onCropImage,
   onError,
   onDropRejected,
+  onDeleteFile,
   error,
   maxImageSize,
   maxVideoSize,
@@ -44,6 +46,10 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     if (!isLoading) {
       return
     }
+    if (error) {
+      setIsLoading(false)
+      return
+    }
     const timeout = setTimeout(() => {
       if (progress < 100) {
         setProgress(progress + 1)
@@ -55,7 +61,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }, 5)
 
     return () => clearTimeout(timeout)
-  }, [isLoading, progress])
+  }, [error, isLoading, progress])
 
   const handleUploadFile = (file: File) => {
     if (step === 'video') {
@@ -91,6 +97,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     if (fileType === 'image') {
       onCropImage?.(null)
     }
+    onDeleteFile?.(fileType)
   }
 
   return (
@@ -142,7 +149,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       <ImageCropDialog
         ref={dialogRef}
         imageType="videoThumbnail"
-        onConfirm={(_, croppedImageUrl) => onCropImage?.(croppedImageUrl)}
+        onConfirm={(blob, croppedImageUrl) => onCropImage?.(croppedImageUrl, blob)}
       />
     </MultiFileSelectContainer>
   )
