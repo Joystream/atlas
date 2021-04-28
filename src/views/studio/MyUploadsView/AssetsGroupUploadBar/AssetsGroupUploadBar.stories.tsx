@@ -1,53 +1,51 @@
+import React from 'react'
 import { Meta, Story } from '@storybook/react'
 import AssetsGroupUploadBar, { AssetsGroupBarUploadProps } from './AssetsGroupUploadBar'
-import React from 'react'
+import { LiaisonJudgement } from '@/api/queries/__generated__/baseTypes.generated'
 
 export default {
   title: 'General/AssetsGroupUploadBar',
   component: AssetsGroupUploadBar,
   argTypes: {
     uploadData: {
-      defaultValue: {
-        type: 'channel',
-        files: [
-          {
-            id: '768dad7c-6fea-4496-ae90-3a1ee4281bd4',
-            type: 'avatar',
-            progress: 0,
+      defaultValue: [
+        {
+          id: '768dad7c-6fea-4496-ae90-3a1ee4281bd4',
+          type: 'avatar',
+          progress: 100,
+          size: 178400,
+          imageCropData: {
+            top: 0,
+            left: 0,
             width: 360,
             height: 420,
-            size: 178400,
-            status: 'reconnecting',
           },
-          {
-            id: '0c2672ff-8d19-43df-975f-5c089aed5dde',
-            type: 'cover',
-            progress: 100,
+          parentObject: {
+            type: 'channel',
+            id: '1',
+          },
+          lastStatus: 'completed',
+          liaisonJudgement: LiaisonJudgement.Accepted,
+        },
+        {
+          id: '0c2672ff-8d19-43df-975f-5c089aed5dde',
+          type: 'cover',
+          progress: 60,
+          imageCropData: {
+            top: 0,
+            left: 0,
             width: 1300,
             height: 230,
-            size: 500400,
-            status: 'completed',
           },
-          {
-            id: 'f93c9f18-32e4-4e5e-8076-92a90bd5d2b2',
-            type: 'video',
-            progress: 0,
-            width: 1920,
-            height: 1080,
-            size: 3735993000,
-            status: 'pending',
+          size: 500400,
+          parentObject: {
+            type: 'channel',
+            id: '1',
           },
-          {
-            id: 'eae3c720-de6c-4434-82ef-02629f052074',
-            type: 'video',
-            progress: 70,
-            width: 1920,
-            height: 1080,
-            size: 1735993000,
-            status: 'uploading',
-          },
-        ],
-      },
+          lastStatus: 'inProgress',
+          liaisonJudgement: LiaisonJudgement.Accepted,
+        },
+      ],
     },
   },
 } as Meta
