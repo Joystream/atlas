@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useActiveUser, useEditVideoSheet } from '@/hooks'
-import { useMembership } from '@/api/hooks'
+import { useMembership, useChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -27,6 +27,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
+import { readUrlFromCache } from '@/utils/cachingAssets'
 import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
@@ -34,10 +35,14 @@ type StudioTopbarProps = {
   fullWidth?: boolean
 }
 
+type ChannelFieldsWithCachedAvatar = {
+  cachedAvatarUrl?: string
+} & BasicChannelFieldsFragment
+
 type ChannelInfoProps = {
   active?: boolean
   memberName?: string
-  channel?: BasicChannelFieldsFragment
+  channel?: ChannelFieldsWithCachedAvatar
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
@@ -47,10 +52,10 @@ type MemberInfoProps = {
 
 type NavDrawerProps = {
   active?: boolean
-  channels?: BasicChannelFieldsFragment[]
+  channels?: ChannelFieldsWithCachedAvatar[]
   memberName?: string
   memberAvatar?: string
-  currentChannel?: BasicChannelFieldsFragment
+  currentChannel?: ChannelFieldsWithCachedAvatar
   onCurrentChannelChange: (channelId: string) => void
   onLogoutClick: () => void
   handleClose: () => void
@@ -67,10 +72,29 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
       skip: !activeUser?.memberId,
     }
   )
+  const { client } = useChannel(activeUser?.channelId ?? '', {
+    skip: !activeUser?.channelId,
+  })
 
   const { sheetState } = useEditVideoSheet()
 
-  const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
+  const cachedAvatarUrl = readUrlFromCache({
+    fileType: 'avatar',
+    channelId: activeUser?.channelId ?? '',
+    client,
+  })
+
+  const currentChannel = {
+    ...membership?.channels.find((channel) => channel.id === activeUser?.channelId),
+    cachedAvatarUrl,
+  } as ChannelFieldsWithCachedAvatar
+
+  const channels = membership?.channels.map((channel) => {
+    if (channel.id === currentChannel.id) {
+      return { ...channel, cachedAvatarUrl }
+    }
+    return channel
+  })
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
@@ -137,7 +161,12 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
             {loading ? (
               <ChannelInfoPlaceholder />
             ) : membership?.channels.length ? (
-              <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
+              <ChannelInfo
+                channel={currentChannel}
+                memberName={membership.handle}
+                onClick={handleDrawerToggle}
+                // cachedAvatarUrl={cachedAvatarUrl}
+              />
             ) : (
               <ChannelInfoContainer onClick={handleDrawerToggle}>
                 <NewChannelAvatar newChannel size="small" />
@@ -156,7 +185,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
         active={isDrawerActive}
         memberName={membership?.handle}
         memberAvatar={membership?.avatarUri as string | undefined}
-        channels={membership?.channels}
+        channels={channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
@@ -193,7 +222,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
 
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
+        <StyledAvatar size="small" imageUrl={avatarPhotoUrl || channel?.cachedAvatarUrl} />
         <TextContainer>
           <Text variant="body1">{channel ? channel.title : 'New Channel'}</Text>
           {memberName && (

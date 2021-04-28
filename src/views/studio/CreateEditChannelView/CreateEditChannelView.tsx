@@ -21,6 +21,7 @@ import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
+import { writeUrlInCache, readUrlFromCache } from '@/utils/cachingAssets'
 import { useActiveUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
 import {
   ChannelAssets,
@@ -40,7 +41,6 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
 ]
 
 const FEE = 0
-
 type ImageAsset = {
   url: string | null
   blob: Blob | null
@@ -77,7 +77,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
 
-  const { channel, loading, error, refetch: refetchChannel } = useChannel(channelId || '', {
+  const { channel, loading, error, refetch: refetchChannel, client } = useChannel(channelId || '', {
     skip: newChannel || !channelId,
   })
   // use membership query so we can trigger refetch once the channels are updated
@@ -258,6 +258,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
           await Promise.all([refetchChannel(), refetchMember()])
+          if (data.avatar.blob && avatarContentId) {
+            writeUrlInCache({
+              url: data.avatar.url,
+              fileType: 'avatar',
+              channelId,
+              client,
+            })
+          }
+          if (data.cover.blob && coverContentId) {
+            writeUrlInCache({
+              url: data.cover.url,
+              fileType: 'cover',
+              channelId,
+              client,
+            })
+          }
         })
       }
 
@@ -307,6 +323,17 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     setTransactionStatus(null)
   }
 
+  const cachedAvatarUrl = readUrlFromCache({
+    fileType: 'avatar',
+    channelId,
+    client,
+  })
+  const cachedCoverUrl = readUrlFromCache({
+    fileType: 'cover',
+    channelId,
+    client,
+  })
+
   if (error) {
     throw error
   }
@@ -331,7 +358,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             render={({ value, onChange }) => (
               <>
                 <ChannelCover
-                  coverPhotoUrl={loading ? null : value.url}
+                  coverPhotoUrl={loading ? null : value.url || cachedCoverUrl}
                   onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
@@ -353,7 +380,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               render={({ value, onChange }) => (
                 <>
                   <StyledAvatar
-                    imageUrl={value.url}
+                    imageUrl={value.url || cachedAvatarUrl}
                     size="fill"
                     onEditClick={() => avatarDialogRef.current?.open()}
                     editable
