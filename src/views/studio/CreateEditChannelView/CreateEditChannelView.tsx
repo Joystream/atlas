@@ -41,6 +41,7 @@ const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
 ]
 
 const FEE = 0
+
 type ImageAsset = {
   url: string | null
   blob: Blob | null

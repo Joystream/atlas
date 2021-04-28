@@ -157,12 +157,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
             {loading ? (
               <ChannelInfoPlaceholder />
             ) : membership?.channels.length ? (
-              <ChannelInfo
-                channel={currentChannel}
-                memberName={membership.handle}
-                onClick={handleDrawerToggle}
-                // cachedAvatarUrl={cachedAvatarUrl}
-              />
+              <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
             ) : (
               <ChannelInfoContainer onClick={handleDrawerToggle}>
                 <NewChannelAvatar newChannel size="small" />
