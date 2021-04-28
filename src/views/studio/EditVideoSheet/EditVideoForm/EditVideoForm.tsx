@@ -21,7 +21,7 @@ const visibilityOptions: SelectItem<boolean>[] = [
 export type FormInputs = {
   title: string
   description: string
-  isPublic: string | null
+  isPublic: boolean | null
   language: string | null
   category: string | null
   hasMarketing: boolean | null
@@ -182,6 +182,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         <Controller
           name="isExplicit"
           control={control}
+          defaultValue={false}
           rules={{
             validate: (value) => value !== null,
           }}

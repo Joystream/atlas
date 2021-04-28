@@ -14,6 +14,7 @@ import {
   useActiveUser,
   useJoystream,
   useUploadsManager,
+  useSnackbar,
 } from '@/hooks'
 import { Container, Content, DrawerOverlay, StyledActionBar } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
@@ -27,19 +28,23 @@ import {
   ExtensionSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useCategories, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
+import { useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
+import { getVideoMetadata } from '@/utils/video'
+import { FileType } from '@/types/files'
 
 type Asset = {
   url: string | null
-  blob: Blob | null
+  blob: Blob | File | null
 }
 
 type VideoAsset = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
+  mimeType?: string
+  size?: number
 } & Asset
 
 type FileStateWithDraftId = {
@@ -65,9 +70,8 @@ export const EditVideoSheet: React.FC = () => {
     setSelectedVideoTab,
   } = useEditVideoSheet()
 
-  const { categories, error: categoriesError } = useCategories()
-
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
+  const { displaySnackbar } = useSnackbar()
   const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
   const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -104,7 +108,7 @@ export const EditVideoSheet: React.FC = () => {
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileStateWithDraftId[]>([])
   const [croppedImageUrls, setCroppedImageUrls] = useState<CroppedImageUrlsWithDraftId[]>([])
-  const handleFileRejections = (fileRejections: FileRejection[]) => {
+  const handleFileRejections = async (fileRejections: FileRejection[]) => {
     if (fileRejections.length) {
       const { errors } = fileRejections[0]
       const invalidType = errors.find((error) => error.code === 'file-invalid-type')
@@ -125,13 +129,13 @@ export const EditVideoSheet: React.FC = () => {
     shouldFocusError: true,
     defaultValues: {
       title: '',
-      isPublic: 'public',
+      isPublic: false,
       language: 'en',
       category: null,
       description: '',
       hasMarketing: false,
       publishedBeforeJoystream: null,
-      isExplicit: null,
+      isExplicit: false,
     },
   })
 
@@ -167,30 +171,49 @@ export const EditVideoSheet: React.FC = () => {
   }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    if (!video.url || !video.blob || !thumbnail.blob || !thumbnail.url) {
-      setFileSelectError('video or thumbnail was not provided')
+    if (!video.url || !video.blob) {
+      setFileSelectError('Video was not provided')
+      return
+    }
+    if (!thumbnail.url || !thumbnail.blob) {
+      setFileSelectError('Thumbnail was not provided')
       return
     }
     if (!joystream || !memberId || !channelId) {
       return
     }
-    // todo create metadata
 
-    const metadata: CreateVideoMetadata = {
-      ...(data.title ? { title: data.title ?? '' } : {}),
-      ...(data.description ? { description: data.description ?? '' } : {}),
-      ...(data.category ? { category: Number(data.category) ?? undefined } : {}),
-      ...(data.isPublic ? { isPublic: data.isPublic === 'true' } : {}),
-      ...(data.hasMarketing ? { hasMarketing: data.hasMarketing || undefined } : {}),
-      ...(data.isExplicit ? { isExplicit: data.isExplicit || undefined } : {}),
-      // todo cannot set video.duration, getting "Assertion failed"
-      // ...(video.duration ? { duration: video.duration || undefined } : {}),
-      ...(video.mediaPixelHeight ? { mediaPixelHeight: video.mediaPixelHeight } : {}),
-      ...(video.mediaPixelWidth ? { mediaPixelWidth: video.mediaPixelWidth } : {}),
-      // todo publishedBeforeJoystream
-    }
+    setFileSelectError(null)
 
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
+
+    const metadata: CreateVideoMetadata = {
+      ...(data.title ? { title: data.title } : {}),
+      ...(data.description ? { description: data.description } : {}),
+      ...(data.category ? { category: Number(data.category) } : {}),
+      ...(data.isPublic != null ? { isPublic: data.isPublic } : {}),
+      ...(data.hasMarketing != null ? { hasMarketing: data.hasMarketing } : {}),
+      ...(data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
+      ...(data.language ? { language: data.language } : {}),
+      ...(data.publishedBeforeJoystream
+        ? {
+            publishedBeforeJoystream: {
+              isPublished: true,
+              date: data.publishedBeforeJoystream.toString(),
+            },
+          }
+        : {}),
+      ...(video.mimeType
+        ? {
+            mediaType: {
+              mimeMediaType: video.mimeType,
+            },
+          }
+        : {}),
+      ...(video.duration ? { duration: Math.round(video.duration) } : {}),
+      ...(video.mediaPixelHeight ? { mediaPixelHeight: video.mediaPixelHeight } : {}),
+      ...(video.mediaPixelWidth ? { mediaPixelWidth: video.mediaPixelWidth } : {}),
+    }
 
     const assets: VideoAssets = {}
     let videoContentId = ''
@@ -226,7 +249,6 @@ export const EditVideoSheet: React.FC = () => {
         metadata,
         assets,
         (status) => {
-          console.log(assets)
           setTransactionStatus(status)
         }
       )
@@ -264,7 +286,7 @@ export const EditVideoSheet: React.FC = () => {
       if (e instanceof ExtensionSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
-        // displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
+        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
       } else {
         console.error(e)
         setTransactionStatus(ExtrinsicStatus.Error)
@@ -275,7 +297,7 @@ export const EditVideoSheet: React.FC = () => {
   const resetFields = (video: VideoDraft | null) => ({
     title: video?.title,
     description: video?.description,
-    isPublic: video?.isPublic === undefined ? null : video.isPublic ? 'public' : 'unlisted',
+    isPublic: null,
     language: video?.language ?? null,
     category: video?.categoryId ?? null,
     hasMarketing: video?.hasMarketing ?? null,
@@ -354,42 +376,40 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const handleChangeFiles = async (changeFiles: FileState) => {
-    const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
-    const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
-    if (draft?.title === 'New Draft') {
-      await updateDraft(draft.id, { title: changeFiles.video?.name })
-      reset(resetFields(draft))
-    }
-    if (hasFiles) {
-      const newFiles = files.map((f) => {
-        if (f.id === selectedVideoTab?.id) {
-          return { ...f, ...changeFiles }
-        }
-        return f
-      })
-      setFiles(newFiles)
-    } else {
-      setFiles([...files, { id: selectedVideoTab?.id, files: changeFiles }])
-    }
-
     if (changeFiles.video) {
-      const fileToBlob = async (file: File) => new Blob([new Uint8Array(await file.arrayBuffer())], { type: file.type })
-
-      const url = URL.createObjectURL(changeFiles.video)
-      const videoEl = document.createElement('video')
-      videoEl.src = url
-
-      videoEl.preload = 'metadata'
-
-      videoEl.onloadedmetadata = () => {
-        window.URL.revokeObjectURL(videoEl.src)
-        const mediaPixelHeight = videoEl.videoHeight
-        const mediaPixelWidth = videoEl.videoWidth
-        const duration = videoEl.duration
-        setVideo((video) => ({ ...video, duration, mediaPixelHeight, mediaPixelWidth }))
+      try {
+        const url = URL.createObjectURL(changeFiles.video)
+        const videoMetadata = await getVideoMetadata(changeFiles.video)
+        setVideo({
+          duration: videoMetadata.duration,
+          mediaPixelHeight: videoMetadata.height,
+          mediaPixelWidth: videoMetadata.width,
+          size: videoMetadata.sizeInBytes,
+          mimeType: videoMetadata.mimeType,
+          blob: changeFiles.video,
+          url,
+        })
+      } catch (error) {
+        setFileSelectError('Wrong file type')
+        return
       }
-      const blob = await fileToBlob(changeFiles.video)
-      setVideo((video) => ({ ...video, blob, url }))
+      const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
+      const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
+      if (draft?.title === 'New Draft') {
+        await updateDraft(draft.id, { title: changeFiles.video?.name })
+        reset(resetFields(draft))
+      }
+      if (hasFiles) {
+        const newFiles = files.map((f) => {
+          if (f.id === selectedVideoTab?.id) {
+            return { ...f, files: { ...changeFiles } }
+          }
+          return f
+        })
+        setFiles(newFiles)
+      } else {
+        setFiles([...files, { id: selectedVideoTab?.id, files: changeFiles }])
+      }
     }
   }
 
@@ -413,8 +433,8 @@ export const EditVideoSheet: React.FC = () => {
     })
   }
 
-  const currentFilesWithDraftId = files.find((f) => f.id === selectedVideoTab?.id) || {
-    draftId: selectedVideoTab?.id,
+  const currentVideoDraft = files.find((f) => f.id === selectedVideoTab?.id) || {
+    id: selectedVideoTab?.id,
     files: {
       video: null,
       image: null,
@@ -435,10 +455,25 @@ export const EditVideoSheet: React.FC = () => {
 
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
-      // todo, temporary. do something here
+      if (selectedVideoTab?.id) {
+        removeDraft(selectedVideoTab?.id)
+      }
       setTransactionStatus(null)
+      closeSheet()
+      reset()
     }
     setTransactionStatus(null)
+  }
+
+  const handleDeleteFile = (fileType: FileType) => {
+    setFiles(
+      files.map((f) => {
+        if (f.id === selectedVideoTab?.id) {
+          return { ...f, files: { ...f.files, [fileType]: null } }
+        }
+        return f
+      })
+    )
   }
 
   // todo handle updating video
@@ -469,7 +504,8 @@ export const EditVideoSheet: React.FC = () => {
         />
         <Content>
           <MultiFileSelect
-            files={currentFilesWithDraftId.files}
+            onDeleteFile={handleDeleteFile}
+            files={currentVideoDraft.files}
             error={fileSelectError}
             onError={setFileSelectError}
             onDropRejected={handleFileRejections}
