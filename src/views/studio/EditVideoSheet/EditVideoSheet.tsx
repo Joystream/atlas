@@ -73,7 +73,6 @@ export const EditVideoSheet: React.FC = () => {
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const { displaySnackbar } = useSnackbar()
   const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
-  const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [video, setVideo] = useState<VideoAsset>({
@@ -159,9 +158,8 @@ export const EditVideoSheet: React.FC = () => {
 
     if (queryNodeState.indexerHead >= transactionBlock) {
       setTransactionStatus(ExtrinsicStatus.Completed)
-      transactionCallback?.()
     }
-  }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
+  }, [queryNodeState, transactionBlock, transactionStatus])
 
   const handleSubmit = createSubmitHandler(async (data) => {
     if (!video.url || !video.blob) {
@@ -233,13 +231,11 @@ export const EditVideoSheet: React.FC = () => {
     } else {
       console.warn('Missing thumbnail data')
     }
-    let assetsOwner: VideoId = ''
 
     try {
-      const { block } = await joystream.createVideo(memberId, channelId, metadata, assets, (status) => {
+      const { block, data: videoId } = await joystream.createVideo(memberId, channelId, metadata, assets, (status) => {
         setTransactionStatus(status)
       })
-      assetsOwner = channelId
 
       setTransactionStatus(ExtrinsicStatus.Syncing)
       setTransactionBlock(block)
@@ -247,10 +243,10 @@ export const EditVideoSheet: React.FC = () => {
       if (video.blob && videoContentId) {
         startFileUpload(video.blob, {
           contentId: videoContentId,
-          owner: assetsOwner,
+          owner: channelId,
           parentObject: {
             type: 'video',
-            id: assetsOwner,
+            id: videoId,
           },
           type: 'video',
         })
@@ -258,10 +254,10 @@ export const EditVideoSheet: React.FC = () => {
       if (thumbnail.blob && thumbnailContentId) {
         startFileUpload(thumbnail.blob, {
           contentId: thumbnailContentId,
-          owner: assetsOwner,
+          owner: channelId,
           parentObject: {
             type: 'video',
-            id: assetsOwner,
+            id: videoId,
           },
           type: 'thumbnail',
         })
@@ -443,7 +439,7 @@ export const EditVideoSheet: React.FC = () => {
         removeDraft(selectedVideoTab?.id)
       }
       setTransactionStatus(null)
-      closeSheet()
+      setSheetState('minimized')
       reset()
     }
     setTransactionStatus(null)
