@@ -7,8 +7,21 @@ import { DispatchError } from '@polkadot/types/interfaces/system'
 import { web3AccountsSubscribe, web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 import { types } from '@joystream/types'
 import { ChannelId as RuntimeChannelId } from '@joystream/types/common'
-import { ChannelCreationParameters, ChannelUpdateParameters, ContentActor, NewAsset } from '@joystream/types/content'
-import { ChannelMetadata } from '@joystream/content-metadata-protobuf'
+import {
+  ChannelCreationParameters,
+  ChannelUpdateParameters,
+  ContentActor,
+  NewAsset,
+  VideoCreationParameters,
+  VideoUpdateParameters,
+} from '@joystream/types/content'
+import {
+  ChannelMetadata,
+  License,
+  MediaType,
+  PublishedBeforeJoystream,
+  VideoMetadata,
+} from '@joystream/content-metadata-protobuf'
 
 import {
   AccountNotFoundError,
@@ -25,11 +38,14 @@ import {
   AssetMetadata,
   ChannelAssets,
   ChannelId,
+  VideoId,
   CreateChannelMetadata,
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   MemberId,
+  CreateVideoMetadata,
+  VideoAssets,
 } from './types'
 import { ContentParameters } from '@joystream/types/storage'
 import { ContentId } from '@joystream/types/media'
@@ -212,6 +228,125 @@ export class JoystreamJs {
     })
   }
 
+  private async _createOrUpdateVideo(
+    updatedVideoId: VideoId | null = null,
+    memberId: MemberId,
+    channelId: ChannelId,
+    inputMetadata: CreateVideoMetadata,
+    inputAssets: VideoAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult<VideoId>> {
+    const newVideo = updatedVideoId === null
+
+    // === video assets ===
+    // first video, then thumbnail
+    const newAssetsList: NewAsset[] = [
+      ...(inputAssets.video ? [inputAssets.video] : []),
+      ...(inputAssets.thumbnail ? [inputAssets.thumbnail] : []),
+    ]
+
+    // === video assets ===
+    const protoMeta = new VideoMetadata()
+    if (inputMetadata.title != null) {
+      protoMeta.setTitle(inputMetadata.title)
+    }
+    if (inputMetadata.description != null) {
+      protoMeta.setDescription(inputMetadata.description)
+    }
+    if (inputMetadata.isPublic != null) {
+      protoMeta.setIsPublic(inputMetadata.isPublic)
+    }
+    if (inputMetadata.language != null) {
+      protoMeta.setLanguage(inputMetadata.language)
+    }
+    if (inputMetadata.isExplicit != null) {
+      protoMeta.setIsExplicit(inputMetadata.isExplicit)
+    }
+    if (inputMetadata.category != null) {
+      protoMeta.setCategory(inputMetadata.category)
+    }
+    if (inputMetadata.duration != null) {
+      protoMeta.setDuration(inputMetadata.duration)
+    }
+    if (inputMetadata.mediaPixelHeight != null) {
+      protoMeta.setMediaPixelHeight(inputMetadata.mediaPixelHeight)
+    }
+    if (inputMetadata.mediaPixelWidth != null) {
+      protoMeta.setMediaPixelWidth(inputMetadata.mediaPixelWidth)
+    }
+    if (inputMetadata.hasMarketing != null) {
+      protoMeta.setHasMarketing(inputMetadata.hasMarketing)
+    }
+
+    if (inputMetadata.mediaType != null) {
+      const protoMediaType = new MediaType()
+      protoMediaType.setCodecName(inputMetadata.mediaType.codecName || '')
+      protoMediaType.setContainer(inputMetadata.mediaType.container || '')
+      protoMediaType.setMimeMediaType(inputMetadata.mediaType.mimeMediaType || '')
+      protoMeta.setMediaType(protoMediaType)
+    }
+    if (inputMetadata.license != null) {
+      const protoLicense = new License()
+      protoLicense.setAttribution(inputMetadata.license.attribution || '')
+      protoLicense.setCode(inputMetadata.license.code || 0)
+      protoLicense.setCustomText(inputMetadata.license.customText || '')
+      protoMeta.setLicense(protoLicense)
+    }
+    if (inputMetadata.publishedBeforeJoystream != null) {
+      const protoPublishedBeforeJoystream = new PublishedBeforeJoystream()
+      protoPublishedBeforeJoystream.setDate(inputMetadata.publishedBeforeJoystream.date || '')
+      protoPublishedBeforeJoystream.setIsPublished(!!inputMetadata.publishedBeforeJoystream.date)
+      protoMeta.setPublishedBeforeJoystream(protoPublishedBeforeJoystream)
+    }
+
+    if (inputAssets.video) {
+      protoMeta.setVideo(0)
+    }
+    if (inputAssets.thumbnail) {
+      protoMeta.setThumbnailPhoto(inputAssets.video ? 1 : 0)
+    }
+
+    const serializedProtoMeta = protoMeta.serializeBinary()
+    const metaRaw = new Raw(this.api.registry, serializedProtoMeta)
+    const metaBytes = new Bytes(this.api.registry, metaRaw)
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    let tx: SubmittableExtrinsic<'promise'>
+
+    if (newVideo) {
+      const assets = new Vec<NewAsset>(this.api.registry, NewAsset, newAssetsList)
+
+      const params = new VideoCreationParameters(this.api.registry, {
+        meta: metaBytes,
+        assets: assets,
+      })
+
+      tx = this.api.tx.content.createVideo(contentActor, channelId, params)
+    } else {
+      const optionalMetaBytes = new Option<Bytes>(this.api.registry, Bytes, metaBytes)
+      class OptionalAssetsVec extends Option.with(Vec.with(NewAsset)) {}
+      const optionalAssets = new OptionalAssetsVec(this.api.registry, newAssetsList)
+
+      const params = new VideoUpdateParameters(this.api.registry, {
+        new_meta: optionalMetaBytes,
+        assets: optionalAssets,
+      })
+
+      tx = this.api.tx.content.updateVideo(contentActor, channelId, params)
+    }
+
+    const { data: events, block } = await this.sendExtrinsic(tx, cb)
+
+    const contentEvents = events.filter((event) => event.section === 'content')
+    const videoId = contentEvents[0].data[1]
+    return {
+      data: new BN(videoId as never).toString(),
+      block,
+    }
+  }
+
   private async _createOrUpdateChannel(
     updatedChannelId: ChannelId | null = null,
     memberId: MemberId,
@@ -357,5 +492,30 @@ export class JoystreamJs {
     await this.ensureApi()
 
     return this._createOrUpdateChannel(channelId, memberId, inputMetadata, inputAssets, cb)
+  }
+
+  async createVideo(
+    memberId: MemberId,
+    channelId: ChannelId,
+    inputMetadata: CreateVideoMetadata,
+    inputAssets: VideoAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult<VideoId>> {
+    await this.ensureApi()
+
+    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, inputAssets, cb)
+  }
+
+  async updateVideo(
+    videoId: VideoId,
+    memberId: MemberId,
+    channelId: ChannelId,
+    inputMetadata: CreateVideoMetadata,
+    inputAssets: VideoAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult<VideoId>> {
+    await this.ensureApi()
+
+    return this._createOrUpdateVideo(videoId, memberId, channelId, inputMetadata, inputAssets, cb)
   }
 }

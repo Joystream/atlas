@@ -21,9 +21,9 @@ const visibilityOptions: SelectItem<boolean>[] = [
 export type FormInputs = {
   title: string
   description: string
-  selectedVideoVisibility: string | null
-  selectedVideoLanguage: string | null
-  selectedVideoCategory: string | null
+  isPublic: boolean | null
+  language: string | null
+  category: string | null
   hasMarketing: boolean | null
   publishedBeforeJoystream: Date | null
   isExplicit: boolean | null
@@ -81,7 +81,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
       />
       <FormField title="Video Visibility">
         <Controller
-          name="selectedVideoVisibility"
+          name="isPublic"
           control={control}
           rules={{
             validate: (value) => value !== null,
@@ -94,15 +94,15 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
                 onChange(value)
                 draftId && updateDraft(draftId, { isPublic: value })
               }}
-              error={!!errors.selectedVideoVisibility && !value}
-              helperText={errors.selectedVideoVisibility ? 'Video visibility must be selected' : ''}
+              error={!!errors.isPublic && !value}
+              helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
             />
           )}
         />
       </FormField>
       <FormField title="Video Language">
         <Controller
-          name="selectedVideoLanguage"
+          name="language"
           control={control}
           rules={requiredValidation('Video language')}
           render={({ value, onChange }) => (
@@ -113,15 +113,15 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
                 onChange(value)
                 draftId && updateDraft(draftId, { language: value })
               }}
-              error={!!errors.selectedVideoLanguage && !value}
-              helperText={errors.selectedVideoLanguage?.message}
+              error={!!errors.language && !value}
+              helperText={errors.language?.message}
             />
           )}
         />
       </FormField>
       <FormField title="Video Category">
         <Controller
-          name="selectedVideoCategory"
+          name="category"
           control={control}
           rules={requiredValidation('Video category')}
           render={({ value, onChange }) => (
@@ -132,8 +132,8 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
                 onChange(value)
                 draftId && updateDraft(draftId, { categoryId: value })
               }}
-              error={!!errors.selectedVideoCategory && !value}
-              helperText={errors.selectedVideoCategory?.message}
+              error={!!errors.category && !value}
+              helperText={errors.category?.message}
             />
           )}
         />
@@ -182,6 +182,7 @@ export const EditVideoForm: React.FC<FormProps> = ({ errors, control, descriptio
         <Controller
           name="isExplicit"
           control={control}
+          defaultValue={false}
           rules={{
             validate: (value) => value !== null,
           }}
