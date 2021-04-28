@@ -16,7 +16,13 @@ import {
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
+import {
+  InnerFormContainer,
+  StyledAvatar,
+  StyledCheckout,
+  StyledTitleSection,
+  TitleContainer,
+} from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -33,7 +39,6 @@ import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
-import Checkout from '@/shared/components/Checkout'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -111,7 +116,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   })
 
   const titleRef = useRef<HTMLInputElement | null>(null)
-  const descriptionRef = useRef<HTMLInputElement | null>(null)
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
   const { sheetState } = useEditVideoSheet()
 
@@ -382,6 +387,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                     render={({ value, onChange }) => (
                       <Tooltip text="Click to edit channel title">
                         <HeaderTextField
+                          ref={titleRef}
                           placeholder="Add Channel Title"
                           value={value}
                           onChange={(e) => {
@@ -415,7 +421,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   placeholder="Add description"
                   spellcheck={false}
                   rows={8}
-                  ref={register(textFieldValidation('Description', 3, 1000))}
+                  ref={(ref) => {
+                    if (ref) {
+                      register(ref, textFieldValidation('Description', 3, 1000))
+                      descriptionRef.current = ref
+                    }
+                  }}
                   maxLength={1000}
                   error={!!errors.description}
                   helperText={errors.description?.message}
@@ -478,30 +489,32 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 onConfirmClick={handleSubmit}
               />
             </CSSTransition>
-            <Checkout
-              steps={[
-                {
-                  title: 'Add Channel Title',
-                  completed: !!dirtyFields.title,
-                  onClick: () => {},
-                },
-                {
-                  title: 'Add Description',
-                  completed: !!dirtyFields.description,
-                  onClick: () => {},
-                },
-                {
-                  title: 'Add Avatar',
-                  completed: !!dirtyFields.avatar,
-                  onClick: () => avatarDialogRef.current?.open(),
-                },
-                {
-                  title: 'Add Cover Image',
-                  completed: !!dirtyFields.cover,
-                  onClick: () => coverDialogRef.current?.open(),
-                },
-              ]}
-            />
+            {newChannel && (
+              <StyledCheckout
+                steps={[
+                  {
+                    title: 'Add Channel Title',
+                    completed: !!dirtyFields.title,
+                    onClick: () => titleRef.current?.focus(),
+                  },
+                  {
+                    title: 'Add Description',
+                    completed: !!dirtyFields.description,
+                    onClick: () => descriptionRef.current?.focus(),
+                  },
+                  {
+                    title: 'Add Avatar',
+                    completed: !!dirtyFields.avatar,
+                    onClick: () => avatarDialogRef.current?.open(),
+                  },
+                  {
+                    title: 'Add Cover Image',
+                    completed: !!dirtyFields.cover,
+                    onClick: () => coverDialogRef.current?.open(),
+                  },
+                ]}
+              />
+            )}
           </InnerFormContainer>
         </StudioContainer>
       </form>

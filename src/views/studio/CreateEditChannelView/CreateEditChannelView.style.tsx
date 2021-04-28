@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 import { sizes, media } from '@/shared/theme'
 import { Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
+import Checkout from '@/shared/components/Checkout'
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 
 export const StyledHeader = styled(Header)``
 
@@ -41,5 +43,15 @@ export const StyledAvatar = styled(Avatar)`
   ${media.small} {
     width: 136px;
     height: 136px;
+  }
+`
+
+export const StyledCheckout = styled(Checkout)`
+  display: none;
+  position: fixed;
+  bottom: ${TOP_NAVBAR_HEIGHT}px;
+  right: 0;
+  ${media.medium} {
+    display: block;
   }
 `
