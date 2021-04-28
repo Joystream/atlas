@@ -28,7 +28,7 @@ import {
   ExtensionSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { getVideoMetadata } from '@/utils/video'
@@ -87,13 +87,6 @@ export const EditVideoSheet: React.FC = () => {
   const {
     activeUser: { channelId, memberId },
   } = useActiveUser()
-
-  const { refetch: refetchMember } = useMembership(
-    {
-      where: { id: memberId },
-    },
-    { skip: !memberId }
-  )
 
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
 
@@ -243,22 +236,13 @@ export const EditVideoSheet: React.FC = () => {
     let assetsOwner: VideoId = ''
 
     try {
-      const { data: newVideoId, block } = await joystream.createVideo(
-        memberId,
-        channelId,
-        metadata,
-        assets,
-        (status) => {
-          setTransactionStatus(status)
-        }
-      )
-      assetsOwner = newVideoId
+      const { block } = await joystream.createVideo(memberId, channelId, metadata, assets, (status) => {
+        setTransactionStatus(status)
+      })
+      assetsOwner = channelId
 
       setTransactionStatus(ExtrinsicStatus.Syncing)
       setTransactionBlock(block)
-      setTransactionCallback(() => async () => {
-        await refetchMember()
-      })
 
       if (video.blob && videoContentId) {
         startFileUpload(video.blob, {

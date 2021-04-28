@@ -283,17 +283,20 @@ export class JoystreamJs {
       protoMediaType.setCodecName(inputMetadata.mediaType.codecName || '')
       protoMediaType.setContainer(inputMetadata.mediaType.container || '')
       protoMediaType.setMimeMediaType(inputMetadata.mediaType.mimeMediaType || '')
+      protoMeta.setMediaType(protoMediaType)
     }
     if (inputMetadata.license != null) {
       const protoLicense = new License()
       protoLicense.setAttribution(inputMetadata.license.attribution || '')
       protoLicense.setCode(inputMetadata.license.code || 0)
       protoLicense.setCustomText(inputMetadata.license.customText || '')
+      protoMeta.setLicense(protoLicense)
     }
     if (inputMetadata.publishedBeforeJoystream != null) {
       const protoPublishedBeforeJoystream = new PublishedBeforeJoystream()
       protoPublishedBeforeJoystream.setDate(inputMetadata.publishedBeforeJoystream.date || '')
       protoPublishedBeforeJoystream.setIsPublished(!!inputMetadata.publishedBeforeJoystream.date)
+      protoMeta.setPublishedBeforeJoystream(protoPublishedBeforeJoystream)
     }
 
     if (inputAssets.video) {
