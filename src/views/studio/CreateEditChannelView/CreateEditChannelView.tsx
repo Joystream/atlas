@@ -33,6 +33,7 @@ import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
+import Checkout from '@/shared/components/Checkout'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -108,6 +109,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: true,
     },
   })
+
+  const titleRef = useRef<HTMLInputElement | null>(null)
+  const descriptionRef = useRef<HTMLInputElement | null>(null)
 
   const { sheetState } = useEditVideoSheet()
 
@@ -474,6 +478,30 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 onConfirmClick={handleSubmit}
               />
             </CSSTransition>
+            <Checkout
+              steps={[
+                {
+                  title: 'Add Channel Title',
+                  completed: !!dirtyFields.title,
+                  onClick: () => {},
+                },
+                {
+                  title: 'Add Description',
+                  completed: !!dirtyFields.description,
+                  onClick: () => {},
+                },
+                {
+                  title: 'Add Avatar',
+                  completed: !!dirtyFields.avatar,
+                  onClick: () => avatarDialogRef.current?.open(),
+                },
+                {
+                  title: 'Add Cover Image',
+                  completed: !!dirtyFields.cover,
+                  onClick: () => coverDialogRef.current?.open(),
+                },
+              ]}
+            />
           </InnerFormContainer>
         </StudioContainer>
       </form>
