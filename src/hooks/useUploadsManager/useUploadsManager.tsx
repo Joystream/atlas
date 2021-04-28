@@ -30,13 +30,13 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
             'Content-Type': '',
           },
           onUploadProgress: ({ loaded, total }: ProgressEvent) => {
-            setAssetUploadProgress(loaded / total)
+            setAssetUploadProgress((loaded / total) * 100)
           },
         })
 
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
-        setAssetUploadProgress(1)
+        setAssetUploadProgress(100)
 
         // TODO: add snackbar?
       } catch (e) {
