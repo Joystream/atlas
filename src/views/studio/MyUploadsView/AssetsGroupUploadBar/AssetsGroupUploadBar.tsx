@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react'
+import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
+import { LiaisonJudgement } from '@/api/queries/__generated__/baseTypes.generated'
 import {
   Container,
   AssetsGroupUploadBarContainer,
@@ -13,48 +15,37 @@ import { AssetLine } from '../AssetLine'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
-type AssetType = 'avatar' | 'cover' | 'thumbnail' | 'video'
-type AssetStatus = 'completed' | 'uploading' | 'pending' | 'failed' | 'reconnecting'
-export type Asset = {
-  id: string
-  type: AssetType
-  progress: number
-  status: AssetStatus
-  width: number
-  height: number
-  size: number
-}
-
-type UploadDataType = 'channel' | 'video'
 export type UploadData = {
-  type: UploadDataType
-  title?: string
-  files: Asset[]
-}
+  liaisonJudgement?: LiaisonJudgement
+  videoTitle?: string
+} & AssetUploadWithProgress
 
 export type AssetsGroupBarUploadProps = {
-  uploadData: UploadData
+  uploadData: UploadData[]
 }
 
-const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData: { type, title, files } }) => {
+const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
 
   const drawer = useRef<HTMLDivElement>(null)
 
-  const isChannelType = type === 'channel'
-  const isPending = files.every((file) => file.status === 'pending')
-  const hasErrorNumber = files.filter(({ status }) => status === 'failed' || status === 'reconnecting').length
+  const isChannelType = uploadData[0].parentObject.type === 'channel'
 
-  const allAssetsSize = files.reduce((acc, file) => acc + file.size, 0)
-  const alreadyUploadedSize = files.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
+  const isWaiting = uploadData.every((file) => file.progress === 0)
+  const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
+
+  const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
+  const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const assetsGroupTitleText = isChannelType ? 'Channel assets' : title
-  const assetsGroupNumberText = `${files.length} asset${files.length > 1 ? 's' : ''}`
-  const assetsGroupInfoText = isPending
+  const videoTitle = uploadData.find((asset) => !!asset.videoTitle)?.videoTitle
+  const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
+  const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
+
+  const assetsGroupInfoText = errorsCount
+    ? `(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} upload failed`
+    : isWaiting
     ? 'Waiting for upload...'
-    : hasErrorNumber
-    ? `(${hasErrorNumber}) Asset${hasErrorNumber > 1 ? 's' : ''} upload failed`
     : `Uploaded (${masterProgress}%)`
 
   return (
@@ -65,7 +56,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
       >
         <ProgressBar progress={masterProgress} />
         <Thumbnail>
-          {hasErrorNumber ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
+          {errorsCount ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
@@ -81,8 +72,8 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData:
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
-        {files.map((file, idx) => (
-          <AssetLine key={file.id} asset={file} isLast={files.length === idx + 1} />
+        {uploadData.map((file, idx) => (
+          <AssetLine key={file.contentId} asset={file} isLast={uploadData.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>
