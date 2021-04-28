@@ -15,7 +15,13 @@ import {
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
-import { ChannelMetadata, VideoMetadata } from '@joystream/content-metadata-protobuf'
+import {
+  ChannelMetadata,
+  License,
+  MediaType,
+  PublishedBeforeJoystream,
+  VideoMetadata,
+} from '@joystream/content-metadata-protobuf'
 
 import {
   AccountNotFoundError,
@@ -272,23 +278,22 @@ export class JoystreamJs {
       protoMeta.setHasMarketing(inputMetadata.hasMarketing)
     }
 
-    // todo figure out how to do it cleaner
     if (inputMetadata.mediaType != null) {
-      const protoMediaType = protoMeta.getMediaType()
-      protoMediaType?.setCodecName(inputMetadata.mediaType.codecName || '')
-      protoMediaType?.setContainer(inputMetadata.mediaType.container || '')
-      protoMediaType?.setMimeMediaType(inputMetadata.mediaType.mimeMediaType || '')
+      const protoMediaType = new MediaType()
+      protoMediaType.setCodecName(inputMetadata.mediaType.codecName || '')
+      protoMediaType.setContainer(inputMetadata.mediaType.container || '')
+      protoMediaType.setMimeMediaType(inputMetadata.mediaType.mimeMediaType || '')
     }
     if (inputMetadata.license != null) {
-      const protoLicense = protoMeta.getLicense()
-      protoLicense?.setAttribution(inputMetadata.license.attribution || '')
-      protoLicense?.setCode(inputMetadata.license.code || 0)
-      protoLicense?.setCustomText(inputMetadata.license.customText || '')
+      const protoLicense = new License()
+      protoLicense.setAttribution(inputMetadata.license.attribution || '')
+      protoLicense.setCode(inputMetadata.license.code || 0)
+      protoLicense.setCustomText(inputMetadata.license.customText || '')
     }
     if (inputMetadata.publishedBeforeJoystream != null) {
-      const protoPublishedBeforeJoystream = protoMeta.getPublishedBeforeJoystream()
-      protoPublishedBeforeJoystream?.setDate(inputMetadata.publishedBeforeJoystream.date || '')
-      protoPublishedBeforeJoystream?.setIsPublished(inputMetadata.publishedBeforeJoystream.isPublished || false)
+      const protoPublishedBeforeJoystream = new PublishedBeforeJoystream()
+      protoPublishedBeforeJoystream.setDate(inputMetadata.publishedBeforeJoystream.date || '')
+      protoPublishedBeforeJoystream.setIsPublished(!!inputMetadata.publishedBeforeJoystream.date)
     }
 
     if (inputAssets.video) {
