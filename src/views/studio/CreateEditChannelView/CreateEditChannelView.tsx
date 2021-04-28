@@ -110,6 +110,19 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { sheetState } = useEditVideoSheet()
 
   useEffect(() => {
+    if (newChannel) {
+      reset({
+        avatar: { url: null, blob: null },
+        cover: { url: null, blob: null },
+        title: '',
+        description: '',
+        language: languages[0].value,
+        isPublic: true,
+      })
+    }
+  }, [newChannel, reset])
+
+  useEffect(() => {
     if (loading || newChannel || !channel) {
       return
     }
