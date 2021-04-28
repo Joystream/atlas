@@ -12,13 +12,10 @@ import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
-// not yet doable
-// TODO: on edit video callbacks
-// TODO: on delete video callbacks
-// TODO: dynamic channels (not hardcoded)
+
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab } = useEditVideoSheet()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -30,22 +27,14 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? ''
-  const {
-    drafts,
-    removeDraft,
-    unseenDrafts,
-    removeAllUnseenDrafts,
-    removeAllDrafts,
-    addDraft,
-    updateDraft,
-  } = useDrafts('video', channelId)
+  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', channelId)
 
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
       where: {
-        channelId_eq: activeUser.channelId,
+        channelId_eq: channelId,
         isPublic_eq,
       },
     },
@@ -91,6 +80,22 @@ export const MyVideosView = () => {
     }
   }
 
+  type HandleVideoClickOpts = {
+    draft?: boolean
+    minimized?: boolean
+  }
+  const handleVideoClick = (id?: string, opts: HandleVideoClickOpts = { draft: false, minimized: false }) => {
+    if (!id) {
+      return
+    }
+    addVideoTab({ id, isDraft: opts.draft })
+    if (opts.minimized) {
+      setSheetState('minimized')
+    } else {
+      navigate(absoluteRoutes.studio.editVideo())
+    }
+  }
+
   const gridContent = (
     <>
       {isDraftTab
@@ -106,28 +111,36 @@ export const MyVideosView = () => {
                 isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
                 onClick={(e) => {
                   e.preventDefault()
-                  addVideoTab(draft)
-                  setSelectedVideoTab(draft)
-                  navigate(absoluteRoutes.studio.editVideo())
+                  handleVideoClick(draft.id, { draft: true })
                 }}
                 onPullupClick={(e) => {
+                  // TODO: needed?
                   e.stopPropagation()
-                  addVideoTab(draft)
-                  setSheetState('minimized')
-                  setSelectedVideoTab(draft)
+                  handleVideoClick(draft.id, { draft: true, minimized: true })
                 }}
-                onEditVideoClick={() => {
-                  addVideoTab(draft)
-                  setSelectedVideoTab(draft)
-                  navigate(absoluteRoutes.studio.editVideo())
-                }}
-                onDeleteVideoClick={() => {
-                  removeDraft(draft.id)
-                }}
+                onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+                onDeleteVideoClick={() => removeDraft(draft.id)}
               />
             ))
         : videosWithPlaceholders.map((video, idx) => (
-            <VideoPreviewPublisher key={idx} id={video.id} showChannel={false} isPullupDisabled={false} />
+            <VideoPreviewPublisher
+              key={idx}
+              id={video.id}
+              showChannel={false}
+              isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
+              onClick={(e) => {
+                e.preventDefault()
+                handleVideoClick(video.id)
+              }}
+              onPullupClick={(e) => {
+                e.stopPropagation()
+                handleVideoClick(video.id, { minimized: true })
+              }}
+              onEditVideoClick={() => handleVideoClick(video.id)}
+              onDeleteVideoClick={() => {
+                // TODO: handle delete
+              }}
+            />
           ))}
     </>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { EditVideoSheetTab } from '@/hooks'
+import { EditVideoSheetTab, useEditVideoSheetTabData } from '@/hooks'
 import { IconButton } from '@/shared/components'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
 import { ButtonsContainer, Tab, TabsContainer, TabsHeader, TabTitle, Topbar } from './EditVideoTabsBar.style'
@@ -8,8 +8,8 @@ type TabsBarProps = {
   videoTabs: EditVideoSheetTab[]
   selectedVideoTab?: EditVideoSheetTab
   onAddNewTabClick: () => void
-  onRemoveTabClick: (tab: EditVideoSheetTab) => void
-  onTabSelect: (tab: EditVideoSheetTab) => void
+  onRemoveTabClick: (tabIdx: number) => void
+  onTabSelect: (tabIdx: number) => void
   onCloseClick: () => void
   onToggleMinimizedClick: () => void
 }
@@ -26,20 +26,14 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
   <Topbar>
     <TabsContainer>
       <TabsHeader variant="h6">Add new video</TabsHeader>
-      {videoTabs.map((tab) => (
-        <Tab key={tab.id} selected={tab.id === selectedVideoTab?.id} onClick={() => onTabSelect(tab)}>
-          <TabTitle variant="subtitle2">{tab.title}</TabTitle>
-          <IconButton
-            size="small"
-            variant="tertiary"
-            onClick={(e) => {
-              e.stopPropagation()
-              onRemoveTabClick(tab)
-            }}
-          >
-            <SvgGlyphClose />
-          </IconButton>
-        </Tab>
+      {videoTabs.map((tab, idx) => (
+        <EditVideoTab
+          key={tab.id}
+          tab={tab}
+          selected={tab.id === selectedVideoTab?.id}
+          onTabSelect={() => onTabSelect(idx)}
+          onRemoveTabClick={() => onRemoveTabClick(idx)}
+        />
       ))}
       <IconButton variant="tertiary" onClick={onAddNewTabClick}>
         <SvgGlyphPlus />
@@ -55,3 +49,30 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
     </ButtonsContainer>
   </Topbar>
 )
+
+type EditVideoTabProps = {
+  tab: EditVideoSheetTab
+  selected: boolean
+  onTabSelect: () => void
+  onRemoveTabClick: () => void
+}
+
+const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, selected, onTabSelect, onRemoveTabClick }) => {
+  const { data } = useEditVideoSheetTabData(tab)
+
+  return (
+    <Tab key={tab.id} selected={selected} onClick={onTabSelect}>
+      <TabTitle variant="subtitle2">{data?.title ?? '...'}</TabTitle>
+      <IconButton
+        size="small"
+        variant="tertiary"
+        onClick={(e) => {
+          e.stopPropagation()
+          onRemoveTabClick()
+        }}
+      >
+        <SvgGlyphClose />
+      </IconButton>
+    </Tab>
+  )
+}

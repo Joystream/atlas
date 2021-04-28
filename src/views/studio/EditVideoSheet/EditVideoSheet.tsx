@@ -1,33 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
-import { useForm } from 'react-hook-form'
 import { FileState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { MultiFileSelect } from '@/shared/components'
-import { textFieldValidation } from '@/utils/formValidationOptions'
 import {
-  EditVideoSheetState,
-  EditVideoSheetTab,
   useDrafts,
-  VideoDraft,
   useEditVideoSheet,
-  useOverlayManager,
   useActiveUser,
-  useJoystream,
   useUploadsManager,
   useSnackbar,
+  useJoystream,
+  EditVideoFormFields,
 } from '@/hooks'
-import { Container, Content, DrawerOverlay, StyledActionBar } from './EditVideoSheet.style'
+import { Container, Content, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
-import { EditVideoForm, FormInputs } from './EditVideoForm'
-import { SvgGlyphInfo } from '@/shared/icons'
-import {
-  CreateVideoMetadata,
-  ExtrinsicStatus,
-  VideoAssets,
-  ExtensionSignCancelledError,
-  VideoId,
-} from '@/joystream-lib'
+import { EditVideoForm } from './EditVideoForm'
+import { CreateVideoMetadata, ExtrinsicStatus, VideoAssets, ExtensionSignCancelledError } from '@/joystream-lib'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
@@ -63,12 +51,12 @@ export const EditVideoSheet: React.FC = () => {
     sheetState,
     setSheetState,
     videoTabs,
+    selectedVideoTabIdx,
+    setSelectedVideoTabIdx,
     addVideoTab,
     removeVideoTab,
-    resetVideoTabs,
-    selectedVideoTab,
-    setSelectedVideoTab,
   } = useEditVideoSheet()
+  const selectedVideoTab = videoTabs[selectedVideoTabIdx]
 
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const { displaySnackbar } = useSnackbar()
@@ -92,8 +80,6 @@ export const EditVideoSheet: React.FC = () => {
   const { startFileUpload } = useUploadsManager(channelId || '')
   const { joystream } = useJoystream()
 
-  const { lockScroll, unlockScroll } = useOverlayManager()
-  const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
   // forms state
@@ -109,27 +95,6 @@ export const EditVideoSheet: React.FC = () => {
       invalidType && setFileSelectError(invalidType.message)
     }
   }
-  const {
-    register,
-    control,
-    setValue: setFormValue,
-    handleSubmit: createSubmitHandler,
-    reset,
-    clearErrors,
-    errors,
-  } = useForm<FormInputs>({
-    shouldFocusError: true,
-    defaultValues: {
-      title: '',
-      isPublic: false,
-      language: 'en',
-      category: null,
-      description: '',
-      hasMarketing: false,
-      publishedBeforeJoystream: null,
-      isExplicit: false,
-    },
-  })
 
   // video hash
   useEffect(() => {
@@ -161,7 +126,7 @@ export const EditVideoSheet: React.FC = () => {
     }
   }, [queryNodeState, transactionBlock, transactionStatus])
 
-  const handleSubmit = createSubmitHandler(async (data) => {
+  const handleSubmit = async (data: EditVideoFormFields) => {
     if (!video.url || !video.blob) {
       setFileSelectError('Video was not provided')
       return
@@ -272,59 +237,10 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Error)
       }
     }
-  })
-
-  const resetFields = (video: VideoDraft | null) => ({
-    title: video?.title,
-    description: video?.description,
-    isPublic: null,
-    language: video?.language ?? null,
-    category: video?.categoryId ?? null,
-    hasMarketing: video?.hasMarketing ?? null,
-    publishedBeforeJoystream: video?.publishedBeforeJoystream ?? '',
-  })
+  }
 
   // Tabs
-  const { addDraft, drafts, updateDraft, removeDraft } = useDrafts('video', channelId || '')
-
-  const selectTab = useCallback(
-    async (tab: EditVideoSheetTab) => {
-      const currentDraft = drafts.find((draft) => draft.id === tab.id)
-      currentDraft && reset(resetFields(currentDraft))
-      setSelectedVideoTab(tab)
-    },
-    [drafts, reset, setSelectedVideoTab]
-  )
-
-  const addNewTab = useCallback(async () => {
-    const newDraft = await addDraft({
-      channelId: channelId || '',
-      title: 'New Draft',
-    })
-    addVideoTab(newDraft)
-    if (!videoTabs.length) {
-      setSelectedVideoTab(newDraft)
-      reset(resetFields(newDraft))
-    }
-  }, [addDraft, channelId, addVideoTab, videoTabs.length, setSelectedVideoTab, reset])
-
-  useEffect(() => {
-    if (sheetState === cachedSheetState) {
-      return
-    }
-    setCachedSheetState(sheetState)
-
-    if (sheetState === 'open') {
-      selectedVideoTab && reset(resetFields(selectedVideoTab))
-      if (videoTabs.length === 0) {
-        addNewTab()
-      }
-      lockScroll()
-    }
-    if (sheetState === 'closed' || sheetState === 'minimized') {
-      unlockScroll()
-    }
-  }, [sheetState, cachedSheetState, videoTabs.length, addNewTab, lockScroll, unlockScroll, reset, selectedVideoTab])
+  const { drafts } = useDrafts('video', channelId ?? '')
 
   useEffect(() => {
     if (sheetState === 'closed') {
@@ -345,14 +261,7 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const closeSheet = () => {
-    resetVideoTabs()
     setSheetState('closed')
-  }
-
-  const removeTab = (tab: EditVideoSheetTab) => {
-    const newTab = videoTabs.find((currentTab) => currentTab.id !== tab.id)
-    newTab ? selectedVideoTab?.id === tab.id && selectTab(newTab) : closeSheet()
-    removeVideoTab(tab)
   }
 
   const handleChangeFiles = async (changeFiles: FileState) => {
@@ -376,8 +285,9 @@ export const EditVideoSheet: React.FC = () => {
       const hasFiles = files.some((f) => f.id === selectedVideoTab?.id)
       const draft = drafts.find((draft) => draft.id === selectedVideoTab?.id)
       if (draft?.title === 'New Draft') {
-        await updateDraft(draft.id, { title: changeFiles.video?.name })
-        reset(resetFields(draft))
+        // TODO: set draft name
+        // await updateDraft(draft.id, { title: changeFiles.video?.name })
+        // reset(resetFields(draft))
       }
       if (hasFiles) {
         const newFiles = files.map((f) => {
@@ -423,24 +333,16 @@ export const EditVideoSheet: React.FC = () => {
 
   const currentCroppedImgUrl = croppedImageUrls.find((item) => item.id === selectedVideoTab?.id)?.url || null
 
-  const videoTabsWithTitle = videoTabs
-    .map((tab) => {
-      const draft = drafts.find((draft) => draft.id === tab.id)
-      if (draft) {
-        return { ...tab, title: draft.title }
-      }
-      return { ...tab }
-    })
-    .filter((tab) => tab.title !== undefined)
-
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
       if (selectedVideoTab?.id) {
-        removeDraft(selectedVideoTab?.id)
+        // TODO: remove
+        // removeDraft(selectedVideoTab?.id)
       }
       setTransactionStatus(null)
       setSheetState('minimized')
-      reset()
+      // TODO: reset?
+      // reset()
     }
     setTransactionStatus(null)
   }
@@ -474,11 +376,11 @@ export const EditVideoSheet: React.FC = () => {
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
-          videoTabs={videoTabsWithTitle}
+          videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
-          onAddNewTabClick={addNewTab}
-          onRemoveTabClick={removeTab}
-          onTabSelect={selectTab}
+          onAddNewTabClick={() => addVideoTab()}
+          onRemoveTabClick={removeVideoTab}
+          onTabSelect={setSelectedVideoTabIdx}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
@@ -493,24 +395,8 @@ export const EditVideoSheet: React.FC = () => {
             croppedImageUrl={currentCroppedImgUrl}
             onCropImage={handleCropImage}
           />
-          <EditVideoForm
-            control={control}
-            titleRef={register(textFieldValidation('Video Title', 3, 20))}
-            descriptionRef={register(textFieldValidation('Description', 0, 2160))}
-            errors={errors}
-            clearErrors={clearErrors}
-            setFormValue={setFormValue}
-            draftId={selectedVideoTab?.id}
-          />
+          <EditVideoForm selectedVideoTab={selectedVideoTab} onSubmit={handleSubmit} />
         </Content>
-        <StyledActionBar
-          fee={99}
-          primaryButtonText="Publish video"
-          onConfirmClick={handleSubmit}
-          detailsText="Drafts are saved automatically"
-          tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
-          detailsTextIcon={<SvgGlyphInfo />}
-        />
       </Container>
     </>
   )

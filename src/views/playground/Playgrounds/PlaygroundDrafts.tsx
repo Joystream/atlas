@@ -57,12 +57,16 @@ const PlaygroundDrafts = () => {
       )}
 
       <FormField title="Your title">
-        <TextField label="title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+        <TextField
+          label="title"
+          value={form.title ?? undefined}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
       </FormField>
       <FormField title="Your description">
         <TextArea
           placeholder="description"
-          value={form.description}
+          value={form.description ?? undefined}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
       </FormField>

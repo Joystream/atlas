@@ -7,7 +7,8 @@ const regularMockMemberships: BasicMembershipFieldsFragment[] = rawMemberships.m
   ...rawMembership,
   __typename: 'Membership',
   avatarUri: channelAvatarSources[idx % channelAvatarSources.length],
-  controllerAccount: 'POLKADOT_ACCOUNT',
+  // TODO: change back
+  controllerAccount: '5HYySFRdS6993Fxsv5tPR3Vu5Cj5db4YghNJfYG14NR4CprA',
   channels: regularMockChannels.splice(0, 3),
 }))
 
