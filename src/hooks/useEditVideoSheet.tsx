@@ -16,8 +16,9 @@ export type EditVideoSheetTab = {
   id: string
   isDraft?: boolean
   isFresh?: boolean
-  inputFiles: InputFilesState
 }
+
+type EditVideoAssetsCache = Record<string, InputFilesState>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
@@ -26,6 +27,8 @@ type ContextValue = {
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
+  selectedVideoTabCachedAssets: InputFilesState
+  setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
 }
@@ -37,6 +40,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [selectedVideoTabIdx, setSelectedVideoTabIdx] = useState<number>(-1)
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
+  const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
 
   const { lockScroll, unlockScroll } = useOverlayManager()
 
@@ -46,10 +50,6 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         id: createId(),
         isDraft: true,
         isFresh: true,
-        inputFiles: {
-          video: null,
-          thumbnail: null,
-        },
       }
 
       if (videoTabs.find((t) => t.id === tabToAdd.id)) {
@@ -90,6 +90,17 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [selectedVideoTabIdx, videoTabs.length]
   )
 
+  const selectedVideoTab = videoTabs[selectedVideoTabIdx]
+  const setSelectedVideoTabCachedAssets = useCallback(
+    (files: InputFilesState) => {
+      setAssetsCache((existingAssets) => ({
+        ...existingAssets,
+        [selectedVideoTab.id]: files,
+      }))
+    },
+    [selectedVideoTab?.id]
+  )
+  const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
   const updateSelectedVideoTab = useCallback(
     (tabUpdates: Partial<EditVideoSheetTab>) => {
       setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
@@ -129,6 +140,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSelectedVideoTabIdx,
         sheetState,
         setSheetState,
+        selectedVideoTabCachedAssets,
+        setSelectedVideoTabCachedAssets,
       }}
     >
       {children}
@@ -158,6 +171,7 @@ export type EditVideoFormFields = {
   isPublic: boolean
   isExplicit: boolean | null
   publishedBeforeJoystream: string | null
+  assets: InputFilesState
 }
 
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
@@ -165,6 +179,8 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     activeUser: { channelId },
   } = useActiveUser()
   const { drafts } = useDrafts('video', channelId ?? '')
+
+  const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
@@ -178,6 +194,21 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   const draft = drafts.find((d) => d.id === tab.id)
 
+  const assets: InputFilesState = tab.isDraft
+    ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
+    : {
+        video: {
+          url: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+        },
+        thumbnail: {
+          url: createUrlFromAsset(
+            video?.thumbnailPhotoAvailability,
+            video?.thumbnailPhotoUrls,
+            video?.thumbnailPhotoDataObject
+          ),
+        },
+      }
+
   const normalizedData: EditVideoFormFields = {
     title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
@@ -188,22 +219,11 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
       (tab.isDraft ? draft?.publishedBeforeJoystream : video?.publishedBeforeJoystream?.toISOString()) ?? null,
+    assets,
   }
-
-  const assets = tab.isDraft
-    ? null
-    : {
-        video: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
-        thumbnail: createUrlFromAsset(
-          video?.thumbnailPhotoAvailability,
-          video?.thumbnailPhotoUrls,
-          video?.thumbnailPhotoDataObject
-        ),
-      }
 
   return {
     data: normalizedData,
-    assets,
     loading: tab.isDraft ? false : loading,
     error,
   }

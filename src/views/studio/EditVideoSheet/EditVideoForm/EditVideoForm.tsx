@@ -10,18 +10,29 @@ import {
   EditVideoFormFields,
   useEditVideoSheet,
 } from '@/hooks'
-import { Checkbox, Datepicker, FormField, RadioButton, Select, SelectItem, TextArea } from '@/shared/components'
+import {
+  Checkbox,
+  Datepicker,
+  FormField,
+  MultiFileSelect,
+  RadioButton,
+  Select,
+  SelectItem,
+  TextArea,
+} from '@/shared/components'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
 import {
-  FormContainer,
+  InputsContainer,
   StyledHeaderTextField,
   StyledRadioContainer,
   DeleteVideoContainer,
   DeleteVideoButton,
+  FormWrapper,
 } from './EditVideoForm.style'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 import { SvgGlyphInfo } from '@/shared/icons'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public (Anyone can see this video)', value: true },
@@ -30,19 +41,28 @@ const visibilityOptions: SelectItem<boolean>[] = [
 
 type EditVideoFormProps = {
   onSubmit: (data: EditVideoFormFields) => void
+  onThumbnailFileChange: (file: Blob) => void
+  onVideoFileChange: (file: Blob) => void
   selectedVideoTab?: EditVideoSheetTab
 }
 
-export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selectedVideoTab }) => {
+export const EditVideoForm: React.FC<EditVideoFormProps> = ({
+  selectedVideoTab,
+  onSubmit,
+  onThumbnailFileChange,
+  onVideoFileChange,
+}) => {
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? ''
-  const { categories, error: categoriesError } = useCategories()
-  const { addDraft, updateDraft } = useDrafts('video', channelId)
+  const isEdit = !selectedVideoTab?.isDraft
+
+  const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
-  const { updateSelectedVideoTab } = useEditVideoSheet()
-  const { data: tabData, assets: tabAssets, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(
-    selectedVideoTab
-  )
+  const { addDraft, updateDraft } = useDrafts('video', channelId)
+  const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets } = useEditVideoSheet()
+
+  const { categories, error: categoriesError } = useCategories()
+  const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   if (categoriesError) {
     throw categoriesError
@@ -52,7 +72,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     throw tabDataError
   }
 
-  const { register, control, handleSubmit, errors, getValues, reset, formState } = useForm<EditVideoFormFields>({
+  const { register, control, handleSubmit, errors, getValues, setValue, reset, formState } = useForm<
+    EditVideoFormFields
+  >({
     shouldFocusError: true,
     defaultValues: {
       title: '',
@@ -63,6 +85,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
       hasMarketing: false,
       publishedBeforeJoystream: null,
       isExplicit: null,
+      assets: {
+        video: null,
+        thumbnail: null,
+      },
     },
   })
 
@@ -103,18 +129,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     debouncedDraftSave.current.flush()
 
     console.log('reset')
-    if (tabAssets && !selectedVideoTab.isDraft) {
-      updateSelectedVideoTab({
-        inputFiles: {
-          video: {
-            url: tabAssets.video,
-          },
-          thumbnail: {
-            url: tabAssets.thumbnail,
-          },
-        },
-      })
-    }
+    setFileSelectError(null)
     reset(tabData)
   }, [
     selectedVideoTab,
@@ -123,17 +138,63 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     tabDataLoading,
     tabData,
     formState.isDirty,
-    tabAssets,
     updateSelectedVideoTab,
   ])
 
   const handleFormChange = () => {
-    if (!selectedVideoTab) {
+    if (!selectedVideoTab?.isDraft) {
       return
     }
     // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
     const data = getValues()
     debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+  }
+
+  const handleVideoFileChange = async (video: VideoInputFile | null) => {
+    const updatedAssets = {
+      ...getValues('assets'),
+      video,
+    }
+    setValue('assets', updatedAssets, { shouldDirty: true })
+    if (selectedVideoTab?.isDraft) {
+      setSelectedVideoTabCachedAssets(updatedAssets)
+    }
+    if (video?.blob) {
+      onVideoFileChange(video.blob)
+    }
+
+    if (!formState.dirtyFields.title && video?.title) {
+      const videoNameWithoutExtension = video.title.replace(/\.[^.]+$/, '')
+      setValue('title', videoNameWithoutExtension, { shouldDirty: true })
+      handleFormChange()
+    }
+  }
+
+  const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
+    const updatedAssets = {
+      ...getValues('assets'),
+      thumbnail,
+    }
+    setValue('assets', updatedAssets, { shouldDirty: true })
+    if (selectedVideoTab?.isDraft) {
+      setSelectedVideoTabCachedAssets(updatedAssets)
+    }
+    if (thumbnail?.blob) {
+      onThumbnailFileChange(thumbnail.blob)
+    }
+  }
+
+  const handleFileSelectError = async (errorCode: FileErrorType | null) => {
+    if (!errorCode) {
+      setFileSelectError(null)
+    } else if (errorCode === 'file-invalid-type') {
+      setFileSelectError('Invalid file type')
+    } else if (errorCode === 'file-too-large') {
+      setFileSelectError('File too large')
+    } else {
+      console.error({ message: 'Unknown file select error', code: errorCode })
+      setFileSelectError('Unknown error')
+    }
   }
 
   const handleDeleteVideo = () => {
@@ -147,177 +208,203 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     })) || []
 
   return (
-    <FormContainer>
-      <StyledHeaderTextField
-        name="title"
-        ref={register(textFieldValidation('Video Title', 3, 40))}
-        onChange={handleFormChange}
-        placeholder="Insert Video Title"
-        error={!!errors.title}
-        helperText={errors.title?.message}
-      />
-      <TextArea
-        name="description"
-        ref={register(textFieldValidation('Description', 0, 2160))}
-        onChange={handleFormChange}
-        maxLength={2160}
-        placeholder="Add video description"
-        error={!!errors.description}
-        helperText={errors.description?.message}
-      />
-      <FormField title="Video Visibility">
+    <>
+      <FormWrapper>
         <Controller
-          name="isPublic"
+          name="assets"
           control={control}
-          rules={{
-            validate: (value) => value !== null,
-          }}
-          render={({ value, onChange }) => (
-            <Select
-              value={value}
-              items={visibilityOptions}
-              onChange={(value) => {
-                onChange(value)
-                handleFormChange()
-              }}
-              error={!!errors.isPublic && !value}
-              helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
+          render={({ value }) => (
+            <MultiFileSelect
+              files={value}
+              onVideoChange={handleVideoFileChange}
+              onThumbnailChange={handleThumbnailFileChange}
+              editMode={isEdit}
+              error={fileSelectError}
+              onError={handleFileSelectError}
+              // TODO: change
+              maxVideoSize={2 * 1024 * 1024 * 1024}
             />
           )}
         />
-      </FormField>
-      <FormField title="Video Language">
-        <Controller
-          name="language"
-          control={control}
-          rules={requiredValidation('Video language')}
-          render={({ value, onChange }) => (
-            <Select
-              value={value ?? null}
-              items={languages}
-              onChange={(value) => {
-                onChange(value)
-                handleFormChange()
+        <InputsContainer>
+          <StyledHeaderTextField
+            name="title"
+            ref={register(textFieldValidation('Video Title', 3, 40))}
+            onChange={handleFormChange}
+            placeholder="Insert Video Title"
+            error={!!errors.title}
+            helperText={errors.title?.message}
+          />
+          <TextArea
+            name="description"
+            ref={register(textFieldValidation('Description', 0, 2160))}
+            onChange={handleFormChange}
+            maxLength={2160}
+            placeholder="Add video description"
+            error={!!errors.description}
+            helperText={errors.description?.message}
+          />
+          <FormField title="Video Visibility">
+            <Controller
+              name="isPublic"
+              control={control}
+              rules={{
+                validate: (value) => value !== null,
               }}
-              error={!!errors.language && !value}
-              helperText={errors.language?.message}
+              render={({ value, onChange }) => (
+                <Select
+                  value={value}
+                  items={visibilityOptions}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.isPublic && !value}
+                  helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
+                />
+              )}
             />
-          )}
-        />
-      </FormField>
-      <FormField title="Video Category">
-        <Controller
-          name="category"
-          control={control}
-          rules={requiredValidation('Video category')}
-          render={({ value, onChange }) => (
-            <Select
-              value={value ?? null}
-              items={categoriesSelectItems}
-              onChange={(value) => {
-                onChange(value)
-                handleFormChange()
+          </FormField>
+          <FormField title="Video Language">
+            <Controller
+              name="language"
+              control={control}
+              rules={requiredValidation('Video language')}
+              render={({ value, onChange }) => (
+                <Select
+                  value={value ?? null}
+                  items={languages}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.language && !value}
+                  helperText={errors.language?.message}
+                />
+              )}
+            />
+          </FormField>
+          <FormField title="Video Category">
+            <Controller
+              name="category"
+              control={control}
+              rules={requiredValidation('Video category')}
+              render={({ value, onChange }) => (
+                <Select
+                  value={value ?? null}
+                  items={categoriesSelectItems}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.category && !value}
+                  helperText={errors.category?.message}
+                />
+              )}
+            />
+          </FormField>
+          <FormField
+            title="Published Before"
+            description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
+          >
+            <Controller
+              name="publishedBeforeJoystream"
+              control={control}
+              rules={{
+                validate: (publishedBeforeJoystream) => pastDateValidation(publishedBeforeJoystream),
               }}
-              error={!!errors.category && !value}
-              helperText={errors.category?.message}
+              render={({ value, onChange }) => (
+                <Datepicker
+                  value={value}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.publishedBeforeJoystream}
+                  helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+                />
+              )}
             />
-          )}
-        />
-      </FormField>
-      <FormField
-        title="Published Before"
-        description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
-      >
-        <Controller
-          name="publishedBeforeJoystream"
-          control={control}
-          rules={{
-            validate: (publishedBeforeJoystream) => pastDateValidation(publishedBeforeJoystream),
-          }}
-          render={({ value, onChange }) => (
-            <Datepicker
-              value={value}
-              onChange={(value) => {
-                onChange(value)
-                handleFormChange()
+          </FormField>
+          <FormField title="Marketing" description="Please select whether your video contains paid promotions">
+            <Controller
+              name="hasMarketing"
+              control={control}
+              render={({ value, onChange }) => (
+                <Checkbox
+                  value={value}
+                  label="My video features a paid promotion material"
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                />
+              )}
+            />
+          </FormField>
+          <FormField
+            title="Content Rating"
+            description="Please select whether your video contains explicit material (sex, violence, etc.)"
+          >
+            <Controller
+              name="isExplicit"
+              control={control}
+              defaultValue={false}
+              rules={{
+                validate: (value) => value !== null,
               }}
-              error={!!errors.publishedBeforeJoystream}
-              helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+              render={({ value, onChange }) => (
+                <StyledRadioContainer>
+                  <RadioButton
+                    value="false"
+                    label="All audiences"
+                    onChange={() => {
+                      onChange(false)
+                      handleFormChange()
+                    }}
+                    selectedValue={value?.toString()}
+                    error={!!errors.isExplicit}
+                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                  />
+                  <RadioButton
+                    value="true"
+                    label="Mature"
+                    onChange={() => {
+                      onChange(true)
+                      handleFormChange()
+                    }}
+                    selectedValue={value?.toString()}
+                    error={!!errors.isExplicit}
+                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                  />
+                </StyledRadioContainer>
+              )}
             />
+          </FormField>
+          {isEdit && (
+            <DeleteVideoContainer>
+              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
+                Delete video
+              </DeleteVideoButton>
+            </DeleteVideoContainer>
           )}
-        />
-      </FormField>
-      <FormField title="Marketing" description="Please select whether your video contains paid promotions">
-        <Controller
-          name="hasMarketing"
-          control={control}
-          render={({ value, onChange }) => (
-            <Checkbox
-              value={value}
-              label="My video features a paid promotion material"
-              onChange={(value) => {
-                onChange(value)
-                handleFormChange()
-              }}
-            />
-          )}
-        />
-      </FormField>
-      <FormField
-        title="Content Rating"
-        description="Please select whether your video contains explicit material (sex, violence, etc.)"
-      >
-        <Controller
-          name="isExplicit"
-          control={control}
-          defaultValue={false}
-          rules={{
-            validate: (value) => value !== null,
-          }}
-          render={({ value, onChange }) => (
-            <StyledRadioContainer>
-              <RadioButton
-                value="false"
-                label="All audiences"
-                onChange={() => {
-                  onChange(false)
-                  handleFormChange()
-                }}
-                selectedValue={value?.toString()}
-                error={!!errors.isExplicit}
-                helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-              />
-              <RadioButton
-                value="true"
-                label="Mature"
-                onChange={() => {
-                  onChange(true)
-                  handleFormChange()
-                }}
-                selectedValue={value?.toString()}
-                error={!!errors.isExplicit}
-                helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-              />
-            </StyledRadioContainer>
-          )}
-        />
-      </FormField>
-      {!selectedVideoTab?.isDraft && (
-        <DeleteVideoContainer>
-          <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
-            Delete video
-          </DeleteVideoButton>
-        </DeleteVideoContainer>
-      )}
-
+        </InputsContainer>
+      </FormWrapper>
       <StyledActionBar
-        fee={99}
-        primaryButtonText="Publish video"
+        fee={0}
+        isActive={!isEdit || formState.isDirty}
+        primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
         onConfirmClick={handleSubmit(onSubmit)}
-        detailsText="Drafts are saved automatically"
-        tooltipText="Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft."
-        detailsTextIcon={<SvgGlyphInfo />}
+        detailsText={isEdit ? undefined : 'Drafts are saved automatically'}
+        tooltipText={
+          isEdit
+            ? undefined
+            : 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.'
+        }
+        detailsTextIcon={isEdit ? undefined : <SvgGlyphInfo />}
+        secondaryButtonText={isEdit ? 'Cancel' : undefined}
+        onCancelClick={isEdit ? () => reset() : undefined}
       />
-    </FormContainer>
+    </>
   )
 }

@@ -22,7 +22,16 @@ const Template: Story<MultiFileSelectProps> = (args) => {
     thumbnail: null,
   })
 
-  return <MultiFileSelect {...args} files={files} error={error} onError={setError} onChange={setFiles} />
+  return (
+    <MultiFileSelect
+      {...args}
+      files={files}
+      error={error}
+      onError={setError}
+      onThumbnailChange={(thumbnail) => setFiles((files) => ({ ...files, thumbnail }))}
+      onVideoChange={(video) => setFiles((files) => ({ ...files, video }))}
+    />
+  )
 }
 
 export const Default = Template.bind({})

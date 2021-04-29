@@ -11,9 +11,10 @@ import { getVideoMetadata } from '@/utils/video'
 type InputFile = {
   url?: string | null
   blob?: Blob | File | null
+  title?: string
 }
 
-type VideoInputFile = {
+export type VideoInputFile = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
@@ -21,7 +22,7 @@ type VideoInputFile = {
   size?: number
 } & InputFile
 
-type ImageInputFile = {
+export type ImageInputFile = {
   originalBlob?: Blob | File | null
 } & InputFile
 
@@ -32,7 +33,8 @@ export type InputFilesState = {
 
 export type FileErrorType = 'file-too-large' | 'file-invalid-type' | string
 export type MultiFileSelectProps = {
-  onChange: (filesState: InputFilesState) => void
+  onVideoChange: (video: VideoInputFile | null) => void
+  onThumbnailChange: (thumbnail: ImageInputFile | null) => void
   files: InputFilesState
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
@@ -42,7 +44,8 @@ export type MultiFileSelectProps = {
 }
 
 const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
-  onChange,
+  onVideoChange,
+  onThumbnailChange,
   files,
   maxImageSize,
   maxVideoSize,
@@ -95,11 +98,9 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         size: videoMetadata.sizeInBytes,
         mimeType: videoMetadata.mimeType,
         blob: file,
+        title: file.name,
       }
-      onChange({
-        ...files,
-        video: updatedVideo,
-      })
+      onVideoChange(updatedVideo)
     } catch (e) {
       onError?.('file-invalid-type')
     }
@@ -111,10 +112,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       blob: croppedBlob,
       url: croppedUrl,
     }
-    onChange({
-      ...files,
-      thumbnail: updatedThumbnail,
-    })
+    onThumbnailChange(updatedThumbnail)
   }
 
   const handleUploadFile = (file: File) => {
@@ -139,7 +137,12 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }
 
   const handleDeleteFile = (fileType: FileType) => {
-    onChange({ ...files, [fileType === 'video' ? 'video' : 'thumbnail']: null })
+    if (fileType === 'video') {
+      onVideoChange(null)
+    }
+    if (fileType === 'image') {
+      onThumbnailChange(null)
+    }
     setIsLoading(false)
     setProgress(0)
   }

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { FileErrorType, InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { MultiFileSelect } from '@/shared/components'
 import {
   useEditVideoSheet,
   useActiveUser,
@@ -10,7 +8,7 @@ import {
   EditVideoFormFields,
   EditVideoSheetTab,
 } from '@/hooks'
-import { Container, Content, DrawerOverlay } from './EditVideoSheet.style'
+import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
@@ -31,7 +29,6 @@ export const EditVideoSheet: React.FC = () => {
     videoTabs,
     selectedVideoTabIdx,
     setSelectedVideoTabIdx,
-    updateSelectedVideoTab,
     addVideoTab,
     removeVideoTab,
   } = useEditVideoSheet()
@@ -48,29 +45,6 @@ export const EditVideoSheet: React.FC = () => {
   const { startFileUpload } = useUploadsManager(channelId || '')
   const { joystream } = useJoystream()
 
-  // forms state
-  const [fileSelectError, setFileSelectError] = useState<string | null>(null)
-
-  // video hash
-  useEffect(() => {
-    if (!selectedVideoTab?.inputFiles.video?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(selectedVideoTab.inputFiles.video?.blob)
-    setVideoHashPromise(hashPromise)
-  }, [selectedVideoTab?.inputFiles.video?.blob])
-
-  // thumbnail hash
-  useEffect(() => {
-    if (!selectedVideoTab?.inputFiles.thumbnail?.blob) {
-      return
-    }
-
-    const hashPromise = computeFileHash(selectedVideoTab.inputFiles.thumbnail?.blob)
-    setThumbnailHashPromise(hashPromise)
-  }, [selectedVideoTab?.inputFiles.thumbnail?.blob])
-
   useEffect(() => {
     if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
       return
@@ -81,25 +55,35 @@ export const EditVideoSheet: React.FC = () => {
     }
   }, [queryNodeState, transactionBlock, transactionStatus])
 
+  const handleVideoFileChange = (file: Blob) => {
+    const hashPromise = computeFileHash(file)
+    setVideoHashPromise(hashPromise)
+  }
+
+  const handleThumbnailFileChange = (file: Blob) => {
+    const hashPromise = computeFileHash(file)
+    setThumbnailHashPromise(hashPromise)
+  }
+
   const handleSubmit = async (data: EditVideoFormFields) => {
     if (!selectedVideoTab) {
       return
     }
-    const { video: videoInputFile, thumbnail: thumbnailInputFile } = selectedVideoTab.inputFiles
+    const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
 
     if (!videoInputFile?.url || !videoInputFile?.blob) {
-      setFileSelectError('Video was not provided')
+      // setFileSelectError('Video was not provided')
       return
     }
     if (!thumbnailInputFile?.url || !thumbnailInputFile?.blob) {
-      setFileSelectError('Thumbnail was not provided')
+      // setFileSelectError('Thumbnail was not provided')
       return
     }
     if (!joystream || !memberId || !channelId) {
       return
     }
 
-    setFileSelectError(null)
+    // setFileSelectError(null)
 
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
 
@@ -207,24 +191,6 @@ export const EditVideoSheet: React.FC = () => {
     setSheetState('closed')
   }
 
-  const handleChangeFiles = async (changeFiles: InputFilesState) => {
-    updateSelectedVideoTab({ inputFiles: changeFiles })
-    // TODO: set draft name
-  }
-
-  const handleFileSelectError = async (errorCode: FileErrorType | null) => {
-    if (!errorCode) {
-      setFileSelectError(null)
-    } else if (errorCode === 'file-invalid-type') {
-      setFileSelectError('Invalid file type')
-    } else if (errorCode === 'file-too-large') {
-      setFileSelectError('File too large')
-    } else {
-      console.error({ message: 'Unknown file select error', code: errorCode })
-      setFileSelectError('Unknown error')
-    }
-  }
-
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
       if (selectedVideoTab?.id) {
@@ -262,17 +228,12 @@ export const EditVideoSheet: React.FC = () => {
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
-        <Content>
-          <MultiFileSelect
-            files={selectedVideoTab?.inputFiles || { video: null, thumbnail: null }}
-            onChange={handleChangeFiles}
-            editMode={!selectedVideoTab?.isDraft}
-            error={fileSelectError}
-            onError={handleFileSelectError}
-            maxVideoSize={2 * 1024 * 1024 * 1024}
-          />
-          <EditVideoForm selectedVideoTab={selectedVideoTab} onSubmit={handleSubmit} />
-        </Content>
+        <EditVideoForm
+          selectedVideoTab={selectedVideoTab}
+          onSubmit={handleSubmit}
+          onThumbnailFileChange={handleThumbnailFileChange}
+          onVideoFileChange={handleVideoFileChange}
+        />
       </Container>
     </>
   )

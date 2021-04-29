@@ -62,7 +62,7 @@ const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, selected, onTabSelect,
 
   return (
     <Tab key={tab.id} selected={selected} onClick={onTabSelect}>
-      <TabTitle variant="subtitle2">{data?.title ?? '...'}</TabTitle>
+      <TabTitle variant="subtitle2">{data?.title || 'Untitled'}</TabTitle>
       <IconButton
         size="small"
         variant="tertiary"
