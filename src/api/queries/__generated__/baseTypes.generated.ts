@@ -215,6 +215,32 @@ export type VideoConnection = {
   totalCount: Scalars['Int']
 }
 
+export type StorageProviderWhereInput = {
+  metadata_contains?: Maybe<Scalars['String']>
+}
+
+export type StorageProviderWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type StorageProviderEdge = {
+  __typename?: 'StorageProviderEdge'
+  node: StorageProvider
+  cursor: Scalars['String']
+}
+
+export type StorageProviderConnection = {
+  __typename?: 'StorageProviderConnection'
+  edges: Array<StorageProviderEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export enum StorageProviderOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+}
+
 export type CoverVideo = {
   __typename?: 'CoverVideo'
   id: Scalars['ID']
@@ -275,6 +301,9 @@ export type Query = {
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
+  storageProviderByUniqueInput?: Maybe<StorageProvider>
+  storageProviders?: Maybe<Array<StorageProvider>>
+  storageProvidersConnection: StorageProviderConnection
   videoByUniqueInput?: Maybe<Video>
   videoCategories: Array<VideoCategory>
   /** Get views count for a single video */
@@ -333,6 +362,23 @@ export type QueryMembershipsArgs = {
 export type QuerySearchArgs = {
   limit?: Maybe<Scalars['Int']>
   text: Scalars['String']
+}
+
+export type QueryStorageProviderByUniqueInputArgs = {
+  where: StorageProviderWhereUniqueInput
+}
+
+export type QueryStorageProvidersArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<StorageProviderWhereInput>
+}
+
+export type QueryStorageProvidersConnectionArgs = {
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<StorageProviderWhereInput>
+  orderBy?: Maybe<StorageProviderOrderByInput>
 }
 
 export type QueryVideoByUniqueInputArgs = {

@@ -211,6 +211,29 @@ type VideoConnection {
   totalCount: Int!
 }
 
+input StorageProviderWhereInput {
+  metadata_contains: String
+}
+
+input StorageProviderWhereUniqueInput {
+  id: ID!
+}
+
+type StorageProviderEdge {
+  node: StorageProvider!
+  cursor: String!
+}
+
+type StorageProviderConnection {
+  edges: [StorageProviderEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+enum StorageProviderOrderByInput {
+  createdAt_ASC
+  createdAt_DESC
+}
 # Isn't provided by query node yet
 type CoverVideo {
   id: ID!
@@ -280,6 +303,17 @@ type Query {
 
   # List all categories
   videoCategories: [VideoCategory!]!
+
+  storageProviders(offset: Int, limit: Int, where: StorageProviderWhereInput): [StorageProvider!]
+
+  storageProvidersConnection(
+    first: Int
+    after: String
+    where: StorageProviderWhereInput
+    orderBy: StorageProviderOrderByInput
+  ): StorageProviderConnection!
+
+  storageProviderByUniqueInput(where: StorageProviderWhereUniqueInput!): StorageProvider
 
   # Get the current cover video
   coverVideo: CoverVideo!
