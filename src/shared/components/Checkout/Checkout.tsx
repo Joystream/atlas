@@ -30,7 +30,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps, className }) => {
         {steps.map((step, idx) => (
           <Step key={step.title + idx} onClick={step.onClick}>
             <StepInnerContainer>
-              <StepState completed={step.completed}>{step.completed && <SvgGlyphCheck />}</StepState>{' '}
+              <StepState completed={step.completed}>{step.completed && <SvgGlyphCheck />}</StepState>
               <Text variant="body2">{step.title}</Text>
             </StepInnerContainer>
             <SvgGlyphChevronRight />

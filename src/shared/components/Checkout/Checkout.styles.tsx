@@ -34,7 +34,7 @@ export const BottomRowContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
-  z-index: 6;
+  z-index: 1;
 `
 
 type StepsContainerProps = {
@@ -106,6 +106,6 @@ export const StepsCompletedText = styled(Text)`
 export const StepInnerContainer = styled.div`
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 12px;
+  grid-gap: ${sizes(3)};
   align-items: center;
 `
