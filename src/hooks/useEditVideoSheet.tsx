@@ -20,7 +20,7 @@ type ContextValue = {
   videoTabs: EditVideoSheetTab[]
   addVideoTab: (tab?: EditVideoSheetTab, shouldSelect?: boolean) => void
   removeVideoTab: (tabIdx: number) => void
-  changeSelectedTabTitle: (newTitle: string) => void
+  updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
   sheetState: EditVideoSheetState
@@ -83,9 +83,9 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [selectedVideoTabIdx, videoTabs.length]
   )
 
-  const changeSelectedTabTitle = useCallback(
-    (newTitle: string) => {
-      setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, title: newTitle })))
+  const updateSelectedVideoTab = useCallback(
+    (tabUpdates: Partial<EditVideoSheetTab>) => {
+      setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
     },
     [selectedVideoTabIdx]
   )
@@ -117,7 +117,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         videoTabs,
         addVideoTab,
         removeVideoTab,
-        changeSelectedTabTitle,
+        updateSelectedVideoTab,
         selectedVideoTabIdx,
         setSelectedVideoTabIdx,
         sheetState,

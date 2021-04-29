@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
-import { useDrafts, useActiveUser, EditVideoSheetTab, useEditVideoSheetTabData, EditVideoFormFields } from '@/hooks'
+import {
+  useDrafts,
+  useActiveUser,
+  EditVideoSheetTab,
+  useEditVideoSheetTabData,
+  EditVideoFormFields,
+  useEditVideoSheet,
+} from '@/hooks'
 import { Checkbox, Datepicker, FormField, RadioButton, Select, SelectItem, TextArea } from '@/shared/components'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
@@ -32,6 +39,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
   const { categories, error: categoriesError } = useCategories()
   const { addDraft, updateDraft } = useDrafts('video', channelId)
   const [cachedSelectedVideoTab, setCachedSelectedVideoTab] = useState<EditVideoSheetTab | null>(null)
+  const { updateSelectedVideoTab } = useEditVideoSheet()
   const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   if (categoriesError) {
@@ -42,7 +50,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     throw tabDataError
   }
 
-  const { register, control, handleSubmit, errors, watch, reset, formState } = useForm<EditVideoFormFields>({
+  const { register, control, handleSubmit, errors, getValues, reset, formState } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
     defaultValues: {
       title: '',
@@ -62,13 +70,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
       (
         tab: EditVideoSheetTab,
         data: EditVideoFormFields,
-        resetFn: typeof reset,
         addDraftFn: typeof addDraft,
-        updateDraftFn: typeof updateDraft
+        updateDraftFn: typeof updateDraft,
+        updateSelectedTabFn: typeof updateSelectedVideoTab
       ) => {
-        resetFn(data)
         if (tab.isFresh) {
           addDraftFn(data, tab.id)
+          updateSelectedTabFn({ isFresh: false })
         } else {
           updateDraftFn(tab.id, data)
         }
@@ -88,23 +96,20 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     }
     setCachedSelectedVideoTab(selectedVideoTab)
 
-    if (formState.isDirty) {
-      // flush any possible changes to the edited draft
-      debouncedDraftSave.current.flush()
-    }
+    // flush any possible changes to the edited draft
+    debouncedDraftSave.current.flush()
 
     console.log('reset')
     reset(tabData)
   }, [selectedVideoTab, cachedSelectedVideoTab, reset, tabDataLoading, tabData, formState.isDirty])
 
-  useEffect(() => {
-    if (!selectedVideoTab || !selectedVideoTab.isDraft || !formState.isDirty) {
+  const handleFormChange = () => {
+    if (!selectedVideoTab) {
       return
     }
-
-    const data = watch()
-    debouncedDraftSave.current(selectedVideoTab, data, reset, addDraft, updateDraft)
-  }, [watch, selectedVideoTab, formState.isDirty, reset, addDraft, updateDraft])
+    const data = getValues()
+    debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+  }
 
   const handleDeleteVideo = () => {
     // TODO add logic for deleting video
@@ -117,7 +122,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     })) || []
 
   return (
-    <FormContainer>
+    <FormContainer onChange={handleFormChange}>
       <StyledHeaderTextField
         name="title"
         ref={register(textFieldValidation('Video Title', 3, 20))}
