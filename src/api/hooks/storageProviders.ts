@@ -41,17 +41,9 @@ export const useStorageProvidersCount = (variables: GetStorageProvidersQueryVari
 }
 
 export const useRandomStorageProviderUrl = () => {
-  const { totalCount } = useStorageProvidersCount({ where: { metadata_contains: 'http' } })
-  const randomStorageIdx = totalCount && getRandomIntInclusive(1, totalCount)
+  // Todo something here. Storageprovider is not randomized. It's not possible at the time.
+  const { storageProviders } = useStorageProviders({ where: { metadata_contains: 'http' } })
 
-  const { storageProviders } = useStorageProviders(
-    {
-      where: { metadata_contains: ' ' },
-      offset: randomStorageIdx,
-      limit: 1,
-    },
-    { skip: randomStorageIdx === undefined }
-  )
   if (storageProviders?.length) {
     return storageProviders[0].metadata
   }
