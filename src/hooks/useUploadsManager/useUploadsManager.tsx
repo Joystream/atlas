@@ -20,7 +20,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       try {
         addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         setAssetUploadProgress(0)
-        console.log(asset.metadata)
         const assetUrl = new URL(asset.contentId, storageNodeUrl + '/asset/v0/')
 
         await axios.put(assetUrl.toString(), file, {
