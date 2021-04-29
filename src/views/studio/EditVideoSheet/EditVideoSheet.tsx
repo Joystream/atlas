@@ -7,15 +7,23 @@ import {
   useJoystream,
   EditVideoFormFields,
   EditVideoSheetTab,
+  useDrafts,
 } from '@/hooks'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
-import { CreateVideoMetadata, ExtrinsicStatus, VideoAssets, ExtensionSignCancelledError } from '@/joystream-lib'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
+import {
+  CreateVideoMetadata,
+  ExtrinsicStatus,
+  VideoAssets,
+  ExtensionSignCancelledError,
+  VideoId,
+} from '@/joystream-lib'
+import { useQueryNodeStateSubscription, useVideo } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
+import { FieldNamesMarkedBoolean } from 'react-hook-form'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -31,9 +39,13 @@ export const EditVideoSheet: React.FC = () => {
     setSelectedVideoTabIdx,
     addVideoTab,
     removeVideoTab,
+    updateSelectedVideoTab,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
+  const isEdit = !selectedVideoTab?.isDraft
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
+
+  const { removeDraft } = useDrafts('video', channelId || '')
 
   // transaction management
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
@@ -41,9 +53,13 @@ export const EditVideoSheet: React.FC = () => {
   const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
+  const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
   const { startFileUpload } = useUploadsManager(channelId || '')
   const { joystream } = useJoystream()
+  const { refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
+    skip: !selectedVideoTab || selectedVideoTab.isDraft,
+  })
 
   useEffect(() => {
     if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
@@ -52,8 +68,9 @@ export const EditVideoSheet: React.FC = () => {
 
     if (queryNodeState.indexerHead >= transactionBlock) {
       setTransactionStatus(ExtrinsicStatus.Completed)
+      transactionCallback?.()
     }
-  }, [queryNodeState, transactionBlock, transactionStatus])
+  }, [queryNodeState, transactionBlock, transactionStatus, transactionCallback])
 
   const handleVideoFileChange = (file: Blob) => {
     const hashPromise = computeFileHash(file)
@@ -65,20 +82,12 @@ export const EditVideoSheet: React.FC = () => {
     setThumbnailHashPromise(hashPromise)
   }
 
-  const handleSubmit = async (data: EditVideoFormFields) => {
+  const handleSubmit = async (data: EditVideoFormFields, dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>) => {
     if (!selectedVideoTab) {
       return
     }
     const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
 
-    if (!videoInputFile?.url || !videoInputFile?.blob) {
-      // setFileSelectError('Video was not provided')
-      return
-    }
-    if (!thumbnailInputFile?.url || !thumbnailInputFile?.blob) {
-      // setFileSelectError('Thumbnail was not provided')
-      return
-    }
     if (!joystream || !memberId || !channelId) {
       return
     }
@@ -87,39 +96,36 @@ export const EditVideoSheet: React.FC = () => {
 
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
 
+    const isNew = !isEdit
+
     const metadata: CreateVideoMetadata = {
-      ...(data.title ? { title: data.title } : {}),
-      ...(data.description ? { description: data.description } : {}),
-      ...(data.category ? { category: Number(data.category) } : {}),
-      ...(data.isPublic != null ? { isPublic: data.isPublic } : {}),
-      ...(data.hasMarketing != null ? { hasMarketing: data.hasMarketing } : {}),
-      ...(data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
-      ...(data.language ? { language: data.language } : {}),
-      ...(data.publishedBeforeJoystream
+      ...(isNew || dirtyFields.title ? { title: data.title } : {}),
+      ...(isNew || dirtyFields.description ? { description: data.description } : {}),
+      ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
+      ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
+      ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null ? { hasMarketing: data.hasMarketing } : {}),
+      ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
+      ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+      ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
         ? {
-            publishedBeforeJoystream: {
-              isPublished: true,
-              date: data.publishedBeforeJoystream.toString(),
-            },
+            publishedBeforeJoystream: data.publishedBeforeJoystream,
           }
         : {}),
-      ...(videoInputFile.mimeType
+      ...(isNew || dirtyFields.assets?.video
         ? {
-            mediaType: {
-              mimeMediaType: videoInputFile.mimeType,
-            },
+            mimeMediaType: videoInputFile?.mimeType,
           }
         : {}),
-      ...(videoInputFile.duration ? { duration: Math.round(videoInputFile.duration) } : {}),
-      ...(videoInputFile.mediaPixelHeight ? { mediaPixelHeight: videoInputFile.mediaPixelHeight } : {}),
-      ...(videoInputFile.mediaPixelWidth ? { mediaPixelWidth: videoInputFile.mediaPixelWidth } : {}),
+      ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
+      ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
+      ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
     }
 
     const assets: VideoAssets = {}
     let videoContentId = ''
     let thumbnailContentId = ''
 
-    if (videoInputFile.blob && videoHashPromise) {
+    if (videoInputFile?.blob && videoHashPromise) {
       const [asset, contentId] = joystream.createFileAsset({
         size: videoInputFile.blob.size,
         ipfsContentId: await videoHashPromise,
@@ -130,7 +136,7 @@ export const EditVideoSheet: React.FC = () => {
       console.warn('Missing video data')
     }
 
-    if (thumbnailInputFile.blob && thumbnailHashPromise) {
+    if (thumbnailInputFile?.blob && thumbnailHashPromise) {
       const [asset, contentId] = joystream.createFileAsset({
         size: thumbnailInputFile.blob.size,
         ipfsContentId: await thumbnailHashPromise,
@@ -141,15 +147,43 @@ export const EditVideoSheet: React.FC = () => {
       console.warn('Missing thumbnail data')
     }
 
+    let videoId: VideoId = selectedVideoTab.id || ''
+
     try {
-      const { block, data: videoId } = await joystream.createVideo(memberId, channelId, metadata, assets, (status) => {
-        setTransactionStatus(status)
-      })
+      if (isNew) {
+        const { block, data: newVideoId } = await joystream.createVideo(
+          memberId,
+          channelId,
+          metadata,
+          assets,
+          (status) => {
+            setTransactionStatus(status)
+          }
+        )
+        videoId = newVideoId
 
-      setTransactionStatus(ExtrinsicStatus.Syncing)
-      setTransactionBlock(block)
+        setTransactionStatus(ExtrinsicStatus.Syncing)
+        setTransactionBlock(block)
+        setTransactionCallback(() => async () => {
+          await refetchVideo()
+          updateSelectedVideoTab({
+            id: newVideoId,
+            isDraft: false,
+          })
+          removeDraft(selectedVideoTab?.id)
+        })
+      } else {
+        const { block } = await joystream.updateVideo(videoId, memberId, channelId, metadata, assets, (status) => {
+          setTransactionStatus(status)
+        })
+        setTransactionStatus(ExtrinsicStatus.Syncing)
+        setTransactionBlock(block)
+        setTransactionCallback(() => async () => {
+          await refetchVideo()
+        })
+      }
 
-      if (videoInputFile.blob && videoContentId) {
+      if (videoInputFile?.blob && videoContentId) {
         startFileUpload(videoInputFile.blob, {
           contentId: videoContentId,
           owner: channelId,
@@ -160,7 +194,7 @@ export const EditVideoSheet: React.FC = () => {
           type: 'video',
         })
       }
-      if (thumbnailInputFile.blob && thumbnailContentId) {
+      if (thumbnailInputFile?.blob && thumbnailContentId) {
         startFileUpload(thumbnailInputFile.blob, {
           contentId: thumbnailContentId,
           owner: channelId,
@@ -193,14 +227,8 @@ export const EditVideoSheet: React.FC = () => {
 
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
-      if (selectedVideoTab?.id) {
-        // TODO: remove
-        // removeDraft(selectedVideoTab?.id)
-      }
       setTransactionStatus(null)
       setSheetState('minimized')
-      // TODO: reset?
-      // reset()
     }
     setTransactionStatus(null)
   }
@@ -209,9 +237,9 @@ export const EditVideoSheet: React.FC = () => {
     <>
       <TransactionDialog
         status={transactionStatus}
-        successTitle={selectedVideoTab?.isDraft ? 'Video successfully created!' : 'Video successfully updated!'}
+        successTitle={!isEdit ? 'Video successfully created!' : 'Video successfully updated!'}
         successDescription={
-          selectedVideoTab?.isDraft
+          !isEdit
             ? 'Your video was created and saved on the blockchain.'
             : 'Changes to your video were saved on the blockchain.'
         }

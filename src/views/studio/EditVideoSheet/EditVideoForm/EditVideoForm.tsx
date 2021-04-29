@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -40,7 +40,7 @@ const visibilityOptions: SelectItem<boolean>[] = [
 ]
 
 type EditVideoFormProps = {
-  onSubmit: (data: EditVideoFormFields) => void
+  onSubmit: (data: EditVideoFormFields, dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>) => void
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
   selectedVideoTab?: EditVideoSheetTab
@@ -72,9 +72,16 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     throw tabDataError
   }
 
-  const { register, control, handleSubmit, errors, getValues, setValue, reset, formState } = useForm<
-    EditVideoFormFields
-  >({
+  const {
+    register,
+    control,
+    handleSubmit: createSubmitHandler,
+    errors,
+    getValues,
+    setValue,
+    reset,
+    formState: { dirtyFields, isDirty },
+  } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
     defaultValues: {
       title: '',
@@ -108,7 +115,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         } else {
           updateDraftFn(tab.id, data)
         }
-        console.log('!!!save draft!!!')
       },
       700
     )
@@ -128,24 +134,28 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     // flush any possible changes to the edited draft
     debouncedDraftSave.current.flush()
 
-    console.log('reset')
     setFileSelectError(null)
     reset(tabData)
-  }, [
-    selectedVideoTab,
-    cachedSelectedVideoTabId,
-    reset,
-    tabDataLoading,
-    tabData,
-    formState.isDirty,
-    updateSelectedVideoTab,
-  ])
+  }, [selectedVideoTab, cachedSelectedVideoTabId, reset, tabDataLoading, tabData, updateSelectedVideoTab])
 
+  const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
+    // do initial validation
+    if (!isEdit && !data.assets.video?.blob) {
+      setFileSelectError('Video file cannot be empty')
+      return
+    }
+    if ((!isEdit || dirtyFields.assets?.thumbnail) && !data.assets.thumbnail?.blob) {
+      setFileSelectError('Thumbnail cannot be empty')
+    }
+
+    await onSubmit(data, dirtyFields)
+  })
+
+  // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
     if (!selectedVideoTab?.isDraft) {
       return
     }
-    // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
     const data = getValues()
     debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
   }
@@ -163,7 +173,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       onVideoFileChange(video.blob)
     }
 
-    if (!formState.dirtyFields.title && video?.title) {
+    if (!dirtyFields.title && video?.title) {
+      // TODO: don't change it if the draft was saved and reloaded
       const videoNameWithoutExtension = video.title.replace(/\.[^.]+$/, '')
       setValue('title', videoNameWithoutExtension, { shouldDirty: true })
       handleFormChange()
@@ -392,9 +403,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       </FormWrapper>
       <StyledActionBar
         fee={0}
-        isActive={!isEdit || formState.isDirty}
+        isActive={!isEdit || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
-        onConfirmClick={handleSubmit(onSubmit)}
+        onConfirmClick={handleSubmit}
         detailsText={isEdit ? undefined : 'Drafts are saved automatically'}
         tooltipText={
           isEdit
