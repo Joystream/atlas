@@ -26,13 +26,14 @@ export type AssetsGroupBarUploadProps = {
 
 const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
-
   const drawer = useRef<HTMLDivElement>(null)
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
-  const isWaiting = uploadData.every((file) => file.progress === 0)
+  const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
+  const reconnectionErrorsCount = uploadData.filter((file) => file.lastStatus === 'reconnectionError').length
+  const isPendingCount = uploadData.filter((file) => file.liaisonJudgement === LiaisonJudgement.Pending).length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
@@ -42,11 +43,28 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
-  const assetsGroupInfoText = errorsCount
-    ? `(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} upload failed`
-    : isWaiting
-    ? 'Waiting for upload...'
-    : `Uploaded (${masterProgress}%)`
+  const renderAssetsGroupInfo = () => {
+    if (reconnectionErrorsCount) {
+      return (
+        <Text variant="subtitle2">{`(${reconnectionErrorsCount}) Asset${
+          reconnectionErrorsCount > 1 ? 's' : ''
+        } upload failed`}</Text>
+      )
+    }
+    if (errorsCount) {
+      return <Text variant="subtitle2">{`(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} lost connection`}</Text>
+    }
+    if (isPendingCount) {
+      return (
+        <Text variant="subtitle2">{`(${isPendingCount}) Asset${isPendingCount > 1 ? 's' : ''} lost connection`}</Text>
+      )
+    }
+    if (isWaiting) {
+      return <Text variant="subtitle2">Waiting for upload...</Text>
+    }
+
+    return <Text variant="subtitle2">{`Uploaded (${masterProgress}%)`}</Text>
+  }
 
   return (
     <Container>
@@ -63,7 +81,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
           <Text variant="body2">{assetsGroupNumberText}</Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
-          <Text variant="subtitle2">{assetsGroupInfoText}</Text>
+          {renderAssetsGroupInfo()}
           <StyledExpandButton
             expanded={isAssetsDrawerActive}
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}

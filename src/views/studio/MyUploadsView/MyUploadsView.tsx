@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
