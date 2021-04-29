@@ -88,7 +88,7 @@ export const MyVideosView = () => {
     if (!id) {
       return
     }
-    addVideoTab({ id, isDraft: opts.draft })
+    addVideoTab({ id, isDraft: opts.draft, inputFiles: { video: null, thumbnail: null } })
     if (opts.minimized) {
       setSheetState('minimized')
     } else {

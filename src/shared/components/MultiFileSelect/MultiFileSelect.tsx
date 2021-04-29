@@ -6,41 +6,63 @@ import FileSelect from '../FileSelect'
 import FileStep from '../FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 import { SvgGlyphChevronRight } from '@/shared/icons'
+import { getVideoMetadata } from '@/utils/video'
 
-export type FileState = {
-  video: File | null
-  image: File | null
+type InputFile = {
+  url?: string | null
+  blob?: Blob | File | null
 }
 
+type VideoInputFile = {
+  duration?: number
+  mediaPixelWidth?: number
+  mediaPixelHeight?: number
+  mimeType?: string
+  size?: number
+} & InputFile
+
+type ImageInputFile = {
+  originalBlob?: Blob | File | null
+} & InputFile
+
+export type InputFilesState = {
+  video: VideoInputFile | null
+  thumbnail: ImageInputFile | null
+}
+
+export type FileErrorType = 'file-too-large' | 'file-invalid-type' | string
 export type MultiFileSelectProps = {
-  onChangeFiles: (fileState: FileState) => void
-  files: FileState
-  onDeleteFile?: (filetype: FileType) => void
-  onCropImage?: (imageUrl: string | null, blob?: Blob) => void
-  croppedImageUrl?: string | null
+  onChange: (filesState: InputFilesState) => void
+  files: InputFilesState
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
-  onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: (error: string | null) => void
+  editMode?: boolean
+  onError?: (error: FileErrorType | null) => void
   error?: string | null
 }
 
 const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
-  onChangeFiles,
+  onChange,
   files,
-  croppedImageUrl,
-  onCropImage,
-  onError,
-  onDropRejected,
-  onDeleteFile,
-  error,
   maxImageSize,
   maxVideoSize,
+  editMode = false,
+  onError,
+  error,
 }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [step, setStep] = useState<FileType>('video')
   const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [rawImageFile, setRawImageFile] = useState<File | null>(null)
+
+  useEffect(() => {
+    if (editMode) {
+      setStep('image')
+    } else {
+      setStep('video')
+    }
+  }, [editMode])
 
   useEffect(() => {
     if (!isLoading) {
@@ -63,26 +85,52 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     return () => clearTimeout(timeout)
   }, [error, isLoading, progress])
 
+  const updateVideoFile = async (file: File) => {
+    try {
+      const videoMetadata = await getVideoMetadata(file)
+      const updatedVideo: VideoInputFile = {
+        duration: videoMetadata.duration,
+        mediaPixelHeight: videoMetadata.height,
+        mediaPixelWidth: videoMetadata.width,
+        size: videoMetadata.sizeInBytes,
+        mimeType: videoMetadata.mimeType,
+        blob: file,
+      }
+      onChange({
+        ...files,
+        video: updatedVideo,
+      })
+    } catch (e) {
+      onError?.('file-invalid-type')
+    }
+  }
+
+  const updateThumbnailFile = (croppedBlob: Blob, croppedUrl: string) => {
+    const updatedThumbnail: ImageInputFile = {
+      originalBlob: rawImageFile,
+      blob: croppedBlob,
+      url: croppedUrl,
+    }
+    onChange({
+      ...files,
+      thumbnail: updatedThumbnail,
+    })
+  }
+
   const handleUploadFile = (file: File) => {
     if (step === 'video') {
-      onChangeFiles({
-        ...files,
-        video: file,
-      })
       setIsLoading(true)
+      updateVideoFile(file)
     }
     if (step === 'image') {
-      onChangeFiles({
-        ...files,
-        image: file,
-      })
+      setRawImageFile(file)
       dialogRef.current?.open(file)
     }
   }
 
   const handleReAdjustThumbnail = () => {
-    if (files.image) {
-      dialogRef.current?.open(files.image)
+    if (files.thumbnail?.originalBlob) {
+      dialogRef.current?.open(files.thumbnail.originalBlob)
     }
   }
 
@@ -91,13 +139,23 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }
 
   const handleDeleteFile = (fileType: FileType) => {
-    onChangeFiles({ ...files, [fileType]: null })
+    onChange({ ...files, [fileType === 'video' ? 'video' : 'thumbnail']: null })
     setIsLoading(false)
     setProgress(0)
-    if (fileType === 'image') {
-      onCropImage?.(null)
+  }
+
+  const handleFileRejections = async (fileRejections: FileRejection[]) => {
+    if (!fileRejections.length) {
+      return
     }
-    onDeleteFile?.(fileType)
+
+    const { errors } = fileRejections[0]
+    if (!errors.length) {
+      return
+    }
+
+    const firstError = errors[0]
+    onError?.(firstError.code)
   }
 
   return (
@@ -109,24 +167,23 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         progress={progress}
         fileType={step}
         title={step === 'video' ? 'Select Video File' : 'Add Thumbnail Image'}
-        thumbnailUrl={croppedImageUrl}
+        thumbnailUrl={files.thumbnail?.url}
         paragraph={
           step === 'video'
             ? `Minimum 480p. Accepts any format supported by your browser.`
             : `Maximum 10MB. Accepts any format supported by your browser.`
         }
-        onDropRejected={onDropRejected}
+        onDropRejected={handleFileRejections}
         onError={onError}
         error={error}
       />
       <StepsContainer>
         <FileStep
-          overhead="Video File"
-          subtitle="Select Video File"
           stepNumber={1}
           active={step === 'video'}
-          fileName={files.video?.name}
-          step="video"
+          isFileSet={!!files.video}
+          disabled={editMode}
+          type="video"
           onDelete={() => handleDeleteFile('video')}
           onSelect={handleChangeStep}
           progress={progress}
@@ -135,22 +192,16 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           <SvgGlyphChevronRight />
         </StepDivider>
         <FileStep
-          overhead="Thumbnail Image"
-          subtitle="Add Thumbnail Image"
           stepNumber={2}
           active={step === 'image'}
-          fileName={files.image?.name}
-          step="image"
+          isFileSet={!!files.thumbnail}
+          type="image"
           onDelete={() => handleDeleteFile('image')}
           onSelect={handleChangeStep}
-          thumbnail={croppedImageUrl}
+          thumbnailUrl={files.thumbnail?.url}
         />
       </StepsContainer>
-      <ImageCropDialog
-        ref={dialogRef}
-        imageType="videoThumbnail"
-        onConfirm={(blob, croppedImageUrl) => onCropImage?.(croppedImageUrl, blob)}
-      />
+      <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
     </MultiFileSelectContainer>
   )
 }

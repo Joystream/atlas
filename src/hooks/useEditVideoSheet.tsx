@@ -9,11 +9,14 @@ import { createId } from '@/utils/createId'
 import { useDrafts } from '@/hooks/useDrafts'
 import { useActiveUser } from '@/hooks/useActiveUser'
 import { useVideo } from '@/api/hooks'
+import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { createUrlFromAsset } from '@/utils/asset'
 
 export type EditVideoSheetTab = {
   id: string
   isDraft?: boolean
   isFresh?: boolean
+  inputFiles: InputFilesState
 }
 
 type ContextValue = {
@@ -43,6 +46,10 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         id: createId(),
         isDraft: true,
         isFresh: true,
+        inputFiles: {
+          video: null,
+          thumbnail: null,
+        },
       }
 
       if (videoTabs.find((t) => t.id === tabToAdd.id)) {
@@ -183,8 +190,20 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
       (tab.isDraft ? draft?.publishedBeforeJoystream : video?.publishedBeforeJoystream?.toISOString()) ?? null,
   }
 
+  const assets = tab.isDraft
+    ? null
+    : {
+        video: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+        thumbnail: createUrlFromAsset(
+          video?.thumbnailPhotoAvailability,
+          video?.thumbnailPhotoUrls,
+          video?.thumbnailPhotoDataObject
+        ),
+      }
+
   return {
     data: normalizedData,
+    assets,
     loading: tab.isDraft ? false : loading,
     error,
   }

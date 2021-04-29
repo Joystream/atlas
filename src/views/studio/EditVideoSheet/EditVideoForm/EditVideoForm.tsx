@@ -38,9 +38,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
   const channelId = activeUser.channelId ?? ''
   const { categories, error: categoriesError } = useCategories()
   const { addDraft, updateDraft } = useDrafts('video', channelId)
-  const [cachedSelectedVideoTab, setCachedSelectedVideoTab] = useState<EditVideoSheetTab | null>(null)
+  const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
   const { updateSelectedVideoTab } = useEditVideoSheet()
-  const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { data: tabData, assets: tabAssets, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(
+    selectedVideoTab
+  )
 
   if (categoriesError) {
     throw categoriesError
@@ -91,17 +93,39 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
       return
     }
 
-    if (selectedVideoTab === cachedSelectedVideoTab) {
+    // only run this hook if the selected tab changed
+    if (selectedVideoTab.id === cachedSelectedVideoTabId) {
       return
     }
-    setCachedSelectedVideoTab(selectedVideoTab)
+    setCachedSelectedVideoTabId(selectedVideoTab.id)
 
     // flush any possible changes to the edited draft
     debouncedDraftSave.current.flush()
 
     console.log('reset')
+    if (tabAssets && !selectedVideoTab.isDraft) {
+      updateSelectedVideoTab({
+        inputFiles: {
+          video: {
+            url: tabAssets.video,
+          },
+          thumbnail: {
+            url: tabAssets.thumbnail,
+          },
+        },
+      })
+    }
     reset(tabData)
-  }, [selectedVideoTab, cachedSelectedVideoTab, reset, tabDataLoading, tabData, formState.isDirty])
+  }, [
+    selectedVideoTab,
+    cachedSelectedVideoTabId,
+    reset,
+    tabDataLoading,
+    tabData,
+    formState.isDirty,
+    tabAssets,
+    updateSelectedVideoTab,
+  ])
 
   const handleFormChange = () => {
     if (!selectedVideoTab) {
