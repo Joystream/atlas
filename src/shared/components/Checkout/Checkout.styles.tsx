@@ -86,7 +86,7 @@ export const Step = styled.div`
   :last-of-type {
     position: relative;
     ::after {
-      bottom: -12px;
+      bottom: -${sizes(4)};
       position: absolute;
       content: '';
       width: 100%;

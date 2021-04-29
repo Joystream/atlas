@@ -45,7 +45,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps, className }) => {
               {stepsCompletedNumber}/{steps.length}
             </StepsCompletedText>
           </CircularProgresaBarContainer>
-          <IconButton variant="secondary" onClick={() => setIsHidden(!isHidden)}>
+          <IconButton variant="secondary" onClick={() => setIsHidden(!isHidden)} size="small">
             <StyledSvgGlyphChevronDown isHidden={isHidden} />
           </IconButton>
         </StepsProgressContainer>
