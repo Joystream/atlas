@@ -3,7 +3,7 @@ import { Container, HelperText, StyledInput } from './HeaderTextField.style'
 
 export type HeaderTextFieldProps = {
   name?: string
-  value: string
+  value?: string
   helperText?: string
   placeholder?: string
   error?: boolean
@@ -26,7 +26,7 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
           defaultValue={value}
           onChange={onChange}
           onBlur={onBlur}
-          widthSize={controlled ? value.length : null}
+          widthSize={controlled && value ? value.length : null}
         />
         {helperText && (
           <HelperText variant="body1" error={error} warning={warning}>

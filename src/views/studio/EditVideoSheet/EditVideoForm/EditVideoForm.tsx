@@ -107,6 +107,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     if (!selectedVideoTab) {
       return
     }
+    // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
     const data = getValues()
     debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
   }
@@ -122,11 +123,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
     })) || []
 
   return (
-    <FormContainer onChange={handleFormChange}>
+    <FormContainer>
       <StyledHeaderTextField
         name="title"
-        ref={register(textFieldValidation('Video Title', 3, 20))}
-        value=""
+        ref={register(textFieldValidation('Video Title', 3, 40))}
+        onChange={handleFormChange}
         placeholder="Insert Video Title"
         error={!!errors.title}
         helperText={errors.title?.message}
@@ -134,6 +135,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
       <TextArea
         name="description"
         ref={register(textFieldValidation('Description', 0, 2160))}
+        onChange={handleFormChange}
         maxLength={2160}
         placeholder="Add video description"
         error={!!errors.description}
@@ -150,7 +152,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
             <Select
               value={value}
               items={visibilityOptions}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                handleFormChange()
+              }}
               error={!!errors.isPublic && !value}
               helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
             />
@@ -166,7 +171,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
             <Select
               value={value ?? null}
               items={languages}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                handleFormChange()
+              }}
               error={!!errors.language && !value}
               helperText={errors.language?.message}
             />
@@ -182,7 +190,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
             <Select
               value={value ?? null}
               items={categoriesSelectItems}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                handleFormChange()
+              }}
               error={!!errors.category && !value}
               helperText={errors.category?.message}
             />
@@ -202,7 +213,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
           render={({ value, onChange }) => (
             <Datepicker
               value={value}
-              onChange={onChange}
+              onChange={(value) => {
+                onChange(value)
+                handleFormChange()
+              }}
               error={!!errors.publishedBeforeJoystream}
               helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
             />
@@ -214,7 +228,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
           name="hasMarketing"
           control={control}
           render={({ value, onChange }) => (
-            <Checkbox value={value} label="My video features a paid promotion material" onChange={onChange} />
+            <Checkbox
+              value={value}
+              label="My video features a paid promotion material"
+              onChange={(value) => {
+                onChange(value)
+                handleFormChange()
+              }}
+            />
           )}
         />
       </FormField>
@@ -234,7 +255,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
               <RadioButton
                 value="false"
                 label="All audiences"
-                onChange={() => onChange(false)}
+                onChange={() => {
+                  onChange(false)
+                  handleFormChange()
+                }}
                 selectedValue={value?.toString()}
                 error={!!errors.isExplicit}
                 helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
@@ -242,7 +266,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({ onSubmit, selected
               <RadioButton
                 value="true"
                 label="Mature"
-                onChange={() => onChange(true)}
+                onChange={() => {
+                  onChange(true)
+                  handleFormChange()
+                }}
                 selectedValue={value?.toString()}
                 error={!!errors.isExplicit}
                 helperText={errors.isExplicit ? 'Content rating must be selected' : ''}

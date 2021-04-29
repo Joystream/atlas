@@ -46,6 +46,10 @@ type CroppedImageUrlsWithDraftId = {
 }
 
 export const EditVideoSheet: React.FC = () => {
+  const {
+    activeUser: { channelId, memberId },
+  } = useActiveUser()
+
   // sheet state
   const {
     sheetState,
@@ -56,13 +60,21 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
   } = useEditVideoSheet()
+  const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
 
+  // transaction management
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const { displaySnackbar } = useSnackbar()
   const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
+  const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
+  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { joystream } = useJoystream()
+
+  // TODO: delete?
+  const { drafts } = useDrafts('video', channelId ?? '')
   const [video, setVideo] = useState<VideoAsset>({
     url: null,
     blob: null,
@@ -71,30 +83,11 @@ export const EditVideoSheet: React.FC = () => {
     url: null,
     blob: null,
   })
-  const {
-    activeUser: { channelId, memberId },
-  } = useActiveUser()
-
-  const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
-
-  const { startFileUpload } = useUploadsManager(channelId || '')
-  const { joystream } = useJoystream()
-
-  const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
   // forms state
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [files, setFiles] = useState<FileStateWithDraftId[]>([])
   const [croppedImageUrls, setCroppedImageUrls] = useState<CroppedImageUrlsWithDraftId[]>([])
-  const handleFileRejections = async (fileRejections: FileRejection[]) => {
-    if (fileRejections.length) {
-      const { errors } = fileRejections[0]
-      const invalidType = errors.find((error) => error.code === 'file-invalid-type')
-      const invalidSize = errors.find((error) => error.code === 'file-too-large')
-      invalidSize && setFileSelectError(invalidSize.message)
-      invalidType && setFileSelectError(invalidType.message)
-    }
-  }
 
   // video hash
   useEffect(() => {
@@ -239,23 +232,6 @@ export const EditVideoSheet: React.FC = () => {
     }
   }
 
-  // Tabs
-  const { drafts } = useDrafts('video', channelId ?? '')
-
-  useEffect(() => {
-    if (sheetState === 'closed') {
-      return
-    }
-    const beforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = 'Do you want to leave this page? Changes that you made may not be saved.'
-    }
-    window.addEventListener('beforeunload', beforeUnload)
-    return () => {
-      window.removeEventListener('beforeunload', beforeUnload)
-    }
-  }, [sheetState])
-
   const toggleMinimizedSheet = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
@@ -300,6 +276,16 @@ export const EditVideoSheet: React.FC = () => {
       } else {
         setFiles([...files, { id: selectedVideoTab?.id, files: changeFiles }])
       }
+    }
+  }
+
+  const handleFileRejections = async (fileRejections: FileRejection[]) => {
+    if (fileRejections.length) {
+      const { errors } = fileRejections[0]
+      const invalidType = errors.find((error) => error.code === 'file-invalid-type')
+      const invalidSize = errors.find((error) => error.code === 'file-too-large')
+      invalidSize && setFileSelectError(invalidSize.message)
+      invalidType && setFileSelectError(invalidType.message)
     }
   }
 
