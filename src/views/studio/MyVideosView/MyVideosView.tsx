@@ -109,12 +109,8 @@ export const MyVideosView = () => {
                 showChannel={false}
                 isDraft
                 isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleVideoClick(draft.id, { draft: true })
-                }}
+                onClick={() => handleVideoClick(draft.id, { draft: true })}
                 onPullupClick={(e) => {
-                  // TODO: needed?
                   e.stopPropagation()
                   handleVideoClick(draft.id, { draft: true, minimized: true })
                 }}
@@ -128,10 +124,7 @@ export const MyVideosView = () => {
               id={video.id}
               showChannel={false}
               isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-              onClick={(e) => {
-                e.preventDefault()
-                handleVideoClick(video.id)
-              }}
+              onClick={() => handleVideoClick(video.id)}
               onPullupClick={(e) => {
                 e.stopPropagation()
                 handleVideoClick(video.id, { minimized: true })

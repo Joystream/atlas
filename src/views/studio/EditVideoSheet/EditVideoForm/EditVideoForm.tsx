@@ -232,8 +232,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               editMode={isEdit}
               error={fileSelectError}
               onError={handleFileSelectError}
-              // TODO: change
-              maxVideoSize={2 * 1024 * 1024 * 1024}
+              maxVideoSize={10 * 1024 * 1024 * 1024}
             />
           )}
         />

@@ -173,8 +173,8 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         thumbnailUrl={files.thumbnail?.url}
         paragraph={
           step === 'video'
-            ? `Minimum 480p. Accepts any format supported by your browser.`
-            : `Maximum 10MB. Accepts any format supported by your browser.`
+            ? `Maximum 10GB. Accepts any format supported by your browser.`
+            : `Accepts any format supported by your browser.`
         }
         onDropRejected={handleFileRejections}
         onError={onError}
