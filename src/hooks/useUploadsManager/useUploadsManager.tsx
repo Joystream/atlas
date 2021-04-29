@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react'
 import axios from 'axios'
-import { STORAGE_NODE_URL } from '@/config/urls'
 import { ChannelId } from '@/joystream-lib'
 import { useUploadsManagerStore } from './store'
 import { InputAssetUpload, AssetUploadWithProgress, UploadManagerValue, UploadsProgressRecord } from './types'
@@ -13,7 +12,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
 
   const startFileUpload = useCallback(
-    async (file: File | Blob, asset: InputAssetUpload) => {
+    async (file: File | Blob, asset: InputAssetUpload, storageNodeUrl: string) => {
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
@@ -21,8 +20,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       try {
         addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         setAssetUploadProgress(0)
-
-        const assetUrl = new URL(asset.contentId, STORAGE_NODE_URL)
+        console.log(asset.metadata)
+        const assetUrl = new URL(asset.contentId, storageNodeUrl + '/asset/v0/')
 
         await axios.put(assetUrl.toString(), file, {
           headers: {

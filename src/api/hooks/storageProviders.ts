@@ -43,7 +43,6 @@ export const useStorageProvidersCount = (variables: GetStorageProvidersQueryVari
 export const useRandomStorageProviderUrl = () => {
   const { totalCount } = useStorageProvidersCount({ where: { metadata_contains: 'http' } })
   const randomStorageIdx = totalCount && getRandomIntInclusive(1, totalCount)
-  console.log(randomStorageIdx, totalCount)
 
   const { storageProviders } = useStorageProviders(
     {
