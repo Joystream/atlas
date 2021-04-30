@@ -149,8 +149,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
     reset({
-      avatar: { blob: null, url: avatarPhotoUrl || avatarPhotoUrls[0], imageCropData: null },
-      cover: { blob: null, url: coverPhotoUrl || coverPhotoUrls[0], imageCropData: null },
+      avatar: { blob: null, url: avatarPhotoUrl, imageCropData: null },
+      cover: { blob: null, url: coverPhotoUrl, imageCropData: null },
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,

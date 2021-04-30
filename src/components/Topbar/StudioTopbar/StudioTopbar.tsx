@@ -193,7 +193,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
 
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="small" imageUrl={avatarPhotoUrl || channel?.avatarPhotoUrls[0]} />
+        <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
         <TextContainer>
           <Text variant="body1">{channel ? channel.title : 'New Channel'}</Text>
           {memberName && (
