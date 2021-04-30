@@ -20,20 +20,26 @@ fragment VideoFields on Video {
   }
   views
   duration
-  thumbnailPhotoUrls
-  thumbnailPhotoAvailability
-  thumbnailPhotoDataObject {
-    ...DataObjectFields
-  }
   createdAt
   isPublic
+  isExplicit
+  hasMarketing
   isCensored
+  language {
+    iso
+  }
+  publishedBeforeJoystream
   mediaMetadata {
     ...VideoMediaMetadataFields
   }
   mediaUrls
   mediaAvailability
   mediaDataObject {
+    ...DataObjectFields
+  }
+  thumbnailPhotoUrls
+  thumbnailPhotoAvailability
+  thumbnailPhotoDataObject {
     ...DataObjectFields
   }
   channel {

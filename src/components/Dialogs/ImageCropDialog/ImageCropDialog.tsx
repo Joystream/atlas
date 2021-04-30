@@ -23,7 +23,7 @@ export type ImageCropDialogProps = {
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
-  open: (file?: File) => void
+  open: (file?: File | Blob) => void
 }
 
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
