@@ -28,7 +28,7 @@ import {
   ExtensionSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { getVideoMetadata } from '@/utils/video'
@@ -71,6 +71,7 @@ export const EditVideoSheet: React.FC = () => {
   } = useEditVideoSheet()
 
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
+  const randomStorageProviderUrl = useRandomStorageProviderUrl()
   const { displaySnackbar } = useSnackbar()
   const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -240,27 +241,35 @@ export const EditVideoSheet: React.FC = () => {
       setTransactionStatus(ExtrinsicStatus.Syncing)
       setTransactionBlock(block)
 
-      if (video.blob && videoContentId) {
-        startFileUpload(video.blob, {
-          contentId: videoContentId,
-          owner: channelId,
-          parentObject: {
+      if (video.blob && videoContentId && randomStorageProviderUrl) {
+        startFileUpload(
+          video.blob,
+          {
+            contentId: videoContentId,
+            owner: channelId,
+            parentObject: {
+              type: 'video',
+              id: videoId,
+            },
             type: 'video',
-            id: videoId,
           },
-          type: 'video',
-        })
+          randomStorageProviderUrl
+        )
       }
-      if (thumbnail.blob && thumbnailContentId) {
-        startFileUpload(thumbnail.blob, {
-          contentId: thumbnailContentId,
-          owner: channelId,
-          parentObject: {
-            type: 'video',
-            id: videoId,
+      if (thumbnail.blob && thumbnailContentId && randomStorageProviderUrl) {
+        startFileUpload(
+          thumbnail.blob,
+          {
+            contentId: thumbnailContentId,
+            owner: channelId,
+            parentObject: {
+              type: 'video',
+              id: videoId,
+            },
+            type: 'thumbnail',
           },
-          type: 'thumbnail',
-        })
+          randomStorageProviderUrl
+        )
       }
     } catch (e) {
       if (e instanceof ExtensionSignCancelledError) {
