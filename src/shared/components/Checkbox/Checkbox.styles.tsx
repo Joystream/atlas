@@ -1,3 +1,4 @@
+import { SvgGlyphCheck } from '@/shared/icons'
 import { sizes, colors, transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
@@ -108,4 +109,7 @@ export const Checkmark = styled.div`
 export const StyledHelperText = styled(HelperText)`
   margin: 0;
   grid-column-start: 2;
+`
+export const StyledGlyphCheck = styled(SvgGlyphCheck)`
+  position: absolute;
 `
