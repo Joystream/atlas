@@ -1,8 +1,7 @@
 import { OverlayManagerProvider } from '@/hooks'
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
-import { FileRejection } from 'react-dropzone'
-import MultiFileSelect, { MultiFileSelectProps, FileState } from './MultiFileSelect'
+import MultiFileSelect, { MultiFileSelectProps, InputFilesState } from './MultiFileSelect'
 
 export default {
   title: 'Shared/MultiFileSelect',
@@ -18,21 +17,10 @@ export default {
 
 const Template: Story<MultiFileSelectProps> = (args) => {
   const [error, setError] = useState<string | null>(null)
-  const [files, setFiles] = useState<FileState>({
+  const [files, setFiles] = useState<InputFilesState>({
     video: null,
-    image: null,
+    thumbnail: null,
   })
-  const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null)
-
-  const handleFileRejections = (fileRejections: FileRejection[]) => {
-    if (fileRejections.length) {
-      const { errors } = fileRejections[0]
-      const invalidType = errors.find((error) => error.code === 'file-invalid-type')
-      const invalidSize = errors.find((error) => error.code === 'file-too-large')
-      invalidSize && setError(invalidSize.message)
-      invalidType && setError(invalidType.message)
-    }
-  }
 
   return (
     <MultiFileSelect
@@ -40,10 +28,8 @@ const Template: Story<MultiFileSelectProps> = (args) => {
       files={files}
       error={error}
       onError={setError}
-      onDropRejected={handleFileRejections}
-      onChangeFiles={setFiles}
-      croppedImageUrl={croppedImageUrl}
-      onCropImage={setCroppedImageUrl}
+      onThumbnailChange={(thumbnail) => setFiles((files) => ({ ...files, thumbnail }))}
+      onVideoChange={(video) => setFiles((files) => ({ ...files, video }))}
     />
   )
 }

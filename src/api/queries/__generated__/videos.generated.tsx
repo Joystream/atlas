@@ -27,17 +27,21 @@ export type VideoFieldsFragment = {
   description?: Types.Maybe<string>
   views?: Types.Maybe<number>
   duration?: Types.Maybe<number>
-  thumbnailPhotoUrls: Array<string>
-  thumbnailPhotoAvailability: Types.AssetAvailability
   createdAt: Date
   isPublic?: Types.Maybe<boolean>
+  isExplicit?: Types.Maybe<boolean>
+  hasMarketing?: Types.Maybe<boolean>
   isCensored: boolean
+  publishedBeforeJoystream?: Types.Maybe<Date>
   mediaUrls: Array<string>
   mediaAvailability: Types.AssetAvailability
+  thumbnailPhotoUrls: Array<string>
+  thumbnailPhotoAvailability: Types.AssetAvailability
   category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-  thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
   mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
   mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
   channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
   license?: Types.Maybe<{ __typename?: 'License' } & LicenseFieldsFragment>
 }
@@ -142,20 +146,26 @@ export const VideoFieldsFragmentDoc = gql`
     }
     views
     duration
-    thumbnailPhotoUrls
-    thumbnailPhotoAvailability
-    thumbnailPhotoDataObject {
-      ...DataObjectFields
-    }
     createdAt
     isPublic
+    isExplicit
+    hasMarketing
     isCensored
+    language {
+      iso
+    }
+    publishedBeforeJoystream
     mediaMetadata {
       ...VideoMediaMetadataFields
     }
     mediaUrls
     mediaAvailability
     mediaDataObject {
+      ...DataObjectFields
+    }
+    thumbnailPhotoUrls
+    thumbnailPhotoAvailability
+    thumbnailPhotoDataObject {
       ...DataObjectFields
     }
     channel {
@@ -165,8 +175,8 @@ export const VideoFieldsFragmentDoc = gql`
       ...LicenseFields
     }
   }
-  ${DataObjectFieldsFragmentDoc}
   ${VideoMediaMetadataFieldsFragmentDoc}
+  ${DataObjectFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
 `

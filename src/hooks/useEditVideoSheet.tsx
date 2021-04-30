@@ -1,19 +1,35 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Draft } from '@/hooks'
 import { Location } from 'history'
 import { absoluteRoutes } from '@/config/routes'
 import { useNavigate } from 'react-router-dom'
 import { useLocation, useMatch } from 'react-router'
 import { RoutingState } from '@/types/routing'
+import { useOverlayManager } from '@/hooks/useOverlayManager'
+import { createId } from '@/utils/createId'
+import { useDrafts } from '@/hooks/useDrafts'
+import { useActiveUser } from '@/hooks/useActiveUser'
+import { useVideo } from '@/api/hooks'
+import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { createUrlFromAsset } from '@/utils/asset'
+import { parseISO } from 'date-fns'
 
-export type EditVideoSheetTab = Draft
+export type EditVideoSheetTab = {
+  id: string
+  isDraft?: boolean
+  isNew?: boolean
+}
+
+type EditVideoAssetsCache = Record<string, InputFilesState>
+
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
-  addVideoTab: (tab: EditVideoSheetTab) => void
-  removeVideoTab: (tab: EditVideoSheetTab) => void
-  resetVideoTabs: () => void
-  selectedVideoTab: EditVideoSheetTab | undefined
-  setSelectedVideoTab: (tab: EditVideoSheetTab | undefined) => void
+  addVideoTab: (tab?: EditVideoSheetTab, shouldSelect?: boolean) => void
+  removeVideoTab: (tabIdx: number) => void
+  updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
+  selectedVideoTabIdx: number
+  setSelectedVideoTabIdx: (tabIdx: number) => void
+  selectedVideoTabCachedAssets: InputFilesState
+  setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
 }
@@ -22,29 +38,97 @@ EditVideoSheetContext.displayName = 'EditVideoSheetContext'
 
 export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [videoTabs, setVideoTabs] = useState<EditVideoSheetTab[]>([])
-  const [selectedVideoTab, setSelectedVideoTab] = useState<EditVideoSheetTab>()
+  const [selectedVideoTabIdx, setSelectedVideoTabIdx] = useState<number>(-1)
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
+  const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
+  const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
+
+  const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
-    (tab: EditVideoSheetTab) => {
-      setVideoTabs((existingTabs) => {
-        if (!existingTabs.find((t) => t.id === tab.id)) {
-          return [tab, ...existingTabs]
-        }
-        return existingTabs
-      })
+    (tab?: EditVideoSheetTab, shouldSelect = true) => {
+      const tabToAdd: EditVideoSheetTab = tab ?? {
+        id: createId(),
+        isDraft: true,
+        isNew: true,
+      }
+
+      if (videoTabs.find((t) => t.id === tabToAdd.id)) {
+        return
+      }
+
+      setVideoTabs([...videoTabs, tabToAdd])
+
+      if (shouldSelect) {
+        const newTabIdx = videoTabs.length
+        setSelectedVideoTabIdx(newTabIdx)
+      }
     },
-    [setVideoTabs]
+    [videoTabs]
   )
 
   const removeVideoTab = useCallback(
-    (tab: EditVideoSheetTab) => {
-      setVideoTabs((tabs) => tabs.filter((t) => t.id !== tab.id))
+    (removedTabIdx: number) => {
+      setVideoTabs((tabs) => tabs.filter((_, idx) => idx !== removedTabIdx))
+
+      // if there are no other tabs, close the sheet
+      if (videoTabs.length <= 1) {
+        setSheetState('closed')
+      } else {
+        let newSelectedIdx
+
+        if (removedTabIdx === selectedVideoTabIdx) {
+          // removing currently selected tab
+          newSelectedIdx = selectedVideoTabIdx === 0 ? 0 : selectedVideoTabIdx - 1
+        } else {
+          // removing some other tab, make sure the index updates if needed
+          newSelectedIdx = selectedVideoTabIdx > removedTabIdx ? selectedVideoTabIdx - 1 : selectedVideoTabIdx
+        }
+
+        setSelectedVideoTabIdx(newSelectedIdx)
+      }
     },
-    [setVideoTabs]
+    [selectedVideoTabIdx, videoTabs.length]
   )
 
-  const resetVideoTabs = useCallback(() => setVideoTabs([]), [setVideoTabs])
+  const selectedVideoTab = videoTabs[selectedVideoTabIdx]
+  const setSelectedVideoTabCachedAssets = useCallback(
+    (files: InputFilesState) => {
+      setAssetsCache((existingAssets) => ({
+        ...existingAssets,
+        [selectedVideoTab.id]: files,
+      }))
+    },
+    [selectedVideoTab?.id]
+  )
+  const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
+  const updateSelectedVideoTab = useCallback(
+    (tabUpdates: Partial<EditVideoSheetTab>) => {
+      setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
+    },
+    [selectedVideoTabIdx]
+  )
+
+  useEffect(() => {
+    if (sheetState === cachedSheetState) {
+      return
+    }
+    setCachedSheetState(sheetState)
+
+    if (sheetState === 'open') {
+      if (videoTabs.length === 0) {
+        addVideoTab()
+      }
+      lockScroll()
+    }
+    if (sheetState === 'closed' || sheetState === 'minimized') {
+      unlockScroll()
+    }
+    if (sheetState === 'closed') {
+      setVideoTabs([])
+      setSelectedVideoTabIdx(-1)
+    }
+  }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
 
   return (
     <EditVideoSheetContext.Provider
@@ -52,11 +136,13 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         videoTabs,
         addVideoTab,
         removeVideoTab,
-        resetVideoTabs,
-        selectedVideoTab,
-        setSelectedVideoTab,
+        updateSelectedVideoTab,
+        selectedVideoTabIdx,
+        setSelectedVideoTabIdx,
         sheetState,
         setSheetState,
+        selectedVideoTabCachedAssets,
+        setSelectedVideoTabCachedAssets,
       }}
     >
       {children}
@@ -74,27 +160,78 @@ const useEditVideoSheetContext = () => {
 
 export type EditVideoSheetState = 'closed' | 'open' | 'minimized'
 export const useEditVideoSheet = () => {
+  return useEditVideoSheetContext()
+}
+
+export type EditVideoFormFields = {
+  title: string
+  description: string
+  language: string | null
+  category: string | null
+  hasMarketing: boolean | null
+  isPublic: boolean
+  isExplicit: boolean | null
+  publishedBeforeJoystream: Date | null
+  assets: InputFilesState
+}
+
+export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const {
-    videoTabs,
-    addVideoTab,
-    removeVideoTab,
-    selectedVideoTab,
-    resetVideoTabs,
-    setSelectedVideoTab,
-    sheetState,
-    setSheetState,
-  } = useEditVideoSheetContext()
+    activeUser: { channelId },
+  } = useActiveUser()
+  const { drafts } = useDrafts('video', channelId ?? '')
+
+  const { selectedVideoTabCachedAssets } = useEditVideoSheet()
+
+  const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
+
+  if (!tab) {
+    return {
+      data: null,
+      loading: false,
+      error: null,
+    }
+  }
+
+  const draft = drafts.find((d) => d.id === tab.id)
+
+  const assets: InputFilesState = tab.isDraft
+    ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
+    : {
+        video: {
+          url: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+        },
+        thumbnail: {
+          url: createUrlFromAsset(
+            video?.thumbnailPhotoAvailability,
+            video?.thumbnailPhotoUrls,
+            video?.thumbnailPhotoDataObject
+          ),
+        },
+      }
+
+  const normalizedData: EditVideoFormFields = {
+    title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
+    description: (tab.isDraft ? draft?.description : video?.description) ?? '',
+    category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
+    language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
+    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
+    hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+    publishedBeforeJoystream:
+      (tab.isDraft
+        ? draft?.publishedBeforeJoystream
+          ? parseISO(draft.publishedBeforeJoystream)
+          : null
+        : video?.publishedBeforeJoystream) ?? null,
+    assets,
+  }
 
   return {
-    sheetState,
-    setSheetState,
-    videoTabs,
-    addVideoTab,
-    removeVideoTab,
-    resetVideoTabs,
-    selectedVideoTab,
-    setSelectedVideoTab,
-  } as const
+    data: normalizedData,
+    loading: tab.isDraft ? false : loading,
+    error,
+  }
 }
 
 const defaultLocation: Location = {

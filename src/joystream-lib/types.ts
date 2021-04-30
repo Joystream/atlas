@@ -22,7 +22,13 @@ export type ChannelAssets = {
   avatar?: NewAsset
 }
 
-export type CreateVideoMetadata = Omit<VideoMetadata.AsObject, 'thumbnailPhoto' | 'video' | 'personsList'>
+export type CreateVideoMetadata = Omit<
+  VideoMetadata.AsObject,
+  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'license'
+> & {
+  publishedBeforeJoystream?: string
+  mimeMediaType?: string
+}
 export type VideoAssets = {
   thumbnail?: NewAsset
   video?: NewAsset

@@ -24,17 +24,17 @@ export type DraftType = 'video'
 
 export type VideoDraft = {
   type: 'video'
-  title?: string
-  description?: string
-  isPublic?: boolean
-  publishedBeforeJoystream?: string
-  hasMarketing?: boolean
-  isExplicit?: boolean
-  language?: Language['iso']
-  categoryId?: VideoCategory['id']
+  title?: string | null
+  description?: string | null
+  isPublic?: boolean | null
+  publishedBeforeJoystream?: string | null
+  hasMarketing?: boolean | null
+  isExplicit?: boolean | null
+  language?: Language['iso'] | null
+  category?: VideoCategory['id'] | null
 } & CommonDraftProps
 
-export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type'>
+export type RawDraft = Omit<Draft, 'id' | 'updatedAt' | 'type' | 'channelId'>
 
 type DraftState = {
   videos: VideoDraft[]
@@ -107,7 +107,7 @@ export const useDrafts = (type: DraftType, channelId: string) => {
   }, [])
 
   const updateSingleDraft = useCallback(
-    async (draftId: string, draftProps: Omit<RawDraft, 'channelId'>) => {
+    async (draftId: string, draftProps: RawDraft) => {
       const updatedDraft = await updateDraft(draftId, { ...draftProps, channelId })
       fetchDrafts()
       return updatedDraft
@@ -116,14 +116,14 @@ export const useDrafts = (type: DraftType, channelId: string) => {
   )
 
   const createSingleDraft = useCallback(
-    async (draft: RawDraft) => {
-      const newDraft = await addDraft({ ...draft, type })
+    async (draft: RawDraft, explicitId?: string) => {
+      const newDraft = await addDraft({ ...draft, channelId, type }, explicitId)
       await addUnseenDraft(newDraft.id, newDraft.channelId)
       fetchUnseenDrafts()
       fetchDrafts()
       return newDraft
     },
-    [fetchDrafts, fetchUnseenDrafts, type]
+    [channelId, fetchDrafts, fetchUnseenDrafts, type]
   )
 
   const discardDraft = useCallback(

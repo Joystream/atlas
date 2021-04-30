@@ -14,10 +14,10 @@ import {
   NewAsset,
   VideoCreationParameters,
   VideoUpdateParameters,
+  VideoId as RuntimeVideoId,
 } from '@joystream/types/content'
 import {
   ChannelMetadata,
-  License,
   MediaType,
   PublishedBeforeJoystream,
   VideoMetadata,
@@ -245,7 +245,7 @@ export class JoystreamJs {
       ...(inputAssets.thumbnail ? [inputAssets.thumbnail] : []),
     ]
 
-    // === video assets ===
+    // === video metadata ===
     const protoMeta = new VideoMetadata()
     if (inputMetadata.title != null) {
       protoMeta.setTitle(inputMetadata.title)
@@ -278,24 +278,16 @@ export class JoystreamJs {
       protoMeta.setHasMarketing(inputMetadata.hasMarketing)
     }
 
-    if (inputMetadata.mediaType != null) {
-      const protoMediaType = new MediaType()
-      protoMediaType.setCodecName(inputMetadata.mediaType.codecName || '')
-      protoMediaType.setContainer(inputMetadata.mediaType.container || '')
-      protoMediaType.setMimeMediaType(inputMetadata.mediaType.mimeMediaType || '')
-      protoMeta.setMediaType(protoMediaType)
+    const protoMediaType = new MediaType()
+    if (inputMetadata.mimeMediaType != null) {
+      protoMediaType.setMimeMediaType(inputMetadata.mimeMediaType)
     }
-    if (inputMetadata.license != null) {
-      const protoLicense = new License()
-      protoLicense.setAttribution(inputMetadata.license.attribution || '')
-      protoLicense.setCode(inputMetadata.license.code || 0)
-      protoLicense.setCustomText(inputMetadata.license.customText || '')
-      protoMeta.setLicense(protoLicense)
-    }
+    protoMeta.setMediaType(protoMediaType)
+
     if (inputMetadata.publishedBeforeJoystream != null) {
       const protoPublishedBeforeJoystream = new PublishedBeforeJoystream()
-      protoPublishedBeforeJoystream.setDate(inputMetadata.publishedBeforeJoystream.date || '')
-      protoPublishedBeforeJoystream.setIsPublished(!!inputMetadata.publishedBeforeJoystream.date)
+      protoPublishedBeforeJoystream.setIsPublished(true)
+      protoPublishedBeforeJoystream.setDate(inputMetadata.publishedBeforeJoystream)
       protoMeta.setPublishedBeforeJoystream(protoPublishedBeforeJoystream)
     }
 
@@ -334,13 +326,14 @@ export class JoystreamJs {
         assets: optionalAssets,
       })
 
-      tx = this.api.tx.content.updateVideo(contentActor, channelId, params)
+      const videoId = new RuntimeVideoId(this.api.registry, updatedVideoId)
+      tx = this.api.tx.content.updateVideo(contentActor, videoId, params)
     }
 
     const { data: events, block } = await this.sendExtrinsic(tx, cb)
 
     const contentEvents = events.filter((event) => event.section === 'content')
-    const videoId = contentEvents[0].data[2]
+    const videoId = contentEvents[0].data[newVideo ? 2 : 1]
     return {
       data: new BN(videoId as never).toString(),
       block,

@@ -8,6 +8,7 @@ export const Topbar = styled.div`
   display: flex;
   justify-content: space-between;
   height: ${EDIT_VIDEO_TABS_BAR_HEIGHT}px;
+  min-height: ${EDIT_VIDEO_TABS_BAR_HEIGHT}px;
   border-bottom: solid 1px ${colors.gray[700]};
   padding: 0 ${sizes(4)};
   ${media.small} {

@@ -17,12 +17,10 @@ export type FileStepProps = {
   stepNumber: number
   active: boolean
   onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  step: FileType
-  fileName?: string
-  thumbnail?: string | null
+  type: FileType
+  isFileSet?: boolean
+  thumbnailUrl?: string | null
   onSelect?: (step: FileType) => void
-  overhead?: string
-  subtitle?: string
   progress?: number
   disabled?: boolean
 }
@@ -30,38 +28,46 @@ export type FileStepProps = {
 const FileStep: React.FC<FileStepProps> = ({
   stepNumber = 1,
   active,
-  fileName,
-  step,
+  isFileSet,
+  type,
   onDelete,
-  thumbnail,
+  thumbnailUrl,
   onSelect,
-  overhead,
-  subtitle,
   progress = 0,
   disabled,
 }) => {
   const handleChangeStep = () => {
-    !disabled && onSelect?.(step)
+    !disabled && onSelect?.(type)
   }
+
+  const stepSubtitle =
+    type === 'video'
+      ? isFileSet
+        ? 'Video file'
+        : 'Add video file'
+      : isFileSet
+      ? 'Thumbnail image'
+      : 'Add thumbnail image'
+
   return (
     <StepWrapper aria-disabled={disabled} active={active} onClick={handleChangeStep}>
       <StepStatus>
-        {!fileName && <StepNumber active={active}>{stepNumber}</StepNumber>}
-        {fileName &&
+        {!isFileSet && <StepNumber active={active}>{stepNumber}</StepNumber>}
+        {isFileSet &&
           (progress ? (
             <StyledProgress value={progress} maxValue={80} />
           ) : (
             <Thumbnail>
-              {step === 'video' && <SvgGlyphFileVideo />}
-              {step === 'image' && thumbnail && <img src={thumbnail} alt="thumbnail" />}
+              {type === 'video' && <SvgGlyphFileVideo />}
+              {type === 'image' && thumbnailUrl && <img src={thumbnailUrl} alt="thumbnail" />}
             </Thumbnail>
           ))}
         <StepDetails>
-          <Overhead variant="overhead">{fileName ? overhead : `Step ${stepNumber}`}</Overhead>
-          <FileName variant="subtitle2">{fileName || subtitle}</FileName>
+          <Overhead variant="overhead">Step {stepNumber}</Overhead>
+          <FileName variant="subtitle2">{stepSubtitle}</FileName>
         </StepDetails>
       </StepStatus>
-      {fileName && (
+      {isFileSet && (
         <IconButton variant="tertiary" disabled={disabled} onClick={onDelete}>
           {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
         </IconButton>

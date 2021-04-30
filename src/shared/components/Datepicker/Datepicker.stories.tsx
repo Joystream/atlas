@@ -13,12 +13,9 @@ export default {
 
 const Template: Story<DatepickerProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
-  const [date, setDate] = useState<string | null>()
+  const [date, setDate] = useState<Date | null>()
   const [validationError, setValidationError] = useState(false)
 
-  const handleChange: (date: string | null) => void = (date) => {
-    setDate(date)
-  }
   const handleDateValidation = () => {
     if (!date) {
       return
@@ -27,8 +24,8 @@ const Template: Story<DatepickerProps> = (args) => {
   }
   return (
     <>
-      <Datepicker {...args} ref={ref} onChange={handleChange} onBlur={handleDateValidation} error={validationError} />
-      <span>{date ? (isValid(date) ? date : 'Invalid date') : 'No date'}</span>
+      <Datepicker {...args} ref={ref} onChange={setDate} onBlur={handleDateValidation} error={validationError} />
+      <span>{date ? (isValid(date) ? date.toISOString() : 'Invalid date') : 'No date'}</span>
     </>
   )
 }
