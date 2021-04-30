@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useUploadsManager, useActiveUser } from '@/hooks'
+import { useUploadsManager, useActiveUser, useJoystream } from '@/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { formatBytes } from '@/utils/size'
 import { computeFileHash } from '@/utils/hashing'
@@ -32,12 +32,20 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     activeUser: { channelId },
   } = useActiveUser()
   const { startFileUpload } = useUploadsManager(channelId || '')
+  const { joystream } = useJoystream()
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
       const videoFileHash = await computeFileHash(file)
-      if (videoFileHash !== asset.contentId) {
+      if (!joystream) {
+        return
+      }
+      const [, contentId] = joystream.createFileAsset({
+        size: file.size,
+        ipfsContentId: videoFileHash,
+      })
+      if (contentId !== asset.contentId) {
         setShowDialog(true)
       } else {
         startFileUpload(file, {
@@ -51,7 +59,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         })
       }
     },
-    [asset, startFileUpload]
+    [asset, joystream, startFileUpload]
   )
 
   const { getRootProps, getInputProps, open } = useDropzone({

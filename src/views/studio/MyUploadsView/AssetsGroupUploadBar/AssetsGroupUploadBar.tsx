@@ -33,7 +33,9 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
   const reconnectionErrorsCount = uploadData.filter((file) => file.lastStatus === 'reconnectionError').length
-  const isPendingCount = uploadData.filter((file) => file.liaisonJudgement === LiaisonJudgement.Pending).length
+  const isPendingCount = uploadData.filter(
+    (file) => file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0
+  ).length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)

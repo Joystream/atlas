@@ -1,7 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
+import { useNavigate } from 'react-router'
 import { useSnackbar } from '@/hooks/useSnackbar/useSnackbar'
+import { absoluteRoutes } from '@/config/routes'
 import { ChannelId } from '@/joystream-lib'
 import { useUploadsManagerStore } from './store'
 import { InputAssetUpload, AssetUploadWithProgress, UploadManagerValue, UploadsProgressRecord } from './types'
@@ -14,6 +16,7 @@ const UploadManagerContext = React.createContext<UploadManagerValue | undefined>
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
+  const navigate = useNavigate()
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
@@ -68,6 +71,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
             title: 'Asset failing to reconnect',
             description: 'Host is not responding',
             actionText: 'Go to uploads',
+            onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
             iconType: 'info',
           })
         } else {
@@ -75,7 +79,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         }
       }
     },
-    [addAsset, displaySnackbar, updateAsset]
+    [addAsset, displaySnackbar, navigate, updateAsset]
   )
 
   const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
