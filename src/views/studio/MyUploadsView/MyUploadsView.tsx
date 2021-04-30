@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useActiveUser, useUploadsManager } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
@@ -17,18 +17,14 @@ const MyUploadsView = () => {
   const channelId = activeUser.channelId ?? ''
   const { uploadsState } = useUploadsManager(channelId)
   const { channel, loading: channelLoading } = useChannel(channelId)
-  const { videos, loading: videosLoading, refetch: refetchVideos } = useVideos({
-    where: {
-      channelId_eq: channelId,
+  const { videos, loading: videosLoading } = useVideos(
+    {
+      where: {
+        id_in: uploadsState.filter((item) => item.parentObject.type === 'video').map((item) => item.parentObject.id),
+      },
     },
-  })
-
-  useEffect(() => {
-    if (videosLoading || !uploadsState.length) {
-      return
-    }
-    refetchVideos()
-  }, [refetchVideos, uploadsState.length, videosLoading])
+    { skip: !uploadsState.length }
+  )
 
   const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
   const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
