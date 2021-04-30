@@ -38,8 +38,6 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       detailsText,
       tooltipText,
       detailsTextIcon,
-      fullWidth,
-      isActive = true,
       secondaryButtonIcon,
       className,
       onConfirmClick,
@@ -48,7 +46,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     ref
   ) => {
     return (
-      <StyledActionBarContainer className={className} isActive={isActive} fullWidth={fullWidth}>
+      <StyledActionBarContainer className={className}>
         <StyledInnerContainer>
           <StyledInfoContainer>
             <StyledPrimaryText>{primaryText}</StyledPrimaryText>

@@ -9,11 +9,11 @@ export const createUrlFromAsset = (
   if (availability !== AssetAvailability.Accepted) {
     return
   }
+  if (assetUrls?.length) {
+    return assetUrls[0]
+  }
   if (dataObject?.joystreamContentId) {
     const url = new URL(dataObject.joystreamContentId, STORAGE_NODE_URL)
     return url.href
-  }
-  if (assetUrls?.length) {
-    return assetUrls[0]
   }
 }

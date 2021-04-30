@@ -2,17 +2,8 @@ import styled from '@emotion/styled'
 import { colors, sizes, typography, transitions, zIndex, media } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
-type ActionBarContainerProps = {
-  isActive?: boolean
-  fullWidth?: boolean
-}
-
-export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
+export const StyledActionBarContainer = styled.div`
   display: flex;
-  position: fixed;
-  bottom: 0;
-  left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width);')};
-  right: 0;
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
@@ -22,9 +13,6 @@ export const StyledActionBarContainer = styled.div<ActionBarContainerProps>`
     justify-content: space-between;
     padding: ${sizes(4)} ${sizes(8)};
   }
-
-  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
 
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} ${transitions.timings.regular} !important;
