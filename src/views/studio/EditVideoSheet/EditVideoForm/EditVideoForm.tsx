@@ -109,9 +109,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         updateDraftFn: typeof updateDraft,
         updateSelectedTabFn: typeof updateSelectedVideoTab
       ) => {
-        if (tab.isFresh) {
+        if (tab.isNew) {
           addDraftFn(data, tab.id)
-          updateSelectedTabFn({ isFresh: false })
+          updateSelectedTabFn({ isNew: false })
         } else {
           updateDraftFn(tab.id, data)
         }

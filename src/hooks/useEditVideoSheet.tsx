@@ -15,7 +15,7 @@ import { createUrlFromAsset } from '@/utils/asset'
 export type EditVideoSheetTab = {
   id: string
   isDraft?: boolean
-  isFresh?: boolean
+  isNew?: boolean
 }
 
 type EditVideoAssetsCache = Record<string, InputFilesState>
@@ -49,7 +49,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       const tabToAdd: EditVideoSheetTab = tab ?? {
         id: createId(),
         isDraft: true,
-        isFresh: true,
+        isNew: true,
       }
 
       if (videoTabs.find((t) => t.id === tabToAdd.id)) {
