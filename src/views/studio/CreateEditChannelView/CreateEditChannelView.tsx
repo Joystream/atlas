@@ -18,7 +18,7 @@ import {
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
+import { useChannel, useMembership, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import { writeUrlInCache } from '@/utils/cachingAssets'
@@ -70,6 +70,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
+
+  const storageProviderUrl = useRandomStorageProviderUrl()
 
   const {
     activeUser: { channelId, memberId },
@@ -299,29 +301,37 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       }
 
       // start files upload
-      if (data.avatar.blob && avatarContentId) {
-        startFileUpload(data.avatar.blob, {
-          contentId: avatarContentId,
-          owner: assetsOwner,
-          parentObject: {
-            type: 'channel',
-            id: assetsOwner,
+      if (data.avatar.blob && avatarContentId && storageProviderUrl) {
+        startFileUpload(
+          data.avatar.blob,
+          {
+            contentId: avatarContentId,
+            owner: assetsOwner,
+            parentObject: {
+              type: 'channel',
+              id: assetsOwner,
+            },
+            imageCropData: data.avatar.imageCropData ?? undefined,
+            type: 'avatar',
           },
-          imageCropData: data.avatar.imageCropData ?? undefined,
-          type: 'avatar',
-        })
+          storageProviderUrl
+        )
       }
-      if (data.cover.blob && coverContentId) {
-        startFileUpload(data.cover.blob, {
-          contentId: coverContentId,
-          owner: assetsOwner,
-          parentObject: {
-            type: 'channel',
-            id: assetsOwner,
+      if (data.cover.blob && coverContentId && storageProviderUrl) {
+        startFileUpload(
+          data.cover.blob,
+          {
+            contentId: coverContentId,
+            owner: assetsOwner,
+            parentObject: {
+              type: 'channel',
+              id: assetsOwner,
+            },
+            imageCropData: data.cover.imageCropData ?? undefined,
+            type: 'cover',
           },
-          imageCropData: data.cover.imageCropData ?? undefined,
-          type: 'cover',
-        })
+          storageProviderUrl
+        )
       }
     } catch (e) {
       if (e instanceof ExtensionSignCancelledError) {
