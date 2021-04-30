@@ -21,7 +21,7 @@ import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
-import { writeUrlInCache, readUrlFromCache } from '@/utils/cachingAssets'
+import { writeUrlInCache } from '@/utils/cachingAssets'
 import { useActiveUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
 import {
   ChannelAssets,
@@ -146,22 +146,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     const avatarPhotoUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
     const coverPhotoUrl = createUrlFromAsset(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
-    const cachedAvatarPhotoUrl = readUrlFromCache({
-      fileType: 'avatar',
-      channelId: id,
-      client,
-    })
-    const cachedCoverPhotoUrl = readUrlFromCache({
-      fileType: 'cover',
-      channelId: id,
-      client,
-    })
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
     reset({
-      avatar: { blob: null, url: avatarPhotoUrl || cachedAvatarPhotoUrl, imageCropData: null },
-      cover: { blob: null, url: coverPhotoUrl || cachedCoverPhotoUrl, imageCropData: null },
+      avatar: { blob: null, url: avatarPhotoUrl || avatarPhotoUrls[0], imageCropData: null },
+      cover: { blob: null, url: coverPhotoUrl || coverPhotoUrls[0], imageCropData: null },
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
