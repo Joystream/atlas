@@ -1,9 +1,10 @@
 import React from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { TextContainer, StyledTransactionIllustration, StyledSpinner } from './TransactionDialog.style'
+import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import MessageDialog from '../MessageDialog'
+import { Tooltip } from '@/shared/components'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
@@ -71,6 +72,23 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
 
   const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
 
+  const transactionStepsWithoutProccessingAssets = Object.values(TRANSACTION_STEPS_DETAILS).filter(
+    (step) => step.title !== TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.ProcessingAssets].title
+  )
+
+  const getTooltipText = (title: string) => {
+    switch (title) {
+      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Unsigned].title:
+        return 'Signing in'
+      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Signed].title:
+        return 'Confirmation'
+      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Syncing].title:
+        return 'Data Propagation'
+      default:
+        return 'Signing in'
+    }
+  }
+
   return (
     <ActionDialog
       showDialog={status != null}
@@ -80,6 +98,13 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
       exitButton={false}
       {...actionDialogProps}
     >
+      <StepsBar>
+        {transactionStepsWithoutProccessingAssets.map(({ title }, idx) => (
+          <Tooltip key={idx} text={getTooltipText(title)} placement="top-end">
+            <Step isActive={stepDetails?.title === title} />
+          </Tooltip>
+        ))}
+      </StepsBar>
       <StyledTransactionIllustration />
       <StyledSpinner />
       <TextContainer>
