@@ -21,6 +21,7 @@ import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
+import { writeUrlInCache } from '@/utils/cachingAssets'
 import { useActiveUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
 import {
   ChannelAssets,
@@ -78,7 +79,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
 
-  const { channel, loading, error, refetch: refetchChannel } = useChannel(channelId || '', {
+  const { channel, loading, error, refetch: refetchChannel, client } = useChannel(channelId || '', {
     skip: newChannel || !channelId,
   })
   // use membership query so we can trigger refetch once the channels are updated
@@ -252,6 +253,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionCallback(() => async () => {
           await refetchMember()
           await setActiveChannel(newChannelId)
+          if (data.avatar.blob && avatarContentId) {
+            writeUrlInCache({
+              url: data.avatar.url,
+              fileType: 'avatar',
+              channelId: newChannelId,
+              client,
+            })
+          }
+          if (data.cover.blob && coverContentId) {
+            writeUrlInCache({
+              url: data.cover.url,
+              fileType: 'cover',
+              channelId: newChannelId,
+              client,
+            })
+          }
         })
       } else if (channelId) {
         const { block } = await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
@@ -262,6 +279,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
           await Promise.all([refetchChannel(), refetchMember()])
+          if (data.avatar.blob && avatarContentId) {
+            writeUrlInCache({
+              url: data.avatar.url,
+              fileType: 'avatar',
+              channelId,
+              client,
+            })
+          }
+          if (data.cover.blob && coverContentId) {
+            writeUrlInCache({
+              url: data.cover.url,
+              fileType: 'cover',
+              channelId,
+              client,
+            })
+          }
         })
       }
 
