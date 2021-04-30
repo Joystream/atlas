@@ -17,16 +17,17 @@ const MyUploadsView = () => {
   const channelId = activeUser.channelId ?? ''
   const { uploadsState } = useUploadsManager(channelId)
   const { channel, loading: channelLoading } = useChannel(channelId)
-  const { videos, loading: videosLoading } = useVideos({
-    where: {
-      channelId_eq: channelId,
+  const { videos, loading: videosLoading } = useVideos(
+    {
+      where: {
+        id_in: uploadsState.filter((item) => item.parentObject.type === 'video').map((item) => item.parentObject.id),
+      },
     },
-  })
+    { skip: !uploadsState.length }
+  )
 
   const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
-  const videosDataObjects =
-    videos?.map((video) => [{ title: video.title, ...video.mediaDataObject }, video.thumbnailPhotoDataObject]).flat() ||
-    []
+  const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
   const allDataObjects = [...channelDataObjects, ...videosDataObjects]
 
   // Enriching data with pending/accepted/rejected status
@@ -38,9 +39,18 @@ const MyUploadsView = () => {
     return { ...asset }
   })
 
+  // Enriching video type assets with video title
+  const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
+    if (asset.type === 'video') {
+      const video = videos?.find((video) => video.mediaDataObject?.joystreamContentId === asset.contentId)
+      return { ...asset, title: video?.title }
+    }
+    return asset
+  })
+
   // Grouping all assets by parent id (videos, channel)
   const uploadsStateGroupedByParentObjectId = Object.values(
-    uploadsStateWithLiaisonJudgement.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+    uploadsStateWithVideoTitles.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       const key = asset.parentObject.id
       !acc[key] ? (acc[key] = [{ ...asset }]) : acc[key].push(asset)
       return acc
