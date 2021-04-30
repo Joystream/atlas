@@ -25,6 +25,7 @@ import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
+import { writeUrlInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -58,7 +59,7 @@ export const EditVideoSheet: React.FC = () => {
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
   const { startFileUpload } = useUploadsManager(channelId || '')
   const { joystream } = useJoystream()
-  const { refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
+  const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
   })
 
@@ -83,7 +84,11 @@ export const EditVideoSheet: React.FC = () => {
     setThumbnailHashPromise(hashPromise)
   }
 
-  const handleSubmit = async (data: EditVideoFormFields, dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>) => {
+  const handleSubmit = async (
+    data: EditVideoFormFields,
+    dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>,
+    callback?: () => void
+  ) => {
     if (!selectedVideoTab) {
       return
     }
@@ -164,7 +169,13 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchVideo()
+          await refetchVideo({ where: { id: newVideoId } })
+          writeUrlInCache({
+            url: data.assets.thumbnail?.url,
+            fileType: 'thumbnail',
+            parentId: videoId,
+            client,
+          })
           updateSelectedVideoTab({
             id: newVideoId,
             isDraft: false,
@@ -179,6 +190,13 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
           await refetchVideo()
+          writeUrlInCache({
+            url: data.assets.thumbnail?.url,
+            fileType: 'thumbnail',
+            parentId: videoId,
+            client,
+          })
+          callback?.()
         })
       }
 

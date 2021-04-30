@@ -34,7 +34,6 @@ import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
-import { css } from '@emotion/react'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -257,7 +256,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             writeUrlInCache({
               url: data.avatar.url,
               fileType: 'avatar',
-              channelId: newChannelId,
+              parentId: newChannelId,
               client,
             })
           }
@@ -265,7 +264,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             writeUrlInCache({
               url: data.cover.url,
               fileType: 'cover',
-              channelId: newChannelId,
+              parentId: newChannelId,
               client,
             })
           }
@@ -283,7 +282,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             writeUrlInCache({
               url: data.avatar.url,
               fileType: 'avatar',
-              channelId,
+              parentId: channelId,
               client,
             })
           }
@@ -291,7 +290,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             writeUrlInCache({
               url: data.cover.url,
               fileType: 'cover',
-              channelId,
+              parentId: channelId,
               client,
             })
           }

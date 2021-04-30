@@ -41,7 +41,11 @@ const visibilityOptions: SelectItem<boolean>[] = [
 ]
 
 type EditVideoFormProps = {
-  onSubmit: (data: EditVideoFormFields, dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>) => void
+  onSubmit: (
+    data: EditVideoFormFields,
+    dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>,
+    callback: () => void
+  ) => void
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
   selectedVideoTab?: EditVideoSheetTab
@@ -57,6 +61,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const channelId = activeUser.channelId ?? ''
   const isEdit = !selectedVideoTab?.isDraft
 
+  const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
   const { addDraft, updateDraft } = useDrafts('video', channelId)
@@ -132,18 +137,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       return
     }
 
-    // only run this hook if the selected tab changed
-    if (selectedVideoTab.id === cachedSelectedVideoTabId) {
+    // only run this hook if the selected tab changed or we forced reset
+    if (selectedVideoTab.id === cachedSelectedVideoTabId && !forceReset) {
       return
     }
     setCachedSelectedVideoTabId(selectedVideoTab.id)
+    setForceReset(false)
 
     // flush any possible changes to the edited draft
     debouncedDraftSave.current.flush()
 
     setFileSelectError(null)
     reset(tabData)
-  }, [selectedVideoTab, cachedSelectedVideoTabId, reset, tabDataLoading, tabData, updateSelectedVideoTab])
+  }, [selectedVideoTab, cachedSelectedVideoTabId, forceReset, reset, tabDataLoading, tabData, updateSelectedVideoTab])
 
   const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
     // do initial validation
@@ -155,7 +161,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setFileSelectError('Thumbnail cannot be empty')
     }
 
-    await onSubmit(data, dirtyFields)
+    const callback = () => {
+      setForceReset(true)
+    }
+
+    await onSubmit(data, dirtyFields, callback)
   })
 
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
