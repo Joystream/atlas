@@ -141,7 +141,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       description,
       isPublic,
       language,
-      id,
     } = channel
 
     const avatarPhotoUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
@@ -157,7 +156,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || languages[0].value,
     })
-  }, [channel, channelId, client, loading, newChannel, reset])
+  }, [channel, loading, newChannel, reset])
 
   const avatarValue = watch('avatar')
   const coverValue = watch('cover')
