@@ -22,7 +22,7 @@ const cachedAvatarUrlFragment = gql`
   }
 `
 
-export const writeUrlInCache: (arg: WriteUrlInCacheArg) => void = ({ url, fileType, channelId, client }) => {
+export const writeUrlInCache = ({ url, fileType, channelId, client }: WriteUrlInCacheArg) => {
   const field = fileType === 'avatar' ? 'cachedAvatarUrl' : 'cachedCoverUrl'
   client.writeFragment({
     id: `Channel:${channelId}`,
