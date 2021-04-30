@@ -1,12 +1,6 @@
 import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
 import { AssetAvailability } from '@/api/queries'
-
-type WriteUrlInCacheArg = {
-  url: string | null
-  fileType: 'avatar' | 'cover'
-  channelId: string | null
-  client: ApolloClient<NormalizedCacheObject>
-}
+import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
   fragment CoverUrlField on Channel {
@@ -22,17 +16,45 @@ const cachedAvatarUrlFragment = gql`
   }
 `
 
-export const writeUrlInCache = ({ url, fileType, channelId, client }: WriteUrlInCacheArg) => {
-  const field =
-    fileType === 'avatar'
-      ? ['avatarPhotoUrls', 'avatarPhotoAvailability']
-      : ['coverPhotoUrls', 'coverPhotoAvailability']
+const cachedThumbnailUrlFragment = gql`
+  fragment ThumbnailUrlField on Video {
+    thumbnailPhotoAvailability
+    thumbnailPhotoUrls
+  }
+`
+
+type CachedAssetType = 'avatar' | 'cover' | 'thumbnail'
+
+type WriteUrlInCacheArg = {
+  url?: string | null
+  fileType: CachedAssetType
+  parentId: string | null
+  client: ApolloClient<NormalizedCacheObject>
+}
+
+const FILE_TYPE_FIELDS: Record<CachedAssetType, string[]> = {
+  avatar: ['avatarPhotoUrls', 'avatarPhotoAvailability'],
+  cover: ['coverPhotoUrls', 'coverPhotoAvailability'],
+  thumbnail: ['thumbnailPhotoUrls', 'thumbnailPhotoAvailability'],
+}
+
+const FILE_TYPE_FRAGMENT: Record<CachedAssetType, DocumentNode> = {
+  avatar: cachedAvatarUrlFragment,
+  cover: cachedCoverUrlFragment,
+  thumbnail: cachedThumbnailUrlFragment,
+}
+
+export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInCacheArg) => {
+  const parentObject = fileType === 'thumbnail' ? 'Video' : 'Channel'
+  const updateFields = FILE_TYPE_FIELDS[fileType]
+  const fragment = FILE_TYPE_FRAGMENT[fileType]
+
   client.writeFragment({
-    id: `Channel:${channelId}`,
-    fragment: fileType === 'avatar' ? cachedAvatarUrlFragment : cachedCoverUrlFragment,
+    id: `${parentObject}:${parentId}`,
+    fragment: fragment,
     data: {
-      [field[0]]: [url],
-      [field[1]]: AssetAvailability.Accepted,
+      [updateFields[0]]: url ? [url] : [],
+      [updateFields[1]]: AssetAvailability.Accepted,
     },
   })
 }

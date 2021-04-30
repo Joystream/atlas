@@ -19,6 +19,18 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
 }
 
+const createDateHandler = () => ({
+  merge: (_: unknown, existingData: string | Date): Date => {
+    if (typeof existingData !== 'string') {
+      // TODO: investigate further
+      // rarely, for some reason the object that arrives here is already a date object
+      // in this case parsing attempt will cause an error
+      return existingData
+    }
+    return parseISO(existingData)
+  },
+})
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -57,17 +69,8 @@ const cache = new InMemoryCache({
     },
     Video: {
       fields: {
-        createdAt: {
-          merge(_, createdAt: string | Date): Date {
-            if (typeof createdAt !== 'string') {
-              // TODO: investigate further
-              // rarely, for some reason the object that arrives here is already a date object
-              // in this case parsing attempt will cause an error
-              return createdAt
-            }
-            return parseISO(createdAt)
-          },
-        },
+        createdAt: createDateHandler(),
+        publishedBeforeJoystream: createDateHandler(),
       },
     },
   },

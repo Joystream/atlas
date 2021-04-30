@@ -30,6 +30,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
 
   :after {
     content: '';
+    pointer-events: none;
     display: flex;
     position: absolute;
     top: 0;
