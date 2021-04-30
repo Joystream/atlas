@@ -33,6 +33,7 @@ import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
+import { css } from '@emotion/react'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -108,6 +109,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: true,
     },
   })
+
+  const titleRef = useRef<HTMLInputElement | null>(null)
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
   const { sheetState } = useEditVideoSheet()
 
@@ -311,6 +315,29 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     throw error
   }
 
+  const checkoutSteps = [
+    {
+      title: 'Add Channel Title',
+      completed: !!dirtyFields.title,
+      onClick: () => titleRef.current?.focus(),
+    },
+    {
+      title: 'Add Description',
+      completed: !!dirtyFields.description,
+      onClick: () => descriptionRef.current?.focus(),
+    },
+    {
+      title: 'Add Avatar',
+      completed: !!dirtyFields.avatar,
+      onClick: () => avatarDialogRef.current?.open(),
+    },
+    {
+      title: 'Add Cover Image',
+      completed: !!dirtyFields.cover,
+      onClick: () => coverDialogRef.current?.open(),
+    },
+  ]
+
   return (
     <>
       <TransactionDialog
@@ -378,6 +405,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                     render={({ value, onChange }) => (
                       <Tooltip text="Click to edit channel title">
                         <HeaderTextField
+                          ref={titleRef}
                           placeholder="Add Channel Title"
                           value={value}
                           onChange={(e) => {
@@ -411,7 +439,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   placeholder="Add description"
                   spellcheck={false}
                   rows={8}
-                  ref={register(textFieldValidation('Description', 3, 1000))}
+                  ref={(ref) => {
+                    if (ref) {
+                      register(ref, textFieldValidation('Description', 3, 1000))
+                      descriptionRef.current = ref
+                    }
+                  }}
                   maxLength={1000}
                   error={!!errors.description}
                   helperText={errors.description?.message}
@@ -466,6 +499,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             >
               <ActionBarTransaction
                 fee={FEE}
+                checkoutSteps={newChannel ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
                 fullWidth={!channelId}
                 primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
