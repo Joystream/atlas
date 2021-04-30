@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { sizes, media } from '@/shared/theme'
 import { Avatar } from '@/shared/components'
 import { Header, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
+import Checkout from '@/shared/components/Checkout'
 
 export const StyledHeader = styled(Header)``
 
