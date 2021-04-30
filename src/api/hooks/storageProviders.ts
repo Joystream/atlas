@@ -6,8 +6,7 @@ import {
   GetStorageProvidersQueryVariables,
   useGetStorageProviderQuery,
   useGetStorageProvidersQuery,
-  useGetStorageProvidersCountQuery,
-} from '../queries/__generated__/storageProviders.generated'
+} from '@/api/queries/__generated__/storageProviders.generated'
 
 type StorageProviderOpts = QueryHookOptions<GetStorageProviderQuery>
 export const useStorageProvider = (id: string, opts?: StorageProviderOpts) => {
@@ -31,28 +30,18 @@ export const useStorageProviders = (variables: GetStorageProvidersQueryVariables
   }
 }
 
-export const useStorageProvidersCount = (variables: GetStorageProvidersQueryVariables, opts?: StorageProvidersOpts) => {
-  const { data: connectionData, loading, ...rest } = useGetStorageProvidersCountQuery({ ...opts, variables })
-  return {
-    totalCount: connectionData?.storageProvidersConnection.totalCount,
-    loading,
-    ...rest,
-  }
-}
-
 export const useRandomStorageProviderUrl = () => {
-  const { totalCount } = useStorageProvidersCount({ where: { metadata_contains: 'http' } })
-  const randomStorageIdx = totalCount && getRandomIntInclusive(1, totalCount)
-
-  const { storageProviders } = useStorageProviders(
+  const { storageProviders, loading } = useStorageProviders(
     {
-      where: { metadata_contains: 'http' },
-      offset: randomStorageIdx,
-      limit: 1,
+      where: { metadata_contains: 'http', isActive_eq: true },
+      limit: 100,
     },
-    { skip: randomStorageIdx === undefined }
+    {
+      fetchPolicy: 'network-only',
+    }
   )
-  if (storageProviders?.length) {
-    return storageProviders[0].metadata
+  if (storageProviders?.length && !loading) {
+    const randomStorageIdx = getRandomIntInclusive(0, storageProviders.length - 1)
+    return storageProviders[randomStorageIdx].metadata
   }
 }

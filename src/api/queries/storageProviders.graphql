@@ -1,6 +1,7 @@
 fragment BasicStorageProviderFields on StorageProvider {
   id
   metadata
+  isActive
 }
 
 query GetStorageProvider($where: StorageProviderWhereUniqueInput!) {
@@ -10,13 +11,7 @@ query GetStorageProvider($where: StorageProviderWhereUniqueInput!) {
 }
 
 query GetStorageProviders($limit: Int, $offset: Int, $where: StorageProviderWhereInput) {
-  storageProviders(limit: $limit, offset: $offset) {
+  storageProviders(limit: $limit, offset: $offset, where: $where) {
     ...BasicStorageProviderFields
-  }
-}
-
-query GetStorageProvidersCount($where: StorageProviderWhereInput) {
-  storageProvidersConnection(first: 0, where: $where) {
-    totalCount
   }
 }

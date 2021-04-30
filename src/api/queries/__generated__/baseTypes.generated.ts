@@ -56,6 +56,7 @@ export type StorageProvider = {
   __typename?: 'StorageProvider'
   id: Scalars['ID']
   metadata?: Maybe<Scalars['String']>
+  isActive: Scalars['Boolean']
 }
 
 export type DataObject = {
@@ -217,6 +218,7 @@ export type VideoConnection = {
 
 export type StorageProviderWhereInput = {
   metadata_contains?: Maybe<Scalars['String']>
+  isActive_eq?: Maybe<Scalars['Boolean']>
 }
 
 export type StorageProviderWhereUniqueInput = {

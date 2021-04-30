@@ -6,6 +6,7 @@ export type BasicStorageProviderFieldsFragment = {
   __typename?: 'StorageProvider'
   id: string
   metadata?: Types.Maybe<string>
+  isActive: boolean
 }
 
 export type GetStorageProviderQueryVariables = Types.Exact<{
@@ -28,19 +29,11 @@ export type GetStorageProvidersQuery = {
   storageProviders?: Types.Maybe<Array<{ __typename?: 'StorageProvider' } & BasicStorageProviderFieldsFragment>>
 }
 
-export type GetStorageProvidersCountQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.StorageProviderWhereInput>
-}>
-
-export type GetStorageProvidersCountQuery = {
-  __typename?: 'Query'
-  storageProvidersConnection: { __typename?: 'StorageProviderConnection'; totalCount: number }
-}
-
 export const BasicStorageProviderFieldsFragmentDoc = gql`
   fragment BasicStorageProviderFields on StorageProvider {
     id
     metadata
+    isActive
   }
 `
 export const GetStorageProviderDocument = gql`
@@ -92,7 +85,7 @@ export type GetStorageProviderQueryResult = Apollo.QueryResult<
 >
 export const GetStorageProvidersDocument = gql`
   query GetStorageProviders($limit: Int, $offset: Int, $where: StorageProviderWhereInput) {
-    storageProviders(limit: $limit, offset: $offset) {
+    storageProviders(limit: $limit, offset: $offset, where: $where) {
       ...BasicStorageProviderFields
     }
   }
@@ -138,50 +131,4 @@ export type GetStorageProvidersLazyQueryHookResult = ReturnType<typeof useGetSto
 export type GetStorageProvidersQueryResult = Apollo.QueryResult<
   GetStorageProvidersQuery,
   GetStorageProvidersQueryVariables
->
-export const GetStorageProvidersCountDocument = gql`
-  query GetStorageProvidersCount($where: StorageProviderWhereInput) {
-    storageProvidersConnection(first: 0, where: $where) {
-      totalCount
-    }
-  }
-`
-
-/**
- * __useGetStorageProvidersCountQuery__
- *
- * To run a query within a React component, call `useGetStorageProvidersCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetStorageProvidersCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetStorageProvidersCountQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetStorageProvidersCountQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetStorageProvidersCountQuery, GetStorageProvidersCountQueryVariables>
-) {
-  return Apollo.useQuery<GetStorageProvidersCountQuery, GetStorageProvidersCountQueryVariables>(
-    GetStorageProvidersCountDocument,
-    baseOptions
-  )
-}
-export function useGetStorageProvidersCountLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetStorageProvidersCountQuery, GetStorageProvidersCountQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetStorageProvidersCountQuery, GetStorageProvidersCountQueryVariables>(
-    GetStorageProvidersCountDocument,
-    baseOptions
-  )
-}
-export type GetStorageProvidersCountQueryHookResult = ReturnType<typeof useGetStorageProvidersCountQuery>
-export type GetStorageProvidersCountLazyQueryHookResult = ReturnType<typeof useGetStorageProvidersCountLazyQuery>
-export type GetStorageProvidersCountQueryResult = Apollo.QueryResult<
-  GetStorageProvidersCountQuery,
-  GetStorageProvidersCountQueryVariables
 >

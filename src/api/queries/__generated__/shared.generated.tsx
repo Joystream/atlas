@@ -9,7 +9,12 @@ export type DataObjectFieldsFragment = {
   liaisonJudgement: Types.LiaisonJudgement
   ipfsContentId: string
   joystreamContentId: string
-  liaison?: Types.Maybe<{ __typename?: 'StorageProvider'; id: string; metadata?: Types.Maybe<string> }>
+  liaison?: Types.Maybe<{
+    __typename?: 'StorageProvider'
+    id: string
+    metadata?: Types.Maybe<string>
+    isActive: boolean
+  }>
 }
 
 export const DataObjectFieldsFragmentDoc = gql`
@@ -20,6 +25,7 @@ export const DataObjectFieldsFragmentDoc = gql`
     liaison {
       id
       metadata
+      isActive
     }
     liaisonJudgement
     ipfsContentId

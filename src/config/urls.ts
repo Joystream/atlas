@@ -11,3 +11,5 @@ export const SENTRY_DSN = readEnv('REACT_APP_SENTRY_DSN')
 export const WEB3_APP_NAME = 'Joystream Atlas'
 export const NODE_URL = readEnv('REACT_APP_NODE_URL') || 'ws://127.0.0.1:9944'
 export const FAUCET_URL = readEnv('REACT_APP_FAUCET_URL') || '/mocked-faucet'
+
+export const STORAGE_URL_SUFFIX = '/asset/v0/'

@@ -40,6 +40,7 @@ enum LiaisonJudgement {
 type StorageProvider {
   id: ID!
   metadata: String
+  isActive: Boolean!
 }
 
 type DataObject {
@@ -213,6 +214,7 @@ type VideoConnection {
 
 input StorageProviderWhereInput {
   metadata_contains: String
+  isActive_eq: Boolean
 }
 
 input StorageProviderWhereUniqueInput {

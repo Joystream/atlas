@@ -30,7 +30,7 @@ export type UploadsManagerState = AssetUpload[]
 
 export type UploadManagerValue = {
   uploadsState: AssetUploadWithProgress[]
-  startFileUpload: (file: File | Blob, asset: InputAssetUpload, storageNodeUrl: string) => void
+  startFileUpload: (file: File | Blob, asset: InputAssetUpload, storageMetadata: string) => void
 }
 export type UploadsProgressRecord = Record<string, number>
 
