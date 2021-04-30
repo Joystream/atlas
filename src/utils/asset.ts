@@ -1,5 +1,5 @@
 import { AssetAvailability, DataObject } from '@/api/queries'
-import { STORAGE_NODE_URL } from '@/config/urls'
+import { STORAGE_URL_SUFFIX } from '@/config/urls'
 
 export const createUrlFromAsset = (
   availability?: AssetAvailability,
@@ -12,8 +12,12 @@ export const createUrlFromAsset = (
   if (assetUrls?.length) {
     return assetUrls[0]
   }
-  if (dataObject?.joystreamContentId) {
-    const url = new URL(dataObject.joystreamContentId, STORAGE_NODE_URL)
+  if (dataObject?.joystreamContentId && dataObject?.liaison?.metadata) {
+    // dataObject?.liaison?.metadata is a storage node url
+    const url = createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata)
     return url.href
   }
 }
+
+export const createStorageNodeUrl = (contentId: string, storageMetadata: string) =>
+  new URL(contentId, storageMetadata + STORAGE_URL_SUFFIX)

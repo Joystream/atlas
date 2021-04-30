@@ -1,0 +1,17 @@
+fragment BasicStorageProviderFields on StorageProvider {
+  id
+  metadata
+  isActive
+}
+
+query GetStorageProvider($where: StorageProviderWhereUniqueInput!) {
+  storageProviderByUniqueInput(where: $where) {
+    ...BasicStorageProviderFields
+  }
+}
+
+query GetStorageProviders($limit: Int, $offset: Int, $where: StorageProviderWhereInput) {
+  storageProviders(limit: $limit, offset: $offset, where: $where) {
+    ...BasicStorageProviderFields
+  }
+}
