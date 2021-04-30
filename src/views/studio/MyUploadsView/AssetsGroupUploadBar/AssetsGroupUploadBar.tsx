@@ -17,7 +17,7 @@ import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 export type UploadData = {
   liaisonJudgement?: LiaisonJudgement
-  videoTitle?: string
+  title?: string
 } & AssetUploadWithProgress
 
 export type AssetsGroupBarUploadProps = {
@@ -38,7 +38,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const videoTitle = uploadData.find((asset) => !!asset.videoTitle)?.videoTitle
+  const videoTitle = uploadData.find((asset) => asset.type === 'video')?.title
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
