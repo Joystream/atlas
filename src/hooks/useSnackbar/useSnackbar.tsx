@@ -4,9 +4,9 @@ import styled from '@emotion/styled'
 import { Snackbar } from '@/shared/components'
 import { transitions, sizes } from '@/shared/theme'
 import { createId } from '@/utils/createId'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess } from '@/shared/icons'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 
-type SnackbarIconType = 'success' | 'error' | 'info'
+type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
 export type DisplaySnackbarArgs = {
   timeout?: number
@@ -31,6 +31,7 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertInfo />,
   success: <SvgAlertSuccess />,
   error: <SvgAlertError />,
+  warning: <SvgAlertWarning />,
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)

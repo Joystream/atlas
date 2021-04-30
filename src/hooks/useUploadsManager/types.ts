@@ -30,8 +30,10 @@ export type InputAssetUpload = Omit<AssetUpload, 'lastStatus' | 'size'>
 export type UploadsManagerState = AssetUpload[]
 
 export type UploadManagerValue = {
-  uploadsState: AssetUploadWithProgress[]
+  uploadsState: AssetUploadWithProgress[][]
+  removeAsset: (contentId: string) => void
   startFileUpload: (file: File | Blob, asset: InputAssetUpload, storageMetadata: string) => void
+  isLoading: boolean
 }
 export type UploadsProgressRecord = Record<string, number>
 

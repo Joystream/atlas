@@ -18,6 +18,7 @@ import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 export type UploadData = {
   liaisonJudgement?: LiaisonJudgement
   title?: string
+  ipfsContentId?: string
 } & AssetUploadWithProgress
 
 export type AssetsGroupBarUploadProps = {
@@ -31,10 +32,12 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
+  const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
   const reconnectionErrorsCount = uploadData.filter((file) => file.lastStatus === 'reconnectionError').length
   const isPendingCount = uploadData.filter(
-    (file) => file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0
+    (file) =>
+      file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0 && file.lastStatus !== 'completed'
   ).length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
@@ -65,7 +68,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
       return <Text variant="subtitle2">Waiting for upload...</Text>
     }
 
-    return <Text variant="subtitle2">{`Uploaded (${masterProgress}%)`}</Text>
+    return <Text variant="subtitle2">{`Uploaded (${isCompleted ? 100 : masterProgress}%)`}</Text>
   }
 
   return (
