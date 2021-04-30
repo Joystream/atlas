@@ -33,6 +33,7 @@ import {
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { formatISO, isValid } from 'date-fns'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public (Anyone can see this video)', value: true },
@@ -109,11 +110,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         updateDraftFn: typeof updateDraft,
         updateSelectedTabFn: typeof updateSelectedVideoTab
       ) => {
+        const draftData = {
+          ...data,
+          publishedBeforeJoystream: isValid(data.publishedBeforeJoystream)
+            ? formatISO(data.publishedBeforeJoystream as Date)
+            : null,
+        }
         if (tab.isNew) {
-          addDraftFn(data, tab.id)
+          addDraftFn(draftData, tab.id)
           updateSelectedTabFn({ isNew: false })
         } else {
-          updateDraftFn(tab.id, data)
+          updateDraftFn(tab.id, draftData)
         }
       },
       700
@@ -321,7 +328,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="publishedBeforeJoystream"
               control={control}
               rules={{
-                validate: (publishedBeforeJoystream) => pastDateValidation(publishedBeforeJoystream),
+                validate: pastDateValidation,
               }}
               render={({ value, onChange }) => (
                 <Datepicker

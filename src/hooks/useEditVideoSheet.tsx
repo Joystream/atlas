@@ -11,6 +11,7 @@ import { useActiveUser } from '@/hooks/useActiveUser'
 import { useVideo } from '@/api/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { createUrlFromAsset } from '@/utils/asset'
+import { parseISO } from 'date-fns'
 
 export type EditVideoSheetTab = {
   id: string
@@ -170,7 +171,7 @@ export type EditVideoFormFields = {
   hasMarketing: boolean | null
   isPublic: boolean
   isExplicit: boolean | null
-  publishedBeforeJoystream: string | null
+  publishedBeforeJoystream: Date | null
   assets: InputFilesState
 }
 
@@ -218,7 +219,11 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
     hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
-      (tab.isDraft ? draft?.publishedBeforeJoystream : video?.publishedBeforeJoystream?.toISOString()) ?? null,
+      (tab.isDraft
+        ? draft?.publishedBeforeJoystream
+          ? parseISO(draft.publishedBeforeJoystream)
+          : null
+        : video?.publishedBeforeJoystream) ?? null,
     assets,
   }
 

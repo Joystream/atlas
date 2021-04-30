@@ -24,6 +24,7 @@ import { useQueryNodeStateSubscription, useVideo } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
+import { formatISO } from 'date-fns'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -92,8 +93,6 @@ export const EditVideoSheet: React.FC = () => {
       return
     }
 
-    // setFileSelectError(null)
-
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
 
     const isNew = !isEdit
@@ -108,7 +107,7 @@ export const EditVideoSheet: React.FC = () => {
       ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
       ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
         ? {
-            publishedBeforeJoystream: data.publishedBeforeJoystream,
+            publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
           }
         : {}),
       ...(isNew || dirtyFields.assets?.video
@@ -132,7 +131,7 @@ export const EditVideoSheet: React.FC = () => {
       })
       assets.video = asset
       videoContentId = contentId
-    } else {
+    } else if (dirtyFields.assets?.video) {
       console.warn('Missing video data')
     }
 
@@ -143,7 +142,7 @@ export const EditVideoSheet: React.FC = () => {
       })
       assets.thumbnail = asset
       thumbnailContentId = contentId
-    } else {
+    } else if (dirtyFields.assets?.thumbnail) {
       console.warn('Missing thumbnail data')
     }
 

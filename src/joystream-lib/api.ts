@@ -333,7 +333,7 @@ export class JoystreamJs {
     const { data: events, block } = await this.sendExtrinsic(tx, cb)
 
     const contentEvents = events.filter((event) => event.section === 'content')
-    const videoId = contentEvents[0].data[2]
+    const videoId = contentEvents[0].data[newVideo ? 2 : 1]
     return {
       data: new BN(videoId as never).toString(),
       block,
