@@ -16,13 +16,7 @@ import {
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import {
-  InnerFormContainer,
-  StyledAvatar,
-  StyledCheckout,
-  StyledTitleSection,
-  TitleContainer,
-} from './CreateEditChannelView.style'
+import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 import { useChannel, useMembership, useQueryNodeStateSubscription } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -39,6 +33,7 @@ import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
+import { css } from '@emotion/react'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public (Channel will appear in feeds)', value: true },
@@ -320,6 +315,29 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     throw error
   }
 
+  const checkoutSteps = [
+    {
+      title: 'Add Channel Title',
+      completed: !!dirtyFields.title,
+      onClick: () => titleRef.current?.focus(),
+    },
+    {
+      title: 'Add Description',
+      completed: !!dirtyFields.description,
+      onClick: () => descriptionRef.current?.focus(),
+    },
+    {
+      title: 'Add Avatar',
+      completed: !!dirtyFields.avatar,
+      onClick: () => avatarDialogRef.current?.open(),
+    },
+    {
+      title: 'Add Cover Image',
+      completed: !!dirtyFields.cover,
+      onClick: () => coverDialogRef.current?.open(),
+    },
+  ]
+
   return (
     <>
       <TransactionDialog
@@ -481,6 +499,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             >
               <ActionBarTransaction
                 fee={FEE}
+                checkoutSteps={newChannel ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
                 fullWidth={!channelId}
                 primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
@@ -489,32 +508,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 onConfirmClick={handleSubmit}
               />
             </CSSTransition>
-            {newChannel && (
-              <StyledCheckout
-                steps={[
-                  {
-                    title: 'Add Channel Title',
-                    completed: !!dirtyFields.title,
-                    onClick: () => titleRef.current?.focus(),
-                  },
-                  {
-                    title: 'Add Description',
-                    completed: !!dirtyFields.description,
-                    onClick: () => descriptionRef.current?.focus(),
-                  },
-                  {
-                    title: 'Add Avatar',
-                    completed: !!dirtyFields.avatar,
-                    onClick: () => avatarDialogRef.current?.open(),
-                  },
-                  {
-                    title: 'Add Cover Image',
-                    completed: !!dirtyFields.cover,
-                    onClick: () => coverDialogRef.current?.open(),
-                  },
-                ]}
-              />
-            )}
           </InnerFormContainer>
         </StudioContainer>
       </form>

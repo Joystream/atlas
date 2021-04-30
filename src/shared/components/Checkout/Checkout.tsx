@@ -15,6 +15,8 @@ import {
 } from './Checkout.styles'
 import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/shared/icons'
 import IconButton from '../IconButton'
+import { CSSTransition } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type CheckoutProps = {
@@ -28,12 +30,18 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps, className }) => {
     <Container className={className}>
       <StepsContainer isHidden={isHidden}>
         {steps.map((step, idx) => (
-          <Step key={step.title + idx} onClick={step.onClick}>
+          <Step completed={step.completed} key={step.title + idx} onClick={() => !step.completed && step.onClick()}>
             <StepInnerContainer>
-              <StepState completed={step.completed}>{step.completed && <SvgGlyphCheck />}</StepState>
+              <StepState completed={step.completed}>
+                <CSSTransition in={step.completed} timeout={100} classNames={transitions.names.fade} unmountOnExit>
+                  <SvgGlyphCheck />
+                </CSSTransition>
+              </StepState>
               <Text variant="body2">{step.title}</Text>
             </StepInnerContainer>
-            <SvgGlyphChevronRight />
+            <CSSTransition in={!step.completed} timeout={100} classNames={transitions.names.fade} unmountOnExit>
+              <SvgGlyphChevronRight />
+            </CSSTransition>
           </Step>
         ))}
       </StepsContainer>

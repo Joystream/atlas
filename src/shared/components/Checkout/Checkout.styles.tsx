@@ -76,13 +76,14 @@ export const StepState = styled.div<StepStateProps>`
   ]};
 `
 
-export const Step = styled.div`
-  cursor: pointer;
+export const Step = styled.div<StepStateProps>`
+  cursor: ${({ completed }) => (completed ? 'initial' : 'pointer')};
   display: grid;
   grid-auto-flow: column;
   justify-content: space-between;
   align-items: center;
   padding: ${sizes(2)};
+  margin-bottom: ${sizes(2)};
   :last-of-type {
     position: relative;
     ::after {
@@ -94,8 +95,9 @@ export const Step = styled.div`
       background-color: ${colors.gray[300]};
     }
   }
+
   :hover {
-    background-color: ${colors.transparentPrimary[18]};
+    background-color: ${({ completed }) => !completed && colors.transparentPrimary[18]};
   }
 `
 
