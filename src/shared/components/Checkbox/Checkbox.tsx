@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import Text from '../Text'
-import { CheckboxLabel, Checkmark, Container, InnerContainer, Input, StyledHelperText } from './Checkbox.styles'
+import {
+  CheckboxLabel,
+  Checkmark,
+  Container,
+  InnerContainer,
+  Input,
+  StyledGlyphCheck,
+  StyledHelperText,
+} from './Checkbox.styles'
 import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
@@ -78,7 +86,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               onBlur={handleBlur}
               {...props}
             />
-            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgGlyphMinus /> : <SvgGlyphCheck />}</Checkmark>
+            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgGlyphMinus /> : <StyledGlyphCheck />}</Checkmark>
           </InnerContainer>
         </Container>
         {label && <Text variant="body1">{label}</Text>}

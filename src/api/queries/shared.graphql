@@ -5,6 +5,7 @@ fragment DataObjectFields on DataObject {
   liaison {
     id
     metadata
+    isActive
   }
   liaisonJudgement
   ipfsContentId
