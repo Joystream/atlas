@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { useUploadsManager, useActiveUser } from '@/hooks'
+import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { formatBytes } from '@/utils/size'
 import { computeFileHash } from '@/utils/hashing'
@@ -31,7 +32,8 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const {
     activeUser: { channelId },
   } = useActiveUser()
-  const { startFileUpload, removeAsset } = useUploadsManager(channelId || '')
+  const { startFileUpload } = useUploadsManager(channelId || '')
+  const randomStorageProviderUrl = useRandomStorageProviderUrl()
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
@@ -40,19 +42,25 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (fileHash !== asset.ipfsContentId) {
         setShowDialog(true)
       } else {
-        removeAsset(asset.contentId)
-        startFileUpload(file, {
-          contentId: asset.contentId,
-          owner: asset.owner,
-          parentObject: {
-            type: asset.parentObject.type,
-            id: asset.parentObject.id,
+        startFileUpload(
+          file,
+          {
+            contentId: asset.contentId,
+            owner: asset.owner,
+            parentObject: {
+              type: asset.parentObject.type,
+              id: asset.parentObject.id,
+            },
+            type: asset.type,
           },
-          type: asset.type,
-        })
+          randomStorageProviderUrl ?? '',
+          {
+            isReUpload: true,
+          }
+        )
       }
     },
-    [asset, removeAsset, startFileUpload]
+    [asset, randomStorageProviderUrl, startFileUpload]
   )
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -69,7 +77,22 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
-    // TODO add logic for changing storage provider
+    startFileUpload(
+      null,
+      {
+        contentId: asset.contentId,
+        owner: asset.owner,
+        parentObject: {
+          type: asset.parentObject.type,
+          id: asset.parentObject.id,
+        },
+        type: asset.type,
+      },
+      randomStorageProviderUrl ?? '',
+      {
+        changeHost: true,
+      }
+    )
   }
 
   const dimension =

@@ -7,7 +7,13 @@ import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { ChannelId } from '@/joystream-lib'
 import { useUploadsManagerStore } from './store'
-import { InputAssetUpload, AssetUploadWithProgress, UploadManagerValue, UploadsProgressRecord } from './types'
+import {
+  InputAssetUpload,
+  AssetUploadWithProgress,
+  UploadManagerValue,
+  UploadsProgressRecord,
+  StartFileUploadOptions,
+} from './types'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { LiaisonJudgement } from '@/api/queries'
 
@@ -18,14 +24,20 @@ type GroupByParentObjectIdAcc = {
   [key: string]: AssetUploadWithProgress[]
 }
 
+type AssetFile = {
+  contentId: string
+  blob: File | Blob
+}
+
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
-  const { uploadsState, addAsset, updateAsset, removeAsset } = useUploadsManagerStore()
+  const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
+  const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? ''
   const { channel, loading: channelLoading } = useChannel(channelId)
@@ -59,7 +71,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   useEffect(() => {
-    console.log(lostConnectionAssets.length)
     if (!lostConnectionAssets.length) {
       return
     }
@@ -93,17 +104,29 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const startFileUpload = useCallback(
-    async (file: File | Blob, asset: InputAssetUpload, storageMetadata: string) => {
+    async (
+      file: File | Blob | null,
+      asset: InputAssetUpload,
+      storageMetadata: string,
+      opts?: StartFileUploadOptions
+    ) => {
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
+      const isFileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
+      if (!isFileInState && file) {
+        setAssetsFiles([...assetsFiles, { contentId: asset.contentId, blob: file }])
+      }
+      const savedFile = assetsFiles.find((file) => file.contentId === asset.contentId)?.blob
       rax.attach()
       try {
-        addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
+        if (!opts?.isReUpload && file) {
+          addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
+        }
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
-        await axios.put(assetUrl.toString(), file, {
+        await axios.put(assetUrl.toString(), opts?.changeHost ? savedFile : file, {
           headers: {
             // workaround for a bug in the storage node
             'Content-Type': '',
@@ -149,7 +172,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         }
       }
     },
-    [addAsset, displaySnackbar, navigate, updateAsset]
+    [addAsset, assetsFiles, displaySnackbar, navigate, updateAsset]
   )
 
   const isLoading = channelLoading || videosLoading
@@ -158,7 +181,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     <UploadManagerContext.Provider
       value={{
         startFileUpload,
-        removeAsset,
         isLoading,
         uploadsState: uploadsStateGroupedByParentObjectId,
       }}
