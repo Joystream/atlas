@@ -125,26 +125,34 @@ export const MyVideosView = () => {
             // pagination slice
             .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
             .map((draft, idx) => (
-              <VideoPreviewPublisher
-                key={idx}
-                id={draft.id}
-                showChannel={false}
-                isDraft
-                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-                onClick={() => handleVideoClick(draft.id, { draft: true })}
-                onPullupClick={(e) => {
-                  e.stopPropagation()
-                  handleVideoClick(draft.id, { draft: true, minimized: true })
-                  displaySnackbar({
-                    title: 'Video opened in new tab',
-                    iconType: 'success',
-                    actionText: 'Remove',
-                    onActionClick: () => setSheetState('closed'),
-                  })
-                }}
-                onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-                onDeleteVideoClick={() => removeDraft(draft.id)}
-              />
+              <>
+                <VideoPreviewPublisher
+                  key={idx}
+                  id={draft.id}
+                  showChannel={false}
+                  isDraft
+                  isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+                  onClick={() => handleVideoClick(draft.id, { draft: true })}
+                  onPullupClick={(e) => {
+                    e.stopPropagation()
+                    handleVideoClick(draft.id, { draft: true, minimized: true })
+                    displaySnackbar({
+                      title: 'Video opened in new tab',
+                      iconType: 'success',
+                      actionText: 'Remove',
+                      onActionClick: () => setSheetState('closed'),
+                    })
+                  }}
+                  onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+                  onDeleteVideoClick={() => {
+                    removeDraft(draft.id)
+                    displaySnackbar({
+                      title: 'Draft successfully deleted',
+                      iconType: 'success',
+                    })
+                  }}
+                />
+              </>
             ))
         : videosWithPlaceholders.map((video, idx) => (
             <VideoPreviewPublisher

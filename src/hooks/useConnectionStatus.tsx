@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useSnackbar } from '@/hooks/useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
@@ -19,6 +20,8 @@ const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
+  const [showSnackbar, setShowSnackbar] = useState(false)
+  const { displaySnackbar } = useSnackbar()
 
   useEffect(() => {
     // ping google every three seconds to check if user is connected to internet
@@ -30,6 +33,13 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (showSnackbar) {
+      displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
+      setShowSnackbar(false)
+    }
+  }, [displaySnackbar, showSnackbar])
+
   const checkConnection = async () => {
     try {
       const res = await withTimeout(
@@ -40,10 +50,16 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
         4000
       )
       if (res) {
-        setIsUserConnectedToInternet(true)
+        setIsUserConnectedToInternet((previousState) => {
+          if (previousState === false) {
+            setShowSnackbar(true)
+          }
+          return true
+        })
       }
     } catch (error) {
       setIsUserConnectedToInternet(false)
+      displaySnackbar({ title: 'No network connection', iconType: 'error' })
     }
   }
 

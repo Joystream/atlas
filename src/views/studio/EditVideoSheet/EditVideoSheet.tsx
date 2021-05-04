@@ -251,6 +251,22 @@ export const EditVideoSheet: React.FC = () => {
           randomStorageProviderUrl
         )
       }
+      if (
+        (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) ||
+        (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl)
+      ) {
+        displaySnackbar({ title: 'Asset being uploaded', iconType: 'info' })
+      }
+      if (
+        videoInputFile?.blob &&
+        videoContentId &&
+        randomStorageProviderUrl &&
+        thumbnailInputFile?.blob &&
+        thumbnailContentId &&
+        randomStorageProviderUrl
+      ) {
+        displaySnackbar({ title: '(2) Assets being uploaded', iconType: 'info' })
+      }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
@@ -303,7 +319,11 @@ export const EditVideoSheet: React.FC = () => {
           handleTransactionClose()
           if (isEdit && transactionStatus === ExtrinsicStatus.Completed) {
             closeSheet()
-            displaySnackbar({ title: 'Video successfully edited', iconType: 'success' })
+            displaySnackbar({ title: 'Video successfully updated', iconType: 'success' })
+          }
+          if (!isEdit && transactionStatus === ExtrinsicStatus.Completed) {
+            closeSheet()
+            displaySnackbar({ title: 'Video successfully created', iconType: 'success' })
           }
         }}
       />

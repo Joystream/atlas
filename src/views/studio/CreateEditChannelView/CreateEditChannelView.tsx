@@ -188,9 +188,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     if (queryNodeState.indexerHead >= transactionBlock) {
       setTransactionStatus(ExtrinsicStatus.Completed)
-      if (!newChannel) {
-        displaySnackbar({ title: 'Channel successfully edited', iconType: 'success' })
-      }
       transactionCallback?.()
     }
   }, [displaySnackbar, newChannel, queryNodeState, transactionBlock, transactionCallback, transactionStatus])
@@ -339,6 +336,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           storageProviderUrl
         )
       }
+      if (
+        (data.cover.blob && coverContentId && storageProviderUrl) ||
+        (data.avatar.blob && avatarContentId && storageProviderUrl)
+      ) {
+        displaySnackbar({ title: 'Asset being uploaded', iconType: 'info' })
+      }
+      if (
+        data.cover.blob &&
+        coverContentId &&
+        storageProviderUrl &&
+        data.avatar.blob &&
+        avatarContentId &&
+        storageProviderUrl
+      ) {
+        displaySnackbar({ title: '(2) Assets being uploaded', iconType: 'info' })
+      }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
@@ -354,7 +367,11 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())
+      displaySnackbar({ title: 'Channel successfully created', iconType: 'success' })
       return
+    }
+    if (transactionStatus === ExtrinsicStatus.Completed && !newChannel) {
+      displaySnackbar({ title: 'Channel successfully updated', iconType: 'success' })
     }
 
     setTransactionStatus(null)

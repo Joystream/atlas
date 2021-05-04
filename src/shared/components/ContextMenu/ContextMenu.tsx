@@ -6,7 +6,7 @@ import { StyledContainer, StyledMenuItem, StyledText, menuTransitions } from './
 
 type MenuItemProps = {
   icon: ReactNode
-  onClick: () => void
+  onClick: (e: React.MouseEvent<HTMLElement>) => void
 }
 
 type ContextMenuProps = {
