@@ -63,7 +63,7 @@ export type DataObject = {
   __typename?: 'DataObject'
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
-  size: Scalars['Int']
+  size: Scalars['Float']
   liaison?: Maybe<StorageProvider>
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
