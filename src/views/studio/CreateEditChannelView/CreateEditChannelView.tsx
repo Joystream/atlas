@@ -190,7 +190,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       setTransactionStatus(ExtrinsicStatus.Completed)
       transactionCallback?.()
     }
-  }, [displaySnackbar, newChannel, queryNodeState, transactionBlock, transactionCallback, transactionStatus])
+  }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
   const handleSubmit = createSubmitHandler(async (data) => {
     if (!joystream || !activeMemberId) {

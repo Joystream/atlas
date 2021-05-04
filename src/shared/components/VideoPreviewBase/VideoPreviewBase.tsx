@@ -69,7 +69,7 @@ export type VideoPreviewPublisherProps =
       onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
-      onDeleteVideoClick?: (e: React.MouseEvent<HTMLElement>) => void
+      onDeleteVideoClick?: () => void
     }
   | {
       publisherMode?: false

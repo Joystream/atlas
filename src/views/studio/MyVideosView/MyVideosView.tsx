@@ -20,6 +20,7 @@ export const MyVideosView = () => {
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
+  const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -118,6 +119,14 @@ export const MyVideosView = () => {
     closeDeleteTransactionDialog()
   }
 
+  const confirmRemoveDraft = (id: string) => {
+    removeDraft(id)
+    displaySnackbar({
+      title: 'Draft successfully deleted',
+      iconType: 'success',
+    })
+  }
+
   const gridContent = (
     <>
       {isDraftTab
@@ -125,34 +134,26 @@ export const MyVideosView = () => {
             // pagination slice
             .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
             .map((draft, idx) => (
-              <>
-                <VideoPreviewPublisher
-                  key={idx}
-                  id={draft.id}
-                  showChannel={false}
-                  isDraft
-                  isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-                  onClick={() => handleVideoClick(draft.id, { draft: true })}
-                  onPullupClick={(e) => {
-                    e.stopPropagation()
-                    handleVideoClick(draft.id, { draft: true, minimized: true })
-                    displaySnackbar({
-                      title: 'Video opened in new tab',
-                      iconType: 'success',
-                      actionText: 'Remove',
-                      onActionClick: () => setSheetState('closed'),
-                    })
-                  }}
-                  onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-                  onDeleteVideoClick={() => {
-                    removeDraft(draft.id)
-                    displaySnackbar({
-                      title: 'Draft successfully deleted',
-                      iconType: 'success',
-                    })
-                  }}
-                />
-              </>
+              <VideoPreviewPublisher
+                key={idx}
+                id={draft.id}
+                showChannel={false}
+                isDraft
+                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+                onClick={() => handleVideoClick(draft.id, { draft: true })}
+                onPullupClick={(e) => {
+                  e.stopPropagation()
+                  handleVideoClick(draft.id, { draft: true, minimized: true })
+                  displaySnackbar({
+                    title: 'Video opened in new tab',
+                    iconType: 'success',
+                    actionText: 'Remove',
+                    onActionClick: () => setSheetState('closed'),
+                  })
+                }}
+                onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+                onDeleteVideoClick={() => setDraftToRemove(draft.id)}
+              />
             ))
         : videosWithPlaceholders.map((video, idx) => (
             <VideoPreviewPublisher
@@ -189,6 +190,17 @@ export const MyVideosView = () => {
         successTitle="Video successfully deleted!"
         successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
         onClose={handleVideoDeleted}
+      />
+      <MessageDialog
+        title="Do you want to remove this draft from your drafts?"
+        description="Draft will be removed permanently and all its data will be lost. Drafts are stored locally - that’s why you don’t need to make a transaction to confirm it."
+        variant="warning"
+        showDialog={drafts.some((item) => item.id === draftToRemove)}
+        error
+        primaryButtonText="Remove draft"
+        secondaryButtonText="Cancel"
+        onPrimaryButtonClick={() => draftToRemove && confirmRemoveDraft(draftToRemove)}
+        onSecondaryButtonClick={() => setDraftToRemove(null)}
       />
     </>
   )
