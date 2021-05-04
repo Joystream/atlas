@@ -34,6 +34,8 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
+import { useDeleteVideo } from '../../MyVideosView/MyVideosView'
+import { MessageDialog, TransactionDialog } from '@/components'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -48,6 +50,7 @@ type EditVideoFormProps = {
   ) => void
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
+  onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: EditVideoSheetTab
 }
 
@@ -56,6 +59,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   onSubmit,
   onThumbnailFileChange,
   onVideoFileChange,
+  onDeleteVideo,
 }) => {
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? ''
@@ -69,6 +73,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   const { categories, error: categoriesError } = useCategories()
   const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+
+  const {
+    handleCancel,
+    handleDeleteTransactionClose,
+    handleConfirmDeleteVideo,
+    handleDeleteVideoClick,
+    videoIdToDelete,
+    deleteTransactionStatus,
+  } = useDeleteVideo(activeUser.memberId)
 
   if (categoriesError) {
     throw categoriesError
@@ -224,10 +237,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       console.error({ message: 'Unknown file select error', code: errorCode })
       setFileSelectError('Unknown error')
     }
-  }
-
-  const handleDeleteVideo = () => {
-    // TODO add logic for deleting video
   }
 
   const categoriesSelectItems: SelectItem[] =
@@ -414,13 +423,41 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </FormField>
           {isEdit && (
             <DeleteVideoContainer>
-              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
+              <DeleteVideoButton
+                size="large"
+                variant="tertiary"
+                textColorVariant="error"
+                onClick={() => {
+                  handleDeleteVideoClick(selectedVideoTab?.id)
+                }}
+              >
                 Delete video
               </DeleteVideoButton>
             </DeleteVideoContainer>
           )}
         </InputsContainer>
       </FormWrapper>
+      <MessageDialog
+        title="Do you want to remove this video from your videos?"
+        exitButton={false}
+        description="Video will be removed permanently and all its data will be lost. Joystream studio do not keep any of your data after you remove your video."
+        showDialog={!!videoIdToDelete}
+        onSecondaryButtonClick={handleCancel}
+        onPrimaryButtonClick={handleConfirmDeleteVideo}
+        error
+        variant="warning"
+        primaryButtonText="Delete video"
+        secondaryButtonText="Cancel"
+      />
+      <TransactionDialog
+        status={deleteTransactionStatus}
+        successTitle={'Video successfully deleted!'}
+        successDescription={'Your video was deleted from the blockchain.'}
+        onClose={() => {
+          selectedVideoTab?.id && onDeleteVideo(selectedVideoTab?.id)
+          handleDeleteTransactionClose()
+        }}
+      />
       <StyledActionBar
         fee={0}
         isActive={!isEdit || isDirty}
