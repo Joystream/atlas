@@ -1,8 +1,9 @@
 import { useVideos } from '@/api/hooks'
 import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
+import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
@@ -16,6 +17,7 @@ const ROWS_AMOUNT = 4
 export const MyVideosView = () => {
   const navigate = useNavigate()
   const { setSheetState, videoTabs, addVideoTab } = useEditVideoSheet()
+  const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -133,6 +135,12 @@ export const MyVideosView = () => {
                 onPullupClick={(e) => {
                   e.stopPropagation()
                   handleVideoClick(draft.id, { draft: true, minimized: true })
+                  displaySnackbar({
+                    title: 'Video opened in new tab',
+                    iconType: 'success',
+                    actionText: 'Remove',
+                    onActionClick: () => setSheetState('closed'),
+                  })
                 }}
                 onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
                 onDeleteVideoClick={() => removeDraft(draft.id)}

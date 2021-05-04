@@ -188,9 +188,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     if (queryNodeState.indexerHead >= transactionBlock) {
       setTransactionStatus(ExtrinsicStatus.Completed)
+      if (!newChannel) {
+        displaySnackbar({ title: 'Channel successfully edited', iconType: 'success' })
+      }
       transactionCallback?.()
     }
-  }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
+  }, [displaySnackbar, newChannel, queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
   const handleSubmit = createSubmitHandler(async (data) => {
     if (!joystream || !activeMemberId) {

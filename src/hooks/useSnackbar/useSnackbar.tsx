@@ -71,10 +71,14 @@ export const SnackbarProvider: React.FC = ({ children }) => {
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
-          {snackbars.map(({ id, iconType, ...snackbarProps }) => (
+          {snackbars.map(({ id, iconType, onActionClick, ...snackbarProps }) => (
             <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
               <Snackbar
                 {...snackbarProps}
+                onActionClick={() => {
+                  onActionClick?.()
+                  closeSnackbar(id)
+                }}
                 icon={iconType && ICON_TYPE_TO_ICON[iconType]}
                 onClick={() => closeSnackbar(id)}
               />

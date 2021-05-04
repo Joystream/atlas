@@ -299,7 +299,13 @@ export const EditVideoSheet: React.FC = () => {
             ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
             : 'Changes to your video were saved on the blockchain.'
         }
-        onClose={handleTransactionClose}
+        onClose={() => {
+          handleTransactionClose()
+          if (isEdit && transactionStatus === ExtrinsicStatus.Completed) {
+            closeSheet()
+            displaySnackbar({ title: 'Video successfully edited', iconType: 'success' })
+          }
+        }}
       />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
