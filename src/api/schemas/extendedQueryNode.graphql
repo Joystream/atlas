@@ -46,7 +46,7 @@ type StorageProvider {
 type DataObject {
   id: ID!
   createdAt: DateTime!
-  size: Int!
+  size: Float!
   # storage provider that accepted the asset
   liaison: StorageProvider
   # status of asset as reported by liaison
