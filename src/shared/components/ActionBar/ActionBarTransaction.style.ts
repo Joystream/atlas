@@ -18,9 +18,11 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
 `
 
 export const StyledCheckout = styled(Checkout)`
-  margin-left: auto;
   display: none;
   ${media.medium} {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
     display: block;
   }
 `
