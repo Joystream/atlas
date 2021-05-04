@@ -432,6 +432,19 @@ export class JoystreamJs {
     }
   }
 
+  private async _deleteVideo(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn) {
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.deleteVideo(contentActor, videoId)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+    }
+  }
+
   /* Public */
   async setAccount(accountId: AccountId | null) {
     // make sure the initialization was done already
@@ -518,5 +531,11 @@ export class JoystreamJs {
     await this.ensureApi()
 
     return this._createOrUpdateVideo(videoId, memberId, channelId, inputMetadata, inputAssets, cb)
+  }
+
+  async deleteVideo(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    return this._deleteVideo(videoId, memberId, cb)
   }
 }
