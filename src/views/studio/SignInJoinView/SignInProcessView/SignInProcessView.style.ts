@@ -21,7 +21,6 @@ export const ListContainer = styled.div`
 `
 
 export const StyledCoinsIllustrations = styled(CoinsIllustration)`
-  width: 100%;
   z-index: -2;
   bottom: 0;
   left: 0;

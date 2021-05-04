@@ -14,9 +14,9 @@ import {
   StyledStudioContainer,
   UnOrderedItem,
   UnOrderedList,
-} from './SignInProccessView.style'
+} from './SignInProcessView.style'
 
-const SignInProccessView = () => {
+const SignInProcessView = () => {
   return (
     <>
       <StyledStudioContainer>
@@ -83,4 +83,4 @@ const SignInProccessView = () => {
   )
 }
 
-export default SignInProccessView
+export default SignInProcessView
