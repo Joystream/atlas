@@ -39,7 +39,7 @@ const globalStyles = css`
 
   :root {
     --global-horizontal-padding: ${sizes(4)};
-    --sidenav-collapsed-width: 0;
+    --sidenav-collapsed-width: 0px;
 
     ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};

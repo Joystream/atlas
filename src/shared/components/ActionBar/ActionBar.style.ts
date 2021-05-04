@@ -7,7 +7,7 @@ export const StyledActionBarContainer = styled.div`
   background-color: ${colors.gray[900]};
   padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
-  z-index: ${zIndex.header};
+
   ${media.medium} {
     flex-direction: row;
     justify-content: space-between;

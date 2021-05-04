@@ -541,7 +541,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             >
               <ActionBarTransaction
                 fee={FEE}
-                checkoutSteps={newChannel ? checkoutSteps : undefined}
+                checkoutSteps={!channelId ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
                 fullWidth={!channelId}
                 primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
