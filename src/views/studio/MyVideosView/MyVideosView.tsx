@@ -16,7 +16,7 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
@@ -144,11 +144,12 @@ export const MyVideosView = () => {
                 onPullupClick={(e) => {
                   e.stopPropagation()
                   handleVideoClick(draft.id, { draft: true, minimized: true })
+                  const index = videoTabs.findIndex((item) => item.id === draft.id)
                   displaySnackbar({
                     title: 'Video opened in new tab',
                     iconType: 'success',
                     actionText: 'Remove',
-                    onActionClick: () => setSheetState('closed'),
+                    onActionClick: () => removeVideoTab(index),
                   })
                 }}
                 onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
