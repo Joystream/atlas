@@ -20,7 +20,7 @@ const SignInStepsStepper: React.FC = () => {
       element: <AccountStep nextStepPath="?step=3" />,
     },
     {
-      title: 'Terms & Conditions',
+      title: 'Terms of Service',
       element: <TermsStep />,
     },
   ]
