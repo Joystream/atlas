@@ -25,7 +25,7 @@ const getLinkPropsFromTo = (to?: To) => {
 }
 
 const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
-  ({ onClick, to, type = 'button', children, size = 'medium', variant = 'primary', ...styleProps }, ref) => {
+  ({ onClick, to, type = 'button', children, size = 'medium', variant = 'primary', disabled, ...styleProps }, ref) => {
     const clickable = !!onClick || !!to || type === 'submit'
 
     const linkProps = getLinkPropsFromTo(to)
@@ -36,6 +36,8 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         type={to ? undefined : type}
         onClick={onClick}
         clickable={clickable}
+        disabled={disabled}
+        aria-disabled={disabled}
         {...linkProps}
         size={size}
         variant={variant}

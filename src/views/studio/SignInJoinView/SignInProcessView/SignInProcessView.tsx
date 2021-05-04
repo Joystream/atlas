@@ -12,6 +12,7 @@ import {
   StyledButton,
   StyledCoinsIllustrations,
   StyledStudioContainer,
+  SubTitle,
   UnOrderedItem,
   UnOrderedList,
 } from './SignInProcessView.style'
@@ -22,45 +23,45 @@ const SignInProcessView = () => {
       <StyledStudioContainer>
         <HeroContainer>
           <Text variant="h2">How to start your publisher journey?</Text>
+          <SubTitle variant="body1" secondary>
+            We will guide you through those steps so you&apos;re all set up to start publishing on Joystream.
+          </SubTitle>
         </HeroContainer>
         <ListContainer>
           <OrderedList>
             <OrderedItem variant="h4" as="li">
-              Install Polkadot extension
+              Create your blockchain account
               <UnOrderedList>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Create a polkadot account
+                  Install Polkadot browser extension
                 </UnOrderedItem>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Make your first transaction & join the blockchain
-                </UnOrderedItem>
-                <UnOrderedItem secondary variant="body2" as="li">
-                  Connect it to your joystream membership
+                  Generate your personal keypair
                 </UnOrderedItem>
               </UnOrderedList>
             </OrderedItem>
             <OrderedItem variant="h4" as="li">
-              Create joystream membership account
+              Create Joystream membership
               <UnOrderedList>
                 <UnOrderedItem secondary variant="body2" as="li">
                   One Joystream membership allows you to create multiple channels
                 </UnOrderedItem>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Creating a membership is free!
+                  Creating a membership is free
                 </UnOrderedItem>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Membership never expires & there are no fees!
+                  Membership never expires & there are no fees
                 </UnOrderedItem>
               </UnOrderedList>
             </OrderedItem>
             <OrderedItem variant="h4" as="li">
-              Create your first channel
+              Create your channel
               <UnOrderedList>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Add unlimited content
+                  Personalize your channel
                 </UnOrderedItem>
                 <UnOrderedItem secondary variant="body2" as="li">
-                  Gather your own audience & be heard!
+                  Gather your own audience & be heard
                 </UnOrderedItem>
               </UnOrderedList>
             </OrderedItem>
@@ -73,7 +74,7 @@ const SignInProcessView = () => {
             icon={<SvgGlyphChevronRight />}
             to={absoluteRoutes.studio.signInJoin({ step: '1' })}
           >
-            Join now
+            Get started
           </StyledButton>
         </ListContainer>
       </StyledStudioContainer>

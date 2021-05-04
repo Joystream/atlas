@@ -266,7 +266,7 @@ export const EditVideoSheet: React.FC = () => {
         successTitle={!isEdit ? 'Video successfully created!' : 'Video successfully updated!'}
         successDescription={
           !isEdit
-            ? 'Your video was created and saved on the blockchain.'
+            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
             : 'Changes to your video were saved on the blockchain.'
         }
         onClose={handleTransactionClose}

@@ -16,7 +16,7 @@ const SignInStepsStepper: React.FC = () => {
       element: <ExtensionStep nextStepPath="?step=2" />,
     },
     {
-      title: 'Connect accounts',
+      title: 'Connect account',
       element: <AccountStep nextStepPath="?step=3" />,
     },
     {

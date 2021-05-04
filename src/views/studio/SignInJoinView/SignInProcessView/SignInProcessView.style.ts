@@ -16,6 +16,10 @@ export const HeroContainer = styled.div`
   margin-bottom: 60px;
 `
 
+export const SubTitle = styled(Text)`
+  margin-top: ${sizes(4)};
+`
+
 export const ListContainer = styled.div`
   max-width: 440px;
 `

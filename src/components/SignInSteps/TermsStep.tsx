@@ -1,18 +1,14 @@
 import { absoluteRoutes } from '@/config/routes'
-import { Checkbox } from '@/shared/components'
 import Text from '@/shared/components/Text'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import { StepFooter, StepTitle, StepWrapper } from './SignInSteps.style'
+import { StepFooter, StepWrapper } from './SignInSteps.style'
 import { TermsBox, TextWrapper, TermsParagraph, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
 
 const TermsStep: React.FC = () => {
-  const navigate = useNavigate()
-  const [isCheckboxVisible, setIsCheckboxVisible] = useState(false)
-  const [isAccepted, setIsAccepted] = useState(false)
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
 
@@ -25,8 +21,7 @@ const TermsStep: React.FC = () => {
     const boxHeight = termsBoxRef.current.clientHeight
 
     if (scrollPosition === scrollHeight - boxHeight) {
-      // hide scroll button, show checkbox
-      setIsCheckboxVisible(true)
+      setHasScrolledToBottom(true)
     }
   }, [scrollPosition])
 
@@ -73,7 +68,7 @@ const TermsStep: React.FC = () => {
         </TextWrapper>
         <TermsOverlay>
           <CSSTransition
-            in={!isCheckboxVisible}
+            in={!hasScrolledToBottom}
             timeout={parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
             unmountOnExit
@@ -85,19 +80,9 @@ const TermsStep: React.FC = () => {
         </TermsOverlay>
       </TermsBox>
       <StepFooter>
-        <CSSTransition
-          in={isCheckboxVisible}
-          timeout={parseInt(transitions.timings.loading)}
-          classNames={transitions.names.fade}
-          unmountOnExit
-        >
-          <Checkbox
-            value={isAccepted}
-            onClick={() => setIsAccepted(!isAccepted)}
-            label="I’ve read and accept Terms And Conditions"
-          />
-        </CSSTransition>
-        <ContinueButton to={absoluteRoutes.studio.newMembership()}>Accept terms</ContinueButton>
+        <ContinueButton to={absoluteRoutes.studio.newMembership()} disabled={!hasScrolledToBottom}>
+          Accept terms
+        </ContinueButton>
       </StepFooter>
     </StepWrapper>
   )
