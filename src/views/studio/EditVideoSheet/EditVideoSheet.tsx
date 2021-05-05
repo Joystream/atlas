@@ -20,12 +20,12 @@ import {
   ExtensionSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { writeUrlInCache } from '@/utils/cachingAssets'
+import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -62,6 +62,11 @@ export const EditVideoSheet: React.FC = () => {
   const { joystream } = useJoystream()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
+  })
+  const { refetchCount: refetchVideosCount } = useVideos({
+    where: {
+      channelId_eq: channelId,
+    },
   })
 
   useEffect(() => {
@@ -170,13 +175,19 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchVideo({ where: { id: newVideoId } })
-          writeUrlInCache({
-            url: data.assets.thumbnail?.url,
-            fileType: 'thumbnail',
-            parentId: videoId,
-            client,
-          })
+          const fetchedVideo = await refetchVideo({ where: { id: newVideoId } })
+
+          if (fetchedVideo.data.videoByUniqueInput) {
+            writeVideoDataInCache({
+              data: fetchedVideo.data.videoByUniqueInput,
+              thumbnailUrl: data.assets.thumbnail?.url,
+              client,
+            })
+          }
+
+          // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
+          await refetchVideosCount()
+
           updateSelectedVideoTab({
             id: newVideoId,
             isDraft: false,
@@ -259,10 +270,14 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(null)
   }
 
-  const handleDeleteVideo = (videoId: string) => {
+  const handleDeleteVideo = async (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
+    await refetchVideosCount()
     removeVideoTab(videoTabIdx)
-    setSheetState('minimized')
+    removeVideoFromCache(videoId, client)
+
+    // close the sheet if we closed the last tab
+    setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
   }
 
   return (
