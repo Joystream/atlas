@@ -44,9 +44,9 @@ export const InputsContainer = styled.div`
   flex-direction: column;
 
   padding: ${sizes(4)};
+  padding-bottom: 100px;
   margin-top: ${sizes(8)};
   ${media.medium} {
-    padding: ${sizes(4)};
     margin-top: 0;
     overflow-y: auto;
   }

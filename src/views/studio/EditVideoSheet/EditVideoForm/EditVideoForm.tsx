@@ -422,6 +422,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         </InputsContainer>
       </FormWrapper>
       <StyledActionBar
+        fullWidth={true}
         fee={0}
         isActive={!isEdit || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
