@@ -36,8 +36,8 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/componen
 import { formatISO, isValid } from 'date-fns'
 
 const visibilityOptions: SelectItem<boolean>[] = [
-  { name: 'Public (Anyone can see this video)', value: true },
-  { name: 'Unlisted (Only people with a link can see this video)', value: false },
+  { name: 'Public', value: true },
+  { name: 'Unlisted (video will not appear in feeds and search)', value: false },
 ]
 
 type EditVideoFormProps = {
@@ -259,7 +259,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             name="title"
             ref={register(textFieldValidation('Video Title', 3, 40))}
             onChange={handleFormChange}
-            placeholder="Insert Video Title"
+            placeholder="Video title"
             error={!!errors.title}
             helperText={errors.title?.message}
           />
@@ -268,11 +268,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             ref={register(textFieldValidation('Description', 0, 2160))}
             onChange={handleFormChange}
             maxLength={2160}
-            placeholder="Add video description"
+            placeholder="Description of the video to share with your audience"
             error={!!errors.description}
             helperText={errors.description?.message}
           />
-          <FormField title="Video Visibility">
+          <FormField
+            title="Privacy"
+            description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
+          >
             <Controller
               name="isPublic"
               control={control}
@@ -293,7 +296,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          <FormField title="Video Language">
+          <FormField title="Language" description="Main language used in the video">
             <Controller
               name="language"
               control={control}
@@ -312,7 +315,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          <FormField title="Video Category">
+          <FormField title="Category" description="Category that best describes the content">
             <Controller
               name="category"
               control={control}
@@ -331,30 +334,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          <FormField
-            title="Published Before"
-            description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
-          >
-            <Controller
-              name="publishedBeforeJoystream"
-              control={control}
-              rules={{
-                validate: pastDateValidation,
-              }}
-              render={({ value, onChange }) => (
-                <Datepicker
-                  value={value}
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
-                  error={!!errors.publishedBeforeJoystream}
-                  helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
-                />
-              )}
-            />
-          </FormField>
-          <FormField title="Marketing" description="Please select whether your video contains paid promotions">
+          <FormField title="Marketing">
             <Controller
               name="hasMarketing"
               control={control}
@@ -371,8 +351,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             />
           </FormField>
           <FormField
-            title="Content Rating"
-            description="Please select whether your video contains explicit material (sex, violence, etc.)"
+            title="Content rating"
+            description="Whether your video contains explicit material (sex, violence, etc.)"
           >
             <Controller
               name="isExplicit"
@@ -406,6 +386,29 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                     helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
                   />
                 </StyledRadioContainer>
+              )}
+            />
+          </FormField>
+          <FormField
+            title="Prior publication"
+            description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
+          >
+            <Controller
+              name="publishedBeforeJoystream"
+              control={control}
+              rules={{
+                validate: pastDateValidation,
+              }}
+              render={({ value, onChange }) => (
+                <Datepicker
+                  value={value}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.publishedBeforeJoystream}
+                  helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+                />
               )}
             />
           </FormField>

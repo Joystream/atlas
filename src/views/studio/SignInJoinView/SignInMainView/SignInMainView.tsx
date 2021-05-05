@@ -29,9 +29,9 @@ const SignInMainView: React.FC = () => {
         <LogoContainer>
           <FullLogoSVG />
         </LogoContainer>
-        <StyledHero variant="hero">Welcome to - Joystream Studio</StyledHero>
+        <StyledHero variant="hero">Welcome to Joystream Studio</StyledHero>
         <SubTitle variant="body1">
-          Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
+          Start your journey as a Video Publisher. Publish and manage your channel and video content.
         </SubTitle>
         <ButtonGroup>
           <SignInButton icon={<SvgGlyphChannel />} size="large" to={absoluteRoutes.studio.signInJoin({ step: '0' })}>

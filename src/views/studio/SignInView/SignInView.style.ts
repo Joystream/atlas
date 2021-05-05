@@ -6,7 +6,7 @@ import styled from '@emotion/styled'
 export const Header = styled.header`
   margin: 0 auto;
   text-align: center;
-  max-width: 400px;
+  max-width: 600px;
   margin-bottom: ${sizes(12)};
 `
 

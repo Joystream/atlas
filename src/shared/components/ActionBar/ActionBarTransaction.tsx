@@ -22,7 +22,7 @@ const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
         {...actionBarArgs}
         fullWidth={fullWidth}
         primaryText={`Fee: ${fee} Joy`}
-        secondaryText="Every change in the blockchain state requires paying a nominal fee."
+        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
       />
     </ActionBarTransactionWrapper>
   )
