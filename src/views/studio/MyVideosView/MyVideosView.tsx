@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
+import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -30,7 +31,7 @@ export const MyVideosView = () => {
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', channelId)
   const memberId = activeUser.memberId ?? ''
 
-  const { loading, videos, totalCount, error, fetchMore, refetch } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore, refetchCount: refetchVideosCount, client } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -106,6 +107,17 @@ export const MyVideosView = () => {
     }
   }
 
+  const handleVideoDeleted = async () => {
+    if (!selectedVideoId) {
+      return
+    }
+    setSelectedVideoId(undefined)
+
+    await refetchVideosCount()
+    removeVideoFromCache(selectedVideoId, client)
+    closeDeleteTransactionDialog()
+  }
+
   const gridContent = (
     <>
       {isDraftTab
@@ -162,10 +174,7 @@ export const MyVideosView = () => {
         status={deleteTransactionStatus}
         successTitle="Video successfully deleted!"
         successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={() => {
-          closeDeleteTransactionDialog()
-          setSelectedVideoId(undefined)
-        }}
+        onClose={handleVideoDeleted}
       />
     </>
   )
