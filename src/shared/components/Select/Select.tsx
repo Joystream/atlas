@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Ref } from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
@@ -25,8 +25,9 @@ const Select = <T,>({
   value,
   disabled,
   onChange,
+  customRef,
   ...inputBaseProps
-}: SelectProps<T>) => {
+}: SelectProps<T> & { customRef?: Ref<HTMLDivElement> }) => {
   const itemsValues = items.map((item) => item.value)
 
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
@@ -47,7 +48,7 @@ const Select = <T,>({
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper>
+      <SelectWrapper ref={customRef}>
         <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
           {label && <StyledLabelText>{label}</StyledLabelText>}
         </label>
