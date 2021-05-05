@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
-import { AssetAvailability } from '@/api/queries'
+import { AssetAvailability, VideoFieldsFragment, Maybe } from '@/api/queries'
 import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
@@ -23,12 +23,34 @@ const cachedThumbnailUrlFragment = gql`
   }
 `
 
+const cachedVideoDataFragment = gql`
+  fragment CachedVideoFields on Video {
+    id
+    title
+    views
+    createdAt
+    thumbnailPhotoAvailability
+    thumbnailPhotoUrls
+  }
+`
+
 type CachedAssetType = 'avatar' | 'cover' | 'thumbnail'
 
 type WriteUrlInCacheArg = {
   url?: string | null
   fileType: CachedAssetType
   parentId: string | null
+  client: ApolloClient<NormalizedCacheObject>
+}
+
+type WriteVideoDataCacheArg = {
+  data: Maybe<
+    {
+      __typename?: 'Video' | undefined
+    } & VideoFieldsFragment
+  >
+  videoId: string
+  thumbnailUrl?: string | null
   client: ApolloClient<NormalizedCacheObject>
 }
 
@@ -55,6 +77,22 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
     data: {
       [updateFields[0]]: url ? [url] : [],
       [updateFields[1]]: AssetAvailability.Accepted,
+    },
+  })
+}
+
+export const writeVideoDataInCache = ({ data, videoId, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+  const { id, title, views, createdAt } = data as VideoFieldsFragment
+  client.writeFragment({
+    id: `Video:${videoId}`,
+    fragment: cachedVideoDataFragment,
+    data: {
+      id,
+      title,
+      views,
+      createdAt,
+      thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
+      thumbnailPhotoAvailability: AssetAvailability.Accepted,
     },
   })
 }

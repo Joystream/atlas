@@ -25,7 +25,8 @@ import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { writeUrlInCache } from '@/utils/cachingAssets'
+import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { VideoFieldsFragment } from '@/api/queries'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -170,13 +171,16 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchVideo({ where: { id: newVideoId } })
-          writeUrlInCache({
-            url: data.assets.thumbnail?.url,
-            fileType: 'thumbnail',
-            parentId: videoId,
-            client,
-          })
+          const video = await refetchVideo({ where: { id: newVideoId } })
+          if (video.data.videoByUniqueInput) {
+            writeVideoDataInCache({
+              data: video.data.videoByUniqueInput,
+              videoId,
+              thumbnailUrl: data.assets.thumbnail?.url,
+              client,
+            })
+          }
+
           updateSelectedVideoTab({
             id: newVideoId,
             isDraft: false,
