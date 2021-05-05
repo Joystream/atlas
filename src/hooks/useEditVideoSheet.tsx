@@ -28,6 +28,8 @@ type ContextValue = {
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
+  selectedVideoTabCachedDirtyFormData: Array<EditVideoFormFields & EditVideoSheetTab>
+  setSelectedVideoTabCachedDirtyFormData: (formData: EditVideoFormFields) => void
   selectedVideoTabCachedAssets: InputFilesState
   setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
@@ -42,7 +44,9 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-
+  const [selectedVideoTabCachedDirtyFormData, _setSelectedVideoTabCachedDirtyFormData] = useState<
+    Array<EditVideoFormFields & EditVideoSheetTab>
+  >([])
   const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
@@ -92,6 +96,23 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   )
 
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
+  const setSelectedVideoTabCachedDirtyFormData = useCallback(
+    (data: EditVideoFormFields) => {
+      const index = selectedVideoTabCachedDirtyFormData.findIndex((dirtyTab) => dirtyTab.id === selectedVideoTab.id)
+      if (index === -1) {
+        _setSelectedVideoTabCachedDirtyFormData([
+          ...selectedVideoTabCachedDirtyFormData,
+          { ...data, ...selectedVideoTab },
+        ])
+      } else {
+        const temp = [...selectedVideoTabCachedDirtyFormData]
+        temp[index] = { ...data, ...selectedVideoTab }
+        _setSelectedVideoTabCachedDirtyFormData(temp)
+      }
+    },
+    [selectedVideoTab, selectedVideoTabCachedDirtyFormData]
+  )
+
   const setSelectedVideoTabCachedAssets = useCallback(
     (files: InputFilesState) => {
       setAssetsCache((existingAssets) => ({
@@ -143,6 +164,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSheetState,
         selectedVideoTabCachedAssets,
         setSelectedVideoTabCachedAssets,
+        selectedVideoTabCachedDirtyFormData,
+        setSelectedVideoTabCachedDirtyFormData,
       }}
     >
       {children}
@@ -180,12 +203,9 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     activeUser: { channelId },
   } = useActiveUser()
   const { drafts } = useDrafts('video', channelId ?? '')
-  const { selectedVideoTabCachedAssets } = useEditVideoSheet()
+  const { selectedVideoTabCachedAssets, selectedVideoTabCachedDirtyFormData } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
-  const [cachedDirtyVideoTabsData, setcachedDirtyVideoTabs] = useState<Array<EditVideoFormFields & EditVideoSheetTab>>(
-    []
-  )
 
   if (!tab) {
     return {
@@ -197,7 +217,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   }
 
   const dirtyCachedVideoData =
-    tab?.isDraft === false ? cachedDirtyVideoTabsData.find((dirtyTab) => dirtyTab.id === tab.id) : undefined
+    tab?.isDraft === false ? selectedVideoTabCachedDirtyFormData.find((dirtyTab) => dirtyTab.id === tab.id) : undefined
   const videoData = dirtyCachedVideoData ?? {
     ...video,
     category: video?.category?.id,
@@ -238,19 +258,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     assets,
   }
 
-  const updateTabData = (data: EditVideoFormFields) => {
-    const index = cachedDirtyVideoTabsData.findIndex((dirtyTab) => dirtyTab.id === tab.id)
-    if (index === -1) {
-      setcachedDirtyVideoTabs([...cachedDirtyVideoTabsData, { ...data, ...tab }])
-    } else {
-      const temp = [...cachedDirtyVideoTabsData]
-      temp[index] = { ...data, ...tab }
-      setcachedDirtyVideoTabs(temp)
-    }
-  }
-
   return {
-    updateTabData,
     tabData: normalizedData,
     loading: tab.isDraft ? false : loading,
     error,

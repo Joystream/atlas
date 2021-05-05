@@ -65,12 +65,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
   const { addDraft, updateDraft } = useDrafts('video', channelId)
-  const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets } = useEditVideoSheet()
+  const {
+    updateSelectedVideoTab,
+    setSelectedVideoTabCachedAssets,
+    setSelectedVideoTabCachedDirtyFormData,
+  } = useEditVideoSheet()
 
   const { categories, error: categoriesError } = useCategories()
-  const { tabData, updateTabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(
-    selectedVideoTab
-  )
+  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   if (categoriesError) {
     throw categoriesError
@@ -175,7 +177,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const handleFormChange = () => {
     const data = getValues()
     if (!selectedVideoTab?.isDraft) {
-      updateTabData(data)
+      setSelectedVideoTabCachedDirtyFormData(data)
     } else {
       debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
     }
