@@ -20,13 +20,12 @@ import {
   ExtensionSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
-import { VideoFieldsFragment } from '@/api/queries'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -63,6 +62,11 @@ export const EditVideoSheet: React.FC = () => {
   const { joystream } = useJoystream()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
+  })
+  const { countRefetch } = useVideos({
+    where: {
+      channelId_eq: channelId,
+    },
   })
 
   useEffect(() => {
@@ -172,6 +176,8 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
           const video = await refetchVideo({ where: { id: newVideoId } })
+          const count = await countRefetch()
+          console.log(count)
           if (video.data.videoByUniqueInput) {
             writeVideoDataInCache({
               data: video.data.videoByUniqueInput,

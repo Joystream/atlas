@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
-import { AssetAvailability, VideoFieldsFragment, Maybe } from '@/api/queries'
+import { AssetAvailability, VideoFieldsFragment, VideoFieldsFragmentDoc, Maybe } from '@/api/queries'
 import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
@@ -82,17 +82,39 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
 }
 
 export const writeVideoDataInCache = ({ data, videoId, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
-  const { id, title, views, createdAt } = data as VideoFieldsFragment
-  client.writeFragment({
-    id: `Video:${videoId}`,
-    fragment: cachedVideoDataFragment,
-    data: {
-      id,
-      title,
-      views,
-      createdAt,
-      thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
-      thumbnailPhotoAvailability: AssetAvailability.Accepted,
+  client.cache.modify({
+    fields: {
+      videos: (existingVideos = []) => {
+        const video = client.cache.writeFragment({
+          id: `Video:${videoId}`,
+          fragment: VideoFieldsFragmentDoc,
+          fragmentName: 'VideoFields',
+          data: {
+            ...data,
+            thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
+            thumbnailPhotoAvailability: AssetAvailability.Accepted,
+          },
+        })
+        console.log(video)
+        return [video, ...existingVideos]
+      },
     },
   })
+
+  // cache.modify({
+  //   fields: {
+  //     todos(existingTodos = []) {
+  //       const newTodoRef = cache.writeFragment({
+  //         data: addTodo,
+  //         fragment: gql`
+  //           fragment NewTodo on Todo {
+  //             id
+  //             type
+  //           }
+  //         `
+  //       });
+  //       return [...existingTodos, newTodoRef];
+  //     }
+  //   }
+  // });
 }
