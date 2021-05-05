@@ -332,17 +332,17 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
                   {onEditVideoClick && (
                     <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                      {isDraft ? 'Edit Draft' : 'Edit Video'}
+                      {isDraft ? 'Edit draft' : 'Edit video'}
                     </ContextMenuItem>
                   )}
                   {onCopyVideoURLClick && (
                     <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                      Copy Video URL
+                      Copy video URL
                     </ContextMenuItem>
                   )}
                   {onDeleteVideoClick && (
                     <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                      {isDraft ? 'Delete Draft' : 'Delete Video'}
+                      {isDraft ? 'Delete draft' : 'Delete video'}
                     </ContextMenuItem>
                   )}
                 </ContextMenu>

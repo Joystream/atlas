@@ -28,7 +28,7 @@ export const StepTitle = styled(Text)`
 
 export const StepSubTitle = styled(Text)`
   margin-top: ${sizes(2)};
-  max-width: 400px;
+  max-width: 500px;
 `
 
 export const StepFooter = styled.div`

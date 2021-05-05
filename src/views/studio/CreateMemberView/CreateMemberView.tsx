@@ -1,7 +1,7 @@
-import { ActionDialog, MessageDialog } from '@/components/Dialogs'
+import { MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useActiveUser, useConnectionStatus } from '@/hooks'
-import { Spinner, Text } from '@/shared/components'
+import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import { debounce } from 'lodash'
@@ -13,7 +13,6 @@ import {
   Form,
   StyledButton,
   Wrapper,
-  StyledText,
   Header,
   Hero,
   SubTitle,
@@ -115,9 +114,10 @@ const CreateMemberView = () => {
   return (
     <Wrapper>
       <Header>
-        <Hero variant="h2">Create Joystream membership</Hero>
+        <Hero variant="h2">Create your Joystream membership</Hero>
         <SubTitle variant="body1" secondary>
-          Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
+          Membership represents you as a member of the Joystream community. You can use it to create a channel and
+          publish content. It also allows you to participate in the platform governance, shaping its future.
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
@@ -129,8 +129,8 @@ const CreateMemberView = () => {
         <StyledTextField
           name="avatar"
           onChange={handleAvatarChange}
-          label="Avatar url"
-          placeholder="http://link_to_avatar_file"
+          label="Avatar URL"
+          placeholder="https://example.com/avatar.jpeg"
           ref={register(urlValidation('Avatar url'))}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
@@ -145,31 +145,32 @@ const CreateMemberView = () => {
         />
         <TextArea
           name="about"
-          label="About me"
-          placeholder="Describe yourself here..."
+          label="About"
+          placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={100}
           ref={register(textFieldValidation('About', 0, 100))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />
-        <StyledButton disabled={nodeConnectionStatus !== 'connected'} type="submit">
+        <StyledButton disabled={nodeConnectionStatus !== 'connected'} type="submit" size="large">
           Create membership
         </StyledButton>
       </Form>
-      <ActionDialog showDialog={isSubmitting} exitButton={false}>
-        <Spinner />
-        <Text variant="h4">Creating Membership...</Text>
-        <StyledText variant="body2">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero rem facilis assumenda consequuntur nostrum
-          inventore earum molestias ab quidem odio!
-        </StyledText>
-      </ActionDialog>
+      <MessageDialog
+        showDialog={isSubmitting}
+        exitButton={false}
+        icon={<Spinner />}
+        title="Creating membership..."
+        description="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds."
+      />
       <MessageDialog
         variant="error"
-        title="Some unexpected error occurred. "
+        title="Something went wrong..."
         showDialog={!isSubmitting && !!error}
-        description={`Error: ${error}`}
+        description={`Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${error}`}
+        secondaryButtonText="Close"
         onExitClick={() => setError(undefined)}
+        onSecondaryButtonClick={() => setError(undefined)}
       />
     </Wrapper>
   )

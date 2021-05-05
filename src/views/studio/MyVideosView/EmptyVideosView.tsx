@@ -15,9 +15,7 @@ export const EmptyVideosView: React.FC = () => {
         <MessageView>
           <Text variant="h3">Add your first video</Text>
           <Subtitle variant="body2">
-            No videos available. Start the publisher journey by adding
-            <br />
-            you very first video to Joystream.
+            No videos uploaded yet. Start publishing by adding your first video to Joystream.
           </Subtitle>
         </MessageView>
         <div>
@@ -80,6 +78,7 @@ const MessageView = styled.div`
   text-align: center;
   margin-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
+  max-width: 450px;
 
   ${media.medium} {
     text-align: left;
@@ -94,9 +93,8 @@ export const EmptyVideos = () => {
       <WellIllustration />
       <Message>
         <Text variant="h5">No videos found...</Text>
-        {/* <Subtitle variant="body2">No videos found..</Subtitle> */}
       </Message>
-      <Button icon={<SvgGlyphAddVideo />} to={absoluteRoutes.studio.editVideo()}>
+      <Button icon={<SvgGlyphAddVideo />} to={absoluteRoutes.studio.editVideo()} size="large">
         Upload video
       </Button>
     </Container>

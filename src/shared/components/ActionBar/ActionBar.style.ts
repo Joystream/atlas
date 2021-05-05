@@ -56,7 +56,7 @@ export const StyledSecondaryText = styled(Text)`
   color: ${colors.gray[300]};
   font-size: ${typography.sizes.body2};
   line-height: 20px;
-  max-width: 280px;
+  max-width: 360px;
   display: none;
 
   ${media.medium} {
