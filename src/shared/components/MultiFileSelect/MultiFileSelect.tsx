@@ -169,7 +169,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         onReAdjustThumbnail={handleReAdjustThumbnail}
         progress={progress}
         fileType={step}
-        title={step === 'video' ? 'Select Video File' : 'Add Thumbnail Image'}
+        title={step === 'video' ? 'Select video file' : 'Add thumbnail image'}
         thumbnailUrl={files.thumbnail?.url}
         paragraph={
           step === 'video'

@@ -76,13 +76,13 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         {!accountsWithNoMembership?.length ? (
           <StyledStepWrapper withBottomBar>
             <AccountStepImg src={accountCreation} />
-            <StepTitle variant="h4">Create account</StepTitle>
+            <StepTitle variant="h4">Create blockchain account</StepTitle>
             <SubTitle variant="body2" secondary>
-              Follow instructions to create an account:
+              Use the Polkadot extension to generate your personal keypair. Follow these instructions:
             </SubTitle>
             <OrderedSteps>
               <OrderedStep secondary variant="caption" as="li">
-                Open the extension with the icon in your browser bar.
+                Open the extension popup with the icon in your browser bar
               </OrderedStep>
               <OrderedStep secondary variant="caption" as="li">
                 Click the plus icon
@@ -102,13 +102,13 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
           <form onSubmit={handleSubmitSelectedAccount}>
             <StepWrapper>
               <IconGroup>
-                <StyledLogo src={polkadotIcon} alt="" />
+                <StyledLogo src={polkadotIcon} alt="Polkadot icon" />
                 <SvgOutlineConnect />
-                <StyledLogo src={joystreamIcon} alt="" />
+                <StyledLogo src={joystreamIcon} alt="Joystream icon" />
               </IconGroup>
-              <StepTitle variant="h4">Connect accounts</StepTitle>
+              <StepTitle variant="h4">Connect account</StepTitle>
               <StepSubTitle secondary>
-                Select polkadot account which you want to connect to your new joystream membership.
+                Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
                 {accountsWithNoMembership?.map(({ id, name }) => (
@@ -123,7 +123,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
               </AccountsWrapper>
               <StepFooter>
                 <StyledButton type="submit" disabled={!selectedAccountAddress}>
-                  Connect accounts
+                  Connect account
                 </StyledButton>
               </StepFooter>
             </StepWrapper>

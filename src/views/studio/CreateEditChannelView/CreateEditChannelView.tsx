@@ -36,8 +36,8 @@ import { computeFileHash } from '@/utils/hashing'
 import { ImageCropData } from '@/types/cropper'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
-  { name: 'Public (Channel will appear in feeds)', value: true },
-  { name: 'Unlisted', value: false },
+  { name: 'Public', value: true },
+  { name: 'Unlisted (channel will not appear in feeds and search)', value: false },
 ]
 
 const FEE = 0
@@ -359,22 +359,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   const checkoutSteps = [
     {
-      title: 'Add Channel Title',
+      title: 'Add channel title',
       completed: !!dirtyFields.title,
       onClick: () => titleRef.current?.focus(),
     },
     {
-      title: 'Add Description',
+      title: 'Add description',
       completed: !!dirtyFields.description,
       onClick: () => descriptionRef.current?.focus(),
     },
     {
-      title: 'Add Avatar',
+      title: 'Add avatar image',
       completed: !!dirtyFields.avatar,
       onClick: () => avatarDialogRef.current?.open(),
     },
     {
-      title: 'Add Cover Image',
+      title: 'Add cover image',
       completed: !!dirtyFields.cover,
       onClick: () => coverDialogRef.current?.open(),
     },
@@ -448,7 +448,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                       <Tooltip text="Click to edit channel title">
                         <HeaderTextField
                           ref={titleRef}
-                          placeholder="Add Channel Title"
+                          placeholder="Channel title"
                           value={value}
                           onChange={(e) => {
                             onChange(e.currentTarget.value)
@@ -478,8 +478,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <Tooltip text="Click to edit channel description">
                 <TextArea
                   name="description"
-                  placeholder="Add description"
-                  spellcheck={false}
+                  placeholder="Description of your channel to share with your audience"
                   rows={8}
                   ref={(ref) => {
                     if (ref) {
@@ -493,10 +492,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 />
               </Tooltip>
             </FormField>
-            <FormField
-              title="Change Language"
-              description="Channel language is the main language of the content you publish on your channel"
-            >
+            <FormField title="Language" description="Main language of the content you publish on your channel">
               <Controller
                 name="language"
                 control={control}
@@ -515,8 +511,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             </FormField>
 
             <FormField
-              title="Publicness"
-              description="Publicness dictates whether your channel will be displayed in users' feeds"
+              title="Privacy"
+              description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
             >
               <Controller
                 name="isPublic"
@@ -541,7 +537,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             >
               <ActionBarTransaction
                 fee={FEE}
-                checkoutSteps={newChannel ? checkoutSteps : undefined}
+                checkoutSteps={!channelId ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
                 fullWidth={!channelId}
                 primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}

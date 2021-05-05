@@ -75,7 +75,8 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
 
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
 
-  &:disabled {
+  &:disabled,
+  &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
   }

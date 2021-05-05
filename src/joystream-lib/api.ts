@@ -1,8 +1,16 @@
 import BN from 'bn.js'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Bytes, GenericEvent, Raw, Option, Vec, TypeRegistry, u64 as U64 } from '@polkadot/types'
-import RuntimeAccountId from '@polkadot/types/generic/AccountId'
+import {
+  GenericAccountId as RuntimeAccountId,
+  Bytes,
+  GenericEvent,
+  Raw,
+  Option,
+  Vec,
+  TypeRegistry,
+  u64 as U64,
+} from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import { web3AccountsSubscribe, web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 import { types } from '@joystream/types'

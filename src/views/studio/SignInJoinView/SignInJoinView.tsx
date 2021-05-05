@@ -3,7 +3,7 @@ import { transitions } from '@/shared/theme'
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import SignInMainView from './SignInMainView'
-import SignInProccessView from './SignInProccessView'
+import SignInProcessView from './SignInProcessView'
 
 const SignInJoinView = () => {
   const currentStep = useRouterQuery('step')
@@ -14,7 +14,7 @@ const SignInJoinView = () => {
         classNames={transitions.names.fadeAndSlide}
         timeout={parseInt(transitions.timings.routing)}
       >
-        {currentStep ? <SignInProccessView /> : <SignInMainView />}
+        {currentStep ? <SignInProcessView /> : <SignInMainView />}
       </CSSTransition>
     </SwitchTransition>
   )

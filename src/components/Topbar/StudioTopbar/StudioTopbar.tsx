@@ -142,7 +142,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
               <ChannelInfoContainer onClick={handleDrawerToggle}>
                 <NewChannelAvatar newChannel size="small" />
                 <TextContainer>
-                  <Text>New Channel</Text>
+                  <Text>New channel</Text>
                   <Text>{membership?.handle}</Text>
                 </TextContainer>
               </ChannelInfoContainer>
@@ -236,7 +236,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
                 <NewChannelIconContainer>
                   <SvgGlyphNewChannel />
                 </NewChannelIconContainer>
-                <Text>Add new Channel</Text>
+                <Text>Add new channel</Text>
               </NewChannel>
             </StyledLink>
           </>

@@ -59,7 +59,7 @@ type SelectOptionProps = {
 export const SelectOption = styled.li<SelectOptionProps>`
   margin: 0;
   cursor: pointer;
-  padding: ${sizes(2)} ${sizes(3)};
+  padding: ${sizes(3)} ${sizes(3)};
   font-size: ${typography.sizes.subtitle2};
   background-color: ${({ isSelected }) => (isSelected ? colors.gray[600] : 'none')};
 

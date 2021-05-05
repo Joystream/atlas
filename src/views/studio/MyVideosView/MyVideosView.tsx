@@ -147,7 +147,7 @@ export const MyVideosView = () => {
   return (
     <StudioContainer>
       <ViewContainer>
-        <Text variant="h2">My Videos</Text>
+        <Text variant="h2">My videos</Text>
         {hasNoVideos ? (
           <EmptyVideosView />
         ) : (
@@ -158,10 +158,8 @@ export const MyVideosView = () => {
             {isDraftTab && (
               <StyledDismissibleMessage
                 id="video-draft-saved-locally-warning"
-                title={'Video Drafts are saved locally'}
-                description={
-                  'This mean you can only access one on the device you used to create it. Clearing your browser history will delete all your drafts.'
-                }
+                title="Video drafts are saved locally"
+                description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>

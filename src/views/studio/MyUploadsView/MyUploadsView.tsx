@@ -61,7 +61,7 @@ const MyUploadsView = () => {
 
   return (
     <StudioContainer>
-      <StyledText variant="h2">My Uploads</StyledText>
+      <StyledText variant="h2">My uploads</StyledText>
       {videosLoading || channelLoading ? (
         placeholderItems.map((Placeholder, idx) => <Placeholder key={`placeholder-${idx}`} />)
       ) : hasUploads ? (
