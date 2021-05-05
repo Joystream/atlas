@@ -3,9 +3,7 @@ fragment DataObjectFields on DataObject {
   createdAt
   size
   liaison {
-    id
-    metadata
-    isActive
+    ...BasicWorkerFields
   }
   liaisonJudgement
   ipfsContentId

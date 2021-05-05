@@ -2,47 +2,51 @@ import * as Types from './baseTypes.generated'
 
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
-export type BasicStorageProviderFieldsFragment = {
-  __typename?: 'StorageProvider'
+export type BasicWorkerFieldsFragment = {
+  __typename?: 'Worker'
   id: string
+  workerId: string
   metadata?: Types.Maybe<string>
   isActive: boolean
+  type: Types.WorkerType
 }
 
 export type GetStorageProviderQueryVariables = Types.Exact<{
-  where: Types.StorageProviderWhereUniqueInput
+  where: Types.WorkerWhereUniqueInput
 }>
 
 export type GetStorageProviderQuery = {
   __typename?: 'Query'
-  storageProviderByUniqueInput?: Types.Maybe<{ __typename?: 'StorageProvider' } & BasicStorageProviderFieldsFragment>
+  workerByUniqueInput?: Types.Maybe<{ __typename?: 'Worker' } & BasicWorkerFieldsFragment>
 }
 
 export type GetStorageProvidersQueryVariables = Types.Exact<{
   limit?: Types.Maybe<Types.Scalars['Int']>
   offset?: Types.Maybe<Types.Scalars['Int']>
-  where?: Types.Maybe<Types.StorageProviderWhereInput>
+  where?: Types.Maybe<Types.WorkerWhereInput>
 }>
 
 export type GetStorageProvidersQuery = {
   __typename?: 'Query'
-  storageProviders?: Types.Maybe<Array<{ __typename?: 'StorageProvider' } & BasicStorageProviderFieldsFragment>>
+  workers?: Types.Maybe<Array<{ __typename?: 'Worker' } & BasicWorkerFieldsFragment>>
 }
 
-export const BasicStorageProviderFieldsFragmentDoc = gql`
-  fragment BasicStorageProviderFields on StorageProvider {
+export const BasicWorkerFieldsFragmentDoc = gql`
+  fragment BasicWorkerFields on Worker {
     id
+    workerId
     metadata
     isActive
+    type
   }
 `
 export const GetStorageProviderDocument = gql`
-  query GetStorageProvider($where: StorageProviderWhereUniqueInput!) {
-    storageProviderByUniqueInput(where: $where) {
-      ...BasicStorageProviderFields
+  query GetStorageProvider($where: WorkerWhereUniqueInput!) {
+    workerByUniqueInput(where: $where) {
+      ...BasicWorkerFields
     }
   }
-  ${BasicStorageProviderFieldsFragmentDoc}
+  ${BasicWorkerFieldsFragmentDoc}
 `
 
 /**
@@ -84,12 +88,12 @@ export type GetStorageProviderQueryResult = Apollo.QueryResult<
   GetStorageProviderQueryVariables
 >
 export const GetStorageProvidersDocument = gql`
-  query GetStorageProviders($limit: Int, $offset: Int, $where: StorageProviderWhereInput) {
-    storageProviders(limit: $limit, offset: $offset, where: $where) {
-      ...BasicStorageProviderFields
+  query GetStorageProviders($limit: Int, $offset: Int, $where: WorkerWhereInput) {
+    workers(limit: $limit, offset: $offset, where: $where) {
+      ...BasicWorkerFields
     }
   }
-  ${BasicStorageProviderFieldsFragmentDoc}
+  ${BasicWorkerFieldsFragmentDoc}
 `
 
 /**

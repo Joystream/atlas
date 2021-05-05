@@ -15,7 +15,7 @@ export const useStorageProvider = (id: string, opts?: StorageProviderOpts) => {
     variables: { where: { id } },
   })
   return {
-    storageProvider: data?.storageProviderByUniqueInput,
+    storageProvider: data?.workerByUniqueInput,
     ...queryRest,
   }
 }
@@ -24,7 +24,7 @@ type StorageProvidersOpts = QueryHookOptions<GetStorageProvidersQuery>
 export const useStorageProviders = (variables: GetStorageProvidersQueryVariables, opts?: StorageProvidersOpts) => {
   const { data, loading, ...rest } = useGetStorageProvidersQuery({ ...opts, variables })
   return {
-    storageProviders: data?.storageProviders,
+    storageProviders: data?.workers,
     loading,
     ...rest,
   }

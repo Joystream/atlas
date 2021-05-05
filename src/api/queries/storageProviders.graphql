@@ -1,17 +1,19 @@
-fragment BasicStorageProviderFields on StorageProvider {
+fragment BasicWorkerFields on Worker {
   id
+  workerId
   metadata
   isActive
+  type
 }
 
-query GetStorageProvider($where: StorageProviderWhereUniqueInput!) {
-  storageProviderByUniqueInput(where: $where) {
-    ...BasicStorageProviderFields
+query GetStorageProvider($where: WorkerWhereUniqueInput!) {
+  workerByUniqueInput(where: $where) {
+    ...BasicWorkerFields
   }
 }
 
-query GetStorageProviders($limit: Int, $offset: Int, $where: StorageProviderWhereInput) {
-  storageProviders(limit: $limit, offset: $offset, where: $where) {
-    ...BasicStorageProviderFields
+query GetStorageProviders($limit: Int, $offset: Int, $where: WorkerWhereInput) {
+  workers(limit: $limit, offset: $offset, where: $where) {
+    ...BasicWorkerFields
   }
 }
