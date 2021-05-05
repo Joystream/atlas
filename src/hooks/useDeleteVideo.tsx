@@ -5,7 +5,7 @@ import { useSnackbar, useJoystream } from '@/hooks'
 
 export const useDeleteVideo = (memberId: string | null) => {
   const { joystream } = useJoystream()
-  const [videoIdToDelete, setVideoIdToDelete] = useState<string | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deleteTransactionStatus, setDeleteTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const [deleteTransactionBlock, setDeleteTransactionBlock] = useState<number | null>(null)
   const { queryNodeState } = useQueryNodeStateSubscription({
@@ -23,25 +23,12 @@ export const useDeleteVideo = (memberId: string | null) => {
     }
   }, [deleteTransactionBlock, queryNodeState, deleteTransactionStatus])
 
-  const handleCancel = () => {
-    setVideoIdToDelete(null)
-  }
-
-  const handleDeleteVideoClick = (videoId?: string) => {
-    if (!videoId) {
-      return
-    }
-    setVideoIdToDelete(videoId)
-  }
-
-  const handleConfirmDeleteVideo = async () => {
-    if (!joystream || !memberId || !videoIdToDelete) {
+  const confirmDeleteVideo = async (videoId?: string) => {
+    if (!joystream || !memberId || !videoId) {
       return
     }
 
-    const videoId = videoIdToDelete
-
-    setVideoIdToDelete(null)
+    setIsDeleteDialogOpen(false)
     setDeleteTransactionStatus(ExtrinsicStatus.Unsigned)
     try {
       const { block } = await joystream.deleteVideo(videoId, memberId, (status) => setDeleteTransactionStatus(status))
@@ -59,19 +46,12 @@ export const useDeleteVideo = (memberId: string | null) => {
     }
   }
 
-  const handleDeleteTransactionClose = () => {
-    if (deleteTransactionStatus === ExtrinsicStatus.Completed) {
-      setDeleteTransactionStatus(null)
-    }
-    setDeleteTransactionStatus(null)
-  }
-
   return {
-    handleConfirmDeleteVideo,
-    handleDeleteTransactionClose,
-    handleCancel,
-    handleDeleteVideoClick,
-    videoIdToDelete,
+    closeVideoDeleteDialog: () => setIsDeleteDialogOpen(false),
+    openVideoDeleteDialog: () => setIsDeleteDialogOpen(true),
+    confirmDeleteVideo,
+    closeDeleteTransactionDialog: () => setDeleteTransactionStatus(null),
+    isDeleteDialogOpen,
     deleteTransactionStatus,
   }
 }

@@ -75,11 +75,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   const {
-    handleCancel,
-    handleDeleteTransactionClose,
-    handleConfirmDeleteVideo,
-    handleDeleteVideoClick,
-    videoIdToDelete,
+    closeVideoDeleteDialog,
+    closeDeleteTransactionDialog,
+    confirmDeleteVideo,
+    openVideoDeleteDialog,
+    isDeleteDialogOpen,
     deleteTransactionStatus,
   } = useDeleteVideo(activeUser.memberId)
 
@@ -427,9 +427,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 size="large"
                 variant="tertiary"
                 textColorVariant="error"
-                onClick={() => {
-                  handleDeleteVideoClick(selectedVideoTab?.id)
-                }}
+                onClick={openVideoDeleteDialog}
               >
                 Delete video
               </DeleteVideoButton>
@@ -438,12 +436,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         </InputsContainer>
       </FormWrapper>
       <MessageDialog
-        title="Do you want to remove this video from your videos?"
+        title="Delete this video?"
         exitButton={false}
-        description="Video will be removed permanently and all its data will be lost. Joystream studio do not keep any of your data after you remove your video."
-        showDialog={!!videoIdToDelete}
-        onSecondaryButtonClick={handleCancel}
-        onPrimaryButtonClick={handleConfirmDeleteVideo}
+        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
+        showDialog={isDeleteDialogOpen}
+        onSecondaryButtonClick={closeVideoDeleteDialog}
+        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoTab?.id)}
         error
         variant="warning"
         primaryButtonText="Delete video"
@@ -451,11 +449,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       />
       <TransactionDialog
         status={deleteTransactionStatus}
-        successTitle={'Video successfully deleted!'}
-        successDescription={'Your video was deleted from the blockchain.'}
+        successTitle="Video successfully deleted!"
+        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
         onClose={() => {
           selectedVideoTab?.id && onDeleteVideo(selectedVideoTab?.id)
-          handleDeleteTransactionClose()
+          closeDeleteTransactionDialog()
         }}
       />
       <StyledActionBar

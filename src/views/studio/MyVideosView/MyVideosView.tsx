@@ -21,6 +21,7 @@ export const MyVideosView = () => {
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
+  const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
@@ -42,12 +43,12 @@ export const MyVideosView = () => {
   )
 
   const {
-    handleCancel,
-    handleDeleteTransactionClose,
-    handleConfirmDeleteVideo,
-    handleDeleteVideoClick,
-    videoIdToDelete,
+    closeVideoDeleteDialog,
+    closeDeleteTransactionDialog,
+    confirmDeleteVideo,
+    openVideoDeleteDialog,
     deleteTransactionStatus,
+    isDeleteDialogOpen,
   } = useDeleteVideo(memberId)
 
   useEffect(() => {
@@ -139,16 +140,19 @@ export const MyVideosView = () => {
                 handleVideoClick(video.id, { minimized: true })
               }}
               onEditVideoClick={() => handleVideoClick(video.id)}
-              onDeleteVideoClick={() => handleDeleteVideoClick(video.id)}
+              onDeleteVideoClick={() => {
+                openVideoDeleteDialog()
+                setSelectedVideoId(video.id)
+              }}
             />
           ))}
       <MessageDialog
-        title="Do you want to remove this video from your videos?"
+        title="Delete this video?"
         exitButton={false}
-        description="Video will be removed permanently and all its data will be lost. Joystream studio do not keep any of your data after you remove your video."
-        showDialog={!!videoIdToDelete}
-        onSecondaryButtonClick={handleCancel}
-        onPrimaryButtonClick={handleConfirmDeleteVideo}
+        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
+        showDialog={isDeleteDialogOpen}
+        onSecondaryButtonClick={closeVideoDeleteDialog}
+        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoId)}
         error
         variant="warning"
         primaryButtonText="Delete video"
@@ -156,11 +160,11 @@ export const MyVideosView = () => {
       />
       <TransactionDialog
         status={deleteTransactionStatus}
-        successTitle={'Video successfully deleted!'}
-        successDescription={'Your video was deleted from the blockchain.'}
+        successTitle="Video successfully deleted!"
+        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
         onClose={() => {
-          handleDeleteTransactionClose()
-          refetch({})
+          closeDeleteTransactionDialog()
+          setSelectedVideoId(undefined)
         }}
       />
     </>

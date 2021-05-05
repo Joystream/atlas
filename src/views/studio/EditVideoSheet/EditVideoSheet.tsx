@@ -259,9 +259,8 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(null)
   }
 
-  const handleDeleteVideo = async (videoId: string) => {
+  const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
-    await refetchVideo()
     removeVideoTab(videoTabIdx)
     setSheetState('minimized')
   }
