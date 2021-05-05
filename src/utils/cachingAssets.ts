@@ -84,3 +84,14 @@ export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideo
     },
   })
 }
+
+export const removeVideoFromCache = (videoId: string, client: ApolloClient<NormalizedCacheObject>) => {
+  client.cache.modify({
+    fields: {
+      videos: (existingVideos = []) => {
+        client.cache.evict({ id: `Video:${videoId}` })
+        return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
+      },
+    },
+  })
+}

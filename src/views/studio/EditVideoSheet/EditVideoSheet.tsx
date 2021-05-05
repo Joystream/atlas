@@ -25,7 +25,7 @@ import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
   const {
@@ -270,10 +270,14 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(null)
   }
 
-  const handleDeleteVideo = (videoId: string) => {
+  const handleDeleteVideo = async (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
+    await refetchVideosCount()
     removeVideoTab(videoTabIdx)
-    setSheetState('minimized')
+    removeVideoFromCache(videoId, client)
+
+    // close the sheet if we closed the last tab
+    setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
   }
 
   return (
