@@ -519,4 +519,19 @@ export class JoystreamJs {
 
     return this._createOrUpdateVideo(videoId, memberId, channelId, inputMetadata, inputAssets, cb)
   }
+
+  async deleteVideo(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.deleteVideo(contentActor, videoId)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+    }
+  }
 }
