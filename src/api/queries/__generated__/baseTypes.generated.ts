@@ -52,9 +52,16 @@ export enum LiaisonJudgement {
   Rejected = 'REJECTED',
 }
 
-export type StorageProvider = {
-  __typename?: 'StorageProvider'
+export enum WorkerType {
+  Gateway = 'GATEWAY',
+  Storage = 'STORAGE',
+}
+
+export type Worker = {
+  __typename?: 'Worker'
   id: Scalars['ID']
+  workerId: Scalars['String']
+  type: WorkerType
   metadata?: Maybe<Scalars['String']>
   isActive: Scalars['Boolean']
 }
@@ -64,7 +71,7 @@ export type DataObject = {
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   size: Scalars['Float']
-  liaison?: Maybe<StorageProvider>
+  liaison?: Maybe<Worker>
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']
@@ -216,29 +223,17 @@ export type VideoConnection = {
   totalCount: Scalars['Int']
 }
 
-export type StorageProviderWhereInput = {
+export type WorkerWhereInput = {
   metadata_contains?: Maybe<Scalars['String']>
   isActive_eq?: Maybe<Scalars['Boolean']>
+  type_eq?: Maybe<WorkerType>
 }
 
-export type StorageProviderWhereUniqueInput = {
+export type WorkerWhereUniqueInput = {
   id: Scalars['ID']
 }
 
-export type StorageProviderEdge = {
-  __typename?: 'StorageProviderEdge'
-  node: StorageProvider
-  cursor: Scalars['String']
-}
-
-export type StorageProviderConnection = {
-  __typename?: 'StorageProviderConnection'
-  edges: Array<StorageProviderEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export enum StorageProviderOrderByInput {
+export enum WorkerOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
 }
@@ -303,15 +298,14 @@ export type Query = {
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
-  storageProviderByUniqueInput?: Maybe<StorageProvider>
-  storageProviders?: Maybe<Array<StorageProvider>>
-  storageProvidersConnection: StorageProviderConnection
   videoByUniqueInput?: Maybe<Video>
   videoCategories: Array<VideoCategory>
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>
   videos?: Maybe<Array<Video>>
   videosConnection: VideoConnection
+  workerByUniqueInput?: Maybe<Worker>
+  workers?: Maybe<Array<Worker>>
 }
 
 export type QueryBatchedChannelFollowsArgs = {
@@ -366,23 +360,6 @@ export type QuerySearchArgs = {
   text: Scalars['String']
 }
 
-export type QueryStorageProviderByUniqueInputArgs = {
-  where: StorageProviderWhereUniqueInput
-}
-
-export type QueryStorageProvidersArgs = {
-  offset?: Maybe<Scalars['Int']>
-  limit?: Maybe<Scalars['Int']>
-  where?: Maybe<StorageProviderWhereInput>
-}
-
-export type QueryStorageProvidersConnectionArgs = {
-  first?: Maybe<Scalars['Int']>
-  after?: Maybe<Scalars['String']>
-  where?: Maybe<StorageProviderWhereInput>
-  orderBy?: Maybe<StorageProviderOrderByInput>
-}
-
 export type QueryVideoByUniqueInputArgs = {
   where: VideoWhereUniqueInput
 }
@@ -403,6 +380,16 @@ export type QueryVideosConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<VideoWhereInput>
   orderBy?: Maybe<VideoOrderByInput>
+}
+
+export type QueryWorkerByUniqueInputArgs = {
+  where: WorkerWhereUniqueInput
+}
+
+export type QueryWorkersArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<WorkerWhereInput>
 }
 
 export type Subscription = {
