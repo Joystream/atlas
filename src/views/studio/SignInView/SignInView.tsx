@@ -58,7 +58,8 @@ const SignInView = () => {
         <Header>
           <Hero variant="hero">Sign in</Hero>
           <SubTitle variant="body1" secondary>
-            Start your journey as a Video Publisher. Create, manage and modify your channel and video content.
+            Select the membership you want to use. Each membership can have an unlimited number of channels and is
+            independent of other memberships you control.
           </SubTitle>
         </Header>
 
@@ -78,7 +79,7 @@ const SignInView = () => {
           variant="secondary"
           to={absoluteRoutes.studio.signIn({ step: '1' })}
         >
-          New Member
+          New membership
         </StyledButton>
       </Wrapper>
       <SignInStepsStepper />

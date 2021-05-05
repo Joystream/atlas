@@ -1,6 +1,6 @@
 import { StudioContainer } from '@/components'
 import { Button, Text, Avatar, TextField } from '@/shared/components'
-import { media, colors, sizes } from '@/shared/theme'
+import { sizes } from '@/shared/theme'
 
 import styled from '@emotion/styled'
 
@@ -39,13 +39,7 @@ export const StyledAvatar = styled(Avatar)`
 `
 
 export const StyledButton = styled(Button)`
-  display: block;
-  cursor: pointer;
+  display: flex;
   margin-top: 30px;
-  margin-bottom: 30px;
   margin-left: auto;
-`
-export const StyledText = styled(Text)`
-  color: ${colors.gray[300]};
-  margin-top: ${sizes(3)};
 `

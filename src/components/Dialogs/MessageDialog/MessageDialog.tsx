@@ -9,6 +9,7 @@ export type MessageDialogProps = {
   variant?: DialogVariant
   title?: string
   description?: string
+  icon?: React.ReactElement
 } & ActionDialogProps
 
 const VARIANT_TO_ICON: Record<DialogVariant, ReactNode | null> = {
@@ -22,9 +23,10 @@ const MessageDialog: React.FC<MessageDialogProps> = ({
   title,
   description,
   variant = 'info',
+  icon,
   ...actionDialogProps
 }) => {
-  const iconNode = VARIANT_TO_ICON[variant]
+  const iconNode = icon || VARIANT_TO_ICON[variant]
 
   return (
     <ActionDialog {...actionDialogProps}>
