@@ -11,11 +11,15 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   position: fixed;
   bottom: 0;
   left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : ' calc(100% - var(--sidenav-collapsed-width))')};
+  right: 0;
   z-index: ${zIndex.header};
 
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+
+  &.${transitions.names.fade}-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
+  }
 `
 
 export const StyledCheckout = styled(Checkout)`

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, transitions, zIndex, media } from '@/shared/theme'
+import { colors, sizes, typography, media } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
 export const StyledActionBarContainer = styled.div`
@@ -12,10 +12,6 @@ export const StyledActionBarContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     padding: ${sizes(4)} ${sizes(8)};
-  }
-
-  &.${transitions.names.fade}-enter-active {
-    transition: opacity ${transitions.timings.loading} ${transitions.easing} ${transitions.timings.regular} !important;
   }
 `
 
