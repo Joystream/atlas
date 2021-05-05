@@ -6,13 +6,13 @@ fragment BasicWorkerFields on Worker {
   type
 }
 
-query GetStorageProvider($where: WorkerWhereUniqueInput!) {
+query GetWorker($where: WorkerWhereUniqueInput!) {
   workerByUniqueInput(where: $where) {
     ...BasicWorkerFields
   }
 }
 
-query GetStorageProviders($limit: Int, $offset: Int, $where: WorkerWhereInput) {
+query GetWorkers($limit: Int, $offset: Int, $where: WorkerWhereInput) {
   workers(limit: $limit, offset: $offset, where: $where) {
     ...BasicWorkerFields
   }

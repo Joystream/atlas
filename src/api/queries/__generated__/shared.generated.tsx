@@ -1,6 +1,6 @@
 import * as Types from './baseTypes.generated'
 
-import { BasicWorkerFieldsFragment, BasicWorkerFieldsFragmentDoc } from './storageProviders.generated'
+import { BasicWorkerFieldsFragment, BasicWorkerFieldsFragmentDoc } from './workers.generated'
 import { gql } from '@apollo/client'
 
 export type DataObjectFieldsFragment = {
