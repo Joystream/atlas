@@ -266,7 +266,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <InputsContainer>
           <StyledHeaderTextField
             name="title"
-            ref={register(textFieldValidation('Video Title', 3, 40))}
+            ref={register(textFieldValidation('Video Title', 3, 40, true))}
             onChange={handleFormChange}
             placeholder="Video title"
             error={!!errors.title}
