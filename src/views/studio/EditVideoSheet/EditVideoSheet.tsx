@@ -63,7 +63,7 @@ export const EditVideoSheet: React.FC = () => {
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
   })
-  const { countRefetch } = useVideos({
+  const { refetchCount: refetchVideosCount } = useVideos({
     where: {
       channelId_eq: channelId,
     },
@@ -175,9 +175,10 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          const video = await refetchVideo({ where: { id: newVideoId } })
-          const count = await countRefetch()
-          console.log(count)
+          const videoPromise = refetchVideo({ where: { id: newVideoId } })
+          const videosCountPromise = refetchVideosCount()
+          const [video] = await Promise.all([videoPromise, videosCountPromise])
+
           if (video.data.videoByUniqueInput) {
             writeVideoDataInCache({
               data: video.data.videoByUniqueInput,
