@@ -52,9 +52,9 @@
     "@joystream/content-metadata-protobuf": "~1.1.0",
     "@joystream/eslint-config": "^1.0.0",
     "@joystream/prettier-config": "^1.0.0",
-    "@joystream/types": "~0.16.0",
+    "@joystream/types": "~0.16.1",
     "@loadable/component": "^5.14.1",
-    "@polkadot/extension-dapp": "~0.32.1",
+    "@polkadot/extension-dapp": "~0.37.3-17",
     "@sentry/react": "^6.3.0",
     "@tippyjs/react": "^4.2.5",
     "@types/body-scroll-lock": "^2.6.1",
@@ -140,6 +140,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": ">=14"
   },
   "msw": {
     "workerDirectory": "public"
