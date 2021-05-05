@@ -68,7 +68,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { categories, error: categoriesError } = useCategories()
-  const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { tabData, updateTabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(
+    selectedVideoTab
+  )
 
   if (categoriesError) {
     throw categoriesError
@@ -171,11 +173,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
-    if (!selectedVideoTab?.isDraft) {
-      return
-    }
     const data = getValues()
-    debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    if (!selectedVideoTab?.isDraft) {
+      updateTabData(data)
+    } else {
+      debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    }
   }
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {

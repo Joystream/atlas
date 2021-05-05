@@ -180,17 +180,28 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     activeUser: { channelId },
   } = useActiveUser()
   const { drafts } = useDrafts('video', channelId ?? '')
-
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
+  const [cachedDirtyVideoTabsData, setcachedDirtyVideoTabs] = useState<Array<EditVideoFormFields & EditVideoSheetTab>>(
+    []
+  )
 
   if (!tab) {
     return {
-      data: null,
+      updateTabData: () => ({}),
+      tabData: null,
       loading: false,
       error: null,
     }
+  }
+
+  const dirtyCachedVideoData =
+    tab?.isDraft === false ? cachedDirtyVideoTabsData.find((dirtyTab) => dirtyTab.id === tab.id) : undefined
+  const videoData = dirtyCachedVideoData ?? {
+    ...video,
+    category: video?.category?.id,
+    language: video?.language?.iso,
   }
 
   const draft = drafts.find((d) => d.id === tab.id)
@@ -211,24 +222,36 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
       }
 
   const normalizedData: EditVideoFormFields = {
-    title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
-    description: (tab.isDraft ? draft?.description : video?.description) ?? '',
-    category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
-    language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
-    isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
-    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
-    hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+    title: tab.isDraft ? draft?.title ?? 'New Draft' : videoData?.title ?? '',
+    description: (tab.isDraft ? draft?.description : videoData?.description) ?? '',
+    category: (tab.isDraft ? draft?.category : videoData?.category) ?? null,
+    language: (tab.isDraft ? draft?.language : videoData?.language) ?? 'en',
+    isPublic: (tab.isDraft ? draft?.isPublic : videoData?.isPublic) ?? true,
+    isExplicit: (tab.isDraft ? draft?.isExplicit : videoData?.isExplicit) ?? null,
+    hasMarketing: (tab.isDraft ? draft?.hasMarketing : videoData?.hasMarketing) ?? false,
     publishedBeforeJoystream:
       (tab.isDraft
         ? draft?.publishedBeforeJoystream
           ? parseISO(draft.publishedBeforeJoystream)
           : null
-        : video?.publishedBeforeJoystream) ?? null,
+        : videoData?.publishedBeforeJoystream) ?? null,
     assets,
   }
 
+  const updateTabData = (data: EditVideoFormFields) => {
+    const index = cachedDirtyVideoTabsData.findIndex((dirtyTab) => dirtyTab.id === tab.id)
+    if (index === -1) {
+      setcachedDirtyVideoTabs([...cachedDirtyVideoTabsData, { ...data, ...tab }])
+    } else {
+      const temp = [...cachedDirtyVideoTabsData]
+      temp[index] = { ...data, ...tab }
+      setcachedDirtyVideoTabs(temp)
+    }
+  }
+
   return {
-    data: normalizedData,
+    updateTabData,
+    tabData: normalizedData,
     loading: tab.isDraft ? false : loading,
     error,
   }
