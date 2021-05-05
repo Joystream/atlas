@@ -1,13 +1,12 @@
+import { useVideos } from '@/api/hooks'
+import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
+import { useActiveUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
+import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useVideos } from '@/api/hooks'
-import { useDrafts, useActiveUser, useEditVideoSheet } from '@/hooks'
-import { StudioContainer, VideoPreviewPublisher } from '@/components'
-import { Grid, Pagination, Tabs, Text } from '@/shared/components'
-import { absoluteRoutes } from '@/config/routes'
-
-import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
+import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -22,14 +21,16 @@ export const MyVideosView = () => {
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
+  const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { activeUser } = useActiveUser()
   const channelId = activeUser.channelId ?? ''
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', channelId)
+  const memberId = activeUser.memberId ?? ''
 
-  const { loading, videos, totalCount, error, fetchMore } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore, refetch } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -40,6 +41,15 @@ export const MyVideosView = () => {
     },
     { notifyOnNetworkStatusChange: true }
   )
+
+  const {
+    closeVideoDeleteDialog,
+    closeDeleteTransactionDialog,
+    confirmDeleteVideo,
+    openVideoDeleteDialog,
+    deleteTransactionStatus,
+    isDeleteDialogOpen,
+  } = useDeleteVideo(memberId)
 
   useEffect(() => {
     if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
@@ -131,10 +141,32 @@ export const MyVideosView = () => {
               }}
               onEditVideoClick={() => handleVideoClick(video.id)}
               onDeleteVideoClick={() => {
-                // TODO: handle delete
+                openVideoDeleteDialog()
+                setSelectedVideoId(video.id)
               }}
             />
           ))}
+      <MessageDialog
+        title="Delete this video?"
+        exitButton={false}
+        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
+        showDialog={isDeleteDialogOpen}
+        onSecondaryButtonClick={closeVideoDeleteDialog}
+        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoId)}
+        error
+        variant="warning"
+        primaryButtonText="Delete video"
+        secondaryButtonText="Cancel"
+      />
+      <TransactionDialog
+        status={deleteTransactionStatus}
+        successTitle="Video successfully deleted!"
+        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
+        onClose={() => {
+          closeDeleteTransactionDialog()
+          setSelectedVideoId(undefined)
+        }}
+      />
     </>
   )
 
