@@ -1,14 +1,12 @@
+import { useVideos } from '@/api/hooks'
+import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
+import { useActiveUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
+import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQueryNodeStateSubscription, useVideos } from '@/api/hooks'
-import { useDrafts, useActiveUser, useEditVideoSheet, useJoystream, useSnackbar } from '@/hooks'
-import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
-import { Grid, Pagination, Tabs, Text } from '@/shared/components'
-import { absoluteRoutes } from '@/config/routes'
-
-import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
-import { ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -231,75 +229,5 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
     case 'All Videos':
     default:
       return undefined
-  }
-}
-
-export const useDeleteVideo = (memberId: string | null) => {
-  const { joystream } = useJoystream()
-  const [videoIdToDelete, setVideoIdToDelete] = useState<undefined | string>()
-  const [deleteTransactionStatus, setDeleteTransactionStatus] = useState<ExtrinsicStatus | null>(null)
-  const [deleteTransactionBlock, setDeleteTransactionBlock] = useState<number | null>(null)
-  const { queryNodeState } = useQueryNodeStateSubscription({
-    skip: deleteTransactionStatus !== ExtrinsicStatus.Syncing,
-  })
-  const { displaySnackbar } = useSnackbar()
-
-  useEffect(() => {
-    if (!deleteTransactionBlock || !queryNodeState || deleteTransactionStatus !== ExtrinsicStatus.Syncing) {
-      return
-    }
-
-    if (queryNodeState.indexerHead >= deleteTransactionBlock) {
-      setDeleteTransactionStatus(ExtrinsicStatus.Completed)
-    }
-  }, [deleteTransactionBlock, queryNodeState, deleteTransactionStatus])
-
-  const handleCancel = () => {
-    setVideoIdToDelete(undefined)
-  }
-
-  const handleDeleteVideoClick = (videoId?: string) => {
-    setVideoIdToDelete(videoId)
-  }
-
-  const handleConfirmDeleteVideo = async () => {
-    if (!joystream || !memberId || !videoIdToDelete) {
-      return
-    }
-
-    const videoId = videoIdToDelete
-
-    setVideoIdToDelete(undefined)
-    setDeleteTransactionStatus(ExtrinsicStatus.Unsigned)
-    try {
-      const { block } = await joystream.deleteVideo(videoId, memberId, (status) => setDeleteTransactionStatus(status))
-      setDeleteTransactionBlock(block)
-      setDeleteTransactionStatus(ExtrinsicStatus.Syncing)
-    } catch (error) {
-      if (error instanceof ExtensionSignCancelledError) {
-        console.warn('Sign cancelled')
-        setDeleteTransactionStatus(null)
-        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
-      } else {
-        console.error(error)
-        setDeleteTransactionStatus(ExtrinsicStatus.Error)
-      }
-    }
-  }
-
-  const handleDeleteTransactionClose = () => {
-    if (deleteTransactionStatus === ExtrinsicStatus.Completed) {
-      setDeleteTransactionStatus(null)
-    }
-    setDeleteTransactionStatus(null)
-  }
-
-  return {
-    handleConfirmDeleteVideo,
-    handleDeleteTransactionClose,
-    handleCancel,
-    handleDeleteVideoClick,
-    videoIdToDelete,
-    deleteTransactionStatus,
   }
 }

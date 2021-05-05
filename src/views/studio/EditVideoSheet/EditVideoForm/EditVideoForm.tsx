@@ -9,6 +9,7 @@ import {
   useEditVideoSheetTabData,
   EditVideoFormFields,
   useEditVideoSheet,
+  useDeleteVideo,
 } from '@/hooks'
 import {
   Checkbox,
@@ -34,7 +35,6 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { useDeleteVideo } from '../../MyVideosView/MyVideosView'
 import { MessageDialog, TransactionDialog } from '@/components'
 
 const visibilityOptions: SelectItem<boolean>[] = [
