@@ -259,6 +259,12 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(null)
   }
 
+  const handleDeleteVideo = (videoId: string) => {
+    const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
+    removeVideoTab(videoTabIdx)
+    setSheetState('minimized')
+  }
+
   return (
     <>
       <TransactionDialog
@@ -283,6 +289,7 @@ export const EditVideoSheet: React.FC = () => {
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
         <EditVideoForm
+          onDeleteVideo={handleDeleteVideo}
           selectedVideoTab={selectedVideoTab}
           onSubmit={handleSubmit}
           onThumbnailFileChange={handleThumbnailFileChange}
