@@ -77,8 +77,8 @@ query GetVideosConnection(
   }
 }
 
-query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput) {
-  videos(offset: $offset, limit: $limit, where: $where) {
+query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput = createdAt_DESC) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...VideoFields
   }
 }

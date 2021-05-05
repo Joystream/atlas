@@ -298,7 +298,7 @@ type Query {
   videoByUniqueInput(where: VideoWhereUniqueInput!): Video
 
   # Lookup videos by where params
-  videos(offset: Int, limit: Int, where: VideoWhereInput): [Video!]
+  videos(offset: Int, limit: Int, where: VideoWhereInput, orderBy: VideoOrderByInput): [Video!]
 
   # List all videos by given constraints
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
