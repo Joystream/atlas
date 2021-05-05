@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
-import { AssetAvailability, VideoFieldsFragment, VideoFieldsFragmentDoc, Maybe } from '@/api/queries'
+import { AssetAvailability, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
 import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
@@ -23,17 +23,6 @@ const cachedThumbnailUrlFragment = gql`
   }
 `
 
-const cachedVideoDataFragment = gql`
-  fragment CachedVideoFields on Video {
-    id
-    title
-    views
-    createdAt
-    thumbnailPhotoAvailability
-    thumbnailPhotoUrls
-  }
-`
-
 type CachedAssetType = 'avatar' | 'cover' | 'thumbnail'
 
 type WriteUrlInCacheArg = {
@@ -44,12 +33,7 @@ type WriteUrlInCacheArg = {
 }
 
 type WriteVideoDataCacheArg = {
-  data: Maybe<
-    {
-      __typename?: 'Video' | undefined
-    } & VideoFieldsFragment
-  >
-  videoId: string
+  data: VideoFieldsFragment
   thumbnailUrl?: string | null
   client: ApolloClient<NormalizedCacheObject>
 }
@@ -81,12 +65,12 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
   })
 }
 
-export const writeVideoDataInCache = ({ data, videoId, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
         const video = client.cache.writeFragment({
-          id: `Video:${videoId}`,
+          id: `Video:${data.id}`,
           fragment: VideoFieldsFragmentDoc,
           fragmentName: 'VideoFields',
           data: {
@@ -95,26 +79,8 @@ export const writeVideoDataInCache = ({ data, videoId, thumbnailUrl, client }: W
             thumbnailPhotoAvailability: AssetAvailability.Accepted,
           },
         })
-        console.log(video)
         return [video, ...existingVideos]
       },
     },
   })
-
-  // cache.modify({
-  //   fields: {
-  //     todos(existingTodos = []) {
-  //       const newTodoRef = cache.writeFragment({
-  //         data: addTodo,
-  //         fragment: gql`
-  //           fragment NewTodo on Todo {
-  //             id
-  //             type
-  //           }
-  //         `
-  //       });
-  //       return [...existingTodos, newTodoRef];
-  //     }
-  //   }
-  // });
 }

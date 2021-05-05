@@ -175,18 +175,18 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          const videoPromise = refetchVideo({ where: { id: newVideoId } })
-          const videosCountPromise = refetchVideosCount()
-          const [video] = await Promise.all([videoPromise, videosCountPromise])
+          const fetchedVideo = await refetchVideo({ where: { id: newVideoId } })
 
-          if (video.data.videoByUniqueInput) {
+          if (fetchedVideo.data.videoByUniqueInput) {
             writeVideoDataInCache({
-              data: video.data.videoByUniqueInput,
-              videoId,
+              data: fetchedVideo.data.videoByUniqueInput,
               thumbnailUrl: data.assets.thumbnail?.url,
               client,
             })
           }
+
+          // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
+          await refetchVideosCount()
 
           updateSelectedVideoTab({
             id: newVideoId,
