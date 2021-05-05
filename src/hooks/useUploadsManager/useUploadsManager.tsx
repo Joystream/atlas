@@ -83,6 +83,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       iconType: 'warning',
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lostConnectionAssets.length])
 
   // Enriching video type assets with video title
@@ -113,11 +114,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
-      const isFileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
-      if (!isFileInState && file) {
+      const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
+      if (!fileInState && file) {
         setAssetsFiles([...assetsFiles, { contentId: asset.contentId, blob: file }])
       }
-      const savedFile = assetsFiles.find((file) => file.contentId === asset.contentId)?.blob
+
       rax.attach()
       try {
         if (!opts?.isReUpload && file) {
@@ -126,7 +127,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
-        await axios.put(assetUrl.toString(), opts?.changeHost ? savedFile : file, {
+        await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
             'Content-Type': '',

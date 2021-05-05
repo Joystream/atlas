@@ -42,6 +42,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (fileHash !== asset.ipfsContentId) {
         setShowDialog(true)
       } else {
+        if (!randomStorageProviderUrl) {
+          return
+        }
         startFileUpload(
           file,
           {
@@ -53,7 +56,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
             },
             type: asset.type,
           },
-          randomStorageProviderUrl ?? '',
+          randomStorageProviderUrl,
           {
             isReUpload: true,
           }
@@ -77,6 +80,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
+    if (!randomStorageProviderUrl) {
+      return
+    }
     startFileUpload(
       null,
       {
@@ -88,7 +94,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         },
         type: asset.type,
       },
-      randomStorageProviderUrl ?? '',
+      randomStorageProviderUrl,
       {
         changeHost: true,
       }
