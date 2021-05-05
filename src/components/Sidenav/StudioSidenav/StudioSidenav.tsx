@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDrafts, useActiveUser, useEditVideoSheet } from '@/hooks'
+import { useDrafts, useActiveUser, useEditVideoSheet, useUploadsManager } from '@/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
@@ -34,10 +34,19 @@ export const StudioSidenav: React.FC = () => {
   const channelId = activeUser.channelId ?? ''
   const { unseenDrafts } = useDrafts('video', channelId)
   const { sheetState } = useEditVideoSheet()
+  const { uploadsState } = useUploadsManager(channelId)
 
-  const studioNavbarItemsWithBadge = studioNavbarItems.map((item) =>
-    item.to === absoluteRoutes.studio.videos() ? { ...item, badgeNumber: unseenDrafts.length } : item
-  )
+  const assetsInProgress = uploadsState.filter((asset) => asset.lastStatus === 'inProgress')
+
+  const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
+    if (item.to === absoluteRoutes.studio.videos()) {
+      return { ...item, badgeNumber: unseenDrafts.length }
+    }
+    if (item.to === absoluteRoutes.studio.uploads()) {
+      return { ...item, badgeNumber: assetsInProgress.length }
+    }
+    return item
+  })
 
   return (
     <SidenavBase
