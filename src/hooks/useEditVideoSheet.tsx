@@ -30,6 +30,7 @@ type ContextValue = {
   setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
+  haveAssetCache: boolean
 }
 const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
 EditVideoSheetContext.displayName = 'EditVideoSheetContext'
@@ -125,12 +126,16 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     if (sheetState === 'closed') {
       setVideoTabs([])
       setSelectedVideoTabIdx(-1)
+      setAssetsCache({})
     }
   }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
+
+  const haveAssetCache = !!Object.keys(assetsCache).length
 
   return (
     <EditVideoSheetContext.Provider
       value={{
+        haveAssetCache,
         videoTabs,
         addVideoTab,
         removeVideoTab,

@@ -29,6 +29,7 @@ import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
 import { useNavigate } from 'react-router'
+import { MessageDialog } from '@/components/Dialogs'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -59,9 +60,11 @@ type NavDrawerProps = {
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
+  const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
   const navigate = useNavigate()
 
-  const { sheetState } = useEditVideoSheet()
+  const { sheetState, setSheetState, haveAssetCache } = useEditVideoSheet()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -75,12 +78,22 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     }
     setActiveUser({ channelId })
     setDrawerActive(false)
+    setDrawerActive(false)
+    if (haveAssetCache) {
+      setLostDatadDialogVisible(true)
+      setConfirmCallback(() => () => changeChannel(channelId))
+    } else {
+      changeChannel(channelId)
+    }
   }
 
-  const handleLogout = () => {
-    resetActiveUser()
-    navigate(absoluteRoutes.studio.index())
-    setDrawerActive(false)
+  const changeChannel = (channelId: string) => {
+    const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
+    if (!channel) {
+      return
+    }
+    setActiveUser({ channelId })
+    setSheetState('closed')
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -106,6 +119,33 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
       document.removeEventListener('click', handleClickOutside, true)
     }
   }, [isDrawerActive])
+
+  const handleLogout = () => {
+    resetActiveUser()
+    navigate(absoluteRoutes.studio.index())
+    setDrawerActive(false)
+    if (haveAssetCache) {
+      setLostDatadDialogVisible(true)
+      setConfirmCallback(() => logout)
+    } else {
+      logout()
+    }
+  }
+
+  const logout = () => {
+    resetActiveUser()
+    navigate(absoluteRoutes.studio.index())
+    setSheetState('closed')
+  }
+
+  const confirmCloseSheet = () => {
+    setLostDatadDialogVisible(false)
+    confirmCallback?.()
+  }
+
+  const cancelCloseSheet = () => {
+    setLostDatadDialogVisible(false)
+  }
 
   return (
     <>
@@ -150,6 +190,17 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
         handleClose={() => setDrawerActive(false)}
+      />
+      <MessageDialog
+        title="Video & image data will be lost"
+        description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
+        primaryButtonText="Proceed"
+        showDialog={lostDataDialogVisible}
+        onPrimaryButtonClick={confirmCloseSheet}
+        onSecondaryButtonClick={cancelCloseSheet}
+        onExitClick={cancelCloseSheet}
+        secondaryButtonText="Cancel"
+        variant="warning"
       />
     </>
   )

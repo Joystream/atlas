@@ -21,7 +21,7 @@ import {
   VideoId,
 } from '@/joystream-lib'
 import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
-import { TransactionDialog } from '@/components'
+import { MessageDialog, TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
@@ -40,10 +40,12 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
     updateSelectedVideoTab,
+    haveAssetCache,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
+  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
 
   const { removeDraft } = useDrafts('video', activeChannelId)
 
@@ -267,10 +269,6 @@ export const EditVideoSheet: React.FC = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const closeSheet = () => {
-    setSheetState('closed')
-  }
-
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
       setTransactionStatus(null)
@@ -287,6 +285,23 @@ export const EditVideoSheet: React.FC = () => {
 
     // close the sheet if we closed the last tab
     setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
+  }
+
+  const closeSheet = () => {
+    if (haveAssetCache) {
+      setLostDatadDialogVisible(true)
+    } else {
+      setSheetState('closed')
+    }
+  }
+
+  const confirmCloseSheet = () => {
+    setSheetState('closed')
+    setLostDatadDialogVisible(false)
+  }
+
+  const cancelCloseSheet = () => {
+    setLostDatadDialogVisible(false)
   }
 
   return (
@@ -320,6 +335,17 @@ export const EditVideoSheet: React.FC = () => {
           onVideoFileChange={handleVideoFileChange}
         />
       </Container>
+      <MessageDialog
+        title="Video & image data will be lost"
+        description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
+        primaryButtonText="Proceed"
+        showDialog={lostDataDialogVisible}
+        onPrimaryButtonClick={confirmCloseSheet}
+        onSecondaryButtonClick={cancelCloseSheet}
+        onExitClick={cancelCloseSheet}
+        secondaryButtonText="Cancel"
+        variant="warning"
+      />
     </>
   )
 }
