@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/react'
+import { CaptureConsole } from '@sentry/integrations'
 import App from './App'
 import './styles/fonts.css'
 import { SENTRY_DSN } from './config/urls'
@@ -20,7 +21,14 @@ const initApp = async () => {
   }
 
   if (env === 'production') {
-    Sentry.init({ dsn: SENTRY_DSN })
+    Sentry.init({
+      dsn: SENTRY_DSN,
+      integrations: [
+        new CaptureConsole({
+          levels: ['error'],
+        }),
+      ],
+    })
   }
   ReactDOM.render(<App />, document.getElementById('root'))
 }
