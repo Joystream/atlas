@@ -26,9 +26,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
   const fileStatusMessage = asset.lastStatus === 'error' ? 'Reconnecting...' : ''
 
-  const resolution =
-    asset.imageCropData?.width && asset.imageCropData.height
-      ? `${Math.floor(asset.imageCropData.width)}x${Math.floor(asset.imageCropData.height)}`
+  const dimension =
+    asset.dimensions?.width && asset.dimensions.height
+      ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
   const size = formatBytes(asset.size)
 
@@ -55,7 +55,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
           {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
           <Text variant="body2">{fileTypeText}</Text>
         </FileInfoType>
-        <Text variant="body2">{resolution}</Text>
+        <Text variant="body2">{dimension}</Text>
         <Text>{size}</Text>
       </FileInfoContainer>
       <StatusMessage variant="subtitle2">{fileStatusMessage}</StatusMessage>

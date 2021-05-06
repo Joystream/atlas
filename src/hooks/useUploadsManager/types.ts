@@ -1,5 +1,5 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
-import { ImageCropData } from '@/types/cropper'
+import { Dimensions } from '@/components'
 
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 type AssetParent = 'video' | 'channel'
@@ -17,7 +17,7 @@ export type AssetUpload = {
   lastStatus: AssetUploadStatus
   // size in bytes
   size: number
-  imageCropData?: ImageCropData
+  dimensions?: Dimensions
   metadata?: string
 }
 export type AssetUploadWithProgress = AssetUpload & {

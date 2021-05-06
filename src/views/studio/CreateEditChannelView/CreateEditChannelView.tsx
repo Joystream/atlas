@@ -4,7 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { languages } from '@/config/languages'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer, TransactionDialog } from '@/components'
+import {
+  ImageCropDialog,
+  ImageCropDialogImperativeHandle,
+  StudioContainer,
+  TransactionDialog,
+  Dimensions,
+} from '@/components'
 import {
   ActionBarTransaction,
   ChannelCover,
@@ -33,7 +39,6 @@ import {
 import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
-import { ImageCropData } from '@/types/cropper'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -45,7 +50,7 @@ const FEE = 0
 type ImageAsset = {
   url: string | null
   blob: Blob | null
-  imageCropData: ImageCropData | null
+  imageCropData: Dimensions | null
 }
 type Inputs = {
   title?: string
@@ -310,7 +315,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               type: 'channel',
               id: assetsOwner,
             },
-            imageCropData: data.avatar.imageCropData ?? undefined,
+            dimensions: data.avatar.imageCropData ?? undefined,
             type: 'avatar',
           },
           storageProviderUrl
@@ -326,7 +331,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               type: 'channel',
               id: assetsOwner,
             },
-            imageCropData: data.cover.imageCropData ?? undefined,
+            dimensions: data.cover.imageCropData ?? undefined,
             type: 'cover',
           },
           storageProviderUrl

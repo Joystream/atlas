@@ -17,9 +17,14 @@ import {
 } from './ImageCropDialog.style'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 
+export type Dimensions = {
+  width: number
+  height: number
+}
+
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: ImageCropData) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: Dimensions) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {

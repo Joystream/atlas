@@ -1,4 +1,4 @@
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
+import ImageCropDialog, { ImageCropDialogImperativeHandle, Dimensions } from '@/components/Dialogs/ImageCropDialog'
 import { FileType } from '@/types/files'
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
@@ -24,6 +24,7 @@ export type VideoInputFile = {
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null
+  imageCropData?: Dimensions
 } & InputFile
 
 export type InputFilesState = {
@@ -106,11 +107,12 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
   }
 
-  const updateThumbnailFile = (croppedBlob: Blob, croppedUrl: string) => {
+  const updateThumbnailFile = (croppedBlob: Blob, croppedUrl: string, imageCropData: Dimensions) => {
     const updatedThumbnail: ImageInputFile = {
       originalBlob: rawImageFile,
       blob: croppedBlob,
       url: croppedUrl,
+      imageCropData,
     }
     onThumbnailChange(updatedThumbnail)
   }
