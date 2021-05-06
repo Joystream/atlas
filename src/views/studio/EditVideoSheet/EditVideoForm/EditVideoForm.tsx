@@ -266,7 +266,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <InputsContainer>
           <StyledHeaderTextField
             name="title"
-            ref={register(textFieldValidation('Video Title', 3, 40, true))}
+            ref={register(textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true }))}
             onChange={handleFormChange}
             placeholder="Video title"
             error={!!errors.title}
@@ -274,7 +274,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           />
           <TextArea
             name="description"
-            ref={register(textFieldValidation('Description', 0, 2160))}
+            ref={register(textFieldValidation({ name: 'Description', maxLength: 2160 }))}
             onChange={handleFormChange}
             maxLength={2160}
             placeholder="Description of the video to share with your audience"

@@ -137,9 +137,17 @@ const CreateMemberView = () => {
         />
         <StyledTextField
           name="handle"
-          placeholder="Johnny Smith"
+          placeholder="johnysmith"
           label="Member Name"
-          ref={register(textFieldValidation('Member name', 4, 40, true))}
+          ref={register(
+            textFieldValidation({
+              name: 'Member name',
+              maxLength: 40,
+              minLength: 4,
+              required: true,
+              pattern: /^[a-z0-9_]+$/,
+            })
+          )}
           error={!!errors.handle}
           helperText={errors.handle?.message}
         />
@@ -148,7 +156,7 @@ const CreateMemberView = () => {
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={100}
-          ref={register(textFieldValidation('About', 0, 100))}
+          ref={register(textFieldValidation({ name: 'About', maxLength: 100 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />

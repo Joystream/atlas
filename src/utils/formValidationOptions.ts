@@ -11,12 +11,22 @@ type RegisterOptions = Partial<{
   validate: Validate | Record<string, Validate>
 }>
 
-export const textFieldValidation: (
-  name: string,
-  minLength: number,
-  maxLength: number,
+type TextValidationArgs = {
+  name: string
+  maxLength: number
+  minLength?: number
   required?: boolean
-) => RegisterOptions = (name, minLength, maxLength, required = false) => ({
+  pattern?: RegExp
+}
+
+export const textFieldValidation = ({
+  name,
+  minLength = 0,
+  maxLength = 0,
+  required = false,
+  // match everything by default
+  pattern = /[\s\S]/,
+}: TextValidationArgs): RegisterOptions => ({
   required: {
     value: required,
     message: `${name} cannot be empty`,
@@ -28,6 +38,10 @@ export const textFieldValidation: (
   maxLength: {
     value: maxLength,
     message: `${name} cannot be longer than ${maxLength} characters.`,
+  },
+  pattern: {
+    value: pattern,
+    message: `${name} must be a valid`,
   },
 })
 
