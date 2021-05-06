@@ -11,7 +11,9 @@ import {
   StudioTopbarContainer,
   MemberInfoContainer,
   MemberInnerContainer,
-  MemberTitleText,
+  DrawerMemberText,
+  DrawerMemberTitleText,
+  StyledChannelInfoText,
   MemberTextContainer,
   ChannelInfoContainer,
   NewChannelAvatar,
@@ -172,8 +174,8 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
       <MemberInnerContainer>
         <StyledAvatar imageUrl={memberAvatar} />
         <MemberTextContainer>
-          <Text>{memberName}</Text>
-          <MemberTitleText variant="caption">Member</MemberTitleText>
+          <DrawerMemberText>{memberName}</DrawerMemberText>
+          <DrawerMemberTitleText variant="caption">Member</DrawerMemberTitleText>
         </MemberTextContainer>
       </MemberInnerContainer>
       <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
@@ -195,11 +197,11 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
         <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
         <TextContainer>
-          <Text variant="body1">{channel ? channel.title : 'New Channel'}</Text>
+          <StyledChannelInfoText variant="body1">{channel ? channel.title : 'New Channel'}</StyledChannelInfoText>
           {memberName && (
-            <Text variant="caption" secondary>
+            <StyledChannelInfoText variant="caption" secondary>
               {memberName}
-            </Text>
+            </StyledChannelInfoText>
           )}
         </TextContainer>
         {active && (

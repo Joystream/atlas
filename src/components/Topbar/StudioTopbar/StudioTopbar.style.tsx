@@ -44,16 +44,12 @@ export const TextContainer = styled.div`
   justify-content: center;
   margin-right: auto;
   width: 160px;
-  p:nth-of-type(1) {
-    font-size: ${typography.sizes.body1};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  p:nth-of-type(2) {
-    font-size: ${typography.sizes.caption};
-    color: ${colors.gray[300]};
-  }
+`
+
+export const StyledChannelInfoText = styled(Text)`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `
 
 export const StudioTopbarContainer = styled.div`
@@ -98,7 +94,17 @@ export const MemberTextContainer = styled.div`
   align-items: center;
 `
 
-export const MemberTitleText = styled(Text)`
+export const DrawerMemberText = styled(Text)`
+  max-width: 140px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  ${media.medium} {
+    max-width: 160px;
+  }
+`
+
+export const DrawerMemberTitleText = styled(Text)`
   background-color: ${colors.transparentPrimary[20]};
   color: ${colors.gray[50]};
   padding: ${sizes(0.5)} ${sizes(1)};
