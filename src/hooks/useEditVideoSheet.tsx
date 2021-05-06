@@ -4,10 +4,8 @@ import { absoluteRoutes } from '@/config/routes'
 import { useNavigate } from 'react-router-dom'
 import { useLocation, useMatch } from 'react-router'
 import { RoutingState } from '@/types/routing'
-import { useOverlayManager } from '@/hooks/useOverlayManager'
+import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
 import { createId } from '@/utils/createId'
-import { useDrafts } from '@/hooks/useDrafts'
-import { useActiveUser } from '@/hooks/useActiveUser'
 import { useVideo } from '@/api/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { createUrlFromAsset } from '@/utils/asset'
@@ -176,10 +174,8 @@ export type EditVideoFormFields = {
 }
 
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
-  const {
-    activeUser: { channelId },
-  } = useActiveUser()
-  const { drafts } = useDrafts('video', channelId ?? '')
+  const { activeChannelId } = useAuthorizedUser()
+  const { drafts } = useDrafts('video', activeChannelId)
 
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 

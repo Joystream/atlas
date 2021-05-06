@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useActiveUser, useEditVideoSheet } from '@/hooks'
+import { useUser, useEditVideoSheet } from '@/hooks'
 import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -59,20 +59,20 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
-  const { activeUser, setActiveChannel, removeActiveUser } = useActiveUser()
+  const { activeMemberId, activeChannelId, setActiveUser, resetActiveUser } = useUser()
   const navigate = useNavigate()
   const { membership, loading, error } = useMembership(
     {
-      where: { id: activeUser?.memberId },
+      where: { id: activeMemberId },
     },
     {
-      skip: !activeUser?.memberId,
+      skip: !activeMemberId,
     }
   )
 
   const { sheetState } = useEditVideoSheet()
 
-  const currentChannel = membership?.channels.find((channel) => channel.id === activeUser?.channelId)
+  const currentChannel = membership?.channels.find((channel) => channel.id === activeChannelId)
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
@@ -82,12 +82,12 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     if (!channel) {
       return
     }
-    setActiveChannel(channelId)
+    setActiveUser({ channelId })
     setDrawerActive(false)
   }
 
   const handleLogout = async () => {
-    await removeActiveUser()
+    resetActiveUser()
     navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)
   }

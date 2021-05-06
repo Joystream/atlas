@@ -22,7 +22,7 @@ import {
   EditVideoSheetProvider,
   useVideoEditSheetRouting,
   useConnectionStatus,
-  useActiveUser,
+  useUser,
   useJoystream,
   UploadManagerProvider,
 } from '@/hooks'
@@ -48,24 +48,24 @@ const StudioLayout = () => {
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
   const { extensionConnected: extensionStatus, accounts } = useJoystream()
-
-  const {
-    activeUser: { accountId, memberId, channelId },
-    loading: activeUserLoading,
-  } = useActiveUser()
-
-  const { memberships, loading: membershipsLoading } = useMemberships({
-    where: { controllerAccount_in: accounts.map((a) => a.id) },
-  })
-
-  const [enterLocation] = useState(location.pathname)
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
+
+  const { activeAccountId, activeMemberId, activeChannelId } = useUser()
+
+  const { memberships, loading: membershipsLoading } = useMemberships(
+    {
+      where: { controllerAccount_in: accounts.map((a) => a.id) },
+    },
+    { skip: !extensionConnected || !accounts.length }
+  )
+
+  const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
-  const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId && hasMembership
-  const channelSet = memberSet && !!channelId && hasMembership
+  const accountSet = !!activeAccountId && extensionConnected
+  const memberSet = accountSet && !!activeMemberId && hasMembership
+  const channelSet = memberSet && !!activeChannelId && hasMembership
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -79,7 +79,7 @@ const StudioLayout = () => {
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
-      {extensionConnectionLoading || activeUserLoading || membershipsLoading ? (
+      {extensionConnectionLoading || membershipsLoading ? (
         <StudioLoading />
       ) : (
         <>
@@ -140,7 +140,7 @@ const StudioLayout = () => {
               </Routes>
             </ErrorBoundary>
           </MainContainer>
-          <EditVideoSheet />
+          {channelSet && <EditVideoSheet />}
         </>
       )}
     </>

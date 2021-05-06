@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   useEditVideoSheet,
-  useActiveUser,
+  useAuthorizedUser,
   useUploadsManager,
   useSnackbar,
   useJoystream,
@@ -28,9 +28,7 @@ import { formatISO } from 'date-fns'
 import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
-  const {
-    activeUser: { channelId, memberId },
-  } = useActiveUser()
+  const { activeChannelId, activeMemberId } = useAuthorizedUser()
 
   // sheet state
   const {
@@ -47,7 +45,7 @@ export const EditVideoSheet: React.FC = () => {
   const isEdit = !selectedVideoTab?.isDraft
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
-  const { removeDraft } = useDrafts('video', channelId || '')
+  const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
@@ -58,14 +56,14 @@ export const EditVideoSheet: React.FC = () => {
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
-  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
   })
   const { refetchCount: refetchVideosCount } = useVideos({
     where: {
-      channelId_eq: channelId,
+      channelId_eq: activeChannelId,
     },
   })
 
@@ -100,7 +98,7 @@ export const EditVideoSheet: React.FC = () => {
     }
     const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
 
-    if (!joystream || !memberId || !channelId) {
+    if (!joystream) {
       return
     }
 
@@ -162,8 +160,8 @@ export const EditVideoSheet: React.FC = () => {
     try {
       if (isNew) {
         const { block, data: newVideoId } = await joystream.createVideo(
-          memberId,
-          channelId,
+          activeMemberId,
+          activeChannelId,
           metadata,
           assets,
           (status) => {
@@ -195,9 +193,16 @@ export const EditVideoSheet: React.FC = () => {
           removeDraft(selectedVideoTab?.id)
         })
       } else {
-        const { block } = await joystream.updateVideo(videoId, memberId, channelId, metadata, assets, (status) => {
-          setTransactionStatus(status)
-        })
+        const { block } = await joystream.updateVideo(
+          videoId,
+          activeMemberId,
+          activeChannelId,
+          metadata,
+          assets,
+          (status) => {
+            setTransactionStatus(status)
+          }
+        )
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
@@ -217,7 +222,7 @@ export const EditVideoSheet: React.FC = () => {
           videoInputFile.blob,
           {
             contentId: videoContentId,
-            owner: channelId,
+            owner: activeChannelId,
             parentObject: {
               type: 'video',
               id: videoId,
@@ -232,7 +237,7 @@ export const EditVideoSheet: React.FC = () => {
           thumbnailInputFile.blob,
           {
             contentId: thumbnailContentId,
-            owner: channelId,
+            owner: activeChannelId,
             parentObject: {
               type: 'video',
               id: videoId,

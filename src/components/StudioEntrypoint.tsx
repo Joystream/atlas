@@ -4,7 +4,7 @@ import { Spinner, Text } from '@/shared/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { useMembership, useMemberships } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useJoystream } from '@/hooks'
+import { useUser, useJoystream } from '@/hooks'
 import { Navigate } from 'react-router-dom'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
@@ -14,18 +14,15 @@ type StudioEntrypointProps = {
 }
 
 export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocation }) => {
-  const {
-    activeUser: { accountId, memberId, channelId },
-    setActiveChannel,
-  } = useActiveUser()
+  const { activeAccountId, activeMemberId, activeChannelId, setActiveUser } = useUser()
   const { extensionConnected: extensionStatus, accounts } = useJoystream()
 
   const { membership, loading: membershipLoading } = useMembership(
     {
-      where: { id: memberId },
+      where: { id: activeMemberId },
     },
     {
-      skip: !memberId,
+      skip: !activeMemberId,
     }
   )
 
@@ -42,9 +39,9 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
 
   const hasMemberships = !membershipsLoading && memberships?.length
 
-  const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId
-  const channelSet = memberSet && !!channelId
+  const accountSet = !!activeAccountId && extensionConnected
+  const memberSet = accountSet && !!activeMemberId
+  const channelSet = memberSet && !!activeChannelId
 
   // not signed user with not created memberships and/or no extension
   if (!hasMemberships) {
@@ -63,7 +60,7 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
     if (!membership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.newChannel()} />
     }
-    setActiveChannel(membership.channels[0].id)
+    setActiveUser({ channelId: membership.channels[0].id })
     return <Navigate to={enterLocation} />
   }
 

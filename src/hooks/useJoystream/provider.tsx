@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Account, JoystreamJs } from '@/joystream-lib'
-import { useActiveUser } from '@/hooks'
+import { useUser } from '@/hooks'
 import useConnectionStatus from '../useConnectionStatus'
 import { NODE_URL, WEB3_APP_NAME } from '@/config/urls'
 
@@ -13,7 +13,7 @@ export const JoystreamContext = React.createContext<JoystreamContextValue | unde
 JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
-  const { activeUser } = useActiveUser()
+  const { activeAccountId } = useUser()
   const { setNodeConnection } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
@@ -64,16 +64,16 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [handleAccountsUpdate, handleExtensionConnectedUpdate, handleNodeConnectionUpdate, setNodeConnection])
 
   useEffect(() => {
-    if (!joystream || !activeUser || !accountsSet) {
+    if (!joystream || !activeAccountId || !accountsSet) {
       return
     }
 
-    if (joystream.selectedAccountId === activeUser.accountId) {
+    if (joystream.selectedAccountId === activeAccountId) {
       return
     }
 
-    joystream.setAccount(activeUser.accountId)
-  }, [joystream, activeUser, accountsSet])
+    joystream.setAccount(activeAccountId)
+  }, [joystream, activeAccountId, accountsSet])
 
   return (
     <JoystreamContext.Provider value={{ accounts, joystream, extensionConnected }}>

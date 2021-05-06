@@ -1,5 +1,5 @@
 import accountCreation from '@/assets/account-creation.svg'
-import { useActiveUser, useJoystream } from '@/hooks'
+import { useUser, useJoystream } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
@@ -33,7 +33,7 @@ type AccountStepProps = {
 
 const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
-  const { setActiveUser } = useActiveUser()
+  const { setActiveUser } = useUser()
   const { accounts } = useJoystream()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
@@ -52,11 +52,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
     if (!selectedAccountAddress) {
       return
     }
-    await setActiveUser({
-      accountId: selectedAccountAddress,
-      memberId: null,
-      channelId: null,
-    })
+    setActiveUser({ accountId: selectedAccountAddress })
     navigate(nextStepPath)
   }
 

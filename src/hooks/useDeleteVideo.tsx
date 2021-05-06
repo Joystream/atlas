@@ -1,10 +1,11 @@
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { useState, useEffect } from 'react'
-import { useSnackbar, useJoystream } from '@/hooks'
+import { useSnackbar, useJoystream, useAuthorizedUser } from '@/hooks'
 
-export const useDeleteVideo = (memberId: string | null) => {
+export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
+  const { activeMemberId } = useAuthorizedUser()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deleteTransactionStatus, setDeleteTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const [deleteTransactionBlock, setDeleteTransactionBlock] = useState<number | null>(null)
@@ -24,14 +25,16 @@ export const useDeleteVideo = (memberId: string | null) => {
   }, [deleteTransactionBlock, queryNodeState, deleteTransactionStatus])
 
   const confirmDeleteVideo = async (videoId?: string) => {
-    if (!joystream || !memberId || !videoId) {
+    if (!joystream || !videoId) {
       return
     }
 
     setIsDeleteDialogOpen(false)
     setDeleteTransactionStatus(ExtrinsicStatus.Unsigned)
     try {
-      const { block } = await joystream.deleteVideo(videoId, memberId, (status) => setDeleteTransactionStatus(status))
+      const { block } = await joystream.deleteVideo(videoId, activeMemberId, (status) =>
+        setDeleteTransactionStatus(status)
+      )
       setDeleteTransactionBlock(block)
       setDeleteTransactionStatus(ExtrinsicStatus.Syncing)
     } catch (error) {

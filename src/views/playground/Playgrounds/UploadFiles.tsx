@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { useActiveUser, useUploadsManager } from '@/hooks'
+import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 
 export const UploadFiles = () => {
-  const {
-    activeUser: { channelId },
-  } = useActiveUser()
-  const { startFileUpload, uploadsState } = useUploadsManager(channelId || '')
+  const { activeChannelId } = useAuthorizedUser()
+  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId)
   const randomStorageProviderUrl = useRandomStorageProviderUrl()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -29,9 +27,9 @@ export const UploadFiles = () => {
         type: 'avatar',
         parentObject: {
           type: 'channel',
-          id: channelId || '',
+          id: activeChannelId,
         },
-        owner: channelId || '',
+        owner: activeChannelId,
       },
       randomStorageProviderUrl
     )

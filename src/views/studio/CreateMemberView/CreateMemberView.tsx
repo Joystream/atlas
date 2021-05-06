@@ -1,6 +1,6 @@
 import { MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useConnectionStatus } from '@/hooks'
+import { useUser, useConnectionStatus } from '@/hooks'
 import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
@@ -31,7 +31,7 @@ type Inputs = {
 }
 
 const CreateMemberView = () => {
-  const { activeUser } = useActiveUser()
+  const { activeAccountId } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
@@ -58,11 +58,11 @@ const CreateMemberView = () => {
     {
       where: {
         // `controllerAccount_in` has to be used to trigger refresh on other queries using it
-        controllerAccount_in: [activeUser.accountId || ''],
+        controllerAccount_in: [activeAccountId || ''],
       },
     },
     {
-      skip: !activeUser.accountId,
+      skip: !activeAccountId,
     }
   )
   if (membershipError) {
@@ -71,27 +71,28 @@ const CreateMemberView = () => {
 
   // success
   useEffect(() => {
-    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeUser.accountId) {
+    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
+      // TODO: this likely needs to refetch memberships for all accounts controlled by user
       refetchMembership().then(() => {
         setIsSubmitting(false)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeUser.accountId, navigate, refetchMembership])
+  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMembership])
 
   const handleCreateMember = handleSubmit(async (data) => {
-    if (!activeUser.accountId) {
+    if (!activeAccountId) {
       return
     }
 
     try {
       setIsSubmitting(true)
-      const { block } = await createNewMember(activeUser.accountId, data)
+      const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
       setIsSubmitting(false)

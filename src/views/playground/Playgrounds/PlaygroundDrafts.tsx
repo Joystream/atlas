@@ -1,4 +1,4 @@
-import { useDrafts, VideoDraft, useActiveUser } from '@/hooks'
+import { useDrafts, VideoDraft, useUser } from '@/hooks'
 import { FormField, Button, Text } from '@/shared/components'
 import Select from '@/shared/components/Select'
 import TextArea from '@/shared/components/TextArea'
@@ -20,10 +20,10 @@ const CONTENT_RATING = [
 
 const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
-  const { activeUser } = useActiveUser()
+  const { activeChannelId } = useUser()
   const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
     'video',
-    activeUser.channelId || INITIAL_STATE.channelId
+    activeChannelId || INITIAL_STATE.channelId
   )
   const [currentDraftId, setCurrentDraftId] = useState('')
 
@@ -32,9 +32,9 @@ const PlaygroundDrafts = () => {
     const draft = await getDraft(draftID)
     if (draft) {
       const { title, description, isExplicit, channelId } = draft
-      setForm({ title, description, isExplicit, channelId: activeUser.channelId || channelId })
+      setForm({ title, description, isExplicit, channelId: activeChannelId || channelId })
     } else {
-      setForm({ ...INITIAL_STATE, channelId: activeUser.channelId || INITIAL_STATE.channelId })
+      setForm({ ...INITIAL_STATE, channelId: activeChannelId || INITIAL_STATE.channelId })
     }
   }
 
