@@ -31,7 +31,7 @@ export const ButtonsContainer = styled.div`
   padding: 0 ${sizes(3)};
   border-left: solid 1px ${colors.gray[700]};
 
-  ${media.small}) {
+  ${media.small} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
   }

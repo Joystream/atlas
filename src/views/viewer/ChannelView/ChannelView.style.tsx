@@ -28,6 +28,7 @@ export const TitleSection = styled.div`
   margin-top: -64px;
 
   ${media.small} {
+    margin-right: ${sizes(8)};
     margin-top: -100px;
     flex-direction: row;
     align-items: center;
@@ -91,7 +92,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   span {
     font-size: ${typography.sizes.h2};
   }
-  ${media.small}) {
+  ${media.small} {
     margin: 0 ${sizes(6)} 0 0;
   }
 `
