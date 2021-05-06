@@ -65,6 +65,10 @@ const ImageDownsizing = () => {
     width: 0,
     height: 0,
     fileSize: 0,
+    imageCropData: {
+      width: 0,
+      height: 0,
+    },
   })
 
   useEffect(() => {
@@ -86,6 +90,10 @@ const ImageDownsizing = () => {
     width: 0,
     height: 0,
     fileSize: 0,
+    imageCropData: {
+      width: 0,
+      height: 0,
+    },
   })
 
   useEffect(() => {
@@ -107,6 +115,7 @@ const ImageDownsizing = () => {
     setAvatarSizes({
       ...avatarSizes,
       fileSize: croppedBlob.size,
+      imageCropData,
     })
   }
 
@@ -115,6 +124,7 @@ const ImageDownsizing = () => {
     setCoverSizes({
       ...coverSizes,
       fileSize: croppedBlob.size,
+      imageCropData,
     })
   }
 
@@ -152,6 +162,10 @@ const ImageDownsizing = () => {
           <p>
             Cropped image size: {avatarSizes.width || 0} X {avatarSizes.height}
           </p>
+          <p>
+            imageCropData (from cropper) size: {avatarSizes.imageCropData.width || 0} X{' '}
+            {avatarSizes.imageCropData.height}
+          </p>
           <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
         </>
       )}
@@ -162,6 +176,9 @@ const ImageDownsizing = () => {
           <StyledImg src={coverUrl} ref={coverImgRef} />
           <p>
             Cropped image size: {coverSizes.width || 0} X {coverSizes.height}
+          </p>
+          <p>
+            imageCropData (from cropper) size: {coverSizes.imageCropData.width || 0} X {coverSizes.imageCropData.height}
           </p>
           <p>Cropped image filesize: {formatBytes(coverSizes.fileSize)} </p>
         </>
