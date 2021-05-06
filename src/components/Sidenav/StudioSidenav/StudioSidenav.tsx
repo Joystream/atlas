@@ -6,6 +6,8 @@ import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
+import { MessageDialog } from '@/components/Dialogs'
+import { useNavigate } from 'react-router'
 
 const studioNavbarItems: NavItemType[] = [
   {
@@ -33,7 +35,10 @@ export const StudioSidenav: React.FC = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { unseenDrafts } = useDrafts('video', activeChannelId)
   const { uploadsState } = useUploadsManager(activeChannelId)
+  const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
+
+  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
 
   const assetsInProgress = uploadsState.filter((asset) => asset.lastStatus === 'inProgress')
 
@@ -46,6 +51,26 @@ export const StudioSidenav: React.FC = () => {
     }
     return item
   })
+  const { haveVideoTabsAssetCache } = useEditVideoSheet()
+
+  const confirmCloseSheet = () => {
+    setLostDatadDialogVisible(false)
+    setExpanded(false)
+    navigate(absoluteRoutes.viewer.index())
+  }
+
+  const cancelCloseSheet = () => {
+    setExpanded(false)
+    setLostDatadDialogVisible(false)
+  }
+
+  const handleClick = () => {
+    if (haveVideoTabsAssetCache) {
+      setLostDatadDialogVisible(true)
+    } else {
+      navigate(absoluteRoutes.viewer.index())
+    }
+  }
 
   return (
     <SidenavBase
@@ -69,14 +94,20 @@ export const StudioSidenav: React.FC = () => {
               New Video
             </Button>
           </CSSTransition>
-          <Button
-            variant="secondary"
-            onClick={() => setExpanded(false)}
-            icon={<SvgGlyphExternal />}
-            to={absoluteRoutes.viewer.index()}
-          >
+          <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
             Joystream
           </Button>
+          <MessageDialog
+            title="Video & image data will be lost"
+            description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
+            primaryButtonText="Proceed"
+            showDialog={lostDataDialogVisible}
+            onPrimaryButtonClick={confirmCloseSheet}
+            onSecondaryButtonClick={cancelCloseSheet}
+            onExitClick={cancelCloseSheet}
+            secondaryButtonText="Cancel"
+            variant="warning"
+          />
         </>
       }
     />
