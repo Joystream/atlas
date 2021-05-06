@@ -64,7 +64,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
   const navigate = useNavigate()
 
-  const { sheetState, setSheetState, haveAssetCache } = useEditVideoSheet()
+  const { sheetState, setSheetState, haveVideoTabsAssetCache } = useEditVideoSheet()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -79,7 +79,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     setActiveUser({ channelId })
     setDrawerActive(false)
     setDrawerActive(false)
-    if (haveAssetCache) {
+    if (haveVideoTabsAssetCache) {
       setLostDatadDialogVisible(true)
       setConfirmCallback(() => () => changeChannel(channelId))
     } else {
@@ -124,7 +124,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     resetActiveUser()
     navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)
-    if (haveAssetCache) {
+    if (haveVideoTabsAssetCache) {
       setLostDatadDialogVisible(true)
       setConfirmCallback(() => logout)
     } else {

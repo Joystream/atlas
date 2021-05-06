@@ -40,7 +40,8 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
     updateSelectedVideoTab,
-    haveAssetCache,
+    haveVideoTabsAssetCache,
+    hasSelectedVideoTabAssetCache,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -68,6 +69,22 @@ export const EditVideoSheet: React.FC = () => {
       channelId_eq: activeChannelId,
     },
   })
+  const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
+
+  useEffect(() => {
+    if (sheetState === 'closed' || !haveVideoTabsAssetCache) {
+      return
+    }
+
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = 'Do you want to leave this page? Changes that you made may not be saved.'
+    }
+    window.addEventListener('beforeunload', beforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload)
+    }
+  }, [sheetState, haveVideoTabsAssetCache])
 
   useEffect(() => {
     if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
@@ -288,16 +305,26 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const closeSheet = () => {
-    if (haveAssetCache) {
+    if (haveVideoTabsAssetCache) {
       setLostDatadDialogVisible(true)
+      setConfirmCallback(() => () => setSheetState('closed'))
     } else {
       setSheetState('closed')
     }
   }
 
+  const handleRemoveVideoTab = (tabIdx: number) => {
+    if (hasSelectedVideoTabAssetCache) {
+      setLostDatadDialogVisible(true)
+      setConfirmCallback(() => () => removeVideoTab(tabIdx))
+    } else {
+      removeVideoTab(tabIdx)
+    }
+  }
+
   const confirmCloseSheet = () => {
-    setSheetState('closed')
     setLostDatadDialogVisible(false)
+    confirmCallback?.()
   }
 
   const cancelCloseSheet = () => {
@@ -322,7 +349,7 @@ export const EditVideoSheet: React.FC = () => {
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
           onAddNewTabClick={() => addVideoTab()}
-          onRemoveTabClick={removeVideoTab}
+          onRemoveTabClick={handleRemoveVideoTab}
           onTabSelect={setSelectedVideoTabIdx}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
