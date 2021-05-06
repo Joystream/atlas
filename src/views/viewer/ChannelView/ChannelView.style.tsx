@@ -91,7 +91,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   span {
     font-size: ${typography.sizes.h2};
   }
-  ${media.small}) {
+  ${media.small} {
     margin: 0 ${sizes(6)} 0 0;
   }
 `

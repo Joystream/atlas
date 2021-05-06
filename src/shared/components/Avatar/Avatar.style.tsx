@@ -37,7 +37,7 @@ const viewAvatarCss = css`
   width: 128px;
   min-width: 128px;
   height: 128px;
-  ${media.medium}) {
+  ${media.medium} {
     width: 136px;
     min-width: 136px;
     height: 136px;
