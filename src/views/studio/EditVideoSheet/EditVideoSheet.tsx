@@ -8,6 +8,7 @@ import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useDrafts,
+  useDisplayDataLostWarning,
 } from '@/hooks'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
@@ -21,7 +22,7 @@ import {
   VideoId,
 } from '@/joystream-lib'
 import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
-import { MessageDialog, TransactionDialog } from '@/components'
+import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
@@ -46,7 +47,6 @@ export const EditVideoSheet: React.FC = () => {
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
-  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
 
   const { removeDraft } = useDrafts('video', activeChannelId)
 
@@ -69,7 +69,7 @@ export const EditVideoSheet: React.FC = () => {
       channelId_eq: activeChannelId,
     },
   })
-  const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
+  const { WarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
     if (sheetState === 'closed' || !haveVideoTabsAssetCache) {
@@ -306,8 +306,7 @@ export const EditVideoSheet: React.FC = () => {
 
   const closeSheet = () => {
     if (haveVideoTabsAssetCache) {
-      setLostDatadDialogVisible(true)
-      setConfirmCallback(() => () => setSheetState('closed'))
+      openWarningDialog({ confirmCallback: () => () => setSheetState('closed') })
     } else {
       setSheetState('closed')
     }
@@ -315,20 +314,10 @@ export const EditVideoSheet: React.FC = () => {
 
   const handleRemoveVideoTab = (tabIdx: number) => {
     if (hasSelectedVideoTabAssetCache) {
-      setLostDatadDialogVisible(true)
-      setConfirmCallback(() => () => removeVideoTab(tabIdx))
+      openWarningDialog({ confirmCallback: () => removeVideoTab(tabIdx) })
     } else {
       removeVideoTab(tabIdx)
     }
-  }
-
-  const confirmCloseSheet = () => {
-    setLostDatadDialogVisible(false)
-    confirmCallback?.()
-  }
-
-  const cancelCloseSheet = () => {
-    setLostDatadDialogVisible(false)
   }
 
   return (
@@ -343,6 +332,7 @@ export const EditVideoSheet: React.FC = () => {
         }
         onClose={handleTransactionClose}
       />
+      <WarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
@@ -362,17 +352,6 @@ export const EditVideoSheet: React.FC = () => {
           onVideoFileChange={handleVideoFileChange}
         />
       </Container>
-      <MessageDialog
-        title="Video & image data will be lost"
-        description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
-        primaryButtonText="Proceed"
-        showDialog={lostDataDialogVisible}
-        onPrimaryButtonClick={confirmCloseSheet}
-        onSecondaryButtonClick={cancelCloseSheet}
-        onExitClick={cancelCloseSheet}
-        secondaryButtonText="Cancel"
-        variant="warning"
-      />
     </>
   )
 }

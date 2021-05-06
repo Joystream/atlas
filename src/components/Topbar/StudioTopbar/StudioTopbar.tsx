@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useEditVideoSheet } from '@/hooks'
+import { useUser, useDisplayDataLostWarning, useEditVideoSheet } from '@/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -29,7 +29,6 @@ import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import { createUrlFromAsset } from '@/utils/asset'
 import { useNavigate } from 'react-router'
-import { MessageDialog } from '@/components/Dialogs'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -62,9 +61,11 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
   const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
   const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
+
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, haveVideoTabsAssetCache } = useEditVideoSheet()
+  const { WarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -80,8 +81,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     setDrawerActive(false)
     setDrawerActive(false)
     if (haveVideoTabsAssetCache) {
-      setLostDatadDialogVisible(true)
-      setConfirmCallback(() => () => changeChannel(channelId))
+      openWarningDialog({ confirmCallback: () => () => changeChannel(channelId) })
     } else {
       changeChannel(channelId)
     }
@@ -125,8 +125,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)
     if (haveVideoTabsAssetCache) {
-      setLostDatadDialogVisible(true)
-      setConfirmCallback(() => logout)
+      openWarningDialog({ confirmCallback: () => logout })
     } else {
       logout()
     }
@@ -138,17 +137,9 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     setSheetState('closed')
   }
 
-  const confirmCloseSheet = () => {
-    setLostDatadDialogVisible(false)
-    confirmCallback?.()
-  }
-
-  const cancelCloseSheet = () => {
-    setLostDatadDialogVisible(false)
-  }
-
   return (
     <>
+      <WarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
@@ -190,17 +181,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}
         handleClose={() => setDrawerActive(false)}
-      />
-      <MessageDialog
-        title="Video & image data will be lost"
-        description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
-        primaryButtonText="Proceed"
-        showDialog={lostDataDialogVisible}
-        onPrimaryButtonClick={confirmCloseSheet}
-        onSecondaryButtonClick={cancelCloseSheet}
-        onExitClick={cancelCloseSheet}
-        secondaryButtonText="Cancel"
-        variant="warning"
       />
     </>
   )
