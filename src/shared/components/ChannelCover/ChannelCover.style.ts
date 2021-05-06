@@ -156,9 +156,20 @@ export const RemoveCoverDesktopButton = styled(Button)`
   ${removeButtonStyles};
 
   display: none;
+  background-color: ${colors.transparentBlack[24]};
+  &:hover {
+    background-color: ${colors.transparentBlack[54]};
+  }
 
   ${media.small} {
     display: flex;
+  }
+
+  ${media.medium} {
+    background-color: ${colors.transparent};
+    &:hover {
+      background-color: ${colors.transparentPrimary[12]};
+    }
   }
 `
 

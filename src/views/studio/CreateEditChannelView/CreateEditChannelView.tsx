@@ -9,15 +9,21 @@ import {
   ActionBarTransaction,
   ChannelCover,
   FormField,
-  HeaderTextField,
   Select,
   SelectItem,
   TextArea,
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
-import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
+import {
+  InnerFormContainer,
+  StyledAvatar,
+  StyledTitleSection,
+  TitleContainer,
+  StyledHeaderTextField,
+  StyledSubTitle,
+} from './CreateEditChannelView.style'
+import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 import { useChannel, useMembership, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
@@ -446,7 +452,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                     rules={textFieldValidation('Channel name', 3, 40, true)}
                     render={({ value, onChange }) => (
                       <Tooltip text="Click to edit channel title">
-                        <HeaderTextField
+                        <StyledHeaderTextField
                           ref={titleRef}
                           placeholder="Channel title"
                           value={value}
@@ -460,7 +466,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                     )}
                   />
                   {!newChannel && (
-                    <SubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                    <StyledSubTitle>
+                      {channel?.follows ? formatNumberShort(channel.follows) : 0} Followers
+                    </StyledSubTitle>
                   )}
                 </>
               ) : (
