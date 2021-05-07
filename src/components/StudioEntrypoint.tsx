@@ -78,8 +78,8 @@ const LoadingStudioContainer = styled.main`
 export const StudioLoading: React.FC = () => {
   return (
     <LoadingStudioContainer>
-      <Text variant="h1">Loading Studio View</Text>
-      <Spinner />
+      <Text variant="h1">Loading Joystream studio...</Text>
+      <Spinner size="large" />
     </LoadingStudioContainer>
   )
 }
