@@ -144,6 +144,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       700
     )
   )
+  const categorySelectRef = useRef<HTMLDivElement>(null)
+  const isExplicitInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -239,6 +241,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     }
   }
 
+  const handleFieldFocus = (ref: React.RefObject<HTMLElement>) => {
+    ref.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
+
   const categoriesSelectItems: SelectItem[] =
     categories?.map((c) => ({
       name: c.name || 'Unknown category',
@@ -329,8 +338,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="category"
               control={control}
               rules={requiredValidation('Video category')}
+              onFocus={() => handleFieldFocus(categorySelectRef)}
               render={({ value, onChange }) => (
                 <Select
+                  containerRef={categorySelectRef}
                   value={value ?? null}
                   items={categoriesSelectItems}
                   onChange={(value) => {
@@ -370,9 +381,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => value !== null,
               }}
+              onFocus={() => handleFieldFocus(isExplicitInputRef)}
               render={({ value, onChange }) => (
                 <StyledRadioContainer>
                   <RadioButton
+                    ref={isExplicitInputRef}
                     value="false"
                     label="All audiences"
                     onChange={() => {
