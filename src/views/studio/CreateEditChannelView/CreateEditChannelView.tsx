@@ -302,6 +302,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       }
 
       // start files upload
+      let uploadCount = 0
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
           data.avatar.blob,
@@ -318,6 +319,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
+        uploadCount++
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
         startFileUpload(
@@ -335,22 +337,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
+        uploadCount++
       }
-      if (
-        (data.cover.blob && coverContentId && storageProviderUrl) ||
-        (data.avatar.blob && avatarContentId && storageProviderUrl)
-      ) {
-        displaySnackbar({ title: 'Asset being uploaded', iconType: 'info' })
-      }
-      if (
-        data.cover.blob &&
-        coverContentId &&
-        storageProviderUrl &&
-        data.avatar.blob &&
-        avatarContentId &&
-        storageProviderUrl
-      ) {
-        displaySnackbar({ title: '(2) Assets being uploaded', iconType: 'info' })
+      if (uploadCount > 0) {
+        displaySnackbar({ title: `(${uploadCount}) Asset being uploaded`, iconType: 'info' })
       }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {

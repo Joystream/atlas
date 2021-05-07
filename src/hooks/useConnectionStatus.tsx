@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { useSnackbar } from '@/hooks/useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
@@ -23,24 +23,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [showSnackbar, setShowSnackbar] = useState(false)
   const { displaySnackbar } = useSnackbar()
 
-  useEffect(() => {
-    // ping google every three seconds to check if user is connected to internet
-    const interval = setInterval(() => {
-      checkConnection()
-    }, 5000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (showSnackbar) {
-      displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
-      setShowSnackbar(false)
-    }
-  }, [displaySnackbar, showSnackbar])
-
-  const checkConnection = async () => {
+  const checkConnection = useCallback(async () => {
     try {
       const res = await withTimeout(
         fetch('https://google.com', {
@@ -61,7 +44,24 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
       setIsUserConnectedToInternet(false)
       displaySnackbar({ title: 'No network connection', iconType: 'error' })
     }
-  }
+  }, [displaySnackbar])
+
+  useEffect(() => {
+    // ping google every three seconds to check if user is connected to internet
+    const interval = setInterval(() => {
+      checkConnection()
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [checkConnection])
+
+  useEffect(() => {
+    if (showSnackbar) {
+      displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
+      setShowSnackbar(false)
+    }
+  }, [displaySnackbar, showSnackbar])
 
   return (
     <ConnectionStatusContext.Provider

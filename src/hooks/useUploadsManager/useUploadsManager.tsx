@@ -39,7 +39,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
         displaySnackbar({ title: 'Asset uploaded', iconType: 'success' })
-        // TODO: add snackbar?
       } catch (e) {
         console.error('Upload failed')
         console.error(e)
