@@ -22,6 +22,7 @@ import {
 import { useMemberships, useQueryNodeStateSubscription } from '@/api/hooks'
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 type Inputs = {
   handle: string
@@ -137,9 +138,18 @@ const CreateMemberView = () => {
         />
         <StyledTextField
           name="handle"
-          placeholder="Johnny Smith"
+          placeholder="johnnysmith"
           label="Member Name"
-          ref={register(textFieldValidation('Member name', 4, 40, true))}
+          ref={register(
+            textFieldValidation({
+              name: 'Member name',
+              maxLength: 40,
+              minLength: 4,
+              required: true,
+              pattern: MEMBERSHIP_NAME_PATTERN,
+              patternMessage: 'may contain only lowercase letters, numbers and underscores',
+            })
+          )}
           error={!!errors.handle}
           helperText={errors.handle?.message}
         />
@@ -148,7 +158,7 @@ const CreateMemberView = () => {
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={100}
-          ref={register(textFieldValidation('About', 0, 100))}
+          ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />
