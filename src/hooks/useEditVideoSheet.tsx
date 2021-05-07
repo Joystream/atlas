@@ -209,7 +209,6 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   if (!tab) {
     return {
-      updateTabData: () => ({}),
       tabData: null,
       loading: false,
       error: null,
