@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Ref } from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
@@ -14,6 +14,7 @@ export type SelectProps<T = string> = {
   value?: T | null
   items: SelectItem<T>[]
   placeholder?: string
+  containerRef?: Ref<HTMLDivElement>
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -25,6 +26,7 @@ const Select = <T,>({
   value,
   disabled,
   onChange,
+  containerRef,
   ...inputBaseProps
 }: SelectProps<T>) => {
   const itemsValues = items.map((item) => item.value)
@@ -47,7 +49,7 @@ const Select = <T,>({
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper>
+      <SelectWrapper ref={containerRef}>
         <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
           {label && <StyledLabelText>{label}</StyledLabelText>}
         </label>
