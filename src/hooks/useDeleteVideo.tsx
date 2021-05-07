@@ -1,5 +1,5 @@
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { ExtensionSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { useState, useEffect } from 'react'
 import { useSnackbar, useJoystream, useAuthorizedUser } from '@/hooks'
 
@@ -38,7 +38,7 @@ export const useDeleteVideo = () => {
       setDeleteTransactionBlock(block)
       setDeleteTransactionStatus(ExtrinsicStatus.Syncing)
     } catch (error) {
-      if (error instanceof ExtensionSignCancelledError) {
+      if (error instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setDeleteTransactionStatus(null)
         displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })

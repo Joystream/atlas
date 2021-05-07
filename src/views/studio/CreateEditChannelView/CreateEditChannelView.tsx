@@ -27,7 +27,7 @@ import {
   ChannelAssets,
   ChannelId,
   CreateChannelMetadata,
-  ExtensionSignCancelledError,
+  ExtrinsicSignCancelledError,
   ExtrinsicStatus,
 } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
@@ -335,7 +335,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         )
       }
     } catch (e) {
-      if (e instanceof ExtensionSignCancelledError) {
+      if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
         displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })

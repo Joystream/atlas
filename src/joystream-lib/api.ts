@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { Signer, SubmittableExtrinsic } from '@polkadot/api/types'
 import {
   GenericAccountId as RuntimeAccountId,
   Bytes,
@@ -12,7 +12,6 @@ import {
   u64 as U64,
 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
-import { web3AccountsSubscribe, web3Enable, web3FromAddress } from '@polkadot/extension-dapp'
 import { types } from '@joystream/types'
 import { ChannelId as RuntimeChannelId } from '@joystream/types/common'
 import {
@@ -32,16 +31,13 @@ import {
 } from '@joystream/content-metadata-protobuf'
 
 import {
-  AccountNotFoundError,
   AccountNotSelectedError,
   ApiNotConnectedError,
-  ExtensionSignCancelledError,
-  ExtensionUnknownError,
+  ExtrinsicSignCancelledError,
   ExtrinsicFailedError,
   ExtrinsicUnknownError,
 } from './errors'
 import {
-  Account,
   AccountId,
   AssetMetadata,
   ChannelAssets,
@@ -67,19 +63,11 @@ export class JoystreamJs {
     return this._selectedAccountId
   }
 
-  private _accounts: Account[] = []
-  get accounts(): Account[] {
-    return this._accounts
-  }
-
-  private unsubscribeFromAccountChanges?: () => void
   // if needed these could become some kind of event emitter
-  public onAccountsUpdate?: (accounts: Account[]) => unknown
-  public onExtensionConnectedUpdate?: (connected: boolean) => unknown
   public onNodeConnectionUpdate?: (connected: boolean) => unknown
 
   /* Lifecycle */
-  constructor(endpoint: string, appName: string) {
+  constructor(endpoint: string) {
     const provider = new WsProvider(endpoint)
     provider.on('connected', () => {
       this.logConnectionData(endpoint)
@@ -93,43 +81,10 @@ export class JoystreamJs {
     })
 
     this.api = new ApiPromise({ provider, types })
-
-    this.initPolkadotExtension(appName)
-  }
-
-  public async initPolkadotExtension(appName: string) {
-    this.initPolkadotExtensionPromise = this._initPolkadotExtension(appName)
-  }
-
-  private async _initPolkadotExtension(appName: string): Promise<boolean> {
-    try {
-      const enabledExtensions = await web3Enable(appName)
-
-      if (!enabledExtensions.length) {
-        this.logWarn('No extension detected')
-        this.onExtensionConnectedUpdate?.(false)
-        return false
-      }
-
-      // subscribe to changes to the accounts list
-      this.unsubscribeFromAccountChanges = await web3AccountsSubscribe((accounts) => {
-        this._accounts = accounts.map((a) => ({
-          id: a.address,
-          name: a.meta.name || 'Unnamed',
-        }))
-        this.onAccountsUpdate?.(this._accounts)
-      })
-
-      this.onExtensionConnectedUpdate?.(true)
-      return true
-    } catch (e) {
-      throw new ExtensionUnknownError(e)
-    }
   }
 
   destroy() {
     this.api.disconnect()
-    this.unsubscribeFromAccountChanges?.()
     this.log('Destroyed')
   }
 
@@ -227,7 +182,7 @@ export class JoystreamJs {
         cb?.(ExtrinsicStatus.Signed)
       } catch (e) {
         if (e?.message === 'Cancelled') {
-          reject(new ExtensionSignCancelledError())
+          reject(new ExtrinsicSignCancelledError())
           return
         }
         this.logError(`Unknown sendExtrinsic error: ${e}`)
@@ -433,7 +388,7 @@ export class JoystreamJs {
   }
 
   /* Public */
-  async setAccount(accountId: AccountId | null) {
+  async setActiveAccount(accountId: AccountId | null, signer?: Signer) {
     // make sure the initialization was done already
     await this.initPolkadotExtensionPromise
 
@@ -441,15 +396,13 @@ export class JoystreamJs {
       this._selectedAccountId = null
       this.api.setSigner({})
       return
+    } else if (!signer) {
+      this.logError('Missing signer on active account set')
+      return
     }
 
-    if (!this._accounts.find((a) => a.id === accountId)) {
-      throw AccountNotFoundError
-    }
-
-    const accountInjector = await web3FromAddress(accountId)
     this._selectedAccountId = accountId
-    this.api.setSigner(accountInjector.signer)
+    this.api.setSigner(signer)
   }
 
   async getAccountBalance(accountId: AccountId): Promise<number> {

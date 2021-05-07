@@ -13,7 +13,7 @@ import {
 } from './SignInView.style'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { SignInStepsStepper } from '@/components'
-import { useJoystream, useUser } from '@/hooks'
+import { useUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
@@ -21,18 +21,16 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
-  const { activeChannelId, setActiveUser } = useUser()
-
-  const { accounts, extensionConnected } = useJoystream()
+  const { activeChannelId, setActiveUser, accounts, extensionConnected } = useUser()
 
   const { memberships } = useMemberships(
     {
       where: {
-        controllerAccount_in: accounts.map((a) => a.id),
+        controllerAccount_in: (accounts || []).map((a) => a.id),
       },
     },
     {
-      skip: extensionConnected !== true || !accounts.length,
+      skip: extensionConnected !== true || !(accounts || []).length,
     }
   )
 

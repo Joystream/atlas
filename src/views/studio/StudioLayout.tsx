@@ -23,7 +23,6 @@ import {
   useVideoEditSheetRouting,
   useConnectionStatus,
   useUser,
-  useJoystream,
   UploadManagerProvider,
 } from '@/hooks'
 
@@ -47,17 +46,16 @@ const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const { extensionConnected: extensionStatus, accounts } = useJoystream()
+
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected: extensionStatus, accounts } = useUser()
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
 
-  const { activeAccountId, activeMemberId, activeChannelId } = useUser()
-
   const { memberships, loading: membershipsLoading } = useMemberships(
     {
-      where: { controllerAccount_in: accounts.map((a) => a.id) },
+      where: { controllerAccount_in: (accounts || []).map((a) => a.id) },
     },
-    { skip: !extensionConnected || !accounts.length }
+    { skip: !extensionConnected || !(accounts || []).length }
   )
 
   const [enterLocation] = useState(location.pathname)

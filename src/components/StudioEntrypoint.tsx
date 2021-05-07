@@ -4,7 +4,7 @@ import { Spinner, Text } from '@/shared/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { useMembership, useMemberships } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser, useJoystream } from '@/hooks'
+import { useUser } from '@/hooks'
 import { Navigate } from 'react-router-dom'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
@@ -14,8 +14,14 @@ type StudioEntrypointProps = {
 }
 
 export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocation }) => {
-  const { activeAccountId, activeMemberId, activeChannelId, setActiveUser } = useUser()
-  const { extensionConnected: extensionStatus, accounts } = useJoystream()
+  const {
+    activeAccountId,
+    activeMemberId,
+    activeChannelId,
+    setActiveUser,
+    extensionConnected: extensionStatus,
+    accounts,
+  } = useUser()
 
   const { membership, loading: membershipLoading } = useMembership(
     {
@@ -28,10 +34,10 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
 
   const { memberships, loading: membershipsLoading } = useMemberships(
     {
-      where: { controllerAccount_in: accounts.map((a) => a.id) },
+      where: { controllerAccount_in: (accounts || []).map((a) => a.id) },
     },
     {
-      skip: !accounts.length,
+      skip: !(accounts || []).length,
     }
   )
 

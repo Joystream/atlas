@@ -1,5 +1,5 @@
 import accountCreation from '@/assets/account-creation.svg'
-import { useUser, useJoystream } from '@/hooks'
+import { useUser } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
@@ -33,19 +33,18 @@ type AccountStepProps = {
 
 const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
-  const { setActiveUser } = useUser()
-  const { accounts } = useJoystream()
+  const { accounts, setActiveUser } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
   const { memberships, loading } = useMemberships({
     where: {
-      controllerAccount_in: accounts.map((a) => a.id),
+      controllerAccount_in: (accounts || []).map((a) => a.id),
     },
   })
 
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
 
-  const accountsWithNoMembership = accounts.filter((el) => !membershipsControllerAccounts?.includes(el.id))
+  const accountsWithNoMembership = (accounts || []).filter((el) => !membershipsControllerAccounts?.includes(el.id))
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()

@@ -17,7 +17,7 @@ import {
   CreateVideoMetadata,
   ExtrinsicStatus,
   VideoAssets,
-  ExtensionSignCancelledError,
+  ExtrinsicSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
 import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
@@ -248,7 +248,7 @@ export const EditVideoSheet: React.FC = () => {
         )
       }
     } catch (e) {
-      if (e instanceof ExtensionSignCancelledError) {
+      if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
         displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
