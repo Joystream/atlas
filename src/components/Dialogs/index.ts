@@ -2,8 +2,8 @@ import ActionDialog from './ActionDialog'
 import MessageDialog from './MessageDialog'
 import BaseDialog, { BaseDialogProps } from './BaseDialog'
 import Multistepper from './Multistepper'
-import ImageCropDialog, { ImageCropDialogImperativeHandle, AssetDimensions } from './ImageCropDialog'
+import ImageCropDialog, { ImageCropDialogImperativeHandle } from './ImageCropDialog'
 import TransactionDialog from './TransactionDialog'
 
 export { BaseDialog, ActionDialog, Multistepper, ImageCropDialog, TransactionDialog, MessageDialog }
-export type { BaseDialogProps, ImageCropDialogImperativeHandle, AssetDimensions }
+export type { BaseDialogProps, ImageCropDialogImperativeHandle }

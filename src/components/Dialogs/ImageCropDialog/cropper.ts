@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
-import { AssetDimensions } from './ImageCropDialog'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import 'cropperjs/dist/cropper.min.css'
 
 const MAX_ZOOM = 3
@@ -138,15 +138,16 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     }
   }, [imageEl, zoomRange])
 
-  const cropImage = async (): Promise<[Blob, string, AssetDimensions]> => {
+  const cropImage = async (): Promise<[Blob, string, AssetDimensions, ImageCropData]> => {
     return new Promise((resolve, reject) => {
       if (!cropper) {
         reject(new Error('No cropper instance'))
         return
       }
 
+      const imageCropData = cropper.getCropBoxData()
       const canvas = cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType])
-      const imageCropData = {
+      const assetDimensions = {
         width: canvas.width,
         height: canvas.height,
       }
@@ -156,7 +157,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
           return
         }
         const url = URL.createObjectURL(blob)
-        resolve([blob, url, imageCropData])
+        resolve([blob, url, assetDimensions, imageCropData])
       }, 'image/jpeg')
     })
   }

@@ -1,10 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
-import ImageCropDialog, {
-  ImageCropDialogImperativeHandle,
-  ImageCropDialogProps,
-  AssetDimensions,
-} from './ImageCropDialog'
+import { ImageCropData, AssetDimensions } from '@/types/cropper'
+import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
 import { Avatar, Placeholder } from '@/shared/components'
 import { OverlayManagerProvider } from '@/hooks'
 import { css } from '@emotion/react'
@@ -34,15 +31,30 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
+  const handleAvatarConfirm = (
+    blob: Blob,
+    url: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
+  const handleThumbnailConfirm = (
+    blob: Blob,
+    url: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
+  const handleCoverConfirm = (
+    blob: Blob,
+    url: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     setCoverImageUrl(url)
   }
 

@@ -240,7 +240,8 @@ export const EditVideoSheet: React.FC = () => {
               id: videoId,
             },
             type: 'thumbnail',
-            dimensions: thumbnailInputFile.imageCropData,
+            dimensions: thumbnailInputFile.assetDimensions,
+            imageCropData: thumbnailInputFile.imageCropData,
           },
           randomStorageProviderUrl
         )
