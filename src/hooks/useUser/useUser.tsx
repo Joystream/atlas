@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useActiveUserStore } from './store'
-import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
+import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { AccountId } from '@/joystream-lib'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
 export type Account = {
   id: AccountId
@@ -21,29 +22,36 @@ type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
   activeMembership: ReturnType<typeof useMembership>['membership']
   activeMembershipLoading: boolean
   refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
+
+  userInitialized: boolean
 }
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
-  const store = useActiveUserStore()
+  const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
-    memberships,
+    memberships: membershipsData,
+    previousData: membershipPreviousData,
     loading: membershipsLoading,
     error: membershipsError,
     refetch: refetchMemberships,
   } = useMemberships({ where: { controllerAccount_in: accountsIds } }, { skip: !accounts || !accounts.length })
+
+  // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
+  const memberships = membershipsData || membershipPreviousData?.memberships
+
   const {
     membership: activeMembership,
     loading: activeMembershipLoading,
     error: activeMembershipError,
     refetch: refetchActiveMembership,
-  } = useMembership({ where: { id: store.activeUserState.memberId } }, { skip: !store.activeUserState.memberId })
+  } = useMembership({ where: { id: activeUserState.memberId } }, { skip: !activeUserState.memberId })
 
   if (membershipsError) {
     throw membershipsError
@@ -67,14 +75,18 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
           return
         }
 
-        // subscribe to changes to the accounts list
-        unsub = await web3AccountsSubscribe((accounts) => {
+        const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
           const mappedAccounts = accounts.map((a) => ({
             id: a.address,
             name: a.meta.name || 'Unnamed',
           }))
           setAccounts(mappedAccounts)
-        })
+        }
+
+        // subscribe to changes to the accounts list
+        unsub = await web3AccountsSubscribe(handleAccountsChange)
+        const accounts = await web3Accounts()
+        handleAccountsChange(accounts)
 
         setExtensionConnected(true)
       } catch (e) {
@@ -90,10 +102,27 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  // TODO: move membership fetching logic
+  useEffect(() => {
+    if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
+      return
+    }
+
+    const account = accounts.find((a) => a.id === activeUserState.accountId)
+
+    if (!account) {
+      console.warn('Selected accountId not found in extension accounts, resetting user')
+      resetActiveUser()
+    }
+  }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
+
+  const userInitialized =
+    (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
 
   const contextValue: ActiveUserContextValue = {
-    ...store,
+    activeUserState,
+    setActiveUser,
+    resetActiveUser,
+
     accounts,
     extensionConnected,
 
@@ -104,6 +133,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     activeMembership,
     activeMembershipLoading,
     refetchActiveMembership,
+
+    userInitialized,
   }
 
   return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>
@@ -122,6 +153,7 @@ export const useUser = () => {
     activeUserState: { accountId: activeAccountId, memberId: activeMemberId, channelId: activeChannelId },
     ...rest
   } = useActiveUserContext()
+
   return {
     activeAccountId,
     activeMemberId,

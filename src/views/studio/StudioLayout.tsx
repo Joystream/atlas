@@ -51,14 +51,16 @@ const StudioLayout = () => {
     activeMemberId,
     activeChannelId,
     extensionConnected: extensionStatus,
+    accounts,
     memberships,
-    membershipsLoading,
+    userInitialized,
   } = useUser()
-  const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
 
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
+
+  console.log({ hasMembership, userInitialized, memberships, accounts, extensionConnected })
 
   const accountSet = !!activeAccountId && extensionConnected
   const memberSet = accountSet && !!activeMemberId && hasMembership
@@ -76,7 +78,7 @@ const StudioLayout = () => {
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
-      {extensionConnectionLoading || membershipsLoading ? (
+      {!userInitialized ? (
         <StudioLoading />
       ) : (
         <>

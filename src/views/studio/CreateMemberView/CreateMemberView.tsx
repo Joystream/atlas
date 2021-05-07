@@ -19,7 +19,7 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useMemberships, useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription } from '@/api/hooks'
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
@@ -31,7 +31,7 @@ type Inputs = {
 }
 
 const CreateMemberView = () => {
-  const { activeAccountId } = useUser()
+  const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
@@ -54,21 +54,6 @@ const CreateMemberView = () => {
     throw queryNodeStateError
   }
 
-  const { error: membershipError, refetch: refetchMembership } = useMemberships(
-    {
-      where: {
-        // `controllerAccount_in` has to be used to trigger refresh on other queries using it
-        controllerAccount_in: [activeAccountId || ''],
-      },
-    },
-    {
-      skip: !activeAccountId,
-    }
-  )
-  if (membershipError) {
-    throw membershipError
-  }
-
   // success
   useEffect(() => {
     if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
@@ -77,13 +62,12 @@ const CreateMemberView = () => {
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
-      // TODO: this likely needs to refetch memberships for all accounts controlled by user
-      refetchMembership().then(() => {
+      refetchMemberships().then(() => {
         setIsSubmitting(false)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMembership])
+  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {

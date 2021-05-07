@@ -56,7 +56,6 @@ import { ContentId } from '@joystream/types/media'
 
 export class JoystreamJs {
   readonly api: ApiPromise
-  private initPolkadotExtensionPromise?: Promise<boolean>
 
   private _selectedAccountId: AccountId | null = null
   get selectedAccountId() {
@@ -389,9 +388,6 @@ export class JoystreamJs {
 
   /* Public */
   async setActiveAccount(accountId: AccountId | null, signer?: Signer) {
-    // make sure the initialization was done already
-    await this.initPolkadotExtensionPromise
-
     if (!accountId) {
       this._selectedAccountId = null
       this.api.setSigner({})
