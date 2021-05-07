@@ -69,6 +69,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
 
   useEffect(() => {
     if (!isLoading) {
+      setProgress(0)
       return
     }
     if (error) {

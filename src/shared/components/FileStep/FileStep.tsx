@@ -1,5 +1,5 @@
 import { FileType } from '@/types/files'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StepWrapper,
   StepStatus,
@@ -39,6 +39,20 @@ const FileStep: React.FC<FileStepProps> = ({
   const handleChangeStep = () => {
     !disabled && onSelect?.(type)
   }
+  const [circularProgress, setCircularProgress] = useState(0)
+  console.log(progress)
+  useEffect(() => {
+    if (progress === 0) {
+      setCircularProgress(0)
+      return
+    }
+    const timeout = setTimeout(() => {
+      setCircularProgress((progress) => progress + 10)
+    }, 20)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [circularProgress, progress])
 
   const stepSubtitle =
     type === 'video'
@@ -55,7 +69,7 @@ const FileStep: React.FC<FileStepProps> = ({
         {!isFileSet && <StepNumber active={active}>{stepNumber}</StepNumber>}
         {isFileSet &&
           (progress ? (
-            <StyledProgress value={progress ? 1 : 0} maxValue={80} />
+            <StyledProgress value={circularProgress} maxValue={80} />
           ) : (
             <Thumbnail>
               {type === 'video' && <SvgGlyphFileVideo />}
