@@ -1,18 +1,18 @@
 <svg width="440" height="216" viewBox="0 0 440 216" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="440" height="216">
+<mask id="transaction-mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="440" height="216">
 <rect width="440" height="216" fill="#0B0C0F"/>
 </mask>
-<g mask="url(#mask0)">
+<g mask="url(#transaction-mask0)">
 <g filter="url(#filter0_d)">
-<mask id="mask1" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="32" width="400" height="216">
+<mask id="transaction-mask1" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="32" width="400" height="216">
 <path d="M0 32H392C396.418 32 400 35.5817 400 40V248H0V32Z" fill="#A0AEB0"/>
 </mask>
-<g mask="url(#mask1)">
+<g mask="url(#transaction-mask1)">
 <path d="M-8 32.5H-8.5V33V256V256.5H-8H399H399.5V256V41C399.5 36.3056 395.694 32.5 391 32.5H-8Z" stroke="black" stroke-opacity="0.18"/>
-<mask id="mask2" mask-type="alpha" maskUnits="userSpaceOnUse" x="-8" y="33" width="407" height="223">
+<mask id="transaction-mask2" mask-type="alpha" maskUnits="userSpaceOnUse" x="-8" y="33" width="407" height="223">
 <path d="M-8 33H391C395.418 33 399 36.5817 399 41V256H-8V33Z" fill="#DFE1E5"/>
 </mask>
-<g mask="url(#mask2)">
+<g mask="url(#transaction-mask2)">
 <path d="M-8 33H399V256H-8V33Z" fill="#35363A"/>
 <g filter="url(#filter1_f)">
 <path d="M-24 25H399V34H-24V25Z" fill="#EEEEF0" fill-opacity="0.14"/>
