@@ -1,5 +1,6 @@
 import { ValidationRule, Message, Validate } from 'react-hook-form'
 import { isValid } from 'date-fns'
+import { URL_PATTERN } from '@/config/regex'
 
 type RegisterOptions = Partial<{
   required: Message | ValidationRule<boolean>
@@ -17,6 +18,7 @@ type TextValidationArgs = {
   minLength?: number
   required?: boolean
   pattern?: RegExp
+  message?: string
 }
 
 export const textFieldValidation = ({
@@ -25,6 +27,7 @@ export const textFieldValidation = ({
   maxLength,
   required = false,
   pattern,
+  message,
 }: TextValidationArgs): RegisterOptions => ({
   required: {
     value: required,
@@ -42,7 +45,7 @@ export const textFieldValidation = ({
     ? {
         pattern: {
           value: pattern,
-          message: `${name} must be a valid`,
+          message: message ? `${name} ${message}` : `${name} must be a valid`,
         },
       }
     : {}),
@@ -57,7 +60,7 @@ export const requiredValidation: (name: string) => RegisterOptions = (name) => (
 
 export const urlValidation: (name: string) => RegisterOptions = (name) => ({
   pattern: {
-    value: /[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)?/gi,
+    value: URL_PATTERN,
     message: `${name} must be a valid url`,
   },
 })
