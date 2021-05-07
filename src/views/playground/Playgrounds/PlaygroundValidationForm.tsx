@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { isValid } from 'date-fns'
-import { textFieldValidation, requiredValidation } from '@/utils/formValidationOptions'
+import { textFieldValidation } from '@/utils/formValidationOptions'
 import styled from '@emotion/styled'
 import {
   Button as _Button,
@@ -55,7 +55,7 @@ const PlaygroundValidationForm = () => {
       <form onSubmit={onSubmit}>
         <HeaderTextField
           name="header"
-          ref={register(textFieldValidation('Channel name', 3, 20))}
+          ref={register(textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
           value="Lorem ipsum"
           error={!!errors.header}
           helperText={errors.header?.message}
@@ -65,7 +65,7 @@ const PlaygroundValidationForm = () => {
           <TextField
             name="title"
             label="Title"
-            ref={register(textFieldValidation('Title', 3, 20))}
+            ref={register(textFieldValidation({ name: 'Title', minLength: 3, maxLength: 20 }))}
             error={!!errors.title}
             helperText={errors.title?.message}
           />
@@ -151,7 +151,7 @@ const PlaygroundValidationForm = () => {
         <FormField title="Description">
           <TextArea
             name="textarea"
-            ref={register(textFieldValidation('Description', 3, 20))}
+            ref={register(textFieldValidation({ name: 'Description', minLength: 3, maxLength: 20 }))}
             maxLength={20}
             error={!!errors.textarea}
             helperText={errors.textarea?.message}

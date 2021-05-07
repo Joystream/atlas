@@ -443,7 +443,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   <Controller
                     name="title"
                     control={control}
-                    rules={textFieldValidation('Channel name', 3, 40, true)}
+                    rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
                     render={({ value, onChange }) => (
                       <Tooltip text="Click to edit channel title">
                         <HeaderTextField
@@ -482,7 +482,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   rows={8}
                   ref={(ref) => {
                     if (ref) {
-                      register(ref, textFieldValidation('Description', 3, 1000))
+                      register(ref, textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 }))
                       descriptionRef.current = ref
                     }
                   }}
