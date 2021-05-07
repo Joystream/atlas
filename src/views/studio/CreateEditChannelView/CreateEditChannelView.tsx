@@ -18,7 +18,7 @@ import {
 import { transitions } from '@/shared/theme'
 import { InnerFormContainer, StyledAvatar, StyledTitleSection, TitleContainer } from './CreateEditChannelView.style'
 import { Header, SubTitle, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel, useMembership, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useChannel, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import { writeUrlInCache } from '@/utils/cachingAssets'
@@ -72,7 +72,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   const storageProviderUrl = useRandomStorageProviderUrl()
 
-  const { activeMemberId, activeChannelId, setActiveUser } = useUser()
+  const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
@@ -80,13 +80,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
-  // use membership query so we can trigger refetch once the channels are updated
-  const { refetch: refetchMember } = useMembership(
-    {
-      where: { id: activeMemberId },
-    },
-    { skip: !activeMemberId }
-  )
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
   const { startFileUpload } = useUploadsManager(activeChannelId || '')
 
@@ -254,7 +247,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchMember()
+          await refetchActiveMembership()
           setActiveUser({ channelId: newChannelId })
           if (data.avatar.blob && avatarContentId) {
             writeUrlInCache({
@@ -281,7 +274,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await Promise.all([refetchChannel(), refetchMember()])
+          await Promise.all([refetchChannel(), refetchActiveMembership()])
           if (data.avatar.blob && avatarContentId) {
             writeUrlInCache({
               url: data.avatar.url,

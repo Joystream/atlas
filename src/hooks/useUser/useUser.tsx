@@ -3,6 +3,7 @@ import { useActiveUserStore } from './store'
 import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { AccountId } from '@/joystream-lib'
 import { WEB3_APP_NAME } from '@/config/urls'
+import { useMembership, useMemberships } from '@/api/hooks'
 
 export type Account = {
   id: AccountId
@@ -12,6 +13,14 @@ export type Account = {
 type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
   accounts: Account[] | null
   extensionConnected: boolean | null
+
+  memberships: ReturnType<typeof useMemberships>['memberships']
+  membershipsLoading: boolean
+  refetchMemberships: ReturnType<typeof useMemberships>['refetch']
+
+  activeMembership: ReturnType<typeof useMembership>['membership']
+  activeMembershipLoading: boolean
+  refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
 }
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
@@ -22,6 +31,29 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
 
+  const accountsIds = (accounts || []).map((a) => a.id)
+  const {
+    memberships,
+    loading: membershipsLoading,
+    error: membershipsError,
+    refetch: refetchMemberships,
+  } = useMemberships({ where: { controllerAccount_in: accountsIds } }, { skip: !accounts || !accounts.length })
+  const {
+    membership: activeMembership,
+    loading: activeMembershipLoading,
+    error: activeMembershipError,
+    refetch: refetchActiveMembership,
+  } = useMembership({ where: { id: store.activeUserState.memberId } }, { skip: !store.activeUserState.memberId })
+
+  if (membershipsError) {
+    throw membershipsError
+  }
+
+  if (activeMembershipError) {
+    throw activeMembershipError
+  }
+
+  // handle polkadot extension
   useEffect(() => {
     let unsub: () => void
 
@@ -60,11 +92,21 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   // TODO: move membership fetching logic
 
-  return (
-    <ActiveUserContext.Provider value={{ ...store, accounts, extensionConnected }}>
-      {children}
-    </ActiveUserContext.Provider>
-  )
+  const contextValue: ActiveUserContextValue = {
+    ...store,
+    accounts,
+    extensionConnected,
+
+    memberships,
+    membershipsLoading,
+    refetchMemberships,
+
+    activeMembership,
+    activeMembershipLoading,
+    refetchActiveMembership,
+  }
+
+  return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>
 }
 
 const useActiveUserContext = () => {

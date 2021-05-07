@@ -37,7 +37,6 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
-import { useMemberships } from '@/api/hooks'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -47,16 +46,16 @@ const StudioLayout = () => {
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
 
-  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected: extensionStatus, accounts } = useUser()
+  const {
+    activeAccountId,
+    activeMemberId,
+    activeChannelId,
+    extensionConnected: extensionStatus,
+    memberships,
+    membershipsLoading,
+  } = useUser()
   const extensionConnectionLoading = extensionStatus === null
   const extensionConnected = extensionStatus === true
-
-  const { memberships, loading: membershipsLoading } = useMemberships(
-    {
-      where: { controllerAccount_in: (accounts || []).map((a) => a.id) },
-    },
-    { skip: !extensionConnected || !(accounts || []).length }
-  )
 
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length

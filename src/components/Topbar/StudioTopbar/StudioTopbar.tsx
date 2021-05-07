@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useUser, useEditVideoSheet } from '@/hooks'
-import { useMembership } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -51,7 +50,7 @@ type NavDrawerProps = {
   active?: boolean
   channels?: BasicChannelFieldsFragment[]
   memberName?: string
-  memberAvatar?: string
+  memberAvatar?: string | null
   currentChannel?: BasicChannelFieldsFragment
   onCurrentChannelChange: (channelId: string) => void
   onLogoutClick: () => void
@@ -59,26 +58,18 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
-  const { activeMemberId, activeChannelId, setActiveUser, resetActiveUser } = useUser()
+  const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
   const navigate = useNavigate()
-  const { membership, loading, error } = useMembership(
-    {
-      where: { id: activeMemberId },
-    },
-    {
-      skip: !activeMemberId,
-    }
-  )
 
   const { sheetState } = useEditVideoSheet()
 
-  const currentChannel = membership?.channels.find((channel) => channel.id === activeChannelId)
+  const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
   const [isDrawerActive, setDrawerActive] = useState(false)
   const drawerRef = useRef<HTMLDivElement | null>(null)
 
   const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
-    const channel = membership?.channels.find((channel) => channel.id === channelId)
+    const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
     if (!channel) {
       return
     }
@@ -116,10 +107,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     }
   }, [isDrawerActive])
 
-  if (error) {
-    throw error
-  }
-
   return (
     <>
       <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
@@ -136,16 +123,16 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
                 <SvgGlyphAddVideo />
               </IconButton>
             </CSSTransition>
-            {loading ? (
+            {activeMembershipLoading ? (
               <ChannelInfoPlaceholder />
-            ) : membership?.channels.length ? (
-              <ChannelInfo channel={currentChannel} memberName={membership.handle} onClick={handleDrawerToggle} />
+            ) : activeMembership?.channels.length ? (
+              <ChannelInfo channel={currentChannel} memberName={activeMembership.handle} onClick={handleDrawerToggle} />
             ) : (
               <ChannelInfoContainer onClick={handleDrawerToggle}>
                 <NewChannelAvatar newChannel size="small" />
                 <TextContainer>
                   <Text>New channel</Text>
-                  <Text>{membership?.handle}</Text>
+                  <Text>{activeMembership?.handle}</Text>
                 </TextContainer>
               </ChannelInfoContainer>
             )}
@@ -156,9 +143,9 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
       <NavDrawer
         ref={drawerRef}
         active={isDrawerActive}
-        memberName={membership?.handle}
-        memberAvatar={membership?.avatarUri as string | undefined}
-        channels={membership?.channels}
+        memberName={activeMembership?.handle}
+        memberAvatar={activeMembership?.avatarUri}
+        channels={activeMembership?.channels}
         currentChannel={currentChannel}
         onCurrentChannelChange={handleCurrentChannelChange}
         onLogoutClick={handleLogout}

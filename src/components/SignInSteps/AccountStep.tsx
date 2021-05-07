@@ -25,7 +25,6 @@ import joystreamIcon from '@/assets/joystream-logo.svg'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
-import { useMemberships } from '@/api/hooks'
 
 type AccountStepProps = {
   nextStepPath: string
@@ -33,17 +32,10 @@ type AccountStepProps = {
 
 const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
-  const { accounts, setActiveUser } = useUser()
+  const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
-  const { memberships, loading } = useMemberships({
-    where: {
-      controllerAccount_in: (accounts || []).map((a) => a.id),
-    },
-  })
-
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
-
   const accountsWithNoMembership = (accounts || []).filter((el) => !membershipsControllerAccounts?.includes(el.id))
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
@@ -58,7 +50,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const handleSelect = (id: string) => {
     setSelectedAccountAddress(id)
   }
-  if (loading) {
+  if (membershipsLoading) {
     return <StyledSpinner />
   }
   return (

@@ -16,23 +16,11 @@ import { SignInStepsStepper } from '@/components'
 import { useUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
-import { useMemberships } from '@/api/hooks'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
-  const { activeChannelId, setActiveUser, accounts, extensionConnected } = useUser()
-
-  const { memberships } = useMemberships(
-    {
-      where: {
-        controllerAccount_in: (accounts || []).map((a) => a.id),
-      },
-    },
-    {
-      skip: extensionConnected !== true || !(accounts || []).length,
-    }
-  )
+  const { activeChannelId, setActiveUser, memberships } = useUser()
 
   const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
     const newActiveUser = {

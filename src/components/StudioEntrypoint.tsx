@@ -2,7 +2,6 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Spinner, Text } from '@/shared/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { useMembership, useMemberships } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/hooks'
 import { Navigate } from 'react-router-dom'
@@ -20,26 +19,11 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
     activeChannelId,
     setActiveUser,
     extensionConnected: extensionStatus,
-    accounts,
+    memberships,
+    membershipsLoading,
+    activeMembership,
+    activeMembershipLoading,
   } = useUser()
-
-  const { membership, loading: membershipLoading } = useMembership(
-    {
-      where: { id: activeMemberId },
-    },
-    {
-      skip: !activeMemberId,
-    }
-  )
-
-  const { memberships, loading: membershipsLoading } = useMemberships(
-    {
-      where: { controllerAccount_in: (accounts || []).map((a) => a.id) },
-    },
-    {
-      skip: !(accounts || []).length,
-    }
-  )
 
   const extensionConnected = extensionStatus === true
 
@@ -62,11 +46,11 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   }
 
   // signed users
-  if (!membershipLoading && memberSet && !channelSet && hasMemberships) {
-    if (!membership?.channels.length) {
+  if (!activeMembershipLoading && memberSet && !channelSet && hasMemberships) {
+    if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.newChannel()} />
     }
-    setActiveUser({ channelId: membership.channels[0].id })
+    setActiveUser({ channelId: activeMembership.channels[0].id })
     return <Navigate to={enterLocation} />
   }
 
