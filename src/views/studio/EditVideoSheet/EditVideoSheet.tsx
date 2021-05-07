@@ -306,7 +306,7 @@ export const EditVideoSheet: React.FC = () => {
 
   const closeSheet = () => {
     if (haveVideoTabsAssetCache) {
-      openWarningDialog({ confirmCallback: () => () => setSheetState('closed') })
+      openWarningDialog({ confirmCallback: () => setSheetState('closed') })
     } else {
       setSheetState('closed')
     }
@@ -314,7 +314,7 @@ export const EditVideoSheet: React.FC = () => {
 
   const handleRemoveVideoTab = (tabIdx: number) => {
     if (hasSelectedVideoTabAssetCache) {
-      openWarningDialog({ confirmCallback: () => () => removeVideoTab(tabIdx) })
+      openWarningDialog({ confirmCallback: () => removeVideoTab(tabIdx) })
     } else {
       removeVideoTab(tabIdx)
     }

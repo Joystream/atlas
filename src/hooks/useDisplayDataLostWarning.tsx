@@ -13,8 +13,8 @@ export const useDisplayDataLostWarning = () => {
 
   const openWarningDialog = ({ cancelCallback, confirmCallback }: OpenWarningDialogArgs) => {
     setLostDatadDialogVisible(true)
-    setConfirmWarningCallback(confirmCallback)
-    setCancelWarningCallback(cancelCallback)
+    setConfirmWarningCallback(() => confirmCallback)
+    setCancelWarningCallback(() => cancelCallback)
   }
 
   const confirmCloseSheet = () => {

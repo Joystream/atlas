@@ -81,7 +81,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     setDrawerActive(false)
     setDrawerActive(false)
     if (haveVideoTabsAssetCache) {
-      openWarningDialog({ confirmCallback: () => () => changeChannel(channelId) })
+      openWarningDialog({ confirmCallback: () => changeChannel(channelId) })
     } else {
       changeChannel(channelId)
     }

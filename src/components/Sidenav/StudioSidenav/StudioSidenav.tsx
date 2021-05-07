@@ -55,13 +55,11 @@ export const StudioSidenav: React.FC = () => {
   const handleClick = () => {
     if (haveVideoTabsAssetCache) {
       openWarningDialog({
-        confirmCallback: () => () => {
+        confirmCallback: () => {
           setExpanded(false)
           navigate(absoluteRoutes.viewer.index())
         },
-        cancelCallback: () => () => {
-          setExpanded(false)
-        },
+        cancelCallback: () => setExpanded(false),
       })
     } else {
       navigate(absoluteRoutes.viewer.index())
