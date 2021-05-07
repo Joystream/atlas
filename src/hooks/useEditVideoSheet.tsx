@@ -27,11 +27,11 @@ type ContextValue = {
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
   selectedVideoTabCachedAssets: InputFilesState
-  setSelectedVideoTabCachedAssets: (files?: InputFilesState) => void
+  setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
   haveVideoTabsAssetCache: boolean
-  hasSelectedVideoTabAssetCache: boolean
+  hasVideoTabAssetCache: (tabIdx: number) => boolean
 }
 const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
 EditVideoSheetContext.displayName = 'EditVideoSheetContext'
@@ -69,19 +69,13 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
 
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
   const setSelectedVideoTabCachedAssets = useCallback(
-    (files?: InputFilesState) => {
-      if (!files) {
-        const existingAssetsCopy = { ...assetsCache }
-        delete existingAssetsCopy[selectedVideoTab?.id]
-        setAssetsCache(existingAssetsCopy)
-      } else {
-        setAssetsCache((existingAssets) => ({
-          ...existingAssets,
-          [selectedVideoTab.id]: files,
-        }))
-      }
+    (files: InputFilesState) => {
+      setAssetsCache((existingAssets) => ({
+        ...existingAssets,
+        [selectedVideoTab?.id]: files,
+      }))
     },
-    [assetsCache, selectedVideoTab?.id]
+    [selectedVideoTab?.id]
   )
   const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
   const updateSelectedVideoTab = useCallback(
@@ -93,8 +87,11 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
 
   const removeVideoTab = useCallback(
     (removedTabIdx: number) => {
+      const tabId = videoTabs[removedTabIdx].id
       setVideoTabs((tabs) => tabs.filter((_, idx) => idx !== removedTabIdx))
-      setSelectedVideoTabCachedAssets()
+      const existingAssetsCopy = { ...assetsCache }
+      delete existingAssetsCopy[tabId]
+      setAssetsCache(existingAssetsCopy)
       // if there are no other tabs, close the sheet
       if (videoTabs.length <= 1) {
         setSheetState('closed')
@@ -112,7 +109,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSelectedVideoTabIdx(newSelectedIdx)
       }
     },
-    [selectedVideoTabIdx, setSelectedVideoTabCachedAssets, videoTabs.length]
+    [assetsCache, selectedVideoTabIdx, videoTabs]
   )
 
   useEffect(() => {
@@ -138,14 +135,17 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
 
   const haveVideoTabsAssetCache = Object.values(assetsCache).some((val) => val.thumbnail || val.video)
-  const hasSelectedVideoTabAssetCache =
-    !!assetsCache[selectedVideoTab?.id]?.thumbnail || !!assetsCache[selectedVideoTab?.id]?.video
+
+  const hasVideoTabAssetCache = (tabIdx: number) => {
+    const tabId = videoTabs[tabIdx].id
+    return !!assetsCache[tabId]?.thumbnail || !!assetsCache[tabId]?.video
+  }
 
   return (
     <EditVideoSheetContext.Provider
       value={{
+        hasVideoTabAssetCache,
         haveVideoTabsAssetCache,
-        hasSelectedVideoTabAssetCache,
         videoTabs,
         addVideoTab,
         removeVideoTab,

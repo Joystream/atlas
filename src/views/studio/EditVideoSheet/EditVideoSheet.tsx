@@ -42,7 +42,7 @@ export const EditVideoSheet: React.FC = () => {
     removeVideoTab,
     updateSelectedVideoTab,
     haveVideoTabsAssetCache,
-    hasSelectedVideoTabAssetCache,
+    hasVideoTabAssetCache,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -313,7 +313,7 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const handleRemoveVideoTab = (tabIdx: number) => {
-    if (hasSelectedVideoTabAssetCache) {
+    if (hasVideoTabAssetCache(tabIdx)) {
       openWarningDialog({ confirmCallback: () => removeVideoTab(tabIdx) })
     } else {
       removeVideoTab(tabIdx)
