@@ -107,6 +107,11 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
 
     const isNew = !isEdit
+    const license = {
+      code: data.licenseCode ?? undefined,
+      attribution: data.licenseAttribution ?? undefined,
+      customText: data.licenseCustomText ?? undefined,
+    }
 
     const metadata: CreateVideoMetadata = {
       ...(isNew || dirtyFields.title ? { title: data.title } : {}),
@@ -116,6 +121,7 @@ export const EditVideoSheet: React.FC = () => {
       ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null ? { hasMarketing: data.hasMarketing } : {}),
       ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
       ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+      ...((isNew || dirtyFields.licenseCode) && data.licenseCode != null ? { license } : {}),
       ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
         ? {
             publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),

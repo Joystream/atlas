@@ -20,9 +20,11 @@ import {
   Select,
   SelectItem,
   TextArea,
+  TextField,
 } from '@/shared/components'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
+import knownLicenses from '@/data/knownLicenses.json'
 import {
   InputsContainer,
   StyledHeaderTextField,
@@ -36,11 +38,18 @@ import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
 import { MessageDialog, TransactionDialog } from '@/components'
+import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
   { name: 'Unlisted (video will not appear in feeds and search)', value: false },
 ]
+
+const CUSTOM_LICENSE_CODE = 1000
+const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
+  name: license.name,
+  value: license.code,
+}))
 
 type EditVideoFormProps = {
   onSubmit: (
@@ -107,6 +116,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       isPublic: true,
       language: 'en',
       category: null,
+      licenseCode: null,
+      licenseAttribution: '',
+      licenseCustomText: '',
       description: '',
       hasMarketing: false,
       publishedBeforeJoystream: null,
@@ -354,6 +366,56 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
+          <FormField title="License">
+            <Controller
+              name="licenseCode"
+              control={control}
+              rules={requiredValidation('License')}
+              render={({ value, onChange }) => (
+                <Select
+                  value={value ?? null}
+                  items={knownLicensesOptions}
+                  placeholder="Choose license type"
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  icon
+                  tooltipTexts={knownLicenses.map((license) => license.description)}
+                  headerTooltipTexts={knownLicenses.map((license) => license.longName)}
+                  error={!!errors.licenseCode && !value}
+                  helperText={errors.licenseCode?.message}
+                />
+              )}
+            />
+          </FormField>
+          {knownLicenses.find((license) => license.code === getValues('licenseCode'))?.attributionRequired && (
+            <FormField title="License attribution">
+              <TextField
+                name="licenseAttribution"
+                ref={register(textFieldValidation('License attribution', 0, 5000))}
+                onChange={handleFormChange}
+                placeholder="Type your attribution here"
+                error={!!errors.licenseAttribution}
+                helperText={errors.licenseAttribution?.message}
+              />
+            </FormField>
+          )}
+
+          {getValues('licenseCode') === CUSTOM_LICENSE_CODE && (
+            <FormField title="Custom license">
+              <TextArea
+                name="licenseCustomText"
+                ref={register(textFieldValidation('License', 0, 5000))}
+                onChange={handleFormChange}
+                maxLength={5000}
+                placeholder="Type your license content here"
+                error={!!errors.licenseCustomText}
+                helperText={errors.licenseCustomText?.message}
+              />
+            </FormField>
+          )}
+
           <FormField title="Marketing">
             <Controller
               name="hasMarketing"

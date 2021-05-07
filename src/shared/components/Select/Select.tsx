@@ -1,7 +1,15 @@
 import React, { Ref } from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
-import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
+import {
+  SelectButton,
+  SelectMenu,
+  SelectOption,
+  SelectWrapper,
+  StyledLabelText,
+  StyledSvgGlyphInfo,
+} from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
+import { Tooltip } from '@/shared/components'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
 export type SelectItem<T = string> = {
@@ -15,6 +23,9 @@ export type SelectProps<T = string> = {
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
+  icon?: boolean
+  tooltipTexts?: string[]
+  headerTooltipTexts?: string[]
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -25,6 +36,9 @@ const Select = <T,>({
   error,
   value,
   disabled,
+  icon = false,
+  tooltipTexts,
+  headerTooltipTexts,
   onChange,
   containerRef,
   ...inputBaseProps
@@ -70,9 +84,20 @@ const Select = <T,>({
             items.map((item, index) => (
               <SelectOption
                 isSelected={highlightedIndex === index}
-                key={index}
+                key={`${item.name}-${index}`}
                 {...getItemProps({ item: item.value, index })}
               >
+                {icon && tooltipTexts?.length && (
+                  <Tooltip
+                    headerText={headerTooltipTexts?.[index]}
+                    text={tooltipTexts[index]}
+                    placement="top-end"
+                    offsetX={6}
+                    offsetY={12}
+                  >
+                    <StyledSvgGlyphInfo />
+                  </Tooltip>
+                )}
                 {item?.name}
               </SelectOption>
             ))}

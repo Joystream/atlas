@@ -168,6 +168,9 @@ export type EditVideoFormFields = {
   description: string
   language: string | null
   category: string | null
+  licenseCode: number | null
+  licenseCustomText: string | null
+  licenseAttribution: string | null
   hasMarketing: boolean | null
   isPublic: boolean
   isExplicit: boolean | null
@@ -214,6 +217,9 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
+    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? null,
+    licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
+    licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
     language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
     isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
