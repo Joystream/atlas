@@ -1,6 +1,10 @@
 import React, { useState, useRef } from 'react'
 import { Story, Meta } from '@storybook/react'
-import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps, Dimensions } from './ImageCropDialog'
+import ImageCropDialog, {
+  ImageCropDialogImperativeHandle,
+  ImageCropDialogProps,
+  AssetDimensions,
+} from './ImageCropDialog'
 import { Avatar, Placeholder } from '@/shared/components'
 import { OverlayManagerProvider } from '@/hooks'
 import { css } from '@emotion/react'
@@ -30,15 +34,15 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null)
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null)
 
-  const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: Dimensions) => {
+  const handleAvatarConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
     setAvatarImageUrl(url)
   }
 
-  const handleThumbnailConfirm = (blob: Blob, url: string, imageCropData: Dimensions) => {
+  const handleThumbnailConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
     setThumbnailImageUrl(url)
   }
 
-  const handleCoverConfirm = (blob: Blob, url: string, imageCropData: Dimensions) => {
+  const handleCoverConfirm = (blob: Blob, url: string, imageCropData: AssetDimensions) => {
     setCoverImageUrl(url)
   }
 

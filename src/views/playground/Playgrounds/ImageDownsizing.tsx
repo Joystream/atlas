@@ -1,4 +1,4 @@
-import { ImageCropDialog, ImageCropDialogImperativeHandle, Dimensions } from '@/components'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, AssetDimensions } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
@@ -110,7 +110,7 @@ const ImageDownsizing = () => {
     })
   }, [coverSizes])
 
-  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, imageCropData: Dimensions) => {
+  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, imageCropData: AssetDimensions) => {
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
       ...avatarSizes,
@@ -119,7 +119,7 @@ const ImageDownsizing = () => {
     })
   }
 
-  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, imageCropData: Dimensions) => {
+  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, imageCropData: AssetDimensions) => {
     setCoverUrl(croppedUrl)
     setCoverSizes({
       ...coverSizes,

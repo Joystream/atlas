@@ -1,5 +1,4 @@
 import { IconButton } from '@/shared/components'
-import { ImageCropData } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
 import { CropperImageType, useCropper } from './cropper'
@@ -17,14 +16,14 @@ import {
 } from './ImageCropDialog.style'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 
-export type Dimensions = {
+export type AssetDimensions = {
   width: number
   height: number
 }
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: Dimensions) => void
+  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: AssetDimensions) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {

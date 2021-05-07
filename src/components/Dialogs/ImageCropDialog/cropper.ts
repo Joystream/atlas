@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
-import { Dimensions } from './ImageCropDialog'
+import { AssetDimensions } from './ImageCropDialog'
 import 'cropperjs/dist/cropper.min.css'
 
 const MAX_ZOOM = 3
@@ -138,7 +138,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     }
   }, [imageEl, zoomRange])
 
-  const cropImage = async (): Promise<[Blob, string, Dimensions]> => {
+  const cropImage = async (): Promise<[Blob, string, AssetDimensions]> => {
     return new Promise((resolve, reject) => {
       if (!cropper) {
         reject(new Error('No cropper instance'))

@@ -9,7 +9,7 @@ import {
   ImageCropDialogImperativeHandle,
   StudioContainer,
   TransactionDialog,
-  Dimensions,
+  AssetDimensions,
 } from '@/components'
 import {
   ActionBarTransaction,
@@ -50,7 +50,7 @@ const FEE = 0
 type ImageAsset = {
   url: string | null
   blob: Blob | null
-  imageCropData: Dimensions | null
+  imageCropData: AssetDimensions | null
 }
 type Inputs = {
   title?: string
