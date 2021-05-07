@@ -22,10 +22,9 @@ type TextValidationArgs = {
 export const textFieldValidation = ({
   name,
   minLength = 0,
-  maxLength = 0,
+  maxLength,
   required = false,
-  // match everything by default
-  pattern = /[\s\S]/,
+  pattern,
 }: TextValidationArgs): RegisterOptions => ({
   required: {
     value: required,
@@ -39,10 +38,14 @@ export const textFieldValidation = ({
     value: maxLength,
     message: `${name} cannot be longer than ${maxLength} characters.`,
   },
-  pattern: {
-    value: pattern,
-    message: `${name} must be a valid`,
-  },
+  ...(pattern
+    ? {
+        pattern: {
+          value: pattern,
+          message: `${name} must be a valid`,
+        },
+      }
+    : {}),
 })
 
 export const requiredValidation: (name: string) => RegisterOptions = (name) => ({
