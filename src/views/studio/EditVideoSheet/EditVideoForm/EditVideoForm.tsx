@@ -339,7 +339,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               }}
               render={({ value, onChange }) => (
                 <Select
-                  customRef={categorySelectRef}
+                  containerRef={categorySelectRef}
                   value={value ?? null}
                   items={categoriesSelectItems}
                   onChange={(value) => {

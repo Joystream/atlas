@@ -14,6 +14,7 @@ export type SelectProps<T = string> = {
   value?: T | null
   items: SelectItem<T>[]
   placeholder?: string
+  containerRef?: Ref<HTMLDivElement>
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -25,9 +26,9 @@ const Select = <T,>({
   value,
   disabled,
   onChange,
-  customRef,
+  containerRef,
   ...inputBaseProps
-}: SelectProps<T> & { customRef?: Ref<HTMLDivElement> }) => {
+}: SelectProps<T>) => {
   const itemsValues = items.map((item) => item.value)
 
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
@@ -48,7 +49,7 @@ const Select = <T,>({
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper ref={customRef}>
+      <SelectWrapper ref={containerRef}>
         <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
           {label && <StyledLabelText>{label}</StyledLabelText>}
         </label>
