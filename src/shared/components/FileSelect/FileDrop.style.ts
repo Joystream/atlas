@@ -77,9 +77,9 @@ export const ProgressBar = styled.div<ProgressBarProps>`
   top: 0;
   position: absolute;
 
-  transition: transform 100ms ${transitions.easing};
   transform-origin: left;
-  transform: ${({ progress = 0 }) => `scaleX(${progress && progress / 100})`};
+  transform: ${({ progress }) => `scaleX(${progress})`};
+  transition: transform ${({ progress }) => (progress === 1 ? '1000ms' : '0ms')} ${transitions.easing};
 `
 
 export const ErrorContainer = styled.div`

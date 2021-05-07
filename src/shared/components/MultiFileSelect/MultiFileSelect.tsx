@@ -75,15 +75,14 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       setIsLoading(false)
       return
     }
+    setProgress(1)
     const timeout = setTimeout(() => {
-      if (progress < 100) {
-        setProgress(progress + 1)
-      } else {
+      if (progress === 1) {
         setIsLoading(false)
         setProgress(0)
         setStep('image')
       }
-    }, 5)
+    }, 1000)
 
     return () => clearTimeout(timeout)
   }, [error, isLoading, progress])

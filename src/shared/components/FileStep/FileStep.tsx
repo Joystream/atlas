@@ -55,7 +55,7 @@ const FileStep: React.FC<FileStepProps> = ({
         {!isFileSet && <StepNumber active={active}>{stepNumber}</StepNumber>}
         {isFileSet &&
           (progress ? (
-            <StyledProgress value={progress} maxValue={80} />
+            <StyledProgress value={progress ? 1 : 0} maxValue={80} />
           ) : (
             <Thumbnail>
               {type === 'video' && <SvgGlyphFileVideo />}
