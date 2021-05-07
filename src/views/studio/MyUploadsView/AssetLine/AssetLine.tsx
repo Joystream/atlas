@@ -66,7 +66,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     [asset, randomStorageProviderUrl, startFileUpload]
   )
 
-  const { getRootProps, getInputProps, open } = useDropzone({
+  const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
     onDrop,
     maxFiles: 1,
     multiple: false,
@@ -125,7 +125,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       return (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
-          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={() => open()}>
+          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={() => openFileSelect()}>
             Reconnect file
           </Button>
         </div>
@@ -161,7 +161,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         primaryButtonText="Reselect file"
         onPrimaryButtonClick={() => {
           setShowDialog(false)
-          open()
+          openFileSelect()
         }}
         secondaryButtonText="Upload new (0.2 JOY)"
         exitButton={false}

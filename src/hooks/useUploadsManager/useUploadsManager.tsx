@@ -62,12 +62,19 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   // Enriching data with pending/accepted/rejected status
   const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress.map((asset) => {
     const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
+    if (!dataObject && !channelLoading && !videosLoading) {
+      console.warn(`Data object not found. ContentId: ${asset.contentId}`)
+    }
 
     return { ...asset, liaisonJudgement: dataObject?.liaisonJudgement, ipfsContentId: dataObject?.ipfsContentId }
   })
 
   const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) => asset.liaisonJudgement === LiaisonJudgement.Pending
+    (asset) =>
+      asset.liaisonJudgement === LiaisonJudgement.Pending &&
+      asset.lastStatus === 'inProgress' &&
+      asset.progress === 0 &&
+      !assetsFiles.find((item) => item.contentId === asset.ipfsContentId)
   )
 
   useEffect(() => {
@@ -84,12 +91,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       iconType: 'warning',
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lostConnectionAssets.length])
+  }, [lostConnectionAssets.length, navigate])
 
   // Enriching video type assets with video title
   const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
     if (asset.type === 'video') {
       const video = videos?.find((video) => video.mediaDataObject?.joystreamContentId === asset.contentId)
+      if (!video && !videosLoading) {
+        console.warn(`Video not found. ContentId: ${asset.contentId}`)
+      }
       return { ...asset, title: video?.title }
     }
     return asset
@@ -116,7 +126,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       }
       const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
       if (!fileInState && file) {
-        setAssetsFiles([...assetsFiles, { contentId: asset.contentId, blob: file }])
+        setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
+      }
+      if (!fileInState && !file) {
+        throw Error('File was not provided nor found')
       }
 
       rax.attach()
