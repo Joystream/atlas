@@ -18,7 +18,7 @@ type TextValidationArgs = {
   minLength?: number
   required?: boolean
   pattern?: RegExp
-  message?: string
+  patternMessage?: string
 }
 
 export const textFieldValidation = ({
@@ -27,7 +27,7 @@ export const textFieldValidation = ({
   maxLength,
   required = false,
   pattern,
-  message,
+  patternMessage,
 }: TextValidationArgs): RegisterOptions => ({
   required: {
     value: required,
@@ -45,7 +45,7 @@ export const textFieldValidation = ({
     ? {
         pattern: {
           value: pattern,
-          message: message ? `${name} ${message}` : `${name} must be a valid`,
+          message: patternMessage ? `${name} ${patternMessage}` : `${name} must be a valid`,
         },
       }
     : {}),

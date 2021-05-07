@@ -138,7 +138,7 @@ const CreateMemberView = () => {
         />
         <StyledTextField
           name="handle"
-          placeholder="johnysmith"
+          placeholder="johnnysmith"
           label="Member Name"
           ref={register(
             textFieldValidation({
@@ -147,7 +147,7 @@ const CreateMemberView = () => {
               minLength: 4,
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
-              message: 'may contain only lowercase letters, numbers and underscores',
+              patternMessage: 'may contain only lowercase letters, numbers and underscores',
             })
           )}
           error={!!errors.handle}
