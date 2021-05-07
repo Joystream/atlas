@@ -20,6 +20,7 @@ export type EditVideoSheetTab = {
 }
 
 type EditVideoAssetsCache = Record<string, InputFilesState>
+type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields> & EditVideoSheetTab>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
@@ -28,8 +29,8 @@ type ContextValue = {
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
-  selectedVideoTabCachedDirtyFormData: Array<EditVideoFormFields & EditVideoSheetTab>
-  setSelectedVideoTabCachedDirtyFormData: (formData: EditVideoFormFields) => void
+  selectedVideoTabCachedDirtyFormData: Partial<EditVideoFormFields> | undefined
+  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<EditVideoFormFields>) => void
   selectedVideoTabCachedAssets: InputFilesState
   setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
@@ -44,9 +45,9 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-  const [selectedVideoTabCachedDirtyFormData, _setSelectedVideoTabCachedDirtyFormData] = useState<
-    Array<EditVideoFormFields & EditVideoSheetTab>
-  >([])
+  const [selectedVideoTabsCachedDirtyFormData, _setSelectedVideoTabsCachedDirtyFormData] = useState<
+    EditVideoTabCachedDirtyFormData
+  >({})
   const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
@@ -97,20 +98,13 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
 
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
   const setSelectedVideoTabCachedDirtyFormData = useCallback(
-    (data: EditVideoFormFields) => {
-      const index = selectedVideoTabCachedDirtyFormData.findIndex((dirtyTab) => dirtyTab.id === selectedVideoTab.id)
-      if (index === -1) {
-        _setSelectedVideoTabCachedDirtyFormData([
-          ...selectedVideoTabCachedDirtyFormData,
-          { ...data, ...selectedVideoTab },
-        ])
-      } else {
-        const temp = [...selectedVideoTabCachedDirtyFormData]
-        temp[index] = { ...data, ...selectedVideoTab }
-        _setSelectedVideoTabCachedDirtyFormData(temp)
-      }
+    (data: Partial<EditVideoFormFields>) => {
+      _setSelectedVideoTabsCachedDirtyFormData((currentMap) => ({
+        ...currentMap,
+        [selectedVideoTab.id]: { ...data, ...selectedVideoTab },
+      }))
     },
-    [selectedVideoTab, selectedVideoTabCachedDirtyFormData]
+    [selectedVideoTab]
   )
 
   const setSelectedVideoTabCachedAssets = useCallback(
@@ -123,6 +117,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [selectedVideoTab?.id]
   )
   const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
+  const selectedVideoTabCachedDirtyFormData = selectedVideoTabsCachedDirtyFormData[selectedVideoTab?.id]
   const updateSelectedVideoTab = useCallback(
     (tabUpdates: Partial<EditVideoSheetTab>) => {
       setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
@@ -203,7 +198,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     activeUser: { channelId },
   } = useActiveUser()
   const { drafts } = useDrafts('video', channelId ?? '')
-  const { selectedVideoTabCachedAssets, selectedVideoTabCachedDirtyFormData } = useEditVideoSheet()
+  const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
@@ -215,9 +210,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     }
   }
 
-  const dirtyCachedVideoData =
-    tab?.isDraft === false ? selectedVideoTabCachedDirtyFormData.find((dirtyTab) => dirtyTab.id === tab.id) : undefined
-  const videoData = dirtyCachedVideoData ?? {
+  const videoData = {
     ...video,
     category: video?.category?.id,
     language: video?.language?.iso,
