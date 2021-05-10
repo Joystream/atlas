@@ -142,7 +142,7 @@ export const EditableControls = styled.div`
   }
 
   ${media.xlarge} {
-    height: 70%;
+    height: 80%;
   }
 `
 
@@ -157,7 +157,7 @@ export const RemoveCoverDesktopButton = styled(Button)`
 
   display: none;
 
-  ${media.small} {
+  ${media.medium} {
     display: flex;
   }
 `
@@ -166,8 +166,11 @@ export const RemoveCoverMobileButton = styled(IconButton)`
   ${removeButtonStyles};
 
   background-color: ${colors.gray[800]};
+  &:hover {
+    background-color: ${colors.transparentBlack[54]};
+  }
 
-  ${media.small} {
+  ${media.medium} {
     display: none;
   }
 `
@@ -194,6 +197,9 @@ export const EditCoverMobileButton = styled(IconButton)`
 
   background-color: ${colors.gray[800]};
 
+  &:hover {
+    background-color: ${colors.transparentBlack[54]};
+  }
   ${media.medium} {
     display: none;
   }
