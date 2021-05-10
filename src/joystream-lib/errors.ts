@@ -11,10 +11,6 @@ export class ExtrinsicFailedError extends Error {
     this.extrinsicFailedEvent = event
   }
 }
+export class ExtrinsicSignCancelledError extends Error {}
 
-export class AccountNotFoundError extends Error {}
 export class AccountNotSelectedError extends Error {}
-
-export class ExtensionNotFoundError extends Error {}
-export class ExtensionUnknownError extends Error {}
-export class ExtensionSignCancelledError extends Error {}

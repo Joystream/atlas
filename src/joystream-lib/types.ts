@@ -2,11 +2,6 @@ import { ChannelMetadata, VideoMetadata } from '@joystream/content-metadata-prot
 import { NewAsset } from '@joystream/types/content'
 
 export type AccountId = string
-export type Account = {
-  id: AccountId
-  name: string
-}
-
 export type MemberId = string
 export type ChannelId = string
 export type VideoId = string

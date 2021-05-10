@@ -8,7 +8,6 @@ import { PlaygroundLayout } from './views/playground'
 import { TopbarBase, StudioLoading } from '@/components'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
-  // TODO: improve
   fallback: (
     <>
       <TopbarBase variant="studio" />
