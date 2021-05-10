@@ -1,5 +1,5 @@
 import { IconButton } from '@/shared/components'
-import { ImageCropData } from '@/types/cropper'
+import { ImageCropData, AssetDimensions } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { ActionDialogProps } from '../ActionDialog'
 import { CropperImageType, useCropper } from './cropper'
@@ -19,7 +19,12 @@ import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
-  onConfirm: (croppedBlob: Blob, croppedUrl: string, imageCropData: ImageCropData) => void
+  onConfirm: (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
@@ -77,9 +82,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   }
 
   const handleConfirmClick = async () => {
-    const [blob, url, imageCropData] = await cropImage()
+    const [blob, url, assetDimensions, imageCropData] = await cropImage()
     resetDialog()
-    onConfirm(blob, url, imageCropData)
+    onConfirm(blob, url, assetDimensions, imageCropData)
   }
 
   const zoomControlNode = (
