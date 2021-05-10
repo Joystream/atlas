@@ -7,6 +7,7 @@ import FileStep from '../FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { getVideoMetadata } from '@/utils/video'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 type InputFile = {
   url?: string | null
@@ -24,6 +25,8 @@ export type VideoInputFile = {
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null
+  imageCropData?: ImageCropData
+  assetDimensions?: AssetDimensions
 } & InputFile
 
 export type InputFilesState = {
@@ -102,11 +105,18 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
   }
 
-  const updateThumbnailFile = (croppedBlob: Blob, croppedUrl: string) => {
+  const updateThumbnailFile = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     const updatedThumbnail: ImageInputFile = {
       originalBlob: rawImageFile,
       blob: croppedBlob,
       url: croppedUrl,
+      assetDimensions,
+      imageCropData,
     }
     onThumbnailChange(updatedThumbnail)
   }

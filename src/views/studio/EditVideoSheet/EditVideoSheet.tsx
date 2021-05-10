@@ -213,6 +213,7 @@ export const EditVideoSheet: React.FC = () => {
       }
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
+        const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
         startFileUpload(
           videoInputFile.blob,
           {
@@ -223,6 +224,7 @@ export const EditVideoSheet: React.FC = () => {
               id: videoId,
             },
             type: 'video',
+            dimensions: width && height ? { width, height } : undefined,
           },
           randomStorageProviderUrl
         )
@@ -238,6 +240,8 @@ export const EditVideoSheet: React.FC = () => {
               id: videoId,
             },
             type: 'thumbnail',
+            dimensions: thumbnailInputFile.assetDimensions,
+            imageCropData: thumbnailInputFile.imageCropData,
           },
           randomStorageProviderUrl
         )
