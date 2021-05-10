@@ -69,7 +69,7 @@ export const EditVideoSheet: React.FC = () => {
       channelId_eq: activeChannelId,
     },
   })
-  const { WarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
     if (sheetState === 'closed' || !haveVideoTabsAssetCache) {
@@ -332,7 +332,7 @@ export const EditVideoSheet: React.FC = () => {
         }
         onClose={handleTransactionClose}
       />
-      <WarningDialog />
+      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar

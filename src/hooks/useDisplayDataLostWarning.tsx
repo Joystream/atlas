@@ -41,7 +41,7 @@ export const useDisplayDataLostWarning = () => {
     />
   )
   return {
-    WarningDialog: renderWarning,
+    DataLostWarningDialog: renderWarning,
     openWarningDialog,
   }
 }

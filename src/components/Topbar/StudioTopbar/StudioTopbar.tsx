@@ -59,13 +59,11 @@ type NavDrawerProps = {
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
-  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
-  const [confirmCallback, setConfirmCallback] = useState<undefined | (() => void)>()
 
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, haveVideoTabsAssetCache } = useEditVideoSheet()
-  const { WarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -77,8 +75,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     if (!channel) {
       return
     }
-    setActiveUser({ channelId })
-    setDrawerActive(false)
     setDrawerActive(false)
     if (haveVideoTabsAssetCache) {
       openWarningDialog({ confirmCallback: () => changeChannel(channelId) })
@@ -88,10 +84,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   }
 
   const changeChannel = (channelId: string) => {
-    const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
-    if (!channel) {
-      return
-    }
     setActiveUser({ channelId })
     setSheetState('closed')
   }
@@ -121,25 +113,23 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   }, [isDrawerActive])
 
   const handleLogout = () => {
-    resetActiveUser()
-    navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)
     if (haveVideoTabsAssetCache) {
-      openWarningDialog({ confirmCallback: () => logout })
+      openWarningDialog({ confirmCallback: () => logout() })
     } else {
       logout()
     }
   }
 
   const logout = () => {
+    setSheetState('closed')
     resetActiveUser()
     navigate(absoluteRoutes.studio.index())
-    setSheetState('closed')
   }
 
   return (
     <>
-      <WarningDialog />
+      <DataLostWarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>

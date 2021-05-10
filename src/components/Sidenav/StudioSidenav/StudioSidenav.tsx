@@ -37,7 +37,7 @@ export const StudioSidenav: React.FC = () => {
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
 
-  const { WarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   const assetsInProgress = uploadsState.filter((asset) => asset.lastStatus === 'inProgress')
 
@@ -95,7 +95,7 @@ export const StudioSidenav: React.FC = () => {
           </>
         }
       />
-      <WarningDialog />
+      <DataLostWarningDialog />
     </>
   )
 }
