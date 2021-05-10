@@ -77,7 +77,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     setDrawerActive(false)
   }
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     resetActiveUser()
     navigate(absoluteRoutes.studio.index())
     setDrawerActive(false)

@@ -18,14 +18,12 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
     activeMemberId,
     activeChannelId,
     setActiveUser,
-    extensionConnected: extensionStatus,
+    extensionConnected,
     memberships,
     membershipsLoading,
     activeMembership,
     activeMembershipLoading,
   } = useUser()
-
-  const extensionConnected = extensionStatus === true
 
   const hasMemberships = !membershipsLoading && memberships?.length
 

@@ -50,12 +50,10 @@ const StudioLayout = () => {
     activeAccountId,
     activeMemberId,
     activeChannelId,
-    extensionConnected: extensionStatus,
-    accounts,
+    extensionConnected,
     memberships,
     userInitialized,
   } = useUser()
-  const extensionConnected = extensionStatus === true
 
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
