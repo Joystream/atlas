@@ -47,7 +47,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
   }, [displaySnackbar])
 
   useEffect(() => {
-    // ping google every three seconds to check if user is connected to internet
+    // ping google every five seconds to check if user is connected to internet
     const interval = setInterval(() => {
       checkConnection()
     }, 5000)
