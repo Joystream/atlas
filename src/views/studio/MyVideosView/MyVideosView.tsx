@@ -4,12 +4,11 @@ import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
-import { remove } from 'lodash'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -102,7 +101,7 @@ export const MyVideosView = () => {
       return
     }
     const index = addVideoTab({ id, isDraft: opts.draft })
-    console.log(index)
+
     displaySnackbar({
       title: 'Video opened in new tab',
       iconType: 'success',
