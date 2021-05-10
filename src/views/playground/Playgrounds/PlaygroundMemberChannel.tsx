@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useMemberships } from '@/api/hooks'
-import { useActiveUser } from '@/hooks'
+import { useUser } from '@/hooks'
 import { BasicMembershipFieldsFragment, BasicChannelFieldsFragment } from '@/api/queries'
 import { Button, RadioButton } from '@/shared/components'
 
@@ -11,7 +11,7 @@ const PlaygroundMemberChannel = () => {
   const [selectedMember, setSelectedMember] = useState<BasicMembershipFieldsFragment>()
   const [activeUserString, setActiveUserString] = useState('')
 
-  const { activeUser, setActiveUser, setActiveMember, setActiveChannel, removeActiveUser } = useActiveUser()
+  const { activeAccountId, activeMemberId, activeChannelId, setActiveUser, resetActiveUser } = useUser()
   const { memberships, loading: membershipsLoading, error: membershipsError } = useMemberships({
     where: { controllerAccount_eq: account },
   })
@@ -23,7 +23,7 @@ const PlaygroundMemberChannel = () => {
       return
     }
     setSelectedMember(member)
-    setActiveMember(member?.id)
+    setActiveUser({ memberId: member?.id })
   }
   const handleActiveChannelChange = (e: React.MouseEvent<HTMLInputElement>) => {
     const element = e.currentTarget
@@ -32,16 +32,21 @@ const PlaygroundMemberChannel = () => {
       return
     }
     setSelectedChannel(channel)
-    setActiveChannel(channel.id)
+    setActiveUser({ channelId: channel.id })
   }
 
   const handleAddUser = () => {
-    setActiveUser({ accountId: account, memberId: selectedMember?.id || null, channelId: selectedChannel?.id || null })
+    setActiveUser({ channelId: selectedChannel?.id || null })
   }
 
   useEffect(() => {
+    const activeUser = {
+      activeAccountId,
+      activeMemberId,
+      activeChannelId,
+    }
     setActiveUserString(JSON.stringify(activeUser, null, 4))
-  }, [activeUser])
+  }, [activeAccountId, activeChannelId, activeMemberId])
 
   if (membershipsError) {
     throw membershipsError
@@ -83,7 +88,7 @@ const PlaygroundMemberChannel = () => {
             ))}
       </div>
       <Button onClick={handleAddUser}>Set User</Button>
-      <Button onClick={removeActiveUser}>Remove user</Button>
+      <Button onClick={resetActiveUser}>Remove user</Button>
     </>
   )
 }

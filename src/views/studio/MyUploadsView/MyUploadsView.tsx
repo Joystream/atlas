@@ -1,5 +1,5 @@
 import React from 'react'
-import { useActiveUser, useUploadsManager } from '@/hooks'
+import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { StudioContainer } from '@/components'
@@ -13,10 +13,9 @@ type GroupByParentObjectIdAcc = {
 }
 
 const MyUploadsView = () => {
-  const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? ''
-  const { uploadsState } = useUploadsManager(channelId)
-  const { channel, loading: channelLoading } = useChannel(channelId)
+  const { activeChannelId } = useAuthorizedUser()
+  const { uploadsState } = useUploadsManager(activeChannelId)
+  const { channel, loading: channelLoading } = useChannel(activeChannelId)
   const { videos, loading: videosLoading } = useVideos(
     {
       where: {
