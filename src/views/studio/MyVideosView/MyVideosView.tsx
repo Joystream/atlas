@@ -4,11 +4,12 @@ import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+import { remove } from 'lodash'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -100,7 +101,15 @@ export const MyVideosView = () => {
     if (!id) {
       return
     }
-    addVideoTab({ id, isDraft: opts.draft })
+    const index = addVideoTab({ id, isDraft: opts.draft })
+    console.log(index)
+    displaySnackbar({
+      title: 'Video opened in new tab',
+      iconType: 'success',
+      actionText: 'Remove',
+      onActionClick: () => index !== undefined && removeVideoTab(index),
+    })
+
     if (opts.minimized) {
       setSheetState('minimized')
     } else {
@@ -144,13 +153,6 @@ export const MyVideosView = () => {
                 onPullupClick={(e) => {
                   e.stopPropagation()
                   handleVideoClick(draft.id, { draft: true, minimized: true })
-                  const index = videoTabs.findIndex((item) => item.id === draft.id)
-                  displaySnackbar({
-                    title: 'Video opened in new tab',
-                    iconType: 'success',
-                    actionText: 'Remove',
-                    onActionClick: () => removeVideoTab(index),
-                  })
                 }}
                 onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
                 onDeleteVideoClick={() => setDraftToRemove(draft.id)}
@@ -193,8 +195,8 @@ export const MyVideosView = () => {
         onClose={handleVideoDeleted}
       />
       <MessageDialog
-        title="Do you want to remove this draft from your drafts?"
-        description="Draft will be removed permanently and all its data will be lost. Drafts are stored locally - that’s why you don’t need to make a transaction to confirm it."
+        title="Delete this draft?"
+        description="You will not be able to undo this."
         variant="warning"
         showDialog={drafts.some((item) => item.id === draftToRemove)}
         error

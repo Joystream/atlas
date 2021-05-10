@@ -357,11 +357,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())
-      displaySnackbar({ title: 'Channel successfully created', iconType: 'success' })
       return
-    }
-    if (transactionStatus === ExtrinsicStatus.Completed && !newChannel) {
-      displaySnackbar({ title: 'Channel successfully updated', iconType: 'success' })
     }
 
     setTransactionStatus(null)

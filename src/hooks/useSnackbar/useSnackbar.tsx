@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styled from '@emotion/styled'
 import { Snackbar } from '@/shared/components'
@@ -41,9 +41,9 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  const displaySnackbar = ({ timeout, ...args }: DisplaySnackbarArgs) => {
+  const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
     const id = createId()
-    setSnackbars([...snackbars, { id, ...args }])
+    setSnackbars((s) => [...s, { id, ...args }])
 
     if (timeout) {
       setTimeout(() => {
@@ -52,7 +52,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
     }
 
     return id
-  }
+  }, [])
 
   const closeSnackbar = (id: string) => {
     setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))

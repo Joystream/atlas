@@ -279,8 +279,7 @@ export const EditVideoSheet: React.FC = () => {
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
       setTransactionStatus(null)
-      closeSheet()
-      displaySnackbar({ title: `Video successfully ${isEdit ? 'updated' : 'created'}`, iconType: 'success' })
+      setSheetState('minimized')
     }
     setTransactionStatus(null)
   }

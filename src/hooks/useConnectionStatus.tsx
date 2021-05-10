@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react'
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { useSnackbar } from '@/hooks/useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
@@ -20,7 +20,6 @@ const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
-  const [showSnackbar, setShowSnackbar] = useState(false)
   const { displaySnackbar } = useSnackbar()
 
   const checkConnection = useCallback(async () => {
@@ -33,18 +32,12 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
         4000
       )
       if (res) {
-        setIsUserConnectedToInternet((previousState) => {
-          if (previousState === false) {
-            setShowSnackbar(true)
-          }
-          return true
-        })
+        setIsUserConnectedToInternet(true)
       }
     } catch (error) {
       setIsUserConnectedToInternet(false)
-      displaySnackbar({ title: 'No network connection', iconType: 'error' })
     }
-  }, [displaySnackbar])
+  }, [])
 
   useEffect(() => {
     // ping google every five seconds to check if user is connected to internet
@@ -56,12 +49,19 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     }
   }, [checkConnection])
 
+  const isInitialMount = useRef(true)
+
   useEffect(() => {
-    if (showSnackbar) {
-      displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
-      setShowSnackbar(false)
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+    } else {
+      if (isUserConnectedToInternet) {
+        displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
+      } else {
+        displaySnackbar({ title: 'No network connection', iconType: 'error' })
+      }
     }
-  }, [displaySnackbar, showSnackbar])
+  }, [displaySnackbar, isUserConnectedToInternet])
 
   return (
     <ConnectionStatusContext.Provider
