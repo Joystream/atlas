@@ -11,6 +11,7 @@ import {
   SubItemsWrapper,
   Logo,
   LogoLink,
+  LegalLink,
 } from './SideNavbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
@@ -70,9 +71,14 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
             </NavItem>
           ))}
         </SidebarNavList>
-        {followedChannels.length > 0 && (
+        {followedChannels.length > 0 ? (
           <FollowedChannels onClick={closeSideNav} followedChannels={followedChannels} expanded={expanded} />
+        ) : (
+          <div />
         )}
+        <LegalLink onClick={closeSideNav} expanded={expanded} to="/legal" content="xd">
+          Legal information
+        </LegalLink>
       </SidebarNav>
     </>
   )

@@ -6,7 +6,7 @@ import { ErrorBoundary } from '@sentry/react'
 
 import { GlobalStyle } from '@/shared/components'
 import { TopNavbar, ViewErrorFallback, SideNavbar } from '@/components'
-import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView } from '@/views'
+import { HomeView, VideoView, SearchOverlayView, ChannelView, VideosView, ChannelsView, LegalView } from '@/views'
 import routes from '@/config/routes'
 import { globalStyles } from '@/styles/global'
 import { routingTransitions } from '@/styles/routingTransitions'
@@ -40,6 +40,7 @@ const routesMap = [
   { path: routes.videos(), Component: VideosView },
   { path: routes.channels(), Component: ChannelsView },
   { path: routes.channel(), Component: ChannelView },
+  { path: routes.legal(), Component: LegalView },
 ]
 
 const LayoutWithRouting: React.FC = () => {
