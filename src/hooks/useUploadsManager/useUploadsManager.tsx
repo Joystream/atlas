@@ -90,8 +90,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       iconType: 'warning',
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lostConnectionAssets.length, navigate])
+  }, [displaySnackbar, lostConnectionAssets.length, navigate])
 
   // Enriching video type assets with video title
   const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
