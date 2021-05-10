@@ -7,6 +7,7 @@ import FileStep from '../FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { getVideoMetadata } from '@/utils/video'
+import { validateImage } from '@/utils/image'
 
 type InputFile = {
   url?: string | null
@@ -115,14 +116,19 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     onThumbnailChange(updatedThumbnail)
   }
 
-  const handleUploadFile = (file: File) => {
+  const handleUploadFile = async (file: File) => {
     if (step === 'video') {
       setIsLoading(true)
       updateVideoFile(file)
     }
     if (step === 'image') {
-      setRawImageFile(file)
-      dialogRef.current?.open(file)
+      try {
+        await validateImage(file)
+        setRawImageFile(file)
+        dialogRef.current?.open(file)
+      } catch (error) {
+        onError?.('file-invalid-type')
+      }
     }
   }
 
