@@ -27,7 +27,7 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
 
   const hasMemberships = !membershipsLoading && memberships?.length
 
-  const accountSet = !!activeAccountId && extensionConnected
+  const accountSet = !!activeAccountId && !!extensionConnected
   const memberSet = accountSet && !!activeMemberId
   const channelSet = memberSet && !!activeChannelId
 

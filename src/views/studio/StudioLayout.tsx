@@ -58,7 +58,7 @@ const StudioLayout = () => {
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
-  const accountSet = !!activeAccountId && extensionConnected
+  const accountSet = !!activeAccountId && !!extensionConnected
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
 
