@@ -24,7 +24,7 @@ export type FileSelectProps = {
   title: string
   paragraph: string
   thumbnailUrl?: string | null
-  progress?: number
+  isLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
   onError?: (error: string | null) => void
@@ -41,7 +41,7 @@ const FileSelect: React.FC<FileSelectProps> = ({
   thumbnailUrl,
   onReAdjustThumbnail,
   onDropRejected,
-  progress,
+  isLoading,
   onError,
   error,
 }) => {
@@ -71,7 +71,7 @@ const FileSelect: React.FC<FileSelectProps> = ({
 
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <ProgressBar progress={progress} />
+      <ProgressBar isLoading={isLoading} />
       <input {...getInputProps()} />
       {thumbnailUrl && fileType === 'image' ? (
         <Thumbnail
