@@ -45,9 +45,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-  const [selectedVideoTabsCachedDirtyFormData, _setSelectedVideoTabsCachedDirtyFormData] = useState<
-    EditVideoTabCachedDirtyFormData
-  >({})
+  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
   const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
@@ -99,7 +97,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
   const setSelectedVideoTabCachedDirtyFormData = useCallback(
     (data: Partial<EditVideoFormFields>) => {
-      _setSelectedVideoTabsCachedDirtyFormData((currentMap) => ({
+      _setVideoTabsCachedDirtyFormData((currentMap) => ({
         ...currentMap,
         [selectedVideoTab.id]: { ...data, ...selectedVideoTab },
       }))
@@ -117,7 +115,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [selectedVideoTab?.id]
   )
   const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
-  const selectedVideoTabCachedDirtyFormData = selectedVideoTabsCachedDirtyFormData[selectedVideoTab?.id]
+  const selectedVideoTabCachedDirtyFormData = videoTabsCachedDirtyFormData[selectedVideoTab?.id]
   const updateSelectedVideoTab = useCallback(
     (tabUpdates: Partial<EditVideoSheetTab>) => {
       setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
