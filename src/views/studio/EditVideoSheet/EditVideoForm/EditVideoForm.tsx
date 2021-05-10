@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
+import { CSSTransition } from 'react-transition-group'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -39,6 +40,7 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/componen
 import { formatISO, isValid } from 'date-fns'
 import { MessageDialog, TransactionDialog } from '@/components'
 import { License } from '@/api/queries'
+import { transitions } from '@/shared/theme'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -107,6 +109,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     errors,
     getValues,
     setValue,
+    watch,
     reset,
     formState: { dirtyFields, isDirty },
   } = useForm<EditVideoFormFields>({
@@ -389,11 +392,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          {knownLicenses.find((license) => license.code === getValues('licenseCode'))?.attributionRequired && (
+          {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
             <FormField title="License attribution">
               <TextField
                 name="licenseAttribution"
-                ref={register(textFieldValidation('License attribution', 0, 5000))}
+                ref={register(textFieldValidation({ name: 'License attribution', maxLength: 5000, required: true }))}
                 onChange={handleFormChange}
                 placeholder="Type your attribution here"
                 error={!!errors.licenseAttribution}
@@ -402,11 +405,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             </FormField>
           )}
 
-          {getValues('licenseCode') === CUSTOM_LICENSE_CODE && (
+          {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
             <FormField title="Custom license">
               <TextArea
                 name="licenseCustomText"
-                ref={register(textFieldValidation('License', 0, 5000))}
+                ref={register(textFieldValidation({ name: 'License', maxLength: 5000, required: true }))}
                 onChange={handleFormChange}
                 maxLength={5000}
                 placeholder="Type your license content here"

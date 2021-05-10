@@ -297,9 +297,7 @@ export class JoystreamJs {
     if (inputMetadata.license?.customText != null) {
       protoLicenseType.setCustomText(inputMetadata.license.customText)
     }
-    if (protoLicenseType != null) {
-      protoMeta.setLicense(protoLicenseType)
-    }
+    protoMeta.setLicense(protoLicenseType)
 
     const protoMediaType = new MediaType()
     if (inputMetadata.mimeMediaType != null) {
