@@ -7,6 +7,7 @@ import FileStep from '../FileStep'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { getVideoMetadata } from '@/utils/video'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 type InputFile = {
   url?: string | null
@@ -24,6 +25,8 @@ export type VideoInputFile = {
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null
+  imageCropData?: ImageCropData
+  assetDimensions?: AssetDimensions
 } & InputFile
 
 export type InputFilesState = {
@@ -55,7 +58,6 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
 }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [step, setStep] = useState<FileType>('video')
-  const [progress, setProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)
 
@@ -76,17 +78,14 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       return
     }
     const timeout = setTimeout(() => {
-      if (progress < 100) {
-        setProgress(progress + 1)
-      } else {
+      if (isLoading) {
         setIsLoading(false)
-        setProgress(0)
         setStep('image')
       }
-    }, 5)
+    }, 1000)
 
     return () => clearTimeout(timeout)
-  }, [error, isLoading, progress])
+  }, [error, isLoading])
 
   const updateVideoFile = async (file: File) => {
     try {
@@ -106,11 +105,18 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
   }
 
-  const updateThumbnailFile = (croppedBlob: Blob, croppedUrl: string) => {
+  const updateThumbnailFile = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     const updatedThumbnail: ImageInputFile = {
       originalBlob: rawImageFile,
       blob: croppedBlob,
       url: croppedUrl,
+      assetDimensions,
+      imageCropData,
     }
     onThumbnailChange(updatedThumbnail)
   }
@@ -144,7 +150,6 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       onThumbnailChange(null)
     }
     setIsLoading(false)
-    setProgress(0)
   }
 
   const handleFileRejections = async (fileRejections: FileRejection[]) => {
@@ -167,7 +172,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
-        progress={progress}
+        isLoading={isLoading}
         fileType={step}
         title={step === 'video' ? 'Select video file' : 'Add thumbnail image'}
         thumbnailUrl={files.thumbnail?.url}
@@ -189,7 +194,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           type="video"
           onDelete={() => handleDeleteFile('video')}
           onSelect={handleChangeStep}
-          progress={progress}
+          isLoading={isLoading}
         />
         <StepDivider>
           <SvgGlyphChevronRight />

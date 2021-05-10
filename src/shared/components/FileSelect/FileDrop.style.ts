@@ -10,7 +10,7 @@ type DragAndDropAreaProps = {
 }
 
 type ProgressBarProps = {
-  progress?: number
+  isLoading?: boolean
 }
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
@@ -77,9 +77,9 @@ export const ProgressBar = styled.div<ProgressBarProps>`
   top: 0;
   position: absolute;
 
-  transition: transform 100ms ${transitions.easing};
   transform-origin: left;
-  transform: ${({ progress = 0 }) => `scaleX(${progress && progress / 100})`};
+  transform: ${({ isLoading }) => `scaleX(${isLoading ? 1 : 0})`};
+  transition: transform ${({ isLoading }) => (isLoading ? '1000ms' : '0ms')} ${transitions.easing};
 `
 
 export const ErrorContainer = styled.div`
@@ -90,7 +90,7 @@ export const ErrorContainer = styled.div`
 
   width: 100%;
   padding: ${sizes(2)} 0;
-  background-color: rgba(255, 56, 97, 0.08);
+  background-color: ${colors.transparentError};
 
   display: flex;
   align-items: center;

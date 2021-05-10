@@ -1,4 +1,5 @@
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { Button, Text } from '@/shared/components'
 import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
@@ -65,6 +66,10 @@ const ImageDownsizing = () => {
     width: 0,
     height: 0,
     fileSize: 0,
+    assetDimensions: {
+      width: 0,
+      height: 0,
+    },
   })
 
   useEffect(() => {
@@ -86,6 +91,10 @@ const ImageDownsizing = () => {
     width: 0,
     height: 0,
     fileSize: 0,
+    assetDimensions: {
+      width: 0,
+      height: 0,
+    },
   })
 
   useEffect(() => {
@@ -102,19 +111,31 @@ const ImageDownsizing = () => {
     })
   }, [coverSizes])
 
-  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
+  const handleConfirmAvatar = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
       ...avatarSizes,
       fileSize: croppedBlob.size,
+      assetDimensions,
     })
   }
 
-  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, imageCropData: Cropper.CropBoxData) => {
+  const handleConfirmCover = (
+    croppedBlob: Blob,
+    croppedUrl: string,
+    assetDimensions: AssetDimensions,
+    imageCropData: ImageCropData
+  ) => {
     setCoverUrl(croppedUrl)
     setCoverSizes({
       ...coverSizes,
       fileSize: croppedBlob.size,
+      assetDimensions,
     })
   }
 
@@ -152,6 +173,10 @@ const ImageDownsizing = () => {
           <p>
             Cropped image size: {avatarSizes.width || 0} X {avatarSizes.height}
           </p>
+          <p>
+            assetDimensions (from cropper) size: {avatarSizes.assetDimensions.width || 0} X{' '}
+            {avatarSizes.assetDimensions.height}
+          </p>
           <p>Cropped image filesize: {formatBytes(avatarSizes.fileSize)}</p>
         </>
       )}
@@ -162,6 +187,10 @@ const ImageDownsizing = () => {
           <StyledImg src={coverUrl} ref={coverImgRef} />
           <p>
             Cropped image size: {coverSizes.width || 0} X {coverSizes.height}
+          </p>
+          <p>
+            assetDimensions (from cropper) size: {coverSizes.assetDimensions.width || 0} X{' '}
+            {coverSizes.assetDimensions.height}
           </p>
           <p>Cropped image filesize: {formatBytes(coverSizes.fileSize)} </p>
         </>

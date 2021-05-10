@@ -1,5 +1,5 @@
 import { FileType } from '@/types/files'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StepWrapper,
   StepStatus,
@@ -12,6 +12,7 @@ import {
 } from './FileStep.style'
 import { IconButton } from '@/shared/components'
 import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
+import { CSSTransition } from 'react-transition-group'
 
 export type FileStepProps = {
   stepNumber: number
@@ -21,8 +22,8 @@ export type FileStepProps = {
   isFileSet?: boolean
   thumbnailUrl?: string | null
   onSelect?: (step: FileType) => void
-  progress?: number
   disabled?: boolean
+  isLoading?: boolean
 }
 
 const FileStep: React.FC<FileStepProps> = ({
@@ -33,12 +34,25 @@ const FileStep: React.FC<FileStepProps> = ({
   onDelete,
   thumbnailUrl,
   onSelect,
-  progress = 0,
+  isLoading,
   disabled,
 }) => {
   const handleChangeStep = () => {
     !disabled && onSelect?.(type)
   }
+  const [circularProgress, setCircularProgress] = useState(0)
+
+  useEffect(() => {
+    if (!isLoading) {
+      setCircularProgress(0)
+      return
+    }
+    const timeout = setTimeout(() => {
+      setCircularProgress(circularProgress + 20)
+    }, 50)
+
+    return () => clearTimeout(timeout)
+  }, [circularProgress, isLoading])
 
   const stepSubtitle =
     type === 'video'
@@ -54,8 +68,8 @@ const FileStep: React.FC<FileStepProps> = ({
       <StepStatus>
         {!isFileSet && <StepNumber active={active}>{stepNumber}</StepNumber>}
         {isFileSet &&
-          (progress ? (
-            <StyledProgress value={progress} maxValue={80} />
+          (isLoading ? (
+            <StyledProgress value={circularProgress} maxValue={100} />
           ) : (
             <Thumbnail>
               {type === 'video' && <SvgGlyphFileVideo />}
