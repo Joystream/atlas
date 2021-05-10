@@ -20,7 +20,7 @@ export type EditVideoSheetTab = {
 }
 
 type EditVideoAssetsCache = Record<string, InputFilesState>
-type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields> & EditVideoSheetTab>
+type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields>>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
