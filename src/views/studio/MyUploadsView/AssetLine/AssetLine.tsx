@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useUploadsManager, useActiveUser } from '@/hooks'
+import { useUploadsManager, useAuthorizedUser } from '@/hooks'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { formatBytes } from '@/utils/size'
@@ -29,10 +29,8 @@ type AssetLineProps = {
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
-  const {
-    activeUser: { channelId },
-  } = useActiveUser()
-  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { activeChannelId } = useAuthorizedUser()
+  const { startFileUpload } = useUploadsManager(activeChannelId)
   const randomStorageProviderUrl = useRandomStorageProviderUrl()
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(

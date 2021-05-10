@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
-import { useChannel, useVideos } from '@/api/hooks'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { StudioContainer } from '@/components'
 import { EmptyUploadsView } from './EmptyUploadsView'
 import { placeholderItems } from './PlaceholderItems'

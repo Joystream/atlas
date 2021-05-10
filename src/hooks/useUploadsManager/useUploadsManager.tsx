@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
-import { useSnackbar, useActiveUser } from '@/hooks'
+import { useSnackbar, useAuthorizedUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { ChannelId } from '@/joystream-lib'
@@ -38,9 +38,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
-  const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? ''
-  const { channel, loading: channelLoading } = useChannel(channelId)
+  const { activeChannelId } = useAuthorizedUser()
+  const { channel, loading: channelLoading } = useChannel(activeChannelId)
   const { videos, loading: videosLoading } = useVideos(
     {
       where: {
