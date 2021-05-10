@@ -160,7 +160,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setTimeout(() => {
         const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof EditVideoFormFields>
         keys.forEach((key) => {
-          console.log({ key, value: selectedVideoTabCachedDirtyFormData[key] })
           setValue(key, selectedVideoTabCachedDirtyFormData[key], { shouldDirty: true })
         })
       }, 0)
