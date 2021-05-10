@@ -128,12 +128,12 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       if (!fileInState && file) {
         setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
       }
-      if (!fileInState && !file) {
-        throw Error('File was not provided nor found')
-      }
 
       rax.attach()
       try {
+        if (!fileInState && !file) {
+          throw Error('File was not provided nor found')
+        }
         if (!opts?.isReUpload && file) {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
