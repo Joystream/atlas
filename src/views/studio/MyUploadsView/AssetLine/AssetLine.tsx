@@ -156,7 +156,12 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         variant="warning"
         onSecondaryButtonClick={() => {
           setShowDialog(false)
-          navigate(absoluteRoutes.studio.editVideo())
+          if (asset.parentObject.type === 'video') {
+            navigate(absoluteRoutes.studio.editVideo())
+          }
+          if (asset.parentObject.type === 'channel') {
+            navigate(absoluteRoutes.studio.editChannel())
+          }
         }}
         primaryButtonText="Reselect file"
         onPrimaryButtonClick={() => {
