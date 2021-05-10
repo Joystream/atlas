@@ -1,5 +1,5 @@
 import accountCreation from '@/assets/account-creation.svg'
-import { useActiveUser, useJoystream } from '@/hooks'
+import { useUser } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
@@ -25,7 +25,6 @@ import joystreamIcon from '@/assets/joystream-logo.svg'
 import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
-import { useMemberships } from '@/api/hooks'
 
 type AccountStepProps = {
   nextStepPath: string
@@ -33,37 +32,25 @@ type AccountStepProps = {
 
 const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
-  const { setActiveUser } = useActiveUser()
-  const { accounts } = useJoystream()
+  const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
 
-  const { memberships, loading } = useMemberships({
-    where: {
-      controllerAccount_in: accounts.map((a) => a.id),
-    },
-  })
-
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
-
-  const accountsWithNoMembership = accounts.filter((el) => !membershipsControllerAccounts?.includes(el.id))
+  const accountsWithNoMembership = (accounts || []).filter((el) => !membershipsControllerAccounts?.includes(el.id))
 
   const handleSubmitSelectedAccount = async (e: FormEvent) => {
     e.preventDefault()
     if (!selectedAccountAddress) {
       return
     }
-    await setActiveUser({
-      accountId: selectedAccountAddress,
-      memberId: null,
-      channelId: null,
-    })
+    setActiveUser({ accountId: selectedAccountAddress })
     navigate(nextStepPath)
   }
 
   const handleSelect = (id: string) => {
     setSelectedAccountAddress(id)
   }
-  if (loading) {
+  if (membershipsLoading) {
     return <StyledSpinner />
   }
   return (

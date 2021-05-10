@@ -25,16 +25,16 @@ import {
   StyledSubTitle,
 } from './CreateEditChannelView.style'
 import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
-import { useChannel, useMembership, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useChannel, useQueryNodeStateSubscription, useRandomStorageProviderUrl } from '@/api/hooks'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import { writeUrlInCache } from '@/utils/cachingAssets'
-import { useActiveUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
+import { useUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
 import {
   ChannelAssets,
   ChannelId,
   CreateChannelMetadata,
-  ExtensionSignCancelledError,
+  ExtrinsicSignCancelledError,
   ExtrinsicStatus,
 } from '@/joystream-lib'
 import { createUrlFromAsset } from '@/utils/asset'
@@ -79,26 +79,16 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   const storageProviderUrl = useRandomStorageProviderUrl()
 
-  const {
-    activeUser: { channelId, memberId },
-    setActiveChannel,
-  } = useActiveUser()
+  const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
 
-  const { channel, loading, error, refetch: refetchChannel, client } = useChannel(channelId || '', {
-    skip: newChannel || !channelId,
+  const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
+    skip: newChannel || !activeChannelId,
   })
-  // use membership query so we can trigger refetch once the channels are updated
-  const { refetch: refetchMember } = useMembership(
-    {
-      where: { id: memberId },
-    },
-    { skip: !memberId }
-  )
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
-  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { startFileUpload } = useUploadsManager(activeChannelId || '')
 
   const {
     register,
@@ -203,7 +193,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    if (!joystream || !memberId) {
+    if (!joystream || !activeMemberId) {
       return
     }
 
@@ -246,21 +236,26 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       }
     }
 
-    let assetsOwner: ChannelId = channelId || ''
+    let assetsOwner: ChannelId = activeChannelId || ''
 
     try {
       if (newChannel) {
-        const { data: newChannelId, block } = await joystream.createChannel(memberId, metadata, assets, (status) => {
-          setTransactionStatus(status)
-        })
+        const { data: newChannelId, block } = await joystream.createChannel(
+          activeMemberId,
+          metadata,
+          assets,
+          (status) => {
+            setTransactionStatus(status)
+          }
+        )
         assetsOwner = newChannelId
 
         // transaction will be marked as completed once query node processes the block, that's done in useEffect above
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchMember()
-          await setActiveChannel(newChannelId)
+          await refetchActiveMembership()
+          setActiveUser({ channelId: newChannelId })
           if (data.avatar.blob && avatarContentId) {
             writeUrlInCache({
               url: data.avatar.url,
@@ -278,20 +273,20 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             })
           }
         })
-      } else if (channelId) {
-        const { block } = await joystream.updateChannel(channelId, memberId, metadata, assets, (status) => {
+      } else if (activeChannelId) {
+        const { block } = await joystream.updateChannel(activeChannelId, activeMemberId, metadata, assets, (status) => {
           setTransactionStatus(status)
         })
         // transaction will be marked as completed once query node processes the block, that's done in useEffect above
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await Promise.all([refetchChannel(), refetchMember()])
+          await Promise.all([refetchChannel(), refetchActiveMembership()])
           if (data.avatar.blob && avatarContentId) {
             writeUrlInCache({
               url: data.avatar.url,
               fileType: 'avatar',
-              parentId: channelId,
+              parentId: activeChannelId,
               client,
             })
           }
@@ -299,7 +294,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             writeUrlInCache({
               url: data.cover.url,
               fileType: 'cover',
-              parentId: channelId,
+              parentId: activeChannelId,
               client,
             })
           }
@@ -342,7 +337,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         )
       }
     } catch (e) {
-      if (e instanceof ExtensionSignCancelledError) {
+      if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
         displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
@@ -552,9 +547,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             >
               <ActionBarTransaction
                 fee={FEE}
-                checkoutSteps={!channelId ? checkoutSteps : undefined}
+                checkoutSteps={!activeChannelId ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
-                fullWidth={!channelId}
+                fullWidth={!activeChannelId}
                 primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
                 secondaryButtonText="Cancel"
                 onCancelClick={() => reset()}

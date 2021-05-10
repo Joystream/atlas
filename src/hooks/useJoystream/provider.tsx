@@ -1,25 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Account, JoystreamJs } from '@/joystream-lib'
-import { useActiveUser } from '@/hooks'
+import { JoystreamJs } from '@/joystream-lib'
+import { useUser } from '@/hooks'
 import useConnectionStatus from '../useConnectionStatus'
-import { NODE_URL, WEB3_APP_NAME } from '@/config/urls'
+import { NODE_URL } from '@/config/urls'
+import { web3FromAddress } from '@polkadot/extension-dapp'
 
 type JoystreamContextValue = {
   joystream: JoystreamJs | null
-  accounts: Account[]
-  extensionConnected: boolean | null
 }
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
-  const { activeUser } = useActiveUser()
+  const { activeAccountId, accounts } = useUser()
   const { setNodeConnection } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
-  const [accounts, setAccounts] = useState<Account[]>([])
-  const [accountsSet, setAccountsSet] = useState(false)
-  const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
 
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
@@ -28,27 +24,15 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     [setNodeConnection]
   )
 
-  const handleAccountsUpdate = useCallback((accounts: Account[]) => {
-    setAccounts(accounts)
-    setAccountsSet(true)
-  }, [])
-
-  const handleExtensionConnectedUpdate = useCallback((connected: boolean) => {
-    setExtensionConnected(connected)
-  }, [])
-
   useEffect(() => {
     let joystream: JoystreamJs
 
     const init = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamJs(NODE_URL, WEB3_APP_NAME)
+        joystream = new JoystreamJs(NODE_URL)
         setJoystream(joystream)
 
-        setAccounts(joystream.accounts)
-        joystream.onAccountsUpdate = handleAccountsUpdate
-        joystream.onExtensionConnectedUpdate = handleExtensionConnectedUpdate
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
         handleNodeConnectionUpdate(false)
@@ -61,23 +45,28 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleAccountsUpdate, handleExtensionConnectedUpdate, handleNodeConnectionUpdate, setNodeConnection])
+  }, [handleNodeConnectionUpdate, setNodeConnection])
 
   useEffect(() => {
-    if (!joystream || !activeUser || !accountsSet) {
+    if (!joystream || !activeAccountId || !accounts) {
       return
     }
 
-    if (joystream.selectedAccountId === activeUser.accountId) {
+    if (joystream.selectedAccountId === activeAccountId) {
       return
     }
 
-    joystream.setAccount(activeUser.accountId)
-  }, [joystream, activeUser, accountsSet])
+    const setActiveAccount = async () => {
+      if (activeAccountId) {
+        const accountInjector = await web3FromAddress(activeAccountId)
+        joystream.setActiveAccount(activeAccountId, accountInjector.signer)
+      } else {
+        joystream.setActiveAccount(activeAccountId)
+      }
+    }
 
-  return (
-    <JoystreamContext.Provider value={{ accounts, joystream, extensionConnected }}>
-      {children}
-    </JoystreamContext.Provider>
-  )
+    setActiveAccount()
+  }, [joystream, activeAccountId, accounts])
+
+  return <JoystreamContext.Provider value={{ joystream }}>{children}</JoystreamContext.Provider>
 }

@@ -1,7 +1,7 @@
 import { useVideos } from '@/api/hooks'
 import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
+import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -26,17 +26,15 @@ export const MyVideosView = () => {
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
-  const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? ''
-  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', channelId)
-  const memberId = activeUser.memberId ?? ''
+  const { activeChannelId } = useAuthorizedUser()
+  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
   const { loading, videos, totalCount, error, fetchMore, refetchCount: refetchVideosCount, client } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
       where: {
-        channelId_eq: channelId,
+        channelId_eq: activeChannelId,
         isPublic_eq,
       },
     },
@@ -50,7 +48,7 @@ export const MyVideosView = () => {
     openVideoDeleteDialog,
     deleteTransactionStatus,
     isDeleteDialogOpen,
-  } = useDeleteVideo(memberId)
+  } = useDeleteVideo()
 
   useEffect(() => {
     if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
@@ -86,7 +84,7 @@ export const MyVideosView = () => {
     setCurrentTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        await removeAllUnseenDrafts(channelId)
+        await removeAllUnseenDrafts(activeChannelId)
       }
     }
   }

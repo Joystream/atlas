@@ -4,7 +4,7 @@ import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
   useDrafts,
-  useActiveUser,
+  useAuthorizedUser,
   EditVideoSheetTab,
   useEditVideoSheetTabData,
   EditVideoFormFields,
@@ -61,14 +61,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   onVideoFileChange,
   onDeleteVideo,
 }) => {
-  const { activeUser } = useActiveUser()
-  const channelId = activeUser.channelId ?? ''
+  const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
-  const { addDraft, updateDraft } = useDrafts('video', channelId)
+  const { addDraft, updateDraft } = useDrafts('video', activeChannelId)
   const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { categories, error: categoriesError } = useCategories()
@@ -81,7 +80,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     openVideoDeleteDialog,
     isDeleteDialogOpen,
     deleteTransactionStatus,
-  } = useDeleteVideo(activeUser.memberId)
+  } = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
