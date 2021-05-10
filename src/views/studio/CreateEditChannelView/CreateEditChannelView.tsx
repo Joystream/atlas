@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { languages } from '@/config/languages'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer, TransactionDialog } from '@/components'
 import {
   ActionBarTransaction,
@@ -39,7 +40,6 @@ import {
 import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
-import { ImageCropData } from '@/types/cropper'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -51,6 +51,7 @@ const FEE = 0
 type ImageAsset = {
   url: string | null
   blob: Blob | null
+  assetDimensions: AssetDimensions | null
   imageCropData: ImageCropData | null
 }
 type Inputs = {
@@ -109,8 +110,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     errors,
   } = useForm<Inputs>({
     defaultValues: {
-      avatar: { url: null, blob: null, imageCropData: null },
-      cover: { url: null, blob: null, imageCropData: null },
+      avatar: { url: null, blob: null, assetDimensions: null, imageCropData: null },
+      cover: { url: null, blob: null, assetDimensions: null, imageCropData: null },
       title: '',
       description: '',
       language: languages[0].value,
@@ -160,8 +161,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
     reset({
-      avatar: { blob: null, url: avatarPhotoUrl, imageCropData: null },
-      cover: { blob: null, url: coverPhotoUrl, imageCropData: null },
+      avatar: { blob: null, url: avatarPhotoUrl, assetDimensions: null, imageCropData: null },
+      cover: { blob: null, url: coverPhotoUrl, assetDimensions: null, imageCropData: null },
       title: title || '',
       description: description || '',
       isPublic: isPublic ?? false,
@@ -316,6 +317,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               type: 'channel',
               id: assetsOwner,
             },
+            dimensions: data.avatar.assetDimensions ?? undefined,
             imageCropData: data.avatar.imageCropData ?? undefined,
             type: 'avatar',
           },
@@ -332,6 +334,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               type: 'channel',
               id: assetsOwner,
             },
+            dimensions: data.cover.assetDimensions ?? undefined,
             imageCropData: data.cover.imageCropData ?? undefined,
             type: 'cover',
           },
@@ -414,7 +417,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 />
                 <ImageCropDialog
                   imageType="cover"
-                  onConfirm={(blob, url, imageCropData) => onChange({ blob, url, imageCropData })}
+                  onConfirm={(blob, url, assetDimensions, imageCropData) =>
+                    onChange({ blob, url, assetDimensions, imageCropData })
+                  }
                   ref={coverDialogRef}
                 />
               </>
@@ -436,7 +441,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   />
                   <ImageCropDialog
                     imageType="avatar"
-                    onConfirm={(blob, url, imageCropData) => onChange({ blob, url, imageCropData })}
+                    onConfirm={(blob, url, assetDimensions, imageCropData) =>
+                      onChange({ blob, url, assetDimensions, imageCropData })
+                    }
                     ref={avatarDialogRef}
                   />
                 </>
