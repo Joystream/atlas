@@ -99,10 +99,10 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     (data: Partial<EditVideoFormFields>) => {
       _setVideoTabsCachedDirtyFormData((currentMap) => ({
         ...currentMap,
-        [selectedVideoTab.id]: { ...data, ...selectedVideoTab },
+        [selectedVideoTab.id]: { ...data },
       }))
     },
-    [selectedVideoTab]
+    [selectedVideoTab?.id]
   )
 
   const setSelectedVideoTabCachedAssets = useCallback(
