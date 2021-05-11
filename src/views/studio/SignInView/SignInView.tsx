@@ -13,41 +13,30 @@ import {
 } from './SignInView.style'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { SignInStepsStepper } from '@/components'
-import { useJoystream, useActiveUser } from '@/hooks'
+import { useUser } from '@/hooks'
 import { useNavigate } from 'react-router'
 
-import { useMemberships } from '@/api/hooks'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()
-  const { setActiveUser, activeUser, setActiveChannel } = useActiveUser()
-
-  const { accounts } = useJoystream()
-
-  const { memberships } = useMemberships(
-    {
-      where: {
-        controllerAccount_in: accounts.map((a) => a.id),
-      },
-    },
-    {
-      fetchPolicy: 'network-only',
-    }
-  )
+  const { activeChannelId, setActiveUser, memberships } = useUser()
 
   const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
-    await setActiveUser({
-      ...activeUser,
+    const newActiveUser = {
       accountId: membership.controllerAccount,
       memberId: membership.id,
-    })
+      channelId: activeChannelId,
+    }
+
     if (membership.channels.length) {
-      if (!activeUser.channelId) {
-        setActiveChannel(membership.channels[0].id)
+      if (!activeChannelId) {
+        newActiveUser.channelId = membership.channels[0].id
       }
+      setActiveUser(newActiveUser)
       navigate(absoluteRoutes.studio.videos())
     } else {
+      setActiveUser(newActiveUser)
       navigate(absoluteRoutes.studio.newChannel())
     }
   }

@@ -1,6 +1,6 @@
 import { MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useConnectionStatus } from '@/hooks'
+import { useUser, useConnectionStatus } from '@/hooks'
 import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
@@ -19,9 +19,10 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useMemberships, useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription } from '@/api/hooks'
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
+import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
 
 type Inputs = {
   handle: string
@@ -30,7 +31,7 @@ type Inputs = {
 }
 
 const CreateMemberView = () => {
-  const { activeUser } = useActiveUser()
+  const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
@@ -53,44 +54,29 @@ const CreateMemberView = () => {
     throw queryNodeStateError
   }
 
-  const { error: membershipError, refetch: refetchMembership } = useMemberships(
-    {
-      where: {
-        // `controllerAccount_in` has to be used to trigger refresh on other queries using it
-        controllerAccount_in: [activeUser.accountId || ''],
-      },
-    },
-    {
-      skip: !activeUser.accountId,
-    }
-  )
-  if (membershipError) {
-    throw membershipError
-  }
-
   // success
   useEffect(() => {
-    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeUser.accountId) {
+    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
-      refetchMembership().then(() => {
+      refetchMemberships().then(() => {
         setIsSubmitting(false)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeUser.accountId, navigate, refetchMembership])
+  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
-    if (!activeUser.accountId) {
+    if (!activeAccountId) {
       return
     }
 
     try {
       setIsSubmitting(true)
-      const { block } = await createNewMember(activeUser.accountId, data)
+      const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
       setIsSubmitting(false)
@@ -137,9 +123,18 @@ const CreateMemberView = () => {
         />
         <StyledTextField
           name="handle"
-          placeholder="Johnny Smith"
+          placeholder="johnnysmith"
           label="Member Name"
-          ref={register(textFieldValidation('Member name', 4, 40, true))}
+          ref={register(
+            textFieldValidation({
+              name: 'Member name',
+              maxLength: 40,
+              minLength: 4,
+              required: true,
+              pattern: MEMBERSHIP_NAME_PATTERN,
+              patternMessage: 'may contain only lowercase letters, numbers and underscores',
+            })
+          )}
           error={!!errors.handle}
           helperText={errors.handle?.message}
         />
@@ -148,7 +143,7 @@ const CreateMemberView = () => {
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={100}
-          ref={register(textFieldValidation('About', 0, 100))}
+          ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />

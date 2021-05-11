@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   useEditVideoSheet,
-  useActiveUser,
+  useAuthorizedUser,
   useUploadsManager,
   useSnackbar,
   useJoystream,
@@ -17,20 +17,18 @@ import {
   CreateVideoMetadata,
   ExtrinsicStatus,
   VideoAssets,
-  ExtensionSignCancelledError,
+  ExtrinsicSignCancelledError,
   VideoId,
 } from '@/joystream-lib'
-import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { writeUrlInCache } from '@/utils/cachingAssets'
+import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
-  const {
-    activeUser: { channelId, memberId },
-  } = useActiveUser()
+  const { activeChannelId, activeMemberId } = useAuthorizedUser()
 
   // sheet state
   const {
@@ -47,7 +45,7 @@ export const EditVideoSheet: React.FC = () => {
   const isEdit = !selectedVideoTab?.isDraft
   const { drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
-  const { removeDraft } = useDrafts('video', channelId || '')
+  const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
   const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
@@ -58,10 +56,15 @@ export const EditVideoSheet: React.FC = () => {
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
   const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
-  const { startFileUpload } = useUploadsManager(channelId || '')
+  const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
+  })
+  const { refetchCount: refetchVideosCount } = useVideos({
+    where: {
+      channelId_eq: activeChannelId,
+    },
   })
 
   useEffect(() => {
@@ -95,7 +98,7 @@ export const EditVideoSheet: React.FC = () => {
     }
     const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
 
-    if (!joystream || !memberId || !channelId) {
+    if (!joystream) {
       return
     }
 
@@ -157,8 +160,8 @@ export const EditVideoSheet: React.FC = () => {
     try {
       if (isNew) {
         const { block, data: newVideoId } = await joystream.createVideo(
-          memberId,
-          channelId,
+          activeMemberId,
+          activeChannelId,
           metadata,
           assets,
           (status) => {
@@ -170,13 +173,19 @@ export const EditVideoSheet: React.FC = () => {
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
-          await refetchVideo({ where: { id: newVideoId } })
-          writeUrlInCache({
-            url: data.assets.thumbnail?.url,
-            fileType: 'thumbnail',
-            parentId: videoId,
-            client,
-          })
+          const fetchedVideo = await refetchVideo({ where: { id: newVideoId } })
+
+          if (fetchedVideo.data.videoByUniqueInput) {
+            writeVideoDataInCache({
+              data: fetchedVideo.data.videoByUniqueInput,
+              thumbnailUrl: data.assets.thumbnail?.url,
+              client,
+            })
+          }
+
+          // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
+          await refetchVideosCount()
+
           updateSelectedVideoTab({
             id: newVideoId,
             isDraft: false,
@@ -184,9 +193,16 @@ export const EditVideoSheet: React.FC = () => {
           removeDraft(selectedVideoTab?.id)
         })
       } else {
-        const { block } = await joystream.updateVideo(videoId, memberId, channelId, metadata, assets, (status) => {
-          setTransactionStatus(status)
-        })
+        const { block } = await joystream.updateVideo(
+          videoId,
+          activeMemberId,
+          activeChannelId,
+          metadata,
+          assets,
+          (status) => {
+            setTransactionStatus(status)
+          }
+        )
         setTransactionStatus(ExtrinsicStatus.Syncing)
         setTransactionBlock(block)
         setTransactionCallback(() => async () => {
@@ -202,16 +218,18 @@ export const EditVideoSheet: React.FC = () => {
       }
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
+        const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
         startFileUpload(
           videoInputFile.blob,
           {
             contentId: videoContentId,
-            owner: channelId,
+            owner: activeChannelId,
             parentObject: {
               type: 'video',
               id: videoId,
             },
             type: 'video',
+            dimensions: width && height ? { width, height } : undefined,
           },
           randomStorageProviderUrl
         )
@@ -221,18 +239,20 @@ export const EditVideoSheet: React.FC = () => {
           thumbnailInputFile.blob,
           {
             contentId: thumbnailContentId,
-            owner: channelId,
+            owner: activeChannelId,
             parentObject: {
               type: 'video',
               id: videoId,
             },
             type: 'thumbnail',
+            dimensions: thumbnailInputFile.assetDimensions,
+            imageCropData: thumbnailInputFile.imageCropData,
           },
           randomStorageProviderUrl
         )
       }
     } catch (e) {
-      if (e instanceof ExtensionSignCancelledError) {
+      if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setTransactionStatus(null)
         displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
@@ -259,6 +279,16 @@ export const EditVideoSheet: React.FC = () => {
     setTransactionStatus(null)
   }
 
+  const handleDeleteVideo = async (videoId: string) => {
+    const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
+    await refetchVideosCount()
+    removeVideoTab(videoTabIdx)
+    removeVideoFromCache(videoId, client)
+
+    // close the sheet if we closed the last tab
+    setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
+  }
+
   return (
     <>
       <TransactionDialog
@@ -283,6 +313,7 @@ export const EditVideoSheet: React.FC = () => {
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
         <EditVideoForm
+          onDeleteVideo={handleDeleteVideo}
           selectedVideoTab={selectedVideoTab}
           onSubmit={handleSubmit}
           onThumbnailFileChange={handleThumbnailFileChange}

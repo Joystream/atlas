@@ -2,9 +2,8 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Spinner, Text } from '@/shared/components'
 import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { useMembership, useMemberships } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useActiveUser, useJoystream } from '@/hooks'
+import { useUser } from '@/hooks'
 import { Navigate } from 'react-router-dom'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
@@ -15,36 +14,22 @@ type StudioEntrypointProps = {
 
 export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocation }) => {
   const {
-    activeUser: { accountId, memberId, channelId },
-    setActiveChannel,
-  } = useActiveUser()
-  const { extensionConnected: extensionStatus, accounts } = useJoystream()
-
-  const { membership, loading: membershipLoading } = useMembership(
-    {
-      where: { id: memberId },
-    },
-    {
-      skip: !memberId,
-    }
-  )
-
-  const { memberships, loading: membershipsLoading } = useMemberships(
-    {
-      where: { controllerAccount_in: accounts.map((a) => a.id) },
-    },
-    {
-      skip: !accounts.length,
-    }
-  )
-
-  const extensionConnected = extensionStatus === true
+    activeAccountId,
+    activeMemberId,
+    activeChannelId,
+    setActiveUser,
+    extensionConnected,
+    memberships,
+    membershipsLoading,
+    activeMembership,
+    activeMembershipLoading,
+  } = useUser()
 
   const hasMemberships = !membershipsLoading && memberships?.length
 
-  const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId
-  const channelSet = memberSet && !!channelId
+  const accountSet = !!activeAccountId && !!extensionConnected
+  const memberSet = accountSet && !!activeMemberId
+  const channelSet = memberSet && !!activeChannelId
 
   // not signed user with not created memberships and/or no extension
   if (!hasMemberships) {
@@ -59,11 +44,11 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   }
 
   // signed users
-  if (!membershipLoading && memberSet && !channelSet && hasMemberships) {
-    if (!membership?.channels.length) {
+  if (!activeMembershipLoading && memberSet && !channelSet && hasMemberships) {
+    if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.newChannel()} />
     }
-    setActiveChannel(membership.channels[0].id)
+    setActiveUser({ channelId: activeMembership.channels[0].id })
     return <Navigate to={enterLocation} />
   }
 
@@ -91,8 +76,8 @@ const LoadingStudioContainer = styled.main`
 export const StudioLoading: React.FC = () => {
   return (
     <LoadingStudioContainer>
-      <Text variant="h1">Loading Studio View</Text>
-      <Spinner />
+      <Text variant="h1">Loading Joystream studio...</Text>
+      <Spinner size="large" />
     </LoadingStudioContainer>
   )
 }

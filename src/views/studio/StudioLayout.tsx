@@ -22,8 +22,7 @@ import {
   EditVideoSheetProvider,
   useVideoEditSheetRouting,
   useConnectionStatus,
-  useActiveUser,
-  useJoystream,
+  useUser,
   UploadManagerProvider,
 } from '@/hooks'
 
@@ -38,7 +37,6 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
-import { useMemberships } from '@/api/hooks'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -47,25 +45,22 @@ const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
   const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
-  const { extensionConnected: extensionStatus, accounts } = useJoystream()
 
   const {
-    activeUser: { accountId, memberId, channelId },
-    loading: activeUserLoading,
-  } = useActiveUser()
-
-  const { memberships, loading: membershipsLoading } = useMemberships({
-    where: { controllerAccount_in: accounts.map((a) => a.id) },
-  })
+    activeAccountId,
+    activeMemberId,
+    activeChannelId,
+    extensionConnected,
+    memberships,
+    userInitialized,
+  } = useUser()
 
   const [enterLocation] = useState(location.pathname)
-  const extensionConnectionLoading = extensionStatus === null
-  const extensionConnected = extensionStatus === true
   const hasMembership = !!memberships?.length
 
-  const accountSet = !!accountId && extensionConnected
-  const memberSet = accountSet && !!memberId && hasMembership
-  const channelSet = memberSet && !!channelId && hasMembership
+  const accountSet = !!activeAccountId && !!extensionConnected
+  const memberSet = accountSet && !!activeMemberId && hasMembership
+  const channelSet = memberSet && !!activeChannelId && hasMembership
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
@@ -79,7 +74,7 @@ const StudioLayout = () => {
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
-      {extensionConnectionLoading || activeUserLoading || membershipsLoading ? (
+      {!userInitialized ? (
         <StudioLoading />
       ) : (
         <>
@@ -140,7 +135,7 @@ const StudioLayout = () => {
               </Routes>
             </ErrorBoundary>
           </MainContainer>
-          <EditVideoSheet />
+          {channelSet && <EditVideoSheet />}
         </>
       )}
     </>

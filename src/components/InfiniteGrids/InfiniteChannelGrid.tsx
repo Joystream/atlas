@@ -26,8 +26,6 @@ const QUERY_VARIABLES = {
   where: {
     isPublic_eq: true,
     isCensored_eq: false,
-    avatarPhotoAvailability_eq: AssetAvailability.Accepted,
-    coverPhotoAvailability_eq: AssetAvailability.Accepted,
   },
 }
 
