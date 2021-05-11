@@ -20,6 +20,7 @@ export const MyVideosView = () => {
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
+  const [videoTabToRemoveViaSnackbar, setVideoTabToRemoveViaSnackbar] = useState<number>()
   const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
@@ -106,7 +107,7 @@ export const MyVideosView = () => {
       title: 'Video opened in new tab',
       iconType: 'success',
       actionText: 'Remove',
-      onActionClick: () => index !== undefined && removeVideoTab(index),
+      onActionClick: () => setVideoTabToRemoveViaSnackbar(index),
     })
 
     if (opts.minimized) {
@@ -134,6 +135,13 @@ export const MyVideosView = () => {
       iconType: 'success',
     })
   }
+
+  useEffect(() => {
+    if (videoTabToRemoveViaSnackbar !== undefined) {
+      removeVideoTab(videoTabToRemoveViaSnackbar)
+      setVideoTabToRemoveViaSnackbar(undefined)
+    }
+  }, [removeVideoTab, videoTabToRemoveViaSnackbar])
 
   const gridContent = (
     <>
