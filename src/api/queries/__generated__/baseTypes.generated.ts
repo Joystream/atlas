@@ -89,6 +89,7 @@ export type Membership = {
 
 export type MembershipWhereUniqueInput = {
   id?: Maybe<Scalars['ID']>
+  handle?: Maybe<Scalars['String']>
 }
 
 export type MembershipWhereInput = {

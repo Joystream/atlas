@@ -6,6 +6,7 @@ import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
+import { useLazyQuery } from '@apollo/client'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
@@ -20,6 +21,7 @@ import {
   StyledTextField,
 } from './CreateMemberView.style'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
@@ -35,7 +37,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, setError: setInputError, getValues } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -54,6 +56,13 @@ const CreateMemberView = () => {
     throw queryNodeStateError
   }
 
+  const [getMember, { data: memberData }] = useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(
+    GetMembershipDocument,
+    {
+      onCompleted: () => createMemberOnCompleted(),
+    }
+  )
+
   // success
   useEffect(() => {
     if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
@@ -70,20 +79,28 @@ const CreateMemberView = () => {
   }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
+    getMember({ variables: { where: { handle: data.handle } } })
+  })
+
+  const createMemberOnCompleted = async () => {
+    if (memberData?.membershipByUniqueInput !== null) {
+      setInputError('handle', { message: 'Member name is already taken' })
+      return
+    }
     if (!activeAccountId) {
       return
     }
 
     try {
       setIsSubmitting(true)
-      const { block } = await createNewMember(activeAccountId, data)
+      const { block } = await createNewMember(activeAccountId, getValues())
       setMembershipBlock(block)
     } catch (error) {
       setIsSubmitting(false)
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       setError(errorMessage)
     }
-  })
+  }
 
   const debounceAvatarChange = debounce(async (value) => {
     await trigger('avatar')
