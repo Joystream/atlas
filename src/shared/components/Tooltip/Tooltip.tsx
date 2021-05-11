@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import Tippy from '@tippyjs/react/headless'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
-import { StyledTooltip, TooltipText, IconWrapper, Arrow } from './Tooltip.style'
+import { StyledTooltip, TooltipText, IconWrapper, Arrow, TooltipHeader } from './Tooltip.style'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
 export type TooltipProps = {
   text: string
+  headerText?: string
   icon?: boolean
   placement?: Placement
   offsetX?: number
@@ -18,6 +19,7 @@ export type TooltipProps = {
 
 const Tooltip: React.FC<TooltipProps> = ({
   text,
+  headerText,
   icon,
   children,
   placement = 'bottom-start',
@@ -40,13 +42,18 @@ const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs}>
-            {icon && (
-              <IconWrapper>
-                <SvgGlyphInfo />
-              </IconWrapper>
-            )}
+          <StyledTooltip {...attrs} headerText={!!headerText}>
+            <TooltipHeader>
+              {icon && (
+                <IconWrapper>
+                  <SvgGlyphInfo />
+                </IconWrapper>
+              )}
+              {headerText && <TooltipText variant="overhead">{headerText}</TooltipText>}
+            </TooltipHeader>
+
             <TooltipText variant="caption">{text}</TooltipText>
+
             {!arrowDisabled && <Arrow />}
           </StyledTooltip>
         </CSSTransition>

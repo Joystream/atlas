@@ -184,6 +184,9 @@ export type EditVideoFormFields = {
   description: string
   language: string | null
   category: string | null
+  licenseCode: number | null
+  licenseCustomText: string | null
+  licenseAttribution: string | null
   hasMarketing: boolean | null
   isPublic: boolean
   isExplicit: boolean | null
@@ -230,13 +233,16 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
       }
 
   const normalizedData: EditVideoFormFields = {
-    title: tab.isDraft ? draft?.title ?? 'New Draft' : videoData?.title ?? '',
-    description: (tab.isDraft ? draft?.description : videoData?.description) ?? '',
-    category: (tab.isDraft ? draft?.category : videoData?.category) ?? null,
-    language: (tab.isDraft ? draft?.language : videoData?.language) ?? 'en',
-    isPublic: (tab.isDraft ? draft?.isPublic : videoData?.isPublic) ?? true,
-    isExplicit: (tab.isDraft ? draft?.isExplicit : videoData?.isExplicit) ?? null,
-    hasMarketing: (tab.isDraft ? draft?.hasMarketing : videoData?.hasMarketing) ?? false,
+    title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
+    description: (tab.isDraft ? draft?.description : video?.description) ?? '',
+    category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
+    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? null,
+    licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
+    licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
+    language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
+    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
+    hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
       (tab.isDraft
         ? draft?.publishedBeforeJoystream

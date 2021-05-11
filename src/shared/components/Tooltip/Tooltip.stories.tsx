@@ -9,6 +9,7 @@ export default {
   component: Tooltip,
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },
+    headerText: { defaultValue: 'Lorem ipsum' },
     arrowDisabled: { defaultValue: false },
     placement: {
       control: { type: 'select', options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'] },
