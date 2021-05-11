@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
-import { CSSTransition } from 'react-transition-group'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -40,7 +39,6 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/componen
 import { formatISO, isValid } from 'date-fns'
 import { MessageDialog, TransactionDialog } from '@/components'
 import { License } from '@/api/queries'
-import { transitions } from '@/shared/theme'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -51,6 +49,8 @@ const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
+  tooltipText: license.description,
+  tooltipHeaderText: license.longName,
 }))
 
 type EditVideoFormProps = {
@@ -383,9 +383,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                     onChange(value)
                     handleFormChange()
                   }}
-                  icon
-                  tooltipTexts={knownLicenses.map((license) => license.description)}
-                  headerTooltipTexts={knownLicenses.map((license) => license.longName)}
                   error={!!errors.licenseCode && !value}
                   helperText={errors.licenseCode?.message}
                 />

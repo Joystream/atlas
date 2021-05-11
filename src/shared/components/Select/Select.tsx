@@ -15,6 +15,8 @@ import { SvgGlyphChevronDown } from '@/shared/icons'
 export type SelectItem<T = string> = {
   value: T
   name: string
+  tooltipHeaderText?: string
+  tooltipText?: string
 }
 
 export type SelectProps<T = string> = {
@@ -23,9 +25,6 @@ export type SelectProps<T = string> = {
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
-  icon?: boolean
-  tooltipTexts?: string[]
-  headerTooltipTexts?: string[]
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -36,9 +35,6 @@ const Select = <T,>({
   error,
   value,
   disabled,
-  icon = false,
-  tooltipTexts,
-  headerTooltipTexts,
   onChange,
   containerRef,
   ...inputBaseProps
@@ -87,10 +83,10 @@ const Select = <T,>({
                 key={`${item.name}-${index}`}
                 {...getItemProps({ item: item.value, index })}
               >
-                {icon && tooltipTexts?.length && (
+                {item.tooltipText && (
                   <Tooltip
-                    headerText={headerTooltipTexts?.[index]}
-                    text={tooltipTexts[index]}
+                    headerText={item.tooltipHeaderText}
+                    text={item.tooltipText}
                     placement="top-end"
                     offsetX={6}
                     offsetY={12}
