@@ -204,7 +204,9 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && <EmptyVideos />}
+            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
+              <EmptyVideos isDraftTab={isDraftTab} />
+            )}
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}

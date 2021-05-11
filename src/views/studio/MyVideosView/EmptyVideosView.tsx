@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { ReactComponent as WellIllustration } from '@/assets/well-blue.svg'
 import { ReactComponent as EmptyIllustration } from '@/assets/empty-videos-illustration.svg'
+import { ReactComponent as TheaterMaskIllustration } from '@/assets/theater-mask.svg'
 import { Button, Text } from '@/shared/components'
 import { sizes, colors, media } from '@/shared/theme'
 import { SvgGlyphAddVideo } from '@/shared/icons'
@@ -28,6 +28,11 @@ export const EmptyVideosView: React.FC = () => {
     </ContainerView>
   )
 }
+
+const Subtitle = styled(Text)`
+  margin-top: 8px;
+  color: ${colors.gray[300]};
+`
 
 const StyledWEmptyIllustration = styled(EmptyIllustration)`
   margin: 0 auto;
@@ -87,38 +92,39 @@ const MessageView = styled.div`
 `
 
 // for tabs
-export const EmptyVideos = () => {
+export const EmptyVideos: React.FC<{ isDraftTab: boolean }> = ({ isDraftTab }) => {
   return (
     <Container>
-      <WellIllustration />
+      <TheaterMaskIllustration />
       <Message>
-        <Text variant="h5">No videos found...</Text>
+        <Text secondary variant="body2">
+          There are no {isDraftTab ? 'drafts' : 'videos'} currently
+        </Text>
+        <Button icon={<SvgGlyphAddVideo />} to={absoluteRoutes.studio.editVideo()} size="large">
+          Upload video
+        </Button>
       </Message>
-      <Button icon={<SvgGlyphAddVideo />} to={absoluteRoutes.studio.editVideo()} size="large">
-        Upload video
-      </Button>
     </Container>
   )
 }
 
 const Container = styled.div`
-  margin: ${sizes(20)} auto 0;
   display: grid;
   place-items: center;
   > svg {
-    max-width: 650px;
+    max-width: 100%;
+  }
+  ${media.small} {
+    margin: ${sizes(20)} auto 0;
   }
 `
 
 const Message = styled.div`
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  top: -256px;
+  display: grid;
+  gap: ${sizes(4)};
   text-align: center;
   margin-top: 48px;
   margin-bottom: ${sizes(4)};
-`
-
-const Subtitle = styled(Text)`
-  margin-top: 8px;
-  color: ${colors.gray[300]};
 `
