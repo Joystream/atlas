@@ -14,8 +14,15 @@ const Legal: React.FC = () => {
             <br />
             <br />
             Copyright owners and their agents may notify us in cases where content hosted on our testnets (available
-            publicly at [play.joystream.org] and [testnet.joystream.org]) infringes on their copyrights by sending a
-            DMCA notice to us using the contact information below.
+            publicly at{' '}
+            <a href="https://play.joystream.org" rel="noopener noreferrer" target="_blank">
+              play.joystream.org
+            </a>{' '}
+            and{' '}
+            <a href="https://testnet.joystream.org" rel="noopener noreferrer" target="_blank">
+              testnet.joystream.org
+            </a>
+            ) infringes on their copyrights by sending a DMCA notice to us using the contact information below.
             <br />
             <br />
             Upon receipt of a valid and complete notice, we will remove the content from our public-facing applications
@@ -55,19 +62,24 @@ const Legal: React.FC = () => {
           </ol>
           <Paragraph header>DMCA Agent Information</Paragraph>
           <Paragraph>
-            Our dedicated email address for DMCA notifications is: abuse@jsgenesis.com.
+            Our dedicated email address for DMCA notifications is:{' '}
+            <a href="mailto:abuse@jsgenesis.com">abuse@jsgenesis.com</a>.
+            <br />
             <br />
             Alternatively you can contact us by post:
             <br />
             <br />
-            Designated DMCA Agent Jsgenesis AS
+            <address>
+              Designated DMCA Agent Jsgenesis AS
+              <br />
+              CO UMA Workspace Stenersgata 8
+              <br />
+              Oslo, 0184 Norway
+            </address>
             <br />
-            CO UMA Workspace Stenersgata 8
             <br />
-            Oslo, 0184 Norway
-            <br />
-            <br />
-            Or by telephone: +44789553019
+            Or by telephone:
+            <a href="tel:+44789553019">+44789553019</a>
           </Paragraph>
           <Paragraph header>DMCA Counter Notification</Paragraph>
           <Paragraph>
