@@ -16,6 +16,7 @@ export default {
   channel: (id = ':id') => `/channel/${id}`,
   videos: () => '/videos',
   channels: () => '/channels',
+  legal: () => '/legal',
 }
 
 export const QUERY_PARAMS = {
