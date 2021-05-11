@@ -59,7 +59,7 @@ const CreateMemberView = () => {
   const [getMember, { data: memberData }] = useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(
     GetMembershipDocument,
     {
-      onCompleted: () => createMemberOnCompleted(),
+      onCompleted: () => createMemberOnCompletedFetch(),
     }
   )
 
@@ -82,7 +82,7 @@ const CreateMemberView = () => {
     getMember({ variables: { where: { handle: data.handle } } })
   })
 
-  const createMemberOnCompleted = async () => {
+  const createMemberOnCompletedFetch = async () => {
     if (memberData?.membershipByUniqueInput !== null) {
       setInputError('handle', { message: 'Member name is already taken' })
       return
