@@ -141,6 +141,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     if (sheetState === 'closed') {
       setVideoTabs([])
       setSelectedVideoTabIdx(-1)
+      setAssetsCache({})
+      _setVideoTabsCachedDirtyFormData({})
     }
   }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
 
