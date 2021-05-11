@@ -1,6 +1,7 @@
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { LabelText } from '../InputBase'
+import { SvgGlyphInfo } from '@/shared/icons'
 
 export const SelectWrapper = styled.div`
   width: 100%;
@@ -57,6 +58,7 @@ type SelectOptionProps = {
 }
 
 export const SelectOption = styled.li<SelectOptionProps>`
+  display: flex;
   margin: 0;
   cursor: pointer;
   padding: ${sizes(3)} ${sizes(3)};
@@ -65,5 +67,16 @@ export const SelectOption = styled.li<SelectOptionProps>`
 
   :hover {
     background-color: ${colors.gray[600]};
+  }
+
+  *:first-of-type {
+    margin-right: ${sizes(2)};
+  }
+`
+
+export const StyledSvgGlyphInfo = styled(SvgGlyphInfo)`
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
   }
 `

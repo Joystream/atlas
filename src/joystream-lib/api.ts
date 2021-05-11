@@ -25,6 +25,7 @@ import {
 } from '@joystream/types/content'
 import {
   ChannelMetadata,
+  License,
   MediaType,
   PublishedBeforeJoystream,
   VideoMetadata,
@@ -239,6 +240,18 @@ export class JoystreamJs {
     if (inputMetadata.hasMarketing != null) {
       protoMeta.setHasMarketing(inputMetadata.hasMarketing)
     }
+
+    const protoLicenseType = new License()
+    if (inputMetadata.license?.code != null) {
+      protoLicenseType.setCode(inputMetadata.license.code)
+    }
+    if (inputMetadata.license?.attribution != null) {
+      protoLicenseType.setAttribution(inputMetadata.license.attribution)
+    }
+    if (inputMetadata.license?.customText != null) {
+      protoLicenseType.setCustomText(inputMetadata.license.customText)
+    }
+    protoMeta.setLicense(protoLicenseType)
 
     const protoMediaType = new MediaType()
     if (inputMetadata.mimeMediaType != null) {

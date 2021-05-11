@@ -1,12 +1,22 @@
 import React, { Ref } from 'react'
 import InputBase, { InputBaseProps } from '../InputBase'
-import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledLabelText } from './Select.style'
+import {
+  SelectButton,
+  SelectMenu,
+  SelectOption,
+  SelectWrapper,
+  StyledLabelText,
+  StyledSvgGlyphInfo,
+} from './Select.style'
 import { useSelect, UseSelectStateChange } from 'downshift'
+import { Tooltip } from '@/shared/components'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
 export type SelectItem<T = string> = {
   value: T
   name: string
+  tooltipHeaderText?: string
+  tooltipText?: string
 }
 
 export type SelectProps<T = string> = {
@@ -70,9 +80,20 @@ const Select = <T,>({
             items.map((item, index) => (
               <SelectOption
                 isSelected={highlightedIndex === index}
-                key={index}
+                key={`${item.name}-${index}`}
                 {...getItemProps({ item: item.value, index })}
               >
+                {item.tooltipText && (
+                  <Tooltip
+                    headerText={item.tooltipHeaderText}
+                    text={item.tooltipText}
+                    placement="top-end"
+                    offsetX={6}
+                    offsetY={12}
+                  >
+                    <StyledSvgGlyphInfo />
+                  </Tooltip>
+                )}
                 {item?.name}
               </SelectOption>
             ))}

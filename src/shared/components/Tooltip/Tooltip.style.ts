@@ -2,6 +2,10 @@ import styled from '@emotion/styled'
 import { colors, sizes, typography } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
+type StyledTooltipProps = {
+  headerText?: boolean
+}
+
 export const IconWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -35,10 +39,21 @@ export const TooltipText = styled(Text)`
   line-height: ${typography.lineHeights.subtitle1};
 `
 
-export const StyledTooltip = styled.div`
+export const TooltipHeader = styled.div`
+  display: flex;
+  margin-bottom: ${sizes(2)};
+`
+
+export const StyledTooltip = styled.div<StyledTooltipProps>`
   display: inline-flex;
+  flex-direction: ${({ headerText }) => (headerText ? 'column' : 'row')};
   padding: ${sizes(2)};
   background-color: ${colors.gray[400]};
+
+  ${TooltipHeader} {
+    align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};
+  }
+
   &[data-placement^='top-start'] ${Arrow} {
     bottom: -6px;
     left: 12px;
