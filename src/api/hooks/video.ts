@@ -7,6 +7,7 @@ import {
   GetVideosQueryVariables,
   useGetVideosQuery,
   useGetVideoCountQuery,
+  VideoOrderByInput,
 } from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
@@ -32,8 +33,13 @@ export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts
       where: variables?.where,
     },
   })
+  const videos =
+    variables?.orderBy === VideoOrderByInput.CreatedAtAsc
+      ? data?.videos?.slice()?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      : data?.videos?.slice()?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+
   return {
-    videos: data?.videos,
+    videos,
     loading: videosLoading || countLoading,
     totalCount: connectionData?.videosConnection.totalCount,
     refetchCount,

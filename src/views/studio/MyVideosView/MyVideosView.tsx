@@ -6,11 +6,21 @@ import { Grid, Pagination, Tabs, Text, Select } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
-import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
+import {
+  PaginationContainer,
+  SortContainer,
+  StyledDismissibleMessage,
+  TabsContainer,
+  ViewContainer,
+} from './MyVideos.styles'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
-import styled from '@emotion/styled'
+import { VideoOrderByInput } from '@/api/queries'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
+const SORT_OPTIONS = [
+  { name: 'ascending', value: VideoOrderByInput.CreatedAtAsc },
+  { name: ' descending', value: VideoOrderByInput.CreatedAtDesc },
+] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 
@@ -19,6 +29,9 @@ export const MyVideosView = () => {
   const { setSheetState, videoTabs, addVideoTab } = useEditVideoSheet()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
+  const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
+    VideoOrderByInput.CreatedAtAsc
+  )
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -28,12 +41,27 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
+  const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { loading, videos, totalCount, error, fetchMore, refetchCount: refetchVideosCount, client } = useVideos(
+  const drafts =
+    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+
+  const {
+    loading,
+    videos,
+    totalCount,
+    error,
+    fetchMore,
+    refetch,
+    refetchCount: refetchVideosCount,
+    client,
+  } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
+      orderBy: sortVideosBy,
       where: {
         channelId_eq: activeChannelId,
         isPublic_eq,
@@ -183,7 +211,6 @@ export const MyVideosView = () => {
   }
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
-  const sorts = ['ascending', 'descending']
   return (
     <StudioContainer>
       <ViewContainer>
@@ -195,16 +222,17 @@ export const MyVideosView = () => {
             <TabsContainer>
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
               <SortContainer>
-                Sort by
+                <Text variant="body2">Sort by</Text>
                 <Select
-                  value={null}
-                  items={categoriesSelectItems}
+                  helperText={false}
+                  value={sortVideosBy}
+                  items={[...SORT_OPTIONS]}
                   onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
+                    if (value) {
+                      setSortVideosBy(value)
+                      refetch({ orderBy: value })
+                    }
                   }}
-                  error={!!errors.category && !value}
-                  helperText={errors.category?.message}
                 />
               </SortContainer>
             </TabsContainer>
@@ -256,8 +284,3 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
       return undefined
   }
 }
-
-const SortContainer = styled.div`
-  display: flex;
-  align-items: center;
-`
