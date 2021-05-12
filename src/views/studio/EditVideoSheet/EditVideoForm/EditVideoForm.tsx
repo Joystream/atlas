@@ -133,6 +133,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   })
 
   useEffect(() => {
+    if (isEdit) {
+      return
+    }
     // reset multifileselect when sheetState is closed
     if (sheetState === 'closed') {
       setValue('assets', {
@@ -140,7 +143,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         thumbnail: null,
       })
     }
-  }, [sheetState, setValue])
+  }, [sheetState, setValue, isEdit])
 
   // we pass the functions explicitly so the debounced function doesn't need to change when those functions change
   const debouncedDraftSave = useRef(
