@@ -2,12 +2,13 @@ import { useVideos } from '@/api/hooks'
 import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
-import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+import { Grid, Pagination, Tabs, Text, Select } from '@/shared/components'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+import styled from '@emotion/styled'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -193,6 +194,7 @@ export const MyVideosView = () => {
           <>
             <TabsContainer>
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+              <SortContainer>Sort by </SortContainer>
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage
@@ -242,3 +244,8 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
       return undefined
   }
 }
+
+const SortContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
