@@ -18,6 +18,7 @@ export type EditVideoSheetTab = {
 }
 
 type EditVideoAssetsCache = Record<string, InputFilesState>
+type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields>>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
@@ -26,6 +27,8 @@ type ContextValue = {
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
+  selectedVideoTabCachedDirtyFormData: Partial<EditVideoFormFields> | undefined
+  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<EditVideoFormFields>) => void
   selectedVideoTabCachedAssets: InputFilesState
   setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
@@ -42,7 +45,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-
+  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
   const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
@@ -112,6 +115,18 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [assetsCache, selectedVideoTabIdx, videoTabs]
   )
 
+  const setSelectedVideoTabCachedDirtyFormData = useCallback(
+    (data: Partial<EditVideoFormFields>) => {
+      _setVideoTabsCachedDirtyFormData((currentMap) => ({
+        ...currentMap,
+        [selectedVideoTab.id]: { ...data },
+      }))
+    },
+    [selectedVideoTab?.id]
+  )
+
+  const selectedVideoTabCachedDirtyFormData = videoTabsCachedDirtyFormData[selectedVideoTab?.id]
+
   useEffect(() => {
     if (sheetState === cachedSheetState) {
       return
@@ -131,6 +146,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       setVideoTabs([])
       setSelectedVideoTabIdx(-1)
       setAssetsCache({})
+      _setVideoTabsCachedDirtyFormData({})
     }
   }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
 
@@ -156,6 +172,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSheetState,
         selectedVideoTabCachedAssets,
         setSelectedVideoTabCachedAssets,
+        selectedVideoTabCachedDirtyFormData,
+        setSelectedVideoTabCachedDirtyFormData,
       }}
     >
       {children}
@@ -194,17 +212,22 @@ export type EditVideoFormFields = {
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
-
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
   if (!tab) {
     return {
-      data: null,
+      tabData: null,
       loading: false,
       error: null,
     }
+  }
+
+  const videoData = {
+    ...video,
+    category: video?.category?.id,
+    language: video?.language?.iso,
   }
 
   const draft = drafts.find((d) => d.id === tab.id)
@@ -240,12 +263,12 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
         ? draft?.publishedBeforeJoystream
           ? parseISO(draft.publishedBeforeJoystream)
           : null
-        : video?.publishedBeforeJoystream) ?? null,
+        : videoData?.publishedBeforeJoystream) ?? null,
     assets,
   }
 
   return {
-    data: normalizedData,
+    tabData: normalizedData,
     loading: tab.isDraft ? false : loading,
     error,
   }
