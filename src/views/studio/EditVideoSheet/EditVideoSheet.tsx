@@ -222,7 +222,7 @@ export const EditVideoSheet: React.FC = () => {
           callback?.()
         })
       }
-
+      let uploadCount = 0
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
         startFileUpload(
@@ -239,6 +239,7 @@ export const EditVideoSheet: React.FC = () => {
           },
           randomStorageProviderUrl
         )
+        uploadCount++
       }
       if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
         startFileUpload(
@@ -256,6 +257,10 @@ export const EditVideoSheet: React.FC = () => {
           },
           randomStorageProviderUrl
         )
+        uploadCount++
+      }
+      if (uploadCount > 0) {
+        displaySnackbar({ title: `(${uploadCount}) Assets being uploaded`, iconType: 'info' })
       }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {

@@ -89,14 +89,11 @@ export const SnackbarButtonsContainer = styled.div`
 export const SnackbarActionButton = styled(Button)`
   display: flex;
   align-items: center;
-  padding: 0;
+  padding: ${sizes(2)};
   min-width: auto;
   font-size: ${sizes(3)};
   margin-right: ${sizes(2)};
   font-size: ${typography.sizes.body1};
-  span {
-    margin-top: calc(-1 * ${sizes(1)});
-  }
 `
 
 export const SnackbarIconContainer = styled.span`
