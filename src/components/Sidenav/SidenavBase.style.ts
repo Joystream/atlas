@@ -80,7 +80,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  a:not(:first-of-type) {
+  * + * {
     margin-top: ${sizes(4)};
   }
 `
