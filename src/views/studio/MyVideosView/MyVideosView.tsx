@@ -104,9 +104,9 @@ export const MyVideosView = () => {
     addVideoTab({ id, isDraft: opts.draft })
 
     displaySnackbar({
-      title: 'Video opened in new tab',
+      title: 'Video opened in a new tab',
       iconType: 'success',
-      actionText: 'Remove',
+      actionText: 'Undo',
       onActionClick: () => setTabIdToRemoveViaSnackbar(id),
     })
 
@@ -131,7 +131,7 @@ export const MyVideosView = () => {
   const confirmRemoveDraft = (id: string) => {
     removeDraft(id)
     displaySnackbar({
-      title: 'Draft successfully deleted',
+      title: 'Draft deleted',
       iconType: 'success',
     })
   }
