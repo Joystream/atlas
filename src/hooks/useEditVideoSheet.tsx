@@ -21,7 +21,7 @@ type EditVideoAssetsCache = Record<string, InputFilesState>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
-  addVideoTab: (tab?: EditVideoSheetTab, shouldSelect?: boolean) => number | undefined
+  addVideoTab: (tab?: EditVideoSheetTab, shouldSelect?: boolean) => void
   removeVideoTab: (tabIdx: number) => void
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
@@ -54,15 +54,12 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       if (videoTabs.find((t) => t.id === tabToAdd.id)) {
         return
       }
-      const newVideoTabs = [...videoTabs, tabToAdd]
-      setVideoTabs(newVideoTabs)
+      setVideoTabs([...videoTabs, tabToAdd])
 
       if (shouldSelect) {
         const newTabIdx = videoTabs.length
         setSelectedVideoTabIdx(newTabIdx)
       }
-      // return index of added tab
-      return newVideoTabs.length - 1
     },
     [videoTabs]
   )

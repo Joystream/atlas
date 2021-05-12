@@ -49,9 +49,10 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     }
   }, [checkConnection])
 
+  // setting initialMount ref to true to prevent displaying "Network connection restored" on entering Studio
   const isInitialMount = useRef(true)
-
   useEffect(() => {
+    // without that condition snackbar will appear on entering the app
     if (isInitialMount.current) {
       isInitialMount.current = false
     } else {
