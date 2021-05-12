@@ -2,7 +2,13 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { DraftsProvider, ActiveUserProvider, ConnectionStatusProvider, UploadManagerProvider } from '@/hooks'
+import {
+  DraftsProvider,
+  ActiveUserProvider,
+  ConnectionStatusProvider,
+  UploadManagerProvider,
+  SnackbarProvider,
+} from '@/hooks'
 import {
   FileHashing,
   ImageDownsizing,
@@ -28,30 +34,32 @@ const playgroundRoutes = [
 
 export const PlaygroundLayout = () => {
   return (
-    <UploadManagerProvider>
-      <ConnectionStatusProvider>
-        <DraftsProvider>
-          <ActiveUserProvider>
-            <Container>
-              <NavContainer>
-                {playgroundRoutes.map((route) => (
-                  <Link key={route.path} to={route.path}>
-                    {route.name}
-                  </Link>
-                ))}
-              </NavContainer>
-              <ContentContainer>
-                <Routes>
+    <SnackbarProvider>
+      <UploadManagerProvider>
+        <ConnectionStatusProvider>
+          <DraftsProvider>
+            <ActiveUserProvider>
+              <Container>
+                <NavContainer>
                   {playgroundRoutes.map((route) => (
-                    <Route key={route.path} path={route.path} element={route.element} />
+                    <Link key={route.path} to={route.path}>
+                      {route.name}
+                    </Link>
                   ))}
-                </Routes>
-              </ContentContainer>
-            </Container>
-          </ActiveUserProvider>
-        </DraftsProvider>
-      </ConnectionStatusProvider>
-    </UploadManagerProvider>
+                </NavContainer>
+                <ContentContainer>
+                  <Routes>
+                    {playgroundRoutes.map((route) => (
+                      <Route key={route.path} path={route.path} element={route.element} />
+                    ))}
+                  </Routes>
+                </ContentContainer>
+              </Container>
+            </ActiveUserProvider>
+          </DraftsProvider>
+        </ConnectionStatusProvider>
+      </UploadManagerProvider>
+    </SnackbarProvider>
   )
 }
 

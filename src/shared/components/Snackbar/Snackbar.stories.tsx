@@ -16,7 +16,7 @@ export default {
       defaultValue: 'secondary',
     },
     iconType: {
-      control: { type: 'select', options: [null, 'error', 'success', 'info'] },
+      control: { type: 'select', options: [null, 'error', 'success', 'info', 'warning'] },
       defaultValue: null,
     },
     timeout: { control: { type: 'number' }, defaultValue: null },

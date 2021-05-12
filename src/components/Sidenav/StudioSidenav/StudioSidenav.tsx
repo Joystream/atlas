@@ -39,7 +39,7 @@ export const StudioSidenav: React.FC = () => {
 
   const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
-  const assetsInProgress = uploadsState.filter((asset) => asset.lastStatus === 'inProgress')
+  const assetsInProgress = uploadsState.flat().filter((asset) => asset.lastStatus === 'inProgress')
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
     if (item.to === absoluteRoutes.studio.videos()) {
