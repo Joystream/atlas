@@ -112,7 +112,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (asset.lastStatus === 'reconnectionError') {
       return (
         <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
-          Change host (0.2 JOY)
+          Change host
         </Button>
       )
     }
@@ -149,7 +149,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     <>
       <MessageDialog
         title="Different file was selected!"
-        description="We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or make a new transaction (0.2JOY) and upload a new version of file."
+        description={`We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
+          asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
+        } to use the new file.`}
         showDialog={showDialog}
         variant="warning"
         onSecondaryButtonClick={() => {
@@ -166,7 +168,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
           setShowDialog(false)
           openFileSelect()
         }}
-        secondaryButtonText="Upload new (0.2 JOY)"
+        secondaryButtonText={`Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`}
         exitButton={false}
       />
       <FileLineContainer isLast={isLast}>
