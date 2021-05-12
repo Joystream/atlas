@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { LiaisonJudgement } from '@/api/queries/__generated__/baseTypes.generated'
+import { LiaisonJudgement } from '@/api/queries'
 import {
   Container,
   AssetsGroupUploadBarContainer,
@@ -22,7 +22,7 @@ export type UploadData = {
 } & AssetUploadWithProgress
 
 export type AssetsGroupBarUploadProps = {
-  uploadData: UploadData[]
+  uploadData: AssetUploadWithProgress[]
 }
 
 const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
-import { useSnackbar, useAuthorizedUser } from '@/hooks'
+import { useSnackbar, useUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { ChannelId } from '@/joystream-lib'
@@ -38,8 +38,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
-  const { activeChannelId } = useAuthorizedUser()
-  const { channel, loading: channelLoading } = useChannel(activeChannelId)
+  const { activeChannelId } = useUser()
+  const { channel, loading: channelLoading } = useChannel(activeChannelId ?? '')
   const { videos, loading: videosLoading } = useVideos(
     {
       where: {
@@ -59,18 +59,20 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const allDataObjects = [...channelDataObjects, ...videosDataObjects]
 
   // Enriching data with pending/accepted/rejected status
-  const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress.map((asset) => {
-    const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
-    if (!dataObject && !channelLoading && !videosLoading) {
-      console.warn(`Data object not found. ContentId: ${asset.contentId}`)
-    }
+  const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress
+    .map((asset) => {
+      const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
+      if (!dataObject && !channelLoading && !videosLoading) {
+        return null
+      }
 
-    return { ...asset, liaisonJudgement: dataObject?.liaisonJudgement, ipfsContentId: dataObject?.ipfsContentId }
-  })
+      return { ...asset, liaisonJudgement: dataObject?.liaisonJudgement, ipfsContentId: dataObject?.ipfsContentId }
+    })
+    .filter((asset) => asset !== null)
 
   const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
     (asset) =>
-      asset.liaisonJudgement === LiaisonJudgement.Pending &&
+      asset?.liaisonJudgement === LiaisonJudgement.Pending &&
       asset.lastStatus === 'inProgress' &&
       asset.progress === 0 &&
       !assetsFiles.find((item) => item.contentId === asset.ipfsContentId)
@@ -93,19 +95,30 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
 
   // Enriching video type assets with video title
   const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
-    if (asset.type === 'video') {
+    if (asset?.type === 'video') {
       const video = videos?.find((video) => video.mediaDataObject?.joystreamContentId === asset.contentId)
-      if (!video && !videosLoading) {
-        console.warn(`Video not found. ContentId: ${asset.contentId}`)
-      }
-      return { ...asset, title: video?.title }
+      const title = video?.title ?? null
+      return { ...asset, title }
     }
     return asset
+  })
+
+  // Check if liaison data and video title is available
+  uploadsStateWithVideoTitles.map((asset) => {
+    if (!channelLoading && !videosLoading && (!asset?.liaisonJudgement || !asset?.ipfsContentId)) {
+      console.warn(`Asset does not contain liaisonJudgement. ContentId: ${asset?.contentId}`)
+    }
+    if (!channelLoading && !videosLoading && asset?.type === 'video' && !asset?.title) {
+      console.warn(`Video type asset does not contain title. ContentId: ${asset.contentId}`)
+    }
   })
 
   // Grouping all assets by parent id (videos, channel)
   const uploadsStateGroupedByParentObjectId = Object.values(
     uploadsStateWithVideoTitles.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+      if (!asset) {
+        return acc
+      }
       const key = asset.parentObject.id
       !acc[key] ? (acc[key] = [{ ...asset }]) : acc[key].push(asset)
       return acc

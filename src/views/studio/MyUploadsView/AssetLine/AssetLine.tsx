@@ -16,7 +16,7 @@ import {
   StatusMessage,
   ProgressbarContainer,
 } from './AssetLine.style'
-import { UploadData } from '../AssetsGroupUploadBar/AssetsGroupUploadBar'
+import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { MessageDialog } from '@/components'
 import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
@@ -24,7 +24,7 @@ import { LiaisonJudgement } from '@/api/queries'
 
 type AssetLineProps = {
   isLast?: boolean
-  asset: UploadData
+  asset: AssetUploadWithProgress
 }
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
@@ -105,7 +105,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       : ''
   const size = formatBytes(asset.size)
 
-  const renderStatusMessage = (asset: UploadData) => {
+  const renderStatusMessage = (asset: AssetUploadWithProgress) => {
     if (asset.lastStatus === 'reconnecting') {
       return 'Trying to reconnect...'
     }
@@ -131,7 +131,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     }
   }
 
-  const renderStatusIndicator = (asset: UploadData) => {
+  const renderStatusIndicator = (asset: AssetUploadWithProgress) => {
     if (asset.lastStatus === 'completed') {
       return <SvgAlertSuccess />
     }
