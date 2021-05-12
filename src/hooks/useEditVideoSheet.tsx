@@ -54,6 +54,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       if (videoTabs.find((t) => t.id === tabToAdd.id)) {
         return
       }
+
       setVideoTabs([...videoTabs, tabToAdd])
 
       if (shouldSelect) {
