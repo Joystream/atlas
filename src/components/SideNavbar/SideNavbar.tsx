@@ -77,7 +77,7 @@ const SideNavbar: React.FC<SidenavProps> = ({ items }) => {
           <div />
         )}
         <LegalLink onClick={closeSideNav} expanded={expanded} to="/legal" content="xd">
-          Legal information
+          Copyright Policy
         </LegalLink>
       </SidebarNav>
     </>
