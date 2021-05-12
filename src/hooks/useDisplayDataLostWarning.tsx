@@ -2,8 +2,8 @@ import { MessageDialog } from '@/components'
 import React, { useState } from 'react'
 
 type OpenWarningDialogArgs = {
-  cancelCallback?: () => void
-  confirmCallback?: () => void
+  onCancel?: () => void
+  onConfirm?: () => void
 }
 
 export const useDisplayDataLostWarning = () => {
@@ -11,10 +11,10 @@ export const useDisplayDataLostWarning = () => {
   const [confirmWarningCallback, setConfirmWarningCallback] = useState<undefined | (() => void)>()
   const [cancelWarningCallback, setCancelWarningCallback] = useState<undefined | (() => void)>()
 
-  const openWarningDialog = ({ cancelCallback, confirmCallback }: OpenWarningDialogArgs) => {
+  const openWarningDialog = ({ onCancel, onConfirm }: OpenWarningDialogArgs) => {
     setLostDatadDialogVisible(true)
-    setConfirmWarningCallback(() => confirmCallback)
-    setCancelWarningCallback(() => cancelCallback)
+    setConfirmWarningCallback(() => onConfirm)
+    setCancelWarningCallback(() => onCancel)
   }
 
   const confirmCloseSheet = () => {
@@ -29,8 +29,8 @@ export const useDisplayDataLostWarning = () => {
 
   const renderWarning = () => (
     <MessageDialog
-      title="Video & image data will be lost"
-      description="Drafts are stored locally and dont contain metadata for video and image file - if you abandon the proccess those files will have to be uploaded again."
+      title="Drafts' video & image data will be lost"
+      description="Drafts' assets aren't stored permanently. If you proceed, you will need to reselect the files again."
       primaryButtonText="Proceed"
       showDialog={lostDataDialogVisible}
       onPrimaryButtonClick={confirmCloseSheet}

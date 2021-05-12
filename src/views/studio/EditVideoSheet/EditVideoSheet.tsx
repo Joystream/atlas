@@ -41,8 +41,8 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
     updateSelectedVideoTab,
-    haveVideoTabsAssetCache,
-    hasVideoTabAssetCache,
+    anyVideoTabsCachedAssets,
+    hasVideoTabAnyCachedAssets,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -72,19 +72,18 @@ export const EditVideoSheet: React.FC = () => {
   const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
-    if (sheetState === 'closed' || !haveVideoTabsAssetCache) {
+    if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
       return
     }
 
     const beforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault()
-      e.returnValue = 'Do you want to leave this page? Changes that you made may not be saved.'
     }
     window.addEventListener('beforeunload', beforeUnload)
     return () => {
       window.removeEventListener('beforeunload', beforeUnload)
     }
-  }, [sheetState, haveVideoTabsAssetCache])
+  }, [sheetState, anyVideoTabsCachedAssets])
 
   useEffect(() => {
     if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
@@ -305,16 +304,16 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const closeSheet = () => {
-    if (haveVideoTabsAssetCache) {
-      openWarningDialog({ confirmCallback: () => setSheetState('closed') })
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => setSheetState('closed') })
     } else {
       setSheetState('closed')
     }
   }
 
   const handleRemoveVideoTab = (tabIdx: number) => {
-    if (hasVideoTabAssetCache(tabIdx)) {
-      openWarningDialog({ confirmCallback: () => removeVideoTab(tabIdx) })
+    if (hasVideoTabAnyCachedAssets(tabIdx)) {
+      openWarningDialog({ onConfirm: () => removeVideoTab(tabIdx) })
     } else {
       removeVideoTab(tabIdx)
     }

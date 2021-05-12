@@ -50,16 +50,16 @@ export const StudioSidenav: React.FC = () => {
     }
     return item
   })
-  const { haveVideoTabsAssetCache } = useEditVideoSheet()
+  const { anyVideoTabsCachedAssets } = useEditVideoSheet()
 
   const handleClick = () => {
-    if (haveVideoTabsAssetCache) {
+    if (anyVideoTabsCachedAssets) {
       openWarningDialog({
-        confirmCallback: () => {
+        onConfirm: () => {
           setExpanded(false)
           navigate(absoluteRoutes.viewer.index())
         },
-        cancelCallback: () => setExpanded(false),
+        onCancel: () => setExpanded(false),
       })
     } else {
       navigate(absoluteRoutes.viewer.index())

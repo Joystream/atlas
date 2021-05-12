@@ -119,7 +119,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const titleRef = useRef<HTMLInputElement | null>(null)
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
-  const { sheetState, haveVideoTabsAssetCache, setSheetState } = useEditVideoSheet()
+  const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
   const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
@@ -201,8 +201,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
   const handleSubmit = createSubmitHandler((data) => {
-    if (haveVideoTabsAssetCache) {
-      openWarningDialog({ confirmCallback: () => submit(data) })
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => submit(data) })
     } else {
       submit(data)
     }
