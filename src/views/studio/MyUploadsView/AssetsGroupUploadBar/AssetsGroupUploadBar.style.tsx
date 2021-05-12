@@ -82,7 +82,6 @@ export const AssetsInfoContainer = styled.div`
   margin-left: ${sizes(4)};
   height: ${sizes(12)};
   color: ${colors.gray[300]};
-  z-index: ${zIndex.overlay};
 `
 
 export const UploadInfoContainer = styled.div`
@@ -93,7 +92,6 @@ export const UploadInfoContainer = styled.div`
   height: ${sizes(12)};
   color: ${colors.gray[300]};
   text-align: right;
-  z-index: ${zIndex.overlay};
 `
 
 export const StyledExpandButton = styled(ExpandButton)`

@@ -2,7 +2,7 @@ import React from 'react'
 import { ApolloProvider } from '@apollo/client'
 
 import { createApolloClient } from '@/api'
-import { ConnectionStatusProvider, OverlayManagerProvider } from '@/hooks'
+import { ConnectionStatusProvider, OverlayManagerProvider, SnackbarProvider } from '@/hooks'
 import MainLayout from './MainLayout'
 
 export default function App() {
@@ -12,11 +12,13 @@ export default function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <ConnectionStatusProvider>
-        <OverlayManagerProvider>
-          <MainLayout />
-        </OverlayManagerProvider>
-      </ConnectionStatusProvider>
+      <SnackbarProvider>
+        <ConnectionStatusProvider>
+          <OverlayManagerProvider>
+            <MainLayout />
+          </OverlayManagerProvider>
+        </ConnectionStatusProvider>
+      </SnackbarProvider>
     </ApolloProvider>
   )
 }
