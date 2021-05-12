@@ -183,7 +183,7 @@ export const MyVideosView = () => {
   }
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
-
+  const sorts = ['ascending', 'descending']
   return (
     <StudioContainer>
       <ViewContainer>
@@ -194,7 +194,19 @@ export const MyVideosView = () => {
           <>
             <TabsContainer>
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-              <SortContainer>Sort by </SortContainer>
+              <SortContainer>
+                Sort by
+                <Select
+                  value={null}
+                  items={categoriesSelectItems}
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.category && !value}
+                  helperText={errors.category?.message}
+                />
+              </SortContainer>
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage
