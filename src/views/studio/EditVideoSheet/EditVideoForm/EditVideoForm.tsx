@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean, DeepMap } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -78,11 +78,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
+  const {
+    updateSelectedVideoTab,
+    setSelectedVideoTabCachedAssets,
+    selectedVideoTabCachedDirtyFormData,
+    setSelectedVideoTabCachedDirtyFormData,
+    sheetState,
+  } = useEditVideoSheet()
   const { addDraft, updateDraft } = useDrafts('video', activeChannelId)
-  const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets, sheetState } = useEditVideoSheet()
 
   const { categories, error: categoriesError } = useCategories()
-  const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   const {
     closeVideoDeleteDialog,
@@ -188,7 +194,27 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
     setFileSelectError(null)
     reset(tabData)
-  }, [selectedVideoTab, cachedSelectedVideoTabId, forceReset, reset, tabDataLoading, tabData, updateSelectedVideoTab])
+
+    if (selectedVideoTabCachedDirtyFormData) {
+      // allow a render for the form to reset first and then set fields dirty
+      setTimeout(() => {
+        const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof EditVideoFormFields>
+        keys.forEach((key) => {
+          setValue(key, selectedVideoTabCachedDirtyFormData[key], { shouldDirty: true })
+        })
+      }, 0)
+    }
+  }, [
+    selectedVideoTab,
+    cachedSelectedVideoTabId,
+    forceReset,
+    reset,
+    tabDataLoading,
+    tabData,
+    updateSelectedVideoTab,
+    selectedVideoTabCachedDirtyFormData,
+    setValue,
+  ])
 
   const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
     // do initial validation
@@ -210,11 +236,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
-    if (!selectedVideoTab?.isDraft) {
-      return
-    }
     const data = getValues()
-    debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    if (!selectedVideoTab?.isDraft) {
+      const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
+      const dirtyData = keysToKeep.reduce((acc, curr) => {
+        acc[curr] = data[curr]
+        return acc
+      }, {} as Record<string, unknown>)
+      setSelectedVideoTabCachedDirtyFormData(dirtyData)
+    } else {
+      debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    }
   }
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
@@ -543,7 +575,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       <StyledActionBar
         fullWidth={true}
         fee={0}
-        isActive={!isEdit || isDirty}
+        isActive={selectedVideoTab?.isDraft || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
         onConfirmClick={handleSubmit}
         detailsText={isEdit ? undefined : 'Drafts are saved automatically'}
