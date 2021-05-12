@@ -8,6 +8,7 @@ import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useDrafts,
+  useDisplayDataLostWarning,
 } from '@/hooks'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
@@ -40,6 +41,8 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
     updateSelectedVideoTab,
+    anyVideoTabsCachedAssets,
+    hasVideoTabAnyCachedAssets,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -66,6 +69,21 @@ export const EditVideoSheet: React.FC = () => {
       channelId_eq: activeChannelId,
     },
   })
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+
+  useEffect(() => {
+    if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
+      return
+    }
+
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+    }
+    window.addEventListener('beforeunload', beforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload)
+    }
+  }, [sheetState, anyVideoTabsCachedAssets])
 
   useEffect(() => {
     if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
@@ -278,10 +296,6 @@ export const EditVideoSheet: React.FC = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const closeSheet = () => {
-    setSheetState('closed')
-  }
-
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed) {
       setTransactionStatus(null)
@@ -300,6 +314,22 @@ export const EditVideoSheet: React.FC = () => {
     setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
   }
 
+  const closeSheet = () => {
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => setSheetState('closed') })
+    } else {
+      setSheetState('closed')
+    }
+  }
+
+  const handleRemoveVideoTab = (tabIdx: number) => {
+    if (hasVideoTabAnyCachedAssets(tabIdx)) {
+      openWarningDialog({ onConfirm: () => removeVideoTab(tabIdx) })
+    } else {
+      removeVideoTab(tabIdx)
+    }
+  }
+
   return (
     <>
       <TransactionDialog
@@ -312,13 +342,14 @@ export const EditVideoSheet: React.FC = () => {
         }
         onClose={handleTransactionClose}
       />
+      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
           onAddNewTabClick={() => addVideoTab()}
-          onRemoveTabClick={removeVideoTab}
+          onRemoveTabClick={handleRemoveVideoTab}
           onTabSelect={setSelectedVideoTabIdx}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useEditVideoSheet } from '@/hooks'
+import { useUser, useDisplayDataLostWarning, useEditVideoSheet } from '@/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -59,9 +59,11 @@ type NavDrawerProps = {
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+
   const navigate = useNavigate()
 
-  const { sheetState } = useEditVideoSheet()
+  const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -73,14 +75,17 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     if (!channel) {
       return
     }
-    setActiveUser({ channelId })
     setDrawerActive(false)
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => changeChannel(channelId) })
+    } else {
+      changeChannel(channelId)
+    }
   }
 
-  const handleLogout = () => {
-    resetActiveUser()
-    navigate(absoluteRoutes.studio.index())
-    setDrawerActive(false)
+  const changeChannel = (channelId: string) => {
+    setActiveUser({ channelId })
+    setSheetState('closed')
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -107,8 +112,24 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     }
   }, [isDrawerActive])
 
+  const handleLogout = () => {
+    setDrawerActive(false)
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => logout() })
+    } else {
+      logout()
+    }
+  }
+
+  const logout = () => {
+    setSheetState('closed')
+    resetActiveUser()
+    navigate(absoluteRoutes.studio.index())
+  }
+
   return (
     <>
+      <DataLostWarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
