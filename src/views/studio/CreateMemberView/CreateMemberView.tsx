@@ -37,7 +37,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError, getValues } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, setError: setInputError, clearErrors } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -58,9 +58,7 @@ const CreateMemberView = () => {
 
   const [getMember, { data: memberData }] = useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(
     GetMembershipDocument,
-    {
-      onCompleted: () => createMemberOnCompletedFetch(),
-    }
+    { onCompleted: async () => await trigger('handle') }
   )
 
   // success
@@ -79,32 +77,20 @@ const CreateMemberView = () => {
   }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
-    if (data.handle === memberData?.membershipByUniqueInput?.handle) {
-      setInputError('handle', { message: 'Member name is already taken' })
-      return
-    }
-    getMember({ variables: { where: { handle: data.handle } } })
-  })
-
-  const createMemberOnCompletedFetch = async () => {
-    if (memberData?.membershipByUniqueInput !== null) {
-      setInputError('handle', { message: 'Member name is already taken' })
-      return
-    }
     if (!activeAccountId) {
       return
     }
 
     try {
       setIsSubmitting(true)
-      const { block } = await createNewMember(activeAccountId, getValues())
+      const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
       setIsSubmitting(false)
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       setError(errorMessage)
     }
-  }
+  })
 
   const debounceAvatarChange = debounce(async (value) => {
     await trigger('avatar')
@@ -116,6 +102,16 @@ const CreateMemberView = () => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value
     debounceAvatarChange(value)
+  }
+
+  const debounceHandleChange = debounce(async (value) => {
+    clearErrors('handle')
+    getMember({ variables: { where: { handle: value } } })
+  }, 1000)
+
+  const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value
+    debounceHandleChange(value)
   }
 
   return (
@@ -154,10 +150,14 @@ const CreateMemberView = () => {
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
               patternMessage: 'may contain only lowercase letters, numbers and underscores',
+              validate: (value) => memberData?.membershipByUniqueInput?.handle !== value,
             })
           )}
+          onChange={handleHandleChange}
           error={!!errors.handle}
-          helperText={errors.handle?.message}
+          helperText={
+            errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
+          }
         />
         <TextArea
           name="about"
