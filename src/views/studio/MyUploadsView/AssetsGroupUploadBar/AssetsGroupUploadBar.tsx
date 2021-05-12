@@ -15,12 +15,6 @@ import { AssetLine } from '../AssetLine'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
-export type UploadData = {
-  liaisonJudgement?: LiaisonJudgement
-  title?: string
-  ipfsContentId?: string
-} & AssetUploadWithProgress
-
 export type AssetsGroupBarUploadProps = {
   uploadData: AssetUploadWithProgress[]
 }
