@@ -4,6 +4,7 @@ import { ChannelId } from '@/joystream-lib'
 import { useUploadsManagerStore } from './store'
 import { InputAssetUpload, AssetUploadWithProgress, UploadManagerValue, UploadsProgressRecord } from './types'
 import { createStorageNodeUrl } from '@/utils/asset'
+import { useSnackbar } from '@/hooks/useSnackbar'
 
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
@@ -11,6 +12,7 @@ UploadManagerContext.displayName = 'UploadManagerContext'
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
+  const { displaySnackbar } = useSnackbar()
 
   const startFileUpload = useCallback(
     async (file: File | Blob, asset: InputAssetUpload, storageMetadata: string) => {
@@ -36,15 +38,14 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-
-        // TODO: add snackbar?
+        displaySnackbar({ title: 'Asset uploaded', iconType: 'success' })
       } catch (e) {
         console.error('Upload failed')
         console.error(e)
         updateAsset(asset.contentId, 'error')
       }
     },
-    [addAsset, updateAsset]
+    [addAsset, displaySnackbar, updateAsset]
   )
 
   const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({

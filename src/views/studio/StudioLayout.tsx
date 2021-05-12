@@ -18,7 +18,6 @@ import {
   ActiveUserProvider,
   DraftsProvider,
   PersonalDataProvider,
-  SnackbarProvider,
   EditVideoSheetProvider,
   useVideoEditSheetRouting,
   useConnectionStatus,
@@ -151,17 +150,15 @@ const MainContainer = styled.main`
 const StudioLayoutWrapper: React.FC = () => (
   <ActiveUserProvider>
     <PersonalDataProvider>
-      <SnackbarProvider>
-        <UploadManagerProvider>
-          <DraftsProvider>
-            <EditVideoSheetProvider>
-              <JoystreamProvider>
-                <StudioLayout />
-              </JoystreamProvider>
-            </EditVideoSheetProvider>
-          </DraftsProvider>
-        </UploadManagerProvider>
-      </SnackbarProvider>
+      <UploadManagerProvider>
+        <DraftsProvider>
+          <EditVideoSheetProvider>
+            <JoystreamProvider>
+              <StudioLayout />
+            </JoystreamProvider>
+          </EditVideoSheetProvider>
+        </DraftsProvider>
+      </UploadManagerProvider>
     </PersonalDataProvider>
   </ActiveUserProvider>
 )
