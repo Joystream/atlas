@@ -79,6 +79,10 @@ const CreateMemberView = () => {
   }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
+    if (data.handle === memberData?.membershipByUniqueInput?.handle) {
+      setInputError('handle', { message: 'Member name is already taken' })
+      return
+    }
     getMember({ variables: { where: { handle: data.handle } } })
   })
 
