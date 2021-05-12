@@ -29,7 +29,14 @@ import { useChannel, useQueryNodeStateSubscription, useRandomStorageProviderUrl 
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { formatNumberShort } from '@/utils/number'
 import { writeUrlInCache } from '@/utils/cachingAssets'
-import { useUser, useJoystream, useSnackbar, useUploadsManager, useEditVideoSheet } from '@/hooks'
+import {
+  useUser,
+  useJoystream,
+  useSnackbar,
+  useUploadsManager,
+  useEditVideoSheet,
+  useDisplayDataLostWarning,
+} from '@/hooks'
 import {
   ChannelAssets,
   ChannelId,
@@ -112,7 +119,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const titleRef = useRef<HTMLInputElement | null>(null)
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
-  const { sheetState } = useEditVideoSheet()
+  const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
     if (newChannel) {
@@ -192,10 +200,20 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     }
   }, [queryNodeState, transactionBlock, transactionCallback, transactionStatus])
 
-  const handleSubmit = createSubmitHandler(async (data) => {
+  const handleSubmit = createSubmitHandler((data) => {
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => submit(data) })
+    } else {
+      submit(data)
+    }
+  })
+
+  const submit = async (data: Inputs) => {
     if (!joystream || !activeMemberId) {
       return
     }
+
+    setSheetState('closed')
 
     const metadata: CreateChannelMetadata = {
       ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
@@ -302,6 +320,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       }
 
       // start files upload
+      let uploadCount = 0
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
           data.avatar.blob,
@@ -318,6 +337,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
+        uploadCount++
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
         startFileUpload(
@@ -335,6 +355,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
+        uploadCount++
+      }
+      if (uploadCount > 0) {
+        displaySnackbar({ title: `(${uploadCount}) Asset being uploaded`, iconType: 'info' })
       }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
@@ -346,7 +370,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         setTransactionStatus(ExtrinsicStatus.Error)
       }
     }
-  })
+  }
 
   const handleTransactionClose = async () => {
     if (transactionStatus === ExtrinsicStatus.Completed && newChannel) {
@@ -386,6 +410,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   return (
     <>
+      <DataLostWarningDialog />
       <TransactionDialog
         status={transactionStatus}
         successTitle={newChannel ? 'Channel successfully created!' : 'Channel successfully updated!'}
