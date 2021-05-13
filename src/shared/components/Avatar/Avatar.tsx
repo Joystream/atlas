@@ -11,12 +11,13 @@ import {
   NewChannelAvatar,
 } from './Avatar.style'
 import { transitions } from '@/shared/theme'
-import { SvgGlyphImage, SvgGlyphNewChannel } from '@/shared/icons'
+import { SvgGlyphImage, SvgGlyphNewChannel, SvgLargeUploadFailed } from '@/shared/icons'
 
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onEditClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   imageUrl?: string | null
+  isPending?: boolean
   loading?: boolean
   className?: string
   size?: AvatarSize
@@ -27,6 +28,7 @@ export type AvatarProps = {
 
 const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
+  isPending,
   loading = false,
   size = 'default',
   onClick,
@@ -66,6 +68,10 @@ const Avatar: React.FC<AvatarProps> = ({
               <StyledPlaceholder rounded />
             ) : imageUrl ? (
               <StyledImage src={imageUrl} onError={onError} />
+            ) : isPending ? (
+              <NewChannelAvatar>
+                <SvgLargeUploadFailed />
+              </NewChannelAvatar>
             ) : (
               <SilhouetteAvatar />
             )}

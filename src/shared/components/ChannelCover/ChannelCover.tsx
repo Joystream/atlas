@@ -13,11 +13,14 @@ import {
   CoverWrapper,
   RemoveCoverMobileButton,
   EditCoverMobileButton,
+  FailedUploadContainer,
 } from './ChannelCover.style'
-import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash } from '@/shared/icons'
+import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash, SvgLargeUploadFailed } from '@/shared/icons'
+import { Text } from '@/shared/components'
 
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
+  isPending?: boolean
   editable?: boolean
   disabled?: boolean
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
@@ -26,6 +29,7 @@ export type ChannelCoverProps = {
 
 const ChannelCover: React.FC<ChannelCoverProps> = ({
   coverPhotoUrl,
+  isPending,
   editable,
   disabled,
   onCoverEditClick,
@@ -64,7 +68,18 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {coverPhotoUrl ? <CoverImage src={coverPhotoUrl} /> : <BackgroundPattern />}
+              {coverPhotoUrl ? (
+                <CoverImage src={coverPhotoUrl} />
+              ) : isPending ? (
+                <FailedUploadContainer>
+                  <SvgLargeUploadFailed />
+                  <Text variant="subtitle2" secondary>
+                    Failed upload
+                  </Text>
+                </FailedUploadContainer>
+              ) : (
+                <BackgroundPattern />
+              )}
             </CSSTransition>
           </TransitionGroup>
         </Media>

@@ -8,6 +8,7 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
+import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string
@@ -79,6 +80,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={thumbnailPhotoUrl}
+      isPending={video?.thumbnailPhotoAvailability === AssetAvailability.Pending}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
