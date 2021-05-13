@@ -16,6 +16,7 @@ export const useEditVideoSheetAnimations = (sheetState: EditVideoSheetState) => 
   const drawerOverlayAnimationProps = useSpring({
     duration: transitions.timings.sharp,
     opacity: sheetState === 'open' ? 1 : 0,
+    pointerEvents: sheetState === 'open' ? 'initial' : 'none',
   })
 
   const sheetAnimationProps = useSpring({
