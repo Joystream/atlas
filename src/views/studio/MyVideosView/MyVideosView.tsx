@@ -17,8 +17,8 @@ import {
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const SORT_OPTIONS = [
-  { name: 'ascending', value: VideoOrderByInput.CreatedAtAsc },
-  { name: ' descending', value: VideoOrderByInput.CreatedAtDesc },
+  { name: 'Newest first', value: VideoOrderByInput.CreatedAtAsc },
+  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtDesc },
 ] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4

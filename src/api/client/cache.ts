@@ -1,7 +1,7 @@
 import { InMemoryCache } from '@apollo/client'
 import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
-import { GetVideosQueryVariables } from '../queries'
+import { GetVideosQueryVariables, VideoOrderByInput } from '../queries'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
@@ -44,7 +44,10 @@ const cache = new InMemoryCache({
             // if offset and limit are not provided.
             const offset = args?.offset ?? 0
             const limit = args?.limit ?? existing?.length
-            return existing?.slice(offset, offset + limit)
+            const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
+            return sortingASC
+              ? existing?.slice(offset, offset + limit)
+              : existing?.slice(offset, offset + limit).reverse()
           },
         },
         channel(existing, { toReference, args }) {
