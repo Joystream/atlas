@@ -37,7 +37,7 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { MessageDialog, TransactionDialog } from '@/components'
+import { MessageDialog } from '@/components'
 import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
@@ -92,14 +92,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
-  const {
-    closeVideoDeleteDialog,
-    closeDeleteTransactionDialog,
-    confirmDeleteVideo,
-    openVideoDeleteDialog,
-    isDeleteDialogOpen,
-    deleteTransactionStatus,
-  } = useDeleteVideo()
+  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -567,20 +560,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
         showDialog={isDeleteDialogOpen}
         onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoTab?.id)}
+        onPrimaryButtonClick={() =>
+          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
+        }
         error
         variant="warning"
         primaryButtonText="Delete video"
         secondaryButtonText="Cancel"
-      />
-      <TransactionDialog
-        status={deleteTransactionStatus}
-        successTitle="Video successfully deleted!"
-        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={() => {
-          selectedVideoTab?.id && onDeleteVideo(selectedVideoTab?.id)
-          closeDeleteTransactionDialog()
-        }}
       />
       <StyledActionBar
         fullWidth={true}

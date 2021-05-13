@@ -10,11 +10,11 @@ type SuccessMessage = {
   description: string
 }
 type HandleTransactionOpts<T> = {
-  preProcess?: () => Promise<void>
   txFactory: (updateStatus: UpdateStatusFn) => Promise<ExtrinsicResult<T>>
-  onTxFinalize: (data: T) => void
-  onTxSync: (data: T) => void
-  onTxClose: (completed: boolean) => void
+  preProcess?: () => Promise<void>
+  onTxFinalize?: (data: T) => void
+  onTxSync?: (data: T) => void
+  onTxClose?: (completed: boolean) => void
   successMessage: SuccessMessage
 }
 
@@ -72,7 +72,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     try {
       setSuccessMessage(successMessage)
       // set up fallback dialog close callback
-      setDialogCloseCallback(() => () => onTxClose(false))
+      setDialogCloseCallback(() => () => onTxClose?.(false))
 
       // if provided, do any preprocessing
       if (preProcess) {
@@ -87,13 +87,13 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       // set up query node sync
       setStatus(ExtrinsicStatus.Syncing)
       setFinalizationBlock(block)
-      setSyncCallback(() => () => onTxSync(data))
+      setSyncCallback(() => () => onTxSync?.(data))
 
       // set up dialog close callback
-      setDialogCloseCallback(() => () => onTxClose(true))
+      setDialogCloseCallback(() => () => onTxClose?.(true))
 
       // call tx callback
-      onTxFinalize(data)
+      onTxFinalize?.(data)
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
