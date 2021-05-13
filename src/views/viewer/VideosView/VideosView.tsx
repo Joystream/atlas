@@ -60,7 +60,7 @@ const VideosView: React.FC = () => {
   if (featuredVideosError) {
     throw featuredVideosError
   }
-  const videos = featuredVideos?.map((featuredVideo) => featuredVideo)
+
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
 
   return (
@@ -71,7 +71,7 @@ const VideosView: React.FC = () => {
         {featuredVideosLoading || featuredVideos?.length ? (
           <FeaturedVideosContainer>
             {!hasFeaturedVideosError ? (
-              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
+              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos || []} />
             ) : (
               <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
             )}
