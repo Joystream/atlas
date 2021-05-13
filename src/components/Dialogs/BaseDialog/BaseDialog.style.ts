@@ -12,7 +12,7 @@ export const StyledContainer = styled.div`
   width: 90%;
   max-width: 440px;
   min-height: 150px;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow: auto;
   margin: ${sizes(16)} auto;
   color: ${colors.white};
