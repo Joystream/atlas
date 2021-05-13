@@ -176,6 +176,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   )
   const categorySelectRef = useRef<HTMLDivElement>(null)
   const isExplicitInputRef = useRef<HTMLInputElement>(null)
+  const licenseSelectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -415,8 +416,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="licenseCode"
               control={control}
               rules={requiredValidation('License')}
+              onFocus={() => handleFieldFocus(licenseSelectRef)}
               render={({ value, onChange }) => (
                 <Select
+                  containerRef={licenseSelectRef}
                   value={value ?? null}
                   items={knownLicensesOptions}
                   placeholder="Choose license type"
