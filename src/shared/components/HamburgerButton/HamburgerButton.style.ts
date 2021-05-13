@@ -14,7 +14,7 @@ export const Hamburger = styled.button`
   top: 18px;
   // FIXME: this shouldn't be set to 'fixed', button should work on its own, consumer may set it to fixed
   position: fixed;
-  z-index: ${zIndex.header + 1};
+  z-index: ${zIndex.sideNav};
   cursor: pointer;
   background-color: ${colors.gray[700]};
   border: none;
