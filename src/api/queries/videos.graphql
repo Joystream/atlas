@@ -23,6 +23,7 @@ fragment VideoFields on Video {
   createdAt
   isPublic
   isExplicit
+  isFeatured
   hasMarketing
   isCensored
   language {
@@ -80,14 +81,6 @@ query GetVideosConnection(
 query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput = createdAt_DESC) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...VideoFields
-  }
-}
-
-query GetFeaturedVideos {
-  featuredVideos(orderBy: createdAt_DESC) {
-    video {
-      ...VideoFields
-    }
   }
 }
 

@@ -1,13 +1,13 @@
 import { useVideos } from '@/api/hooks'
-import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
+import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet } from '@/hooks'
+import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
-import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -15,9 +15,12 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
+  const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
+  const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
+  const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentTab]
   const isDraftTab = currentTabName === 'Drafts'
@@ -29,7 +32,7 @@ export const MyVideosView = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { loading, videos, totalCount, error, fetchMore, refetchCount: refetchVideosCount, client } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -41,14 +44,7 @@ export const MyVideosView = () => {
     { notifyOnNetworkStatusChange: true }
   )
 
-  const {
-    closeVideoDeleteDialog,
-    closeDeleteTransactionDialog,
-    confirmDeleteVideo,
-    openVideoDeleteDialog,
-    deleteTransactionStatus,
-    isDeleteDialogOpen,
-  } = useDeleteVideo()
+  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
   useEffect(() => {
     if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
@@ -98,7 +94,14 @@ export const MyVideosView = () => {
       return
     }
     addVideoTab({ id, isDraft: opts.draft })
+
     if (opts.minimized) {
+      displaySnackbar({
+        title: 'Video opened in a new tab',
+        iconType: 'success',
+        actionText: 'Undo',
+        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
+      })
       setSheetState('minimized')
     } else {
       navigate(absoluteRoutes.studio.editVideo())
@@ -110,11 +113,29 @@ export const MyVideosView = () => {
       return
     }
     setSelectedVideoId(undefined)
-
-    await refetchVideosCount()
-    removeVideoFromCache(selectedVideoId, client)
-    closeDeleteTransactionDialog()
   }
+
+  const confirmRemoveDraft = (id: string) => {
+    removeDraft(id)
+    displaySnackbar({
+      title: 'Draft deleted',
+      iconType: 'success',
+    })
+  }
+
+  // Workaround for removing drafts from video sheet tabs via snackbar
+  // Snackbar will probably need a refactor to handle actions that change state
+  useEffect(() => {
+    if (tabIdToRemoveViaSnackbar !== undefined) {
+      const tab = videoTabs.find((tab) => tab.id === tabIdToRemoveViaSnackbar)
+      if (!tab) {
+        return
+      }
+      const idx = videoTabs.indexOf(tab)
+      removeVideoTab(idx)
+      setTabIdToRemoveViaSnackbar(undefined)
+    }
+  }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
 
   const gridContent = (
     <>
@@ -135,7 +156,7 @@ export const MyVideosView = () => {
                   handleVideoClick(draft.id, { draft: true, minimized: true })
                 }}
                 onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-                onDeleteVideoClick={() => removeDraft(draft.id)}
+                onDeleteVideoClick={() => setDraftToRemove(draft.id)}
               />
             ))
         : videosWithPlaceholders.map((video, idx) => (
@@ -162,17 +183,22 @@ export const MyVideosView = () => {
         description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
         showDialog={isDeleteDialogOpen}
         onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoId)}
+        onPrimaryButtonClick={() => selectedVideoId && confirmDeleteVideo(selectedVideoId, () => handleVideoDeleted())}
         error
         variant="warning"
         primaryButtonText="Delete video"
         secondaryButtonText="Cancel"
       />
-      <TransactionDialog
-        status={deleteTransactionStatus}
-        successTitle="Video successfully deleted!"
-        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={handleVideoDeleted}
+      <MessageDialog
+        title="Delete this draft?"
+        description="You will not be able to undo this."
+        variant="warning"
+        showDialog={drafts.some((item) => item.id === draftToRemove)}
+        error
+        primaryButtonText="Remove draft"
+        secondaryButtonText="Cancel"
+        onPrimaryButtonClick={() => draftToRemove && confirmRemoveDraft(draftToRemove)}
+        onSecondaryButtonClick={() => setDraftToRemove(null)}
       />
     </>
   )

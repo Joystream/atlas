@@ -18,6 +18,7 @@ export type EditVideoSheetTab = {
 }
 
 type EditVideoAssetsCache = Record<string, InputFilesState>
+type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields>>
 
 type ContextValue = {
   videoTabs: EditVideoSheetTab[]
@@ -26,10 +27,14 @@ type ContextValue = {
   updateSelectedVideoTab: (tabUpdates: Partial<EditVideoSheetTab>) => void
   selectedVideoTabIdx: number
   setSelectedVideoTabIdx: (tabIdx: number) => void
+  selectedVideoTabCachedDirtyFormData: Partial<EditVideoFormFields> | undefined
+  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<EditVideoFormFields>) => void
   selectedVideoTabCachedAssets: InputFilesState
   setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
+  anyVideoTabsCachedAssets: boolean
+  hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
 }
 const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
 EditVideoSheetContext.displayName = 'EditVideoSheetContext'
@@ -40,7 +45,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-
+  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
   const { lockScroll, unlockScroll } = useOverlayManager()
 
   const addVideoTab = useCallback(
@@ -65,10 +70,31 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     [videoTabs]
   )
 
+  const selectedVideoTab = videoTabs[selectedVideoTabIdx]
+  const setSelectedVideoTabCachedAssets = useCallback(
+    (files: InputFilesState) => {
+      setAssetsCache((existingAssets) => ({
+        ...existingAssets,
+        [selectedVideoTab?.id]: files,
+      }))
+    },
+    [selectedVideoTab?.id]
+  )
+  const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
+  const updateSelectedVideoTab = useCallback(
+    (tabUpdates: Partial<EditVideoSheetTab>) => {
+      setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
+    },
+    [selectedVideoTabIdx]
+  )
+
   const removeVideoTab = useCallback(
     (removedTabIdx: number) => {
+      const tabId = videoTabs[removedTabIdx].id
       setVideoTabs((tabs) => tabs.filter((_, idx) => idx !== removedTabIdx))
-
+      const existingAssetsCopy = { ...assetsCache }
+      delete existingAssetsCopy[tabId]
+      setAssetsCache(existingAssetsCopy)
       // if there are no other tabs, close the sheet
       if (videoTabs.length <= 1) {
         setSheetState('closed')
@@ -86,26 +112,20 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSelectedVideoTabIdx(newSelectedIdx)
       }
     },
-    [selectedVideoTabIdx, videoTabs.length]
+    [assetsCache, selectedVideoTabIdx, videoTabs]
   )
 
-  const selectedVideoTab = videoTabs[selectedVideoTabIdx]
-  const setSelectedVideoTabCachedAssets = useCallback(
-    (files: InputFilesState) => {
-      setAssetsCache((existingAssets) => ({
-        ...existingAssets,
-        [selectedVideoTab.id]: files,
+  const setSelectedVideoTabCachedDirtyFormData = useCallback(
+    (data: Partial<EditVideoFormFields>) => {
+      _setVideoTabsCachedDirtyFormData((currentMap) => ({
+        ...currentMap,
+        [selectedVideoTab.id]: { ...data },
       }))
     },
     [selectedVideoTab?.id]
   )
-  const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
-  const updateSelectedVideoTab = useCallback(
-    (tabUpdates: Partial<EditVideoSheetTab>) => {
-      setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
-    },
-    [selectedVideoTabIdx]
-  )
+
+  const selectedVideoTabCachedDirtyFormData = videoTabsCachedDirtyFormData[selectedVideoTab?.id]
 
   useEffect(() => {
     if (sheetState === cachedSheetState) {
@@ -125,12 +145,23 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     if (sheetState === 'closed') {
       setVideoTabs([])
       setSelectedVideoTabIdx(-1)
+      setAssetsCache({})
+      _setVideoTabsCachedDirtyFormData({})
     }
   }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
+
+  const anyVideoTabsCachedAssets = Object.values(assetsCache).some((val) => val.thumbnail || val.video)
+
+  const hasVideoTabAnyCachedAssets = (tabIdx: number) => {
+    const tabId = videoTabs[tabIdx].id
+    return !!assetsCache[tabId]?.thumbnail || !!assetsCache[tabId]?.video
+  }
 
   return (
     <EditVideoSheetContext.Provider
       value={{
+        hasVideoTabAnyCachedAssets,
+        anyVideoTabsCachedAssets,
         videoTabs,
         addVideoTab,
         removeVideoTab,
@@ -141,6 +172,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSheetState,
         selectedVideoTabCachedAssets,
         setSelectedVideoTabCachedAssets,
+        selectedVideoTabCachedDirtyFormData,
+        setSelectedVideoTabCachedDirtyFormData,
       }}
     >
       {children}
@@ -166,6 +199,9 @@ export type EditVideoFormFields = {
   description: string
   language: string | null
   category: string | null
+  licenseCode: number | null
+  licenseCustomText: string | null
+  licenseAttribution: string | null
   hasMarketing: boolean | null
   isPublic: boolean
   isExplicit: boolean | null
@@ -176,17 +212,22 @@ export type EditVideoFormFields = {
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
-
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
   if (!tab) {
     return {
-      data: null,
+      tabData: null,
       loading: false,
       error: null,
     }
+  }
+
+  const videoData = {
+    ...video,
+    category: video?.category?.id,
+    language: video?.language?.iso,
   }
 
   const draft = drafts.find((d) => d.id === tab.id)
@@ -210,6 +251,9 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
+    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? null,
+    licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
+    licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
     language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
     isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
@@ -219,12 +263,12 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
         ? draft?.publishedBeforeJoystream
           ? parseISO(draft.publishedBeforeJoystream)
           : null
-        : video?.publishedBeforeJoystream) ?? null,
+        : videoData?.publishedBeforeJoystream) ?? null,
     assets,
   }
 
   return {
-    data: normalizedData,
+    tabData: normalizedData,
     loading: tab.isDraft ? false : loading,
     error,
   }

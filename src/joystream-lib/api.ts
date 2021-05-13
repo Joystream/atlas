@@ -25,6 +25,7 @@ import {
 } from '@joystream/types/content'
 import {
   ChannelMetadata,
+  License,
   MediaType,
   PublishedBeforeJoystream,
   VideoMetadata,
@@ -239,6 +240,18 @@ export class JoystreamJs {
     if (inputMetadata.hasMarketing != null) {
       protoMeta.setHasMarketing(inputMetadata.hasMarketing)
     }
+
+    const protoLicenseType = new License()
+    if (inputMetadata.license?.code != null) {
+      protoLicenseType.setCode(inputMetadata.license.code)
+    }
+    if (inputMetadata.license?.attribution != null) {
+      protoLicenseType.setAttribution(inputMetadata.license.attribution)
+    }
+    if (inputMetadata.license?.customText != null) {
+      protoLicenseType.setCustomText(inputMetadata.license.customText)
+    }
+    protoMeta.setLicense(protoLicenseType)
 
     const protoMediaType = new MediaType()
     if (inputMetadata.mimeMediaType != null) {
@@ -469,7 +482,11 @@ export class JoystreamJs {
     return this._createOrUpdateVideo(videoId, memberId, channelId, inputMetadata, inputAssets, cb)
   }
 
-  async deleteVideo(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn) {
+  async deleteVideo(
+    videoId: VideoId,
+    memberId: MemberId,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ExtrinsicResult<VideoId>> {
     await this.ensureApi()
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -481,6 +498,7 @@ export class JoystreamJs {
 
     return {
       block,
+      data: videoId,
     }
   }
 }

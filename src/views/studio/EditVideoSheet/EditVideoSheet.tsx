@@ -8,24 +8,19 @@ import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useDrafts,
+  useDisplayDataLostWarning,
+  useTransactionManager,
 } from '@/hooks'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
-import {
-  CreateVideoMetadata,
-  ExtrinsicStatus,
-  VideoAssets,
-  ExtrinsicSignCancelledError,
-  VideoId,
-} from '@/joystream-lib'
-import { useQueryNodeStateSubscription, useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
-import { TransactionDialog } from '@/components'
+import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+import { useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -40,6 +35,10 @@ export const EditVideoSheet: React.FC = () => {
     addVideoTab,
     removeVideoTab,
     updateSelectedVideoTab,
+    anyVideoTabsCachedAssets,
+    hasVideoTabAnyCachedAssets,
+    setSelectedVideoTabCachedAssets,
+    setSelectedVideoTabCachedDirtyFormData,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -48,16 +47,13 @@ export const EditVideoSheet: React.FC = () => {
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
-  const [transactionStatus, setTransactionStatus] = useState<ExtrinsicStatus | null>(null)
   const randomStorageProviderUrl = useRandomStorageProviderUrl()
   const { displaySnackbar } = useSnackbar()
-  const [transactionBlock, setTransactionBlock] = useState<number | null>(null)
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const [transactionCallback, setTransactionCallback] = useState<(() => void) | null>(null)
-  const { queryNodeState } = useQueryNodeStateSubscription({ skip: transactionStatus !== ExtrinsicStatus.Syncing })
   const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
+  const { fee, handleTransaction } = useTransactionManager()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
     skip: !selectedVideoTab || selectedVideoTab.isDraft,
   })
@@ -66,17 +62,21 @@ export const EditVideoSheet: React.FC = () => {
       channelId_eq: activeChannelId,
     },
   })
+  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
-    if (!queryNodeState || transactionStatus !== ExtrinsicStatus.Syncing || !transactionBlock) {
+    if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
       return
     }
 
-    if (queryNodeState.indexerHead >= transactionBlock) {
-      setTransactionStatus(ExtrinsicStatus.Completed)
-      transactionCallback?.()
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
     }
-  }, [queryNodeState, transactionBlock, transactionStatus, transactionCallback])
+    window.addEventListener('beforeunload', beforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload)
+    }
+  }, [sheetState, anyVideoTabsCachedAssets])
 
   const handleVideoFileChange = (file: Blob) => {
     const hashPromise = computeFileHash(file)
@@ -102,9 +102,12 @@ export const EditVideoSheet: React.FC = () => {
       return
     }
 
-    setTransactionStatus(ExtrinsicStatus.ProcessingAssets)
-
     const isNew = !isEdit
+    const license = {
+      code: data.licenseCode ?? undefined,
+      attribution: data.licenseAttribution ?? undefined,
+      customText: data.licenseCustomText ?? undefined,
+    }
 
     const metadata: CreateVideoMetadata = {
       ...(isNew || dirtyFields.title ? { title: data.title } : {}),
@@ -114,6 +117,7 @@ export const EditVideoSheet: React.FC = () => {
       ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null ? { hasMarketing: data.hasMarketing } : {}),
       ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
       ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+      ...((isNew || dirtyFields.licenseCode) && data.licenseCode != null ? { license } : {}),
       ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
         ? {
             publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
@@ -133,89 +137,32 @@ export const EditVideoSheet: React.FC = () => {
     let videoContentId = ''
     let thumbnailContentId = ''
 
-    if (videoInputFile?.blob && videoHashPromise) {
-      const [asset, contentId] = joystream.createFileAsset({
-        size: videoInputFile.blob.size,
-        ipfsContentId: await videoHashPromise,
-      })
-      assets.video = asset
-      videoContentId = contentId
-    } else if (dirtyFields.assets?.video) {
-      console.warn('Missing video data')
-    }
-
-    if (thumbnailInputFile?.blob && thumbnailHashPromise) {
-      const [asset, contentId] = joystream.createFileAsset({
-        size: thumbnailInputFile.blob.size,
-        ipfsContentId: await thumbnailHashPromise,
-      })
-      assets.thumbnail = asset
-      thumbnailContentId = contentId
-    } else if (dirtyFields.assets?.thumbnail) {
-      console.warn('Missing thumbnail data')
-    }
-
-    let videoId: VideoId = selectedVideoTab.id || ''
-
-    try {
-      if (isNew) {
-        const { block, data: newVideoId } = await joystream.createVideo(
-          activeMemberId,
-          activeChannelId,
-          metadata,
-          assets,
-          (status) => {
-            setTransactionStatus(status)
-          }
-        )
-        videoId = newVideoId
-
-        setTransactionStatus(ExtrinsicStatus.Syncing)
-        setTransactionBlock(block)
-        setTransactionCallback(() => async () => {
-          const fetchedVideo = await refetchVideo({ where: { id: newVideoId } })
-
-          if (fetchedVideo.data.videoByUniqueInput) {
-            writeVideoDataInCache({
-              data: fetchedVideo.data.videoByUniqueInput,
-              thumbnailUrl: data.assets.thumbnail?.url,
-              client,
-            })
-          }
-
-          // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
-          await refetchVideosCount()
-
-          updateSelectedVideoTab({
-            id: newVideoId,
-            isDraft: false,
-          })
-          removeDraft(selectedVideoTab?.id)
+    const processAssets = async () => {
+      if (videoInputFile?.blob && videoHashPromise) {
+        const [asset, contentId] = joystream.createFileAsset({
+          size: videoInputFile.blob.size,
+          ipfsContentId: await videoHashPromise,
         })
-      } else {
-        const { block } = await joystream.updateVideo(
-          videoId,
-          activeMemberId,
-          activeChannelId,
-          metadata,
-          assets,
-          (status) => {
-            setTransactionStatus(status)
-          }
-        )
-        setTransactionStatus(ExtrinsicStatus.Syncing)
-        setTransactionBlock(block)
-        setTransactionCallback(() => async () => {
-          await refetchVideo()
-          writeUrlInCache({
-            url: data.assets.thumbnail?.url,
-            fileType: 'thumbnail',
-            parentId: videoId,
-            client,
-          })
-          callback?.()
-        })
+        assets.video = asset
+        videoContentId = contentId
+      } else if (dirtyFields.assets?.video) {
+        console.warn('Missing video data')
       }
+
+      if (thumbnailInputFile?.blob && thumbnailHashPromise) {
+        const [asset, contentId] = joystream.createFileAsset({
+          size: thumbnailInputFile.blob.size,
+          ipfsContentId: await thumbnailHashPromise,
+        })
+        assets.thumbnail = asset
+        thumbnailContentId = contentId
+      } else if (dirtyFields.assets?.thumbnail) {
+        console.warn('Missing thumbnail data')
+      }
+    }
+
+    const uploadAssets = (videoId: VideoId) => {
+      let uploadCount = 0
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
@@ -233,6 +180,7 @@ export const EditVideoSheet: React.FC = () => {
           },
           randomStorageProviderUrl
         )
+        uploadCount++
       }
       if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
         startFileUpload(
@@ -250,64 +198,106 @@ export const EditVideoSheet: React.FC = () => {
           },
           randomStorageProviderUrl
         )
+        uploadCount++
       }
-    } catch (e) {
-      if (e instanceof ExtrinsicSignCancelledError) {
-        console.warn('Sign cancelled')
-        setTransactionStatus(null)
-        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
-      } else {
-        console.error(e)
-        setTransactionStatus(ExtrinsicStatus.Error)
+
+      if (uploadCount > 0) {
+        displaySnackbar({ title: `(${uploadCount}) Assets being uploaded`, iconType: 'info' })
       }
     }
+
+    const refetchDataAndCacheAssets = async (videoId: VideoId) => {
+      const fetchedVideo = await refetchVideo({ where: { id: videoId } })
+
+      if (isNew) {
+        if (fetchedVideo.data.videoByUniqueInput) {
+          writeVideoDataInCache({
+            data: fetchedVideo.data.videoByUniqueInput,
+            thumbnailUrl: data.assets.thumbnail?.url,
+            client,
+          })
+        }
+        // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
+        await refetchVideosCount()
+
+        updateSelectedVideoTab({
+          id: videoId,
+          isDraft: false,
+        })
+        removeDraft(selectedVideoTab?.id)
+      } else {
+        writeUrlInCache({
+          url: data.assets.thumbnail?.url,
+          fileType: 'thumbnail',
+          parentId: videoId,
+          client,
+        })
+      }
+      setSelectedVideoTabCachedAssets({ video: null, thumbnail: null })
+      setSelectedVideoTabCachedDirtyFormData({})
+
+      // allow for the changes in refetched video to propagate first
+      setTimeout(() => {
+        callback?.()
+      })
+    }
+
+    handleTransaction({
+      preProcess: processAssets,
+      txFactory: (updateStatus) =>
+        isNew
+          ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+          : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
+      onTxFinalize: uploadAssets,
+      onTxSync: refetchDataAndCacheAssets,
+      onTxClose: (completed) => completed && setSheetState('minimized'),
+      successMessage: {
+        title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+        description: isNew
+          ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+          : 'Changes to your video were saved on the blockchain.',
+      },
+    })
   }
 
   const toggleMinimizedSheet = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const closeSheet = () => {
-    setSheetState('closed')
-  }
-
-  const handleTransactionClose = async () => {
-    if (transactionStatus === ExtrinsicStatus.Completed) {
-      setTransactionStatus(null)
-      setSheetState('minimized')
-    }
-    setTransactionStatus(null)
-  }
-
   const handleDeleteVideo = async (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
-    await refetchVideosCount()
     removeVideoTab(videoTabIdx)
-    removeVideoFromCache(videoId, client)
 
     // close the sheet if we closed the last tab
     setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
   }
 
+  const closeSheet = () => {
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({ onConfirm: () => setSheetState('closed') })
+    } else {
+      setSheetState('closed')
+    }
+  }
+
+  const handleRemoveVideoTab = (tabIdx: number) => {
+    if (hasVideoTabAnyCachedAssets(tabIdx)) {
+      openWarningDialog({ onConfirm: () => removeVideoTab(tabIdx) })
+    } else {
+      removeVideoTab(tabIdx)
+    }
+  }
+
   return (
     <>
-      <TransactionDialog
-        status={transactionStatus}
-        successTitle={!isEdit ? 'Video successfully created!' : 'Video successfully updated!'}
-        successDescription={
-          !isEdit
-            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-            : 'Changes to your video were saved on the blockchain.'
-        }
-        onClose={handleTransactionClose}
-      />
+      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
           onAddNewTabClick={() => addVideoTab()}
-          onRemoveTabClick={removeVideoTab}
+          onRemoveTabClick={handleRemoveVideoTab}
           onTabSelect={setSelectedVideoTabIdx}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
@@ -318,6 +308,7 @@ export const EditVideoSheet: React.FC = () => {
           onSubmit={handleSubmit}
           onThumbnailFileChange={handleThumbnailFileChange}
           onVideoFileChange={handleVideoFileChange}
+          fee={fee}
         />
       </Container>
     </>

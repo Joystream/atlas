@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react'
+import { useSnackbar } from '@/hooks/useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
@@ -19,18 +20,9 @@ const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
+  const { displaySnackbar } = useSnackbar()
 
-  useEffect(() => {
-    // ping google every three seconds to check if user is connected to internet
-    const interval = setInterval(() => {
-      checkConnection()
-    }, 5000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
-  const checkConnection = async () => {
+  const checkConnection = useCallback(async () => {
     try {
       const res = await withTimeout(
         fetch('https://google.com', {
@@ -45,7 +37,32 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     } catch (error) {
       setIsUserConnectedToInternet(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // ping google every five seconds to check if user is connected to internet
+    const interval = setInterval(() => {
+      checkConnection()
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [checkConnection])
+
+  // setting initialMount ref to true to prevent displaying "Network connection restored" on entering Studio
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    // without that condition snackbar will appear on entering the app
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+    } else {
+      if (isUserConnectedToInternet) {
+        displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
+      } else {
+        displaySnackbar({ title: 'No network connection', iconType: 'error' })
+      }
+    }
+  }, [displaySnackbar, isUserConnectedToInternet])
 
   return (
     <ConnectionStatusContext.Provider

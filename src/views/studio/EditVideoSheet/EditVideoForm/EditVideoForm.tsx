@@ -20,9 +20,11 @@ import {
   Select,
   SelectItem,
   TextArea,
+  TextField,
 } from '@/shared/components'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { languages } from '@/config/languages'
+import knownLicenses from '@/data/knownLicenses.json'
 import {
   InputsContainer,
   StyledHeaderTextField,
@@ -35,12 +37,21 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { MessageDialog, TransactionDialog } from '@/components'
+import { MessageDialog } from '@/components'
+import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
   { name: 'Unlisted (video will not appear in feeds and search)', value: false },
 ]
+
+const CUSTOM_LICENSE_CODE = 1000
+const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
+  name: license.name,
+  value: license.code,
+  tooltipText: license.description,
+  tooltipHeaderText: license.longName,
+}))
 
 type EditVideoFormProps = {
   onSubmit: (
@@ -52,6 +63,7 @@ type EditVideoFormProps = {
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: EditVideoSheetTab
+  fee: number
 }
 
 export const EditVideoForm: React.FC<EditVideoFormProps> = ({
@@ -60,6 +72,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   onThumbnailFileChange,
   onVideoFileChange,
   onDeleteVideo,
+  fee,
 }) => {
   const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
@@ -67,20 +80,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
   const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
+  const {
+    updateSelectedVideoTab,
+    setSelectedVideoTabCachedAssets,
+    selectedVideoTabCachedDirtyFormData,
+    setSelectedVideoTabCachedDirtyFormData,
+    sheetState,
+  } = useEditVideoSheet()
   const { addDraft, updateDraft } = useDrafts('video', activeChannelId)
-  const { updateSelectedVideoTab, setSelectedVideoTabCachedAssets } = useEditVideoSheet()
 
   const { categories, error: categoriesError } = useCategories()
-  const { data: tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
-  const {
-    closeVideoDeleteDialog,
-    closeDeleteTransactionDialog,
-    confirmDeleteVideo,
-    openVideoDeleteDialog,
-    isDeleteDialogOpen,
-    deleteTransactionStatus,
-  } = useDeleteVideo()
+  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -97,6 +109,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     errors,
     getValues,
     setValue,
+    watch,
     reset,
     formState: { dirtyFields, isDirty },
   } = useForm<EditVideoFormFields>({
@@ -106,6 +119,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       isPublic: true,
       language: 'en',
       category: null,
+      licenseCode: null,
+      licenseAttribution: '',
+      licenseCustomText: '',
       description: '',
       hasMarketing: false,
       publishedBeforeJoystream: null,
@@ -116,6 +132,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+
+  useEffect(() => {
+    if (isEdit) {
+      return
+    }
+    // reset multifileselect when sheetState is closed
+    if (sheetState === 'closed') {
+      setValue('assets', {
+        video: null,
+        thumbnail: null,
+      })
+    }
+  }, [sheetState, setValue, isEdit])
 
   // we pass the functions explicitly so the debounced function doesn't need to change when those functions change
   const debouncedDraftSave = useRef(
@@ -145,6 +174,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   )
   const categorySelectRef = useRef<HTMLDivElement>(null)
   const isExplicitInputRef = useRef<HTMLInputElement>(null)
+  const licenseSelectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -163,7 +193,27 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
     setFileSelectError(null)
     reset(tabData)
-  }, [selectedVideoTab, cachedSelectedVideoTabId, forceReset, reset, tabDataLoading, tabData, updateSelectedVideoTab])
+
+    if (selectedVideoTabCachedDirtyFormData) {
+      // allow a render for the form to reset first and then set fields dirty
+      setTimeout(() => {
+        const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof EditVideoFormFields>
+        keys.forEach((key) => {
+          setValue(key, selectedVideoTabCachedDirtyFormData[key], { shouldDirty: true })
+        })
+      }, 0)
+    }
+  }, [
+    selectedVideoTab,
+    cachedSelectedVideoTabId,
+    forceReset,
+    reset,
+    tabDataLoading,
+    tabData,
+    updateSelectedVideoTab,
+    selectedVideoTabCachedDirtyFormData,
+    setValue,
+  ])
 
   const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
     // do initial validation
@@ -180,16 +230,24 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setForceReset(true)
     }
 
+    debouncedDraftSave.current.flush()
+
     await onSubmit(data, dirtyFields, callback)
   })
 
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
-    if (!selectedVideoTab?.isDraft) {
-      return
-    }
     const data = getValues()
-    debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    if (!selectedVideoTab?.isDraft) {
+      const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
+      const dirtyData = keysToKeep.reduce((acc, curr) => {
+        acc[curr] = data[curr]
+        return acc
+      }, {} as Record<string, unknown>)
+      setSelectedVideoTabCachedDirtyFormData(dirtyData)
+    } else {
+      debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+    }
   }
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
@@ -353,6 +411,55 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
+          <FormField title="License">
+            <Controller
+              name="licenseCode"
+              control={control}
+              rules={requiredValidation('License')}
+              onFocus={() => handleFieldFocus(licenseSelectRef)}
+              render={({ value, onChange }) => (
+                <Select
+                  containerRef={licenseSelectRef}
+                  value={value ?? null}
+                  items={knownLicensesOptions}
+                  placeholder="Choose license type"
+                  onChange={(value) => {
+                    onChange(value)
+                    handleFormChange()
+                  }}
+                  error={!!errors.licenseCode && !value}
+                  helperText={errors.licenseCode?.message}
+                />
+              )}
+            />
+          </FormField>
+          {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
+            <FormField title="License attribution">
+              <TextField
+                name="licenseAttribution"
+                ref={register(textFieldValidation({ name: 'License attribution', maxLength: 5000, required: true }))}
+                onChange={handleFormChange}
+                placeholder="Type your attribution here"
+                error={!!errors.licenseAttribution}
+                helperText={errors.licenseAttribution?.message}
+              />
+            </FormField>
+          )}
+
+          {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
+            <FormField title="Custom license">
+              <TextArea
+                name="licenseCustomText"
+                ref={register(textFieldValidation({ name: 'License', maxLength: 5000, required: true }))}
+                onChange={handleFormChange}
+                maxLength={5000}
+                placeholder="Type your license content here"
+                error={!!errors.licenseCustomText}
+                helperText={errors.licenseCustomText?.message}
+              />
+            </FormField>
+          )}
+
           <FormField title="Marketing">
             <Controller
               name="hasMarketing"
@@ -453,25 +560,18 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
         showDialog={isDeleteDialogOpen}
         onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoTab?.id)}
+        onPrimaryButtonClick={() =>
+          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
+        }
         error
         variant="warning"
         primaryButtonText="Delete video"
         secondaryButtonText="Cancel"
       />
-      <TransactionDialog
-        status={deleteTransactionStatus}
-        successTitle="Video successfully deleted!"
-        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={() => {
-          selectedVideoTab?.id && onDeleteVideo(selectedVideoTab?.id)
-          closeDeleteTransactionDialog()
-        }}
-      />
       <StyledActionBar
         fullWidth={true}
-        fee={0}
-        isActive={!isEdit || isDirty}
+        fee={fee}
+        isActive={selectedVideoTab?.isDraft || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
         onConfirmClick={handleSubmit}
         detailsText={isEdit ? undefined : 'Drafts are saved automatically'}

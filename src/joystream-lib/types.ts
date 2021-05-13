@@ -19,7 +19,7 @@ export type ChannelAssets = {
 
 export type CreateVideoMetadata = Omit<
   VideoMetadata.AsObject,
-  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'license'
+  'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream'
 > & {
   publishedBeforeJoystream?: string
   mimeMediaType?: string
