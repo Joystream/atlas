@@ -247,16 +247,6 @@ type CoverVideo {
   coverCutMediaUrl: String
 }
 
-type FeaturedVideo {
-  id: ID!
-  video: Video!
-}
-
-enum FeaturedVideoOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-}
-
 union SearchResult = Video | Channel
 
 type SearchFTSOutput {
@@ -312,9 +302,6 @@ type Query {
 
   # Get the current cover video
   coverVideo: CoverVideo!
-
-  # List all top trending videos
-  featuredVideos(orderBy: FeaturedVideoOrderByInput): [FeaturedVideo!]!
 
   # Free text search across videos and channels
   search(limit: Int, text: String!): [SearchFTSOutput!]!

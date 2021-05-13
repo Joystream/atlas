@@ -30,6 +30,7 @@ export type VideoFieldsFragment = {
   createdAt: Date
   isPublic?: Types.Maybe<boolean>
   isExplicit?: Types.Maybe<boolean>
+  isFeatured: boolean
   hasMarketing?: Types.Maybe<boolean>
   isCensored: boolean
   publishedBeforeJoystream?: Types.Maybe<Date>
@@ -82,13 +83,6 @@ export type GetVideosQueryVariables = Types.Exact<{
 export type GetVideosQuery = {
   __typename?: 'Query'
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
-}
-
-export type GetFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never }>
-
-export type GetFeaturedVideosQuery = {
-  __typename?: 'Query'
-  featuredVideos: Array<{ __typename?: 'FeaturedVideo'; video: { __typename?: 'Video' } & VideoFieldsFragment }>
 }
 
 export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -150,6 +144,7 @@ export const VideoFieldsFragmentDoc = gql`
     createdAt
     isPublic
     isExplicit
+    isFeatured
     hasMarketing
     isCensored
     language {
@@ -319,51 +314,6 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
-export const GetFeaturedVideosDocument = gql`
-  query GetFeaturedVideos {
-    featuredVideos(orderBy: createdAt_DESC) {
-      video {
-        ...VideoFields
-      }
-    }
-  }
-  ${VideoFieldsFragmentDoc}
-`
-
-/**
- * __useGetFeaturedVideosQuery__
- *
- * To run a query within a React component, call `useGetFeaturedVideosQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFeaturedVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetFeaturedVideosQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetFeaturedVideosQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>
-) {
-  return Apollo.useQuery<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>(
-    GetFeaturedVideosDocument,
-    baseOptions
-  )
-}
-export function useGetFeaturedVideosLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>(
-    GetFeaturedVideosDocument,
-    baseOptions
-  )
-}
-export type GetFeaturedVideosQueryHookResult = ReturnType<typeof useGetFeaturedVideosQuery>
-export type GetFeaturedVideosLazyQueryHookResult = ReturnType<typeof useGetFeaturedVideosLazyQuery>
-export type GetFeaturedVideosQueryResult = Apollo.QueryResult<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>
 export const GetCoverVideoDocument = gql`
   query GetCoverVideo {
     coverVideo {

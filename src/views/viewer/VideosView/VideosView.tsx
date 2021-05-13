@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react'
 
 import { ErrorBoundary } from '@sentry/react'
 import { useInView } from 'react-intersection-observer'
-import { useFeaturedVideos, useCategories } from '@/api/hooks'
+import { useCategories, useVideos } from '@/api/hooks'
+import { VideoOrderByInput } from '@/api/queries'
 
 import { ErrorFallback, BackgroundPattern, VideoGallery, TOP_NAVBAR_HEIGHT } from '@/components'
 import { Text } from '@/shared/components'
@@ -23,10 +24,18 @@ const VideosView: React.FC = () => {
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const {
     loading: featuredVideosLoading,
-    featuredVideos,
+    videos: featuredVideos,
     error: featuredVideosError,
     refetch: refetchFeaturedVideos,
-  } = useFeaturedVideos({}, { notifyOnNetworkStatusChange: true })
+  } = useVideos(
+    {
+      where: {
+        isFeatured_eq: true,
+      },
+      orderBy: VideoOrderByInput.CreatedAtDesc,
+    },
+    { notifyOnNetworkStatusChange: true }
+  )
 
   const topicsRef = useRef<HTMLHeadingElement>(null)
   const { ref: targetRef, inView } = useInView({
@@ -47,7 +56,11 @@ const VideosView: React.FC = () => {
   if (categoriesError) {
     throw categoriesError
   }
-  const videos = featuredVideos?.map((featuredVideo) => featuredVideo.video)
+
+  if (featuredVideosError) {
+    throw featuredVideosError
+  }
+
   const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
 
   return (
@@ -58,7 +71,7 @@ const VideosView: React.FC = () => {
         {featuredVideosLoading || featuredVideos?.length ? (
           <FeaturedVideosContainer>
             {!hasFeaturedVideosError ? (
-              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={videos} />
+              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos || []} />
             ) : (
               <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
             )}

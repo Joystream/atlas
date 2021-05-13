@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean, DeepMap } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -37,7 +37,7 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { MessageDialog, TransactionDialog } from '@/components'
+import { MessageDialog } from '@/components'
 import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
@@ -63,6 +63,7 @@ type EditVideoFormProps = {
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: EditVideoSheetTab
+  fee: number
 }
 
 export const EditVideoForm: React.FC<EditVideoFormProps> = ({
@@ -71,6 +72,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   onThumbnailFileChange,
   onVideoFileChange,
   onDeleteVideo,
+  fee,
 }) => {
   const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
@@ -90,14 +92,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
-  const {
-    closeVideoDeleteDialog,
-    closeDeleteTransactionDialog,
-    confirmDeleteVideo,
-    openVideoDeleteDialog,
-    isDeleteDialogOpen,
-    deleteTransactionStatus,
-  } = useDeleteVideo()
+  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -139,6 +134,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   })
 
   useEffect(() => {
+    if (isEdit) {
+      return
+    }
     // reset multifileselect when sheetState is closed
     if (sheetState === 'closed') {
       setValue('assets', {
@@ -146,7 +144,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         thumbnail: null,
       })
     }
-  }, [sheetState, setValue])
+  }, [sheetState, setValue, isEdit])
 
   // we pass the functions explicitly so the debounced function doesn't need to change when those functions change
   const debouncedDraftSave = useRef(
@@ -176,6 +174,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   )
   const categorySelectRef = useRef<HTMLDivElement>(null)
   const isExplicitInputRef = useRef<HTMLInputElement>(null)
+  const licenseSelectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -230,6 +229,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     const callback = () => {
       setForceReset(true)
     }
+
+    debouncedDraftSave.current.flush()
 
     await onSubmit(data, dirtyFields, callback)
   })
@@ -415,8 +416,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="licenseCode"
               control={control}
               rules={requiredValidation('License')}
+              onFocus={() => handleFieldFocus(licenseSelectRef)}
               render={({ value, onChange }) => (
                 <Select
+                  containerRef={licenseSelectRef}
                   value={value ?? null}
                   items={knownLicensesOptions}
                   placeholder="Choose license type"
@@ -557,24 +560,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
         showDialog={isDeleteDialogOpen}
         onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoTab?.id)}
+        onPrimaryButtonClick={() =>
+          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
+        }
         error
         variant="warning"
         primaryButtonText="Delete video"
         secondaryButtonText="Cancel"
       />
-      <TransactionDialog
-        status={deleteTransactionStatus}
-        successTitle="Video successfully deleted!"
-        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={() => {
-          selectedVideoTab?.id && onDeleteVideo(selectedVideoTab?.id)
-          closeDeleteTransactionDialog()
-        }}
-      />
       <StyledActionBar
         fullWidth={true}
-        fee={0}
+        fee={fee}
         isActive={selectedVideoTab?.isDraft || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
         onConfirmClick={handleSubmit}

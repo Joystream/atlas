@@ -23,6 +23,7 @@ import {
   useConnectionStatus,
   useUser,
   UploadManagerProvider,
+  TransactionManagerProvider,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -154,7 +155,9 @@ const StudioLayoutWrapper: React.FC = () => (
         <DraftsProvider>
           <EditVideoSheetProvider>
             <JoystreamProvider>
-              <StudioLayout />
+              <TransactionManagerProvider>
+                <StudioLayout />
+              </TransactionManagerProvider>
             </JoystreamProvider>
           </EditVideoSheetProvider>
         </DraftsProvider>
