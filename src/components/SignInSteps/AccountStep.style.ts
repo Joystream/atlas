@@ -36,7 +36,7 @@ export const SubTitle = styled(Text)`
 
 export const AccountsWrapper = styled.div`
   width: 100%;
-  max-height: 300px;
+  max-height: 200px;
   min-height: 200px;
   overflow-y: auto;
   margin-top: ${sizes(4)};
