@@ -1,5 +1,5 @@
 import { useVideos } from '@/api/hooks'
-import { MessageDialog, StudioContainer, TransactionDialog, VideoPreviewPublisher } from '@/components'
+import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
-import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -33,7 +32,7 @@ export const MyVideosView = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { loading, videos, totalCount, error, fetchMore, refetchCount: refetchVideosCount, client } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -45,14 +44,7 @@ export const MyVideosView = () => {
     { notifyOnNetworkStatusChange: true }
   )
 
-  const {
-    closeVideoDeleteDialog,
-    closeDeleteTransactionDialog,
-    confirmDeleteVideo,
-    openVideoDeleteDialog,
-    deleteTransactionStatus,
-    isDeleteDialogOpen,
-  } = useDeleteVideo()
+  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
   useEffect(() => {
     if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
@@ -103,14 +95,13 @@ export const MyVideosView = () => {
     }
     addVideoTab({ id, isDraft: opts.draft })
 
-    displaySnackbar({
-      title: 'Video opened in a new tab',
-      iconType: 'success',
-      actionText: 'Undo',
-      onActionClick: () => setTabIdToRemoveViaSnackbar(id),
-    })
-
     if (opts.minimized) {
+      displaySnackbar({
+        title: 'Video opened in a new tab',
+        iconType: 'success',
+        actionText: 'Undo',
+        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
+      })
       setSheetState('minimized')
     } else {
       navigate(absoluteRoutes.studio.editVideo())
@@ -122,10 +113,6 @@ export const MyVideosView = () => {
       return
     }
     setSelectedVideoId(undefined)
-
-    await refetchVideosCount()
-    removeVideoFromCache(selectedVideoId, client)
-    closeDeleteTransactionDialog()
   }
 
   const confirmRemoveDraft = (id: string) => {
@@ -196,17 +183,11 @@ export const MyVideosView = () => {
         description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
         showDialog={isDeleteDialogOpen}
         onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => confirmDeleteVideo(selectedVideoId)}
+        onPrimaryButtonClick={() => selectedVideoId && confirmDeleteVideo(selectedVideoId, () => handleVideoDeleted())}
         error
         variant="warning"
         primaryButtonText="Delete video"
         secondaryButtonText="Cancel"
-      />
-      <TransactionDialog
-        status={deleteTransactionStatus}
-        successTitle="Video successfully deleted!"
-        successDescription="Your video was marked as deleted and it will no longer show up on Joystream."
-        onClose={handleVideoDeleted}
       />
       <MessageDialog
         title="Delete this draft?"

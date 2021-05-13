@@ -1,60 +1,45 @@
-import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { useState, useEffect } from 'react'
-import { useSnackbar, useJoystream, useAuthorizedUser } from '@/hooks'
+import { useVideos } from '@/api/hooks'
+import { useState } from 'react'
+import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
+import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
-  const { activeMemberId } = useAuthorizedUser()
+  const { handleTransaction } = useTransactionManager()
+  const { activeMemberId, activeChannelId } = useAuthorizedUser()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [deleteTransactionStatus, setDeleteTransactionStatus] = useState<ExtrinsicStatus | null>(null)
-  const [deleteTransactionBlock, setDeleteTransactionBlock] = useState<number | null>(null)
-  const { queryNodeState } = useQueryNodeStateSubscription({
-    skip: deleteTransactionStatus !== ExtrinsicStatus.Syncing,
+
+  const { refetchCount: refetchVideosCount, client } = useVideos({
+    where: {
+      channelId_eq: activeChannelId,
+    },
   })
-  const { displaySnackbar } = useSnackbar()
 
-  useEffect(() => {
-    if (!deleteTransactionBlock || !queryNodeState || deleteTransactionStatus !== ExtrinsicStatus.Syncing) {
-      return
-    }
-
-    if (queryNodeState.indexerHead >= deleteTransactionBlock) {
-      setDeleteTransactionStatus(ExtrinsicStatus.Completed)
-    }
-  }, [deleteTransactionBlock, queryNodeState, deleteTransactionStatus])
-
-  const confirmDeleteVideo = async (videoId?: string) => {
-    if (!joystream || !videoId) {
+  const confirmDeleteVideo = async (videoId: string, onTxSync?: () => void) => {
+    if (!joystream) {
       return
     }
 
     setIsDeleteDialogOpen(false)
-    setDeleteTransactionStatus(ExtrinsicStatus.Unsigned)
-    try {
-      const { block } = await joystream.deleteVideo(videoId, activeMemberId, (status) =>
-        setDeleteTransactionStatus(status)
-      )
-      setDeleteTransactionBlock(block)
-      setDeleteTransactionStatus(ExtrinsicStatus.Syncing)
-    } catch (error) {
-      if (error instanceof ExtrinsicSignCancelledError) {
-        console.warn('Sign cancelled')
-        setDeleteTransactionStatus(null)
-        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
-      } else {
-        console.error(error)
-        setDeleteTransactionStatus(ExtrinsicStatus.Error)
-      }
-    }
+
+    handleTransaction({
+      txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
+      onTxSync: async () => {
+        await refetchVideosCount()
+        removeVideoFromCache(videoId, client)
+        onTxSync?.()
+      },
+      successMessage: {
+        title: 'Video successfully deleted!',
+        description: 'Your video was marked as deleted and it will no longer show up on Joystream.',
+      },
+    })
   }
 
   return {
     closeVideoDeleteDialog: () => setIsDeleteDialogOpen(false),
     openVideoDeleteDialog: () => setIsDeleteDialogOpen(true),
     confirmDeleteVideo,
-    closeDeleteTransactionDialog: () => setDeleteTransactionStatus(null),
     isDeleteDialogOpen,
-    deleteTransactionStatus,
   }
 }
