@@ -231,7 +231,17 @@ export const MyVideosView = () => {
               {gridContent}
             </Grid>
             {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
-              <EmptyVideos isDraftTab={isDraftTab} />
+              <EmptyVideos
+                text={
+                  currentTabName === 'All Videos'
+                    ? 'There are no videos currently'
+                    : currentTabName === 'Published'
+                    ? 'There are no published videos currently'
+                    : currentTabName === 'Drafts'
+                    ? 'There are no drafts currently'
+                    : 'There are no unlisted videos currently'
+                }
+              />
             )}
             <PaginationContainer>
               <Pagination

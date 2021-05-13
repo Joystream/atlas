@@ -92,13 +92,13 @@ const MessageView = styled.div`
 `
 
 // for tabs
-export const EmptyVideos: React.FC<{ isDraftTab: boolean }> = ({ isDraftTab }) => {
+export const EmptyVideos: React.FC<{ text: string }> = ({ text }) => {
   return (
     <Container>
       <TheaterMaskIllustration />
       <Message>
         <Text secondary variant="body2">
-          There are no {isDraftTab ? 'drafts' : 'videos'} currently
+          {text}
         </Text>
         <Button icon={<SvgGlyphAddVideo />} to={absoluteRoutes.studio.editVideo()} size="large">
           Upload video

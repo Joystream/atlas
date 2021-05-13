@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { ReactComponent as EmptyUploadsIllustration } from '@/assets/empty-uploads-illustration.svg'
+import { ReactComponent as EmptyUploadsIllustration } from '@/assets/theater-mask.svg'
 import { Button, Text } from '@/shared/components'
 import { sizes, media, zIndex } from '@/shared/theme'
 import { SvgGlyphUpload } from '@/shared/icons'
