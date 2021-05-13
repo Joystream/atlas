@@ -40,7 +40,6 @@ export const queryNodeStitchingResolvers = (
     ]),
     videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
-    featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
       RemoveQueryNodeFollowsField,

@@ -18,9 +18,6 @@ import {
   GetVideoCountDocument,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
-  GetFeaturedVideosDocument,
-  GetFeaturedVideosQuery,
-  GetFeaturedVideosQueryVariables,
   GetVideoDocument,
   GetVideoQuery,
   GetVideoQueryVariables,
@@ -45,13 +42,12 @@ import {
   GetVideoCategoriesDocument,
   GetVideoCategoriesQuery,
 } from '@/api/queries'
-import { FEATURED_VIDEOS_INDEXES, mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
+import { mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
 import { createQueryHandler } from './queries'
 import {
   createChannelFollowsAccessor,
   createCursorPaginationAccessor,
   createOffsetLimitPaginationAccessor,
-  createFeaturedVideosAccessor,
   createSearchAccessor,
   createSingleItemAccessor,
   createTotalCountAccessor,
@@ -90,11 +86,6 @@ const queryNodeHandlers = [
     queryNode,
     GetVideoCountDocument,
     createTotalCountAccessor(mockVideos)
-  ),
-  createQueryHandler<GetFeaturedVideosQuery, GetFeaturedVideosQueryVariables>(
-    queryNode,
-    GetFeaturedVideosDocument,
-    createFeaturedVideosAccessor(mockVideos, FEATURED_VIDEOS_INDEXES)
   ),
 
   // channels

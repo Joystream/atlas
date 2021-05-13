@@ -249,17 +249,6 @@ export type CoverVideo = {
   coverCutMediaUrl?: Maybe<Scalars['String']>
 }
 
-export type FeaturedVideo = {
-  __typename?: 'FeaturedVideo'
-  id: Scalars['ID']
-  video: Video
-}
-
-export enum FeaturedVideoOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-}
-
 export type SearchResult = Video | Channel
 
 export type SearchFtsOutput = {
@@ -294,7 +283,6 @@ export type Query = {
   channels: Array<Channel>
   channelsConnection: ChannelConnection
   coverVideo: CoverVideo
-  featuredVideos: Array<FeaturedVideo>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
@@ -341,10 +329,6 @@ export type QueryChannelsConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<ChannelWhereInput>
   orderBy?: Maybe<ChannelOrderByInput>
-}
-
-export type QueryFeaturedVideosArgs = {
-  orderBy?: Maybe<FeaturedVideoOrderByInput>
 }
 
 export type QueryMembershipByUniqueInputArgs = {
