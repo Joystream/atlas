@@ -30,7 +30,7 @@ export const SidebarNav = styled.nav<SidebarNavProps>`
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.sideNav};
   width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
 
@@ -156,7 +156,7 @@ export const DrawerOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.sideNav};
   background-color: rgba(0, 0, 0, 0.5);
 `
 export const SubItemsWrapper = styled.div<SubItemProps>`

@@ -58,7 +58,6 @@ const SidenavBase: React.FC<SidenavProps> = ({
       >
         <DrawerOverlay onClick={() => toggleSideNav(false)} />
       </CSSTransition>
-      <HamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
       <SidebarNav expanded={expanded} isStudio={isStudio}>
         <LogoLink to="./" onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
           <Logo />
@@ -95,6 +94,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
+      <HamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
     </>
   )
 }
