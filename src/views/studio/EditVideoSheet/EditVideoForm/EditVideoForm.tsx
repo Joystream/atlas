@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean, DeepMap } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { useCategories } from '@/api/hooks'
 import {
@@ -63,6 +63,7 @@ type EditVideoFormProps = {
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: EditVideoSheetTab
+  fee: number
 }
 
 export const EditVideoForm: React.FC<EditVideoFormProps> = ({
@@ -71,6 +72,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   onThumbnailFileChange,
   onVideoFileChange,
   onDeleteVideo,
+  fee,
 }) => {
   const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
@@ -234,6 +236,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     const callback = () => {
       setForceReset(true)
     }
+
+    debouncedDraftSave.current.flush()
 
     await onSubmit(data, dirtyFields, callback)
   })
@@ -580,7 +584,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       />
       <StyledActionBar
         fullWidth={true}
-        fee={0}
+        fee={fee}
         isActive={selectedVideoTab?.isDraft || isDirty}
         primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
         onConfirmClick={handleSubmit}

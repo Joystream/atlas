@@ -103,14 +103,13 @@ export const MyVideosView = () => {
     }
     addVideoTab({ id, isDraft: opts.draft })
 
-    displaySnackbar({
-      title: 'Video opened in a new tab',
-      iconType: 'success',
-      actionText: 'Undo',
-      onActionClick: () => setTabIdToRemoveViaSnackbar(id),
-    })
-
     if (opts.minimized) {
+      displaySnackbar({
+        title: 'Video opened in a new tab',
+        iconType: 'success',
+        actionText: 'Undo',
+        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
+      })
       setSheetState('minimized')
     } else {
       navigate(absoluteRoutes.studio.editVideo())
