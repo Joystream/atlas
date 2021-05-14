@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
@@ -60,10 +60,10 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     setDialogCloseCallback(null)
   }
 
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     dialogCloseCallback?.()
     reset()
-  }
+  }, [dialogCloseCallback])
 
   const handleTransaction = async <T,>({
     preProcess,

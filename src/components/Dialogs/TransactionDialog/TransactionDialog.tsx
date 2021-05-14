@@ -52,31 +52,36 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
   const { openDialog, closeDialog } = useDialog()
 
   useEffect(() => {
-    if (status === ExtrinsicStatus.Error) {
-      openDialog(STATUS_ERROR_DIALOG, {
-        variant: 'error',
-        title: 'Something went wrong...',
-        description:
-          'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-        secondaryButtonText: 'Close',
-        onSecondaryButtonClick: () => {
-          onClose()
-          closeDialog(STATUS_ERROR_DIALOG)
-        },
-      })
+    if (status !== ExtrinsicStatus.Error) {
+      return
     }
-    if (status === ExtrinsicStatus.Completed) {
-      openDialog(STATUS_COMPLETED_DIALOG, {
-        variant: 'success',
-        title: successTitle,
-        description: successDescription,
-        secondaryButtonText: 'Close',
-        onSecondaryButtonClick: () => {
-          onClose()
-          closeDialog(STATUS_COMPLETED_DIALOG)
-        },
-      })
+    openDialog(STATUS_ERROR_DIALOG, {
+      variant: 'error',
+      title: 'Something went wrong...',
+      description:
+        'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+      secondaryButtonText: 'Close',
+      onSecondaryButtonClick: () => {
+        onClose()
+        closeDialog(STATUS_ERROR_DIALOG)
+      },
+    })
+  }, [closeDialog, onClose, openDialog, status])
+
+  useEffect(() => {
+    if (status !== ExtrinsicStatus.Completed) {
+      return
     }
+    openDialog(STATUS_COMPLETED_DIALOG, {
+      variant: 'success',
+      title: successTitle,
+      description: successDescription,
+      secondaryButtonText: 'Close',
+      onSecondaryButtonClick: () => {
+        onClose()
+        closeDialog(STATUS_COMPLETED_DIALOG)
+      },
+    })
   }, [closeDialog, onClose, openDialog, status, successDescription, successTitle])
 
   if (status === ExtrinsicStatus.Error || status === ExtrinsicStatus.Completed) {
