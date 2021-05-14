@@ -70,6 +70,11 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
     video?.channel.avatarPhotoDataObject
   )
 
+  const hasThumbnailUploadFailed =
+    video?.thumbnailPhotoAvailability === AssetAvailability.Pending &&
+    uploadsState.flat().find((asset) => asset.ipfsContentId === video.thumbnailPhotoDataObject?.ipfsContentId)
+      ?.lastStatus !== 'completed'
+
   return (
     <VideoPreviewBase
       publisherMode
@@ -80,7 +85,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={thumbnailPhotoUrl}
-      isPending={video?.thumbnailPhotoAvailability === AssetAvailability.Pending}
+      hasThumbnailUploadFailed={hasThumbnailUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}

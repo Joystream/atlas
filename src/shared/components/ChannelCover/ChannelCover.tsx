@@ -20,7 +20,7 @@ import { Text } from '@/shared/components'
 
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
-  isPending?: boolean
+  hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
@@ -29,7 +29,7 @@ export type ChannelCoverProps = {
 
 const ChannelCover: React.FC<ChannelCoverProps> = ({
   coverPhotoUrl,
-  isPending,
+  hasCoverUploadFailed,
   editable,
   disabled,
   onCoverEditClick,
@@ -70,7 +70,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
             >
               {coverPhotoUrl ? (
                 <CoverImage src={coverPhotoUrl} />
-              ) : isPending ? (
+              ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <SvgLargeUploadFailed />
                   <Text variant="subtitle2" secondary>

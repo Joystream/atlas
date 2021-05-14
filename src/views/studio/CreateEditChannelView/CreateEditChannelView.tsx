@@ -89,7 +89,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
-  const { startFileUpload } = useUploadsManager(activeChannelId || '')
+  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId || '')
 
   const {
     register,
@@ -344,6 +344,16 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     },
   ]
 
+  const hasAvatarUploadFailed =
+    channel?.avatarPhotoAvailability === AssetAvailability.Pending &&
+    uploadsState.flat().find((asset) => asset.ipfsContentId === channel.avatarPhotoDataObject?.ipfsContentId)
+      ?.lastStatus !== 'completed'
+
+  const hasCoverUploadFailed =
+    channel?.coverPhotoAvailability === AssetAvailability.Pending &&
+    uploadsState.flat().find((asset) => asset.ipfsContentId === channel.coverPhotoDataObject?.ipfsContentId)
+      ?.lastStatus !== 'completed'
+
   return (
     <>
       <DataLostWarningDialog />
@@ -356,7 +366,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <>
                 <ChannelCover
                   coverPhotoUrl={loading ? null : value.url}
-                  isPending={channel?.coverPhotoAvailability === AssetAvailability.Pending}
+                  hasCoverUploadFailed={hasCoverUploadFailed}
                   onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
@@ -387,7 +397,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 <>
                   <StyledAvatar
                     imageUrl={value.url}
-                    isPending={channel?.avatarPhotoAvailability === AssetAvailability.Pending}
+                    hasAvatarUploadFailed={hasAvatarUploadFailed}
                     size="fill"
                     onEditClick={() => avatarDialogRef.current?.open()}
                     editable

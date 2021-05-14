@@ -95,7 +95,7 @@ export type VideoPreviewBaseProps = {
   progress?: number
   views?: number | null
   thumbnailUrl?: string | null
-  isPending?: boolean
+  hasThumbnailUploadFailed?: boolean
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
@@ -123,7 +123,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   progress = 0,
   views,
   thumbnailUrl,
-  isPending,
+  hasThumbnailUploadFailed,
   onCoverResize,
   channelHref,
   videoHref,
@@ -213,7 +213,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                         ref={imgRef}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
-                    ) : isPending ? (
+                    ) : hasThumbnailUploadFailed ? (
                       <CoverThumbnailUploadFailed>
                         <SvgLargeUploadFailed />
                         <Text variant="subtitle2" secondary>

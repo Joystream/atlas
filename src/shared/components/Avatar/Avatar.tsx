@@ -17,7 +17,7 @@ export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onEditClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   imageUrl?: string | null
-  isPending?: boolean
+  hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
   size?: AvatarSize
@@ -28,7 +28,7 @@ export type AvatarProps = {
 
 const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
-  isPending,
+  hasAvatarUploadFailed,
   loading = false,
   size = 'default',
   onClick,
@@ -68,7 +68,7 @@ const Avatar: React.FC<AvatarProps> = ({
               <StyledPlaceholder rounded />
             ) : imageUrl ? (
               <StyledImage src={imageUrl} onError={onError} />
-            ) : isPending ? (
+            ) : hasAvatarUploadFailed ? (
               <NewChannelAvatar>
                 <SvgLargeUploadFailed />
               </NewChannelAvatar>

@@ -14,10 +14,6 @@ type StyledTopbarBaseProps = {
   fullWidth?: boolean
 }
 
-type StyledAvatarProps = {
-  isPending?: boolean
-}
-
 export const StyledTopbarBase = styled(TopbarBase)<StyledTopbarBaseProps>`
   ${({ fullWidth }) => fullWidth && 'left: 0;'}
   ${media.small} {
@@ -37,12 +33,9 @@ export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
 
-export const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
+export const StyledAvatar = styled(Avatar)`
   margin-left: ${sizes(5)};
   margin-right: ${sizes(2.5)};
-  svg {
-    transform: ${({ isPending }) => isPending && 'scale(0.5)'};
-  }
 `
 
 export const TextContainer = styled.div`
