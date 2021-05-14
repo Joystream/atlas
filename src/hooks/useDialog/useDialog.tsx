@@ -1,6 +1,6 @@
 import MessageDialog, { MessageDialogProps } from '@/components/Dialogs/MessageDialog'
 import { transitions } from '@/shared/theme'
-import React, { useCallback, useContext, useRef, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 type DialogContextValue = {
@@ -22,9 +22,9 @@ export const DialogProvider: React.FC = ({ children }) => {
     setDialogs((dialogs) => [...dialogs, { id: customId, showDialog: true, ...dialogConfig }])
   }, [])
 
-  const closeDialog = (id: string) => {
-    setDialogs([...dialogs.filter((dialog) => dialog.id !== id)])
-  }
+  const closeDialog = useCallback((id: string) => {
+    setDialogs((dialogs) => [...dialogs.filter((dialog) => dialog.id !== id)])
+  }, [])
 
   return (
     <DialogContext.Provider value={{ openDialog, closeDialog }}>

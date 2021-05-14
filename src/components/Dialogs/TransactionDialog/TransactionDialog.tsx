@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import MessageDialog from '../MessageDialog'
 import { Tooltip } from '@/shared/components'
+import { useDialog } from '@/hooks'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
@@ -39,6 +39,9 @@ const TRANSACTION_STEPS_DETAILS = {
   },
 }
 
+const STATUS_ERROR_DIALOG = 'STATUS_ERROR_DIALOG'
+const STATUS_COMPLETED_DIALOG = 'STATUS_ERROR_COMPLETED'
+
 const TransactionDialog: React.FC<TransactionDialogProps> = ({
   status,
   successTitle,
@@ -46,30 +49,38 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
   onClose,
   ...actionDialogProps
 }) => {
-  if (status === ExtrinsicStatus.Error) {
-    return (
-      <MessageDialog
-        showDialog
-        variant="error"
-        title="Something went wrong..."
-        description="Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help."
-        secondaryButtonText="Close"
-        onSecondaryButtonClick={onClose}
-      />
-    )
-  }
+  const { openDialog, closeDialog } = useDialog()
 
-  if (status === ExtrinsicStatus.Completed) {
-    return (
-      <MessageDialog
-        showDialog
-        variant="success"
-        title={successTitle}
-        description={successDescription}
-        secondaryButtonText="Close"
-        onSecondaryButtonClick={onClose}
-      />
-    )
+  useEffect(() => {
+    if (status === ExtrinsicStatus.Error) {
+      openDialog(STATUS_ERROR_DIALOG, {
+        variant: 'error',
+        title: 'Something went wrong...',
+        description:
+          'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+        secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => {
+          onClose()
+          closeDialog(STATUS_ERROR_DIALOG)
+        },
+      })
+    }
+    if (status === ExtrinsicStatus.Completed) {
+      openDialog(STATUS_COMPLETED_DIALOG, {
+        variant: 'success',
+        title: successTitle,
+        description: successDescription,
+        secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => {
+          onClose()
+          closeDialog(STATUS_COMPLETED_DIALOG)
+        },
+      })
+    }
+  }, [closeDialog, onClose, openDialog, status, successDescription, successTitle])
+
+  if (status === ExtrinsicStatus.Error || status === ExtrinsicStatus.Completed) {
+    return null
   }
 
   const stepDetails = status != null ? TRANSACTION_STEPS_DETAILS[status] : null
