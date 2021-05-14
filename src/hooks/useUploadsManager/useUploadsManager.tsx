@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
+import { throttle } from 'lodash'
 import { useSnackbar, useUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
@@ -148,6 +149,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         if (!opts?.isReUpload && file) {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
+        if (opts?.changeHost) {
+          updateAsset(asset.contentId, 'inProgress')
+        }
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
@@ -170,10 +174,13 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
             },
           },
-          onUploadProgress: ({ loaded, total }: ProgressEvent) => {
-            updateAsset(asset.contentId, 'inProgress')
-            setAssetUploadProgress((loaded / total) * 100)
-          },
+          onUploadProgress: throttle(
+            ({ loaded, total }: ProgressEvent) => {
+              setAssetUploadProgress((loaded / total) * 100)
+            },
+            3000,
+            { leading: true }
+          ),
         })
 
         // TODO: remove assets from the same parent if all finished
