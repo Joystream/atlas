@@ -10,7 +10,6 @@ type DialogContextValue = {
 
 type DialogState = {
   id: string
-  type: 'transaction' | 'default'
 } & MessageDialogProps
 
 const DialogContext = React.createContext<undefined | DialogContextValue>(undefined)
@@ -20,34 +19,33 @@ export const DialogProvider: React.FC = ({ children }) => {
   const [dialogs, setDialogs] = useState<DialogState[]>([])
 
   const openDialog = useCallback((customId: string, dialogConfig?: MessageDialogProps) => {
-    setDialogs((dialogs) => [...dialogs, { id: customId, type: 'default', showDialog: true, ...dialogConfig }])
+    setDialogs((dialogs) => [...dialogs, { id: customId, showDialog: true, ...dialogConfig }])
   }, [])
 
   const closeDialog = (id: string) => {
     setDialogs([...dialogs.filter((dialog) => dialog.id !== id)])
   }
+
   return (
-    <>
-      <DialogContext.Provider value={{ openDialog, closeDialog }}>
-        <TransitionGroup>
-          {dialogs.map(({ id, onExitClick, ...dialogProps }, idx) => {
-            return (
-              <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-                <MessageDialog
-                  key={idx}
-                  {...dialogProps}
-                  onExitClick={(e) => {
-                    closeDialog(id)
-                    onExitClick?.(e)
-                  }}
-                />
-              </CSSTransition>
-            )
-          })}
-        </TransitionGroup>
-        {children}
-      </DialogContext.Provider>
-    </>
+    <DialogContext.Provider value={{ openDialog, closeDialog }}>
+      <TransitionGroup>
+        {dialogs.map(({ id, onExitClick, ...dialogProps }, idx) => {
+          return (
+            <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+              <MessageDialog
+                key={idx}
+                {...dialogProps}
+                onExitClick={(e) => {
+                  closeDialog(id)
+                  onExitClick?.(e)
+                }}
+              />
+            </CSSTransition>
+          )
+        })}
+      </TransitionGroup>
+      {children}
+    </DialogContext.Provider>
   )
 }
 

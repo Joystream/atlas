@@ -114,7 +114,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
   const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
     if (newChannel) {
@@ -351,7 +351,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   return (
     <>
-      <DataLostWarningDialog />
       <form onSubmit={handleSubmit}>
         <Header>
           <Controller
