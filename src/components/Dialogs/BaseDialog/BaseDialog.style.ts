@@ -1,8 +1,19 @@
 import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
-import { colors, sizes, media } from '@/shared/theme'
+import { colors, sizes, media, zIndex } from '@/shared/theme'
+
+export const DialogBackDrop = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: ${zIndex.globalOverlay};
+  background-color: rgba(0, 0, 0, 0.4);
+`
 
 export const StyledContainer = styled.div`
+  z-index: ${zIndex.globalOverlay};
   --dialog-padding: ${sizes(4)};
   ${media.small} {
     --dialog-padding: ${sizes(6)};

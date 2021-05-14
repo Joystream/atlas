@@ -11,6 +11,7 @@ type OverlayManagerContextValue = {
   setOverlayContainerOpened: (value: boolean) => void
   overlayContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
+  dialogPortalRef: React.RefObject<HTMLDivElement>
 }
 
 type OverlayContainerProps = {
@@ -26,6 +27,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const overlayContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
+  const dialogPortalRef = useRef<HTMLDivElement>(null)
   const handleScrollLocked = useCallback((value: boolean, scrollbarGap?: number) => {
     if (value) {
       setScrollLocked(true)
@@ -47,6 +49,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <Global styles={[overlayManagerStyles(scrollbarGap), dialogTransitions]} />
       <OverlayManagerContext.Provider
         value={{
+          dialogPortalRef,
           scrollLocked,
           setScrollLocked: handleScrollLocked,
           overlayContainerOpened,
@@ -56,6 +59,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
         }}
       >
         {children}
+        <div ref={dialogPortalRef} />
         <StyledContextMenuContainer ref={contextMenuContainerRef} />
         <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened} />
       </OverlayManagerContext.Provider>
@@ -122,7 +126,13 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setScrollLocked, setOverlayContainerOpened, overlayContainerRef, contextMenuContainerRef } = context
+  const {
+    setScrollLocked,
+    setOverlayContainerOpened,
+    overlayContainerRef,
+    contextMenuContainerRef,
+    dialogPortalRef,
+  } = context
 
   const lockScroll = useCallback(() => {
     const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
@@ -148,5 +158,6 @@ export const useOverlayManager = () => {
     closeOverlayContainer,
     overlayContainerRef,
     contextMenuContainerRef,
+    dialogPortalRef,
   }
 }
