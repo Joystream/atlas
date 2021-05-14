@@ -1,6 +1,5 @@
-import { MessageDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser, useConnectionStatus } from '@/hooks'
+import { useUser, useConnectionStatus, useDialog } from '@/hooks'
 import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
@@ -33,6 +32,9 @@ type Inputs = {
   about: string
 }
 
+const ERROR_DIALOG = 'ERROR_DIALOG'
+const CREATE_MEMBERSHIP_DIALOG = 'CREATE_MEMBERSHIP_DIALOG'
+
 const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
@@ -48,9 +50,8 @@ const CreateMemberView = () => {
   })
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [error, setError] = useState<string | undefined>()
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { openDialog, closeDialog } = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   if (queryNodeStateError) {
@@ -61,18 +62,18 @@ const CreateMemberView = () => {
 
   // success
   useEffect(() => {
-    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
+    if (!membershipBlock || !queryNodeState || !activeAccountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
       refetchMemberships().then(() => {
-        setIsSubmitting(false)
+        closeDialog(CREATE_MEMBERSHIP_DIALOG)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
+  }, [membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships, closeDialog])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -80,13 +81,30 @@ const CreateMemberView = () => {
     }
 
     try {
-      setIsSubmitting(true)
+      openDialog(CREATE_MEMBERSHIP_DIALOG, {
+        exitButton: false,
+        icon: <Spinner />,
+        title: 'Creating membership...',
+        description:
+          "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+      })
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
-      setIsSubmitting(false)
+      closeDialog(CREATE_MEMBERSHIP_DIALOG)
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
-      setError(errorMessage)
+      openDialog(ERROR_DIALOG, {
+        variant: 'error',
+        title: 'Something went wrong...',
+        description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
+        secondaryButtonText: 'Close',
+        onExitClick: () => {
+          closeDialog(ERROR_DIALOG)
+        },
+        onSecondaryButtonClick: () => {
+          closeDialog(ERROR_DIALOG)
+        },
+      })
     }
   })
 
@@ -187,22 +205,6 @@ const CreateMemberView = () => {
           Create membership
         </StyledButton>
       </Form>
-      <MessageDialog
-        showDialog={isSubmitting}
-        exitButton={false}
-        icon={<Spinner />}
-        title="Creating membership..."
-        description="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds."
-      />
-      <MessageDialog
-        variant="error"
-        title="Something went wrong..."
-        showDialog={!isSubmitting && !!error}
-        description={`Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${error}`}
-        secondaryButtonText="Close"
-        onExitClick={() => setError(undefined)}
-        onSecondaryButtonClick={() => setError(undefined)}
-      />
     </Wrapper>
   )
 }
