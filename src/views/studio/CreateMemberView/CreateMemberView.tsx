@@ -6,7 +6,6 @@ import TextArea from '@/shared/components/TextArea'
 import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
 import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
@@ -20,8 +19,8 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import { useQueryNodeStateSubscription, useMembership } from '@/api/hooks'
+
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
@@ -37,7 +36,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError, clearErrors } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, setError: setInputError, watch } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -56,10 +55,9 @@ const CreateMemberView = () => {
     throw queryNodeStateError
   }
 
-  const [getMember, { data: memberData }] = useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(
-    GetMembershipDocument,
-    { onCompleted: async () => await trigger('handle') }
-  )
+  const { refetch: refetchMember } = useMembership({
+    where: { handle: watch('handle') },
+  })
 
   // success
   useEffect(() => {
@@ -104,16 +102,6 @@ const CreateMemberView = () => {
     debounceAvatarChange(value)
   }
 
-  const debounceHandleChange = debounce(async (value) => {
-    clearErrors('handle')
-    getMember({ variables: { where: { handle: value } } })
-  }, 1000)
-
-  const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    debounceHandleChange(value)
-  }
-
   return (
     <Wrapper>
       <Header>
@@ -150,10 +138,21 @@ const CreateMemberView = () => {
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
               patternMessage: 'may contain only lowercase letters, numbers and underscores',
-              validate: (value) => memberData?.membershipByUniqueInput?.handle !== value,
+              validate: async (value) => {
+                // Wrapping it up with promise and resolving comparison inside debounce
+                // debounce() will not automatically do the return, which is needed for validation
+                return new Promise((resolve) => {
+                  debounce(async (handle) => {
+                    const {
+                      data: { membershipByUniqueInput },
+                    } = await refetchMember()
+                    resolve(membershipByUniqueInput?.handle !== handle)
+                  }, 500)(value)
+                })
+              },
             })
           )}
-          onChange={handleHandleChange}
+          onChange={async () => await trigger('handle')}
           error={!!errors.handle}
           helperText={
             errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
