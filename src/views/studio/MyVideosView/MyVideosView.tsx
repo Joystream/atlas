@@ -1,7 +1,7 @@
 import { useVideosConnection } from '@/api/hooks'
-import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
+import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
+import { useAuthorizedUser, useDeleteVideo, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
 import React, { useEffect, useState } from 'react'
@@ -13,6 +13,7 @@ const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
+const DELETE_DRAFT_DIALOG = 'DELETE_DRAFT_DIALOG'
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
@@ -20,7 +21,6 @@ export const MyVideosView = () => {
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
-  const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
@@ -44,8 +44,8 @@ export const MyVideosView = () => {
     },
     { notifyOnNetworkStatusChange: true }
   )
-
-  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
+  const { openDialog, closeDialog } = useDialog()
+  const deleteVideo = useDeleteVideo()
 
   const videos = edges
     ?.map((edge) => edge.node)
@@ -111,22 +111,6 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleVideoDeleted = () => {
-    if (!selectedVideoId) {
-      return
-    }
-    removeVideoTab(videoTabs.findIndex((vt) => vt.id === selectedVideoId))
-    setSelectedVideoId(undefined)
-  }
-
-  const confirmRemoveDraft = (id: string) => {
-    removeDraft(id)
-    displaySnackbar({
-      title: 'Draft deleted',
-      iconType: 'success',
-    })
-  }
-
   // Workaround for removing drafts from video sheet tabs via snackbar
   // Snackbar will probably need a refactor to handle actions that change state
   useEffect(() => {
@@ -141,71 +125,61 @@ export const MyVideosView = () => {
     }
   }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
 
-  const gridContent = (
-    <>
-      {isDraftTab
-        ? drafts
-            // pagination slice
-            .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
-            .map((draft, idx) => (
-              <VideoPreviewPublisher
-                key={idx}
-                id={draft.id}
-                showChannel={false}
-                isDraft
-                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-                onClick={() => handleVideoClick(draft.id, { draft: true })}
-                onPullupClick={(e) => {
-                  e.stopPropagation()
-                  handleVideoClick(draft.id, { draft: true, minimized: true })
-                }}
-                onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-                onDeleteVideoClick={() => setDraftToRemove(draft.id)}
-              />
-            ))
-        : videosWithPlaceholders.map((video, idx) => (
-            <VideoPreviewPublisher
-              key={idx}
-              id={video.id}
-              showChannel={false}
-              isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-              onClick={() => handleVideoClick(video.id)}
-              onPullupClick={(e) => {
-                e.stopPropagation()
-                handleVideoClick(video.id, { minimized: true })
-              }}
-              onEditVideoClick={() => handleVideoClick(video.id)}
-              onDeleteVideoClick={() => {
-                openVideoDeleteDialog()
-                setSelectedVideoId(video.id)
-              }}
-            />
-          ))}
-      <MessageDialog
-        title="Delete this video?"
-        exitButton={false}
-        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
-        showDialog={isDeleteDialogOpen}
-        onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => selectedVideoId && confirmDeleteVideo(selectedVideoId, () => handleVideoDeleted())}
-        error
-        variant="warning"
-        primaryButtonText="Delete video"
-        secondaryButtonText="Cancel"
-      />
-      <MessageDialog
-        title="Delete this draft?"
-        description="You will not be able to undo this."
-        variant="warning"
-        showDialog={drafts.some((item) => item.id === draftToRemove)}
-        error
-        primaryButtonText="Remove draft"
-        secondaryButtonText="Cancel"
-        onPrimaryButtonClick={() => draftToRemove && confirmRemoveDraft(draftToRemove)}
-        onSecondaryButtonClick={() => setDraftToRemove(null)}
-      />
-    </>
-  )
+  const handleDeleteDraft = (draftId: string) => {
+    openDialog(DELETE_DRAFT_DIALOG, {
+      title: 'Delete this draft?',
+      description: 'You will not be able to undo this.',
+      variant: 'warning',
+      error: true,
+      primaryButtonText: 'Remove draft',
+      secondaryButtonText: 'Cancel',
+      onPrimaryButtonClick: () => {
+        removeDraft(draftId)
+        displaySnackbar({
+          title: 'Draft deleted',
+          iconType: 'success',
+        })
+        closeDialog(DELETE_DRAFT_DIALOG)
+      },
+      onSecondaryButtonClick: () => closeDialog(DELETE_DRAFT_DIALOG),
+    })
+  }
+
+  const gridContent = isDraftTab
+    ? drafts
+        // pagination slice
+        .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
+        .map((draft, idx) => (
+          <VideoPreviewPublisher
+            key={idx}
+            id={draft.id}
+            showChannel={false}
+            isDraft
+            isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+            onClick={() => handleVideoClick(draft.id, { draft: true })}
+            onPullupClick={(e) => {
+              e.stopPropagation()
+              handleVideoClick(draft.id, { draft: true, minimized: true })
+            }}
+            onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+            onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+          />
+        ))
+    : videosWithPlaceholders.map((video, idx) => (
+        <VideoPreviewPublisher
+          key={idx}
+          id={video.id}
+          showChannel={false}
+          isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
+          onClick={() => handleVideoClick(video.id)}
+          onPullupClick={(e) => {
+            e.stopPropagation()
+            handleVideoClick(video.id, { minimized: true })
+          }}
+          onEditVideoClick={() => handleVideoClick(video.id)}
+          onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
+        />
+      ))
 
   if (error) {
     throw error
