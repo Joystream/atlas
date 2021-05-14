@@ -27,6 +27,8 @@ type AssetLineProps = {
   asset: AssetUploadWithProgress
 }
 
+// TODO add useDialog here. That was a struggle
+
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
   const { activeChannelId } = useAuthorizedUser()
