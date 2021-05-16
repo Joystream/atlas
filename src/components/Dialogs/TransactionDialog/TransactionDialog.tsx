@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { Tooltip } from '@/shared/components'
-import { useDialog } from '@/hooks'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
-  successTitle: string
-  successDescription: string
   onClose: () => void
 }
 
@@ -39,51 +36,7 @@ const TRANSACTION_STEPS_DETAILS = {
   },
 }
 
-const STATUS_ERROR_DIALOG = 'STATUS_ERROR_DIALOG'
-const STATUS_COMPLETED_DIALOG = 'STATUS_ERROR_COMPLETED'
-
-const TransactionDialog: React.FC<TransactionDialogProps> = ({
-  status,
-  successTitle,
-  successDescription,
-  onClose,
-  ...actionDialogProps
-}) => {
-  const { openDialog, closeDialog } = useDialog()
-
-  useEffect(() => {
-    if (status !== ExtrinsicStatus.Error) {
-      return
-    }
-    openDialog(STATUS_ERROR_DIALOG, {
-      variant: 'error',
-      title: 'Something went wrong...',
-      description:
-        'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-      secondaryButtonText: 'Close',
-      onSecondaryButtonClick: () => {
-        onClose()
-        closeDialog(STATUS_ERROR_DIALOG)
-      },
-    })
-  }, [closeDialog, onClose, openDialog, status])
-
-  useEffect(() => {
-    if (status !== ExtrinsicStatus.Completed) {
-      return
-    }
-    openDialog(STATUS_COMPLETED_DIALOG, {
-      variant: 'success',
-      title: successTitle,
-      description: successDescription,
-      secondaryButtonText: 'Close',
-      onSecondaryButtonClick: () => {
-        onClose()
-        closeDialog(STATUS_COMPLETED_DIALOG)
-      },
-    })
-  }, [closeDialog, onClose, openDialog, status, successDescription, successTitle])
-
+const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
   if (status === ExtrinsicStatus.Error || status === ExtrinsicStatus.Completed) {
     return null
   }

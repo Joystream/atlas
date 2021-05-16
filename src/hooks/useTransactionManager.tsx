@@ -4,6 +4,10 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
 import useConnectionStatus from './useConnectionStatus'
+import { useDialog } from './useDialog'
+
+const STATUS_ERROR_DIALOG = 'STATUS_ERROR_DIALOG'
+const STATUS_COMPLETED_DIALOG = 'STATUS_ERROR_COMPLETED'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {
@@ -39,19 +43,45 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
   const { queryNodeState } = useQueryNodeStateSubscription()
   const { nodeConnectionStatus } = useConnectionStatus()
+  const { openDialog, closeDialog } = useDialog()
 
   const { displaySnackbar } = useSnackbar()
+
+  const handleDialogClose = useCallback(() => {
+    dialogCloseCallback?.()
+    reset()
+  }, [dialogCloseCallback])
 
   useEffect(() => {
     if (!queryNodeState || status !== ExtrinsicStatus.Syncing || !finalizationBlock) {
       return
     }
-
     if (queryNodeState.indexerHead >= finalizationBlock) {
       setStatus(ExtrinsicStatus.Completed)
       syncCallback?.()
+
+      openDialog(STATUS_COMPLETED_DIALOG, {
+        variant: 'success',
+        title: successMessage.title,
+        description: successMessage.description,
+        secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => {
+          handleDialogClose()
+          closeDialog(STATUS_COMPLETED_DIALOG)
+        },
+      })
     }
-  }, [queryNodeState, finalizationBlock, syncCallback, status])
+  }, [
+    queryNodeState,
+    finalizationBlock,
+    syncCallback,
+    status,
+    openDialog,
+    successMessage.title,
+    successMessage.description,
+    handleDialogClose,
+    closeDialog,
+  ])
 
   const reset = () => {
     setStatus(null)
@@ -59,11 +89,6 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     setSyncCallback(null)
     setDialogCloseCallback(null)
   }
-
-  const handleDialogClose = useCallback(() => {
-    dialogCloseCallback?.()
-    reset()
-  }, [dialogCloseCallback])
 
   const handleTransaction = async <T,>({
     preProcess,
@@ -114,6 +139,18 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       } else {
         console.error(e)
         setStatus(ExtrinsicStatus.Error)
+
+        openDialog(STATUS_ERROR_DIALOG, {
+          variant: 'error',
+          title: 'Something went wrong...',
+          description:
+            'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+          secondaryButtonText: 'Close',
+          onSecondaryButtonClick: () => {
+            handleDialogClose()
+            closeDialog(STATUS_ERROR_DIALOG)
+          },
+        })
       }
     }
   }
@@ -121,12 +158,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
   return (
     <TransactionManagerContext.Provider value={{ handleTransaction, fee: 0 }}>
       {children}
-      <TransactionDialog
-        status={status}
-        successTitle={successMessage.title}
-        successDescription={successMessage.description}
-        onClose={handleDialogClose}
-      />
+      <TransactionDialog status={status} onClose={handleDialogClose} />
     </TransactionManagerContext.Provider>
   )
 }
