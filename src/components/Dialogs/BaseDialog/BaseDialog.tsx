@@ -11,10 +11,18 @@ export type BaseDialogProps = {
   exitButton?: boolean
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
+  withSingleDialogAnimation?: boolean
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
-  const { dialogPortalRef, lockScroll, unlockScroll } = useOverlayManager()
+const BaseDialog: React.FC<BaseDialogProps> = ({
+  children,
+  showDialog,
+  exitButton = true,
+  onExitClick,
+  className,
+  withSingleDialogAnimation = true,
+}) => {
+  const { dialogPortalRef, lockScroll, unlockScroll, overlayContainerRef } = useOverlayManager()
   useEffect(() => {
     if (!showDialog) {
       return
@@ -26,19 +34,30 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
   }, [lockScroll, unlockScroll, showDialog])
 
   return (
-    <Portal containerRef={dialogPortalRef}>
-      <DialogBackDrop isOpened={showDialog}>
-        <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-          <StyledContainer className={className}>
-            {exitButton && (
-              <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
-                <SvgGlyphClose />
-              </StyledExitButton>
-            )}
-            {children}
-          </StyledContainer>
-        </CSSTransition>
-      </DialogBackDrop>
+    <Portal containerRef={withSingleDialogAnimation ? dialogPortalRef : overlayContainerRef}>
+      {withSingleDialogAnimation ? (
+        <DialogBackDrop isOpened={showDialog}>
+          <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+            <StyledContainer className={className}>
+              {exitButton && (
+                <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
+                  <SvgGlyphClose />
+                </StyledExitButton>
+              )}
+              {children}
+            </StyledContainer>
+          </CSSTransition>
+        </DialogBackDrop>
+      ) : (
+        <StyledContainer className={className}>
+          {exitButton && (
+            <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
+              <SvgGlyphClose />
+            </StyledExitButton>
+          )}
+          {children}
+        </StyledContainer>
+      )}
     </Portal>
   )
 }

@@ -13,7 +13,7 @@ export const DialogBackDrop = styled.div<DialogBackDropProps>`
   left: 0;
   right: 0;
   visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
-  opacity: ${({ isOpened }) => (isOpened ? '1' : '0')};
+  opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
   z-index: ${zIndex.globalOverlay};
   background-color: rgba(0, 0, 0, 0.4);
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);

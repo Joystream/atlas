@@ -1,7 +1,9 @@
+import { DialogBackDrop } from '@/components/Dialogs/BaseDialog/BaseDialog.style'
 import MessageDialog, { MessageDialogProps } from '@/components/Dialogs/MessageDialog'
 import { transitions } from '@/shared/theme'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { useOverlayManager } from '../useOverlayManager'
 
 type DialogContextValue = {
   openDialog: (id: string, dialogConfig?: MessageDialogProps) => void
@@ -26,13 +28,26 @@ export const DialogProvider: React.FC = ({ children }) => {
     setDialogs((dialogs) => [...dialogs.filter((dialog) => dialog.id !== id)])
   }, [])
 
+  const { openOverlayContainer, closeOverlayContainer } = useOverlayManager()
+
+  useEffect(() => {
+    if (!dialogs.length) {
+      return
+    }
+    openOverlayContainer()
+    return () => {
+      closeOverlayContainer()
+    }
+  }, [closeOverlayContainer, dialogs.length, openOverlayContainer])
+
   return (
     <DialogContext.Provider value={{ openDialog, closeDialog }}>
       <TransitionGroup>
         {dialogs.map(({ id, onExitClick, ...dialogProps }, idx) => {
           return (
-            <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+            <CSSTransition key={idx} timeout={100} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
               <MessageDialog
+                withSingleDialogAnimation={false}
                 key={idx}
                 {...dialogProps}
                 onExitClick={(e) => {
