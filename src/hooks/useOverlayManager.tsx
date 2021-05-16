@@ -7,11 +7,12 @@ import { transitions, zIndex } from '@/shared/theme'
 type OverlayManagerContextValue = {
   scrollLocked: boolean
   setScrollLocked: (value: boolean, scrollbarGap?: number) => void
-  overlayContainerOpened: boolean
-  setOverlayContainerOpened: (value: boolean) => void
-  overlayContainerRef: React.RefObject<HTMLDivElement>
+  overlayContainerOpenedForMessageDialog: boolean
+  setOverlayContainerOpenedForMessageDialog: (value: boolean) => void
+  setOverlayContainerOpenedForActionDialog: (value: boolean) => void
+  messageDialogContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
-  dialogPortalRef: React.RefObject<HTMLDivElement>
+  actionDialogContainerRef: React.RefObject<HTMLDivElement>
 }
 
 type OverlayContainerProps = {
@@ -23,11 +24,12 @@ OverlayManagerContext.displayName = 'OverlayManagerContext'
 
 export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
-  const [overlayContainerOpened, setOverlayContainerOpened] = useState(false)
+  const [overlayContainerOpenedForMessageDialog, setOverlayContainerOpenedForMessageDialog] = useState(false)
+  const [overlayContainerOpenedForActionDialog, setOverlayContainerOpenedForActionDialog] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
-  const overlayContainerRef = useRef<HTMLDivElement>(null)
+  const messageDialogContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
-  const dialogPortalRef = useRef<HTMLDivElement>(null)
+  const actionDialogContainerRef = useRef<HTMLDivElement>(null)
   const handleScrollLocked = useCallback((value: boolean, scrollbarGap?: number) => {
     if (value) {
       setScrollLocked(true)
@@ -40,8 +42,12 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
     }
   }, [])
 
-  const handleContainerOpened = useCallback((value: boolean) => {
-    setOverlayContainerOpened(value)
+  const handleContainerOpenedForMessageDialog = useCallback((value: boolean) => {
+    setOverlayContainerOpenedForMessageDialog(value)
+  }, [])
+
+  const handleContainerOpenedForActionDialog = useCallback((value: boolean) => {
+    setOverlayContainerOpenedForActionDialog(value)
   }, [])
 
   return (
@@ -49,19 +55,20 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <Global styles={[overlayManagerStyles(scrollbarGap), dialogTransitions]} />
       <OverlayManagerContext.Provider
         value={{
-          dialogPortalRef,
+          actionDialogContainerRef,
           scrollLocked,
           setScrollLocked: handleScrollLocked,
-          overlayContainerOpened,
-          setOverlayContainerOpened: handleContainerOpened,
-          overlayContainerRef,
+          overlayContainerOpenedForMessageDialog,
+          setOverlayContainerOpenedForMessageDialog: handleContainerOpenedForMessageDialog,
+          setOverlayContainerOpenedForActionDialog: handleContainerOpenedForActionDialog,
+          messageDialogContainerRef,
           contextMenuContainerRef,
         }}
       >
         {children}
-        <div ref={dialogPortalRef} />
         <StyledContextMenuContainer ref={contextMenuContainerRef} />
-        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened} />
+        <StyledOverlayContainer ref={actionDialogContainerRef} isOpened={overlayContainerOpenedForActionDialog} />
+        <StyledOverlayContainer ref={messageDialogContainerRef} isOpened={overlayContainerOpenedForMessageDialog} />
       </OverlayManagerContext.Provider>
     </>
   )
@@ -128,10 +135,11 @@ export const useOverlayManager = () => {
   }
   const {
     setScrollLocked,
-    setOverlayContainerOpened,
-    overlayContainerRef,
+    setOverlayContainerOpenedForMessageDialog,
+    messageDialogContainerRef,
     contextMenuContainerRef,
-    dialogPortalRef,
+    actionDialogContainerRef,
+    setOverlayContainerOpenedForActionDialog,
   } = context
 
   const lockScroll = useCallback(() => {
@@ -143,21 +151,31 @@ export const useOverlayManager = () => {
     setScrollLocked(false)
   }, [setScrollLocked])
 
-  const openOverlayContainer = useCallback(() => {
-    setOverlayContainerOpened(true)
-  }, [setOverlayContainerOpened])
+  const openOverlayContainerForMessageDialog = useCallback(() => {
+    setOverlayContainerOpenedForMessageDialog(true)
+  }, [setOverlayContainerOpenedForMessageDialog])
 
-  const closeOverlayContainer = useCallback(() => {
-    setOverlayContainerOpened(false)
-  }, [setOverlayContainerOpened])
+  const closeOverlayContainerForMessageDialog = useCallback(() => {
+    setOverlayContainerOpenedForMessageDialog(false)
+  }, [setOverlayContainerOpenedForMessageDialog])
+
+  const openOverlayContainerForActionDialog = useCallback(() => {
+    setOverlayContainerOpenedForActionDialog(true)
+  }, [setOverlayContainerOpenedForActionDialog])
+
+  const closeOverlayContainerForActionDialog = useCallback(() => {
+    setOverlayContainerOpenedForActionDialog(false)
+  }, [setOverlayContainerOpenedForActionDialog])
 
   return {
     lockScroll,
     unlockScroll,
-    openOverlayContainer,
-    closeOverlayContainer,
-    overlayContainerRef,
+    openOverlayContainerForMessageDialog,
+    closeOverlayContainerForMessageDialog,
+    openOverlayContainerForActionDialog,
+    closeOverlayContainerForActionDialog,
+    messageDialogContainerRef,
     contextMenuContainerRef,
-    dialogPortalRef,
+    actionDialogContainerRef,
   }
 }

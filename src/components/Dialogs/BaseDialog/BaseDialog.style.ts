@@ -2,23 +2,6 @@ import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
 import { colors, sizes, media, zIndex } from '@/shared/theme'
 
-type DialogBackDropProps = {
-  isOpened?: boolean
-}
-
-export const DialogBackDrop = styled.div<DialogBackDropProps>`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
-  opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
-  z-index: ${zIndex.globalOverlay};
-  background-color: rgba(0, 0, 0, 0.4);
-  transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-`
-
 export const StyledContainer = styled.div`
   --dialog-padding: ${sizes(4)};
   ${media.small} {
