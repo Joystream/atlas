@@ -24,10 +24,11 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
       unlockScroll()
     }
   }, [lockScroll, unlockScroll, showDialog])
+
   return (
     <Portal containerRef={dialogPortalRef}>
-      <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-        <DialogBackDrop>
+      <DialogBackDrop isOpened={showDialog}>
+        <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
           <StyledContainer className={className}>
             {exitButton && (
               <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
@@ -36,8 +37,8 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
             )}
             {children}
           </StyledContainer>
-        </DialogBackDrop>
-      </CSSTransition>
+        </CSSTransition>
+      </DialogBackDrop>
     </Portal>
   )
 }
