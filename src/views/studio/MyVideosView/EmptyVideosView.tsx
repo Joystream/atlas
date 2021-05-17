@@ -124,6 +124,7 @@ const Message = styled.div`
   top: -256px;
   display: grid;
   gap: ${sizes(4)};
+  justify-items: center;
   text-align: center;
   margin-top: 48px;
   margin-bottom: ${sizes(4)};
