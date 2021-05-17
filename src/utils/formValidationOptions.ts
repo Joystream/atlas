@@ -19,6 +19,7 @@ type TextValidationArgs = {
   required?: boolean
   pattern?: RegExp
   patternMessage?: string
+  validate?: Validate
 }
 
 export const textFieldValidation = ({
@@ -28,6 +29,7 @@ export const textFieldValidation = ({
   required = false,
   pattern,
   patternMessage,
+  validate,
 }: TextValidationArgs): RegisterOptions => ({
   required: {
     value: required,
@@ -49,6 +51,7 @@ export const textFieldValidation = ({
         },
       }
     : {}),
+  validate,
 })
 
 export const requiredValidation: (name: string) => RegisterOptions = (name) => ({
