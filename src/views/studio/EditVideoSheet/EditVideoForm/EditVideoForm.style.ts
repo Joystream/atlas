@@ -36,7 +36,7 @@ export const FormWrapper = styled.form`
     padding: ${sizes(8)} 0 0 0;
   }
 
-  ${studioContainerStyle}
+  ${studioContainerStyle};
 
   // include some spacing at the bottom so content isn't covered by the action bar
   // has to be below studioContainerStyle as those contain margin as well
