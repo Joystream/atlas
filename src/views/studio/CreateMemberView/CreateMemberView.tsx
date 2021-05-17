@@ -146,7 +146,7 @@ const CreateMemberView = () => {
                     const {
                       data: { membershipByUniqueInput },
                     } = await refetchMember()
-                    resolve(membershipByUniqueInput?.handle !== handle)
+                    resolve(!membershipByUniqueInput)
                   }, 500)(value)
                 })
               },
