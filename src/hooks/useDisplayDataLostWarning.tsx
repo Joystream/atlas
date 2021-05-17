@@ -8,10 +8,9 @@ type OpenWarningDialogArgs = {
 const DATA_LOST_DIALOG = 'DATA_LOST_DIALOG'
 
 export const useDisplayDataLostWarning = () => {
-  const { openDialog, closeDialog } = useDialog()
+  const { openDialog } = useDialog()
 
   const cancelDialog = (onCancel?: () => void) => {
-    closeDialog(DATA_LOST_DIALOG)
     onCancel?.()
   }
 
@@ -23,7 +22,6 @@ export const useDisplayDataLostWarning = () => {
       primaryButtonText: 'Proceed',
       secondaryButtonText: 'Cancel',
       onPrimaryButtonClick: () => {
-        closeDialog(DATA_LOST_DIALOG)
         onConfirm?.()
       },
       onSecondaryButtonClick: () => {

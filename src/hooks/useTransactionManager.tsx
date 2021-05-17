@@ -43,7 +43,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
   const { queryNodeState } = useQueryNodeStateSubscription()
   const { nodeConnectionStatus } = useConnectionStatus()
-  const { openDialog, closeDialog } = useDialog()
+  const { openDialog } = useDialog()
 
   const { displaySnackbar } = useSnackbar()
 
@@ -67,7 +67,6 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
         secondaryButtonText: 'Close',
         onSecondaryButtonClick: () => {
           handleDialogClose()
-          closeDialog(STATUS_COMPLETED_DIALOG)
         },
       })
     }
@@ -80,7 +79,6 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     successMessage.title,
     successMessage.description,
     handleDialogClose,
-    closeDialog,
   ])
 
   const reset = () => {
@@ -148,7 +146,6 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
           secondaryButtonText: 'Close',
           onSecondaryButtonClick: () => {
             handleDialogClose()
-            closeDialog(STATUS_ERROR_DIALOG)
           },
         })
       }

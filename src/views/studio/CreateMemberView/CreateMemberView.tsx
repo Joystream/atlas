@@ -51,7 +51,7 @@ const CreateMemberView = () => {
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const { openDialog, closeDialog } = useDialog()
+  const { openDialog } = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   if (queryNodeStateError) {
@@ -69,11 +69,10 @@ const CreateMemberView = () => {
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
       refetchMemberships().then(() => {
-        closeDialog(CREATE_MEMBERSHIP_DIALOG)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships, closeDialog])
+  }, [membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -91,19 +90,12 @@ const CreateMemberView = () => {
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
-      closeDialog(CREATE_MEMBERSHIP_DIALOG)
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       openDialog(ERROR_DIALOG, {
         variant: 'error',
         title: 'Something went wrong...',
         description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
         secondaryButtonText: 'Close',
-        onExitClick: () => {
-          closeDialog(ERROR_DIALOG)
-        },
-        onSecondaryButtonClick: () => {
-          closeDialog(ERROR_DIALOG)
-        },
       })
     }
   })

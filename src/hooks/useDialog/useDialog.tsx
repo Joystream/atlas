@@ -11,6 +11,7 @@ type DialogContextValue = {
 
 type DialogState = {
   id: string
+  shouldCloseOnClick?: boolean
 } & MessageDialogProps
 
 const DialogContext = React.createContext<undefined | DialogContextValue>(undefined)
@@ -52,24 +53,41 @@ export const DialogProvider: React.FC = ({ children }) => {
     unlockScroll,
   ])
 
+  const handleCloseDialog = (id: string, shouldCloseOnClick = true) => {
+    shouldCloseOnClick && closeDialog(id)
+  }
+
   return (
     <DialogContext.Provider value={{ openDialog, closeDialog }}>
       <TransitionGroup>
-        {dialogs.map(({ id, onExitClick, ...dialogProps }, idx) => {
-          return (
-            <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-              <MessageDialog
-                isActionDialog={false}
-                key={idx}
-                {...dialogProps}
-                onExitClick={(e) => {
-                  closeDialog(id)
-                  onExitClick?.(e)
-                }}
-              />
-            </CSSTransition>
-          )
-        })}
+        {dialogs.map(
+          (
+            { id, onExitClick, onPrimaryButtonClick, onSecondaryButtonClick, shouldCloseOnClick, ...dialogProps },
+            idx
+          ) => {
+            return (
+              <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+                <MessageDialog
+                  isActionDialog={false}
+                  key={idx}
+                  {...dialogProps}
+                  onExitClick={(e) => {
+                    handleCloseDialog(id, shouldCloseOnClick)
+                    onExitClick?.(e)
+                  }}
+                  onPrimaryButtonClick={(e) => {
+                    handleCloseDialog(id, shouldCloseOnClick)
+                    onPrimaryButtonClick?.(e)
+                  }}
+                  onSecondaryButtonClick={(e) => {
+                    handleCloseDialog(id, shouldCloseOnClick)
+                    onSecondaryButtonClick?.(e)
+                  }}
+                />
+              </CSSTransition>
+            )
+          }
+        )}
       </TransitionGroup>
       {children}
     </DialogContext.Provider>

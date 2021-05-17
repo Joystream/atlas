@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
-import { colors, sizes, media, zIndex } from '@/shared/theme'
+import { colors, sizes, media } from '@/shared/theme'
 
 export const StyledContainer = styled.div`
   --dialog-padding: ${sizes(4)};
