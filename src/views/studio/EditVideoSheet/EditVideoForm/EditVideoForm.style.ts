@@ -44,8 +44,8 @@ export const InputsContainer = styled.div`
   flex-direction: column;
 
   padding: ${sizes(4)};
-  padding-bottom: 100px;
-  margin-top: ${sizes(8)};
+  // include some spacing at the bottom so content isn't covered by the action bar
+  margin: ${sizes(8)} 0 100px;
   ${media.medium} {
     margin-top: 0;
     overflow-y: auto;
