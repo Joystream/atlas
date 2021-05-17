@@ -7,12 +7,12 @@ import styled from '@emotion/styled'
 export const StyledContainer = styled(StudioContainer)`
   margin-top: 64px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
+  padding-bottom: 150px;
   ${media.medium} {
-    flex-wrap: unset;
+    flex-direction: row;
     justify-content: space-between;
   }
 `
@@ -31,10 +31,7 @@ export const LogoContainer = styled.div`
 
 export const Header = styled.header`
   margin-top: 60px;
-  max-width: 400px;
-  ${media.medium} {
-    max-width: 440px;
-  }
+  max-width: 550px;
   ${media.large} {
     max-width: 600px;
   }
