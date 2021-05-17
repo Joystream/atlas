@@ -152,7 +152,6 @@ const CreateMemberView = () => {
               },
             })
           )}
-          onChange={async () => await trigger('handle')}
           error={!!errors.handle}
           helperText={
             errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
