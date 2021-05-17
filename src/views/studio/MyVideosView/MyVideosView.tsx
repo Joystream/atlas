@@ -15,7 +15,7 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [currentTab, setCurrentTab] = useState(0)
@@ -94,7 +94,8 @@ export const MyVideosView = () => {
       return
     }
     addVideoTab({ id, isDraft: opts.draft })
-
+    const tabIdx = videoTabs.findIndex((t) => t.id === id)
+    if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
     if (opts.minimized) {
       displaySnackbar({
         title: 'Video opened in a new tab',
