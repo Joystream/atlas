@@ -19,7 +19,8 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { useQueryNodeStateSubscription, useMembership } from '@/api/hooks'
+
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
 import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
@@ -35,7 +36,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, setError: setInputError, watch } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -53,6 +54,10 @@ const CreateMemberView = () => {
   if (queryNodeStateError) {
     throw queryNodeStateError
   }
+
+  const { refetch: refetchMember } = useMembership({
+    where: { handle: watch('handle') },
+  })
 
   // success
   useEffect(() => {
@@ -133,10 +138,24 @@ const CreateMemberView = () => {
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
               patternMessage: 'may contain only lowercase letters, numbers and underscores',
+              validate: async (value) => {
+                // Wrapping it up with promise and resolving comparison inside debounce
+                // debounce() will not automatically do the return, which is needed for validation
+                return new Promise((resolve) => {
+                  debounce(async (handle) => {
+                    const {
+                      data: { membershipByUniqueInput },
+                    } = await refetchMember()
+                    resolve(!membershipByUniqueInput)
+                  }, 500)(value)
+                })
+              },
             })
           )}
           error={!!errors.handle}
-          helperText={errors.handle?.message}
+          helperText={
+            errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
+          }
         />
         <TextArea
           name="about"
