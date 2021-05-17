@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
+const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 
@@ -235,7 +235,7 @@ export const MyVideosView = () => {
                 text={
                   currentTabName === 'All Videos'
                     ? "You don't have any published videos at the moment"
-                    : currentTabName === 'Published'
+                    : currentTabName === 'Public'
                     ? "You don't have any public videos at the moment"
                     : currentTabName === 'Drafts'
                     ? "You don't have any drafts at the moment"
@@ -271,7 +271,7 @@ const usePagination = (currentTab: number) => {
 
 const getPublicness = (currentTabName: typeof TABS[number]) => {
   switch (currentTabName) {
-    case 'Published':
+    case 'Public':
       return true
     case 'Unlisted':
       return false
