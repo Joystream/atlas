@@ -149,11 +149,17 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         if (!opts?.isReUpload && file) {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
-        if (opts?.changeHost) {
-          updateAsset(asset.contentId, 'inProgress')
-        }
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
+
+        const setUploadProgressThrottled = throttle(
+          ({ loaded, total }: ProgressEvent) => {
+            updateAsset(asset.contentId, 'inProgress')
+            setAssetUploadProgress((loaded / total) * 100)
+          },
+          3000,
+          { leading: true }
+        )
 
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
@@ -164,9 +170,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
             onRetryAttempt: (err) => {
-              if (!err) {
-                updateAsset(asset.contentId, 'inProgress')
-              }
               const cfg = rax.getConfig(err)
               if (cfg?.currentRetryAttempt === 1) {
                 updateAsset(asset.contentId, 'reconnecting')
@@ -177,14 +180,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
             },
           },
-          onUploadProgress: throttle(
-            ({ loaded, total }: ProgressEvent) => {
-              setAssetUploadProgress((loaded / total) * 100)
-            },
-            3000,
-            { leading: true }
-          ),
+          onUploadProgress: setUploadProgressThrottled,
         })
+
+        // Cancel delayed functions that would overwrite asset status back to 'inProgres'
+        setUploadProgressThrottled.cancel()
 
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
