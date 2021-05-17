@@ -164,6 +164,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
             onRetryAttempt: (err) => {
+              if (!err) {
+                updateAsset(asset.contentId, 'inProgress')
+              }
               const cfg = rax.getConfig(err)
               if (cfg?.currentRetryAttempt === 1) {
                 updateAsset(asset.contentId, 'reconnecting')
