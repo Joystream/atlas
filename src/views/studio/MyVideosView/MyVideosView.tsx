@@ -234,12 +234,12 @@ export const MyVideosView = () => {
               <EmptyVideos
                 text={
                   currentTabName === 'All Videos'
-                    ? 'There are no videos currently'
+                    ? "You don't have any published videos at the moment"
                     : currentTabName === 'Published'
-                    ? 'There are no published videos currently'
+                    ? "You don't have any public videos at the moment"
                     : currentTabName === 'Drafts'
-                    ? 'There are no drafts currently'
-                    : 'There are no unlisted videos currently'
+                    ? "You don't have any drafts at the moment"
+                    : "You don't have any unlisted videos at the moment"
                 }
               />
             )}
