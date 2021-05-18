@@ -7,7 +7,7 @@ import VideoPreviewBase, {
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts, useAuthorizedUser } from '@/hooks'
-import { copyToClipboard } from '@/utils/broswer'
+import { copyToClipboard } from '@/utils/browser'
 import { createUrlFromAsset } from '@/utils/asset'
 
 export type VideoPreviewProps = {

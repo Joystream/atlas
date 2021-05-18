@@ -6,6 +6,7 @@ import { sub } from 'date-fns'
 import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { transitions } from '@/shared/theme'
+import { isAllowedBrowser } from '@/utils/browser'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
@@ -35,6 +36,9 @@ const HomeView: React.FC = () => {
 
   if (error) {
     throw error
+  }
+  if (!isAllowedBrowser()) {
+    alert('browser not supported, please use Chrome, Firefox or Edge.')
   }
   return (
     <ViewWrapper>
