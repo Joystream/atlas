@@ -25,8 +25,9 @@ export const TabsContainer = styled.div`
   overflow: auto hidden;
   width: 100%;
   &::-webkit-scrollbar {
-    height: 0;
+    display: none;
   }
+  scrollbar-width: none;
 `
 
 export const ButtonsContainer = styled.div`
