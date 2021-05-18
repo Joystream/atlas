@@ -3,7 +3,7 @@ import { Button } from '@/shared/components'
 import React, { useEffect } from 'react'
 
 const Dialogs = () => {
-  const { openDialog } = useDialog()
+  const { openDialog, closeDialog } = useDialog()
 
   useEffect(() => {
     // just to test two dialogs open at once
@@ -12,7 +12,7 @@ const Dialogs = () => {
       title: 'First dialog with useEffect',
       primaryButtonText: 'Confirm',
     })
-    openDialog('useEffectDialog2', {
+    openDialog('useEffectDialog3', {
       description: 'Second dialog with useEffect',
       title: 'Second dialog',
       primaryButtonText: 'Confirm',
@@ -42,6 +42,13 @@ const Dialogs = () => {
         }}
       >
         Open second dialog
+      </Button>
+      <Button
+        onClick={() => {
+          closeDialog('dialogIdWhichDontExist')
+        }}
+      >
+        Close dialog which dont exists and check the console
       </Button>
     </>
   )

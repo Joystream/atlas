@@ -21,11 +21,23 @@ export const DialogProvider: React.FC = ({ children }) => {
   const [dialogs, setDialogs] = useState<DialogState[]>([])
 
   const openDialog = useCallback((customId: string, dialogConfig?: MessageDialogProps) => {
-    setDialogs((dialogs) => [...dialogs, { id: customId, showDialog: true, ...dialogConfig }])
+    setDialogs((dialogs) => {
+      if (dialogs.find((dialog) => dialog.id === customId)) {
+        console.warn(`Couldn't create dialog. Dialog with id '${customId}' already exists`)
+        return dialogs
+      }
+      return [...dialogs, { id: customId, showDialog: true, ...dialogConfig }]
+    })
   }, [])
 
   const closeDialog = useCallback((id: string) => {
-    setDialogs((dialogs) => [...dialogs.filter((dialog) => dialog.id !== id)])
+    setDialogs((dialogs) => {
+      if (!dialogs.find((dialog) => dialog.id === id)) {
+        console.warn(`Couldn't close dialog. Dialog with id '${id}' doesn't exists`)
+        return dialogs
+      }
+      return [...dialogs.filter((dialog) => dialog.id !== id)]
+    })
   }, [])
 
   const {
@@ -61,15 +73,12 @@ export const DialogProvider: React.FC = ({ children }) => {
     <DialogContext.Provider value={{ openDialog, closeDialog }}>
       <TransitionGroup>
         {dialogs.map(
-          (
-            { id, onExitClick, onPrimaryButtonClick, onSecondaryButtonClick, shouldCloseOnClick, ...dialogProps },
-            idx
-          ) => {
+          ({ id, onExitClick, onPrimaryButtonClick, onSecondaryButtonClick, shouldCloseOnClick, ...dialogProps }) => {
             return (
-              <CSSTransition key={idx} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+              <CSSTransition key={id} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
                 <MessageDialog
                   isActionDialog={false}
-                  key={idx}
+                  key={id}
                   {...dialogProps}
                   onExitClick={(e) => {
                     handleCloseDialog(id, shouldCloseOnClick)
