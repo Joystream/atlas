@@ -8,7 +8,9 @@ export const StyledContainer = styled.div`
     --dialog-padding: ${sizes(6)};
   }
 
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   width: 90%;
   max-width: 440px;
   min-height: 150px;
