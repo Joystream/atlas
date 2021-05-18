@@ -47,7 +47,10 @@ const cache = new InMemoryCache({
             const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
             return sortingASC
               ? existing?.slice(offset, offset + limit)
-              : existing?.slice(offset, offset + limit).reverse()
+              : existing
+                  ?.slice()
+                  .reverse()
+                  ?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
