@@ -30,7 +30,7 @@ export type ImageCropDialogProps = {
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
-  open: (file?: File | Blob) => void
+  open: (file?: File | Blob, cropData?: ImageCropData) => void
 }
 
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
@@ -41,19 +41,25 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
-  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType })
+  const [cropData, setCropData] = useState<ImageCropData | null>(null)
+  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({
+    imageEl,
+    imageType,
+    cropData,
+  })
 
   // not great - ideally we'd have a data flow trigger this via prop change
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
   useImperativeHandle(ref, () => ({
-    open: (file) => {
+    open: (file, cropData) => {
       if (file) {
         const fileUrl = URL.createObjectURL(file)
         setEditedImageHref(fileUrl)
         setShowDialog(true)
       } else {
         inputRef.current?.click()
+        if (cropData) setCropData(cropData)
       }
     },
   }))

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { useUploadsManager, useAuthorizedUser } from '@/hooks'
@@ -17,7 +17,7 @@ import {
   ProgressbarContainer,
 } from './AssetLine.style'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { MessageDialog } from '@/components'
+import { MessageDialog, ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { LiaisonJudgement } from '@/api/queries'
@@ -32,6 +32,10 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const { activeChannelId } = useAuthorizedUser()
   const { startFileUpload } = useUploadsManager(activeChannelId)
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
+
+  const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
@@ -101,6 +105,33 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     )
   }
 
+  const handleCropConfirm = async (croppedBlob: Blob) => {
+    const fileHash = await computeFileHash(croppedBlob)
+    if (fileHash !== asset.ipfsContentId) {
+      setShowDialog(true)
+    } else {
+      if (!randomStorageProviderUrl) {
+        return
+      }
+      startFileUpload(
+        croppedBlob,
+        {
+          contentId: asset.contentId,
+          owner: asset.owner,
+          parentObject: {
+            type: asset.parentObject.type,
+            id: asset.parentObject.id,
+          },
+          type: asset.type,
+        },
+        randomStorageProviderUrl,
+        {
+          isReUpload: true,
+        }
+      )
+    }
+  }
+
   const dimension =
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
@@ -122,10 +153,24 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       asset.lastStatus === 'error' ||
       (asset.lastStatus === 'inProgress' && asset.progress === 0 && asset.liaisonJudgement === LiaisonJudgement.Pending)
     ) {
+      const assetsDialogs = {
+        avatar: avatarDialogRef,
+        cover: coverDialogRef,
+        thumbnail: thumbnailDialogRef,
+      }
       return (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
-          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={() => openFileSelect()}>
+          <Button
+            size="small"
+            variant="secondary"
+            icon={<SvgGlyphUpload />}
+            onClick={() =>
+              asset.type === 'video'
+                ? openFileSelect()
+                : assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
+            }
+          >
             Reconnect file
           </Button>
         </div>
@@ -186,6 +231,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         </FileInfoContainer>
         <StatusMessage variant="subtitle2">{renderStatusMessage(asset)}</StatusMessage>
       </FileLineContainer>
+      <ImageCropDialog ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
+      <ImageCropDialog ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />
+      <ImageCropDialog ref={coverDialogRef} imageType="cover" onConfirm={handleCropConfirm} />
     </>
   )
 }
