@@ -37,25 +37,26 @@ export const ListContainer = styled.div`
 
 export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   z-index: -2;
-  bottom: 0;
-  position: relative;
-  margin-top: 50px;
-  width: 640px;
   display: none;
-  ${media.large} {
+  ${media.medium} {
+    position: relative;
     left: -100px;
+
     display: block;
-    bottom: -250px;
-    position: fixed;
-    width: 780px;
+    width: 600px;
+    margin-top: -200px;
   }
-  ${media.xlarge} {
+  ${media.large} {
     position: fixed;
+    bottom: -250px;
+
+    margin-top: unset;
     width: 780px;
   }
   ${media.xxlarge} {
-    width: 900px;
     bottom: 0;
+
+    width: 900px;
   }
 `
 
