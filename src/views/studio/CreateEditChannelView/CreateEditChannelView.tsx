@@ -38,6 +38,7 @@ import {
   useDisplayDataLostWarning,
   useTransactionManager,
   useAsset,
+  useConnectionStatus,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { absoluteRoutes } from '@/config/routes'
@@ -80,6 +81,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const { displaySnackbar } = useSnackbar()
+  const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
   const { getAssetUrl } = useAsset()
 
@@ -494,6 +496,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               unmountOnExit
             >
               <ActionBarTransaction
+                disabled={nodeConnectionStatus !== 'connected'}
                 fee={fee}
                 checkoutSteps={!activeChannelId ? checkoutSteps : undefined}
                 isActive={newChannel || (!loading && isDirty)}
