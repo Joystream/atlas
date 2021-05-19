@@ -365,6 +365,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   onConfirm={(blob, url, assetDimensions, imageCropData) =>
                     onChange({ blob, url, assetDimensions, imageCropData })
                   }
+                  onError={() =>
+                    displaySnackbar({
+                      title: 'Cannot load the image. Choose another.',
+                      iconType: 'error',
+                    })
+                  }
                   ref={coverDialogRef}
                 />
               </>
@@ -388,6 +394,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                     imageType="avatar"
                     onConfirm={(blob, url, assetDimensions, imageCropData) =>
                       onChange({ blob, url, assetDimensions, imageCropData })
+                    }
+                    onError={() =>
+                      displaySnackbar({
+                        title: 'Cannot load the image. Choose another.',
+                        iconType: 'error',
+                      })
                     }
                     ref={avatarDialogRef}
                   />
