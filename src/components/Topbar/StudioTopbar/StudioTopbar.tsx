@@ -19,6 +19,7 @@ import {
   StyledAvatar,
   TextContainer,
   DrawerContainer,
+  DrawerChannelsContainer,
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
@@ -233,14 +234,16 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
       <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
         {hasChannels && (
           <>
-            {channels?.map((channel) => (
-              <ChannelInfo
-                key={channel.id}
-                channel={channel}
-                active={channel.id === currentChannel?.id}
-                onClick={() => onCurrentChannelChange(channel.id)}
-              />
-            ))}
+            <DrawerChannelsContainer>
+              {channels?.map((channel) => (
+                <ChannelInfo
+                  key={channel.id}
+                  channel={channel}
+                  active={channel.id === currentChannel?.id}
+                  onClick={() => onCurrentChannelChange(channel.id)}
+                />
+              ))}
+            </DrawerChannelsContainer>
             <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>
