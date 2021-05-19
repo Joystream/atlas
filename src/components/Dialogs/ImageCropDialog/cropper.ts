@@ -92,11 +92,12 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       const middleZoom = minZoom + (maxZoom - minZoom) / 2
       cropper.zoomTo(middleZoom)
 
-      if (cropData && cropper) {
-        const { zoom, width, height, top, left } = cropData
+      if (cropData) {
+        const { data, canvasData, cropBoxData, zoom } = cropData
         cropper.zoomTo(zoom)
-        cropper.setCropBoxData({ width, height, top, left })
-        cropper.setCanvasData({ top, left })
+        cropper.setCropBoxData(cropBoxData)
+        cropper.setCanvasData(canvasData)
+        cropper.setData(data)
       }
     }
 
@@ -152,10 +153,10 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
         reject(new Error('No cropper instance'))
         return
       }
-      const { x, y } = cropper.getData()
-      const { width, height } = cropper.getCropBoxData()
-      const imageCropData = { width, height, left: x, top: y, zoom: currentZoom }
-
+      const data = cropper.getData()
+      const cropBoxData = cropper.getCropBoxData()
+      const canvasData = cropper.getCanvasData()
+      const imageCropData = { data, cropBoxData, canvasData, zoom: currentZoom }
       const canvas = cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType])
       const assetDimensions = {
         width: canvas.width,
