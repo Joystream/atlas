@@ -319,6 +319,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           control={control}
           render={({ value }) => (
             <MultiFileSelect
+              key={selectedVideoTab?.id}
               files={value}
               onVideoChange={handleVideoFileChange}
               onThumbnailChange={handleThumbnailFileChange}
