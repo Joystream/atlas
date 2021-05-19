@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useDisplayDataLostWarning, useEditVideoSheet } from '@/hooks'
+import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -27,7 +27,6 @@ import {
 } from './StudioTopbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
-import { createUrlFromAsset } from '@/utils/asset'
 import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
@@ -195,7 +194,8 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const avatarPhotoUrl = createUrlFromAsset(
+    const { getAssetUrl } = useAsset()
+    const avatarPhotoUrl = getAssetUrl(
       channel?.avatarPhotoAvailability,
       channel?.avatarPhotoUrls,
       channel?.avatarPhotoDataObject

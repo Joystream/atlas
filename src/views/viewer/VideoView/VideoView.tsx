@@ -21,10 +21,9 @@ import { Placeholder, VideoPlayer } from '@/shared/components'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { usePersonalData, useRouterQuery } from '@/hooks'
+import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
 import { useVideo, useAddVideoView } from '@/api/hooks'
 import knownLicenses from '@/data/knownLicenses.json'
-import { createUrlFromAsset } from '@/utils/asset'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()
@@ -32,6 +31,7 @@ const VideoView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
+  const { getAssetUrl } = useAsset()
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -121,8 +121,8 @@ const VideoView: React.FC = () => {
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
 
-  const mediaUrl = createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const mediaUrl = getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject

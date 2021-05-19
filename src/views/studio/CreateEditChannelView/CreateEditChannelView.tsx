@@ -37,9 +37,9 @@ import {
   useEditVideoSheet,
   useDisplayDataLostWarning,
   useTransactionManager,
+  useAsset,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import { createUrlFromAsset } from '@/utils/asset'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -81,6 +81,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { fee, handleTransaction } = useTransactionManager()
   const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const { getAssetUrl } = useAsset()
 
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
@@ -143,8 +144,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       language,
     } = channel
 
-    const avatarPhotoUrl = createUrlFromAsset(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
-    const coverPhotoUrl = createUrlFromAsset(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
+    const avatarPhotoUrl = getAssetUrl(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
+    const coverPhotoUrl = getAssetUrl(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
@@ -156,7 +157,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || languages[0].value,
     })
-  }, [channel, loading, newChannel, reset])
+  }, [channel, getAssetUrl, loading, newChannel, reset])
 
   const avatarValue = watch('avatar')
   const coverValue = watch('cover')
