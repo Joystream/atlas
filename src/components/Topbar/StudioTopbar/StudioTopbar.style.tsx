@@ -171,6 +171,15 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   }
 `
 
+export const DrawerChannelsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: ${sizes(4)};
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
+
 export const AvatarPlaceholder = styled(Placeholder)`
   border-radius: 100%;
   width: 42px;
