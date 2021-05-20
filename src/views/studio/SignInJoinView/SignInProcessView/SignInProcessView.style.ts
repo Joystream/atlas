@@ -9,6 +9,16 @@ export const StyledStudioContainer = styled(StudioContainer)`
   flex-wrap: wrap;
   margin-top: 64px;
   justify-content: space-between;
+  flex-direction: column;
+  align-content: center;
+  ${media.large} {
+    align-content: unset;
+    flex-direction: row;
+  }
+  ${media.xlarge} {
+    flex-direction: column;
+    align-content: center;
+  }
 `
 
 export const HeroContainer = styled.div`
@@ -22,23 +32,31 @@ export const SubTitle = styled(Text)`
 
 export const ListContainer = styled.div`
   max-width: 440px;
+  padding-bottom: 150px;
 `
 
 export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   z-index: -2;
-  bottom: 0;
-  left: 0;
-  width: 250px;
-  position: fixed;
-  margin-top: 50px;
-  ${media.small} {
-    width: 300px;
-  }
+  display: none;
   ${media.medium} {
-    width: 350px;
+    position: relative;
+    left: -100px;
+
+    display: block;
+    width: 600px;
+    margin-top: -200px;
   }
   ${media.large} {
-    width: 650px;
+    position: fixed;
+    bottom: -250px;
+
+    margin-top: unset;
+    width: 780px;
+  }
+  ${media.xxlarge} {
+    bottom: 0;
+
+    width: 900px;
   }
 `
 
@@ -86,4 +104,12 @@ export const UnOrderedItem = styled(Text)``
 
 export const StyledButton = styled(Button)`
   margin-top: 64px;
+  position: fixed;
+  bottom: 20px;
+  left: var(--global-horizontal-padding);
+  width: calc(100% - var(--global-horizontal-padding) * 2);
+  ${media.small} {
+    position: unset;
+    width: unset;
+  }
 `
