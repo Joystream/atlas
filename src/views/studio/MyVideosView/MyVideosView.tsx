@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
+const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 
@@ -230,7 +230,19 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && <EmptyVideos />}
+            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
+              <EmptyVideos
+                text={
+                  currentTabName === 'All Videos'
+                    ? "You don't have any published videos at the moment"
+                    : currentTabName === 'Public'
+                    ? "You don't have any public videos at the moment"
+                    : currentTabName === 'Drafts'
+                    ? "You don't have any drafts at the moment"
+                    : "You don't have any unlisted videos at the moment"
+                }
+              />
+            )}
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}
@@ -259,7 +271,7 @@ const usePagination = (currentTab: number) => {
 
 const getPublicness = (currentTabName: typeof TABS[number]) => {
   switch (currentTabName) {
-    case 'Published':
+    case 'Public':
       return true
     case 'Unlisted':
       return false
