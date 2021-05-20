@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
+import { throttle } from 'lodash'
 import { useSnackbar, useUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
@@ -151,6 +152,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
+        const setUploadProgressThrottled = throttle(
+          ({ loaded, total }: ProgressEvent) => {
+            updateAsset(asset.contentId, 'inProgress')
+            setAssetUploadProgress((loaded / total) * 100)
+          },
+          3000,
+          { leading: true }
+        )
+
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -170,11 +180,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
             },
           },
-          onUploadProgress: ({ loaded, total }: ProgressEvent) => {
-            updateAsset(asset.contentId, 'inProgress')
-            setAssetUploadProgress((loaded / total) * 100)
-          },
+          onUploadProgress: setUploadProgressThrottled,
         })
+
+        // Cancel delayed functions that would overwrite asset status back to 'inProgres'
+        setUploadProgressThrottled.cancel()
 
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
