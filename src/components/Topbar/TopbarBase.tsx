@@ -6,14 +6,21 @@ export type TopbarBaseProps = {
   variant?: TopbarVariant
   hasFocus?: boolean
   className?: string
+  isHamburgerButtonPresent?: boolean
 }
 
-const TopbarBase: React.FC<TopbarBaseProps> = ({ children, variant = 'default', hasFocus, className }) => {
+const TopbarBase: React.FC<TopbarBaseProps> = ({
+  children,
+  variant = 'default',
+  hasFocus,
+  className,
+  isHamburgerButtonPresent = true,
+}) => {
   const isStudio = variant === 'studio'
   const logoLink = isStudio ? '/studio' : '/'
   return (
     <Header hasFocus={hasFocus} className={className}>
-      <LogoContainer variant={variant}>
+      <LogoContainer variant={variant} isHamburgerButtonPresent={isHamburgerButtonPresent}>
         <LogoLink to={logoLink}>
           <ShortLogo />
           <FullLogo variant={variant} />

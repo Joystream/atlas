@@ -5,7 +5,6 @@ import {
   Header,
   LogoContainer,
   SignInButton,
-  StyledBackgroundPattern,
   StyledContainer,
   StyledHero,
   StyledSignInIllustrationSVG,
@@ -43,7 +42,6 @@ const SignInMainView: React.FC = () => {
         </ButtonGroup>
       </Header>
       <StyledSignInIllustrationSVG />
-      <StyledBackgroundPattern />
     </StyledContainer>
   )
 }

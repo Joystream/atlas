@@ -58,7 +58,15 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
-  const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+  const {
+    activeChannelId,
+    setActiveUser,
+    resetActiveUser,
+    activeMembership,
+    activeMembershipLoading,
+    memberships,
+    activeAccountId,
+  } = useUser()
 
   const navigate = useNavigate()
 
@@ -127,10 +135,12 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     navigate(absoluteRoutes.studio.index())
   }
 
+  const channelSet = !!activeAccountId && !!activeChannelId && !!memberships?.length
+
   return (
     <>
       <DataLostWarningDialog />
-      <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
+      <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
