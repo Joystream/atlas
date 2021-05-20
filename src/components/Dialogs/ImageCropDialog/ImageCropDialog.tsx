@@ -103,7 +103,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)}>
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} disabled={!!cropData}>
         <SvgGlyphZoomOut />
       </IconButton>
       <StyledSlider
@@ -112,8 +112,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         min={zoomRange[0]}
         max={zoomRange[1]}
         step={zoomStep}
+        disabled={!!cropData}
       />
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)}>
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} disabled={!!cropData}>
         <SvgGlyphZoomIn />
       </IconButton>
     </ZoomControl>
@@ -137,7 +138,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
           <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (
-          <CropContainer rounded={imageType === 'avatar'}>
+          <CropContainer rounded={imageType === 'avatar'} disabled={!!cropData}>
             <StyledImage src={editedImageHref} ref={imageElRefCallback} />
           </CropContainer>
         )}
