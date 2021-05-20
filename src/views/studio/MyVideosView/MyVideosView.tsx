@@ -15,23 +15,28 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
+  const {
+    setSheetState,
+    videoTabs,
+    addVideoTab,
+    removeVideoTab,
+    currentVideosTab,
+    setCurrentVideosTab,
+    isDraftTab,
+    isPublic_eq,
+  } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [currentTab, setCurrentTab] = useState(0)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
-  const currentTabName = TABS[currentTab]
-  const isDraftTab = currentTabName === 'Drafts'
-  const isPublic_eq = getPublicness(currentTabName)
+  const currentTabName = TABS[currentVideosTab]
   const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
   // Drafts calls can run into race conditions
-  const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-
   const { loading, videos, totalCount, error, fetchMore } = useVideos(
     {
       limit: videosPerPage,
@@ -41,7 +46,7 @@ export const MyVideosView = () => {
         isPublic_eq,
       },
     },
-    { notifyOnNetworkStatusChange: true }
+    { notifyOnNetworkStatusChange: true, nextFetchPolicy: 'cache-and-network' }
   )
 
   const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
@@ -77,7 +82,7 @@ export const MyVideosView = () => {
   }
 
   const handleSetCurrentTab = async (tab: number) => {
-    setCurrentTab(tab)
+    setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
         await removeAllUnseenDrafts(activeChannelId)

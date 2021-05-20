@@ -39,6 +39,7 @@ export const EditVideoSheet: React.FC = () => {
     hasVideoTabAnyCachedAssets,
     setSelectedVideoTabCachedAssets,
     setSelectedVideoTabCachedDirtyFormData,
+    isPublic_eq,
   } = useEditVideoSheet()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
@@ -211,11 +212,14 @@ export const EditVideoSheet: React.FC = () => {
 
       if (isNew) {
         if (fetchedVideo.data.videoByUniqueInput) {
-          writeVideoDataInCache({
-            data: fetchedVideo.data.videoByUniqueInput,
-            thumbnailUrl: data.assets.thumbnail?.url,
-            client,
-          })
+          // if isPublic_eq === undefined - all videos tab
+          if (isPublic_eq === undefined || isPublic_eq === data.isPublic) {
+            writeVideoDataInCache({
+              data: fetchedVideo.data.videoByUniqueInput,
+              thumbnailUrl: data.assets.thumbnail?.url,
+              client,
+            })
+          }
         }
         // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
         await refetchVideosCount()
