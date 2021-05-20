@@ -22,7 +22,6 @@ export const MyVideosView = () => {
     removeVideoTab,
     currentVideosTab,
     setCurrentVideosTab,
-    isDraftTab,
     isPublic_eq,
   } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
@@ -32,6 +31,7 @@ export const MyVideosView = () => {
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const currentTabName = TABS[currentVideosTab]
   const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
+  const isDraftTab = currentTabName === 'Drafts'
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
