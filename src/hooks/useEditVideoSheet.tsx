@@ -35,9 +35,6 @@ type ContextValue = {
   setSheetState: (state: EditVideoSheetState) => void
   anyVideoTabsCachedAssets: boolean
   hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
-  isPublic_eq: boolean | undefined
-  setCurrentVideosTab: (tab: number) => void
-  currentVideosTab: number
 }
 const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
 EditVideoSheetContext.displayName = 'EditVideoSheetContext'
@@ -50,10 +47,6 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
   const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
   const { lockScroll, unlockScroll } = useOverlayManager()
-  const [currentVideosTab, setCurrentVideosTab] = useState(0)
-  const currentTabName = TABS[currentVideosTab]
-
-  const isPublic_eq = getPublicness(currentTabName)
 
   const addVideoTab = useCallback(
     (tab?: EditVideoSheetTab, shouldSelect = true) => {
@@ -181,9 +174,6 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         setSelectedVideoTabCachedAssets,
         selectedVideoTabCachedDirtyFormData,
         setSelectedVideoTabCachedDirtyFormData,
-        isPublic_eq,
-        setCurrentVideosTab,
-        currentVideosTab,
       }}
     >
       {children}
@@ -217,19 +207,6 @@ export type EditVideoFormFields = {
   isExplicit: boolean | null
   publishedBeforeJoystream: Date | null
   assets: InputFilesState
-}
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
-
-const getPublicness = (currentTabName: typeof TABS[number]) => {
-  switch (currentTabName) {
-    case 'Published':
-      return true
-    case 'Unlisted':
-      return false
-    case 'All Videos':
-    default:
-      return undefined
-  }
 }
 
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {

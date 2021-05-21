@@ -15,23 +15,18 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const {
-    setSheetState,
-    videoTabs,
-    addVideoTab,
-    removeVideoTab,
-    currentVideosTab,
-    setCurrentVideosTab,
-    isPublic_eq,
-  } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
-  const currentTabName = TABS[currentVideosTab]
   const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
+
+  const [currentVideosTab, setCurrentVideosTab] = useState(0)
+  const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
+  const isPublic_eq = getPublicness(currentTabName)
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
@@ -46,7 +41,7 @@ export const MyVideosView = () => {
         isPublic_eq,
       },
     },
-    { notifyOnNetworkStatusChange: true, nextFetchPolicy: 'cache-and-network' }
+    { notifyOnNetworkStatusChange: true }
   )
 
   const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
@@ -261,6 +256,18 @@ export const MyVideosView = () => {
       </ViewContainer>
     </StudioContainer>
   )
+}
+
+const getPublicness = (currentTabName: typeof TABS[number]) => {
+  switch (currentTabName) {
+    case 'Published':
+      return true
+    case 'Unlisted':
+      return false
+    case 'All Videos':
+    default:
+      return undefined
+  }
 }
 
 export default MyVideosView
