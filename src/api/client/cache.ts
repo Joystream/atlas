@@ -44,7 +44,13 @@ const cache = new InMemoryCache({
             // if offset and limit are not provided.
             const offset = args?.offset ?? 0
             const limit = args?.limit ?? existing?.length
-            return existing?.slice(offset, offset + limit)
+            return existing?.value?.slice(offset, offset + limit)
+          },
+          merge(existing, incoming = [], opts) {
+            return {
+              value: incoming,
+              args: opts.args,
+            }
           },
         },
         channel(existing, { toReference, args }) {

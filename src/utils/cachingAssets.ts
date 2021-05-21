@@ -67,20 +67,24 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
 }
 
 export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+  const video = client.cache.writeFragment({
+    id: `Video:${data.id}`,
+    fragment: VideoFieldsFragmentDoc,
+    fragmentName: 'VideoFields',
+    data: {
+      ...data,
+      thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
+      thumbnailPhotoAvailability: AssetAvailability.Accepted,
+    },
+  })
   client.cache.modify({
     fields: {
-      videos: (existingVideos = []) => {
-        const video = client.cache.writeFragment({
-          id: `Video:${data.id}`,
-          fragment: VideoFieldsFragmentDoc,
-          fragmentName: 'VideoFields',
-          data: {
-            ...data,
-            thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
-            thumbnailPhotoAvailability: AssetAvailability.Accepted,
-          },
-        })
-        return [video, ...existingVideos]
+      videos: (existingVideos = [], { fieldName, storeFieldName }) => {
+        const isPublic = existingVideos?.args?.where?.isPublic_eq
+        console.log(isPublic, data.isPublic)
+        if (isPublic === data.isPublic || isPublic === undefined) {
+          return [video, ...existingVideos.value]
+        }
       },
     },
   })
@@ -91,7 +95,7 @@ export const removeVideoFromCache = (videoId: string, client: ApolloClient<Norma
     fields: {
       videos: (existingVideos = []) => {
         client.cache.evict({ id: `Video:${videoId}` })
-        return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
+        return existingVideos.value.filter((video: VideoFieldsFragment) => video.id !== videoId)
       },
     },
   })
