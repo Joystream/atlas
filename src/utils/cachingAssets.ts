@@ -78,11 +78,10 @@ export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideo
   })
   client.cache.modify({
     fields: {
-      videos: (existingVideos = [], { fieldName, storeFieldName }) => {
+      videos: (existingVideos) => {
         const isPublic = existingVideos?.args?.where?.isPublic_eq
-        console.log(isPublic, data.isPublic)
         if (isPublic === data.isPublic || isPublic === undefined) {
-          return [video, ...existingVideos.value]
+          return existingVideos.value ? [video, ...existingVideos.value] : []
         }
       },
     },
