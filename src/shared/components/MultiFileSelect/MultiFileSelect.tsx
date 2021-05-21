@@ -71,6 +71,14 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }, [editMode])
 
   useEffect(() => {
+    if (files.video) {
+      setStep('image')
+    } else {
+      setStep('video')
+    }
+  }, [files.video])
+
+  useEffect(() => {
     if (!isLoading) {
       return
     }
