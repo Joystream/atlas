@@ -18,9 +18,10 @@ export const useAsset = () => {
     if (dataObject?.liaison?.isActive && dataObject?.liaison?.metadata) {
       return createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata)
     }
-    if (!dataObject?.liaison?.isActive && randomStorageUrl) {
+    if (randomStorageUrl) {
       return createStorageNodeUrl(dataObject.joystreamContentId, randomStorageUrl)
     }
+    console.error('No storage provider available to serve asset')
   }
 
   return { getAssetUrl }
