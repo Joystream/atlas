@@ -24,6 +24,7 @@ export type ActionBarProps = {
   secondaryButtonText?: string
   secondaryButtonIcon?: ReactNode
   className?: string
+  disabled?: boolean
   onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
@@ -40,6 +41,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       detailsTextIcon,
       secondaryButtonIcon,
       className,
+      disabled,
       onConfirmClick,
       onCancelClick,
     },
@@ -69,7 +71,7 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
               </Button>
             )}
             {primaryButtonText && (
-              <Button onClick={onConfirmClick} size="large" type="submit">
+              <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
                 {primaryButtonText}
               </Button>
             )}

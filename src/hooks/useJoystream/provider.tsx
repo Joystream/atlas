@@ -13,15 +13,15 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
-  const { setNodeConnection } = useConnectionStatus()
+  const { setNodeConnection, isUserConnectedToInternet } = useConnectionStatus()
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
 
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
-      setNodeConnection(connected ? 'connected' : 'disconnected')
+      setNodeConnection(connected && isUserConnectedToInternet ? 'connected' : 'disconnected')
     },
-    [setNodeConnection]
+    [isUserConnectedToInternet, setNodeConnection]
   )
 
   useEffect(() => {

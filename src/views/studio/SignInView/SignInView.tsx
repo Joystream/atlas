@@ -13,7 +13,7 @@ import {
 } from './SignInView.style'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 import { SignInStepsStepper } from '@/components'
-import { useUser } from '@/hooks'
+import { useUser, useConnectionStatus } from '@/hooks'
 import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
@@ -21,6 +21,7 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 const SignInView = () => {
   const navigate = useNavigate()
   const { activeChannelId, setActiveUser, memberships } = useUser()
+  const { nodeConnectionStatus } = useConnectionStatus()
 
   const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
     const newActiveUser = {
@@ -59,10 +60,12 @@ const SignInView = () => {
               key={membership.id}
               handle={membership.handle}
               avatarUri={membership.avatarUri}
+              disabled={nodeConnectionStatus !== 'connected'}
             />
           ))}
         </MemberGrid>
         <StyledButton
+          disabled={nodeConnectionStatus !== 'connected'}
           icon={<SvgGlyphNewChannel />}
           size="large"
           variant="secondary"
@@ -81,11 +84,12 @@ export type StudioCardProps = {
   follows?: number
   avatarUri?: string | null
   onClick: () => void
+  disabled?: boolean
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick }) => {
+const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
   return (
-    <CardWrapper onClick={onClick}>
+    <CardWrapper onClick={onClick} disabled={disabled}>
       <StyledAvatar imageUrl={avatarUri} />
       <HandleText variant="h4">{handle}</HandleText>
     </CardWrapper>
