@@ -78,11 +78,8 @@ export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideo
   })
   client.cache.modify({
     fields: {
-      videos: (existingVideos) => {
-        const isPublic = existingVideos?.args?.where?.isPublic_eq
-        if (isPublic === data.isPublic || isPublic === undefined) {
-          return existingVideos.value ? [video, ...existingVideos.value] : []
-        }
+      videos: (existingVideos = []) => {
+        return [video, ...existingVideos]
       },
     },
   })
@@ -93,7 +90,7 @@ export const removeVideoFromCache = (videoId: string, client: ApolloClient<Norma
     fields: {
       videos: (existingVideos = []) => {
         client.cache.evict({ id: `Video:${videoId}` })
-        return existingVideos.value.filter((video: VideoFieldsFragment) => video.id !== videoId)
+        return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
       },
     },
   })

@@ -1,5 +1,5 @@
 import { InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
+import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 import { GetVideosQueryVariables } from '../queries'
 
@@ -39,18 +39,19 @@ const cache = new InMemoryCache({
         videosConnection: relayStylePagination(getVideoKeyArgs),
         videos: {
           ...offsetLimitPagination(getVideoKeyArgs),
-          read(existing, { args }: { args: Record<string, GetVideosQueryVariables> | null }) {
+          read(existing, opts) {
+            const isPublic = opts.args?.where.isPublic_eq
+
+            const filteredExistingVideos = existing?.filter(
+              (v: StoreObject | Reference) => opts.readField('isPublic', v) === isPublic || isPublic === undefined
+            )
             // Default to returning the entire cached list,
+            // console.log(opts.args && opts.args.where.isPublic_eq)
             // if offset and limit are not provided.
-            const offset = args?.offset ?? 0
-            const limit = args?.limit ?? existing?.length
-            return existing?.value?.slice(offset, offset + limit)
-          },
-          merge(existing, incoming = [], opts) {
-            return {
-              value: incoming,
-              args: opts.args,
-            }
+            const offset = opts.args?.offset ?? 0
+            const limit = opts.args?.limit ?? filteredExistingVideos?.length
+
+            return filteredExistingVideos?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
