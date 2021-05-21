@@ -16,6 +16,7 @@ import {
   ZoomControl,
 } from './ImageCropDialog.style'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
+import { validateImage } from '@/utils/image'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
@@ -25,6 +26,7 @@ export type ImageCropDialogProps = {
     assetDimensions: AssetDimensions,
     imageCropData: ImageCropData
   ) => void
+  onError?: (error: Error) => void
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
@@ -34,7 +36,7 @@ export type ImageCropDialogImperativeHandle = {
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   ImageCropDialogImperativeHandle,
   ImageCropDialogProps
-> = ({ imageType, onConfirm, onExitClick }, ref) => {
+> = ({ imageType, onConfirm, onExitClick, onError }, ref) => {
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
@@ -69,16 +71,22 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
     }
   }, [])
 
-  const handleFileChange = () => {
+  const handleFileChange = async () => {
     const files = inputRef.current?.files
     if (!files?.length) {
       console.error('no files selected')
       return
     }
-    const selectedFile = files[0]
-    const fileUrl = URL.createObjectURL(selectedFile)
-    setEditedImageHref(fileUrl)
-    setShowDialog(true)
+    try {
+      const selectedFile = files[0]
+      await validateImage(selectedFile)
+      const fileUrl = URL.createObjectURL(selectedFile)
+      setEditedImageHref(fileUrl)
+      setShowDialog(true)
+    } catch (error) {
+      onError?.(error)
+      console.error(error)
+    }
   }
 
   const handleConfirmClick = async () => {

@@ -3,6 +3,7 @@ import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
+import useConnectionStatus from './useConnectionStatus'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {
@@ -35,6 +36,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
 
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
   const { queryNodeState } = useQueryNodeStateSubscription()
+  const { nodeConnectionStatus } = useConnectionStatus()
 
   const { displaySnackbar } = useSnackbar()
 
@@ -70,6 +72,10 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     successMessage,
   }: HandleTransactionOpts<T>) => {
     try {
+      if (nodeConnectionStatus !== 'connected') {
+        setStatus(ExtrinsicStatus.Error)
+        return
+      }
       setSuccessMessage(successMessage)
       // set up fallback dialog close callback
       setDialogCloseCallback(() => () => onTxClose?.(false))
@@ -108,15 +114,13 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
 
   return (
     <TransactionManagerContext.Provider value={{ handleTransaction, fee: 0 }}>
-      <>
-        {children}
-        <TransactionDialog
-          status={status}
-          successTitle={successMessage.title}
-          successDescription={successMessage.description}
-          onClose={handleDialogClose}
-        />
-      </>
+      {children}
+      <TransactionDialog
+        status={status}
+        successTitle={successMessage.title}
+        successDescription={successMessage.description}
+        onClose={handleDialogClose}
+      />
     </TransactionManagerContext.Provider>
   )
 }
