@@ -10,6 +10,7 @@ import {
   EditVideoFormFields,
   useEditVideoSheet,
   useDeleteVideo,
+  useConnectionStatus,
 } from '@/hooks'
 import {
   Checkbox,
@@ -91,6 +92,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { nodeConnectionStatus } = useConnectionStatus()
 
   const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
@@ -569,6 +571,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         secondaryButtonText="Cancel"
       />
       <StyledActionBar
+        disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}
         fee={fee}
         isActive={selectedVideoTab?.isDraft || isDirty}

@@ -110,7 +110,7 @@ const StudioLayout = () => {
               <PrivateRoute
                 path={relativeRoutes.studio.newMembership()}
                 element={<CreateMemberView />}
-                isAuth={accountSet}
+                isAuth={accountSet && !memberSet}
                 redirectTo={ENTRY_POINT_ROUTE}
               />
               <PrivateRoute

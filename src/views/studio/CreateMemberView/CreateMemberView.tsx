@@ -161,7 +161,7 @@ const CreateMemberView = () => {
           name="about"
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
-          maxLength={100}
+          maxLength={1000}
           ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
