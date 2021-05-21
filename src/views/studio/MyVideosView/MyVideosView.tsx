@@ -53,16 +53,16 @@ export const MyVideosView = () => {
 
     const currentOffset = currentPage * videosPerPage
     const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
-    if (totalCount < targetDisplayedCount) {
-      const missingCount = videosPerPage - totalCount
+    if (videos.length < targetDisplayedCount) {
+      const missingCount = videosPerPage - videos.length
       fetchMore({
         variables: {
-          offset: currentOffset + totalCount,
+          offset: currentOffset + videos.length,
           limit: missingCount,
         },
       })
     }
-  }, [currentPage, fetchMore, isDraftTab, loading, totalCount, videos, videosPerPage])
+  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
 
   const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
     id: undefined,
