@@ -258,18 +258,6 @@ export const MyVideosView = () => {
   )
 }
 
-const getPublicness = (currentTabName: typeof TABS[number]) => {
-  switch (currentTabName) {
-    case 'Published':
-      return true
-    case 'Unlisted':
-      return false
-    case 'All Videos':
-    default:
-      return undefined
-  }
-}
-
 export default MyVideosView
 
 const usePagination = (currentTab: number) => {

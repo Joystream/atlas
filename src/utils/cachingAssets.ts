@@ -36,7 +36,6 @@ type WriteVideoDataCacheArg = {
   data: VideoFieldsFragment
   thumbnailUrl?: string | null
   client: ApolloClient<NormalizedCacheObject>
-  isPublic?: boolean | null
 }
 
 const FILE_TYPE_FIELDS: Record<CachedAssetType, string[]> = {
