@@ -8,6 +8,7 @@ import {
   useGetWorkersQuery,
 } from '@/api/queries/__generated__/workers.generated'
 import { WorkerType } from '@/api/queries'
+import { useCallback } from 'react'
 
 type WorkerOpts = QueryHookOptions<GetWorkerQuery>
 export const useWorker = (id: string, opts?: WorkerOpts) => {
@@ -44,8 +45,16 @@ export const useStorageProviders = (variables: GetWorkersQueryVariables, opts?: 
 
 export const useRandomStorageProviderUrl = () => {
   const { storageProviders, loading } = useStorageProviders({ limit: 100 }, { fetchPolicy: 'network-only' })
-  if (storageProviders?.length && !loading) {
-    const randomStorageIdx = getRandomIntInclusive(0, storageProviders.length - 1)
-    return storageProviders[randomStorageIdx].metadata
-  }
+
+  const getRandomStorageProviderUrl = useCallback(() => {
+    if (storageProviders?.length && !loading) {
+      const randomStorageIdx = getRandomIntInclusive(0, storageProviders.length - 1)
+      return storageProviders[randomStorageIdx].metadata
+    } else if (!loading) {
+      console.error('No active storage provider available')
+    }
+    return null
+  }, [loading, storageProviders])
+
+  return { getRandomStorageProviderUrl }
 }

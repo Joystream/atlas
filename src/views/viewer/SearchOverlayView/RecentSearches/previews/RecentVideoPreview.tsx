@@ -12,14 +12,15 @@ import { absoluteRoutes } from '@/config/routes'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { createUrlFromAsset } from '@/utils/asset'
+import { useAsset } from '@/hooks'
 
 type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment
 }
 
 const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const { getAssetUrl } = useAsset()
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject
