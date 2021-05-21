@@ -230,7 +230,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     const uploadAssets = (channelId: ChannelId) => {
       const storageProviderUrl = getRandomStorageProviderUrl()
-      let uploadCount = 0
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
           data.avatar.blob,
@@ -247,7 +246,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
-        uploadCount++
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
         startFileUpload(
@@ -265,12 +263,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
-        uploadCount++
-      }
-
-      // TODO: move to uploads manager
-      if (uploadCount > 0) {
-        displaySnackbar({ title: `(${uploadCount}) Asset being uploaded`, iconType: 'info' })
       }
     }
 

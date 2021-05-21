@@ -9,6 +9,7 @@ import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
 export type DisplaySnackbarArgs = {
+  customId?: string
   timeout?: number
   variant?: 'primary' | 'secondary'
   iconType?: SnackbarIconType
@@ -23,7 +24,9 @@ type SnackbarsState = {
 } & Omit<DisplaySnackbarArgs, 'time'>
 
 type SnackbarContextValue = {
+  snackbars: SnackbarsState[]
   displaySnackbar: (args: DisplaySnackbarArgs) => string
+  updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
   closeSnackbar: (id: string) => void
 }
 
@@ -42,9 +45,11 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = createId()
-    setSnackbars((s) => [...s, { id, ...args }])
+  const displaySnackbar = useCallback(({ customId, timeout, ...args }: DisplaySnackbarArgs) => {
+    const id = customId || createId()
+    setSnackbars((currentSnackbars) => {
+      return [...currentSnackbars, { id, ...args }]
+    })
 
     if (timeout) {
       setTimeout(() => {
@@ -55,9 +60,24 @@ export const SnackbarProvider: React.FC = ({ children }) => {
     return id
   }, [])
 
-  const closeSnackbar = (id: string) => {
-    setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))
-  }
+  const updateSnackbar = useCallback((id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => {
+    setSnackbars((currentSnackbars) => {
+      const newSnackbars = currentSnackbars.map((snackbar) => {
+        if (snackbar.id === id) {
+          return { ...snackbar, ...opts }
+        }
+        return snackbar
+      })
+      return newSnackbars
+    })
+  }, [])
+
+  const closeSnackbar = useCallback(
+    (id: string) => {
+      setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))
+    },
+    [snackbars]
+  )
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
@@ -68,7 +88,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   }, [snackbars])
 
   return (
-    <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
+    <SnackbarContext.Provider value={{ snackbars, displaySnackbar, updateSnackbar, closeSnackbar }}>
       {children}
       <SnackbarsContainer>
         <TransitionGroup>

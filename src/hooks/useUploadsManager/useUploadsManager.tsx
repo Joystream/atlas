@@ -19,7 +19,10 @@ import { createStorageNodeUrl } from '@/utils/asset'
 import { LiaisonJudgement } from '@/api/queries'
 
 const RETRIES_COUNT = 5
+const SNACKBAR_TIMEOUT = 5000
 const RECONNECTION_ERROR_MESSAGE = 'Reconnection failed'
+const ASSET_BEING_UPLOADED = 'ASSET_BEING_UPLOADED'
+const ASSET_UPLOADED = 'ASSET_UPLOADED'
 
 type GroupByParentObjectIdAcc = {
   [key: string]: AssetUploadWithProgress[]
@@ -36,7 +39,7 @@ UploadManagerContext.displayName = 'UploadManagerContext'
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
-  const { displaySnackbar } = useSnackbar()
+  const { snackbars, displaySnackbar, updateSnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
@@ -88,7 +91,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         lostConnectionAssets.length > 1 ? 's' : ''
       } waiting to resume upload`,
       description: 'Reconnect files to fix the issue',
-      actionText: 'See assets',
+      actionText: 'See',
       onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       iconType: 'warning',
     })
@@ -126,6 +129,19 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     }, {})
   )
 
+  const beingUploaded = snackbars.filter((item) => item.id === ASSET_BEING_UPLOADED)
+  const uploaded = snackbars.filter((item) => item.id === ASSET_UPLOADED)
+  useEffect(() => {
+    if (beingUploaded.length > 1) {
+      updateSnackbar(ASSET_BEING_UPLOADED, {
+        title: `${beingUploaded.length} assets being uploaded`,
+      })
+    }
+    if (uploaded.length > 1) {
+      updateSnackbar(ASSET_UPLOADED, { title: `${uploaded.length} assets uploaded` })
+    }
+  }, [beingUploaded.length, updateSnackbar, uploaded.length])
+
   const startFileUpload = useCallback(
     async (
       file: File | Blob | null,
@@ -161,6 +177,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           { leading: true }
         )
 
+        displaySnackbar({
+          customId: ASSET_BEING_UPLOADED,
+          title: 'Asset being uploaded',
+          iconType: 'info',
+          timeout: SNACKBAR_TIMEOUT,
+          actionText: 'See',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        })
+
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -189,7 +214,14 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-        displaySnackbar({ title: 'Asset uploaded', iconType: 'success' })
+        displaySnackbar({
+          customId: ASSET_UPLOADED,
+          title: 'Asset uploaded',
+          iconType: 'success',
+          timeout: SNACKBAR_TIMEOUT,
+          actionText: 'See',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        })
       } catch (e) {
         console.error('Upload failed')
         console.error(e)
