@@ -94,8 +94,6 @@ export const MyVideosView = () => {
       return
     }
     addVideoTab({ id, isDraft: opts.draft })
-    const tabIdx = videoTabs.findIndex((t) => t.id === id)
-    if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
     if (opts.minimized) {
       displaySnackbar({
         title: 'Video opened in a new tab',
@@ -105,6 +103,8 @@ export const MyVideosView = () => {
       })
       setSheetState('minimized')
     } else {
+      const tabIdx = videoTabs.findIndex((t) => t.id === id)
+      if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
       navigate(absoluteRoutes.studio.editVideo())
     }
   }
