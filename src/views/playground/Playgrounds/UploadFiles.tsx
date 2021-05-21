@@ -6,7 +6,7 @@ import { useRandomStorageProviderUrl } from '@/api/hooks'
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId)
-  const randomStorageProviderUrl = useRandomStorageProviderUrl()
+  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +17,7 @@ export const UploadFiles = () => {
   }
 
   const handleUploadClick = () => {
+    const randomStorageProviderUrl = getRandomStorageProviderUrl()
     if (!file || !randomStorageProviderUrl) {
       return
     }

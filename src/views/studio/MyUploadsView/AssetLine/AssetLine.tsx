@@ -31,7 +31,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
   const { activeChannelId } = useAuthorizedUser()
   const { startFileUpload } = useUploadsManager(activeChannelId)
-  const randomStorageProviderUrl = useRandomStorageProviderUrl()
+  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
@@ -40,6 +40,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (fileHash !== asset.ipfsContentId) {
         setShowDialog(true)
       } else {
+        const randomStorageProviderUrl = getRandomStorageProviderUrl()
         if (!randomStorageProviderUrl) {
           return
         }
@@ -61,7 +62,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         )
       }
     },
-    [asset, randomStorageProviderUrl, startFileUpload]
+    [asset, getRandomStorageProviderUrl, startFileUpload]
   )
 
   const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
@@ -78,6 +79,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
+    const randomStorageProviderUrl = getRandomStorageProviderUrl()
     if (!randomStorageProviderUrl) {
       return
     }
