@@ -66,19 +66,19 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
 }
 
 export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+  const video = client.cache.writeFragment({
+    id: `Video:${data.id}`,
+    fragment: VideoFieldsFragmentDoc,
+    fragmentName: 'VideoFields',
+    data: {
+      ...data,
+      thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
+      thumbnailPhotoAvailability: AssetAvailability.Accepted,
+    },
+  })
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
-        const video = client.cache.writeFragment({
-          id: `Video:${data.id}`,
-          fragment: VideoFieldsFragmentDoc,
-          fragmentName: 'VideoFields',
-          data: {
-            ...data,
-            thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
-            thumbnailPhotoAvailability: AssetAvailability.Accepted,
-          },
-        })
         return [video, ...existingVideos]
       },
     },
