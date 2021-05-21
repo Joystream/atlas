@@ -47,7 +47,7 @@ export const EditVideoSheet: React.FC = () => {
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
-  const randomStorageProviderUrl = useRandomStorageProviderUrl()
+  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const { displaySnackbar } = useSnackbar()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
@@ -163,6 +163,7 @@ export const EditVideoSheet: React.FC = () => {
 
     const uploadAssets = (videoId: VideoId) => {
       let uploadCount = 0
+      const randomStorageProviderUrl = getRandomStorageProviderUrl()
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile

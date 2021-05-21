@@ -74,7 +74,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
-  const storageProviderUrl = useRandomStorageProviderUrl()
+  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
@@ -227,6 +227,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     }
 
     const uploadAssets = (channelId: ChannelId) => {
+      const storageProviderUrl = getRandomStorageProviderUrl()
       let uploadCount = 0
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
