@@ -83,10 +83,8 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       const fileUrl = URL.createObjectURL(selectedFile)
       setEditedImageHref(fileUrl)
       setShowDialog(true)
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        onError?.(error)
-      }
+    } catch (error) {
+      onError?.(error)
       console.error(error)
     }
   }
