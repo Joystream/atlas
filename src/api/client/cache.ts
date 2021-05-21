@@ -46,7 +46,6 @@ const cache = new InMemoryCache({
               (v: StoreObject | Reference) => opts.readField('isPublic', v) === isPublic || isPublic === undefined
             )
             // Default to returning the entire cached list,
-            // console.log(opts.args && opts.args.where.isPublic_eq)
             // if offset and limit are not provided.
             const offset = opts.args?.offset ?? 0
             const limit = opts.args?.limit ?? filteredExistingVideos?.length
