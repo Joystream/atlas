@@ -221,7 +221,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setFileSelectError('Video file cannot be empty')
       return
     }
-    if (!data.assets.thumbnail?.url && !dirtyFields.assets?.thumbnail) {
+    if (!data.assets.thumbnail?.url) {
       setFileSelectError('Thumbnail cannot be empty')
       return
     }
