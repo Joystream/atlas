@@ -1,5 +1,6 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 import {
+  AssetAvailability,
   FollowChannelMutation,
   GetBasicChannelQuery,
   GetChannelQuery,
@@ -43,7 +44,15 @@ type VideoCountOpts = QueryHookOptions<GetVideoCountQuery>
 export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) => {
   const { data, ...rest } = useGetVideoCountQuery({
     ...opts,
-    variables: { where: { channelId_eq: channelId } },
+    variables: {
+      where: {
+        channelId_eq: channelId,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+        isPublic_eq: true,
+        isCensored_eq: false,
+      },
+    },
   })
   return {
     videoCount: data?.videosConnection.totalCount,
