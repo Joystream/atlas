@@ -23,8 +23,8 @@ import { Placeholder, VideoPlayer } from '@/shared/components'
 import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
-import { createUrlFromAsset } from '@/utils/asset'
 import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
+import { useAsset } from '@/hooks'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -34,6 +34,7 @@ const CoverVideo: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [displayControls, setDisplayControls] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
+  const { getAssetUrl } = useAsset()
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
@@ -58,12 +59,12 @@ const CoverVideo: React.FC = () => {
     setVideoPlaying(false)
   }
 
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const thumbnailPhotoUrl = getAssetUrl(
     data.video?.thumbnailPhotoAvailability,
     data.video?.thumbnailPhotoUrls,
     data.video?.thumbnailPhotoDataObject
   )
-  const mediaUrl = createUrlFromAsset(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
+  const mediaUrl = getAssetUrl(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
 
   return (
     <Container>

@@ -8,8 +8,8 @@ import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
 import { createId } from '@/utils/createId'
 import { useVideo } from '@/api/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { createUrlFromAsset } from '@/utils/asset'
 import { parseISO } from 'date-fns'
+import { useAsset } from './useAsset'
 
 export type EditVideoSheetTab = {
   id: string
@@ -213,6 +213,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
+  const { getAssetUrl } = useAsset()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
@@ -236,10 +237,10 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
     : {
         video: {
-          url: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+          url: getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
         },
         thumbnail: {
-          url: createUrlFromAsset(
+          url: getAssetUrl(
             video?.thumbnailPhotoAvailability,
             video?.thumbnailPhotoUrls,
             video?.thumbnailPhotoDataObject
