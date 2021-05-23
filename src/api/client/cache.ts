@@ -40,11 +40,8 @@ const cache = new InMemoryCache({
         videosConnection: relayStylePagination(getVideoKeyArgs),
         videos: {
           ...offsetLimitPagination(getVideoKeyArgs),
-          read(
-            existing,
-            { args, readField }: { args: Record<string, GetVideosQueryVariables> | null; readField: ReadFieldFunction }
-          ) {
-            const isPublic = args?.where.isPublic_eq
+          read(existing, { args, readField }: { args: GetVideosQueryVariables | null; readField: ReadFieldFunction }) {
+            const isPublic = args?.where?.isPublic_eq
             const filteredExistingVideos = existing?.filter(
               (v: StoreObject | Reference) => readField('isPublic', v) === isPublic || isPublic === undefined
             )
@@ -69,15 +66,6 @@ const cache = new InMemoryCache({
                   )
 
             return sortedArray?.slice(offset, offset + limit)
-            // read(existing, opts) {
-
-            //   )
-            //   // Default to returning the entire cached list,
-            //   // if offset and limit are not provided.
-            //   const offset = opts.args?.offset ?? 0
-            //   const limit = opts.args?.limit ?? filteredExistingVideos?.length
-
-            //   return filteredExistingVideos?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
