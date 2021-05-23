@@ -6,9 +6,8 @@ import VideoPreviewBase, {
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { useDrafts, useAuthorizedUser } from '@/hooks'
+import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
-import { createUrlFromAsset } from '@/utils/asset'
 
 export type VideoPreviewProps = {
   id?: string
@@ -17,13 +16,14 @@ export type VideoPreviewProps = {
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, false)
+  const { getAssetUrl } = useAsset()
 
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject
   )
-  const avatarPhotoUrl = createUrlFromAsset(
+  const avatarPhotoUrl = getAssetUrl(
     video?.channel?.avatarPhotoAvailability,
     video?.channel?.avatarPhotoUrls,
     video?.channel?.avatarPhotoDataObject
@@ -56,13 +56,14 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
+  const { getAssetUrl } = useAsset()
 
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject
   )
-  const avatarPhotoUrl = createUrlFromAsset(
+  const avatarPhotoUrl = getAssetUrl(
     video?.channel.avatarPhotoAvailability,
     video?.channel.avatarPhotoUrls,
     video?.channel.avatarPhotoDataObject

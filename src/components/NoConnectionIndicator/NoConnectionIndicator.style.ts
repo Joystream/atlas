@@ -26,7 +26,7 @@ export const IndicatorWrapper = styled.div`
   width: 100%;
   max-width: 500px;
   align-items: center;
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.globalOverlay};
   background-color: ${colors.gray[600]};
   padding: ${sizes(3)} ${sizes(5)};
   ${media.medium} {

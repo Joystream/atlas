@@ -25,23 +25,24 @@ const ROWS_AMOUNT = 4
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [currentTab, setCurrentTab] = useState(0)
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
     VideoOrderByInput.CreatedAtAsc
   )
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
-  const currentTabName = TABS[currentTab]
-  const isDraftTab = currentTabName === 'Drafts'
-  const isPublic_eq = getPublicness(currentTabName)
   const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
+  const [currentVideosTab, setCurrentVideosTab] = useState(0)
+  const currentTabName = TABS[currentVideosTab]
+  const isDraftTab = currentTabName === 'Drafts'
+  const isPublic_eq = getPublicness(currentTabName)
+
   // Drafts calls can run into race conditions
-  const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
@@ -96,7 +97,7 @@ export const MyVideosView = () => {
   }
 
   const handleSetCurrentTab = async (tab: number) => {
-    setCurrentTab(tab)
+    setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
         await removeAllUnseenDrafts(activeChannelId)
@@ -113,7 +114,6 @@ export const MyVideosView = () => {
       return
     }
     addVideoTab({ id, isDraft: opts.draft })
-
     if (opts.minimized) {
       displaySnackbar({
         title: 'Video opened in a new tab',
@@ -123,6 +123,8 @@ export const MyVideosView = () => {
       })
       setSheetState('minimized')
     } else {
+      const tabIdx = videoTabs.findIndex((t) => t.id === id)
+      if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
       navigate(absoluteRoutes.studio.editVideo())
     }
   }
@@ -262,7 +264,19 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && <EmptyVideos />}
+            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
+              <EmptyVideos
+                text={
+                  currentTabName === 'All Videos'
+                    ? "You don't have any published videos at the moment"
+                    : currentTabName === 'Published'
+                    ? "You don't have any public videos at the moment"
+                    : currentTabName === 'Drafts'
+                    ? "You don't have any drafts at the moment"
+                    : "You don't have any unlisted videos at the moment"
+                }
+              />
+            )}
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}

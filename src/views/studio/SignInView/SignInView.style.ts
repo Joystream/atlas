@@ -35,8 +35,9 @@ export const StyledButton = styled(Button)`
   margin-top: ${sizes(8)};
 `
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.button`
   padding: ${sizes(8)};
+  border: none;
   width: 272px;
   height: 272px;
   cursor: pointer;
@@ -48,6 +49,11 @@ export const CardWrapper = styled.div`
   background-color: ${colors.gray[900]};
   text-decoration: none;
   transition: background-color ${transitions.timings.routing} ${transitions.easing};
+  &:disabled,
+  &[aria-disabled='true'] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
   :hover {
     background-color: ${colors.gray[800]};
   }

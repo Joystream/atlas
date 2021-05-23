@@ -11,14 +11,15 @@ import { absoluteRoutes } from '@/config/routes'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
-import { createUrlFromAsset } from '@/utils/asset'
+import { useAsset } from '@/hooks'
 
 type RecentChannelPreviewProps = {
   channel?: BasicChannelFieldsFragment
 }
 
 const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
-  const avatarPhotoUrl = createUrlFromAsset(
+  const { getAssetUrl } = useAsset()
+  const avatarPhotoUrl = getAssetUrl(
     channel?.avatarPhotoAvailability,
     channel?.avatarPhotoUrls,
     channel?.avatarPhotoDataObject

@@ -78,6 +78,7 @@ type Membership {
 
 input MembershipWhereUniqueInput {
   id: ID
+  handle: String
 }
 
 input MembershipWhereInput {

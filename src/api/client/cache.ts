@@ -1,6 +1,6 @@
 import { InMemoryCache } from '@apollo/client'
 import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
-import { offsetLimitPagination, Reference, relayStylePagination } from '@apollo/client/utilities'
+import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 import { GetVideosQueryVariables, VideoOrderByInput } from '../queries'
 
@@ -8,7 +8,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   // make sure queries asking for a specific category are separated in cache
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
-  const isPublic = args?.where?.isPublic_eq || ''
+  const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
 
@@ -44,19 +44,24 @@ const cache = new InMemoryCache({
             existing,
             { args, readField }: { args: Record<string, GetVideosQueryVariables> | null; readField: ReadFieldFunction }
           ) {
+            const isPublic = args?.where.isPublic_eq
+            const filteredExistingVideos = existing?.filter(
+              (v: StoreObject | Reference) => readField('isPublic', v) === isPublic || isPublic === undefined
+            )
+
             // Default to returning the entire cached list,
             // if offset and limit are not provided.
             const offset = args?.offset ?? 0
-            const limit = args?.limit ?? existing?.length
+            const limit = args?.limit ?? filteredExistingVideos?.length
             const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
             const sortedArray = sortingASC
-              ? existing
+              ? filteredExistingVideos
                   ?.slice()
                   .sort(
                     (a: Reference, b: Reference) =>
                       (readField('createdAt', b) as Date).getTime() - (readField('createdAt', a) as Date).getTime()
                   )
-              : existing
+              : filteredExistingVideos
                   ?.slice()
                   .sort(
                     (a: Reference, b: Reference) =>
@@ -64,6 +69,15 @@ const cache = new InMemoryCache({
                   )
 
             return sortedArray?.slice(offset, offset + limit)
+            // read(existing, opts) {
+
+            //   )
+            //   // Default to returning the entire cached list,
+            //   // if offset and limit are not provided.
+            //   const offset = opts.args?.offset ?? 0
+            //   const limit = opts.args?.limit ?? filteredExistingVideos?.length
+
+            //   return filteredExistingVideos?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
