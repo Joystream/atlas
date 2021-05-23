@@ -2,7 +2,8 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { breakpointsOfGrid, Gallery, MIN_VIDEO_PREVIEW_WIDTH, CAROUSEL_ARROW_HEIGHT } from '@/shared/components'
+import { Gallery, MIN_VIDEO_PREVIEW_WIDTH, CAROUSEL_ARROW_HEIGHT } from '@/shared/components'
+import { breakpointsOfGrid } from '@/shared/components/Grid'
 import VideoPreview from './VideoPreview'
 import { sizes } from '@/shared/theme'
 import { VideoFieldsFragment } from '@/api/queries'
@@ -74,6 +75,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
+  console.log(breakpoints)
   return (
     <Gallery
       title={title}

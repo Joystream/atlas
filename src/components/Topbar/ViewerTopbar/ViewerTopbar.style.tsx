@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Searchbar } from '@/shared/components'
+import Searchbar from '@/shared/components/Searchbar'
 import { sizes, transitions, media } from '@/shared/theme'
 
 export const SearchbarContainer = styled.div`
