@@ -1,5 +1,6 @@
 import { InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
+import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
+import { offsetLimitPagination, Reference, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 import { GetVideosQueryVariables, VideoOrderByInput } from '../queries'
 
@@ -39,18 +40,30 @@ const cache = new InMemoryCache({
         videosConnection: relayStylePagination(getVideoKeyArgs),
         videos: {
           ...offsetLimitPagination(getVideoKeyArgs),
-          read(existing, { args }: { args: Record<string, GetVideosQueryVariables> | null }) {
+          read(
+            existing,
+            { args, readField }: { args: Record<string, GetVideosQueryVariables> | null; readField: ReadFieldFunction }
+          ) {
             // Default to returning the entire cached list,
             // if offset and limit are not provided.
             const offset = args?.offset ?? 0
             const limit = args?.limit ?? existing?.length
             const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
-            return sortingASC
-              ? existing?.slice(offset, offset + limit)
+            const sortedArray = sortingASC
+              ? existing
+                  ?.slice()
+                  .sort(
+                    (a: Reference, b: Reference) =>
+                      (readField('createdAt', b) as Date).getTime() - (readField('createdAt', a) as Date).getTime()
+                  )
               : existing
                   ?.slice()
-                  .reverse()
-                  ?.slice(offset, offset + limit)
+                  .sort(
+                    (a: Reference, b: Reference) =>
+                      (readField('createdAt', a) as Date).getTime() - (readField('createdAt', b) as Date).getTime()
+                  )
+
+            return sortedArray?.slice(offset, offset + limit)
           },
         },
         channel(existing, { toReference, args }) {
