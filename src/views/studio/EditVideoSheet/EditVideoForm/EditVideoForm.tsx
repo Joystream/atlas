@@ -33,6 +33,7 @@ import {
   DeleteVideoContainer,
   DeleteVideoButton,
   FormWrapper,
+  StyledLastFormField,
 } from './EditVideoForm.style'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 import { SvgGlyphInfo } from '@/shared/icons'
@@ -519,7 +520,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          <FormField
+          <StyledLastFormField
+            isEdit={isEdit}
             title="Prior publication"
             description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
           >
@@ -541,7 +543,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 />
               )}
             />
-          </FormField>
+          </StyledLastFormField>
           {isEdit && (
             <DeleteVideoContainer>
               <DeleteVideoButton
