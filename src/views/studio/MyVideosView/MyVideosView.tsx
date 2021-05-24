@@ -3,6 +3,7 @@ import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/compone
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -32,7 +33,7 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-  const { loading, videos, totalCount, error, fetchMore } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore, refetchCount, variables } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -53,6 +54,10 @@ export const MyVideosView = () => {
 
     const currentOffset = currentPage * videosPerPage
     const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
+
+    if (videos.length === targetDisplayedCount) {
+      return
+    }
     if (videos.length < targetDisplayedCount) {
       const missingCount = videosPerPage - videos.length
       fetchMore({
@@ -60,9 +65,15 @@ export const MyVideosView = () => {
           offset: currentOffset + videos.length,
           limit: missingCount,
         },
-      })
+        updateQuery: (prev, { fetchMoreResult }) => ({
+          videos: [
+            ...(prev?.videos?.length ? prev.videos : []),
+            ...(fetchMoreResult?.videos?.length ? fetchMoreResult.videos : []),
+          ],
+        }),
+      }).then(() => refetchCount({ where: variables?.where }))
     }
-  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
+  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab, refetchCount, variables?.where])
 
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,

@@ -9,7 +9,7 @@ export const useDeleteVideo = () => {
   const { activeMemberId, activeChannelId } = useAuthorizedUser()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
-  const { refetchCount: refetchVideosCount, client } = useVideos({
+  const { client } = useVideos({
     where: {
       channelId_eq: activeChannelId,
     },
@@ -25,7 +25,6 @@ export const useDeleteVideo = () => {
     handleTransaction({
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
       onTxSync: async () => {
-        await refetchVideosCount()
         removeVideoFromCache(videoId, client)
         onTxSync?.()
       },
