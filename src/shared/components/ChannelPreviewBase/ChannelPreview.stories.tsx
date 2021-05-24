@@ -1,6 +1,7 @@
 import React from 'react'
 import ChannelPreviewBase, { ChannelPreviewBaseProps } from './ChannelPreviewBase'
 import { Meta, Story } from '@storybook/react'
+import { BrowserRouter } from 'react-router-dom'
 
 export default {
   title: 'Shared/ChannelPreview',
@@ -9,6 +10,7 @@ export default {
     className: { table: { disable: true } },
     onClick: { table: { disable: true } },
   },
+  decorators: [(story) => <BrowserRouter>{story()}</BrowserRouter>],
 } as Meta
 
 const Template: Story<ChannelPreviewBaseProps> = (args) => <ChannelPreviewBase {...args} />
