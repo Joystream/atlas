@@ -70,10 +70,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
     video?.channel.avatarPhotoDataObject
   )
 
-  const hasThumbnailUploadFailed =
-    video?.thumbnailPhotoAvailability === AssetAvailability.Pending &&
-    uploadsState.flat().find((asset) => asset.ipfsContentId === video.thumbnailPhotoDataObject?.ipfsContentId)
-      ?.lastStatus !== 'completed'
+  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 
   return (
     <VideoPreviewBase

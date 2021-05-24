@@ -344,15 +344,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     },
   ]
 
-  const hasAvatarUploadFailed =
-    channel?.avatarPhotoAvailability === AssetAvailability.Pending &&
-    uploadsState.flat().find((asset) => asset.ipfsContentId === channel.avatarPhotoDataObject?.ipfsContentId)
-      ?.lastStatus !== 'completed'
-
-  const hasCoverUploadFailed =
-    channel?.coverPhotoAvailability === AssetAvailability.Pending &&
-    uploadsState.flat().find((asset) => asset.ipfsContentId === channel.coverPhotoDataObject?.ipfsContentId)
-      ?.lastStatus !== 'completed'
+  const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
+  const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
 
   return (
     <>
