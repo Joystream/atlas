@@ -237,6 +237,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     await onSubmit(data, dirtyFields, callback)
   })
 
+  const debouncedSetSelectedVideoTabCachedDirtyFormData = debounce((dirtyData) => {
+    setSelectedVideoTabCachedDirtyFormData(dirtyData)
+  }, 700)
+
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
     const data = getValues()
@@ -246,7 +250,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         acc[curr] = data[curr]
         return acc
       }, {} as Record<string, unknown>)
-      setSelectedVideoTabCachedDirtyFormData(dirtyData)
+      debouncedSetSelectedVideoTabCachedDirtyFormData(dirtyData)
     } else {
       debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
     }
