@@ -61,15 +61,9 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   }, [])
 
   const updateSnackbar = useCallback((id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => {
-    setSnackbars((currentSnackbars) => {
-      const newSnackbars = currentSnackbars.map((snackbar) => {
-        if (snackbar.id === id) {
-          return { ...snackbar, ...opts }
-        }
-        return snackbar
-      })
-      return newSnackbars
-    })
+    setSnackbars((currentSnackbars) =>
+      currentSnackbars.map((snackbar) => (snackbar.id === id ? { ...snackbar, ...opts } : snackbar))
+    )
   }, [])
 
   const closeSnackbar = useCallback(
