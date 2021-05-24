@@ -20,7 +20,7 @@ import { useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -260,9 +260,10 @@ export const EditVideoSheet: React.FC = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const handleDeleteVideo = async (videoId: string) => {
+  const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
     removeVideoTab(videoTabIdx)
+    removeVideoFromCache(videoId, client)
 
     // close the sheet if we closed the last tab
     setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')

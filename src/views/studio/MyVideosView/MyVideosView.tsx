@@ -33,7 +33,7 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-  const { loading, videos, totalCount, error, fetchMore, refetchCount, variables } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore, refetchCount, variables, client } = useVideos(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -120,10 +120,11 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleVideoDeleted = async () => {
+  const handleVideoDeleted = () => {
     if (!selectedVideoId) {
       return
     }
+    removeVideoFromCache(selectedVideoId, client)
     setSelectedVideoId(undefined)
   }
 

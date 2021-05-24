@@ -1,19 +1,11 @@
-import { useVideos } from '@/api/hooks'
 import { useState } from 'react'
 import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
-import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
   const { handleTransaction } = useTransactionManager()
-  const { activeMemberId, activeChannelId } = useAuthorizedUser()
+  const { activeMemberId } = useAuthorizedUser()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-
-  const { client } = useVideos({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
 
   const confirmDeleteVideo = async (videoId: string, onTxSync?: () => void) => {
     if (!joystream) {
@@ -24,10 +16,7 @@ export const useDeleteVideo = () => {
 
     handleTransaction({
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
-      onTxSync: async () => {
-        removeVideoFromCache(videoId, client)
-        onTxSync?.()
-      },
+      onTxSync,
       successMessage: {
         title: 'Video successfully deleted!',
         description: 'Your video was marked as deleted and it will no longer show up on Joystream.',
