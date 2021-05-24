@@ -64,7 +64,7 @@ export const MyVideosView = () => {
     }
   }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
 
-  const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
+  const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
