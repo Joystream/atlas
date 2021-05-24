@@ -37,9 +37,6 @@ export const FormWrapper = styled.form`
   }
 
   ${studioContainerStyle};
-
-  // include some spacing at the bottom so content isn't covered by the action bar
-  // has to be below studioContainerStyle as those contain margin as well
 `
 
 export const InputsContainer = styled.div`
