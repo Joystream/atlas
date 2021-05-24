@@ -1,9 +1,12 @@
+import { TransactionDialog } from '@/components'
 import { useDialog } from '@/hooks'
+import { ExtrinsicStatus } from '@/joystream-lib'
 import { Button } from '@/shared/components'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Dialogs = () => {
   const { openDialog, closeDialog } = useDialog()
+  const [status, setStatus] = useState<null | ExtrinsicStatus.ProcessingAssets>(ExtrinsicStatus.ProcessingAssets)
 
   useEffect(() => {
     // just to test two dialogs open at once
@@ -20,7 +23,8 @@ const Dialogs = () => {
   }, [openDialog])
 
   return (
-    <>
+    // to test lock/unlock scroll
+    <div style={{ height: '200vh' }}>
       <Button
         onClick={() => {
           openDialog('firstDialog', {
@@ -50,7 +54,8 @@ const Dialogs = () => {
       >
         Close dialog which dont exists and check the console
       </Button>
-    </>
+      <TransactionDialog status={status} onClose={() => setStatus(null)} />
+    </div>
   )
 }
 
