@@ -24,6 +24,8 @@ type TransactionManagerContextValue = {
   fee: number
 }
 
+const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
+
 const TransactionManagerContext = React.createContext<TransactionManagerContextValue | undefined>(undefined)
 TransactionManagerContext.displayName = 'TransactionManagerContext'
 
@@ -104,7 +106,11 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
         setStatus(null)
-        displaySnackbar({ title: 'Transaction signing cancelled', iconType: 'info' })
+        displaySnackbar({
+          title: 'Transaction signing cancelled',
+          iconType: 'warning',
+          timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+        })
       } else {
         console.error(e)
         setStatus(ExtrinsicStatus.Error)
