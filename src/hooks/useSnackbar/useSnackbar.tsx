@@ -66,12 +66,9 @@ export const SnackbarProvider: React.FC = ({ children }) => {
     )
   }, [])
 
-  const closeSnackbar = useCallback(
-    (id: string) => {
-      setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))
-    },
-    [snackbars]
-  )
+  const closeSnackbar = useCallback((id: string) => {
+    setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
+  }, [])
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
