@@ -1,4 +1,4 @@
-import { useVideosAndCount } from '@/api/hooks'
+import { useVideosConnection } from '@/api/hooks'
 import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
@@ -13,6 +13,7 @@ import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewConta
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
+const INITIAL_FIRST = 100
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
@@ -33,10 +34,10 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-  const { loading, videos, totalCount, error, fetchMore, client } = useVideosAndCount(
+
+  const { edges, totalCount, loading, client, error, refetch, fetchMore, variables } = useVideosConnection(
     {
-      limit: videosPerPage,
-      offset: videosPerPage * currentPage,
+      first: INITIAL_FIRST,
       where: {
         channelId_eq: activeChannelId,
         isPublic_eq,
@@ -47,38 +48,15 @@ export const MyVideosView = () => {
 
   const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
-  useEffect(() => {
-    if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
-      return
-    }
-
-    const currentOffset = currentPage * videosPerPage
-    const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
-
-    if (videos.length === targetDisplayedCount) {
-      return
-    }
-    if (videos.length < targetDisplayedCount) {
-      fetchMore({
-        variables: {
-          offset: currentOffset + videos.length,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          ...prev,
-          videosConnection: { ...prev.videosConnection, totalCount: fetchMoreResult?.videosConnection.totalCount || 0 },
-          videos: [
-            ...(prev?.videos?.length ? prev.videos : []),
-            ...(fetchMoreResult?.videos?.length ? fetchMoreResult.videos : []),
-          ],
-        }),
-      })
-    }
-  }, [currentPage, fetchMore, isDraftTab, loading, totalCount, videos, videosPerPage])
-
+  const videos = edges
+    ?.map((edge) => edge.node)
+    .filter((node) => node.isPublic === isPublic_eq || isPublic_eq === undefined)
+    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
+
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
@@ -221,7 +199,6 @@ export const MyVideosView = () => {
   }
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
-
   return (
     <StudioContainer>
       <ViewContainer>

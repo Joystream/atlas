@@ -16,7 +16,7 @@ import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import { useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
+import { useRandomStorageProviderUrl, useVideosConnection } from '@/api/hooks'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
@@ -54,14 +54,12 @@ export const EditVideoSheet: React.FC = () => {
   const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
-  const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
-    skip: !selectedVideoTab || selectedVideoTab.isDraft,
-  })
-  const { refetchCount: refetchVideosCount } = useVideos({
+  const { refetch: refetchVideoWithCursor, client } = useVideosConnection({
     where: {
       channelId_eq: activeChannelId,
     },
   })
+
   const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
@@ -203,18 +201,19 @@ export const EditVideoSheet: React.FC = () => {
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
-      const fetchedVideo = await refetchVideo({ where: { id: videoId } })
-
+      const fetchedVideo = await refetchVideoWithCursor({ where: { id_in: [videoId] } })
+      // const fetchVideoWithCursor = await
+      console.log(data.assets.thumbnail?.url)
       if (isNew) {
-        if (fetchedVideo.data.videoByUniqueInput) {
+        if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
-            data: fetchedVideo.data.videoByUniqueInput,
+            edge: fetchedVideo.data.videosConnection.edges[0],
             thumbnailUrl: data.assets.thumbnail?.url,
             client,
           })
         }
         // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
-        await refetchVideosCount()
+        // !! await refetchVideosCount()
 
         updateSelectedVideoTab({
           id: videoId,
