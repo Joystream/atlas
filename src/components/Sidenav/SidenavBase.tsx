@@ -15,10 +15,12 @@ import {
   LegalLink,
   SidebarNavFooter,
   StudioText,
+  LegalLinksWrapper,
 } from './SidenavBase.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import HamburgerButton from '@/shared/components/HamburgerButton'
+import { absoluteRoutes } from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -88,9 +90,11 @@ const SidenavBase: React.FC<SidenavProps> = ({
         >
           <SidebarNavFooter>
             <ButtonGroup>{buttonsContent}</ButtonGroup>
-            <LegalLink onClick={() => toggleSideNav(false)} to="/legal">
-              Copyright Policy
-            </LegalLink>
+            <LegalLinksWrapper>
+              <LegalLink to={absoluteRoutes.legal.termsOfService()}>Terms of Service</LegalLink>
+              <span>•</span>
+              <LegalLink to={absoluteRoutes.legal.copyright()}>Copyright Policy</LegalLink>
+            </LegalLinksWrapper>
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>

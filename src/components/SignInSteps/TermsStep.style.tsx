@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, IconButton, Text } from '@/shared/components'
+import { Button, IconButton } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
@@ -19,23 +19,6 @@ export const TextWrapper = styled.div`
     text-decoration: none;
     color: ${colors.gray[50]};
   }
-`
-const _TermsParagraph = styled(Text)`
-  margin-top: ${sizes(6)};
-  ol + & {
-    margin-top: 0;
-  }
-`
-
-export const TermsParagraph: React.FC<{ header?: boolean }> = ({ header, ...props }) => (
-  <_TermsParagraph variant={header ? 'h6' : 'body2'} secondary={!header} {...props} />
-)
-// wrapper so we can use a specific element to render
-const _StyledText = styled(Text)``
-export const TermsListItem: React.FC = (props) => <_StyledText variant="body2" secondary as="li" {...props} />
-
-export const LastUpdateText = styled(TermsParagraph)`
-  font-style: italic;
 `
 
 export const TermsOverlay = styled.div`
