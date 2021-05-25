@@ -115,6 +115,8 @@ const cache = new InMemoryCache({
       fields: {
         createdAt: createDateHandler(),
         publishedBeforeJoystream: createDateHandler(),
+        thumbnailPhotoUrls: createCachedUrlsHandler(),
+        thumbnailPhotoAvailability: createCachedAvailabilityHandler(),
       },
     },
     Channel: {
