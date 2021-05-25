@@ -84,6 +84,20 @@ query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: Vi
   }
 }
 
+query GetVideosAndCount(
+  $offset: Int
+  $limit: Int
+  $where: VideoWhereInput
+  $orderBy: VideoOrderByInput = createdAt_DESC
+) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
+    ...VideoFields
+  }
+  videosConnection(where: $where, orderBy: $orderBy) {
+    totalCount
+  }
+}
+
 query GetCoverVideo {
   coverVideo {
     video {

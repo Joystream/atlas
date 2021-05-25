@@ -1,4 +1,4 @@
-import { useVideos } from '@/api/hooks'
+import { useVideosAndCount } from '@/api/hooks'
 import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
@@ -33,7 +33,7 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-  const { loading, videos, totalCount, error, fetchMore, refetchCount, variables, client } = useVideos(
+  const { loading, videos, totalCount, error, fetchMore, client } = useVideosAndCount(
     {
       limit: videosPerPage,
       offset: videosPerPage * currentPage,
@@ -59,21 +59,21 @@ export const MyVideosView = () => {
       return
     }
     if (videos.length < targetDisplayedCount) {
-      const missingCount = videosPerPage - videos.length
       fetchMore({
         variables: {
           offset: currentOffset + videos.length,
-          limit: missingCount,
         },
         updateQuery: (prev, { fetchMoreResult }) => ({
+          ...prev,
+          videosConnection: { ...prev.videosConnection, totalCount: fetchMoreResult?.videosConnection.totalCount || 0 },
           videos: [
             ...(prev?.videos?.length ? prev.videos : []),
             ...(fetchMoreResult?.videos?.length ? fetchMoreResult.videos : []),
           ],
         }),
-      }).then(() => refetchCount({ where: variables?.where }))
+      })
     }
-  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab, refetchCount, variables?.where])
+  }, [currentPage, fetchMore, isDraftTab, loading, totalCount, videos, videosPerPage])
 
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
