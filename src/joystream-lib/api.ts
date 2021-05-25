@@ -241,23 +241,25 @@ export class JoystreamJs {
       protoMeta.setHasMarketing(inputMetadata.hasMarketing)
     }
 
-    const protoLicenseType = new License()
-    if (inputMetadata.license?.code != null) {
-      protoLicenseType.setCode(inputMetadata.license.code)
+    if (inputMetadata.license) {
+      const protoLicenseType = new License()
+      if (inputMetadata.license.code != null) {
+        protoLicenseType.setCode(inputMetadata.license.code)
+      }
+      if (inputMetadata.license.attribution != null) {
+        protoLicenseType.setAttribution(inputMetadata.license.attribution)
+      }
+      if (inputMetadata.license.customText != null) {
+        protoLicenseType.setCustomText(inputMetadata.license.customText)
+      }
+      protoMeta.setLicense(protoLicenseType)
     }
-    if (inputMetadata.license?.attribution != null) {
-      protoLicenseType.setAttribution(inputMetadata.license.attribution)
-    }
-    if (inputMetadata.license?.customText != null) {
-      protoLicenseType.setCustomText(inputMetadata.license.customText)
-    }
-    protoMeta.setLicense(protoLicenseType)
 
-    const protoMediaType = new MediaType()
     if (inputMetadata.mimeMediaType != null) {
+      const protoMediaType = new MediaType()
       protoMediaType.setMimeMediaType(inputMetadata.mimeMediaType)
+      protoMeta.setMediaType(protoMediaType)
     }
-    protoMeta.setMediaType(protoMediaType)
 
     if (inputMetadata.publishedBeforeJoystream != null) {
       const protoPublishedBeforeJoystream = new PublishedBeforeJoystream()
