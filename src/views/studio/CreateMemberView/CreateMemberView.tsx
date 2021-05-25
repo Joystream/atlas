@@ -36,7 +36,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError, watch } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, watch } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -111,11 +111,7 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar
-          size="view"
-          imageUrl={errors.avatar ? undefined : avatarImageUrl}
-          onError={() => setInputError('avatar', { message: 'Image not found' })}
-        />
+        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
           name="avatar"
           onChange={handleAvatarChange}
@@ -134,7 +130,7 @@ const CreateMemberView = () => {
                   debounce(async (handle) => {
                     const img = new Image()
                     img.src = value
-                    img.onerror = () => resolve('Avatar URL must be a valid url!')
+                    img.onerror = () => resolve('Image not found')
                     img.onload = () => resolve(true)
                   }, 500)(value)
                 })
