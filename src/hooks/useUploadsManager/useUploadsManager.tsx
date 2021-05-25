@@ -142,7 +142,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
       pendingNotificationsCounts.current.uploading = 0
-    })
+    }, 700)
   )
 
   const displayUploadedNotification = useRef(
@@ -158,7 +158,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
       pendingNotificationsCounts.current.uploaded = 0
-    })
+    }, 700)
   )
 
   const startFileUpload = useCallback(
