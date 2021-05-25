@@ -54,6 +54,11 @@ const createCachedUrlsHandler = () => ({
 
 const createCachedAvailabilityHandler = () => ({
   merge: (existing: AssetAvailability | undefined, incoming: AssetAvailability) => {
+    if (incoming === AssetAvailability.Invalid) {
+      // if the incoming availability is invalid that means we deleted the asset so we shouldn't care about what's in cache
+      return incoming
+    }
+
     if (existing === AssetAvailability.Accepted) {
       // if the asset is already accepted, update most probably means that:
       // fresh fetch is trying to overwrite local optimistically updated data
