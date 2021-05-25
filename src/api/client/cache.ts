@@ -37,10 +37,13 @@ const createCachedUrlsHandler = () => ({
       return incoming
     }
 
-    const firstExistingItem = existing[0]
-
-    if (!firstExistingItem.startsWith('blob:')) {
+    if (!existing[0].startsWith('blob:')) {
       // regular URL in cache, overwrite
+      return incoming
+    }
+
+    if (incoming && incoming.length && incoming[0].startsWith('blob:')) {
+      // incoming URL is cached asset, overwrite
       return incoming
     }
 
