@@ -85,19 +85,6 @@ export type GetVideosQuery = {
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
-export type GetVideosAndCountQueryVariables = Types.Exact<{
-  offset?: Types.Maybe<Types.Scalars['Int']>
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  where?: Types.Maybe<Types.VideoWhereInput>
-  orderBy?: Types.Maybe<Types.VideoOrderByInput>
-}>
-
-export type GetVideosAndCountQuery = {
-  __typename?: 'Query'
-  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
-  videosConnection: { __typename?: 'VideoConnection'; totalCount: number }
-}
-
 export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetCoverVideoQuery = {
@@ -327,61 +314,6 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
-export const GetVideosAndCountDocument = gql`
-  query GetVideosAndCount(
-    $offset: Int
-    $limit: Int
-    $where: VideoWhereInput
-    $orderBy: VideoOrderByInput = createdAt_DESC
-  ) {
-    videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
-      ...VideoFields
-    }
-    videosConnection(where: $where, orderBy: $orderBy) {
-      totalCount
-    }
-  }
-  ${VideoFieldsFragmentDoc}
-`
-
-/**
- * __useGetVideosAndCountQuery__
- *
- * To run a query within a React component, call `useGetVideosAndCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideosAndCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetVideosAndCountQuery({
- *   variables: {
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *   },
- * });
- */
-export function useGetVideosAndCountQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetVideosAndCountQuery, GetVideosAndCountQueryVariables>
-) {
-  return Apollo.useQuery<GetVideosAndCountQuery, GetVideosAndCountQueryVariables>(
-    GetVideosAndCountDocument,
-    baseOptions
-  )
-}
-export function useGetVideosAndCountLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetVideosAndCountQuery, GetVideosAndCountQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetVideosAndCountQuery, GetVideosAndCountQueryVariables>(
-    GetVideosAndCountDocument,
-    baseOptions
-  )
-}
-export type GetVideosAndCountQueryHookResult = ReturnType<typeof useGetVideosAndCountQuery>
-export type GetVideosAndCountLazyQueryHookResult = ReturnType<typeof useGetVideosAndCountLazyQuery>
-export type GetVideosAndCountQueryResult = Apollo.QueryResult<GetVideosAndCountQuery, GetVideosAndCountQueryVariables>
 export const GetCoverVideoDocument = gql`
   query GetCoverVideo {
     coverVideo {

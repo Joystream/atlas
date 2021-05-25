@@ -7,9 +7,6 @@ import {
   GetVideosQueryVariables,
   useGetVideosQuery,
   useGetVideoCountQuery,
-  GetVideosAndCountQuery,
-  GetVideosAndCountQueryVariables,
-  useGetVideosAndCountQuery,
 } from '@/api/queries'
 import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
@@ -40,16 +37,6 @@ export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts
     loading: videosLoading || countLoading,
     totalCount: connectionData?.videosConnection.totalCount,
     refetchCount,
-    ...rest,
-  }
-}
-
-type VideosAndCountOpts = QueryHookOptions<GetVideosAndCountQuery>
-export const useVideosAndCount = (variables?: GetVideosAndCountQueryVariables, opts?: VideosAndCountOpts) => {
-  const { data, ...rest } = useGetVideosAndCountQuery({ ...opts, variables })
-  return {
-    videos: data?.videos,
-    totalCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }
