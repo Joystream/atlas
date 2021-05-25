@@ -36,17 +36,17 @@ export const textFieldValidation = ({
   },
   minLength: {
     value: minLength,
-    message: `${name} must be at least ${minLength} characters.`,
+    message: `${name} must be at least ${minLength} characters`,
   },
   maxLength: {
     value: maxLength,
-    message: `${name} cannot be longer than ${maxLength} characters.`,
+    message: `${name} cannot be longer than ${maxLength} characters`,
   },
   ...(pattern
     ? {
         pattern: {
           value: pattern,
-          message: patternMessage ? `${name} ${patternMessage}` : `${name} must be a valid`,
+          message: patternMessage ? `${name} ${patternMessage}` : `${name} must be valid`,
         },
       }
     : {}),
