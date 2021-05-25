@@ -276,26 +276,36 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     }
 
     const refetchDataAndCacheAssets = async (channelId: ChannelId) => {
+      const setCachedAssets = () => {
+        if (data.avatar.blob && avatarContentId) {
+          writeUrlInCache({
+            url: data.avatar.url,
+            fileType: 'avatar',
+            parentId: channelId,
+            client,
+          })
+        }
+        if (data.cover.blob && coverContentId) {
+          writeUrlInCache({
+            url: data.cover.url,
+            fileType: 'cover',
+            parentId: channelId,
+            client,
+          })
+        }
+      }
+
+      if (!newChannel) {
+        // we can set cached assets before the refetch since cache policy will keep the local URLs
+        setCachedAssets()
+      }
+
       const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
       await Promise.all(refetchPromiseList)
+
       if (newChannel) {
+        setCachedAssets()
         setActiveUser({ channelId })
-      }
-      if (data.avatar.blob && avatarContentId) {
-        writeUrlInCache({
-          url: data.avatar.url,
-          fileType: 'avatar',
-          parentId: channelId,
-          client,
-        })
-      }
-      if (data.cover.blob && coverContentId) {
-        writeUrlInCache({
-          url: data.cover.url,
-          fileType: 'cover',
-          parentId: channelId,
-          client,
-        })
       }
     }
 

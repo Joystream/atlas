@@ -1,7 +1,7 @@
 import { InMemoryCache } from '@apollo/client'
 import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
-import { GetVideosQueryVariables } from '../queries'
+import { AssetAvailability, GetVideosQueryVariables } from '../queries'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
@@ -28,6 +28,39 @@ const createDateHandler = () => ({
       return existingData
     }
     return parseISO(existingData)
+  },
+})
+
+const createCachedUrlsHandler = () => ({
+  merge: (existing: string[] | undefined, incoming: string[]) => {
+    if (!existing || !existing.length) {
+      return incoming
+    }
+
+    if (!existing[0].startsWith('blob:')) {
+      // regular URL in cache, overwrite
+      return incoming
+    }
+
+    if (incoming && incoming.length && incoming[0].startsWith('blob:')) {
+      // incoming URL is cached asset, overwrite
+      return incoming
+    }
+
+    // currently using cached URL, keep it
+    return existing
+  },
+})
+
+const createCachedAvailabilityHandler = () => ({
+  merge: (existing: AssetAvailability | undefined, incoming: AssetAvailability) => {
+    if (existing === AssetAvailability.Accepted) {
+      // if the asset is already accepted, update most probably means that:
+      // fresh fetch is trying to overwrite local optimistically updated data
+      // in that case, let's keep it as Accepted to allow usage of cached blob URL
+      return existing
+    }
+    return incoming
   },
 })
 
@@ -77,6 +110,14 @@ const cache = new InMemoryCache({
       fields: {
         createdAt: createDateHandler(),
         publishedBeforeJoystream: createDateHandler(),
+      },
+    },
+    Channel: {
+      fields: {
+        avatarPhotoUrls: createCachedUrlsHandler(),
+        coverPhotoUrls: createCachedUrlsHandler(),
+        avatarPhotoAvailability: createCachedAvailabilityHandler(),
+        coverPhotoAvailability: createCachedAvailabilityHandler(),
       },
     },
   },

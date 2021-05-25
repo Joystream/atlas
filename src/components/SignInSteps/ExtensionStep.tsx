@@ -25,7 +25,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   return (
     <StepWrapper withBottomBar>
       <StyledLogo src={polkadotIcon} alt="polkadot icon" />
-      <StepTitle variant="h4">Add polkadot extension</StepTitle>
+      <StepTitle variant="h4">Add Polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
         To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
         following link:
@@ -36,7 +36,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
       <StepFooter>
         <BottomBarIcon />
         <Text variant="body2" secondary>
-          Please reload the page after installing the extension
+          Please reload the page and allow access after installing the extension
         </Text>
       </StepFooter>
     </StepWrapper>
