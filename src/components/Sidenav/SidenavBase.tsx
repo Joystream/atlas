@@ -79,7 +79,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
             </NavItem>
           ))}
         </SidebarNavList>
-        {additionalContent || <div />}
+        <div>{additionalContent}</div>
         <CSSTransition
           in={expanded}
           unmountOnExit
