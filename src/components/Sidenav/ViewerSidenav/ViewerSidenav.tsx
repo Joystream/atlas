@@ -4,7 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components'
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
 import FollowedChannels from './FollowedChannels'
-import { SvgGlyphExternal, SvgNavChannel, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 
 const viewerSidenavItems: NavItemType[] = [
   {
@@ -19,7 +19,7 @@ const viewerSidenavItems: NavItemType[] = [
   },
   {
     // TODO: update to channels icon once it exists
-    icon: <SvgNavChannel />,
+    icon: <SvgNavChannels />,
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
   },
