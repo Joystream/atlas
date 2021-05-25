@@ -35,7 +35,7 @@ export const SidebarNav = styled.nav<SidebarNavProps>`
   transition: width ${transitions.timings.regular} ${transitions.easing};
 
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
 
   overflow: hidden;
   color: ${colors.white};
@@ -80,6 +80,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  margin-top: ${sizes(3)};
   > * + * {
     margin-top: ${sizes(4)};
   }
