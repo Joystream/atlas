@@ -18,20 +18,24 @@ const TRANSACTION_STEPS_DETAILS = {
     title: 'Processing assets...',
     description:
       "Please wait till all your assets get processed. This can take up to 1 minute, depending on asset size and your machine's computing power.",
+    tooltip: '',
   },
   [ExtrinsicStatus.Unsigned]: {
     title: 'Waiting for signature...',
     description: 'Please sign the transaction using the Polkadot browser extension.',
+    tooltip: 'Signature',
   },
   [ExtrinsicStatus.Signed]: {
     title: 'Waiting for confirmation...',
     description:
       'Your transaction has been signed and sent. Please wait for the blockchain confirmation. This should take about 15 seconds.',
+    tooltip: 'Confirmation',
   },
   [ExtrinsicStatus.Syncing]: {
     title: 'Waiting for data propagation...',
     description:
       "Your transaction has been accepted and included into the blockchain. Please wait till it's picked up by the indexing node. This should take up to 15 seconds.",
+    tooltip: 'Propagation',
   },
 }
 
@@ -72,22 +76,9 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
 
   const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
 
-  const transactionStepsWithoutProccessingAssets = Object.values(TRANSACTION_STEPS_DETAILS).filter(
+  const transactionStepsWithoutProcessingAssets = Object.values(TRANSACTION_STEPS_DETAILS).filter(
     (step) => step.title !== TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.ProcessingAssets].title
   )
-
-  const getTooltipText = (title: string) => {
-    switch (title) {
-      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Unsigned].title:
-        return 'Signing in'
-      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Signed].title:
-        return 'Confirmation'
-      case TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.Syncing].title:
-        return 'Data Propagation'
-      default:
-        return 'Signing in'
-    }
-  }
 
   return (
     <ActionDialog
@@ -99,8 +90,8 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
       {...actionDialogProps}
     >
       <StepsBar>
-        {transactionStepsWithoutProccessingAssets.map(({ title }, idx) => (
-          <Tooltip key={idx} text={getTooltipText(title)} placement="top-end">
+        {transactionStepsWithoutProcessingAssets.map(({ title, tooltip }, idx) => (
+          <Tooltip key={idx} text={tooltip} placement="top-end">
             <Step isActive={!!status && status > idx} />
           </Tooltip>
         ))}
