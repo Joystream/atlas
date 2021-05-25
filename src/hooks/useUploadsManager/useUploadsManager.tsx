@@ -19,10 +19,9 @@ import { createStorageNodeUrl } from '@/utils/asset'
 import { LiaisonJudgement } from '@/api/queries'
 
 const RETRIES_COUNT = 5
-const SNACKBAR_TIMEOUT = 5000
+const UPLOADING_SNACKBAR_TIMEOUT = 8000
+const UPLOADED_SNACKBAR_TIMEOUT = 13000
 const RECONNECTION_ERROR_MESSAGE = 'Reconnection failed'
-const ASSET_BEING_UPLOADED = 'ASSET_BEING_UPLOADED'
-const ASSET_UPLOADED = 'ASSET_UPLOADED'
 
 type GroupByParentObjectIdAcc = {
   [key: string]: AssetUploadWithProgress[]
@@ -52,6 +51,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     },
     { skip: !uploadsState.length }
   )
+  const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
   const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
     ...asset,
@@ -129,8 +129,37 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     }, {})
   )
 
-  const beingUploadedCount = useRef(0)
-  const uploadedCount = useRef(0)
+  const displayUploadingNotification = useRef(
+    debounce(() => {
+      displaySnackbar({
+        title:
+          pendingNotificationsCounts.current.uploading > 1
+            ? `${pendingNotificationsCounts.current.uploading} assets being uploaded`
+            : 'Asset being uploaded',
+        iconType: 'info',
+        timeout: UPLOADING_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.current.uploading = 0
+    })
+  )
+
+  const displayUploadedNotification = useRef(
+    debounce(() => {
+      displaySnackbar({
+        title:
+          pendingNotificationsCounts.current.uploaded > 1
+            ? `${pendingNotificationsCounts.current.uploaded} assets uploaded`
+            : 'Asset uploaded',
+        iconType: 'success',
+        timeout: UPLOADED_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.current.uploaded = 0
+    })
+  )
 
   const startFileUpload = useCallback(
     async (
@@ -167,19 +196,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           { leading: true }
         )
 
-        const debouncedDisplayBeingUploadedSnackbar = debounce((count) => {
-          displaySnackbar({
-            customId: ASSET_BEING_UPLOADED,
-            title: count > 1 ? `${count} assets being uploaded` : 'Asset being uploaded',
-            iconType: 'info',
-            timeout: SNACKBAR_TIMEOUT,
-            actionText: 'See',
-            onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-          })
-          beingUploadedCount.current--
-        }, 500)
-        beingUploadedCount.current++
-        debouncedDisplayBeingUploadedSnackbar(beingUploadedCount.current)
+        pendingNotificationsCounts.current.uploading++
+        displayUploadingNotification.current()
 
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
@@ -209,19 +227,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-        const debouncedDisplayUploadedSnackbar = debounce((count) => {
-          displaySnackbar({
-            customId: ASSET_UPLOADED,
-            title: count > 1 ? `${count} assets uploaded` : 'Asset uploaded',
-            iconType: 'success',
-            timeout: SNACKBAR_TIMEOUT,
-            actionText: 'See',
-            onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-          })
-          uploadedCount.current--
-        }, 500)
-        uploadedCount.current++
-        debouncedDisplayUploadedSnackbar(uploadedCount.current)
+
+        pendingNotificationsCounts.current.uploaded++
+        displayUploadedNotification.current()
       } catch (e) {
         console.error('Upload failed')
         console.error(e)

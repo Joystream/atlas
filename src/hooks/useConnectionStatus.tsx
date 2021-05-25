@@ -17,7 +17,7 @@ const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
   return await Promise.race([timeoutPromise, promise])
 }
 
-const SNACKBAR_TIMEOUT = 5000
+const SNACKBAR_TIMEOUT = 15000
 
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
