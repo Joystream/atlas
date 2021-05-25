@@ -23,7 +23,9 @@ type SnackbarsState = {
 } & Omit<DisplaySnackbarArgs, 'time'>
 
 type SnackbarContextValue = {
+  snackbars: SnackbarsState[]
   displaySnackbar: (args: DisplaySnackbarArgs) => string
+  updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
   closeSnackbar: (id: string) => void
 }
 
@@ -44,7 +46,9 @@ export const SnackbarProvider: React.FC = ({ children }) => {
 
   const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
     const id = createId()
-    setSnackbars((s) => [...s, { id, ...args }])
+    setSnackbars((currentSnackbars) => {
+      return [...currentSnackbars, { id, ...args }]
+    })
 
     if (timeout) {
       setTimeout(() => {
@@ -55,9 +59,15 @@ export const SnackbarProvider: React.FC = ({ children }) => {
     return id
   }, [])
 
-  const closeSnackbar = (id: string) => {
-    setSnackbars(snackbars.filter((snackbar) => snackbar.id !== id))
-  }
+  const updateSnackbar = useCallback((id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => {
+    setSnackbars((currentSnackbars) =>
+      currentSnackbars.map((snackbar) => (snackbar.id === id ? { ...snackbar, ...opts } : snackbar))
+    )
+  }, [])
+
+  const closeSnackbar = useCallback((id: string) => {
+    setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
+  }, [])
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
@@ -68,7 +78,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   }, [snackbars])
 
   return (
-    <SnackbarContext.Provider value={{ displaySnackbar, closeSnackbar }}>
+    <SnackbarContext.Provider value={{ snackbars, displaySnackbar, updateSnackbar, closeSnackbar }}>
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
