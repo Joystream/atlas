@@ -212,3 +212,13 @@ export const EditButtonMessage = styled(Text)`
   color: ${colors.gray[100]};
   margin-top: ${sizes(1)};
 `
+
+export const FailedUploadContainer = styled.div`
+  position: absolute;
+  top: ${sizes(16)};
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`

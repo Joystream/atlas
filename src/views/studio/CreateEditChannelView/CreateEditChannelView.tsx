@@ -43,6 +43,7 @@ import {
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
+import { AssetAvailability } from '@/api/queries'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -343,6 +344,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     },
   ]
 
+  const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
+  const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
+
   return (
     <>
       <DataLostWarningDialog />
@@ -355,6 +359,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <>
                 <ChannelCover
                   coverPhotoUrl={loading ? null : value.url}
+                  hasCoverUploadFailed={hasCoverUploadFailed}
                   onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
@@ -385,6 +390,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 <>
                   <StyledAvatar
                     imageUrl={value.url}
+                    hasAvatarUploadFailed={hasAvatarUploadFailed}
                     size="fill"
                     onEditClick={() => avatarDialogRef.current?.open()}
                     editable
