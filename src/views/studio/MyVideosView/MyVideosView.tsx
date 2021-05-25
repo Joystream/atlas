@@ -231,7 +231,8 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
+            {((isDraftTab && drafts.length === 0) ||
+              (!isDraftTab && totalCount === 0 && !loading && (!videos || videos.length === 0))) && (
               <EmptyVideos
                 text={
                   currentTabName === 'All Videos'
