@@ -24,8 +24,9 @@ export const StyledHeader = styled.div`
 
   border-bottom: 1px solid ${colors.gray[500]};
   margin: 0 calc(-1 * var(--dialog-padding));
-  padding: 0 var(--dialog-padding);
-  padding-bottom: var(--dialog-padding);
+  // account for close button
+  padding: 0 calc(var(--dialog-padding) + 40px) var(--dialog-padding) var(--dialog-padding);
+
   hr {
     display: none;
 
@@ -52,9 +53,16 @@ export const StyledStepsInfoContainer = styled.div`
 export const StyledStepInfo = styled.div<StyledStepInfoProps>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
+  > svg {
+    display: none;
+    flex-shrink: 0;
+  }
 
   ${media.small} {
     display: flex;
+    > svg {
+      display: block;
+    }
   }
 `
 export const StyledCircle = styled.div<CircleProps>`
@@ -77,7 +85,7 @@ export const StyledStepInfoText = styled.div<StyledStepInfoProps>`
   margin-left: ${sizes(2)};
 
   ${media.small} {
-    max-width: 120px;
+    max-width: 140px;
   }
 `
 
