@@ -18,6 +18,7 @@ import {
   UploadFiles,
   PlaygroundValidationForm,
   VideoMetaData,
+  AutomaticCrop,
 } from './Playgrounds'
 import { colors } from '@/shared/theme'
 
@@ -30,6 +31,7 @@ const playgroundRoutes = [
   { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
   { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
   { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
+  { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
 ]
 
 export const PlaygroundLayout = () => {
