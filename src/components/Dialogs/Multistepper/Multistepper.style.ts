@@ -14,7 +14,7 @@ type StyledStepInfoProps = {
 }
 
 export const StyledDialog = styled(BaseDialog)`
-  max-width: 700px;
+  max-width: 740px;
 `
 
 export const StyledHeader = styled.div`
@@ -47,22 +47,15 @@ export const StyledStepsInfoContainer = styled.div`
 
   ${media.small} {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-row-gap: ${sizes(4)};
+    grid-column-gap: ${sizes(4)};
   }
 `
 export const StyledStepInfo = styled.div<StyledStepInfoProps>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
-  > svg {
-    display: none;
-    flex-shrink: 0;
-  }
 
   ${media.small} {
     display: flex;
-    > svg {
-      display: block;
-    }
   }
 `
 export const StyledCircle = styled.div<CircleProps>`
@@ -80,13 +73,10 @@ export const StyledCircle = styled.div<CircleProps>`
 export const StyledStepInfoText = styled.div<StyledStepInfoProps>`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   justify-content: center;
   font-weight: ${typography.weights.semibold};
   margin-left: ${sizes(2)};
-
-  ${media.small} {
-    max-width: 140px;
-  }
 `
 
 export const StyledStepTitle = styled(Text)`
@@ -94,8 +84,14 @@ export const StyledStepTitle = styled(Text)`
 `
 
 export const StyledChevron = styled(SvgGlyphChevronRight)`
-  margin: 0 ${sizes(5)};
-  display: block;
+  margin: 0 ${sizes(1)};
+  flex-shrink: 0;
+
+  display: none;
+  ${media.small} {
+    display: block;
+  }
+
   > path {
     stroke: ${colors.gray[500]};
   }
