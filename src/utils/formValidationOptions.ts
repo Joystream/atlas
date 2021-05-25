@@ -1,6 +1,5 @@
 import { ValidationRule, Message, Validate } from 'react-hook-form'
 import { isValid } from 'date-fns'
-import { URL_PATTERN } from '@/config/regex'
 
 type RegisterOptions = Partial<{
   required: Message | ValidationRule<boolean>
@@ -58,13 +57,6 @@ export const requiredValidation: (name: string) => RegisterOptions = (name) => (
   required: {
     value: true,
     message: `${name} must be selected`,
-  },
-})
-
-export const urlValidation: (name: string) => RegisterOptions = (name) => ({
-  pattern: {
-    value: URL_PATTERN,
-    message: `${name} must be a valid url`,
   },
 })
 
