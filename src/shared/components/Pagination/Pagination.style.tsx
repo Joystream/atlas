@@ -46,7 +46,7 @@ export const ThreeDotsWrapper = styled.div`
 `
 
 const buttonActiveState = css`
-  background-color: ${colors.transparentPrimary[6]};
+  background-color: ${colors.transparentPrimary[12]};
   color: ${colors.gray[50]};
 `
 
@@ -70,7 +70,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
     color ${transitions.timings.loading} ${transitions.easing}, opacity 200ms ${transitions.easing};
   :hover,
   :focus {
-    background-color: ${colors.transparentPrimary[12]};
+    background-color: ${colors.transparentPrimary[18]};
     color: ${colors.gray[50]};
   }
   :active {
