@@ -110,6 +110,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (fileHash !== asset.ipfsContentId) {
       setShowDialog(true)
     } else {
+      const randomStorageProviderUrl = getRandomStorageProviderUrl()
       if (!randomStorageProviderUrl) {
         return
       }
