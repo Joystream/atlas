@@ -4,6 +4,12 @@ import ChannelLink from '../../ChannelLink'
 import { Text } from '@/shared/components'
 import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from '../SidenavBase.style'
 
+export const FollowedChannelsWrapper = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+`
+
 export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
