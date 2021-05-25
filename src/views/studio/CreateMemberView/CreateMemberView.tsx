@@ -3,7 +3,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useUser, useConnectionStatus } from '@/hooks'
 import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
+import { textFieldValidation } from '@/utils/formValidationOptions'
 import { debounce } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -23,7 +23,7 @@ import { useQueryNodeStateSubscription, useMembership } from '@/api/hooks'
 
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
-import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 
 type Inputs = {
   handle: string
@@ -36,7 +36,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError, watch } = useForm<Inputs>({
+  const { register, handleSubmit, errors, trigger, watch } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -101,7 +101,6 @@ const CreateMemberView = () => {
     const value = e.currentTarget.value
     debounceAvatarChange(value)
   }
-
   return (
     <Wrapper>
       <Header>
@@ -112,17 +111,32 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar
-          size="view"
-          imageUrl={errors.avatar ? undefined : avatarImageUrl}
-          onError={() => setInputError('avatar', { message: 'Image not found' })}
-        />
+        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
           name="avatar"
           onChange={handleAvatarChange}
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          ref={register(urlValidation('Avatar url'))}
+          ref={register(
+            textFieldValidation({
+              name: 'Avatar URL',
+              pattern: URL_PATTERN,
+              patternMessage: 'must be a valid url',
+              maxLength: 200,
+              required: false,
+              validate: async (value) => {
+                if (!value) return
+                return new Promise((resolve) => {
+                  debounce(async (handle) => {
+                    const img = new Image()
+                    img.src = value
+                    img.onerror = () => resolve('Image not found')
+                    img.onload = () => resolve(true)
+                  }, 500)(value)
+                })
+              },
+            })
+          )}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
@@ -146,16 +160,18 @@ const CreateMemberView = () => {
                     const {
                       data: { membershipByUniqueInput },
                     } = await refetchMember()
-                    resolve(!membershipByUniqueInput)
+                    if (membershipByUniqueInput) {
+                      resolve('Member name is already taken')
+                    } else {
+                      resolve(true)
+                    }
                   }, 500)(value)
                 })
               },
             })
           )}
           error={!!errors.handle}
-          helperText={
-            errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
-          }
+          helperText={errors.handle?.message}
         />
         <TextArea
           name="about"
