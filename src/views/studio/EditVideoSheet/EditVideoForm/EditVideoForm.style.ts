@@ -37,10 +37,6 @@ export const FormWrapper = styled.form`
   }
 
   ${studioContainerStyle};
-
-  // include some spacing at the bottom so content isn't covered by the action bar
-  // has to be below studioContainerStyle as those contain margin as well
-  margin-bottom: 100px;
 `
 
 export const InputsContainer = styled.div`
@@ -52,6 +48,10 @@ export const InputsContainer = styled.div`
   ${media.medium} {
     margin-top: 0;
     overflow-y: auto;
+  }
+
+  > :last-child {
+    padding-bottom: 100px;
   }
 `
 
