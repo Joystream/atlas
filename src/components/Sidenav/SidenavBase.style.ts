@@ -182,14 +182,27 @@ export const SubItem = styled.li`
   }
 `
 
-export const LegalLink = styled(Link)`
+export const LegalLinksWrapper = styled.span`
+  display: flex;
+  align-items: center;
+
   margin-top: ${sizes(8)};
   padding: ${sizes(4)} 0 ${sizes(6)};
-  color: ${colors.gray[300]};
+  border-top: 1px solid ${colors.gray[300]};
+
+  > * {
+    color: ${colors.gray[300]};
+  }
+
+  > * + * {
+    margin-left: ${sizes(2)};
+  }
+`
+
+export const LegalLink = styled(Link)`
   text-decoration: none;
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.subtitle2};
-  border-top: 1px solid ${colors.gray[300]};
   &:hover {
     color: ${colors.gray[400]};
   }

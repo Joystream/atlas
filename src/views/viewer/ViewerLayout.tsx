@@ -4,7 +4,7 @@ import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-
 import { Location } from 'history'
 import { ErrorBoundary } from '@sentry/react'
 
-import { ChannelsView, ChannelView, HomeView, LegalView, SearchOverlayView, VideosView, VideoView } from '.'
+import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, VideoView } from '.'
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { transitions } from '@/shared/theme'
@@ -18,7 +18,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
-  { path: relativeRoutes.viewer.legal(), element: <LegalView /> },
 ]
 
 const ViewerLayout: React.FC = () => {
