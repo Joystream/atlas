@@ -36,7 +36,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
       <StepFooter>
         <BottomBarIcon />
         <Text variant="body2" secondary>
-          Please reload the page after installing the extension
+          Please reload the page and allow access after installing the extension
         </Text>
       </StepFooter>
     </StepWrapper>

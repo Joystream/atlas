@@ -12,7 +12,7 @@ const SignInStepsStepper: React.FC = () => {
 
   const steps = [
     {
-      title: 'Add Polkadot plugin',
+      title: 'Add Polkadot extension',
       element: <ExtensionStep nextStepPath="?step=2" />,
     },
     {
