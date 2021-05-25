@@ -89,7 +89,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
-  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId || '')
+  const { startFileUpload } = useUploadsManager(activeChannelId || '')
 
   const {
     register,
