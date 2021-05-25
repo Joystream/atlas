@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { media, sizes, colors } from '@/shared/theme'
-import { HeaderTextField, Button, FormField } from '@/shared/components'
+import { HeaderTextField, Button } from '@/shared/components'
 import { studioContainerStyle } from '@/components/StudioContainer'
 
 export const StyledRadioContainer = styled.div`
@@ -49,10 +49,10 @@ export const InputsContainer = styled.div`
     margin-top: 0;
     overflow-y: auto;
   }
-`
 
-export const StyledLastFormField = styled(FormField)<{ isEdit: boolean }>`
-  padding-bottom: ${({ isEdit }) => (isEdit ? '0px' : '100px')};
+  > :last-child {
+    padding-bottom: 100px;
+  }
 `
 
 export const StyledHeaderTextField = styled(HeaderTextField)`
@@ -66,7 +66,6 @@ export const DeleteVideoContainer = styled.div`
   margin-top: ${sizes(6)};
   padding-top: ${sizes(4)};
   border-top: 1px solid ${colors.gray[400]};
-  padding-bottom: 100px;
 `
 
 export const DeleteVideoButton = styled(Button)`
