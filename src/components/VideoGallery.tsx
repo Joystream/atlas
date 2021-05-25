@@ -75,7 +75,6 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
-  console.log(breakpoints)
   return (
     <Gallery
       title={title}
