@@ -9,7 +9,6 @@ import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
 export type DisplaySnackbarArgs = {
-  customId?: string
   timeout?: number
   variant?: 'primary' | 'secondary'
   iconType?: SnackbarIconType
@@ -45,8 +44,8 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  const displaySnackbar = useCallback(({ customId, timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = customId || createId()
+  const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
+    const id = createId()
     setSnackbars((currentSnackbars) => {
       return [...currentSnackbars, { id, ...args }]
     })
