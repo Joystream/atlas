@@ -13,7 +13,7 @@ import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewConta
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
-const INITIAL_FIRST = 100
+const INITIAL_FIRST = 50
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ export const MyVideosView = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { edges, totalCount, loading, client, error } = useVideosConnection(
+  const { edges, totalCount, loading, client, error, fetchMore, variables, pageInfo } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       where: {
@@ -60,6 +60,21 @@ export const MyVideosView = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+
+  useEffect(() => {
+    if (!fetchMore || !edges?.length || !totalCount) {
+      return
+    }
+    if (totalCount <= edges.length) {
+      return
+    }
+
+    if (currentPage * videosPerPage + videosPerPage > edges.length) {
+      fetchMore({
+        variables: { ...variables, after: pageInfo?.endCursor },
+      })
+    }
+  }, [currentPage, edges, fetchMore, pageInfo, totalCount, variables, videosPerPage])
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
