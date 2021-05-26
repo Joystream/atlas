@@ -18,7 +18,6 @@ const viewerSidenavItems: NavItemType[] = [
     to: absoluteRoutes.viewer.videos(),
   },
   {
-    // TODO: update to channels icon once it exists
     icon: <SvgNavChannels />,
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
