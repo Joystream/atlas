@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { BaseDialogProps } from '../BaseDialog'
 import {
   StyledDialog,
@@ -10,7 +10,7 @@ import {
   StyledChevron,
   StyledStepTitle,
 } from './Multistepper.style'
-import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/shared/icons'
+import { SvgGlyphCheck } from '@/shared/icons'
 import { Text } from '@/shared/components'
 
 type Step = {
@@ -34,8 +34,8 @@ const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, 
             const isLast = idx === steps.length - 1
 
             return (
-              <>
-                <StyledStepInfo key={step.title} isActive={isActive}>
+              <Fragment key={idx}>
+                <StyledStepInfo isActive={isActive}>
                   <StyledCircle isFilled={isActive || isCompleted} isActive={isActive}>
                     {isCompleted ? <SvgGlyphCheck /> : idx + 1}
                   </StyledCircle>
@@ -47,7 +47,7 @@ const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, 
                   </StyledStepInfoText>
                 </StyledStepInfo>
                 {isLast ? null : <StyledChevron />}
-              </>
+              </Fragment>
             )
           })}
         </StyledStepsInfoContainer>
