@@ -34,18 +34,20 @@ const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, 
             const isLast = idx === steps.length - 1
 
             return (
-              <StyledStepInfo key={step.title} isActive={isActive}>
-                <StyledCircle isFilled={isActive || isCompleted} isActive={isActive}>
-                  {isCompleted ? <SvgGlyphCheck /> : idx + 1}
-                </StyledCircle>
-                <StyledStepInfoText isActive={isActive}>
-                  <Text variant="caption" secondary>
-                    Step {idx + 1}
-                  </Text>
-                  <StyledStepTitle variant="overhead">{step.title}</StyledStepTitle>
-                </StyledStepInfoText>
+              <>
+                <StyledStepInfo key={step.title} isActive={isActive}>
+                  <StyledCircle isFilled={isActive || isCompleted} isActive={isActive}>
+                    {isCompleted ? <SvgGlyphCheck /> : idx + 1}
+                  </StyledCircle>
+                  <StyledStepInfoText isActive={isActive}>
+                    <Text variant="caption" secondary>
+                      Step {idx + 1}
+                    </Text>
+                    <StyledStepTitle variant="overhead">{step.title}</StyledStepTitle>
+                  </StyledStepInfoText>
+                </StyledStepInfo>
                 {isLast ? null : <StyledChevron />}
-              </StyledStepInfo>
+              </>
             )
           })}
         </StyledStepsInfoContainer>
