@@ -46,7 +46,9 @@ export const StyledStepsInfoContainer = styled.div`
   display: grid;
 
   ${media.small} {
-    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    grid-template-columns: repeat(6, auto);
+    align-items: center;
     grid-column-gap: ${sizes(4)};
   }
 `
