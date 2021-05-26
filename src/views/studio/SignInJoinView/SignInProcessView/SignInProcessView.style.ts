@@ -6,7 +6,7 @@ import { Button, Text } from '@/shared/components'
 
 export const StyledStudioContainer = styled(StudioContainer)`
   display: flex;
-  margin-top: 50px;
+  margin-top: 64px;
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
@@ -16,13 +16,13 @@ export const StyledStudioContainer = styled(StudioContainer)`
     justify-content: center;
   }
   ${media.xlarge} {
-    margin-top: 100px;
+    margin-top: 128px;
     flex-direction: column;
     align-items: center;
     left: 200px;
   }
   ${media.xxlarge} {
-    margin-top: 250px;
+    margin-top: 256px;
   }
 `
 
@@ -37,7 +37,7 @@ export const SubTitle = styled(Text)`
 
 export const ListContainer = styled.div`
   max-width: 440px;
-  padding-bottom: 150px;
+  padding-bottom: 100px;
   ${media.medium} {
     margin-left: 60px;
   }
@@ -50,30 +50,29 @@ export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   z-index: -2;
   display: none;
   ${media.small} {
+    display: block;
+
     position: relative;
     left: -100px;
     bottom: 150px;
     width: 450px;
-    display: block;
   }
   ${media.medium} {
     position: fixed;
-    bottom: -200px;
     left: 0;
+    bottom: -200px;
   }
   ${media.large} {
     bottom: -150px;
     width: 600px;
-    margin-top: unset;
   }
   ${media.xlarge} {
     bottom: -100px;
     width: 900px;
-    margin-top: unset;
   }
   ${media.xxlarge} {
-    bottom: unset;
     top: 150px;
+    bottom: unset;
     width: 1200px;
   }
 `

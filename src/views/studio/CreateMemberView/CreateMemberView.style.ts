@@ -28,7 +28,6 @@ export const Wrapper = styled(StudioContainer)`
   justify-content: space-between;
   align-items: center;
   margin-top: 64px;
-  flex-grow: 1;
   padding-bottom: 100px;
   ${media.small} {
     margin-top: 80px;

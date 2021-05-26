@@ -36,9 +36,6 @@ export const LogoContainer = styled.div`
 
 export const Header = styled.header`
   max-width: 550px;
-  ${media.large} {
-    max-width: 550px;
-  }
 `
 
 export const StyledHero = styled(Text)`
