@@ -35,7 +35,7 @@ export const MyVideosView = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { edges, totalCount, loading, client, error, refetch, fetchMore, variables } = useVideosConnection(
+  const { edges, totalCount, loading, client, error } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       where: {
