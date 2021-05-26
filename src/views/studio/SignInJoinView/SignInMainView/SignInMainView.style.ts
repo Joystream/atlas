@@ -5,15 +5,20 @@ import { media, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export const StyledContainer = styled(StudioContainer)`
-  margin-top: 64px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 150px;
+  padding-bottom: 100px;
   ${media.medium} {
     flex-direction: row;
     justify-content: space-between;
+  }
+  ${media.xlarge} {
+    margin-top: 80px;
+    max-width: 1700px;
+    left: 150px;
   }
 `
 
@@ -30,10 +35,9 @@ export const LogoContainer = styled.div`
 `
 
 export const Header = styled.header`
-  margin-top: 60px;
   max-width: 550px;
   ${media.large} {
-    max-width: 600px;
+    max-width: 550px;
   }
 `
 
@@ -45,6 +49,11 @@ export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
   margin-top: 60px;
   align-self: center;
   width: 100%;
+  ${media.medium} {
+    position: relative;
+    left: -50px;
+    margin-top: 0px;
+  }
   ${media.large} {
     width: unset;
   }
