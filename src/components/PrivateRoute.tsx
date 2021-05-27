@@ -10,7 +10,7 @@ type PrivateRouteProps = {
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Element, redirectTo, isAuth, path, ...props }) => {
   if (!isAuth && redirectTo) {
-    return <Navigate to={redirectTo} />
+    return <Navigate to={redirectTo} replace />
   }
   return <Route path={path} element={Element} {...props} />
 }
