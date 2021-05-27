@@ -76,8 +76,7 @@ const createCachedAvailabilityHandler = () => ({
   },
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy<any> | FieldReadFunction<any>>>
+type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(),
