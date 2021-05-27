@@ -1,7 +1,14 @@
 import { InMemoryCache } from '@apollo/client'
 import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
-import { AssetAvailability, GetVideosQueryVariables } from '../queries'
+import {
+  AllChannelFieldsFragment,
+  AssetAvailability,
+  GetVideosQueryVariables,
+  Query,
+  VideoFieldsFragment,
+} from '../queries'
+import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
@@ -69,63 +76,71 @@ const createCachedAvailabilityHandler = () => ({
   },
 })
 
+type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
+
+const queryCacheFields: CachePolicyFields<keyof Query> = {
+  channelsConnection: relayStylePagination(),
+  videosConnection: relayStylePagination(getVideoKeyArgs),
+  videos: {
+    ...offsetLimitPagination(getVideoKeyArgs),
+    read(existing, opts) {
+      const isPublic = opts.args?.where.isPublic_eq
+
+      const filteredExistingVideos = existing?.filter(
+        (v: StoreObject | Reference) => opts.readField('isPublic', v) === isPublic || isPublic === undefined
+      )
+      // Default to returning the entire cached list,
+      // if offset and limit are not provided.
+      const offset = opts.args?.offset ?? 0
+      const limit = opts.args?.limit ?? filteredExistingVideos?.length
+
+      return filteredExistingVideos?.slice(offset, offset + limit)
+    },
+  },
+  channelByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Channel',
+        id: args?.where.id,
+      })
+    )
+  },
+  videoByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Video',
+        id: args?.where.id,
+      })
+    )
+  },
+}
+
+const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
+  createdAt: createDateHandler(),
+  publishedBeforeJoystream: createDateHandler(),
+  thumbnailPhotoUrls: createCachedUrlsHandler(),
+  thumbnailPhotoAvailability: createCachedAvailabilityHandler(),
+}
+
+const channelCacheFields: CachePolicyFields<keyof AllChannelFieldsFragment> = {
+  avatarPhotoUrls: createCachedUrlsHandler(),
+  coverPhotoUrls: createCachedUrlsHandler(),
+  avatarPhotoAvailability: createCachedAvailabilityHandler(),
+  coverPhotoAvailability: createCachedAvailabilityHandler(),
+}
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
-      fields: {
-        channelsConnection: relayStylePagination(),
-        videosConnection: relayStylePagination(getVideoKeyArgs),
-        videos: {
-          ...offsetLimitPagination(getVideoKeyArgs),
-          read(existing, opts) {
-            const isPublic = opts.args?.where.isPublic_eq
-
-            const filteredExistingVideos = existing?.filter(
-              (v: StoreObject | Reference) => opts.readField('isPublic', v) === isPublic || isPublic === undefined
-            )
-            // Default to returning the entire cached list,
-            // if offset and limit are not provided.
-            const offset = opts.args?.offset ?? 0
-            const limit = opts.args?.limit ?? filteredExistingVideos?.length
-
-            return filteredExistingVideos?.slice(offset, offset + limit)
-          },
-        },
-        channel(existing, { toReference, args }) {
-          return (
-            existing ||
-            toReference({
-              __typename: 'Channel',
-              id: args?.where.id,
-            })
-          )
-        },
-        video(existing, { toReference, args }) {
-          return (
-            existing ||
-            toReference({
-              __typename: 'Video',
-              id: args?.where.id,
-            })
-          )
-        },
-      },
+      fields: queryCacheFields,
     },
     Video: {
-      fields: {
-        createdAt: createDateHandler(),
-        publishedBeforeJoystream: createDateHandler(),
-        thumbnailPhotoUrls: createCachedUrlsHandler(),
-        thumbnailPhotoAvailability: createCachedAvailabilityHandler(),
-      },
+      fields: videoCacheFields,
     },
     Channel: {
-      fields: {
-        avatarPhotoUrls: createCachedUrlsHandler(),
-        coverPhotoUrls: createCachedUrlsHandler(),
-        avatarPhotoAvailability: createCachedAvailabilityHandler(),
-        coverPhotoAvailability: createCachedAvailabilityHandler(),
-      },
+      fields: channelCacheFields,
     },
   },
 })
