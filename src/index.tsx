@@ -20,6 +20,7 @@ const initApp = async () => {
     }
   }
 
+  console.log({ env })
   if (env === 'production') {
     Sentry.init({
       dsn: SENTRY_DSN,
@@ -29,6 +30,7 @@ const initApp = async () => {
         }),
       ],
     })
+    console.log('sentry init', SENTRY_DSN)
   }
   ReactDOM.render(<App />, document.getElementById('root'))
 }
