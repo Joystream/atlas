@@ -16,19 +16,19 @@ export const StyledStudioContainer = styled(StudioContainer)`
     justify-content: center;
   }
   ${media.xlarge} {
-    margin-top: 128px;
+    margin-top: 40px;
     flex-direction: column;
     align-items: center;
     left: 200px;
   }
   ${media.xxlarge} {
-    margin-top: 256px;
+    margin-top: 64px;
   }
 `
 
 export const HeroContainer = styled.div`
-  max-width: 400px;
-  margin-bottom: 60px;
+  max-width: 440px;
+  margin-bottom: 40px;
 `
 
 export const SubTitle = styled(Text)`
@@ -54,7 +54,7 @@ export const StyledCoinsIllustrations = styled(CoinsIllustration)`
 
     position: relative;
     left: -100px;
-    bottom: 150px;
+    bottom: 100px;
     width: 450px;
   }
   ${media.medium} {
@@ -120,12 +120,12 @@ export const UnOrderedList = styled.ul`
 export const UnOrderedItem = styled(Text)``
 
 export const StyledButton = styled(Button)`
-  margin-top: 40px;
   position: fixed;
   bottom: 20px;
   left: var(--global-horizontal-padding);
   width: calc(100% - var(--global-horizontal-padding) * 2);
   ${media.small} {
+    margin-top: 40px;
     position: unset;
     width: unset;
   }

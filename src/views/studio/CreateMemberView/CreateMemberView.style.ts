@@ -29,20 +29,13 @@ export const Wrapper = styled(StudioContainer)`
   align-items: center;
   margin-top: 64px;
   padding-bottom: 100px;
-  ${media.small} {
-    margin-top: 80px;
-  }
   ${media.medium} {
-    margin-top: 30px;
+    margin-top: 40px;
     align-items: unset;
     flex-direction: row;
   }
-  ${media.large} {
-    margin-top: 128px;
-  }
-  ${media.xlarge} {
-    margin-top: 256px;
-    position: relative;
+  ${media.xxlarge} {
+    margin-top: 64px;
   }
 `
 export const Form = styled.form`
