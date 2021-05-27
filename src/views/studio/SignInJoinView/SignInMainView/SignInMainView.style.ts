@@ -12,7 +12,6 @@ export const StyledContainer = styled(StudioContainer)`
   justify-content: center;
   padding-bottom: 100px;
   ${media.medium} {
-    margin-top: 40px;
     flex-direction: row;
     justify-content: space-between;
   }
@@ -21,7 +20,7 @@ export const StyledContainer = styled(StudioContainer)`
     left: 150px;
   }
   ${media.xxlarge} {
-    margin-top: 64px;
+    margin-top: 128px;
   }
 `
 
