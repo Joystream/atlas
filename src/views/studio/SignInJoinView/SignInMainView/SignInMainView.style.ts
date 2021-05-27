@@ -3,6 +3,7 @@ import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { media, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 export const StyledContainer = styled(StudioContainer)`
   margin-top: 64px;
@@ -51,7 +52,7 @@ export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
   ${media.medium} {
     position: relative;
     left: -50px;
-    margin-top: 0px;
+    margin-top: 0;
   }
   ${media.large} {
     max-width: 1000px;
@@ -80,4 +81,17 @@ export const SignInButton = styled(Button)`
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
   color: ${colors.gray[200]};
+`
+
+export const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
+
+  margin-top: ${sizes(5)};
+
+  path {
+    stroke: ${colors.gray[300]};
+  }
 `

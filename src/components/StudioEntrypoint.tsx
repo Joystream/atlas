@@ -34,26 +34,26 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   // not signed user with not created memberships and/or no extension
   if (!hasMemberships) {
     // go to /signin/join
-    return <Navigate to={absoluteRoutes.studio.signInJoin()} />
+    return <Navigate to={absoluteRoutes.studio.signInJoin()} replace />
   }
 
   // not signed user with extension and with created memberships
   if (hasMemberships && !memberSet) {
     // go to /signin
-    return <Navigate to={absoluteRoutes.studio.signIn()} />
+    return <Navigate to={absoluteRoutes.studio.signIn()} replace />
   }
 
   // signed users
   if (!activeMembershipLoading && memberSet && !channelSet && hasMemberships) {
     if (!activeMembership?.channels.length) {
-      return <Navigate to={absoluteRoutes.studio.newChannel()} />
+      return <Navigate to={absoluteRoutes.studio.newChannel()} replace />
     }
     setActiveUser({ channelId: activeMembership.channels[0].id })
-    return <Navigate to={enterLocation} />
+    return <Navigate to={enterLocation} replace />
   }
 
   if (channelSet) {
-    return <Navigate to={DEFAULT_ROUTE} />
+    return <Navigate to={DEFAULT_ROUTE} replace />
   }
 
   return <StudioLoading />
