@@ -1,8 +1,8 @@
 import rawCategories from './raw/categories.json'
-import { CategoryFieldsFragment } from '@/api/queries'
+import { VideoCategoryFieldsFragment } from '@/api/queries'
 
-type MockCategory = CategoryFieldsFragment
+type MockCategory = VideoCategoryFieldsFragment
 
-const mockCategories: MockCategory[] = rawCategories.map((c) => ({ ...c, __typename: 'Category' }))
+const mockCategories: MockCategory[] = rawCategories.map((c) => ({ ...c, __typename: 'VideoCategory' }))
 
 export default mockCategories

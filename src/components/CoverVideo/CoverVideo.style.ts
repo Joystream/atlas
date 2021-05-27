@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 import { darken, fluidRange } from 'polished'
-
-import { Button, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes } from '@/shared/theme'
-import { css, keyframes } from '@emotion/core'
+import { Button, IconButton, Placeholder, Text } from '@/shared/components'
+import { breakpoints, colors, sizes, media } from '@/shared/theme'
+import { css, keyframes } from '@emotion/react'
 import ChannelLink from '../ChannelLink'
 
 const CONTENT_OVERLAP_MAP = {
@@ -23,19 +22,23 @@ export const Container = styled.section`
 
   // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
   // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
   }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
   }
 `
@@ -84,7 +87,7 @@ export const HorizontalGradientOverlay = styled.div`
   display: none;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 11.76%, rgba(0, 0, 0, 0) 100%);
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     display: block;
   }
 `
@@ -95,7 +98,8 @@ export const VerticalGradientOverlay = styled.div`
   // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
   // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
   background: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 2}px);
-  @media screen and (min-width: ${breakpoints.small}) {
+
+  ${media.small} {
     background: linear-gradient(
       0deg,
       black 0%,
@@ -103,7 +107,8 @@ export const VerticalGradientOverlay = styled.div`
       rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
     );
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     background: linear-gradient(
       0deg,
       black 0%,
@@ -111,7 +116,8 @@ export const VerticalGradientOverlay = styled.div`
       rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
     );
   }
-  @media screen and (min-width: ${breakpoints.large}) {
+
+  ${media.large} {
     background: linear-gradient(
       0deg,
       black 0%,
@@ -119,7 +125,8 @@ export const VerticalGradientOverlay = styled.div`
       rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
     );
   }
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+
+  ${media.xlarge} {
     background: linear-gradient(
       0deg,
       black 0%,
@@ -127,7 +134,8 @@ export const VerticalGradientOverlay = styled.div`
       rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
     );
   }
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+
+  ${media.xxlarge} {
     background: linear-gradient(
       0deg,
       black 0%,
@@ -142,26 +150,26 @@ export const InfoContainer = styled.div<{ isLoading: boolean }>`
   margin-top: -${sizes(8)};
   padding-bottom: ${sizes(12)};
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     position: absolute;
     margin: 0;
     padding-bottom: 0;
     bottom: ${CONTENT_OVERLAP_MAP.SMALL + INFO_BOTTOM_MARGIN / 4}px;
   }
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN / 2}px;
   }
 
-  @media screen and (min-width: ${breakpoints.large}) {
+  ${media.large} {
     bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
   }
 
-  @media screen and (min-width: ${breakpoints.xlarge}) {
+  ${media.xlarge} {
     bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
   }
 
-  @media screen and (min-width: ${breakpoints.xxlarge}) {
+  ${media.xxlarge} {
     bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
@@ -175,7 +183,8 @@ export const TitleContainer = styled.div`
     text-decoration: none;
   }
   margin-bottom: ${sizes(8)};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-bottom: ${sizes(10)};
   }
 
@@ -194,14 +203,16 @@ export const Title = styled(Text)`
 
   display: inline-block;
   margin-bottom: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-bottom: ${sizes(5)};
   }
 `
 
 export const TitlePlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     margin-bottom: ${sizes(5)};
   }
 `
@@ -210,22 +221,17 @@ export const ControlsContainer = styled.div`
   min-height: ${BUTTONS_HEIGHT_PX};
 `
 
-export const PlayButton = styled(Button)<{ playing: boolean }>`
-  width: 140px;
-  height: ${BUTTONS_HEIGHT_PX};
-  justify-content: flex-start;
-
-  svg {
-    margin-left: ${sizes(3)};
-  }
-
-  span {
-    margin-top: -3px;
-    margin-left: ${({ playing }) => (playing ? sizes(2) : sizes(3))};
-  }
+export const ButtonsContainer = styled.div`
+  display: flex;
 `
 
-export const SoundButton = styled(Button)`
+export const PlayButton = styled(Button)`
+  width: 140px;
+  height: ${BUTTONS_HEIGHT_PX};
+`
+
+export const SoundButton = styled(IconButton)`
   margin-left: ${sizes(4)};
   height: ${BUTTONS_HEIGHT_PX};
+  width: ${BUTTONS_HEIGHT_PX};
 `

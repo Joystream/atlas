@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import useResizeObserver from 'use-resize-observer'
-import { sizes, breakpoints } from '../../theme'
-import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreview'
-import { css } from '@emotion/core'
+import { sizes, media } from '../../theme'
+import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
+import { css } from '@emotion/react'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
 
@@ -25,7 +25,9 @@ const Grid: React.FC<GridProps> = ({
   minWidth = MIN_VIDEO_PREVIEW_WIDTH,
   ...props
 }) => {
-  const { ref: gridRef } = useResizeObserver<HTMLDivElement>({
+  const gridRef = useRef<HTMLImageElement>(null)
+  useResizeObserver<HTMLDivElement>({
+    ref: gridRef,
     onResize: () => {
       if (onResize && gridRef.current) {
         const computedStyles = window.getComputedStyle(gridRef.current)
@@ -53,7 +55,7 @@ type ContainerProps = Required<Pick<GridProps, 'gap' | 'maxColumns' | 'minWidth'
 const maxColumnsCss = ({ maxColumns }: ContainerProps) =>
   maxColumns
     ? css`
-        @media (min-width: ${toPx(breakpoints.xlarge)}) {
+        ${media.xlarge} {
           grid-template-columns: repeat(${maxColumns}, 1fr);
         }
       `

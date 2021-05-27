@@ -1,76 +1,94 @@
 import * as Types from './baseTypes.generated'
 
+import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
 import { gql } from '@apollo/client'
+
 import * as Apollo from '@apollo/client'
 export type BasicChannelFieldsFragment = {
-  __typename: 'Channel'
+  __typename?: 'Channel'
   id: string
-  handle: string
-  avatarPhotoUrl?: Types.Maybe<string>
+  title?: Types.Maybe<string>
+  createdAt: Date
+  avatarPhotoUrls: Array<string>
+  avatarPhotoAvailability: Types.AssetAvailability
+  avatarPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
 }
 
 export type AllChannelFieldsFragment = {
-  __typename: 'Channel'
-  id: string
-  handle: string
-  avatarPhotoUrl?: Types.Maybe<string>
-  coverPhotoUrl?: Types.Maybe<string>
+  __typename?: 'Channel'
+  description?: Types.Maybe<string>
   follows?: Types.Maybe<number>
-}
+  isPublic?: Types.Maybe<boolean>
+  isCensored: boolean
+  coverPhotoUrls: Array<string>
+  coverPhotoAvailability: Types.AssetAvailability
+  language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+  coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+} & BasicChannelFieldsFragment
 
 export type GetBasicChannelQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']
+  where: Types.ChannelWhereUniqueInput
 }>
 
 export type GetBasicChannelQuery = {
-  __typename: 'Query'
-  channel?: Types.Maybe<{ __typename: 'Channel' } & BasicChannelFieldsFragment>
+  __typename?: 'Query'
+  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
 }
 
 export type GetChannelQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']
+  where: Types.ChannelWhereUniqueInput
 }>
 
 export type GetChannelQuery = {
-  __typename: 'Query'
-  channel?: Types.Maybe<{ __typename: 'Channel' } & AllChannelFieldsFragment>
+  __typename?: 'Query'
+  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
 }
 
-export type GetChannelVideoCountQueryVariables = Types.Exact<{
-  channelId: Types.Scalars['ID']
+export type GetVideoCountQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
-export type GetChannelVideoCountQuery = {
-  __typename: 'Query'
-  videosConnection: { __typename: 'VideoConnection'; totalCount: number }
+export type GetVideoCountQuery = {
+  __typename?: 'Query'
+  videosConnection: { __typename?: 'VideoConnection'; totalCount: number }
 }
 
 export type GetChannelsQueryVariables = Types.Exact<{
-  id_in: Array<Types.Scalars['ID']> | Types.Scalars['ID']
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetChannelsQuery = {
-  __typename: 'Query'
-  channels: Array<{ __typename: 'Channel' } & AllChannelFieldsFragment>
+  __typename?: 'Query'
+  channels: Array<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
 }
 
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetChannelsConnectionQuery = {
-  __typename: 'Query'
+  __typename?: 'Query'
   channelsConnection: {
-    __typename: 'ChannelConnection'
+    __typename?: 'ChannelConnection'
     totalCount: number
     edges: Array<{
-      __typename: 'ChannelEdge'
+      __typename?: 'ChannelEdge'
       cursor: string
-      node: { __typename: 'Channel'; createdAt: Date } & AllChannelFieldsFragment
+      node: { __typename?: 'Channel' } & AllChannelFieldsFragment
     }>
-    pageInfo: { __typename: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
+}
+
+export type GetChannelFollowsQueryVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
+}>
+
+export type GetChannelFollowsQuery = {
+  __typename?: 'Query'
+  channelFollows?: Types.Maybe<{ __typename?: 'ChannelFollowsInfo'; id: string; follows: number }>
 }
 
 export type FollowChannelMutationVariables = Types.Exact<{
@@ -78,8 +96,8 @@ export type FollowChannelMutationVariables = Types.Exact<{
 }>
 
 export type FollowChannelMutation = {
-  __typename: 'Mutation'
-  followChannel: { __typename: 'ChannelFollowsInfo'; id: string; follows: number }
+  __typename?: 'Mutation'
+  followChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
 }
 
 export type UnfollowChannelMutationVariables = Types.Exact<{
@@ -87,29 +105,45 @@ export type UnfollowChannelMutationVariables = Types.Exact<{
 }>
 
 export type UnfollowChannelMutation = {
-  __typename: 'Mutation'
-  unfollowChannel: { __typename: 'ChannelFollowsInfo'; id: string; follows: number }
+  __typename?: 'Mutation'
+  unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
 }
 
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
-    handle
-    avatarPhotoUrl
+    title
+    createdAt
+    avatarPhotoUrls
+    avatarPhotoAvailability
+    avatarPhotoDataObject {
+      ...DataObjectFields
+    }
   }
+  ${DataObjectFieldsFragmentDoc}
 `
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
-    id
-    handle
-    avatarPhotoUrl
-    coverPhotoUrl
+    ...BasicChannelFields
+    description
     follows
+    isPublic
+    isCensored
+    language {
+      iso
+    }
+    coverPhotoUrls
+    coverPhotoAvailability
+    coverPhotoDataObject {
+      ...DataObjectFields
+    }
   }
+  ${BasicChannelFieldsFragmentDoc}
+  ${DataObjectFieldsFragmentDoc}
 `
 export const GetBasicChannelDocument = gql`
-  query GetBasicChannel($id: ID!) {
-    channel(where: { id: $id }) {
+  query GetBasicChannel($where: ChannelWhereUniqueInput!) {
+    channelByUniqueInput(where: $where) {
       ...BasicChannelFields
     }
   }
@@ -128,7 +162,7 @@ export const GetBasicChannelDocument = gql`
  * @example
  * const { data, loading, error } = useGetBasicChannelQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -146,8 +180,8 @@ export type GetBasicChannelQueryHookResult = ReturnType<typeof useGetBasicChanne
 export type GetBasicChannelLazyQueryHookResult = ReturnType<typeof useGetBasicChannelLazyQuery>
 export type GetBasicChannelQueryResult = Apollo.QueryResult<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 export const GetChannelDocument = gql`
-  query GetChannel($id: ID!) {
-    channel(where: { id: $id }) {
+  query GetChannel($where: ChannelWhereUniqueInput!) {
+    channelByUniqueInput(where: $where) {
       ...AllChannelFields
     }
   }
@@ -166,7 +200,7 @@ export const GetChannelDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -181,55 +215,46 @@ export function useGetChannelLazyQuery(
 export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
 export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
 export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>
-export const GetChannelVideoCountDocument = gql`
-  query GetChannelVideoCount($channelId: ID!) {
-    videosConnection(first: 0, where: { channelId_eq: $channelId }) {
+export const GetVideoCountDocument = gql`
+  query GetVideoCount($where: VideoWhereInput) {
+    videosConnection(first: 0, where: $where) {
       totalCount
     }
   }
 `
 
 /**
- * __useGetChannelVideoCountQuery__
+ * __useGetVideoCountQuery__
  *
- * To run a query within a React component, call `useGetChannelVideoCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelVideoCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetVideoCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideoCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelVideoCountQuery({
+ * const { data, loading, error } = useGetVideoCountQuery({
  *   variables: {
- *      channelId: // value for 'channelId'
+ *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetChannelVideoCountQuery(
-  baseOptions: Apollo.QueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+export function useGetVideoCountQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
 ) {
-  return Apollo.useQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
-    GetChannelVideoCountDocument,
-    baseOptions
-  )
+  return Apollo.useQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, baseOptions)
 }
-export function useGetChannelVideoCountLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>
+export function useGetVideoCountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetChannelVideoCountQuery, GetChannelVideoCountQueryVariables>(
-    GetChannelVideoCountDocument,
-    baseOptions
-  )
+  return Apollo.useLazyQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, baseOptions)
 }
-export type GetChannelVideoCountQueryHookResult = ReturnType<typeof useGetChannelVideoCountQuery>
-export type GetChannelVideoCountLazyQueryHookResult = ReturnType<typeof useGetChannelVideoCountLazyQuery>
-export type GetChannelVideoCountQueryResult = Apollo.QueryResult<
-  GetChannelVideoCountQuery,
-  GetChannelVideoCountQueryVariables
->
+export type GetVideoCountQueryHookResult = ReturnType<typeof useGetVideoCountQuery>
+export type GetVideoCountLazyQueryHookResult = ReturnType<typeof useGetVideoCountLazyQuery>
+export type GetVideoCountQueryResult = Apollo.QueryResult<GetVideoCountQuery, GetVideoCountQueryVariables>
 export const GetChannelsDocument = gql`
-  query GetChannels($id_in: [ID!]!) {
-    channels(where: { id_in: $id_in }) {
+  query GetChannels($where: ChannelWhereInput) {
+    channels(where: $where) {
       ...AllChannelFields
     }
   }
@@ -248,11 +273,13 @@ export const GetChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelsQuery({
  *   variables: {
- *      id_in: // value for 'id_in'
+ *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetChannelsQuery(baseOptions: Apollo.QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>) {
+export function useGetChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
+) {
   return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions)
 }
 export function useGetChannelsLazyQuery(
@@ -264,13 +291,12 @@ export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>
 export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLazyQuery>
 export type GetChannelsQueryResult = Apollo.QueryResult<GetChannelsQuery, GetChannelsQueryVariables>
 export const GetChannelsConnectionDocument = gql`
-  query GetChannelsConnection($first: Int, $after: String) {
-    channelsConnection(first: $first, after: $after, orderBy: createdAt_DESC) {
+  query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
+    channelsConnection(first: $first, after: $after, where: $where, orderBy: createdAt_DESC) {
       edges {
         cursor
         node {
           ...AllChannelFields
-          createdAt
         }
       }
       pageInfo {
@@ -297,6 +323,7 @@ export const GetChannelsConnectionDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -322,6 +349,50 @@ export type GetChannelsConnectionQueryResult = Apollo.QueryResult<
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables
 >
+export const GetChannelFollowsDocument = gql`
+  query GetChannelFollows($channelId: ID!) {
+    channelFollows(channelId: $channelId) {
+      id
+      follows
+    }
+  }
+`
+
+/**
+ * __useGetChannelFollowsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelFollowsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelFollowsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelFollowsQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetChannelFollowsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
+) {
+  return Apollo.useQuery<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(
+    GetChannelFollowsDocument,
+    baseOptions
+  )
+}
+export function useGetChannelFollowsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(
+    GetChannelFollowsDocument,
+    baseOptions
+  )
+}
+export type GetChannelFollowsQueryHookResult = ReturnType<typeof useGetChannelFollowsQuery>
+export type GetChannelFollowsLazyQueryHookResult = ReturnType<typeof useGetChannelFollowsLazyQuery>
+export type GetChannelFollowsQueryResult = Apollo.QueryResult<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
 export const FollowChannelDocument = gql`
   mutation FollowChannel($channelId: ID!) {
     followChannel(channelId: $channelId) {

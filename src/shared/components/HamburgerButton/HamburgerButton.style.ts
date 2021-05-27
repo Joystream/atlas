@@ -1,7 +1,7 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 
 import styled from '@emotion/styled'
-import { breakpoints, colors, sizes, zIndex } from '../../theme'
+import { colors, sizes, zIndex, media } from '../../theme'
 
 type HamburgerInnerProps = {
   active: boolean
@@ -12,8 +12,9 @@ export const Hamburger = styled.button`
   width: ${sizes(11)};
   padding: 0;
   top: 18px;
+  // FIXME: this shouldn't be set to 'fixed', button should work on its own, consumer may set it to fixed
   position: fixed;
-  z-index: ${zIndex.header + 1};
+  z-index: ${zIndex.sideNav};
   cursor: pointer;
   background-color: ${colors.gray[700]};
   border: none;
@@ -29,7 +30,8 @@ export const Hamburger = styled.button`
   &:active {
     background-color: rgba(0, 0, 0, 0.4);
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     top: 16px;
     height: ${sizes(12)};
     width: ${sizes(12)};

@@ -1,145 +1,68 @@
-import { css } from '@emotion/core'
 import styled from '@emotion/styled'
-import Icon from '../Icon'
-import { colors, typography } from '../../theme'
+import ButtonBase, { ButtonSize } from '../ButtonBase'
+import Text from '../Text'
+import { css, SerializedStyles } from '@emotion/react'
+import { colors, sizes } from '@/shared/theme'
 
-export type ButtonStyleProps = {
-  variant?: 'primary' | 'secondary' | 'tertiary'
-  full?: boolean
-  size?: 'regular' | 'small' | 'smaller'
-  disabled?: boolean
-  hasText?: boolean
-  clickable?: boolean
+type ButtonSizeProps = {
+  size: ButtonSize
 }
 
-export type IconStyleProps = {
-  disabled?: boolean
-}
+export type TextColorVariant = 'default' | 'error'
+type TextProps = {
+  textColorVariant?: TextColorVariant
+} & ButtonSizeProps
 
-const colorsFromProps = ({ variant }: ButtonStyleProps) => {
-  let styles
-  switch (variant) {
-    case 'tertiary': {
-      styles = css`
-        background-color: transparent;
-        border-color: transparent;
-        color: ${colors.blue[500]};
-        &:hover {
-          color: ${colors.blue[300]};
-        }
-        &:active {
-          color: ${colors.blue[700]};
-        }
-      `
-      break
-    }
-    case 'secondary': {
-      styles = css`
-        color: ${colors.white};
-        background-color: ${colors.black};
-        border-color: ${colors.blue[500]};
-        &:hover {
-          border-color: ${colors.blue[700]};
-          color: ${colors.blue[300]};
-        }
-        &:active {
-          border-color: ${colors.blue[700]};
-          color: ${colors.blue[700]};
-        }
-      `
-      break
-    }
-    case 'primary':
-    default: {
-      styles = css`
-        color: ${colors.white};
-        background-color: ${colors.blue[500]};
-        border-color: ${colors.blue[500]};
-        &:hover {
-          background-color: ${colors.blue[700]};
-          border-color: ${colors.blue[700]};
-          color: ${colors.white};
-        }
-        &:active {
-          background-color: ${colors.blue[900]};
-          border-color: ${colors.blue[900]};
-          color: ${colors.white};
-        }
-      `
-      break
-    }
-  }
-  return styles
-}
-
-const sizeFromProps = ({ size = 'regular', full, hasText }: ButtonStyleProps) => {
-  let padding, fontSize
+const sizeOverwriteStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
   switch (size) {
-    case 'smaller': {
-      padding = '10px'
-      fontSize = typography.sizes.button.small
-      break
-    }
-    case 'small': {
-      padding = hasText ? `12px 14px` : '12px'
-      fontSize = typography.sizes.button.medium
-      break
-    }
-    case 'regular':
-    default: {
-      padding = hasText ? `14px 20px` : '14px'
-      fontSize = typography.sizes.button.large
-      break
-    }
+    case 'large':
+      return css`
+        padding-left: ${sizes(5)};
+        padding-right: ${sizes(5)};
+      `
+    case 'medium':
+      return css`
+        padding-left: ${sizes(4)};
+        padding-right: ${sizes(4)};
+      `
+    case 'small':
+      return css`
+        padding-left: ${sizes(3)};
+        padding-right: ${sizes(3)};
+      `
   }
-  return css`
-    width: ${full ? '100%' : ''};
-    display: ${full ? 'flex' : 'inline-flex'};
-    font-size: ${fontSize};
-    padding: ${padding};
-  `
 }
 
-const disabled = ({ disabled }: ButtonStyleProps) =>
-  disabled
-    ? css`
-        box-shadow: none;
-        color: ${colors.gray[200]};
-        background-color: ${colors.gray[400]};
-        border-color: ${colors.gray[400]};
-        &:hover {
-          color: ${colors.gray[200]};
-          background-color: ${colors.gray[400]};
-          border-color: ${colors.gray[400]};
-        }
-        &:active {
-          color: ${colors.gray[200]};
-          background-color: ${colors.gray[400]};
-          border-color: ${colors.gray[400]};
-        }
+const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
+  // make the text look centered wrt the icon
+  switch (size) {
+    case 'large':
+      return css`
+        margin-top: -2px;
+        padding-bottom: 2px;
       `
-    : null
-
-export const StyledIcon = styled(Icon)<IconStyleProps>`
-  flex-shrink: 0;
-  & + * {
-    margin-left: 10px;
+    case 'medium':
+      return css`
+        padding-bottom: 2px;
+      `
+    case 'small':
+      return css`
+        padding: 1px 0 3px 0;
+      `
   }
-  filter: ${(props) => (props.disabled ? 'brightness(0.7)' : null)};
+}
+
+export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
+  ${sizeOverwriteStyles}
+  ${sizeOverwriteStyles};
 `
-export const StyledButton = styled.button<ButtonStyleProps>`
-  border-width: 1px;
-  border-style: solid;
-  font-family: ${typography.fonts.headers};
-  font-weight: ${typography.weights.medium};
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    cursor: ${(props) => (!props.disabled && props.clickable ? 'pointer' : '')};
-  }
 
-  ${colorsFromProps};
-  ${sizeFromProps};
-  ${disabled};
+export const ButtonIconWrapper = styled.span`
+  margin-right: ${sizes(2)};
+`
+
+export const StyledText = styled(Text)<TextProps>`
+  // compensate for line-height being 1
+  ${textPaddingStyles}
+  color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error}
 `

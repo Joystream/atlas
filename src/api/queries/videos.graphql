@@ -1,29 +1,14 @@
-fragment VideoMediaFields on VideoMedia {
+fragment VideoMediaMetadataFields on VideoMediaMetadata {
   id
   pixelHeight
   pixelWidth
-  location {
-    ... on HttpMediaLocation {
-      url
-    }
-    ... on JoystreamMediaLocation {
-      dataObjectId
-    }
-  }
 }
 
-fragment LicenseFields on LicenseEntity {
+fragment LicenseFields on License {
   id
+  code
   attribution
-  type {
-    ... on KnownLicense {
-      code
-      url
-    }
-    ... on UserDefinedLicense {
-      content
-    }
-  }
+  customText
 }
 
 fragment VideoFields on Video {
@@ -35,51 +20,50 @@ fragment VideoFields on Video {
   }
   views
   duration
-  thumbnailUrl
   createdAt
-  media {
-    ...VideoMediaFields
+  isPublic
+  isExplicit
+  isFeatured
+  hasMarketing
+  isCensored
+  language {
+    iso
+  }
+  publishedBeforeJoystream
+  mediaMetadata {
+    ...VideoMediaMetadataFields
+  }
+  mediaUrls
+  mediaAvailability
+  mediaDataObject {
+    ...DataObjectFields
+  }
+  thumbnailPhotoUrls
+  thumbnailPhotoAvailability
+  thumbnailPhotoDataObject {
+    ...DataObjectFields
   }
   channel {
-    id
-    avatarPhotoUrl
-    handle
+    ...BasicChannelFields
   }
   license {
     ...LicenseFields
   }
 }
 
-query GetVideo($id: ID!) {
-  video(where: { id: $id }) {
+query GetVideo($where: VideoWhereUniqueInput!) {
+  videoByUniqueInput(where: $where) {
     ...VideoFields
-    channel {
-      ...BasicChannelFields
-    }
   }
 }
 
 query GetVideosConnection(
   $first: Int
   $after: String
-  $categoryId: ID
-  $channelId: ID
-  $channelIdIn: [ID]
-  $createdAtGte: Date
   $orderBy: VideoOrderByInput = createdAt_DESC
+  $where: VideoWhereInput
 ) {
-  videosConnection(
-    first: $first
-    after: $after
-    where: {
-      categoryId_eq: $categoryId
-      channelId_eq: $channelId
-      isCurated_eq: false
-      channelId_in: $channelIdIn
-      createdAt_gte: $createdAtGte
-    }
-    orderBy: $orderBy
-  ) {
+  videosConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {
@@ -94,17 +78,9 @@ query GetVideosConnection(
   }
 }
 
-query GetVideos($id_in: [ID!]!) {
-  videos(where: { id_in: $id_in }) {
+query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput = createdAt_DESC) {
+  videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
     ...VideoFields
-  }
-}
-
-query GetFeaturedVideos {
-  featuredVideos(orderBy: createdAt_DESC) {
-    video {
-      ...VideoFields
-    }
   }
 }
 
@@ -114,9 +90,19 @@ query GetCoverVideo {
       ...VideoFields
     }
     coverDescription
-    coverCutMedia {
-      ...VideoMediaFields
+    coverCutMediaMetadata {
+      ...VideoMediaMetadataFields
     }
+  }
+}
+
+### Orion
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetVideoViews($videoId: ID!) {
+  videoViews(videoId: $videoId) {
+    id
+    views
   }
 }
 

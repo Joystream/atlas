@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from '@emotion/styled'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 import { sizes } from '@/shared/theme'
 import { Grid, Text } from '@/shared/components'
@@ -8,6 +8,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  AssetAvailability,
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import useInfiniteGrid from './useInfiniteGrid'
@@ -21,7 +22,12 @@ type InfiniteChannelGridProps = {
 
 const INITIAL_ROWS = 4
 const INITIAL_CHANNELS_PER_ROW = 7
-const QUERY_VARIABLES = {}
+const QUERY_VARIABLES = {
+  where: {
+    isPublic_eq: true,
+    isCensored_eq: false,
+  },
+}
 
 const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCount = 0, ready = true, className }) => {
   const [channelsPerRow, setChannelsPerRow] = useState(INITIAL_CHANNELS_PER_ROW)

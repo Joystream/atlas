@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
-import { CategoryFieldsFragment } from '@/api/queries'
+import { VideoCategoryFieldsFragment } from '@/api/queries'
 
 type CategoryPickerProps = {
-  categories?: CategoryFieldsFragment[]
+  categories?: VideoCategoryFieldsFragment[]
   selectedCategoryId: string | null
   loading?: boolean
   onChange: (categoryId: string | null) => void
@@ -30,24 +30,26 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({
   const handleCategoryChange = (categoryId: string | null) => {
     onChange(categoryId === ALL_CATEGORY.id ? null : categoryId)
   }
-  const content =
-    !categories || loading
-      ? CATEGORY_PLACEHOLDER_WIDTHS.map((width, idx) => (
-          <StyledPlaceholder key={`placeholder-${idx}`} width={width} height="48px" />
-        ))
-      : displayedCategories.map((category) => (
-          <StyledToggleButton
-            key={category.id}
-            controlled
-            toggled={category.id === selectedCategoryId}
-            variant="secondary"
-            onClick={() => handleCategoryChange(category.id)}
-          >
-            {category.name}
-          </StyledToggleButton>
-        ))
-
-  return <Container className={className}>{content}</Container>
+  const isLoading = !categories || !!loading
+  return (
+    <Container className={className}>
+      {isLoading
+        ? CATEGORY_PLACEHOLDER_WIDTHS.map((width, idx) => (
+            <StyledPlaceholder key={`placeholder-${idx}`} width={width} height="48px" />
+          ))
+        : displayedCategories.map((category) => (
+            <StyledToggleButton
+              key={category.id}
+              controlled
+              toggled={category.id === selectedCategoryId}
+              onClick={() => handleCategoryChange(category.id)}
+              size="large"
+            >
+              {category.name || ''}
+            </StyledToggleButton>
+          ))}
+    </Container>
+  )
 }
 
 export default CategoryPicker

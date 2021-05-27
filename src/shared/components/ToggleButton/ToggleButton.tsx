@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { StyledToggleButton } from './ToggleButton.styles'
 
 import type { ButtonProps } from '../Button/Button'
+import { Text } from '@/shared/components'
 
-type ToggleButtonProps = {
+export type ToggleButtonProps = {
   controlled?: boolean
   toggled?: boolean
-} & ButtonProps
+} & Omit<ButtonProps, 'variant'>
 
-const ToggleButton: React.FC<Partial<ToggleButtonProps>> = ({
+const ToggleButton: React.FC<ToggleButtonProps> = ({
   onClick,
   controlled = false,
   toggled: externalToggled = false,
@@ -27,8 +28,13 @@ const ToggleButton: React.FC<Partial<ToggleButtonProps>> = ({
   }
 
   return (
-    <StyledToggleButton onClick={handleClick} toggled={controlled ? externalToggled : toggled} {...buttonProps}>
-      {children}
+    <StyledToggleButton
+      onClick={handleClick}
+      toggled={controlled ? externalToggled : toggled}
+      {...buttonProps}
+      variant="secondary"
+    >
+      <Text variant="button1">{children}</Text>
     </StyledToggleButton>
   )
 }

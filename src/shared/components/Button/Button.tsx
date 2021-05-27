@@ -1,59 +1,34 @@
 import React from 'react'
-import { SerializedStyles } from '@emotion/core'
-import { ButtonStyleProps, StyledButton, StyledIcon } from './Button.style'
-import type { IconType } from '../Icon'
+import { ButtonIconWrapper, StyledButtonBase, StyledText, TextColorVariant } from './Button.style'
+import { TextVariant } from '../Text'
+import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 
 export type ButtonProps = {
-  children?: React.ReactNode
-  icon?: IconType
-  disabled?: boolean
-  containerCss?: SerializedStyles
-  className?: string
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-} & Omit<ButtonStyleProps, 'clickable' | 'hasText'>
+  icon?: React.ReactNode
+  textColorVariant?: TextColorVariant
+  children: string
+} & Omit<ButtonBaseProps, 'children'>
 
-const ButtonComponent: React.ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
-  {
-    children,
-    icon,
-    variant = 'primary',
-    disabled = false,
-    full = false,
-    size = 'regular',
-    containerCss,
-    className,
-    onClick,
-  },
-  ref
-) => {
-  const clickable = !!onClick
-  const hasText = !!children
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!onClick) return
-    onClick(e)
-  }
-
-  return (
-    <StyledButton
-      css={containerCss}
-      className={className}
-      onClick={handleClick}
-      disabled={disabled}
-      variant={variant}
-      clickable={clickable}
-      hasText={hasText}
-      full={full}
-      size={size}
-      ref={ref}
-    >
-      {icon && <StyledIcon disabled={disabled} name={icon} />}
-      {children && <span>{children}</span>}
-    </StyledButton>
-  )
+const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
+  large: 'button1',
+  medium: 'button2',
+  small: 'button3',
 }
 
-const Button = React.forwardRef(ButtonComponent)
-
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ icon, children, size = 'medium', textColorVariant = 'default', ...baseButtonProps }, ref) => {
+    return (
+      <StyledButtonBase ref={ref} size={size} {...baseButtonProps}>
+        {icon && <ButtonIconWrapper>{icon}</ButtonIconWrapper>}
+        {children && (
+          <StyledText variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} textColorVariant={textColorVariant} size={size}>
+            {children}
+          </StyledText>
+        )}
+      </StyledButtonBase>
+    )
+  }
+)
 Button.displayName = 'Button'
 
 export default Button

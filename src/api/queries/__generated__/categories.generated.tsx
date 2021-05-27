@@ -2,55 +2,64 @@ import * as Types from './baseTypes.generated'
 
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
-export type CategoryFieldsFragment = { __typename: 'Category'; id: string; name: string }
+export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }
 
-export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
+export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
-export type GetCategoriesQuery = {
-  __typename: 'Query'
-  categories: Array<{ __typename: 'Category' } & CategoryFieldsFragment>
+export type GetVideoCategoriesQuery = {
+  __typename?: 'Query'
+  videoCategories: Array<{ __typename?: 'VideoCategory' } & VideoCategoryFieldsFragment>
 }
 
-export const CategoryFieldsFragmentDoc = gql`
-  fragment CategoryFields on Category {
+export const VideoCategoryFieldsFragmentDoc = gql`
+  fragment VideoCategoryFields on VideoCategory {
     id
     name
   }
 `
-export const GetCategoriesDocument = gql`
-  query GetCategories {
-    categories {
-      ...CategoryFields
+export const GetVideoCategoriesDocument = gql`
+  query GetVideoCategories {
+    videoCategories {
+      ...VideoCategoryFields
     }
   }
-  ${CategoryFieldsFragmentDoc}
+  ${VideoCategoryFieldsFragmentDoc}
 `
 
 /**
- * __useGetCategoriesQuery__
+ * __useGetVideoCategoriesQuery__
  *
- * To run a query within a React component, call `useGetCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetVideoCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideoCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoriesQuery({
+ * const { data, loading, error } = useGetVideoCategoriesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetCategoriesQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>
+export function useGetVideoCategoriesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
 ) {
-  return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions)
+  return Apollo.useQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(
+    GetVideoCategoriesDocument,
+    baseOptions
+  )
 }
-export function useGetCategoriesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>
+export function useGetVideoCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, baseOptions)
+  return Apollo.useLazyQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(
+    GetVideoCategoriesDocument,
+    baseOptions
+  )
 }
-export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>
-export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>
-export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>
+export type GetVideoCategoriesQueryHookResult = ReturnType<typeof useGetVideoCategoriesQuery>
+export type GetVideoCategoriesLazyQueryHookResult = ReturnType<typeof useGetVideoCategoriesLazyQuery>
+export type GetVideoCategoriesQueryResult = Apollo.QueryResult<
+  GetVideoCategoriesQuery,
+  GetVideoCategoriesQueryVariables
+>

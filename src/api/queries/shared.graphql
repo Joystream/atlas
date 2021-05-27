@@ -1,0 +1,11 @@
+fragment DataObjectFields on DataObject {
+  id
+  createdAt
+  size
+  liaison {
+    ...BasicWorkerFields
+  }
+  liaisonJudgement
+  ipfsContentId
+  joystreamContentId
+}
