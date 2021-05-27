@@ -95,7 +95,7 @@ export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideo
   })
 }
 
-export const removeVideoFromCache = (videoId: string, client: ApolloClient<NormalizedCacheObject>) => {
+export const removeVideoFromCache = (videoId: string, client: ApolloClient<object>) => {
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {

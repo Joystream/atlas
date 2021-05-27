@@ -48,7 +48,6 @@ export const EditVideoSheet: React.FC = () => {
 
   // transaction management
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
-  const { displaySnackbar } = useSnackbar()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const { startFileUpload } = useUploadsManager(activeChannelId)
@@ -202,8 +201,6 @@ export const EditVideoSheet: React.FC = () => {
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
       const fetchedVideo = await refetchVideoWithCursor({ where: { id_in: [videoId] } })
-      // const fetchVideoWithCursor = await
-      console.log(data.assets.thumbnail?.url)
       if (isNew) {
         if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
@@ -212,8 +209,6 @@ export const EditVideoSheet: React.FC = () => {
             client,
           })
         }
-        // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
-        // !! await refetchVideosCount()
 
         updateSelectedVideoTab({
           id: videoId,
@@ -262,7 +257,6 @@ export const EditVideoSheet: React.FC = () => {
   const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
     removeVideoTab(videoTabIdx)
-    removeVideoFromCache(videoId, client)
 
     // close the sheet if we closed the last tab
     setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')

@@ -3,7 +3,6 @@ import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/compone
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
-import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -35,7 +34,7 @@ export const MyVideosView = () => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { edges, totalCount, loading, client, error, fetchMore, variables, pageInfo } = useVideosConnection(
+  const { edges, totalCount, loading, error, fetchMore, variables, pageInfo } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       where: {
@@ -117,7 +116,6 @@ export const MyVideosView = () => {
     if (!selectedVideoId) {
       return
     }
-    removeVideoFromCache(selectedVideoId, client)
     setSelectedVideoId(undefined)
   }
 
