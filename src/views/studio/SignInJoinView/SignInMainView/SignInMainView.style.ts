@@ -10,10 +10,17 @@ export const StyledContainer = styled(StudioContainer)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 150px;
+  padding-bottom: 100px;
   ${media.medium} {
     flex-direction: row;
     justify-content: space-between;
+  }
+  ${media.xlarge} {
+    max-width: 1700px;
+    left: 150px;
+  }
+  ${media.xxlarge} {
+    margin-top: 128px;
   }
 `
 
@@ -30,11 +37,7 @@ export const LogoContainer = styled.div`
 `
 
 export const Header = styled.header`
-  margin-top: 60px;
   max-width: 550px;
-  ${media.large} {
-    max-width: 600px;
-  }
 `
 
 export const StyledHero = styled(Text)`
@@ -45,8 +48,16 @@ export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
   margin-top: 60px;
   align-self: center;
   width: 100%;
+  ${media.medium} {
+    position: relative;
+    left: -50px;
+    margin-top: 0px;
+  }
   ${media.large} {
-    width: unset;
+    max-width: 1000px;
+  }
+  ${media.xxlarge} {
+    max-width: unset;
   }
 `
 
