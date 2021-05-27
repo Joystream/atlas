@@ -299,7 +299,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      console.error({ message: 'Unknown file select error', code: errorCode })
+      console.error('Unknown file select error', errorCode)
       setFileSelectError('Unknown error')
     }
   }

@@ -231,8 +231,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
       } catch (e) {
-        console.error('Upload failed')
-        console.error(e)
+        console.error('Upload failed', e)
         if (e.message === RECONNECTION_ERROR_MESSAGE) {
           updateAsset(asset.contentId, 'reconnectionError')
           displaySnackbar({
