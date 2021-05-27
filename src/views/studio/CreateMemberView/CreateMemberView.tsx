@@ -221,7 +221,7 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    console.error('Failed to create a new member')
+    console.error('Failed to create a new member', error)
     throw error
   }
 }

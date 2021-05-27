@@ -105,7 +105,7 @@ export class JoystreamJs {
     try {
       await this.api.isReady
     } catch (e) {
-      console.error(e)
+      console.error('Polkadot API init error', e)
       throw new ApiNotConnectedError()
     }
   }
