@@ -25,6 +25,7 @@ type VideoGalleryProps = {
   loading?: boolean
   removeButton?: boolean
   onRemoveButtonClick?: (id: string) => void
+  onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
 }
 
@@ -51,6 +52,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   onVideoClick,
   removeButton,
   onRemoveButtonClick,
+  onVideoNotFound,
 }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
@@ -75,6 +77,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
+  const createNotFoundHandler = (id?: string) => () => id && onVideoNotFound && onVideoNotFound(id)
   return (
     <Gallery
       title={title}
@@ -92,6 +95,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
           removeButton={video ? removeButton : false}
           onCoverResize={onCoverResize}
           onClick={createClickHandler(video.id)}
+          onNotFound={createNotFoundHandler(video.id)}
           onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
         />
       ))}
