@@ -25,7 +25,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   }
 
   const onVideoNotFound = (id: string) => {
-    console.warn(`interrupted video not found, removing id: ${id}`)
+    console.warn(`Interrupted video not found, removing id: ${id}`)
     updateWatchedVideos('REMOVED', id)
   }
 

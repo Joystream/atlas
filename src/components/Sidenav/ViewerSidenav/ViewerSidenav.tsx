@@ -32,7 +32,7 @@ export const ViewerSidenav: React.FC = () => {
   } = usePersonalData()
 
   const handleChannelNotFound = (id: string) => {
-    console.warn(`followed channel not found, removing id: ${id}`)
+    console.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
 
