@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
-import { AssetAvailability, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
+import { ApolloClient, gql, Reference } from '@apollo/client'
+import { AssetAvailability, VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
 import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
@@ -29,7 +29,7 @@ type WriteUrlInCacheArg = {
   url?: string | null
   fileType: CachedAssetType
   parentId: string | null
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<object>
 }
 
 type WriteVideoDataCacheArg = {
@@ -38,7 +38,7 @@ type WriteVideoDataCacheArg = {
     node: VideoFieldsFragment
   }
   thumbnailUrl?: string | null
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<object>
 }
 
 const FILE_TYPE_FIELDS: Record<CachedAssetType, string[]> = {
@@ -84,9 +84,6 @@ export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideo
       videosConnection: (existingVideos = {}) => {
         return {
           ...existingVideos,
-          pageInfo: {
-            ...existingVideos.pageInfo,
-          },
           totalCount: existingVideos.totalCount + 1,
           edges: [{ ...edge, node: video }, ...(existingVideos?.edges ? existingVideos.edges : [])],
         }
@@ -95,12 +92,26 @@ export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideo
   })
 }
 
+type NormalizedVideoEdge = Omit<VideoEdge, 'node'> & {
+  node: Reference
+}
+
 export const removeVideoFromCache = (videoId: string, client: ApolloClient<object>) => {
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
         client.cache.evict({ id: `Video:${videoId}` })
         return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
+      },
+      videosConnection: (existing = {}, opts) => {
+        client.cache.evict({ id: `Video:${videoId}` })
+        return (
+          existing && {
+            ...existing,
+            totalCount: existing.totalCount - 1,
+            edges: existing.edges.filter((edge: NormalizedVideoEdge) => edge.node.__ref !== `Video:${videoId}`),
+          }
+        )
       },
     },
   })

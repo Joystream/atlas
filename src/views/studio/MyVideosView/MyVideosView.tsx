@@ -49,7 +49,6 @@ export const MyVideosView = () => {
 
   const videos = edges
     ?.map((edge) => edge.node)
-    .filter((node) => node.isPublic === isPublic_eq || isPublic_eq === undefined)
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
@@ -234,7 +233,7 @@ export const MyVideosView = () => {
               {gridContent}
             </Grid>
             {((isDraftTab && drafts.length === 0) ||
-              (!isDraftTab && totalCount === 0 && !loading && (!videos || videos.length === 0))) && (
+              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
               <EmptyVideos
                 text={
                   currentTabName === 'All Videos'

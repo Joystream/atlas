@@ -16,11 +16,13 @@ import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import { useRandomStorageProviderUrl, useVideosConnection } from '@/api/hooks'
+import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
-import { removeVideoFromCache, writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { useApolloClient } from '@apollo/client'
+import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -53,11 +55,7 @@ export const EditVideoSheet: React.FC = () => {
   const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
-  const { refetch: refetchVideoWithCursor, client } = useVideosConnection({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
+  const client = useApolloClient()
 
   const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
@@ -200,7 +198,16 @@ export const EditVideoSheet: React.FC = () => {
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
-      const fetchedVideo = await refetchVideoWithCursor({ where: { id_in: [videoId] } })
+      const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
+        query: GetVideosConnectionDocument,
+        variables: {
+          where: {
+            channelId_eq: activeChannelId,
+            isPublic_eq: data.isPublic,
+            id_eq: videoId,
+          },
+        },
+      })
       if (isNew) {
         if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
