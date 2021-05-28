@@ -1,19 +1,18 @@
 import React from 'react'
-import { styledVariants } from './Text.style'
+import { secondaryTextStyles, styledVariants } from './Text.style'
 
-type TextVariant = keyof typeof styledVariants
+export type TextVariant = keyof typeof styledVariants
 
-type TextProps = {
+export type TextProps = {
   variant?: TextVariant
+  secondary?: boolean
   className?: string
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 
-const Text: React.ForwardRefRenderFunction<HTMLHeadingElement, TextProps> = (
-  { variant = 'body2', ...otherProps },
-  ref
-) => {
+const Text = React.forwardRef<HTMLHeadingElement, TextProps>(({ variant = 'body2', secondary, ...otherProps }, ref) => {
   const Tag = styledVariants[variant]
-  return <Tag {...otherProps} ref={ref} />
-}
+  return <Tag {...otherProps} css={secondary && secondaryTextStyles} ref={ref} />
+})
+Text.displayName = 'Text'
 
-export default React.forwardRef(Text)
+export default Text

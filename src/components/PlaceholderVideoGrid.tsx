@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { Grid, VideoPreviewBase } from '@/shared/components'
+import { Grid } from '@/shared/components'
+import VideoPreview from './VideoPreview'
 
 type PlaceholderVideoGridProps = {
   videosCount?: number
@@ -9,7 +10,7 @@ const PlaceholderVideoGrid: React.FC<PlaceholderVideoGridProps> = ({ videosCount
   return (
     <Grid>
       {Array.from({ length: videosCount }).map((_, idx) => (
-        <VideoPreviewBase key={idx} />
+        <VideoPreview key={idx} />
       ))}
     </Grid>
   )

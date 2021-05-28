@@ -1,7 +1,8 @@
-import { css, Global, SerializedStyles } from '@emotion/core'
+import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
-import { breakpoints, colors, sizes, typography } from '../../theme'
 import React from 'react'
+import { media, colors, sizes, typography } from '../../theme'
+import { transitionStyles } from './transitionStyles'
 
 const globalStyles = css`
   ${emotionNormalize};
@@ -9,7 +10,7 @@ const globalStyles = css`
   body {
     font-family: ${typography.fonts.base};
     background: ${colors.black};
-    color: ${colors.gray[500]};
+    color: ${colors.gray[50]};
   }
 
   *,
@@ -32,11 +33,15 @@ const globalStyles = css`
     color: ${colors.white};
   }
 
+  svg {
+    display: block;
+  }
+
   :root {
     --global-horizontal-padding: ${sizes(4)};
-    --sidenav-collapsed-width: 0;
+    --sidenav-collapsed-width: 0px;
 
-    @media screen and (min-width: ${breakpoints.medium}) {
+    ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};
       --sidenav-collapsed-width: 72px;
     }
@@ -53,7 +58,7 @@ const GlobalStyle: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
       ? additionalStyles
       : [additionalStyles]
     : []
-  return <Global styles={[globalStyles, ...additionalStylesArray]} />
+  return <Global styles={[globalStyles, transitionStyles, ...additionalStylesArray]} />
 }
 
 export default GlobalStyle

@@ -4,7 +4,7 @@ const { override, addBabelPreset, addBabelPlugin, addWebpackAlias, addWebpackMod
 
 module.exports = {
   webpack: override(
-    addBabelPlugin('babel-plugin-emotion'),
+    addBabelPlugin('@emotion/babel-plugin'),
     addBabelPreset('@emotion/babel-preset-css-prop'),
     addWebpackAlias({
       '@': path.resolve(__dirname, 'src/'),
@@ -13,6 +13,11 @@ module.exports = {
       test: /\.(graphql|gql)$/,
       exclude: /node_modules/,
       loader: 'graphql-tag/loader',
+    }),
+    addWebpackModuleRule({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
     })
   ),
   paths: (paths) => {

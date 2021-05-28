@@ -1,48 +1,43 @@
 import rawCoverVideo from './raw/coverVideo.json'
-import { MockVideo } from '@/mocking/data/mockVideos'
-import { MockVideoMedia } from '@/mocking/data/mockVideosMedia'
-import { MockChannel } from '@/mocking/data/mockChannels'
+import mockCategories from './mockCategories'
+import { coverMockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
-import { CoverVideo } from '@/api/queries'
-
-export const mockCoverVideoChannel: MockChannel = {
-  ...rawCoverVideo.channel,
-  __typename: 'Channel',
-}
-
-export const mockCoverVideo: MockVideo = {
-  ...rawCoverVideo.video,
-  __typename: 'Video',
-}
-
-export const mockCoverVideoMedia: MockVideoMedia = {
-  ...rawCoverVideo.videoMedia,
-  __typename: 'VideoMedia',
-  location: {
-    __typename: 'HttpMediaLocation',
-    ...rawCoverVideo.videoMedia.location,
-  },
-}
-
-export type CoverInfo = Omit<CoverVideo, 'video' | '__typename' | 'id'>
-
-export const mockCoverVideoInfo: CoverInfo = {
-  ...rawCoverVideo.cover,
-  coverCutMedia: {
-    __typename: 'VideoMedia',
-    ...rawCoverVideo.cover.coverCutMedia,
-    location: {
-      __typename: 'HttpMediaLocation',
-      ...rawCoverVideo.cover.coverCutMedia.location,
-    },
-  },
-}
+import { AssetAvailability, CoverVideo } from '@/api/queries'
 
 export const mockCoverVideoLicense: MockLicense = {
-  __typename: 'LicenseEntity',
+  __typename: 'License',
   ...rawCoverVideo.license,
-  type: {
-    ...rawCoverVideo.license.type,
-    __typename: 'UserDefinedLicense',
+}
+
+type MockCoverVideo = CoverVideo & {
+  __typename: 'CoverVideo'
+}
+
+export const mockCoverVideo: MockCoverVideo = {
+  __typename: 'CoverVideo',
+  id: 'fake-cover-video-id',
+  video: {
+    ...rawCoverVideo.video,
+    createdAt: new Date(rawCoverVideo.video.createdAt),
+    channel: {
+      ...coverMockChannel,
+      videos: [],
+    },
+    license: mockCoverVideoLicense,
+    mediaMetadata: rawCoverVideo.videoMediaMetadata,
+    mediaAvailability: AssetAvailability.Accepted,
+    mediaUrls: [rawCoverVideo.cover.coverCutMediaMetadata.location.url],
+    thumbnailPhotoUrls: [rawCoverVideo.video.thumbnailPhotoUrl],
+    thumbnailPhotoAvailability: AssetAvailability.Accepted,
+    duration: rawCoverVideo.videoMediaMetadata.duration,
+    category: mockCategories[mockCategories.length - 1],
+    isCensored: false,
+    isFeatured: false,
   },
+  coverCutMediaMetadata: {
+    __typename: 'VideoMediaMetadata',
+    ...rawCoverVideo.cover.coverCutMediaMetadata,
+  },
+  coverCutMediaAvailability: AssetAvailability.Accepted,
+  coverDescription: rawCoverVideo.cover.coverDescription,
 }

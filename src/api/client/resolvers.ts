@@ -20,6 +20,7 @@ const createResolverWithTransforms = (
     delegateToSchema({
       schema,
       operation: 'query',
+      operationName: info?.operation?.name?.value,
       fieldName,
       args,
       context,
@@ -34,12 +35,15 @@ export const queryNodeStitchingResolvers = (
 ): IResolvers => ({
   Query: {
     // video queries
-    video: createResolverWithTransforms(queryNodeSchema, 'video', [RemoveQueryNodeViewsField]),
+    videoByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'videoByUniqueInput', [
+      RemoveQueryNodeViewsField,
+    ]),
     videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
-    featuredVideos: createResolverWithTransforms(queryNodeSchema, 'featuredVideos', [RemoveQueryNodeViewsField]),
     // channel queries
-    channel: createResolverWithTransforms(queryNodeSchema, 'channel', [RemoveQueryNodeFollowsField]),
+    channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
+      RemoveQueryNodeFollowsField,
+    ]),
     channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
@@ -59,6 +63,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetVideoViews',
           fieldName: ORION_VIEWS_QUERY_NAME,
           args: {
             videoId: parent.id,
@@ -79,6 +85,8 @@ export const queryNodeStitchingResolvers = (
         return await delegateToSchema({
           schema: orionSchema,
           operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetChannelFollows',
           fieldName: ORION_FOLLOWS_QUERY_NAME,
           args: {
             channelId: parent.id,

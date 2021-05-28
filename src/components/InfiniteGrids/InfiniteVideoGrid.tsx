@@ -2,9 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/shared/theme'
-import { Grid, Text, VideoPreviewBase, Placeholder } from '@/shared/components'
-import VideoPreview from '@/components/VideoPreviewWithNavigation'
-import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
+import { Grid, Text, Placeholder } from '@/shared/components'
+import VideoPreview from '@/components/VideoPreview'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoWhereInput,
+  AssetAvailability,
+} from '@/api/queries'
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
@@ -13,6 +19,10 @@ type InfiniteVideoGridProps = {
   channelId?: string
   channelIdIn?: string[] | null
   createdAtGte?: Date | null
+  isPublic?: boolean
+  isCensored?: boolean
+  thumbnailPhotoAvailability?: AssetAvailability
+  mediaAvailability?: AssetAvailability
   skipCount?: number
   ready?: boolean
   showChannel?: boolean
@@ -28,17 +38,27 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   channelId = null,
   channelIdIn = null,
   createdAtGte = null,
+  isPublic = true,
+  isCensored = false,
+  thumbnailPhotoAvailability = AssetAvailability.Accepted,
+  mediaAvailability = AssetAvailability.Accepted,
   skipCount = 0,
   ready = true,
   showChannel = true,
   className,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const queryVariables = {
-    ...(channelId ? { channelId } : {}),
-    ...(channelIdIn ? { channelIdIn } : {}),
-    ...(createdAtGte ? { createdAtGte } : {}),
-    ...(categoryId ? { categoryId } : {}),
+  const queryVariables: { where: VideoWhereInput } = {
+    where: {
+      ...(channelId ? { channelId_eq: channelId } : {}),
+      ...(channelIdIn ? { channelId_in: channelIdIn } : {}),
+      ...(createdAtGte ? { createdAt_gte: createdAtGte } : {}),
+      ...(categoryId ? { categoryId_eq: categoryId } : {}),
+      ...(thumbnailPhotoAvailability ? { thumbnailPhotoAvailability_eq: thumbnailPhotoAvailability } : {}),
+      ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
+      isPublic_eq: isPublic,
+      isCensored_eq: isCensored,
+    },
   }
 
   const [targetRowsCountByCategory, setTargetRowsCountByCategory] = useState<Record<string, number>>({
@@ -102,25 +122,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     createdAtGte,
   ])
 
+  const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (
     <>
-      {displayedItems.map((v) => (
-        <VideoPreview
-          id={v.id}
-          channelId={v.channel.id}
-          title={v.title}
-          channelName={v.channel.handle}
-          channelAvatarURL={v.channel.avatarPhotoUrl}
-          createdAt={v.createdAt}
-          views={v.views}
-          duration={v.duration}
-          posterURL={v.thumbnailUrl}
-          showChannel={showChannel}
-          key={v.id}
-        />
-      ))}
-      {Array.from({ length: placeholdersCount }, (_, idx) => (
-        <VideoPreviewBase key={idx} showChannel={showChannel} />
+      {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
+        <VideoPreview id={video.id} key={idx} showChannel={showChannel} />
       ))}
     </>
   )
@@ -129,9 +135,11 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     return null
   }
 
+  // TODO: We should probably postpone doing first fetch until `onResize` gets called.
+  // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>}
+      {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )

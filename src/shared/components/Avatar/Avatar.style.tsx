@@ -1,13 +1,18 @@
 import styled from '@emotion/styled'
-import { css, SerializedStyles } from '@emotion/core'
+import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
-import { breakpoints, colors } from '../../theme'
+import { colors, transitions, typography, media } from '@/shared/theme'
 import Placeholder from '../Placeholder'
+import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
 type ContainerProps = {
   size: AvatarSize
+}
+
+type EditButtonProps = {
+  size: Omit<AvatarSize, 'default'>
 }
 
 const previewAvatarCss = css`
@@ -21,7 +26,7 @@ const coverAvatarCss = css`
   min-width: 64px;
   height: 64px;
 
-  @media screen and (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     width: 88px;
     min-width: 88px;
     height: 88px;
@@ -32,12 +37,17 @@ const viewAvatarCss = css`
   width: 128px;
   min-width: 128px;
   height: 128px;
-
-  @media (min-width: ${breakpoints.medium}) {
+  ${media.medium} {
     width: 136px;
     min-width: 136px;
     height: 136px;
   }
+`
+
+const smallAvatarCss = css`
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
 `
 
 const defaultAvatarCss = css`
@@ -61,6 +71,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return viewAvatarCss
     case 'fill':
       return fillAvatarCss
+    case 'small':
+      return smallAvatarCss
     default:
       return defaultAvatarCss
   }
@@ -69,12 +81,42 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
 export const Container = styled.div<ContainerProps>`
   ${({ size }) => getAvatarSizeCss(size)}
   border-radius: 100%;
-  background-color: ${colors.gray[400]};
-  color: ${colors.white};
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+`
+
+export const EditButton = styled.button<EditButtonProps>`
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  cursor: pointer;
+  background: none;
+  border: none;
+  position: absolute;
+  z-index: 3;
+  color: ${colors.gray[100]};
+  font-family: ${typography.fonts.headers};
+  font-weight: ${typography.weights.bold};
+  font-size: ${typography.sizes.subtitle2};
+  ${({ size }) => size === 'cover' && `font-size: ${typography.sizes.button.small}`};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background-color ${transitions.timings.loading} ${transitions.easing};
+  opacity: 0;
+  :hover {
+    background-color: ${colors.transparentBlack[54]};
+    opacity: 1;
+  }
+  :active {
+    border: 2px solid ${colors.blue[500]};
+  }
+  span {
+    ${({ size }) => size === 'small' && 'display: none'};
+  }
 `
 
 export const StyledPlaceholder = styled(Placeholder)`
@@ -87,10 +129,6 @@ export const StyledTransitionGroup = styled(TransitionGroup)`
   display: flex;
   justify-content: center;
   align-items: center;
-  span {
-    text-transform: uppercase;
-    line-height: 1.43;
-  }
 `
 
 export const StyledImage = styled.img`
@@ -100,4 +138,20 @@ export const StyledImage = styled.img`
   height: 100%;
   object-fit: cover;
   border-radius: 100%;
+`
+export const SilhouetteAvatar = styled(Silhouette)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`
+
+export const NewChannelAvatar = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  background-color: ${colors.gray[800]};
 `

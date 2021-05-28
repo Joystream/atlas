@@ -1,9 +1,10 @@
 import React from 'react'
 import Avatar, { AvatarSize } from '@/shared/components/Avatar'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { useAsset } from '@/hooks'
 
 type ChannelLinkProps = {
   id?: string
@@ -26,22 +27,22 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   className,
 }) => {
   const { channel } = useBasicChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
+  const { getAssetUrl } = useAsset()
 
   const displayedChannel = overrideChannel || channel
 
+  const avatarPhotoUrl = getAssetUrl(
+    displayedChannel?.avatarPhotoAvailability,
+    displayedChannel?.avatarPhotoUrls,
+    displayedChannel?.avatarPhotoDataObject
+  )
+
   return (
-    <Container to={routes.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && (
-        <Avatar
-          handle={displayedChannel?.handle}
-          imageUrl={displayedChannel?.avatarPhotoUrl}
-          loading={!displayedChannel}
-          size={avatarSize}
-        />
-      )}
+    <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
+      {!hideAvatar && <Avatar imageUrl={avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />}
       {!hideHandle &&
         (displayedChannel ? (
-          <Handle withAvatar={!hideAvatar}>{displayedChannel.handle}</Handle>
+          <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
         ) : (
           <HandlePlaceholder withAvatar={!hideAvatar} height={16} width={150} />
         ))}

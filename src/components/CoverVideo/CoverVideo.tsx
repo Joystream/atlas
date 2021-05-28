@@ -15,13 +15,16 @@ import {
   TitlePlaceholder,
   PlayerPlaceholder,
   ControlsContainer,
+  ButtonsContainer,
 } from './CoverVideo.style'
 import { CSSTransition } from 'react-transition-group'
-import routes from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { Link } from 'react-router-dom'
 import { transitions } from '@/shared/theme'
 import { useCoverVideo } from '@/api/hooks'
+import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
+import { useAsset } from '@/hooks'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -31,6 +34,7 @@ const CoverVideo: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [displayControls, setDisplayControls] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
+  const { getAssetUrl } = useAsset()
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
@@ -55,6 +59,13 @@ const CoverVideo: React.FC = () => {
     setVideoPlaying(false)
   }
 
+  const thumbnailPhotoUrl = getAssetUrl(
+    data.video?.thumbnailPhotoAvailability,
+    data.video?.thumbnailPhotoUrls,
+    data.video?.thumbnailPhotoDataObject
+  )
+  const mediaUrl = getAssetUrl(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
+
   return (
     <Container>
       <MediaWrapper>
@@ -66,11 +77,11 @@ const CoverVideo: React.FC = () => {
                 isInBackground
                 muted={soundMuted}
                 playing={videoPlaying}
-                posterUrl={data.video.thumbnailUrl}
+                posterUrl={thumbnailPhotoUrl}
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                src={data.coverCutMedia.location}
+                src={mediaUrl}
               />
             ) : (
               <PlayerPlaceholder />
@@ -90,7 +101,7 @@ const CoverVideo: React.FC = () => {
         <TitleContainer>
           {data ? (
             <>
-              <Link to={routes.video(data.video.id)}>
+              <Link to={absoluteRoutes.viewer.video(data.video.id)}>
                 <Title variant="h2">{data.video.title}</Title>
               </Link>
               <span>{data.coverDescription}</span>
@@ -111,12 +122,18 @@ const CoverVideo: React.FC = () => {
             unmountOnExit
             appear
           >
-            <div>
-              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? 'pause' : 'play'} playing={videoPlaying}>
+            <ButtonsContainer>
+              <PlayButton
+                onClick={handlePlayPauseClick}
+                icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
+                size="large"
+              >
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
-              <SoundButton onClick={handleSoundToggleClick} icon={!soundMuted ? 'sound-on' : 'sound-off'} />
-            </div>
+              <SoundButton onClick={handleSoundToggleClick} size="large">
+                {!soundMuted ? <SvgPlayerSoundOn /> : <SvgPlayerSoundOff />}
+              </SoundButton>
+            </ButtonsContainer>
           </CSSTransition>
         </ControlsContainer>
       </InfoContainer>

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { Grid } from '@/shared/components'
-import VideoPreview from './VideoPreviewWithNavigation'
+import VideoPreview from './VideoPreview'
 import { VideoFieldsFragment } from '@/api/queries'
 
 const StyledVideoPreview = styled(VideoPreview)`
@@ -21,16 +21,8 @@ const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVid
     <Grid>
       {videos.map((v, idx) => (
         <StyledVideoPreview
-          id={v.id}
-          channelId={v.channel.id}
           key={idx}
-          title={v.title}
-          channelName={v.channel.handle}
-          channelAvatarURL={v.channel.avatarPhotoUrl}
-          createdAt={v.createdAt}
-          duration={v.duration}
-          views={v.views}
-          posterURL={v.thumbnailUrl}
+          id={v.id}
           showChannel={showChannel}
           onClick={() => {
             if (onVideoClick) {

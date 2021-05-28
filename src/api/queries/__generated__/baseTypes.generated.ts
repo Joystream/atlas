@@ -9,149 +9,122 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  Date: Date
+  DateTime: Date
 }
 
-export enum Language {
-  Chinese = 'Chinese',
-  English = 'English',
-  Arabic = 'Arabic',
-  Portugese = 'Portugese',
-  French = 'French',
+export type Language = {
+  __typename?: 'Language'
+  iso: Scalars['String']
 }
 
-export type Member = {
-  __typename: 'Member'
+export type VideoCategory = {
+  __typename?: 'VideoCategory'
   id: Scalars['ID']
-  handle: Scalars['String']
-}
-
-export type Channel = {
-  __typename: 'Channel'
-  id: Scalars['ID']
-  createdAt: Scalars['Date']
-  handle: Scalars['String']
-  description: Scalars['String']
-  coverPhotoUrl?: Maybe<Scalars['String']>
-  avatarPhotoUrl?: Maybe<Scalars['String']>
-  owner: Member
-  isPublic: Scalars['Boolean']
-  isCurated: Scalars['Boolean']
-  language?: Maybe<Language>
-  videos: Array<Video>
-  follows?: Maybe<Scalars['Int']>
-}
-
-export type Category = {
-  __typename: 'Category'
-  id: Scalars['ID']
-  name: Scalars['String']
+  name?: Maybe<Scalars['String']>
   videos?: Maybe<Array<Video>>
 }
 
-export type JoystreamMediaLocation = {
-  __typename: 'JoystreamMediaLocation'
-  dataObjectId: Scalars['String']
-}
-
-export type HttpMediaLocation = {
-  __typename: 'HttpMediaLocation'
-  url: Scalars['String']
-}
-
-export type MediaLocation = JoystreamMediaLocation | HttpMediaLocation
-
-export type KnownLicense = {
-  __typename: 'KnownLicense'
-  code: Scalars['String']
-  name?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  url?: Maybe<Scalars['String']>
-}
-
-export type UserDefinedLicense = {
-  __typename: 'UserDefinedLicense'
-  content: Scalars['String']
-}
-
-export type License = UserDefinedLicense | KnownLicense
-
-export type LicenseEntity = {
-  __typename: 'LicenseEntity'
+export type License = {
+  __typename?: 'License'
   id: Scalars['ID']
-  type: License
+  code?: Maybe<Scalars['Int']>
   attribution?: Maybe<Scalars['String']>
-  videoLicense?: Maybe<Array<Video>>
-}
-
-export type VideoMedia = {
-  __typename: 'VideoMedia'
-  id: Scalars['ID']
-  pixelWidth: Scalars['Int']
-  pixelHeight: Scalars['Int']
-  size?: Maybe<Scalars['Float']>
-  location: MediaLocation
-}
-
-export type Video = {
-  __typename: 'Video'
-  id: Scalars['ID']
-  channel: Channel
-  category: Category
-  title: Scalars['String']
-  description: Scalars['String']
-  views?: Maybe<Scalars['Int']>
-  duration: Scalars['Int']
-  skippableIntroDuration?: Maybe<Scalars['Int']>
-  thumbnailUrl: Scalars['String']
-  Language?: Maybe<Language>
-  media: VideoMedia
-  hasMarketing?: Maybe<Scalars['Boolean']>
-  createdAt: Scalars['Date']
-  createdAtBlockHeight: Scalars['Float']
-  publishedBeforeJoystream?: Maybe<Scalars['String']>
-  isPublic: Scalars['Boolean']
-  isCurated: Scalars['Boolean']
-  isExplicit: Scalars['Boolean']
-  license: LicenseEntity
-}
-
-export type CoverVideo = {
-  __typename: 'CoverVideo'
-  id: Scalars['ID']
-  video: Video
-  coverDescription: Scalars['String']
-  coverCutMedia: VideoMedia
-}
-
-export type FeaturedVideo = {
-  __typename: 'FeaturedVideo'
-  id: Scalars['ID']
-  video: Video
-}
-
-export type SearchResult = Video | Channel
-
-export type SearchFtsOutput = {
-  __typename: 'SearchFTSOutput'
-  item: SearchResult
-  rank: Scalars['Float']
-  isTypeOf: Scalars['String']
-  highlight: Scalars['String']
+  customText?: Maybe<Scalars['String']>
 }
 
 export type PageInfo = {
-  __typename: 'PageInfo'
+  __typename?: 'PageInfo'
   hasNextPage: Scalars['Boolean']
   hasPreviousPage: Scalars['Boolean']
   startCursor?: Maybe<Scalars['String']>
   endCursor?: Maybe<Scalars['String']>
 }
 
+export enum AssetAvailability {
+  Accepted = 'ACCEPTED',
+  Pending = 'PENDING',
+  Invalid = 'INVALID',
+}
+
+export enum LiaisonJudgement {
+  Pending = 'PENDING',
+  Accepted = 'ACCEPTED',
+  Rejected = 'REJECTED',
+}
+
+export enum WorkerType {
+  Gateway = 'GATEWAY',
+  Storage = 'STORAGE',
+}
+
+export type Worker = {
+  __typename?: 'Worker'
+  id: Scalars['ID']
+  workerId: Scalars['String']
+  type: WorkerType
+  metadata?: Maybe<Scalars['String']>
+  isActive: Scalars['Boolean']
+}
+
+export type DataObject = {
+  __typename?: 'DataObject'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  size: Scalars['Float']
+  liaison?: Maybe<Worker>
+  liaisonJudgement: LiaisonJudgement
+  ipfsContentId: Scalars['String']
+  joystreamContentId: Scalars['String']
+}
+
+export type Membership = {
+  __typename?: 'Membership'
+  id: Scalars['ID']
+  handle: Scalars['String']
+  avatarUri?: Maybe<Scalars['String']>
+  controllerAccount: Scalars['String']
+  about?: Maybe<Scalars['String']>
+  channels: Array<Channel>
+}
+
+export type MembershipWhereUniqueInput = {
+  id?: Maybe<Scalars['ID']>
+  handle?: Maybe<Scalars['String']>
+}
+
+export type MembershipWhereInput = {
+  controllerAccount_eq?: Maybe<Scalars['ID']>
+  controllerAccount_in?: Maybe<Array<Scalars['ID']>>
+}
+
+export type Channel = {
+  __typename?: 'Channel'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  ownerMember?: Maybe<Membership>
+  videos: Array<Video>
+  isCensored: Scalars['Boolean']
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  isPublic?: Maybe<Scalars['Boolean']>
+  language?: Maybe<Language>
+  coverPhotoDataObject?: Maybe<DataObject>
+  coverPhotoUrls: Array<Scalars['String']>
+  coverPhotoAvailability: AssetAvailability
+  avatarPhotoDataObject?: Maybe<DataObject>
+  avatarPhotoUrls: Array<Scalars['String']>
+  avatarPhotoAvailability: AssetAvailability
+  follows?: Maybe<Scalars['Int']>
+}
+
 export type ChannelWhereInput = {
+  id_in?: Maybe<Array<Scalars['ID']>>
+  ownerMemberId_eq?: Maybe<Scalars['ID']>
   isCurated_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
-  id_in?: Maybe<Array<Scalars['ID']>>
+  isCensored_eq?: Maybe<Scalars['Boolean']>
+  coverPhotoAvailability_eq?: Maybe<AssetAvailability>
+  avatarPhotoAvailability_eq?: Maybe<AssetAvailability>
 }
 
 export type ChannelWhereUniqueInput = {
@@ -164,29 +137,68 @@ export enum ChannelOrderByInput {
 }
 
 export type ChannelEdge = {
-  __typename: 'ChannelEdge'
+  __typename?: 'ChannelEdge'
   node: Channel
   cursor: Scalars['String']
 }
 
 export type ChannelConnection = {
-  __typename: 'ChannelConnection'
+  __typename?: 'ChannelConnection'
   edges: Array<ChannelEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
 
-export type CategoryWhereUniqueInput = {
+export type VideoMediaMetadata = {
+  __typename?: 'VideoMediaMetadata'
+  id: Scalars['ID']
+  pixelWidth?: Maybe<Scalars['Int']>
+  pixelHeight?: Maybe<Scalars['Int']>
+  size?: Maybe<Scalars['Int']>
+}
+
+export type Video = {
+  __typename?: 'Video'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  channel: Channel
+  isCensored: Scalars['Boolean']
+  isFeatured: Scalars['Boolean']
+  publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  category?: Maybe<VideoCategory>
+  language?: Maybe<Language>
+  hasMarketing?: Maybe<Scalars['Boolean']>
+  isExplicit?: Maybe<Scalars['Boolean']>
+  isPublic?: Maybe<Scalars['Boolean']>
+  license?: Maybe<License>
+  thumbnailPhotoDataObject?: Maybe<DataObject>
+  thumbnailPhotoUrls: Array<Scalars['String']>
+  thumbnailPhotoAvailability: AssetAvailability
+  mediaDataObject?: Maybe<DataObject>
+  mediaUrls: Array<Scalars['String']>
+  mediaAvailability: AssetAvailability
+  mediaMetadata: VideoMediaMetadata
+  duration?: Maybe<Scalars['Int']>
+  skippableIntroDuration?: Maybe<Scalars['Int']>
+  views?: Maybe<Scalars['Int']>
+}
+
+export type VideoCategoryWhereUniqueInput = {
   id: Scalars['ID']
 }
 
 export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
-  channelId_in?: Maybe<Array<Maybe<Scalars['ID']>>>
+  channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
-  createdAt_gte?: Maybe<Scalars['Date']>
-  isCurated_eq?: Maybe<Scalars['Boolean']>
+  thumbnailPhotoAvailability_eq?: Maybe<AssetAvailability>
+  mediaAvailability_eq?: Maybe<AssetAvailability>
+  createdAt_gte?: Maybe<Scalars['DateTime']>
+  isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
+  isCensored_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
 }
 
@@ -200,34 +212,71 @@ export enum VideoOrderByInput {
 }
 
 export type VideoEdge = {
-  __typename: 'VideoEdge'
+  __typename?: 'VideoEdge'
   node: Video
   cursor: Scalars['String']
 }
 
 export type VideoConnection = {
-  __typename: 'VideoConnection'
+  __typename?: 'VideoConnection'
   edges: Array<VideoEdge>
   pageInfo: PageInfo
   totalCount: Scalars['Int']
 }
 
-export enum FeaturedVideoOrderByInput {
+export type WorkerWhereInput = {
+  metadata_contains?: Maybe<Scalars['String']>
+  isActive_eq?: Maybe<Scalars['Boolean']>
+  type_eq?: Maybe<WorkerType>
+}
+
+export type WorkerWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export enum WorkerOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
 }
 
+export type CoverVideo = {
+  __typename?: 'CoverVideo'
+  id: Scalars['ID']
+  video: Video
+  coverDescription: Scalars['String']
+  coverCutMediaMetadata: VideoMediaMetadata
+  coverCutMediaDataObject?: Maybe<DataObject>
+  coverCutMediaAvailability: AssetAvailability
+  coverCutMediaUrl?: Maybe<Scalars['String']>
+}
+
+export type SearchResult = Video | Channel
+
+export type SearchFtsOutput = {
+  __typename?: 'SearchFTSOutput'
+  item: SearchResult
+  rank: Scalars['Float']
+  isTypeOf: Scalars['String']
+  highlight: Scalars['String']
+}
+
+export type ProcessorState = {
+  __typename?: 'ProcessorState'
+  lastCompleteBlock: Scalars['Float']
+  lastProcessedEvent: Scalars['String']
+  indexerHead: Scalars['Float']
+  chainHead: Scalars['Float']
+}
+
 export type Query = {
-  __typename: 'Query'
+  __typename?: 'Query'
   /** Get follows counts for a list of channels */
   batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
   /** Get views counts for a list of channels */
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   /** Get views counts for a list of videos */
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categories: Array<Category>
-  category?: Maybe<Category>
-  channel?: Maybe<Channel>
+  channelByUniqueInput?: Maybe<Channel>
   /** Get follows count for a single channel */
   channelFollows?: Maybe<ChannelFollowsInfo>
   /** Get views count for a single channel */
@@ -235,13 +284,17 @@ export type Query = {
   channels: Array<Channel>
   channelsConnection: ChannelConnection
   coverVideo: CoverVideo
-  featuredVideos: Array<FeaturedVideo>
+  membershipByUniqueInput?: Maybe<Membership>
+  memberships: Array<Membership>
   search: Array<SearchFtsOutput>
-  video?: Maybe<Video>
+  videoByUniqueInput?: Maybe<Video>
+  videoCategories: Array<VideoCategory>
   /** Get views count for a single video */
   videoViews?: Maybe<EntityViewsInfo>
-  videos: Array<Video>
+  videos?: Maybe<Array<Video>>
   videosConnection: VideoConnection
+  workerByUniqueInput?: Maybe<Worker>
+  workers?: Maybe<Array<Worker>>
 }
 
 export type QueryBatchedChannelFollowsArgs = {
@@ -256,11 +309,7 @@ export type QueryBatchedVideoViewsArgs = {
   videoIdList: Array<Scalars['ID']>
 }
 
-export type QueryCategoryArgs = {
-  where: CategoryWhereUniqueInput
-}
-
-export type QueryChannelArgs = {
+export type QueryChannelByUniqueInputArgs = {
   where: ChannelWhereUniqueInput
 }
 
@@ -283,8 +332,12 @@ export type QueryChannelsConnectionArgs = {
   orderBy?: Maybe<ChannelOrderByInput>
 }
 
-export type QueryFeaturedVideosArgs = {
-  orderBy?: Maybe<FeaturedVideoOrderByInput>
+export type QueryMembershipByUniqueInputArgs = {
+  where: MembershipWhereUniqueInput
+}
+
+export type QueryMembershipsArgs = {
+  where: MembershipWhereInput
 }
 
 export type QuerySearchArgs = {
@@ -292,7 +345,7 @@ export type QuerySearchArgs = {
   text: Scalars['String']
 }
 
-export type QueryVideoArgs = {
+export type QueryVideoByUniqueInputArgs = {
   where: VideoWhereUniqueInput
 }
 
@@ -301,7 +354,10 @@ export type QueryVideoViewsArgs = {
 }
 
 export type QueryVideosArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
   where?: Maybe<VideoWhereInput>
+  orderBy?: Maybe<VideoOrderByInput>
 }
 
 export type QueryVideosConnectionArgs = {
@@ -311,20 +367,35 @@ export type QueryVideosConnectionArgs = {
   orderBy?: Maybe<VideoOrderByInput>
 }
 
+export type QueryWorkerByUniqueInputArgs = {
+  where: WorkerWhereUniqueInput
+}
+
+export type QueryWorkersArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<WorkerWhereInput>
+}
+
+export type Subscription = {
+  __typename?: 'Subscription'
+  stateSubscription: ProcessorState
+}
+
 export type ChannelFollowsInfo = {
-  __typename: 'ChannelFollowsInfo'
+  __typename?: 'ChannelFollowsInfo'
   follows: Scalars['Int']
   id: Scalars['ID']
 }
 
 export type EntityViewsInfo = {
-  __typename: 'EntityViewsInfo'
+  __typename?: 'EntityViewsInfo'
   id: Scalars['ID']
   views: Scalars['Int']
 }
 
 export type Mutation = {
-  __typename: 'Mutation'
+  __typename?: 'Mutation'
   /** Add a single view to the target video's count */
   addVideoView: EntityViewsInfo
   /** Add a single follow to the target channel */

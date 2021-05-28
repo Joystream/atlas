@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 
 import { ReactComponent as BackgroundPatternSVG } from '@/assets/bg-pattern.svg'
-import { breakpoints, zIndex, transitions } from '@/shared/theme'
+import { zIndex, transitions, media } from '@/shared/theme'
 
 const PATTERN_OFFSET = {
   SMALL: '-150px',
@@ -26,12 +26,13 @@ const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
   position: absolute;
   transform: scale(1.3);
 
-  @media screen and (min-width: ${breakpoints.small}) {
+  ${media.small} {
     display: block;
     top: 73px;
     right: ${PATTERN_OFFSET.SMALL};
   }
-  @media screen and (min-width: ${breakpoints.medium}) {
+
+  ${media.medium} {
     right: ${PATTERN_OFFSET.MEDIUM};
   }
 `

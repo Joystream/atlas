@@ -1,167 +1,20 @@
-scalar Date
+scalar DateTime
 
-enum Language {
-  Chinese
-  English
-  Arabic
-  Portugese
-  French
+type Language {
+  iso: String!
 }
 
-type Member {
+type VideoCategory {
   id: ID!
-  handle: String!
-}
-
-type Channel {
-  id: ID!
-
-  createdAt: Date!
-
-  handle: String!
-
-  description: String!
-
-  coverPhotoUrl: String
-
-  avatarPhotoUrl: String
-
-  owner: Member!
-
-  isPublic: Boolean!
-
-  isCurated: Boolean!
-
-  language: Language
-
-  videos: [Video!]!
-
-  # extended from Orion
-  follows: Int
-}
-
-type Category {
-  id: ID!
-
-  name: String!
-
+  name: String
   videos: [Video!]
 }
 
-type JoystreamMediaLocation {
-  dataObjectId: String!
-}
-
-type HttpMediaLocation {
-  url: String!
-}
-
-# In the future we can add IPFS, Dat, etc.
-union MediaLocation = JoystreamMediaLocation | HttpMediaLocation
-
-type KnownLicense {
-  code: String!
-  name: String
-  description: String
-  url: String
-}
-
-type UserDefinedLicense {
-  content: String!
-}
-
-union License = UserDefinedLicense | KnownLicense
-
-type LicenseEntity {
+type License {
   id: ID!
-  type: License!
+  code: Int
   attribution: String
-  videoLicense: [Video!]
-}
-type VideoMedia {
-  id: ID!
-
-  # Resolution width
-  pixelWidth: Int!
-
-  # Resolution height
-  pixelHeight: Int!
-  # Size in bytes
-  size: Float
-
-  # where to find
-  location: MediaLocation!
-}
-
-type Video {
-  id: ID!
-
-  channel: Channel!
-
-  category: Category!
-
-  title: String!
-
-  description: String!
-
-  # extended from Orion
-  views: Int
-
-  # In seconds
-  duration: Int!
-
-  # In intro
-  skippableIntroDuration: Int
-
-  thumbnailUrl: String!
-  Language: Language
-
-  media: VideoMedia!
-
-  hasMarketing: Boolean
-
-  # Timestamp of block
-  createdAt: Date!
-  createdAtBlockHeight: Float!
-
-  # Possible time when video was published before Joystream
-  publishedBeforeJoystream: String
-
-  isPublic: Boolean!
-
-  isCurated: Boolean!
-
-  isExplicit: Boolean!
-
-  license: LicenseEntity!
-}
-
-type CoverVideo {
-  id: ID!
-
-  video: Video!
-
-  coverDescription: String!
-
-  coverCutMedia: VideoMedia!
-}
-
-type FeaturedVideo {
-  id: ID!
-
-  video: Video!
-}
-
-union SearchResult = Video | Channel
-
-type SearchFTSOutput {
-  item: SearchResult!
-
-  rank: Float!
-
-  isTypeOf: String!
-
-  highlight: String!
+  customText: String
 }
 
 type PageInfo {
@@ -172,10 +25,101 @@ type PageInfo {
   endCursor: String
 }
 
+enum AssetAvailability {
+  ACCEPTED
+  PENDING
+  INVALID
+}
+
+enum LiaisonJudgement {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum WorkerType {
+  GATEWAY
+  STORAGE
+}
+
+type Worker {
+  # unique ID
+  id: ID!
+  # ID of worker in the group, can be the same for different workers (in different groups)
+  workerId: String!
+
+  type: WorkerType!
+  metadata: String
+  isActive: Boolean!
+}
+
+type DataObject {
+  id: ID!
+  createdAt: DateTime!
+  size: Float!
+  # storage provider that accepted the asset
+  liaison: Worker
+  # status of asset as reported by liaison
+  liaisonJudgement: LiaisonJudgement!
+  # IPFS content id
+  ipfsContentId: String!
+  # Joystream runtime content id
+  joystreamContentId: String!
+}
+
+type Membership {
+  id: ID!
+  handle: String!
+  avatarUri: String
+  controllerAccount: String!
+  about: String
+  channels: [Channel!]!
+}
+
+input MembershipWhereUniqueInput {
+  id: ID
+  handle: String
+}
+
+input MembershipWhereInput {
+  controllerAccount_eq: ID
+  controllerAccount_in: [ID!]
+}
+
+type Channel {
+  id: ID!
+  createdAt: DateTime!
+
+  ownerMember: Membership
+  videos: [Video!]!
+  isCensored: Boolean!
+
+  # === metadata ===
+  title: String
+  description: String
+  isPublic: Boolean
+  language: Language
+
+  # === assets ===
+  coverPhotoDataObject: DataObject
+  coverPhotoUrls: [String!]!
+  coverPhotoAvailability: AssetAvailability!
+  avatarPhotoDataObject: DataObject
+  avatarPhotoUrls: [String!]!
+  avatarPhotoAvailability: AssetAvailability!
+
+  # === extended from Orion ===
+  follows: Int
+}
+
 input ChannelWhereInput {
+  id_in: [ID!]
+  ownerMemberId_eq: ID
   isCurated_eq: Boolean
   isPublic_eq: Boolean
-  id_in: [ID!]
+  isCensored_eq: Boolean
+  coverPhotoAvailability_eq: AssetAvailability
+  avatarPhotoAvailability_eq: AssetAvailability
 }
 
 input ChannelWhereUniqueInput {
@@ -198,17 +142,64 @@ type ChannelConnection {
   totalCount: Int!
 }
 
-input CategoryWhereUniqueInput {
+type VideoMediaMetadata {
+  id: ID!
+
+  pixelWidth: Int
+  pixelHeight: Int
+  # Size in bytes
+  size: Int
+}
+
+type Video {
+  id: ID!
+  createdAt: DateTime!
+  channel: Channel!
+  isCensored: Boolean!
+  isFeatured: Boolean!
+  publishedBeforeJoystream: DateTime
+
+  # === metadata ===
+  title: String
+  description: String
+  category: VideoCategory
+  language: Language
+  hasMarketing: Boolean
+  isExplicit: Boolean
+  isPublic: Boolean
+  license: License
+
+  # === assets ===
+  thumbnailPhotoDataObject: DataObject
+  thumbnailPhotoUrls: [String!]!
+  thumbnailPhotoAvailability: AssetAvailability!
+  mediaDataObject: DataObject
+  mediaUrls: [String!]!
+  mediaAvailability: AssetAvailability!
+
+  mediaMetadata: VideoMediaMetadata!
+  # In seconds
+  duration: Int
+  skippableIntroDuration: Int
+
+  # === extended from Orion ===
+  views: Int
+}
+
+input VideoCategoryWhereUniqueInput {
   id: ID!
 }
 
 input VideoWhereInput {
   categoryId_eq: ID
-  channelId_in: [ID]
+  channelId_in: [ID!]
   channelId_eq: ID
-  createdAt_gte: Date
-  isCurated_eq: Boolean
+  thumbnailPhotoAvailability_eq: AssetAvailability
+  mediaAvailability_eq: AssetAvailability
+  createdAt_gte: DateTime
+  isFeatured_eq: Boolean
   isPublic_eq: Boolean
+  isCensored_eq: Boolean
   id_in: [ID!]
 }
 
@@ -232,14 +223,56 @@ type VideoConnection {
   totalCount: Int!
 }
 
-enum FeaturedVideoOrderByInput {
+input WorkerWhereInput {
+  metadata_contains: String
+  isActive_eq: Boolean
+  type_eq: WorkerType
+}
+
+input WorkerWhereUniqueInput {
+  id: ID!
+}
+
+enum WorkerOrderByInput {
   createdAt_ASC
   createdAt_DESC
 }
+# Isn't provided by query node yet
+type CoverVideo {
+  id: ID!
+  video: Video!
+  coverDescription: String!
+  coverCutMediaMetadata: VideoMediaMetadata!
+  coverCutMediaDataObject: DataObject
+  coverCutMediaAvailability: AssetAvailability!
+  coverCutMediaUrl: String
+}
+
+union SearchResult = Video | Channel
+
+type SearchFTSOutput {
+  item: SearchResult!
+  rank: Float!
+  isTypeOf: String!
+  highlight: String!
+}
+
+type ProcessorState {
+  lastCompleteBlock: Float!
+  lastProcessedEvent: String!
+  indexerHead: Float!
+  chainHead: Float!
+}
 
 type Query {
+  # Lookup a membership by its ID
+  membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
+
+  # Lookup all memberships by account ID
+  memberships(where: MembershipWhereInput!): [Membership!]!
+
   # Lookup a channel by its ID
-  channel(where: ChannelWhereUniqueInput!): Channel
+  channelByUniqueInput(where: ChannelWhereUniqueInput!): Channel
 
   # List all channels by given constraints
   channels(where: ChannelWhereInput): [Channel!]!
@@ -252,27 +285,29 @@ type Query {
     orderBy: ChannelOrderByInput
   ): ChannelConnection!
 
-  # Lookup a channel by its ID
-  category(where: CategoryWhereUniqueInput!): Category
-
-  # List all categories
-  categories: [Category!]!
-
   # Lookup video by its ID
-  video(where: VideoWhereUniqueInput!): Video
+  videoByUniqueInput(where: VideoWhereUniqueInput!): Video
 
   # Lookup videos by where params
-  videos(where: VideoWhereInput): [Video!]!
+  videos(offset: Int, limit: Int, where: VideoWhereInput, orderBy: VideoOrderByInput): [Video!]
 
   # List all videos by given constraints
   videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
 
+  # List all categories
+  videoCategories: [VideoCategory!]!
+
+  workers(offset: Int, limit: Int, where: WorkerWhereInput): [Worker!]
+
+  workerByUniqueInput(where: WorkerWhereUniqueInput!): Worker
+
   # Get the current cover video
   coverVideo: CoverVideo!
 
-  # List all top trending videos
-  featuredVideos(orderBy: FeaturedVideoOrderByInput): [FeaturedVideo!]!
-
   # Free text search across videos and channels
   search(limit: Int, text: String!): [SearchFTSOutput!]!
+}
+
+type Subscription {
+  stateSubscription: ProcessorState!
 }
