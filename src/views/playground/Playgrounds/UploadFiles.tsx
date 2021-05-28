@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
+import { cast } from 'mobx-state-tree'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
@@ -23,15 +24,15 @@ export const UploadFiles = () => {
     }
     startFileUpload(
       file,
-      {
+      cast({
         contentId: contentId,
-        type: 'avatar',
         parentObject: {
           type: 'channel',
           id: activeChannelId,
         },
         owner: activeChannelId,
-      },
+        type: 'avatar',
+      }),
       randomStorageProviderUrl
     )
   }

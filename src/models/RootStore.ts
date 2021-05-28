@@ -1,6 +1,7 @@
-import { observable } from 'mobx'
+import { observable, toJS } from 'mobx'
 import {
   applyAction,
+  addMiddleware,
   applyPatch,
   applySnapshot,
   getSnapshot,
@@ -12,15 +13,14 @@ import {
   SnapshotIn,
   types,
 } from 'mobx-state-tree'
+import { mstLog } from 'mst-log'
 import { UploadsManagerStore } from './UploadsManagerStore'
 
-export const MainStore = types.model('MainStore', {
-  uploadsManagerStore: types.optional(UploadsManagerStore, {
-    todos: [],
-  }),
+export const RootStore = types.model('RootStore', {
+  uploadsManagerStore: types.optional(UploadsManagerStore, {}),
 })
 
-export const store = MainStore.create(
+export const store = RootStore.create(
   {},
   {
     alert: (m: string) => console.log(m),
@@ -28,16 +28,15 @@ export const store = MainStore.create(
 )
 
 export const history = {
-  snapshots: observable.array<{ data: SnapshotIn<typeof MainStore>; replay: () => void }>([], { deep: false }),
+  snapshots: observable.array<{ data: SnapshotIn<typeof RootStore>; replay: () => void }>([], { deep: false }),
   actions: observable.array<{ data: ISerializedActionCall; replay: () => void }>([], { deep: false }),
   patches: observable.array<{ data: IJsonPatch; replay: () => void }>([], { deep: false }),
 }
 
 let recording = true // supress recording history when replaying
-onSnapshot(
-  store,
-  (s) =>
-    recording &&
+onSnapshot(store, (s) => {
+  console.log({ store, snapshot: s })
+  recording &&
     history.snapshots.unshift({
       data: s,
       replay() {
@@ -46,7 +45,7 @@ onSnapshot(
         recording = true
       },
     })
-)
+})
 onPatch(
   store,
   (s) =>
@@ -60,10 +59,9 @@ onPatch(
       },
     })
 )
-onAction(
-  store,
-  (s) =>
-    recording &&
+onAction(store, (s) => {
+  console.log({ store: toJS(store), action: toJS(s) })
+  recording &&
     history.actions.unshift({
       data: s,
       replay() {
@@ -72,7 +70,7 @@ onAction(
         recording = true
       },
     })
-)
+})
 
 // add initial snapshot
 history.snapshots.push({
@@ -84,6 +82,8 @@ history.snapshots.push({
     recording = true
   },
 })
+
+addMiddleware(store, mstLog())
 
 // @ts-ignore for playing around with the console remove on prod
 window.store = store

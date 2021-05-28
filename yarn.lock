@@ -14483,7 +14483,7 @@ mobx-state-tree@^5.0.1:
   resolved "https://registry.yarnpkg.com/mobx-state-tree/-/mobx-state-tree-5.0.1.tgz#d495725fe11075d8fde8f02ab65db6736b44e014"
   integrity sha512-XZafwF1sJe6sp8L1kgf9Tz0SLo/UPf2pxsonnHaBQNsqbebw+0GC+IT3WxPEIe0/aQ73q4nY4SRgW1uyfd1KRA==
 
-mobx@^6.3.2:
+mobx@^6.2.0, mobx@^6.3.2:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.2.tgz#125590961f702a572c139ab69392bea416d2e51b"
   integrity sha512-xGPM9dIE1qkK9Nrhevp0gzpsmELKU4MFUJRORW/jqxVFIHHWIoQrjDjL8vkwoJYY3C2CeVJqgvl38hgKTalTWg==
@@ -14539,6 +14539,14 @@ ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
+
+mst-log@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mst-log/-/mst-log-2.0.0.tgz#1708efdca1a21030a67e46147b1e157b6f65dad1"
+  integrity sha512-VvgTgII9qr27Thzzj1QkA/6l4XG5PRy2VYFCU+byL85S7c9R+na2pj7HAMgX8MZ+v22F0gDU0SYt69bFCuyzWw==
+  dependencies:
+    mobx "^6.2.0"
+    mobx-state-tree "^5.0.1"
 
 msw@^0.27.0:
   version "0.27.0"

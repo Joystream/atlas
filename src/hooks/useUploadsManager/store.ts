@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useReducer } from 'react'
-import { AssetUpload, AssetUploadStatus, UploadsManagerState, UploadsManagerStateAction } from './types'
+import { useEffect, useReducer } from 'react'
+import { UploadsManagerState, UploadsManagerStateAction } from './types'
 
 const LOCAL_STORAGE_KEY = 'uploads'
-
+// TODO: Deprecated remove file
 const uploadsManagerReducer = (state: UploadsManagerState, action: UploadsManagerStateAction): UploadsManagerState => {
   switch (action.type) {
     case 'ADD_ASSET':
@@ -38,27 +38,27 @@ export const useUploadsManagerStore = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, rawData)
   }, [state])
 
-  const addAsset = useCallback((asset: AssetUpload) => {
-    dispatch({
-      type: 'ADD_ASSET',
-      asset,
-    })
-  }, [])
+  // const addAsset = useCallback((asset: AssetUpload) => {
+  //   dispatch({
+  //     type: 'ADD_ASSET',
+  //     asset,
+  //   })
+  // }, [])
 
-  const updateAsset = useCallback((contentId: string, lastStatus: AssetUploadStatus) => {
-    dispatch({
-      type: 'UPDATE_ASSET',
-      contentId,
-      lastStatus,
-    })
-  }, [])
+  // const updateAsset = useCallback((contentId: string, lastStatus: AssetUploadStatus) => {
+  //   dispatch({
+  //     type: 'UPDATE_ASSET',
+  //     contentId,
+  //     lastStatus,
+  //   })
+  // }, [])
 
-  const removeAsset = useCallback((contentId: string) => {
-    dispatch({
-      type: 'REMOVE_ASSET',
-      contentId,
-    })
-  }, [])
+  // const removeAsset = useCallback((contentId: string) => {
+  //   dispatch({
+  //     type: 'REMOVE_ASSET',
+  //     contentId,
+  //   })
+  // }, [])
 
-  return { uploadsState: state, addAsset, updateAsset, removeAsset }
+  // return { uploadsState: state, addAsset, updateAsset, removeAsset }
 }

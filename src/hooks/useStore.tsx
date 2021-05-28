@@ -1,21 +1,15 @@
-import { MainStore, store } from '@/models/MainStore'
+import { store } from '@/models/RootStore'
 import { Instance } from 'mobx-state-tree'
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
+import React, { createContext, useContext } from 'react'
 
-type ContextValue =
-  | {
-      store: Instance<typeof MainStore>
-    }
-  | undefined
-
-const StoreContext = createContext<ContextValue>(undefined)
+const StoreContext = createContext<Instance<typeof store>>(store)
 StoreContext.displayName = 'StoreContext'
 
 export const StoreProvider: React.FC = ({ children }) => {
-  return <StoreContext.Provider value={{ store }}>{children}</StoreContext.Provider>
+  return <StoreContext.Provider value={{ ...store }}>{children}</StoreContext.Provider>
 }
 
-const useStore = () => {
+export const useMST = () => {
   const ctx = useContext(StoreContext)
   if (ctx === undefined) {
     throw new Error('useUploadsManager must be used within a UploadManagerProvider')

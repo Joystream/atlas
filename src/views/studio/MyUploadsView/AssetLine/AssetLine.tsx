@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import { cast } from 'mobx-state-tree'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { useUploadsManager, useAuthorizedUser } from '@/hooks'
@@ -16,15 +17,15 @@ import {
   StatusMessage,
   ProgressbarContainer,
 } from './AssetLine.style'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { MessageDialog } from '@/components'
 import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { LiaisonJudgement } from '@/api/queries'
+import { IAssetUpload } from '@/models/UploadsManagerStore'
 
 type AssetLineProps = {
   isLast?: boolean
-  asset: AssetUploadWithProgress
+  asset: IAssetUpload
 }
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
@@ -46,7 +47,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         }
         startFileUpload(
           file,
-          {
+          cast({
             contentId: asset.contentId,
             owner: asset.owner,
             parentObject: {
@@ -54,7 +55,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
               id: asset.parentObject.id,
             },
             type: asset.type,
-          },
+          }),
           randomStorageProviderUrl,
           {
             isReUpload: true,
@@ -85,7 +86,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     }
     startFileUpload(
       null,
-      {
+      cast({
         contentId: asset.contentId,
         owner: asset.owner,
         parentObject: {
@@ -93,7 +94,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
           id: asset.parentObject.id,
         },
         type: asset.type,
-      },
+      }),
       randomStorageProviderUrl,
       {
         changeHost: true,
@@ -107,7 +108,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       : ''
   const size = formatBytes(asset.size)
 
-  const renderStatusMessage = (asset: AssetUploadWithProgress) => {
+  const renderStatusMessage = (asset: IAssetUpload) => {
     if (asset.lastStatus === 'reconnecting') {
       return 'Trying to reconnect...'
     }
@@ -133,7 +134,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     }
   }
 
-  const renderStatusIndicator = (asset: AssetUploadWithProgress) => {
+  const renderStatusIndicator = (asset: IAssetUpload) => {
     if (asset.lastStatus === 'completed') {
       return <SvgAlertSuccess />
     }

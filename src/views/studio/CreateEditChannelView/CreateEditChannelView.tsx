@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import { cast } from 'mobx-state-tree'
 
 import { languages } from '@/config/languages'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -44,6 +45,7 @@ import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { AssetAvailability } from '@/api/queries'
+import { AssetUpload } from '@/models/UploadsManagerStore'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -234,7 +236,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
           data.avatar.blob,
-          {
+          cast({
             contentId: avatarContentId,
             owner: channelId,
             parentObject: {
@@ -244,14 +246,14 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             dimensions: data.avatar.assetDimensions ?? undefined,
             imageCropData: data.avatar.imageCropData ?? undefined,
             type: 'avatar',
-          },
+          }),
           storageProviderUrl
         )
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
         startFileUpload(
           data.cover.blob,
-          {
+          cast({
             contentId: coverContentId,
             owner: channelId,
             parentObject: {
@@ -261,7 +263,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             dimensions: data.cover.assetDimensions ?? undefined,
             imageCropData: data.cover.imageCropData ?? undefined,
             type: 'cover',
-          },
+          }),
           storageProviderUrl
         )
       }

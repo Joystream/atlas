@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { cast } from 'mobx-state-tree'
 import {
   useEditVideoSheet,
   useAuthorizedUser,
@@ -21,10 +22,10 @@ import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { useMST } from '@/hooks/useStore'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
-
   // sheet state
   const {
     sheetState,
@@ -170,7 +171,7 @@ export const EditVideoSheet: React.FC = () => {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
         startFileUpload(
           videoInputFile.blob,
-          {
+          cast({
             contentId: videoContentId,
             owner: activeChannelId,
             parentObject: {
@@ -179,14 +180,14 @@ export const EditVideoSheet: React.FC = () => {
             },
             type: 'video',
             dimensions: width && height ? { width, height } : undefined,
-          },
+          }),
           randomStorageProviderUrl
         )
       }
       if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
         startFileUpload(
           thumbnailInputFile.blob,
-          {
+          cast({
             contentId: thumbnailContentId,
             owner: activeChannelId,
             parentObject: {
@@ -196,7 +197,7 @@ export const EditVideoSheet: React.FC = () => {
             type: 'thumbnail',
             dimensions: thumbnailInputFile.assetDimensions,
             imageCropData: thumbnailInputFile.imageCropData,
-          },
+          }),
           randomStorageProviderUrl
         )
       }

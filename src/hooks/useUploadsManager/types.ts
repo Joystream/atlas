@@ -1,37 +1,8 @@
-import { ChannelId, VideoId } from '@/joystream-lib'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { LiaisonJudgement } from '@/api/queries'
-
-type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
-type AssetParent = 'video' | 'channel'
+import { IAssetUpload } from '@/models/UploadsManagerStore'
 
 export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'reconnectionError'
 
-export type AssetUpload = {
-  contentId: string
-  parentObject: {
-    type: AssetParent
-    id: ChannelId | VideoId
-  }
-  owner: ChannelId
-  type: AssetType
-  lastStatus: AssetUploadStatus
-  liaisonJudgement?: LiaisonJudgement
-  ipfsContentId?: string
-  // size in bytes
-  size: number
-  dimensions?: AssetDimensions
-  imageCropData?: ImageCropData
-  metadata?: string
-  title?: string | null
-}
-export type AssetUploadWithProgress = AssetUpload & {
-  // progress of upload - 0...1
-  progress: number
-}
-export type InputAssetUpload = Omit<AssetUpload, 'lastStatus' | 'size'>
-
-export type UploadsManagerState = AssetUpload[]
+export type UploadsManagerState = IAssetUpload[]
 
 export type StartFileUploadOptions = {
   isReUpload?: boolean
@@ -39,10 +10,10 @@ export type StartFileUploadOptions = {
 }
 
 export type UploadManagerValue = {
-  uploadsState: AssetUploadWithProgress[][]
+  uploadsState: IAssetUpload[][]
   startFileUpload: (
     file: File | Blob | null,
-    asset: InputAssetUpload,
+    asset: IAssetUpload,
     storageMetadata: string,
     opts?: StartFileUploadOptions
   ) => void
@@ -52,7 +23,7 @@ export type UploadsProgressRecord = Record<string, number>
 
 type AddAssetAction = {
   type: 'ADD_ASSET'
-  asset: AssetUpload
+  asset: IAssetUpload
 }
 type UpdateAssetAction = {
   type: 'UPDATE_ASSET'

@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { LiaisonJudgement } from '@/api/queries'
 import {
   Container,
@@ -14,9 +13,10 @@ import {
 import { AssetLine } from '../AssetLine'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
+import { IAssetUpload } from '@/models/UploadsManagerStore'
 
 export type AssetsGroupBarUploadProps = {
-  uploadData: AssetUploadWithProgress[]
+  uploadData: IAssetUpload[]
 }
 
 const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {
