@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { observer } from 'mobx-react-lite'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
 import { debounce } from 'lodash'
@@ -7,8 +8,7 @@ import { useSnackbar, useUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { ChannelId } from '@/joystream-lib'
-import { useUploadsManagerStore } from './store'
-import { UploadManagerValue, UploadsProgressRecord, StartFileUploadOptions } from './types'
+import { UploadManagerValue, StartFileUploadOptions } from './types'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { LiaisonJudgement } from '@/api/queries'
 import { useMST } from '../useStore'
@@ -31,12 +31,10 @@ type AssetFile = {
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
-export const UploadManagerProvider: React.FC = ({ children }) => {
+export const UploadManagerProvider: React.FC = observer(({ children }) => {
   const navigate = useNavigate()
   const { uploadsManagerStore } = useMST()
-  // const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const { displaySnackbar } = useSnackbar()
-  const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
   const { channel, loading: channelLoading } = useChannel(activeChannelId ?? '')
@@ -52,17 +50,12 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
   const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
-  const uploadsStateWithProgress = uploadsManagerStore.uploadingAssetsState.map((asset) => ({
-    ...asset,
-    progress: uploadsProgress[asset.contentId] ?? 0,
-  }))
-
   const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
   const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
   const allDataObjects = [...channelDataObjects, ...videosDataObjects]
 
   // Enriching data with pending/accepted/rejected status
-  const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress
+  const uploadsStateWithLiaisonJudgement = uploadsManagerStore.uploadingAssetsState
     .map((asset) => {
       const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
       if (!dataObject && !channelLoading && !videosLoading) {
@@ -162,9 +155,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
 
   const startFileUpload = useCallback(
     async (file: File | Blob | null, asset: IAssetUpload, storageMetadata: string, opts?: StartFileUploadOptions) => {
-      const setAssetUploadProgress = (progress: number) => {
-        setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
-      }
       const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
       if (!fileInState && file) {
         setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
@@ -176,14 +166,16 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           throw Error('File was not provided nor found')
         }
         if (!opts?.isReUpload && file) {
-          uploadsManagerStore.addAsset(AssetUpload.create({ ...asset, lastStatus: 'inProgress', size: file.size }))
+          console.log({ size: file.size })
+          uploadsManagerStore.addAsset(
+            AssetUpload.create({ ...asset, lastStatus: 'inProgress', size: file.size, progress: 0 })
+          )
         }
-        setAssetUploadProgress(0)
+        // setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
         const setUploadProgressThrottled = ({ loaded, total }: ProgressEvent) => {
           uploadsManagerStore.updateAsset({ ...asset, lastStatus: 'inProgress', progress: (loaded / total) * 100 })
-          setAssetUploadProgress((loaded / total) * 100)
         }
 
         pendingNotificationsCounts.current.uploading++
@@ -223,7 +215,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           lastStatus: 'completed',
           progress: 100,
         })
-        setAssetUploadProgress(100)
 
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
@@ -266,7 +257,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       {children}
     </UploadManagerContext.Provider>
   )
-}
+})
 
 const useUploadsManagerContext = () => {
   const ctx = useContext(UploadManagerContext)

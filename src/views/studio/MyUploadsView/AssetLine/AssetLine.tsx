@@ -106,7 +106,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
-  const size = formatBytes(asset.size)
+  const size = formatBytes(asset.size ?? 0)
 
   const renderStatusMessage = (asset: IAssetUpload) => {
     if (asset.lastStatus === 'reconnecting') {

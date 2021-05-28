@@ -10,7 +10,6 @@ const MyUploadsView = () => {
   const { uploadsState, isLoading } = useUploadsManager(activeChannelId)
 
   const hasUploads = uploadsState.length > 0
-
   return (
     <UploadsContainer>
       <StyledText variant="h2">My Uploads</StyledText>

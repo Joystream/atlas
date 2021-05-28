@@ -24,16 +24,13 @@ export const AssetUpload = types.model('AssetUpload', {
   parentObject: ParentObject,
   owner: types.string,
   type: types.enumeration(['video', 'thumbnail', 'cover', 'avatar']),
-  lastStatus: types.optional(
-    types.enumeration(['completed', 'inProgress', 'error', 'reconnecting', 'reconnectionError']),
-    'inProgress'
-  ),
+  lastStatus: types.maybe(types.enumeration(['completed', 'inProgress', 'error', 'reconnecting', 'reconnectionError'])),
   liaisonJudgement: types.maybe(
     types.enumeration<LiaisonJudgement>('LiaisonJudgement', Object.values(LiaisonJudgement))
   ),
   ipfsContentId: types.maybe(types.string),
   // size in bytes
-  size: types.optional(types.number, 0),
+  size: types.maybe(types.number),
   dimensions: types.maybe(AssetDimensions),
   imageCropData: types.maybe(ImageCropData),
   metadata: types.maybe(types.string),
@@ -47,11 +44,11 @@ export const UploadsManagerStore = types
   })
   .views((self) => ({
     // get count() {
-    //   return self.todos.length
+    //   return self.x.length
     // },
   }))
   // .volatile((self) => ({
-  //   newTodoTitle: '',
+  //   title: '',
   // }))
   .actions((self) => ({
     addAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
@@ -59,10 +56,10 @@ export const UploadsManagerStore = types
       self.uploadingAssetsState.push(asset)
     },
     updateAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
-      // const index = self.uploadingAssetsState.findIndex((a) => a.contentId === asset.contentId)
-      // if (index >= 0) {
-      //   self.uploadingAssetsState[index] = cast(asset)
-      // }
+      const index = self.uploadingAssetsState.findIndex((a) => a.contentId === asset.contentId)
+      if (index >= 0) {
+        self.uploadingAssetsState[index] = { ...self.uploadingAssetsState[index], ...cast(asset) }
+      }
     },
     removeAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
       self.uploadingAssetsState.remove(cast(asset))

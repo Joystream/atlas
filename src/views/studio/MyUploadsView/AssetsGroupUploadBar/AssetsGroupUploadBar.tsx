@@ -34,8 +34,8 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
       file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0 && file.lastStatus !== 'completed'
   ).length
 
-  const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
-  const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
+  const allAssetsSize = uploadData.reduce((acc, file) => acc + (file.size ?? 0), 0)
+  const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * (file.size ?? 0), 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
   const videoTitle = uploadData.find((asset) => asset.type === 'video')?.title
