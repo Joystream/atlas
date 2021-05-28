@@ -4,6 +4,7 @@ import { ApolloProvider } from '@apollo/client'
 import { createApolloClient } from '@/api'
 import { ConnectionStatusProvider, OverlayManagerProvider, SnackbarProvider } from '@/hooks'
 import MainLayout from './MainLayout'
+import { StoreProvider } from './hooks/useStore'
 
 export default function App() {
   // create client on render so the mocking setup is done if needed
@@ -12,13 +13,15 @@ export default function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <SnackbarProvider>
-        <ConnectionStatusProvider>
-          <OverlayManagerProvider>
-            <MainLayout />
-          </OverlayManagerProvider>
-        </ConnectionStatusProvider>
-      </SnackbarProvider>
+      <StoreProvider>
+        <SnackbarProvider>
+          <ConnectionStatusProvider>
+            <OverlayManagerProvider>
+              <MainLayout />
+            </OverlayManagerProvider>
+          </ConnectionStatusProvider>
+        </SnackbarProvider>
+      </StoreProvider>
     </ApolloProvider>
   )
 }
