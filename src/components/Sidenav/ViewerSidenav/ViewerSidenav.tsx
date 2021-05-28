@@ -28,7 +28,13 @@ export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const {
     state: { followedChannels },
+    updateChannelFollowing,
   } = usePersonalData()
+
+  const handleChannelNotFound = (id: string) => {
+    console.warn(`Followed channel not found, removing id: ${id}`)
+    updateChannelFollowing(id, false)
+  }
 
   return (
     <SidenavBase
@@ -36,7 +42,12 @@ export const ViewerSidenav: React.FC = () => {
       toggleSideNav={setExpanded}
       items={viewerSidenavItems}
       additionalContent={
-        <FollowedChannels onClick={() => setExpanded(false)} followedChannels={followedChannels} expanded={expanded} />
+        <FollowedChannels
+          onClick={() => setExpanded(false)}
+          onChannelNotFound={handleChannelNotFound}
+          followedChannels={followedChannels}
+          expanded={expanded}
+        />
       }
       buttonsContent={
         <>

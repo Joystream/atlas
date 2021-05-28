@@ -12,11 +12,12 @@ import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string
+  onNotFound?: () => void
 } & VideoPreviewBaseMetaProps &
   Pick<VideoPreviewBaseProps, 'progress' | 'className'>
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic(id, false)
+const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
+  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
   const { getAssetUrl } = useAsset()
 
   const thumbnailPhotoUrl = getAssetUrl(
@@ -52,8 +53,13 @@ export default VideoPreview
 
 export type VideoPreviewWPublisherProps = VideoPreviewProps &
   Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>
-export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ id, isDraft, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic(id, isDraft)
+export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
+  id,
+  isDraft,
+  onNotFound,
+  ...metaProps
+}) => {
+  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
@@ -94,8 +100,17 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   )
 }
 
-const useVideoSharedLogic = (id?: string, isDraft?: boolean) => {
-  const { video, loading } = useVideo(id ?? '', { skip: !id || isDraft })
+type UseVideoSharedLogicOpts = {
+  id?: string
+  isDraft?: boolean
+  onNotFound?: () => void
+}
+const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpts) => {
+  const { video, loading } = useVideo(id ?? '', {
+    skip: !id || isDraft,
+    onCompleted: (data) => !data && onNotFound?.(),
+    onError: (error) => console.error('Failed to fetch video', error),
+  })
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
   return { video, loading: internalIsLoadingState, videoHref }

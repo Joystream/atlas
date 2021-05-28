@@ -24,6 +24,11 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     updateWatchedVideos('REMOVED', id)
   }
 
+  const onVideoNotFound = (id: string) => {
+    console.warn(`Interrupted video not found, removing id: ${id}`)
+    updateWatchedVideos('REMOVED', id)
+  }
+
   return (
     <VideoGallery
       title="Continue watching"
@@ -31,6 +36,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
       loading={false}
       removeButton
       onRemoveButtonClick={onRemoveButtonClick}
+      onVideoNotFound={onVideoNotFound}
     />
   )
 }

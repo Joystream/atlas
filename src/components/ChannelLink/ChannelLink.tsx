@@ -15,6 +15,7 @@ type ChannelLinkProps = {
   overrideChannel?: BasicChannelFieldsFragment
   avatarSize?: AvatarSize
   className?: string
+  onNotFound?: () => void
 }
 
 const ChannelLink: React.FC<ChannelLinkProps> = ({
@@ -24,9 +25,14 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   noLink,
   overrideChannel,
   avatarSize = 'default',
+  onNotFound,
   className,
 }) => {
-  const { channel } = useBasicChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
+  const { channel } = useBasicChannel(id || '', {
+    skip: !id,
+    onCompleted: (data) => !data && onNotFound?.(),
+    onError: (error) => console.error('Failed to fetch channel', error),
+  })
   const { getAssetUrl } = useAsset()
 
   const displayedChannel = overrideChannel || channel
