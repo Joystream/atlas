@@ -29,7 +29,6 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   className,
 }) => {
   const { channel } = useBasicChannel(id || '', {
-    fetchPolicy: 'cache-first',
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => console.error('Failed to fetch channel', error),
