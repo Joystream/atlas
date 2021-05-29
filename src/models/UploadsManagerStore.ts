@@ -52,7 +52,6 @@ export const UploadsManagerStore = types
   // }))
   .actions((self) => ({
     addAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
-      console.log(toJS(asset))
       self.uploadingAssetsState.push(asset)
     },
     updateAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
@@ -66,7 +65,4 @@ export const UploadsManagerStore = types
     },
   }))
 
-// TODO: save in local storage
-
 export type IAssetUpload = Instance<typeof AssetUpload>
-// export type IInputAssetUpload = Instance<typeof InputAssetUpload>
