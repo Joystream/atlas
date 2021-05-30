@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { cast } from 'mobx-state-tree'
 import {
   useEditVideoSheet,
   useAuthorizedUser,
-  useUploadsManager,
   useSnackbar,
   useJoystream,
   EditVideoFormFields,
@@ -24,8 +24,9 @@ import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { useMST } from '@/hooks/useStore'
 
-export const EditVideoSheet: React.FC = () => {
+export const EditVideoSheet: React.FC = observer(() => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
+  const { uploadsManagerStore } = useMST()
   // sheet state
   const {
     sheetState,
@@ -52,7 +53,7 @@ export const EditVideoSheet: React.FC = () => {
   const { displaySnackbar } = useSnackbar()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const { startFileUpload } = useUploadsManager(activeChannelId)
+  // const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
@@ -169,7 +170,7 @@ export const EditVideoSheet: React.FC = () => {
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        startFileUpload(
+        uploadsManagerStore.startFileUpload(
           videoInputFile.blob,
           cast({
             contentId: videoContentId,
@@ -185,7 +186,7 @@ export const EditVideoSheet: React.FC = () => {
         )
       }
       if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
-        startFileUpload(
+        uploadsManagerStore.startFileUpload(
           thumbnailInputFile.blob,
           cast({
             contentId: thumbnailContentId,
@@ -310,4 +311,4 @@ export const EditVideoSheet: React.FC = () => {
       </Container>
     </>
   )
-}
+})

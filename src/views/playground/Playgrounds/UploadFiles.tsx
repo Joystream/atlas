@@ -3,10 +3,12 @@ import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { cast } from 'mobx-state-tree'
+import { useMST } from '@/hooks/useStore'
 
 export const UploadFiles = () => {
+  const { uploadsManagerStore } = useMST()
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId)
+  const { uploadsState } = useUploadsManager(activeChannelId)
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -22,7 +24,7 @@ export const UploadFiles = () => {
     if (!file || !randomStorageProviderUrl) {
       return
     }
-    startFileUpload(
+    uploadsManagerStore.startFileUpload(
       file,
       cast({
         contentId: contentId,

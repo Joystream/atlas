@@ -45,7 +45,7 @@ import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { AssetAvailability } from '@/api/queries'
-import { AssetUpload } from '@/models/UploadsManagerStore'
+import { useMST } from '@/hooks/useStore'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -75,6 +75,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
+  const { uploadsManagerStore } = useMST()
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
@@ -91,7 +92,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
-  const { startFileUpload } = useUploadsManager(activeChannelId || '')
 
   const {
     register,
@@ -234,7 +234,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     const uploadAssets = (channelId: ChannelId) => {
       const storageProviderUrl = getRandomStorageProviderUrl()
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
-        startFileUpload(
+        uploadsManagerStore.startFileUpload(
           data.avatar.blob,
           cast({
             contentId: avatarContentId,
@@ -251,7 +251,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         )
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
-        startFileUpload(
+        uploadsManagerStore.startFileUpload(
           data.cover.blob,
           cast({
             contentId: coverContentId,

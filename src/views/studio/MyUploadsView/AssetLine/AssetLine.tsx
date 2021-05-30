@@ -22,6 +22,7 @@ import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { LiaisonJudgement } from '@/api/queries'
 import { IAssetUpload } from '@/models/UploadsManagerStore'
+import { useMST } from '@/hooks/useStore'
 
 type AssetLineProps = {
   isLast?: boolean
@@ -29,9 +30,9 @@ type AssetLineProps = {
 }
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
+  const { uploadsManagerStore } = useMST()
   const navigate = useNavigate()
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload } = useUploadsManager(activeChannelId)
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
@@ -45,7 +46,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         if (!randomStorageProviderUrl) {
           return
         }
-        startFileUpload(
+        uploadsManagerStore.startFileUpload(
           file,
           cast({
             contentId: asset.contentId,
@@ -63,7 +64,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         )
       }
     },
-    [asset, getRandomStorageProviderUrl, startFileUpload]
+    [asset, getRandomStorageProviderUrl, uploadsManagerStore]
   )
 
   const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
@@ -84,7 +85,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (!randomStorageProviderUrl) {
       return
     }
-    startFileUpload(
+    uploadsManagerStore.startFileUpload(
       null,
       cast({
         contentId: asset.contentId,
