@@ -33,10 +33,7 @@ type WriteUrlInCacheArg = {
 }
 
 type WriteVideoDataCacheArg = {
-  edge: {
-    cursor: string
-    node: VideoFieldsFragment
-  }
+  data: VideoFieldsFragment
   thumbnailUrl?: string | null
   client: ApolloClient<object>
 }
@@ -68,13 +65,13 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
   })
 }
 
-export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
   const video = client.cache.writeFragment({
-    id: `Video:${edge.node.id}`,
+    id: `Video:${data.id}`,
     fragment: VideoFieldsFragmentDoc,
     fragmentName: 'VideoFields',
     data: {
-      ...edge.node,
+      ...data,
       thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
       thumbnailPhotoAvailability: AssetAvailability.Accepted,
     },
@@ -85,7 +82,7 @@ export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideo
         return {
           ...existingVideos,
           totalCount: existingVideos.totalCount + 1,
-          edges: [{ ...edge, node: video }, ...(existingVideos?.edges ? existingVideos.edges : [])],
+          edges: [{ node: video, __typename: 'VideoEdge' }, ...(existingVideos?.edges ? existingVideos.edges : [])],
         }
       },
     },
@@ -97,18 +94,19 @@ type NormalizedVideoEdge = Omit<VideoEdge, 'node'> & {
 }
 
 export const removeVideoFromCache = (videoId: string, client: ApolloClient<object>) => {
+  client.cache.evict({ id: `Video:${videoId}` })
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
-        client.cache.evict({ id: `Video:${videoId}` })
         return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
       },
       videosConnection: (existing = {}, opts) => {
-        client.cache.evict({ id: `Video:${videoId}` })
         return (
           existing && {
             ...existing,
-            totalCount: existing.totalCount - 1,
+            totalCount: existing.edges.find((edge: NormalizedVideoEdge) => edge.node.__ref === `Video:${videoId}`)
+              ? existing.totalCount - 1
+              : existing.totalCount,
             edges: existing.edges.filter((edge: NormalizedVideoEdge) => edge.node.__ref !== `Video:${videoId}`),
           }
         )
