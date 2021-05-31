@@ -3,14 +3,12 @@ import {
   useEditVideoSheet,
   useAuthorizedUser,
   useUploadsManager,
-  useSnackbar,
   useJoystream,
   EditVideoFormFields,
   EditVideoSheetTab,
   useDrafts,
   useDisplayDataLostWarning,
   useTransactionManager,
-  useDialog,
 } from '@/hooks'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
 import { useEditVideoSheetAnimations } from './animations'

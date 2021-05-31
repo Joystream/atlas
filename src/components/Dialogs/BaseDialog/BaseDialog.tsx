@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { CSSTransition } from 'react-transition-group'
-import { StyledContainer, StyledExitButton } from './BaseDialog.style'
-import { transitions } from '@/shared/theme'
+import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { SvgGlyphClose } from '@/shared/icons'
 import Portal from '@/components/Portal'
 import { useOverlayManager } from '@/hooks'
+import { CSSTransition } from 'react-transition-group'
+import { transitions } from '@/shared/theme'
 
 export type BaseDialogProps = {
   showDialog?: boolean
@@ -14,56 +14,38 @@ export type BaseDialogProps = {
   isActionDialog?: boolean
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({
-  children,
-  showDialog,
-  exitButton = true,
-  onExitClick,
-  className,
-  isActionDialog = true,
-}) => {
-  const {
-    actionDialogContainerRef,
-    lockScroll,
-    unlockScroll,
-    messageDialogContainerRef,
-    closeOverlayContainerForActionDialog,
-    openOverlayContainerForActionDialog,
-  } = useOverlayManager()
+const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
+  const { dialogContainerRef, lockScroll, unlockScroll } = useOverlayManager()
 
   useEffect(() => {
-    if (!showDialog || !isActionDialog) {
+    // don't lock if there is no children in dialogContainerRef
+    if (!dialogContainerRef.current?.hasChildNodes()) {
+      unlockScroll()
       return
     }
+    // don't lock if there is only one dialog and it has ${transitions.names.dialog}-exit class
+    const hasLastElementExitClassName = [...dialogContainerRef.current?.children]
+      .filter((item) => item.className.includes(transitions.names.dialog))
+      .every((item) => item.className.includes(`${transitions.names.dialog}-exit`))
+
+    if (hasLastElementExitClassName) {
+      unlockScroll()
+      return
+    }
+
     lockScroll()
-    openOverlayContainerForActionDialog()
+
     return () => {
       unlockScroll()
-      closeOverlayContainerForActionDialog()
     }
-  }, [
-    lockScroll,
-    unlockScroll,
-    showDialog,
-    isActionDialog,
-    openOverlayContainerForActionDialog,
-    closeOverlayContainerForActionDialog,
-  ])
+  }, [dialogContainerRef, lockScroll, showDialog, unlockScroll])
 
   return (
-    <Portal containerRef={isActionDialog ? actionDialogContainerRef : messageDialogContainerRef}>
-      {isActionDialog ? (
-        <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-          <StyledContainer className={className}>
-            {exitButton && (
-              <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
-                <SvgGlyphClose />
-              </StyledExitButton>
-            )}
-            {children}
-          </StyledContainer>
-        </CSSTransition>
-      ) : (
+    <Portal containerRef={dialogContainerRef}>
+      <CSSTransition in={showDialog} timeout={200} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
+        <DialogBackDrop />
+      </CSSTransition>
+      <CSSTransition in={showDialog} timeout={200} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
         <StyledContainer className={className}>
           {exitButton && (
             <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
@@ -72,7 +54,7 @@ const BaseDialog: React.FC<BaseDialogProps> = ({
           )}
           {children}
         </StyledContainer>
-      )}
+      </CSSTransition>
     </Portal>
   )
 }

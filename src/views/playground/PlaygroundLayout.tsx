@@ -24,6 +24,8 @@ import {
 } from './Playgrounds'
 import { colors } from '@/shared/theme'
 
+import { TransitionGroup } from 'react-transition-group'
+
 const playgroundRoutes = [
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },

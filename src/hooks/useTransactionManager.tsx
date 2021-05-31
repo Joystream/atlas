@@ -1,13 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { TransactionDialog } from '@/components'
+import { ActionDialog, TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
 import useConnectionStatus from './useConnectionStatus'
 import { useDialog } from './useDialog'
-
-const STATUS_ERROR_DIALOG = 'STATUS_ERROR_DIALOG'
-const STATUS_COMPLETED_DIALOG = 'STATUS_ERROR_COMPLETED'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {
@@ -43,7 +40,27 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
   const { queryNodeState } = useQueryNodeStateSubscription()
   const { nodeConnectionStatus } = useConnectionStatus()
-  const { openDialog } = useDialog()
+
+  const [openErrorDialog, closeErrorDialog] = useDialog({
+    variant: 'error',
+    title: 'Something went wrong...',
+    description:
+      'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+    secondaryButtonText: 'Close',
+    onSecondaryButtonClick: () => {
+      handleDialogClose()
+    },
+  })
+  const [openCompletedDialog, closeCompletedDialog] = useDialog({
+    variant: 'success',
+    title: successMessage.title,
+    description: successMessage.description,
+    secondaryButtonText: 'Close',
+    onSecondaryButtonClick: () => {
+      handleDialogClose()
+      closeCompletedDialog()
+    },
+  })
 
   const { displaySnackbar } = useSnackbar()
 
@@ -60,26 +77,9 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       setStatus(ExtrinsicStatus.Completed)
       syncCallback?.()
 
-      openDialog(STATUS_COMPLETED_DIALOG, {
-        variant: 'success',
-        title: successMessage.title,
-        description: successMessage.description,
-        secondaryButtonText: 'Close',
-        onSecondaryButtonClick: () => {
-          handleDialogClose()
-        },
-      })
+      openCompletedDialog()
     }
-  }, [
-    queryNodeState,
-    finalizationBlock,
-    syncCallback,
-    status,
-    openDialog,
-    successMessage.title,
-    successMessage.description,
-    handleDialogClose,
-  ])
+  }, [finalizationBlock, openCompletedDialog, queryNodeState, status, syncCallback])
 
   const reset = () => {
     setStatus(null)
@@ -138,16 +138,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
         console.error(e)
         setStatus(ExtrinsicStatus.Error)
 
-        openDialog(STATUS_ERROR_DIALOG, {
-          variant: 'error',
-          title: 'Something went wrong...',
-          description:
-            'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-          secondaryButtonText: 'Close',
-          onSecondaryButtonClick: () => {
-            handleDialogClose()
-          },
-        })
+        openErrorDialog()
       }
     }
   }

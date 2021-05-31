@@ -1,112 +1,121 @@
 import MessageDialog, { MessageDialogProps } from '@/components/Dialogs/MessageDialog'
-import { transitions } from '@/shared/theme'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { useOverlayManager } from '../useOverlayManager'
+import { createId } from '@/utils/createId'
+import React, { useCallback, useEffect, useState, useContext, useMemo } from 'react'
+import { TransitionGroup } from 'react-transition-group'
 
-type DialogContextValue = {
-  openDialog: (id: string, dialogConfig?: MessageDialogProps) => void
-  closeDialog: (id: string) => void
+type DialogRendererProps = {
+  component: React.FunctionComponent
 }
 
-type DialogState = {
-  id: string
-  shouldCloseOnClick?: boolean
-} & MessageDialogProps
+interface DialogsContainerProps {
+  dialogs: Record<string, React.FunctionComponent>
+  component?: React.ComponentType
+  container?: Element
+}
 
+const DialogsRenderer = ({ component, ...rest }: DialogRendererProps) => component(rest)
+
+export const DialogsContainer = ({ dialogs }: DialogsContainerProps) => {
+  return (
+    <TransitionGroup>
+      {Object.keys(dialogs).map((key) => (
+        <DialogsRenderer key={key} component={dialogs[key]} />
+      ))}
+    </TransitionGroup>
+  )
+}
+
+type DialogContextValue = {
+  openDialog: (key: string, dialog: React.FunctionComponent<{ in?: boolean }>) => void
+  closeDialog: (key: string) => void
+}
 const DialogContext = React.createContext<undefined | DialogContextValue>(undefined)
 DialogContext.displayName = 'DialogsContext'
 
-export const DialogProvider: React.FC = ({ children }) => {
-  const [dialogs, setDialogs] = useState<DialogState[]>([])
+type DialogsProviderProps = {
+  container?: Element
+}
 
-  const openDialog = useCallback((customId: string, dialogConfig?: MessageDialogProps) => {
-    setDialogs((dialogs) => {
-      if (dialogs.find((dialog) => dialog.id === customId)) {
-        console.warn(`Couldn't create dialog. Dialog with id '${customId}' already exists`)
-        return dialogs
-      }
-      return [...dialogs, { id: customId, showDialog: true, ...dialogConfig }]
-    })
-  }, [])
+export const DialogProvider: React.FC<DialogsProviderProps> = ({ container, children }) => {
+  const [dialogs, setDialogs] = useState<Record<string, React.FC>>({})
 
-  const closeDialog = useCallback((id: string) => {
-    setDialogs((dialogs) => {
-      if (!dialogs.find((dialog) => dialog.id === id)) {
-        console.warn(`Couldn't close dialog. Dialog with id '${id}' doesn't exists`)
-        return dialogs
-      }
-      return [...dialogs.filter((dialog) => dialog.id !== id)]
-    })
-  }, [])
+  const openDialog = useCallback(
+    (key: string, dialog: React.FC) =>
+      setDialogs((dialogs) => ({
+        ...dialogs,
+        [key]: dialog,
+      })),
+    []
+  )
 
-  const {
-    openOverlayContainerForMessageDialog,
-    closeOverlayContainerForMessageDialog,
-    lockScroll,
-    unlockScroll,
-  } = useOverlayManager()
+  const closeDialog = useCallback(
+    (key: string) =>
+      setDialogs((dialogs) => {
+        if (!dialogs[key]) {
+          return dialogs
+        }
+        const newDialogs = { ...dialogs }
+        delete newDialogs[key]
+        return newDialogs
+      }),
+    []
+  )
 
-  useEffect(() => {
-    if (!dialogs.length) {
-      return
-    }
-    openOverlayContainerForMessageDialog()
-    lockScroll()
-    return () => {
-      closeOverlayContainerForMessageDialog()
-      unlockScroll()
-    }
-  }, [
-    closeOverlayContainerForMessageDialog,
-    dialogs.length,
-    lockScroll,
-    openOverlayContainerForMessageDialog,
-    unlockScroll,
-  ])
-
-  const handleCloseDialog = (id: string, shouldCloseOnClick = true) => {
-    shouldCloseOnClick && closeDialog(id)
-  }
+  const contextValue = useMemo(() => ({ openDialog, closeDialog }), [closeDialog, openDialog])
 
   return (
-    <DialogContext.Provider value={{ openDialog, closeDialog }}>
-      <TransitionGroup>
-        {dialogs.map(
-          ({ id, onExitClick, onPrimaryButtonClick, onSecondaryButtonClick, shouldCloseOnClick, ...dialogProps }) => {
-            return (
-              <CSSTransition key={id} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
-                <MessageDialog
-                  isActionDialog={false}
-                  key={id}
-                  {...dialogProps}
-                  onExitClick={(e) => {
-                    handleCloseDialog(id, shouldCloseOnClick)
-                    onExitClick?.(e)
-                  }}
-                  onPrimaryButtonClick={(e) => {
-                    handleCloseDialog(id, shouldCloseOnClick)
-                    onPrimaryButtonClick?.(e)
-                  }}
-                  onSecondaryButtonClick={(e) => {
-                    handleCloseDialog(id, shouldCloseOnClick)
-                    onSecondaryButtonClick?.(e)
-                  }}
-                />
-              </CSSTransition>
-            )
-          }
-        )}
-      </TransitionGroup>
+    <DialogContext.Provider value={contextValue}>
       {children}
+      <DialogsContainer dialogs={dialogs} container={container} />
     </DialogContext.Provider>
   )
 }
 
-export const useDialog = () => {
+type ComponentOrDialogProps = React.FunctionComponent<{ in?: boolean }> | MessageDialogProps
+type UseDialogOptions = {
+  shouldCloseOnClick?: boolean
+}
+
+export const useDialog = (component?: ComponentOrDialogProps, options?: UseDialogOptions) => {
   const ctx = useContext(DialogContext)
   if (ctx === undefined) {
     throw new Error('useDialog must be used within a DialogProvider')
   }
-  return ctx
+
+  const { openDialog, closeDialog } = ctx
+
+  const [isShown, setShown] = useState(false)
+  const showModal = useCallback(() => setShown(true), [])
+  const hideModal = useCallback(() => setShown(false), [])
+  const dialogId = useMemo(() => createId(), [])
+
+  useEffect(() => {
+    if (isShown) {
+      openDialog(
+        dialogId,
+        typeof component === 'function'
+          ? component
+          : ({ in: inAnimation }) => <MessageDialog {...component} showDialog={inAnimation} />
+      )
+    } else {
+      closeDialog(dialogId)
+    }
+    return () => {
+      closeDialog(dialogId)
+    }
+  }, [closeDialog, component, dialogId, isShown, openDialog])
+
+  const _openDialog = useCallback(
+    (args?: MessageDialogProps) =>
+      component === undefined
+        ? openDialog(dialogId, ({ in: inAnimation }) => <MessageDialog {...args} showDialog={inAnimation} />)
+        : showModal(),
+    [component, dialogId, openDialog, showModal]
+  )
+
+  const _closeDialog = useCallback(() => {
+    return component === undefined ? closeDialog(dialogId) : hideModal()
+  }, [closeDialog, component, dialogId, hideModal])
+
+  return [_openDialog, _closeDialog]
 }

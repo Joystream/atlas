@@ -1,60 +1,55 @@
-import { TransactionDialog } from '@/components'
-import { useDialog } from '@/hooks'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ActionDialog } from '@/components'
+import { useDialog } from '@/hooks/useDialog'
 import { Button } from '@/shared/components'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 const Dialogs = () => {
-  const { openDialog, closeDialog } = useDialog()
-  const [status, setStatus] = useState<null | ExtrinsicStatus.ProcessingAssets>(ExtrinsicStatus.ProcessingAssets)
+  const [openFirstDialog, closeFirstDialog] = useDialog({
+    description: 'This is first dialog',
+    title: 'first dialog',
+    primaryButtonText: 'Confirm',
+    onExitClick: () => closeFirstDialog(),
+  })
 
-  useEffect(() => {
-    // just to test two dialogs open at once
-    openDialog('useEffectDialog', {
-      description: 'asdasdasg',
-      title: 'First dialog with useEffect',
-      primaryButtonText: 'Confirm',
-    })
-    openDialog('useEffectDialog3', {
-      description: 'Second dialog with useEffect',
-      title: 'Second dialog',
-      primaryButtonText: 'Confirm',
-    })
-  }, [openDialog])
+  const [openSecondDialog, closeSecondDialog] = useDialog({
+    description: 'This is second dialog',
+    title: 'second dialog',
+    primaryButtonText: 'Confirm',
+    onExitClick: () => closeSecondDialog(),
+  })
+
+  const [openThirdDialog, closeThirdDialog] = useDialog({
+    description: 'This is third dialog',
+    title: 'third dialog',
+    primaryButtonText: 'Confirm',
+    onExitClick: () => closeThirdDialog(),
+  })
+
+  const [openActionDialog, closeActionDialog] = useDialog(() => (
+    <ActionDialog onExitClick={() => closeActionDialog()}>
+      <div>hello from ActionDialog</div>
+    </ActionDialog>
+  ))
 
   return (
     // to test lock/unlock scroll
     <div style={{ height: '200vh' }}>
+      <Button onClick={() => openFirstDialog()}>Open Dialog</Button>
       <Button
         onClick={() => {
-          openDialog('firstDialog', {
-            description: 'This is first dialog',
-            title: 'First dialog',
-            primaryButtonText: 'Confirm',
-          })
+          openSecondDialog()
+          openThirdDialog()
         }}
       >
-        Open Dialog
+        Open two dialogs at once
       </Button>
       <Button
         onClick={() => {
-          openDialog('secondDialog', {
-            description: 'This is second dialog',
-            title: 'Second dialog',
-            primaryButtonText: 'Confirm',
-          })
+          openActionDialog()
         }}
       >
-        Open second dialog
+        Open action dialog
       </Button>
-      <Button
-        onClick={() => {
-          closeDialog('dialogIdWhichDontExist')
-        }}
-      >
-        Close dialog which dont exists and check the console
-      </Button>
-      <TransactionDialog status={status} onClose={() => setStatus(null)} />
     </div>
   )
 }

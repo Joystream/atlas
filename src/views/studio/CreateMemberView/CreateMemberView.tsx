@@ -32,9 +32,6 @@ type Inputs = {
   about: string
 }
 
-const ERROR_DIALOG = 'ERROR_DIALOG'
-const CREATE_MEMBERSHIP_DIALOG = 'CREATE_MEMBERSHIP_DIALOG'
-
 const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
@@ -51,7 +48,14 @@ const CreateMemberView = () => {
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const { openDialog, closeDialog } = useDialog()
+  const [openCreatingDialog, closeCreatingDialog] = useDialog({
+    exitButton: false,
+    icon: <Spinner />,
+    title: 'Creating membership...',
+    description:
+      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+  })
+  const [openErrorDialog, closeErrorDialog] = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   if (queryNodeStateError) {
@@ -68,12 +72,12 @@ const CreateMemberView = () => {
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
-      closeDialog(CREATE_MEMBERSHIP_DIALOG)
+      closeCreatingDialog()
       refetchMemberships().then(() => {
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships, closeDialog])
+  }, [activeAccountId, closeCreatingDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -81,22 +85,17 @@ const CreateMemberView = () => {
     }
 
     try {
-      openDialog(CREATE_MEMBERSHIP_DIALOG, {
-        exitButton: false,
-        icon: <Spinner />,
-        title: 'Creating membership...',
-        description:
-          "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
-      })
+      openCreatingDialog()
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
-      openDialog(ERROR_DIALOG, {
+      openErrorDialog({
         variant: 'error',
         title: 'Something went wrong...',
         description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
         secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => closeErrorDialog(),
       })
     }
   })
