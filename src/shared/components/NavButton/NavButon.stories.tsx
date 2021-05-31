@@ -3,7 +3,7 @@ import NavButton, { NavButtonProps } from './NavButton'
 import { Meta, Story } from '@storybook/react'
 
 export default {
-  title: 'Shared/NavButton',
+  title: 'Shared/N/NavButton',
   component: NavButton,
   argTypes: {
     outerCss: {

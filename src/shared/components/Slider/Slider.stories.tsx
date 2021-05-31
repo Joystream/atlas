@@ -5,7 +5,7 @@ import { WithValue } from '../../../../.storybook/WithValue'
 import styled from '@emotion/styled'
 
 export default {
-  title: 'Shared/Slider',
+  title: 'Shared/S/Slider',
   component: Slider,
   args: {
     min: 0,

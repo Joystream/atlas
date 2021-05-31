@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import { css } from '@emotion/react'
 
 export default {
-  title: 'Shared/CircularProgressbar',
+  title: 'Shared/C/CircularProgressbar',
   component: CircularProgressbar,
   argTypes: {},
 } as Meta

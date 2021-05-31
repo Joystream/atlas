@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import FileSelect, { FileSelectProps } from './FileSelect'
 
 export default {
-  title: 'Shared/FileSelect',
+  title: 'Shared/F/FileSelect',
   component: FileSelect,
   argTypes: {
     fileType: {

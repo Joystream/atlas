@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { colors } from '@/shared/theme'
 
 export default {
-  title: 'Shared/VideoPlayer',
+  title: 'Shared/V/VideoPlayer',
   component: VideoPlayer,
 } as Meta
 

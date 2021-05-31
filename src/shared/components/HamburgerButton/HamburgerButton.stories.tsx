@@ -5,7 +5,7 @@ import HamburgerButton, { HamburgerButtonProps } from './HamburgerButton'
 import { colors } from '@/shared/theme'
 
 export default {
-  title: 'Shared/HamburgerButton',
+  title: 'Shared/H/HamburgerButton',
   component: HamburgerButton,
   argTypes: {
     active: { table: { disable: true } },
