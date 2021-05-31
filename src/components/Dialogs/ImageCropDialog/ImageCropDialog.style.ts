@@ -53,7 +53,7 @@ export const CropPlaceholder = styled(Placeholder)`
   ${cropAreaSizeCss};
 `
 
-export const CropContainer = styled.div<{ rounded?: boolean }>`
+export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean }>`
   ${cropAreaSizeCss};
 
   ${({ rounded }) => rounded && roundedCropperCss};
@@ -76,6 +76,8 @@ export const CropContainer = styled.div<{ rounded?: boolean }>`
   .cropper-modal {
     background-color: ${colors.transparentBlack[54]};
   }
+
+  pointer-events: ${({ disabled }) => disabled && 'none'};
 `
 
 export const StyledImage = styled.img`
