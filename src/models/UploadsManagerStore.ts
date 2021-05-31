@@ -1,9 +1,11 @@
 import { LiaisonJudgement } from '@/api/queries'
 import { StartFileUploadOptions } from '@/hooks/useUploadsManager/types'
-import { SnapshotOrInstance, types, cast, Instance, flow } from 'mobx-state-tree'
+import { SnapshotOrInstance, types, cast, Instance, flow, getRoot } from 'mobx-state-tree'
 import * as rax from 'retry-axios'
 import axios from 'axios'
 import { createStorageNodeUrl } from '@/utils/asset'
+import { RootStoreIntance, RootStore } from './RootStore'
+import { debounce } from 'lodash'
 
 type AssetFile = {
   contentId: string
@@ -64,7 +66,36 @@ export const UploadsManagerStore = types
     const assetsFiles: AssetFile[] = []
     const pendingNotificationsCounts = { uploading: 0, uploaded: 0 }
 
-    return { assetsFiles, pendingNotificationsCounts }
+    const displayUploadingNotification = debounce(() => {
+      getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
+        title:
+          pendingNotificationsCounts.uploading > 1
+            ? `${pendingNotificationsCounts.uploading} assets being uploaded`
+            : 'Asset being uploaded',
+        iconType: 'info',
+        timeout: UPLOADED_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        // TODO:
+        // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.uploading = 0
+    }, 700)
+    const displayUploadedNotification = debounce(() => {
+      getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
+        title:
+          pendingNotificationsCounts.uploaded > 1
+            ? `${pendingNotificationsCounts.uploaded} assets uploaded`
+            : 'Asset uploaded',
+        iconType: 'success',
+        timeout: UPLOADED_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        // TODO:
+        // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.uploaded = 0
+    }, 700)
+
+    return { assetsFiles, pendingNotificationsCounts, displayUploadingNotification, displayUploadedNotification }
   })
   .actions((self) => {
     function addAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
@@ -105,7 +136,8 @@ export const UploadsManagerStore = types
           self.updateAsset({ ...asset, lastStatus: 'inProgress', progress: (loaded / total) * 100 })
         }
         self.pendingNotificationsCounts.uploading++
-        // displayUploadingNotification.current()
+        self.displayUploadingNotification()
+
         yield axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -136,7 +168,7 @@ export const UploadsManagerStore = types
           progress: 100,
         })
         self.pendingNotificationsCounts.uploaded++
-        // displayUploadedNotification.current()
+        self.displayUploadedNotification()
       } catch (e) {
         console.error('Upload failed', e)
         if (e.message === RECONNECTION_ERROR_MESSAGE) {
@@ -144,13 +176,14 @@ export const UploadsManagerStore = types
             ...asset,
             lastStatus: 'reconnectionError',
           })
-          // displaySnackbar({
-          //   title: 'Asset failing to reconnect',
-          //   description: 'Host is not responding',
-          //   actionText: 'Go to uploads',
-          //   onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-          //   iconType: 'warning',
-          // })
+          getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
+            title: 'Asset failing to reconnect',
+            description: 'Host is not responding',
+            actionText: 'Go to uploads',
+            // TODO:
+            // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+            iconType: 'warning',
+          })
         } else {
           if (asset)
             self.updateAsset({
@@ -162,5 +195,8 @@ export const UploadsManagerStore = types
     })
     return { startFileUpload }
   })
+
+// TODO: snackbar store
+// TODO: remove useUploadsManager completely
 
 export type IAssetUpload = Instance<typeof AssetUpload>

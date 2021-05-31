@@ -22,7 +22,7 @@ type SnackbarsState = {
   id: string
 } & Omit<DisplaySnackbarArgs, 'time'>
 
-type SnackbarContextValue = {
+export type SnackbarContextValue = {
   snackbars: SnackbarsState[]
   displaySnackbar: (args: DisplaySnackbarArgs) => string
   updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void

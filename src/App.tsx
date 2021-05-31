@@ -13,15 +13,15 @@ export default function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <StoreProvider>
-        <SnackbarProvider>
-          <ConnectionStatusProvider>
-            <OverlayManagerProvider>
+      <SnackbarProvider>
+        <ConnectionStatusProvider>
+          <OverlayManagerProvider>
+            <StoreProvider>
               <MainLayout />
-            </OverlayManagerProvider>
-          </ConnectionStatusProvider>
-        </SnackbarProvider>
-      </StoreProvider>
+            </StoreProvider>
+          </OverlayManagerProvider>
+        </ConnectionStatusProvider>
+      </SnackbarProvider>
     </ApolloProvider>
   )
 }

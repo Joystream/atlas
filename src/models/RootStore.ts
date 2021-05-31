@@ -1,12 +1,29 @@
 import localForage from 'localforage'
 import { persist } from 'mst-persist'
-import { types } from 'mobx-state-tree'
+import { Instance, types } from 'mobx-state-tree'
 import { mstLog } from 'mst-log'
 import { UploadsManagerStore } from './UploadsManagerStore'
+import { SnackbarContextValue } from '@/hooks'
 
 export const RootStore = types.model('RootStore', {
   uploadsManagerStore: types.optional(UploadsManagerStore, {}),
+  hooks: types.optional(
+    types
+      .model('hooks')
+      .volatile((self) => {
+        const snackbar: Partial<SnackbarContextValue> = {}
+        return { snackbar }
+      })
+      .actions((self) => ({
+        setHooks(hooks: { snackbar: SnackbarContextValue }) {
+          self.snackbar = hooks.snackbar
+        },
+      })),
+    {}
+  ),
 })
+
+export type RootStoreIntance = Instance<typeof RootStore>
 
 export const store = RootStore.create(
   {},

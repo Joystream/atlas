@@ -39,7 +39,7 @@ export const UploadManagerProvider: React.FC = observer(({ children }) => {
     },
     { skip: !uploadsManagerStore.uploadingAssetsState.length }
   )
-  const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
+  // const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
   const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
   const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
