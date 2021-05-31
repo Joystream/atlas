@@ -109,10 +109,11 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleVideoDeleted = async () => {
+  const handleVideoDeleted = () => {
     if (!selectedVideoId) {
       return
     }
+    removeVideoTab(videoTabs.findIndex((vt) => vt.id === selectedVideoId))
     setSelectedVideoId(undefined)
   }
 
