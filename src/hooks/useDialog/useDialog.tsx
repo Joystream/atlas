@@ -72,11 +72,8 @@ export const DialogProvider: React.FC<DialogsProviderProps> = ({ container, chil
 }
 
 type ComponentOrDialogProps = React.FunctionComponent<{ in?: boolean }> | MessageDialogProps
-type UseDialogOptions = {
-  shouldCloseOnClick?: boolean
-}
 
-export const useDialog = (component?: ComponentOrDialogProps, options?: UseDialogOptions) => {
+export const useDialog = (componentOrDialogProps?: ComponentOrDialogProps) => {
   const ctx = useContext(DialogContext)
   if (ctx === undefined) {
     throw new Error('useDialog must be used within a DialogProvider')
@@ -89,33 +86,36 @@ export const useDialog = (component?: ComponentOrDialogProps, options?: UseDialo
   const hideModal = useCallback(() => setShown(false), [])
   const dialogId = useMemo(() => createId(), [])
 
+  const openDialogCb: ComponentOrDialogProps = useMemo(
+    () =>
+      typeof componentOrDialogProps === 'function'
+        ? componentOrDialogProps
+        : ({ in: inAnimation }) => <MessageDialog {...componentOrDialogProps} showDialog={inAnimation} />,
+    [componentOrDialogProps]
+  )
+
   useEffect(() => {
     if (isShown) {
-      openDialog(
-        dialogId,
-        typeof component === 'function'
-          ? component
-          : ({ in: inAnimation }) => <MessageDialog {...component} showDialog={inAnimation} />
-      )
+      openDialog(dialogId, openDialogCb)
     } else {
       closeDialog(dialogId)
     }
     return () => {
       closeDialog(dialogId)
     }
-  }, [closeDialog, component, dialogId, isShown, openDialog])
+  }, [closeDialog, componentOrDialogProps, dialogId, isShown, openDialog, openDialogCb])
 
   const _openDialog = useCallback(
     (args?: MessageDialogProps) =>
-      component === undefined
+      componentOrDialogProps === undefined
         ? openDialog(dialogId, ({ in: inAnimation }) => <MessageDialog {...args} showDialog={inAnimation} />)
         : showModal(),
-    [component, dialogId, openDialog, showModal]
+    [componentOrDialogProps, dialogId, openDialog, showModal]
   )
 
   const _closeDialog = useCallback(() => {
-    return component === undefined ? closeDialog(dialogId) : hideModal()
-  }, [closeDialog, component, dialogId, hideModal])
+    return componentOrDialogProps === undefined ? closeDialog(dialogId) : hideModal()
+  }, [closeDialog, componentOrDialogProps, dialogId, hideModal])
 
   return [_openDialog, _closeDialog]
 }
