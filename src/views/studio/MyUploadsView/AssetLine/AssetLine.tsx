@@ -139,6 +139,15 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       : ''
   const size = formatBytes(asset.size)
 
+  const assetsDialogs = {
+    avatar: avatarDialogRef,
+    cover: coverDialogRef,
+    thumbnail: thumbnailDialogRef,
+  }
+  const reselectFile = () => {
+    asset.type === 'video' ? openFileSelect() : assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
+  }
+
   const renderStatusMessage = (asset: AssetUploadWithProgress) => {
     if (asset.lastStatus === 'reconnecting') {
       return 'Trying to reconnect...'
@@ -154,24 +163,10 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       asset.lastStatus === 'error' ||
       (asset.lastStatus === 'inProgress' && asset.progress === 0 && asset.liaisonJudgement === LiaisonJudgement.Pending)
     ) {
-      const assetsDialogs = {
-        avatar: avatarDialogRef,
-        cover: coverDialogRef,
-        thumbnail: thumbnailDialogRef,
-      }
       return (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
-          <Button
-            size="small"
-            variant="secondary"
-            icon={<SvgGlyphUpload />}
-            onClick={() =>
-              asset.type === 'video'
-                ? openFileSelect()
-                : assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
-            }
-          >
+          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
             Reconnect file
           </Button>
         </div>
@@ -214,7 +209,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         primaryButtonText="Reselect file"
         onPrimaryButtonClick={() => {
           setShowDialog(false)
-          openFileSelect()
+          reselectFile()
         }}
         secondaryButtonText={`Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`}
         exitButton={false}

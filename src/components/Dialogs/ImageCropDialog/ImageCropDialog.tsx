@@ -48,6 +48,8 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
     cropData,
   })
 
+  const disabled = !!cropData
+
   // not great - ideally we'd have a data flow trigger this via prop change
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
@@ -103,7 +105,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} disabled={!!cropData}>
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)} disabled={disabled}>
         <SvgGlyphZoomOut />
       </IconButton>
       <StyledSlider
@@ -112,9 +114,9 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         min={zoomRange[0]}
         max={zoomRange[1]}
         step={zoomStep}
-        disabled={!!cropData}
+        disabled={disabled}
       />
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} disabled={!!cropData}>
+      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)} disabled={disabled}>
         <SvgGlyphZoomIn />
       </IconButton>
     </ZoomControl>
@@ -138,7 +140,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
           <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (
-          <CropContainer rounded={imageType === 'avatar'} disabled={!!cropData}>
+          <CropContainer rounded={imageType === 'avatar'} disabled={disabled}>
             <StyledImage src={editedImageHref} ref={imageElRefCallback} />
           </CropContainer>
         )}
