@@ -18,6 +18,7 @@ import {
   UploadFiles,
   PlaygroundValidationForm,
   VideoMetaData,
+  AutomaticCrop,
 } from './Playgrounds'
 import { colors } from '@/shared/theme'
 
@@ -30,15 +31,16 @@ const playgroundRoutes = [
   { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
   { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
   { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
+  { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
 ]
 
 export const PlaygroundLayout = () => {
   return (
     <SnackbarProvider>
-      <UploadManagerProvider>
-        <ConnectionStatusProvider>
-          <DraftsProvider>
-            <ActiveUserProvider>
+      <ActiveUserProvider>
+        <UploadManagerProvider>
+          <ConnectionStatusProvider>
+            <DraftsProvider>
               <Container>
                 <NavContainer>
                   {playgroundRoutes.map((route) => (
@@ -55,10 +57,10 @@ export const PlaygroundLayout = () => {
                   </Routes>
                 </ContentContainer>
               </Container>
-            </ActiveUserProvider>
-          </DraftsProvider>
-        </ConnectionStatusProvider>
-      </UploadManagerProvider>
+            </DraftsProvider>
+          </ConnectionStatusProvider>
+        </UploadManagerProvider>
+      </ActiveUserProvider>
     </SnackbarProvider>
   )
 }
