@@ -6,6 +6,7 @@ import axios from 'axios'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { RootStoreIntance, RootStore } from './RootStore'
 import { debounce } from 'lodash'
+import { absoluteRoutes } from '@/config/routes'
 
 type AssetFile = {
   contentId: string
@@ -65,8 +66,8 @@ export const UploadsManagerStore = types
   .volatile((self) => {
     const assetsFiles: AssetFile[] = []
     const pendingNotificationsCounts = { uploading: 0, uploaded: 0 }
-
     const displayUploadingNotification = debounce(() => {
+      console.log('displayin')
       getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
         title:
           pendingNotificationsCounts.uploading > 1
@@ -75,8 +76,7 @@ export const UploadsManagerStore = types
         iconType: 'info',
         timeout: UPLOADED_SNACKBAR_TIMEOUT,
         actionText: 'See',
-        // TODO:
-        // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
       })
       pendingNotificationsCounts.uploading = 0
     }, 700)
@@ -89,8 +89,7 @@ export const UploadsManagerStore = types
         iconType: 'success',
         timeout: UPLOADED_SNACKBAR_TIMEOUT,
         actionText: 'See',
-        // TODO:
-        // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
       })
       pendingNotificationsCounts.uploaded = 0
     }, 700)
@@ -180,8 +179,7 @@ export const UploadsManagerStore = types
             title: 'Asset failing to reconnect',
             description: 'Host is not responding',
             actionText: 'Go to uploads',
-            // TODO:
-            // onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+            onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
             iconType: 'warning',
           })
         } else {
@@ -196,7 +194,8 @@ export const UploadsManagerStore = types
     return { startFileUpload }
   })
 
-// TODO: snackbar store
+// videos
+// channel
 // TODO: remove useUploadsManager completely
 
 export type IAssetUpload = Instance<typeof AssetUpload>

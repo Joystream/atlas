@@ -1,16 +1,19 @@
 import { store } from '@/models/RootStore'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { Instance } from 'mobx-state-tree'
 import React, { useEffect, createContext, useContext } from 'react'
 import { useSnackbar } from '.'
+import { useNavigate } from 'react-router'
 
 const StoreContext = createContext<Instance<typeof store>>(store)
 StoreContext.displayName = 'StoreContext'
 
-export const StoreProvider: React.FC = ({ children }) => {
-  const { displaySnackbar, updateSnackbar, closeSnackbar, snackbars } = useSnackbar()
+export const StoreProvider: React.FC<{ client: ApolloClient<NormalizedCacheObject> }> = ({ children, client }) => {
+  const snackbar = useSnackbar()
+  const navigate = useNavigate()
   useEffect(() => {
-    store.hooks.setHooks({ snackbar: { displaySnackbar, updateSnackbar, closeSnackbar, snackbars } })
-  }, [closeSnackbar, displaySnackbar, snackbars, updateSnackbar])
+    store.hooks.setHooks({ snackbar, client, navigate })
+  }, [client, snackbar, navigate])
 
   return <StoreContext.Provider value={{ ...store }}>{children}</StoreContext.Provider>
 }
@@ -18,7 +21,7 @@ export const StoreProvider: React.FC = ({ children }) => {
 export const useMST = () => {
   const ctx = useContext(StoreContext)
   if (ctx === undefined) {
-    throw new Error('useUploadsManager must be used within a UploadManagerProvider')
+    throw new Error('useMST must be used within a StoreProvider')
   }
   return ctx
 }
