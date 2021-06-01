@@ -134,6 +134,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+  useEffect(() => {
+    // reset form for edited video on sheet close
+    if (isEdit && sheetState === 'closed' && tabData) {
+      reset(tabData)
+    }
+  }, [isEdit, reset, setValue, sheetState, tabData])
 
   useEffect(() => {
     if (isEdit) {
