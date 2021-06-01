@@ -86,16 +86,32 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(),
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
-    read(existing: VideoConnection, opts) {
-      const isPublic = opts.args?.where?.isPublic_eq
-      const filteredEdges = existing?.edges.filter(
-        (edge) => opts.readField('isPublic', edge.node) === isPublic || isPublic === undefined
-      )
+    read(
+      existing: VideoConnection,
+      { args, readField }: { args: GetVideosQueryVariables | null; readField: ReadFieldFunction }
+    ) {
+      const isPublic = args?.where?.isPublic_eq
+      const filteredEdges =
+        existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
 
+      const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
+      const sortedEdges = sortingASC
+        ? filteredEdges
+            ?.slice()
+            .sort(
+              (a, b) =>
+                (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
+            )
+        : filteredEdges
+            ?.slice()
+            .sort(
+              (a, b) =>
+                (readField('createdAt', a.node) as Date).getTime() - (readField('createdAt', b.node) as Date).getTime()
+            )
       return (
         existing && {
           ...existing,
-          edges: filteredEdges,
+          edges: sortedEdges,
         }
       )
     },
