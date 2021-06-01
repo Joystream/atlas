@@ -132,14 +132,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   // Will set all incompleted assets' status to error on initial mount
   const isInitialMount = useRef(true)
   useEffect(() => {
-    if (isInitialMount.current) {
-      uploadsState.forEach((asset) => {
-        if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
-          updateAsset(asset.contentId, 'error')
-        }
-      })
-      isInitialMount.current = false
+    if (!isInitialMount.current) {
+      return
     }
+    uploadsState.forEach((asset) => {
+      if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
+        updateAsset(asset.contentId, 'error')
+      }
+    })
+    isInitialMount.current = false
   }, [updateAsset, uploadsState])
 
   const displayUploadingNotification = useRef(
