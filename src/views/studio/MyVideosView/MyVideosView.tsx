@@ -1,36 +1,24 @@
-import { useVideos } from '@/api/hooks'
+import { useVideosConnection } from '@/api/hooks'
 import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
-import { Grid, Pagination, Tabs, Text, Select } from '@/shared/components'
+import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
-import { VideoOrderByInput } from '@/api/queries'
-import {
-  PaginationContainer,
-  SortContainer,
-  StyledDismissibleMessage,
-  TabsContainer,
-  ViewContainer,
-} from './MyVideos.styles'
+import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
-const SORT_OPTIONS = [
-  { name: 'Newest first', value: VideoOrderByInput.CreatedAtAsc },
-  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtDesc },
-] as const
+const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
+const INITIAL_FIRST = 50
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
-    VideoOrderByInput.CreatedAtAsc
-  )
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -44,18 +32,11 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
+  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const drafts =
-    sortVideosBy === VideoOrderByInput.CreatedAtAsc
-      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
-
-  const { loading, videos, totalCount, error, refetch, fetchMore } = useVideos(
+  const { edges, totalCount, loading, error, fetchMore, variables, pageInfo } = useVideosConnection(
     {
-      limit: videosPerPage,
-      offset: videosPerPage * currentPage,
-      orderBy: sortVideosBy,
+      first: INITIAL_FIRST,
       where: {
         channelId_eq: activeChannelId,
         isPublic_eq,
@@ -66,31 +47,32 @@ export const MyVideosView = () => {
 
   const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
 
-  useEffect(() => {
-    if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
-      return
-    }
-
-    const currentOffset = currentPage * videosPerPage
-    const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
-    if (videos.length < targetDisplayedCount) {
-      const missingCount = videosPerPage - videos.length
-      fetchMore({
-        variables: {
-          offset: currentOffset + videos.length,
-          limit: missingCount,
-        },
-      })
-    }
-  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
-
-  const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
+  const videos = edges
+    ?.map((edge) => edge.node)
+    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+  const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
+
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+
+  useEffect(() => {
+    if (!fetchMore || !edges?.length || !totalCount) {
+      return
+    }
+    if (totalCount <= edges.length) {
+      return
+    }
+
+    if (currentPage * videosPerPage + videosPerPage > edges.length) {
+      fetchMore({
+        variables: { ...variables, after: pageInfo?.endCursor },
+      })
+    }
+  }, [currentPage, edges, fetchMore, pageInfo, totalCount, variables, videosPerPage])
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
@@ -129,10 +111,11 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleVideoDeleted = async () => {
+  const handleVideoDeleted = () => {
     if (!selectedVideoId) {
       return
     }
+    removeVideoTab(videoTabs.findIndex((vt) => vt.id === selectedVideoId))
     setSelectedVideoId(undefined)
   }
 
@@ -239,20 +222,6 @@ export const MyVideosView = () => {
           <>
             <TabsContainer>
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-              <SortContainer>
-                <Text variant="body2">Sort by</Text>
-                <Select
-                  helperText={false}
-                  value={sortVideosBy}
-                  items={[...SORT_OPTIONS]}
-                  onChange={(value) => {
-                    if (value) {
-                      setSortVideosBy(value)
-                      refetch({ orderBy: value })
-                    }
-                  }}
-                />
-              </SortContainer>
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage
@@ -264,12 +233,13 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && (
+            {((isDraftTab && drafts.length === 0) ||
+              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
               <EmptyVideos
                 text={
                   currentTabName === 'All Videos'
                     ? "You don't have any published videos at the moment"
-                    : currentTabName === 'Published'
+                    : currentTabName === 'Public'
                     ? "You don't have any public videos at the moment"
                     : currentTabName === 'Drafts'
                     ? "You don't have any drafts at the moment"
@@ -305,7 +275,7 @@ const usePagination = (currentTab: number) => {
 
 const getPublicness = (currentTabName: typeof TABS[number]) => {
   switch (currentTabName) {
-    case 'Published':
+    case 'Public':
       return true
     case 'Unlisted':
       return false

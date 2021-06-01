@@ -70,12 +70,19 @@ const Pagination: React.FC<PaginationProps> = ({
 
 const generatePaginationArray = (currentPage: number, maxPaginationLinks: number, totalPages: number) => {
   const paginationArray = Array.from({ length: totalPages }).map((_, idx) => idx + 1)
-  const center = Math.floor(maxPaginationLinks / 2)
+
+  const center =
+    maxPaginationLinks % 2 === 0 ? Math.floor(maxPaginationLinks / 2 - 1) : Math.floor(maxPaginationLinks / 2)
 
   let slicedArray: Array<number>
-  if (currentPage + center <= totalPages) {
-    const start = Math.max(currentPage - 1 - center, 0)
+
+  if (currentPage + center < totalPages) {
+    const start =
+      maxPaginationLinks === 4
+        ? Math.min(currentPage - 1, totalPages - maxPaginationLinks)
+        : Math.max(currentPage - 1 - center, 0)
     const end = start + maxPaginationLinks
+
     slicedArray = paginationArray.slice(start, end)
   } else {
     slicedArray = paginationArray.slice(-maxPaginationLinks)
@@ -85,15 +92,16 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
   }
 
   const arrayWithDots = slicedArray.map((el, idx) => {
-    // always show the first and the last one page
-    if (idx === 0) {
+    // first page
+    if (idx === 0 && maxPaginationLinks !== 4) {
       return 1
     }
+    // last page
     if (idx === slicedArray.length - 1) {
       return totalPages
     }
     // show left "..."
-    if (idx === 1 && el - 1 !== 1) {
+    if (idx === 1 && el - 1 !== 1 && maxPaginationLinks !== 4) {
       return '...'
     }
     // show right "..."

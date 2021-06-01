@@ -3697,7 +3697,7 @@
     prop-types "^15.7.2"
     regenerator-runtime "^0.13.7"
 
-"@storybook/addons@6.1.16":
+"@storybook/addons@6.1.16", "@storybook/addons@^6.1.16":
   version "6.1.16"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-6.1.16.tgz#d5a5b940efeda4031fd406d8064b6774124543f4"
   integrity sha512-UefxKL4JHd7wTlCGXq+YZzmUgv6GvSSUHMPS39OTtrZUGTL1Vr88h6wITnQPUi/MFtj0VAZ0Fnj3N+PK3fxYzQ==
@@ -4032,7 +4032,7 @@
     regenerator-runtime "^0.13.7"
     source-map "^0.7.3"
 
-"@storybook/theming@6.1.16":
+"@storybook/theming@6.1.16", "@storybook/theming@^6.1.16":
   version "6.1.16"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.1.16.tgz#012711c0bd224cc6c089ec6c0239bc86c5b2842b"
   integrity sha512-gFcqbTALWdLI6hwUSob3Gn7iIcyp9qp9Oib+8f00ZHDfZnWr8CDQPJ3PcZ322uf35gskDstk8eKqviSZSDUQug==
@@ -4321,6 +4321,11 @@
   integrity sha512-U3a/z302duKpXUHfMneFjrWDDoq5n+nsJ/YeJHoTI9LXSBtSsqMUyxEJPIMAzfDawF5nuG5c9FN2gY//ZGl5PA==
   dependencies:
     cropperjs "*"
+
+"@types/debounce-promise@^3.1.1":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@types/debounce-promise/-/debounce-promise-3.1.3.tgz#dd0d6b96ee61da0dd4c413e3ea03a425ffa36b3f"
+  integrity sha512-mjcCf//DAUQ6YLQMhqYJAv/+a4BsE1GQFmy1el5K62wLJJmQwGi3TsnshhOFynPpuBF9Gh2Vvb+5ImPi47KaZw==
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
@@ -6010,6 +6015,28 @@ await-to-js@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/await-to-js/-/await-to-js-2.1.1.tgz#c2093cd5a386f2bb945d79b292817bbc3f41b31b"
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
+
+awesome-debounce-promise@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/awesome-debounce-promise/-/awesome-debounce-promise-2.1.0.tgz#7c21cadf2eaa1fa0a29449dd4dfdbd5004811e53"
+  integrity sha512-0Dv4j2wKk5BrNZh4jgV2HUdznaeVgEK/WTvcHhZWUElhmQ1RR+iURRoLEwICFyR0S/5VtxfcvY6gR+qSe95jNg==
+  dependencies:
+    "@types/debounce-promise" "^3.1.1"
+    awesome-imperative-promise "^1.0.1"
+    awesome-only-resolves-last-promise "^1.0.3"
+    debounce-promise "^3.1.0"
+
+awesome-imperative-promise@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/awesome-imperative-promise/-/awesome-imperative-promise-1.0.1.tgz#be143d89615b9110ac310345457f37e9791ddac9"
+  integrity sha512-EmPr3FqbQGqlNh+WxMNcF9pO9uDQJnOC4/3rLBQNH9m4E9qI+8lbfHCmHpVAsmGqPJPKhCjJLHUQzQW/RBHRdQ==
+
+awesome-only-resolves-last-promise@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/awesome-only-resolves-last-promise/-/awesome-only-resolves-last-promise-1.0.3.tgz#f2dac3ff7df238e48b818b423483031750f13ef0"
+  integrity sha512-7q4WPsYiD8Omvi/yHL314DkvsD/lM//Z2/KcU1vWk0xJotiV0GMJTgHTpWl3n90HJqpXKg7qX+VVNs5YbQyPRQ==
+  dependencies:
+    awesome-imperative-promise "^1.0.1"
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -8477,6 +8504,11 @@ de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
   integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
+
+debounce-promise@^3.1.0:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
+  integrity sha512-rZHcgBkbYavBeD9ej6sP56XfG53d51CD4dnaw989YX/nZ/ZJfgRx/9ePKmTNiUiyQvh4mtrMoS3OAWW+yoYtpg==
 
 debounce@^1.2.0:
   version "1.2.0"

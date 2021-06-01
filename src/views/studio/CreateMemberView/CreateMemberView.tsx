@@ -3,9 +3,9 @@ import { absoluteRoutes } from '@/config/routes'
 import { useUser, useConnectionStatus } from '@/hooks'
 import { Spinner } from '@/shared/components'
 import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation, urlValidation } from '@/utils/formValidationOptions'
-import { debounce } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import { textFieldValidation } from '@/utils/formValidationOptions'
+import debouncePromise from 'awesome-debounce-promise'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { FAUCET_URL } from '@/config/urls'
@@ -19,11 +19,13 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription, useMembership } from '@/api/hooks'
+import { useQueryNodeStateSubscription } from '@/api/hooks'
 
 import axios, { AxiosError } from 'axios'
 import { MemberId } from '@/joystream-lib'
-import { MEMBERSHIP_NAME_PATTERN } from '@/config/regex'
+import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { useApolloClient } from '@apollo/client'
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 
 type Inputs = {
   handle: string
@@ -36,7 +38,7 @@ const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors, trigger, setError: setInputError, watch } = useForm<Inputs>({
+  const { register, handleSubmit, errors } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -55,9 +57,7 @@ const CreateMemberView = () => {
     throw queryNodeStateError
   }
 
-  const { refetch: refetchMember } = useMembership({
-    where: { handle: watch('handle') },
-  })
+  const client = useApolloClient()
 
   // success
   useEffect(() => {
@@ -90,17 +90,40 @@ const CreateMemberView = () => {
     }
   })
 
-  const debounceAvatarChange = debounce(async (value) => {
-    await trigger('avatar')
-    if (!errors.avatar) {
-      setAvatarImageUrl(value)
-    }
-  }, 500)
+  const debouncedHandleAvatarChange = useRef(debouncePromise((value: string) => setAvatarImageUrl(value), 500))
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    debounceAvatarChange(value)
-  }
+  const debouncedAvatarValidation = useRef(
+    debouncePromise(
+      async (value: string): Promise<string | boolean> =>
+        new Promise((resolve) => {
+          if (!value) resolve(true)
+          const img = new Image()
+          img.src = value
+          img.onerror = () => resolve('Image not found')
+          img.onload = () => {
+            setAvatarImageUrl(value)
+            resolve(true)
+          }
+        }),
+      500
+    )
+  )
+
+  const debouncedHandleUniqueValidation = useRef(
+    debouncePromise(async (value: string) => {
+      const {
+        data: { membershipByUniqueInput },
+      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+        query: GetMembershipDocument,
+        variables: { where: { handle: value } },
+      })
+      if (membershipByUniqueInput) {
+        return 'Member handle already in use'
+      } else {
+        return true
+      }
+    }, 500)
+  )
 
   return (
     <Wrapper>
@@ -112,49 +135,43 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar
-          size="view"
-          imageUrl={errors.avatar ? undefined : avatarImageUrl}
-          onError={() => setInputError('avatar', { message: 'Image not found' })}
-        />
+        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
           name="avatar"
-          onChange={handleAvatarChange}
+          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          ref={register(urlValidation('Avatar url'))}
+          ref={register(
+            textFieldValidation({
+              name: 'Avatar URL',
+              pattern: URL_PATTERN,
+              patternMessage: 'must be a valid url',
+              maxLength: 200,
+              required: false,
+              validate: debouncedAvatarValidation.current,
+            })
+          )}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
         <StyledTextField
           name="handle"
           placeholder="johnnysmith"
-          label="Member Name"
+          label="Member handle"
           ref={register(
             textFieldValidation({
-              name: 'Member name',
+              name: 'Member handle',
               maxLength: 40,
               minLength: 4,
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
               patternMessage: 'may contain only lowercase letters, numbers and underscores',
-              validate: async (value) => {
-                // Wrapping it up with promise and resolving comparison inside debounce
-                // debounce() will not automatically do the return, which is needed for validation
-                return new Promise((resolve) => {
-                  debounce(async (handle) => {
-                    const {
-                      data: { membershipByUniqueInput },
-                    } = await refetchMember()
-                    resolve(!membershipByUniqueInput)
-                  }, 500)(value)
-                })
-              },
+              validate: debouncedHandleUniqueValidation.current,
             })
           )}
           error={!!errors.handle}
           helperText={
-            errors.handle?.message || (errors.handle?.type === 'validate' ? 'Member name is already taken' : '')
+            errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
           }
         />
         <TextArea
@@ -204,7 +221,7 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    console.error('Failed to create a new member')
+    console.error('Failed to create a new member', error)
     throw error
   }
 }

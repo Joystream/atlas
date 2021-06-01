@@ -169,6 +169,16 @@ export const RemoveCoverMobileButton = styled(IconButton)`
   &:hover {
     background-color: ${colors.transparentBlack[54]};
   }
+`
+
+export const EditCoverDesktopOverlay = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: ${colors.gray[200]};
+  display: none;
 
   ${media.medium} {
     display: none;
@@ -203,6 +213,24 @@ export const EditCoverMobileButton = styled(IconButton)`
   ${media.medium} {
     display: none;
   }
+`
+
+export const EditButtonMessage = styled(Text)`
+  font-weight: 700;
+  font-family: ${typography.fonts.headers};
+  line-height: 1;
+  color: ${colors.gray[100]};
+  margin-top: ${sizes(1)};
+`
+
+export const FailedUploadContainer = styled.div`
+  position: absolute;
+  top: ${sizes(16)};
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 export const EditButtonMessage = styled(Text)`

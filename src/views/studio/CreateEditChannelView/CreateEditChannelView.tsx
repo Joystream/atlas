@@ -43,6 +43,7 @@ import {
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
+import { AssetAvailability } from '@/api/queries'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -230,7 +231,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
     const uploadAssets = (channelId: ChannelId) => {
       const storageProviderUrl = getRandomStorageProviderUrl()
-      let uploadCount = 0
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
         startFileUpload(
           data.avatar.blob,
@@ -247,7 +247,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
-        uploadCount++
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
         startFileUpload(
@@ -265,36 +264,40 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           },
           storageProviderUrl
         )
-        uploadCount++
-      }
-
-      // TODO: move to uploads manager
-      if (uploadCount > 0) {
-        displaySnackbar({ title: `(${uploadCount}) Asset being uploaded`, iconType: 'info' })
       }
     }
 
     const refetchDataAndCacheAssets = async (channelId: ChannelId) => {
+      const setCachedAssets = () => {
+        if (data.avatar.blob && avatarContentId) {
+          writeUrlInCache({
+            url: data.avatar.url,
+            fileType: 'avatar',
+            parentId: channelId,
+            client,
+          })
+        }
+        if (data.cover.blob && coverContentId) {
+          writeUrlInCache({
+            url: data.cover.url,
+            fileType: 'cover',
+            parentId: channelId,
+            client,
+          })
+        }
+      }
+
+      if (!newChannel) {
+        // we can set cached assets before the refetch since cache policy will keep the local URLs
+        setCachedAssets()
+      }
+
       const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
       await Promise.all(refetchPromiseList)
+
       if (newChannel) {
+        setCachedAssets()
         setActiveUser({ channelId })
-      }
-      if (data.avatar.blob && avatarContentId) {
-        writeUrlInCache({
-          url: data.avatar.url,
-          fileType: 'avatar',
-          parentId: channelId,
-          client,
-        })
-      }
-      if (data.cover.blob && coverContentId) {
-        writeUrlInCache({
-          url: data.cover.url,
-          fileType: 'cover',
-          parentId: channelId,
-          client,
-        })
       }
     }
 
@@ -343,6 +346,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     },
   ]
 
+  const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
+  const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
+
   return (
     <>
       <DataLostWarningDialog />
@@ -355,6 +361,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <>
                 <ChannelCover
                   coverPhotoUrl={loading ? null : value.url}
+                  hasCoverUploadFailed={hasCoverUploadFailed}
                   onCoverEditClick={() => coverDialogRef.current?.open()}
                   onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                   editable
@@ -385,6 +392,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 <>
                   <StyledAvatar
                     imageUrl={value.url}
+                    hasAvatarUploadFailed={hasAvatarUploadFailed}
                     size="fill"
                     onEditClick={() => avatarDialogRef.current?.open()}
                     editable

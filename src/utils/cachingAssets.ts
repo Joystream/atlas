@@ -1,5 +1,5 @@
-import { ApolloClient, NormalizedCacheObject, gql } from '@apollo/client'
-import { AssetAvailability, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
+import { ApolloClient, gql, Reference } from '@apollo/client'
+import { AssetAvailability, VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
 import { DocumentNode } from 'graphql'
 
 const cachedCoverUrlFragment = gql`
@@ -29,13 +29,16 @@ type WriteUrlInCacheArg = {
   url?: string | null
   fileType: CachedAssetType
   parentId: string | null
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<object>
 }
 
 type WriteVideoDataCacheArg = {
-  data: VideoFieldsFragment
+  edge: {
+    cursor: string
+    node: VideoFieldsFragment
+  }
   thumbnailUrl?: string | null
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<object>
 }
 
 const FILE_TYPE_FIELDS: Record<CachedAssetType, string[]> = {
@@ -65,32 +68,51 @@ export const writeUrlInCache = ({ url, fileType, parentId, client }: WriteUrlInC
   })
 }
 
-export const writeVideoDataInCache = ({ data, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
+export const writeVideoDataInCache = ({ edge, thumbnailUrl, client }: WriteVideoDataCacheArg) => {
   const video = client.cache.writeFragment({
-    id: `Video:${data.id}`,
+    id: `Video:${edge.node.id}`,
     fragment: VideoFieldsFragmentDoc,
     fragmentName: 'VideoFields',
     data: {
-      ...data,
+      ...edge.node,
       thumbnailPhotoUrls: thumbnailUrl ? [thumbnailUrl] : [],
       thumbnailPhotoAvailability: AssetAvailability.Accepted,
     },
   })
   client.cache.modify({
     fields: {
-      videos: (existingVideos = []) => {
-        return [video, ...existingVideos]
+      videosConnection: (existingVideos = {}) => {
+        return {
+          ...existingVideos,
+          totalCount: existingVideos.totalCount + 1,
+          edges: [{ ...edge, node: video }, ...(existingVideos?.edges ? existingVideos.edges : [])],
+        }
       },
     },
   })
 }
 
-export const removeVideoFromCache = (videoId: string, client: ApolloClient<NormalizedCacheObject>) => {
+type NormalizedVideoEdge = Omit<VideoEdge, 'node'> & {
+  node: Reference
+}
+
+export const removeVideoFromCache = (videoId: string, client: ApolloClient<object>) => {
+  client.cache.evict({ id: `Video:${videoId}` })
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
-        client.cache.evict({ id: `Video:${videoId}` })
         return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
+      },
+      videosConnection: (existing = {}, opts) => {
+        return (
+          existing && {
+            ...existing,
+            totalCount: existing.edges.find((edge: NormalizedVideoEdge) => edge.node.__ref === `Video:${videoId}`)
+              ? existing.totalCount - 1
+              : existing.totalCount,
+            edges: existing.edges.filter((edge: NormalizedVideoEdge) => edge.node.__ref !== `Video:${videoId}`),
+          }
+        )
       },
     },
   })

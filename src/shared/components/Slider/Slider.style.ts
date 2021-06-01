@@ -36,4 +36,9 @@ export const StyledRcSlider = styled(RcSlider)`
       box-shadow: none;
     }
   }
+
+  &.rc-slider-disabled {
+    background-color: ${colors.gray['700']};
+    opacity: 0.1;
+  }
 `

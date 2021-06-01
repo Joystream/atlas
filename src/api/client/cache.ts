@@ -1,13 +1,23 @@
 import { InMemoryCache } from '@apollo/client'
-import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
 import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
-import { GetVideosQueryVariables, VideoOrderByInput } from '../queries'
+import {
+  AllChannelFieldsFragment,
+  AssetAvailability,
+  GetVideosQueryVariables,
+  Query,
+  VideoConnection,
+  VideoFieldsFragment,
+  VideoOrderByInput,
+} from '../queries'
+import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
+import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
+  const idEq = args?.where?.id_eq || ''
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
@@ -17,7 +27,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
+  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
 }
 
 const createDateHandler = () => ({
@@ -32,67 +42,138 @@ const createDateHandler = () => ({
   },
 })
 
+const createCachedUrlsHandler = () => ({
+  merge: (existing: string[] | undefined, incoming: string[]) => {
+    if (!existing || !existing.length) {
+      return incoming
+    }
+
+    if (!existing[0].startsWith('blob:')) {
+      // regular URL in cache, overwrite
+      return incoming
+    }
+
+    if (incoming && incoming.length && incoming[0].startsWith('blob:')) {
+      // incoming URL is cached asset, overwrite
+      return incoming
+    }
+
+    // currently using cached URL, keep it
+    return existing
+  },
+})
+
+const createCachedAvailabilityHandler = () => ({
+  merge: (existing: AssetAvailability | undefined, incoming: AssetAvailability) => {
+    if (incoming === AssetAvailability.Invalid) {
+      // if the incoming availability is invalid that means we deleted the asset so we shouldn't care about what's in cache
+      return incoming
+    }
+
+    if (existing === AssetAvailability.Accepted) {
+      // if the asset is already accepted, update most probably means that:
+      // fresh fetch is trying to overwrite local optimistically updated data
+      // in that case, let's keep it as Accepted to allow usage of cached blob URL
+      return existing
+    }
+    return incoming
+  },
+})
+
+type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
+
+const queryCacheFields: CachePolicyFields<keyof Query> = {
+  channelsConnection: relayStylePagination(),
+  videosConnection: {
+    ...relayStylePagination(getVideoKeyArgs),
+    read(existing: VideoConnection, opts) {
+      const isPublic = opts.args?.where?.isPublic_eq
+      const filteredEdges = existing?.edges.filter(
+        (edge) => opts.readField('isPublic', edge.node) === isPublic || isPublic === undefined
+      )
+
+      return (
+        existing && {
+          ...existing,
+          edges: filteredEdges,
+        }
+      )
+    },
+  },
+  videos: {
+    ...offsetLimitPagination(getVideoKeyArgs),
+    read(existing, { args, readField }: { args: GetVideosQueryVariables | null; readField: ReadFieldFunction }) {
+      const isPublic = args?.where?.isPublic_eq
+      const filteredExistingVideos = existing?.filter(
+        (v: StoreObject | Reference) => readField('isPublic', v) === isPublic || isPublic === undefined
+      )
+
+      // Default to returning the entire cached list,
+      // if offset and limit are not provided.
+      const offset = args?.offset ?? 0
+      const limit = args?.limit ?? filteredExistingVideos?.length
+      const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
+      const sortedArray = sortingASC
+        ? filteredExistingVideos
+            ?.slice()
+            .sort(
+              (a: Reference, b: Reference) =>
+                (readField('createdAt', b) as Date).getTime() - (readField('createdAt', a) as Date).getTime()
+            )
+        : filteredExistingVideos
+            ?.slice()
+            .sort(
+              (a: Reference, b: Reference) =>
+                (readField('createdAt', a) as Date).getTime() - (readField('createdAt', b) as Date).getTime()
+            )
+
+      return sortedArray?.slice(offset, offset + limit)
+    },
+  },
+  channelByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Channel',
+        id: args?.where.id,
+      })
+    )
+  },
+  videoByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Video',
+        id: args?.where.id,
+      })
+    )
+  },
+}
+
+const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
+  createdAt: createDateHandler(),
+  publishedBeforeJoystream: createDateHandler(),
+  thumbnailPhotoUrls: createCachedUrlsHandler(),
+  thumbnailPhotoAvailability: createCachedAvailabilityHandler(),
+}
+
+const channelCacheFields: CachePolicyFields<keyof AllChannelFieldsFragment> = {
+  avatarPhotoUrls: createCachedUrlsHandler(),
+  coverPhotoUrls: createCachedUrlsHandler(),
+  avatarPhotoAvailability: createCachedAvailabilityHandler(),
+  coverPhotoAvailability: createCachedAvailabilityHandler(),
+}
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
-      fields: {
-        channelsConnection: relayStylePagination(),
-        videosConnection: relayStylePagination(getVideoKeyArgs),
-        videos: {
-          ...offsetLimitPagination(getVideoKeyArgs),
-          read(existing, { args, readField }: { args: GetVideosQueryVariables | null; readField: ReadFieldFunction }) {
-            const isPublic = args?.where?.isPublic_eq
-            const filteredExistingVideos = existing?.filter(
-              (v: StoreObject | Reference) => readField('isPublic', v) === isPublic || isPublic === undefined
-            )
-
-            // Default to returning the entire cached list,
-            // if offset and limit are not provided.
-            const offset = args?.offset ?? 0
-            const limit = args?.limit ?? filteredExistingVideos?.length
-            const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
-            const sortedArray = sortingASC
-              ? filteredExistingVideos
-                  ?.slice()
-                  .sort(
-                    (a: Reference, b: Reference) =>
-                      (readField('createdAt', b) as Date).getTime() - (readField('createdAt', a) as Date).getTime()
-                  )
-              : filteredExistingVideos
-                  ?.slice()
-                  .sort(
-                    (a: Reference, b: Reference) =>
-                      (readField('createdAt', a) as Date).getTime() - (readField('createdAt', b) as Date).getTime()
-                  )
-
-            return sortedArray?.slice(offset, offset + limit)
-          },
-        },
-        channel(existing, { toReference, args }) {
-          return (
-            existing ||
-            toReference({
-              __typename: 'Channel',
-              id: args?.where.id,
-            })
-          )
-        },
-        video(existing, { toReference, args }) {
-          return (
-            existing ||
-            toReference({
-              __typename: 'Video',
-              id: args?.where.id,
-            })
-          )
-        },
-      },
+      fields: queryCacheFields,
     },
     Video: {
-      fields: {
-        createdAt: createDateHandler(),
-        publishedBeforeJoystream: createDateHandler(),
-      },
+      fields: videoCacheFields,
+    },
+    Channel: {
+      fields: channelCacheFields,
     },
   },
 })

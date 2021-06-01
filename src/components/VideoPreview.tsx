@@ -8,6 +8,7 @@ import VideoPreviewBase, {
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
+import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string
@@ -69,6 +70,8 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
     video?.channel.avatarPhotoDataObject
   )
 
+  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
+
   return (
     <VideoPreviewBase
       publisherMode
@@ -79,6 +82,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={thumbnailPhotoUrl}
+      hasThumbnailUploadFailed={hasThumbnailUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}

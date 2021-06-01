@@ -200,6 +200,7 @@ export type VideoWhereInput = {
   isPublic_eq?: Maybe<Scalars['Boolean']>
   isCensored_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
+  id_eq?: Maybe<Scalars['ID']>
 }
 
 export type VideoWhereUniqueInput = {

@@ -7,6 +7,7 @@ import {
   ShowMoreButton,
   StyledChannelLink,
   ShowMoreIconWrapper,
+  FollowedChannelsWrapper,
 } from './FollowedChannels.style'
 import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
@@ -28,21 +29,14 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
   const channelsToSlice = isShowingMore ? numberOfChannels : MAX_CHANNELS
   const channels = followedChannels.slice(0, channelsToSlice)
   return (
-    <>
-      <CSSTransition
-        in={expanded}
-        unmountOnExit
-        timeout={parseInt(transitions.timings.loading)}
-        classNames={transitions.names.fade}
-      >
+    <CSSTransition
+      in={expanded}
+      unmountOnExit
+      timeout={parseInt(transitions.timings.loading)}
+      classNames={transitions.names.fade}
+    >
+      <FollowedChannelsWrapper>
         <ChannelsTitle variant="h6">Followed Channels</ChannelsTitle>
-      </CSSTransition>
-      <CSSTransition
-        in={expanded}
-        unmountOnExit
-        timeout={parseInt(transitions.timings.loading)}
-        classNames={transitions.names.fade}
-      >
         <ChannelsWrapper>
           <ChannelsList>
             {channels.map(({ id }) => (
@@ -60,8 +54,8 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
             </ShowMoreButton>
           )}
         </ChannelsWrapper>
-      </CSSTransition>
-    </>
+      </FollowedChannelsWrapper>
+    </CSSTransition>
   )
 }
 

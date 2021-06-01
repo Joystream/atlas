@@ -12,11 +12,15 @@ import {
   Logo,
   LogoLink,
   ButtonGroup,
+  LegalLink,
+  SidebarNavFooter,
   StudioText,
+  LegalLinksWrapper,
 } from './SidenavBase.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
 import HamburgerButton from '@/shared/components/HamburgerButton'
+import { absoluteRoutes } from '@/config/routes'
 
 type NavSubitem = {
   name: string
@@ -77,14 +81,21 @@ const SidenavBase: React.FC<SidenavProps> = ({
             </NavItem>
           ))}
         </SidebarNavList>
-        {additionalContent}
+        <div>{additionalContent}</div>
         <CSSTransition
           in={expanded}
           unmountOnExit
           timeout={parseInt(transitions.timings.loading)}
           classNames={transitions.names.fade}
         >
-          <ButtonGroup>{buttonsContent}</ButtonGroup>
+          <SidebarNavFooter>
+            <ButtonGroup>{buttonsContent}</ButtonGroup>
+            <LegalLinksWrapper>
+              <LegalLink to={absoluteRoutes.legal.termsOfService()}>Terms of Service</LegalLink>
+              <span>•</span>
+              <LegalLink to={absoluteRoutes.legal.copyright()}>Copyright Policy</LegalLink>
+            </LegalLinksWrapper>
+          </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
       <HamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />

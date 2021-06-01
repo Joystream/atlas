@@ -25,13 +25,17 @@ export const Wrapper = styled(StudioContainer)`
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 64px;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 150px;
+  margin-top: 64px;
+  padding-bottom: 100px;
   ${media.medium} {
+    margin-top: 40px;
     align-items: unset;
     flex-direction: row;
+  }
+  ${media.xxlarge} {
+    margin-top: 64px;
   }
 `
 export const Form = styled.form`
@@ -49,12 +53,13 @@ export const StyledTextField = styled(TextField)`
 `
 
 export const StyledAvatar = styled(Avatar)`
-  margin-bottom: ${sizes(4)};
+  margin-bottom: ${sizes(6)};
+  width: 104px;
 `
 
 export const StyledButton = styled(Button)`
   display: block;
-  margin-top: 30px;
+  margin-top: 20px;
   ${media.medium} {
     margin-left: auto;
   }

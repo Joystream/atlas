@@ -34,9 +34,8 @@ export const SidebarNav = styled.nav<SidebarNavProps>`
   width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
 
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
 
   overflow: hidden;
   color: ${colors.white};
@@ -71,14 +70,17 @@ export const SidebarNavList = styled.ul`
   padding: 0;
 `
 
-export const ButtonGroup = styled.div`
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+export const SidebarNavFooter = styled.div`
+  display: flex;
+  flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
-  margin-bottom: ${sizes(10)};
-  flex-grow: 1;
+`
+
+export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  margin-top: ${sizes(3)};
   > * + * {
     margin-top: ${sizes(4)};
   }
@@ -177,5 +179,37 @@ export const SubItem = styled.li`
   margin-top: ${sizes(8)};
   :first-of-type {
     margin-top: ${sizes(6)};
+  }
+`
+
+export const LegalLinksWrapper = styled.span`
+  display: flex;
+  align-items: center;
+
+  margin-top: ${sizes(8)};
+  padding: ${sizes(4)} 0 ${sizes(6)};
+  border-top: 1px solid ${colors.gray[300]};
+
+  > * {
+    color: ${colors.gray[300]};
+  }
+
+  > * + * {
+    margin-left: ${sizes(2)};
+  }
+`
+
+export const LegalLink = styled(Link)`
+  text-decoration: none;
+  font-family: ${typography.fonts.headers};
+  font-size: ${typography.sizes.subtitle2};
+  &:hover {
+    color: ${colors.gray[400]};
+  }
+  &:focus {
+    color: ${colors.gray[400]};
+  }
+  &:active {
+    color: ${colors.gray[500]};
   }
 `
