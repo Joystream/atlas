@@ -11,7 +11,6 @@ export type BaseDialogProps = {
   exitButton?: boolean
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
-  isActionDialog?: boolean
 }
 
 const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {

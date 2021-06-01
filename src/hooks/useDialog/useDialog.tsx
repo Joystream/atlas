@@ -1,29 +1,13 @@
 import MessageDialog, { MessageDialogProps } from '@/components/Dialogs/MessageDialog'
 import { createId } from '@/utils/createId'
-import React, { useCallback, useEffect, useState, useContext, useMemo } from 'react'
+import React, { useCallback, useState, useContext, useMemo, useRef } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
 type DialogRendererProps = {
   component: React.FunctionComponent
 }
 
-interface DialogsContainerProps {
-  dialogs: Record<string, React.FunctionComponent>
-  component?: React.ComponentType
-  container?: Element
-}
-
 const DialogsRenderer = ({ component, ...rest }: DialogRendererProps) => component(rest)
-
-export const DialogsContainer = ({ dialogs }: DialogsContainerProps) => {
-  return (
-    <TransitionGroup>
-      {Object.keys(dialogs).map((key) => (
-        <DialogsRenderer key={key} component={dialogs[key]} />
-      ))}
-    </TransitionGroup>
-  )
-}
 
 type DialogContextValue = {
   openDialog: (key: string, dialog: React.FunctionComponent<{ in?: boolean }>) => void
@@ -32,11 +16,7 @@ type DialogContextValue = {
 const DialogContext = React.createContext<undefined | DialogContextValue>(undefined)
 DialogContext.displayName = 'DialogsContext'
 
-type DialogsProviderProps = {
-  container?: Element
-}
-
-export const DialogProvider: React.FC<DialogsProviderProps> = ({ container, children }) => {
+export const DialogProvider: React.FC = ({ children }) => {
   const [dialogs, setDialogs] = useState<Record<string, React.FC>>({})
 
   const openDialog = useCallback(
@@ -51,12 +31,8 @@ export const DialogProvider: React.FC<DialogsProviderProps> = ({ container, chil
   const closeDialog = useCallback(
     (key: string) =>
       setDialogs((dialogs) => {
-        if (!dialogs[key]) {
-          return dialogs
-        }
-        const newDialogs = { ...dialogs }
-        delete newDialogs[key]
-        return newDialogs
+        const { [key]: _, ...filteredDialogs } = dialogs
+        return filteredDialogs
       }),
     []
   )
@@ -66,7 +42,11 @@ export const DialogProvider: React.FC<DialogsProviderProps> = ({ container, chil
   return (
     <DialogContext.Provider value={contextValue}>
       {children}
-      <DialogsContainer dialogs={dialogs} container={container} />
+      <TransitionGroup>
+        {Object.keys(dialogs).map((key) => (
+          <DialogsRenderer key={key} component={dialogs[key]} />
+        ))}
+      </TransitionGroup>
     </DialogContext.Provider>
   )
 }
@@ -79,33 +59,19 @@ export const useDialog = (dialogProps?: MessageDialogProps) => {
 
   const { openDialog, closeDialog } = ctx
 
-  const [isShown, setShown] = useState(false)
-  const showModal = useCallback(() => setShown(true), [])
-  const hideModal = useCallback(() => setShown(false), [])
-  const dialogId = useMemo(() => createId(), [])
-
-  useEffect(() => {
-    if (isShown) {
-      openDialog(dialogId, ({ in: inAnimation }) => <MessageDialog {...dialogProps} showDialog={inAnimation} />)
-    } else {
-      closeDialog(dialogId)
-    }
-    return () => {
-      closeDialog(dialogId)
-    }
-  }, [closeDialog, dialogProps, dialogId, isShown, openDialog])
+  const dialogId = useRef(createId()).current
 
   const _openDialog = useCallback(
     (args?: MessageDialogProps) =>
-      dialogProps === undefined
-        ? openDialog(dialogId, ({ in: inAnimation }) => <MessageDialog {...args} showDialog={inAnimation} />)
-        : showModal(),
-    [dialogProps, dialogId, openDialog, showModal]
+      openDialog(dialogId, ({ in: inAnimation }) => (
+        <MessageDialog {...(args || dialogProps)} showDialog={inAnimation} />
+      )),
+    [dialogProps, dialogId, openDialog]
   )
 
   const _closeDialog = useCallback(() => {
-    return dialogProps === undefined ? closeDialog(dialogId) : hideModal()
-  }, [closeDialog, dialogProps, dialogId, hideModal])
+    closeDialog(dialogId)
+  }, [closeDialog, dialogId])
 
   return [_openDialog, _closeDialog]
 }

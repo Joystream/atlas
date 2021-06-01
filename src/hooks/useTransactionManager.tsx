@@ -49,6 +49,11 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     secondaryButtonText: 'Close',
     onSecondaryButtonClick: () => {
       handleDialogClose()
+      closeErrorDialog()
+    },
+    onExitClick: () => {
+      handleDialogClose()
+      closeErrorDialog()
     },
   })
   const [openCompletedDialog, closeCompletedDialog] = useDialog({
@@ -57,6 +62,10 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     description: successMessage.description,
     secondaryButtonText: 'Close',
     onSecondaryButtonClick: () => {
+      handleDialogClose()
+      closeCompletedDialog()
+    },
+    onExitClick: () => {
       handleDialogClose()
       closeCompletedDialog()
     },

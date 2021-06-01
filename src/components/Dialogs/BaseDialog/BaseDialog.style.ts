@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
 import { colors, sizes, media, zIndex } from '@/shared/theme'
-import { animated } from 'react-spring'
 
-export const DialogBackDrop = styled(animated.div)`
+export const DialogBackDrop = styled.div`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -14,7 +13,7 @@ export const DialogBackDrop = styled(animated.div)`
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
 `
 
-export const StyledContainer = styled(animated.div)`
+export const StyledContainer = styled.div`
   --dialog-padding: ${sizes(4)};
   ${media.small} {
     --dialog-padding: ${sizes(6)};
