@@ -201,6 +201,7 @@ input VideoWhereInput {
   isPublic_eq: Boolean
   isCensored_eq: Boolean
   id_in: [ID!]
+  id_eq: ID
 }
 
 input VideoWhereUniqueInput {

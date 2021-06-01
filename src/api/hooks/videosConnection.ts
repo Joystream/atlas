@@ -7,6 +7,9 @@ const useVideosConnection = (variables?: GetVideosConnectionQueryVariables, opts
 
   return {
     videosConnection: data?.videosConnection,
+    edges: data?.videosConnection.edges,
+    totalCount: data?.videosConnection.totalCount,
+    pageInfo: data?.videosConnection.pageInfo,
     ...rest,
   }
 }

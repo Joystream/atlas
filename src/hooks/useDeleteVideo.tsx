@@ -1,19 +1,15 @@
-import { useVideos } from '@/api/hooks'
 import { useState } from 'react'
 import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
+import { useApolloClient } from '@apollo/client'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
   const { handleTransaction } = useTransactionManager()
-  const { activeMemberId, activeChannelId } = useAuthorizedUser()
+  const { activeMemberId } = useAuthorizedUser()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
-  const { refetchCount: refetchVideosCount, client } = useVideos({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
+  const client = useApolloClient()
 
   const confirmDeleteVideo = async (videoId: string, onTxSync?: () => void) => {
     if (!joystream) {
@@ -25,7 +21,6 @@ export const useDeleteVideo = () => {
     handleTransaction({
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
       onTxSync: async () => {
-        await refetchVideosCount()
         removeVideoFromCache(videoId, client)
         onTxSync?.()
       },
