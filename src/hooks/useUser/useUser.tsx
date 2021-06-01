@@ -4,7 +4,11 @@ import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/exten
 import { AccountId } from '@/joystream-lib'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
+import { useSnackbar } from '@/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+
+const POLKADOT_EXTENSION_ID = 'mopnmbcafieddcagagdcbnhejhlodfdd'
+const EXTENSION_URL = `chrome-extension://${POLKADOT_EXTENSION_ID}/page.js`
 
 export type Account = {
   id: AccountId
@@ -14,6 +18,7 @@ export type Account = {
 type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
   accounts: Account[] | null
   extensionConnected: boolean | null
+  extensionRejected: boolean | null
 
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
@@ -30,9 +35,11 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
+  const { displaySnackbar } = useSnackbar()
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
+  const [extensionRejected, setExtensionRejected] = useState<boolean | null>(null)
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
@@ -68,9 +75,17 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const initPolkadotExtension = async () => {
       try {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
+        const res = await fetch(EXTENSION_URL)
+        const polkaDotExtensionInstalled = res.ok
 
         if (!enabledExtensions.length) {
-          console.warn('No Polkadot extension detected')
+          if (polkaDotExtensionInstalled) {
+            console.warn('Polkadot extension disabled')
+            displaySnackbar({ title: "Polkadot's website acces rejected", actionText: 'See details' })
+            setExtensionRejected(true)
+          } else {
+            console.warn('No Polkadot extension detected')
+          }
           setExtensionConnected(false)
           return
         }
@@ -100,7 +115,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     return () => {
       unsub?.()
     }
-  }, [])
+  }, [displaySnackbar])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
@@ -125,6 +140,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
     accounts,
     extensionConnected,
+    extensionRejected,
 
     memberships,
     membershipsLoading,
