@@ -22,7 +22,12 @@ import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { useApolloClient } from '@apollo/client'
-import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoOrderByInput,
+} from '@/api/queries'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -201,9 +206,8 @@ export const EditVideoSheet: React.FC = () => {
       const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
         query: GetVideosConnectionDocument,
         variables: {
+          orderBy: VideoOrderByInput.CreatedAtDesc,
           where: {
-            channelId_eq: activeChannelId,
-            isPublic_eq: data.isPublic,
             id_eq: videoId,
           },
         },
