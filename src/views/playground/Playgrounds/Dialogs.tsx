@@ -1,4 +1,3 @@
-import { ActionDialog } from '@/components'
 import { useDialog } from '@/hooks/useDialog'
 import { Button } from '@/shared/components'
 import React from 'react'
@@ -24,13 +23,6 @@ const Dialogs = () => {
     primaryButtonText: 'Confirm',
     onExitClick: () => closeThirdDialog(),
   })
-
-  const [openActionDialog, closeActionDialog] = useDialog(() => (
-    <ActionDialog onExitClick={() => closeActionDialog()}>
-      <div>hello from ActionDialog</div>
-    </ActionDialog>
-  ))
-
   return (
     // to test lock/unlock scroll
     <div style={{ height: '200vh' }}>
@@ -42,13 +34,6 @@ const Dialogs = () => {
         }}
       >
         Open two dialogs at once
-      </Button>
-      <Button
-        onClick={() => {
-          openActionDialog()
-        }}
-      >
-        Open action dialog
       </Button>
     </div>
   )
