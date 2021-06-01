@@ -22,7 +22,7 @@ import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { useApolloClient } from '@apollo/client'
-import { GetVideoDocument, GetVideoQuery, GetVideoQueryVariables } from '@/api/queries'
+import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -198,18 +198,20 @@ export const EditVideoSheet: React.FC = () => {
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
-      const fetchedVideo = await client.query<GetVideoQuery, GetVideoQueryVariables>({
-        query: GetVideoDocument,
+      const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
+        query: GetVideosConnectionDocument,
         variables: {
           where: {
-            id: videoId,
+            channelId_eq: activeChannelId,
+            isPublic_eq: data.isPublic,
+            id_eq: videoId,
           },
         },
       })
       if (isNew) {
-        if (fetchedVideo.data?.videoByUniqueInput) {
+        if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
-            data: fetchedVideo.data?.videoByUniqueInput,
+            edge: fetchedVideo.data.videosConnection.edges[0],
             thumbnailUrl: data.assets.thumbnail?.url,
             client,
           })
