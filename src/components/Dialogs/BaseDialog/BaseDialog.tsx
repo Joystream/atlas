@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { SvgGlyphClose } from '@/shared/icons'
 import Portal from '@/components/Portal'
@@ -15,37 +15,22 @@ export type BaseDialogProps = {
 }
 
 const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
-  const { dialogContainerRef, lockScroll, unlockScroll } = useOverlayManager()
-
-  useEffect(() => {
-    // don't lock if there is no children in dialogContainerRef
-    if (!dialogContainerRef.current?.hasChildNodes()) {
-      unlockScroll()
-      return
-    }
-    // don't lock if there is only one dialog and it has ${transitions.names.dialog}-exit class
-    const hasLastElementExitClassName = [...dialogContainerRef.current?.children]
-      .filter((item) => item.className.includes(transitions.names.dialog))
-      .every((item) => item.className.includes(`${transitions.names.dialog}-exit`))
-
-    if (hasLastElementExitClassName) {
-      unlockScroll()
-      return
-    }
-
-    lockScroll()
-
-    return () => {
-      unlockScroll()
-    }
-  }, [dialogContainerRef, lockScroll, showDialog, unlockScroll])
+  const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   return (
     <Portal containerRef={dialogContainerRef}>
       <CSSTransition in={showDialog} timeout={200} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
         <DialogBackDrop />
       </CSSTransition>
-      <CSSTransition in={showDialog} timeout={200} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+      <CSSTransition
+        in={showDialog}
+        timeout={200}
+        classNames={transitions.names.dialog}
+        mountOnEnter
+        unmountOnExit
+        onEnter={incrementOverlaysOpenCount}
+        onExited={decrementOverlaysOpenCount}
+      >
         <StyledContainer className={className}>
           {exitButton && (
             <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">

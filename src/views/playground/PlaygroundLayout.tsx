@@ -24,8 +24,6 @@ import {
 } from './Playgrounds'
 import { colors } from '@/shared/theme'
 
-import { TransitionGroup } from 'react-transition-group'
-
 const playgroundRoutes = [
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
@@ -58,9 +56,7 @@ export const PlaygroundLayout = () => {
                   <ContentContainer>
                     <Routes>
                       {playgroundRoutes.map((route) => (
-                        <Link key={route.path} to={route.path}>
-                          {route.name}
-                        </Link>
+                        <Route key={route.path} path={route.path} element={route.element} />
                       ))}
                     </Routes>
                   </ContentContainer>
