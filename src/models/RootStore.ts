@@ -53,5 +53,7 @@ persist('store', store, {
   whitelist: ['uploadsManagerStore'],
 }).then(() => console.log('store has been hydrated'))
 
-// @ts-ignore for playing around with the console remove on prod
-window.store = store
+if (process.env.NODE_ENV === 'development') {
+  // @ts-ignore for playing around with the console on development
+  window.store = store
+}
