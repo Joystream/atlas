@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import { ReactComponent as CoinsIllustration } from '@/assets/coins.svg'
 import { colors, media, sizes } from '@/shared/theme'
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
+import { SvgCoinsIllustration } from '@/shared/illustrations'
 
 export const StyledStudioContainer = styled(StudioContainer)`
   display: flex;
@@ -46,7 +46,7 @@ export const ListContainer = styled.div`
   }
 `
 
-export const StyledCoinsIllustrations = styled(CoinsIllustration)`
+export const StyledCoinsIllustrations = styled(SvgCoinsIllustration)`
   z-index: -2;
   display: none;
   ${media.small} {

@@ -1,5 +1,6 @@
 import { Text } from '@/shared/components'
 import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
+import { SvgJoystreamLogo, SvgPolkadotLogo } from '@/shared/illustrations'
 import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
@@ -17,7 +18,11 @@ export const StepWrapper = styled.div<StepWrapperProps>`
   margin-top: ${sizes(10)};
 `
 
-export const StyledLogo = styled.img`
+export const StyledJoystreamLogo = styled(SvgJoystreamLogo)`
+  height: 40px;
+  width: 40px;
+`
+export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
   height: 40px;
   width: 40px;
 `

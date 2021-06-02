@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
 import { StyledButton } from './ExtensionStep.style'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
-import polkadotIcon from '@/assets/polkadot-logo.svg'
+import {
+  StepFooter,
+  BottomBarIcon,
+  StepSubTitle,
+  StepTitle,
+  StepWrapper,
+  StyledPolkadotLogo,
+} from './SignInSteps.style'
 import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'
 import { useRouterQuery, useUser } from '@/hooks'
@@ -24,7 +30,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
 
   return (
     <StepWrapper withBottomBar>
-      <StyledLogo src={polkadotIcon} alt="polkadot icon" />
+      <StyledPolkadotLogo />
       <StepTitle variant="h4">Add Polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
         To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
