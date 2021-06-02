@@ -68,29 +68,33 @@ export const UploadsManagerStore = types
     const pendingNotificationsCounts = { uploading: 0, uploaded: 0 }
     const displayUploadingNotification = debounce(() => {
       console.log('displayin')
-      getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
-        title:
-          pendingNotificationsCounts.uploading > 1
-            ? `${pendingNotificationsCounts.uploading} assets being uploaded`
-            : 'Asset being uploaded',
-        iconType: 'info',
-        timeout: UPLOADED_SNACKBAR_TIMEOUT,
-        actionText: 'See',
-        onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
-      })
+      getRoot<RootStoreIntance>(self).snackbarStore.displaySnackbar(
+        {
+          title:
+            pendingNotificationsCounts.uploading > 1
+              ? `${pendingNotificationsCounts.uploading} assets being uploaded`
+              : 'Asset being uploaded',
+          iconType: 'info',
+          timeout: UPLOADED_SNACKBAR_TIMEOUT,
+          actionText: 'See',
+        },
+        () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads())
+      )
       pendingNotificationsCounts.uploading = 0
     }, 700)
     const displayUploadedNotification = debounce(() => {
-      getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
-        title:
-          pendingNotificationsCounts.uploaded > 1
-            ? `${pendingNotificationsCounts.uploaded} assets uploaded`
-            : 'Asset uploaded',
-        iconType: 'success',
-        timeout: UPLOADED_SNACKBAR_TIMEOUT,
-        actionText: 'See',
-        onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
-      })
+      getRoot<RootStoreIntance>(self).snackbarStore.displaySnackbar?.(
+        {
+          title:
+            pendingNotificationsCounts.uploaded > 1
+              ? `${pendingNotificationsCounts.uploaded} assets uploaded`
+              : 'Asset uploaded',
+          iconType: 'success',
+          timeout: UPLOADED_SNACKBAR_TIMEOUT,
+          actionText: 'See',
+        },
+        () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads())
+      )
       pendingNotificationsCounts.uploaded = 0
     }, 700)
 
@@ -175,13 +179,15 @@ export const UploadsManagerStore = types
             ...asset,
             lastStatus: 'reconnectionError',
           })
-          getRoot<RootStoreIntance>(self).hooks.snackbar.displaySnackbar?.({
-            title: 'Asset failing to reconnect',
-            description: 'Host is not responding',
-            actionText: 'Go to uploads',
-            onActionClick: () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads()),
-            iconType: 'warning',
-          })
+          getRoot<RootStoreIntance>(self).snackbarStore.displaySnackbar?.(
+            {
+              title: 'Asset failing to reconnect',
+              description: 'Host is not responding',
+              actionText: 'Go to uploads',
+              iconType: 'warning',
+            },
+            () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads())
+          )
         } else {
           if (asset)
             self.updateAsset({
@@ -196,6 +202,7 @@ export const UploadsManagerStore = types
 
 // videos
 // channel
-// TODO: remove useUploadsManager completely
+// TODO: remove useUploadsManager completely ?
 
-export type IAssetUpload = Instance<typeof AssetUpload>
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IAssetUpload extends Instance<typeof AssetUpload> {}

@@ -34,7 +34,6 @@ import {
   useUser,
   useJoystream,
   useSnackbar,
-  useUploadsManager,
   useEditVideoSheet,
   useDisplayDataLostWarning,
   useTransactionManager,

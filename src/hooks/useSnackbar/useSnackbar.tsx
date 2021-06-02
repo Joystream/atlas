@@ -1,33 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import { observer } from 'mobx-react-lite'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styled from '@emotion/styled'
 import { Snackbar } from '@/shared/components'
 import { transitions, sizes } from '@/shared/theme'
-import { createId } from '@/utils/createId'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
-
-type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
-
-export type DisplaySnackbarArgs = {
-  timeout?: number
-  variant?: 'primary' | 'secondary'
-  iconType?: SnackbarIconType
-  title: string
-  description?: string
-  actionText?: string
-  onActionClick?: () => void
-}
-
-type SnackbarsState = {
-  id: string
-} & Omit<DisplaySnackbarArgs, 'time'>
-
-export type SnackbarContextValue = {
-  snackbars: SnackbarsState[]
-  displaySnackbar: (args: DisplaySnackbarArgs) => string
-  updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
-  closeSnackbar: (id: string) => void
-}
+import { SnackbarIconType } from '@/models/SnackbarStore'
+import { useMST } from '../useStore'
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertInfo />,
@@ -36,70 +15,31 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   warning: <SvgAlertWarning />,
 }
 
-const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)
-SnackbarContext.displayName = 'SnackbarContext'
-
-const SNACKBARS_LIMIT = 3
-
-export const SnackbarProvider: React.FC = ({ children }) => {
-  const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
-
-  const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = createId()
-    setSnackbars((currentSnackbars) => {
-      return [...currentSnackbars, { id, ...args }]
-    })
-
-    if (timeout) {
-      setTimeout(() => {
-        setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
-      }, timeout)
-    }
-
-    return id
-  }, [])
-
-  const updateSnackbar = useCallback((id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => {
-    setSnackbars((currentSnackbars) =>
-      currentSnackbars.map((snackbar) => (snackbar.id === id ? { ...snackbar, ...opts } : snackbar))
-    )
-  }, [])
-
-  const closeSnackbar = useCallback((id: string) => {
-    setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
-  }, [])
-
-  useEffect(() => {
-    if (snackbars.length > SNACKBARS_LIMIT) {
-      setTimeout(() => {
-        setSnackbars((currentSnackbars) => currentSnackbars.slice(1))
-      }, 500)
-    }
-  }, [snackbars])
-
+export const Snackbars = observer(() => {
+  const { snackbarStore } = useMST()
   return (
-    <SnackbarContext.Provider value={{ snackbars, displaySnackbar, updateSnackbar, closeSnackbar }}>
-      {children}
-      <SnackbarsContainer>
-        <TransitionGroup>
-          {snackbars.map(({ id, iconType, onActionClick, ...snackbarProps }) => (
+    <SnackbarsContainer>
+      <TransitionGroup>
+        {[...snackbarStore.snackbars].map((snackbar) => {
+          const { id, iconType, onActionClick, ...snackbarProps } = snackbar
+          return (
             <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
               <Snackbar
                 {...snackbarProps}
                 onActionClick={() => {
                   onActionClick?.()
-                  closeSnackbar(id)
+                  snackbarStore.closeSnackbar(snackbar)
                 }}
                 icon={iconType && ICON_TYPE_TO_ICON[iconType]}
-                onClick={() => closeSnackbar(id)}
+                onClick={() => snackbarStore.closeSnackbar(snackbar)}
               />
             </CSSTransition>
-          ))}
-        </TransitionGroup>
-      </SnackbarsContainer>
-    </SnackbarContext.Provider>
+          )
+        })}
+      </TransitionGroup>
+    </SnackbarsContainer>
   )
-}
+})
 
 const SnackbarsContainer = styled.div`
   position: fixed;
@@ -112,9 +52,6 @@ const SnackbarsContainer = styled.div`
 `
 
 export const useSnackbar = () => {
-  const ctx = useContext(SnackbarContext)
-  if (ctx === undefined) {
-    throw new Error('useSnackbar must be used within a SnackbarProvider')
-  }
-  return ctx
+  const { snackbarStore } = useMST()
+  return snackbarStore
 }

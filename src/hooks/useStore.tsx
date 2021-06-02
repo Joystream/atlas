@@ -9,11 +9,10 @@ const StoreContext = createContext<Instance<typeof store>>(store)
 StoreContext.displayName = 'StoreContext'
 
 export const StoreProvider: React.FC<{ client: ApolloClient<NormalizedCacheObject> }> = ({ children, client }) => {
-  const snackbar = useSnackbar()
   const navigate = useNavigate()
   useEffect(() => {
-    store.hooks.setHooks({ snackbar, client, navigate })
-  }, [client, snackbar, navigate])
+    store.hooks.setHooks({ client, navigate })
+  }, [client, navigate])
 
   return <StoreContext.Provider value={{ ...store }}>{children}</StoreContext.Provider>
 }

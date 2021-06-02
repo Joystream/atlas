@@ -2,7 +2,7 @@ import React from 'react'
 import { ApolloProvider } from '@apollo/client'
 
 import { createApolloClient } from '@/api'
-import { ConnectionStatusProvider, OverlayManagerProvider, SnackbarProvider } from '@/hooks'
+import { ConnectionStatusProvider, OverlayManagerProvider, Snackbars } from '@/hooks'
 import MainLayout from './MainLayout'
 import { StoreProvider } from './hooks/useStore'
 import { BrowserRouter } from 'react-router-dom'
@@ -13,18 +13,17 @@ export default function App() {
   const apolloClient = createApolloClient()
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <SnackbarProvider>
+    <BrowserRouter>
+      <ApolloProvider client={apolloClient}>
         <ConnectionStatusProvider>
-          <OverlayManagerProvider>
-            <BrowserRouter>
-              <StoreProvider client={apolloClient}>
-                <MainLayout />
-              </StoreProvider>
-            </BrowserRouter>
-          </OverlayManagerProvider>
+          <StoreProvider client={apolloClient}>
+            <OverlayManagerProvider>
+              <MainLayout />
+            </OverlayManagerProvider>
+            <Snackbars />
+          </StoreProvider>
         </ConnectionStatusProvider>
-      </SnackbarProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </BrowserRouter>
   )
 }

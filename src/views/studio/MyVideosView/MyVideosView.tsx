@@ -95,12 +95,14 @@ export const MyVideosView = () => {
     }
     addVideoTab({ id, isDraft: opts.draft })
     if (opts.minimized) {
-      displaySnackbar({
-        title: 'Video opened in a new tab',
-        iconType: 'success',
-        actionText: 'Undo',
-        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
-      })
+      displaySnackbar(
+        {
+          title: 'Video opened in a new tab',
+          iconType: 'success',
+          actionText: 'Undo',
+        },
+        () => setTabIdToRemoveViaSnackbar(id)
+      )
       setSheetState('minimized')
     } else {
       const tabIdx = videoTabs.findIndex((t) => t.id === id)

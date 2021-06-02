@@ -3,29 +3,24 @@ import { persist } from 'mst-persist'
 import { Instance, types } from 'mobx-state-tree'
 import { mstLog } from 'mst-log'
 import { UploadsManagerStore } from './UploadsManagerStore'
-import { SnackbarContextValue } from '@/hooks'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { NavigateFunction } from 'react-router'
+import { SnackbarStore } from './SnackbarStore'
 
 export const RootStore = types.model('RootStore', {
   uploadsManagerStore: types.optional(UploadsManagerStore, {}),
+  snackbarStore: types.optional(SnackbarStore, {}),
   // provitional store to pass down things that as of now live only in hooks
   hooks: types.optional(
     types
       .model('hooks')
       .volatile((self) => {
-        const snackbar: Partial<SnackbarContextValue> = {}
         const client: Partial<ApolloClient<NormalizedCacheObject>> = {}
         const navigate: NavigateFunction = () => ({})
-        return { snackbar, client, navigate }
+        return { client, navigate }
       })
       .actions((self) => ({
-        setHooks(hooks: {
-          snackbar: SnackbarContextValue
-          client: ApolloClient<NormalizedCacheObject>
-          navigate: NavigateFunction
-        }) {
-          self.snackbar = hooks.snackbar
+        setHooks(hooks: { client: ApolloClient<NormalizedCacheObject>; navigate: NavigateFunction }) {
           self.client = hooks.client
           self.navigate = hooks.navigate
         },
