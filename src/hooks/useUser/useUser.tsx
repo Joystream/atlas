@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { useActiveUserStore } from './store'
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { AccountId } from '@/joystream-lib'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
-import { useSnackbar } from '@/hooks'
+import { useSnackbar, useCheckBrowser } from '@/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
 const POLKADOT_EXTENSION_ID = 'mopnmbcafieddcagagdcbnhejhlodfdd'
@@ -36,6 +36,7 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
   const { displaySnackbar } = useSnackbar()
+  const browser = useCheckBrowser()
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
@@ -68,6 +69,17 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     throw activeMembershipError
   }
 
+  const checkIfPolkadotExtensionInstalled = useCallback(async () => {
+    const res = await fetch(EXTENSION_URL)
+    const polkaDotExtensionInstalled = res.ok
+    if (polkaDotExtensionInstalled) {
+      console.warn('Polkadot extension disabled')
+      setExtensionRejected(true)
+    } else {
+      console.warn('No Polkadot extension detected')
+    }
+  }, [])
+
   // handle polkadot extension
   useEffect(() => {
     let unsub: () => void
@@ -75,14 +87,11 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const initPolkadotExtension = async () => {
       try {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
-        const res = await fetch(EXTENSION_URL)
-        const polkaDotExtensionInstalled = res.ok
 
         if (!enabledExtensions.length) {
-          if (polkaDotExtensionInstalled) {
-            console.warn('Polkadot extension disabled')
-            displaySnackbar({ title: "Polkadot's website acces rejected", actionText: 'See details' })
-            setExtensionRejected(true)
+          // Current check if extension is installed in browser works only in Chromium-based browsers
+          if (browser === 'chrome') {
+            checkIfPolkadotExtensionInstalled()
           } else {
             console.warn('No Polkadot extension detected')
           }
@@ -115,7 +124,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     return () => {
       unsub?.()
     }
-  }, [displaySnackbar])
+  }, [browser, checkIfPolkadotExtensionInstalled])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
