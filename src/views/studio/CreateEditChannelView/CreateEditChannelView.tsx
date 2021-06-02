@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-
 import { languages } from '@/config/languages'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
@@ -359,6 +358,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             <>
               <ChannelCover
                 coverPhotoUrl={loading ? null : value.url}
+                hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => coverDialogRef.current?.open()}
                 onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                 editable
@@ -389,6 +389,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               <>
                 <StyledAvatar
                   imageUrl={value.url}
+                  hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size="fill"
                   onEditClick={() => avatarDialogRef.current?.open()}
                   editable
@@ -479,45 +480,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   onChange={onChange}
                   error={!!errors.language && !value}
                   helperText={(errors.language as FieldError)?.message}
-                />
-              )}
-            />
-          </FormField>
-
-          <FormField
-            title="Privacy"
-            description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
-          >
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ value, onChange }) => (
-                <Select
-                  items={PUBLIC_SELECT_ITEMS}
-                  disabled={loading}
-                  value={value}
-                  onChange={onChange}
-                  error={!!errors.isPublic && !value}
-                  helperText={(errors.isPublic as FieldError)?.message}
-                />
-              )}
-            />
-          </FormField>
-          <FormField
-            title="Privacy"
-            description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
-          >
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ value, onChange }) => (
-                <Select
-                  items={PUBLIC_SELECT_ITEMS}
-                  disabled={loading}
-                  value={value}
-                  onChange={onChange}
-                  error={!!errors.isPublic && !value}
-                  helperText={(errors.isPublic as FieldError)?.message}
                 />
               )}
             />

@@ -3,10 +3,6 @@ import { createId } from '@/utils/createId'
 import React, { useCallback, useState, useContext, useMemo, useRef } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-type DialogRendererProps = {
-  component: React.FunctionComponent
-}
-
 type DialogContextValue = {
   openDialog: (key: string, dialog: React.FunctionComponent<{ in?: boolean }>) => void
   closeDialog: (key: string) => void

@@ -38,7 +38,6 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
-import { TransitionGroup } from 'react-transition-group'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
