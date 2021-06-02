@@ -48,7 +48,7 @@ const CreateMemberView = () => {
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [openCreatingDialog, closeCreatingDialog] = useDialog({
+  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useDialog({
     exitButton: false,
     icon: <Spinner />,
     title: 'Creating membership...',
@@ -72,12 +72,12 @@ const CreateMemberView = () => {
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
-      closeCreatingDialog()
+      closeCreatingMemberDialog()
       refetchMemberships().then(() => {
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [activeAccountId, closeCreatingDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
+  }, [activeAccountId, closeCreatingMemberDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -85,7 +85,7 @@ const CreateMemberView = () => {
     }
 
     try {
-      openCreatingDialog()
+      openCreatingMemberDialog()
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
