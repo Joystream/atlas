@@ -75,11 +75,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     .filter((asset) => asset !== null)
 
   const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) =>
-      asset?.liaisonJudgement === LiaisonJudgement.Pending &&
-      asset.lastStatus === 'inProgress' &&
-      asset.progress === 0 &&
-      !assetsFiles.find((item) => item.contentId === asset.ipfsContentId)
+    (asset) => asset?.liaisonJudgement === LiaisonJudgement.Pending && asset.lastStatus === 'error'
   )
 
   useEffect(() => {
