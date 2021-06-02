@@ -12,7 +12,6 @@ import {
 } from './FileStep.style'
 import { IconButton } from '@/shared/components'
 import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
-import { CSSTransition } from 'react-transition-group'
 
 export type FileStepProps = {
   stepNumber: number

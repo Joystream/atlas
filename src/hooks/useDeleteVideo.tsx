@@ -1,22 +1,40 @@
-import { useState } from 'react'
 import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
 import { useApolloClient } from '@apollo/client'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+import { useDialog } from './useDialog'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
   const { handleTransaction } = useTransactionManager()
   const { activeMemberId } = useAuthorizedUser()
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()
 
   const client = useApolloClient()
+
+  const deleteVideo = (videoId: string, onDeleteVideo?: () => void) => {
+    openDeleteVideoDialog({
+      title: 'Delete this video?',
+      exitButton: false,
+      description:
+        'You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets.',
+      onPrimaryButtonClick: () => {
+        confirmDeleteVideo(videoId, () => onDeleteVideo?.())
+        closeDeleteVideoDialog()
+      },
+      onSecondaryButtonClick: () => {
+        closeDeleteVideoDialog()
+      },
+      error: true,
+      variant: 'warning',
+      primaryButtonText: 'Delete video',
+      secondaryButtonText: 'Cancel',
+    })
+  }
 
   const confirmDeleteVideo = async (videoId: string, onTxSync?: () => void) => {
     if (!joystream) {
       return
     }
-
-    setIsDeleteDialogOpen(false)
 
     handleTransaction({
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
@@ -31,10 +49,5 @@ export const useDeleteVideo = () => {
     })
   }
 
-  return {
-    closeVideoDeleteDialog: () => setIsDeleteDialogOpen(false),
-    openVideoDeleteDialog: () => setIsDeleteDialogOpen(true),
-    confirmDeleteVideo,
-    isDeleteDialogOpen,
-  }
+  return deleteVideo
 }

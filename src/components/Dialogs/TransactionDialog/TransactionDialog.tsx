@@ -3,13 +3,10 @@ import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import MessageDialog from '../MessageDialog'
 import { Tooltip } from '@/shared/components'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
-  successTitle: string
-  successDescription: string
   onClose: () => void
 }
 
@@ -39,40 +36,11 @@ const TRANSACTION_STEPS_DETAILS = {
   },
 }
 
-const TransactionDialog: React.FC<TransactionDialogProps> = ({
-  status,
-  successTitle,
-  successDescription,
-  onClose,
-  ...actionDialogProps
-}) => {
-  if (status === ExtrinsicStatus.Error) {
-    return (
-      <MessageDialog
-        showDialog
-        variant="error"
-        title="Something went wrong..."
-        description="Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help."
-        secondaryButtonText="Close"
-        onSecondaryButtonClick={onClose}
-      />
-    )
-  }
-
-  if (status === ExtrinsicStatus.Completed) {
-    return (
-      <MessageDialog
-        showDialog
-        variant="success"
-        title={successTitle}
-        description={successDescription}
-        secondaryButtonText="Close"
-        onSecondaryButtonClick={onClose}
-      />
-    )
-  }
-
-  const stepDetails = status != null ? TRANSACTION_STEPS_DETAILS[status] : null
+const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
+  const stepDetails =
+    status != null && status !== ExtrinsicStatus.Error && status !== ExtrinsicStatus.Completed
+      ? TRANSACTION_STEPS_DETAILS[status]
+      : null
 
   const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
 
@@ -82,7 +50,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({
 
   return (
     <ActionDialog
-      showDialog={status != null}
+      showDialog={!!stepDetails}
       onSecondaryButtonClick={onClose}
       secondaryButtonText="Cancel"
       secondaryButtonDisabled={!canCancel}
