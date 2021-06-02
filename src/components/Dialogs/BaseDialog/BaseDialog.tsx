@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
 import { SvgGlyphClose } from '@/shared/icons'
 import Portal from '@/components/Portal'
@@ -15,6 +15,12 @@ export type BaseDialogProps = {
 
 const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
   const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+
+  useEffect(() => {
+    return () => {
+      decrementOverlaysOpenCount()
+    }
+  }, [decrementOverlaysOpenCount])
 
   return (
     <Portal containerRef={dialogContainerRef}>

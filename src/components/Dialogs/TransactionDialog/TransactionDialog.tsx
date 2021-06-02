@@ -37,11 +37,10 @@ const TRANSACTION_STEPS_DETAILS = {
 }
 
 const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
-  if (status === ExtrinsicStatus.Error || status === ExtrinsicStatus.Completed) {
-    return null
-  }
-
-  const stepDetails = status != null ? TRANSACTION_STEPS_DETAILS[status] : null
+  const stepDetails =
+    status != null && status !== ExtrinsicStatus.Error && status !== ExtrinsicStatus.Completed
+      ? TRANSACTION_STEPS_DETAILS[status]
+      : null
 
   const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
 
@@ -51,7 +50,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, 
 
   return (
     <ActionDialog
-      showDialog={status != null}
+      showDialog={!!stepDetails}
       onSecondaryButtonClick={onClose}
       secondaryButtonText="Cancel"
       secondaryButtonDisabled={!canCancel}

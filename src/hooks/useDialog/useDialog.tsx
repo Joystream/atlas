@@ -7,8 +7,6 @@ type DialogRendererProps = {
   component: React.FunctionComponent
 }
 
-const DialogsRenderer = ({ component, ...rest }: DialogRendererProps) => component(rest)
-
 type DialogContextValue = {
   openDialog: (key: string, dialog: React.FunctionComponent<{ in?: boolean }>) => void
   closeDialog: (key: string) => void
@@ -43,9 +41,10 @@ export const DialogProvider: React.FC = ({ children }) => {
     <DialogContext.Provider value={contextValue}>
       {children}
       <TransitionGroup>
-        {Object.keys(dialogs).map((key) => (
-          <DialogsRenderer key={key} component={dialogs[key]} />
-        ))}
+        {Object.keys(dialogs).map((key) => {
+          const Component = dialogs[key]
+          return <Component key={key} />
+        })}
       </TransitionGroup>
     </DialogContext.Provider>
   )

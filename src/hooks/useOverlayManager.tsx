@@ -105,7 +105,7 @@ export const useOverlayManager = () => {
   const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
     setOverlaysOpenCount,
   ])
-  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count - 1), [
+  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
     setOverlaysOpenCount,
   ])
 
