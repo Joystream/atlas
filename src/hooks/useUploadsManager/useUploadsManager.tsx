@@ -75,11 +75,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     .filter((asset) => asset !== null)
 
   const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) =>
-      asset?.liaisonJudgement === LiaisonJudgement.Pending &&
-      asset.lastStatus === 'inProgress' &&
-      asset.progress === 0 &&
-      !assetsFiles.find((item) => item.contentId === asset.ipfsContentId)
+    (asset) => asset?.liaisonJudgement === LiaisonJudgement.Pending && asset.lastStatus === 'error'
   )
 
   useEffect(() => {
@@ -128,6 +124,20 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       return acc
     }, {})
   )
+
+  // Will set all incompleted assets' status to error on initial mount
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      return
+    }
+    uploadsState.forEach((asset) => {
+      if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
+        updateAsset(asset.contentId, 'error')
+      }
+    })
+    isInitialMount.current = false
+  }, [updateAsset, uploadsState])
 
   const displayUploadingNotification = useRef(
     debounce(() => {
