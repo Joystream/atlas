@@ -3,7 +3,6 @@ import {
   useEditVideoSheet,
   useAuthorizedUser,
   useUploadsManager,
-  useSnackbar,
   useJoystream,
   EditVideoFormFields,
   EditVideoSheetTab,
@@ -51,6 +50,7 @@ export const EditVideoSheet: React.FC = () => {
   const isEdit = !selectedVideoTab?.isDraft
   const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
+  const { openWarningDialog } = useDisplayDataLostWarning()
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
@@ -61,8 +61,6 @@ export const EditVideoSheet: React.FC = () => {
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const client = useApolloClient()
-
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
     if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
@@ -291,7 +289,6 @@ export const EditVideoSheet: React.FC = () => {
 
   return (
     <>
-      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container ref={containerRef} role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
