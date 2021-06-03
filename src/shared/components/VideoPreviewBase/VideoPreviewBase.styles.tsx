@@ -140,6 +140,16 @@ export const CoverNoImage = styled.div`
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
 `
 
+export const CoverThumbnailUploadFailed = styled.div`
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
 export const CoverHoverOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -183,6 +193,7 @@ export const ProgressBar = styled.div`
   left: 0;
   bottom: 0;
   height: 100%;
+  max-width: 100%;
   width: 0;
   background-color: ${colors.blue['500']};
 `

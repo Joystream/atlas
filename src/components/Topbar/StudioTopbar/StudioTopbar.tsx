@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useDisplayDataLostWarning, useEditVideoSheet } from '@/hooks'
+import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
@@ -19,6 +19,7 @@ import {
   StyledAvatar,
   TextContainer,
   DrawerContainer,
+  DrawerChannelsContainer,
   NewChannel,
   NewChannelIconContainer,
   StyledLink,
@@ -27,7 +28,6 @@ import {
 } from './StudioTopbar.style'
 import { CSSTransition } from 'react-transition-group'
 import { transitions } from '@/shared/theme'
-import { createUrlFromAsset } from '@/utils/asset'
 import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
@@ -58,12 +58,20 @@ type NavDrawerProps = {
 }
 
 const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
-  const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+  const {
+    activeChannelId,
+    setActiveUser,
+    resetActiveUser,
+    activeMembership,
+    activeMembershipLoading,
+    memberships,
+    activeAccountId,
+  } = useUser()
 
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -127,10 +135,11 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
     navigate(absoluteRoutes.studio.index())
   }
 
+  const channelSet = !!activeAccountId && !!activeChannelId && !!memberships?.length
+
   return (
     <>
-      <DataLostWarningDialog />
-      <StyledTopbarBase variant="studio" fullWidth={fullWidth}>
+      <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
@@ -195,7 +204,8 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const avatarPhotoUrl = createUrlFromAsset(
+    const { getAssetUrl } = useAsset()
+    const avatarPhotoUrl = getAssetUrl(
       channel?.avatarPhotoAvailability,
       channel?.avatarPhotoUrls,
       channel?.avatarPhotoDataObject
@@ -233,14 +243,16 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
       <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
         {hasChannels && (
           <>
-            {channels?.map((channel) => (
-              <ChannelInfo
-                key={channel.id}
-                channel={channel}
-                active={channel.id === currentChannel?.id}
-                onClick={() => onCurrentChannelChange(channel.id)}
-              />
-            ))}
+            <DrawerChannelsContainer>
+              {channels?.map((channel) => (
+                <ChannelInfo
+                  key={channel.id}
+                  channel={channel}
+                  active={channel.id === currentChannel?.id}
+                  onClick={() => onCurrentChannelChange(channel.id)}
+                />
+              ))}
+            </DrawerChannelsContainer>
             <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>

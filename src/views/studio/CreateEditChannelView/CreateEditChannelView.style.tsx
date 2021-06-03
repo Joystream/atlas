@@ -33,11 +33,7 @@ export const TitleContainer = styled.div`
 export const InnerFormContainer = styled.div`
   width: 100%;
   margin-top: 50px;
-  padding-bottom: 100px;
-
-  ${media.medium} {
-    padding-bottom: 200px;
-  }
+  padding-bottom: 250px;
 `
 
 export const StyledAvatar = styled(Avatar)`

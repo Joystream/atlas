@@ -6,14 +6,29 @@ import { Button, Text } from '@/shared/components'
 
 export const StyledStudioContainer = styled(StudioContainer)`
   display: flex;
-  flex-wrap: wrap;
   margin-top: 64px;
   justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  ${media.medium} {
+    align-items: unset;
+    flex-direction: row;
+    justify-content: center;
+  }
+  ${media.xlarge} {
+    margin-top: 40px;
+    flex-direction: column;
+    align-items: center;
+    left: 200px;
+  }
+  ${media.xxlarge} {
+    margin-top: 64px;
+  }
 `
 
 export const HeroContainer = styled.div`
-  max-width: 400px;
-  margin-bottom: 60px;
+  max-width: 440px;
+  margin-bottom: 40px;
 `
 
 export const SubTitle = styled(Text)`
@@ -22,23 +37,43 @@ export const SubTitle = styled(Text)`
 
 export const ListContainer = styled.div`
   max-width: 440px;
+  padding-bottom: 100px;
+  ${media.medium} {
+    margin-left: 60px;
+  }
+  ${media.xlarge} {
+    margin-left: 0;
+  }
 `
 
 export const StyledCoinsIllustrations = styled(CoinsIllustration)`
   z-index: -2;
-  bottom: 0;
-  left: 0;
-  width: 250px;
-  position: fixed;
-  margin-top: 50px;
+  display: none;
   ${media.small} {
-    width: 300px;
+    display: block;
+
+    position: relative;
+    left: -100px;
+    bottom: 100px;
+    width: 450px;
   }
   ${media.medium} {
-    width: 350px;
+    position: fixed;
+    left: 0;
+    bottom: -200px;
   }
   ${media.large} {
-    width: 650px;
+    bottom: -150px;
+    width: 600px;
+  }
+  ${media.xlarge} {
+    bottom: -100px;
+    width: 900px;
+  }
+  ${media.xxlarge} {
+    top: 150px;
+    bottom: unset;
+    width: 1200px;
   }
 `
 
@@ -85,5 +120,13 @@ export const UnOrderedList = styled.ul`
 export const UnOrderedItem = styled(Text)``
 
 export const StyledButton = styled(Button)`
-  margin-top: 64px;
+  position: fixed;
+  bottom: 20px;
+  left: var(--global-horizontal-padding);
+  width: calc(100% - var(--global-horizontal-padding) * 2);
+  ${media.small} {
+    margin-top: 40px;
+    position: unset;
+    width: unset;
+  }
 `

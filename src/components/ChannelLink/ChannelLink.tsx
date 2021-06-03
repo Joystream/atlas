@@ -4,7 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { createUrlFromAsset } from '@/utils/asset'
+import { useAsset } from '@/hooks'
 
 type ChannelLinkProps = {
   id?: string
@@ -27,10 +27,11 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   className,
 }) => {
   const { channel } = useBasicChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
+  const { getAssetUrl } = useAsset()
 
   const displayedChannel = overrideChannel || channel
 
-  const avatarPhotoUrl = createUrlFromAsset(
+  const avatarPhotoUrl = getAssetUrl(
     displayedChannel?.avatarPhotoAvailability,
     displayedChannel?.avatarPhotoUrls,
     displayedChannel?.avatarPhotoDataObject

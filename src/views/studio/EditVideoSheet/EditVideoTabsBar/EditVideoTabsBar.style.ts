@@ -2,6 +2,10 @@ import styled from '@emotion/styled'
 import { colors, media, sizes } from '@/shared/theme'
 import { Text } from '@/shared/components'
 
+type AddDraftButtonContainerProps = {
+  hasOverflow?: boolean
+}
+
 export const EDIT_VIDEO_TABS_BAR_HEIGHT = sizes(14, true)
 
 export const Topbar = styled.div`
@@ -19,10 +23,13 @@ export const TabsContainer = styled.div`
   display: flex;
   align-items: center;
   overflow: auto hidden;
+  width: 100%;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 `
-export const TabsHeader = styled(Text)`
-  margin-right: ${sizes(8)};
-`
+
 export const ButtonsContainer = styled.div`
   display: grid;
   align-items: center;
@@ -54,4 +61,17 @@ export const TabTitle = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 120px;
+`
+
+export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
+  position: sticky;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  max-width: ${sizes(14)};
+  padding: ${({ hasOverflow }) => (hasOverflow ? `0 ${sizes(2)}` : '0')};
+  border-left: ${({ hasOverflow }) => hasOverflow && `1px solid ${colors.gray[700]}`};
+  background-color: ${colors.gray[900]};
 `

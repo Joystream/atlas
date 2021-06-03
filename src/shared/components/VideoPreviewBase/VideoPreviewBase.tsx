@@ -22,6 +22,7 @@ import {
   CoverImageContainer,
   CoverVideoPublishingStateOverlay,
   CoverNoImage,
+  CoverThumbnailUploadFailed,
   ContextMenuContainer,
   KebabMenuIconContainer,
   CoverTopLeftContainer,
@@ -33,6 +34,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import useResizeObserver from 'use-resize-observer'
 import { transitions } from '@/shared/theme'
+import { Text } from '@/shared/components'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { ContextMenu, ContextMenuItem, Placeholder } from '..'
 import { useContextMenu } from '@/hooks'
@@ -47,6 +49,7 @@ import {
   SvgGlyphTrash,
   SvgLargeEdit,
   SvgOutlineVideo,
+  SvgLargeUploadFailed,
 } from '@/shared/icons'
 
 export type VideoPreviewBaseMetaProps = {
@@ -92,6 +95,7 @@ export type VideoPreviewBaseProps = {
   progress?: number
   views?: number | null
   thumbnailUrl?: string | null
+  hasThumbnailUploadFailed?: boolean
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
@@ -119,6 +123,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   progress = 0,
   views,
   thumbnailUrl,
+  hasThumbnailUploadFailed,
   onCoverResize,
   channelHref,
   videoHref,
@@ -207,6 +212,13 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                         ref={imgRef}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
+                    ) : hasThumbnailUploadFailed ? (
+                      <CoverThumbnailUploadFailed>
+                        <SvgLargeUploadFailed />
+                        <Text variant="subtitle2" secondary>
+                          Thumbnail upload failed
+                        </Text>
+                      </CoverThumbnailUploadFailed>
                     ) : (
                       <CoverNoImage />
                     )}

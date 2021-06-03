@@ -17,6 +17,8 @@ const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
   return await Promise.race([timeoutPromise, promise])
 }
 
+const SNACKBAR_TIMEOUT = 15000
+
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
@@ -57,9 +59,9 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
       isInitialMount.current = false
     } else {
       if (isUserConnectedToInternet) {
-        displaySnackbar({ title: 'Network connection restored', iconType: 'success' })
+        displaySnackbar({ title: 'Network connection restored', iconType: 'success', timeout: SNACKBAR_TIMEOUT })
       } else {
-        displaySnackbar({ title: 'No network connection', iconType: 'error' })
+        displaySnackbar({ title: 'Network connection lost', iconType: 'error', timeout: SNACKBAR_TIMEOUT })
       }
     }
   }, [displaySnackbar, isUserConnectedToInternet])

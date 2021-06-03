@@ -1,6 +1,7 @@
 export const BASE_PATHS = {
   // must be empty so we don't get double '/' after joining paths
   viewer: '',
+  legal: '/legal',
   studio: '/studio',
   playground: '/playground',
 } as const
@@ -22,6 +23,11 @@ export const relativeRoutes = {
     channels: () => 'channels',
     video: (id = ':id') => `video/${id}`,
     videos: () => 'videos',
+  },
+  legal: {
+    index: () => '',
+    copyright: () => 'copyright',
+    termsOfService: () => 'tos',
   },
   studio: {
     index: () => '',

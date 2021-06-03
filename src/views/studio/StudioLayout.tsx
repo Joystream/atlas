@@ -24,6 +24,7 @@ import {
   useUser,
   UploadManagerProvider,
   TransactionManagerProvider,
+  DialogProvider,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -110,7 +111,7 @@ const StudioLayout = () => {
               <PrivateRoute
                 path={relativeRoutes.studio.newMembership()}
                 element={<CreateMemberView />}
-                isAuth={accountSet}
+                isAuth={accountSet && !memberSet}
                 redirectTo={ENTRY_POINT_ROUTE}
               />
               <PrivateRoute
@@ -149,21 +150,23 @@ const StudioLayoutWrapper: React.FC = () => {
         navigate(absoluteRoutes.studio.index())
       }}
     >
-      <ActiveUserProvider>
-        <PersonalDataProvider>
-          <UploadManagerProvider>
-            <DraftsProvider>
-              <EditVideoSheetProvider>
-                <JoystreamProvider>
-                  <TransactionManagerProvider>
-                    <StudioLayout />
-                  </TransactionManagerProvider>
-                </JoystreamProvider>
-              </EditVideoSheetProvider>
-            </DraftsProvider>
-          </UploadManagerProvider>
-        </PersonalDataProvider>
-      </ActiveUserProvider>
+      <DialogProvider>
+        <ActiveUserProvider>
+          <PersonalDataProvider>
+            <UploadManagerProvider>
+              <DraftsProvider>
+                <EditVideoSheetProvider>
+                  <JoystreamProvider>
+                    <TransactionManagerProvider>
+                      <StudioLayout />
+                    </TransactionManagerProvider>
+                  </JoystreamProvider>
+                </EditVideoSheetProvider>
+              </DraftsProvider>
+            </UploadManagerProvider>
+          </PersonalDataProvider>
+        </ActiveUserProvider>
+      </DialogProvider>
     </ErrorBoundary>
   )
 }

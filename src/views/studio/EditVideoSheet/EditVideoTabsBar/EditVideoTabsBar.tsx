@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { EditVideoSheetTab, useEditVideoSheetTabData } from '@/hooks'
 import { IconButton } from '@/shared/components'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
-import { ButtonsContainer, Tab, TabsContainer, TabsHeader, TabTitle, Topbar } from './EditVideoTabsBar.style'
+
+import {
+  ButtonsContainer,
+  Tab,
+  TabsContainer,
+  TabTitle,
+  Topbar,
+  AddDraftButtonContainer,
+} from './EditVideoTabsBar.style'
 
 type TabsBarProps = {
   videoTabs: EditVideoSheetTab[]
@@ -22,38 +30,55 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
   onTabSelect,
   onCloseClick,
   onToggleMinimizedClick,
-}) => (
-  <Topbar>
-    <TabsContainer>
-      <TabsHeader variant="h6">Add new video</TabsHeader>
-      {videoTabs.map((tab, idx) => (
-        <EditVideoTab
-          key={tab.id}
-          tab={tab}
-          selected={tab.id === selectedVideoTab?.id}
-          onTabSelect={() => onTabSelect(idx)}
-          onRemoveTabClick={() => onRemoveTabClick(idx)}
-        />
-      ))}
-      <IconButton variant="tertiary" onClick={onAddNewTabClick}>
-        <SvgGlyphPlus />
-      </IconButton>
-    </TabsContainer>
-    <ButtonsContainer>
-      <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
-        <SvgGlyphMinus />
-      </IconButton>
-      <IconButton variant="tertiary" onClick={onCloseClick}>
-        <SvgGlyphClose />
-      </IconButton>
-    </ButtonsContainer>
-  </Topbar>
-)
+}) => {
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const handleTabSelect = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
+    onTabSelect(idx)
+    e.currentTarget.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+    })
+  }
+  return (
+    <Topbar>
+      <TabsContainer ref={tabsContainerRef}>
+        {videoTabs.map((tab, idx) => (
+          <EditVideoTab
+            key={tab.id}
+            tab={tab}
+            selected={tab.id === selectedVideoTab?.id}
+            onTabSelect={(e) => handleTabSelect(e, idx)}
+            onRemoveTabClick={() => onRemoveTabClick(idx)}
+          />
+        ))}
+        <AddDraftButtonContainer
+          hasOverflow={
+            tabsContainerRef.current
+              ? tabsContainerRef?.current.scrollWidth > tabsContainerRef?.current.clientWidth
+              : false
+          }
+        >
+          <IconButton variant="tertiary" onClick={onAddNewTabClick}>
+            <SvgGlyphPlus />
+          </IconButton>
+        </AddDraftButtonContainer>
+      </TabsContainer>
+      <ButtonsContainer>
+        <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
+          <SvgGlyphMinus />
+        </IconButton>
+        <IconButton variant="tertiary" onClick={onCloseClick}>
+          <SvgGlyphClose />
+        </IconButton>
+      </ButtonsContainer>
+    </Topbar>
+  )
+}
 
 type EditVideoTabProps = {
   tab: EditVideoSheetTab
   selected: boolean
-  onTabSelect: () => void
+  onTabSelect: (e: React.MouseEvent<HTMLDivElement>) => void
   onRemoveTabClick: () => void
 }
 

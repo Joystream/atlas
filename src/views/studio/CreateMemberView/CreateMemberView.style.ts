@@ -1,12 +1,15 @@
 import { StudioContainer } from '@/components'
 import { Button, Text, Avatar, TextField } from '@/shared/components'
-import { sizes } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 import styled from '@emotion/styled'
 
 export const Header = styled.header`
-  max-width: 440px;
   margin-bottom: ${sizes(12)};
+  max-width: 580px;
+  ${media.medium} {
+    max-width: 440px;
+  }
 `
 
 export const Hero = styled(Text)`
@@ -19,27 +22,45 @@ export const SubTitle = styled(Text)`
 
 export const Wrapper = styled(StudioContainer)`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 64px;
   justify-content: space-between;
+  align-items: center;
+  margin-top: 64px;
+  padding-bottom: 100px;
+  ${media.medium} {
+    margin-top: 40px;
+    align-items: unset;
+    flex-direction: row;
+  }
+  ${media.xxlarge} {
+    margin-top: 64px;
+  }
 `
 export const Form = styled.form`
   position: relative;
   width: 100%;
   max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  ${media.medium} {
+    display: block;
+  }
 `
 export const StyledTextField = styled(TextField)`
   margin-bottom: ${sizes(5)};
 `
 
 export const StyledAvatar = styled(Avatar)`
-  margin-bottom: ${sizes(4)};
+  margin-bottom: ${sizes(6)};
+  width: 104px;
 `
 
 export const StyledButton = styled(Button)`
-  display: flex;
-  margin-top: 30px;
-  margin-left: auto;
+  display: block;
+  margin-top: 20px;
+  ${media.medium} {
+    margin-left: auto;
+  }
 `

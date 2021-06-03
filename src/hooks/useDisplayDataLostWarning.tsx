@@ -1,5 +1,4 @@
-import { MessageDialog } from '@/components'
-import React, { useState } from 'react'
+import { useDialog } from './useDialog'
 
 type OpenWarningDialogArgs = {
   onCancel?: () => void
@@ -7,41 +6,36 @@ type OpenWarningDialogArgs = {
 }
 
 export const useDisplayDataLostWarning = () => {
-  const [lostDataDialogVisible, setLostDatadDialogVisible] = useState(false)
-  const [confirmWarningCallback, setConfirmWarningCallback] = useState<undefined | (() => void)>()
-  const [cancelWarningCallback, setCancelWarningCallback] = useState<undefined | (() => void)>()
+  const [openDialog, closeDialog] = useDialog()
+
+  const cancelDialog = (onCancel?: () => void) => {
+    onCancel?.()
+  }
 
   const openWarningDialog = ({ onCancel, onConfirm }: OpenWarningDialogArgs) => {
-    setLostDatadDialogVisible(true)
-    setConfirmWarningCallback(() => onConfirm)
-    setCancelWarningCallback(() => onCancel)
+    openDialog({
+      title: "Drafts' video & image data will be lost",
+      description:
+        "Drafts' assets aren't stored permanently. If you proceed, you will need to reselect the files again.",
+      primaryButtonText: 'Proceed',
+      secondaryButtonText: 'Cancel',
+      onPrimaryButtonClick: () => {
+        onConfirm?.()
+        closeDialog()
+      },
+      onSecondaryButtonClick: () => {
+        cancelDialog(onCancel)
+        closeDialog()
+      },
+      onExitClick: () => {
+        cancelDialog(onCancel)
+        closeDialog()
+      },
+      variant: 'warning',
+    })
   }
 
-  const confirmCloseSheet = () => {
-    setLostDatadDialogVisible(false)
-    confirmWarningCallback?.()
-  }
-
-  const cancelCloseSheet = () => {
-    setLostDatadDialogVisible(false)
-    cancelWarningCallback?.()
-  }
-
-  const renderWarning = () => (
-    <MessageDialog
-      title="Drafts' video & image data will be lost"
-      description="Drafts' assets aren't stored permanently. If you proceed, you will need to reselect the files again."
-      primaryButtonText="Proceed"
-      showDialog={lostDataDialogVisible}
-      onPrimaryButtonClick={confirmCloseSheet}
-      onSecondaryButtonClick={cancelCloseSheet}
-      onExitClick={cancelCloseSheet}
-      secondaryButtonText="Cancel"
-      variant="warning"
-    />
-  )
   return {
-    DataLostWarningDialog: renderWarning,
     openWarningDialog,
   }
 }

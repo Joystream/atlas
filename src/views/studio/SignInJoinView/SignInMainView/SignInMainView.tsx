@@ -1,11 +1,11 @@
-import { Button } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 import React from 'react'
 import {
+  BackLink,
   ButtonGroup,
   Header,
   LogoContainer,
   SignInButton,
-  StyledBackgroundPattern,
   StyledContainer,
   StyledHero,
   StyledSignInIllustrationSVG,
@@ -13,7 +13,7 @@ import {
 } from './SignInMainView.style'
 import { ReactComponent as FullLogoSVG } from '@/assets/full-logo.svg'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChannel, SvgGlyphInfo } from '@/shared/icons'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
 
 export type Membership = {
   id: string
@@ -41,9 +41,12 @@ const SignInMainView: React.FC = () => {
             How it works?
           </Button>
         </ButtonGroup>
+        <BackLink to={absoluteRoutes.viewer.index()}>
+          <SvgGlyphChevronLeft />
+          <Text secondary>Go back</Text>
+        </BackLink>
       </Header>
       <StyledSignInIllustrationSVG />
-      <StyledBackgroundPattern />
     </StyledContainer>
   )
 }

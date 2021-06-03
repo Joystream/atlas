@@ -1,7 +1,8 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react'
+import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
+import { throttle, debounce } from 'lodash'
 import { useSnackbar, useUser } from '@/hooks'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
@@ -18,6 +19,8 @@ import { createStorageNodeUrl } from '@/utils/asset'
 import { LiaisonJudgement } from '@/api/queries'
 
 const RETRIES_COUNT = 5
+const UPLOADING_SNACKBAR_TIMEOUT = 8000
+const UPLOADED_SNACKBAR_TIMEOUT = 13000
 const RECONNECTION_ERROR_MESSAGE = 'Reconnection failed'
 
 type GroupByParentObjectIdAcc = {
@@ -48,6 +51,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     },
     { skip: !uploadsState.length }
   )
+  const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
   const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
     ...asset,
@@ -71,11 +75,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     .filter((asset) => asset !== null)
 
   const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) =>
-      asset?.liaisonJudgement === LiaisonJudgement.Pending &&
-      asset.lastStatus === 'inProgress' &&
-      asset.progress === 0 &&
-      !assetsFiles.find((item) => item.contentId === asset.ipfsContentId)
+    (asset) => asset?.liaisonJudgement === LiaisonJudgement.Pending && asset.lastStatus === 'error'
   )
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         lostConnectionAssets.length > 1 ? 's' : ''
       } waiting to resume upload`,
       description: 'Reconnect files to fix the issue',
-      actionText: 'See assets',
+      actionText: 'See',
       onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       iconType: 'warning',
     })
@@ -125,6 +125,52 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     }, {})
   )
 
+  // Will set all incompleted assets' status to error on initial mount
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      return
+    }
+    uploadsState.forEach((asset) => {
+      if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
+        updateAsset(asset.contentId, 'error')
+      }
+    })
+    isInitialMount.current = false
+  }, [updateAsset, uploadsState])
+
+  const displayUploadingNotification = useRef(
+    debounce(() => {
+      displaySnackbar({
+        title:
+          pendingNotificationsCounts.current.uploading > 1
+            ? `${pendingNotificationsCounts.current.uploading} assets being uploaded`
+            : 'Asset being uploaded',
+        iconType: 'info',
+        timeout: UPLOADING_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.current.uploading = 0
+    }, 700)
+  )
+
+  const displayUploadedNotification = useRef(
+    debounce(() => {
+      displaySnackbar({
+        title:
+          pendingNotificationsCounts.current.uploaded > 1
+            ? `${pendingNotificationsCounts.current.uploaded} assets uploaded`
+            : 'Asset uploaded',
+        iconType: 'success',
+        timeout: UPLOADED_SNACKBAR_TIMEOUT,
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+      })
+      pendingNotificationsCounts.current.uploaded = 0
+    }, 700)
+  )
+
   const startFileUpload = useCallback(
     async (
       file: File | Blob | null,
@@ -151,6 +197,18 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetUploadProgress(0)
         const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
+        const setUploadProgressThrottled = throttle(
+          ({ loaded, total }: ProgressEvent) => {
+            updateAsset(asset.contentId, 'inProgress')
+            setAssetUploadProgress((loaded / total) * 100)
+          },
+          3000,
+          { leading: true }
+        )
+
+        pendingNotificationsCounts.current.uploading++
+        displayUploadingNotification.current()
+
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -170,19 +228,20 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
             },
           },
-          onUploadProgress: ({ loaded, total }: ProgressEvent) => {
-            updateAsset(asset.contentId, 'inProgress')
-            setAssetUploadProgress((loaded / total) * 100)
-          },
+          onUploadProgress: setUploadProgressThrottled,
         })
+
+        // Cancel delayed functions that would overwrite asset status back to 'inProgres'
+        setUploadProgressThrottled.cancel()
 
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-        displaySnackbar({ title: 'Asset uploaded', iconType: 'success' })
+
+        pendingNotificationsCounts.current.uploaded++
+        displayUploadedNotification.current()
       } catch (e) {
-        console.error('Upload failed')
-        console.error(e)
+        console.error('Upload failed', e)
         if (e.message === RECONNECTION_ERROR_MESSAGE) {
           updateAsset(asset.contentId, 'reconnectionError')
           displaySnackbar({

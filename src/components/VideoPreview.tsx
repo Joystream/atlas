@@ -6,9 +6,9 @@ import VideoPreviewBase, {
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { useDrafts, useAuthorizedUser } from '@/hooks'
-import { copyToClipboard } from '@/utils/browser'
-import { createUrlFromAsset } from '@/utils/asset'
+import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
+import { copyToClipboard } from '@/utils/broswer'
+import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string
@@ -17,13 +17,14 @@ export type VideoPreviewProps = {
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ id, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic(id, false)
+  const { getAssetUrl } = useAsset()
 
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject
   )
-  const avatarPhotoUrl = createUrlFromAsset(
+  const avatarPhotoUrl = getAssetUrl(
     video?.channel?.avatarPhotoAvailability,
     video?.channel?.avatarPhotoUrls,
     video?.channel?.avatarPhotoDataObject
@@ -56,17 +57,20 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
+  const { getAssetUrl } = useAsset()
 
-  const thumbnailPhotoUrl = createUrlFromAsset(
+  const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
     video?.thumbnailPhotoUrls,
     video?.thumbnailPhotoDataObject
   )
-  const avatarPhotoUrl = createUrlFromAsset(
+  const avatarPhotoUrl = getAssetUrl(
     video?.channel.avatarPhotoAvailability,
     video?.channel.avatarPhotoUrls,
     video?.channel.avatarPhotoDataObject
   )
+
+  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 
   return (
     <VideoPreviewBase
@@ -78,6 +82,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({ i
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={thumbnailPhotoUrl}
+      hasThumbnailUploadFailed={hasThumbnailUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}

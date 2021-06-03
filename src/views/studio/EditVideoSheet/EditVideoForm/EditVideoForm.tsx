@@ -10,6 +10,7 @@ import {
   EditVideoFormFields,
   useEditVideoSheet,
   useDeleteVideo,
+  useConnectionStatus,
 } from '@/hooks'
 import {
   Checkbox,
@@ -37,7 +38,6 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { MessageDialog } from '@/components'
 import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
@@ -91,8 +91,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { nodeConnectionStatus } = useConnectionStatus()
 
-  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
+  const deleteVideo = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -132,6 +133,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+  useEffect(() => {
+    // reset form for edited video on sheet close
+    if (isEdit && sheetState === 'closed' && tabData) {
+      reset(tabData)
+    }
+  }, [isEdit, reset, setValue, sheetState, tabData])
 
   useEffect(() => {
     if (isEdit) {
@@ -221,7 +228,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setFileSelectError('Video file cannot be empty')
       return
     }
-    if ((!isEdit || dirtyFields.assets?.thumbnail) && !data.assets.thumbnail?.blob) {
+    if (!data.assets.thumbnail?.url) {
       setFileSelectError('Thumbnail cannot be empty')
       return
     }
@@ -235,6 +242,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     await onSubmit(data, dirtyFields, callback)
   })
 
+  const debouncedSetSelectedVideoTabCachedDirtyFormData = debounce((dirtyData) => {
+    setSelectedVideoTabCachedDirtyFormData(dirtyData)
+  }, 700)
+
   // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
   const handleFormChange = () => {
     const data = getValues()
@@ -244,7 +255,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         acc[curr] = data[curr]
         return acc
       }, {} as Record<string, unknown>)
-      setSelectedVideoTabCachedDirtyFormData(dirtyData)
+      debouncedSetSelectedVideoTabCachedDirtyFormData(dirtyData)
     } else {
       debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
     }
@@ -293,7 +304,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      console.error({ message: 'Unknown file select error', code: errorCode })
+      console.error('Unknown file select error', errorCode)
       setFileSelectError('Unknown error')
     }
   }
@@ -303,6 +314,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       behavior: 'smooth',
       block: 'start',
     })
+  }
+
+  const handleDeleteVideo = () => {
+    selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
   }
 
   const categoriesSelectItems: SelectItem[] =
@@ -542,33 +557,16 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </FormField>
           {isEdit && (
             <DeleteVideoContainer>
-              <DeleteVideoButton
-                size="large"
-                variant="tertiary"
-                textColorVariant="error"
-                onClick={openVideoDeleteDialog}
-              >
+              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
                 Delete video
               </DeleteVideoButton>
             </DeleteVideoContainer>
           )}
         </InputsContainer>
       </FormWrapper>
-      <MessageDialog
-        title="Delete this video?"
-        exitButton={false}
-        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
-        showDialog={isDeleteDialogOpen}
-        onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() =>
-          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
-        }
-        error
-        variant="warning"
-        primaryButtonText="Delete video"
-        secondaryButtonText="Cancel"
-      />
+
       <StyledActionBar
+        disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}
         fee={fee}
         isActive={selectedVideoTab?.isDraft || isDirty}

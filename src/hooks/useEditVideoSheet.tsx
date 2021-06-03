@@ -8,8 +8,8 @@ import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
 import { createId } from '@/utils/createId'
 import { useVideo } from '@/api/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { createUrlFromAsset } from '@/utils/asset'
 import { parseISO } from 'date-fns'
+import { useAsset } from './useAsset'
 
 export type EditVideoSheetTab = {
   id: string
@@ -46,7 +46,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
   const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
-  const { lockScroll, unlockScroll } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const addVideoTab = useCallback(
     (tab?: EditVideoSheetTab, shouldSelect = true) => {
@@ -137,10 +137,10 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       if (videoTabs.length === 0) {
         addVideoTab()
       }
-      lockScroll()
+      incrementOverlaysOpenCount()
     }
     if (sheetState === 'closed' || sheetState === 'minimized') {
-      unlockScroll()
+      decrementOverlaysOpenCount()
     }
     if (sheetState === 'closed') {
       setVideoTabs([])
@@ -148,7 +148,14 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       setAssetsCache({})
       _setVideoTabsCachedDirtyFormData({})
     }
-  }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
+  }, [
+    sheetState,
+    cachedSheetState,
+    videoTabs.length,
+    incrementOverlaysOpenCount,
+    decrementOverlaysOpenCount,
+    addVideoTab,
+  ])
 
   const anyVideoTabsCachedAssets = Object.values(assetsCache).some((val) => val.thumbnail || val.video)
 
@@ -213,6 +220,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
+  const { getAssetUrl } = useAsset()
 
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
 
@@ -236,10 +244,10 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
     : {
         video: {
-          url: createUrlFromAsset(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+          url: getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
         },
         thumbnail: {
-          url: createUrlFromAsset(
+          url: getAssetUrl(
             video?.thumbnailPhotoAvailability,
             video?.thumbnailPhotoUrls,
             video?.thumbnailPhotoDataObject

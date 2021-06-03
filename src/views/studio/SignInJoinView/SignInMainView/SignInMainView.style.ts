@@ -1,21 +1,27 @@
 import { ReactComponent as SignInIllustrationSVG } from '@/assets/signin-illustration.svg'
-import { ReactComponent as SignInPatternSVG } from '@/assets/signin-pattern.svg'
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
-import { media, colors, sizes, zIndex } from '@/shared/theme'
+import { media, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 export const StyledContainer = styled(StudioContainer)`
   margin-top: 64px;
-  text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
+  padding-bottom: 100px;
   ${media.medium} {
-    text-align: unset;
+    flex-direction: row;
     justify-content: space-between;
+  }
+  ${media.xlarge} {
+    max-width: 1700px;
+    left: 150px;
+  }
+  ${media.xxlarge} {
+    margin-top: 128px;
   }
 `
 
@@ -32,14 +38,7 @@ export const LogoContainer = styled.div`
 `
 
 export const Header = styled.header`
-  margin-top: 60px;
-  max-width: 400px;
-  ${media.medium} {
-    max-width: 540px;
-  }
-  ${media.large} {
-    max-width: 600px;
-  }
+  max-width: 550px;
 `
 
 export const StyledHero = styled(Text)`
@@ -49,28 +48,50 @@ export const StyledHero = styled(Text)`
 export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
   margin-top: 60px;
   align-self: center;
-  max-width: 420px;
+  width: 100%;
+  ${media.medium} {
+    position: relative;
+    left: -50px;
+    margin-top: 0;
+  }
   ${media.large} {
+    max-width: 1000px;
+  }
+  ${media.xxlarge} {
     max-width: unset;
   }
 `
 
-export const StyledBackgroundPattern = styled(SignInPatternSVG)`
-  position: absolute;
-  top: 0;
-  right: 50px;
-  z-index: ${zIndex.background};
-`
-
 export const ButtonGroup = styled.div`
   margin-top: ${sizes(12)};
+  display: flex;
+  flex-direction: column;
+  ${media.small} {
+    flex-direction: row;
+  }
 `
 export const SignInButton = styled(Button)`
-  margin-right: ${sizes(3)};
-  margin-bottom: ${sizes(3)};
+  margin-bottom: ${sizes(4)};
+  ${media.small} {
+    margin-bottom: unset;
+    margin-right: ${sizes(4)};
+  }
 `
 
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
   color: ${colors.gray[200]};
+`
+
+export const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
+
+  margin-top: ${sizes(5)};
+
+  path {
+    stroke: ${colors.gray[300]};
+  }
 `

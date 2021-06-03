@@ -1,7 +1,7 @@
-import { useVideos } from '@/api/hooks'
-import { MessageDialog, StudioContainer, VideoPreviewPublisher } from '@/components'
+import { useVideosConnection } from '@/api/hooks'
+import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useAuthorizedUser, useDeleteVideo, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
+import { useAuthorizedUser, useDeleteVideo, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
 import { Grid, Pagination, Tabs, Text } from '@/shared/components'
 
 import React, { useEffect, useState } from 'react'
@@ -9,33 +9,32 @@ import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
 
-const TABS = ['All Videos', 'Published', 'Drafts', 'Unlisted'] as const
+const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
+const INITIAL_FIRST = 50
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, removeVideoTab } = useEditVideoSheet()
+  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [currentTab, setCurrentTab] = useState(0)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
-  const [draftToRemove, setDraftToRemove] = useState<string | null>(null)
   const videosPerPage = ROWS_AMOUNT * videosPerRow
-  const currentTabName = TABS[currentTab]
+
+  const [currentVideosTab, setCurrentVideosTab] = useState(0)
+  const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
-  const [selectedVideoId, setSelectedVideoId] = useState<string | undefined>()
 
   // Drafts calls can run into race conditions
-  const { currentPage, setCurrentPage } = usePagination(currentTab)
+  const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
 
-  const { loading, videos, totalCount, error, fetchMore } = useVideos(
+  const { edges, totalCount, loading, error, fetchMore, variables, pageInfo } = useVideosConnection(
     {
-      limit: videosPerPage,
-      offset: videosPerPage * currentPage,
+      first: INITIAL_FIRST,
       where: {
         channelId_eq: activeChannelId,
         isPublic_eq,
@@ -43,41 +42,42 @@ export const MyVideosView = () => {
     },
     { notifyOnNetworkStatusChange: true }
   )
+  const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
+  const deleteVideo = useDeleteVideo()
 
-  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
-
-  useEffect(() => {
-    if (!fetchMore || !videos || loading || !totalCount || isDraftTab) {
-      return
-    }
-
-    const currentOffset = currentPage * videosPerPage
-    const targetDisplayedCount = Math.min(videosPerPage, totalCount - currentOffset)
-    if (videos.length < targetDisplayedCount) {
-      const missingCount = videosPerPage - videos.length
-      fetchMore({
-        variables: {
-          offset: currentOffset + videos.length,
-          limit: missingCount,
-        },
-      })
-    }
-  }, [currentPage, fetchMore, loading, videos, videosPerPage, totalCount, isDraftTab])
-
-  const placeholderItems = Array.from({ length: loading ? videosPerPage : 0 }, () => ({
+  const videos = edges
+    ?.map((edge) => edge.node)
+    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+  const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
+
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+
+  useEffect(() => {
+    if (!fetchMore || !edges?.length || !totalCount) {
+      return
+    }
+    if (totalCount <= edges.length) {
+      return
+    }
+
+    if (currentPage * videosPerPage + videosPerPage > edges.length) {
+      fetchMore({
+        variables: { ...variables, after: pageInfo?.endCursor },
+      })
+    }
+  }, [currentPage, edges, fetchMore, pageInfo, totalCount, variables, videosPerPage])
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
   }
 
   const handleSetCurrentTab = async (tab: number) => {
-    setCurrentTab(tab)
+    setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
         await removeAllUnseenDrafts(activeChannelId)
@@ -94,7 +94,6 @@ export const MyVideosView = () => {
       return
     }
     addVideoTab({ id, isDraft: opts.draft })
-
     if (opts.minimized) {
       displaySnackbar({
         title: 'Video opened in a new tab',
@@ -104,23 +103,10 @@ export const MyVideosView = () => {
       })
       setSheetState('minimized')
     } else {
+      const tabIdx = videoTabs.findIndex((t) => t.id === id)
+      if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
       navigate(absoluteRoutes.studio.editVideo())
     }
-  }
-
-  const handleVideoDeleted = async () => {
-    if (!selectedVideoId) {
-      return
-    }
-    setSelectedVideoId(undefined)
-  }
-
-  const confirmRemoveDraft = (id: string) => {
-    removeDraft(id)
-    displaySnackbar({
-      title: 'Draft deleted',
-      iconType: 'success',
-    })
   }
 
   // Workaround for removing drafts from video sheet tabs via snackbar
@@ -137,78 +123,72 @@ export const MyVideosView = () => {
     }
   }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
 
-  const gridContent = (
-    <>
-      {isDraftTab
-        ? drafts
-            // pagination slice
-            .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
-            .map((draft, idx) => (
-              <VideoPreviewPublisher
-                key={idx}
-                id={draft.id}
-                showChannel={false}
-                isDraft
-                isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-                onClick={() => handleVideoClick(draft.id, { draft: true })}
-                onPullupClick={(e) => {
-                  e.stopPropagation()
-                  handleVideoClick(draft.id, { draft: true, minimized: true })
-                }}
-                onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-                onDeleteVideoClick={() => setDraftToRemove(draft.id)}
-              />
-            ))
-        : videosWithPlaceholders.map((video, idx) => (
-            <VideoPreviewPublisher
-              key={idx}
-              id={video.id}
-              showChannel={false}
-              isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-              onClick={() => handleVideoClick(video.id)}
-              onPullupClick={(e) => {
-                e.stopPropagation()
-                handleVideoClick(video.id, { minimized: true })
-              }}
-              onEditVideoClick={() => handleVideoClick(video.id)}
-              onDeleteVideoClick={() => {
-                openVideoDeleteDialog()
-                setSelectedVideoId(video.id)
-              }}
-            />
-          ))}
-      <MessageDialog
-        title="Delete this video?"
-        exitButton={false}
-        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
-        showDialog={isDeleteDialogOpen}
-        onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() => selectedVideoId && confirmDeleteVideo(selectedVideoId, () => handleVideoDeleted())}
-        error
-        variant="warning"
-        primaryButtonText="Delete video"
-        secondaryButtonText="Cancel"
-      />
-      <MessageDialog
-        title="Delete this draft?"
-        description="You will not be able to undo this."
-        variant="warning"
-        showDialog={drafts.some((item) => item.id === draftToRemove)}
-        error
-        primaryButtonText="Remove draft"
-        secondaryButtonText="Cancel"
-        onPrimaryButtonClick={() => draftToRemove && confirmRemoveDraft(draftToRemove)}
-        onSecondaryButtonClick={() => setDraftToRemove(null)}
-      />
-    </>
-  )
+  const handleDeleteDraft = (draftId: string) => {
+    openDeleteDraftDialog({
+      title: 'Delete this draft?',
+      description: 'You will not be able to undo this.',
+      variant: 'warning',
+      error: true,
+      primaryButtonText: 'Remove draft',
+      secondaryButtonText: 'Cancel',
+      onExitClick: () => {
+        closeDeleteDraftDialog()
+      },
+      onSecondaryButtonClick: () => {
+        closeDeleteDraftDialog()
+      },
+      onPrimaryButtonClick: () => {
+        closeDeleteDraftDialog()
+        removeDraft(draftId)
+        displaySnackbar({
+          title: 'Draft deleted',
+          iconType: 'success',
+        })
+      },
+    })
+  }
+
+  const gridContent = isDraftTab
+    ? drafts
+        // pagination slice
+        .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
+        .map((draft, idx) => (
+          <VideoPreviewPublisher
+            key={idx}
+            id={draft.id}
+            showChannel={false}
+            isDraft
+            isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+            onClick={() => handleVideoClick(draft.id, { draft: true })}
+            onPullupClick={(e) => {
+              e.stopPropagation()
+              handleVideoClick(draft.id, { draft: true, minimized: true })
+            }}
+            onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+            onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+          />
+        ))
+    : videosWithPlaceholders.map((video, idx) => (
+        <VideoPreviewPublisher
+          key={idx}
+          id={video.id}
+          showChannel={false}
+          isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
+          onClick={() => handleVideoClick(video.id)}
+          onPullupClick={(e) => {
+            e.stopPropagation()
+            handleVideoClick(video.id, { minimized: true })
+          }}
+          onEditVideoClick={() => handleVideoClick(video.id)}
+          onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
+        />
+      ))
 
   if (error) {
     throw error
   }
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
-
   return (
     <StudioContainer>
       <ViewContainer>
@@ -230,7 +210,20 @@ export const MyVideosView = () => {
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {gridContent}
             </Grid>
-            {((isDraftTab && drafts.length === 0) || (!isDraftTab && totalCount === 0 && !loading)) && <EmptyVideos />}
+            {((isDraftTab && drafts.length === 0) ||
+              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
+              <EmptyVideos
+                text={
+                  currentTabName === 'All Videos'
+                    ? "You don't have any published videos at the moment"
+                    : currentTabName === 'Public'
+                    ? "You don't have any public videos at the moment"
+                    : currentTabName === 'Drafts'
+                    ? "You don't have any drafts at the moment"
+                    : "You don't have any unlisted videos at the moment"
+                }
+              />
+            )}
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}
@@ -259,7 +252,7 @@ const usePagination = (currentTab: number) => {
 
 const getPublicness = (currentTabName: typeof TABS[number]) => {
   switch (currentTabName) {
-    case 'Published':
+    case 'Public':
       return true
     case 'Unlisted':
       return false

@@ -14,6 +14,7 @@ export default {
 } as Meta
 
 const Template: Story<ChannelPreviewBaseProps> = (args) => <ChannelPreviewBase {...args} />
+const PlaceholderTemplate: Story<ChannelPreviewBaseProps> = (args) => <ChannelPreviewBase {...args} />
 
 export const Regular = Template.bind({})
 Regular.args = {
@@ -22,3 +23,4 @@ Regular.args = {
   videoCount: 0,
   loading: false,
 }
+export const Placeholder = PlaceholderTemplate.bind({})
