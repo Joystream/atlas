@@ -181,20 +181,6 @@ export const EditCoverDesktopOverlay = styled.div`
   display: none;
 
   ${media.medium} {
-    display: none;
-  }
-`
-
-export const EditCoverDesktopOverlay = styled.div`
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  color: ${colors.gray[200]};
-  display: none;
-
-  ${media.medium} {
     display: flex;
     cursor: pointer;
   }
@@ -231,12 +217,4 @@ export const FailedUploadContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
-export const EditButtonMessage = styled(Text)`
-  font-weight: 700;
-  font-family: ${typography.fonts.headers};
-  line-height: 1;
-  color: ${colors.gray[100]};
-  margin-top: ${sizes(1)};
 `
