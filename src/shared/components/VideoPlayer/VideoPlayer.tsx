@@ -59,7 +59,11 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
         const playPromise = player.play()
         if (playPromise) {
           playPromise.catch((e) => {
-            console.error('Video play failed:', e)
+            if (e.name === 'NotAllowedError') {
+              console.warn('Video play failed:', e)
+            } else {
+              console.error('Video play failed:', e)
+            }
           })
         }
       } else {

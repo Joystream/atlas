@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import * as rax from 'retry-axios'
 import { useNavigate } from 'react-router'
 import { throttle, debounce } from 'lodash'
@@ -21,7 +21,6 @@ import { LiaisonJudgement } from '@/api/queries'
 const RETRIES_COUNT = 5
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
-const RECONNECTION_ERROR_MESSAGE = 'Reconnection failed'
 
 type GroupByParentObjectIdAcc = {
   [key: string]: AssetUploadWithProgress[]
@@ -30,6 +29,15 @@ type GroupByParentObjectIdAcc = {
 type AssetFile = {
   contentId: string
   blob: File | Blob
+}
+
+class ReconnectFailedError extends Error {
+  reason: AxiosError
+
+  constructor(reason: AxiosError) {
+    super()
+    this.reason = reason
+  }
 }
 
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
@@ -162,12 +170,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const startFileUpload = useCallback(
-    async (
-      file: File | Blob | null,
-      asset: InputAssetUpload,
-      storageMetadata: string,
-      opts?: StartFileUploadOptions
-    ) => {
+    async (file: File | Blob | null, asset: InputAssetUpload, storageUrl: string, opts?: StartFileUploadOptions) => {
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
@@ -177,6 +180,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       }
 
       rax.attach()
+      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
       try {
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
@@ -185,7 +189,6 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
         setAssetUploadProgress(0)
-        const assetUrl = createStorageNodeUrl(asset.contentId, storageMetadata)
 
         const setUploadProgressThrottled = throttle(
           ({ loaded, total }: ProgressEvent) => {
@@ -214,7 +217,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
 
               if (cfg?.currentRetryAttempt === RETRIES_COUNT) {
-                throw Error(RECONNECTION_ERROR_MESSAGE)
+                throw new ReconnectFailedError(err)
               }
             },
           },
@@ -231,8 +234,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
       } catch (e) {
-        console.error('Upload failed', e)
-        if (e.message === RECONNECTION_ERROR_MESSAGE) {
+        if (e instanceof ReconnectFailedError) {
+          console.error('Failed to reconnect to storage provider', { storageUrl, reason: e.reason })
           updateAsset(asset.contentId, 'reconnectionError')
           displaySnackbar({
             title: 'Asset failing to reconnect',
@@ -242,6 +245,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
             iconType: 'warning',
           })
         } else {
+          console.error('Unknown upload error', e)
           updateAsset(asset.contentId, 'error')
         }
       }
