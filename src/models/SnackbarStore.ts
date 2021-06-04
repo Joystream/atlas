@@ -39,7 +39,6 @@ export const SnackbarStore = types
       console.log('attaching snackbarstore')
       autorun(() => {
         if (self.snackbars.length > SNACKBARS_LIMIT) {
-          autorun(() => {})
           setTimeout(() => {
             console.log('kick')
             this.closeSnackbar(self.snackbars[0])
