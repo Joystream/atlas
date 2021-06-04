@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useActiveUserStore } from './store'
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { AccountId } from '@/joystream-lib'
-import { WEB3_APP_NAME, EXTENSION_URL } from '@/config/urls'
+import { WEB3_APP_NAME } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
-import { useCheckBrowser, useDialog } from '@/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import { PolkadotExtensionRejected } from '@/components/SignInSteps/ExtensionStep'
 
 export type Account = {
   id: AccountId
@@ -16,7 +14,6 @@ export type Account = {
 type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
   accounts: Account[] | null
   extensionConnected: boolean | null
-  extensionRejected: boolean | null
 
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
@@ -33,12 +30,9 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
-  const [openDialog, closeDialog] = useDialog()
-  const browser = useCheckBrowser()
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
-  const [extensionRejected, setExtensionRejected] = useState<boolean | null>(null)
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
@@ -67,21 +61,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     throw activeMembershipError
   }
 
-  const checkIfPolkadotExtensionInstalled = useCallback(async () => {
-    const res = await fetch(EXTENSION_URL)
-    const polkaDotExtensionInstalled = res.ok
-    if (polkaDotExtensionInstalled) {
-      console.warn('Polkadot extension disabled')
-      openDialog({
-        additionalActionsNode: <PolkadotExtensionRejected />,
-        onExitClick: () => closeDialog(),
-      })
-      setExtensionRejected(true)
-    } else {
-      console.warn('No Polkadot extension detected')
-    }
-  }, [closeDialog, openDialog])
-
   // handle polkadot extension
   useEffect(() => {
     let unsub: () => void
@@ -91,12 +70,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
         if (!enabledExtensions.length) {
-          // Current check if extension is installed in browser works only in Chromium-based browsers
-          if (browser === 'chrome') {
-            checkIfPolkadotExtensionInstalled()
-          } else {
-            console.warn('No Polkadot extension detected')
-          }
+          console.warn('No Polkadot extension detected')
           setExtensionConnected(false)
           return
         }
@@ -126,7 +100,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     return () => {
       unsub?.()
     }
-  }, [browser, checkIfPolkadotExtensionInstalled])
+  }, [])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
@@ -151,7 +125,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
     accounts,
     extensionConnected,
-    extensionRejected,
 
     memberships,
     membershipsLoading,
