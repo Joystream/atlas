@@ -7,7 +7,7 @@ import { useRouterQuery, useUser, useDialog } from '@/hooks'
 import { SvgGlyphExternal } from '@/shared/icons'
 
 type ExtensionStepProps = {
-  nextStepPath?: string
+  nextStepPath: string
 }
 
 const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
@@ -20,7 +20,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   })
 
   useEffect(() => {
-    if (extensionConnected && nextStepPath && step === '1') {
+    if (extensionConnected && step === '1') {
       navigate(nextStepPath)
     }
   }, [extensionConnected, navigate, nextStepPath, step])
