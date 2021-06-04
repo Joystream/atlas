@@ -7,7 +7,7 @@ import { useRouterQuery, useUser } from '@/hooks'
 import { SvgGlyphExternal } from '@/shared/icons'
 
 type ExtensionStepProps = {
-  nextStepPath: string
+  nextStepPath?: string
 }
 
 const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
@@ -18,13 +18,14 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const [showDisabledExtensionMessage, setShowDisabledExtensionMessage] = useState(false)
 
   useEffect(() => {
-    if (extensionConnected && step === '1') {
+    if (extensionConnected && nextStepPath && step === '1') {
       navigate(nextStepPath)
     }
   }, [extensionConnected, navigate, nextStepPath, step])
 
-  const PolkadotExtensionNotInstalled: React.FC = () => (
-    <>
+  return (
+    <StepWrapper withBottomBar>
+      <StyledPolkadotLogo />
       <StepTitle variant="h4">Add Polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
         To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
@@ -36,33 +37,6 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
       <Button variant="tertiary" size="small" onClick={() => setShowDisabledExtensionMessage(true)}>
         Polkadot extension already installed? Click here
       </Button>
-    </>
-  )
-
-  const PolkadotExtensionRejected: React.FC = () => (
-    <>
-      <StepTitle variant="h4">Enable Polkadot extension website access</StepTitle>
-      <StepSubTitle secondary variant="body2">
-        It seems like you have disabled Polkadot extension access to the app. Please follow the steps below to enable
-        it:
-      </StepSubTitle>
-      <ol>
-        <StyledListItem>Open Polkadot extension menu in the right upper corner of the screen</StyledListItem>
-        <StyledListItem>In the menu open settings and Manage Website Access</StyledListItem>
-        <StyledListItem>Find play.joystream.org address and switch it to allowed</StyledListItem>
-      </ol>
-      {showDisabledExtensionMessage && (
-        <Button variant="tertiary" size="small" onClick={() => setShowDisabledExtensionMessage(false)}>
-          Go back
-        </Button>
-      )}
-    </>
-  )
-
-  return (
-    <StepWrapper withBottomBar>
-      <StyledPolkadotLogo />
-      {extensionRejected ? <PolkadotExtensionRejected /> : <PolkadotExtensionNotInstalled />}
       <StyledStepFooter>
         <BottomBarIcon />
         <Text variant="body2" secondary>
@@ -72,5 +46,20 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
     </StepWrapper>
   )
 }
+
+export const PolkadotExtensionRejected: React.FC = () => (
+  <div>
+    <StyledPolkadotLogo />
+    <StepTitle variant="h4">Enable Polkadot extension website access</StepTitle>
+    <StepSubTitle secondary variant="body2">
+      It seems like you have disabled Polkadot extension access to the app. Please follow the steps below to enable it:
+    </StepSubTitle>
+    <ol>
+      <StyledListItem>Open Polkadot extension menu in the right upper corner of the screen</StyledListItem>
+      <StyledListItem>In the menu open settings and Manage Website Access</StyledListItem>
+      <StyledListItem>Find play.joystream.org address and switch it to allowed</StyledListItem>
+    </ol>
+  </div>
+)
 
 export default ExtensionStep

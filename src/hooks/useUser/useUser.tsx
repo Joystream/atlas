@@ -4,8 +4,9 @@ import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/exten
 import { AccountId } from '@/joystream-lib'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
-import { useSnackbar, useCheckBrowser } from '@/hooks'
+import { useCheckBrowser, useDialog } from '@/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+import { PolkadotExtensionRejected } from '@/components/SignInSteps/ExtensionStep'
 
 const POLKADOT_EXTENSION_ID = 'mopnmbcafieddcagagdcbnhejhlodfdd'
 const EXTENSION_URL = `chrome-extension://${POLKADOT_EXTENSION_ID}/page.js`
@@ -35,7 +36,7 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
-  const { displaySnackbar } = useSnackbar()
+  const [openDialog, closeDialog] = useDialog()
   const browser = useCheckBrowser()
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
@@ -74,11 +75,19 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const polkaDotExtensionInstalled = res.ok
     if (polkaDotExtensionInstalled) {
       console.warn('Polkadot extension disabled')
+      openDialog({
+        additionalActionsNode: (
+          <div style={{ textAlign: 'center' }}>
+            <PolkadotExtensionRejected />
+          </div>
+        ),
+        onExitClick: () => closeDialog(),
+      })
       setExtensionRejected(true)
     } else {
       console.warn('No Polkadot extension detected')
     }
-  }, [])
+  }, [closeDialog, openDialog])
 
   // handle polkadot extension
   useEffect(() => {
