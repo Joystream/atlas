@@ -3,8 +3,7 @@ import { css, SerializedStyles } from '@emotion/react'
 import { TransitionGroup } from 'react-transition-group'
 import { colors, transitions, typography, media } from '@/shared/theme'
 import Placeholder from '../Placeholder'
-import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
-
+import { SvgAvatarSilhouette } from '@/shared/illustrations'
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
 type ContainerProps = {
@@ -139,7 +138,7 @@ export const StyledImage = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `
-export const SilhouetteAvatar = styled(Silhouette)`
+export const SilhouetteAvatar = styled(SvgAvatarSilhouette)`
   position: absolute;
   width: 100%;
   height: 100%;

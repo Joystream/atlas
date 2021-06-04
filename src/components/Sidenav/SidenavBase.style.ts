@@ -1,10 +1,10 @@
-import { ReactComponent as UnstyledFullLogo } from '@/assets/full-logo.svg'
 import { Text } from '@/shared/components'
 import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 import { badgeStyles } from '@/shared/components/Badge'
+import { SvgJoystreamFullLogo } from '@/shared/illustrations'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -53,7 +53,7 @@ export const LogoLink = styled(Link)`
   }
 `
 
-export const Logo = styled(UnstyledFullLogo)`
+export const Logo = styled(SvgJoystreamFullLogo)`
   height: ${sizes(8)};
 `
 
