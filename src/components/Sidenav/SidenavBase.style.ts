@@ -29,7 +29,7 @@ type SidebarNavLinkProps = {
 export const SidebarNav = styled.nav<SidebarNavProps>`
   position: fixed;
   top: 0;
-  bottom: 0;
+  height: 100vh;
   z-index: ${zIndex.sideNav};
   width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
