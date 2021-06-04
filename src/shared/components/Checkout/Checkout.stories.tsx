@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
-  title: 'Shared/Checkout',
+  title: 'Shared/C/Checkout',
   component: Checkout,
   argTypes: {},
 } as Meta

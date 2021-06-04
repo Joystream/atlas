@@ -3,7 +3,7 @@ import Avatar, { AvatarProps } from './Avatar'
 import React from 'react'
 
 export default {
-  title: 'Shared/Avatar',
+  title: 'Shared/A/Avatar',
   component: Avatar,
   argTypes: {
     size: {

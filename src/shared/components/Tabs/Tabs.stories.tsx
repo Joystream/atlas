@@ -3,11 +3,18 @@ import Tabs, { TabsProps } from './Tabs'
 import React from 'react'
 
 export default {
-  title: 'Shared/Tabs',
+  title: 'Shared/T/Tabs',
   component: Tabs,
   argTypes: {
     tabs: {
-      defaultValue: ['one', 'two', 'three', 'four', 'five', 'six'],
+      defaultValue: [
+        { name: 'one', badgeNumber: 1 },
+        { name: 'two', badgeNumber: 2 },
+        { name: 'three', badgeNumber: 3 },
+        { name: 'four', badgeNumber: 4 },
+        { name: 'five', badgeNumber: 5 },
+        { name: 'six', badgeNumber: 6 },
+      ],
     },
   },
 } as Meta

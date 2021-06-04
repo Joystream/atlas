@@ -5,7 +5,7 @@ import Button from '../Button'
 import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/hooks/useSnackbar/useSnackbar'
 
 export default {
-  title: 'Shared/Snackbar',
+  title: 'Shared/S/Snackbar',
   component: Snackbar,
   argTypes: {
     title: { defaultValue: 'Lorem ipsul dolor' },

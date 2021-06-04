@@ -5,7 +5,7 @@ import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 export default {
-  title: 'Shared/Tooltip',
+  title: 'Shared/T/Tooltip',
   component: Tooltip,
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },

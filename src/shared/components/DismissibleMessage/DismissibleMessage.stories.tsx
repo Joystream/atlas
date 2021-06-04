@@ -5,7 +5,7 @@ import Button from '../Button'
 import DismissibleMessage, { DismissibleMessageProps } from './DismissibleMessage'
 
 export default {
-  title: 'Shared/DismissibleMessage',
+  title: 'Shared/D/DismissibleMessage',
   component: DismissibleMessage,
   argTypes: {
     id: {

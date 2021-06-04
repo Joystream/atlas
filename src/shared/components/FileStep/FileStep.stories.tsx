@@ -3,7 +3,7 @@ import React from 'react'
 import FileStep, { FileStepProps } from './FileStep'
 
 export default {
-  title: 'Shared/FileStep',
+  title: 'Shared/F/FileStep',
   component: FileStep,
   argTypes: {
     step: {

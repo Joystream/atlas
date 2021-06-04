@@ -4,7 +4,7 @@ import Datepicker, { DatepickerProps } from './Datepicker'
 import { Meta, Story } from '@storybook/react'
 
 export default {
-  title: 'Shared/Datepicker',
+  title: 'Shared/D/Datepicker',
   component: Datepicker,
   args: {
     helperText: 'Lorem ipsum dolor sit amet...',

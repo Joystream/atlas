@@ -7,7 +7,7 @@ import TextField from '../TextField'
 import FormField, { FormFieldProps } from './FormField'
 
 export default {
-  title: 'Shared/FormField',
+  title: 'Shared/F/FormField',
   component: FormField,
   argTypes: {
     className: {

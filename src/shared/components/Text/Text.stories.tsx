@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import { css } from '@emotion/react'
 
 export default {
-  title: 'Shared/Text',
+  title: 'Shared/T/Text',
   component: Text,
 } as Meta
 
