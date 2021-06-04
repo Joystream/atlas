@@ -9,16 +9,16 @@ import { QUERY_PARAMS } from '@/config/routes'
 
 const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
-  const { lockScroll, unlockScroll } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   // prevent body scroll
   useEffect(() => {
-    lockScroll()
+    incrementOverlaysOpenCount()
 
     return () => {
-      unlockScroll()
+      decrementOverlaysOpenCount()
     }
-  }, [lockScroll, unlockScroll])
+  }, [incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
   return (
     <OverlayContainer role="dialog">

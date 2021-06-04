@@ -71,7 +71,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -139,7 +139,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
 
   return (
     <>
-      <DataLostWarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>

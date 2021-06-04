@@ -3,7 +3,7 @@ import ToggleButton, { ToggleButtonProps } from './ToggleButton'
 import { Meta, Story } from '@storybook/react'
 
 export default {
-  title: 'Shared/ToggleButton',
+  title: 'Shared/T/ToggleButton',
   component: ToggleButton,
   argTypes: {
     onClick: {

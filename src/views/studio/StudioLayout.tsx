@@ -24,6 +24,7 @@ import {
   useUser,
   UploadManagerProvider,
   TransactionManagerProvider,
+  DialogProvider,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -149,21 +150,23 @@ const StudioLayoutWrapper: React.FC = () => {
         navigate(absoluteRoutes.studio.index())
       }}
     >
-      <ActiveUserProvider>
-        <PersonalDataProvider>
-          <UploadManagerProvider>
-            <DraftsProvider>
-              <EditVideoSheetProvider>
-                <JoystreamProvider>
-                  <TransactionManagerProvider>
-                    <StudioLayout />
-                  </TransactionManagerProvider>
-                </JoystreamProvider>
-              </EditVideoSheetProvider>
-            </DraftsProvider>
-          </UploadManagerProvider>
-        </PersonalDataProvider>
-      </ActiveUserProvider>
+      <DialogProvider>
+        <ActiveUserProvider>
+          <PersonalDataProvider>
+            <UploadManagerProvider>
+              <DraftsProvider>
+                <EditVideoSheetProvider>
+                  <JoystreamProvider>
+                    <TransactionManagerProvider>
+                      <StudioLayout />
+                    </TransactionManagerProvider>
+                  </JoystreamProvider>
+                </EditVideoSheetProvider>
+              </DraftsProvider>
+            </UploadManagerProvider>
+          </PersonalDataProvider>
+        </ActiveUserProvider>
+      </DialogProvider>
     </ErrorBoundary>
   )
 }

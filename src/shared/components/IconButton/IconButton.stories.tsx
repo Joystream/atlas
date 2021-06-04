@@ -4,7 +4,7 @@ import IconButton, { IconButtonProps } from '.'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 
 export default {
-  title: 'Shared/IconButton',
+  title: 'Shared/I/IconButton',
   component: IconButton,
   argTypes: {
     size: { table: { disable: true } },

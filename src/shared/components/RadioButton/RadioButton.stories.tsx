@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import RadioButton from './RadioButton'
 
 export default {
-  title: 'Shared/RadioButton',
+  title: 'Shared/R/RadioButton',
   component: RadioButton,
   args: {
     label: 'Hello there',

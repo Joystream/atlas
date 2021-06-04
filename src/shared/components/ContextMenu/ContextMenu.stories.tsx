@@ -6,7 +6,7 @@ import { Meta, Story } from '@storybook/react'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
 export default {
-  title: 'Shared/ContextMenu',
+  title: 'Shared/C/ContextMenu',
   component: ContextMenu,
   decorators: [
     (Story) => (

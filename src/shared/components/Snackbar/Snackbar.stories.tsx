@@ -6,7 +6,7 @@
 // import { useSnackbar, Snackbars } from '@/hooks/useSnackbar/useSnackbar'
 
 // export default {
-//   title: 'Shared/Snackbar',
+//   title: 'Shared/S/Snackbar',
 //   component: Snackbar,
 //   argTypes: {
 //     title: { defaultValue: 'Lorem ipsul dolor' },
@@ -24,9 +24,9 @@
 //   },
 //   decorators: [
 //     (Story) => (
-//       <Snackbars>
+//       <SnackbarProvider>
 //         <Story />
-//       </Snackbars>
+//       </SnackbarProvider>
 //     ),
 //   ],
 // } as Meta

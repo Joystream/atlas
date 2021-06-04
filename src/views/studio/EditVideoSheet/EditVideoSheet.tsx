@@ -4,7 +4,7 @@ import { cast } from 'mobx-state-tree'
 import {
   useEditVideoSheet,
   useAuthorizedUser,
-  useSnackbar,
+  useUploadsManager,
   useJoystream,
   EditVideoFormFields,
   EditVideoSheetTab,
@@ -17,12 +17,18 @@ import { useEditVideoSheetAnimations } from './animations'
 import { EditVideoTabsBar } from './EditVideoTabsBar'
 import { EditVideoForm } from './EditVideoForm'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import { useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
+import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { computeFileHash } from '@/utils/hashing'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
-import { useMST } from '@/hooks/useStore'
+import { useApolloClient } from '@apollo/client'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoOrderByInput,
+} from '@/api/queries'
 
 export const EditVideoSheet: React.FC = observer(() => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -46,25 +52,17 @@ export const EditVideoSheet: React.FC = observer(() => {
   const isEdit = !selectedVideoTab?.isDraft
   const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
+  const { openWarningDialog } = useDisplayDataLostWarning()
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
-  const { displaySnackbar } = useSnackbar()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   // const { startFileUpload } = useUploadsManager(activeChannelId)
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
-  const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
-    skip: !selectedVideoTab || selectedVideoTab.isDraft,
-  })
-  const { refetchCount: refetchVideosCount } = useVideos({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const client = useApolloClient()
 
   useEffect(() => {
     if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
@@ -205,18 +203,23 @@ export const EditVideoSheet: React.FC = observer(() => {
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
-      const fetchedVideo = await refetchVideo({ where: { id: videoId } })
-
+      const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
+        query: GetVideosConnectionDocument,
+        variables: {
+          orderBy: VideoOrderByInput.CreatedAtDesc,
+          where: {
+            id_eq: videoId,
+          },
+        },
+      })
       if (isNew) {
-        if (fetchedVideo.data.videoByUniqueInput) {
+        if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
-            data: fetchedVideo.data.videoByUniqueInput,
+            edge: fetchedVideo.data.videosConnection.edges[0],
             thumbnailUrl: data.assets.thumbnail?.url,
             client,
           })
         }
-        // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
-        await refetchVideosCount()
 
         updateSelectedVideoTab({
           id: videoId,
@@ -262,7 +265,7 @@ export const EditVideoSheet: React.FC = observer(() => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const handleDeleteVideo = async (videoId: string) => {
+  const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
     removeVideoTab(videoTabIdx)
 
@@ -288,7 +291,6 @@ export const EditVideoSheet: React.FC = observer(() => {
 
   return (
     <>
-      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container ref={containerRef} role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar

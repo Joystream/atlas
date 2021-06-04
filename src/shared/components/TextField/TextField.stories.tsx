@@ -6,7 +6,7 @@ import Button from '../Button'
 import { css } from '@emotion/react'
 
 export default {
-  title: 'Shared/TextField',
+  title: 'Shared/T/TextField',
   component: TextField,
   args: {
     label: 'label text',

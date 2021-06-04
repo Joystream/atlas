@@ -38,7 +38,6 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import { SvgGlyphInfo } from '@/shared/icons'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { formatISO, isValid } from 'date-fns'
-import { MessageDialog } from '@/components'
 import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
@@ -94,7 +93,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
   const { nodeConnectionStatus } = useConnectionStatus()
 
-  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
+  const deleteVideo = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -134,6 +133,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+  useEffect(() => {
+    // reset form for edited video on sheet close
+    if (isEdit && sheetState === 'closed' && tabData) {
+      reset(tabData)
+    }
+  }, [isEdit, reset, setValue, sheetState, tabData])
 
   useEffect(() => {
     if (isEdit) {
@@ -309,6 +314,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       behavior: 'smooth',
       block: 'start',
     })
+  }
+
+  const handleDeleteVideo = () => {
+    selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
   }
 
   const categoriesSelectItems: SelectItem[] =
@@ -548,32 +557,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </FormField>
           {isEdit && (
             <DeleteVideoContainer>
-              <DeleteVideoButton
-                size="large"
-                variant="tertiary"
-                textColorVariant="error"
-                onClick={openVideoDeleteDialog}
-              >
+              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
                 Delete video
               </DeleteVideoButton>
             </DeleteVideoContainer>
           )}
         </InputsContainer>
       </FormWrapper>
-      <MessageDialog
-        title="Delete this video?"
-        exitButton={false}
-        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
-        showDialog={isDeleteDialogOpen}
-        onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() =>
-          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
-        }
-        error
-        variant="warning"
-        primaryButtonText="Delete video"
-        secondaryButtonText="Cancel"
-      />
+
       <StyledActionBar
         disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}

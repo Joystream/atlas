@@ -1,20 +1,14 @@
-import React, { useCallback, useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
-import { transitions, zIndex } from '@/shared/theme'
+import { transitions } from '@/shared/theme'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
-  setScrollLocked: (value: boolean, scrollbarGap?: number) => void
-  overlayContainerOpened: boolean
-  setOverlayContainerOpened: (value: boolean) => void
-  overlayContainerRef: React.RefObject<HTMLDivElement>
+  setOverlaysOpenCount: React.Dispatch<React.SetStateAction<number>>
+  dialogContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
-}
-
-type OverlayContainerProps = {
-  isOpened?: boolean
 }
 
 const OverlayManagerContext = React.createContext<OverlayManagerContextValue | undefined>(undefined)
@@ -22,25 +16,23 @@ OverlayManagerContext.displayName = 'OverlayManagerContext'
 
 export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
-  const [overlayContainerOpened, setOverlayContainerOpened] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
-  const overlayContainerRef = useRef<HTMLDivElement>(null)
+  const [overlaysOpenCount, setOverlaysOpenCount] = useState(0)
+  const dialogContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
-  const handleScrollLocked = useCallback((value: boolean, scrollbarGap?: number) => {
-    if (value) {
-      setScrollLocked(true)
-      setScrollbarGap(scrollbarGap || 0)
-      disableBodyScroll(document.body, { reserveScrollBarGap: true })
-    } else {
+
+  useEffect(() => {
+    if (overlaysOpenCount === 0 && scrollLocked) {
       setScrollLocked(false)
       setScrollbarGap(0)
       enableBodyScroll(document.body)
+    } else if (overlaysOpenCount > 0 && !scrollLocked) {
+      const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
+      setScrollLocked(true)
+      setScrollbarGap(scrollbarGap)
+      disableBodyScroll(document.body, { reserveScrollBarGap: true })
     }
-  }, [])
-
-  const handleContainerOpened = useCallback((value: boolean) => {
-    setOverlayContainerOpened(value)
-  }, [])
+  }, [overlaysOpenCount, scrollLocked])
 
   return (
     <>
@@ -48,16 +40,15 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
-          setScrollLocked: handleScrollLocked,
-          overlayContainerOpened,
-          setOverlayContainerOpened: handleContainerOpened,
-          overlayContainerRef,
+          setOverlaysOpenCount,
+          dialogContainerRef,
           contextMenuContainerRef,
         }}
       >
         {children}
-        <StyledContextMenuContainer ref={contextMenuContainerRef} />
-        <StyledOverlayContainer ref={overlayContainerRef} isOpened={overlayContainerOpened} />
+
+        <PortalContainer ref={dialogContainerRef} />
+        <PortalContainer ref={contextMenuContainerRef} />
       </OverlayManagerContext.Provider>
     </>
   )
@@ -97,24 +88,11 @@ const dialogTransitions = css`
   }
 `
 
-const StyledContextMenuContainer = styled.div`
+const PortalContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-`
-
-const StyledOverlayContainer = styled.div<OverlayContainerProps>`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  visibility: ${({ isOpened }) => (isOpened ? 'visible' : 'hidden')};
-  opacity: ${({ isOpened }) => (isOpened ? '1' : '0')};
-  z-index: ${zIndex.globalOverlay};
-  background-color: rgba(0, 0, 0, 0.4);
-  transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
 `
 
 export const useOverlayManager = () => {
@@ -122,31 +100,19 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setScrollLocked, setOverlayContainerOpened, overlayContainerRef, contextMenuContainerRef } = context
+  const { setOverlaysOpenCount, dialogContainerRef, contextMenuContainerRef } = context
 
-  const lockScroll = useCallback(() => {
-    const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
-    setScrollLocked(true, scrollbarGap)
-  }, [setScrollLocked])
-
-  const unlockScroll = useCallback(() => {
-    setScrollLocked(false)
-  }, [setScrollLocked])
-
-  const openOverlayContainer = useCallback(() => {
-    setOverlayContainerOpened(true)
-  }, [setOverlayContainerOpened])
-
-  const closeOverlayContainer = useCallback(() => {
-    setOverlayContainerOpened(false)
-  }, [setOverlayContainerOpened])
+  const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
+    setOverlaysOpenCount,
+  ])
+  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
+    setOverlaysOpenCount,
+  ])
 
   return {
-    lockScroll,
-    unlockScroll,
-    openOverlayContainer,
-    closeOverlayContainer,
-    overlayContainerRef,
+    incrementOverlaysOpenCount,
+    decrementOverlaysOpenCount,
+    dialogContainerRef,
     contextMenuContainerRef,
   }
 }

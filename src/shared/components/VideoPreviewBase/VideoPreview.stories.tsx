@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { OverlayManagerProvider } from '@/hooks'
 
 export default {
-  title: 'Shared/VideoPreview',
+  title: 'Shared/V/VideoPreview',
   component: VideoPreviewBase,
   argTypes: {
     createdAt: { control: 'date' },

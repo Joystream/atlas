@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 
 export default {
-  title: 'Shared/Button',
+  title: 'Shared/B/Button',
   component: Button,
   argTypes: {
     size: { table: { disable: true } },

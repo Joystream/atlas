@@ -5,7 +5,7 @@ import ActionBarTransaction, { ActionBarTransactionProps } from './ActionBarTran
 import { SvgGlyphInfo } from '@/shared/icons'
 
 export default {
-  title: 'Shared/ActionBar',
+  title: 'Shared/A/ActionBar',
   component: ActionBar,
   args: {
     primaryText: 'Fee: 0.2 Joy',
@@ -16,6 +16,7 @@ export default {
     primaryButtonText: 'Edit the channel',
     secondaryButtonText: 'Cancel',
     fee: 1,
+    isActive: true,
   },
 } as Meta
 
