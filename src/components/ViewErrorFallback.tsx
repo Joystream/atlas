@@ -2,9 +2,9 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
 
-import { ReactComponent as ErrorIllustration } from '@/assets/error.svg'
 import { Button, Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
+import { SvgWellErrorIllustration } from '@/shared/illustrations'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;
@@ -37,7 +37,7 @@ const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) =>
   console.error('An error occurred.', { componentStack, error })
   return (
     <Container>
-      <ErrorIllustration />
+      <SvgWellErrorIllustration />
       <Message>
         <Title variant="h3">Oops! An Error occurred.</Title>
         <Subtitle>We could not acquire expected results. Please try reloading or return to the home page.</Subtitle>

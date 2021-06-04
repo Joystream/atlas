@@ -1,4 +1,3 @@
-import accountCreation from '@/assets/account-creation.svg'
 import { useUser } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -20,9 +19,15 @@ import {
   SubTitle,
   StyledStepWrapper,
 } from './AccountStep.style'
-import polkadotIcon from '@/assets/polkadot-logo.svg'
-import joystreamIcon from '@/assets/joystream-logo.svg'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
+import {
+  StepFooter,
+  BottomBarIcon,
+  StepSubTitle,
+  StepTitle,
+  StepWrapper,
+  StyledPolkadotLogo,
+  StyledJoystreamLogo,
+} from './SignInSteps.style'
 import { useNavigate } from 'react-router'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 
@@ -62,7 +67,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
       >
         {!accountsWithNoMembership?.length ? (
           <StyledStepWrapper withBottomBar>
-            <AccountStepImg src={accountCreation} />
+            <AccountStepImg />
             <StepTitle variant="h4">Create blockchain account</StepTitle>
             <SubTitle variant="body2" secondary>
               Use the Polkadot extension to generate your personal keypair. Follow these instructions:
@@ -89,9 +94,9 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
           <form onSubmit={handleSubmitSelectedAccount}>
             <StepWrapper>
               <IconGroup>
-                <StyledLogo src={polkadotIcon} alt="Polkadot icon" />
+                <StyledPolkadotLogo />
                 <SvgOutlineConnect />
-                <StyledLogo src={joystreamIcon} alt="Joystream icon" />
+                <StyledJoystreamLogo />
               </IconGroup>
               <StepTitle variant="h4">Connect account</StepTitle>
               <StepSubTitle secondary>

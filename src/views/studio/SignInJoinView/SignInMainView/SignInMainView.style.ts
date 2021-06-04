@@ -1,6 +1,6 @@
-import { ReactComponent as SignInIllustrationSVG } from '@/assets/signin-illustration.svg'
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
+import { SvgSigninIllustration } from '@/shared/illustrations'
 import { media, colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
@@ -45,7 +45,7 @@ export const StyledHero = styled(Text)`
   margin-top: ${sizes(8)};
 `
 
-export const StyledSignInIllustrationSVG = styled(SignInIllustrationSVG)`
+export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
   margin-top: 60px;
   align-self: center;
   width: 100%;
