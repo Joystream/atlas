@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import MultiFileSelect, { MultiFileSelectProps, InputFilesState } from './MultiFileSelect'
 
 export default {
-  title: 'Shared/MultiFileSelect',
+  title: 'Shared/M/MultiFileSelect',
   component: MultiFileSelect,
   decorators: [
     (Story) => (

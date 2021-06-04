@@ -5,7 +5,7 @@ import { colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
 export default {
-  title: 'Shared/Carousel',
+  title: 'Shared/C/Carousel',
   component: Carousel,
 } as Meta
 

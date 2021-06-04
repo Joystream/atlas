@@ -5,7 +5,7 @@ import { Button } from '..'
 import { css } from '@emotion/react'
 
 export default {
-  title: 'Shared/TextArea',
+  title: 'Shared/T/TextArea',
   component: TextArea,
   argTypes: {
     value: { table: { disable: true } },

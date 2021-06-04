@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 
 export default {
-  title: 'Shared/ChannelPreview',
+  title: 'Shared/C/ChannelPreview',
   component: ChannelPreviewBase,
   argTypes: {
     className: { table: { disable: true } },
