@@ -1,5 +1,5 @@
-import { Button } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { Button, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { StepFooter } from './SignInSteps.style'
 
@@ -11,11 +11,13 @@ export const StyledStepFooter = styled(StepFooter)`
   margin-top: ${sizes(12)};
 `
 
-export const StyledListItem = styled.li`
+export const StyledListItem = styled(Text)`
   text-align: left;
-  color: ${colors.gray[200]};
-  font-size: ${typography.sizes.caption};
   & + & {
     margin-top: ${sizes(2)};
   }
+`
+
+export const PolkadotExtensionRejectedWrapper = styled.div`
+  text-align: center;
 `

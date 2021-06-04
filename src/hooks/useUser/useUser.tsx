@@ -2,14 +2,11 @@ import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { useActiveUserStore } from './store'
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { AccountId } from '@/joystream-lib'
-import { WEB3_APP_NAME } from '@/config/urls'
+import { WEB3_APP_NAME, EXTENSION_URL } from '@/config/urls'
 import { useMembership, useMemberships } from '@/api/hooks'
 import { useCheckBrowser, useDialog } from '@/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import { PolkadotExtensionRejected } from '@/components/SignInSteps/ExtensionStep'
-
-const POLKADOT_EXTENSION_ID = 'mopnmbcafieddcagagdcbnhejhlodfdd'
-const EXTENSION_URL = `chrome-extension://${POLKADOT_EXTENSION_ID}/page.js`
 
 export type Account = {
   id: AccountId
@@ -76,11 +73,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (polkaDotExtensionInstalled) {
       console.warn('Polkadot extension disabled')
       openDialog({
-        additionalActionsNode: (
-          <div style={{ textAlign: 'center' }}>
-            <PolkadotExtensionRejected />
-          </div>
-        ),
+        additionalActionsNode: <PolkadotExtensionRejected />,
         onExitClick: () => closeDialog(),
       })
       setExtensionRejected(true)

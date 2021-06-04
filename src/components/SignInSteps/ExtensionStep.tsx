@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyledButton, StyledStepFooter, StyledListItem } from './ExtensionStep.style'
+import { StyledButton, StyledStepFooter, StyledListItem, PolkadotExtensionRejectedWrapper } from './ExtensionStep.style'
 import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
 import { Text, Button } from '@/shared/components'
 import { useNavigate } from 'react-router'
@@ -24,7 +24,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   }, [extensionConnected, navigate, nextStepPath, step])
 
   return (
-    <StepWrapper withBottomBar>
+    <StepWrapper>
       <StyledPolkadotLogo />
       <StepTitle variant="h4">Add Polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
@@ -40,7 +40,9 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
       <StyledStepFooter>
         <BottomBarIcon />
         <Text variant="body2" secondary>
-          Please reload the page and allow access after installing the extension
+          {extensionRejected || showDisabledExtensionMessage
+            ? 'Please reload the page after enabling the extension'
+            : 'Please reload the page and allow access after installing the extension'}
         </Text>
       </StyledStepFooter>
     </StepWrapper>
@@ -48,18 +50,24 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
 }
 
 export const PolkadotExtensionRejected: React.FC = () => (
-  <div>
+  <PolkadotExtensionRejectedWrapper>
     <StyledPolkadotLogo />
     <StepTitle variant="h4">Enable Polkadot extension website access</StepTitle>
     <StepSubTitle secondary variant="body2">
       It seems like you have disabled Polkadot extension access to the app. Please follow the steps below to enable it:
     </StepSubTitle>
     <ol>
-      <StyledListItem>Open Polkadot extension menu in the right upper corner of the screen</StyledListItem>
-      <StyledListItem>In the menu open settings and Manage Website Access</StyledListItem>
-      <StyledListItem>Find play.joystream.org address and switch it to allowed</StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        Open Polkadot extension menu in the right upper corner of the screen
+      </StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        In the menu open settings and Manage Website Access
+      </StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        Find play.joystream.org address and switch it to allowed
+      </StyledListItem>
     </ol>
-  </div>
+  </PolkadotExtensionRejectedWrapper>
 )
 
 export default ExtensionStep
