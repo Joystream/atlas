@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router'
 const StoreContext = createContext<Instance<typeof store>>(store)
 StoreContext.displayName = 'StoreContext'
 
-export const StoreProvider: React.FC<{ client: ApolloClient<NormalizedCacheObject> }> = ({ children, client }) => {
+export const StoreProvider: React.FC<{ client?: ApolloClient<NormalizedCacheObject> }> = ({ children, client }) => {
   const navigate = useNavigate()
   useEffect(() => {
     store.hooks.setHooks({ client, navigate })

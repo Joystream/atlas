@@ -33,7 +33,7 @@ export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useAuthorizedUser()
   const { unseenDrafts } = useDrafts('video', activeChannelId)
-  const { uploadsState } = useUploadsManager(activeChannelId)
+  const { uploadsState } = useUploadsManager()
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
 

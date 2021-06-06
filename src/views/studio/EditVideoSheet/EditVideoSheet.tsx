@@ -29,6 +29,7 @@ import {
   GetVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
+import { useMST } from '@/hooks/useStore'
 
 export const EditVideoSheet: React.FC = observer(() => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()

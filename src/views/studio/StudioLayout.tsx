@@ -22,7 +22,6 @@ import {
   useVideoEditSheetRouting,
   useConnectionStatus,
   useUser,
-  UploadManagerProvider,
   TransactionManagerProvider,
   DialogProvider,
 } from '@/hooks'
@@ -153,17 +152,15 @@ const StudioLayoutWrapper: React.FC = () => {
       <DialogProvider>
         <ActiveUserProvider>
           <PersonalDataProvider>
-            <UploadManagerProvider>
-              <DraftsProvider>
-                <EditVideoSheetProvider>
-                  <JoystreamProvider>
-                    <TransactionManagerProvider>
-                      <StudioLayout />
-                    </TransactionManagerProvider>
-                  </JoystreamProvider>
-                </EditVideoSheetProvider>
-              </DraftsProvider>
-            </UploadManagerProvider>
+            <DraftsProvider>
+              <EditVideoSheetProvider>
+                <JoystreamProvider>
+                  <TransactionManagerProvider>
+                    <StudioLayout />
+                  </TransactionManagerProvider>
+                </JoystreamProvider>
+              </EditVideoSheetProvider>
+            </DraftsProvider>
           </PersonalDataProvider>
         </ActiveUserProvider>
       </DialogProvider>

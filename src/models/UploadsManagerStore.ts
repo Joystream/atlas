@@ -1,4 +1,4 @@
-import { LiaisonJudgement } from '@/api/queries'
+import { AllChannelFieldsFragment, LiaisonJudgement, Maybe, VideoFieldsFragment } from '@/api/queries'
 import { StartFileUploadOptions } from '@/hooks/useUploadsManager/types'
 import { SnapshotOrInstance, types, cast, Instance, flow, getRoot } from 'mobx-state-tree'
 import * as rax from 'retry-axios'
@@ -7,6 +7,8 @@ import { createStorageNodeUrl } from '@/utils/asset'
 import { RootStoreIntance, RootStore } from './RootStore'
 import { debounce } from 'lodash'
 import { absoluteRoutes } from '@/config/routes'
+import { ImageCropData } from '@/types/cropper'
+import { when } from 'mobx'
 
 type AssetFile = {
   contentId: string
@@ -17,13 +19,6 @@ const RETRIES_COUNT = 5
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 const RECONNECTION_ERROR_MESSAGE = 'Reconnection failed'
-
-const ImageCropData = types.model('AssetUpload', {
-  left: types.number,
-  top: types.number,
-  width: types.number,
-  height: types.number,
-})
 
 const AssetDimensions = types.model('AssetUpload', {
   width: types.number,
@@ -39,16 +34,20 @@ export const AssetUpload = types.model('AssetUpload', {
   contentId: types.identifier,
   parentObject: ParentObject,
   owner: types.string,
-  type: types.enumeration(['video', 'thumbnail', 'cover', 'avatar']),
+  type: types.enumeration<'video' | 'thumbnail' | 'cover' | 'avatar'>('Type', [
+    'video',
+    'thumbnail',
+    'cover',
+    'avatar',
+  ]),
   lastStatus: types.maybe(types.enumeration(['completed', 'inProgress', 'error', 'reconnecting', 'reconnectionError'])),
   liaisonJudgement: types.maybe(
     types.enumeration<LiaisonJudgement>('LiaisonJudgement', Object.values(LiaisonJudgement))
   ),
   ipfsContentId: types.maybe(types.string),
-  // size in bytes
-  size: types.maybe(types.number),
+  size: types.maybe(types.number), // size in bytes
   dimensions: types.maybe(AssetDimensions),
-  imageCropData: types.maybe(ImageCropData),
+  imageCropData: types.maybe(types.frozen<ImageCropData>()),
   metadata: types.maybe(types.string),
   title: types.maybe(types.union(types.string, types.null)),
   progress: types.optional(types.number, 0),
@@ -58,16 +57,10 @@ export const UploadsManagerStore = types
   .model('UploadsManagerStore', {
     uploadingAssetsState: types.array(AssetUpload),
   })
-  .views((self) => ({
-    // get count() {
-    //   return self.x.length
-    // },
-  }))
   .volatile((self) => {
     const assetsFiles: AssetFile[] = []
     const pendingNotificationsCounts = { uploading: 0, uploaded: 0 }
     const displayUploadingNotification = debounce(() => {
-      console.log('displayin')
       getRoot<RootStoreIntance>(self).snackbarStore.displaySnackbar(
         {
           title:
@@ -75,7 +68,7 @@ export const UploadsManagerStore = types
               ? `${pendingNotificationsCounts.uploading} assets being uploaded`
               : 'Asset being uploaded',
           iconType: 'info',
-          timeout: UPLOADED_SNACKBAR_TIMEOUT,
+          timeout: UPLOADING_SNACKBAR_TIMEOUT,
           actionText: 'See',
         },
         () => getRoot<RootStoreIntance>(self).hooks.navigate(absoluteRoutes.studio.uploads())
@@ -101,6 +94,22 @@ export const UploadsManagerStore = types
     return { assetsFiles, pendingNotificationsCounts, displayUploadingNotification, displayUploadedNotification }
   })
   .actions((self) => {
+    function afterAttach() {
+      console.log('attaching uploads manager')
+      // allow some time for the store to be hydrated from local storage
+      when(
+        () => self.uploadingAssetsState.length > 0,
+        () => {
+          // Will set all incompleted assets' status to error from previous sessions
+          self.uploadingAssetsState.forEach((asset) => {
+            if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
+              asset.lastStatus = 'error'
+            }
+          })
+        },
+        { timeout: 1000 }
+      )
+    }
     function addAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
       self.uploadingAssetsState.push(asset)
     }
@@ -113,7 +122,7 @@ export const UploadsManagerStore = types
     function removeAsset(asset: SnapshotOrInstance<typeof AssetUpload>) {
       self.uploadingAssetsState.remove(cast(asset))
     }
-    return { addAsset, updateAsset, removeAsset }
+    return { addAsset, updateAsset, removeAsset, afterAttach }
   })
   .actions((self) => {
     const startFileUpload = flow(function* startFileUpload(

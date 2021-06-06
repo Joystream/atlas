@@ -8,7 +8,7 @@ import { useMST } from '@/hooks/useStore'
 export const UploadFiles = () => {
   const { uploadsManagerStore } = useMST()
   const { activeChannelId } = useAuthorizedUser()
-  const { uploadsState } = useUploadsManager(activeChannelId)
+  const { uploadsState } = useUploadsManager()
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)

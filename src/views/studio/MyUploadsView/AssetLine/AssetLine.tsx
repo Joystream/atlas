@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useUploadsManager, useAuthorizedUser, useDialog } from '@/hooks'
+import { useAuthorizedUser } from '@/hooks'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { formatBytes } from '@/utils/size'
@@ -16,13 +16,14 @@ import {
   StatusMessage,
   ProgressbarContainer,
 } from './AssetLine.style'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { LiaisonJudgement } from '@/api/queries'
 import { IAssetUpload } from '@/models/UploadsManagerStore'
 import { useMST } from '@/hooks/useStore'
+import { useDialog } from '@/hooks/useDialog'
+import { cast, TypeOfValue } from 'mobx-state-tree'
 
 type AssetLineProps = {
   isLast?: boolean
@@ -101,7 +102,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       asset.type,
       getRandomStorageProviderUrl,
       openDifferentFileDialog,
-      startFileUpload,
+      uploadsManagerStore,
     ]
   )
 
@@ -148,9 +149,9 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (!randomStorageProviderUrl) {
         return
       }
-      startFileUpload(
+      uploadsManagerStore.startFileUpload(
         croppedBlob,
-        {
+        cast({
           contentId: asset.contentId,
           owner: asset.owner,
           parentObject: {
@@ -158,7 +159,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
             id: asset.parentObject.id,
           },
           type: asset.type,
-        },
+        }),
         randomStorageProviderUrl,
         {
           isReUpload: true,
@@ -182,7 +183,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     asset.type === 'video' ? openFileSelect() : assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
   }
 
-  const renderStatusMessage = (asset: AssetUploadWithProgress) => {
+  const renderStatusMessage = (asset: IAssetUpload) => {
     if (asset.lastStatus === 'reconnecting') {
       return 'Trying to reconnect...'
     }

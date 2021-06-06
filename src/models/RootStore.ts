@@ -20,8 +20,8 @@ export const RootStore = types.model('RootStore', {
         return { client, navigate }
       })
       .actions((self) => ({
-        setHooks(hooks: { client: ApolloClient<NormalizedCacheObject>; navigate: NavigateFunction }) {
-          self.client = hooks.client
+        setHooks(hooks: { client?: ApolloClient<NormalizedCacheObject>; navigate: NavigateFunction }) {
+          self.client = hooks.client ?? {}
           self.navigate = hooks.navigate
         },
       })),

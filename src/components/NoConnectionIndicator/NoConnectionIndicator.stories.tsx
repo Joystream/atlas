@@ -1,7 +1,8 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
 import NoConnectionIndicator, { NoConnectionIndicatorProps } from './NoConnectionIndicator'
-import { ConnectionStatusProvider, SnackbarProvider } from '@/hooks'
+import { ConnectionStatusProvider } from '@/hooks'
+import { StoreProvider } from '@/hooks/useStore'
 
 export default {
   title: 'General/NoConnectionIndicator',
@@ -11,11 +12,11 @@ export default {
   },
   decorators: [
     (Story) => (
-      <SnackbarProvider>
+      <StoreProvider>
         <ConnectionStatusProvider>
           <Story />
         </ConnectionStatusProvider>
-      </SnackbarProvider>
+      </StoreProvider>
     ),
   ],
 } as Meta

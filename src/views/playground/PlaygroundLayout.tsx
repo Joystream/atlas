@@ -2,13 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
-import {
-  DraftsProvider,
-  ActiveUserProvider,
-  ConnectionStatusProvider,
-  UploadManagerProvider,
-  DialogProvider,
-} from '@/hooks'
+import { DraftsProvider, ActiveUserProvider, ConnectionStatusProvider, DialogProvider } from '@/hooks'
 import {
   FileHashing,
   ImageDownsizing,
@@ -22,6 +16,7 @@ import {
   Dialogs,
 } from './Playgrounds'
 import { colors } from '@/shared/theme'
+import { StoreProvider } from '@/hooks/useStore'
 
 const playgroundRoutes = [
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
@@ -40,7 +35,7 @@ export const PlaygroundLayout = () => {
   return (
     <ActiveUserProvider>
       <DialogProvider>
-        <UploadManagerProvider>
+        <StoreProvider>
           <ConnectionStatusProvider>
             <DraftsProvider>
               <Container>
@@ -61,7 +56,7 @@ export const PlaygroundLayout = () => {
               </Container>
             </DraftsProvider>
           </ConnectionStatusProvider>
-        </UploadManagerProvider>
+        </StoreProvider>
       </DialogProvider>
     </ActiveUserProvider>
   )

@@ -6,8 +6,7 @@ import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 
 const MyUploadsView = () => {
-  const { activeChannelId } = useAuthorizedUser()
-  const { uploadsState, isLoading } = useUploadsManager(activeChannelId)
+  const { uploadsState, isLoading } = useUploadsManager()
 
   const hasUploads = uploadsState.length > 0
   return (
