@@ -2,7 +2,8 @@ import React, { useState, useMemo, useCallback } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Gallery, MIN_VIDEO_PREVIEW_WIDTH, CAROUSEL_ARROW_HEIGHT } from '@/shared/components'
+import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import VideoPreview from './VideoPreview'
 import { sizes } from '@/shared/theme'
@@ -103,8 +104,8 @@ const StyledVideoPreview = styled(VideoPreview)`
   & + & {
     margin-left: ${sizes(6)};
   }
-
-  min-width: ${MIN_VIDEO_PREVIEW_WIDTH};
+  /* MIN_VIDEO_PREVIEW_WIDTH */
+  min-width: 300px;
 `
 
 export default VideoGallery
