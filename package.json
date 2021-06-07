@@ -20,7 +20,9 @@
     "dev": "yarn start",
     "build": "react-app-rewired build",
     "eject": "react-app-rewired eject",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:css": "stylelint './src/**/*.{tsx,ts}'",
+    "lint": "yarn lint:css && yarn lint:ts",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "mocking:videos": "node scripts/mocking/generateVideos.js",
@@ -134,7 +136,15 @@
     "@storybook/react": "^6.1.16",
     "@storybook/theming": "^6.1.16",
     "@svgr/cli": "^5.5.0",
-    "@trivago/prettier-plugin-sort-imports": "^2.0.2"
+    "@trivago/prettier-plugin-sort-imports": "^2.0.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recommended": "^5.0.0",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-order": "^4.1.0",
+    "stylelint-prettier": "^1.2.0",
+    "stylelint-webpack-plugin": "^2.1.1"
   },
   "browserslist": {
     "production": [
