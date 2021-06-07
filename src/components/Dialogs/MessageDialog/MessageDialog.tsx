@@ -8,7 +8,7 @@ type DialogVariant = 'success' | 'warning' | 'error' | 'info'
 export type MessageDialogProps = {
   variant?: DialogVariant
   title?: string
-  description?: string
+  description?: React.ReactNode
   icon?: React.ReactElement
 } & ActionDialogProps
 

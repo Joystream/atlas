@@ -4,11 +4,7 @@ import { SvgJoystreamLogo, SvgPolkadotLogo } from '@/shared/illustrations'
 import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-type StepWrapperProps = {
-  withBottomBar?: boolean
-}
-
-export const StepWrapper = styled.div<StepWrapperProps>`
+export const StepWrapper = styled.div`
   width: 100%;
   text-align: center;
   display: flex;
