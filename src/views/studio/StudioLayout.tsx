@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
@@ -25,6 +25,7 @@ import {
   UploadManagerProvider,
   TransactionManagerProvider,
   DialogProvider,
+  useDialog,
 } from '@/hooks'
 
 import { relativeRoutes, absoluteRoutes } from '@/config/routes'
@@ -38,6 +39,7 @@ import {
   PrivateRoute,
   StudioLoading,
 } from '@/components'
+import { isAllowedBrowser } from '@/utils/broswer'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -55,6 +57,7 @@ const StudioLayout = () => {
     userInitialized,
   } = useUser()
 
+  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
@@ -62,10 +65,27 @@ const StudioLayout = () => {
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
 
+  useEffect(() => {
+    if (!isAllowedBrowser()) {
+      openUnsupportedBrowserDialog({
+        variant: 'warning',
+        title: 'Unsupported browser detected',
+        description:
+          'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',
+        primaryButtonText: 'I understand',
+        onPrimaryButtonClick: () => {
+          closeUnsupportedBrowserDialog()
+        },
+        onExitClick: () => {
+          closeUnsupportedBrowserDialog()
+        },
+      })
+    }
+  }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
-
   return (
     <>
       <NoConnectionIndicator
