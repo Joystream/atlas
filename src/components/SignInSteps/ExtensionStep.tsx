@@ -52,22 +52,23 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
 export const PolkadotExtensionRejected: React.FC = () => (
   <PolkadotExtensionRejectedWrapper>
     <StyledPolkadotLogo />
-    <StepTitle variant="h4">Enable Polkadot extension website access</StepTitle>
+    <StepTitle variant="h4">Allow Polkadot extension access</StepTitle>
     <StepSubTitle secondary variant="body2">
-      It seems like you have disabled Polkadot extension access to the app. Please follow the steps below to enable it:
+      If you’ve denied Polkadot extension access for this website, you won’t be able to use Joystream studio. To allow
+      access, you can take the following steps:
     </StepSubTitle>
     <ol>
       <StyledListItem secondary as="li" variant="caption">
-        Open Polkadot extension menu in the right upper corner of the screen
+        Open the extension popup with the icon in your browser bar
       </StyledListItem>
       <StyledListItem secondary as="li" variant="caption">
-        In the menu open settings and Manage Website Access
+        Use cog icon in upper right corner to open settings and select {'"Manage Website Access"'}
       </StyledListItem>
       <StyledListItem secondary as="li" variant="caption">
         Find play.joystream.org address and switch it to allowed
       </StyledListItem>
       <StyledListItem secondary as="li" variant="caption">
-        Reload the page after enabling the extension
+        Reload the page
       </StyledListItem>
     </ol>
   </PolkadotExtensionRejectedWrapper>
