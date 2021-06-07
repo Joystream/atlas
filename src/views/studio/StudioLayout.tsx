@@ -70,7 +70,12 @@ const StudioLayout = () => {
       openUnsupportedBrowserDialog({
         variant: 'warning',
         title: 'Unsupported browser detected',
-        description: 'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',
+        description:
+          'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',
+        primaryButtonText: 'I understand',
+        onPrimaryButtonClick: () => {
+          closeUnsupportedBrowserDialog()
+        },
         onExitClick: () => {
           closeUnsupportedBrowserDialog()
         },
