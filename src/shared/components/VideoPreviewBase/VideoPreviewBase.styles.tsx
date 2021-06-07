@@ -238,6 +238,9 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
