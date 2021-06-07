@@ -37,12 +37,12 @@ import {
   useTransactionManager,
   useAsset,
   useConnectionStatus,
+  useUploadsManager,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { absoluteRoutes } from '@/config/routes'
 import { computeFileHash } from '@/utils/hashing'
 import { AssetAvailability } from '@/api/queries'
-import { useMST } from '@/hooks/useStore'
 import { cast } from 'mobx-state-tree'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
@@ -73,7 +73,8 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
-  const { uploadsManagerStore } = useMST()
+  const { startFileUpload } = useUploadsManager()
+
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
@@ -232,7 +233,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     const uploadAssets = (channelId: ChannelId) => {
       const storageProviderUrl = getRandomStorageProviderUrl()
       if (data.avatar.blob && avatarContentId && storageProviderUrl) {
-        uploadsManagerStore.startFileUpload(
+        startFileUpload(
           data.avatar.blob,
           cast({
             contentId: avatarContentId,
@@ -249,7 +250,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         )
       }
       if (data.cover.blob && coverContentId && storageProviderUrl) {
-        uploadsManagerStore.startFileUpload(
+        startFileUpload(
           data.cover.blob,
           cast({
             contentId: coverContentId,

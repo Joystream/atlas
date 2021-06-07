@@ -10,7 +10,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { ImageCropData } from '@/types/cropper'
 import { when } from 'mobx'
 
-type AssetFile = {
+export type AssetFile = {
   contentId: string
   blob: File | Blob
 }
@@ -95,7 +95,6 @@ export const UploadsManagerStore = types
   })
   .actions((self) => {
     function afterAttach() {
-      console.log('attaching uploads manager')
       // allow some time for the store to be hydrated from local storage
       when(
         () => self.uploadingAssetsState.length > 0,
@@ -208,10 +207,6 @@ export const UploadsManagerStore = types
     })
     return { startFileUpload }
   })
-
-// videos
-// channel
-// TODO: remove useUploadsManager completely ?
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IAssetUpload extends Instance<typeof AssetUpload> {}

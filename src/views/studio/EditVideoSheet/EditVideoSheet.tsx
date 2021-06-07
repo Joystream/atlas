@@ -29,11 +29,11 @@ import {
   GetVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
-import { useMST } from '@/hooks/useStore'
 
 export const EditVideoSheet: React.FC = observer(() => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
-  const { uploadsManagerStore } = useMST()
+  const { startFileUpload } = useUploadsManager()
+
   // sheet state
   const {
     sheetState,
@@ -169,7 +169,7 @@ export const EditVideoSheet: React.FC = observer(() => {
 
       if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        uploadsManagerStore.startFileUpload(
+        startFileUpload(
           videoInputFile.blob,
           cast({
             contentId: videoContentId,
@@ -185,7 +185,7 @@ export const EditVideoSheet: React.FC = observer(() => {
         )
       }
       if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
-        uploadsManagerStore.startFileUpload(
+        startFileUpload(
           thumbnailInputFile.blob,
           cast({
             contentId: thumbnailContentId,

@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useAuthorizedUser } from '@/hooks'
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { formatBytes } from '@/utils/size'
@@ -21,9 +20,9 @@ import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { LiaisonJudgement } from '@/api/queries'
 import { IAssetUpload } from '@/models/UploadsManagerStore'
-import { useMST } from '@/hooks/useStore'
 import { useDialog } from '@/hooks/useDialog'
-import { cast, TypeOfValue } from 'mobx-state-tree'
+import { cast } from 'mobx-state-tree'
+import { useUploadsManager } from '@/hooks'
 
 type AssetLineProps = {
   isLast?: boolean
@@ -31,9 +30,8 @@ type AssetLineProps = {
 }
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
-  const { uploadsManagerStore } = useMST()
+  const { startFileUpload } = useUploadsManager()
   const navigate = useNavigate()
-  const { activeChannelId } = useAuthorizedUser()
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -75,7 +73,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         if (!randomStorageProviderUrl) {
           return
         }
-        uploadsManagerStore.startFileUpload(
+        startFileUpload(
           file,
           cast({
             contentId: asset.contentId,
@@ -102,7 +100,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       asset.type,
       getRandomStorageProviderUrl,
       openDifferentFileDialog,
-      uploadsManagerStore,
+      startFileUpload,
     ]
   )
 
@@ -122,7 +120,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (!randomStorageProviderUrl) {
       return
     }
-    uploadsManagerStore.startFileUpload(
+    startFileUpload(
       null,
       cast({
         contentId: asset.contentId,
@@ -149,7 +147,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (!randomStorageProviderUrl) {
         return
       }
-      uploadsManagerStore.startFileUpload(
+      startFileUpload(
         croppedBlob,
         cast({
           contentId: asset.contentId,

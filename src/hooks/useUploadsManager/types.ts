@@ -9,5 +9,11 @@ export type StartFileUploadOptions = {
 
 export type UploadManagerValue = {
   uploadsState: IAssetUpload[][]
+  startFileUpload: (
+    file: File | Blob | null,
+    asset: IAssetUpload,
+    storageMetadata: string,
+    opts?: StartFileUploadOptions
+  ) => void
   isLoading: boolean
 }

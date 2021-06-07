@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { ChannelId } from '@/joystream-lib'
 import { UploadManagerValue } from './types'
 import { LiaisonJudgement } from '@/api/queries'
 import { useMST } from '../useStore'
@@ -14,15 +13,10 @@ type GroupByParentObjectIdAcc = {
   [key: string]: IAssetUpload[]
 }
 
-type AssetFile = {
-  contentId: string
-  blob: File | Blob
-}
-
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
-export const useUploadsManager = () => {
+export const UploadManagerProvider = observer(({ children }) => {
   const navigate = useNavigate()
   const { uploadsManagerStore, snackbarStore } = useMST()
   const { activeChannelId } = useUser()
@@ -109,9 +103,31 @@ export const useUploadsManager = () => {
 
   const isLoading = channelLoading || videosLoading
 
+  return (
+    <UploadManagerContext.Provider
+      value={{
+        startFileUpload: uploadsManagerStore.startFileUpload,
+        isLoading,
+        uploadsState: uploadsStateGroupedByParentObjectId,
+      }}
+    >
+      {children}
+    </UploadManagerContext.Provider>
+  )
+})
+
+const useUploadsManagerContext = () => {
+  const ctx = useContext(UploadManagerContext)
+  if (ctx === undefined) {
+    throw new Error('useUploadsManager must be used within a UploadManagerProvider')
+  }
+  return ctx
+}
+
+export const useUploadsManager = () => {
+  const { uploadsState, ...rest } = useUploadsManagerContext()
   return {
-    startFileUpload: uploadsManagerStore.startFileUpload,
-    isLoading,
-    uploadsState: uploadsStateGroupedByParentObjectId,
+    uploadsState,
+    ...rest,
   }
 }
