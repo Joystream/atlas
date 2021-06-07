@@ -66,7 +66,7 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accountsWithNoMembership?.length ? (
-          <StyledStepWrapper withBottomBar>
+          <StyledStepWrapper>
             <AccountStepImg />
             <StepTitle variant="h4">Create blockchain account</StepTitle>
             <SubTitle variant="body2" secondary>
