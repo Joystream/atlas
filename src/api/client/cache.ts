@@ -1,9 +1,10 @@
 import { InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
+import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
 import {
   AllChannelFieldsFragment,
   AssetAvailability,
+  GetVideosConnectionQueryVariables,
   GetVideosQueryVariables,
   Query,
   VideoConnection,
@@ -88,27 +89,20 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
     ...relayStylePagination(getVideoKeyArgs),
     read(
       existing: VideoConnection,
-
-      { args, readField }: { args: GetVideosQueryVariables | null; readField: ReadFieldFunction }
+      { args, readField }: { args: GetVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
     ) {
       const isPublic = args?.where?.isPublic_eq
       const filteredEdges =
         existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
 
       const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
-      const sortedEdges = sortingASC
-        ? filteredEdges
-            ?.slice()
-            .sort(
-              (a, b) =>
-                (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
-            )
-        : filteredEdges
-            ?.slice()
-            .sort(
-              (a, b) =>
-                (readField('createdAt', a.node) as Date).getTime() - (readField('createdAt', b.node) as Date).getTime()
-            )
+      const preSortedASC = filteredEdges
+        ?.slice()
+        .sort(
+          (a, b) =>
+            (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
+        )
+      const sortedEdges = sortingASC ? preSortedASC : preSortedASC.reverse()
 
       return (
         existing && {

@@ -20,7 +20,7 @@ const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const SORT_OPTIONS = [
   { name: 'Newest first', value: VideoOrderByInput.CreatedAtAsc },
   { name: 'Oldest first', value: VideoOrderByInput.CreatedAtDesc },
-] as const
+]
 
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -168,6 +168,13 @@ export const MyVideosView = () => {
     })
   }
 
+  const handleSorting = (value?: VideoOrderByInput | null | undefined) => {
+    if (value) {
+      setSortVideosBy(value)
+      refetch({ orderBy: value })
+    }
+  }
+
   const gridContent = isDraftTab
     ? drafts
         // pagination slice
@@ -221,17 +228,7 @@ export const MyVideosView = () => {
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
               <SortContainer>
                 <Text variant="body2">Sort by</Text>
-                <Select
-                  helperText={null}
-                  value={sortVideosBy}
-                  items={[...SORT_OPTIONS]}
-                  onChange={(value) => {
-                    if (value) {
-                      setSortVideosBy(value)
-                      refetch({ orderBy: value })
-                    }
-                  }}
-                />
+                <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
               </SortContainer>
             </TabsContainer>
             {isDraftTab && (
