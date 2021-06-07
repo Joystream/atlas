@@ -26,11 +26,12 @@ const SORT_OPTIONS = [
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
+const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
-  const { displaySnackbar } = useSnackbar()
+  const { displaySnackbar, updateSnackbar, closeSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
     VideoOrderByInput.CreatedAtDesc
@@ -117,6 +118,7 @@ export const MyVideosView = () => {
     addVideoTab({ id, isDraft: opts.draft })
     if (opts.minimized) {
       displaySnackbar({
+        customId: OPEN_TAB_SNACKBAR,
         title: 'Video opened in a new tab',
         iconType: 'success',
         actionText: 'Undo',
@@ -133,6 +135,13 @@ export const MyVideosView = () => {
   // Workaround for removing drafts from video sheet tabs via snackbar
   // Snackbar will probably need a refactor to handle actions that change state
   useEffect(() => {
+    if (videoTabs.length === 0) {
+      closeSnackbar(OPEN_TAB_SNACKBAR)
+      return
+    }
+    updateSnackbar(OPEN_TAB_SNACKBAR, {
+      title: `${videoTabs.length > 1 ? `${videoTabs.length} videos` : 'Video'} opened in a new tab`,
+    })
     if (tabIdToRemoveViaSnackbar !== undefined) {
       const tab = videoTabs.find((tab) => tab.id === tabIdToRemoveViaSnackbar)
       if (!tab) {
@@ -142,7 +151,7 @@ export const MyVideosView = () => {
       removeVideoTab(idx)
       setTabIdToRemoveViaSnackbar(undefined)
     }
-  }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
+  }, [closeSnackbar, removeVideoTab, tabIdToRemoveViaSnackbar, updateSnackbar, videoTabs])
 
   const handleDeleteDraft = (draftId: string) => {
     openDeleteDraftDialog({

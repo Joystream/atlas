@@ -54,7 +54,16 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     },
     { skip: !uploadsState.length }
   )
-  const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
+
+  const pendingNotificationsCounts = useRef(0)
+  type AssetParentObjectID = string
+  const assetsNotificationsCount = useRef<{
+    uploading: AssetParentObjectID[]
+    uploaded: AssetParentObjectID[]
+  }>({
+    uploading: [],
+    uploaded: [],
+  })
 
   // Will set all incomplete assets' status to missing on initial mount
   const isInitialMount = useRef(true)
@@ -111,31 +120,39 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     debounce(() => {
       displaySnackbar({
         title:
-          pendingNotificationsCounts.current.uploading > 1
-            ? `${pendingNotificationsCounts.current.uploading} assets being uploaded`
+          pendingNotificationsCounts.current > 1
+            ? `${pendingNotificationsCounts.current} assets being uploaded`
             : 'Asset being uploaded',
         iconType: 'info',
         timeout: UPLOADING_SNACKBAR_TIMEOUT,
         actionText: 'See',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
-      pendingNotificationsCounts.current.uploading = 0
+      pendingNotificationsCounts.current = 0
     }, 700)
   )
 
   const displayUploadedNotification = useRef(
-    debounce(() => {
+    debounce((id?: string) => {
+      const uploadCount = assetsNotificationsCount.current.uploading.filter((itemId) => itemId === id).length
+      const uploadedCount = assetsNotificationsCount.current.uploaded.filter((itemId) => itemId === id).length
+
       displaySnackbar({
-        title:
-          pendingNotificationsCounts.current.uploaded > 1
-            ? `${pendingNotificationsCounts.current.uploaded} assets uploaded`
-            : 'Asset uploaded',
+        customId: id,
+        title: `${uploadedCount}/${uploadCount} assets uploaded`,
         iconType: 'success',
         timeout: UPLOADED_SNACKBAR_TIMEOUT,
         actionText: 'See',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
-      pendingNotificationsCounts.current.uploaded = 0
+      if (uploadedCount === uploadCount) {
+        assetsNotificationsCount.current.uploading = assetsNotificationsCount.current.uploading.filter(
+          (itemId) => itemId !== id
+        )
+        assetsNotificationsCount.current.uploaded = assetsNotificationsCount.current.uploaded.filter(
+          (itemId) => itemId !== id
+        )
+      }
     }, 700)
   )
 
@@ -184,7 +201,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           { leading: true }
         )
 
-        pendingNotificationsCounts.current.uploading++
+        pendingNotificationsCounts.current++
+        assetsNotificationsCount.current.uploading.push(asset.parentObject.id)
         displayUploadingNotification.current()
 
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
@@ -222,9 +240,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-
-        pendingNotificationsCounts.current.uploaded++
-        displayUploadedNotification.current()
+        assetsNotificationsCount.current.uploaded.push(asset.parentObject.id)
+        displayUploadedNotification.current(asset.parentObject.id)
       } catch (e) {
         console.error('Failed to upload to storage provider', { storageUrl, error: e })
         updateAsset(asset.contentId, 'error')
