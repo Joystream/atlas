@@ -1,15 +1,27 @@
 import { useVideosConnection } from '@/api/hooks'
+import { VideoOrderByInput } from '@/api/queries'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/hooks'
-import { Grid, Pagination, Tabs, Text } from '@/shared/components'
+import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
-import { PaginationContainer, StyledDismissibleMessage, TabsContainer, ViewContainer } from './MyVideos.styles'
+import {
+  PaginationContainer,
+  SortContainer,
+  StyledDismissibleMessage,
+  TabsContainer,
+  ViewContainer,
+} from './MyVideos.styles'
 
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
+const SORT_OPTIONS = [
+  { name: 'Newest first', value: VideoOrderByInput.CreatedAtAsc },
+  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtDesc },
+]
+
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
@@ -19,6 +31,9 @@ export const MyVideosView = () => {
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
+  const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
+    VideoOrderByInput.CreatedAtAsc
+  )
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
@@ -30,11 +45,16 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
+  const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
+  const drafts =
+    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
 
-  const { edges, totalCount, loading, error, fetchMore, variables, pageInfo } = useVideosConnection(
+  const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
       first: INITIAL_FIRST,
+      orderBy: sortVideosBy,
       where: {
         channelId_eq: activeChannelId,
         isPublic_eq,
@@ -148,6 +168,13 @@ export const MyVideosView = () => {
     })
   }
 
+  const handleSorting = (value?: VideoOrderByInput | null | undefined) => {
+    if (value) {
+      setSortVideosBy(value)
+      refetch({ orderBy: value })
+    }
+  }
+
   const gridContent = isDraftTab
     ? drafts
         // pagination slice
@@ -199,6 +226,10 @@ export const MyVideosView = () => {
           <>
             <TabsContainer>
               <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+              <SortContainer>
+                <Text variant="body2">Sort by</Text>
+                <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+              </SortContainer>
             </TabsContainer>
             {isDraftTab && (
               <StyledDismissibleMessage
