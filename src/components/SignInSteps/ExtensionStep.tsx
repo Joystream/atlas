@@ -15,7 +15,7 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const step = useRouterQuery('step')
   const { extensionConnected } = useUser()
   const [openEnableExtensionDialog, closeEnableExtensionDialog] = useDialog({
-    additionalActionsNode: <PolkadotExtensionRejected />,
+    description: <PolkadotExtensionRejected />,
     onExitClick: () => closeEnableExtensionDialog(),
   })
 
