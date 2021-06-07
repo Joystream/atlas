@@ -55,7 +55,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     { skip: !uploadsState.length }
   )
 
-  const pendingNotificationsCounts = useRef(0)
+  const pendingUploadingNotificationsCounts = useRef(0)
   type AssetParentObjectID = string
   const assetsNotificationsCount = useRef<{
     uploading: AssetParentObjectID[]
@@ -120,15 +120,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     debounce(() => {
       displaySnackbar({
         title:
-          pendingNotificationsCounts.current > 1
-            ? `${pendingNotificationsCounts.current} assets being uploaded`
+          pendingUploadingNotificationsCounts.current > 1
+            ? `${pendingUploadingNotificationsCounts.current} assets being uploaded`
             : 'Asset being uploaded',
         iconType: 'info',
         timeout: UPLOADING_SNACKBAR_TIMEOUT,
         actionText: 'See',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
-      pendingNotificationsCounts.current = 0
+      pendingUploadingNotificationsCounts.current = 0
     }, 700)
   )
 
@@ -201,7 +201,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           { leading: true }
         )
 
-        pendingNotificationsCounts.current++
+        pendingUploadingNotificationsCounts.current++
         assetsNotificationsCount.current.uploading.push(asset.parentObject.id)
         displayUploadingNotification.current()
 
