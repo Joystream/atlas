@@ -45,5 +45,6 @@ export const StepFooter = styled.div`
   align-items: center;
 `
 export const BottomBarIcon = styled(SvgGlyphWarning)`
+  flex-shrink: 0;
   margin-right: ${sizes(2)};
 `
