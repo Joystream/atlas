@@ -88,8 +88,8 @@ const mainInfoContainerCss = css`
 
 export const InfoContainer = styled.div<MainProps>`
   min-height: 86px;
-  width: 100%;
   display: flex;
+  justify-content: space-between;
   margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
   ${({ main }) => main && mainInfoContainerCss};
 `
@@ -102,10 +102,7 @@ export const AvatarContainer = styled.div<ScalesWithCoverProps>`
 `
 
 export const TextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  width: 100%;
+  width: calc(100% - 40px);
 `
 
 type MetaContainerProps = { noMarginTop: boolean } & MainProps
@@ -238,6 +235,8 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
