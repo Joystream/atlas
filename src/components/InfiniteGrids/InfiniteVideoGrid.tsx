@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
+import React, { useCallback, useEffect, useState } from 'react'
 
-import { sizes } from '@/shared/theme'
-import { Grid, Text, Placeholder } from '@/shared/components'
-import VideoPreview from '@/components/VideoPreview'
 import {
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
@@ -11,6 +8,10 @@ import {
   VideoWhereInput,
   AssetAvailability,
 } from '@/api/queries'
+import VideoPreview from '@/components/VideoPreview'
+import { Grid, Text, Placeholder } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {

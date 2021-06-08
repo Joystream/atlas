@@ -1,5 +1,12 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { BasicChannelFieldsFragment } from '@/api/queries'
+import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/hooks'
 import { Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+
 import {
   PreviewContainer,
   StyledChannelAvatar,
@@ -7,11 +14,6 @@ import {
   PreviewTitlePlaceholder,
   PreviewSubtextPlaceholder,
 } from './previews.style'
-import { absoluteRoutes } from '@/config/routes'
-import { BasicChannelFieldsFragment } from '@/api/queries'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { useAsset } from '@/hooks'
 
 type RecentChannelPreviewProps = {
   channel?: BasicChannelFieldsFragment

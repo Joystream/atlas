@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { CategoryPicker, Text } from '@/shared/components'
-import { InfiniteVideoGrid, ViewWrapper, TOP_NAVBAR_HEIGHT } from '@/components'
 
+import { InfiniteVideoGrid, ViewWrapper, TOP_NAVBAR_HEIGHT } from '@/components'
+import { CategoryPicker, Text } from '@/shared/components'
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 
 type IsAtTop = {

@@ -1,8 +1,11 @@
-import { absoluteRoutes, QUERY_PARAMS } from '@/config/routes'
-import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+import { absoluteRoutes, QUERY_PARAMS } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
+
 import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
+
 import TopbarBase from '../TopbarBase'
 
 const ViewerTopbar: React.FC = () => {

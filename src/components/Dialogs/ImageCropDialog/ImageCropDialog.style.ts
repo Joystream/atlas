@@ -1,8 +1,10 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+
 import { Placeholder, Text } from '@/shared/components'
 import Slider from '@/shared/components/Slider'
 import { colors, sizes } from '@/shared/theme'
-import { css } from '@emotion/react'
-import styled from '@emotion/styled'
+
 import ActionDialog from '../ActionDialog'
 
 export const StyledActionDialog = styled(ActionDialog)`

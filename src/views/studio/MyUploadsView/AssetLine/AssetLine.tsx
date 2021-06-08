@@ -1,11 +1,18 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useUploadsManager, useAuthorizedUser, useDialog } from '@/hooks'
+
 import { useRandomStorageProviderUrl } from '@/api/hooks'
+import { LiaisonJudgement } from '@/api/queries'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { formatBytes } from '@/utils/size'
+import { useUploadsManager, useAuthorizedUser, useDialog } from '@/hooks'
+import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
+import { Text, CircularProgressbar, Button } from '@/shared/components'
+import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { computeFileHash } from '@/utils/hashing'
+import { formatBytes } from '@/utils/size'
+
 import {
   FileLineContainer,
   FileLinePoint,
@@ -16,11 +23,6 @@ import {
   StatusMessage,
   ProgressbarContainer,
 } from './AssetLine.style'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
-import { Text, CircularProgressbar, Button } from '@/shared/components'
-import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
-import { LiaisonJudgement } from '@/api/queries'
 
 type AssetLineProps = {
   isLast?: boolean

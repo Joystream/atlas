@@ -1,10 +1,10 @@
-import * as Types from './baseTypes.generated'
-
-import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
-import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { gql } from '@apollo/client'
-
 import * as Apollo from '@apollo/client'
+
+import * as Types from './baseTypes.generated'
+import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
+
 export type VideoMediaMetadataFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
   id: string

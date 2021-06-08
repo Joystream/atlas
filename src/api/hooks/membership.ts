@@ -1,4 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
+
 import {
   GetMembershipQuery,
   useGetMembershipQuery,

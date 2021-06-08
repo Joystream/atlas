@@ -1,7 +1,8 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
-import styled from '@emotion/styled'
+
 import {
   DraftsProvider,
   ActiveUserProvider,
@@ -10,6 +11,8 @@ import {
   SnackbarProvider,
   DialogProvider,
 } from '@/hooks'
+import { colors } from '@/shared/theme'
+
 import {
   FileHashing,
   ImageDownsizing,
@@ -22,7 +25,6 @@ import {
   AutomaticCrop,
   Dialogs,
 } from './Playgrounds'
-import { colors } from '@/shared/theme'
 
 const playgroundRoutes = [
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },

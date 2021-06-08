@@ -1,4 +1,5 @@
 import { DocumentNode } from 'graphql'
+
 import { BaseDataQuery, DataAccessor, Link } from './types'
 import { normalizeVariables, parseOperationDocument } from './utils'
 

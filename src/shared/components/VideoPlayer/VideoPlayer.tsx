@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+
+import { SvgOutlineVideo } from '@/shared/icons'
+
 import { Container, PlayOverlay } from './VideoPlayer.style'
 import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
-import { SvgOutlineVideo } from '@/shared/icons'
 
 export type VideoPlayerProps = {
   className?: string

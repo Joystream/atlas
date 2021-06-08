@@ -1,7 +1,12 @@
+import { formatISO, isValid } from 'date-fns'
+import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
-import { debounce } from 'lodash'
+
 import { useCategories } from '@/api/hooks'
+import { License } from '@/api/queries'
+import { languages } from '@/config/languages'
+import knownLicenses from '@/data/knownLicenses.json'
 import {
   useDrafts,
   useAuthorizedUser,
@@ -23,9 +28,11 @@ import {
   TextArea,
   TextField,
 } from '@/shared/components'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { SvgGlyphInfo } from '@/shared/icons'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { languages } from '@/config/languages'
-import knownLicenses from '@/data/knownLicenses.json'
+import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
+
 import {
   InputsContainer,
   StyledHeaderTextField,
@@ -34,11 +41,6 @@ import {
   DeleteVideoButton,
   FormWrapper,
 } from './EditVideoForm.style'
-import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
-import { SvgGlyphInfo } from '@/shared/icons'
-import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { formatISO, isValid } from 'date-fns'
-import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },

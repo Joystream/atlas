@@ -1,4 +1,8 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { transitions } from '@/shared/theme'
+
 import {
   Anchor,
   AvatarContainer,
@@ -10,9 +14,8 @@ import {
   VideoCount,
   VideoCountContainer,
 } from './ChannelPreviewBase.style'
+
 import Placeholder from '../Placeholder'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
 
 export type ChannelPreviewBaseProps = {
   avatarUrl?: string | null

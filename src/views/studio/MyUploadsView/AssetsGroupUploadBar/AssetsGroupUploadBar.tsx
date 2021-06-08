@@ -1,6 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
+
 import { LiaisonJudgement } from '@/api/queries'
+import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
+import { Text } from '@/shared/components'
+import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
+
 import {
   Container,
   AssetsGroupUploadBarContainer,
@@ -11,9 +15,8 @@ import {
   AssetsDrawerContainer,
   StyledExpandButton,
 } from './AssetsGroupUploadBar.style'
+
 import { AssetLine } from '../AssetLine'
-import { Text } from '@/shared/components'
-import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 export type AssetsGroupBarUploadProps = {
   uploadData: AssetUploadWithProgress[]

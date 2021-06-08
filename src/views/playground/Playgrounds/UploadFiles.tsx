@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+
+import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
-import { useRandomStorageProviderUrl } from '@/api/hooks'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()

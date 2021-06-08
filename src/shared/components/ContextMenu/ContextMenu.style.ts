@@ -1,7 +1,9 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
-import { colors, sizes, transitions, typography } from '../../theme'
+import styled from '@emotion/styled'
+
 import { Text } from '@/shared/components'
+
+import { colors, sizes, transitions, typography } from '../../theme'
 
 type ContainerProps = {
   isActive?: boolean

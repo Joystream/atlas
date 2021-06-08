@@ -1,5 +1,6 @@
-import { transitions } from '@/shared/theme'
 import { css } from '@emotion/react'
+
+import { transitions } from '@/shared/theme'
 
 export const transitionStyles = css`
   .${transitions.names.fade}-enter {

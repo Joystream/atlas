@@ -1,5 +1,7 @@
-import theme from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import theme from '@/shared/theme'
+
 import { Path } from './Path'
 
 export const SVG = styled.svg`

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import Text from '../Text'
+
+import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
+
 import {
   CheckboxLabel,
   Checkmark,
@@ -9,7 +11,8 @@ import {
   StyledGlyphCheck,
   StyledHelperText,
 } from './Checkbox.styles'
-import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
+
+import Text from '../Text'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {

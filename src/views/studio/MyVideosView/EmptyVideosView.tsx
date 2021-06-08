@@ -1,10 +1,11 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import { Button, Text } from '@/shared/components'
-import { sizes, colors, media } from '@/shared/theme'
-import { SvgGlyphAddVideo } from '@/shared/icons'
+import React from 'react'
+
 import { absoluteRoutes } from '@/config/routes'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgEmptyVideosIllustration, SvgTheaterMaskIllustration } from '@/shared/illustrations'
+import { sizes, colors, media } from '@/shared/theme'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {

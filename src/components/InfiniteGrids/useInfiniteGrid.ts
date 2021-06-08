@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
 import { ApolloError, useQuery } from '@apollo/client'
-import { debounce } from 'lodash'
-import { DocumentNode } from 'graphql'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { DocumentNode } from 'graphql'
+import { debounce } from 'lodash'
+import { useEffect } from 'react'
 
 type PaginatedData<T> = {
   edges: {

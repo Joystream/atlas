@@ -1,5 +1,10 @@
-import { Button, Text } from '@/shared/components'
 import React from 'react'
+
+import { absoluteRoutes } from '@/config/routes'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
+import { SvgJoystreamFullLogo } from '@/shared/illustrations'
+
 import {
   BackLink,
   ButtonGroup,
@@ -11,9 +16,6 @@ import {
   StyledSignInIllustrationSVG,
   SubTitle,
 } from './SignInMainView.style'
-import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
-import { SvgJoystreamFullLogo } from '@/shared/illustrations'
 
 export type Membership = {
   id: string

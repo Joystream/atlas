@@ -1,7 +1,10 @@
 import React, { ReactNode } from 'react'
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
+
 import { SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/shared/icons'
+
+import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
+
+import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
 
 type DialogVariant = 'success' | 'warning' | 'error' | 'info'
 

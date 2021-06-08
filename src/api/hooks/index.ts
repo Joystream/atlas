@@ -1,5 +1,5 @@
-import useCoverVideo from './coverVideo'
 import useCategories from './categories'
+import useCoverVideo from './coverVideo'
 import useSearch from './search'
 import useVideosConnection from './videosConnection'
 

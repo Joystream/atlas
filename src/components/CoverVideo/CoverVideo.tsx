@@ -1,4 +1,14 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
+
+import { useCoverVideo } from '@/api/hooks'
+import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/hooks'
+import { Placeholder, VideoPlayer } from '@/shared/components'
+import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
 import {
   Container,
   HorizontalGradientOverlay,
@@ -17,14 +27,6 @@ import {
   ControlsContainer,
   ButtonsContainer,
 } from './CoverVideo.style'
-import { CSSTransition } from 'react-transition-group'
-import { absoluteRoutes } from '@/config/routes'
-import { Placeholder, VideoPlayer } from '@/shared/components'
-import { Link } from 'react-router-dom'
-import { transitions } from '@/shared/theme'
-import { useCoverVideo } from '@/api/hooks'
-import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
-import { useAsset } from '@/hooks'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+
 import { EditVideoSheetTab, useEditVideoSheetTabData } from '@/hooks'
 import { IconButton } from '@/shared/components'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'

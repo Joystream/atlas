@@ -1,5 +1,5 @@
-import { ValidationRule, Message, Validate } from 'react-hook-form'
 import { isValid } from 'date-fns'
+import { ValidationRule, Message, Validate } from 'react-hook-form'
 
 type RegisterOptions = Partial<{
   required: Message | ValidationRule<boolean>

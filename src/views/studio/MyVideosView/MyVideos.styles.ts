@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, media, sizes } from '@/shared/theme'
+
 import { DismissibleMessage } from '@/shared/components'
+import { colors, media, sizes } from '@/shared/theme'
 
 export const ViewContainer = styled.div`
   padding-top: ${sizes(8)};

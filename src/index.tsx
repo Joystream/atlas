@@ -1,10 +1,11 @@
+import { CaptureConsole } from '@sentry/integrations'
+import * as Sentry from '@sentry/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import * as Sentry from '@sentry/react'
-import { CaptureConsole } from '@sentry/integrations'
+
 import App from './App'
-import './styles/fonts.css'
 import { SENTRY_DSN } from './config/urls'
+import './styles/fonts.css'
 
 type Env = 'production' | 'staging' | 'development'
 

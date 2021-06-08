@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { computeFileHash } from '@/utils/hashing'
 import { formatDuration, intervalToDuration } from 'date-fns'
+import React, { useState } from 'react'
+
+import { computeFileHash } from '@/utils/hashing'
 
 const FileHashing: React.FC = () => {
   const [computedHash, setComputedHash] = useState('')

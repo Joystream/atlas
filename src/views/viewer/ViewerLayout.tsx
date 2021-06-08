@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
-import { Location } from 'history'
 import { ErrorBoundary } from '@sentry/react'
+import { Location } from 'history'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { ViewerSidenav, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
+import { relativeRoutes, absoluteRoutes } from '@/config/routes'
+import { PersonalDataProvider } from '@/hooks'
+import { transitions } from '@/shared/theme'
+import { RoutingState } from '@/types/routing'
 
 import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, VideoView } from '.'
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { RoutingState } from '@/types/routing'
-import { transitions } from '@/shared/theme'
-import { ViewerSidenav, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { PersonalDataProvider } from '@/hooks'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+
 import { AccountId, ChannelId, MemberId } from '@/joystream-lib'
 
 const LOCAL_STORAGE_KEY = 'activeUser'

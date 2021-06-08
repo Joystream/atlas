@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { useDrafts, useAuthorizedUser, useEditVideoSheet, useUploadsManager, useDisplayDataLostWarning } from '@/hooks'
-import { absoluteRoutes } from '@/config/routes'
-import { Button } from '@/shared/components'
-import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
-import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
 import { useNavigate } from 'react-router'
+import { CSSTransition } from 'react-transition-group'
+
+import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
+import { absoluteRoutes } from '@/config/routes'
+import { useDrafts, useAuthorizedUser, useEditVideoSheet, useUploadsManager, useDisplayDataLostWarning } from '@/hooks'
+import { Button } from '@/shared/components'
+import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 const studioNavbarItems: NavItemType[] = [
   {

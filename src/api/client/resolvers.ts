@@ -1,6 +1,7 @@
-import { GraphQLSchema } from 'graphql'
 import { delegateToSchema, Transform } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
+import { GraphQLSchema } from 'graphql'
+
 import {
   TransformOrionViewsField,
   ORION_VIEWS_QUERY_NAME,

@@ -1,6 +1,8 @@
 import React, { ReactNode } from 'react'
-import { ButtonBaseProps } from '../ButtonBase'
+
 import { StyledButtonBase } from './IconButton.style'
+
+import { ButtonBaseProps } from '../ButtonBase'
 
 export type IconButtonProps = ButtonBaseProps & {
   children: ReactNode

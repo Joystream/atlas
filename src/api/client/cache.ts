@@ -1,6 +1,9 @@
 import { InMemoryCache } from '@apollo/client'
+import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
+import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
 import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
+
 import {
   AllChannelFieldsFragment,
   AssetAvailability,
@@ -11,8 +14,6 @@ import {
   VideoFieldsFragment,
   VideoOrderByInput,
 } from '../queries'
-import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
-import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache

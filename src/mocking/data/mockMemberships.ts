@@ -1,7 +1,8 @@
+import { BasicMembershipFieldsFragment } from '@/api/queries'
+
+import { regularMockChannels } from './mockChannels'
 import { channelAvatarSources } from './mockImages'
 import rawMemberships from './raw/memberships.json'
-import { regularMockChannels } from './mockChannels'
-import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const regularMockMemberships: BasicMembershipFieldsFragment[] = rawMemberships.map((rawMembership, idx) => ({
   ...rawMembership,

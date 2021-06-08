@@ -1,11 +1,12 @@
-import { thumbnailSources } from './mockImages'
-import rawVideos from './raw/videos.json'
-import rawCoverVideo from './raw/coverVideo.json'
 import { AssetAvailability, VideoFieldsFragment } from '@/api/queries'
-import mockVideosMedia from './mockVideosMedia'
-import mockChannels, { coverMockChannel } from './mockChannels'
+
 import mockCategories from './mockCategories'
+import mockChannels, { coverMockChannel } from './mockChannels'
+import { thumbnailSources } from './mockImages'
 import mockLicenses from './mockLicenses'
+import mockVideosMedia from './mockVideosMedia'
+import rawCoverVideo from './raw/coverVideo.json'
+import rawVideos from './raw/videos.json'
 
 export type MockVideo = VideoFieldsFragment
 

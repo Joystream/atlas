@@ -1,3 +1,5 @@
+import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
+
 import {
   useGetVideoQuery,
   useAddVideoViewMutation,
@@ -7,7 +9,6 @@ import {
   GetVideosQueryVariables,
   useGetVideosQuery,
 } from '@/api/queries'
-import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
 type VideoOpts = QueryHookOptions<GetVideoQuery>
 export const useVideo = (id: string, opts?: VideoOpts) => {

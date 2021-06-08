@@ -1,7 +1,9 @@
 import React from 'react'
-import { Step } from '../Checkout/Checkout'
+
 import ActionBar, { ActionBarProps } from './ActionBar'
 import { ActionBarTransactionWrapper, StyledCheckout } from './ActionBarTransaction.style'
+
+import { Step } from '../Checkout/Checkout'
 
 export type ActionBarTransactionProps = {
   fee: number

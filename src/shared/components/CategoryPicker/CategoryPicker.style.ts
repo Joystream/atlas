@@ -1,8 +1,10 @@
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
+
+import { sizes, colors, transitions } from '@/shared/theme'
+
 import Placeholder from '../Placeholder'
 import ToggleButton from '../ToggleButton'
-import { sizes, colors, transitions } from '@/shared/theme'
-import { css, keyframes } from '@emotion/react'
 
 const fadeIn = keyframes`
   0% {

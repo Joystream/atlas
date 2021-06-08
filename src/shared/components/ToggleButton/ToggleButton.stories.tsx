@@ -1,6 +1,7 @@
-import React from 'react'
-import ToggleButton, { ToggleButtonProps } from './ToggleButton'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import ToggleButton, { ToggleButtonProps } from './ToggleButton'
 
 export default {
   title: 'Shared/T/ToggleButton',

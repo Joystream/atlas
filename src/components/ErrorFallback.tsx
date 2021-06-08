@@ -1,7 +1,6 @@
-import React from 'react'
-
 import styled from '@emotion/styled'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
+import React from 'react'
 
 import { Button, Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'

@@ -1,6 +1,7 @@
 import { ApolloClient, gql, Reference } from '@apollo/client'
-import { AssetAvailability, VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
 import { DocumentNode } from 'graphql'
+
+import { AssetAvailability, VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'
 
 const cachedCoverUrlFragment = gql`
   fragment CoverUrlField on Channel {

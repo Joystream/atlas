@@ -1,5 +1,9 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
+
+import { SvgGlyphImage, SvgGlyphNewChannel, SvgLargeUploadFailed } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
 import {
   AvatarSize,
   Container,
@@ -10,8 +14,6 @@ import {
   EditButton,
   NewChannelAvatar,
 } from './Avatar.style'
-import { transitions } from '@/shared/theme'
-import { SvgGlyphImage, SvgGlyphNewChannel, SvgLargeUploadFailed } from '@/shared/icons'
 
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void

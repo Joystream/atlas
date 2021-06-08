@@ -1,13 +1,15 @@
+import loadable from '@loadable/component'
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import loadable from '@loadable/component'
-import { GlobalStyle } from '@/shared/components'
+
+import { TopbarBase, StudioLoading } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
-import { ViewerLayout } from './views/viewer'
+import { GlobalStyle } from '@/shared/components'
+import { routingTransitions } from '@/styles/routingTransitions'
+
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'
-import { TopbarBase, StudioLoading } from '@/components'
-import { routingTransitions } from '@/styles/routingTransitions'
+import { ViewerLayout } from './views/viewer'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
