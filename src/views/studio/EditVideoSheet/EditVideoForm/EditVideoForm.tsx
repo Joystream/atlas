@@ -373,12 +373,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => value !== null,
               }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <Select
-                  value={value}
+                  {...field}
                   items={visibilityOptions}
-                  onChange={onChange}
-                  error={!!errors.isPublic && !value}
+                  error={!!errors.isPublic && !field.value}
                   helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
                 />
               )}
@@ -389,12 +388,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="language"
               control={control}
               rules={requiredValidation('Video language')}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <Select
-                  value={value ?? null}
+                  {...field}
                   items={languages}
-                  onChange={onChange}
-                  error={!!errors.language && !value}
+                  error={!!errors.language && !field.value}
                   helperText={errors.language?.message}
                 />
               )}
@@ -405,15 +403,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="category"
               control={control}
               rules={requiredValidation('Video category')}
-              render={({ field: { value, onChange }, fieldState: { invalid } }) => {
+              render={({ field, fieldState: { invalid } }) => {
                 if (invalid) handleFieldFocus(categorySelectRef)
                 return (
                   <Select
+                    {...field}
                     containerRef={categorySelectRef}
-                    value={value ?? null}
                     items={categoriesSelectItems}
-                    onChange={onChange}
-                    error={!!errors.category && !value}
+                    error={!!errors.category && !field.value}
                     helperText={errors.category?.message}
                   />
                 )
@@ -425,16 +422,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="licenseCode"
               control={control}
               rules={requiredValidation('License')}
-              render={({ field: { value, onChange }, fieldState: { invalid } }) => {
+              render={({ field, fieldState: { invalid } }) => {
                 if (invalid) handleFieldFocus(licenseSelectRef)
                 return (
                   <Select
+                    {...field}
                     containerRef={licenseSelectRef}
-                    value={value ?? null}
                     items={knownLicensesOptions}
                     placeholder="Choose license type"
-                    onChange={onChange}
-                    error={!!errors.licenseCode && !value}
+                    error={!!errors.licenseCode && !field.value}
                     helperText={errors.licenseCode?.message}
                   />
                 )
@@ -530,10 +526,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => pastDateValidation(value),
               }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <Datepicker
-                  value={value}
-                  onChange={onChange}
+                  {...field}
                   error={!!errors.publishedBeforeJoystream}
                   helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
                 />
