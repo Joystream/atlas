@@ -1,5 +1,5 @@
-import { RegisterOptions, Validate } from 'react-hook-form'
 import { isValid } from 'date-fns'
+import { RegisterOptions, Validate } from 'react-hook-form'
 
 type TextValidationArgs = {
   name: string
