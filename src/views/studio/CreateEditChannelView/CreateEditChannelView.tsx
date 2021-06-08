@@ -452,17 +452,22 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         <InnerFormContainer>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
-              <TextArea
-                placeholder="Description of your channel to share with your audience"
-                rows={8}
-                {...register(
-                  'description',
-                  textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })
+              <Controller
+                name="description"
+                control={control}
+                rules={textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })}
+                render={({ field: { value, onChange } }) => (
+                  <TextArea
+                    placeholder="Description of your channel to share with your audience"
+                    rows={8}
+                    ref={descriptionRef}
+                    value={value}
+                    onChange={onChange}
+                    maxLength={1000}
+                    error={!!errors.description}
+                    helperText={errors.description?.message}
+                  />
                 )}
-                ref={descriptionRef}
-                maxLength={1000}
-                error={!!errors.description}
-                helperText={errors.description?.message}
               />
             </Tooltip>
           </FormField>
