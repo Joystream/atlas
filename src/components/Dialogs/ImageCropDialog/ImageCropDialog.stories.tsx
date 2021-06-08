@@ -66,6 +66,7 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
         display: flex;
         flex-direction: column;
         align-items: start;
+
         > * {
           margin-bottom: 24px !important;
         }

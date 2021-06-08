@@ -28,10 +28,12 @@ export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
   background-color: ${({ isActive }) => isActive && colors.transparentPrimary[10]};
+
   &:hover {
     cursor: pointer;
     background-color: ${({ isActive }) => (isActive ? colors.transparentPrimary[10] : colors.transparentPrimary[18])};
   }
+
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
 
@@ -121,12 +123,14 @@ export const NewChannel = styled.div`
   display: flex;
   align-items: center;
   padding: ${sizes(2)};
+
   p {
     margin-left: ${sizes(2)};
     font-size: ${typography.sizes.body1};
     color: ${colors.white};
     text-decoration: none;
   }
+
   &:hover {
     cursor: pointer;
     background-color: ${colors.gray[700]};

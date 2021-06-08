@@ -82,6 +82,7 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
 
 export const Container = styled.div<ContainerProps>`
   ${({ size }) => getAvatarSizeCss(size)}
+
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -102,22 +103,26 @@ export const EditButton = styled.button<EditButtonProps>`
   font-family: ${typography.fonts.headers};
   font-weight: ${typography.weights.bold};
   font-size: ${typography.sizes.subtitle2};
-  ${({ size }) => size === 'cover' && `font-size: ${typography.sizes.button.small}`};
+  ${({ size }) => size === 'cover' && `font-size: ${typography.sizes.button.small}`}
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: background-color ${transitions.timings.loading} ${transitions.easing};
   opacity: 0;
+
   :hover {
     background-color: ${colors.transparentBlack[54]};
     opacity: 1;
   }
+
   :active {
     border: 2px solid ${colors.blue[500]};
   }
+
   span {
-    ${({ size }) => size === 'small' && 'display: none'};
+    ${({ size }) => size === 'small' && 'display: none'}
   }
 `
 

@@ -69,7 +69,7 @@ const Container = styled.div<ContainerProps>`
     auto-${(props) => props.repeat},
     minmax(min(${(props) => toPx(props.minWidth)}, 100%), 1fr)
   );
-  ${maxColumnsCss};
+  ${maxColumnsCss}
 `
 
 type BreakpointsToMatchGridArg = {

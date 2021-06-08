@@ -27,6 +27,7 @@ export const StyledMenuItem = styled.div`
   align-items: center;
   padding: ${sizes(3)};
   transition: background-color 200ms ${transitions.easing};
+
   &:hover {
     cursor: pointer;
     background-color: ${colors.gray[700]};

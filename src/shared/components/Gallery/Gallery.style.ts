@@ -16,6 +16,7 @@ export const HeadingContainer = styled.div`
     font-size: ${typography.sizes.h5};
     margin: 0;
   }
+
   > button {
     font-size: ${typography.sizes.subtitle2};
     padding: 0;

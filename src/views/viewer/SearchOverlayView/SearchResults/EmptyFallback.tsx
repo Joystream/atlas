@@ -9,6 +9,7 @@ const Container = styled.div`
   margin: ${sizes(20)} auto 0;
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 650px;
   }

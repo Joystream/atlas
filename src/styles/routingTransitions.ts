@@ -17,6 +17,7 @@ export const routingTransitions = css`
       transform: translateY(0);
       transition: ${transitions.timings.routing} ${transitions.routingEasing};
     }
+
     transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 

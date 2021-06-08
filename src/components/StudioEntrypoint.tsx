@@ -69,6 +69,7 @@ const LoadingStudioContainer = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   div {
     margin-top: 24px;
   }

@@ -57,6 +57,7 @@ const HomeView: React.FC = () => {
 
 const Container = styled.div`
   position: relative;
+
   & > * {
     margin-bottom: 3rem;
   }

@@ -7,7 +7,7 @@ import { transitionStyles } from './transitionStyles'
 import { media, colors, sizes, typography } from '../../theme'
 
 const globalStyles = css`
-  ${emotionNormalize};
+  ${emotionNormalize}
 
   *::-webkit-scrollbar {
     width: 8px;
@@ -55,7 +55,8 @@ const globalStyles = css`
     --scrollbarBG: ${colors.transparentPrimary[10]};
     --thumbBG: ${colors.transparentPrimary[18]};
     --global-horizontal-padding: ${sizes(4)};
-    --sidenav-collapsed-width: 0px;
+    --sidenav-collapsed-width: 0;
+
     ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};
       --sidenav-collapsed-width: 72px;

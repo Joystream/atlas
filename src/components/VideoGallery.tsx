@@ -108,6 +108,7 @@ const StyledVideoPreview = styled(VideoPreview)`
   & + & {
     margin-left: ${sizes(6)};
   }
+
   /* MIN_VIDEO_PREVIEW_WIDTH */
   min-width: 300px;
 `

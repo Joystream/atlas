@@ -19,8 +19,8 @@ export const StyledContainer = styled.div`
   ${media.small} {
     --dialog-padding: ${sizes(6)};
   }
-  z-index: ${zIndex.globalOverlay};
 
+  z-index: ${zIndex.globalOverlay};
   position: fixed;
   left: 50%;
   transform: translateX(-50%);

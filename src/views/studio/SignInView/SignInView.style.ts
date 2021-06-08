@@ -50,11 +50,13 @@ export const CardWrapper = styled.button`
   background-color: ${colors.gray[900]};
   text-decoration: none;
   transition: background-color ${transitions.timings.routing} ${transitions.easing};
+
   &:disabled,
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
   }
+
   :hover {
     background-color: ${colors.gray[800]};
   }

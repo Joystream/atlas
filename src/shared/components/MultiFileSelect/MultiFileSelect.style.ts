@@ -27,11 +27,13 @@ export const StepDivider = styled.div`
   align-items: center;
   width: ${sizes(8)};
   height: initial;
+
   svg {
     display: none;
     ${media.small} {
       display: initial;
     }
+
     transform: rotate(0deg);
   }
 `

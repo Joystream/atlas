@@ -56,7 +56,7 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles}
-  ${sizeOverwriteStyles};
+  ${sizeOverwriteStyles}
 `
 
 export const ButtonIconWrapper = styled.span`
@@ -64,7 +64,8 @@ export const ButtonIconWrapper = styled.span`
 `
 
 export const StyledText = styled(Text)<TextProps>`
-  // compensate for line-height being 1
+  /* compensate for line-height being 1 */
   ${textPaddingStyles}
+
   color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error}
 `

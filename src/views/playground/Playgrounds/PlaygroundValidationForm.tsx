@@ -172,6 +172,7 @@ const Button = styled(_Button)`
 const StyledCheckboxContainer = styled.div`
   display: flex;
   margin-bottom: 50px;
+
   p {
     margin-left: 20px;
   }

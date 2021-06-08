@@ -31,6 +31,7 @@ export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProp
   background-color: ${({ isActive }) => (isActive ? colors.gray[900] : colors.black)};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+
   &:hover {
     background-color: ${colors.gray[900]};
   }

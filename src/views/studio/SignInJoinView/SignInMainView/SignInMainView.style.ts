@@ -28,6 +28,7 @@ export const StyledContainer = styled(StudioContainer)`
 
 export const LogoContainer = styled.div`
   display: inline-flex;
+
   ::after {
     align-self: center;
     padding: 2px 4px;
@@ -89,7 +90,6 @@ export const BackLink = styled(Link)`
   align-items: center;
   flex-direction: row;
   text-decoration: none;
-
   margin-top: ${sizes(5)};
 
   path {

@@ -38,7 +38,6 @@ const StyledWEmptyIllustration = styled(SvgEmptyVideosIllustration)`
   margin: 0 auto;
   grid-row-start: 1;
   width: 100%;
-
   max-height: 50vh;
   max-width: 75vw;
 
@@ -112,6 +111,7 @@ export const EmptyVideos: React.FC<{ text: string }> = ({ text }) => {
 const Container = styled.div`
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 100%;
   }

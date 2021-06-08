@@ -25,9 +25,11 @@ const pressedStyles = ({ toggled }: ToggleButtonStyleProps) =>
     ? css`
         border-color: ${colors.white};
         background-color: ${colors.blue[500]};
+
         &:hover {
           background-color: ${colors.blue[700]};
         }
+
         &:active {
           background-color: ${colors.blue[900]};
         }
@@ -39,17 +41,18 @@ export const StyledToggleButton = styled.button`
   background-color: transparent;
   padding: ${sizes(3.5)} ${sizes(5)};
   cursor: pointer;
-
   border: 1px solid ${colors.blue[500]};
+
   &:hover {
     border-color: ${colors.blue[50]};
   }
+
   &:active {
     border-color: ${colors.blue[50]};
     background-color: ${colors.blue[500]};
   }
 
   transition: all 0.4s ${transitions.easing};
-  ${pressedStyles};
-  ${hoverTransition};
+  ${pressedStyles}
+  ${hoverTransition}
 `

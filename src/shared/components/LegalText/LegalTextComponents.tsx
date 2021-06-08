@@ -6,6 +6,7 @@ import Text from '../Text'
 
 const _LegalParagraph = styled(Text)`
   margin-top: ${sizes(6)};
+
   ol + & {
     margin-top: 0;
   }

@@ -46,8 +46,9 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-position: center;
   background-attachment: local;
   background-size: cover;
-  // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-  // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
+
+  /* as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
+   this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing */
   background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
 
   ${media.small} {
@@ -103,8 +104,9 @@ export const CoverImage = styled.div<CoverImageProps>`
 
 export const CoverWrapper = styled.div`
   position: relative;
-  // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
-  // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
+
+  /* because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
+   so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin */
   margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
   ${media.small} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
@@ -138,6 +140,7 @@ export const EditableControls = styled.div`
   ${media.medium} {
     background-color: ${colors.transparentBlack[54]};
     opacity: 0;
+
     :hover {
       opacity: 1;
     }
@@ -155,7 +158,7 @@ const removeButtonStyles = css`
 `
 
 export const RemoveCoverDesktopButton = styled(Button)`
-  ${removeButtonStyles};
+  ${removeButtonStyles}
 
   display: none;
 
@@ -165,9 +168,10 @@ export const RemoveCoverDesktopButton = styled(Button)`
 `
 
 export const RemoveCoverMobileButton = styled(IconButton)`
-  ${removeButtonStyles};
+  ${removeButtonStyles}
 
   background-color: ${colors.gray[800]};
+
   &:hover {
     background-color: ${colors.transparentBlack[54]};
   }
@@ -196,7 +200,6 @@ export const EditCoverMobileButton = styled(IconButton)`
   position: absolute;
   left: var(--global-horizontal-padding);
   top: ${sizes(1)};
-
   background-color: ${colors.gray[800]};
 
   &:hover {

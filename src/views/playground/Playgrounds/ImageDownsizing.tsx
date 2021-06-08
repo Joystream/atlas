@@ -42,6 +42,7 @@ const LARGE_WIDTH_HEIGHT_IMAGES = [
 const StyledLink = styled.a`
   text-decoration: none;
   color: white;
+
   :hover {
     opacity: 0.8;
   }

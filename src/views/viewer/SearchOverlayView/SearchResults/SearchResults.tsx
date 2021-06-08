@@ -92,6 +92,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
 
 const Container = styled.div`
   margin: ${sizes(4)} 0;
+
   > * {
     margin-bottom: ${sizes(12)};
   }

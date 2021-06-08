@@ -13,15 +13,16 @@ export const Input = styled.input`
   background: none;
   color: ${colors.white};
 
-  // override mobile Safari user agent styling
+  /* override mobile Safari user agent styling */
   border-radius: 0;
-  -webkit-appearance: none;
+  appearance: none;
 
   ::placeholder {
     color: ${colors.gray[300]};
   }
+
   &::-webkit-search-cancel-button {
-    -webkit-appearance: none;
+    appearance: none;
   }
 `
 
@@ -39,6 +40,7 @@ export const Container = styled.div`
   height: ${sizes(14)};
   background-color: ${colors.gray[800]};
   padding-left: ${sizes(4)};
+
   :focus-within {
     outline: 1px solid ${colors.gray[500]};
   }

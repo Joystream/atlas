@@ -12,6 +12,7 @@ export const StyledTitleSection = styled(TitleSection)`
   ${media.small} {
     padding-top: 0;
   }
+
   /* Hidden visibility on container to not block hover state on Channel cover. 
   HeaderTextField, SubTitle and Avatar must be visible  */
   visibility: hidden;

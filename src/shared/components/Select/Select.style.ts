@@ -78,6 +78,7 @@ export const SelectOption = styled.li<SelectOptionProps>`
 
 export const StyledSvgGlyphInfo = styled(SvgGlyphInfo)`
   opacity: 0.5;
+
   &:hover {
     opacity: 1;
   }
