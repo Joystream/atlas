@@ -1,7 +1,8 @@
-import React, { useRef } from 'react'
 import { css } from '@emotion/react'
-import { GlobalStyle } from '../src/shared/components'
+import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
+
+import { GlobalStyle } from '../src/shared/components'
 
 const wrapperStyle = css`
   padding: 10px;
