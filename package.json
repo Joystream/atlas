@@ -133,7 +133,8 @@
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.1.16",
     "@storybook/theming": "^6.1.16",
-    "@svgr/cli": "^5.5.0"
+    "@svgr/cli": "^5.5.0",
+    "@trivago/prettier-plugin-sort-imports": "^2.0.2"
   },
   "browserslist": {
     "production": [

@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import Multistepper from './Multistepper'
 import { Story, Meta } from '@storybook/react'
+import React, { useState } from 'react'
+
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { Button } from '@/shared/components'
+
+import Multistepper from './Multistepper'
 
 export default {
   title: 'General/Multistepper',

@@ -1,18 +1,20 @@
+import styled from '@emotion/styled'
+import { ErrorBoundary } from '@sentry/react'
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useNavigate, useLocation } from 'react-router-dom'
-import styled from '@emotion/styled'
-import { ErrorBoundary } from '@sentry/react'
 
 import {
-  CreateEditChannelView,
-  EditVideoSheet,
-  MyUploadsView,
-  MyVideosView,
-  SignInView,
-  SignInJoinView,
-  CreateMemberView,
-} from '.'
+  ViewErrorFallback,
+  StudioTopbar,
+  StudioSidenav,
+  NoConnectionIndicator,
+  TOP_NAVBAR_HEIGHT,
+  StudioEntrypoint,
+  PrivateRoute,
+  StudioLoading,
+} from '@/components'
+import { relativeRoutes, absoluteRoutes } from '@/config/routes'
 import {
   JoystreamProvider,
   ActiveUserProvider,
@@ -27,19 +29,17 @@ import {
   DialogProvider,
   useDialog,
 } from '@/hooks'
-
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import {
-  ViewErrorFallback,
-  StudioTopbar,
-  StudioSidenav,
-  NoConnectionIndicator,
-  TOP_NAVBAR_HEIGHT,
-  StudioEntrypoint,
-  PrivateRoute,
-  StudioLoading,
-} from '@/components'
 import { isAllowedBrowser } from '@/utils/broswer'
+
+import {
+  CreateEditChannelView,
+  EditVideoSheet,
+  MyUploadsView,
+  MyVideosView,
+  SignInView,
+  SignInJoinView,
+  CreateMemberView,
+} from '.'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 

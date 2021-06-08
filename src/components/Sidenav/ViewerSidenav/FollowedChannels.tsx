@@ -1,4 +1,10 @@
 import React, { useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
+
+import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
+import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
 import {
   ChannelsWrapper,
   ChannelsTitle,
@@ -9,10 +15,6 @@ import {
   ShowMoreIconWrapper,
   FollowedChannelsWrapper,
 } from './FollowedChannels.style'
-import { transitions } from '@/shared/theme'
-import { CSSTransition } from 'react-transition-group'
-import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
-import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
 
 const MAX_CHANNELS = 4
 

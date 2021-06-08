@@ -1,4 +1,15 @@
+import { useApolloClient } from '@apollo/client'
+import { formatISO } from 'date-fns'
 import React, { useEffect, useState } from 'react'
+import { FieldNamesMarkedBoolean } from 'react-hook-form'
+
+import { useRandomStorageProviderUrl } from '@/api/hooks'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoOrderByInput,
+} from '@/api/queries'
 import {
   useEditVideoSheet,
   useAuthorizedUser,
@@ -10,23 +21,14 @@ import {
   useDisplayDataLostWarning,
   useTransactionManager,
 } from '@/hooks'
-import { Container, DrawerOverlay } from './EditVideoSheet.style'
-import { useEditVideoSheetAnimations } from './animations'
-import { EditVideoTabsBar } from './EditVideoTabsBar'
-import { EditVideoForm } from './EditVideoForm'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import { useRandomStorageProviderUrl } from '@/api/hooks'
-import { computeFileHash } from '@/utils/hashing'
-import { FieldNamesMarkedBoolean } from 'react-hook-form'
-import { formatISO } from 'date-fns'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
-import { useApolloClient } from '@apollo/client'
-import {
-  GetVideosConnectionDocument,
-  GetVideosConnectionQuery,
-  GetVideosConnectionQueryVariables,
-  VideoOrderByInput,
-} from '@/api/queries'
+import { computeFileHash } from '@/utils/hashing'
+
+import { EditVideoForm } from './EditVideoForm'
+import { Container, DrawerOverlay } from './EditVideoSheet.style'
+import { EditVideoTabsBar } from './EditVideoTabsBar'
+import { useEditVideoSheetAnimations } from './animations'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()

@@ -1,10 +1,11 @@
-import { Text } from '@/shared/components'
-import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
+
+import { Text } from '@/shared/components'
 import { badgeStyles } from '@/shared/components/Badge'
 import { SvgJoystreamFullLogo } from '@/shared/illustrations'
+import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24

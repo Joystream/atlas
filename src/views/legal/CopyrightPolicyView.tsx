@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Text, LegalParagraph, LegalListItem } from '@/shared/components'
 
 const CopyrightPolicyView: React.FC = () => {

@@ -1,13 +1,13 @@
-import React, { useState, useMemo, useCallback } from 'react'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import React, { useState, useMemo, useCallback } from 'react'
 
-import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
-
-import { breakpointsOfGrid } from '@/shared/components/Grid'
-import VideoPreview from './VideoPreview'
-import { sizes } from '@/shared/theme'
 import { VideoFieldsFragment } from '@/api/queries'
+import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+import { breakpointsOfGrid } from '@/shared/components/Grid'
+import { sizes } from '@/shared/theme'
+
+import VideoPreview from './VideoPreview'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number

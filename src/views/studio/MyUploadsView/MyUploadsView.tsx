@@ -1,9 +1,11 @@
 import React from 'react'
+
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
-import { EmptyUploadsView } from './EmptyUploadsView'
-import { placeholderItems } from './PlaceholderItems'
+
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
+import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
+import { placeholderItems } from './PlaceholderItems'
 
 const MyUploadsView = () => {
   const { activeChannelId } = useAuthorizedUser()

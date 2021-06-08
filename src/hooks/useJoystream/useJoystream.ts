@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+
 import { JoystreamContext } from './provider'
 
 export const useJoystream = () => {

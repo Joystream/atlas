@@ -1,12 +1,13 @@
-import React, { useState, useRef } from 'react'
-
 import { ErrorBoundary } from '@sentry/react'
+import React, { useState, useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
+
 import { useCategories, useVideos } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-
 import { ErrorFallback, BackgroundPattern, VideoGallery, TOP_NAVBAR_HEIGHT } from '@/components'
 import { Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+
 import {
   StyledViewWrapper,
   StyledCategoryPicker,
@@ -17,7 +18,6 @@ import {
   CategoriesVideosContainer,
   FeaturedVideosContainer,
 } from './VideosView.style'
-import { transitions } from '@/shared/theme'
 
 const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)

@@ -1,4 +1,5 @@
 import { get } from 'lodash'
+
 import { FilteringArgs, GenericData, PredicateFn, SortingArgs } from '../types'
 
 type HasCreatedAt = {

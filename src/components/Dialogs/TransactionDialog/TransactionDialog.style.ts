@@ -1,8 +1,9 @@
-import styled from '@emotion/styled'
-import { sizes, media, colors, transitions } from '@/shared/theme'
-import Spinner from '@/shared/components/Spinner'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+
+import Spinner from '@/shared/components/Spinner'
 import { SvgTransactionIllustration } from '@/shared/illustrations'
+import { sizes, media, colors, transitions } from '@/shared/theme'
 
 type StepProps = {
   isActive?: boolean

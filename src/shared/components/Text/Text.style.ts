@@ -1,6 +1,7 @@
-import { colors, typography } from '../../theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+
+import { colors, typography } from '../../theme'
 
 const baseStyles = css`
   font-family: ${typography.fonts.base};

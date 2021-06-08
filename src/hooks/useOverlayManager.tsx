@@ -1,7 +1,8 @@
-import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import styled from '@emotion/styled'
 import { css, Global } from '@emotion/react'
+import styled from '@emotion/styled'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
+
 import { transitions } from '@/shared/theme'
 
 type OverlayManagerContextValue = {

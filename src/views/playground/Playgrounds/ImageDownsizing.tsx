@@ -1,9 +1,10 @@
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { Button, Text } from '@/shared/components'
-import { formatBytes } from '@/utils/size'
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
+
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
+import { Button, Text } from '@/shared/components'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { formatBytes } from '@/utils/size'
 
 const LARGE_FILE_IMAGES = [
   {

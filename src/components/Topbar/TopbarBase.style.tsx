@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
-import { Text } from '@/shared/components'
-import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
-import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
 import { Link } from 'react-router-dom'
-import { TopbarVariant } from './TopbarBase'
+
+import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
+import { Text } from '@/shared/components'
 import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
+import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
+
+import { TopbarVariant } from './TopbarBase'
 
 type TopNavbarStyleProps = {
   hasFocus?: boolean

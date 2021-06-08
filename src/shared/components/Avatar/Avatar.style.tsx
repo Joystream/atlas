@@ -1,9 +1,12 @@
-import styled from '@emotion/styled'
 import { css, SerializedStyles } from '@emotion/react'
+import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
-import { colors, transitions, typography, media } from '@/shared/theme'
-import Placeholder from '../Placeholder'
+
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
+import { colors, transitions, typography, media } from '@/shared/theme'
+
+import Placeholder from '../Placeholder'
+
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
 type ContainerProps = {

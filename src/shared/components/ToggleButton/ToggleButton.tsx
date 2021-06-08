@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+
+import { Text } from '@/shared/components'
+
 import { StyledToggleButton } from './ToggleButton.styles'
 
 import type { ButtonProps } from '../Button/Button'
-import { Text } from '@/shared/components'
 
 export type ToggleButtonProps = {
   controlled?: boolean

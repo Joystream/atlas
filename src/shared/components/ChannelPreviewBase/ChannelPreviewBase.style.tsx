@@ -1,9 +1,11 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors, sizes, transitions, typography } from '../../theme'
-import { Avatar } from '..'
-import Text from '@/shared/components/Text'
 import { Link } from 'react-router-dom'
+
+import Text from '@/shared/components/Text'
+
+import { Avatar } from '..'
+import { colors, sizes, transitions, typography } from '../../theme'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'

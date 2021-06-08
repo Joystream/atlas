@@ -1,7 +1,9 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import { colors, media } from '@/shared/theme'
+import React from 'react'
+
 import { Placeholder } from '@/shared/components'
+import { colors, media } from '@/shared/theme'
+
 import {
   Container,
   AssetsGroupUploadBarContainer,

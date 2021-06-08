@@ -1,9 +1,10 @@
 import React from 'react'
-import { ChannelPreviewBase } from '@/shared/components'
+
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
+import { ChannelPreviewBase } from '@/shared/components'
 
 type ChannelPreviewProps = {
   id?: string

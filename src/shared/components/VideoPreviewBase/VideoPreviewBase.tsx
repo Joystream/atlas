@@ -1,4 +1,26 @@
 import React, { useState } from 'react'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
+
+import { useContextMenu } from '@/hooks'
+import { Text } from '@/shared/components'
+import {
+  SvgGlyphClose,
+  SvgGlyphCopy,
+  SvgGlyphDraft,
+  SvgGlyphEdit,
+  SvgGlyphHide,
+  SvgGlyphMore,
+  SvgGlyphTrash,
+  SvgLargeEdit,
+  SvgOutlineVideo,
+  SvgLargeUploadFailed,
+} from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+import { formatDateAgo, formatDurationShort } from '@/utils/time'
+import { formatVideoViewsAndDate } from '@/utils/video'
+
+import { PullUp } from './PullUp'
 import {
   AvatarContainer,
   Container,
@@ -30,27 +52,8 @@ import {
   PublishingStateText,
   CoverIconWrapper,
 } from './VideoPreviewBase.styles'
-import { formatVideoViewsAndDate } from '@/utils/video'
-import { formatDateAgo, formatDurationShort } from '@/utils/time'
-import useResizeObserver from 'use-resize-observer'
-import { transitions } from '@/shared/theme'
-import { Text } from '@/shared/components'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+
 import { ContextMenu, ContextMenuItem, Placeholder } from '..'
-import { useContextMenu } from '@/hooks'
-import { PullUp } from './PullUp'
-import {
-  SvgGlyphClose,
-  SvgGlyphCopy,
-  SvgGlyphDraft,
-  SvgGlyphEdit,
-  SvgGlyphHide,
-  SvgGlyphMore,
-  SvgGlyphTrash,
-  SvgLargeEdit,
-  SvgOutlineVideo,
-  SvgLargeUploadFailed,
-} from '@/shared/icons'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean

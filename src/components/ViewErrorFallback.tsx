@@ -1,10 +1,10 @@
-import React from 'react'
 import styled from '@emotion/styled'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
+import React from 'react'
 
 import { Button, Text } from '@/shared/components'
-import { sizes, colors } from '@/shared/theme'
 import { SvgWellErrorIllustration } from '@/shared/illustrations'
+import { sizes, colors } from '@/shared/theme'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
+import { fluidRange } from 'polished'
+
 import { ViewWrapper } from '@/components'
 import { Placeholder, Text } from '@/shared/components'
 import { sizes, colors, typography, breakpoints, media } from '@/shared/theme'
-import { fluidRange } from 'polished'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;

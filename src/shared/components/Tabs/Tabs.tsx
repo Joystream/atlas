@@ -1,7 +1,9 @@
-import { transitions } from '@/shared/theme'
 import { throttle } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
+
+import { transitions } from '@/shared/theme'
+
 import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Tabs.styles'
 
 type TabItem = {

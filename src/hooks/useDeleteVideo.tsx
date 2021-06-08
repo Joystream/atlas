@@ -1,6 +1,8 @@
-import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
 import { useApolloClient } from '@apollo/client'
+
+import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+
 import { useDialog } from './useDialog'
 
 export const useDeleteVideo = () => {

@@ -1,6 +1,8 @@
-import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+
+import { colors, sizes, transitions, typography, media } from '@/shared/theme'
+
 import IconButton from '../IconButton'
 
 type PaginationButtonProps = {

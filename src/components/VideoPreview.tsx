@@ -1,14 +1,15 @@
 import React from 'react'
+
 import { useVideo } from '@/api/hooks'
+import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
+import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
-import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string

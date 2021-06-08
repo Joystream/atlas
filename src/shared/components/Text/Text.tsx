@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { secondaryTextStyles, styledVariants } from './Text.style'
 
 export type TextVariant = keyof typeof styledVariants

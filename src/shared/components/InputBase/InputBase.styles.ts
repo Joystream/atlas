@@ -1,5 +1,6 @@
-import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import { colors, sizes, transitions, typography } from '@/shared/theme'
 
 type FormGroupProps = {
   error?: boolean

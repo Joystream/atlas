@@ -1,8 +1,10 @@
-import { IconButton } from '@/shared/components'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { ActionDialogProps } from '../ActionDialog'
-import { CropperImageType, useCropper } from './cropper'
+
+import { IconButton } from '@/shared/components'
+import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
+import { ImageCropData, AssetDimensions } from '@/types/cropper'
+import { validateImage } from '@/utils/image'
+
 import {
   AlignInfo,
   AlignInfoContainer,
@@ -15,8 +17,9 @@ import {
   StyledSlider,
   ZoomControl,
 } from './ImageCropDialog.style'
-import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
-import { validateImage } from '@/utils/image'
+import { CropperImageType, useCropper } from './cropper'
+
+import { ActionDialogProps } from '../ActionDialog'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType

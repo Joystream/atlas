@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
-import { media, sizes, colors } from '@/shared/theme'
-import { HeaderTextField, Button } from '@/shared/components'
+
 import { studioContainerStyle } from '@/components/StudioContainer'
+import { HeaderTextField, Button } from '@/shared/components'
+import { media, sizes, colors } from '@/shared/theme'
 
 export const StyledRadioContainer = styled.div`
   display: flex;

@@ -1,4 +1,5 @@
 import { VideoWhereUniqueInput, MembershipWhereUniqueInput } from '@/api/queries'
+
 import { FilteringArgs, HasId } from '../types'
 
 export const createSingleItemAccessor = <TData extends HasId>(data: TData[]) => (

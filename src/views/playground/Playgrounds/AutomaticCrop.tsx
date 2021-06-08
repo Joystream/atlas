@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
+
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
-import { computeFileHash } from '@/utils/hashing'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
 import { Button } from '@/shared/components'
+import { ImageCropData, AssetDimensions } from '@/types/cropper'
+import { computeFileHash } from '@/utils/hashing'
 
 const AutomaticCrop: React.FC = () => {
   const [cropData, setCropData] = useState<ImageCropData>()

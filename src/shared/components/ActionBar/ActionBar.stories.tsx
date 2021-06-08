@@ -1,8 +1,10 @@
-import React from 'react'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import { SvgGlyphInfo } from '@/shared/icons'
+
 import ActionBar, { ActionBarProps } from './ActionBar'
 import ActionBarTransaction, { ActionBarTransactionProps } from './ActionBarTransaction'
-import { SvgGlyphInfo } from '@/shared/icons'
 
 export default {
   title: 'Shared/A/ActionBar',

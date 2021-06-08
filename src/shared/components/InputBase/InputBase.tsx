@@ -1,6 +1,8 @@
 import React from 'react'
-import HelperText from '../HelperText/HelperText'
+
 import { FormGroup, LabelText } from './InputBase.styles'
+
+import HelperText from '../HelperText/HelperText'
 
 export type InputBaseProps = {
   error?: boolean

@@ -1,5 +1,7 @@
-import { media, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import { media, colors, sizes, transitions, typography } from '@/shared/theme'
+
 import CircularProgressbar from '../CircularProgressbar'
 import Text from '../Text'
 

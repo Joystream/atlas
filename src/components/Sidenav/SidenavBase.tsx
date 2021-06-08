@@ -1,6 +1,12 @@
 import React, { ReactNode } from 'react'
 import { useMatch } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
+
+import { absoluteRoutes } from '@/config/routes'
+import HamburgerButton from '@/shared/components/HamburgerButton'
+import { transitions } from '@/shared/theme'
+
 import {
   SidebarNav,
   SidebarNavList,
@@ -17,10 +23,6 @@ import {
   StudioText,
   LegalLinksWrapper,
 } from './SidenavBase.style'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import HamburgerButton from '@/shared/components/HamburgerButton'
-import { absoluteRoutes } from '@/config/routes'
 
 type NavSubitem = {
   name: string

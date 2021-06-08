@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
 import Tippy from '@tippyjs/react/headless'
+import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { StyledTooltip, TooltipText, IconWrapper, Arrow, TooltipHeader } from './Tooltip.style'
+
 import { SvgGlyphInfo } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
+import { StyledTooltip, TooltipText, IconWrapper, Arrow, TooltipHeader } from './Tooltip.style'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
 export type TooltipProps = {

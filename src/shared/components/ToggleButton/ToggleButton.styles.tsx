@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 
 import { sizes, colors, transitions } from '../../theme'
 import { ButtonVariant } from '../ButtonBase'

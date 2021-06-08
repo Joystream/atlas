@@ -1,8 +1,9 @@
+import styled from '@emotion/styled'
+import { fluidRange } from 'polished'
+
+import { ChannelLink } from '@/components'
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
 import { sizes, colors, typography, media } from '@/shared/theme'
-import { fluidRange } from 'polished'
-import styled from '@emotion/styled'
-import { ChannelLink } from '@/components'
 
 export const Header = styled.section`
   position: relative;

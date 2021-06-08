@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography } from '@/shared/theme'
-import { Placeholder } from '@/shared/components'
 import { Link } from 'react-router-dom'
+
+import { Placeholder } from '@/shared/components'
+import { colors, sizes, typography } from '@/shared/theme'
 
 type ContainerProps = {
   disabled?: boolean

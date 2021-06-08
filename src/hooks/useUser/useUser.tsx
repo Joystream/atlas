@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useActiveUserStore } from './store'
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
-import { AccountId } from '@/joystream-lib'
-import { WEB3_APP_NAME } from '@/config/urls'
-import { useMembership, useMemberships } from '@/api/hooks'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+import React, { useContext, useEffect, useState } from 'react'
+
+import { useMembership, useMemberships } from '@/api/hooks'
+import { WEB3_APP_NAME } from '@/config/urls'
+import { AccountId } from '@/joystream-lib'
+
+import { useActiveUserStore } from './store'
 
 export type Account = {
   id: AccountId

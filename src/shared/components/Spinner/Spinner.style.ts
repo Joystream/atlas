@@ -1,6 +1,8 @@
-import { colors, sizes } from '@/shared/theme'
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
+
+import { colors, sizes } from '@/shared/theme'
+
 import { SpinnerSize } from './Spinner'
 
 type SpinnerWrapperProps = {

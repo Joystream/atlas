@@ -1,4 +1,23 @@
-import BN from 'bn.js'
+import {
+  ChannelMetadata,
+  License,
+  MediaType,
+  PublishedBeforeJoystream,
+  VideoMetadata,
+} from '@joystream/content-metadata-protobuf'
+import { types } from '@joystream/types'
+import { ChannelId as RuntimeChannelId } from '@joystream/types/common'
+import {
+  ChannelCreationParameters,
+  ChannelUpdateParameters,
+  ContentActor,
+  NewAsset,
+  VideoCreationParameters,
+  VideoUpdateParameters,
+  VideoId as RuntimeVideoId,
+} from '@joystream/types/content'
+import { ContentId } from '@joystream/types/media'
+import { ContentParameters } from '@joystream/types/storage'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer, SubmittableExtrinsic } from '@polkadot/api/types'
 import {
@@ -12,24 +31,7 @@ import {
   u64 as U64,
 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
-import { types } from '@joystream/types'
-import { ChannelId as RuntimeChannelId } from '@joystream/types/common'
-import {
-  ChannelCreationParameters,
-  ChannelUpdateParameters,
-  ContentActor,
-  NewAsset,
-  VideoCreationParameters,
-  VideoUpdateParameters,
-  VideoId as RuntimeVideoId,
-} from '@joystream/types/content'
-import {
-  ChannelMetadata,
-  License,
-  MediaType,
-  PublishedBeforeJoystream,
-  VideoMetadata,
-} from '@joystream/content-metadata-protobuf'
+import BN from 'bn.js'
 
 import {
   AccountNotSelectedError,
@@ -52,8 +54,6 @@ import {
   CreateVideoMetadata,
   VideoAssets,
 } from './types'
-import { ContentParameters } from '@joystream/types/storage'
-import { ContentId } from '@joystream/types/media'
 
 export class JoystreamJs {
   readonly api: ApiPromise

@@ -1,9 +1,10 @@
+import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
+
 import { StudioContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { SvgSigninIllustration } from '@/shared/illustrations'
 import { media, colors, sizes } from '@/shared/theme'
-import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
 export const StyledContainer = styled(StudioContainer)`
   margin-top: 64px;

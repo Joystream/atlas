@@ -1,7 +1,8 @@
-import React from 'react'
 import { SerializedStyles } from '@emotion/react'
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
+import React from 'react'
+
 import { IconButton } from '@/shared/components'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
 export type NavButtonProps = {
   direction: 'right' | 'left'

@@ -1,7 +1,9 @@
-import { colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import { LabelText } from '../InputBase'
+
 import { SvgGlyphInfo } from '@/shared/icons'
+import { colors, sizes, transitions, typography } from '@/shared/theme'
+
+import { LabelText } from '../InputBase'
 
 export const SelectWrapper = styled.div`
   width: 100%;

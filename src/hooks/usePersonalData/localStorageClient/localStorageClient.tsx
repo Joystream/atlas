@@ -1,5 +1,6 @@
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
+
 import {
   CompletedVideo,
   COMPLETED_VIDEO,

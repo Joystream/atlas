@@ -1,4 +1,8 @@
 import React, { ReactNode } from 'react'
+
+import { Button, Text, Tooltip } from '@/shared/components'
+import { SvgGlyphInfo } from '@/shared/icons'
+
 import {
   StyledActionBarContainer,
   StyledInnerContainer,
@@ -9,8 +13,6 @@ import {
   DetailsIconWrapper,
   DetailsContainer,
 } from './ActionBar.style'
-import { Button, Text, Tooltip } from '@/shared/components'
-import { SvgGlyphInfo } from '@/shared/icons'
 
 export type ActionBarProps = {
   primaryText?: string

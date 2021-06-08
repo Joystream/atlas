@@ -1,10 +1,11 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { Gallery } from '@/shared/components'
-import ChannelPreview from './ChannelPreview'
-import { sizes } from '@/shared/theme'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { Gallery } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import ChannelPreview from './ChannelPreview'
 
 type ChannelGalleryProps = {
   title?: string

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router'
+
+import { useRouterQuery, useUser, useDialog } from '@/hooks'
+import { Text, Button } from '@/shared/components'
+import { SvgGlyphExternal } from '@/shared/icons'
+
 import { StyledButton, StyledStepFooter, StyledListItem, PolkadotExtensionRejectedWrapper } from './ExtensionStep.style'
 import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
-import { Text, Button } from '@/shared/components'
-import { useNavigate } from 'react-router'
-import { useRouterQuery, useUser, useDialog } from '@/hooks'
-import { SvgGlyphExternal } from '@/shared/icons'
 
 type ExtensionStepProps = {
   nextStepPath: string

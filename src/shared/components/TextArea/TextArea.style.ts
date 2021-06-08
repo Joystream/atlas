@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+
 import resizeIcon from '@/shared/icons/svgs/glyph-resize.svg'
 
 export const StyledTextArea = styled.textarea`

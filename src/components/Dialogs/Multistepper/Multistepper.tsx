@@ -1,5 +1,8 @@
 import React, { Fragment } from 'react'
-import { BaseDialogProps } from '../BaseDialog'
+
+import { Text } from '@/shared/components'
+import { SvgGlyphCheck } from '@/shared/icons'
+
 import {
   StyledDialog,
   StyledHeader,
@@ -10,8 +13,8 @@ import {
   StyledChevron,
   StyledStepTitle,
 } from './Multistepper.style'
-import { SvgGlyphCheck } from '@/shared/icons'
-import { Text } from '@/shared/components'
+
+import { BaseDialogProps } from '../BaseDialog'
 
 type Step = {
   title: string

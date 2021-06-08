@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { usePersonalData } from '@/hooks'
-import { absoluteRoutes } from '@/config/routes'
-import { Button } from '@/shared/components'
+
 import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
-import FollowedChannels from './FollowedChannels'
+import { absoluteRoutes } from '@/config/routes'
+import { usePersonalData } from '@/hooks'
+import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+
+import FollowedChannels from './FollowedChannels'
 
 const viewerSidenavItems: NavItemType[] = [
   {

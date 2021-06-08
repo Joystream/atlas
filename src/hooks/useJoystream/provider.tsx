@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { JoystreamJs } from '@/joystream-lib'
-import { useUser } from '@/hooks'
-import useConnectionStatus from '../useConnectionStatus'
-import { NODE_URL } from '@/config/urls'
 import { web3FromAddress } from '@polkadot/extension-dapp'
+import React, { useCallback, useEffect, useState } from 'react'
+
+import { NODE_URL } from '@/config/urls'
+import { useUser } from '@/hooks'
+import { JoystreamJs } from '@/joystream-lib'
+
+import useConnectionStatus from '../useConnectionStatus'
 
 type JoystreamContextValue = {
   joystream: JoystreamJs | null

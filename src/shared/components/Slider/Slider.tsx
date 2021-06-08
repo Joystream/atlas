@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { StyledRcSlider } from './Slider.style'
 
 export type SliderProps = {

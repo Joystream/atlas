@@ -1,6 +1,6 @@
+import { LiaisonJudgement } from '@/api/queries'
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { LiaisonJudgement } from '@/api/queries'
 
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 type AssetParent = 'video' | 'channel'

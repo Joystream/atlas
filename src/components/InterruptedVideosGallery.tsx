@@ -1,8 +1,8 @@
-import React from 'react'
 import { RouteComponentProps } from '@reach/router'
+import React from 'react'
 
-import { usePersonalData } from '@/hooks'
 import { VideoGallery } from '@/components'
+import { usePersonalData } from '@/hooks'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 

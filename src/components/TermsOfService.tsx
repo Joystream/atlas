@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { LegalLastUpdateText, LegalListItem, LegalParagraph, Text } from '@/shared/components'
 
 const TermsOfService: React.FC = () => {

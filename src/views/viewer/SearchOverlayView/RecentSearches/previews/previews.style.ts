@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
+
 import { Avatar, Placeholder, Text } from '@/shared/components'
 import { colors, sizes, media } from '@/shared/theme'
 
