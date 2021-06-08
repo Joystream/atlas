@@ -2,13 +2,7 @@ import { ApolloProvider } from '@apollo/client'
 import React from 'react'
 
 import { createApolloClient } from '@/api'
-import {
-  ConnectionStatusProvider,
-  DialogProvider,
-  OverlayManagerProvider,
-  SnackbarProvider,
-  StorageProvidersProvider,
-} from '@/hooks'
+import { ConnectionStatusProvider, OverlayManagerProvider, Snackbars, StorageProvidersProvider } from '@/hooks'
 
 import { MainLayout } from './MainLayout'
 
@@ -19,17 +13,14 @@ export const App = () => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <SnackbarProvider>
-        <ConnectionStatusProvider>
-          <OverlayManagerProvider>
-            <StorageProvidersProvider>
-              <DialogProvider>
-                <MainLayout />
-              </DialogProvider>
-            </StorageProvidersProvider>
-          </OverlayManagerProvider>
-        </ConnectionStatusProvider>
-      </SnackbarProvider>
+      <ConnectionStatusProvider>
+        <OverlayManagerProvider>
+          <StorageProvidersProvider>
+            <MainLayout />
+            <Snackbars />
+          </StorageProvidersProvider>
+        </OverlayManagerProvider>
+      </ConnectionStatusProvider>
     </ApolloProvider>
   )
 }

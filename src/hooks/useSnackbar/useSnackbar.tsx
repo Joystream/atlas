@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import React, { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import create from 'zustand'
 
 import { Snackbar } from '@/shared/components'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
@@ -20,18 +21,6 @@ export type DisplaySnackbarArgs = {
   onExit?: () => void
   onActionClick?: () => void
 }
-
-type SnackbarsState = {
-  id: string
-} & Omit<DisplaySnackbarArgs, 'time'>
-
-type SnackbarContextValue = {
-  snackbars: SnackbarsState[]
-  displaySnackbar: (args: DisplaySnackbarArgs) => string
-  updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
-  closeSnackbar: (id: string) => void
-}
-
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertInfo />,
   success: <SvgAlertSuccess />,
@@ -39,13 +28,16 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   warning: <SvgAlertWarning />,
 }
 
-const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined)
-SnackbarContext.displayName = 'SnackbarContext'
+type Snackbar = {
+  id: string
+} & Omit<DisplaySnackbarArgs, 'time'>
 
-const SNACKBARS_LIMIT = 3
-
-export const SnackbarProvider: React.FC = ({ children }) => {
-  const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
+type SnackbarState = {
+  snackbars: Snackbar[]
+  displaySnackbar: (args: DisplaySnackbarArgs) => string
+  updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
+  closeSnackbar: (id: string) => void
+}
 
   const displaySnackbar = useCallback(({ customId, timeout, onExit, ...args }: DisplaySnackbarArgs) => {
     const id = customId ?? createId()
@@ -59,27 +51,22 @@ export const SnackbarProvider: React.FC = ({ children }) => {
         setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
       }, timeout)
     }
-
     return id
-  }, [])
+  },
+}))
 
-  const updateSnackbar = useCallback((id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => {
-    setSnackbars((currentSnackbars) =>
-      currentSnackbars.map((snackbar) => (snackbar.id === id ? { ...snackbar, ...opts } : snackbar))
-    )
-  }, [])
+const SNACKBARS_LIMIT = 3
 
-  const closeSnackbar = useCallback((id: string) => {
-    setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
-  }, [])
+export const Snackbars: React.FC = () => {
+  const { closeSnackbar, snackbars } = useSnackbar()
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
       setTimeout(() => {
-        setSnackbars((currentSnackbars) => currentSnackbars.slice(1))
+        closeSnackbar(snackbars[0].id)
       }, 500)
     }
-  }, [snackbars])
+  }, [closeSnackbar, snackbars])
 
   return (
     <SnackbarContext.Provider value={{ snackbars, displaySnackbar, updateSnackbar, closeSnackbar }}>
@@ -117,11 +104,3 @@ const SnackbarsContainer = styled.div`
   width: 100%;
   display: grid;
 `
-
-export const useSnackbar = () => {
-  const ctx = useContext(SnackbarContext)
-  if (ctx === undefined) {
-    throw new Error('useSnackbar must be used within a SnackbarProvider')
-  }
-  return ctx
-}

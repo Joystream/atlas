@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { DisplaySnackbarArgs, SnackbarProvider, useSnackbar } from '@/hooks/useSnackbar/useSnackbar'
+import { DisplaySnackbarArgs, Snackbars, useSnackbar } from '@/hooks/useSnackbar/useSnackbar'
 
 import { Snackbar } from './Snackbar'
 
@@ -26,9 +26,10 @@ export default {
   },
   decorators: [
     (Story) => (
-      <SnackbarProvider>
+      <>
         <Story />
-      </SnackbarProvider>
+        <Snackbars />
+      </>
     ),
   ],
 } as Meta

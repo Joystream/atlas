@@ -3,13 +3,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import {
-  ActiveUserProvider,
-  ConnectionStatusProvider,
-  DraftsProvider,
-  SnackbarProvider,
-  UploadManagerProvider,
-} from '@/hooks'
+import { ActiveUserProvider, ConnectionStatusProvider, DraftsProvider, UploadManagerProvider } from '@/hooks'
 import { colors } from '@/shared/theme'
 
 import {
@@ -40,8 +34,8 @@ const playgroundRoutes = [
 
 export const PlaygroundLayout = () => {
   return (
-    <SnackbarProvider>
-      <ActiveUserProvider>
+    <ActiveUserProvider>
+      <DialogProvider>
         <UploadManagerProvider>
           <ConnectionStatusProvider>
             <DraftsProvider>
@@ -59,13 +53,14 @@ export const PlaygroundLayout = () => {
                       <Route key={route.path} path={route.path} element={route.element} />
                     ))}
                   </Routes>
+                  <Snackbars />
                 </ContentContainer>
               </Container>
             </DraftsProvider>
           </ConnectionStatusProvider>
         </UploadManagerProvider>
-      </ActiveUserProvider>
-    </SnackbarProvider>
+      </DialogProvider>
+    </ActiveUserProvider>
   )
 }
 

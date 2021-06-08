@@ -22079,6 +22079,11 @@ zen-observable@^0.8.0, zen-observable@^0.8.14:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
+zustand@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.2.tgz#cf162a8bd1d86475bf308bc856c4d02ff13fd53c"
+  integrity sha512-HUCQI9O77/D/zvoWPNv4dwLriiiY2xtEqnQ0TVY8uaPjmOHls04Okd0w3sWUE9Ex2LaYlSk11DbPPIOZ6shEWg==
+
 zwitch@^1.0.0:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/zwitch/-/zwitch-1.0.5.tgz#d11d7381ffed16b742f6af7b3f223d5cd9fe9920"
