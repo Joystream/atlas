@@ -1,8 +1,9 @@
-import React from 'react'
 import { ApolloProvider } from '@apollo/client'
+import React from 'react'
 
 import { createApolloClient } from '@/api'
 import { ConnectionStatusProvider, OverlayManagerProvider, SnackbarProvider } from '@/hooks'
+
 import MainLayout from './MainLayout'
 
 export default function App() {

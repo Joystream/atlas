@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, media } from '@/shared/theme'
+
 import { Text } from '@/shared/components'
+import { colors, sizes, typography, media } from '@/shared/theme'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;

@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+
 import { colors, sizes, typography } from '@/shared/theme'
 
 export const badgeStyles = css`

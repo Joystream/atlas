@@ -1,13 +1,15 @@
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+import { fluidRange, transparentize } from 'polished'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { fluidRange, transparentize } from 'polished'
-import styled from '@emotion/styled'
-import { css } from '@emotion/react'
+
 import { colors, sizes, transitions, typography, media } from '@/shared/theme'
-import Placeholder from '../Placeholder'
+
 import Avatar from '../Avatar'
-import Text from '../Text'
 import IconButton from '../IconButton'
+import Placeholder from '../Placeholder'
+import Text from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
 

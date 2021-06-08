@@ -1,10 +1,11 @@
-import React from 'react'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { usePersonalData } from '@/hooks'
 import { sub } from 'date-fns'
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
+import React from 'react'
+
 import useVideosConnection from '@/api/hooks/videosConnection'
+import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
+import { usePersonalData } from '@/hooks'
 import { transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16

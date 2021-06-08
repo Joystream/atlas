@@ -1,9 +1,12 @@
 import React from 'react'
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
-import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
+
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { Tooltip } from '@/shared/components'
+
+import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
+
+import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
+import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null

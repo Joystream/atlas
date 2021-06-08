@@ -1,7 +1,8 @@
+import { createId } from '@/utils/createId'
 import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
+
 import { Draft, UnseenDraft } from './useDrafts'
-import { createId } from '@/utils/createId'
 
 export const getDrafts = promisify(() => readFromLocalStorage<Draft[]>('drafts') || [])
 

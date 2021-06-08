@@ -1,7 +1,9 @@
-import React from 'react'
-import Button, { ButtonProps } from './Button'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
 import { SvgGlyphAddVideo } from '@/shared/icons'
+
+import Button, { ButtonProps } from './Button'
 
 export default {
   title: 'Shared/B/Button',

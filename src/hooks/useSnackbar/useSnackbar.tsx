@@ -1,10 +1,11 @@
+import styled from '@emotion/styled'
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import styled from '@emotion/styled'
+
 import { Snackbar } from '@/shared/components'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 import { transitions, sizes } from '@/shared/theme'
 import { createId } from '@/utils/createId'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 

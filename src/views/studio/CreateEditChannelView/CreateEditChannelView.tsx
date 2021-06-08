@@ -2,32 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-import { languages } from '@/config/languages'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
-import {
-  ActionBarTransaction,
-  ChannelCover,
-  FormField,
-  Select,
-  SelectItem,
-  TextArea,
-  Tooltip,
-} from '@/shared/components'
-import { transitions } from '@/shared/theme'
-import {
-  InnerFormContainer,
-  StyledAvatar,
-  StyledTitleSection,
-  TitleContainer,
-  StyledHeaderTextField,
-  StyledSubTitle,
-} from './CreateEditChannelView.style'
-import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
+
 import { useChannel, useRandomStorageProviderUrl } from '@/api/hooks'
-import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { formatNumberShort } from '@/utils/number'
-import { writeUrlInCache } from '@/utils/cachingAssets'
+import { AssetAvailability } from '@/api/queries'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
+import { languages } from '@/config/languages'
+import { absoluteRoutes } from '@/config/routes'
 import {
   useUser,
   useJoystream,
@@ -40,9 +20,31 @@ import {
   useConnectionStatus,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import { absoluteRoutes } from '@/config/routes'
+import {
+  ActionBarTransaction,
+  ChannelCover,
+  FormField,
+  Select,
+  SelectItem,
+  TextArea,
+  Tooltip,
+} from '@/shared/components'
+import { transitions } from '@/shared/theme'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { writeUrlInCache } from '@/utils/cachingAssets'
+import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
-import { AssetAvailability } from '@/api/queries'
+import { formatNumberShort } from '@/utils/number'
+import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
+
+import {
+  InnerFormContainer,
+  StyledAvatar,
+  StyledTitleSection,
+  TitleContainer,
+  StyledHeaderTextField,
+  StyledSubTitle,
+} from './CreateEditChannelView.style'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },

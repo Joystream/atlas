@@ -1,10 +1,11 @@
 import { SerializedStyles } from '@emotion/react'
 import React, { useRef } from 'react'
 
-import { useGlider, GliderProps } from '../Glider'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
 import { Container, GliderContainer, Arrow, Track, BackgroundGradient } from './Carousel.style'
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
+
+import { useGlider, GliderProps } from '../Glider'
 
 export type CarouselProps = {
   paddingLeft?: number

@@ -1,5 +1,7 @@
-import { getRandomIntInclusive } from '@/utils/number'
 import { QueryHookOptions } from '@apollo/client'
+import { useCallback } from 'react'
+
+import { WorkerType } from '@/api/queries'
 import {
   GetWorkerQuery,
   GetWorkersQuery,
@@ -7,8 +9,7 @@ import {
   useGetWorkerQuery,
   useGetWorkersQuery,
 } from '@/api/queries/__generated__/workers.generated'
-import { WorkerType } from '@/api/queries'
-import { useCallback } from 'react'
+import { getRandomIntInclusive } from '@/utils/number'
 
 type WorkerOpts = QueryHookOptions<GetWorkerQuery>
 export const useWorker = (id: string, opts?: WorkerOpts) => {

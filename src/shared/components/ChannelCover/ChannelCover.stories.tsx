@@ -1,5 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+
 import ChannelCover, { ChannelCoverProps } from './ChannelCover'
 
 export default {

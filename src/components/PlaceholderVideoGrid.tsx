@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Grid } from '@/shared/components'
+
 import VideoPreview from './VideoPreview'
 
 type PlaceholderVideoGridProps = {

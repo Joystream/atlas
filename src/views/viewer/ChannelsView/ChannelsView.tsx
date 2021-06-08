@@ -1,7 +1,8 @@
 import React from 'react'
-import { Header, StyledViewWrapper } from '@/views/viewer/VideosView/VideosView.style'
+
 import { BackgroundPattern, InfiniteChannelGrid } from '@/components'
 import { transitions } from '@/shared/theme'
+import { Header, StyledViewWrapper } from '@/views/viewer/VideosView/VideosView.style'
 
 const ChannelsView: React.FC = () => {
   return (

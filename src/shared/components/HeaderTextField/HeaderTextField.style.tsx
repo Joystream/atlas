@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
+
 import { Text } from '@/shared/components'
 import { colors, sizes, typography, media } from '@/shared/theme'
 

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
-import { sizes } from '@/shared/theme'
-import { Text } from '@/shared/components'
+
 import { StudioContainer } from '@/components'
+import { Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
 
 export const UploadsContainer = styled(StudioContainer)`
   padding-bottom: 120px;

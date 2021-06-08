@@ -1,20 +1,21 @@
 import { ApolloClient, split } from '@apollo/client'
-import { WebSocketLink } from '@apollo/client/link/ws'
-import { wrapSchema } from '@graphql-tools/wrap'
-import { mergeSchemas } from '@graphql-tools/merge'
-import { buildASTSchema, GraphQLFieldResolver } from 'graphql'
 import { SchemaLink } from '@apollo/client/link/schema'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { delegateToSchema } from '@graphql-tools/delegate'
+import { CreateProxyingResolverFn } from '@graphql-tools/delegate/types'
+import { mergeSchemas } from '@graphql-tools/merge'
+import { wrapSchema } from '@graphql-tools/wrap'
+import { buildASTSchema, GraphQLFieldResolver } from 'graphql'
 
-import extendedQueryNodeSchema from '../schemas/extendedQueryNode.graphql'
-import orionSchema from '../schemas/orion.graphql'
+import { createExecutors } from '@/api/client/executors'
+import { QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
 
 import cache from './cache'
 import { queryNodeStitchingResolvers } from './resolvers'
-import { createExecutors } from '@/api/client/executors'
-import { delegateToSchema } from '@graphql-tools/delegate'
-import { CreateProxyingResolverFn } from '@graphql-tools/delegate/types'
-import { getMainDefinition } from '@apollo/client/utilities'
-import { QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
+
+import extendedQueryNodeSchema from '../schemas/extendedQueryNode.graphql'
+import orionSchema from '../schemas/orion.graphql'
 
 // we do this so that operationName is passed along with the queries
 // this is needed for our mocking backend to operate

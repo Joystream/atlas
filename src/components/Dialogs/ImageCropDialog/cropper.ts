@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import 'cropperjs/dist/cropper.min.css'
+import { useEffect, useState } from 'react'
+
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 const MAX_ZOOM = 3
 

@@ -1,6 +1,8 @@
+import styled from '@emotion/styled'
+
 import { Button, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
-import styled from '@emotion/styled'
+
 import { StepFooter } from './SignInSteps.style'
 
 export const StyledButton = styled(Button)`

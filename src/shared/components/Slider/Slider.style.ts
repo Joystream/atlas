@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import RcSlider from 'rc-slider'
 import 'rc-slider/assets/index.css'
+
 import { colors } from '@/shared/theme'
 
 const THUMB_SIZE = 24

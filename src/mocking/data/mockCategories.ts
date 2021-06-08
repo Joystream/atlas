@@ -1,5 +1,6 @@
-import rawCategories from './raw/categories.json'
 import { VideoCategoryFieldsFragment } from '@/api/queries'
+
+import rawCategories from './raw/categories.json'
 
 type MockCategory = VideoCategoryFieldsFragment
 

@@ -1,8 +1,9 @@
-import React from 'react'
-import Slider, { SliderProps } from '.'
-import { Story, Meta } from '@storybook/react'
-import { WithValue } from '../../../../.storybook/WithValue'
 import styled from '@emotion/styled'
+import { Story, Meta } from '@storybook/react'
+import React from 'react'
+
+import Slider, { SliderProps } from '.'
+import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
   title: 'Shared/S/Slider',

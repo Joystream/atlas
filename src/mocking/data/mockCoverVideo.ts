@@ -1,8 +1,9 @@
-import rawCoverVideo from './raw/coverVideo.json'
-import mockCategories from './mockCategories'
+import { AssetAvailability, CoverVideo } from '@/api/queries'
 import { coverMockChannel } from '@/mocking/data/mockChannels'
 import { MockLicense } from '@/mocking/data/mockLicenses'
-import { AssetAvailability, CoverVideo } from '@/api/queries'
+
+import mockCategories from './mockCategories'
+import rawCoverVideo from './raw/coverVideo.json'
 
 export const mockCoverVideoLicense: MockLicense = {
   __typename: 'License',

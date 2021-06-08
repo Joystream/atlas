@@ -1,13 +1,21 @@
-import { absoluteRoutes } from '@/config/routes'
-import { useUser, useConnectionStatus, useDialog } from '@/hooks'
-import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation } from '@/utils/formValidationOptions'
+import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
+import axios, { AxiosError } from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+
+import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
+import { useUser, useConnectionStatus, useDialog } from '@/hooks'
+import { MemberId } from '@/joystream-lib'
+import { Spinner } from '@/shared/components'
+import TextArea from '@/shared/components/TextArea'
+import { textFieldValidation } from '@/utils/formValidationOptions'
+
 import {
   Form,
   StyledButton,
@@ -18,13 +26,6 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
-
-import axios, { AxiosError } from 'axios'
-import { MemberId } from '@/joystream-lib'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
-import { useApolloClient } from '@apollo/client'
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 
 type Inputs = {
   handle: string

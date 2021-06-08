@@ -1,12 +1,16 @@
-import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import * as rax from 'retry-axios'
-import { useNavigate } from 'react-router'
 import { throttle, debounce } from 'lodash'
-import { useSnackbar, useUser } from '@/hooks'
+import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router'
+import * as rax from 'retry-axios'
+
 import { useChannel, useVideos } from '@/api/hooks'
+import { LiaisonJudgement } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
+import { useSnackbar, useUser } from '@/hooks'
 import { ChannelId } from '@/joystream-lib'
+import { createStorageNodeUrl } from '@/utils/asset'
+
 import { useUploadsManagerStore } from './store'
 import {
   InputAssetUpload,
@@ -15,8 +19,6 @@ import {
   UploadsProgressRecord,
   StartFileUploadOptions,
 } from './types'
-import { createStorageNodeUrl } from '@/utils/asset'
-import { LiaisonJudgement } from '@/api/queries'
 
 const RETRIES_COUNT = 5
 const UPLOADING_SNACKBAR_TIMEOUT = 8000

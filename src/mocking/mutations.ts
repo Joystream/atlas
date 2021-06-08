@@ -1,4 +1,5 @@
 import { DocumentNode } from 'graphql'
+
 import {
   AddVideoViewDocument,
   AddVideoViewMutation,
@@ -10,6 +11,7 @@ import {
   UnfollowChannelMutation,
   UnfollowChannelMutationVariables,
 } from '@/api/queries'
+
 import { BaseDataQuery, DataMutator, Link, MocksStore } from './types'
 import { normalizeVariables, parseOperationDocument } from './utils'
 

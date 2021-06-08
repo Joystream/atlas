@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import Glider, { GliderEvent, GliderEventMap, Options } from 'glider-js'
 import 'glider-js/glider.min.css'
+import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 
 type GliderEventListeners = {
   onAdd?: (event: GliderEvent<GliderEventMap['glider-add']>) => void

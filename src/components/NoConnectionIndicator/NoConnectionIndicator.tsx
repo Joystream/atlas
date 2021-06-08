@@ -1,9 +1,11 @@
+import React from 'react'
+import { CSSTransition } from 'react-transition-group'
+
 import { ConnectionStatus } from '@/hooks'
 import { Text } from '@/shared/components'
 import { SvgAlertWarning } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import React from 'react'
-import { CSSTransition } from 'react-transition-group'
+
 import { IndicatorWrapper, TextWrapper, IconWrapper } from './NoConnectionIndicator.style'
 
 export type NoConnectionIndicatorProps = {

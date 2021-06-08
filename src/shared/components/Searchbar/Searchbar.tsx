@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { CancelButton, Container, Input, StyledSvgOutlineSearch } from './Searchbar.style'
+
 import { SvgGlyphClose } from '@/shared/icons'
+
+import { CancelButton, Container, Input, StyledSvgOutlineSearch } from './Searchbar.style'
 
 type SearchbarProps = {
   value: string

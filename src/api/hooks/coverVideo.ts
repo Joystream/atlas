@@ -1,7 +1,6 @@
 import { CoverVideo, AllChannelFieldsFragment } from '@/api/queries'
-import { MockVideo } from '@/mocking/data/mockVideos'
-
 import { mockCoverVideo } from '@/mocking/data/mockCoverVideo'
+import { MockVideo } from '@/mocking/data/mockVideos'
 
 type UseCoverVideo = () => {
   data: {

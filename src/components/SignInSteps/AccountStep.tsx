@@ -1,8 +1,12 @@
+import React, { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
 import { useUser } from '@/hooks'
 import { Text } from '@/shared/components'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import React, { FormEvent, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
 import {
   StyledSpinner,
   AccountStepImg,
@@ -28,8 +32,6 @@ import {
   StyledPolkadotLogo,
   StyledJoystreamLogo,
 } from './SignInSteps.style'
-import { useNavigate } from 'react-router'
-import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 
 type AccountStepProps = {
   nextStepPath: string

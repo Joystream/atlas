@@ -1,7 +1,8 @@
+import { Story, Meta } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+
 import TopbarBase, { TopbarBaseProps } from './TopbarBase'
-import { Story, Meta } from '@storybook/react'
 
 export default {
   title: 'Shared/T/TopbarBase',

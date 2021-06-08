@@ -1,6 +1,7 @@
-import React from 'react'
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+import React from 'react'
+
 import { colors, sizes, transitions, typography, zIndex, media } from '../../theme'
 
 type ContainerProps = {

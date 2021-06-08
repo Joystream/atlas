@@ -1,7 +1,8 @@
+import { useCallback } from 'react'
+
 import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { AssetAvailability, DataObject } from '@/api/queries'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { useCallback } from 'react'
 
 export const useAsset = () => {
   const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()

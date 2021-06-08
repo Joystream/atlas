@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Container, Name, StyledAvatar } from './ChannelAvatar.style'
 
 type ChannelAvatarProps = {

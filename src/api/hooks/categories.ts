@@ -1,5 +1,6 @@
-import { useGetVideoCategoriesQuery, GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables } from '@/api/queries'
 import { QueryHookOptions } from '@apollo/client'
+
+import { useGetVideoCategoriesQuery, GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables } from '@/api/queries'
 
 type Opts = QueryHookOptions<GetVideoCategoriesQuery>
 const useCategories = (variables?: GetVideoCategoriesQueryVariables, opts?: Opts) => {

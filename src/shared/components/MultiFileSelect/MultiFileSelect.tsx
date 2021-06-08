@@ -1,14 +1,17 @@
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
-import { FileType } from '@/types/files'
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
+
+import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
+import { SvgGlyphChevronRight } from '@/shared/icons'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { FileType } from '@/types/files'
+import { validateImage } from '@/utils/image'
+import { getVideoMetadata } from '@/utils/video'
+
+import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+
 import FileSelect from '../FileSelect'
 import FileStep from '../FileStep'
-import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
-import { SvgGlyphChevronRight } from '@/shared/icons'
-import { getVideoMetadata } from '@/utils/video'
-import { validateImage } from '@/utils/image'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 type InputFile = {
   url?: string | null

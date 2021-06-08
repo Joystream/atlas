@@ -1,13 +1,15 @@
-import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
-import { sizes } from '@/shared/theme'
-import { Tabs } from '@/shared/components'
-import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
-import AllResultsTab from './AllResultsTab'
-import EmptyFallback from './EmptyFallback'
+import React, { useState, useMemo } from 'react'
+
 import { useSearch } from '@/api/hooks'
 import { SearchQuery } from '@/api/queries'
+import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
+import { usePersonalData } from '@/hooks'
+import { Tabs } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import AllResultsTab from './AllResultsTab'
+import EmptyFallback from './EmptyFallback'
 
 type SearchResultsProps = {
   query: string

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
+
+import { SvgOutlineSearch } from '@/shared/icons'
+
 import { colors, sizes } from '../../theme'
 import IconButton from '../IconButton'
-import { SvgOutlineSearch } from '@/shared/icons'
 
 export const Input = styled.input`
   width: 100%;

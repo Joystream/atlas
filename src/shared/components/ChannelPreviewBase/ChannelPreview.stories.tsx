@@ -1,7 +1,8 @@
-import React from 'react'
-import ChannelPreviewBase, { ChannelPreviewBaseProps } from './ChannelPreviewBase'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+
+import ChannelPreviewBase, { ChannelPreviewBaseProps } from './ChannelPreviewBase'
 
 export default {
   title: 'Shared/C/ChannelPreview',

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
-import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
-import { SvgGlyphClose } from '@/shared/icons'
+import { CSSTransition } from 'react-transition-group'
+
 import Portal from '@/components/Portal'
 import { useOverlayManager } from '@/hooks'
-import { CSSTransition } from 'react-transition-group'
+import { SvgGlyphClose } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+
+import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
 
 export type BaseDialogProps = {
   showDialog?: boolean

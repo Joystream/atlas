@@ -1,8 +1,10 @@
 import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import React from 'react'
-import { media, colors, sizes, typography } from '../../theme'
+
 import { transitionStyles } from './transitionStyles'
+
+import { media, colors, sizes, typography } from '../../theme'
 
 const globalStyles = css`
   ${emotionNormalize};

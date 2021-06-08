@@ -1,7 +1,8 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css, SerializedStyles } from '@emotion/react'
 import styled from '@emotion/styled'
+
 import { colors, sizes, transitions } from '../../theme'
-import isPropValid from '@emotion/is-prop-valid'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
 export type ButtonSize = 'large' | 'medium' | 'small'

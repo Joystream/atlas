@@ -1,8 +1,10 @@
+import { css, SerializedStyles } from '@emotion/react'
 import styled from '@emotion/styled'
+
+import { colors, sizes } from '@/shared/theme'
+
 import ButtonBase, { ButtonSize } from '../ButtonBase'
 import Text from '../Text'
-import { css, SerializedStyles } from '@emotion/react'
-import { colors, sizes } from '@/shared/theme'
 
 type ButtonSizeProps = {
   size: ButtonSize

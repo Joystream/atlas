@@ -1,8 +1,11 @@
-import Snackbar from './Snackbar'
-import React from 'react'
 import { Meta, Story } from '@storybook/react'
-import Button from '../Button'
+import React from 'react'
+
 import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/hooks/useSnackbar/useSnackbar'
+
+import Snackbar from './Snackbar'
+
+import Button from '../Button'
 
 export default {
   title: 'Shared/S/Snackbar',

@@ -1,4 +1,8 @@
 import React, { useRef, useState, useEffect, ReactNode } from 'react'
+
+import { IconButton } from '@/shared/components'
+import { SvgGlyphClose } from '@/shared/icons'
+
 import {
   SnackbarWrapper,
   StyledInnerWrapper,
@@ -9,8 +13,6 @@ import {
   SnackbarDescription,
   SnackbarIconContainer,
 } from './Snackbar.style'
-import { SvgGlyphClose } from '@/shared/icons'
-import { IconButton } from '@/shared/components'
 
 export type SnackbarVariant = 'primary' | 'secondary'
 export type SnackbarProps = {

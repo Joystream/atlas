@@ -1,5 +1,6 @@
-import rawLicenses from './raw/licenses.json'
 import { LicenseFieldsFragment } from '@/api/queries'
+
+import rawLicenses from './raw/licenses.json'
 
 export type MockLicense = LicenseFieldsFragment
 

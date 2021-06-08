@@ -1,9 +1,11 @@
-import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import Text from '../Text'
-import Button from '../Button'
+
 import { IconButton } from '@/shared/components'
+import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+
+import Button from '../Button'
+import Text from '../Text'
 
 export const CONTENT_OVERLAP_MAP = {
   BASE: 0,

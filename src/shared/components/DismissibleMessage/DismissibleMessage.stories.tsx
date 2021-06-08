@@ -1,8 +1,11 @@
-import { PersonalDataProvider, usePersonalData } from '@/hooks'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
-import Button from '../Button'
+
+import { PersonalDataProvider, usePersonalData } from '@/hooks'
+
 import DismissibleMessage, { DismissibleMessageProps } from './DismissibleMessage'
+
+import Button from '../Button'
 
 export default {
   title: 'Shared/D/DismissibleMessage',

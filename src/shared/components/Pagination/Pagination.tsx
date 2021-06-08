@@ -1,6 +1,8 @@
 import React from 'react'
-import { PaginationWrapper, PaginationButton, ChevronButton, ThreeDotsWrapper } from './Pagination.style'
+
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
+
+import { PaginationWrapper, PaginationButton, ChevronButton, ThreeDotsWrapper } from './Pagination.style'
 
 export type PaginationProps = {
   itemsPerPage?: number
