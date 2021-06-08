@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
+import produce, { Draft } from 'immer'
 import React, { ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import create from 'zustand'
+import create, { State, StateCreator } from 'zustand'
 
 import { Snackbar } from '@/shared/components'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
@@ -27,6 +28,12 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   error: <SvgAlertError />,
   warning: <SvgAlertWarning />,
 }
+
+const immer = <T extends State>(config: StateCreator<T, (fn: (draft: Draft<T>) => void) => void>): StateCreator<T> => (
+  set,
+  get,
+  api
+) => config((fn) => set(produce<T>(fn)), get, api)
 
 type Snackbar = {
   id: string
@@ -58,7 +65,8 @@ type SnackbarState = {
 const SNACKBARS_LIMIT = 3
 
 export const Snackbars: React.FC = () => {
-  const { closeSnackbar, snackbars } = useSnackbar()
+  const closeSnackbar = useSnackbar((state) => state.closeSnackbar)
+  const snackbars = useSnackbar((state) => state.snackbars)
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {

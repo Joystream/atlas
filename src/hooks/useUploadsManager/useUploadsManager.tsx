@@ -40,7 +40,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
-  const { displaySnackbar } = useSnackbar()
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
   const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])

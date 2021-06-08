@@ -35,7 +35,7 @@ export default {
 } as Meta
 
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
-  const { displaySnackbar } = useSnackbar()
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
   return (
     <Button size="small" onClick={() => displaySnackbar({ ...args })}>
       Show snackbar
