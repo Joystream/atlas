@@ -96,10 +96,9 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty, dirtyFields, errors },
     watch,
     reset,
-    errors,
   } = useForm<Inputs>({
     defaultValues: {
       avatar: { url: null, blob: null, assetDimensions: null, imageCropData: null },
@@ -356,7 +355,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         <Controller
           name="cover"
           control={control}
-          render={({ value, onChange }) => (
+          render={({ field: { value, onChange } }) => (
             <>
               <ChannelCover
                 coverPhotoUrl={loading ? null : value.url}
@@ -387,7 +386,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           <Controller
             name="avatar"
             control={control}
-            render={({ value, onChange }) => (
+            render={({ field: { value, onChange } }) => (
               <>
                 <StyledAvatar
                   imageUrl={value.url}
@@ -421,7 +420,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   name="title"
                   control={control}
                   rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                  render={({ value, onChange }) => (
+                  render={({ field: { value, onChange } }) => (
                     <Tooltip text="Click to edit channel title">
                       <StyledHeaderTextField
                         ref={titleRef}
@@ -454,15 +453,13 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
               <TextArea
-                name="description"
                 placeholder="Description of your channel to share with your audience"
                 rows={8}
-                ref={(ref) => {
-                  if (ref) {
-                    register(ref, textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 }))
-                    descriptionRef.current = ref
-                  }
-                }}
+                {...register(
+                  'description',
+                  textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })
+                )}
+                ref={descriptionRef}
                 maxLength={1000}
                 error={!!errors.description}
                 helperText={errors.description?.message}
@@ -474,7 +471,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
               name="language"
               control={control}
               rules={requiredValidation('Language')}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Select
                   items={languages}
                   disabled={loading}
@@ -494,7 +491,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
             <Controller
               name="isPublic"
               control={control}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Select
                   items={PUBLIC_SELECT_ITEMS}
                   disabled={loading}

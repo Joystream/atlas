@@ -33,7 +33,15 @@ type Inputs = {
 }
 
 const PlaygroundValidationForm = () => {
-  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       title: '',
@@ -55,8 +63,7 @@ const PlaygroundValidationForm = () => {
     <>
       <form onSubmit={onSubmit}>
         <HeaderTextField
-          name="header"
-          ref={register(textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
+          {...register('header', textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
           value="Lorem ipsum"
           error={!!errors.header}
           helperText={errors.header?.message}
@@ -64,9 +71,8 @@ const PlaygroundValidationForm = () => {
 
         <FormField title="Title" description="Lorem ipsum dolor sit amet">
           <TextField
-            name="title"
             label="Title"
-            ref={register(textFieldValidation({ name: 'Title', minLength: 3, maxLength: 20 }))}
+            {...register('title', textFieldValidation({ name: 'Title', minLength: 3, maxLength: 20 }))}
             error={!!errors.title}
             helperText={errors.title?.message}
           />
@@ -76,8 +82,8 @@ const PlaygroundValidationForm = () => {
           <Controller
             name="selectedVideoVisibility"
             control={control}
-            rules={{ validate: (data) => data === true || data === false }}
-            render={({ value, onChange }) => (
+            rules={{ validate: (data) => data !== null }}
+            render={({ field: { value, onChange } }) => (
               <Select
                 items={items}
                 onChange={onChange}
@@ -91,13 +97,17 @@ const PlaygroundValidationForm = () => {
         <FormField title="Marketing" description="Lorem ipsum dolor sit amet.">
           <StyledCheckboxContainer>
             <Controller
-              as={Checkbox}
               name="check"
               rules={{ required: true }}
-              error={!!errors.check}
               control={control}
-              value={false}
-              label="My video features a paid promotion material"
+              render={({ field: { value, onChange } }) => (
+                <Checkbox
+                  value={value}
+                  error={!!errors.check}
+                  label="My video features a paid promotion material"
+                  onChange={onChange}
+                />
+              )}
             />
           </StyledCheckboxContainer>
         </FormField>
@@ -122,7 +132,7 @@ const PlaygroundValidationForm = () => {
             name="radioGroup"
             control={control}
             rules={{ required: true }}
-            render={(props) => (
+            render={({ field: { value } }) => (
               <StyledRadioContainer>
                 <RadioButton
                   value="all"
@@ -131,7 +141,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selectedValue={props.value}
+                  selectedValue={value}
                   error={!!errors.radioGroup}
                 />
                 <RadioButton
@@ -141,7 +151,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selectedValue={props.value}
+                  selectedValue={value}
                   error={!!errors.radioGroup}
                 />
               </StyledRadioContainer>
@@ -151,8 +161,7 @@ const PlaygroundValidationForm = () => {
 
         <FormField title="Description">
           <TextArea
-            name="textarea"
-            ref={register(textFieldValidation({ name: 'Description', minLength: 3, maxLength: 20 }))}
+            {...register('textarea', textFieldValidation({ name: 'Description', minLength: 3, maxLength: 20 }))}
             maxLength={20}
             error={!!errors.textarea}
             helperText={errors.textarea?.message}
