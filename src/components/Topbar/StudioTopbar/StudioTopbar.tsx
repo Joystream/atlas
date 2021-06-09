@@ -144,7 +144,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={sheetState !== 'open'}
+              in={sheetState !== 'open' && !!activeChannelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}
