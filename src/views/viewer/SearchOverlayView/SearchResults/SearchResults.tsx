@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useState, useMemo } from 'react'
 
 import { useSearch } from '@/api/hooks'
-import { SearchQuery } from '@/api/queries'
+import { SearchQuery, AssetAvailability } from '@/api/queries'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { Tabs } from '@/shared/components'
@@ -25,7 +25,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
       return { channels: [], videos: [] }
     }
     const results = data
-    const videos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+    const videos = results.flatMap((result) =>
+      result.item.__typename === 'Video' && result.item.mediaAvailability === AssetAvailability.Accepted
+        ? [result.item]
+        : []
+    )
     const channels = results.flatMap((result) => (result.item.__typename === 'Channel' ? [result.item] : []))
     return { channels, videos }
   }
