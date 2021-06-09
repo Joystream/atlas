@@ -26,7 +26,9 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
     }
     const results = data
     const videos = results.flatMap((result) =>
-      result.item.__typename === 'Video' && result.item.mediaAvailability === AssetAvailability.Accepted
+      result.item.__typename === 'Video' &&
+      result.item.mediaAvailability === AssetAvailability.Accepted &&
+      result.item.thumbnailPhotoAvailability === AssetAvailability.Accepted
         ? [result.item]
         : []
     )
