@@ -47,7 +47,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
   const displaySnackbar = useCallback(({ customId, timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = customId || createId()
+    const id = customId ?? createId()
     setSnackbars((currentSnackbars) => {
       return [...currentSnackbars, { id, ...args }]
     })
