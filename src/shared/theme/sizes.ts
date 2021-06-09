@@ -10,6 +10,7 @@ export const zIndex = {
   farBackground: -20,
   header: 100,
   sheetOverlay: 150,
+  nearSheetOverlay: 160,
   sideNav: 200,
   overlay: 10,
   nearOverlay: 20,
