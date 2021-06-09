@@ -282,6 +282,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setValue('title', videoNameWithoutExtension, { shouldDirty: true })
       handleFormChange()
     }
+    setFileSelectError(null)
   }
 
   const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
@@ -296,6 +297,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     if (thumbnail?.blob) {
       onThumbnailFileChange(thumbnail.blob)
     }
+    setFileSelectError(null)
   }
 
   const handleFileSelectError = async (errorCode: FileErrorType | null) => {
