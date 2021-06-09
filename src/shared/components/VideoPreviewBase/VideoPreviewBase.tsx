@@ -15,6 +15,7 @@ import {
   SvgLargeEdit,
   SvgOutlineVideo,
   SvgLargeUploadFailed,
+  SvgGlyphPlay,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -73,6 +74,7 @@ export type VideoPreviewPublisherProps =
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
       onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
+      onOpenInTabClick?: () => void
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: () => void
@@ -83,6 +85,7 @@ export type VideoPreviewPublisherProps =
       isDraft?: undefined
       videoPublishState?: undefined
       onPullupClick?: undefined
+      onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
       onCopyVideoURLClick?: undefined
       onDeleteVideoClick?: undefined
@@ -144,6 +147,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onRemoveButtonClick,
   contentKey,
   className,
+  onOpenInTabClick,
   onEditVideoClick,
   onCopyVideoURLClick,
   onDeleteVideoClick,
@@ -345,14 +349,19 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {onEditVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                      {isDraft ? 'Edit draft' : 'Edit video'}
+                  {onOpenInTabClick && (
+                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                      Play in Joystream
                     </ContextMenuItem>
                   )}
                   {onCopyVideoURLClick && (
                     <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
                       Copy video URL
+                    </ContextMenuItem>
+                  )}
+                  {onEditVideoClick && (
+                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                      {isDraft ? 'Edit draft' : 'Edit video'}
                     </ContextMenuItem>
                   )}
                   {onDeleteVideoClick && (
