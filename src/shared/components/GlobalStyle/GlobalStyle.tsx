@@ -9,13 +9,13 @@ import { media, colors, sizes, typography } from '../../theme'
 const globalStyles = css`
   ${emotionNormalize};
 
-  body::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     width: 8px;
   }
-  body::-webkit-scrollbar-track {
+  *::-webkit-scrollbar-track {
     background: var(--scrollbarBG);
   }
-  body::-webkit-scrollbar-thumb {
+  *::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
     border-radius: 20px;
   }
