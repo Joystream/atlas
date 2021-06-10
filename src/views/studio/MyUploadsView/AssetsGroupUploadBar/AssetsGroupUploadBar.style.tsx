@@ -1,8 +1,8 @@
-import { keyframes } from '@emotion/react'
+import { keyframes, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components'
-import { colors, sizes, zIndex, media, transitions } from '@/shared/theme'
+import { colors, sizes, media, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
   progress: number
@@ -63,6 +63,11 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
   animation: ${pulse} 2.5s infinite ease-in-out;
+  ${({ progress }) =>
+    progress === 100 &&
+    css`
+      animation: none;
+    `}
 `
 
 export const Thumbnail = styled.div`
