@@ -344,6 +344,8 @@ export type QueryMembershipsArgs = {
 export type QuerySearchArgs = {
   limit?: Maybe<Scalars['Int']>
   text: Scalars['String']
+  whereVideo?: Maybe<VideoWhereInput>
+  whereChannel?: Maybe<ChannelWhereInput>
 }
 
 export type QueryVideoByUniqueInputArgs = {
