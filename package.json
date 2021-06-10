@@ -138,12 +138,11 @@
     "@svgr/cli": "^5.5.0",
     "@trivago/prettier-plugin-sort-imports": "^2.0.2",
     "stylelint": "^13.13.1",
-    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-recommended": "^5.0.0",
-    "stylelint-config-standard": "^22.0.0",
-    "stylelint-rational-order-plugin": "^1.0.2",
-    "stylelint-config-styled-components": "^0.1.1",
     "stylelint-webpack-plugin": "^2.1.1"
+  },
+  "resolutions": {
+    "postcss-safe-parser": "4.0.2"
   },
   "browserslist": {
     "production": [

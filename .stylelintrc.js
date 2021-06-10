@@ -1,14 +1,10 @@
 module.exports = {
-  extends: [
-    'stylelint-config-standard',
-    'stylelint-config-prettier',
-    'stylelint-config-recommended',
-    'stylelint-config-styled-components',
-  ],
+  extends: ['stylelint-config-recommended'],
   defaultSeverity: 'warning',
   rules: {
     'function-name-case': null,
     'custom-property-empty-line-before': null,
+    'no-empty-source': null,
     'unit-no-unknown': null,
     'declaration-block-no-duplicate-properties': true,
     'value-keyword-case': null,
