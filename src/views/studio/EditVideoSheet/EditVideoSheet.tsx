@@ -226,6 +226,7 @@ export const EditVideoSheet: React.FC = () => {
           isDraft: false,
         })
         removeDraft(selectedVideoTab?.id)
+        removeVideoTab(selectedVideoTabIdx)
       } else {
         writeUrlInCache({
           url: data.assets.thumbnail?.url,
@@ -298,7 +299,10 @@ export const EditVideoSheet: React.FC = () => {
           selectedVideoTab={selectedVideoTab}
           onAddNewTabClick={() => addVideoTab()}
           onRemoveTabClick={handleRemoveVideoTab}
-          onTabSelect={setSelectedVideoTabIdx}
+          onTabSelect={(tabIdx) => {
+            setSelectedVideoTabIdx(tabIdx)
+            setSheetState('open')
+          }}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
