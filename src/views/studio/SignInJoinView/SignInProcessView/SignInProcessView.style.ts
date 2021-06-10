@@ -119,7 +119,9 @@ export const UnOrderedList = styled.ul`
   list-style: disc;
 `
 
-export const UnOrderedItem = styled(Text)``
+export const UnOrderedItem = styled(Text)`
+  /* stylelint-disable-line */
+`
 
 export const StyledButton = styled(Button)`
   position: fixed;

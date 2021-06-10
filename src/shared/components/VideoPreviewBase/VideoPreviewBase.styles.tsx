@@ -290,5 +290,3 @@ export const KebabMenuIconContainer = styled.div`
     background-color: ${transparentize(1 - 0.06, colors.white)};
   }
 `
-
-export const ContextMenuContainer = styled.div``

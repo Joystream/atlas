@@ -4,16 +4,9 @@ import React, { Ref } from 'react'
 import { Tooltip } from '@/shared/components'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
-import {
-  SelectButton,
-  SelectMenu,
-  SelectOption,
-  SelectWrapper,
-  StyledLabelText,
-  StyledSvgGlyphInfo,
-} from './Select.style'
+import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
 
-import InputBase, { InputBaseProps } from '../InputBase'
+import InputBase, { InputBaseProps, LabelText } from '../InputBase'
 
 export type SelectItem<T = string> = {
   value: T
@@ -64,7 +57,7 @@ const Select = <T,>({
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
       <SelectWrapper ref={containerRef}>
         <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
-          {label && <StyledLabelText>{label}</StyledLabelText>}
+          {label && <LabelText>{label}</LabelText>}
         </label>
         <SelectButton
           disabled={disabled}

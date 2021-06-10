@@ -3,8 +3,6 @@ import styled from '@emotion/styled'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 
-import { LabelText } from '../InputBase'
-
 export const SelectWrapper = styled.div`
   width: 100%;
   position: relative;
@@ -38,7 +36,6 @@ export const SelectButton = styled.button<SelectButtonProps>`
   }
 `
 
-export const StyledLabelText = styled(LabelText)``
 type SelectMenuProps = {
   isOpen?: boolean
 }

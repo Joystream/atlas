@@ -83,8 +83,6 @@ export const TextBase = styled(Text)`
   max-width: 100%;
 `
 
-export const NameHeader = styled(TextBase)``
-
 export const VideoCount = styled(TextBase)`
   color: ${colors.gray[300]};
 `

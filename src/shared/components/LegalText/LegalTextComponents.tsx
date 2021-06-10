@@ -16,7 +16,9 @@ export const LegalParagraph: React.FC<{ header?: boolean }> = ({ header, ...prop
   <_LegalParagraph variant={header ? 'h6' : 'body2'} secondary={!header} {...props} />
 )
 // wrapper so we can use a specific element to render
-const _StyledText = styled(Text)``
+const _StyledText = styled(Text)`
+  /* stylelint-disable-line */
+`
 export const LegalListItem: React.FC = (props) => <_StyledText variant="body2" secondary as="li" {...props} />
 
 export const LegalLastUpdateText = styled(LegalParagraph)`
