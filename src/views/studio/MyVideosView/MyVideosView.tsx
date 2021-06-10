@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
@@ -27,6 +27,7 @@ const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
+const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
@@ -43,6 +44,8 @@ export const MyVideosView = () => {
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
+
+  const removeDraftNotificationsCount = useRef(0)
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
@@ -170,10 +173,17 @@ export const MyVideosView = () => {
       onPrimaryButtonClick: () => {
         closeDeleteDraftDialog()
         removeDraft(draftId)
-        displaySnackbar({
-          title: 'Draft deleted',
-          iconType: 'success',
-        })
+        removeDraftNotificationsCount.current++
+        if (removeDraftNotificationsCount.current > 1) {
+          updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })
+        } else {
+          displaySnackbar({
+            customId: REMOVE_DRAFT_SNACKBAR,
+            title: 'Draft deleted',
+            iconType: 'success',
+            onExitClick: () => (removeDraftNotificationsCount.current = 0),
+          })
+        }
       },
     })
   }

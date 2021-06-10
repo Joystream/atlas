@@ -18,6 +18,7 @@ export type DisplaySnackbarArgs = {
   description?: string
   actionText?: string
   onActionClick?: () => void
+  onExitClick?: () => void
 }
 
 type SnackbarsState = {
@@ -84,7 +85,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
-          {snackbars.map(({ id, iconType, onActionClick, ...snackbarProps }) => (
+          {snackbars.map(({ id, iconType, onExitClick, onActionClick, ...snackbarProps }) => (
             <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
               <Snackbar
                 {...snackbarProps}
@@ -93,7 +94,10 @@ export const SnackbarProvider: React.FC = ({ children }) => {
                   closeSnackbar(id)
                 }}
                 icon={iconType && ICON_TYPE_TO_ICON[iconType]}
-                onClick={() => closeSnackbar(id)}
+                onClick={() => {
+                  onExitClick?.()
+                  closeSnackbar(id)
+                }}
               />
             </CSSTransition>
           ))}
