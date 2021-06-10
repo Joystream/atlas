@@ -306,7 +306,7 @@ type Query {
   coverVideo: CoverVideo!
 
   # Free text search across videos and channels
-  search(limit: Int, text: String!): [SearchFTSOutput!]!
+  search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
 }
 
 type Subscription {

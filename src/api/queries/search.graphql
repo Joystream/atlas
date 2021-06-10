@@ -1,5 +1,5 @@
-query Search($text: String!) {
-  search(text: $text) {
+query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: ChannelWhereInput) {
+  search(text: $text, whereVideo: $whereVideo, whereChannel: $whereChannel) {
     item {
       ... on Video {
         ...VideoFields

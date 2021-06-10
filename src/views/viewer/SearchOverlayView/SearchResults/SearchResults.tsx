@@ -18,20 +18,21 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: query })
+  const { data, loading, error } = useSearch({
+    text: query,
+    whereVideo: {
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+    },
+    whereChannel: {},
+  })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
       return { channels: [], videos: [] }
     }
     const results = data
-    const videos = results.flatMap((result) =>
-      result.item.__typename === 'Video' &&
-      result.item.mediaAvailability === AssetAvailability.Accepted &&
-      result.item.thumbnailPhotoAvailability === AssetAvailability.Accepted
-        ? [result.item]
-        : []
-    )
+    const videos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
     const channels = results.flatMap((result) => (result.item.__typename === 'Channel' ? [result.item] : []))
     return { channels, videos }
   }
