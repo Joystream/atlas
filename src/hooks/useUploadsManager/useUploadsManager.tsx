@@ -41,6 +41,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
+  // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
+  const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
   const { loading: channelLoading } = useChannel(activeChannelId ?? '')
@@ -67,6 +69,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       if (asset.lastStatus !== 'completed') {
         updateAsset(asset.contentId, 'missing')
         missingAssetsCount++
+      } else {
+        setIgnoredAssetsIds((ignored) => [...ignored, asset.contentId])
       }
     })
 
@@ -82,14 +86,14 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   }, [updateAsset, uploadsState, displaySnackbar, navigate])
 
   const filteredUploadStateWithProgress: AssetUploadWithProgress[] = uploadsState
-    .filter((asset) => asset.owner === activeChannelId)
+    .filter((asset) => asset.owner === activeChannelId && !ignoredAssetsIds.includes(asset.contentId))
     .map((asset) => ({
       ...asset,
       progress: uploadsProgress[asset.contentId] ?? 0,
     }))
 
   // Grouping all assets by parent id (videos, channel)
-  const uploadsStateGroupedByParentObjectId = Object.values(
+  const groupedUploadsState = Object.values(
     filteredUploadStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       if (!asset) {
         return acc
@@ -235,7 +239,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       value={{
         startFileUpload,
         isLoading,
-        uploadsState: uploadsStateGroupedByParentObjectId,
+        uploadsState: groupedUploadsState,
       }}
     >
       {children}
