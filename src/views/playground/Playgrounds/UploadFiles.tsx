@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
+
 import { useAuthorizedUser, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
-import { useRandomStorageProviderUrl } from '@/api/hooks'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId)
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
+  const { startFileUpload, uploadsState } = useUploadsManager()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,23 +16,18 @@ export const UploadFiles = () => {
   }
 
   const handleUploadClick = () => {
-    const randomStorageProviderUrl = getRandomStorageProviderUrl()
-    if (!file || !randomStorageProviderUrl) {
+    if (!file) {
       return
     }
-    startFileUpload(
-      file,
-      {
-        contentId: contentId,
-        type: 'avatar',
-        parentObject: {
-          type: 'channel',
-          id: activeChannelId,
-        },
-        owner: activeChannelId,
+    startFileUpload(file, {
+      contentId: contentId,
+      type: 'avatar',
+      parentObject: {
+        type: 'channel',
+        id: activeChannelId,
       },
-      randomStorageProviderUrl
-    )
+      owner: activeChannelId,
+    })
   }
 
   return (

@@ -1,6 +1,7 @@
+import { To } from 'history'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { To } from 'history'
+
 import { ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
 
 export type ButtonBaseProps = {

@@ -1,5 +1,7 @@
-import { media, transitions, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import { media, transitions, zIndex } from '@/shared/theme'
+
 import Checkout from '../Checkout'
 
 type ActionBarTransactionWrapperProps = {
@@ -12,7 +14,7 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   bottom: 0;
   left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
   right: 0;
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.nearSheetOverlay};
 
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});

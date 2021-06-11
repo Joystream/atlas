@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
+import { useNavigate } from 'react-router'
+import { CSSTransition } from 'react-transition-group'
+
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
+import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
 import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
   StyledTopbarBase,
@@ -26,9 +30,6 @@ import {
   AvatarPlaceholder,
   GlyphCheckContainer,
 } from './StudioTopbar.style'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -71,7 +72,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -139,7 +140,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
 
   return (
     <>
-      <DataLostWarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>

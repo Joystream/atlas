@@ -1,9 +1,10 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+
 import ChannelCover, { ChannelCoverProps } from './ChannelCover'
 
 export default {
-  title: 'Shared/ChannelCover',
+  title: 'Shared/C/ChannelCover',
   component: ChannelCover,
   argTypes: {
     editable: {

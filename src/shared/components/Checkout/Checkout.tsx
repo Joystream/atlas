@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
-import Text from '../Text'
+import { CSSTransition } from 'react-transition-group'
+
+import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
 import {
   Container,
   BottomRowContainer,
@@ -13,10 +17,9 @@ import {
   CircularProgresaBarContainer,
   StyledSvgGlyphChevronDown,
 } from './Checkout.styles'
-import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/shared/icons'
+
 import IconButton from '../IconButton'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
+import Text from '../Text'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type CheckoutProps = {

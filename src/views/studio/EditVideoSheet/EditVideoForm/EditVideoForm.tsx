@@ -1,7 +1,12 @@
+import { formatISO, isValid } from 'date-fns'
+import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
-import { debounce } from 'lodash'
+
 import { useCategories } from '@/api/hooks'
+import { License } from '@/api/queries'
+import { languages } from '@/config/languages'
+import knownLicenses from '@/data/knownLicenses.json'
 import {
   useDrafts,
   useAuthorizedUser,
@@ -23,9 +28,11 @@ import {
   TextArea,
   TextField,
 } from '@/shared/components'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { SvgGlyphInfo } from '@/shared/icons'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { languages } from '@/config/languages'
-import knownLicenses from '@/data/knownLicenses.json'
+import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
+
 import {
   InputsContainer,
   StyledHeaderTextField,
@@ -34,12 +41,6 @@ import {
   DeleteVideoButton,
   FormWrapper,
 } from './EditVideoForm.style'
-import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
-import { SvgGlyphInfo } from '@/shared/icons'
-import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
-import { formatISO, isValid } from 'date-fns'
-import { MessageDialog } from '@/components'
-import { License } from '@/api/queries'
 
 const visibilityOptions: SelectItem<boolean>[] = [
   { name: 'Public', value: true },
@@ -94,7 +95,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
   const { nodeConnectionStatus } = useConnectionStatus()
 
-  const { closeVideoDeleteDialog, confirmDeleteVideo, openVideoDeleteDialog, isDeleteDialogOpen } = useDeleteVideo()
+  const deleteVideo = useDeleteVideo()
 
   if (categoriesError) {
     throw categoriesError
@@ -134,6 +135,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+  useEffect(() => {
+    // reset form for edited video on sheet close
+    if (isEdit && sheetState === 'closed' && tabData) {
+      reset(tabData)
+    }
+  }, [isEdit, reset, setValue, sheetState, tabData])
 
   useEffect(() => {
     if (isEdit) {
@@ -275,6 +282,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setValue('title', videoNameWithoutExtension, { shouldDirty: true })
       handleFormChange()
     }
+    setFileSelectError(null)
   }
 
   const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
@@ -289,6 +297,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     if (thumbnail?.blob) {
       onThumbnailFileChange(thumbnail.blob)
     }
+    setFileSelectError(null)
   }
 
   const handleFileSelectError = async (errorCode: FileErrorType | null) => {
@@ -309,6 +318,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       behavior: 'smooth',
       block: 'start',
     })
+  }
+
+  const handleDeleteVideo = () => {
+    selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
   }
 
   const categoriesSelectItems: SelectItem[] =
@@ -548,32 +561,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </FormField>
           {isEdit && (
             <DeleteVideoContainer>
-              <DeleteVideoButton
-                size="large"
-                variant="tertiary"
-                textColorVariant="error"
-                onClick={openVideoDeleteDialog}
-              >
+              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
                 Delete video
               </DeleteVideoButton>
             </DeleteVideoContainer>
           )}
         </InputsContainer>
       </FormWrapper>
-      <MessageDialog
-        title="Delete this video?"
-        exitButton={false}
-        description="You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets."
-        showDialog={isDeleteDialogOpen}
-        onSecondaryButtonClick={closeVideoDeleteDialog}
-        onPrimaryButtonClick={() =>
-          selectedVideoTab && confirmDeleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
-        }
-        error
-        variant="warning"
-        primaryButtonText="Delete video"
-        secondaryButtonText="Cancel"
-      />
+
       <StyledActionBar
         disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}

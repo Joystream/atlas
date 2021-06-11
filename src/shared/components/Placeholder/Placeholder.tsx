@@ -1,7 +1,8 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors } from '@/shared/theme'
 import { darken } from 'polished'
+
+import { colors } from '@/shared/theme'
 
 type PlaceholderProps = {
   width?: string | number

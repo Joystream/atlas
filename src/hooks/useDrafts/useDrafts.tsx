@@ -1,4 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
+
+import { Language, VideoCategory, License } from '@/api/queries'
+
 import {
   addDraft,
   clearDrafts,
@@ -10,7 +13,6 @@ import {
   getUnseenDrafts,
   addUnseenDraft,
 } from './utils'
-import { Language, VideoCategory, License } from '@/api/queries'
 
 export type CommonDraftProps = {
   id: string

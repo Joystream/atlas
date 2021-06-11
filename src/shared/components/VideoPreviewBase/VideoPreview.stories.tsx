@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
-import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
-import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
+import { Meta, Story } from '@storybook/react'
+import React, { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+
 import { OverlayManagerProvider } from '@/hooks'
 
+import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
+
 export default {
-  title: 'Shared/VideoPreview',
+  title: 'Shared/V/VideoPreview',
   component: VideoPreviewBase,
   argTypes: {
     createdAt: { control: 'date' },

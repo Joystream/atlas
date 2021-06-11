@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, sizes } from '@/shared/theme'
+
 import { DismissibleMessage } from '@/shared/components'
+import { colors, media, sizes } from '@/shared/theme'
 
 export const ViewContainer = styled.div`
   padding-top: ${sizes(8)};
@@ -10,6 +11,11 @@ export const TabsContainer = styled.div`
   padding-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
   border-bottom: solid 1px ${colors.gray[800]};
+
+  ${media.medium} {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+  }
 `
 
 export const PaginationContainer = styled.div`
@@ -22,4 +28,14 @@ export const PaginationContainer = styled.div`
 
 export const StyledDismissibleMessage = styled(DismissibleMessage)`
   margin-bottom: ${sizes(8)};
+`
+
+export const SortContainer = styled.div`
+  display: none;
+  grid-gap: 8px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  ${media.medium} {
+    display: grid;
+  }
 `

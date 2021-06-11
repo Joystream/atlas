@@ -1,7 +1,7 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { ReactComponent as BackgroundPatternSVG } from '@/assets/bg-pattern.svg'
+import { SvgBgPattern } from '@/shared/illustrations'
 import { zIndex, transitions, media } from '@/shared/theme'
 
 const PATTERN_OFFSET = {
@@ -21,7 +21,7 @@ const StyledBackgroundPatternContainer = styled.div`
   }
 `
 
-const StyledBackgroundPattern = styled(BackgroundPatternSVG)`
+const StyledBackgroundPattern = styled(SvgBgPattern)`
   display: none;
   position: absolute;
   transform: scale(1.3);

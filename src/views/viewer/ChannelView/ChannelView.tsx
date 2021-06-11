@@ -1,11 +1,13 @@
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { useAsset, usePersonalData } from '@/hooks'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { formatNumberShort } from '@/utils/number'
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+
 import {
   Header,
   StyledButtonContainer,

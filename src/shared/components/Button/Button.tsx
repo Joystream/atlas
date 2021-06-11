@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { ButtonIconWrapper, StyledButtonBase, StyledText, TextColorVariant } from './Button.style'
-import { TextVariant } from '../Text'
+
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
+import { TextVariant } from '../Text'
 
 export type ButtonProps = {
   icon?: React.ReactNode

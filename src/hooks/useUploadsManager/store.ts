@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from 'react'
+
 import { AssetUpload, AssetUploadStatus, UploadsManagerState, UploadsManagerStateAction } from './types'
 
 const LOCAL_STORAGE_KEY = 'uploads'
@@ -6,7 +7,7 @@ const LOCAL_STORAGE_KEY = 'uploads'
 const uploadsManagerReducer = (state: UploadsManagerState, action: UploadsManagerStateAction): UploadsManagerState => {
   switch (action.type) {
     case 'ADD_ASSET':
-      return [...state, action.asset]
+      return [action.asset, ...state]
     case 'UPDATE_ASSET':
       return state.map((asset) => {
         if (asset.contentId !== action.contentId) {

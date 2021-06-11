@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { SVG, Background, Trail, StyledPath } from './CircularProgressbar.style'
 
 export const VIEWBOX_WIDTH = 100

@@ -1,0 +1,12 @@
+diff --git a/node_modules/svgo/plugins/_collections.js b/node_modules/svgo/plugins/_collections.js
+index 8179f30..d3016ed 100644
+--- a/node_modules/svgo/plugins/_collections.js
++++ b/node_modules/svgo/plugins/_collections.js
+@@ -1519,6 +1519,7 @@ exports.elems = {
+             'x',
+             'y',
+             'width',
++            'mask-type',
+             'height',
+             'maskUnits',
+             'maskContentUnits'

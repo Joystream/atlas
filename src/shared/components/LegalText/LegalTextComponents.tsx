@@ -1,7 +1,8 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import Text from '../Text'
+import React from 'react'
+
 import { sizes } from '../../theme'
+import Text from '../Text'
 
 const _LegalParagraph = styled(Text)`
   margin-top: ${sizes(6)};

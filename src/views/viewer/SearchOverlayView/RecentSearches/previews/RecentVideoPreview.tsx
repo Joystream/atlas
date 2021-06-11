@@ -1,5 +1,12 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { VideoFieldsFragment } from '@/api/queries'
+import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/hooks'
+import { Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+
 import {
   PreviewSubtextPlaceholder,
   PreviewContainer,
@@ -8,11 +15,6 @@ import {
   PreviewTitlePlaceholder,
   PreviewSubtext,
 } from './previews.style'
-import { absoluteRoutes } from '@/config/routes'
-import { VideoFieldsFragment } from '@/api/queries'
-import { Text } from '@/shared/components'
-import { transitions } from '@/shared/theme'
-import { useAsset } from '@/hooks'
 
 type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment

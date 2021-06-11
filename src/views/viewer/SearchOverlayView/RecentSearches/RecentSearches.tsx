@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react'
-import { Container, SearchesList, Title } from './RecentSearches.style'
-import { RecentChannelPreview, RecentVideoPreview } from './previews'
+
+import { useVideos, useChannels } from '@/api/hooks'
 import { usePersonalData } from '@/hooks'
 import { Text } from '@/shared/components'
-import { useVideos, useChannels } from '@/api/hooks'
 import { createLookup } from '@/utils/data'
+
+import { Container, SearchesList, Title } from './RecentSearches.style'
+import { RecentChannelPreview, RecentVideoPreview } from './previews'
 
 type IdsLookup = {
   videoIds: string[]

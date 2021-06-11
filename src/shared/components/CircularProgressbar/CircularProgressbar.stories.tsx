@@ -1,10 +1,11 @@
-import React from 'react'
-import CircularProgressbar, { CircularProgressbarProps } from './CircularProgressbar'
-import { Meta, Story } from '@storybook/react'
 import { css } from '@emotion/react'
+import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import CircularProgressbar, { CircularProgressbarProps } from './CircularProgressbar'
 
 export default {
-  title: 'Shared/CircularProgressbar',
+  title: 'Shared/C/CircularProgressbar',
   component: CircularProgressbar,
   argTypes: {},
 } as Meta

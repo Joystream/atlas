@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
+
 import { sizes, media } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
-import { css } from '@emotion/react'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
 

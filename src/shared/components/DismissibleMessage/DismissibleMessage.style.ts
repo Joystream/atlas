@@ -1,8 +1,10 @@
-import { colors, sizes } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Text from '../Text'
+
 import { IconButton } from '@/shared/components'
 import { SvgGlyphInfo } from '@/shared/icons'
+import { colors, sizes } from '@/shared/theme'
+
+import Text from '../Text'
 
 export const MessageWrapper = styled.div`
   position: relative;

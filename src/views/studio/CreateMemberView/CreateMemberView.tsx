@@ -1,14 +1,21 @@
-import { MessageDialog } from '@/components/Dialogs'
-import { absoluteRoutes } from '@/config/routes'
-import { useUser, useConnectionStatus } from '@/hooks'
-import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation } from '@/utils/formValidationOptions'
+import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
+import axios, { AxiosError } from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+
+import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
+import { useUser, useConnectionStatus, useDialog } from '@/hooks'
+import { MemberId } from '@/joystream-lib'
+import { Spinner } from '@/shared/components'
+import TextArea from '@/shared/components/TextArea'
+import { textFieldValidation } from '@/utils/formValidationOptions'
+
 import {
   Form,
   StyledButton,
@@ -19,13 +26,6 @@ import {
   StyledAvatar,
   StyledTextField,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
-
-import axios, { AxiosError } from 'axios'
-import { MemberId } from '@/joystream-lib'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
-import { useApolloClient } from '@apollo/client'
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 
 type Inputs = {
   handle: string
@@ -48,9 +48,15 @@ const CreateMemberView = () => {
   })
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [error, setError] = useState<string | undefined>()
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useDialog({
+    exitButton: false,
+    icon: <Spinner />,
+    title: 'Creating membership...',
+    description:
+      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+  })
+  const [openErrorDialog, closeErrorDialog] = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   if (queryNodeStateError) {
@@ -61,18 +67,18 @@ const CreateMemberView = () => {
 
   // success
   useEffect(() => {
-    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
+    if (!membershipBlock || !queryNodeState || !activeAccountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
+      closeCreatingMemberDialog()
       refetchMemberships().then(() => {
-        setIsSubmitting(false)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
+  }, [activeAccountId, closeCreatingMemberDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -80,13 +86,19 @@ const CreateMemberView = () => {
     }
 
     try {
-      setIsSubmitting(true)
+      openCreatingMemberDialog()
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
-      setIsSubmitting(false)
+      closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
-      setError(errorMessage)
+      openErrorDialog({
+        variant: 'error',
+        title: 'Something went wrong...',
+        description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
+        secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => closeErrorDialog(),
+      })
     }
   })
 
@@ -187,22 +199,6 @@ const CreateMemberView = () => {
           Create membership
         </StyledButton>
       </Form>
-      <MessageDialog
-        showDialog={isSubmitting}
-        exitButton={false}
-        icon={<Spinner />}
-        title="Creating membership..."
-        description="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds."
-      />
-      <MessageDialog
-        variant="error"
-        title="Something went wrong..."
-        showDialog={!isSubmitting && !!error}
-        description={`Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${error}`}
-        secondaryButtonText="Close"
-        onExitClick={() => setError(undefined)}
-        onSecondaryButtonClick={() => setError(undefined)}
-      />
     </Wrapper>
   )
 }

@@ -1,6 +1,6 @@
-import { CountData, FilteringArgs, GenericData } from '../types'
-import { MockVideo } from '../data/mockVideos'
 import { filterAndSortGenericData } from '.'
+import { MockVideo } from '../data/mockVideos'
+import { CountData, FilteringArgs, GenericData } from '../types'
 
 type CursorPaginatedData<TData = GenericData> = {
   edges: {

@@ -1,9 +1,11 @@
-import styled from '@emotion/styled'
 import { css, SerializedStyles } from '@emotion/react'
+import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
+
+import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, transitions, typography, media } from '@/shared/theme'
+
 import Placeholder from '../Placeholder'
-import { ReactComponent as Silhouette } from '@/assets/avatar-silhouette.svg'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
@@ -139,7 +141,7 @@ export const StyledImage = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `
-export const SilhouetteAvatar = styled(Silhouette)`
+export const SilhouetteAvatar = styled(SvgAvatarSilhouette)`
   position: absolute;
   width: 100%;
   height: 100%;

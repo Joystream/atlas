@@ -1,11 +1,13 @@
-import React from 'react'
-import VideoPlayer, { VideoPlayerProps } from './VideoPlayer'
-import { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
+import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
 import { colors } from '@/shared/theme'
 
+import VideoPlayer, { VideoPlayerProps } from './VideoPlayer'
+
 export default {
-  title: 'Shared/VideoPlayer',
+  title: 'Shared/V/VideoPlayer',
   component: VideoPlayer,
 } as Meta
 

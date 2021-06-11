@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import Select, { SelectProps, SelectItem } from '.'
-import { Story, Meta } from '@storybook/react'
 import { css } from '@emotion/react'
+import { Story, Meta } from '@storybook/react'
+import React, { useState } from 'react'
+
+import Select, { SelectProps, SelectItem } from '.'
 
 const items: SelectItem[] = [
   { name: 'first', value: 'first' },
@@ -10,7 +11,7 @@ const items: SelectItem[] = [
 ]
 
 export default {
-  title: 'Shared/Select',
+  title: 'Shared/S/Select',
   component: Select,
   args: {
     items,

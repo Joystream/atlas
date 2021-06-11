@@ -1,8 +1,10 @@
-import { colors, sizes, transitions, media } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Text from '../Text'
 import { darken } from 'polished'
+
 import { IconButton } from '@/shared/components'
+import { colors, sizes, transitions, media } from '@/shared/theme'
+
+import Text from '../Text'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean

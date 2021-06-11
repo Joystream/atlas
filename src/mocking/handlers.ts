@@ -1,5 +1,5 @@
 import { graphql, GraphQLHandler } from 'msw'
-import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
+
 import {
   GetBasicChannelDocument,
   GetBasicChannelQuery,
@@ -42,8 +42,9 @@ import {
   GetVideoCategoriesDocument,
   GetVideoCategoriesQuery,
 } from '@/api/queries'
+import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
 import { mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
-import { createQueryHandler } from './queries'
+
 import {
   createChannelFollowsAccessor,
   createCursorPaginationAccessor,
@@ -53,12 +54,13 @@ import {
   createTotalCountAccessor,
   createVideoViewsAccessor,
 } from './accessors'
-import { createStore } from './store'
 import {
   createAddVideoViewMutationHandler,
   createFollowChannelMutationHandler,
   createUnfollowChannelMutationHandler,
 } from './mutations'
+import { createQueryHandler } from './queries'
+import { createStore } from './store'
 
 const store = createStore({ videos: mockVideos, channels: mockChannels })
 

@@ -1,6 +1,11 @@
 import React, { useState, useRef } from 'react'
+
+import { useChannel, useVideo } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { LiaisonJudgement } from '@/api/queries'
+import { Text } from '@/shared/components'
+import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
+import { AssetGroupUploadBarPlaceholder } from '@/views/studio/MyUploadsView/AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
+
 import {
   Container,
   AssetsGroupUploadBarContainer,
@@ -11,9 +16,8 @@ import {
   AssetsDrawerContainer,
   StyledExpandButton,
 } from './AssetsGroupUploadBar.style'
+
 import { AssetLine } from '../AssetLine'
-import { Text } from '@/shared/components'
-import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 
 export type AssetsGroupBarUploadProps = {
   uploadData: AssetUploadWithProgress[]
@@ -25,44 +29,58 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
+  const { video, loading: videoLoading } = useVideo(uploadData[0].parentObject.id, { skip: isChannelType })
+  const { channel, loading: channelLoading } = useChannel(uploadData[0].parentObject.id, { skip: !isChannelType })
+
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
-  const reconnectionErrorsCount = uploadData.filter((file) => file.lastStatus === 'reconnectionError').length
-  const isPendingCount = uploadData.filter(
-    (file) =>
-      file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0 && file.lastStatus !== 'completed'
-  ).length
+  const missingAssetsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'missing').length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const videoTitle = uploadData.find((asset) => asset.type === 'video')?.title
-  const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
+  const assetsGroupTitleText = isChannelType ? 'Channel assets' : video?.title
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
   const renderAssetsGroupInfo = () => {
-    if (reconnectionErrorsCount) {
-      return (
-        <Text variant="subtitle2">{`(${reconnectionErrorsCount}) Asset${
-          reconnectionErrorsCount > 1 ? 's' : ''
-        } upload failed`}</Text>
-      )
-    }
     if (errorsCount) {
-      return <Text variant="subtitle2">{`(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} lost connection`}</Text>
+      return <Text variant="subtitle2">{`(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
     }
-    if (isPendingCount) {
+    if (missingAssetsCount) {
       return (
-        <Text variant="subtitle2">{`(${isPendingCount}) Asset${isPendingCount > 1 ? 's' : ''} lost connection`}</Text>
+        <Text variant="subtitle2">{`(${missingAssetsCount}) Asset${
+          missingAssetsCount > 1 ? 's' : ''
+        } lost connection`}</Text>
       )
     }
     if (isWaiting) {
       return <Text variant="subtitle2">Waiting for upload...</Text>
     }
+    if (isCompleted) {
+      return <Text variant="subtitle2">Completed</Text>
+    }
 
-    return <Text variant="subtitle2">{`Uploaded (${isCompleted ? 100 : masterProgress}%)`}</Text>
+    return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
+  }
+
+  const enrichedUploadData =
+    (isChannelType && (channelLoading || !channel)) || (!isChannelType && (videoLoading || !video))
+      ? uploadData
+      : uploadData.map((asset) => {
+          const typeToAsset = {
+            'video': video?.mediaDataObject,
+            'thumbnail': video?.thumbnailPhotoDataObject,
+            'avatar': channel?.avatarPhotoDataObject,
+            'cover': channel?.coverPhotoDataObject,
+          }
+          const fetchedAsset = typeToAsset[asset.type]
+          return { ...asset, ipfsContentId: fetchedAsset?.ipfsContentId }
+        })
+
+  if (videoLoading || channelLoading) {
+    return <AssetGroupUploadBarPlaceholder />
   }
 
   return (
@@ -73,7 +91,13 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
       >
         <ProgressBar progress={isCompleted ? 100 : masterProgress} />
         <Thumbnail>
-          {errorsCount ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
+          {errorsCount || missingAssetsCount ? (
+            <SvgAlertError />
+          ) : isChannelType ? (
+            <SvgNavChannel />
+          ) : (
+            <SvgOutlineVideo />
+          )}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
@@ -89,7 +113,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
-        {uploadData.map((file, idx) => (
+        {enrichedUploadData.map((file, idx) => (
           <AssetLine key={file.contentId} asset={file} isLast={uploadData.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>

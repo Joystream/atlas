@@ -1,9 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
+import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+
 import useConnectionStatus from './useConnectionStatus'
+import { useDialog } from './useDialog'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {
@@ -12,10 +15,10 @@ type SuccessMessage = {
 }
 type HandleTransactionOpts<T> = {
   txFactory: (updateStatus: UpdateStatusFn) => Promise<ExtrinsicResult<T>>
-  preProcess?: () => Promise<void>
-  onTxFinalize?: (data: T) => void
-  onTxSync?: (data: T) => void
-  onTxClose?: (completed: boolean) => void
+  preProcess?: () => void | Promise<void>
+  onTxFinalize?: (data: T) => void | Promise<unknown>
+  onTxSync?: (data: T) => void | Promise<unknown>
+  onTxClose?: (completed: boolean) => void | Promise<unknown>
   successMessage: SuccessMessage
 }
 
@@ -32,37 +35,83 @@ TransactionManagerContext.displayName = 'TransactionManagerContext'
 export const TransactionManagerProvider: React.FC = ({ children }) => {
   const [status, setStatus] = useState<ExtrinsicStatus | null>(null)
   const [finalizationBlock, setFinalizationBlock] = useState<number | null>(null)
-  const [syncCallback, setSyncCallback] = useState<(() => void) | null>(null)
-  const [dialogCloseCallback, setDialogCloseCallback] = useState<(() => void) | null>(null)
+  const [syncCallback, setSyncCallback] = useState<(() => void | Promise<unknown>) | null>(null)
+  const [dialogCloseCallback, setDialogCloseCallback] = useState<(() => void | Promise<unknown>) | null>(null)
   const [successMessage, setSuccessMessage] = useState<SuccessMessage>({ title: '', description: '' })
 
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
   const { queryNodeState } = useQueryNodeStateSubscription()
   const { nodeConnectionStatus } = useConnectionStatus()
 
+  const [openErrorDialog, closeErrorDialog] = useDialog({
+    variant: 'error',
+    title: 'Something went wrong...',
+    description:
+      'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+    secondaryButtonText: 'Close',
+    onSecondaryButtonClick: () => {
+      handleDialogClose()
+      closeErrorDialog()
+    },
+    onExitClick: () => {
+      handleDialogClose()
+      closeErrorDialog()
+    },
+  })
+  const [openCompletedDialog, closeCompletedDialog] = useDialog({
+    variant: 'success',
+    title: successMessage.title,
+    description: successMessage.description,
+    secondaryButtonText: 'Close',
+    onSecondaryButtonClick: () => {
+      handleDialogClose()
+      closeCompletedDialog()
+    },
+    onExitClick: () => {
+      handleDialogClose()
+      closeCompletedDialog()
+    },
+  })
+
   const { displaySnackbar } = useSnackbar()
+
+  const handleDialogClose = useCallback(async () => {
+    try {
+      if (dialogCloseCallback) {
+        await dialogCloseCallback()
+      }
+    } catch (e) {
+      console.error('Transaction dialog close callback failed', e)
+    }
+    reset()
+  }, [dialogCloseCallback])
 
   useEffect(() => {
     if (!queryNodeState || status !== ExtrinsicStatus.Syncing || !finalizationBlock) {
       return
     }
-
     if (queryNodeState.indexerHead >= finalizationBlock) {
       setStatus(ExtrinsicStatus.Completed)
-      syncCallback?.()
+      const runCallback = async () => {
+        try {
+          if (syncCallback) {
+            await syncCallback()
+          }
+        } catch (e) {
+          console.error('Transaction sync callback failed', e)
+        }
+      }
+      runCallback()
+
+      openCompletedDialog()
     }
-  }, [queryNodeState, finalizationBlock, syncCallback, status])
+  }, [finalizationBlock, openCompletedDialog, queryNodeState, status, syncCallback])
 
   const reset = () => {
     setStatus(null)
     setFinalizationBlock(null)
     setSyncCallback(null)
     setDialogCloseCallback(null)
-  }
-
-  const handleDialogClose = () => {
-    dialogCloseCallback?.()
-    reset()
   }
 
   const handleTransaction = async <T,>({
@@ -80,7 +129,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       }
       setSuccessMessage(successMessage)
       // set up fallback dialog close callback
-      setDialogCloseCallback(() => () => onTxClose?.(false))
+      setDialogCloseCallback(() => async () => await onTxClose?.(false))
 
       // if provided, do any preprocessing
       if (preProcess) {
@@ -95,13 +144,15 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       // set up query node sync
       setStatus(ExtrinsicStatus.Syncing)
       setFinalizationBlock(block)
-      setSyncCallback(() => () => onTxSync?.(data))
+      setSyncCallback(() => async () => await onTxSync?.(data))
 
       // set up dialog close callback
-      setDialogCloseCallback(() => () => onTxClose?.(true))
+      setDialogCloseCallback(() => async () => await onTxClose?.(true))
 
       // call tx callback
-      onTxFinalize?.(data)
+      if (onTxFinalize) {
+        await onTxFinalize(data)
+      }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')
@@ -114,6 +165,8 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       } else {
         console.error(e)
         setStatus(ExtrinsicStatus.Error)
+
+        openErrorDialog()
       }
     }
   }
@@ -121,12 +174,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
   return (
     <TransactionManagerContext.Provider value={{ handleTransaction, fee: 0 }}>
       {children}
-      <TransactionDialog
-        status={status}
-        successTitle={successMessage.title}
-        successDescription={successMessage.description}
-        onClose={handleDialogClose}
-      />
+      <TransactionDialog status={status} onClose={handleDialogClose} />
     </TransactionManagerContext.Provider>
   )
 }

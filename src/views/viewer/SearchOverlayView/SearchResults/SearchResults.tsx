@@ -1,13 +1,15 @@
-import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
-import { sizes } from '@/shared/theme'
-import { Tabs } from '@/shared/components'
+import React, { useState, useMemo } from 'react'
+
+import { useSearch } from '@/api/hooks'
+import { SearchQuery, AssetAvailability } from '@/api/queries'
 import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
+import { Tabs } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
 import AllResultsTab from './AllResultsTab'
 import EmptyFallback from './EmptyFallback'
-import { useSearch } from '@/api/hooks'
-import { SearchQuery } from '@/api/queries'
 
 type SearchResultsProps = {
   query: string
@@ -16,7 +18,14 @@ const tabs = ['all results', 'videos', 'channels']
 
 const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: query })
+  const { data, loading, error } = useSearch({
+    text: query,
+    whereVideo: {
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+    },
+    whereChannel: {},
+  })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {

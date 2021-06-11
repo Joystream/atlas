@@ -1,9 +1,7 @@
-import React, { useCallback, useState } from 'react'
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+import React, { useCallback, useState } from 'react'
 
-import { sizes } from '@/shared/theme'
-import { Grid, Text } from '@/shared/components'
 import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
@@ -11,6 +9,9 @@ import {
   AssetAvailability,
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
+import { Grid, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
 import useInfiniteGrid from './useInfiniteGrid'
 
 type InfiniteChannelGridProps = {

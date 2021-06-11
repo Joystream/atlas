@@ -1,4 +1,27 @@
 import React, { useState } from 'react'
+import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
+
+import { useContextMenu } from '@/hooks'
+import { Text } from '@/shared/components'
+import {
+  SvgGlyphClose,
+  SvgGlyphCopy,
+  SvgGlyphDraft,
+  SvgGlyphEdit,
+  SvgGlyphHide,
+  SvgGlyphMore,
+  SvgGlyphTrash,
+  SvgLargeEdit,
+  SvgOutlineVideo,
+  SvgLargeUploadFailed,
+  SvgGlyphPlay,
+} from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+import { formatDateAgo, formatDurationShort } from '@/utils/time'
+import { formatVideoViewsAndDate } from '@/utils/video'
+
+import { PullUp } from './PullUp'
 import {
   AvatarContainer,
   Container,
@@ -30,27 +53,8 @@ import {
   PublishingStateText,
   CoverIconWrapper,
 } from './VideoPreviewBase.styles'
-import { formatVideoViewsAndDate } from '@/utils/video'
-import { formatDateAgo, formatDurationShort } from '@/utils/time'
-import useResizeObserver from 'use-resize-observer'
-import { transitions } from '@/shared/theme'
-import { Text } from '@/shared/components'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+
 import { ContextMenu, ContextMenuItem, Placeholder } from '..'
-import { useContextMenu } from '@/hooks'
-import { PullUp } from './PullUp'
-import {
-  SvgGlyphClose,
-  SvgGlyphCopy,
-  SvgGlyphDraft,
-  SvgGlyphEdit,
-  SvgGlyphHide,
-  SvgGlyphMore,
-  SvgGlyphTrash,
-  SvgLargeEdit,
-  SvgOutlineVideo,
-  SvgLargeUploadFailed,
-} from '@/shared/icons'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -70,6 +74,7 @@ export type VideoPreviewPublisherProps =
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
       onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
+      onOpenInTabClick?: () => void
       onEditVideoClick?: () => void
       onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: () => void
@@ -80,6 +85,7 @@ export type VideoPreviewPublisherProps =
       isDraft?: undefined
       videoPublishState?: undefined
       onPullupClick?: undefined
+      onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
       onCopyVideoURLClick?: undefined
       onDeleteVideoClick?: undefined
@@ -141,6 +147,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onRemoveButtonClick,
   contentKey,
   className,
+  onOpenInTabClick,
   onEditVideoClick,
   onCopyVideoURLClick,
   onDeleteVideoClick,
@@ -342,14 +349,19 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {onEditVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                      {isDraft ? 'Edit draft' : 'Edit video'}
+                  {onOpenInTabClick && (
+                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                      Play in Joystream
                     </ContextMenuItem>
                   )}
                   {onCopyVideoURLClick && (
                     <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
                       Copy video URL
+                    </ContextMenuItem>
+                  )}
+                  {onEditVideoClick && (
+                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                      {isDraft ? 'Edit draft' : 'Edit video'}
                     </ContextMenuItem>
                   )}
                   {onDeleteVideoClick && (

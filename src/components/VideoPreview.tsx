@@ -1,14 +1,15 @@
 import React from 'react'
+
 import { useVideo } from '@/api/hooks'
+import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
+import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import VideoPreviewBase, {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
 import { copyToClipboard } from '@/utils/broswer'
-import { AssetAvailability } from '@/api/queries'
 
 export type VideoPreviewProps = {
   id?: string
@@ -91,6 +92,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       hasThumbnailUploadFailed={hasThumbnailUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
+      onOpenInTabClick={isDraft || !id ? undefined : () => window.open(absoluteRoutes.viewer.video(id))?.focus()}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}

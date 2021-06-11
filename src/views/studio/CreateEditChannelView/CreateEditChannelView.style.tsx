@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { sizes, media } from '@/shared/theme'
+
 import { Avatar, HeaderTextField } from '@/shared/components'
+import { sizes, media } from '@/shared/theme'
 import { TitleSection, SubTitle } from '@/views/viewer/ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`

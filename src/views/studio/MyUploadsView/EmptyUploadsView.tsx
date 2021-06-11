@@ -1,10 +1,11 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import { ReactComponent as EmptyUploadsIllustration } from '@/assets/theater-mask.svg'
-import { Button, Text } from '@/shared/components'
-import { sizes, media, zIndex } from '@/shared/theme'
-import { SvgGlyphUpload } from '@/shared/icons'
+import React from 'react'
+
 import { absoluteRoutes } from '@/config/routes'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphUpload } from '@/shared/icons'
+import { SvgTheaterMaskIllustration } from '@/shared/illustrations'
+import { sizes, media, zIndex } from '@/shared/theme'
 
 export const EmptyUploadsView: React.FC = () => {
   return (
@@ -42,7 +43,7 @@ const InnerContainerView = styled.div`
   margin-top: -200px;
 `
 
-const StyledEmptyUploadsIllustration = styled(EmptyUploadsIllustration)`
+const StyledEmptyUploadsIllustration = styled(SvgTheaterMaskIllustration)`
   transform: scale(1.5);
   width: 100%;
   z-index: ${zIndex.farBackground};

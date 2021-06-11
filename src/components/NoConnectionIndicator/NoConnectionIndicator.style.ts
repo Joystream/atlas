@@ -1,6 +1,7 @@
-import { colors, sizes, zIndex, media } from '@/shared/theme'
-import { TOP_NAVBAR_HEIGHT } from '@/components'
 import styled from '@emotion/styled'
+
+import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { colors, sizes, zIndex, media } from '@/shared/theme'
 
 export const TextWrapper = styled.div`
   width: 100%;

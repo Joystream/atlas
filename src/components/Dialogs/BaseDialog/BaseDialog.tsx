@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
-import { Portal } from '@/components'
-import { useOverlayManager } from '@/hooks/useOverlayManager'
 import { CSSTransition } from 'react-transition-group'
-import { StyledContainer, StyledExitButton } from './BaseDialog.style'
-import { transitions } from '@/shared/theme'
+
+import Portal from '@/components/Portal'
+import { useOverlayManager } from '@/hooks'
 import { SvgGlyphClose } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
+import { DialogBackDrop, StyledContainer, StyledExitButton } from './BaseDialog.style'
 
 export type BaseDialogProps = {
   showDialog?: boolean
@@ -14,29 +16,28 @@ export type BaseDialogProps = {
 }
 
 const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
-  const {
-    overlayContainerRef,
-    lockScroll,
-    unlockScroll,
-    openOverlayContainer,
-    closeOverlayContainer,
-  } = useOverlayManager()
+  const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
-    if (!showDialog) {
-      return
-    }
-    lockScroll()
-    openOverlayContainer()
     return () => {
-      unlockScroll()
-      closeOverlayContainer()
+      decrementOverlaysOpenCount()
     }
-  }, [showDialog, lockScroll, unlockScroll, openOverlayContainer, closeOverlayContainer])
+  }, [decrementOverlaysOpenCount])
 
   return (
-    <Portal containerRef={overlayContainerRef}>
-      <CSSTransition in={showDialog} timeout={250} classNames={transitions.names.dialog} mountOnEnter unmountOnExit>
+    <Portal containerRef={dialogContainerRef}>
+      <CSSTransition in={showDialog} timeout={200} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
+        <DialogBackDrop />
+      </CSSTransition>
+      <CSSTransition
+        in={showDialog}
+        timeout={200}
+        classNames={transitions.names.dialog}
+        mountOnEnter
+        unmountOnExit
+        onEnter={incrementOverlaysOpenCount}
+        onExited={decrementOverlaysOpenCount}
+      >
         <StyledContainer className={className}>
           {exitButton && (
             <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">

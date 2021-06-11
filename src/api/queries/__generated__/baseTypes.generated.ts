@@ -200,6 +200,7 @@ export type VideoWhereInput = {
   isPublic_eq?: Maybe<Scalars['Boolean']>
   isCensored_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
+  id_eq?: Maybe<Scalars['ID']>
 }
 
 export type VideoWhereUniqueInput = {
@@ -343,6 +344,8 @@ export type QueryMembershipsArgs = {
 export type QuerySearchArgs = {
   limit?: Maybe<Scalars['Int']>
   text: Scalars['String']
+  whereVideo?: Maybe<VideoWhereInput>
+  whereChannel?: Maybe<ChannelWhereInput>
 }
 
 export type QueryVideoByUniqueInputArgs = {

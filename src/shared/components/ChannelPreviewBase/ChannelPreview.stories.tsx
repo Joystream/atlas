@@ -1,10 +1,11 @@
-import React from 'react'
-import ChannelPreviewBase, { ChannelPreviewBaseProps } from './ChannelPreviewBase'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import ChannelPreviewBase, { ChannelPreviewBaseProps } from './ChannelPreviewBase'
+
 export default {
-  title: 'Shared/ChannelPreview',
+  title: 'Shared/C/ChannelPreview',
   component: ChannelPreviewBase,
   argTypes: {
     className: { table: { disable: true } },

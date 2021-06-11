@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import { Text } from '@/shared/components'
 import { getVideoMetadata, VideoMetadata as Metadata } from '@/utils/video'
 

@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import HeaderTextField, { HeaderTextFieldProps } from './HeaderTextField'
 import { Meta, Story } from '@storybook/react'
+import React, { useState } from 'react'
+
+import HeaderTextField, { HeaderTextFieldProps } from './HeaderTextField'
 
 export default {
-  title: 'Shared/HeaderTextField',
+  title: 'Shared/H/HeaderTextField',
   component: HeaderTextField,
   argTypes: {
     helperText: { control: 'text', defaultValue: 'Channel title must be at least 2 character' },

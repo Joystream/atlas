@@ -1,4 +1,5 @@
 import { graphql } from 'msw'
+
 import {
   AllChannelFieldsFragment,
   VideoFieldsFragment,

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { SpinnerWrapper } from './Spinner.style'
 
 export type SpinnerSize = 'large' | 'medium' | 'small'

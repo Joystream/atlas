@@ -1,8 +1,9 @@
-import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { colors, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
+
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { ActionBarTransaction } from '@/shared/components'
+import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`
   position: fixed;

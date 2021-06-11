@@ -1,15 +1,17 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import { colors, media } from '@/shared/theme'
+import React from 'react'
+
 import { Placeholder } from '@/shared/components'
+import { colors, media } from '@/shared/theme'
+
 import {
   Container,
   AssetsGroupUploadBarContainer,
   AssetsInfoContainer,
   UploadInfoContainer,
-} from './AssetsGroupUploadBar/AssetsGroupUploadBar.style'
+} from './AssetsGroupUploadBar.style'
 
-const Placeholders = () => {
+export const AssetGroupUploadBarPlaceholder: React.FC = () => {
   return (
     <Container>
       <AssetsGroupUploadBarContainer style={{ backgroundColor: `${colors.gray[800]}` }}>
@@ -34,5 +36,3 @@ const StyledPlaceholderThumbnail = styled(Placeholder)`
     display: block;
   }
 `
-
-export const placeholderItems = Array(5).fill(Placeholders)

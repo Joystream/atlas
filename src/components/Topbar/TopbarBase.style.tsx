@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import { Text } from '@/shared/components'
-import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
-import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
-import { ReactComponent as UnstyledShortLogo } from '@/assets/logo.svg'
-import { ReactComponent as UnstyledFullLogoDefault } from '@/assets/full-logo.svg'
 import { Link } from 'react-router-dom'
+
+import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
+import { Text } from '@/shared/components'
+import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
+import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
+
 import { TopbarVariant } from './TopbarBase'
 
 type TopNavbarStyleProps = {
@@ -74,7 +75,7 @@ export const StudioText = styled(Text)`
   }
 `
 
-export const ShortLogo = styled(UnstyledShortLogo)`
+export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
   display: block;
   height: ${sizes(8)};
 
@@ -83,7 +84,7 @@ export const ShortLogo = styled(UnstyledShortLogo)`
   }
 `
 
-export const FullLogo = styled(UnstyledFullLogoDefault)<LogoContainerProps>`
+export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
   display: none;
   height: ${sizes(8)};
 

@@ -1,19 +1,25 @@
 import { InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination, Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
+import { ReadFieldFunction } from '@apollo/client/cache/core/types/common'
+import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
+import { offsetLimitPagination, relayStylePagination } from '@apollo/client/utilities'
 import { parseISO } from 'date-fns'
+
 import {
   AllChannelFieldsFragment,
   AssetAvailability,
+  GetVideosConnectionQueryVariables,
   GetVideosQueryVariables,
   Query,
+  VideoConnection,
   VideoFieldsFragment,
+  VideoOrderByInput,
 } from '../queries'
-import { FieldPolicy, FieldReadFunction } from '@apollo/client/cache/inmemory/policies'
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
+  const idEq = args?.where?.id_eq || ''
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
@@ -23,7 +29,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}`
+  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
 }
 
 const createDateHandler = () => ({
@@ -80,21 +86,39 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(),
-  videosConnection: relayStylePagination(getVideoKeyArgs),
+  videosConnection: {
+    ...relayStylePagination(getVideoKeyArgs),
+    read(
+      existing: VideoConnection,
+      { args, readField }: { args: GetVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
+    ) {
+      const isPublic = args?.where?.isPublic_eq
+      const filteredEdges =
+        existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
+
+      const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
+      const preSortedDESC = (filteredEdges || [])
+        .slice()
+        .sort(
+          (a, b) =>
+            (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
+        )
+      const sortedEdges = sortingASC ? preSortedDESC.reverse() : preSortedDESC
+
+      return (
+        existing && {
+          ...existing,
+          edges: sortedEdges,
+        }
+      )
+    },
+  },
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, opts) {
-      const isPublic = opts.args?.where.isPublic_eq
-
-      const filteredExistingVideos = existing?.filter(
-        (v: StoreObject | Reference) => opts.readField('isPublic', v) === isPublic || isPublic === undefined
-      )
-      // Default to returning the entire cached list,
-      // if offset and limit are not provided.
       const offset = opts.args?.offset ?? 0
-      const limit = opts.args?.limit ?? filteredExistingVideos?.length
-
-      return filteredExistingVideos?.slice(offset, offset + limit)
+      const limit = opts.args?.limit ?? existing?.length
+      return existing?.slice(offset, offset + limit)
     },
   },
   channelByUniqueInput: (existing, { toReference, args }) => {

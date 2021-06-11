@@ -1,8 +1,8 @@
+import styled from '@emotion/styled'
+
 import { StudioContainer } from '@/components'
 import { Button, Text, Avatar, TextField } from '@/shared/components'
 import { media, sizes } from '@/shared/theme'
-
-import styled from '@emotion/styled'
 
 export const Header = styled.header`
   margin-bottom: ${sizes(12)};

@@ -1,9 +1,10 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { Grid } from '@/shared/components'
-import ChannelPreview from './ChannelPreview'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { Grid } from '@/shared/components'
+
+import ChannelPreview from './ChannelPreview'
 
 const StyledChannelPreview = styled(ChannelPreview)`
   margin: 0 auto;

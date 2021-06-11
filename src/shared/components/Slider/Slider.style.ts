@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import RcSlider from 'rc-slider'
 import 'rc-slider/assets/index.css'
+
 import { colors } from '@/shared/theme'
 
 const THUMB_SIZE = 24
@@ -35,5 +36,10 @@ export const StyledRcSlider = styled(RcSlider)`
       border: 1px solid ${colors.blue['500']};
       box-shadow: none;
     }
+  }
+
+  &.rc-slider-disabled {
+    background-color: ${colors.gray['700']};
+    opacity: 0.1;
   }
 `

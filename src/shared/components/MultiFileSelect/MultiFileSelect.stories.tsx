@@ -1,10 +1,12 @@
-import { OverlayManagerProvider } from '@/hooks'
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
+
+import { OverlayManagerProvider } from '@/hooks'
+
 import MultiFileSelect, { MultiFileSelectProps, InputFilesState } from './MultiFileSelect'
 
 export default {
-  title: 'Shared/MultiFileSelect',
+  title: 'Shared/M/MultiFileSelect',
   component: MultiFileSelect,
   decorators: [
     (Story) => (

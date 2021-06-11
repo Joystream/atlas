@@ -1,13 +1,11 @@
-import { Text } from '@/shared/components'
-import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
-import { sizes, colors } from '@/shared/theme'
 import styled from '@emotion/styled'
 
-type StepWrapperProps = {
-  withBottomBar?: boolean
-}
+import { Text } from '@/shared/components'
+import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
+import { SvgJoystreamLogo, SvgPolkadotLogo } from '@/shared/illustrations'
+import { sizes, colors } from '@/shared/theme'
 
-export const StepWrapper = styled.div<StepWrapperProps>`
+export const StepWrapper = styled.div`
   width: 100%;
   text-align: center;
   display: flex;
@@ -17,7 +15,11 @@ export const StepWrapper = styled.div<StepWrapperProps>`
   margin-top: ${sizes(10)};
 `
 
-export const StyledLogo = styled.img`
+export const StyledJoystreamLogo = styled(SvgJoystreamLogo)`
+  height: 40px;
+  width: 40px;
+`
+export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
   height: 40px;
   width: 40px;
 `
@@ -43,5 +45,6 @@ export const StepFooter = styled.div`
   align-items: center;
 `
 export const BottomBarIcon = styled(SvgGlyphWarning)`
+  flex-shrink: 0;
   margin-right: ${sizes(2)};
 `

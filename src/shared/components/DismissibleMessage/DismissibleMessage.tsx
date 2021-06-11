@@ -1,5 +1,8 @@
-import { usePersonalData } from '@/hooks'
 import React, { useEffect, useState } from 'react'
+
+import { usePersonalData } from '@/hooks'
+import { SvgGlyphClose } from '@/shared/icons'
+
 import {
   MessageWrapper,
   MessageTitle,
@@ -7,7 +10,6 @@ import {
   MessageDescription,
   StyledSvgGlyphInfo,
 } from './DismissibleMessage.style'
-import { SvgGlyphClose } from '@/shared/icons'
 
 export type DismissibleMessageProps = {
   title?: string

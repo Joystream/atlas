@@ -1,11 +1,13 @@
-import React from 'react'
-import Tooltip, { TooltipProps } from './Tooltip'
-import { Text, Button, ChannelPreviewBase } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Text, Button, ChannelPreviewBase } from '@/shared/components'
+
+import Tooltip, { TooltipProps } from './Tooltip'
+
 export default {
-  title: 'Shared/Tooltip',
+  title: 'Shared/T/Tooltip',
   component: Tooltip,
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },

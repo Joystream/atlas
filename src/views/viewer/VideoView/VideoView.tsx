@@ -1,6 +1,15 @@
+import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { throttle } from 'lodash'
+
+import { useVideo, useAddVideoView } from '@/api/hooks'
+import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import knownLicenses from '@/data/knownLicenses.json'
+import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
+import { Placeholder, VideoPlayer } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+import { formatVideoViewsAndDate } from '@/utils/video'
+
 import {
   ChannelContainer,
   StyledViewWrapper,
@@ -16,14 +25,6 @@ import {
   LicenseContainer,
   TitleText,
 } from './VideoView.style'
-import { transitions } from '@/shared/theme'
-import { Placeholder, VideoPlayer } from '@/shared/components'
-import { formatVideoViewsAndDate } from '@/utils/video'
-
-import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
-import { useVideo, useAddVideoView } from '@/api/hooks'
-import knownLicenses from '@/data/knownLicenses.json'
 
 const VideoView: React.FC = () => {
   const { id } = useParams()

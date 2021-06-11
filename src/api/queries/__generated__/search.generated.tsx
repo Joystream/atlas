@@ -1,12 +1,14 @@
-import * as Types from './baseTypes.generated'
-
-import { VideoFieldsFragment, VideoFieldsFragmentDoc } from './videos.generated'
-import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { gql } from '@apollo/client'
-
 import * as Apollo from '@apollo/client'
+
+import * as Types from './baseTypes.generated'
+import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { VideoFieldsFragment, VideoFieldsFragmentDoc } from './videos.generated'
+
 export type SearchQueryVariables = Types.Exact<{
   text: Types.Scalars['String']
+  whereVideo?: Types.Maybe<Types.VideoWhereInput>
+  whereChannel?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type SearchQuery = {
@@ -18,8 +20,8 @@ export type SearchQuery = {
 }
 
 export const SearchDocument = gql`
-  query Search($text: String!) {
-    search(text: $text) {
+  query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: ChannelWhereInput) {
+    search(text: $text, whereVideo: $whereVideo, whereChannel: $whereChannel) {
       item {
         ... on Video {
           ...VideoFields
@@ -47,6 +49,8 @@ export const SearchDocument = gql`
  * const { data, loading, error } = useSearchQuery({
  *   variables: {
  *      text: // value for 'text'
+ *      whereVideo: // value for 'whereVideo'
+ *      whereChannel: // value for 'whereChannel'
  *   },
  * });
  */

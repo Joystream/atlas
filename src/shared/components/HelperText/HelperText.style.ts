@@ -1,5 +1,7 @@
-import { colors, sizes, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import { colors, sizes, typography } from '@/shared/theme'
+
 import Text from '../Text'
 
 export type HelperTextProps = {

@@ -1,5 +1,12 @@
-import { absoluteRoutes } from '@/config/routes'
 import React from 'react'
+import { useNavigate } from 'react-router'
+
+import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { SignInStepsStepper } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
+import { useUser, useConnectionStatus } from '@/hooks'
+import { SvgGlyphNewChannel } from '@/shared/icons'
+
 import {
   Header,
   Hero,
@@ -11,12 +18,6 @@ import {
   HandleText,
   StyledAvatar,
 } from './SignInView.style'
-import { SvgGlyphNewChannel } from '@/shared/icons'
-import { SignInStepsStepper } from '@/components'
-import { useUser, useConnectionStatus } from '@/hooks'
-import { useNavigate } from 'react-router'
-
-import { BasicMembershipFieldsFragment } from '@/api/queries'
 
 const SignInView = () => {
   const navigate = useNavigate()

@@ -1,8 +1,9 @@
+import { AllChannelFieldsFragment, AssetAvailability } from '@/api/queries'
+import { languages } from '@/config/languages'
+
 import { channelAvatarSources, channelPosterSources } from './mockImages'
 import rawChannels from './raw/channels.json'
 import rawCoverVideo from './raw/coverVideo.json'
-import { AllChannelFieldsFragment, AssetAvailability } from '@/api/queries'
-import { languages } from '@/config/languages'
 
 export type MockChannel = AllChannelFieldsFragment
 

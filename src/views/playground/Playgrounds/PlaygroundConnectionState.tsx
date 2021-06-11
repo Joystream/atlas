@@ -1,8 +1,9 @@
+import React, { useCallback, useEffect } from 'react'
+
 import { BaseDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatus } from '@/hooks'
 import { Button, Text } from '@/shared/components'
-import React, { useCallback, useEffect } from 'react'
 
 const fakeNodeConnection = async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000))

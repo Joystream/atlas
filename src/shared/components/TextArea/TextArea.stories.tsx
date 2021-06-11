@@ -1,11 +1,13 @@
-import React, { useRef, useState } from 'react'
-import { Meta, Story } from '@storybook/react'
-import TextArea, { TextAreaProps } from './TextArea'
-import { Button } from '..'
 import { css } from '@emotion/react'
+import { Meta, Story } from '@storybook/react'
+import React, { useRef, useState } from 'react'
+
+import TextArea, { TextAreaProps } from './TextArea'
+
+import { Button } from '..'
 
 export default {
-  title: 'Shared/TextArea',
+  title: 'Shared/T/TextArea',
   component: TextArea,
   argTypes: {
     value: { table: { disable: true } },

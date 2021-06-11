@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
-import BaseDialog from '../BaseDialog'
+
 import { Text } from '@/shared/components'
-import { colors, sizes, media, typography } from '@/shared/theme'
 import { SvgGlyphChevronRight } from '@/shared/icons'
+import { colors, sizes, media, typography } from '@/shared/theme'
+
+import BaseDialog from '../BaseDialog'
 
 type CircleProps = {
   isFilled?: boolean

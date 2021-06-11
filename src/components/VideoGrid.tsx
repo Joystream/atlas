@@ -1,9 +1,10 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { Grid } from '@/shared/components'
-import VideoPreview from './VideoPreview'
 import { VideoFieldsFragment } from '@/api/queries'
+import { Grid } from '@/shared/components'
+
+import VideoPreview from './VideoPreview'
 
 const StyledVideoPreview = styled(VideoPreview)`
   margin: 0 auto;

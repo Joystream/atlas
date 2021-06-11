@@ -4,6 +4,7 @@ import {
   GetVideoViewsQuery,
   GetVideoViewsQueryVariables,
 } from '@/api/queries'
+
 import { MocksStore } from '../types'
 
 export const createVideoViewsAccessor = (store: MocksStore) => (

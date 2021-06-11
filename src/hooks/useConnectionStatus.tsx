@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback, useRef } from 'react'
+
 import { useSnackbar } from '@/hooks/useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
@@ -27,7 +28,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const checkConnection = useCallback(async () => {
     try {
       const res = await withTimeout(
-        fetch('https://google.com', {
+        fetch('https://www.google.com', {
           method: 'HEAD',
           mode: 'no-cors',
         }),

@@ -1,14 +1,16 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Location } from 'history'
-import { absoluteRoutes } from '@/config/routes'
-import { useNavigate } from 'react-router-dom'
-import { useLocation, useMatch } from 'react-router'
-import { RoutingState } from '@/types/routing'
-import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
-import { createId } from '@/utils/createId'
-import { useVideo } from '@/api/hooks'
-import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { parseISO } from 'date-fns'
+import { Location } from 'history'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { useLocation, useMatch } from 'react-router'
+import { useNavigate } from 'react-router-dom'
+
+import { useVideo } from '@/api/hooks'
+import { absoluteRoutes } from '@/config/routes'
+import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
+import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { RoutingState } from '@/types/routing'
+import { createId } from '@/utils/createId'
+
 import { useAsset } from './useAsset'
 
 export type EditVideoSheetTab = {
@@ -46,7 +48,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
   const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
   const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
-  const { lockScroll, unlockScroll } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const addVideoTab = useCallback(
     (tab?: EditVideoSheetTab, shouldSelect = true) => {
@@ -137,10 +139,10 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       if (videoTabs.length === 0) {
         addVideoTab()
       }
-      lockScroll()
+      incrementOverlaysOpenCount()
     }
     if (sheetState === 'closed' || sheetState === 'minimized') {
-      unlockScroll()
+      decrementOverlaysOpenCount()
     }
     if (sheetState === 'closed') {
       setVideoTabs([])
@@ -148,7 +150,14 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       setAssetsCache({})
       _setVideoTabsCachedDirtyFormData({})
     }
-  }, [sheetState, cachedSheetState, videoTabs.length, lockScroll, unlockScroll, addVideoTab])
+  }, [
+    sheetState,
+    cachedSheetState,
+    videoTabs.length,
+    incrementOverlaysOpenCount,
+    decrementOverlaysOpenCount,
+    addVideoTab,
+  ])
 
   const anyVideoTabsCachedAssets = Object.values(assetsCache).some((val) => val.thumbnail || val.video)
 

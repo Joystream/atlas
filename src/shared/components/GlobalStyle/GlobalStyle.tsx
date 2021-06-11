@@ -1,11 +1,24 @@
 import { css, Global, SerializedStyles } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import React from 'react'
-import { media, colors, sizes, typography } from '../../theme'
+
 import { transitionStyles } from './transitionStyles'
+
+import { media, colors, sizes, typography } from '../../theme'
 
 const globalStyles = css`
   ${emotionNormalize};
+
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 20px;
+  }
 
   body {
     font-family: ${typography.fonts.base};
@@ -16,6 +29,7 @@ const globalStyles = css`
   *,
   *::after,
   *::before {
+    scrollbar-width: thin;
     box-sizing: border-box;
   }
 
@@ -38,13 +52,17 @@ const globalStyles = css`
   }
 
   :root {
+    --scrollbarBG: ${colors.transparentPrimary[10]};
+    --thumbBG: ${colors.transparentPrimary[18]};
     --global-horizontal-padding: ${sizes(4)};
     --sidenav-collapsed-width: 0px;
-
     ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};
       --sidenav-collapsed-width: 72px;
     }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
   }
 `
 
