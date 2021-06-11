@@ -163,7 +163,7 @@ export class JoystreamJs {
                     }
                   }
                   this.logError(`Extrinsic failed: "${errorMsg}"`)
-                  reject(new ExtrinsicFailedError(event))
+                  reject(new ExtrinsicFailedError(event, errorMsg))
                 } else if (event.method === 'ExtrinsicSuccess') {
                   const blockHash = status.asFinalized
                   this.api.rpc.chain

@@ -6,8 +6,8 @@ export class ExtrinsicUnknownError extends Error {}
 export class ExtrinsicFailedError extends Error {
   extrinsicFailedEvent: GenericEvent
 
-  constructor(event: GenericEvent) {
-    super()
+  constructor(event: GenericEvent, message?: string) {
+    super(message)
     this.extrinsicFailedEvent = event
   }
 }
