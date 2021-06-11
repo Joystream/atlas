@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { throttle, debounce } from 'lodash'
 import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
@@ -150,7 +150,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         storageUrl = storageProvider.url
         storageProviderId = storageProvider.id
       } catch (e) {
-        console.log('Failed to find storage provider', e)
+        console.error('Failed to find storage provider', e)
         return
       }
 
@@ -195,6 +195,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           raxConfig: {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
+            // add 400 to default list of codes to retry
+            // seems storage node sometimes fails to calculate the IFPS hash correctly
+            // trying again in that case should succeed
+            statusCodesToRetry: [
+              [100, 199],
+              [400, 400],
+              [429, 429],
+              [500, 599],
+            ],
             retryDelay: RETRY_DELAY,
             backoffType: 'static',
             onRetryAttempt: (err) => {
@@ -219,10 +228,20 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       } catch (e) {
         console.error('Failed to upload to storage provider', { storageUrl, error: e })
         updateAsset(asset.contentId, 'error')
-        markStorageProviderNotWorking(storageProviderId)
+        setAssetUploadProgress(0)
+
+        const axiosError = e as AxiosError
+        const networkFailure =
+          axiosError.isAxiosError &&
+          (!axiosError.response?.status || (axiosError.response.status < 400 && axiosError.response.status >= 500))
+        if (networkFailure) {
+          markStorageProviderNotWorking(storageProviderId)
+        }
+
+        const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
         displaySnackbar({
           title: 'Failed to upload asset',
-          description: 'Host is not responding',
+          description: snackbarDescription,
           actionText: 'Go to uploads',
           onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
           iconType: 'warning',

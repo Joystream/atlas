@@ -150,7 +150,9 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       setDialogCloseCallback(() => async () => await onTxClose?.(true))
 
       // call tx callback
-      onTxFinalize?.(data)
+      if (onTxFinalize) {
+        await onTxFinalize(data)
+      }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
         console.warn('Sign cancelled')

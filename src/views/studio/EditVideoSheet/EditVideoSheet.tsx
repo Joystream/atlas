@@ -161,10 +161,11 @@ export const EditVideoSheet: React.FC = () => {
       }
     }
 
-    const uploadAssets = (videoId: VideoId) => {
+    const uploadAssets = async (videoId: VideoId) => {
+      const uploadPromises: Promise<unknown>[] = []
       if (videoInputFile?.blob && videoContentId) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        startFileUpload(videoInputFile.blob, {
+        const uploadPromise = startFileUpload(videoInputFile.blob, {
           contentId: videoContentId,
           owner: activeChannelId,
           parentObject: {
@@ -174,9 +175,10 @@ export const EditVideoSheet: React.FC = () => {
           type: 'video',
           dimensions: width && height ? { width, height } : undefined,
         })
+        uploadPromises.push(uploadPromise)
       }
       if (thumbnailInputFile?.blob && thumbnailContentId) {
-        startFileUpload(thumbnailInputFile.blob, {
+        const uploadPromise = startFileUpload(thumbnailInputFile.blob, {
           contentId: thumbnailContentId,
           owner: activeChannelId,
           parentObject: {
@@ -187,7 +189,9 @@ export const EditVideoSheet: React.FC = () => {
           dimensions: thumbnailInputFile.assetDimensions,
           imageCropData: thumbnailInputFile.imageCropData,
         })
+        uploadPromises.push(uploadPromise)
       }
+      await Promise.all(uploadPromises)
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
@@ -231,22 +235,33 @@ export const EditVideoSheet: React.FC = () => {
       })
     }
 
-    handleTransaction({
-      preProcess: processAssets,
-      txFactory: (updateStatus) =>
-        isNew
-          ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-          : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
-      onTxFinalize: uploadAssets,
-      onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => (completed ? setSheetState('minimized') : undefined),
-      successMessage: {
-        title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-        description: isNew
-          ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-          : 'Changes to your video were saved on the blockchain.',
-      },
-    })
+    try {
+      await handleTransaction({
+        preProcess: processAssets,
+        txFactory: (updateStatus) =>
+          isNew
+            ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+            : joystream.updateVideo(
+                selectedVideoTab.id,
+                activeMemberId,
+                activeChannelId,
+                metadata,
+                assets,
+                updateStatus
+              ),
+        onTxFinalize: uploadAssets,
+        onTxSync: refetchDataAndCacheAssets,
+        onTxClose: (completed) => (completed ? setSheetState('minimized') : undefined),
+        successMessage: {
+          title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+          description: isNew
+            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+            : 'Changes to your video were saved on the blockchain.',
+        },
+      })
+    } catch (e) {
+      console.error('Transaction handler failed', e)
+    }
   }
 
   const toggleMinimizedSheet = () => {

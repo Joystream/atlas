@@ -37,7 +37,7 @@ export type StartFileUploadOptions = {
 
 export type UploadManagerValue = {
   uploadsState: AssetUploadWithProgress[][]
-  startFileUpload: (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => void
+  startFileUpload: (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => Promise<void>
   isLoading: boolean
 }
 export type UploadsProgressRecord = Record<string, number>
