@@ -97,8 +97,8 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
         existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
 
       const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
-      const preSortedASC = filteredEdges
-        ?.slice()
+      const preSortedASC = (filteredEdges || [])
+        .slice()
         .sort(
           (a, b) =>
             (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()

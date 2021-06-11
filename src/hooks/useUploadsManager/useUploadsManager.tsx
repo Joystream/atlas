@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { throttle, debounce } from 'lodash'
 import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
@@ -7,7 +7,7 @@ import * as rax from 'retry-axios'
 import { useChannel, useVideos } from '@/api/hooks'
 import { LiaisonJudgement } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar, useUser } from '@/hooks'
+import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
 import { ChannelId } from '@/joystream-lib'
 import { createStorageNodeUrl } from '@/utils/asset'
 
@@ -20,7 +20,7 @@ import {
   StartFileUploadOptions,
 } from './types'
 
-const RETRIES_COUNT = 5
+const RETRIES_COUNT = 3
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
@@ -33,21 +33,13 @@ type AssetFile = {
   blob: File | Blob
 }
 
-class ReconnectFailedError extends Error {
-  reason: AxiosError
-
-  constructor(reason: AxiosError) {
-    super()
-    this.reason = reason
-  }
-}
-
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
+  const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
@@ -142,8 +134,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       return
     }
     uploadsState.forEach((asset) => {
-      if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
-        updateAsset(asset.contentId, 'error')
+      if (asset.lastStatus !== 'completed') {
+        updateAsset(asset.contentId, 'missing')
       }
     })
     isInitialMount.current = false
@@ -182,7 +174,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const startFileUpload = useCallback(
-    async (file: File | Blob | null, asset: InputAssetUpload, storageUrl: string, opts?: StartFileUploadOptions) => {
+    async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
+      const storageProvider = getStorageProvider()
+      if (!storageProvider) {
+        return
+      }
+      const { url: storageUrl, id: storageProviderId } = storageProvider
+
+      console.debug(`Uploading to ${storageUrl}`)
+
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
@@ -222,14 +222,12 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           raxConfig: {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
+            retryDelay: 1000,
+            backoffType: 'static',
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
               if (cfg?.currentRetryAttempt === 1) {
                 updateAsset(asset.contentId, 'reconnecting')
-              }
-
-              if (cfg?.currentRetryAttempt === RETRIES_COUNT) {
-                throw new ReconnectFailedError(err)
               }
             },
           },
@@ -246,23 +244,19 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
       } catch (e) {
-        if (e instanceof ReconnectFailedError) {
-          console.error('Failed to reconnect to storage provider', { storageUrl, reason: e.reason })
-          updateAsset(asset.contentId, 'reconnectionError')
-          displaySnackbar({
-            title: 'Asset failing to reconnect',
-            description: 'Host is not responding',
-            actionText: 'Go to uploads',
-            onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-            iconType: 'warning',
-          })
-        } else {
-          console.error('Unknown upload error', e)
-          updateAsset(asset.contentId, 'error')
-        }
+        console.error('Failed to upload to storage provider', { storageUrl, error: e })
+        updateAsset(asset.contentId, 'error')
+        markStorageProviderNotWorking(storageProviderId)
+        displaySnackbar({
+          title: 'Failed to upload asset',
+          description: 'Host is not responding',
+          actionText: 'Go to uploads',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+          iconType: 'warning',
+        })
       }
     },
-    [addAsset, assetsFiles, displaySnackbar, navigate, updateAsset]
+    [addAsset, assetsFiles, displaySnackbar, getStorageProvider, markStorageProviderNotWorking, navigate, updateAsset]
   )
 
   const isLoading = channelLoading || videosLoading

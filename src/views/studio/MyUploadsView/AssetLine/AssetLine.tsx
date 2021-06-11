@@ -1,9 +1,7 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 
-import { useRandomStorageProviderUrl } from '@/api/hooks'
-import { LiaisonJudgement } from '@/api/queries'
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useUploadsManager, useAuthorizedUser, useDialog } from '@/hooks'
@@ -33,7 +31,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
   const { activeChannelId } = useAuthorizedUser()
   const { startFileUpload } = useUploadsManager(activeChannelId)
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -70,10 +67,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       if (fileHash !== asset.ipfsContentId) {
         openDifferentFileDialog()
       } else {
-        const randomStorageProviderUrl = getRandomStorageProviderUrl()
-        if (!randomStorageProviderUrl) {
-          return
-        }
         startFileUpload(
           file,
           {
@@ -85,7 +78,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
             },
             type: asset.type,
           },
-          randomStorageProviderUrl,
           {
             isReUpload: true,
           }
@@ -99,28 +91,24 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       asset.parentObject.id,
       asset.parentObject.type,
       asset.type,
-      getRandomStorageProviderUrl,
       openDifferentFileDialog,
       startFileUpload,
     ]
   )
 
+  const isVideo = asset.type === 'video'
   const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
     onDrop,
     maxFiles: 1,
     multiple: false,
     noClick: true,
     noKeyboard: true,
+    accept: isVideo ? 'video/*' : 'image/*',
   })
 
-  const isVideo = asset.type === 'video'
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
-    const randomStorageProviderUrl = getRandomStorageProviderUrl()
-    if (!randomStorageProviderUrl) {
-      return
-    }
     startFileUpload(
       null,
       {
@@ -132,7 +120,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         },
         type: asset.type,
       },
-      randomStorageProviderUrl,
       {
         changeHost: true,
       }
@@ -144,10 +131,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (fileHash !== asset.ipfsContentId) {
       openDifferentFileDialog()
     } else {
-      const randomStorageProviderUrl = getRandomStorageProviderUrl()
-      if (!randomStorageProviderUrl) {
-        return
-      }
       startFileUpload(
         croppedBlob,
         {
@@ -159,7 +142,6 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
           },
           type: asset.type,
         },
-        randomStorageProviderUrl,
         {
           isReUpload: true,
         }
@@ -184,19 +166,16 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
 
   const renderStatusMessage = (asset: AssetUploadWithProgress) => {
     if (asset.lastStatus === 'reconnecting') {
-      return 'Trying to reconnect...'
+      return 'Reconnecting...'
     }
-    if (asset.lastStatus === 'reconnectionError') {
+    if (asset.lastStatus === 'error') {
       return (
         <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
-          Change host
+          Try again
         </Button>
       )
     }
-    if (
-      asset.lastStatus === 'error' ||
-      (asset.lastStatus === 'inProgress' && asset.progress === 0 && asset.liaisonJudgement === LiaisonJudgement.Pending)
-    ) {
+    if (asset.lastStatus === 'missing') {
       return (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
@@ -212,7 +191,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     if (asset.lastStatus === 'completed') {
       return <SvgAlertSuccess />
     }
-    if (asset.lastStatus === 'error') {
+    if (asset.lastStatus === 'error' || asset.lastStatus === 'missing') {
       return <SvgAlertError />
     }
     return (

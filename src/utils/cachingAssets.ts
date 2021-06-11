@@ -98,23 +98,24 @@ type NormalizedVideoEdge = Omit<VideoEdge, 'node'> & {
 }
 
 export const removeVideoFromCache = (videoId: string, client: ApolloClient<object>) => {
-  client.cache.evict({ id: `Video:${videoId}` })
+  const videoRef = `Video:${videoId}`
   client.cache.modify({
     fields: {
       videos: (existingVideos = []) => {
         return existingVideos.filter((video: VideoFieldsFragment) => video.id !== videoId)
       },
-      videosConnection: (existing = {}, opts) => {
+      videosConnection: (existing = {}) => {
         return (
           existing && {
             ...existing,
-            totalCount: existing.edges.find((edge: NormalizedVideoEdge) => edge.node.__ref === `Video:${videoId}`)
+            totalCount: existing.edges.find((edge: NormalizedVideoEdge) => edge.node.__ref === videoRef)
               ? existing.totalCount - 1
               : existing.totalCount,
-            edges: existing.edges.filter((edge: NormalizedVideoEdge) => edge.node.__ref !== `Video:${videoId}`),
+            edges: existing.edges.filter((edge: NormalizedVideoEdge) => edge.node.__ref !== videoRef),
           }
         )
       },
     },
   })
+  client.cache.evict({ id: videoRef })
 }

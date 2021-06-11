@@ -3,7 +3,6 @@ import { formatISO } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 
-import { useRandomStorageProviderUrl } from '@/api/hooks'
 import {
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
@@ -56,7 +55,6 @@ export const EditVideoSheet: React.FC = () => {
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const { startFileUpload } = useUploadsManager(activeChannelId)
@@ -164,41 +162,31 @@ export const EditVideoSheet: React.FC = () => {
     }
 
     const uploadAssets = (videoId: VideoId) => {
-      const randomStorageProviderUrl = getRandomStorageProviderUrl()
-
-      if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
+      if (videoInputFile?.blob && videoContentId) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        startFileUpload(
-          videoInputFile.blob,
-          {
-            contentId: videoContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
+        startFileUpload(videoInputFile.blob, {
+          contentId: videoContentId,
+          owner: activeChannelId,
+          parentObject: {
             type: 'video',
-            dimensions: width && height ? { width, height } : undefined,
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'video',
+          dimensions: width && height ? { width, height } : undefined,
+        })
       }
-      if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
-        startFileUpload(
-          thumbnailInputFile.blob,
-          {
-            contentId: thumbnailContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
-            type: 'thumbnail',
-            dimensions: thumbnailInputFile.assetDimensions,
-            imageCropData: thumbnailInputFile.imageCropData,
+      if (thumbnailInputFile?.blob && thumbnailContentId) {
+        startFileUpload(thumbnailInputFile.blob, {
+          contentId: thumbnailContentId,
+          owner: activeChannelId,
+          parentObject: {
+            type: 'video',
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'thumbnail',
+          dimensions: thumbnailInputFile.assetDimensions,
+          imageCropData: thumbnailInputFile.imageCropData,
+        })
       }
     }
 

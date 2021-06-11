@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { useRandomStorageProviderUrl } from '@/api/hooks'
 import { AssetAvailability, DataObject } from '@/api/queries'
+import { useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 
 export const useAsset = () => {
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
+  const { getStorageProvider } = useStorageProviders()
 
   const getAssetUrl = useCallback(
     (availability?: AssetAvailability, assetUrls?: string[], dataObject?: DataObject | null) => {
@@ -22,12 +22,12 @@ export const useAsset = () => {
         return createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata)
       }
 
-      const randomStorageUrl = getRandomStorageProviderUrl()
-      if (randomStorageUrl) {
-        return createStorageNodeUrl(dataObject.joystreamContentId, randomStorageUrl)
+      const storageProvider = getStorageProvider()
+      if (storageProvider?.url) {
+        return createStorageNodeUrl(dataObject.joystreamContentId, storageProvider.url)
       }
     },
-    [getRandomStorageProviderUrl]
+    [getStorageProvider]
   )
 
   return { getAssetUrl }

@@ -28,7 +28,7 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const checkConnection = useCallback(async () => {
     try {
       const res = await withTimeout(
-        fetch('https://google.com', {
+        fetch('https://www.google.com', {
           method: 'HEAD',
           mode: 'no-cors',
         }),

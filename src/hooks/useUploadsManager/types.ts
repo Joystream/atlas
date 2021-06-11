@@ -5,7 +5,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 type AssetParent = 'video' | 'channel'
 
-export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'reconnectionError'
+export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'missing'
 
 export type AssetUpload = {
   contentId: string
@@ -40,12 +40,7 @@ export type StartFileUploadOptions = {
 
 export type UploadManagerValue = {
   uploadsState: AssetUploadWithProgress[][]
-  startFileUpload: (
-    file: File | Blob | null,
-    asset: InputAssetUpload,
-    storageMetadata: string,
-    opts?: StartFileUploadOptions
-  ) => void
+  startFileUpload: (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => void
   isLoading: boolean
 }
 export type UploadsProgressRecord = Record<string, number>

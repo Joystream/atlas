@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 
-import { LiaisonJudgement } from '@/api/queries'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
@@ -31,11 +30,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
-  const reconnectionErrorsCount = uploadData.filter((file) => file.lastStatus === 'reconnectionError').length
-  const isPendingCount = uploadData.filter(
-    (file) =>
-      file.liaisonJudgement === LiaisonJudgement.Pending && file.progress === 0 && file.lastStatus !== 'completed'
-  ).length
+  const missingAssetsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'missing').length
 
   const allAssetsSize = uploadData.reduce((acc, file) => acc + file.size, 0)
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
@@ -46,26 +41,24 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
   const renderAssetsGroupInfo = () => {
-    if (reconnectionErrorsCount) {
-      return (
-        <Text variant="subtitle2">{`(${reconnectionErrorsCount}) Asset${
-          reconnectionErrorsCount > 1 ? 's' : ''
-        } upload failed`}</Text>
-      )
-    }
     if (errorsCount) {
-      return <Text variant="subtitle2">{`(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} lost connection`}</Text>
+      return <Text variant="subtitle2">{`(${errorsCount}) Asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
     }
-    if (isPendingCount) {
+    if (missingAssetsCount) {
       return (
-        <Text variant="subtitle2">{`(${isPendingCount}) Asset${isPendingCount > 1 ? 's' : ''} lost connection`}</Text>
+        <Text variant="subtitle2">{`(${missingAssetsCount}) Asset${
+          missingAssetsCount > 1 ? 's' : ''
+        } lost connection`}</Text>
       )
     }
     if (isWaiting) {
       return <Text variant="subtitle2">Waiting for upload...</Text>
     }
+    if (isCompleted) {
+      return <Text variant="subtitle2">Completed</Text>
+    }
 
-    return <Text variant="subtitle2">{`Uploaded (${isCompleted ? 100 : masterProgress}%)`}</Text>
+    return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
   }
 
   return (
@@ -76,7 +69,13 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
       >
         <ProgressBar progress={isCompleted ? 100 : masterProgress} />
         <Thumbnail>
-          {errorsCount ? <SvgAlertError /> : isChannelType ? <SvgNavChannel /> : <SvgOutlineVideo />}
+          {errorsCount || missingAssetsCount ? (
+            <SvgAlertError />
+          ) : isChannelType ? (
+            <SvgNavChannel />
+          ) : (
+            <SvgOutlineVideo />
+          )}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>

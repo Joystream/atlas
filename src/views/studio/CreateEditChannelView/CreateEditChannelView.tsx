@@ -3,7 +3,7 @@ import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
-import { useChannel, useRandomStorageProviderUrl } from '@/api/hooks'
+import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
 import { languages } from '@/config/languages'
@@ -76,8 +76,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
 
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
-
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
 
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
@@ -231,40 +229,31 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     }
 
     const uploadAssets = (channelId: ChannelId) => {
-      const storageProviderUrl = getRandomStorageProviderUrl()
-      if (data.avatar.blob && avatarContentId && storageProviderUrl) {
-        startFileUpload(
-          data.avatar.blob,
-          {
-            contentId: avatarContentId,
-            owner: channelId,
-            parentObject: {
-              type: 'channel',
-              id: channelId,
-            },
-            dimensions: data.avatar.assetDimensions ?? undefined,
-            imageCropData: data.avatar.imageCropData ?? undefined,
-            type: 'avatar',
+      if (data.avatar.blob && avatarContentId) {
+        startFileUpload(data.avatar.blob, {
+          contentId: avatarContentId,
+          owner: channelId,
+          parentObject: {
+            type: 'channel',
+            id: channelId,
           },
-          storageProviderUrl
-        )
+          dimensions: data.avatar.assetDimensions ?? undefined,
+          imageCropData: data.avatar.imageCropData ?? undefined,
+          type: 'avatar',
+        })
       }
-      if (data.cover.blob && coverContentId && storageProviderUrl) {
-        startFileUpload(
-          data.cover.blob,
-          {
-            contentId: coverContentId,
-            owner: channelId,
-            parentObject: {
-              type: 'channel',
-              id: channelId,
-            },
-            dimensions: data.cover.assetDimensions ?? undefined,
-            imageCropData: data.cover.imageCropData ?? undefined,
-            type: 'cover',
+      if (data.cover.blob && coverContentId) {
+        startFileUpload(data.cover.blob, {
+          contentId: coverContentId,
+          owner: channelId,
+          parentObject: {
+            type: 'channel',
+            id: channelId,
           },
-          storageProviderUrl
-        )
+          dimensions: data.cover.assetDimensions ?? undefined,
+          imageCropData: data.cover.imageCropData ?? undefined,
+          type: 'cover',
+        })
       }
     }
 
