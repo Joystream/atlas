@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useUploadsManager, useAuthorizedUser, useDialog } from '@/hooks'
+import { useUploadsManager, useDialog } from '@/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { Text, CircularProgressbar, Button } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
@@ -29,8 +29,7 @@ type AssetLineProps = {
 
 const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
-  const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload } = useUploadsManager(activeChannelId)
+  const { startFileUpload } = useUploadsManager()
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)

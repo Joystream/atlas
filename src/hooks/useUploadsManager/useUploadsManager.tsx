@@ -7,7 +7,6 @@ import * as rax from 'retry-axios'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
-import { ChannelId } from '@/joystream-lib'
 import { createStorageNodeUrl } from '@/utils/asset'
 
 import { useUploadsManagerStore } from './store'
@@ -43,8 +42,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
-  const { channel, loading: channelLoading } = useChannel(activeChannelId ?? '')
-  const { videos, loading: videosLoading } = useVideos(
+  const { loading: channelLoading } = useChannel(activeChannelId ?? '')
+  const { loading: videosLoading } = useVideos(
     {
       where: {
         id_in: uploadsState.filter((item) => item.parentObject.type === 'video').map((item) => item.parentObject.id),
@@ -86,25 +85,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     progress: uploadsProgress[asset.contentId] ?? 0,
   }))
 
-  const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
-  const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
-  const allDataObjects = [...channelDataObjects, ...videosDataObjects]
-
-  // Enriching data with pending/accepted/rejected status
-  const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress
-    .map((asset) => {
-      const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
-      if (!dataObject && !channelLoading && !videosLoading) {
-        return null
-      }
-
-      return { ...asset, ipfsContentId: dataObject?.ipfsContentId }
-    })
-    .filter((asset) => asset !== null)
-
   // Grouping all assets by parent id (videos, channel)
   const uploadsStateGroupedByParentObjectId = Object.values(
-    uploadsStateWithLiaisonJudgement.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+    uploadsStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       if (!asset) {
         return acc
       }
@@ -151,11 +134,18 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
 
   const startFileUpload = useCallback(
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
-      const storageProvider = getStorageProvider()
-      if (!storageProvider) {
+      let storageUrl: string, storageProviderId: string
+      try {
+        const storageProvider = getStorageProvider()
+        if (!storageProvider) {
+          return
+        }
+        storageUrl = storageProvider.url
+        storageProviderId = storageProvider.id
+      } catch (e) {
+        console.log('Failed to find storage provider', e)
         return
       }
-      const { url: storageUrl, id: storageProviderId } = storageProvider
 
       console.debug(`Uploading to ${storageUrl}`)
 
@@ -167,9 +157,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
       }
 
-      rax.attach()
-      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
       try {
+        rax.attach()
+        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
         }
@@ -250,18 +240,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 }
 
-const useUploadsManagerContext = () => {
+export const useUploadsManager = () => {
   const ctx = useContext(UploadManagerContext)
   if (ctx === undefined) {
     throw new Error('useUploadsManager must be used within a UploadManagerProvider')
   }
   return ctx
-}
-
-export const useUploadsManager = (channelId: ChannelId) => {
-  const { uploadsState, ...rest } = useUploadsManagerContext()
-  return {
-    uploadsState,
-    ...rest,
-  }
 }

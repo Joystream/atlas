@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 
-import { useVideo } from '@/api/hooks'
+import { useChannel, useVideo } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
@@ -29,7 +29,8 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
-  const { video, loading } = useVideo(uploadData[0].parentObject.id, { skip: isChannelType })
+  const { video, loading: videoLoading } = useVideo(uploadData[0].parentObject.id, { skip: isChannelType })
+  const { channel, loading: channelLoading } = useChannel(uploadData[0].parentObject.id, { skip: !isChannelType })
 
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
@@ -64,7 +65,21 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
     return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
   }
 
-  if (loading) {
+  const enrichedUploadData =
+    (isChannelType && (channelLoading || !channel)) || (!isChannelType && (videoLoading || !video))
+      ? uploadData
+      : uploadData.map((asset) => {
+          const typeToAsset = {
+            'video': video?.mediaDataObject,
+            'thumbnail': video?.thumbnailPhotoDataObject,
+            'avatar': channel?.avatarPhotoDataObject,
+            'cover': channel?.coverPhotoDataObject,
+          }
+          const fetchedAsset = typeToAsset[asset.type]
+          return { ...asset, ipfsContentId: fetchedAsset?.ipfsContentId }
+        })
+
+  if (videoLoading || channelLoading) {
     return <AssetGroupUploadBarPlaceholder />
   }
 
@@ -98,7 +113,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
         </UploadInfoContainer>
       </AssetsGroupUploadBarContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
-        {uploadData.map((file, idx) => (
+        {enrichedUploadData.map((file, idx) => (
           <AssetLine key={file.contentId} asset={file} isLast={uploadData.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>

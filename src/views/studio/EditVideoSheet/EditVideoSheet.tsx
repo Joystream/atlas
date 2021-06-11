@@ -57,7 +57,7 @@ export const EditVideoSheet: React.FC = () => {
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const { startFileUpload } = useUploadsManager(activeChannelId)
+  const { startFileUpload } = useUploadsManager()
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const client = useApolloClient()

@@ -5,7 +5,7 @@ import { Button, TextField } from '@/shared/components'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload, uploadsState } = useUploadsManager(activeChannelId)
+  const { startFileUpload, uploadsState } = useUploadsManager()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

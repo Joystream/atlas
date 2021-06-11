@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useAuthorizedUser, useUploadsManager } from '@/hooks'
+import { useUploadsManager } from '@/hooks'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
@@ -8,8 +8,7 @@ import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 
 const MyUploadsView: React.FC = () => {
-  const { activeChannelId } = useAuthorizedUser()
-  const { uploadsState, isLoading } = useUploadsManager(activeChannelId)
+  const { uploadsState, isLoading } = useUploadsManager()
 
   const hasUploads = uploadsState.length > 0
 
