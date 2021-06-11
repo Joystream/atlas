@@ -90,6 +90,7 @@ const CreateMemberView = () => {
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
+      closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       openErrorDialog({
         variant: 'error',
