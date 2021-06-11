@@ -19,6 +19,7 @@ import {
 } from './types'
 
 const RETRIES_COUNT = 3
+const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
@@ -188,7 +189,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           raxConfig: {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
-            retryDelay: 1000,
+            retryDelay: RETRY_DELAY,
             backoffType: 'static',
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
