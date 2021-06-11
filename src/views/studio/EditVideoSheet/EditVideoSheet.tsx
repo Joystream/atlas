@@ -239,7 +239,7 @@ export const EditVideoSheet: React.FC = () => {
           : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
       onTxFinalize: uploadAssets,
       onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => completed && setSheetState('minimized'),
+      onTxClose: (completed) => (completed ? setSheetState('minimized') : undefined),
       successMessage: {
         title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
         description: isNew

@@ -81,14 +81,16 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     }
   }, [updateAsset, uploadsState, displaySnackbar, navigate])
 
-  const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
-    ...asset,
-    progress: uploadsProgress[asset.contentId] ?? 0,
-  }))
+  const filteredUploadStateWithProgress: AssetUploadWithProgress[] = uploadsState
+    .filter((asset) => asset.owner === activeChannelId)
+    .map((asset) => ({
+      ...asset,
+      progress: uploadsProgress[asset.contentId] ?? 0,
+    }))
 
   // Grouping all assets by parent id (videos, channel)
   const uploadsStateGroupedByParentObjectId = Object.values(
-    uploadsStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+    filteredUploadStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       if (!asset) {
         return acc
       }

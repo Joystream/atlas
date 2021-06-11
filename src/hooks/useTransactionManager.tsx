@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { ActionDialog, TransactionDialog } from '@/components'
+import { TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 
@@ -15,10 +15,10 @@ type SuccessMessage = {
 }
 type HandleTransactionOpts<T> = {
   txFactory: (updateStatus: UpdateStatusFn) => Promise<ExtrinsicResult<T>>
-  preProcess?: () => Promise<void>
-  onTxFinalize?: (data: T) => void
-  onTxSync?: (data: T) => void
-  onTxClose?: (completed: boolean) => void
+  preProcess?: () => void | Promise<void>
+  onTxFinalize?: (data: T) => void | Promise<unknown>
+  onTxSync?: (data: T) => void | Promise<unknown>
+  onTxClose?: (completed: boolean) => void | Promise<unknown>
   successMessage: SuccessMessage
 }
 
@@ -35,8 +35,8 @@ TransactionManagerContext.displayName = 'TransactionManagerContext'
 export const TransactionManagerProvider: React.FC = ({ children }) => {
   const [status, setStatus] = useState<ExtrinsicStatus | null>(null)
   const [finalizationBlock, setFinalizationBlock] = useState<number | null>(null)
-  const [syncCallback, setSyncCallback] = useState<(() => void) | null>(null)
-  const [dialogCloseCallback, setDialogCloseCallback] = useState<(() => void) | null>(null)
+  const [syncCallback, setSyncCallback] = useState<(() => void | Promise<unknown>) | null>(null)
+  const [dialogCloseCallback, setDialogCloseCallback] = useState<(() => void | Promise<unknown>) | null>(null)
   const [successMessage, setSuccessMessage] = useState<SuccessMessage>({ title: '', description: '' })
 
   // Keep persistent subscription to the query node. If this proves problematic for some reason we can skip until in Syncing
@@ -75,8 +75,14 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
 
   const { displaySnackbar } = useSnackbar()
 
-  const handleDialogClose = useCallback(() => {
-    dialogCloseCallback?.()
+  const handleDialogClose = useCallback(async () => {
+    try {
+      if (dialogCloseCallback) {
+        await dialogCloseCallback()
+      }
+    } catch (e) {
+      console.error('Transaction dialog close callback failed', e)
+    }
     reset()
   }, [dialogCloseCallback])
 
@@ -86,7 +92,16 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     }
     if (queryNodeState.indexerHead >= finalizationBlock) {
       setStatus(ExtrinsicStatus.Completed)
-      syncCallback?.()
+      const runCallback = async () => {
+        try {
+          if (syncCallback) {
+            await syncCallback()
+          }
+        } catch (e) {
+          console.error('Transaction sync callback failed', e)
+        }
+      }
+      runCallback()
 
       openCompletedDialog()
     }
@@ -114,7 +129,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       }
       setSuccessMessage(successMessage)
       // set up fallback dialog close callback
-      setDialogCloseCallback(() => () => onTxClose?.(false))
+      setDialogCloseCallback(() => async () => await onTxClose?.(false))
 
       // if provided, do any preprocessing
       if (preProcess) {
@@ -129,10 +144,10 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       // set up query node sync
       setStatus(ExtrinsicStatus.Syncing)
       setFinalizationBlock(block)
-      setSyncCallback(() => () => onTxSync?.(data))
+      setSyncCallback(() => async () => await onTxSync?.(data))
 
       // set up dialog close callback
-      setDialogCloseCallback(() => () => onTxClose?.(true))
+      setDialogCloseCallback(() => async () => await onTxClose?.(true))
 
       // call tx callback
       onTxFinalize?.(data)

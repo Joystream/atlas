@@ -299,7 +299,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
           : joystream.updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, updateStatus),
       onTxFinalize: uploadAssets,
       onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => completed && newChannel && navigate(absoluteRoutes.studio.videos()),
+      onTxClose: (completed) => (completed && newChannel ? navigate(absoluteRoutes.studio.videos()) : undefined),
       successMessage: {
         title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
         description: newChannel
