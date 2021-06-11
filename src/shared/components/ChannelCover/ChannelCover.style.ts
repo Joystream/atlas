@@ -17,7 +17,7 @@ const GRADIENT_OVERLAP = 50
 const GRADIENT_HEIGHT = 100
 
 type CoverImageProps = {
-  src: string
+  $src: string
 }
 
 export const MediaWrapper = styled.div`
@@ -44,10 +44,10 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-position: center;
   background-attachment: local;
   background-size: cover;
-
-  /* as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-   this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing */
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px), url(${({ src }) => src});
+  // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
+  // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
+  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px),
+    url(${({ $src }) => $src});
 
   ${media.small} {
     background-image: linear-gradient(
@@ -56,7 +56,7 @@ export const CoverImage = styled.div<CoverImageProps>`
         black ${Math.min(CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP, 0)}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
-      url(${({ src }) => src});
+      url(${({ $src }) => $src});
   }
 
   ${media.medium} {
@@ -66,7 +66,7 @@ export const CoverImage = styled.div<CoverImageProps>`
         black ${Math.min(CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP, 0)}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
-      url(${({ src }) => src});
+      url(${({ $src }) => $src});
   }
 
   ${media.large} {
@@ -76,7 +76,7 @@ export const CoverImage = styled.div<CoverImageProps>`
         black ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
-      url(${({ src }) => src});
+      url(${({ $src }) => $src});
   }
 
   ${media.xlarge} {
@@ -86,7 +86,7 @@ export const CoverImage = styled.div<CoverImageProps>`
         black ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
-      url(${({ src }) => src});
+      url(${({ $src }) => $src});
   }
 
   ${media.xxlarge} {
@@ -96,7 +96,7 @@ export const CoverImage = styled.div<CoverImageProps>`
         black ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP}px,
         rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
       ),
-      url(${({ src }) => src});
+      url(${({ $src }) => $src});
   }
 `
 
