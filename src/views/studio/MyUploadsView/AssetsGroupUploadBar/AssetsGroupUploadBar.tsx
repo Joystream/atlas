@@ -89,7 +89,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar progress={isCompleted ? 100 : masterProgress} />
+        <ProgressBar progress={isCompleted ? 100 : masterProgress} isCompleted={isCompleted} />
         <Thumbnail>
           {errorsCount || missingAssetsCount ? (
             <SvgAlertError />

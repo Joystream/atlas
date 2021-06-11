@@ -6,6 +6,7 @@ import { colors, sizes, media, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
   progress: number
+  isCompleted: boolean
 }
 
 type AssetsGroupUploadBarProps = {
@@ -62,12 +63,12 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  animation: ${pulse} 2.5s infinite ease-in-out;
-  ${({ progress }) =>
-    progress === 100 &&
-    css`
-      animation: none;
-    `}
+  animation: ${({ isCompleted }) =>
+    isCompleted
+      ? 'none'
+      : css`
+          ${pulse} 2.5s infinite ease-in-out
+        `};
 `
 
 export const Thumbnail = styled.div`
