@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react'
 
+import { useVideo } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
+import { AssetGroupUploadBarPlaceholder } from '@/views/studio/MyUploadsView/AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
 
 import {
   Container,
@@ -27,6 +29,8 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
 
   const isChannelType = uploadData[0].parentObject.type === 'channel'
 
+  const { video, loading } = useVideo(uploadData[0].parentObject.id, { skip: isChannelType })
+
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
@@ -36,8 +40,7 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
   const alreadyUploadedSize = uploadData.reduce((acc, file) => acc + (file.progress / 100) * file.size, 0)
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
 
-  const videoTitle = uploadData.find((asset) => asset.type === 'video')?.title
-  const assetsGroupTitleText = isChannelType ? 'Channel assets' : videoTitle
+  const assetsGroupTitleText = isChannelType ? 'Channel assets' : video?.title
   const assetsGroupNumberText = `${uploadData.length} asset${uploadData.length > 1 ? 's' : ''}`
 
   const renderAssetsGroupInfo = () => {
@@ -59,6 +62,10 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
     }
 
     return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
+  }
+
+  if (loading) {
+    return <AssetGroupUploadBarPlaceholder />
   }
 
   return (

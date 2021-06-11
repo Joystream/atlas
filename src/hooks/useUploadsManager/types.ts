@@ -1,4 +1,3 @@
-import { LiaisonJudgement } from '@/api/queries'
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
@@ -9,6 +8,7 @@ export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnec
 
 export type AssetUpload = {
   contentId: string
+  ipfsContentId?: string
   parentObject: {
     type: AssetParent
     id: ChannelId | VideoId
@@ -16,14 +16,11 @@ export type AssetUpload = {
   owner: ChannelId
   type: AssetType
   lastStatus: AssetUploadStatus
-  liaisonJudgement?: LiaisonJudgement
-  ipfsContentId?: string
   // size in bytes
   size: number
   dimensions?: AssetDimensions
   imageCropData?: ImageCropData
   metadata?: string
-  title?: string | null
 }
 export type AssetUploadWithProgress = AssetUpload & {
   // progress of upload - 0...1

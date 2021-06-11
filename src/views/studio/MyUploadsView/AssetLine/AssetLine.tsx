@@ -84,16 +84,7 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         )
       }
     },
-    [
-      asset.contentId,
-      asset.ipfsContentId,
-      asset.owner,
-      asset.parentObject.id,
-      asset.parentObject.type,
-      asset.type,
-      openDifferentFileDialog,
-      startFileUpload,
-    ]
+    [asset, openDifferentFileDialog, startFileUpload]
   )
 
   const isVideo = asset.type === 'video'

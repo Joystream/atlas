@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { useChannel, useVideos } from '@/api/hooks'
-import { LiaisonJudgement } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
 import { ChannelId } from '@/joystream-lib'
@@ -55,6 +54,33 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
   const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
+  // Will set all incomplete assets' status to missing on initial mount
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      return
+    }
+    isInitialMount.current = false
+
+    let missingAssetsCount = 0
+    uploadsState.forEach((asset) => {
+      if (asset.lastStatus !== 'completed') {
+        updateAsset(asset.contentId, 'missing')
+        missingAssetsCount++
+      }
+    })
+
+    if (missingAssetsCount > 0) {
+      displaySnackbar({
+        title: `(${missingAssetsCount}) Asset${missingAssetsCount > 1 ? 's' : ''} waiting to resume upload`,
+        description: 'Reconnect files to fix the issue',
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        iconType: 'warning',
+      })
+    }
+  }, [updateAsset, uploadsState, displaySnackbar, navigate])
+
   const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
     ...asset,
     progress: uploadsProgress[asset.contentId] ?? 0,
@@ -72,74 +98,24 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         return null
       }
 
-      return { ...asset, liaisonJudgement: dataObject?.liaisonJudgement, ipfsContentId: dataObject?.ipfsContentId }
+      return { ...asset, ipfsContentId: dataObject?.ipfsContentId }
     })
     .filter((asset) => asset !== null)
 
-  const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) => asset?.liaisonJudgement === LiaisonJudgement.Pending && asset.lastStatus === 'error'
-  )
-
-  useEffect(() => {
-    if (!lostConnectionAssets.length) {
-      return
-    }
-    displaySnackbar({
-      title: `(${lostConnectionAssets.length}) Asset${
-        lostConnectionAssets.length > 1 ? 's' : ''
-      } waiting to resume upload`,
-      description: 'Reconnect files to fix the issue',
-      actionText: 'See',
-      onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-      iconType: 'warning',
-    })
-  }, [displaySnackbar, lostConnectionAssets.length, navigate])
-
-  // Enriching video type assets with video title
-  const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
-    if (asset?.type === 'video') {
-      const video = videos?.find((video) => video.mediaDataObject?.joystreamContentId === asset.contentId)
-      const title = video?.title ?? null
-      return { ...asset, title }
-    }
-    return asset
-  })
-
-  // Check if liaison data and video title is available
-  uploadsStateWithVideoTitles.map((asset) => {
-    if (!channelLoading && !videosLoading && (!asset?.liaisonJudgement || !asset?.ipfsContentId)) {
-      console.warn(`Asset does not contain liaisonJudgement. ContentId: ${asset?.contentId}`)
-    }
-    if (!channelLoading && !videosLoading && asset?.type === 'video' && !asset?.title) {
-      console.warn(`Video type asset does not contain title. ContentId: ${asset.contentId}`)
-    }
-  })
-
   // Grouping all assets by parent id (videos, channel)
   const uploadsStateGroupedByParentObjectId = Object.values(
-    uploadsStateWithVideoTitles.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+    uploadsStateWithLiaisonJudgement.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       if (!asset) {
         return acc
       }
       const key = asset.parentObject.id
-      !acc[key] ? (acc[key] = [{ ...asset }]) : acc[key].push(asset)
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(asset)
       return acc
     }, {})
   )
-
-  // Will set all incompleted assets' status to error on initial mount
-  const isInitialMount = useRef(true)
-  useEffect(() => {
-    if (!isInitialMount.current) {
-      return
-    }
-    uploadsState.forEach((asset) => {
-      if (asset.lastStatus !== 'completed') {
-        updateAsset(asset.contentId, 'missing')
-      }
-    })
-    isInitialMount.current = false
-  }, [updateAsset, uploadsState])
 
   const displayUploadingNotification = useRef(
     debounce(() => {
