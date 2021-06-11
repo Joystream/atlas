@@ -11,6 +11,7 @@ import {
   UnfollowChannelMutation,
   UnfollowChannelMutationVariables,
 } from '@/api/queries'
+import { Logger } from '@/utils/logger'
 
 import { BaseDataQuery, DataMutator, Link, MocksStore } from './types'
 import { normalizeVariables, parseOperationDocument } from './utils'
@@ -22,7 +23,7 @@ const createGenericMutationHandler = <TQuery extends BaseDataQuery, TVariables =
 ) => {
   const { operationName } = parseOperationDocument(mutationDocument)
   if (!operationName) {
-    console.error('Unable to resolve operation name for mocking', mutationDocument)
+    Logger.error('Unable to resolve operation name for mocking', mutationDocument)
     return
   }
 

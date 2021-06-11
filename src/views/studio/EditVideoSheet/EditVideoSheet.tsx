@@ -23,6 +23,7 @@ import {
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
+import { Logger } from '@/utils/logger'
 
 import { EditVideoForm } from './EditVideoForm'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
@@ -146,7 +147,7 @@ export const EditVideoSheet: React.FC = () => {
         assets.video = asset
         videoContentId = contentId
       } else if (dirtyFields.assets?.video) {
-        console.warn('Missing video data')
+        Logger.warn('Missing video data')
       }
 
       if (thumbnailInputFile?.blob && thumbnailHashPromise) {
@@ -157,7 +158,7 @@ export const EditVideoSheet: React.FC = () => {
         assets.thumbnail = asset
         thumbnailContentId = contentId
       } else if (dirtyFields.assets?.thumbnail) {
-        console.warn('Missing thumbnail data')
+        Logger.warn('Missing thumbnail data')
       }
     }
 

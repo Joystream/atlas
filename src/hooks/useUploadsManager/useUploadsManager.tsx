@@ -8,6 +8,7 @@ import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
+import { Logger } from '@/utils/logger'
 
 import { useUploadsManagerStore } from './store'
 import {
@@ -150,7 +151,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         storageUrl = storageProvider.url
         storageProviderId = storageProvider.id
       } catch (e) {
-        console.error('Failed to find storage provider', e)
+        Logger.error('Failed to find storage provider', e)
         return
       }
 
@@ -226,7 +227,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
       } catch (e) {
-        console.error('Failed to upload to storage provider', { storageUrl, error: e })
+        Logger.error('Failed to upload to storage provider', { storageUrl, error: e })
         updateAsset(asset.contentId, 'error')
         setAssetUploadProgress(0)
 
