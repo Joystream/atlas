@@ -19,8 +19,8 @@ import {
 
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 const SORT_OPTIONS = [
-  { name: 'Newest first', value: VideoOrderByInput.CreatedAtAsc },
-  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtDesc },
+  { name: 'Newest first', value: VideoOrderByInput.CreatedAtDesc },
+  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtAsc },
 ]
 
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -33,7 +33,7 @@ export const MyVideosView = () => {
   const { displaySnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
-    VideoOrderByInput.CreatedAtAsc
+    VideoOrderByInput.CreatedAtDesc
   )
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
