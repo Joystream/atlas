@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { media, transitions, zIndex } from '@/shared/theme'
 
-import Checkout from '../Checkout'
+import { Checkout } from '../Checkout'
 
 type ActionBarTransactionWrapperProps = {
   fullWidth?: boolean

@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import Text from '@/shared/components/Text'
+import { Text } from '@/shared/components/Text'
 
 import { Avatar } from '..'
 import { colors, sizes, transitions, typography } from '../../theme'

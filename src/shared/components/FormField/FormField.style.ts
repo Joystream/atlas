@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, typography } from '@/shared/theme'
 
-import Text from '../Text'
+import { Text } from '../Text'
 
 export const FormFieldWrapper = styled.div`
   margin-top: ${sizes(2)};

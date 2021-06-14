@@ -3,8 +3,8 @@ import { useState, useRef } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import TextField, { TextFieldProps } from '.'
-import Button from '../Button'
+import { TextFieldProps, TextField } from '.'
+import { Button } from '../Button'
 
 export default {
   title: 'Shared/T/TextField',

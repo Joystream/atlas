@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { zIndex } from '../../theme'
-import IconButton from '../IconButton'
+import { IconButton } from '../IconButton'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 

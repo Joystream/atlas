@@ -18,8 +18,8 @@ import {
   StyledSvgGlyphChevronDown,
 } from './Checkout.styles'
 
-import IconButton from '../IconButton'
-import Text from '../Text'
+import { IconButton } from '../IconButton'
+import { Text } from '../Text'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type CheckoutProps = {

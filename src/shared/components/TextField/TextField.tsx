@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 
 import { TextInput } from './TextField.style'
 
-import InputBase, { InputBaseProps } from '../InputBase'
+import { InputBaseProps, InputBase } from '../InputBase'
 
 export type TextFieldProps = {
   name?: string

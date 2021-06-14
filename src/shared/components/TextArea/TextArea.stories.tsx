@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
-import TextArea, { TextAreaProps } from './TextArea'
+import { TextAreaProps, TextArea } from './TextArea'
 
 import { Button } from '..'
 

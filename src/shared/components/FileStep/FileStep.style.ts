@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 
-import CircularProgressbar from '../CircularProgressbar'
-import Text from '../Text'
+import { CircularProgressbar } from '../CircularProgressbar'
+import { Text } from '../Text'
 
 type StepProps = {
   active?: boolean

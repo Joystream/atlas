@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom'
 
 import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 
-import Avatar from '../Avatar'
-import IconButton from '../IconButton'
-import Placeholder from '../Placeholder'
-import Text from '../Text'
+import { Avatar } from '../Avatar'
+import { IconButton } from '../IconButton'
+import { Placeholder } from '../Placeholder'
+import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
 

@@ -4,7 +4,7 @@ import styled from '@emotion/styled/'
 import { SvgGlyphCheck } from '@/shared/icons'
 import { sizes, colors, transitions } from '@/shared/theme'
 
-import HelperText from '../HelperText'
+import { HelperText } from '../HelperText'
 
 type CheckboxLabelProps = {
   disabled?: boolean

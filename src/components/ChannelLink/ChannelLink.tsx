@@ -4,7 +4,7 @@ import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
-import Avatar, { AvatarSize } from '@/shared/components/Avatar'
+import { AvatarSize, Avatar } from '@/shared/components/Avatar'
 
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 

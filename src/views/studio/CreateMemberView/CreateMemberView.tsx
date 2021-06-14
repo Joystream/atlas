@@ -13,7 +13,7 @@ import { FAUCET_URL } from '@/config/urls'
 import { useUser, useConnectionStatus, useDialog } from '@/hooks'
 import { MemberId } from '@/joystream-lib'
 import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
+import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 
 import {

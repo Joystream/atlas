@@ -5,7 +5,7 @@ import { OverlayManagerProvider, useContextMenu } from '@/hooks'
 import { Button } from '@/shared/components'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
-import ContextMenu, { ContextMenuItem } from './ContextMenu'
+import { ContextMenuItem, ContextMenu } from './ContextMenu'
 
 export default {
   title: 'Shared/C/ContextMenu',

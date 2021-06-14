@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { IconButton } from '@/shared/components'
 import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
-import Text from '../Text'
+import { Text } from '../Text'
 
 export const CONTENT_OVERLAP_MAP = {
   BASE: 0,

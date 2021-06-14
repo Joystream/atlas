@@ -4,7 +4,7 @@ import { darken } from 'polished'
 import { IconButton } from '@/shared/components'
 import { colors, sizes, transitions, media } from '@/shared/theme'
 
-import Text from '../Text'
+import { Text } from '../Text'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean

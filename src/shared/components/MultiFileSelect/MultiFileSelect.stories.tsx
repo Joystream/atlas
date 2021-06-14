@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { OverlayManagerProvider } from '@/hooks'
 
-import MultiFileSelect, { MultiFileSelectProps, InputFilesState } from './MultiFileSelect'
+import { MultiFileSelectProps, InputFilesState, MultiFileSelect } from './MultiFileSelect'
 
 export default {
   title: 'Shared/M/MultiFileSelect',

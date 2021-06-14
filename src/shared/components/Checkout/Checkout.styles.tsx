@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import CircularProgressbar from '../CircularProgressbar'
-import Text from '../Text'
+import { CircularProgressbar } from '../CircularProgressbar'
+import { Text } from '../Text'
 
 export const Container = styled.div`
   width: 280px;

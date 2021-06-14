@@ -10,8 +10,8 @@ import { getVideoMetadata } from '@/utils/video'
 
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
-import FileSelect from '../FileSelect'
-import FileStep from '../FileStep'
+import { FileSelect } from '../FileSelect'
+import { FileStep } from '../FileStep'
 
 type InputFile = {
   url?: string | null

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Container, HeadingContainer } from './Gallery.style'
 
-import Carousel, { CarouselProps } from '../Carousel/Carousel'
-import Text from '../Text'
+import { CarouselProps, Carousel } from '../Carousel/Carousel'
+import { Text } from '../Text'
 
 export type GalleryProps = {
   title?: string

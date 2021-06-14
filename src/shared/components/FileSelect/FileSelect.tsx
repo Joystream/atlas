@@ -19,7 +19,7 @@ import {
   Title,
 } from './FileDrop.style'
 
-import Button from '../Button'
+import { Button } from '../Button'
 
 export type FileSelectProps = {
   fileType: FileType

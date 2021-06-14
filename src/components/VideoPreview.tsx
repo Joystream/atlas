@@ -4,10 +4,11 @@ import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
-import VideoPreviewBase, {
+import {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
+  VideoPreviewBase,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { copyToClipboard } from '@/utils/broswer'
 

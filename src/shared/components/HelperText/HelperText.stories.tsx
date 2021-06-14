@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import HelperText, { HelperTextProps } from './HelperText'
+import { HelperTextProps, HelperText } from './HelperText'
 
 export default {
   title: 'Shared/H/HelperText',

@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/shared/theme'
 
-import ButtonBase, { ButtonSize } from '../ButtonBase'
-import Text from '../Text'
+import { ButtonSize, ButtonBase } from '../ButtonBase'
+import { Text } from '../Text'
 
 type ButtonSizeProps = {
   size: ButtonSize

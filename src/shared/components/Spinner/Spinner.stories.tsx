@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import Spinner, { SpinnerProps } from './Spinner'
+import { SpinnerProps, Spinner } from './Spinner'
 
 export default {
   title: 'Shared/S/Spinner',

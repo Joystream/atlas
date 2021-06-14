@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { Text, Button, ChannelPreviewBase } from '@/shared/components'
 
-import Tooltip, { TooltipProps } from './Tooltip'
+import { TooltipProps, Tooltip } from './Tooltip'
 
 export default {
   title: 'Shared/T/Tooltip',

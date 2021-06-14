@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, typography } from '@/shared/theme'
 
-import Text from '../Text'
+import { Text } from '../Text'
 
 export type HelperTextProps = {
   helperTextVariant?: 'default' | 'error' | 'warning'

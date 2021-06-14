@@ -15,7 +15,7 @@ import {
   VideoCountContainer,
 } from './ChannelPreviewBase.style'
 
-import Placeholder from '../Placeholder'
+import { Placeholder } from '../Placeholder'
 
 export type ChannelPreviewBaseProps = {
   avatarUrl?: string | null

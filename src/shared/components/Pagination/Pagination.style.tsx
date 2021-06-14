@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 
-import IconButton from '../IconButton'
+import { IconButton } from '../IconButton'
 
 type PaginationButtonProps = {
   isActive?: boolean
