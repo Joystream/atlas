@@ -226,7 +226,6 @@ export const EditVideoSheet: React.FC = () => {
           isDraft: false,
         })
         removeDraft(selectedVideoTab?.id)
-        removeVideoTab(selectedVideoTabIdx)
       } else {
         writeUrlInCache({
           url: data.assets.thumbnail?.url,
@@ -252,7 +251,12 @@ export const EditVideoSheet: React.FC = () => {
           : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
       onTxFinalize: uploadAssets,
       onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => completed && setSheetState('minimized'),
+      onTxClose: (completed) => {
+        if (completed) {
+          setSheetState('minimized')
+          removeVideoTab(selectedVideoTabIdx)
+        }
+      },
       successMessage: {
         title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
         description: isNew
