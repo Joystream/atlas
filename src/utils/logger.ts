@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export const Logger = {
   log: (message: string, details?: unknown) => {
     console.log(message, details)
@@ -9,5 +10,9 @@ export const Logger = {
 
   error: (message: string, details?: unknown) => {
     console.error(message, details)
+  },
+
+  debug: (message: string, details?: unknown) => {
+    console.debug(message, details)
   },
 }

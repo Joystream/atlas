@@ -155,7 +155,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         return
       }
 
-      console.debug(`Uploading to ${storageUrl}`)
+      Logger.debug(`Uploading to ${storageUrl}`)
 
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
