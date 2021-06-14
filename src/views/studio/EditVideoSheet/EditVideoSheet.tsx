@@ -252,11 +252,11 @@ export const EditVideoSheet: React.FC = () => {
         onTxFinalize: uploadAssets,
         onTxSync: refetchDataAndCacheAssets,
         onTxClose: (completed) => {
-        if (completed) {
-          setSheetState('minimized')
-          removeVideoTab(selectedVideoTabIdx)
-        }
-      },
+          if (completed) {
+            setSheetState('minimized')
+            removeVideoTab(selectedVideoTabIdx)
+          }
+        },
         successMessage: {
           title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
           description: isNew
