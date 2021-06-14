@@ -3,7 +3,6 @@ import { formatISO } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import { FieldNamesMarkedBoolean } from 'react-hook-form'
 
-import { useRandomStorageProviderUrl } from '@/api/hooks'
 import {
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
@@ -56,10 +55,9 @@ export const EditVideoSheet: React.FC = () => {
   const { removeDraft } = useDrafts('video', activeChannelId)
 
   // transaction management
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const { startFileUpload } = useUploadsManager(activeChannelId)
+  const { startFileUpload } = useUploadsManager()
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const client = useApolloClient()
@@ -163,43 +161,37 @@ export const EditVideoSheet: React.FC = () => {
       }
     }
 
-    const uploadAssets = (videoId: VideoId) => {
-      const randomStorageProviderUrl = getRandomStorageProviderUrl()
-
-      if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
+    const uploadAssets = async (videoId: VideoId) => {
+      const uploadPromises: Promise<unknown>[] = []
+      if (videoInputFile?.blob && videoContentId) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        startFileUpload(
-          videoInputFile.blob,
-          {
-            contentId: videoContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
+        const uploadPromise = startFileUpload(videoInputFile.blob, {
+          contentId: videoContentId,
+          owner: activeChannelId,
+          parentObject: {
             type: 'video',
-            dimensions: width && height ? { width, height } : undefined,
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'video',
+          dimensions: width && height ? { width, height } : undefined,
+        })
+        uploadPromises.push(uploadPromise)
       }
-      if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
-        startFileUpload(
-          thumbnailInputFile.blob,
-          {
-            contentId: thumbnailContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
-            type: 'thumbnail',
-            dimensions: thumbnailInputFile.assetDimensions,
-            imageCropData: thumbnailInputFile.imageCropData,
+      if (thumbnailInputFile?.blob && thumbnailContentId) {
+        const uploadPromise = startFileUpload(thumbnailInputFile.blob, {
+          contentId: thumbnailContentId,
+          owner: activeChannelId,
+          parentObject: {
+            type: 'video',
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'thumbnail',
+          dimensions: thumbnailInputFile.assetDimensions,
+          imageCropData: thumbnailInputFile.imageCropData,
+        })
+        uploadPromises.push(uploadPromise)
       }
+      await Promise.all(uploadPromises)
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
@@ -243,27 +235,38 @@ export const EditVideoSheet: React.FC = () => {
       })
     }
 
-    handleTransaction({
-      preProcess: processAssets,
-      txFactory: (updateStatus) =>
-        isNew
-          ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-          : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
-      onTxFinalize: uploadAssets,
-      onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => {
+    try {
+      await handleTransaction({
+        preProcess: processAssets,
+        txFactory: (updateStatus) =>
+          isNew
+            ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+            : joystream.updateVideo(
+                selectedVideoTab.id,
+                activeMemberId,
+                activeChannelId,
+                metadata,
+                assets,
+                updateStatus
+              ),
+        onTxFinalize: uploadAssets,
+        onTxSync: refetchDataAndCacheAssets,
+        onTxClose: (completed) => {
         if (completed) {
           setSheetState('minimized')
           removeVideoTab(selectedVideoTabIdx)
         }
       },
-      successMessage: {
-        title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-        description: isNew
-          ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-          : 'Changes to your video were saved on the blockchain.',
-      },
-    })
+        successMessage: {
+          title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+          description: isNew
+            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+            : 'Changes to your video were saved on the blockchain.',
+        },
+      })
+    } catch (e) {
+      console.error('Transaction handler failed', e)
+    }
   }
 
   const toggleMinimizedSheet = () => {

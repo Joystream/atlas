@@ -1,23 +1,24 @@
 import React from 'react'
 
-import { useAuthorizedUser, useUploadsManager } from '@/hooks'
+import { useUploadsManager } from '@/hooks'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
+import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
 import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
-import { placeholderItems } from './PlaceholderItems'
 
-const MyUploadsView = () => {
-  const { activeChannelId } = useAuthorizedUser()
-  const { uploadsState, isLoading } = useUploadsManager(activeChannelId)
+const MyUploadsView: React.FC = () => {
+  const { uploadsState, isLoading } = useUploadsManager()
 
   const hasUploads = uploadsState.length > 0
+
+  const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <AssetGroupUploadBarPlaceholder key={idx} />)
 
   return (
     <UploadsContainer>
       <StyledText variant="h2">My uploads</StyledText>
       {isLoading ? (
-        placeholderItems.map((Placeholder, idx) => <Placeholder key={`placeholder-${idx}`} />)
+        placeholderItems
       ) : hasUploads ? (
         uploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploadData={files} />)
       ) : (

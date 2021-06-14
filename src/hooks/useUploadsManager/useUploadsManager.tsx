@@ -5,10 +5,8 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { useChannel, useVideos } from '@/api/hooks'
-import { LiaisonJudgement } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar, useUser } from '@/hooks'
-import { ChannelId } from '@/joystream-lib'
+import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 
 import { useUploadsManagerStore } from './store'
@@ -20,7 +18,8 @@ import {
   StartFileUploadOptions,
 } from './types'
 
-const RETRIES_COUNT = 5
+const RETRIES_COUNT = 3
+const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
@@ -33,27 +32,21 @@ type AssetFile = {
   blob: File | Blob
 }
 
-class ReconnectFailedError extends Error {
-  reason: AxiosError
-
-  constructor(reason: AxiosError) {
-    super()
-    this.reason = reason
-  }
-}
-
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
+  const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
   const { displaySnackbar } = useSnackbar()
   const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
+  // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
+  const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
   const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
-  const { channel, loading: channelLoading } = useChannel(activeChannelId ?? '')
-  const { videos, loading: videosLoading } = useVideos(
+  const { loading: channelLoading } = useChannel(activeChannelId ?? '')
+  const { loading: videosLoading } = useVideos(
     {
       where: {
         id_in: uploadsState.filter((item) => item.parentObject.type === 'video').map((item) => item.parentObject.id),
@@ -63,91 +56,56 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
   const pendingNotificationsCounts = useRef({ uploading: 0, uploaded: 0 })
 
-  const uploadsStateWithProgress: AssetUploadWithProgress[] = uploadsState.map((asset) => ({
-    ...asset,
-    progress: uploadsProgress[asset.contentId] ?? 0,
-  }))
-
-  const channelDataObjects = [channel?.avatarPhotoDataObject, channel?.coverPhotoDataObject]
-  const videosDataObjects = videos?.flatMap((video) => [video.mediaDataObject, video.thumbnailPhotoDataObject]) || []
-  const allDataObjects = [...channelDataObjects, ...videosDataObjects]
-
-  // Enriching data with pending/accepted/rejected status
-  const uploadsStateWithLiaisonJudgement = uploadsStateWithProgress
-    .map((asset) => {
-      const dataObject = allDataObjects.find((dataObject) => dataObject?.joystreamContentId === asset.contentId)
-      if (!dataObject && !channelLoading && !videosLoading) {
-        return null
-      }
-
-      return { ...asset, liaisonJudgement: dataObject?.liaisonJudgement, ipfsContentId: dataObject?.ipfsContentId }
-    })
-    .filter((asset) => asset !== null)
-
-  const lostConnectionAssets = uploadsStateWithLiaisonJudgement.filter(
-    (asset) => asset?.liaisonJudgement === LiaisonJudgement.Pending && asset.lastStatus === 'error'
-  )
-
-  useEffect(() => {
-    if (!lostConnectionAssets.length) {
-      return
-    }
-    displaySnackbar({
-      title: `(${lostConnectionAssets.length}) Asset${
-        lostConnectionAssets.length > 1 ? 's' : ''
-      } waiting to resume upload`,
-      description: 'Reconnect files to fix the issue',
-      actionText: 'See',
-      onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-      iconType: 'warning',
-    })
-  }, [displaySnackbar, lostConnectionAssets.length, navigate])
-
-  // Enriching video type assets with video title
-  const uploadsStateWithVideoTitles = uploadsStateWithLiaisonJudgement.map((asset) => {
-    if (asset?.type === 'video') {
-      const video = videos?.find((video) => video.mediaDataObject?.joystreamContentId === asset.contentId)
-      const title = video?.title ?? null
-      return { ...asset, title }
-    }
-    return asset
-  })
-
-  // Check if liaison data and video title is available
-  uploadsStateWithVideoTitles.map((asset) => {
-    if (!channelLoading && !videosLoading && (!asset?.liaisonJudgement || !asset?.ipfsContentId)) {
-      console.warn(`Asset does not contain liaisonJudgement. ContentId: ${asset?.contentId}`)
-    }
-    if (!channelLoading && !videosLoading && asset?.type === 'video' && !asset?.title) {
-      console.warn(`Video type asset does not contain title. ContentId: ${asset.contentId}`)
-    }
-  })
-
-  // Grouping all assets by parent id (videos, channel)
-  const uploadsStateGroupedByParentObjectId = Object.values(
-    uploadsStateWithVideoTitles.reduce((acc: GroupByParentObjectIdAcc, asset) => {
-      if (!asset) {
-        return acc
-      }
-      const key = asset.parentObject.id
-      !acc[key] ? (acc[key] = [{ ...asset }]) : acc[key].push(asset)
-      return acc
-    }, {})
-  )
-
-  // Will set all incompleted assets' status to error on initial mount
+  // Will set all incomplete assets' status to missing on initial mount
   const isInitialMount = useRef(true)
   useEffect(() => {
     if (!isInitialMount.current) {
       return
     }
+    isInitialMount.current = false
+
+    let missingAssetsCount = 0
     uploadsState.forEach((asset) => {
-      if (asset.lastStatus !== 'completed' && asset.lastStatus !== 'error') {
-        updateAsset(asset.contentId, 'error')
+      if (asset.lastStatus !== 'completed') {
+        updateAsset(asset.contentId, 'missing')
+        missingAssetsCount++
+      } else {
+        setIgnoredAssetsIds((ignored) => [...ignored, asset.contentId])
       }
     })
-    isInitialMount.current = false
-  }, [updateAsset, uploadsState])
+
+    if (missingAssetsCount > 0) {
+      displaySnackbar({
+        title: `(${missingAssetsCount}) Asset${missingAssetsCount > 1 ? 's' : ''} waiting to resume upload`,
+        description: 'Reconnect files to fix the issue',
+        actionText: 'See',
+        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+        iconType: 'warning',
+      })
+    }
+  }, [updateAsset, uploadsState, displaySnackbar, navigate])
+
+  const filteredUploadStateWithProgress: AssetUploadWithProgress[] = uploadsState
+    .filter((asset) => asset.owner === activeChannelId && !ignoredAssetsIds.includes(asset.contentId))
+    .map((asset) => ({
+      ...asset,
+      progress: uploadsProgress[asset.contentId] ?? 0,
+    }))
+
+  // Grouping all assets by parent id (videos, channel)
+  const groupedUploadsState = Object.values(
+    filteredUploadStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+      if (!asset) {
+        return acc
+      }
+      const key = asset.parentObject.id
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(asset)
+      return acc
+    }, {})
+  )
 
   const displayUploadingNotification = useRef(
     debounce(() => {
@@ -182,7 +140,22 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const startFileUpload = useCallback(
-    async (file: File | Blob | null, asset: InputAssetUpload, storageUrl: string, opts?: StartFileUploadOptions) => {
+    async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
+      let storageUrl: string, storageProviderId: string
+      try {
+        const storageProvider = getStorageProvider()
+        if (!storageProvider) {
+          return
+        }
+        storageUrl = storageProvider.url
+        storageProviderId = storageProvider.id
+      } catch (e) {
+        console.error('Failed to find storage provider', e)
+        return
+      }
+
+      console.debug(`Uploading to ${storageUrl}`)
+
       const setAssetUploadProgress = (progress: number) => {
         setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
       }
@@ -191,9 +164,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
       }
 
-      rax.attach()
-      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
       try {
+        rax.attach()
+        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
         }
@@ -222,14 +195,21 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           raxConfig: {
             retry: RETRIES_COUNT,
             noResponseRetries: RETRIES_COUNT,
+            // add 400 to default list of codes to retry
+            // seems storage node sometimes fails to calculate the IFPS hash correctly
+            // trying again in that case should succeed
+            statusCodesToRetry: [
+              [100, 199],
+              [400, 400],
+              [429, 429],
+              [500, 599],
+            ],
+            retryDelay: RETRY_DELAY,
+            backoffType: 'static',
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
               if (cfg?.currentRetryAttempt === 1) {
                 updateAsset(asset.contentId, 'reconnecting')
-              }
-
-              if (cfg?.currentRetryAttempt === RETRIES_COUNT) {
-                throw new ReconnectFailedError(err)
               }
             },
           },
@@ -246,23 +226,29 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         pendingNotificationsCounts.current.uploaded++
         displayUploadedNotification.current()
       } catch (e) {
-        if (e instanceof ReconnectFailedError) {
-          console.error('Failed to reconnect to storage provider', { storageUrl, reason: e.reason })
-          updateAsset(asset.contentId, 'reconnectionError')
-          displaySnackbar({
-            title: 'Asset failing to reconnect',
-            description: 'Host is not responding',
-            actionText: 'Go to uploads',
-            onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-            iconType: 'warning',
-          })
-        } else {
-          console.error('Unknown upload error', e)
-          updateAsset(asset.contentId, 'error')
+        console.error('Failed to upload to storage provider', { storageUrl, error: e })
+        updateAsset(asset.contentId, 'error')
+        setAssetUploadProgress(0)
+
+        const axiosError = e as AxiosError
+        const networkFailure =
+          axiosError.isAxiosError &&
+          (!axiosError.response?.status || (axiosError.response.status < 400 && axiosError.response.status >= 500))
+        if (networkFailure) {
+          markStorageProviderNotWorking(storageProviderId)
         }
+
+        const snackbarDescription = networkFailure ? 'Host is not responding' : 'Unexpected error occurred'
+        displaySnackbar({
+          title: 'Failed to upload asset',
+          description: snackbarDescription,
+          actionText: 'Go to uploads',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+          iconType: 'warning',
+        })
       }
     },
-    [addAsset, assetsFiles, displaySnackbar, navigate, updateAsset]
+    [addAsset, assetsFiles, displaySnackbar, getStorageProvider, markStorageProviderNotWorking, navigate, updateAsset]
   )
 
   const isLoading = channelLoading || videosLoading
@@ -272,7 +258,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       value={{
         startFileUpload,
         isLoading,
-        uploadsState: uploadsStateGroupedByParentObjectId,
+        uploadsState: groupedUploadsState,
       }}
     >
       {children}
@@ -280,18 +266,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 }
 
-const useUploadsManagerContext = () => {
+export const useUploadsManager = () => {
   const ctx = useContext(UploadManagerContext)
   if (ctx === undefined) {
     throw new Error('useUploadsManager must be used within a UploadManagerProvider')
   }
   return ctx
-}
-
-export const useUploadsManager = (channelId: ChannelId) => {
-  const { uploadsState, ...rest } = useUploadsManagerContext()
-  return {
-    uploadsState,
-    ...rest,
-  }
 }

@@ -9,9 +9,9 @@ import {
   AssetsGroupUploadBarContainer,
   AssetsInfoContainer,
   UploadInfoContainer,
-} from './AssetsGroupUploadBar/AssetsGroupUploadBar.style'
+} from './AssetsGroupUploadBar.style'
 
-const Placeholders = () => {
+export const AssetGroupUploadBarPlaceholder: React.FC = () => {
   return (
     <Container>
       <AssetsGroupUploadBarContainer style={{ backgroundColor: `${colors.gray[800]}` }}>
@@ -36,5 +36,3 @@ const StyledPlaceholderThumbnail = styled(Placeholder)`
     display: block;
   }
 `
-
-export const placeholderItems = Array(5).fill(Placeholders)
