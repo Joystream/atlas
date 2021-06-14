@@ -3,7 +3,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { BackgroundPattern } from '@/components'
 import { Text } from '@/shared/components'
-import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash, SvgLargeUploadFailed } from '@/shared/icons'
+import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -13,9 +13,7 @@ import {
   EditButtonMessage,
   Media,
   MediaWrapper,
-  RemoveCoverDesktopButton,
   CoverWrapper,
-  RemoveCoverMobileButton,
   EditCoverMobileButton,
   FailedUploadContainer,
 } from './ChannelCover.style'
@@ -26,7 +24,6 @@ export type ChannelCoverProps = {
   editable?: boolean
   disabled?: boolean
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
-  onCoverRemoveClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const ChannelCover: React.FC<ChannelCoverProps> = ({
@@ -35,7 +32,6 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   editable,
   disabled,
   onCoverEditClick,
-  onCoverRemoveClick,
 }) => {
   return (
     <CoverWrapper>
@@ -51,16 +47,6 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
             <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
               <SvgGlyphFileImage />
             </EditCoverMobileButton>
-            {coverPhotoUrl && (
-              <>
-                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon={<SvgGlyphTrash />} variant="tertiary">
-                  Remove cover
-                </RemoveCoverDesktopButton>
-                <RemoveCoverMobileButton onClick={onCoverRemoveClick} variant="tertiary">
-                  <SvgGlyphTrash />
-                </RemoveCoverMobileButton>
-              </>
-            )}
           </EditableControls>
         )}
         <Media>

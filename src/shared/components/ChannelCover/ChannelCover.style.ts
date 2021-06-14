@@ -1,10 +1,8 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/shared/components'
 import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
-import Button from '../Button'
 import Text from '../Text'
 
 export const CONTENT_OVERLAP_MAP = {
@@ -148,36 +146,6 @@ export const EditableControls = styled.div`
 
   ${media.xlarge} {
     height: 80%;
-  }
-`
-
-const removeButtonStyles = css`
-  position: absolute;
-  top: ${sizes(1)};
-  right: var(--global-horizontal-padding);
-`
-
-export const RemoveCoverDesktopButton = styled(Button)`
-  ${removeButtonStyles}
-
-  display: none;
-
-  ${media.medium} {
-    display: flex;
-  }
-`
-
-export const RemoveCoverMobileButton = styled(IconButton)`
-  ${removeButtonStyles}
-
-  background-color: ${colors.gray[800]};
-
-  &:hover {
-    background-color: ${colors.transparentBlack[54]};
-  }
-
-  ${media.medium} {
-    display: none;
   }
 `
 
