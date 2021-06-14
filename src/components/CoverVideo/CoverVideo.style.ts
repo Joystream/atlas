@@ -5,7 +5,7 @@ import { darken, fluidRange } from 'polished'
 import { Button, IconButton, Placeholder, Text } from '@/shared/components'
 import { breakpoints, colors, sizes, media } from '@/shared/theme'
 
-import { ChannelLink } from '..'
+import { ChannelLink } from '../ChannelLink'
 
 const CONTENT_OVERLAP_MAP = {
   SMALL: 25,

@@ -4,7 +4,7 @@ import React from 'react'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Grid } from '@/shared/components'
 
-import { VideoPreview } from '.'
+import { VideoPreview } from './VideoPreview'
 
 const StyledVideoPreview = styled(VideoPreview)`
   margin: 0 auto;

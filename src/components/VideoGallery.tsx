@@ -7,7 +7,7 @@ import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/share
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 
-import { VideoPreview } from '.'
+import { VideoPreview } from './VideoPreview'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number

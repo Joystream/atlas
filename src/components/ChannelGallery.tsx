@@ -5,7 +5,7 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
-import { ChannelPreview } from '.'
+import { ChannelPreview } from './ChannelPreview'
 
 type ChannelGalleryProps = {
   title?: string
