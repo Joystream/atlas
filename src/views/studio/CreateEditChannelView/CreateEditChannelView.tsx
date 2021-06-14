@@ -351,7 +351,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                 coverPhotoUrl={loading ? null : value.url}
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => coverDialogRef.current?.open()}
-                onCoverRemoveClick={() => onChange({ blob: null, url: null })}
                 editable
                 disabled={loading}
               />
