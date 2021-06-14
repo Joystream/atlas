@@ -1,7 +1,7 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean, FieldError } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -182,9 +182,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       700
     )
   )
-  const categorySelectRef = useRef<HTMLDivElement>(null)
-  const isExplicitInputRef = useRef<HTMLInputElement>(null)
-  const licenseSelectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -225,32 +222,44 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setValue,
   ])
 
-  const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
-    // do initial validation
-    if (!isEdit && !data.assets.video?.blob) {
-      setFileSelectError('Video file cannot be empty')
-      return
-    }
-    if (!data.assets.thumbnail?.url) {
-      setFileSelectError('Thumbnail cannot be empty')
-      return
-    }
+  const handleSubmit = createSubmitHandler(
+    async (data: EditVideoFormFields) => {
+      // do initial validation
+      if (!isEdit && !data.assets.video?.blob) {
+        setFileSelectError('Video file cannot be empty')
+        return
+      }
+      if (!data.assets.thumbnail?.url) {
+        setFileSelectError('Thumbnail cannot be empty')
+        return
+      }
 
-    const callback = () => {
-      setForceReset(true)
+      const callback = () => {
+        setForceReset(true)
+      }
+
+      debouncedDraftSave.current.flush()
+
+      await onSubmit(data, dirtyFields, callback)
+    },
+    (errors) => {
+      const error = Object.values(errors)[0] as FieldError
+      const ref = error.ref as HTMLElement
+      ref.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
     }
-
-    debouncedDraftSave.current.flush()
-
-    await onSubmit(data, dirtyFields, callback)
-  })
+  )
 
   const debouncedSetSelectedVideoTabCachedDirtyFormData = debounce((dirtyData) => {
     setSelectedVideoTabCachedDirtyFormData(dirtyData)
   }, 700)
 
-  const handleFormChange = () => {
-    const data = getValues()
+  watch((data) => {
+    if (!selectedVideoTab) {
+      return
+    }
     if (!selectedVideoTab?.isDraft) {
       const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
       const dirtyData = keysToKeep.reduce((acc, curr) => {
@@ -261,7 +270,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else {
       debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
     }
-  }
+  })
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
     const updatedAssets = {
@@ -280,7 +289,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       // TODO: don't change it if the draft was saved and reloaded
       const videoNameWithoutExtension = video.title.replace(/\.[^.]+$/, '')
       setValue('title', videoNameWithoutExtension, { shouldDirty: true })
-      handleFormChange()
     }
   }
 
@@ -311,13 +319,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     }
   }
 
-  const handleFieldFocus = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-  }
-
   const handleDeleteVideo = () => {
     selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
   }
@@ -330,7 +331,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   return (
     <>
-      <FormWrapper onChange={handleFormChange}>
+      <FormWrapper>
         <Controller
           name="assets"
           control={control}
@@ -405,19 +406,16 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="category"
               control={control}
               rules={requiredValidation('Video category')}
-              render={({ field: { value, onChange }, fieldState: { invalid } }) => {
-                if (invalid) handleFieldFocus(categorySelectRef)
-                return (
-                  <Select
-                    containerRef={categorySelectRef}
-                    value={value}
-                    items={categoriesSelectItems}
-                    onChange={onChange}
-                    error={!!errors.category && !value}
-                    helperText={errors.category?.message}
-                  />
-                )
-              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <Select
+                  containerRef={ref}
+                  value={value}
+                  items={categoriesSelectItems}
+                  onChange={onChange}
+                  error={!!errors.category && !value}
+                  helperText={errors.category?.message}
+                />
+              )}
             />
           </FormField>
           <FormField title="License">
@@ -425,20 +423,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="licenseCode"
               control={control}
               rules={requiredValidation('License')}
-              render={({ field: { value, onChange }, fieldState: { invalid } }) => {
-                if (invalid) handleFieldFocus(licenseSelectRef)
-                return (
-                  <Select
-                    containerRef={licenseSelectRef}
-                    value={value}
-                    items={knownLicensesOptions}
-                    placeholder="Choose license type"
-                    onChange={onChange}
-                    error={!!errors.licenseCode && !value}
-                    helperText={errors.licenseCode?.message}
-                  />
-                )
-              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <Select
+                  containerRef={ref}
+                  value={value}
+                  items={knownLicensesOptions}
+                  placeholder="Choose license type"
+                  onChange={onChange}
+                  error={!!errors.licenseCode && !value}
+                  helperText={errors.licenseCode?.message}
+                />
+              )}
             />
           </FormField>
           {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
@@ -494,30 +489,27 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => value !== null,
               }}
-              render={({ field: { value, onChange }, fieldState: { invalid } }) => {
-                if (invalid) handleFieldFocus(isExplicitInputRef)
-                return (
-                  <StyledRadioContainer>
-                    <RadioButton
-                      ref={isExplicitInputRef}
-                      value="false"
-                      label="All audiences"
-                      onChange={() => onChange(false)}
-                      selectedValue={value?.toString()}
-                      error={!!errors.isExplicit}
-                      helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                    />
-                    <RadioButton
-                      value="true"
-                      label="Mature"
-                      onChange={() => onChange(true)}
-                      selectedValue={value?.toString()}
-                      error={!!errors.isExplicit}
-                      helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                    />
-                  </StyledRadioContainer>
-                )
-              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <StyledRadioContainer>
+                  <RadioButton
+                    ref={ref}
+                    value="false"
+                    label="All audiences"
+                    onChange={() => onChange(false)}
+                    selectedValue={value?.toString()}
+                    error={!!errors.isExplicit}
+                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                  />
+                  <RadioButton
+                    value="true"
+                    label="Mature"
+                    onChange={() => onChange(true)}
+                    selectedValue={value?.toString()}
+                    error={!!errors.isExplicit}
+                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                  />
+                </StyledRadioContainer>
+              )}
             />
           </FormField>
           <FormField
