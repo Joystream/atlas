@@ -5,12 +5,10 @@ type PortalProps = {
   containerRef: React.RefObject<HTMLDivElement>
 }
 
-const Portal: React.FC<PortalProps> = ({ children, containerRef }) => {
+export const Portal: React.FC<PortalProps> = ({ children, containerRef }) => {
   const element = containerRef.current
   if (!element) {
     return null
   }
   return createPortal(children, element)
 }
-
-export default Portal

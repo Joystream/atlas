@@ -1,3 +1,3 @@
-import ViewerTopbar from './ViewerTopbar'
+import { ViewerTopbar } from './ViewerTopbar'
 
-export default ViewerTopbar
+export { ViewerTopbar }

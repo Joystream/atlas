@@ -7,7 +7,7 @@ import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/share
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 
-import VideoPreview from './VideoPreview'
+import { VideoPreview } from '.'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -46,7 +46,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({
+export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,
@@ -112,5 +112,3 @@ const StyledVideoPreview = styled(VideoPreview)`
   /* MIN_VIDEO_PREVIEW_WIDTH */
   min-width: 300px;
 `
-
-export default VideoGallery

@@ -38,5 +38,3 @@ export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, o
     />
   )
 }
-
-export default ChannelPreview

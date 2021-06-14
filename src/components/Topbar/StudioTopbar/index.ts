@@ -1,3 +1,3 @@
-import StudioTopbar from './StudioTopbar'
+import { StudioTopbar } from './StudioTopbar'
 
-export default StudioTopbar
+export { StudioTopbar }

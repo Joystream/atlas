@@ -8,7 +8,7 @@ import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
 
 import TopbarBase from '../TopbarBase'
 
-const ViewerTopbar: React.FC = () => {
+export const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
@@ -89,5 +89,3 @@ const ViewerTopbar: React.FC = () => {
     </TopbarBase>
   )
 }
-
-export default ViewerTopbar

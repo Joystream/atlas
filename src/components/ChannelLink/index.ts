@@ -1,3 +1,3 @@
-import ChannelLink from './ChannelLink'
+import { ChannelLink } from './ChannelLink'
 
-export default ChannelLink
+export { ChannelLink }

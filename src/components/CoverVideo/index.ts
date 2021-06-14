@@ -1,3 +1,3 @@
-import CoverVideo from './CoverVideo'
+import { CoverVideo } from './CoverVideo'
 
-export default CoverVideo
+export { CoverVideo }

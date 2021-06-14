@@ -37,12 +37,10 @@ const StyledBackgroundPattern = styled(SvgBgPattern)`
   }
 `
 
-const BackgroundPattern: React.FC = () => {
+export const BackgroundPattern: React.FC = () => {
   return (
     <StyledBackgroundPatternContainer>
       <StyledBackgroundPattern />
     </StyledBackgroundPatternContainer>
   )
 }
-
-export default BackgroundPattern

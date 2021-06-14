@@ -9,7 +9,7 @@ import TermsStep from './TermsStep'
 
 import { Multistepper } from '../Dialogs'
 
-const SignInStepsStepper: React.FC = () => {
+export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
 
@@ -37,5 +37,3 @@ const SignInStepsStepper: React.FC = () => {
     />
   )
 }
-
-export default SignInStepsStepper

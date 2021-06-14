@@ -8,11 +8,12 @@ import {
   VideoWhereInput,
   AssetAvailability,
 } from '@/api/queries'
-import VideoPreview from '@/components/VideoPreview'
 import { Grid, Text, Placeholder } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 import useInfiniteGrid from './useInfiniteGrid'
+
+import { VideoPreview } from '..'
 
 type InfiniteVideoGridProps = {
   title?: string

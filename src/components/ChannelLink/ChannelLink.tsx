@@ -20,7 +20,7 @@ type ChannelLinkProps = {
   onNotFound?: () => void
 }
 
-const ChannelLink: React.FC<ChannelLinkProps> = ({
+export const ChannelLink: React.FC<ChannelLinkProps> = ({
   id,
   hideHandle,
   hideAvatar,
@@ -57,5 +57,3 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
     </Container>
   )
 }
-
-export default ChannelLink

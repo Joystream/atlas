@@ -30,7 +30,7 @@ import {
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
-const CoverVideo: React.FC = () => {
+export const CoverVideo: React.FC = () => {
   const { data } = useCoverVideo()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
@@ -142,5 +142,3 @@ const CoverVideo: React.FC = () => {
     </Container>
   )
 }
-
-export default CoverVideo

@@ -1,3 +1,3 @@
-import NoConnectionIndicator from './NoConnectionIndicator'
+import { NoConnectionIndicator } from './NoConnectionIndicator'
 
-export default NoConnectionIndicator
+export { NoConnectionIndicator }

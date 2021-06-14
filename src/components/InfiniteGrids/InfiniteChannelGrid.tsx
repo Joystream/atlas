@@ -6,13 +6,13 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-  AssetAvailability,
 } from '@/api/queries'
-import ChannelPreview from '@/components/ChannelPreview'
 import { Grid, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 import useInfiniteGrid from './useInfiniteGrid'
+
+import { ChannelPreview } from '..'
 
 type InfiniteChannelGridProps = {
   title?: string

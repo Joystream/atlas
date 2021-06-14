@@ -17,7 +17,7 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   Pick<VideoPreviewBaseProps, 'progress' | 'className'>
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
+export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
   const { getAssetUrl } = useAsset()
 
@@ -49,8 +49,6 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProp
     />
   )
 }
-
-export default VideoPreview
 
 export type VideoPreviewWPublisherProps = VideoPreviewProps &
   Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>
