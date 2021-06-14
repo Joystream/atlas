@@ -64,5 +64,3 @@ export const Checkout: React.FC<CheckoutProps> = ({ steps, className }) => {
     </Container>
   )
 }
-
-export default Checkout

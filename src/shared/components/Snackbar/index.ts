@@ -1,3 +1,3 @@
 import Snackbar from './Snackbar'
 
-export { Snackbar as default }
+export { Snackbar }

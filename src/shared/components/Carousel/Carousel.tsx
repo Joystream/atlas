@@ -14,7 +14,7 @@ export type CarouselProps = {
   arrowCss?: SerializedStyles
 } & GliderProps
 
-const Carousel: React.FC<CarouselProps> = ({
+export const Carousel: React.FC<CarouselProps> = ({
   children,
   paddingLeft = 0,
   paddingTop = 0,
@@ -50,4 +50,3 @@ const Carousel: React.FC<CarouselProps> = ({
     </Container>
   )
 }
-export default Carousel

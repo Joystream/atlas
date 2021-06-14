@@ -12,7 +12,15 @@ export type SliderProps = {
   disabled?: boolean
 }
 
-const Slider: React.FC<SliderProps> = ({ value = 50, onChange, min = 0, max = 100, step = 1, className, disabled }) => {
+export const Slider: React.FC<SliderProps> = ({
+  value = 50,
+  onChange,
+  min = 0,
+  max = 100,
+  step = 1,
+  className,
+  disabled,
+}) => {
   return (
     <StyledRcSlider
       value={value}
@@ -25,5 +33,3 @@ const Slider: React.FC<SliderProps> = ({ value = 50, onChange, min = 0, max = 10
     />
   )
 }
-
-export default Slider

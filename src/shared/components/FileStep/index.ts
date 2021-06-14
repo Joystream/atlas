@@ -1,3 +1,3 @@
-import FileStep from './FileStep'
+import { FileStep } from './FileStep'
 
-export default FileStep
+export { FileStep }

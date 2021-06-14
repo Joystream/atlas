@@ -2,7 +2,7 @@ import React from 'react'
 
 import { FormGroup, LabelText } from './InputBase.styles'
 
-import HelperText from '../HelperText/HelperText'
+import { HelperText } from '../HelperText/HelperText'
 
 export type InputBaseProps = {
   error?: boolean
@@ -16,7 +16,7 @@ export type InputBaseProps = {
   maxLength?: number
 }
 
-const InputBase: React.FC<InputBaseProps> = ({
+export const InputBase: React.FC<InputBaseProps> = ({
   children,
   helperText = '\u00A0',
   warning,
@@ -44,5 +44,3 @@ const InputBase: React.FC<InputBaseProps> = ({
     </FormGroup>
   )
 }
-
-export default InputBase

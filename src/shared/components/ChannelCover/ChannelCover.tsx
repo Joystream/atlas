@@ -26,7 +26,7 @@ export type ChannelCoverProps = {
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
 }
 
-const ChannelCover: React.FC<ChannelCoverProps> = ({
+export const ChannelCover: React.FC<ChannelCoverProps> = ({
   coverPhotoUrl,
   hasCoverUploadFailed,
   editable,
@@ -75,5 +75,3 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
     </CoverWrapper>
   )
 }
-
-export default ChannelCover

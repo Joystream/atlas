@@ -17,7 +17,7 @@ type GridProps = {
   onResize?: (sizes: number[]) => void
 }
 
-const Grid: React.FC<GridProps> = ({
+export const Grid: React.FC<GridProps> = ({
   className,
   gap = sizes(6),
   onResize,
@@ -89,5 +89,3 @@ export function breakpointsOfGrid({
     .fill(null)
     .map((_, n) => (n + 1) * minItemWidth + n * gridColumnGap + viewportContainerDifference)
 }
-
-export default Grid

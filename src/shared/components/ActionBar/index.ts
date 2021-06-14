@@ -1,4 +1,2 @@
-import ActionBar from './ActionBar'
-
-export default ActionBar
-export { default as ActionBarTransaction } from './ActionBarTransaction'
+export { ActionBar } from './ActionBar'
+export { ActionBarTransaction } from './ActionBarTransaction'

@@ -18,7 +18,7 @@ export type TabsProps = {
 
 const SCROLL_SHADOW_OFFSET = 10
 
-const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
+export const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [isContentOverflown, setIsContentOverflown] = useState(false)
   const tabsRef = useRef<HTMLDivElement>(null)
@@ -98,4 +98,3 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     </TabsWrapper>
   )
 }
-export default Tabs

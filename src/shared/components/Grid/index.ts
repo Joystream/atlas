@@ -1,4 +1,3 @@
-import Grid, { breakpointsOfGrid } from './Grid'
+import { breakpointsOfGrid, Grid } from './Grid'
 
-export { breakpointsOfGrid }
-export default Grid
+export { breakpointsOfGrid, Grid }

@@ -1,5 +1,5 @@
-import InputBase, { InputBaseProps } from './InputBase'
+import { InputBaseProps, InputBase } from './InputBase'
 import { LabelText } from './InputBase.styles'
 
-export { LabelText, InputBase as default }
+export { LabelText, InputBase }
 export type { InputBaseProps }

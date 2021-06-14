@@ -27,7 +27,7 @@ export type ChannelPreviewBaseProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
+export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   avatarUrl,
   title,
   videoCount,
@@ -86,5 +86,3 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
     </OuterContainer>
   )
 }
-
-export default ChannelPreviewBase

@@ -10,7 +10,7 @@ export type GalleryProps = {
   className?: string
 } & CarouselProps
 
-const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps }) => {
+export const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps }) => {
   return (
     <Container className={className}>
       {title && (
@@ -22,5 +22,3 @@ const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps })
     </Container>
   )
 }
-
-export default Gallery

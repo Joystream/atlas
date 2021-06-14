@@ -20,7 +20,7 @@ type RadioButtonProps = Partial<{
   React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
 
-const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
+export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
   ({ value, selectedValue, label, helperText, className, disabled, error, onChange, ...props }, ref) => {
     const isSelected = value === selectedValue
 
@@ -47,5 +47,3 @@ const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
 )
 
 RadioButton.displayName = 'RadioButton'
-
-export default RadioButton

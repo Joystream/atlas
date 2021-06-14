@@ -43,8 +43,6 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
   )
 }
 
-const TextArea = forwardRef(TextAreaComponent)
+export const TextArea = forwardRef(TextAreaComponent)
 
 TextArea.displayName = 'TextArea'
-
-export default TextArea

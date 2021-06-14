@@ -50,7 +50,7 @@ export type MultiFileSelectProps = {
   error?: string | null
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
+export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onVideoChange,
   onThumbnailChange,
   files,
@@ -230,5 +230,3 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     </MultiFileSelectContainer>
   )
 }
-
-export default MultiFileSelect

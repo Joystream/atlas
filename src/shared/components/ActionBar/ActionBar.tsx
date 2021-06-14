@@ -31,7 +31,7 @@ export type ActionBarProps = {
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
+export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
   (
     {
       primaryText,
@@ -84,5 +84,3 @@ const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
   }
 )
 ActionBar.displayName = 'ActionBar'
-
-export default ActionBar

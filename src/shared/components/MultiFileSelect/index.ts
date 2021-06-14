@@ -1,3 +1,3 @@
-import MultiFileSelect from './MultiFileSelect'
+import { MultiFileSelect } from './MultiFileSelect'
 
-export default MultiFileSelect
+export { MultiFileSelect }

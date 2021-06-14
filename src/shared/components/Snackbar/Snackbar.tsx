@@ -25,7 +25,7 @@ export type SnackbarProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const Snackbar: React.FC<SnackbarProps> = ({
+export const Snackbar: React.FC<SnackbarProps> = ({
   variant = 'secondary',
   icon,
   title,
@@ -77,5 +77,3 @@ const Snackbar: React.FC<SnackbarProps> = ({
     </SnackbarWrapper>
   )
 }
-
-export default Snackbar

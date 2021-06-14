@@ -19,7 +19,7 @@ export type TooltipProps = {
   className?: string
 }
 
-const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: React.FC<TooltipProps> = ({
   text,
   headerText,
   icon,
@@ -67,5 +67,3 @@ const Tooltip: React.FC<TooltipProps> = ({
     </Tippy>
   )
 }
-
-export default Tooltip

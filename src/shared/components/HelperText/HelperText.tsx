@@ -20,7 +20,7 @@ export type HelperTextProps = {
   className?: string
 }
 
-const HelperText: React.FC<HelperTextProps> = ({
+export const HelperText: React.FC<HelperTextProps> = ({
   maxLength,
   warning,
   error,
@@ -60,5 +60,3 @@ const HelperText: React.FC<HelperTextProps> = ({
     </HelperTextsWrapper>
   )
 }
-
-export default HelperText

@@ -8,7 +8,7 @@ export type IconButtonProps = ButtonBaseProps & {
   children: ReactNode
 }
 
-const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = 'primary', children, ...buttonBaseProps }, ref) => {
     return (
       <StyledButtonBase ref={ref} variant={variant} {...buttonBaseProps}>
@@ -18,5 +18,3 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   }
 )
 IconButton.displayName = 'IconButton'
-
-export default IconButton

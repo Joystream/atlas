@@ -39,8 +39,6 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   )
 }
 
-const TextField = forwardRef(TextFieldComponent)
+export const TextField = forwardRef(TextFieldComponent)
 
 TextField.displayName = 'TextField'
-
-export default TextField

@@ -1,4 +1,4 @@
-import Select, { SelectProps, SelectItem } from './Select'
+import { SelectProps, SelectItem, Select } from './Select'
 
-export default Select
+export { Select }
 export type { SelectProps, SelectItem }

@@ -6,7 +6,7 @@ import { SvgGlyphChevronDown } from '@/shared/icons'
 
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
 
-import InputBase, { InputBaseProps, LabelText } from '../InputBase'
+import { InputBaseProps, LabelText, InputBase } from '../InputBase'
 
 export type SelectItem<T = string> = {
   value: T
@@ -24,7 +24,7 @@ export type SelectProps<T = string> = {
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
-const Select = <T,>({
+export const Select = <T,>({
   label = '',
   items,
   placeholder = 'Select option',
@@ -98,5 +98,3 @@ const Select = <T,>({
     </InputBase>
   )
 }
-
-export default Select

@@ -1,3 +1,3 @@
-import DismissibleMessage from './DismissibleMessage'
+import { DismissibleMessage } from './DismissibleMessage'
 
-export default DismissibleMessage
+export { DismissibleMessage }

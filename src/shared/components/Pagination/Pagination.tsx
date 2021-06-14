@@ -13,7 +13,7 @@ export type PaginationProps = {
 }
 
 // Codewise component works with index starting from 0 but it's rendered with index starting from 1
-const Pagination: React.FC<PaginationProps> = ({
+export const Pagination: React.FC<PaginationProps> = ({
   itemsPerPage = 0,
   totalCount = 0,
   maxPaginationLinks = 5,
@@ -115,5 +115,3 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
   })
   return arrayWithDots
 }
-
-export default Pagination

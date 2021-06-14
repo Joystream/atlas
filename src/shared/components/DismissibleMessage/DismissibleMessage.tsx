@@ -18,7 +18,7 @@ export type DismissibleMessageProps = {
   className?: string
 }
 
-const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, description, id, className }) => {
+export const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, description, id, className }) => {
   const {
     updateDismissedMessages,
     state: { dismissedMessages },
@@ -47,5 +47,3 @@ const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, descript
     </MessageWrapper>
   )
 }
-
-export default DismissibleMessage

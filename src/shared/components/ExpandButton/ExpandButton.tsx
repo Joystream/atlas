@@ -10,7 +10,7 @@ type ExpandButtonProps = {
   expanded?: boolean
 } & Omit<IconButtonProps, 'icon' | 'variant' | 'children'>
 
-const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
+export const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
   return (
     <StyledButton {...iconButtonProps} expanded={expanded} variant="tertiary">
       <SvgGlyphChevronDown />
@@ -23,5 +23,3 @@ export const StyledButton = styled(IconButton)<ExpandButtonProps>`
   transform-origin: center;
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 `
-
-export default ExpandButton

@@ -1,4 +1,3 @@
-import VideoPreviewBase, { MIN_VIDEO_PREVIEW_WIDTH } from './VideoPreviewBase'
+import { MIN_VIDEO_PREVIEW_WIDTH, VideoPreviewBase } from './VideoPreviewBase'
 
-export { MIN_VIDEO_PREVIEW_WIDTH }
-export default VideoPreviewBase
+export { VideoPreviewBase, MIN_VIDEO_PREVIEW_WIDTH }

@@ -119,7 +119,7 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
   ((videoPreviewWidth - MIN_VIDEO_PREVIEW_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
-const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
+export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   title,
   channelTitle,
   channelAvatarUrl,
@@ -377,5 +377,3 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     </Container>
   )
 }
-
-export default VideoPreviewBase

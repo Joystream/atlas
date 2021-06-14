@@ -58,8 +58,6 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   )
 }
 
-const Datepicker = forwardRef(DatepickerComponent)
+export const Datepicker = forwardRef(DatepickerComponent)
 
 Datepicker.displayName = 'Datepicker'
-
-export default Datepicker

@@ -27,7 +27,7 @@ export type FileStepProps = {
   isLoading?: boolean
 }
 
-const FileStep: React.FC<FileStepProps> = ({
+export const FileStep: React.FC<FileStepProps> = ({
   stepNumber = 1,
   active,
   isFileSet,
@@ -90,5 +90,3 @@ const FileStep: React.FC<FileStepProps> = ({
     </StepWrapper>
   )
 }
-
-export default FileStep

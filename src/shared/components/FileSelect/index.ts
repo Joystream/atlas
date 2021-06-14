@@ -1,3 +1,3 @@
-import FileSelect from './FileSelect'
+import { FileSelect } from './FileSelect'
 
-export default FileSelect
+export { FileSelect }

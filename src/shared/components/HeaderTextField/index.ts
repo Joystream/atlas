@@ -1,3 +1,3 @@
-import HeaderTextField from './HeaderTextField'
+import { HeaderTextField } from './HeaderTextField'
 
-export default HeaderTextField
+export { HeaderTextField }
