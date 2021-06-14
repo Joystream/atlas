@@ -9,23 +9,6 @@ import { media, colors, sizes, typography } from '../../theme'
 const globalStyles = css`
   ${emotionNormalize}
 
-  *::-webkit-scrollbar {
-    width: 8px;
-  }
-  *::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
-  }
-  *::-webkit-scrollbar-thumb {
-    background-color: var(--thumbBG);
-    border-radius: 20px;
-  }
-
-  body {
-    font-family: ${typography.fonts.base};
-    background: ${colors.black};
-    color: ${colors.gray[50]};
-  }
-
   *,
   *::after,
   *::before {
@@ -33,8 +16,27 @@ const globalStyles = css`
     box-sizing: border-box;
   }
 
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 20px;
+  }
+
   *:focus {
     outline: 0;
+  }
+
+  body {
+    font-family: ${typography.fonts.base};
+    background: ${colors.black};
+    color: ${colors.gray[50]};
   }
 
   h1,
