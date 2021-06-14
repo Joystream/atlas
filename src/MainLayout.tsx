@@ -20,7 +20,7 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
   ),
 })
 
-const MainLayout: React.FC = () => {
+export const MainLayout: React.FC = () => {
   return (
     <>
       <GlobalStyle additionalStyles={[routingTransitions]} />
@@ -35,5 +35,3 @@ const MainLayout: React.FC = () => {
     </>
   )
 }
-
-export default MainLayout

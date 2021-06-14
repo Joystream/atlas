@@ -1,3 +1,3 @@
-import VideosView from './VideosView'
+import { VideosView } from './VideosView'
 
-export default VideosView
+export { VideosView }

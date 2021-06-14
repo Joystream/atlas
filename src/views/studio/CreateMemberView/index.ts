@@ -1,3 +1,3 @@
-import CreateMemberView from './CreateMemberView'
+import { CreateMemberView } from './CreateMemberView'
 
-export default CreateMemberView
+export { CreateMemberView }

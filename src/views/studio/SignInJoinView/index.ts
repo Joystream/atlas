@@ -1,3 +1,3 @@
-import SignInJoinView from './SignInJoinView'
+import { SignInJoinView } from './SignInJoinView'
 
-export default SignInJoinView
+export { SignInJoinView }

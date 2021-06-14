@@ -19,7 +19,7 @@ type RecentChannelPreviewProps = {
   channel?: BasicChannelFieldsFragment
 }
 
-const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
+export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
   const { getAssetUrl } = useAsset()
   const avatarPhotoUrl = getAssetUrl(
     channel?.avatarPhotoAvailability,
@@ -45,5 +45,3 @@ const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) 
     </PreviewContainer>
   )
 }
-
-export default RecentChannelPreview

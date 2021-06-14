@@ -1,3 +1,3 @@
-import LegalLayout from './LegalLayout'
+import { LegalLayout } from './LegalLayout'
 
 export { LegalLayout }

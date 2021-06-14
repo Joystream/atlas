@@ -1,11 +1,11 @@
-import CreateEditChannelView from './CreateEditChannelView'
-import CreateMemberView from './CreateMemberView'
+import { CreateEditChannelView } from './CreateEditChannelView'
+import { CreateMemberView } from './CreateMemberView'
 import { EditVideoSheet } from './EditVideoSheet'
-import MyUploadsView from './MyUploadsView'
-import MyVideosView from './MyVideosView'
-import SignInJoinView from './SignInJoinView'
-import SignInView from './SignInView'
-import StudioLayout from './StudioLayout'
+import { MyUploadsView } from './MyUploadsView'
+import { MyVideosView } from './MyVideosView'
+import { SignInJoinView } from './SignInJoinView'
+import { SignInView } from './SignInView'
+import { StudioLayoutWrapper as StudioLayout } from './StudioLayout'
 
 export {
   StudioLayout,

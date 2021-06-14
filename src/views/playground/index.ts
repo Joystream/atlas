@@ -1,3 +1,3 @@
-import PlaygroundLayout from './PlaygroundLayout'
+import { PlaygroundLayout } from './PlaygroundLayout'
 
 export { PlaygroundLayout }

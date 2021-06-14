@@ -1,3 +1,3 @@
-import RecentSearches from './RecentSearches'
+import { RecentSearches } from './RecentSearches'
 
-export default RecentSearches
+export { RecentSearches }

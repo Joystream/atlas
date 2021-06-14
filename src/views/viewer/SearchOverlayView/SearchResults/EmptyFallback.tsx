@@ -31,7 +31,7 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-const EmptyFallback: React.FC = () => (
+export const EmptyFallback: React.FC = () => (
   <Container>
     <SvgEmptyStateIllustration />
     <Message>
@@ -40,5 +40,3 @@ const EmptyFallback: React.FC = () => (
     </Message>
   </Container>
 )
-
-export default EmptyFallback

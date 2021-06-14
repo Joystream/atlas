@@ -4,10 +4,10 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useRouterQuery } from '@/hooks'
 import { transitions } from '@/shared/theme'
 
-import SignInMainView from './SignInMainView'
-import SignInProcessView from './SignInProcessView'
+import { SignInMainView } from './SignInMainView'
+import { SignInProcessView } from './SignInProcessView'
 
-const SignInJoinView = () => {
+export const SignInJoinView = () => {
   const currentStep = useRouterQuery('step')
   return (
     <SwitchTransition>
@@ -21,5 +21,3 @@ const SignInJoinView = () => {
     </SwitchTransition>
   )
 }
-
-export default SignInJoinView

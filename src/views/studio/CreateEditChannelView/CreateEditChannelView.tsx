@@ -70,7 +70,7 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
-const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
+export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
 
@@ -517,5 +517,3 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     </form>
   )
 }
-
-export default CreateEditChannelView

@@ -24,7 +24,7 @@ export type Membership = {
   avatarUri?: string
 }
 
-const SignInMainView: React.FC = () => {
+export const SignInMainView: React.FC = () => {
   return (
     <StyledContainer>
       <Header>
@@ -52,5 +52,3 @@ const SignInMainView: React.FC = () => {
     </StyledContainer>
   )
 }
-
-export default SignInMainView

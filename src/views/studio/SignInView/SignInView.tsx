@@ -19,7 +19,7 @@ import {
   StyledAvatar,
 } from './SignInView.style'
 
-const SignInView = () => {
+export const SignInView = () => {
   const navigate = useNavigate()
   const { activeChannelId, setActiveUser, memberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
@@ -88,7 +88,7 @@ export type StudioCardProps = {
   disabled?: boolean
 }
 
-const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
+export const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
   return (
     <CardWrapper onClick={onClick} disabled={disabled}>
       <StyledAvatar imageUrl={avatarUri} />
@@ -96,5 +96,3 @@ const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, dis
     </CardWrapper>
   )
 }
-
-export default SignInView

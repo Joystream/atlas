@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { computeFileHash } from '@/utils/hashing'
 
-const FileHashing: React.FC = () => {
+export const FileHashing: React.FC = () => {
   const [computedHash, setComputedHash] = useState('')
   const [duration, setDuration] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -50,5 +50,3 @@ const FileHashing: React.FC = () => {
     </div>
   )
 }
-
-export default FileHashing

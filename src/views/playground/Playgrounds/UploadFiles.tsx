@@ -49,5 +49,3 @@ export const UploadFiles = () => {
     </div>
   )
 }
-
-export default UploadFiles

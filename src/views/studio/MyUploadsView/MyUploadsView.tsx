@@ -7,7 +7,7 @@ import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGrou
 import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 
-const MyUploadsView: React.FC = () => {
+export const MyUploadsView: React.FC = () => {
   const { uploadsState, isLoading } = useUploadsManager()
 
   const hasUploads = uploadsState.length > 0
@@ -27,5 +27,3 @@ const MyUploadsView: React.FC = () => {
     </UploadsContainer>
   )
 }
-
-export default MyUploadsView

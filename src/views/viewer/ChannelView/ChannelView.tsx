@@ -21,7 +21,7 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
-const ChannelView: React.FC = () => {
+export const ChannelView: React.FC = () => {
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
   const { followChannel } = useFollowChannel()
@@ -98,4 +98,3 @@ const ChannelView: React.FC = () => {
     </ViewWrapper>
   )
 }
-export default ChannelView

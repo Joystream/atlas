@@ -12,7 +12,7 @@ const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
 const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
-const HomeView: React.FC = () => {
+export const HomeView: React.FC = () => {
   const {
     state: { followedChannels },
   } = usePersonalData()
@@ -67,5 +67,3 @@ const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
 `
-
-export default HomeView

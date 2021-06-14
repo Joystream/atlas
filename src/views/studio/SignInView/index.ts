@@ -1,3 +1,3 @@
-import SignInView from './SignInView'
+import { SignInView } from './SignInView'
 
-export default SignInView
+export { SignInView }

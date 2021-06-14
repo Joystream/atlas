@@ -1,3 +1,3 @@
-import SearchOverlayView from './SearchOverlayView'
+import { SearchOverlayView } from './SearchOverlayView'
 
-export default SearchOverlayView
+export { SearchOverlayView }

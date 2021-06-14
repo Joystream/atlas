@@ -19,7 +19,7 @@ const CONTENT_RATING = [
   { value: true, name: 'mature' },
 ]
 
-const PlaygroundDrafts = () => {
+export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
   const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
@@ -124,5 +124,3 @@ const PlaygroundDrafts = () => {
     </div>
   )
 }
-
-export default PlaygroundDrafts

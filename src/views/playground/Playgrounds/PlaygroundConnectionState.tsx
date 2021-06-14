@@ -11,7 +11,7 @@ const fakeNodeConnection = async () => {
   return false
 }
 
-const PlaygroundConnectionState = () => {
+export const PlaygroundConnectionState = () => {
   const { nodeConnectionStatus, setNodeConnection, isUserConnectedToInternet } = useConnectionStatus()
 
   const connectToNode = useCallback(async () => {
@@ -46,5 +46,3 @@ const PlaygroundConnectionState = () => {
     </div>
   )
 }
-
-export default PlaygroundConnectionState

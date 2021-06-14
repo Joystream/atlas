@@ -26,7 +26,7 @@ import {
   TitleText,
 } from './VideoView.style'
 
-const VideoView: React.FC = () => {
+export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
@@ -204,5 +204,3 @@ const VideoView: React.FC = () => {
     </StyledViewWrapper>
   )
 }
-
-export default VideoView

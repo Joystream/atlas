@@ -33,7 +33,7 @@ type Inputs = {
   about: string
 }
 
-const CreateMemberView = () => {
+export const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
 
@@ -208,7 +208,7 @@ type NewMemberResponse = {
   block: number
 }
 
-const createNewMember = async (accountId: string, inputs: Inputs) => {
+export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {
     const body = {
       account: accountId,
@@ -221,5 +221,3 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     throw error
   }
 }
-
-export default CreateMemberView

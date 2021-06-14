@@ -13,7 +13,7 @@ type IdsLookup = {
   channelIds: string[]
 }
 
-const RecentSearches: React.FC = () => {
+export const RecentSearches: React.FC = () => {
   const {
     state: { recentSearches },
   } = usePersonalData()
@@ -62,5 +62,3 @@ const RecentSearches: React.FC = () => {
     </Container>
   )
 }
-
-export default RecentSearches
