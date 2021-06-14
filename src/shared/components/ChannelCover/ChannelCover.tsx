@@ -3,7 +3,12 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { BackgroundPattern } from '@/components'
 import { Text } from '@/shared/components'
-import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash, SvgLargeUploadFailed } from '@/shared/icons'
+import {
+  SvgGlyphFileImage,
+  SvgGlyphImage,
+  /* SvgGlyphTrash, */
+  SvgLargeUploadFailed,
+} from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -13,9 +18,9 @@ import {
   EditButtonMessage,
   Media,
   MediaWrapper,
-  RemoveCoverDesktopButton,
+  /* RemoveCoverDesktopButton, */
   CoverWrapper,
-  RemoveCoverMobileButton,
+  /* RemoveCoverMobileButton, */
   EditCoverMobileButton,
   FailedUploadContainer,
 } from './ChannelCover.style'
@@ -35,7 +40,7 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
   editable,
   disabled,
   onCoverEditClick,
-  onCoverRemoveClick,
+  /* onCoverRemoveClick, */
 }) => {
   return (
     <CoverWrapper>

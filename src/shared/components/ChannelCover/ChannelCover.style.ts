@@ -1,10 +1,10 @@
-import { css } from '@emotion/react'
+// import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/shared/components'
 import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
-import Button from '../Button'
+// import Button from '../Button'
 import Text from '../Text'
 
 export const CONTENT_OVERLAP_MAP = {
@@ -150,36 +150,35 @@ export const EditableControls = styled.div`
     height: 80%;
   }
 `
+// TODO: Uncomment as soon as asset removal feature becomes available
+// const removeButtonStyles = css`
+//   position: absolute;
+//   top: ${sizes(1)};
+//   right: var(--global-horizontal-padding);
+// `
 
-const removeButtonStyles = css`
-  position: absolute;
-  top: ${sizes(1)};
-  right: var(--global-horizontal-padding);
-`
+// export const RemoveCoverDesktopButton = styled(Button)`
+//   ${removeButtonStyles};
 
-export const RemoveCoverDesktopButton = styled(Button)`
-  ${removeButtonStyles}
+//   display: none;
 
-  display: none;
+//   ${media.medium} {
+//     display: flex;
+//   }
+// `
 
-  ${media.medium} {
-    display: flex;
-  }
-`
+// export const RemoveCoverMobileButton = styled(IconButton)`
+//   ${removeButtonStyles};
 
-export const RemoveCoverMobileButton = styled(IconButton)`
-  ${removeButtonStyles}
+//   background-color: ${colors.gray[800]};
+//   &:hover {
+//     background-color: ${colors.transparentBlack[54]};
+//   }
 
-  background-color: ${colors.gray[800]};
-
-  &:hover {
-    background-color: ${colors.transparentBlack[54]};
-  }
-
-  ${media.medium} {
-    display: none;
-  }
-`
+//   ${media.medium} {
+//     display: none;
+//   }
+// `
 
 export const EditCoverDesktopOverlay = styled.div`
   flex-direction: column;
