@@ -52,21 +52,25 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
   }, [player, initialized, autoplay])
 
   useEffect(() => {
-    if (!player || !playing) {
+    if (!player) {
       return
     }
 
-    const playPromise = player.play()
-    if (playPromise) {
-      playPromise.catch((e) => {
-        if (e.name === 'NotAllowedError') {
-          console.warn('Video play failed:', e)
-        } else {
-          console.error('Video play failed:', e)
+    if (playing != null) {
+      if (playing) {
+        const playPromise = player.play()
+        if (playPromise) {
+          playPromise.catch((e) => {
+            if (e.name === 'NotAllowedError') {
+              console.warn('Video play failed:', e)
+            } else {
+              console.error('Video play failed:', e)
+            }
+          })
         }
-      })
-    } else {
-      player.pause()
+      } else {
+        player.pause()
+      }
     }
   }, [player, playing])
 
