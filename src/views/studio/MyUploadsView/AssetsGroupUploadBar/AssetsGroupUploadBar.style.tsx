@@ -53,6 +53,13 @@ const pulse = keyframes`
   }
 `
 
+const pulseAnimationCss = (props: ProgressbarProps) =>
+  props.hasUploadingAsset
+    ? css`
+        animation: ${pulse} 2.5s infinite ease-in-out;
+      `
+    : null
+
 export const ProgressBar = styled.div<ProgressbarProps>`
   position: absolute;
   top: 0;
@@ -63,12 +70,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  animation: ${({ hasUploadingAsset }) =>
-    !hasUploadingAsset
-      ? 'none'
-      : css`
-          ${pulse} 2.5s infinite ease-in-out
-        `};
+  ${pulseAnimationCss}
 `
 
 export const Thumbnail = styled.div`
