@@ -6,7 +6,7 @@ import { RoutingState } from '@/types/routing'
 
 import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
 
-import TopbarBase from '../TopbarBase'
+import { TopbarBase } from '../TopbarBase'
 
 export const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()

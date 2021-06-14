@@ -15,7 +15,13 @@ export type BaseDialogProps = {
   className?: string
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
+export const BaseDialog: React.FC<BaseDialogProps> = ({
+  children,
+  showDialog,
+  exitButton = true,
+  onExitClick,
+  className,
+}) => {
   const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -50,5 +56,3 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
     </Portal>
   )
 }
-
-export default BaseDialog

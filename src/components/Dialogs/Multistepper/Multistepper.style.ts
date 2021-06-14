@@ -4,7 +4,7 @@ import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { colors, sizes, media, typography } from '@/shared/theme'
 
-import BaseDialog from '../BaseDialog'
+import { BaseDialog } from '../BaseDialog'
 
 type CircleProps = {
   isFilled?: boolean

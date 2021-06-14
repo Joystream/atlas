@@ -1,4 +1,4 @@
-import ActionDialog, { ActionDialogProps } from './ActionDialog'
+import { ActionDialogProps, ActionDialog } from './ActionDialog'
 
-export default ActionDialog
 export type { ActionDialogProps }
+export { ActionDialog }

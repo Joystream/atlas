@@ -1,4 +1,4 @@
-import TransactionDialog, { TransactionDialogProps } from './TransactionDialog'
+import { TransactionDialogProps, TransactionDialog } from './TransactionDialog'
 
-export default TransactionDialog
 export type { TransactionDialogProps }
+export { TransactionDialog }

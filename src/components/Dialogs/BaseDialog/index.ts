@@ -1,4 +1,4 @@
-import BaseDialog, { BaseDialogProps } from './BaseDialog'
+import { BaseDialogProps, BaseDialog } from './BaseDialog'
 
-export default BaseDialog
 export type { BaseDialogProps }
+export { BaseDialog }

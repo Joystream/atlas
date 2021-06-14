@@ -1,3 +1,3 @@
-import Multistepper from './Multistepper'
+import { Multistepper } from './Multistepper'
 
-export default Multistepper
+export { Multistepper }

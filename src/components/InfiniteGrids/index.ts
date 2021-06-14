@@ -1,4 +1,4 @@
-import InfiniteChannelGrid from './InfiniteChannelGrid'
-import InfiniteVideoGrid from './InfiniteVideoGrid'
+import { InfiniteChannelGrid } from './InfiniteChannelGrid'
+import { InfiniteVideoGrid } from './InfiniteVideoGrid'
 
 export { InfiniteVideoGrid, InfiniteChannelGrid }

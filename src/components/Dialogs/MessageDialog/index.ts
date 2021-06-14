@@ -1,4 +1,4 @@
-import MessageDialog, { MessageDialogProps } from './MessageDialog'
+import { MessageDialogProps, MessageDialog } from './MessageDialog'
 
-export default MessageDialog
 export type { MessageDialogProps }
+export { MessageDialog }

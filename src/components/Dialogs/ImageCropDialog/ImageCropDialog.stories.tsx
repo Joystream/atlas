@@ -7,7 +7,7 @@ import { OverlayManagerProvider } from '@/hooks'
 import { Avatar, Placeholder } from '@/shared/components'
 import { ImageCropData, AssetDimensions } from '@/types/cropper'
 
-import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
+import { ImageCropDialogImperativeHandle, ImageCropDialogProps, ImageCropDialog } from './ImageCropDialog'
 
 export default {
   title: 'General/ImageCropDialog',

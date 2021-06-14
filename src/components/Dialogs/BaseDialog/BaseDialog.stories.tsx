@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { Button } from '@/shared/components'
 
-import Dialog, { BaseDialogProps } from './BaseDialog'
+import { BaseDialogProps, BaseDialog as Dialog } from './BaseDialog'
 
 export default {
   title: 'General/BaseDialog',

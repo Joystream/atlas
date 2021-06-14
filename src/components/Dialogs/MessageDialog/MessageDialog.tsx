@@ -4,7 +4,7 @@ import { SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/shared/
 
 import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
 
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
+import { ActionDialog, ActionDialogProps } from '../ActionDialog/ActionDialog'
 
 type DialogVariant = 'success' | 'warning' | 'error' | 'info'
 
@@ -22,7 +22,7 @@ const VARIANT_TO_ICON: Record<DialogVariant, ReactNode | null> = {
   info: null,
 }
 
-const MessageDialog: React.FC<MessageDialogProps> = ({
+export const MessageDialog: React.FC<MessageDialogProps> = ({
   title,
   description,
   variant = 'info',
@@ -39,5 +39,3 @@ const MessageDialog: React.FC<MessageDialogProps> = ({
     </ActionDialog>
   )
 }
-
-export default MessageDialog

@@ -45,7 +45,11 @@ type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   error?: ApolloError
 }
 
-const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>, TArgs extends PaginatedDataArgs>({
+export const useInfiniteGrid = <
+  TRawData,
+  TPaginatedData extends PaginatedData<unknown>,
+  TArgs extends PaginatedDataArgs
+>({
   query,
   dataAccessor,
   isReady,
@@ -118,5 +122,3 @@ const useInfiniteGrid = <TRawData, TPaginatedData extends PaginatedData<unknown>
     error,
   }
 }
-
-export default useInfiniteGrid

@@ -37,7 +37,7 @@ type AccountStepProps = {
   nextStepPath: string
 }
 
-const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
+export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
@@ -135,7 +135,7 @@ export type AccountBarProps = {
   selectedValue?: string
 }
 
-const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
+export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
   return (
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
@@ -153,5 +153,3 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     </AccountWrapper>
   )
 }
-
-export default AccountStep

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router'
 
 import { useRouterQuery } from '@/hooks'
 
-import AccountStep from './AccountStep'
-import ExtensionStep from './ExtensionStep'
-import TermsStep from './TermsStep'
+import { AccountStep } from './AccountStep'
+import { ExtensionStep } from './ExtensionStep'
+import { TermsStep } from './TermsStep'
 
 import { Multistepper } from '../Dialogs'
 

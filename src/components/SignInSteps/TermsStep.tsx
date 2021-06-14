@@ -10,7 +10,7 @@ import { TermsBox, TextWrapper, TermsOverlay, ScrollButton, ContinueButton } fro
 
 import { TermsOfService } from '../TermsOfService'
 
-const TermsStep: React.FC = () => {
+export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
@@ -60,5 +60,3 @@ const TermsStep: React.FC = () => {
     </StepWrapper>
   )
 }
-
-export default TermsStep

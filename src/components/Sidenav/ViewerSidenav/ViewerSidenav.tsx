@@ -6,7 +6,7 @@ import { usePersonalData } from '@/hooks'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 
-import FollowedChannels from './FollowedChannels'
+import { FollowedChannels } from './FollowedChannels'
 
 const viewerSidenavItems: NavItemType[] = [
   {
