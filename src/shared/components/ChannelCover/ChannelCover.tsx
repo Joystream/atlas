@@ -53,12 +53,13 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
             </EditCoverMobileButton>
             {coverPhotoUrl && (
               <>
-                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon={<SvgGlyphTrash />} variant="tertiary">
+                {/* TODO: Uncomment as soon as asset removal feature becomes available */}
+                {/* <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon={<SvgGlyphTrash />} variant="tertiary">
                   Remove cover
                 </RemoveCoverDesktopButton>
                 <RemoveCoverMobileButton onClick={onCoverRemoveClick} variant="tertiary">
                   <SvgGlyphTrash />
-                </RemoveCoverMobileButton>
+                </RemoveCoverMobileButton> */}
               </>
             )}
           </EditableControls>
