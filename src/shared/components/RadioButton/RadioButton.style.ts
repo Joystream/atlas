@@ -122,7 +122,7 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
     position: absolute;
     z-index: -1;
   }
-  ${colorFromProps}
+  ${colorFromProps};
 
   & + span {
     color: ${(props) => (props.checked ? colors.white : '')};

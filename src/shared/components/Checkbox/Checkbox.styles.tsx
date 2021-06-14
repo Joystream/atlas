@@ -81,9 +81,9 @@ export const InnerContainer = styled.div<CheckboxStateProps>`
   color: ${colors.white};
   border: 1px solid ${colors.gray[300]};
   border-radius: 1px;
-  ${selectedStyles}
-  ${errorStyles}
-  ${disabledStyles}
+  ${selectedStyles};
+  ${errorStyles};
+  ${disabledStyles};
 
   &:active {
     border: 1px solid ${colors.gray[100]};

@@ -64,7 +64,7 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })}
+  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
 
   line-height: 1;
   padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
@@ -76,7 +76,7 @@ export const Title = styled(Text)`
 `
 
 export const SubTitle = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })}
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
 
   padding: ${sizes(1)} ${sizes(2)};
   margin-top: ${sizes(2)};

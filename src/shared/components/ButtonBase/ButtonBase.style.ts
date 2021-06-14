@@ -89,6 +89,6 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   transition-timing-function: ${transitions.easing};
   transition-property: background-color, box-shadow;
 
-  ${variantStyles}
-  ${sizeStyles}
+  ${variantStyles};
+  ${sizeStyles};
 `
