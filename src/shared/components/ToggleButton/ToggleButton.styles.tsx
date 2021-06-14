@@ -53,6 +53,6 @@ export const StyledToggleButton = styled.button`
   }
 
   transition: all 0.4s ${transitions.easing};
-  ${pressedStyles}
-  ${hoverTransition}
+  ${pressedStyles};
+  ${hoverTransition};
 `

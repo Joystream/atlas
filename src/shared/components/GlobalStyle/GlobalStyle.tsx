@@ -7,7 +7,7 @@ import { transitionStyles } from './transitionStyles'
 import { media, colors, sizes, typography } from '../../theme'
 
 const globalStyles = css`
-  ${emotionNormalize}
+  ${emotionNormalize};
 
   *,
   *::after,

@@ -48,5 +48,5 @@ export const SpinnerWrapper = styled.div<SpinnerWrapperProps>`
   border-left: 0.09em solid ${colors.gray[100]};
   margin-bottom: ${sizes(4)};
   animation: ${spin} 1s infinite linear;
-  ${({ size }) => spinnerSizes(size)}
+  ${({ size }) => spinnerSizes(size)};
 `

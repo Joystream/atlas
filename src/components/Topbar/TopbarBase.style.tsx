@@ -90,7 +90,7 @@ export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
 
 export const LogoContainer = styled.div<LogoContainerProps>`
   margin-left: ${({ variant }) => (variant === 'default' ? sizes(10) : sizes(12))};
-  ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'}
+  ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
 
   margin-top: ${({ variant }) => (variant === 'default' ? sizes(1) : '0')};
   display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
@@ -99,7 +99,7 @@ export const LogoContainer = styled.div<LogoContainerProps>`
   ${media.small} {
     display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
-    ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'}
+    ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
   }
 
   ${media.medium} {

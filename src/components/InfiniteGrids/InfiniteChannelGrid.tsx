@@ -90,7 +90,7 @@ const previewCss = css`
 `
 
 const StyledChannelPreview = styled(ChannelPreview)`
-  ${previewCss}
+  ${previewCss};
 `
 
 export default InfiniteChannelGrid

@@ -12,5 +12,5 @@ const tertiaryOverwriteStyles = css`
 `
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonVariantProps>`
-  ${({ variant }) => variant === 'tertiary' && tertiaryOverwriteStyles}
+  ${({ variant }) => variant === 'tertiary' && tertiaryOverwriteStyles};
 `
