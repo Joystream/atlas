@@ -43,30 +43,28 @@ export const PlaygroundLayout = () => {
   return (
     <SnackbarProvider>
       <ActiveUserProvider>
-        <DialogProvider>
-          <UploadManagerProvider>
-            <ConnectionStatusProvider>
-              <DraftsProvider>
-                <Container>
-                  <NavContainer>
+        <UploadManagerProvider>
+          <ConnectionStatusProvider>
+            <DraftsProvider>
+              <Container>
+                <NavContainer>
+                  {playgroundRoutes.map((route) => (
+                    <Link key={route.path} to={route.path}>
+                      {route.name}
+                    </Link>
+                  ))}
+                </NavContainer>
+                <ContentContainer>
+                  <Routes>
                     {playgroundRoutes.map((route) => (
-                      <Link key={route.path} to={route.path}>
-                        {route.name}
-                      </Link>
+                      <Route key={route.path} path={route.path} element={route.element} />
                     ))}
-                  </NavContainer>
-                  <ContentContainer>
-                    <Routes>
-                      {playgroundRoutes.map((route) => (
-                        <Route key={route.path} path={route.path} element={route.element} />
-                      ))}
-                    </Routes>
-                  </ContentContainer>
-                </Container>
-              </DraftsProvider>
-            </ConnectionStatusProvider>
-          </UploadManagerProvider>
-        </DialogProvider>
+                  </Routes>
+                </ContentContainer>
+              </Container>
+            </DraftsProvider>
+          </ConnectionStatusProvider>
+        </UploadManagerProvider>
       </ActiveUserProvider>
     </SnackbarProvider>
   )
