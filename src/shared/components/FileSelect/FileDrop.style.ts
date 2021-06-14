@@ -17,20 +17,17 @@ type ProgressBarProps = {
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   position: relative;
-
-  background-color: ${darken(0.16, colors.gray[600])};
   width: 100%;
   height: 0;
   padding-top: 90%;
   display: flex;
   justify-content: center;
-
   transition: all ${transitions.timings.routing} ${transitions.easing};
-
   background: ${({ isDragAccept }) =>
-    isDragAccept && `radial-gradient(55.47% 148.24% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(64, 56, 255, 0.2) 100%);`};
+    isDragAccept && `radial-gradient(55.47% 148.24% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(64, 56, 255, 0.2) 100%) ;`};
+  background-color: ${darken(0.16, colors.gray[600])};
 
-  :after {
+  ::after {
     content: '';
     pointer-events: none;
     display: flex;
@@ -44,8 +41,8 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
         isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
   }
 
-  :hover:after,
-  :focus:after {
+  :hover::after,
+  :focus::after {
     border: 1px dashed ${colors.blue[500]};
   }
 
@@ -78,9 +75,8 @@ export const ProgressBar = styled.div<ProgressBarProps>`
   opacity: 0.2;
   top: 0;
   position: absolute;
-
   transform-origin: left;
-  transform: ${({ isLoading }) => `scaleX(${isLoading ? 1 : 0})`};
+  transform: ${({ isLoading }) => `scaleX(${isLoading ? 1 : 0}) `};
   transition: transform ${({ isLoading }) => (isLoading ? '1000ms' : '0ms')} ${transitions.easing};
 `
 
@@ -89,11 +85,9 @@ export const ErrorContainer = styled.div`
   cursor: initial;
   bottom: 0;
   z-index: 2;
-
   width: 100%;
   padding: ${sizes(2)} 0;
   background-color: ${colors.transparentError};
-
   display: flex;
   align-items: center;
   justify-content: center;

@@ -35,10 +35,8 @@ export const SidebarNav = styled.nav<SidebarNavProps>`
   z-index: ${zIndex.sideNav};
   width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
-
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-
   overflow: hidden;
   color: ${colors.white};
   background-color: ${({ isStudio }) => (isStudio ? colors.gray[800] : colors.gray[700])};
@@ -83,6 +81,7 @@ export const ButtonGroup = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   margin-top: ${sizes(3)};
+
   > * + * {
     margin-top: ${sizes(4)};
   }
@@ -94,7 +93,8 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
   display: flex;
   flex-direction: column;
   ${badgeStyles}
-  &[data-badge]:after {
+
+  &[data-badge]::after {
     left: ${sizes(12)};
     top: ${sizes(3)};
 
@@ -112,21 +112,26 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   display: flex;
   position: relative;
   align-items: center;
+
   &:hover {
     background-color: ${colors.transparentPrimary[10]};
   }
+
   &:focus {
     background-color: ${colors.transparentPrimary[10]};
   }
+
   &:active {
     background-color: ${colors.transparentPrimary[18]};
   }
+
   > svg {
     ${media.medium} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
     }
   }
+
   > span {
     margin-left: ${sizes(8)};
     font-weight: bold;
@@ -134,10 +139,12 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     font-size: ${typography.sizes.h5};
     line-height: 1;
   }
+
   &[data-active='true'] {
     background-color: ${colors.transparentPrimary[18]};
   }
-  :after {
+
+  ::after {
     ${media.medium} {
       content: ${({ content }) => `'${content}'`};
       position: absolute;
@@ -167,6 +174,7 @@ export const SubItemsWrapper = styled.div<SubItemProps>`
   transition: height ${transitions.timings.regular} ${transitions.easing};
   overflow: hidden;
   height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
+
   > ul {
     display: flex;
     flex-direction: column;
@@ -179,6 +187,7 @@ export const SubItem = styled.li`
   font-size: ${typography.sizes.body2};
   font-family: ${typography.fonts.base};
   margin-top: ${sizes(8)};
+
   :first-of-type {
     margin-top: ${sizes(6)};
   }
@@ -187,7 +196,6 @@ export const SubItem = styled.li`
 export const LegalLinksWrapper = styled.span`
   display: flex;
   align-items: center;
-
   margin-top: ${sizes(8)};
   padding: ${sizes(4)} 0 ${sizes(6)};
   border-top: 1px solid ${colors.gray[300]};
@@ -205,12 +213,15 @@ export const LegalLink = styled(Link)`
   text-decoration: none;
   font-family: ${typography.fonts.headers};
   font-size: ${typography.sizes.subtitle2};
+
   &:hover {
     color: ${colors.gray[400]};
   }
+
   &:focus {
     color: ${colors.gray[400]};
   }
+
   &:active {
     color: ${colors.gray[500]};
   }

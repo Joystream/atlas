@@ -17,12 +17,12 @@ export const PreviewTitlePlaceholder = styled(Placeholder)`
 export const PreviewSubtextPlaceholder = styled(Placeholder)`
   width: 70px;
   height: 16px;
-  ${previewSubtextCss};
+  ${previewSubtextCss}
 `
 
 export const PreviewSubtext = styled(Text)`
   color: ${colors.gray['300']};
-  ${previewSubtextCss};
+  ${previewSubtextCss}
 `
 
 export const StyledChannelAvatar = styled(Avatar)`
@@ -32,11 +32,10 @@ export const StyledChannelAvatar = styled(Avatar)`
 
 export const PreviewContainer = styled(Link)`
   text-decoration: none;
-
   display: inline-flex;
   align-items: center;
-
   margin-bottom: ${sizes(8)};
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -58,9 +57,9 @@ const videoImageCss = css`
 
 export const VideoImage = styled.img`
   object-fit: cover;
-  ${videoImageCss};
+  ${videoImageCss}
 `
 
 export const VideoImagePlaceholder = styled(Placeholder)`
-  ${videoImageCss};
+  ${videoImageCss}
 `

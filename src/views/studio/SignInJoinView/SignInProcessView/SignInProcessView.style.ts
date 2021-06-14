@@ -52,7 +52,6 @@ export const StyledCoinsIllustrations = styled(SvgCoinsIllustration)`
   display: none;
   ${media.small} {
     display: block;
-
     position: relative;
     left: -100px;
     bottom: 100px;
@@ -82,6 +81,7 @@ export const OrderedList = styled.ol`
   counter-reset: ordered-list-counter;
   list-style: none;
   position: relative;
+
   ::before {
     position: absolute;
     content: '';
@@ -95,6 +95,7 @@ export const OrderedItem = styled(Text)`
   counter-increment: ordered-list-counter;
   margin-left: 20px;
   position: relative;
+
   ::before {
     content: counter(ordered-list-counter);
     position: absolute;
@@ -118,7 +119,9 @@ export const UnOrderedList = styled.ul`
   list-style: disc;
 `
 
-export const UnOrderedItem = styled(Text)``
+export const UnOrderedItem = styled(Text)`
+  /* stylelint-disable-line */
+`
 
 export const StyledButton = styled(Button)`
   position: fixed;

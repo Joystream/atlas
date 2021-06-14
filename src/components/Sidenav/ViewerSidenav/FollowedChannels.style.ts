@@ -16,9 +16,7 @@ export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
-
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-
   color: ${colors.gray[300]};
 `
 export const ChannelsWrapper = styled.div`
@@ -49,11 +47,9 @@ export const ChannelsItem = styled.li`
 export const ShowMoreButton = styled.button`
   border: none;
   background: none;
-
   font-family: ${typography.fonts.base};
   font-size: 1rem;
   font-weight: bold;
-
   cursor: pointer;
   padding: ${sizes(5)} 0;
   display: flex;

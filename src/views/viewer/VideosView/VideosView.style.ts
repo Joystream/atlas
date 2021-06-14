@@ -30,7 +30,8 @@ export const CategoriesVideosContainer = styled.div`
 export const StyledCategoryPicker = styled(CategoryPicker)<IsAtTop>`
   z-index: ${zIndex.overlay};
   position: sticky;
-  /*Offset Category Picker by Navbar Height */
+
+  /* Offset Category Picker by Navbar Height */
   top: ${TOP_NAVBAR_HEIGHT}px;
   padding: ${sizes(5)} var(--global-horizontal-padding) ${sizes(2)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));

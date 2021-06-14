@@ -15,6 +15,7 @@ export const StyledStepFooter = styled(StepFooter)`
 
 export const StyledListItem = styled(Text)`
   text-align: left;
+
   & + & {
     margin-top: ${sizes(2)};
   }

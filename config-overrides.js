@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const { override, addBabelPreset, addBabelPlugin, addWebpackAlias, addWebpackModuleRule } = require('customize-cra')
+const StylelintPlugin = require('stylelint-webpack-plugin')
+const {
+  override,
+  addBabelPreset,
+  addBabelPlugin,
+  addWebpackAlias,
+  addWebpackModuleRule,
+  addWebpackPlugin,
+} = require('customize-cra')
 
 module.exports = {
   webpack: override(
     addBabelPlugin('@emotion/babel-plugin'),
+    addWebpackPlugin(new StylelintPlugin({ files: './src/**/*.{tsx,ts}' })),
     addBabelPreset('@emotion/babel-preset-css-prop'),
     addWebpackAlias({
       '@': path.resolve(__dirname, 'src/'),

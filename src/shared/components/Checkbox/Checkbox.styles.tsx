@@ -28,6 +28,7 @@ export const Container = styled.div<CheckboxStateProps>`
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
+
   :hover {
     background: ${({ disabled }) => !disabled && colors.transparentPrimary[12]};
   }
@@ -83,6 +84,7 @@ export const InnerContainer = styled.div<CheckboxStateProps>`
   ${selectedStyles}
   ${errorStyles}
   ${disabledStyles}
+
   &:active {
     border: 1px solid ${colors.gray[100]};
   }

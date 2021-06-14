@@ -24,9 +24,11 @@ export const TabsGroup = styled.div`
   position: relative;
   scroll-behavior: smooth;
   overflow: auto;
+
   ::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
 `
 
@@ -39,12 +41,15 @@ export const Tab = styled.div<TabProps>`
   text-transform: capitalize;
   text-align: center;
   border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : 'none')};
+
   :hover {
     cursor: pointer;
   }
+
   span {
     ${badgeStyles}
-    &[data-badge]:after {
+
+    &[data-badge]::after {
       margin-top: calc(-1 * ${sizes(2)});
     }
   }

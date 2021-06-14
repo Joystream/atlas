@@ -8,9 +8,9 @@ import {
   AvatarContainer,
   Info,
   InnerContainer,
-  NameHeader,
   OuterContainer,
   StyledAvatar,
+  TextBase,
   VideoCount,
   VideoCountContainer,
 } from './ChannelPreviewBase.style'
@@ -63,7 +63,7 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                 {loading ? (
                   <Placeholder width="140px" height="16px" />
                 ) : (
-                  <NameHeader variant="h6">{title || '\u00A0'}</NameHeader>
+                  <TextBase variant="h6">{title || '\u00A0'}</TextBase>
                 )}
                 <VideoCountContainer>
                   {loading ? (

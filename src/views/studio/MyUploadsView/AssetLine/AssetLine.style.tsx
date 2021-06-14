@@ -23,7 +23,8 @@ export const FileLinePoint = styled.div`
   height: 32px;
   border-left: 2px solid ${colors.gray[500]};
   flex-shrink: 0;
-  &:after {
+
+  &::after {
     content: '';
     position: absolute;
     border-top: 2px solid ${colors.gray[500]};
@@ -111,6 +112,7 @@ export const FileInfoType = styled.div`
   align-items: center;
   height: ${sizes(6)};
   color: ${colors.white};
+
   svg {
     margin-right: 10px;
   }

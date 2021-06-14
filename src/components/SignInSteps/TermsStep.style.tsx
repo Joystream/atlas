@@ -16,6 +16,7 @@ export const TermsBox = styled.div`
 `
 export const TextWrapper = styled.div`
   margin: ${sizes(9)} ${sizes(17)} ${sizes(9)} ${sizes(8)};
+
   a {
     text-decoration: none;
     color: ${colors.gray[50]};

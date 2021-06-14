@@ -52,13 +52,14 @@ const cropAreaSizeCss = css`
 `
 
 export const CropPlaceholder = styled(Placeholder)`
-  ${cropAreaSizeCss};
+  ${cropAreaSizeCss}
 `
 
 export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean }>`
-  ${cropAreaSizeCss};
+  ${cropAreaSizeCss}
 
-  ${({ rounded }) => rounded && roundedCropperCss};
+  ${({ rounded }) => rounded && roundedCropperCss}
+
   .cropper-view-box {
     outline: none;
 
@@ -70,7 +71,6 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
       height: 100%;
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
-
       box-shadow: inset 0 0 0 2px ${colors.transparentWhite[32]};
     }
   }
@@ -84,7 +84,6 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
 
 export const StyledImage = styled.img`
   display: block;
-
   max-width: 100%;
 `
 

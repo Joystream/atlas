@@ -25,37 +25,39 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
+
   &.snackbar-enter {
     transform: translateY(500px) translateX(0);
     height: 0;
     margin-bottom: 0;
   }
+
   &.snackbar-enter-active,
   &.snackbar-enter-done {
     transform: translateY(0) translateX(0);
     height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: ${sizes(3)};
   }
+
   &.snackbar-exit {
     transform: translateY(0) translateX(0);
     height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: ${sizes(3)};
   }
+
   &.snackbar-exit-active {
     transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
+    transition: transform ${transitions.timings.regular} ${transitions.easing},
+      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
+      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
 
   &.snackbar-enter-active {
     transition: height ${transitions.timings.regular} ${transitions.easing},
       margin-bottom ${transitions.timings.regular} ${transitions.easing},
       transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
-  }
-  &.snackbar-exit-active {
-    transition: transform ${transitions.timings.regular} ${transitions.easing},
-      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
 `
 
@@ -78,8 +80,8 @@ export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   ${SnackbarDescription} {
-    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
-    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
+    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`}
+    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`}
   }
 `
 
@@ -93,7 +95,6 @@ export const SnackbarActionButton = styled(Button)`
   align-items: center;
   padding: ${sizes(2)};
   min-width: auto;
-  font-size: ${sizes(3)};
   margin-right: ${sizes(2)};
   font-size: ${typography.sizes.body1};
 `

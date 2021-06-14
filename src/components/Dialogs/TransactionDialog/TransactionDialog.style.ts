@@ -12,7 +12,6 @@ export const StepsBar = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
   grid-gap: ${sizes(1)};
@@ -24,12 +23,13 @@ export const Step = styled.div<StepProps>`
   background-color: ${({ isActive }) => (isActive ? colors.gray[400] : colors.gray[600])};
   height: 100%;
   transition: background-color ${transitions.timings.regular} ${transitions.easing};
+
   :hover {
     ${({ isActive }) =>
       !isActive &&
       css`
         background-color: ${colors.gray[500]};
-      `};
+      `}
   }
 `
 

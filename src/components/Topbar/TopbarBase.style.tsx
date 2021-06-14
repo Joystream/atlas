@@ -23,19 +23,14 @@ export const Header = styled.header<TopNavbarStyleProps>`
   top: 0;
   left: var(--sidenav-collapsed-width);
   right: 0;
-
   z-index: ${zIndex.header};
   min-height: ${TOP_NAVBAR_HEIGHT}px;
   max-height: ${TOP_NAVBAR_HEIGHT}px;
-
   display: flex;
   justify-content: space-between;
-
   border-bottom: 1px solid ${colors.gray[800]};
-
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
   transition: background-color 0.4s ${transitions.easing};
-
   padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
   ${media.small} {
@@ -95,7 +90,8 @@ export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
 
 export const LogoContainer = styled.div<LogoContainerProps>`
   margin-left: ${({ variant }) => (variant === 'default' ? sizes(10) : sizes(12))};
-  ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
+  ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'}
+
   margin-top: ${({ variant }) => (variant === 'default' ? sizes(1) : '0')};
   display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
   align-items: center;
@@ -103,7 +99,7 @@ export const LogoContainer = styled.div<LogoContainerProps>`
   ${media.small} {
     display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
-    ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
+    ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'}
   }
 
   ${media.medium} {

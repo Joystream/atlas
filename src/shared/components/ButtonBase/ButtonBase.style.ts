@@ -17,20 +17,24 @@ const variantStyles = ({ variant }: ButtonBaseStyleProps): SerializedStyles => {
     case 'primary':
       return css`
         background-color: ${colors.blue[500]};
+
         &:hover {
           background-color: ${colors.blue[700]};
         }
+
         &:active {
           background-color: ${colors.blue[900]};
         }
       `
     case 'secondary':
       return css`
-        // 1px inset border
+        /* 1px inset border */
         box-shadow: inset 0 0 0 1px ${colors.gray[500]};
+
         &:hover {
           box-shadow: inset 0 0 0 1px ${colors.gray[50]};
         }
+
         &:active {
           box-shadow: inset 0 0 0 1px ${colors.gray[50]};
           background-color: ${colors.blue[500]};
@@ -41,6 +45,7 @@ const variantStyles = ({ variant }: ButtonBaseStyleProps): SerializedStyles => {
         &:hover {
           background-color: ${colors.transparentPrimary[12]};
         }
+
         &:active {
           background-color: ${colors.transparentPrimary[6]};
         }
@@ -69,11 +74,9 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   text-decoration: none;
   border: 0;
   background-color: transparent;
-
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
 
   &:disabled,
@@ -86,6 +89,6 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   transition-timing-function: ${transitions.easing};
   transition-property: background-color, box-shadow;
 
-  ${variantStyles};
-  ${sizeStyles};
+  ${variantStyles}
+  ${sizeStyles}
 `

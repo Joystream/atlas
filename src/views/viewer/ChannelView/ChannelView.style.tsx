@@ -59,13 +59,15 @@ export const TitleContainer = styled.div`
   ${media.medium} {
     max-width: 60%;
   }
+
   z-index: 2;
 `
 
 export const Title = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })}
+
   line-height: 1;
   padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
   background-color: ${colors.gray[800]};
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -74,8 +76,9 @@ export const Title = styled(Text)`
 `
 
 export const SubTitle = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })}
+
   padding: ${sizes(1)} ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
   margin-top: ${sizes(2)};
   color: ${colors.white};
   background-color: ${colors.gray[800]};
@@ -89,6 +92,7 @@ export const VideoSection = styled.section`
 export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(3)};
   position: relative;
+
   span {
     font-size: ${typography.sizes.h2};
   }

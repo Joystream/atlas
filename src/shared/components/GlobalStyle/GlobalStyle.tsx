@@ -7,24 +7,7 @@ import { transitionStyles } from './transitionStyles'
 import { media, colors, sizes, typography } from '../../theme'
 
 const globalStyles = css`
-  ${emotionNormalize};
-
-  *::-webkit-scrollbar {
-    width: 8px;
-  }
-  *::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
-  }
-  *::-webkit-scrollbar-thumb {
-    background-color: var(--thumbBG);
-    border-radius: 20px;
-  }
-
-  body {
-    font-family: ${typography.fonts.base};
-    background: ${colors.black};
-    color: ${colors.gray[50]};
-  }
+  ${emotionNormalize}
 
   *,
   *::after,
@@ -33,8 +16,27 @@ const globalStyles = css`
     box-sizing: border-box;
   }
 
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 20px;
+  }
+
   *:focus {
     outline: 0;
+  }
+
+  body {
+    font-family: ${typography.fonts.base};
+    background: ${colors.black};
+    color: ${colors.gray[50]};
   }
 
   h1,
@@ -55,7 +57,8 @@ const globalStyles = css`
     --scrollbarBG: ${colors.transparentPrimary[10]};
     --thumbBG: ${colors.transparentPrimary[18]};
     --global-horizontal-padding: ${sizes(4)};
-    --sidenav-collapsed-width: 0px;
+    --sidenav-collapsed-width: 0;
+
     ${media.medium} {
       --global-horizontal-padding: ${sizes(8)};
       --sidenav-collapsed-width: 72px;

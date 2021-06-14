@@ -40,6 +40,7 @@ export const Arrow = styled(IconButton)`
   position: absolute;
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
+
   &.disabled {
     display: none;
   }
@@ -47,6 +48,7 @@ export const Arrow = styled(IconButton)`
   &.glider-prev {
     left: 0;
   }
+
   &.glider-next {
     right: 0;
   }

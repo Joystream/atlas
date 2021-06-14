@@ -46,7 +46,6 @@ import {
   CoverVideoPublishingStateOverlay,
   CoverNoImage,
   CoverThumbnailUploadFailed,
-  ContextMenuContainer,
   KebabMenuIconContainer,
   CoverTopLeftContainer,
   RemoveButton,
@@ -344,7 +343,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               )}
             </TextContainer>
             {publisherMode && !isLoading && (
-              <ContextMenuContainer>
+              <div>
                 <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
@@ -370,7 +369,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     </ContextMenuItem>
                   )}
                 </ContextMenu>
-              </ContextMenuContainer>
+              </div>
             )}
           </InfoContainer>
         </CSSTransition>

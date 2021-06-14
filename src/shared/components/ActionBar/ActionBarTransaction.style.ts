@@ -14,8 +14,7 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   bottom: 0;
   left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
   right: 0;
-  z-index: ${zIndex.nearSheetOverlay};
-
+  z-index: ${zIndex.header};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
 
