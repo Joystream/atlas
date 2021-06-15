@@ -161,7 +161,7 @@ const MainContainer = styled.main`
   margin-left: var(--sidenav-collapsed-width);
 `
 
-export const StudioLayoutWrapper: React.FC = () => {
+const StudioLayoutWrapper: React.FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary

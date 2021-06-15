@@ -5,7 +5,7 @@ import { MyUploadsView } from './MyUploadsView'
 import { MyVideosView } from './MyVideosView'
 import { SignInJoinView } from './SignInJoinView'
 import { SignInView } from './SignInView'
-import { StudioLayoutWrapper as StudioLayout } from './StudioLayout'
+import StudioLayout from './StudioLayout'
 
 export {
   StudioLayout,
