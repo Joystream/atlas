@@ -20,7 +20,7 @@ import {
 import { Text } from '../Text'
 
 export type ChannelCoverProps = {
-  coverPhotoUrl?: string | null
+  assetUrl?: string | null
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
@@ -28,7 +28,7 @@ export type ChannelCoverProps = {
 }
 
 export const ChannelCover: React.FC<ChannelCoverProps> = ({
-  coverPhotoUrl,
+  assetUrl,
   hasCoverUploadFailed,
   editable,
   disabled,
@@ -41,9 +41,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgGlyphImage />
-              <EditButtonMessage variant="subtitle2">
-                {`${coverPhotoUrl ? 'Edit ' : 'Add '} cover image`}
-              </EditButtonMessage>
+              <EditButtonMessage variant="subtitle2">{`${assetUrl ? 'Edit ' : 'Add '} cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
               <SvgGlyphFileImage />
@@ -53,12 +51,12 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
         <Media>
           <TransitionGroup>
             <CSSTransition
-              key={coverPhotoUrl ? 'cover' : 'pattern'}
+              key={assetUrl ? 'cover' : 'pattern'}
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {coverPhotoUrl ? (
-                <CoverImage $src={coverPhotoUrl} />
+              {assetUrl ? (
+                <CoverImage $src={assetUrl} />
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <SvgLargeUploadFailed />

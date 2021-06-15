@@ -14,7 +14,7 @@ export default {
     },
     onCoverEditClick: { action: 'edit/add cover' },
     onCoverRemoveClick: { action: 'remove cover' },
-    $src: {
+    assetUrl: {
       defaultValue: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
     },
   },
@@ -37,5 +37,5 @@ export const Default = Template.bind({})
 
 export const WithNoImage = Template.bind({})
 WithNoImage.args = {
-  $src: undefined,
+  assetUrl: undefined,
 }

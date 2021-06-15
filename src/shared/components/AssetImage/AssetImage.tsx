@@ -1,47 +1,56 @@
-import React, { useEffect, ReactElement, cloneElement, useState } from 'react'
+import React, { ReactElement, useEffect, cloneElement, useState, useMemo } from 'react'
 
-import { useRandomStorageProviderUrl } from '@/api/hooks'
-import { AssetAvailability, DataObject } from '@/api/queries'
+import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from '@/api/queries'
+import { useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 
-interface AssetImageProps {
-  isBackgroundImage?: boolean
-  assetData: {
-    availability?: AssetAvailability
-    assetUrls?: string[]
-    dataObject?: DataObject | null
-  }
-  component: ReactElement
-}
+type AssetImageProps = { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; component: ReactElement }
 
-const AssetImage = ({
-  isBackgroundImage,
-  assetData: { availability, assetUrls, dataObject },
-  component,
-}: AssetImageProps) => {
-  const [assetUrl, setAssetUrl] = useState<string | null>(null)
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
-
-  useEffect(() => {
-    if (!assetUrl) {
-      if (availability !== AssetAvailability.Accepted) {
-        return
-      }
-      if (assetUrls?.length) {
-        setAssetUrl(assetUrls[0])
-      }
-      if (dataObject?.liaison?.isActive && dataObject?.liaison?.metadata) {
-        setAssetUrl(createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata))
-      }
-
-      const randomStorageUrl = getRandomStorageProviderUrl()
-      if (randomStorageUrl && dataObject) {
-        setAssetUrl(createStorageNodeUrl(dataObject.joystreamContentId, randomStorageUrl))
+const AssetImage = ({ entity, component }: AssetImageProps) => {
+  const [assetUrl, setAssetUrl] = useState<string | undefined>(undefined)
+  const { getStorageProvider } = useStorageProviders()
+  const assetData = useMemo(() => {
+    if (entity && entity.__typename === 'Channel') {
+      return {
+        title: entity.title,
+        availability: entity.coverPhotoAvailability || entity.avatarPhotoAvailability,
+        urls: entity.avatarPhotoUrls || entity.coverPhotoUrls,
+        dataObject: entity.coverPhotoDataObject || entity.avatarPhotoDataObject,
       }
     }
-  }, [assetUrl, assetUrls, availability, dataObject, getRandomStorageProviderUrl])
+    if (entity && entity.__typename === 'Video') {
+      return {
+        title: entity.title,
+        availability: entity.thumbnailPhotoAvailability,
+        urls: entity.thumbnailPhotoUrls,
+        dataObject: entity.thumbnailPhotoDataObject,
+      }
+    }
+    return null
+  }, [entity])
 
-  return cloneElement(component, { [isBackgroundImage ? '$src' : 'src']: assetUrl })
+  useEffect(() => {
+    if (!assetUrl && assetData) {
+      if (assetData.availability !== AssetAvailability.Accepted) {
+        return
+      }
+      if (assetData.urls?.length) {
+        setAssetUrl(assetData.urls[0])
+      }
+      if (assetData.dataObject?.liaison?.isActive && assetData.dataObject?.liaison?.metadata) {
+        setAssetUrl(
+          createStorageNodeUrl(assetData.dataObject.joystreamContentId, assetData.dataObject?.liaison?.metadata)
+        )
+      }
+
+      const randomStorageUrl = getStorageProvider()
+      if (randomStorageUrl && assetData.dataObject) {
+        setAssetUrl(createStorageNodeUrl(assetData.dataObject.joystreamContentId, randomStorageUrl.url))
+      }
+    }
+  }, [assetUrl, assetData, getStorageProvider])
+
+  return cloneElement(component, { assetUrl })
 }
 
 export default AssetImage

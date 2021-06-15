@@ -65,15 +65,7 @@ export const ChannelView: React.FC = () => {
   return (
     <ViewWrapper>
       <Header>
-        <AssetImage
-          isBackgroundImage
-          assetData={{
-            availability: channel?.coverPhotoAvailability,
-            assetUrls: channel?.coverPhotoUrls,
-            dataObject: channel?.coverPhotoDataObject,
-          }}
-          component={<ChannelCover />}
-        />
+        <AssetImage entity={channel} component={<ChannelCover />} />
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>

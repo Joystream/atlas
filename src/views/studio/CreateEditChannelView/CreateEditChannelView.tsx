@@ -345,7 +345,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           render={({ field: { value, onChange } }) => (
             <>
               <ChannelCover
-                $src={loading ? null : value.url}
+                assetUrl={loading ? null : value.url}
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => coverDialogRef.current?.open()}
                 editable

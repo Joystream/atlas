@@ -44,8 +44,9 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-position: center;
   background-attachment: local;
   background-size: cover;
-  // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-  // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
+
+  /* as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
+  this helps with keeping a consistent background behind a page content - we don\'t want the media to peek out in the content spacing */
   background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px),
     url(${({ $src }) => $src});
 
