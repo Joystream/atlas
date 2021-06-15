@@ -1,3 +1,1 @@
-import { VideosView } from './VideosView'
-
-export { VideosView }
+export * from './VideosView'

@@ -1,3 +1,1 @@
-import { ChannelsView } from './ChannelsView'
-
-export { ChannelsView }
+export * from './ChannelsView'

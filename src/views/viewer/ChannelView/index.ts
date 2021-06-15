@@ -1,1 +1,1 @@
-export { ChannelView } from './ChannelView'
+export * from './ChannelView'

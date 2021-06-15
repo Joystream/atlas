@@ -1,3 +1,1 @@
-import { SearchResults } from './SearchResults'
-
-export { SearchResults }
+export * from './SearchResults'
