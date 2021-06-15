@@ -82,7 +82,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
         await dialogCloseCallback()
       }
     } catch (e) {
-      console.error('Transaction dialog close callback failed', e)
+      Logger.error('Transaction dialog close callback failed', e)
     }
     reset()
   }, [dialogCloseCallback])
@@ -99,7 +99,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
             await syncCallback()
           }
         } catch (e) {
-          console.error('Transaction sync callback failed', e)
+          Logger.error('Transaction sync callback failed', e)
         }
       }
       runCallback()

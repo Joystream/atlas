@@ -266,7 +266,7 @@ export const EditVideoSheet: React.FC = () => {
         },
       })
     } catch (e) {
-      console.error('Transaction handler failed', e)
+      Logger.error('Transaction handler failed', e)
     }
   }
 
