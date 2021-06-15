@@ -5,7 +5,7 @@ import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { Button, ChannelCover } from '@/shared/components'
-import AssetImage from '@/shared/components/AssetImage'
+import AssetImage, { ImageType } from '@/shared/components/AssetImage'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -65,7 +65,7 @@ export const ChannelView: React.FC = () => {
   return (
     <ViewWrapper>
       <Header>
-        <AssetImage entity={channel} component={<ChannelCover />} />
+        <AssetImage entity={channel} component={<ChannelCover />} imageType={ImageType.COVER} />
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>

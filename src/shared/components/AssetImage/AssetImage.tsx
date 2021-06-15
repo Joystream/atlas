@@ -4,30 +4,33 @@ import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from
 import { useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 
-type AssetImageProps = { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; component: ReactElement }
+import { ImageType } from './constants'
 
-const AssetImage = ({ entity, component }: AssetImageProps) => {
+type AssetImageProps = { component: ReactElement } & (
+  | { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; imageType?: ImageType.THUMBNAIL }
+  | { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; imageType: ImageType.COVER | ImageType.AVATAR }
+)
+
+const AssetImage = ({ entity, component, imageType }: AssetImageProps) => {
   const [assetUrl, setAssetUrl] = useState<string | undefined>(undefined)
   const { getStorageProvider } = useStorageProviders()
   const assetData = useMemo(() => {
     if (entity && entity.__typename === 'Channel') {
       return {
-        title: entity.title,
-        availability: entity.coverPhotoAvailability || entity.avatarPhotoAvailability,
-        urls: entity.avatarPhotoUrls || entity.coverPhotoUrls,
-        dataObject: entity.coverPhotoDataObject || entity.avatarPhotoDataObject,
+        availability: imageType === ImageType.COVER ? entity.coverPhotoAvailability : entity.avatarPhotoAvailability,
+        urls: imageType === ImageType.COVER ? entity.avatarPhotoUrls : entity.coverPhotoUrls,
+        dataObject: imageType === ImageType.COVER ? entity.coverPhotoDataObject : entity.avatarPhotoDataObject,
       }
     }
     if (entity && entity.__typename === 'Video') {
       return {
-        title: entity.title,
         availability: entity.thumbnailPhotoAvailability,
         urls: entity.thumbnailPhotoUrls,
         dataObject: entity.thumbnailPhotoDataObject,
       }
     }
     return null
-  }, [entity])
+  }, [entity, imageType])
 
   useEffect(() => {
     if (!assetUrl && assetData) {
