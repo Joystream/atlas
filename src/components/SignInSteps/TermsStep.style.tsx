@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React from 'react'
 
 import { Button, IconButton } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'

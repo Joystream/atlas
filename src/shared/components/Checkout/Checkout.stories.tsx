@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 
 import Checkout, { CheckoutProps } from './Checkout'
 
-import { WithValue } from '../../../../.storybook/WithValue'
-
 export default {
   title: 'Shared/C/Checkout',
   component: Checkout,

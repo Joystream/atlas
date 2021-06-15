@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { AssetDimensions } from '@/types/cropper'
 import { formatBytes } from '@/utils/size'
 
 const LARGE_FILE_IMAGES = [
@@ -113,12 +113,7 @@ const ImageDownsizing = () => {
     })
   }, [coverSizes])
 
-  const handleConfirmAvatar = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
-  ) => {
+  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, assetDimensions: AssetDimensions) => {
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
       ...avatarSizes,
@@ -127,12 +122,7 @@ const ImageDownsizing = () => {
     })
   }
 
-  const handleConfirmCover = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
-  ) => {
+  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, assetDimensions: AssetDimensions) => {
     setCoverUrl(croppedUrl)
     setCoverSizes({
       ...coverSizes,

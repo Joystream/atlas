@@ -34,7 +34,6 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
-import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 

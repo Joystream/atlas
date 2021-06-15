@@ -8,6 +8,7 @@ const reactConfig = require('../config-overrides')
 // TODO: related to an issue with emotion and storybook, remove once resolved https://github.com/storybookjs/storybook/issues/7540
 function getPackageDir(filepath) {
   let currDir = path.dirname(require.resolve(filepath))
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     if (fs.existsSync(path.join(currDir, 'package.json'))) {
       return currDir
