@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
@@ -26,11 +26,14 @@ const SORT_OPTIONS = [
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
+const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
+const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
+const SNACKBAR_TIMEOUT = 5000
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
-  const { displaySnackbar } = useSnackbar()
+  const { displaySnackbar, updateSnackbar, closeSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
     VideoOrderByInput.CreatedAtDesc
@@ -42,6 +45,9 @@ export const MyVideosView = () => {
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
   const isPublic_eq = getPublicness(currentTabName)
+
+  const removeDraftNotificationsCount = useRef(0)
+  const addToTabNotificationsCount = useRef(0)
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
@@ -116,12 +122,21 @@ export const MyVideosView = () => {
     }
     addVideoTab({ id, isDraft: opts.draft })
     if (opts.minimized) {
-      displaySnackbar({
-        title: 'Video opened in a new tab',
-        iconType: 'success',
-        actionText: 'Undo',
-        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
-      })
+      addToTabNotificationsCount.current++
+      if (addToTabNotificationsCount.current > 1) {
+        updateSnackbar(OPEN_TAB_SNACKBAR, { title: `${addToTabNotificationsCount.current} videos opened in a new tab` })
+      } else {
+        displaySnackbar({
+          customId: OPEN_TAB_SNACKBAR,
+          title: 'Video opened in a new tab',
+          iconType: 'success',
+          actionText: 'Undo',
+          timeout: SNACKBAR_TIMEOUT,
+          onActionClick: () => setTabIdToRemoveViaSnackbar(id),
+          onExit: () => (addToTabNotificationsCount.current = 0),
+        })
+      }
+
       setSheetState('minimized')
     } else {
       const tabIdx = videoTabs.findIndex((t) => t.id === id)
@@ -161,10 +176,18 @@ export const MyVideosView = () => {
       onPrimaryButtonClick: () => {
         closeDeleteDraftDialog()
         removeDraft(draftId)
-        displaySnackbar({
-          title: 'Draft deleted',
-          iconType: 'success',
-        })
+        removeDraftNotificationsCount.current++
+        if (removeDraftNotificationsCount.current > 1) {
+          updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })
+        } else {
+          displaySnackbar({
+            customId: REMOVE_DRAFT_SNACKBAR,
+            title: 'Draft deleted',
+            iconType: 'success',
+            timeout: SNACKBAR_TIMEOUT,
+            onExit: () => (removeDraftNotificationsCount.current = 0),
+          })
+        }
       },
     })
   }

@@ -10,12 +10,14 @@ import { createId } from '@/utils/createId'
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
 export type DisplaySnackbarArgs = {
+  customId?: string
   timeout?: number
   variant?: 'primary' | 'secondary'
   iconType?: SnackbarIconType
   title: string
   description?: string
   actionText?: string
+  onExit?: () => void
   onActionClick?: () => void
 }
 
@@ -45,14 +47,15 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  const displaySnackbar = useCallback(({ timeout, ...args }: DisplaySnackbarArgs) => {
-    const id = createId()
+  const displaySnackbar = useCallback(({ customId, timeout, onExit, ...args }: DisplaySnackbarArgs) => {
+    const id = customId ?? createId()
     setSnackbars((currentSnackbars) => {
       return [...currentSnackbars, { id, ...args }]
     })
 
     if (timeout) {
       setTimeout(() => {
+        onExit?.()
         setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
       }, timeout)
     }
@@ -83,7 +86,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
       {children}
       <SnackbarsContainer>
         <TransitionGroup>
-          {snackbars.map(({ id, iconType, onActionClick, ...snackbarProps }) => (
+          {snackbars.map(({ id, iconType, onExit, onActionClick, ...snackbarProps }) => (
             <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
               <Snackbar
                 {...snackbarProps}
@@ -92,7 +95,10 @@ export const SnackbarProvider: React.FC = ({ children }) => {
                   closeSnackbar(id)
                 }}
                 icon={iconType && ICON_TYPE_TO_ICON[iconType]}
-                onClick={() => closeSnackbar(id)}
+                onClick={() => {
+                  onExit?.()
+                  closeSnackbar(id)
+                }}
               />
             </CSSTransition>
           ))}
