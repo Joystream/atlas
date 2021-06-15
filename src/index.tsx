@@ -7,7 +7,6 @@ import { Logger } from '@/utils/logger'
 
 import App from './App'
 import { SENTRY_DSN } from './config/urls'
-import './styles/fonts.css'
 
 type Env = 'production' | 'staging' | 'development'
 
