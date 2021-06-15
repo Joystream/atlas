@@ -6,13 +6,6 @@ module.exports = {
     jest: true,
   },
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 2019,
-    sourceType: 'module',
-  },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
