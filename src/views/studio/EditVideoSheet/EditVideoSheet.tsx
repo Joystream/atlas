@@ -67,13 +67,12 @@ export const EditVideoSheet: React.FC = () => {
     if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
       return
     }
-
-    const beforeUnload = (e: BeforeUnloadEvent) => {
+    window.onbeforeunload = (e: BeforeUnloadEvent) => {
       e.preventDefault()
+      return ''
     }
-    window.addEventListener('beforeunload', beforeUnload)
     return () => {
-      window.removeEventListener('beforeunload', beforeUnload)
+      window.onbeforeunload = null
     }
   }, [sheetState, anyVideoTabsCachedAssets])
 
