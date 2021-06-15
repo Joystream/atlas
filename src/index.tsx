@@ -2,8 +2,10 @@ import { CaptureConsole } from '@sentry/integrations'
 import * as Sentry from '@sentry/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { App } from './App'
+
 import { Logger } from '@/utils/logger'
+
+import { App } from './App'
 import { SENTRY_DSN } from './config/urls'
 import './styles/fonts.css'
 
