@@ -1,3 +1,1 @@
-import { MyUploadsView } from './MyUploadsView'
-
-export { MyUploadsView }
+export * from './MyUploadsView'

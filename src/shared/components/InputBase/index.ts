@@ -1,3 +1,3 @@
 export * from './InputBase'
 
-export * from './InputBase.styles'
+export { LabelText } from './InputBase.styles'

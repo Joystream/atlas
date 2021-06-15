@@ -1,3 +1,1 @@
-import { SignInJoinView } from './SignInJoinView'
-
-export { SignInJoinView }
+export * from './SignInJoinView'

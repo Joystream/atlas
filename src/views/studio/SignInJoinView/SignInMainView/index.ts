@@ -1,3 +1,1 @@
-import { SignInMainView } from './SignInMainView'
-
-export { SignInMainView }
+export * from './SignInMainView'

@@ -1,3 +1,1 @@
-import { CreateMemberView } from './CreateMemberView'
-
-export { CreateMemberView }
+export * from './CreateMemberView'
