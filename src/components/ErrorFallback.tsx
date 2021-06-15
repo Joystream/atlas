@@ -18,7 +18,7 @@ const StyledButton = styled(Button)`
 `
 type FallbackProps = Partial<Parameters<FallbackRender>[0]>
 
-const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetError }) => {
+export const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetError }) => {
   Logger.error(`An error occurred in ${componentStack}`, error)
   return (
     <Container>
