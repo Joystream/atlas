@@ -21,6 +21,7 @@ import {
   EditVideoSheetProvider,
   JoystreamProvider,
   PersonalDataProvider,
+  Snackbars,
   TransactionManagerProvider,
   UploadManagerProvider,
   useConnectionStatus,
@@ -177,6 +178,7 @@ const StudioLayoutWrapper: React.FC = () => {
                 <JoystreamProvider>
                   <TransactionManagerProvider>
                     <StudioLayout />
+                    <Snackbars />
                   </TransactionManagerProvider>
                 </JoystreamProvider>
               </EditVideoSheetProvider>

@@ -1,7 +1,9 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
-import { DisplaySnackbarArgs, Snackbars, useSnackbar } from '@/hooks/useSnackbar/useSnackbar'
+import { DisplaySnackbarArgs, Snackbars } from '@/hooks'
+import { useStore } from '@/store'
 
 import { Snackbar } from './Snackbar'
 
@@ -27,15 +29,17 @@ export default {
   decorators: [
     (Story) => (
       <>
-        <Story />
-        <Snackbars />
+        <BrowserRouter>
+          <Story />
+          <Snackbars />
+        </BrowserRouter>
       </>
     ),
   ],
 } as Meta
 
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const displaySnackbar = useStore((state) => state.displaySnackbar)
   return (
     <Button size="small" onClick={() => displaySnackbar({ ...args })}>
       Show snackbar

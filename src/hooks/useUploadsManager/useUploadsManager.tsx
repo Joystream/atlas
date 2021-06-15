@@ -1,23 +1,17 @@
 import axios, { AxiosError } from 'axios'
-import { debounce, throttle } from 'lodash'
+import { debounce } from 'lodash'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar, useStorageProviders, useUser } from '@/hooks'
+import { useStorageProviders, useUser } from '@/hooks'
+import { useStore } from '@/store'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-import { useUploadsManagerStore } from './store'
-import {
-  AssetUploadWithProgress,
-  InputAssetUpload,
-  StartFileUploadOptions,
-  UploadManagerValue,
-  UploadsProgressRecord,
-} from './types'
+import { AssetUploadWithProgress, InputAssetUpload, StartFileUploadOptions, UploadManagerValue } from './types'
 
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
@@ -28,29 +22,30 @@ type GroupByParentObjectIdAcc = {
   [key: string]: AssetUploadWithProgress[]
 }
 
-type AssetFile = {
-  contentId: string
-  blob: File | Blob
-}
-
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
-  const { uploadsState, addAsset, updateAsset } = useUploadsManagerStore()
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
-  const [uploadsProgress, setUploadsProgress] = useState<UploadsProgressRecord>({})
+
+  const displaySnackbar = useStore((state) => state.displaySnackbar)
+  const addAsset = useStore((state) => state.addAsset)
+  const updateAsset = useStore((state) => state.updateAsset)
+  const uploadsState = useStore((state) => state.uploadsState)
+  const uploadsProgress = useStore((state) => state.uploadsProgress)
+  const setUploadsProgress = useStore((state) => state.setUploadsProgress)
+  const assetsFiles = useStore((state) => state.assetsFiles)
+  const setAssetsFiles = useStore((state) => state.setAssetsFiles)
+
   // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
   const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
-  const [assetsFiles, setAssetsFiles] = useState<AssetFile[]>([])
   const { activeChannelId } = useUser()
   const { loading: channelLoading } = useChannel(activeChannelId ?? '')
   const { loading: videosLoading } = useVideos(
     {
       where: {
-        id_in: uploadsState.filter((item) => item.parentObject.type === 'video').map((item) => item.parentObject.id),
+        id_in: uploadsState.filter((item) => item.parentObject?.type === 'video').map((item) => item.parentObject.id),
       },
     },
     { skip: !uploadsState.length }
@@ -174,11 +169,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       Logger.debug(`Uploading to ${storageUrl}`)
 
       const setAssetUploadProgress = (progress: number) => {
-        setUploadsProgress((prevState) => ({ ...prevState, [asset.contentId]: progress }))
+        setUploadsProgress(asset.contentId, progress)
       }
       const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
       if (!fileInState && file) {
-        setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
+        setAssetsFiles({ contentId: asset.contentId, blob: file })
       }
 
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
@@ -194,14 +189,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         }
         setAssetUploadProgress(0)
 
-        const setUploadProgressThrottled = throttle(
-          ({ loaded, total }: ProgressEvent) => {
-            updateAsset(asset.contentId, 'inProgress')
-            setAssetUploadProgress((loaded / total) * 100)
-          },
-          3000,
-          { leading: true }
-        )
+        const setUploadProgress = ({ loaded, total }: ProgressEvent) => {
+          updateAsset(asset.contentId, 'inProgress')
+          setAssetUploadProgress((loaded / total) * 100)
+        }
 
         pendingUploadingNotificationsCounts.current++
         displayUploadingNotification.current()
@@ -235,11 +226,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
               }
             },
           },
-          onUploadProgress: setUploadProgressThrottled,
+          onUploadProgress: setUploadProgress,
         })
 
         // Cancel delayed functions that would overwrite asset status back to 'inProgres'
-        setUploadProgressThrottled.cancel()
 
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
@@ -270,7 +260,17 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         })
       }
     },
-    [addAsset, assetsFiles, displaySnackbar, getStorageProvider, markStorageProviderNotWorking, navigate, updateAsset]
+    [
+      addAsset,
+      assetsFiles,
+      displaySnackbar,
+      getStorageProvider,
+      markStorageProviderNotWorking,
+      navigate,
+      setAssetsFiles,
+      setUploadsProgress,
+      updateAsset,
+    ]
   )
 
   const isLoading = channelLoading || videosLoading

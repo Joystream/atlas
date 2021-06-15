@@ -3,7 +3,14 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { ActiveUserProvider, ConnectionStatusProvider, DraftsProvider, UploadManagerProvider } from '@/hooks'
+import {
+  ActiveUserProvider,
+  ConnectionStatusProvider,
+  DialogProvider,
+  DraftsProvider,
+  Snackbars,
+  UploadManagerProvider,
+} from '@/hooks'
 import { colors } from '@/shared/theme'
 
 import {

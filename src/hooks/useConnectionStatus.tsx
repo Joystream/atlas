@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import { useSnackbar } from '@/hooks/useSnackbar'
+import { useStore } from '@/store'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
@@ -23,7 +23,7 @@ const SNACKBAR_TIMEOUT = 15000
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const displaySnackbar = useStore((state) => state.displaySnackbar)
 
   const checkConnection = useCallback(async () => {
     try {
