@@ -6,6 +6,7 @@ import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { useAsset, usePersonalData } from '@/hooks'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -50,7 +51,7 @@ export const ChannelView: React.FC = () => {
         setFollowing(true)
       }
     } catch (error) {
-      console.warn('Failed to update Channel following', { error })
+      Logger.warn('Failed to update Channel following', { error })
     }
   }
   if (error) {

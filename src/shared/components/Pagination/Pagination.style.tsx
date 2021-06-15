@@ -78,10 +78,10 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   }
 
   :active {
-    ${buttonActiveState}
+    ${buttonActiveState};
   }
 
-  ${({ isActive }) => isActive && buttonActiveState}
+  ${({ isActive }) => isActive && buttonActiveState};
 
   ${media.small} {
     display: flex;

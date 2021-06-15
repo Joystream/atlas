@@ -11,6 +11,7 @@ import {
   VideoPreviewBase,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { copyToClipboard } from '@/utils/broswer'
+import { Logger } from '@/utils/logger'
 
 export type VideoPreviewProps = {
   id?: string
@@ -110,7 +111,7 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
   const { video, loading } = useVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => console.error('Failed to fetch video', error),
+    onError: (error) => Logger.error('Failed to fetch video', error),
   })
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined

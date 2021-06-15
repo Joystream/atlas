@@ -2,8 +2,8 @@ import { CaptureConsole } from '@sentry/integrations'
 import * as Sentry from '@sentry/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import { App } from './App'
+import { Logger } from '@/utils/logger'
 import { SENTRY_DSN } from './config/urls'
 import './styles/fonts.css'
 
@@ -17,7 +17,7 @@ const initApp = async () => {
       const { worker } = await import('./mocking/browser')
       await worker.start()
     } catch (e) {
-      console.error('Failed to load mocking server', e)
+      Logger.error('Failed to load mocking server', e)
     }
   }
 

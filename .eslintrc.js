@@ -9,6 +9,7 @@ module.exports = {
   plugins: ['@emotion'],
   rules: {
     'react/prop-types': 'off',
+    'no-console': ['warn'],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/ban-ts-comment': [

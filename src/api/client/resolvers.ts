@@ -2,6 +2,8 @@ import { delegateToSchema, Transform } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
+import { Logger } from '@/utils/logger'
+
 import {
   TransformOrionViewsField,
   ORION_VIEWS_QUERY_NAME,
@@ -75,7 +77,7 @@ export const queryNodeStitchingResolvers = (
           transforms: [TransformOrionViewsField],
         })
       } catch (error) {
-        console.warn('Failed to resolve views field', { error })
+        Logger.warn('Failed to resolve views field', { error })
         return null
       }
     },
@@ -97,7 +99,7 @@ export const queryNodeStitchingResolvers = (
           transforms: [TransformOrionFollowsField],
         })
       } catch (error) {
-        console.warn('Failed to resolve follows field', { error })
+        Logger.warn('Failed to resolve follows field', { error })
         return null
       }
     },

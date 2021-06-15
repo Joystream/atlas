@@ -1,5 +1,7 @@
 import React, { useReducer, useContext, useCallback, Dispatch } from 'react'
 
+import { Logger } from '@/utils/logger'
+
 import {
   FollowedChannel,
   WatchedVideo,
@@ -61,7 +63,7 @@ const asyncReducer = (state: PersonalData, action: Action) => {
       }
     }
     default: {
-      console.error(`Unhandled action type, returning state unchanged...`)
+      Logger.error(`Unhandled action type, returning state unchanged...`)
       return state
     }
   }

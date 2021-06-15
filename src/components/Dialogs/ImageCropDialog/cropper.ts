@@ -3,6 +3,7 @@ import 'cropperjs/dist/cropper.min.css'
 import { useEffect, useState } from 'react'
 
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { Logger } from '@/utils/logger'
 
 const MAX_ZOOM = 3
 
@@ -165,7 +166,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       }
       canvas.toBlob((blob) => {
         if (!blob) {
-          console.error('Empty blob from cropped canvas', { blob })
+          Logger.error('Empty blob from cropped canvas', { blob })
           return
         }
         const url = URL.createObjectURL(blob)

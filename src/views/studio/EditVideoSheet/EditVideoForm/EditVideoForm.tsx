@@ -31,6 +31,7 @@ import {
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
+import { Logger } from '@/utils/logger'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 
 import {
@@ -308,7 +309,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      console.error('Unknown file select error', errorCode)
+      Logger.error('Unknown file select error', errorCode)
       setFileSelectError('Unknown error')
     }
   }

@@ -1,5 +1,7 @@
 import { get } from 'lodash'
 
+import { Logger } from '@/utils/logger'
+
 import { FilteringArgs, GenericData, PredicateFn, SortingArgs } from '../types'
 
 type HasCreatedAt = {
@@ -30,7 +32,7 @@ const createPredicate = (key: string, value: any, testData: GenericData): Predic
     const accessKey = field.endsWith('Id') ? `${field.replace('Id', '')}.id` : field
     const testValue = get(testData, accessKey, undefined)
     if (testValue === undefined) {
-      console.warn(`skipping filtering by unknown field "${accessKey}"`)
+      Logger.warn(`skipping filtering by unknown field "${accessKey}"`)
       return () => true
     }
 
@@ -43,7 +45,7 @@ const createPredicate = (key: string, value: any, testData: GenericData): Predic
     const accessKey = field.endsWith('Id') ? `${field.replace('Id', '')}.id` : field
     const testValue = get(testData, accessKey, undefined)
     if (testValue === undefined) {
-      console.warn(`skipping filtering by unknown field "${accessKey}"`)
+      Logger.warn(`skipping filtering by unknown field "${accessKey}"`)
       return () => true
     }
 
@@ -56,11 +58,11 @@ const createPredicate = (key: string, value: any, testData: GenericData): Predic
     const accessKey = field.endsWith('Id') ? `${field.replace('Id', '')}.id` : field
     const testValue = get(testData, accessKey, undefined)
     if (testValue === undefined) {
-      console.warn(`skipping filtering by unknown field "${accessKey}"`)
+      Logger.warn(`skipping filtering by unknown field "${accessKey}"`)
       return () => true
     }
     if (accessKey !== 'createdAt') {
-      console.warn(`skipping filtering by unsupported "_gte" field: "${key}"`)
+      Logger.warn(`skipping filtering by unsupported "_gte" field: "${key}"`)
       return () => true
     }
 
@@ -71,7 +73,7 @@ const createPredicate = (key: string, value: any, testData: GenericData): Predic
       return isoCreatedAt >= value
     }
   } else {
-    console.warn(`skipping filtering by arbitrary filter "${key}"`)
+    Logger.warn(`skipping filtering by arbitrary filter "${key}"`)
     return () => true
   }
 }
@@ -84,7 +86,7 @@ export const genericSort = <TData extends GenericData>(data: TData[], variables:
 
   const [field, direction] = orderBy.split('_')
   if (!field || !direction) {
-    console.warn(`error parsing orderBy: "${orderBy}"`)
+    Logger.warn(`error parsing orderBy: "${orderBy}"`)
     return data
   }
 
@@ -101,11 +103,11 @@ export const genericSort = <TData extends GenericData>(data: TData[], variables:
     } else if (direction === 'ASC') {
       return sortedData.reverse()
     } else {
-      console.warn(`unknown sort direction: "${direction}"`)
+      Logger.warn(`unknown sort direction: "${direction}"`)
       return sortedData
     }
   } else {
-    console.warn(`unsupported sorting field: "${field}"`)
+    Logger.warn(`unsupported sorting field: "${field}"`)
     return data
   }
 }

@@ -5,6 +5,7 @@ import React from 'react'
 import { Button, Text } from '@/shared/components'
 import { SvgWellErrorIllustration } from '@/shared/illustrations'
 import { sizes, colors } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;
@@ -33,8 +34,8 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-export const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
-  console.error('An error occurred.', { componentStack, error })
+const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
+  Logger.error('An error occurred.', { componentStack, error })
   return (
     <Container>
       <SvgWellErrorIllustration />

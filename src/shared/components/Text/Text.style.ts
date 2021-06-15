@@ -15,7 +15,7 @@ export const secondaryTextStyles = css`
 
 export const styledVariants = {
   hero: styled.h1`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.hero};
     line-height: ${typography.lineHeights.hero};
@@ -23,7 +23,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h1: styled.h1`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h1};
     line-height: ${typography.lineHeights.h1};
@@ -31,7 +31,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h2: styled.h2`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h2};
     line-height: ${typography.lineHeights.h2};
@@ -39,7 +39,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h3: styled.h3`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h3};
     line-height: ${typography.lineHeights.h3};
@@ -47,7 +47,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h4: styled.h4`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h4};
     line-height: ${typography.lineHeights.h4};
@@ -55,7 +55,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h5: styled.h5`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h5};
     line-height: ${typography.lineHeights.h5};
@@ -63,7 +63,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   h6: styled.h6`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.h6};
     line-height: ${typography.lineHeights.h6};
@@ -71,14 +71,14 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   subtitle1: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.subtitle1};
     line-height: ${typography.lineHeights.subtitle1};
     font-weight: ${typography.weights.regular};
   `,
   subtitle2: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.subtitle2};
     line-height: ${typography.lineHeights.subtitle2};
@@ -92,7 +92,7 @@ export const styledVariants = {
     font-weight: ${typography.weights.regular};
   `,
   body2: styled.p`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.body2};
     line-height: ${typography.lineHeights.body2};
@@ -106,14 +106,14 @@ export const styledVariants = {
     font-weight: ${typography.weights.regular};
   `,
   overhead: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.overhead};
     line-height: ${typography.lineHeights.overhead};
     font-weight: ${typography.weights.semibold};
   `,
   button1: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.button.large};
     line-height: ${typography.lineHeights.button};
@@ -121,7 +121,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   button2: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.button.medium};
     line-height: ${typography.lineHeights.button};
@@ -129,7 +129,7 @@ export const styledVariants = {
     font-family: ${typography.fonts.headers};
   `,
   button3: styled.span`
-    ${baseStyles}
+    ${baseStyles};
 
     font-size: ${typography.sizes.button.small};
     line-height: ${typography.lineHeights.button};

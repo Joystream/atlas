@@ -75,7 +75,7 @@ export const StepState = styled.div<StepStateProps>`
       `background-color: ${colors.blue[500]};
     border: 2px solid transparent;`,
     completed === false && `border: 2px solid ${colors.gray[300]}`,
-  ]}
+  ]};
 `
 
 export const Step = styled.div<StepStateProps>`

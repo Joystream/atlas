@@ -43,11 +43,11 @@ export const Meta = styled(Text)`
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
 
-  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.base, breakpoints.xlarge)}
+  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.base, breakpoints.xlarge)};
 `
 
 export const TitleText = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)}
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
 `
 
 export const ChannelContainer = styled.div`

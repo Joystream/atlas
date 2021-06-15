@@ -95,5 +95,5 @@ const previewCss = css`
 `
 
 const StyledChannelPreview = styled(ChannelPreview)`
-  ${previewCss}
+  ${previewCss};
 `

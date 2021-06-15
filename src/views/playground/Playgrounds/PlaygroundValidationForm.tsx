@@ -16,6 +16,7 @@ import {
 } from '@/shared/components'
 import { SelectItem } from '@/shared/components/Select'
 import { textFieldValidation } from '@/utils/formValidationOptions'
+import { Logger } from '@/utils/logger'
 
 const items: SelectItem<boolean>[] = [
   { name: 'Public (Anyone can see this video', value: true },
@@ -47,7 +48,7 @@ export const PlaygroundValidationForm = () => {
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    Logger.log('Playground validation form data:', data)
     reset()
   })
 

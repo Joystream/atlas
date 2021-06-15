@@ -29,7 +29,7 @@ export const Step = styled.div<StepProps>`
       !isActive &&
       css`
         background-color: ${colors.gray[500]};
-      `}
+      `};
   }
 `
 

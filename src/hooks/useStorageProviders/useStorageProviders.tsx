@@ -2,6 +2,7 @@ import React, { SetStateAction, useCallback, useContext, useState } from 'react'
 
 import { useStorageWorkers as useStorageProvidersData } from '@/api/hooks'
 import { BasicWorkerFieldsFragment } from '@/api/queries/__generated__/workers.generated'
+import { Logger } from '@/utils/logger'
 import { getRandomIntInclusive } from '@/utils/number'
 
 type StorageProvidersContextValue = {
@@ -33,7 +34,7 @@ export const StorageProvidersProvider: React.FC = ({ children }) => {
     { limit: 100 },
     {
       fetchPolicy: 'network-only',
-      onError: (error) => console.error('Failed to fetch storage providers list', error),
+      onError: (error) => Logger.error('Failed to fetch storage providers list', error),
     }
   )
 
@@ -69,7 +70,7 @@ export const useStorageProviders = () => {
     // make sure we finished fetching providers list
     if (storageProvidersLoading) {
       // TODO: we need to handle that somehow, possibly make it async and block until ready
-      console.error('Trying to use storage providers while still loading')
+      Logger.error('Trying to use storage providers while still loading')
       return null
     }
 

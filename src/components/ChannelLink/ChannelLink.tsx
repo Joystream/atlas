@@ -5,6 +5,7 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
 import { AvatarSize, Avatar } from '@/shared/components/Avatar'
+import { Logger } from '@/utils/logger'
 
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 
@@ -33,7 +34,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => console.error('Failed to fetch channel', error),
+    onError: (error) => Logger.error('Failed to fetch channel', error),
   })
   const { getAssetUrl } = useAsset()
 

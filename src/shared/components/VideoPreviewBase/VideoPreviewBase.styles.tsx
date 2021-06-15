@@ -93,7 +93,7 @@ export const InfoContainer = styled.div<MainProps>`
   display: flex;
   justify-content: space-between;
   margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
-  ${({ main }) => main && mainInfoContainerCss}
+  ${({ main }) => main && mainInfoContainerCss};
 `
 
 export const AvatarContainer = styled.div<ScalesWithCoverProps>`
@@ -231,7 +231,7 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   margin: 0;
   font-weight: ${typography.weights.bold};
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
-  ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })}
+  ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
 
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};

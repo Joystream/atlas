@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useMembership, useMemberships } from '@/api/hooks'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
+import { Logger } from '@/utils/logger'
 
 import { useActiveUserStore } from './store'
 
@@ -72,7 +73,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
         if (!enabledExtensions.length) {
-          console.warn('No Polkadot extension detected')
+          Logger.warn('No Polkadot extension detected')
           setExtensionConnected(false)
           return
         }
@@ -93,7 +94,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         setExtensionConnected(true)
       } catch (e) {
         setExtensionConnected(false)
-        console.error('Unknown polkadot extension error', e)
+        Logger.error('Unknown polkadot extension error', e)
       }
     }
 
@@ -112,7 +113,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const account = accounts.find((a) => a.id === activeUserState.accountId)
 
     if (!account) {
-      console.warn('Selected accountId not found in extension accounts, resetting user')
+      Logger.warn('Selected accountId not found in extension accounts, resetting user')
       resetActiveUser()
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])

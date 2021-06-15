@@ -1,10 +1,12 @@
+import { Logger } from '@/utils/logger'
+
 export const readFromLocalStorage = <T>(key: string, { deserialize = JSON.parse } = {}) => {
   const valueInLocalStorage = window.localStorage.getItem(key)
   if (valueInLocalStorage) {
     try {
       return deserialize(valueInLocalStorage) as T
     } catch (error) {
-      console.error(
+      Logger.error(
         `An error occured when deserializing a value from Local Storage. Did you pass the correct serializer to readFromLocalStorage?`
       )
       throw error

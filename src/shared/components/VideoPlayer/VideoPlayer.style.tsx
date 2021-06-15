@@ -209,7 +209,7 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
-  ${({ isInBackground }) => isInBackground && backgroundContainerCss}
+  ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
 
 export const PlayOverlay = styled.div`

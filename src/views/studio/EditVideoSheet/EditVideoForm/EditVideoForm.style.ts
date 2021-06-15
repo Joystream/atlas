@@ -37,7 +37,7 @@ export const FormWrapper = styled.form`
     padding: ${sizes(8)} 0 0 0;
   }
 
-  ${studioContainerStyle}
+  ${studioContainerStyle};
 `
 
 export const InputsContainer = styled.div`

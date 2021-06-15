@@ -8,6 +8,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import {
@@ -82,7 +83,7 @@ export const VideoView: React.FC = () => {
         channelId,
       },
     }).catch((error) => {
-      console.warn('Failed to increase video views', { error })
+      Logger.warn('Failed to increase video views', { error })
     })
   }, [addVideoView, videoId, channelId])
 

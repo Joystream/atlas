@@ -31,7 +31,7 @@ export const StyledInput = styled.input<StyledInputProps>`
 
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })}
+  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
 
   color: white;
   background-color: ${colors.transparent};
@@ -60,5 +60,5 @@ export const HelperText = styled(Text)<HelperTextProps>`
   width: fit-content;
   max-width: 600px;
   padding: ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '10px', toSize: '16px' })}
+  ${fluidRange({ prop: 'fontSize', fromSize: '10px', toSize: '16px' })};
 `

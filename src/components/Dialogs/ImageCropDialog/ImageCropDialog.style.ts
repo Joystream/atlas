@@ -52,13 +52,13 @@ const cropAreaSizeCss = css`
 `
 
 export const CropPlaceholder = styled(Placeholder)`
-  ${cropAreaSizeCss}
+  ${cropAreaSizeCss};
 `
 
 export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean }>`
-  ${cropAreaSizeCss}
+  ${cropAreaSizeCss};
 
-  ${({ rounded }) => rounded && roundedCropperCss}
+  ${({ rounded }) => rounded && roundedCropperCss};
 
   .cropper-view-box {
     outline: none;

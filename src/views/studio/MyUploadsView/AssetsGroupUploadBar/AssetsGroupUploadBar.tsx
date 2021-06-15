@@ -34,6 +34,7 @@ export const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uplo
 
   const isWaiting = uploadData.every((file) => file.progress === 0 && file.lastStatus === 'inProgress')
   const isCompleted = uploadData.every((file) => file.lastStatus === 'completed')
+  const hasUploadingAsset = uploadData.some((file) => file.lastStatus === 'inProgress')
   const errorsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'error').length
   const missingAssetsCount = uploadData.filter(({ lastStatus }) => lastStatus === 'missing').length
 
@@ -89,7 +90,7 @@ export const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uplo
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar progress={isCompleted ? 100 : masterProgress} />
+        <ProgressBar progress={isCompleted ? 100 : masterProgress} hasUploadingAsset={hasUploadingAsset} />
         <Thumbnail>
           {errorsCount || missingAssetsCount ? (
             <SvgAlertError />

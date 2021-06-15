@@ -4,6 +4,7 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { useSnackbar } from '@/hooks/useSnackbar'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { Logger } from '@/utils/logger'
 
 import useConnectionStatus from './useConnectionStatus'
 import { useDialog } from './useDialog'
@@ -81,7 +82,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
         await dialogCloseCallback()
       }
     } catch (e) {
-      console.error('Transaction dialog close callback failed', e)
+      Logger.error('Transaction dialog close callback failed', e)
     }
     reset()
   }, [dialogCloseCallback])
@@ -98,7 +99,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
             await syncCallback()
           }
         } catch (e) {
-          console.error('Transaction sync callback failed', e)
+          Logger.error('Transaction sync callback failed', e)
         }
       }
       runCallback()
@@ -155,7 +156,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
       }
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
-        console.warn('Sign cancelled')
+        Logger.warn('Sign cancelled')
         setStatus(null)
         displaySnackbar({
           title: 'Transaction signing cancelled',
@@ -163,7 +164,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
           timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
         })
       } else {
-        console.error(e)
+        Logger.error(e)
         setStatus(ExtrinsicStatus.Error)
 
         openErrorDialog()
