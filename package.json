@@ -21,7 +21,7 @@
     "build": "react-app-rewired build",
     "eject": "react-app-rewired eject",
     "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "lint:prettier": "prettier --write .",
+    "lint:prettier": "prettier --check .",
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
     "storybook": "start-storybook -p 6006 -s public",
