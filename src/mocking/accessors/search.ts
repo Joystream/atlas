@@ -1,12 +1,10 @@
-import { GenericData, VideosChannelsData } from '../types'
+import { VideosChannelsData } from '../types'
 
 type SearchArgs = {
   text: string
 }
 
-export const createSearchAccessor = <TData extends GenericData>({ videos, channels }: VideosChannelsData) => (
-  variables: SearchArgs
-) => {
+export const createSearchAccessor = ({ videos, channels }: VideosChannelsData) => (variables: SearchArgs) => {
   const { text: queryText } = variables
   const matchString = (s: string) => s.includes(queryText) || queryText.includes(s)
 

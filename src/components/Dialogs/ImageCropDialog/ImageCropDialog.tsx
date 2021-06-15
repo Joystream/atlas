@@ -40,7 +40,7 @@ export type ImageCropDialogImperativeHandle = {
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   ImageCropDialogImperativeHandle,
   ImageCropDialogProps
-> = ({ imageType, onConfirm, onExitClick, onError }, ref) => {
+> = ({ imageType, onConfirm, onError }, ref) => {
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)

@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/shared/components'
-import { media, sizes, colors, typography } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 type ButtonProps = {
   error?: boolean

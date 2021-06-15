@@ -6,7 +6,6 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-  AssetAvailability,
 } from '@/api/queries'
 import ChannelPreview from '@/components/ChannelPreview'
 import { Grid, Text } from '@/shared/components'

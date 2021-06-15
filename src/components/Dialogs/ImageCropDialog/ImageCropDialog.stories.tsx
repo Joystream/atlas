@@ -36,8 +36,8 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleAvatarConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setAvatarImageUrl(url)
   }
@@ -45,8 +45,8 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleThumbnailConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setThumbnailImageUrl(url)
   }
@@ -54,8 +54,8 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleCoverConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setCoverImageUrl(url)
   }
