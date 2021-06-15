@@ -32,23 +32,20 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  (
-    {
-      primaryText,
-      secondaryText,
-      primaryButtonText,
-      secondaryButtonText,
-      detailsText,
-      tooltipText,
-      detailsTextIcon,
-      secondaryButtonIcon,
-      className,
-      disabled,
-      onConfirmClick,
-      onCancelClick,
-    },
-    ref
-  ) => {
+  ({
+    primaryText,
+    secondaryText,
+    primaryButtonText,
+    secondaryButtonText,
+    detailsText,
+    tooltipText,
+    detailsTextIcon,
+    secondaryButtonIcon,
+    className,
+    disabled,
+    onConfirmClick,
+    onCancelClick,
+  }) => {
     return (
       <StyledActionBarContainer className={className}>
         <StyledInnerContainer>

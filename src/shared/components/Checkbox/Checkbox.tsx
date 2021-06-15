@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
+import { SvgGlyphMinus } from '@/shared/icons'
 
 import {
   CheckboxLabel,
@@ -51,7 +51,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
 
-    const handleChange = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleChange = () => {
       if (!disabled && onChange) {
         onChange(!value)
       }

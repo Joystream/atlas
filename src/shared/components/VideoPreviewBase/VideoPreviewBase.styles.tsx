@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { fluidRange, transparentize } from 'polished'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { colors, sizes, transitions, typography, media } from '@/shared/theme'

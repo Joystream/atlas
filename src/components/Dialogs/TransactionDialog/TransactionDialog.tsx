@@ -61,7 +61,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
       {...actionDialogProps}
     >
       <StepsBar>
-        {transactionStepsWithoutProcessingAssets.map(({ title, tooltip }, idx) => (
+        {transactionStepsWithoutProcessingAssets.map(({ tooltip }, idx) => (
           <Tooltip key={idx} text={tooltip} placement="top-end">
             <Step isActive={!!status && status > idx} />
           </Tooltip>
