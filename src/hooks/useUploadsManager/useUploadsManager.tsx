@@ -16,7 +16,6 @@ import {
   UploadManagerValue,
   UploadsProgressRecord,
   StartFileUploadOptions,
-  AssetParent,
 } from './types'
 
 const RETRIES_COUNT = 3
@@ -57,13 +56,16 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const pendingUploadingNotificationsCounts = useRef(0)
-  type NotificationAsset = { parentId: string; parentType: AssetParent }
   const assetsNotificationsCount = useRef<{
-    uploading: NotificationAsset[]
-    uploaded: NotificationAsset[]
+    uploads: {
+      [key: string]: number
+    }
+    uploaded: {
+      [key: string]: number
+    }
   }>({
-    uploading: [],
-    uploaded: [],
+    uploads: {},
+    uploaded: {},
   })
 
   // Will set all incomplete assets' status to missing on initial mount
@@ -134,29 +136,21 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const displayUploadedNotification = useRef(
-    debounce((id?: string, type?: AssetParent) => {
-      const uploadCount = assetsNotificationsCount.current.uploading.filter(
-        (item) => item.parentId === id && item.parentType === type
-      ).length
-      const uploadedCount = assetsNotificationsCount.current.uploaded.filter(
-        (item) => item.parentId === id && item.parentType === type
-      ).length
+    debounce((key) => {
+      const uploaded = assetsNotificationsCount.current.uploaded[key]
+      const uploads = assetsNotificationsCount.current.uploads[key]
 
       displaySnackbar({
-        customId: id,
-        title: `${uploadedCount}/${uploadCount} assets uploaded`,
+        customId: key,
+        title: `${uploaded}/${uploads} assets uploaded`,
         iconType: 'success',
         timeout: UPLOADED_SNACKBAR_TIMEOUT,
         actionText: 'See',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
-      if (uploadedCount === uploadCount) {
-        assetsNotificationsCount.current.uploading = assetsNotificationsCount.current.uploading.filter(
-          (item) => item.parentId !== id || item.parentType !== type
-        )
-        assetsNotificationsCount.current.uploaded = assetsNotificationsCount.current.uploaded.filter(
-          (item) => item.parentId !== id || item.parentType !== type
-        )
+      if (uploaded === uploads) {
+        assetsNotificationsCount.current.uploaded[key] = 0
+        assetsNotificationsCount.current.uploads[key] = 0
       }
     }, 700)
   )
@@ -186,6 +180,8 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         setAssetsFiles((prevState) => [...prevState, { contentId: asset.contentId, blob: file }])
       }
 
+      const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
+
       try {
         rax.attach()
         const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
@@ -207,11 +203,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         )
 
         pendingUploadingNotificationsCounts.current++
-        assetsNotificationsCount.current.uploading.push({
-          parentId: asset.parentObject.id,
-          parentType: asset.parentObject.type,
-        })
         displayUploadingNotification.current()
+
+        assetsNotificationsCount.current.uploads[assetKey] =
+          (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
 
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
@@ -248,11 +243,9 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-        assetsNotificationsCount.current.uploaded.push({
-          parentId: asset.parentObject.id,
-          parentType: asset.parentObject.type,
-        })
-        displayUploadedNotification.current(asset.parentObject.id, asset.parentObject.type)
+        assetsNotificationsCount.current.uploaded[assetKey] =
+          (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
+        displayUploadedNotification.current(assetKey)
       } catch (e) {
         console.error('Failed to upload to storage provider', { storageUrl, error: e })
         updateAsset(asset.contentId, 'error')
