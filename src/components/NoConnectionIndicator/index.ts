@@ -1,3 +1,1 @@
-import { NoConnectionIndicator } from './NoConnectionIndicator'
-
-export { NoConnectionIndicator }
+export * from './NoConnectionIndicator'

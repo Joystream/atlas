@@ -1,3 +1,1 @@
-import { Multistepper } from './Multistepper'
-
-export { Multistepper }
+export * from './Multistepper'

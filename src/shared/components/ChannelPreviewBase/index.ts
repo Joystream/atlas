@@ -1,3 +1,1 @@
-import { ChannelPreviewBase } from './ChannelPreviewBase'
-
-export { ChannelPreviewBase }
+export * from './ChannelPreviewBase'

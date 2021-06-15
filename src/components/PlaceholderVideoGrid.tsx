@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Grid } from '@/shared/components'
 
-import { VideoPreview } from '.'
+import { VideoPreview } from './VideoPreview'
 
 type PlaceholderVideoGridProps = {
   videosCount?: number

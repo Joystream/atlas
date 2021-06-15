@@ -1,3 +1,1 @@
-import { FileSelect } from './FileSelect'
-
-export { FileSelect }
+export * from './FileSelect'

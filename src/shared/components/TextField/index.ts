@@ -1,4 +1,1 @@
-import { TextFieldProps, TextField } from './TextField'
-
-export { TextField }
-export type { TextFieldProps }
+export * from './TextField'

@@ -1,3 +1,1 @@
-import { ExpandButton } from './ExpandButton'
-
-export { ExpandButton }
+export * from './ExpandButton'

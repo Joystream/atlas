@@ -1,3 +1,1 @@
-import { StudioTopbar } from './StudioTopbar'
-
-export { StudioTopbar }
+export * from './StudioTopbar'

@@ -1,3 +1,1 @@
-import { TextArea } from './TextArea'
-
-export { TextArea }
+export * from './TextArea'

@@ -3,7 +3,7 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks'
-import { Text } from '@/shared/components'
+import { ContextMenu, ContextMenuItem, Placeholder, Text } from '@/shared/components'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -52,8 +52,6 @@ import {
   PublishingStateText,
   CoverIconWrapper,
 } from './VideoPreviewBase.styles'
-
-import { ContextMenu, ContextMenuItem, Placeholder } from '..'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean

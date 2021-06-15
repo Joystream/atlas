@@ -4,7 +4,7 @@ import React from 'react'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Grid } from '@/shared/components'
 
-import { ChannelPreview } from '.'
+import { ChannelPreview } from './ChannelPreview'
 
 const StyledChannelPreview = styled(ChannelPreview)`
   margin: 0 auto;

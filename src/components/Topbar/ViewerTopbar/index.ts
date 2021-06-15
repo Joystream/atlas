@@ -1,3 +1,1 @@
-import { ViewerTopbar } from './ViewerTopbar'
-
-export { ViewerTopbar }
+export * from './ViewerTopbar'

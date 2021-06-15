@@ -1,1 +1,1 @@
-export { ContextMenu, ContextMenuItem } from './ContextMenu'
+export * from './ContextMenu'

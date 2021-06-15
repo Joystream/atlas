@@ -151,5 +151,5 @@ const NavItem: React.FC<NavItemProps> = ({
   )
 }
 
-export { SidenavBase as default, NavItem }
+export { SidenavBase, NavItem }
 export type { NavItemType }

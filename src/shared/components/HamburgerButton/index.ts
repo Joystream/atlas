@@ -1,3 +1,1 @@
-import { HamburgerButton } from './HamburgerButton'
-
-export { HamburgerButton }
+export * from './HamburgerButton'

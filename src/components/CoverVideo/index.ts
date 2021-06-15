@@ -1,3 +1,1 @@
-import { CoverVideo } from './CoverVideo'
-
-export { CoverVideo }
+export { CoverVideo } from './CoverVideo'

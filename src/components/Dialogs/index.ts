@@ -1,9 +1,6 @@
-import { ActionDialog } from './ActionDialog'
-import { BaseDialogProps, BaseDialog } from './BaseDialog'
-import { ImageCropDialogImperativeHandle, ImageCropDialog } from './ImageCropDialog'
-import { MessageDialog } from './MessageDialog'
-import { Multistepper } from './Multistepper'
-import { TransactionDialog } from './TransactionDialog'
-
-export { BaseDialog, ActionDialog, Multistepper, ImageCropDialog, TransactionDialog, MessageDialog }
-export type { BaseDialogProps, ImageCropDialogImperativeHandle }
+export * from './ActionDialog'
+export * from './BaseDialog'
+export * from './ImageCropDialog'
+export * from './MessageDialog'
+export * from './Multistepper'
+export * from './TransactionDialog'

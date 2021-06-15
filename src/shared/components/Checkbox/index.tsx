@@ -1,3 +1,1 @@
-import { Checkbox } from './Checkbox'
-
-export { Checkbox }
+export * from './Checkbox'

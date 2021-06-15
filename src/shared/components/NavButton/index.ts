@@ -1,3 +1,1 @@
-import { NavButton } from './NavButton'
-
-export { NavButton }
+export * from './NavButton'

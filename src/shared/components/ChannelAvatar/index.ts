@@ -1,3 +1,1 @@
-import { ChannelAvatar } from './ChannelAvatar'
-
-export { ChannelAvatar }
+export * from './ChannelAvatar'

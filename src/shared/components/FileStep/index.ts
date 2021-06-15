@@ -1,3 +1,1 @@
-import { FileStep } from './FileStep'
-
-export { FileStep }
+export * from './FileStep'

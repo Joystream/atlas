@@ -13,7 +13,7 @@ import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
-import { VideoPreview } from '..'
+import { VideoPreview } from '../VideoPreview'
 
 type InfiniteVideoGridProps = {
   title?: string

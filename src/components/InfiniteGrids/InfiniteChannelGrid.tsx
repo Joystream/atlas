@@ -12,7 +12,7 @@ import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
-import { ChannelPreview } from '..'
+import { ChannelPreview } from '../ChannelPreview'
 
 type InfiniteChannelGridProps = {
   title?: string

@@ -1,3 +1,1 @@
-import { CategoryPicker } from './CategoryPicker'
-
-export { CategoryPicker }
+export * from './CategoryPicker'

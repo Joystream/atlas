@@ -1,5 +1,3 @@
-import { InputBaseProps, InputBase } from './InputBase'
-import { LabelText } from './InputBase.styles'
+export * from './InputBase'
 
-export { LabelText, InputBase }
-export type { InputBaseProps }
+export * from './InputBase.styles'

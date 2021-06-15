@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 
 import { Text } from '@/shared/components/Text'
 
-import { Avatar } from '..'
 import { colors, sizes, transitions, typography } from '../../theme'
+import { Avatar } from '../Avatar'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'

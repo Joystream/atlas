@@ -1,3 +1,1 @@
-import { DismissibleMessage } from './DismissibleMessage'
-
-export { DismissibleMessage }
+export * from './DismissibleMessage'

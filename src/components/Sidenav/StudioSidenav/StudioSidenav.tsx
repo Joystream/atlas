@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
+import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { useDrafts, useAuthorizedUser, useEditVideoSheet, useUploadsManager, useDisplayDataLostWarning } from '@/hooks'
 import { Button } from '@/shared/components'
