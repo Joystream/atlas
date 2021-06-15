@@ -4,6 +4,7 @@ import React from 'react'
 
 import { Button, Text } from '@/shared/components'
 import { sizes, colors } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 const Container = styled.div`
   padding: ${sizes(4)};
@@ -18,8 +19,7 @@ const StyledButton = styled(Button)`
 type FallbackProps = Partial<Parameters<FallbackRender>[0]>
 
 const ErrorFallback: React.FC<FallbackProps> = ({ error, componentStack, resetError }) => {
-  console.error(`An error occurred in ${componentStack}`)
-  console.error(error)
+  Logger.error(`An error occurred in ${componentStack}`, error)
   return (
     <Container>
       <Text>Something went wrong...</Text>

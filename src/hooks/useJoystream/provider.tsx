@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { NODE_URL } from '@/config/urls'
 import { useUser } from '@/hooks'
 import { JoystreamJs } from '@/joystream-lib'
+import { Logger } from '@/utils/logger'
 
 import useConnectionStatus from '../useConnectionStatus'
 
@@ -38,7 +39,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
         handleNodeConnectionUpdate(false)
-        console.error('Failed to create JoystreamJs instance', e)
+        Logger.error('Failed to create JoystreamJs instance', e)
       }
     }
 

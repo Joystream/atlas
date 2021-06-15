@@ -4,6 +4,7 @@ import { IconButton } from '@/shared/components'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 import { ImageCropData, AssetDimensions } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
+import { Logger } from '@/utils/logger'
 
 import {
   AlignInfo,
@@ -85,7 +86,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const handleFileChange = async () => {
     const files = inputRef.current?.files
     if (!files?.length) {
-      console.error('no files selected')
+      Logger.error('no files selected')
       return
     }
     try {
@@ -96,7 +97,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       setShowDialog(true)
     } catch (error) {
       onError?.(error)
-      console.error(error)
+      Logger.error(error)
     }
   }
 

@@ -5,6 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { usePersonalData } from '@/hooks'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { Logger } from '@/utils/logger'
 
 import FollowedChannels from './FollowedChannels'
 
@@ -34,7 +35,7 @@ export const ViewerSidenav: React.FC = () => {
   } = usePersonalData()
 
   const handleChannelNotFound = (id: string) => {
-    console.warn(`Followed channel not found, removing id: ${id}`)
+    Logger.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
 

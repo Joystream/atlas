@@ -33,6 +33,8 @@ import {
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
 
+import { Logger } from '@/utils/logger'
+
 import {
   AccountNotSelectedError,
   ApiNotConnectedError,
@@ -90,22 +92,22 @@ export class JoystreamJs {
 
   /* Private utilities */
   private log(msg: string) {
-    console.log(`[JoystreamJS] ${msg}`)
+    Logger.log(`[JoystreamJS] ${msg}`)
   }
 
   private logWarn(msg: string) {
-    console.warn(`[JoystreamJS] ${msg}`)
+    Logger.warn(`[JoystreamJS] ${msg}`)
   }
 
   private logError(msg: string) {
-    console.error(`[JoystreamJS] ${msg}`)
+    Logger.error(`[JoystreamJS] ${msg}`)
   }
 
   private async ensureApi() {
     try {
       await this.api.isReady
     } catch (e) {
-      console.error('Polkadot API init error', e)
+      Logger.error('Polkadot API init error', e)
       throw new ApiNotConnectedError()
     }
   }
@@ -171,8 +173,8 @@ export class JoystreamJs {
                     .then(({ number }) => resolve({ block: number.toNumber(), data: unpackedEvents }))
                     .catch((reason) => reject(new ExtrinsicFailedError(reason)))
                 } else {
-                  console.warn('Unknown event method')
-                  console.warn(event)
+                  Logger.warn('Unknown event method')
+                  Logger.warn('Event:', event)
                 }
               })
           }

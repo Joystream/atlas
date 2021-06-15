@@ -3,6 +3,7 @@ import React from 'react'
 
 import { VideoGallery } from '@/components'
 import { usePersonalData } from '@/hooks'
+import { Logger } from '@/utils/logger'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 
@@ -25,7 +26,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   }
 
   const onVideoNotFound = (id: string) => {
-    console.warn(`Interrupted video not found, removing id: ${id}`)
+    Logger.warn(`Interrupted video not found, removing id: ${id}`)
     updateWatchedVideos('REMOVED', id)
   }
 

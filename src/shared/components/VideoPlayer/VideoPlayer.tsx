@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { SvgOutlineVideo } from '@/shared/icons'
+import { Logger } from '@/utils/logger'
 
 import { Container, PlayOverlay } from './VideoPlayer.style'
 import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
@@ -46,7 +47,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
-        console.warn('Autoplay failed:', e)
+        Logger.warn('Autoplay failed:', e)
       })
     }
   }, [player, initialized, autoplay])
@@ -62,9 +63,9 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
         if (playPromise) {
           playPromise.catch((e) => {
             if (e.name === 'NotAllowedError') {
-              console.warn('Video play failed:', e)
+              Logger.warn('Video play failed:', e)
             } else {
-              console.error('Video play failed:', e)
+              Logger.error('Video play failed:', e)
             }
           })
         }
