@@ -25,10 +25,11 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
 const MainLayout: React.FC = () => {
   const [openDialog, closeDialog] = useDialog({
     title: 'Outdated browser detected',
-    description: 'It seems your browser is outdated, the Joystream app may not work properly',
+    description:
+      'It seems the browser version you are using is not fully supported by Joystream. Some of the features may be broken or not accessible. For the best experience, please upgrade your browser to the latest version.',
     variant: 'warning',
-    primaryButtonText: 'I understand',
-    onPrimaryButtonClick: () => closeDialog(),
+    primaryButtonText: 'Click here to see instructions',
+    onPrimaryButtonClick: () => window.open('https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'),
     onExitClick: () => closeDialog(),
   })
 

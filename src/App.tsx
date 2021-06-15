@@ -3,7 +3,6 @@ import React from 'react'
 
 import { createApolloClient } from '@/api'
 import {
-  useDialog,
   DialogProvider,
   ConnectionStatusProvider,
   OverlayManagerProvider,
