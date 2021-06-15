@@ -16,6 +16,7 @@ import {
   UploadManagerValue,
   UploadsProgressRecord,
   StartFileUploadOptions,
+  AssetParent,
 } from './types'
 
 const RETRIES_COUNT = 3
@@ -56,10 +57,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const pendingUploadingNotificationsCounts = useRef(0)
-  type AssetParentObjectID = string
+  type NotificationAsset = { parentId: string; parentType: AssetParent }
   const assetsNotificationsCount = useRef<{
-    uploading: AssetParentObjectID[]
-    uploaded: AssetParentObjectID[]
+    uploading: NotificationAsset[]
+    uploaded: NotificationAsset[]
   }>({
     uploading: [],
     uploaded: [],
@@ -133,9 +134,13 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   )
 
   const displayUploadedNotification = useRef(
-    debounce((id?: string) => {
-      const uploadCount = assetsNotificationsCount.current.uploading.filter((itemId) => itemId === id).length
-      const uploadedCount = assetsNotificationsCount.current.uploaded.filter((itemId) => itemId === id).length
+    debounce((id?: string, type?: AssetParent) => {
+      const uploadCount = assetsNotificationsCount.current.uploading.filter(
+        (item) => item.parentId === id && item.parentType === type
+      ).length
+      const uploadedCount = assetsNotificationsCount.current.uploaded.filter(
+        (item) => item.parentId === id && item.parentType === type
+      ).length
 
       displaySnackbar({
         customId: id,
@@ -147,10 +152,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       })
       if (uploadedCount === uploadCount) {
         assetsNotificationsCount.current.uploading = assetsNotificationsCount.current.uploading.filter(
-          (itemId) => itemId !== id
+          (item) => item.parentId !== id || item.parentType !== type
         )
         assetsNotificationsCount.current.uploaded = assetsNotificationsCount.current.uploaded.filter(
-          (itemId) => itemId !== id
+          (item) => item.parentId !== id || item.parentType !== type
         )
       }
     }, 700)
@@ -202,7 +207,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         )
 
         pendingUploadingNotificationsCounts.current++
-        assetsNotificationsCount.current.uploading.push(asset.parentObject.id)
+        assetsNotificationsCount.current.uploading.push({
+          parentId: asset.parentObject.id,
+          parentType: asset.parentObject.type,
+        })
         displayUploadingNotification.current()
 
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
@@ -240,8 +248,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         // TODO: remove assets from the same parent if all finished
         updateAsset(asset.contentId, 'completed')
         setAssetUploadProgress(100)
-        assetsNotificationsCount.current.uploaded.push(asset.parentObject.id)
-        displayUploadedNotification.current(asset.parentObject.id)
+        assetsNotificationsCount.current.uploaded.push({
+          parentId: asset.parentObject.id,
+          parentType: asset.parentObject.type,
+        })
+        displayUploadedNotification.current(asset.parentObject.id, asset.parentObject.type)
       } catch (e) {
         console.error('Failed to upload to storage provider', { storageUrl, error: e })
         updateAsset(asset.contentId, 'error')

@@ -17,6 +17,7 @@ export type DisplaySnackbarArgs = {
   title: string
   description?: string
   actionText?: string
+  onExit?: () => void
   onActionClick?: () => void
   onExitClick?: () => void
 }
@@ -47,7 +48,7 @@ const SNACKBARS_LIMIT = 3
 export const SnackbarProvider: React.FC = ({ children }) => {
   const [snackbars, setSnackbars] = useState<SnackbarsState[]>([])
 
-  const displaySnackbar = useCallback(({ customId, timeout, ...args }: DisplaySnackbarArgs) => {
+  const displaySnackbar = useCallback(({ customId, timeout, onExit, ...args }: DisplaySnackbarArgs) => {
     const id = customId ?? createId()
     setSnackbars((currentSnackbars) => {
       return [...currentSnackbars, { id, ...args }]
@@ -55,6 +56,7 @@ export const SnackbarProvider: React.FC = ({ children }) => {
 
     if (timeout) {
       setTimeout(() => {
+        onExit?.()
         setSnackbars((currentSnackbars) => currentSnackbars.filter((snackbar) => snackbar.id !== id))
       }, timeout)
     }

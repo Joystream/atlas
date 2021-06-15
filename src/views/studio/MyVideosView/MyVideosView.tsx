@@ -28,6 +28,7 @@ const ROWS_AMOUNT = 4
 const INITIAL_FIRST = 50
 const OPEN_TAB_SNACKBAR = 'OPEN_TAB_SNACKBAR'
 const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
+const SNACKBAR_TIMEOUT = 5000
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
@@ -46,6 +47,7 @@ export const MyVideosView = () => {
   const isPublic_eq = getPublicness(currentTabName)
 
   const removeDraftNotificationsCount = useRef(0)
+  const addToTabNotificationsCount = useRef(0)
 
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
@@ -120,13 +122,21 @@ export const MyVideosView = () => {
     }
     addVideoTab({ id, isDraft: opts.draft })
     if (opts.minimized) {
-      displaySnackbar({
-        customId: OPEN_TAB_SNACKBAR,
-        title: 'Video opened in a new tab',
-        iconType: 'success',
-        actionText: 'Undo',
-        onActionClick: () => setTabIdToRemoveViaSnackbar(id),
-      })
+      addToTabNotificationsCount.current++
+      if (addToTabNotificationsCount.current > 1) {
+        updateSnackbar(OPEN_TAB_SNACKBAR, { title: `${addToTabNotificationsCount.current} videos opened in a new tab` })
+      } else {
+        displaySnackbar({
+          customId: OPEN_TAB_SNACKBAR,
+          title: 'Video opened in a new tab',
+          iconType: 'success',
+          actionText: 'Undo',
+          timeout: SNACKBAR_TIMEOUT,
+          onActionClick: () => setTabIdToRemoveViaSnackbar(id),
+          onExit: () => (addToTabNotificationsCount.current = 0),
+        })
+      }
+
       setSheetState('minimized')
     } else {
       const tabIdx = videoTabs.findIndex((t) => t.id === id)
@@ -138,13 +148,6 @@ export const MyVideosView = () => {
   // Workaround for removing drafts from video sheet tabs via snackbar
   // Snackbar will probably need a refactor to handle actions that change state
   useEffect(() => {
-    if (videoTabs.length === 0) {
-      closeSnackbar(OPEN_TAB_SNACKBAR)
-      return
-    }
-    updateSnackbar(OPEN_TAB_SNACKBAR, {
-      title: `${videoTabs.length > 1 ? `${videoTabs.length} videos` : 'Video'} opened in a new tab`,
-    })
     if (tabIdToRemoveViaSnackbar !== undefined) {
       const tab = videoTabs.find((tab) => tab.id === tabIdToRemoveViaSnackbar)
       if (!tab) {
@@ -154,7 +157,7 @@ export const MyVideosView = () => {
       removeVideoTab(idx)
       setTabIdToRemoveViaSnackbar(undefined)
     }
-  }, [closeSnackbar, removeVideoTab, tabIdToRemoveViaSnackbar, updateSnackbar, videoTabs])
+  }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
 
   const handleDeleteDraft = (draftId: string) => {
     openDeleteDraftDialog({
@@ -181,7 +184,8 @@ export const MyVideosView = () => {
             customId: REMOVE_DRAFT_SNACKBAR,
             title: 'Draft deleted',
             iconType: 'success',
-            onExitClick: () => (removeDraftNotificationsCount.current = 0),
+            timeout: SNACKBAR_TIMEOUT,
+            onExit: () => (removeDraftNotificationsCount.current = 0),
           })
         }
       },
