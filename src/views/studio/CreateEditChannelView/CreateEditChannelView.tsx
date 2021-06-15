@@ -98,6 +98,7 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     control,
     formState: { isDirty, dirtyFields, errors },
     watch,
+    setFocus,
     reset,
   } = useForm<Inputs>({
     defaultValues: {
@@ -109,9 +110,6 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
       isPublic: true,
     },
   })
-
-  const titleRef = useRef<HTMLInputElement | null>(null)
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
   const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
   const { openWarningDialog } = useDisplayDataLostWarning()
@@ -327,12 +325,12 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
     {
       title: 'Add channel title',
       completed: !!dirtyFields.title,
-      onClick: () => titleRef.current?.focus(),
+      onClick: () => setFocus('title'),
     },
     {
       title: 'Add description',
       completed: !!dirtyFields.description,
-      onClick: () => descriptionRef.current?.focus(),
+      onClick: () => setFocus('description'),
     },
     {
       title: 'Add avatar image',
@@ -420,10 +418,10 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
                   name="title"
                   control={control}
                   rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { ref, value, onChange } }) => (
                     <Tooltip text="Click to edit channel title">
                       <StyledHeaderTextField
-                        ref={titleRef}
+                        ref={ref}
                         placeholder="Channel title"
                         value={value}
                         onChange={(e) => {
@@ -452,22 +450,16 @@ const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChanne
         <InnerFormContainer>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
-              <Controller
-                name="description"
-                control={control}
-                rules={textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })}
-                render={({ field: { value, onChange } }) => (
-                  <TextArea
-                    placeholder="Description of your channel to share with your audience"
-                    rows={8}
-                    ref={descriptionRef}
-                    value={value}
-                    onChange={onChange}
-                    maxLength={1000}
-                    error={!!errors.description}
-                    helperText={errors.description?.message}
-                  />
+              <TextArea
+                placeholder="Description of your channel to share with your audience"
+                rows={8}
+                {...register(
+                  'description',
+                  textFieldValidation({ name: 'Description', minLength: 3, maxLength: 1000 })
                 )}
+                maxLength={1000}
+                error={!!errors.description}
+                helperText={errors.description?.message}
               />
             </Tooltip>
           </FormField>

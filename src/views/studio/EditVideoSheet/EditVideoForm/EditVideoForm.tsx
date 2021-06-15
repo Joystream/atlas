@@ -1,7 +1,7 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean, FieldError } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean, FieldError, DeepMap } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -183,6 +183,24 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     )
   )
 
+  const debouncedSetSelectedVideoTabCachedDirtyFormData = useRef(
+    debounce(
+      (
+        data: EditVideoFormFields,
+        dirtyFields: DeepMap<EditVideoFormFields, true>,
+        setSelectedVideoTabCachedDirtyFormDataFn: typeof setSelectedVideoTabCachedDirtyFormData
+      ) => {
+        const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
+        const dirtyData = keysToKeep.reduce((acc, curr) => {
+          acc[curr] = data[curr]
+          return acc
+        }, {} as Record<string, unknown>)
+        setSelectedVideoTabCachedDirtyFormDataFn(dirtyData)
+      },
+      700
+    )
+  )
+
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
       return
@@ -252,21 +270,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     }
   )
 
-  const debouncedSetSelectedVideoTabCachedDirtyFormData = debounce((dirtyData) => {
-    setSelectedVideoTabCachedDirtyFormData(dirtyData)
-  }, 700)
-
   watch((data) => {
-    if (!selectedVideoTab) {
+    if (!Object.keys(dirtyFields).length) {
       return
     }
     if (!selectedVideoTab?.isDraft) {
-      const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
-      const dirtyData = keysToKeep.reduce((acc, curr) => {
-        acc[curr] = data[curr]
-        return acc
-      }, {} as Record<string, unknown>)
-      debouncedSetSelectedVideoTabCachedDirtyFormData(dirtyData)
+      debouncedSetSelectedVideoTabCachedDirtyFormData.current(data, dirtyFields, setSelectedVideoTabCachedDirtyFormData)
     } else {
       debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
     }
