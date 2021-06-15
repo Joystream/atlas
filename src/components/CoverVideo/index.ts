@@ -1,1 +1,1 @@
-export { CoverVideo } from './CoverVideo'
+export * from './CoverVideo'

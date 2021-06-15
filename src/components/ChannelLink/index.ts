@@ -1,1 +1,1 @@
-export { ChannelLink } from './ChannelLink'
+export * from './ChannelLink'
