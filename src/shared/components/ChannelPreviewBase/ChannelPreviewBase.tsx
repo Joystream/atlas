@@ -18,7 +18,7 @@ import {
 import { Placeholder } from '../Placeholder'
 
 export type ChannelPreviewBaseProps = {
-  avatarUrl?: string | null
+  assetUrl?: string | null
   title?: string | null
   videoCount?: number
   channelHref?: string
@@ -28,7 +28,7 @@ export type ChannelPreviewBaseProps = {
 }
 
 export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
-  avatarUrl,
+  assetUrl,
   title,
   videoCount,
   loading = true,
@@ -57,7 +57,7 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
           >
             <InnerContainer animated={isAnimated}>
               <AvatarContainer>
-                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} />}
+                {loading ? <Placeholder rounded /> : <StyledAvatar assetUrl={assetUrl} />}
               </AvatarContainer>
               <Info>
                 {loading ? (

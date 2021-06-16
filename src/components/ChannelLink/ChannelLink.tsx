@@ -3,7 +3,7 @@ import React from 'react'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import AssetImage, { ImageType } from '@/shared/components/AssetImage'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
 import { Logger } from '@/utils/logger'
 
@@ -36,19 +36,18 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => Logger.error('Failed to fetch channel', error),
   })
-  const { getAssetUrl } = useAsset()
 
   const displayedChannel = overrideChannel || channel
 
-  const avatarPhotoUrl = getAssetUrl(
-    displayedChannel?.avatarPhotoAvailability,
-    displayedChannel?.avatarPhotoUrls,
-    displayedChannel?.avatarPhotoDataObject
-  )
-
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && <Avatar imageUrl={avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />}
+      {!hideAvatar && (
+        <AssetImage
+          entity={displayedChannel}
+          component={<Avatar loading={!displayedChannel} size={avatarSize} />}
+          imageType={ImageType.AVATAR}
+        />
+      )}
       {!hideHandle &&
         (displayedChannel ? (
           <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>

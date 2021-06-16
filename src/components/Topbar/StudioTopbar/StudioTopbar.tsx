@@ -4,8 +4,8 @@ import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useDisplayDataLostWarning, useEditVideoSheet, useUser } from '@/hooks'
-import { Button, ExpandButton, IconButton, Placeholder, Text } from '@/shared/components'
+import { useDisplayDataLostWarning, useEditVideoSheet, useUser } from '@/hooks'
+import { AssetImage, Button, ExpandButton, IconButton, ImageType, Placeholder, Text } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -190,7 +190,7 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
   return (
     <MemberInfoContainer hasChannels={hasChannels}>
       <MemberInnerContainer>
-        <StyledAvatar imageUrl={memberAvatar} />
+        <StyledAvatar assetUrl={memberAvatar} />
         <MemberTextContainer>
           <DrawerMemberText>{memberName}</DrawerMemberText>
           <DrawerMemberTitleText variant="caption">Member</DrawerMemberTitleText>
@@ -205,16 +205,9 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const { getAssetUrl } = useAsset()
-    const avatarPhotoUrl = getAssetUrl(
-      channel?.avatarPhotoAvailability,
-      channel?.avatarPhotoUrls,
-      channel?.avatarPhotoDataObject
-    )
-
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
+        <AssetImage entity={channel} component={<StyledAvatar size="small" />} imageType={ImageType.AVATAR} />
         <TextContainer>
           <StyledChannelInfoText variant="body1">{channel ? channel.title : 'New Channel'}</StyledChannelInfoText>
           {memberName && (

@@ -1,4 +1,4 @@
 import AssetImage from './AssetImage'
 
-export * from './constants'
+export { ImageType } from './constants'
 export default AssetImage

@@ -375,7 +375,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             render={({ field: { value, onChange } }) => (
               <>
                 <StyledAvatar
-                  imageUrl={value.url}
+                  assetUrl={value.url}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size="fill"
                   onEditClick={() => avatarDialogRef.current?.open()}

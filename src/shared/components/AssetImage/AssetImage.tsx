@@ -6,12 +6,12 @@ import { createStorageNodeUrl } from '@/utils/asset'
 
 import { ImageType } from './constants'
 
-type AssetImageProps = { component: ReactElement } & (
-  | { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; imageType?: ImageType.THUMBNAIL }
-  | { entity?: AllChannelFieldsFragment | VideoFieldsFragment | null; imageType: ImageType.COVER | ImageType.AVATAR }
+type AssetImageProps = { component: ReactElement; isImg?: boolean } & (
+  | { entity?: VideoFieldsFragment | null; imageType?: ImageType.THUMBNAIL }
+  | { entity?: Partial<AllChannelFieldsFragment> | null; imageType: ImageType.COVER | ImageType.AVATAR }
 )
 
-const AssetImage = ({ entity, component, imageType }: AssetImageProps) => {
+const AssetImage = ({ entity, component, imageType, isImg }: AssetImageProps) => {
   const [assetUrl, setAssetUrl] = useState<string | undefined>(undefined)
   const { getStorageProvider } = useStorageProviders()
   const assetData = useMemo(() => {
@@ -53,7 +53,7 @@ const AssetImage = ({ entity, component, imageType }: AssetImageProps) => {
     }
   }, [assetUrl, assetData, getStorageProvider])
 
-  return cloneElement(component, { assetUrl })
+  return cloneElement(component, { [isImg ? 'src' : 'assetUrl']: assetUrl })
 }
 
 export default AssetImage

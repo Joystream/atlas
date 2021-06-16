@@ -3,8 +3,8 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
 import { Text } from '@/shared/components'
+import AssetImage, { ImageType } from '@/shared/components/AssetImage'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -20,16 +20,13 @@ type RecentChannelPreviewProps = {
 }
 
 export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
-  const { getAssetUrl } = useAsset()
-  const avatarPhotoUrl = getAssetUrl(
-    channel?.avatarPhotoAvailability,
-    channel?.avatarPhotoUrls,
-    channel?.avatarPhotoDataObject
-  )
-
   return (
     <PreviewContainer to={absoluteRoutes.viewer.channel(channel?.id)}>
-      <StyledChannelAvatar imageUrl={avatarPhotoUrl} loading={!channel} />
+      <AssetImage
+        entity={channel}
+        component={<StyledChannelAvatar loading={!channel} />}
+        imageType={ImageType.AVATAR}
+      />
       <SwitchTransition>
         <CSSTransition
           key={channel ? 'placeholder' : 'content'}
