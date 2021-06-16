@@ -21,13 +21,18 @@ module.exports = {
     },
   },
   rules: {
+    // taken care of by typescript
     'react/prop-types': 'off',
-    'no-console': ['warn'],
+
+    // disable explicit return types
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+
+    // allow "_" prefixed function arguments
     '@typescript-eslint/no-unused-vars': [
-      1,
+      'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true },
     ],
+
     '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/ban-ts-comment': [
@@ -44,6 +49,19 @@ module.exports = {
         },
       },
     ],
+
+    // force using Logger object
+    'no-console': ['warn'],
+
+    // sort import member order
+    // can be removed once https://github.com/trivago/prettier-plugin-sort-imports/pull/44 gets released
+    'sort-imports': [
+      'warn',
+      {
+        'ignoreDeclarationSort': true,
+      },
+    ],
+
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',
     '@emotion/no-vanilla': 'error',
