@@ -31,53 +31,50 @@ export type ActionBarProps = {
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  ({
-    primaryText,
-    secondaryText,
-    primaryButtonText,
-    secondaryButtonText,
-    detailsText,
-    tooltipText,
-    detailsTextIcon,
-    secondaryButtonIcon,
-    className,
-    disabled,
-    onConfirmClick,
-    onCancelClick,
-  }) => {
-    return (
-      <StyledActionBarContainer className={className}>
-        <StyledInnerContainer>
-          <StyledInfoContainer>
-            <StyledPrimaryText>{primaryText}</StyledPrimaryText>
-            <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
-          </StyledInfoContainer>
-          <StyledButtonsContainer>
-            {detailsText && tooltipText && (
-              <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
-                <DetailsContainer>
-                  <Text variant="body2" secondary>
-                    {detailsText}
-                  </Text>
-                  <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
-                </DetailsContainer>
-              </Tooltip>
-            )}
-            {secondaryButtonText && !detailsText && (
-              <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
-                {secondaryButtonText}
-              </Button>
-            )}
-            {primaryButtonText && (
-              <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
-                {primaryButtonText}
-              </Button>
-            )}
-          </StyledButtonsContainer>
-        </StyledInnerContainer>
-      </StyledActionBarContainer>
-    )
-  }
-)
-ActionBar.displayName = 'ActionBar'
+export const ActionBar: React.FC<ActionBarProps> = ({
+  primaryText,
+  secondaryText,
+  primaryButtonText,
+  secondaryButtonText,
+  detailsText,
+  tooltipText,
+  detailsTextIcon,
+  secondaryButtonIcon,
+  className,
+  disabled,
+  onConfirmClick,
+  onCancelClick,
+}) => {
+  return (
+    <StyledActionBarContainer className={className}>
+      <StyledInnerContainer>
+        <StyledInfoContainer>
+          <StyledPrimaryText>{primaryText}</StyledPrimaryText>
+          <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
+        </StyledInfoContainer>
+        <StyledButtonsContainer>
+          {detailsText && tooltipText && (
+            <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
+              <DetailsContainer>
+                <Text variant="body2" secondary>
+                  {detailsText}
+                </Text>
+                <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
+              </DetailsContainer>
+            </Tooltip>
+          )}
+          {secondaryButtonText && !detailsText && (
+            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
+              {secondaryButtonText}
+            </Button>
+          )}
+          {primaryButtonText && (
+            <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+              {primaryButtonText}
+            </Button>
+          )}
+        </StyledButtonsContainer>
+      </StyledInnerContainer>
+    </StyledActionBarContainer>
+  )
+}
