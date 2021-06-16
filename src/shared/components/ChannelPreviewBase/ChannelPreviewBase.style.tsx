@@ -2,10 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Text } from '@/shared/components/Text'
-
 import { colors, sizes, transitions, typography } from '../../theme'
 import { Avatar } from '../Avatar'
+import { Text } from '../Text'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'
