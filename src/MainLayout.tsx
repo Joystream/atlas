@@ -1,11 +1,13 @@
 import loadable from '@loadable/component'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { TopbarBase, StudioLoading } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
+import { useDialog } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
 import { routingTransitions } from '@/styles/routingTransitions'
+import { isBrowserOutdated } from '@/utils/broswer'
 
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'
@@ -21,6 +23,22 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
 })
 
 const MainLayout: React.FC = () => {
+  const [openDialog, closeDialog] = useDialog({
+    title: 'Outdated browser detected',
+    description:
+      'It seems the browser version you are using is not fully supported by Joystream. Some of the features may be broken or not accessible. For the best experience, please upgrade your browser to the latest version.',
+    variant: 'warning',
+    primaryButtonText: 'Click here to see instructions',
+    onPrimaryButtonClick: () => window.open('https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'),
+    onExitClick: () => closeDialog(),
+  })
+
+  useEffect(() => {
+    if (isBrowserOutdated) {
+      openDialog()
+    }
+  }, [openDialog])
+
   return (
     <>
       <GlobalStyle additionalStyles={[routingTransitions]} />
