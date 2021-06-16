@@ -1,7 +1,7 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean } from 'react-hook-form'
+import { Controller, useForm, FieldNamesMarkedBoolean, FieldError, DeepMap } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -69,6 +69,8 @@ type EditVideoFormProps = {
   fee: number
 }
 
+type ValueOf<T> = T[keyof T]
+
 export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   selectedVideoTab,
   onSubmit,
@@ -110,12 +112,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     register,
     control,
     handleSubmit: createSubmitHandler,
-    errors,
     getValues,
     setValue,
     watch,
     reset,
-    formState: { dirtyFields, isDirty },
+    formState: { errors, dirtyFields, isDirty },
   } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
     defaultValues: {
@@ -182,9 +183,24 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       700
     )
   )
-  const categorySelectRef = useRef<HTMLDivElement>(null)
-  const isExplicitInputRef = useRef<HTMLInputElement>(null)
-  const licenseSelectRef = useRef<HTMLDivElement>(null)
+
+  const debouncedSetSelectedVideoTabCachedDirtyFormData = useRef(
+    debounce(
+      (
+        data: EditVideoFormFields,
+        dirtyFields: DeepMap<EditVideoFormFields, true>,
+        setSelectedVideoTabCachedDirtyFormDataFn: typeof setSelectedVideoTabCachedDirtyFormData
+      ) => {
+        const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
+        const dirtyData = keysToKeep.reduce((acc, curr) => {
+          acc[curr] = data[curr]
+          return acc
+        }, {} as Record<string, unknown>)
+        setSelectedVideoTabCachedDirtyFormDataFn(dirtyData)
+      },
+      700
+    )
+  )
 
   useEffect(() => {
     if (tabDataLoading || !tabData || !selectedVideoTab) {
@@ -209,7 +225,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       setTimeout(() => {
         const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof EditVideoFormFields>
         keys.forEach((key) => {
-          setValue(key, selectedVideoTabCachedDirtyFormData[key], { shouldDirty: true })
+          setValue(key, selectedVideoTabCachedDirtyFormData[key] as ValueOf<EditVideoFormFields>, { shouldDirty: true })
         })
       }, 0)
     }
@@ -225,44 +241,63 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setValue,
   ])
 
-  const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
-    // do initial validation
-    if (!isEdit && !data.assets.video?.blob) {
-      setFileSelectError('Video file cannot be empty')
-      return
+  const handleSubmit = createSubmitHandler(
+    async (data: EditVideoFormFields) => {
+      // do initial validation
+      if (!isEdit && !data.assets.video?.blob) {
+        setFileSelectError('Video file cannot be empty')
+        return
+      }
+      if (!data.assets.thumbnail?.url) {
+        setFileSelectError('Thumbnail cannot be empty')
+        return
+      }
+
+      const callback = () => {
+        setForceReset(true)
+      }
+
+      debouncedDraftSave.current.flush()
+
+      await onSubmit(data, dirtyFields, callback)
+    },
+    (errors) => {
+      const error = Object.values(errors)[0] as FieldError
+      const ref = error.ref as HTMLElement
+      ref.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
     }
-    if (!data.assets.thumbnail?.url) {
-      setFileSelectError('Thumbnail cannot be empty')
-      return
+  )
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (!Object.keys(dirtyFields).length) {
+        return
+      }
+      if (!selectedVideoTab?.isDraft) {
+        debouncedSetSelectedVideoTabCachedDirtyFormData.current(
+          data,
+          dirtyFields,
+          setSelectedVideoTabCachedDirtyFormData
+        )
+      } else {
+        debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+      }
+    })
+    return () => {
+      subscription.unsubscribe()
     }
-
-    const callback = () => {
-      setForceReset(true)
-    }
-
-    debouncedDraftSave.current.flush()
-
-    await onSubmit(data, dirtyFields, callback)
-  })
-
-  const debouncedSetSelectedVideoTabCachedDirtyFormData = debounce((dirtyData) => {
-    setSelectedVideoTabCachedDirtyFormData(dirtyData)
-  }, 700)
-
-  // with react-hook-form v7 it's possible to call watch((data) => update()), we should use that instead when we upgrade
-  const handleFormChange = () => {
-    const data = getValues()
-    if (!selectedVideoTab?.isDraft) {
-      const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
-      const dirtyData = keysToKeep.reduce((acc, curr) => {
-        acc[curr] = data[curr]
-        return acc
-      }, {} as Record<string, unknown>)
-      debouncedSetSelectedVideoTabCachedDirtyFormData(dirtyData)
-    } else {
-      debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
-    }
-  }
+  }, [
+    addDraft,
+    dirtyFields,
+    selectedVideoTab,
+    setSelectedVideoTabCachedDirtyFormData,
+    updateDraft,
+    updateSelectedVideoTab,
+    watch,
+  ])
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
     const updatedAssets = {
@@ -281,7 +316,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       // TODO: don't change it if the draft was saved and reloaded
       const videoNameWithoutExtension = video.title.replace(/\.[^.]+$/, '')
       setValue('title', videoNameWithoutExtension, { shouldDirty: true })
-      handleFormChange()
     }
     setFileSelectError(null)
   }
@@ -314,13 +348,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     }
   }
 
-  const handleFieldFocus = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-  }
-
   const handleDeleteVideo = () => {
     selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
   }
@@ -337,7 +364,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <Controller
           name="assets"
           control={control}
-          render={({ value }) => (
+          render={({ field: { value } }) => (
             <MultiFileSelect
               files={value}
               onVideoChange={handleVideoFileChange}
@@ -351,17 +378,16 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         />
         <InputsContainer>
           <StyledHeaderTextField
-            name="title"
-            ref={register(textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true }))}
-            onChange={handleFormChange}
+            {...register(
+              'title',
+              textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })
+            )}
             placeholder="Video title"
             error={!!errors.title}
             helperText={errors.title?.message}
           />
           <TextArea
-            name="description"
-            ref={register(textFieldValidation({ name: 'Description', maxLength: 2160 }))}
-            onChange={handleFormChange}
+            {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}
             maxLength={2160}
             placeholder="Description of the video to share with your audience"
             error={!!errors.description}
@@ -377,14 +403,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => value !== null,
               }}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Select
                   value={value}
                   items={visibilityOptions}
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                   error={!!errors.isPublic && !value}
                   helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
                 />
@@ -396,14 +419,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="language"
               control={control}
               rules={requiredValidation('Video language')}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Select
-                  value={value ?? null}
+                  value={value}
                   items={languages}
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                   error={!!errors.language && !value}
                   helperText={errors.language?.message}
                 />
@@ -415,16 +435,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="category"
               control={control}
               rules={requiredValidation('Video category')}
-              onFocus={() => handleFieldFocus(categorySelectRef)}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange, ref } }) => (
                 <Select
-                  containerRef={categorySelectRef}
-                  value={value ?? null}
+                  containerRef={ref}
+                  value={value}
                   items={categoriesSelectItems}
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                   error={!!errors.category && !value}
                   helperText={errors.category?.message}
                 />
@@ -436,17 +452,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="licenseCode"
               control={control}
               rules={requiredValidation('License')}
-              onFocus={() => handleFieldFocus(licenseSelectRef)}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange, ref } }) => (
                 <Select
-                  containerRef={licenseSelectRef}
-                  value={value ?? null}
+                  containerRef={ref}
+                  value={value}
                   items={knownLicensesOptions}
                   placeholder="Choose license type"
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                   error={!!errors.licenseCode && !value}
                   helperText={errors.licenseCode?.message}
                 />
@@ -456,9 +468,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
             <FormField title="License attribution">
               <TextField
-                name="licenseAttribution"
-                ref={register(textFieldValidation({ name: 'License attribution', maxLength: 5000, required: true }))}
-                onChange={handleFormChange}
+                {...register(
+                  'licenseAttribution',
+                  textFieldValidation({ name: 'License attribution', maxLength: 5000, required: true })
+                )}
                 placeholder="Type your attribution here"
                 error={!!errors.licenseAttribution}
                 helperText={errors.licenseAttribution?.message}
@@ -469,9 +482,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
             <FormField title="Custom license">
               <TextArea
-                name="licenseCustomText"
-                ref={register(textFieldValidation({ name: 'License', maxLength: 5000, required: true }))}
-                onChange={handleFormChange}
+                {...register(
+                  'licenseCustomText',
+                  textFieldValidation({ name: 'License', maxLength: 5000, required: true })
+                )}
                 maxLength={5000}
                 placeholder="Type your license content here"
                 error={!!errors.licenseCustomText}
@@ -484,14 +498,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             <Controller
               name="hasMarketing"
               control={control}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Checkbox
-                  value={value}
+                  value={value ?? false}
                   label="My video features a paid promotion material"
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                 />
               )}
             />
@@ -507,17 +518,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               rules={{
                 validate: (value) => value !== null,
               }}
-              onFocus={() => handleFieldFocus(isExplicitInputRef)}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange, ref } }) => (
                 <StyledRadioContainer>
                   <RadioButton
-                    ref={isExplicitInputRef}
+                    ref={ref}
                     value="false"
                     label="All audiences"
-                    onChange={() => {
-                      onChange(false)
-                      handleFormChange()
-                    }}
+                    onChange={() => onChange(false)}
                     selectedValue={value?.toString()}
                     error={!!errors.isExplicit}
                     helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
@@ -525,10 +532,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   <RadioButton
                     value="true"
                     label="Mature"
-                    onChange={() => {
-                      onChange(true)
-                      handleFormChange()
-                    }}
+                    onChange={() => onChange(true)}
                     selectedValue={value?.toString()}
                     error={!!errors.isExplicit}
                     helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
@@ -545,15 +549,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               name="publishedBeforeJoystream"
               control={control}
               rules={{
-                validate: pastDateValidation,
+                validate: (value) => pastDateValidation(value),
               }}
-              render={({ value, onChange }) => (
+              render={({ field: { value, onChange } }) => (
                 <Datepicker
                   value={value}
-                  onChange={(value) => {
-                    onChange(value)
-                    handleFormChange()
-                  }}
+                  onChange={onChange}
                   error={!!errors.publishedBeforeJoystream}
                   helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
                 />
