@@ -3,7 +3,7 @@ import { useApolloClient } from '@apollo/client'
 import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 
-import { useDialog } from './useDialog'
+import { useDialog } from '../providers/useDialog'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()

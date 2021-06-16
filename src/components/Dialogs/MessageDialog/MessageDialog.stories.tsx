@@ -1,7 +1,7 @@
 import { Story, Meta } from '@storybook/react'
 import React from 'react'
 
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+import { OverlayManagerProvider } from '@/providers/useOverlayManager'
 
 import { MessageDialogProps, MessageDialog } from './MessageDialog'
 

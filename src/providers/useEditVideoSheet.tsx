@@ -11,7 +11,7 @@ import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSe
 import { RoutingState } from '@/types/routing'
 import { createId } from '@/utils/createId'
 
-import { useAsset } from './useAsset'
+import { useAsset } from '../hooks/useAsset'
 
 export type EditVideoSheetTab = {
   id: string

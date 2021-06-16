@@ -2,8 +2,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
-import { useSnackbar } from '@/hooks/useSnackbar'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { useSnackbar } from '@/providers/useSnackbar'
 import { Logger } from '@/utils/logger'
 
 import useConnectionStatus from './useConnectionStatus'

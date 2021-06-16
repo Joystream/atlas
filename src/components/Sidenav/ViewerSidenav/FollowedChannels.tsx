@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
+import { FollowedChannel } from '@/providers/usePersonalData/localStorageClient/types'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
