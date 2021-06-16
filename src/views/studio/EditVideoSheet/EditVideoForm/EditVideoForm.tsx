@@ -470,7 +470,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               <TextField
                 {...register(
                   'licenseAttribution',
-                  textFieldValidation({ name: 'License attribution', maxLength: 5000, required: true })
+                  textFieldValidation({ name: 'License attribution', maxLength: 5000 })
                 )}
                 placeholder="Type your attribution here"
                 error={!!errors.licenseAttribution}
