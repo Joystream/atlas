@@ -270,16 +270,33 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     }
   )
 
-  watch((data) => {
-    if (!Object.keys(dirtyFields).length) {
-      return
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (!Object.keys(dirtyFields).length) {
+        return
+      }
+      if (!selectedVideoTab?.isDraft) {
+        debouncedSetSelectedVideoTabCachedDirtyFormData.current(
+          data,
+          dirtyFields,
+          setSelectedVideoTabCachedDirtyFormData
+        )
+      } else {
+        debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+      }
+    })
+    return () => {
+      subscription.unsubscribe()
     }
-    if (!selectedVideoTab?.isDraft) {
-      debouncedSetSelectedVideoTabCachedDirtyFormData.current(data, dirtyFields, setSelectedVideoTabCachedDirtyFormData)
-    } else {
-      debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
-    }
-  })
+  }, [
+    addDraft,
+    dirtyFields,
+    selectedVideoTab,
+    setSelectedVideoTabCachedDirtyFormData,
+    updateDraft,
+    updateSelectedVideoTab,
+    watch,
+  ])
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
     const updatedAssets = {
