@@ -12,7 +12,7 @@ type ExtensionStepProps = {
   nextStepPath: string
 }
 
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
+export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery('step')
   const { extensionConnected } = useUser()
@@ -75,5 +75,3 @@ export const PolkadotExtensionRejected: React.FC = () => (
     </ol>
   </PolkadotExtensionRejectedWrapper>
 )
-
-export default ExtensionStep

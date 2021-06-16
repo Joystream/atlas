@@ -2,7 +2,6 @@ import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { BackgroundPattern } from '@/components'
-import { Text } from '@/shared/components'
 import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -18,6 +17,8 @@ import {
   FailedUploadContainer,
 } from './ChannelCover.style'
 
+import { Text } from '../Text'
+
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null
   hasCoverUploadFailed?: boolean
@@ -26,7 +27,7 @@ export type ChannelCoverProps = {
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
 }
 
-const ChannelCover: React.FC<ChannelCoverProps> = ({
+export const ChannelCover: React.FC<ChannelCoverProps> = ({
   coverPhotoUrl,
   hasCoverUploadFailed,
   editable,
@@ -75,5 +76,3 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
     </CoverWrapper>
   )
 }
-
-export default ChannelCover

@@ -34,7 +34,7 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
+export const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) => {
   Logger.error('An error occurred.', { componentStack, error })
   return (
     <Container>
@@ -47,5 +47,3 @@ const ErrorFallback: FallbackRender = ({ error, componentStack, resetError }) =>
     </Container>
   )
 }
-
-export default ErrorFallback

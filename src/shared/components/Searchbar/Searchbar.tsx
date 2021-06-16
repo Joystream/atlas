@@ -10,7 +10,7 @@ type SearchbarProps = {
   showCancelButton?: boolean
   controlled?: boolean
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
-const Searchbar: React.FC<SearchbarProps> = ({
+export const Searchbar: React.FC<SearchbarProps> = ({
   placeholder,
   onChange,
   onFocus,
@@ -65,4 +65,3 @@ const Searchbar: React.FC<SearchbarProps> = ({
     </Container>
   )
 }
-export default Searchbar

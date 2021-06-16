@@ -22,7 +22,7 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
   ),
 })
 
-const MainLayout: React.FC = () => {
+export const MainLayout: React.FC = () => {
   const [openDialog, closeDialog] = useDialog({
     title: 'Outdated browser detected',
     description:
@@ -53,5 +53,3 @@ const MainLayout: React.FC = () => {
     </>
   )
 }
-
-export default MainLayout

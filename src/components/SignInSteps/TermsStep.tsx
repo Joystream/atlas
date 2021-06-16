@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import TermsOfService from '@/components/TermsOfService'
 import { absoluteRoutes } from '@/config/routes'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -9,7 +8,9 @@ import { transitions } from '@/shared/theme'
 import { StepFooter, StepWrapper } from './SignInSteps.style'
 import { TermsBox, TextWrapper, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
 
-const TermsStep: React.FC = () => {
+import { TermsOfService } from '../TermsOfService'
+
+export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
@@ -59,5 +60,3 @@ const TermsStep: React.FC = () => {
     </StepWrapper>
   )
 }
-
-export default TermsStep

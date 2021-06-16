@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 
 import { Logger } from '@/utils/logger'
 
-import App from './App'
+import { App } from './App'
 import { SENTRY_DSN } from './config/urls'
 
 type Env = 'production' | 'staging' | 'development'

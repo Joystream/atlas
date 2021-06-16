@@ -1,3 +1,1 @@
-import ChannelPreviewBase from './ChannelPreviewBase'
-
-export default ChannelPreviewBase
+export * from './ChannelPreviewBase'

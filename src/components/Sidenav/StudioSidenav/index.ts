@@ -1,1 +1,1 @@
-export { StudioSidenav } from './StudioSidenav'
+export * from './StudioSidenav'

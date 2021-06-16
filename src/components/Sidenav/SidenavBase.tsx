@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import HamburgerButton from '@/shared/components/HamburgerButton'
+import { HamburgerButton } from '@/shared/components/HamburgerButton'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -151,5 +151,5 @@ const NavItem: React.FC<NavItemProps> = ({
   )
 }
 
-export { SidenavBase as default, NavItem }
+export { SidenavBase, NavItem }
 export type { NavItemType }

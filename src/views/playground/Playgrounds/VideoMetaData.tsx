@@ -34,5 +34,3 @@ export const VideoMetaData = () => {
     </div>
   )
 }
-
-export default VideoMetaData

@@ -294,8 +294,6 @@ export const MyVideosView = () => {
   )
 }
 
-export default MyVideosView
-
 const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)
   // reset the pagination when changing tabs

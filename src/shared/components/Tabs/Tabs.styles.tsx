@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
-import { badgeStyles } from '@/shared/components/Badge'
 import { colors, zIndex, sizes } from '@/shared/theme'
+
+import { badgeStyles } from '../Badge'
 
 type TabProps = {
   selected: boolean

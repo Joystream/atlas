@@ -2,7 +2,7 @@ import { Meta, Story } from '@storybook/react'
 import { isValid } from 'date-fns'
 import React, { useRef, useState } from 'react'
 
-import Datepicker, { DatepickerProps } from './Datepicker'
+import { DatepickerProps, Datepicker } from './Datepicker'
 
 export default {
   title: 'Shared/D/Datepicker',

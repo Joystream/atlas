@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import Tabs, { TabsProps } from './Tabs'
+import { TabsProps, Tabs } from './Tabs'
 
 export default {
   title: 'Shared/T/Tabs',

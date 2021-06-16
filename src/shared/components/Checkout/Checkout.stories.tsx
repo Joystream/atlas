@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import Checkout, { CheckoutProps } from './Checkout'
+import { CheckoutProps, Checkout } from './Checkout'
 
 export default {
   title: 'Shared/C/Checkout',

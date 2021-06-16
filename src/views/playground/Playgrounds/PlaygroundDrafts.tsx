@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 
 import { useDrafts, VideoDraft, useUser } from '@/hooks'
 import { FormField, Button, Text } from '@/shared/components'
-import Select from '@/shared/components/Select'
-import TextArea from '@/shared/components/TextArea'
-import TextField from '@/shared/components/TextField'
+import { Select } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { TextField } from '@/shared/components/TextField'
 
 const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
   channelId: '100',
@@ -19,7 +19,7 @@ const CONTENT_RATING = [
   { value: true, name: 'mature' },
 ]
 
-const PlaygroundDrafts = () => {
+export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
   const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
@@ -124,5 +124,3 @@ const PlaygroundDrafts = () => {
     </div>
   )
 }
-
-export default PlaygroundDrafts

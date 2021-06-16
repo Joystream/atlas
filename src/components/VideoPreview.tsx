@@ -4,10 +4,11 @@ import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useDrafts, useAuthorizedUser, useAsset } from '@/hooks'
-import VideoPreviewBase, {
+import {
   VideoPreviewBaseMetaProps,
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
+  VideoPreviewBase,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
 import { copyToClipboard } from '@/utils/broswer'
 import { Logger } from '@/utils/logger'
@@ -18,7 +19,7 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   Pick<VideoPreviewBaseProps, 'progress' | 'className'>
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
+export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
   const { getAssetUrl } = useAsset()
 
@@ -50,8 +51,6 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProp
     />
   )
 }
-
-export default VideoPreview
 
 export type VideoPreviewWPublisherProps = VideoPreviewProps &
   Omit<VideoPreviewPublisherProps, 'publisherMode' | 'videoPublishState'>

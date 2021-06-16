@@ -8,11 +8,12 @@ import {
   VideoWhereInput,
   AssetAvailability,
 } from '@/api/queries'
-import VideoPreview from '@/components/VideoPreview'
 import { Grid, Text, Placeholder } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
-import useInfiniteGrid from './useInfiniteGrid'
+import { useInfiniteGrid } from './useInfiniteGrid'
+
+import { VideoPreview } from '../VideoPreview'
 
 type InfiniteVideoGridProps = {
   title?: string
@@ -33,7 +34,7 @@ type InfiniteVideoGridProps = {
 const INITIAL_ROWS = 4
 const INITIAL_VIDEOS_PER_ROW = 4
 
-const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
+export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
   categoryId = '',
   channelId = null,
@@ -153,5 +154,3 @@ const Title = styled(Text)`
 const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
 `
-
-export default InfiniteVideoGrid

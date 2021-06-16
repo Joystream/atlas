@@ -93,5 +93,3 @@ const ContentContainer = styled.div`
   padding-left: 30px;
   overflow: hidden;
 `
-
-export default PlaygroundLayout

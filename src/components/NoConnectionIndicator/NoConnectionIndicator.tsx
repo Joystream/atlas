@@ -13,7 +13,7 @@ export type NoConnectionIndicatorProps = {
   isConnectedToInternet: boolean
 }
 
-const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
+export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
   nodeConnectionStatus,
   isConnectedToInternet,
 }) => {
@@ -43,5 +43,3 @@ const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
     </CSSTransition>
   )
 }
-
-export default NoConnectionIndicator

@@ -13,7 +13,7 @@ export type VideoPlayerProps = {
   playing?: boolean
 } & VideoJsConfig
 
-const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
+const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, autoplay, isInBackground, playing, ...videoJsConfig },
   externalRef
 ) => {
@@ -123,4 +123,4 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
   )
 }
 
-export default React.forwardRef(VideoPlayer)
+export const VideoPlayer = React.forwardRef(VideoPlayerComponent)

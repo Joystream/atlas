@@ -5,7 +5,7 @@ import { Tooltip } from '@/shared/components'
 
 import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
 
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
+import { ActionDialog, ActionDialogProps } from '../ActionDialog/ActionDialog'
 import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
@@ -39,7 +39,7 @@ const TRANSACTION_STEPS_DETAILS = {
   },
 }
 
-const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
+export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
   const stepDetails =
     status != null && status !== ExtrinsicStatus.Error && status !== ExtrinsicStatus.Completed
       ? TRANSACTION_STEPS_DETAILS[status]
@@ -75,5 +75,3 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, 
     </ActionDialog>
   )
 }
-
-export default TransactionDialog

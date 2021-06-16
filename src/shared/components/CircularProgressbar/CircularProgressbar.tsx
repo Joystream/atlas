@@ -20,7 +20,7 @@ export type CircularProgressbarProps = {
   className?: string
 }
 
-const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
+export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
   value,
   background = false,
   backgroundPadding = 0,
@@ -62,5 +62,3 @@ const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
     </>
   )
 }
-
-export default CircularProgressbar

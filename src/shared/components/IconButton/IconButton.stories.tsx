@@ -3,7 +3,7 @@ import React from 'react'
 
 import { SvgGlyphAddVideo } from '@/shared/icons'
 
-import IconButton, { IconButtonProps } from '.'
+import { IconButtonProps, IconButton } from '.'
 
 export default {
   title: 'Shared/I/IconButton',

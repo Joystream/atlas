@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useContext, useMemo, useRef } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import MessageDialog, { MessageDialogProps } from '@/components/Dialogs/MessageDialog'
+import { MessageDialogProps, MessageDialog } from '@/components/Dialogs/MessageDialog'
 import { createId } from '@/utils/createId'
 
 type DialogContextValue = {

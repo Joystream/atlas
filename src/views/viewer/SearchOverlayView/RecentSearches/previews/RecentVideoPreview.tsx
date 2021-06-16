@@ -20,7 +20,7 @@ type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment
 }
 
-const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
+export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
   const { getAssetUrl } = useAsset()
   const thumbnailPhotoUrl = getAssetUrl(
     video?.thumbnailPhotoAvailability,
@@ -48,5 +48,3 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
     </PreviewContainer>
   )
 }
-
-export default RecentVideoPreview

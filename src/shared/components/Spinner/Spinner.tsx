@@ -9,8 +9,6 @@ export type SpinnerProps = {
   className?: string
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ className, size = 'medium' }) => {
+export const Spinner: React.FC<SpinnerProps> = ({ className, size = 'medium' }) => {
   return <SpinnerWrapper className={className} size={size} />
 }
-
-export default Spinner

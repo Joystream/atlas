@@ -5,7 +5,7 @@ import { TransitionGroup } from 'react-transition-group'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, transitions, typography, media } from '@/shared/theme'
 
-import Placeholder from '../Placeholder'
+import { Placeholder } from '../Placeholder'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 

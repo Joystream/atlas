@@ -28,7 +28,7 @@ export type AvatarProps = {
   onError?: () => void
 }
 
-const Avatar: React.FC<AvatarProps> = ({
+export const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
   hasAvatarUploadFailed,
   loading = false,
@@ -84,5 +84,4 @@ const Avatar: React.FC<AvatarProps> = ({
   )
 }
 
-export default Avatar
 export type { AvatarSize }

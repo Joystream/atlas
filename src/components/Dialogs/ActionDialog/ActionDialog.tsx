@@ -9,7 +9,7 @@ import {
   StyledPrimaryButton,
 } from './ActionDialog.style'
 
-import BaseDialog, { BaseDialogProps } from '../BaseDialog'
+import { BaseDialogProps, BaseDialog } from '../BaseDialog'
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
@@ -23,7 +23,7 @@ export type ActionDialogProps = {
   error?: boolean
 } & BaseDialogProps
 
-const ActionDialog: React.FC<ActionDialogProps> = ({
+export const ActionDialog: React.FC<ActionDialogProps> = ({
   additionalActionsNode,
   primaryButtonText,
   secondaryButtonText,
@@ -66,5 +66,3 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
     </BaseDialog>
   )
 }
-
-export default ActionDialog

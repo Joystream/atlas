@@ -21,7 +21,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
 ]
 
-const ViewerLayout: React.FC = () => {
+export const ViewerLayout: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: absoluteRoutes.viewer.search() })
@@ -95,5 +95,3 @@ const MainContainer = styled.main`
   padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
   margin-left: var(--sidenav-collapsed-width);
 `
-
-export default ViewerLayout

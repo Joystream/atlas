@@ -57,7 +57,7 @@ const StyledImg = styled.img`
   display: block;
 `
 
-const ImageDownsizing = () => {
+export const ImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarImgRef = useRef<HTMLImageElement | null>(null)
@@ -190,5 +190,3 @@ const ImageDownsizing = () => {
     </div>
   )
 }
-
-export default ImageDownsizing

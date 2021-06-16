@@ -58,7 +58,7 @@ type NavDrawerProps = {
   handleClose: () => void
 }
 
-const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
+export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const {
     activeChannelId,
     setActiveUser,
@@ -287,5 +287,3 @@ const ChannelInfoPlaceholder = () => {
     </ChannelInfoContainer>
   )
 }
-
-export default StudioTopbar

@@ -25,7 +25,7 @@ type FollowedChannelsProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-const FollowedChannels: React.FC<FollowedChannelsProps> = ({
+export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
   followedChannels,
   expanded,
   onClick,
@@ -66,5 +66,3 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({
     </CSSTransition>
   )
 }
-
-export default FollowedChannels

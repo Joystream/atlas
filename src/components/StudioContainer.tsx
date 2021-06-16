@@ -8,8 +8,6 @@ export const studioContainerStyle = css`
   position: relative;
   margin: 0 auto;
 `
-const StudioContainer = styled.div`
+export const StudioContainer = styled.div`
   ${studioContainerStyle}
 `
-
-export default StudioContainer

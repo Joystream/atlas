@@ -13,7 +13,7 @@ import { FAUCET_URL } from '@/config/urls'
 import { useUser, useConnectionStatus, useDialog } from '@/hooks'
 import { MemberId } from '@/joystream-lib'
 import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
+import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import { Logger } from '@/utils/logger'
 
@@ -34,7 +34,7 @@ type Inputs = {
   about: string
 }
 
-const CreateMemberView = () => {
+export const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
   const { nodeConnectionStatus } = useConnectionStatus()
 
@@ -212,7 +212,7 @@ type NewMemberResponse = {
   block: number
 }
 
-const createNewMember = async (accountId: string, inputs: Inputs) => {
+export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {
     const body = {
       account: accountId,
@@ -225,5 +225,3 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     throw error
   }
 }
-
-export default CreateMemberView

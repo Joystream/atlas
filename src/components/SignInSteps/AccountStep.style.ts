@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button, Text, RadioButton } from '@/shared/components'
-import Spinner from '@/shared/components/Spinner'
+import { Spinner } from '@/shared/components/Spinner'
 import { SvgAccountCreationIllustration } from '@/shared/illustrations'
 import { sizes, colors, typography, transitions, media } from '@/shared/theme'
 

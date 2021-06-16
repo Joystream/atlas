@@ -1,1 +1,1 @@
-export { default } from './CreateEditChannelView'
+export { CreateEditChannelView } from './CreateEditChannelView'

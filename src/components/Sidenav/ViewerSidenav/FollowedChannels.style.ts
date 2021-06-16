@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
+import { ChannelLink } from '@/components'
 import { Text } from '@/shared/components'
 import { sizes, colors, typography } from '@/shared/theme'
 
-import ChannelLink from '../../ChannelLink'
 import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from '../SidenavBase.style'
 
 export const FollowedChannelsWrapper = styled.div`

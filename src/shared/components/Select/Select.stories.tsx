@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { Story, Meta } from '@storybook/react'
 import React, { useState } from 'react'
 
-import Select, { SelectProps, SelectItem } from '.'
+import { SelectProps, SelectItem, Select } from '.'
 
 const items: SelectItem[] = [
   { name: 'first', value: 'first' },

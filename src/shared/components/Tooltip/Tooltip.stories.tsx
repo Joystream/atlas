@@ -2,9 +2,11 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Text, Button, ChannelPreviewBase } from '@/shared/components'
+import { TooltipProps, Tooltip } from './Tooltip'
 
-import Tooltip, { TooltipProps } from './Tooltip'
+import { Button } from '../Button'
+import { ChannelPreviewBase } from '../ChannelPreviewBase'
+import { Text } from '../Text'
 
 export default {
   title: 'Shared/T/Tooltip',

@@ -3,7 +3,6 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks'
-import { Text } from '@/shared/components'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -53,7 +52,9 @@ import {
   CoverIconWrapper,
 } from './VideoPreviewBase.styles'
 
-import { ContextMenu, ContextMenuItem, Placeholder } from '..'
+import { ContextMenu, ContextMenuItem } from '../ContextMenu'
+import { Placeholder } from '../Placeholder'
+import { Text } from '../Text'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -119,7 +120,7 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
   ((videoPreviewWidth - MIN_VIDEO_PREVIEW_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
-const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
+export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   title,
   channelTitle,
   channelAvatarUrl,
@@ -377,5 +378,3 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     </Container>
   )
 }
-
-export default VideoPreviewBase

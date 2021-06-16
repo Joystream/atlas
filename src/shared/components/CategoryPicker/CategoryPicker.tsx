@@ -20,7 +20,7 @@ export const ALL_CATEGORY = {
 
 const CATEGORY_PLACEHOLDER_WIDTHS = [80, 170, 120, 110, 80, 170, 120]
 
-const CategoryPicker: React.FC<CategoryPickerProps> = ({
+export const CategoryPicker: React.FC<CategoryPickerProps> = ({
   categories,
   selectedCategoryId,
   loading,
@@ -53,5 +53,3 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({
     </Container>
   )
 }
-
-export default CategoryPicker

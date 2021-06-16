@@ -7,7 +7,7 @@ import { Button, RadioButton } from '@/shared/components'
 
 const account = 'POLKADOT_ACCOUNT'
 
-const PlaygroundMemberChannel = () => {
+export const PlaygroundMemberChannel = () => {
   const [selectedChannel, setSelectedChannel] = useState<BasicChannelFieldsFragment>()
   const [selectedMember, setSelectedMember] = useState<BasicMembershipFieldsFragment>()
   const [activeUserString, setActiveUserString] = useState('')
@@ -93,5 +93,3 @@ const PlaygroundMemberChannel = () => {
     </>
   )
 }
-
-export default PlaygroundMemberChannel

@@ -33,7 +33,7 @@ type Inputs = {
   radioGroup: string
 }
 
-const PlaygroundValidationForm = () => {
+export const PlaygroundValidationForm = () => {
   const {
     register,
     handleSubmit,
@@ -193,5 +193,3 @@ const StyledRadioContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
 `
-
-export default PlaygroundValidationForm

@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import FileSelect, { FileSelectProps } from './FileSelect'
+import { FileSelectProps, FileSelect } from './FileSelect'
 
 export default {
   title: 'Shared/F/FileSelect',

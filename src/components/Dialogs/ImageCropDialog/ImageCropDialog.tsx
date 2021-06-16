@@ -161,7 +161,5 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   )
 }
 
-const ImageCropDialog = forwardRef(ImageCropDialogComponent)
+export const ImageCropDialog = forwardRef(ImageCropDialogComponent)
 ImageCropDialog.displayName = 'ImageCropDialog'
-
-export default ImageCropDialog

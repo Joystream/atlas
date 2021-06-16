@@ -12,7 +12,7 @@ import {
   StyledHelperText,
 } from './Checkbox.styles'
 
-import Text from '../Text'
+import { Text } from '../Text'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
@@ -100,5 +100,3 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 )
 
 Checkbox.displayName = 'Checkbox'
-
-export default Checkbox

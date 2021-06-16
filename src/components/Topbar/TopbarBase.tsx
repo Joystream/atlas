@@ -10,7 +10,7 @@ export type TopbarBaseProps = {
   isHamburgerButtonPresent?: boolean
 }
 
-const TopbarBase: React.FC<TopbarBaseProps> = ({
+export const TopbarBase: React.FC<TopbarBaseProps> = ({
   children,
   variant = 'default',
   hasFocus,
@@ -32,5 +32,3 @@ const TopbarBase: React.FC<TopbarBaseProps> = ({
     </Header>
   )
 }
-
-export default TopbarBase

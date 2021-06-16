@@ -26,7 +26,7 @@ type MultistepperProps = {
   currentStepIdx?: number
 } & BaseDialogProps
 
-const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, ...dialogProps }) => {
+export const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, ...dialogProps }) => {
   return (
     <StyledDialog {...dialogProps}>
       <StyledHeader>
@@ -59,5 +59,3 @@ const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepIdx = 0, 
     </StyledDialog>
   )
 }
-
-export default Multistepper

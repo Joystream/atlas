@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Story, Meta } from '@storybook/react'
 import React from 'react'
 
-import Slider, { SliderProps } from '.'
+import { SliderProps, Slider } from '.'
 import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {

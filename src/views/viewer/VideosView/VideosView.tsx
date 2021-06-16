@@ -19,7 +19,7 @@ import {
   FeaturedVideosContainer,
 } from './VideosView.style'
 
-const VideosView: React.FC = () => {
+export const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
   const {
@@ -97,5 +97,3 @@ const VideosView: React.FC = () => {
     </StyledViewWrapper>
   )
 }
-
-export default VideosView

@@ -3,7 +3,7 @@ import React from 'react'
 
 import { ConnectionStatusProvider, SnackbarProvider } from '@/hooks'
 
-import NoConnectionIndicator, { NoConnectionIndicatorProps } from './NoConnectionIndicator'
+import { NoConnectionIndicatorProps, NoConnectionIndicator } from './NoConnectionIndicator'
 
 export default {
   title: 'General/NoConnectionIndicator',

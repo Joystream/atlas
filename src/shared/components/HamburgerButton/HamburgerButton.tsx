@@ -9,7 +9,7 @@ export type HamburgerButtonProps = {
   outerStyles?: SerializedStyles
 }
 
-const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick }) => {
+export const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick }) => {
   return (
     <Hamburger onClick={onClick} aria-label="Main menu" aria-expanded={active}>
       <HamburgerBox>
@@ -18,5 +18,3 @@ const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick }) =>
     </Hamburger>
   )
 }
-
-export default HamburgerButton

@@ -27,7 +27,7 @@ type AssetLineProps = {
   asset: AssetUploadWithProgress
 }
 
-const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
+export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
   const { startFileUpload } = useUploadsManager()
 
@@ -212,5 +212,3 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     </>
   )
 }
-
-export default AssetLine

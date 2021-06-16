@@ -1,3 +1,1 @@
-import NoConnectionIndicator from './NoConnectionIndicator'
-
-export default NoConnectionIndicator
+export * from './NoConnectionIndicator'

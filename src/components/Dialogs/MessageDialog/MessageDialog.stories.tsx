@@ -3,7 +3,7 @@ import React from 'react'
 
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 
-import MessageDialog, { MessageDialogProps } from './MessageDialog'
+import { MessageDialogProps, MessageDialog } from './MessageDialog'
 
 export default {
   title: 'General/MessageDialog',

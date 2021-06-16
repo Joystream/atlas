@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import CircularProgressbar, { CircularProgressbarProps } from './CircularProgressbar'
+import { CircularProgressbarProps, CircularProgressbar } from './CircularProgressbar'
 
 export default {
   title: 'Shared/C/CircularProgressbar',

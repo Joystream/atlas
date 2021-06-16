@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Text, LegalParagraph, LegalListItem } from '@/shared/components'
 
-const CopyrightPolicyView: React.FC = () => {
+export const CopyrightPolicyView: React.FC = () => {
   return (
     <div>
       <Text variant="h5">DMCA Policy For Content Takedown</Text>
@@ -116,5 +116,3 @@ const CopyrightPolicyView: React.FC = () => {
     </div>
   )
 }
-
-export default CopyrightPolicyView

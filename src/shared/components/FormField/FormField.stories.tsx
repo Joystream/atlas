@@ -2,11 +2,11 @@ import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import FormField, { FormFieldProps } from './FormField'
+import { FormFieldProps, FormField } from './FormField'
 
-import Select from '../Select'
-import TextArea from '../TextArea'
-import TextField from '../TextField'
+import { Select } from '../Select'
+import { TextArea } from '../TextArea'
+import { TextField } from '../TextField'
 
 export default {
   title: 'Shared/F/FormField',

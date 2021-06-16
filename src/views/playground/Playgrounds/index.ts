@@ -1,10 +1,23 @@
-export { default as PlaygroundValidationForm } from './PlaygroundValidationForm'
-export { default as PlaygroundDrafts } from './PlaygroundDrafts'
-export { default as VideoMetaData } from './VideoMetaData'
-export { default as UploadFiles } from './UploadFiles'
-export { default as PlaygroundMemberChannel } from './PlaygroundMemberChannel'
-export { default as FileHashing } from './FileHashing'
-export { default as PlaygroundConnectionState } from './PlaygroundConnectionState'
-export { default as ImageDownsizing } from './ImageDownsizing'
-export { default as AutomaticCrop } from './AutomaticCrop'
-export { default as Dialogs } from './Dialogs'
+import { AutomaticCrop } from './AutomaticCrop'
+import { Dialogs } from './Dialogs'
+import { FileHashing } from './FileHashing'
+import { ImageDownsizing } from './ImageDownsizing'
+import { PlaygroundConnectionState } from './PlaygroundConnectionState'
+import { PlaygroundDrafts } from './PlaygroundDrafts'
+import { PlaygroundMemberChannel } from './PlaygroundMemberChannel'
+import { PlaygroundValidationForm } from './PlaygroundValidationForm'
+import { UploadFiles } from './UploadFiles'
+import { VideoMetaData } from './VideoMetaData'
+
+export {
+  AutomaticCrop,
+  Dialogs,
+  FileHashing,
+  ImageDownsizing,
+  PlaygroundConnectionState,
+  PlaygroundDrafts,
+  PlaygroundMemberChannel,
+  PlaygroundValidationForm,
+  UploadFiles,
+  VideoMetaData,
+}

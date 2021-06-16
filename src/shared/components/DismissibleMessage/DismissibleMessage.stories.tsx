@@ -3,9 +3,9 @@ import React from 'react'
 
 import { PersonalDataProvider, usePersonalData } from '@/hooks'
 
-import DismissibleMessage, { DismissibleMessageProps } from './DismissibleMessage'
+import { DismissibleMessageProps, DismissibleMessage } from './DismissibleMessage'
 
-import Button from '../Button'
+import { Button } from '../Button'
 
 export default {
   title: 'Shared/D/DismissibleMessage',

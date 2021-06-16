@@ -23,7 +23,7 @@ export type AssetsGroupBarUploadProps = {
   uploadData: AssetUploadWithProgress[]
 }
 
-const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {
+export const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
   const drawer = useRef<HTMLDivElement>(null)
 
@@ -121,5 +121,3 @@ const AssetsGroupUploadBar: React.FC<AssetsGroupBarUploadProps> = ({ uploadData 
     </Container>
   )
 }
-
-export default AssetsGroupUploadBar

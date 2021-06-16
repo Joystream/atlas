@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { Button } from '@/shared/components'
 
-import ActionDialog, { ActionDialogProps } from './ActionDialog'
+import { ActionDialogProps, ActionDialog } from './ActionDialog'
 
 export default {
   title: 'General/ActionDialog',

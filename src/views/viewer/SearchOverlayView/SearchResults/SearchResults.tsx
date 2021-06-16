@@ -8,15 +8,15 @@ import { usePersonalData } from '@/hooks'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
-import AllResultsTab from './AllResultsTab'
-import EmptyFallback from './EmptyFallback'
+import { AllResultsTab } from './AllResultsTab'
+import { EmptyFallback } from './EmptyFallback'
 
 type SearchResultsProps = {
   query: string
 }
 const tabs = ['all results', 'videos', 'channels']
 
-const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { data, loading, error } = useSearch({
     text: query,
@@ -97,5 +97,3 @@ const Container = styled.div`
     margin-bottom: ${sizes(12)};
   }
 `
-
-export default SearchResults

@@ -6,10 +6,10 @@ import { QUERY_PARAMS } from '@/config/routes'
 import { useOverlayManager, useRouterQuery } from '@/hooks'
 import { colors, zIndex } from '@/shared/theme'
 
-import RecentSearches from './RecentSearches'
-import SearchResults from './SearchResults'
+import { RecentSearches } from './RecentSearches'
+import { SearchResults } from './SearchResults'
 
-const SearchOverlayView: React.FC = () => {
+export const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
@@ -40,5 +40,3 @@ const OverlayContainer = styled.div`
   padding: 0 var(--global-horizontal-padding);
   overflow: auto;
 `
-
-export default SearchOverlayView

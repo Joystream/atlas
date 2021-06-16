@@ -7,7 +7,7 @@ import { Logger } from '@/utils/logger'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 
-const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
+export const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
     updateWatchedVideos,
@@ -41,5 +41,3 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     />
   )
 }
-
-export default InterruptedVideosGallery

@@ -27,7 +27,7 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
   )
 }
 
-const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
   const { contextMenuContainerRef } = useOverlayManager()
   return (
     <Portal containerRef={contextMenuContainerRef}>
@@ -39,5 +39,3 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, 
     </Portal>
   )
 }
-
-export default ContextMenu

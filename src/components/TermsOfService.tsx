@@ -2,7 +2,7 @@ import React from 'react'
 
 import { LegalLastUpdateText, LegalListItem, LegalParagraph, Text } from '@/shared/components'
 
-const TermsOfService: React.FC = () => {
+export const TermsOfService: React.FC = () => {
   return (
     <div>
       <Text variant="h5">Terms of Service</Text>
@@ -79,5 +79,3 @@ const TermsOfService: React.FC = () => {
     </div>
   )
 }
-
-export default TermsOfService

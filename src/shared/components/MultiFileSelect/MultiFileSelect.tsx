@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
+import { ImageCropDialogImperativeHandle, ImageCropDialog } from '@/components/Dialogs/ImageCropDialog'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
@@ -10,8 +10,8 @@ import { getVideoMetadata } from '@/utils/video'
 
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
-import FileSelect from '../FileSelect'
-import FileStep from '../FileStep'
+import { FileSelect } from '../FileSelect'
+import { FileStep } from '../FileStep'
 
 type InputFile = {
   url?: string | null
@@ -50,7 +50,7 @@ export type MultiFileSelectProps = {
   error?: string | null
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
+export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onVideoChange,
   onThumbnailChange,
   files,
@@ -230,5 +230,3 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     </MultiFileSelectContainer>
   )
 }
-
-export default MultiFileSelect
