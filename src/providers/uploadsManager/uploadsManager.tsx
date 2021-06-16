@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideos } from '@/api/hooks'
+import { AssetAvailability, GetVideosDocument, GetVideosQuery, GetVideosQueryVariables } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 
 import { useUploadsStore } from './store'
@@ -33,7 +34,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
   const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
   const { loading: channelLoading } = useChannel(activeChannelId ?? '')
-  const { loading: videosLoading } = useVideos(
+  const { loading: videosLoading, client } = useVideos(
     {
       where: {
         id_in: uploadsStateIds,
