@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import { IconButton } from '@/shared/components'
 import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
@@ -14,6 +13,8 @@ import {
   Thumbnail,
   StyledProgress,
 } from './FileStep.style'
+
+import { IconButton } from '../IconButton'
 
 export type FileStepProps = {
   stepNumber: number

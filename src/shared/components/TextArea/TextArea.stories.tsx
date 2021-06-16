@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react'
 
 import { TextAreaProps, TextArea } from './TextArea'
 
-import { Button } from '..'
+import { Button } from '../Button'
 
 export default {
   title: 'Shared/T/TextArea',

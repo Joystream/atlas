@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components'
 import { colors, sizes, typography } from '@/shared/theme'
+
+import { Text } from '../Text'
 
 type StyledTooltipProps = {
   headerText?: boolean

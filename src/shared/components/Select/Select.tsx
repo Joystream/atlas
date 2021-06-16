@@ -1,12 +1,12 @@
 import { useSelect, UseSelectStateChange } from 'downshift'
 import React, { Ref } from 'react'
 
-import { Tooltip } from '@/shared/components'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
 import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
 
 import { InputBaseProps, LabelText, InputBase } from '../InputBase'
+import { Tooltip } from '../Tooltip'
 
 export type SelectItem<T = string> = {
   value: T

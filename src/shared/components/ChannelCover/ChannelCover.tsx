@@ -2,7 +2,6 @@ import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { BackgroundPattern } from '@/components'
-import { Text } from '@/shared/components'
 import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -17,6 +16,8 @@ import {
   EditCoverMobileButton,
   FailedUploadContainer,
 } from './ChannelCover.style'
+
+import { Text } from '../Text'
 
 export type ChannelCoverProps = {
   coverPhotoUrl?: string | null

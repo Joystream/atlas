@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 
-import { Button, Text } from '@/shared/components'
 import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { SnackbarVariant } from './Snackbar'
+
+import { Button } from '../Button'
+import { Text } from '../Text'
 
 type SnackbarWrapperProps = {
   colorVariant?: SnackbarVariant

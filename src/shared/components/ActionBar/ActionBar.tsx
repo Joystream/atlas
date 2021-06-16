@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 
-import { Button, Text, Tooltip } from '@/shared/components'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 import {
@@ -13,6 +12,10 @@ import {
   DetailsIconWrapper,
   DetailsContainer,
 } from './ActionBar.style'
+
+import { Button } from '../Button'
+import { Text } from '../Text'
+import { Tooltip } from '../Tooltip'
 
 export type ActionBarProps = {
   primaryText?: string

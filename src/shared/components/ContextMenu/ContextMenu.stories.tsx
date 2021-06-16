@@ -2,10 +2,11 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { OverlayManagerProvider, useContextMenu } from '@/hooks'
-import { Button } from '@/shared/components'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
 import { ContextMenuItem, ContextMenu } from './ContextMenu'
+
+import { Button } from '../Button'
 
 export default {
   title: 'Shared/C/ContextMenu',
