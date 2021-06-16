@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components'
-import { colors, sizes, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 type FileLineProps = {
   isLast?: boolean

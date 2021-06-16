@@ -2,13 +2,13 @@ import styled from '@emotion/styled'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import {
+  AssetAvailability,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
-  AssetAvailability,
 } from '@/api/queries'
-import { Grid, Text, Placeholder } from '@/shared/components'
+import { Grid, Placeholder, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'

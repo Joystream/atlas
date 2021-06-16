@@ -3,14 +3,14 @@ import React, { ReactNode } from 'react'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 import {
+  DetailsContainer,
+  DetailsIconWrapper,
   StyledActionBarContainer,
-  StyledInnerContainer,
+  StyledButtonsContainer,
   StyledInfoContainer,
+  StyledInnerContainer,
   StyledPrimaryText,
   StyledSecondaryText,
-  StyledButtonsContainer,
-  DetailsIconWrapper,
-  DetailsContainer,
 } from './ActionBar.style'
 
 import { Button } from '../Button'

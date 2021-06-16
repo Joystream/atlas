@@ -4,22 +4,22 @@ import { useNavigate } from 'react-router'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useUploadsManager, useDialog } from '@/hooks'
+import { useDialog, useUploadsManager } from '@/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { Text, CircularProgressbar, Button } from '@/shared/components'
+import { Button, CircularProgressbar, Text } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
 import {
-  FileLineContainer,
-  FileLinePoint,
-  FileLineLastPoint,
-  FileStatusContainer,
   FileInfoContainer,
   FileInfoType,
-  StatusMessage,
+  FileLineContainer,
+  FileLineLastPoint,
+  FileLinePoint,
+  FileStatusContainer,
   ProgressbarContainer,
+  StatusMessage,
 } from './AssetLine.style'
 
 type AssetLineProps = {

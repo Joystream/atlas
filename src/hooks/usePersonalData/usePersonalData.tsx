@@ -1,15 +1,15 @@
-import React, { useReducer, useContext, useCallback, Dispatch } from 'react'
+import React, { Dispatch, useCallback, useContext, useReducer } from 'react'
 
 import { Logger } from '@/utils/logger'
 
 import {
+  DismissedMessage,
   FollowedChannel,
-  WatchedVideo,
-  RecentSearch,
   PersonalDataClient,
+  RecentSearch,
+  WatchedVideo,
   getInitialPersonalData,
   localStorageClient,
-  DismissedMessage,
 } from './localStorageClient'
 
 const personalClient = localStorageClient

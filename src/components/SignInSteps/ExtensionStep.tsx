@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useRouterQuery, useUser, useDialog } from '@/hooks'
-import { Text, Button } from '@/shared/components'
+import { useDialog, useRouterQuery, useUser } from '@/hooks'
+import { Button, Text } from '@/shared/components'
 import { SvgGlyphExternal } from '@/shared/icons'
 
-import { StyledButton, StyledStepFooter, StyledListItem, PolkadotExtensionRejectedWrapper } from './ExtensionStep.style'
+import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'
 import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
 
 type ExtensionStepProps = {

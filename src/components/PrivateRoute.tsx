@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Navigate } from 'react-router'
+import { Navigate, Route } from 'react-router'
 
 type PrivateRouteProps = {
   element: React.ReactElement

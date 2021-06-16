@@ -6,7 +6,7 @@ import { delegateToSchema } from '@graphql-tools/delegate'
 import { CreateProxyingResolverFn } from '@graphql-tools/delegate/types'
 import { mergeSchemas } from '@graphql-tools/merge'
 import { wrapSchema } from '@graphql-tools/wrap'
-import { buildASTSchema, GraphQLFieldResolver } from 'graphql'
+import { GraphQLFieldResolver, buildASTSchema } from 'graphql'
 
 import { createExecutors } from '@/api/client/executors'
 import { QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'

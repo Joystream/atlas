@@ -2,43 +2,42 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import {
-  ViewErrorFallback,
-  StudioTopbar,
-  StudioSidenav,
   NoConnectionIndicator,
-  TOP_NAVBAR_HEIGHT,
-  StudioEntrypoint,
   PrivateRoute,
+  StudioEntrypoint,
   StudioLoading,
+  StudioSidenav,
+  StudioTopbar,
+  TOP_NAVBAR_HEIGHT,
+  ViewErrorFallback,
 } from '@/components'
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
-  JoystreamProvider,
   ActiveUserProvider,
   DraftsProvider,
-  PersonalDataProvider,
   EditVideoSheetProvider,
-  useVideoEditSheetRouting,
-  useConnectionStatus,
-  useUser,
-  UploadManagerProvider,
+  JoystreamProvider,
+  PersonalDataProvider,
   TransactionManagerProvider,
-  DialogProvider,
+  UploadManagerProvider,
+  useConnectionStatus,
   useDialog,
+  useUser,
+  useVideoEditSheetRouting,
 } from '@/hooks'
 import { isAllowedBrowser } from '@/utils/broswer'
 
 import {
   CreateEditChannelView,
+  CreateMemberView,
   EditVideoSheet,
   MyUploadsView,
   MyVideosView,
-  SignInView,
   SignInJoinView,
-  CreateMemberView,
+  SignInView,
 } from '.'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()

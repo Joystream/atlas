@@ -6,7 +6,7 @@ import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import { StepFooter, StepWrapper } from './SignInSteps.style'
-import { TermsBox, TextWrapper, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
+import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
 
 import { TermsOfService } from '../TermsOfService'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ActionBarProps, ActionBar } from './ActionBar'
+import { ActionBar, ActionBarProps } from './ActionBar'
 import { ActionBarTransactionWrapper, StyledCheckout } from './ActionBarTransaction.style'
 
 import { Step } from '../Checkout/Checkout'

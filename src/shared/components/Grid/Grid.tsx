@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { sizes, media } from '../../theme'
+import { media, sizes } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)

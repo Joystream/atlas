@@ -4,14 +4,14 @@ import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
 import {
-  StepWrapper,
-  StepStatus,
-  StepNumber,
-  StepDetails,
-  Overhead,
   FileName,
-  Thumbnail,
+  Overhead,
+  StepDetails,
+  StepNumber,
+  StepStatus,
+  StepWrapper,
   StyledProgress,
+  Thumbnail,
 } from './FileStep.style'
 
 import { IconButton } from '../IconButton'

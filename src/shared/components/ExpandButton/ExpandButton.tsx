@@ -4,7 +4,7 @@ import React from 'react'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
-import { IconButtonProps, IconButton } from '../IconButton'
+import { IconButton, IconButtonProps } from '../IconButton'
 
 type ExpandButtonProps = {
   expanded?: boolean

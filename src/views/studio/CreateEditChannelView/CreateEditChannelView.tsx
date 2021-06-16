@@ -9,15 +9,15 @@ import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } fro
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import {
-  useUser,
-  useJoystream,
-  useSnackbar,
-  useUploadsManager,
-  useEditVideoSheet,
-  useDisplayDataLostWarning,
-  useTransactionManager,
   useAsset,
   useConnectionStatus,
+  useDisplayDataLostWarning,
+  useEditVideoSheet,
+  useJoystream,
+  useSnackbar,
+  useTransactionManager,
+  useUploadsManager,
+  useUser,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import {
@@ -40,10 +40,10 @@ import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/Ch
 import {
   InnerFormContainer,
   StyledAvatar,
-  StyledTitleSection,
-  TitleContainer,
   StyledHeaderTextField,
   StyledSubTitle,
+  StyledTitleSection,
+  TitleContainer,
 } from './CreateEditChannelView.style'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [

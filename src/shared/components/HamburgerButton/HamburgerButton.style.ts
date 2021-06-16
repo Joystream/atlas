@@ -1,7 +1,7 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
-import { colors, sizes, zIndex, media } from '../../theme'
+import { colors, media, sizes, zIndex } from '../../theme'
 
 type HamburgerInnerProps = {
   active: boolean

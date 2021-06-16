@@ -7,14 +7,14 @@ import { transitions } from '@/shared/theme'
 
 import {
   CoverImage,
-  EditableControls,
-  EditCoverDesktopOverlay,
+  CoverWrapper,
   EditButtonMessage,
+  EditCoverDesktopOverlay,
+  EditCoverMobileButton,
+  EditableControls,
+  FailedUploadContainer,
   Media,
   MediaWrapper,
-  CoverWrapper,
-  EditCoverMobileButton,
-  FailedUploadContainer,
 } from './ChannelCover.style'
 
 import { Text } from '../Text'

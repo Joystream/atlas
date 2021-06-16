@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 
 import { SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/shared/icons'
 
-import { StyledTitleText, StyledDescriptionText, MessageIconWrapper } from './MessageDialog.style'
+import { MessageIconWrapper, StyledDescriptionText, StyledTitleText } from './MessageDialog.style'
 
 import { ActionDialog, ActionDialogProps } from '../ActionDialog/ActionDialog'
 

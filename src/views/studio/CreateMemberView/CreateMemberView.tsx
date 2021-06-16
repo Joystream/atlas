@@ -10,7 +10,7 @@ import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables 
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
-import { useUser, useConnectionStatus, useDialog } from '@/hooks'
+import { useConnectionStatus, useDialog, useUser } from '@/hooks'
 import { MemberId } from '@/joystream-lib'
 import { Spinner } from '@/shared/components'
 import { TextArea } from '@/shared/components/TextArea'
@@ -19,13 +19,13 @@ import { Logger } from '@/utils/logger'
 
 import {
   Form,
-  StyledButton,
-  Wrapper,
   Header,
   Hero,
-  SubTitle,
   StyledAvatar,
+  StyledButton,
   StyledTextField,
+  SubTitle,
+  Wrapper,
 } from './CreateMemberView.style'
 
 type Inputs = {

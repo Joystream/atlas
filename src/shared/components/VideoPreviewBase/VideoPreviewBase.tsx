@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks'
@@ -10,11 +10,11 @@ import {
   SvgGlyphEdit,
   SvgGlyphHide,
   SvgGlyphMore,
+  SvgGlyphPlay,
   SvgGlyphTrash,
   SvgLargeEdit,
-  SvgOutlineVideo,
   SvgLargeUploadFailed,
-  SvgGlyphPlay,
+  SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -22,34 +22,34 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { PullUp } from './PullUp'
 import {
+  Anchor,
   AvatarContainer,
+  ChannelHandle,
   Container,
   CoverContainer,
-  InfoContainer,
-  MetaContainer,
-  TextContainer,
-  CoverWrapper,
-  ChannelHandle,
   CoverDurationOverlay,
   CoverHoverOverlay,
+  CoverIconWrapper,
   CoverImage,
+  CoverImageContainer,
+  CoverNoImage,
+  CoverPlaceholder,
+  CoverThumbnailUploadFailed,
+  CoverTopLeftContainer,
+  CoverVideoPublishingStateOverlay,
+  CoverWrapper,
+  InfoContainer,
+  KebabMenuIconContainer,
+  MetaContainer,
   MetaText,
   ProgressBar,
   ProgressOverlay,
-  StyledAvatar,
-  TitleHeader,
-  Anchor,
-  CoverPlaceholder,
-  SpacedPlaceholder,
-  CoverImageContainer,
-  CoverVideoPublishingStateOverlay,
-  CoverNoImage,
-  CoverThumbnailUploadFailed,
-  KebabMenuIconContainer,
-  CoverTopLeftContainer,
-  RemoveButton,
   PublishingStateText,
-  CoverIconWrapper,
+  RemoveButton,
+  SpacedPlaceholder,
+  StyledAvatar,
+  TextContainer,
+  TitleHeader,
 } from './VideoPreviewBase.styles'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'

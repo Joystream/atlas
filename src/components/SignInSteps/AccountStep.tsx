@@ -8,29 +8,29 @@ import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  StyledSpinner,
-  AccountStepImg,
-  AccountsWrapper,
-  AccountWrapper,
-  AccountInfo,
-  IconWrapper,
-  OrderedSteps,
-  OrderedStep,
-  IconGroup,
   AccountAddress,
-  StyledRadioButton,
+  AccountInfo,
+  AccountStepImg,
+  AccountWrapper,
+  AccountsWrapper,
+  IconGroup,
+  IconWrapper,
+  OrderedStep,
+  OrderedSteps,
   StyledButton,
-  SubTitle,
+  StyledRadioButton,
+  StyledSpinner,
   StyledStepWrapper,
+  SubTitle,
 } from './AccountStep.style'
 import {
-  StepFooter,
   BottomBarIcon,
+  StepFooter,
   StepSubTitle,
   StepTitle,
   StepWrapper,
-  StyledPolkadotLogo,
   StyledJoystreamLogo,
+  StyledPolkadotLogo,
 } from './SignInSteps.style'
 
 type AccountStepProps = {

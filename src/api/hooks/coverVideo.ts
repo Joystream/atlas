@@ -1,4 +1,4 @@
-import { CoverVideo, AllChannelFieldsFragment } from '@/api/queries'
+import { AllChannelFieldsFragment, CoverVideo } from '@/api/queries'
 import { mockCoverVideo } from '@/mocking/data/mockCoverVideo'
 import { MockVideo } from '@/mocking/data/mockVideos'
 

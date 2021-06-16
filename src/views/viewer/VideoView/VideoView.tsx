@@ -2,7 +2,7 @@ import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useVideo, useAddVideoView } from '@/api/hooks'
+import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
@@ -13,17 +13,17 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 
 import {
   ChannelContainer,
-  StyledViewWrapper,
   DescriptionContainer,
   DescriptionPlaceholder,
   InfoContainer,
+  LicenseContainer,
   Meta,
   MoreVideosContainer,
   MoreVideosHeader,
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
-  LicenseContainer,
+  StyledViewWrapper,
   TitleText,
 } from './VideoView.style'
 

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import { colors, sizes, media, typography } from '@/shared/theme'
+import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { BaseDialog } from '../BaseDialog'
 

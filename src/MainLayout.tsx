@@ -1,8 +1,8 @@
 import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import { TopbarBase, StudioLoading } from '@/components'
+import { StudioLoading, TopbarBase } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
 import { useDialog } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'

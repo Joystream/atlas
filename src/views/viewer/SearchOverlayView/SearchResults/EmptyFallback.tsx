@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Text } from '@/shared/components'
 import { SvgEmptyStateIllustration } from '@/shared/illustrations'
-import { sizes, colors } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;

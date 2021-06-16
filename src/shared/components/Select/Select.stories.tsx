@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
-import { Story, Meta } from '@storybook/react'
+import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { SelectProps, SelectItem, Select } from '.'
+import { Select, SelectItem, SelectProps } from '.'
 
 const items: SelectItem[] = [
   { name: 'first', value: 'first' },

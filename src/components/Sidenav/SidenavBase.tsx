@@ -8,20 +8,20 @@ import { HamburgerButton } from '@/shared/components/HamburgerButton'
 import { transitions } from '@/shared/theme'
 
 import {
-  SidebarNav,
-  SidebarNavList,
-  SidebarNavItem,
-  SidebarNavLink,
+  ButtonGroup,
   DrawerOverlay,
-  SubItem,
-  SubItemsWrapper,
+  LegalLink,
+  LegalLinksWrapper,
   Logo,
   LogoLink,
-  ButtonGroup,
-  LegalLink,
+  SidebarNav,
   SidebarNavFooter,
+  SidebarNavItem,
+  SidebarNavLink,
+  SidebarNavList,
   StudioText,
-  LegalLinksWrapper,
+  SubItem,
+  SubItemsWrapper,
 } from './SidenavBase.style'
 
 type NavSubitem = {

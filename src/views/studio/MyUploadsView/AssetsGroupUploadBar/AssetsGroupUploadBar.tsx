@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { useChannel, useVideo } from '@/api/hooks'
 import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
@@ -7,14 +7,14 @@ import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 import { AssetGroupUploadBarPlaceholder } from '@/views/studio/MyUploadsView/AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
 
 import {
-  Container,
-  AssetsGroupUploadBarContainer,
-  ProgressBar,
-  Thumbnail,
-  AssetsInfoContainer,
-  UploadInfoContainer,
   AssetsDrawerContainer,
+  AssetsGroupUploadBarContainer,
+  AssetsInfoContainer,
+  Container,
+  ProgressBar,
   StyledExpandButton,
+  Thumbnail,
+  UploadInfoContainer,
 } from './AssetsGroupUploadBar.style'
 
 import { AssetLine } from '../AssetLine'

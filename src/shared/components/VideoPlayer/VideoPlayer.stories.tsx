@@ -4,7 +4,7 @@ import React from 'react'
 
 import { colors } from '@/shared/theme'
 
-import { VideoPlayerProps, VideoPlayer } from './VideoPlayer'
+import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
 
 export default {
   title: 'Shared/V/VideoPlayer',

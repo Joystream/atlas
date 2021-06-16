@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 import { Text } from '../Text'

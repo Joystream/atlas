@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { SVG, Background, Trail, StyledPath } from './CircularProgressbar.style'
+import { Background, SVG, StyledPath, Trail } from './CircularProgressbar.style'
 
 export const VIEWBOX_WIDTH = 100
 export const VIEWBOX_HEIGHT = 100

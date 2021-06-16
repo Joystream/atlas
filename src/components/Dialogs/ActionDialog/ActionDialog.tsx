@@ -4,12 +4,12 @@ import { Button } from '@/shared/components'
 
 import {
   ActionsContainer,
-  ButtonsContainer,
   AdditionalActionsContainer,
+  ButtonsContainer,
   StyledPrimaryButton,
 } from './ActionDialog.style'
 
-import { BaseDialogProps, BaseDialog } from '../BaseDialog'
+import { BaseDialog, BaseDialogProps } from '../BaseDialog'
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode

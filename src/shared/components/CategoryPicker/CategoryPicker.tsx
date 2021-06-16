@@ -2,7 +2,7 @@ import React from 'react'
 
 import { VideoCategoryFieldsFragment } from '@/api/queries'
 
-import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
+import { Container, StyledPlaceholder, StyledToggleButton } from './CategoryPicker.style'
 
 type CategoryPickerProps = {
   categories?: VideoCategoryFieldsFragment[]

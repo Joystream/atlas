@@ -1,34 +1,34 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
-import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
+import { useAsset, useDisplayDataLostWarning, useEditVideoSheet, useUser } from '@/hooks'
+import { Button, ExpandButton, IconButton, Placeholder, Text } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  StyledTopbarBase,
-  StudioTopbarContainer,
-  MemberInfoContainer,
-  MemberInnerContainer,
+  AvatarPlaceholder,
+  ChannelInfoContainer,
+  DrawerChannelsContainer,
+  DrawerContainer,
   DrawerMemberText,
   DrawerMemberTitleText,
-  StyledChannelInfoText,
-  MemberTextContainer,
-  ChannelInfoContainer,
-  NewChannelAvatar,
-  StyledAvatar,
-  TextContainer,
-  DrawerContainer,
-  DrawerChannelsContainer,
-  NewChannel,
-  NewChannelIconContainer,
-  StyledLink,
-  AvatarPlaceholder,
   GlyphCheckContainer,
+  MemberInfoContainer,
+  MemberInnerContainer,
+  MemberTextContainer,
+  NewChannel,
+  NewChannelAvatar,
+  NewChannelIconContainer,
+  StudioTopbarContainer,
+  StyledAvatar,
+  StyledChannelInfoText,
+  StyledLink,
+  StyledTopbarBase,
+  TextContainer,
 } from './StudioTopbar.style'
 
 type StudioTopbarProps = {

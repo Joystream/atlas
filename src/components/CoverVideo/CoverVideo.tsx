@@ -10,22 +10,22 @@ import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } fr
 import { transitions } from '@/shared/theme'
 
 import {
+  ButtonsContainer,
   Container,
+  ControlsContainer,
   HorizontalGradientOverlay,
   InfoContainer,
   Media,
   MediaWrapper,
   PlayButton,
   PlayerContainer,
+  PlayerPlaceholder,
   SoundButton,
   StyledChannelLink,
-  TitleContainer,
-  VerticalGradientOverlay,
   Title,
+  TitleContainer,
   TitlePlaceholder,
-  PlayerPlaceholder,
-  ControlsContainer,
-  ButtonsContainer,
+  VerticalGradientOverlay,
 } from './CoverVideo.style'
 
 const VIDEO_PLAYBACK_DELAY = 1250
