@@ -1,34 +1,64 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import { AssetAvailability, DataObject } from '@/api/queries'
 import { useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 
-export const useAsset = () => {
+type UseAssetData = [
+  {
+    url?: string
+    error: boolean
+    isLoading: boolean
+  },
+  (availability?: AssetAvailability, assetUrls?: string[], dataObject?: DataObject | null) => void
+]
+
+export const useAsset = (): UseAssetData => {
   const { getStorageProvider } = useStorageProviders()
+  const [error, setError] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [url, setUrl] = useState<string | undefined>(undefined)
+
+  const testImage = (assetUrl: string) => {
+    const img = new Image()
+    img.addEventListener('error', () => {
+      setIsLoading(false)
+      setError(true)
+    })
+    img.addEventListener('load', () => {
+      setIsLoading(false)
+      setUrl(assetUrl)
+    })
+    img.src = assetUrl
+  }
 
   const getAssetUrl = useCallback(
     (availability?: AssetAvailability, assetUrls?: string[], dataObject?: DataObject | null) => {
-      if (availability !== AssetAvailability.Accepted) {
-        return
-      }
-      if (assetUrls?.length) {
-        return assetUrls[0]
-      }
-      if (!dataObject?.joystreamContentId) {
-        return
-      }
-      if (dataObject?.liaison?.isActive && dataObject?.liaison?.metadata) {
-        return createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata)
-      }
+      if (!url && !isLoading) {
+        if (availability !== AssetAvailability.Accepted) {
+          return
+        }
+        if (assetUrls?.length) {
+          testImage(assetUrls[0])
+          return
+        }
+        if (!dataObject?.joystreamContentId) {
+          return
+        }
+        if (dataObject?.liaison?.isActive && dataObject?.liaison?.metadata) {
+          testImage(createStorageNodeUrl(dataObject.joystreamContentId, dataObject?.liaison?.metadata))
+          return
+        }
 
-      const storageProvider = getStorageProvider()
-      if (storageProvider?.url) {
-        return createStorageNodeUrl(dataObject.joystreamContentId, storageProvider.url)
+        const storageProvider = getStorageProvider()
+        if (storageProvider?.url) {
+          testImage(createStorageNodeUrl(dataObject.joystreamContentId, storageProvider.url))
+          return
+        }
       }
     },
-    [getStorageProvider]
+    [url, isLoading, getStorageProvider]
   )
 
-  return { getAssetUrl }
+  return [{ url, error, isLoading }, getAssetUrl]
 }
