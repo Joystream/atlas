@@ -8,7 +8,7 @@ const DATE_FORMAT = 'dd/MM/yyyy'
 
 export type DatepickerProps = {
   name?: string
-  value?: Date
+  value?: Date | null
   required?: boolean
   error?: boolean
   disabled?: boolean

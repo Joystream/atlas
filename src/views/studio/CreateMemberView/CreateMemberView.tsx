@@ -39,7 +39,11 @@ export const CreateMemberView = () => {
   const { nodeConnectionStatus } = useConnectionStatus()
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -150,11 +154,10 @@ export const CreateMemberView = () => {
       <Form onSubmit={handleCreateMember}>
         <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
-          name="avatar"
-          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          ref={register(
+          {...register(
+            'avatar',
             textFieldValidation({
               name: 'Avatar URL',
               pattern: URL_PATTERN,
@@ -164,14 +167,15 @@ export const CreateMemberView = () => {
               validate: debouncedAvatarValidation.current,
             })
           )}
+          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
         <StyledTextField
-          name="handle"
           placeholder="johnnysmith"
           label="Member handle"
-          ref={register(
+          {...register(
+            'handle',
             textFieldValidation({
               name: 'Member handle',
               maxLength: 40,
@@ -188,11 +192,10 @@ export const CreateMemberView = () => {
           }
         />
         <TextArea
-          name="about"
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
-          ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
+          {...register('about', textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />

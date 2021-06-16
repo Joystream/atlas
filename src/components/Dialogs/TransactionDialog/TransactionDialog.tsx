@@ -45,12 +45,11 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
       ? TRANSACTION_STEPS_DETAILS[status]
       : null
 
-  const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
+  const canCancel = status === ExtrinsicStatus.ProcessingAssets || status === ExtrinsicStatus.Unsigned
 
   const transactionStepsWithoutProcessingAssets = Object.values(TRANSACTION_STEPS_DETAILS).filter(
     (step) => step.title !== TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.ProcessingAssets].title
   )
-
   return (
     <ActionDialog
       showDialog={!!stepDetails}
