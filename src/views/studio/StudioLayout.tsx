@@ -170,23 +170,21 @@ const StudioLayoutWrapper: React.FC = () => {
         navigate(absoluteRoutes.studio.index())
       }}
     >
-      <DialogProvider>
-        <ActiveUserProvider>
-          <PersonalDataProvider>
-            <UploadManagerProvider>
-              <DraftsProvider>
-                <EditVideoSheetProvider>
-                  <JoystreamProvider>
-                    <TransactionManagerProvider>
-                      <StudioLayout />
-                    </TransactionManagerProvider>
-                  </JoystreamProvider>
-                </EditVideoSheetProvider>
-              </DraftsProvider>
-            </UploadManagerProvider>
-          </PersonalDataProvider>
-        </ActiveUserProvider>
-      </DialogProvider>
+      <ActiveUserProvider>
+        <PersonalDataProvider>
+          <UploadManagerProvider>
+            <DraftsProvider>
+              <EditVideoSheetProvider>
+                <JoystreamProvider>
+                  <TransactionManagerProvider>
+                    <StudioLayout />
+                  </TransactionManagerProvider>
+                </JoystreamProvider>
+              </EditVideoSheetProvider>
+            </DraftsProvider>
+          </UploadManagerProvider>
+        </PersonalDataProvider>
+      </ActiveUserProvider>
     </ErrorBoundary>
   )
 }

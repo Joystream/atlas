@@ -12,3 +12,5 @@ export const isChromiumBased = (): boolean => !!window.chrome
 // it will check Firefox's API to install add-ons which as of now all firefox versions have
 // to detect if the users browser it's one where the polkadot extension can be installed on
 export const isAllowedBrowser = () => isFirefox() || isChromiumBased()
+
+export const isBrowserOutdated = !('ResizeObserver' in window) || !('IntersectionObserver' in window)
