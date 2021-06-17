@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { SvgBgPattern } from '@/shared/illustrations'
-import { zIndex, transitions, media } from '@/shared/theme'
+import { media, transitions, zIndex } from '@/shared/theme'
 
 const PATTERN_OFFSET = {
   SMALL: '-150px',

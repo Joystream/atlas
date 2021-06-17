@@ -4,10 +4,10 @@ import { usePersonalData } from '@/hooks'
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {
-  MessageWrapper,
-  MessageTitle,
   MessageButton,
   MessageDescription,
+  MessageTitle,
+  MessageWrapper,
   StyledSvgGlyphInfo,
 } from './DismissibleMessage.style'
 

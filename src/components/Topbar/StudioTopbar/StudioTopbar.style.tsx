@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar, Text, Placeholder } from '@/shared/components'
-import { media, colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { Avatar, Placeholder, Text } from '@/shared/components'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { TopbarBase } from '../TopbarBase'
 import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'

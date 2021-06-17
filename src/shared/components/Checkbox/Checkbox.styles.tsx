@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
 import { SvgGlyphCheck } from '@/shared/icons'
-import { sizes, colors, transitions } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/shared/theme'
 
 import { HelperText } from '../HelperText'
 

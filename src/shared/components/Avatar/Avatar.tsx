@@ -7,12 +7,12 @@ import { transitions } from '@/shared/theme'
 import {
   AvatarSize,
   Container,
-  StyledImage,
-  StyledTransitionGroup,
-  StyledPlaceholder,
-  SilhouetteAvatar,
   EditButton,
   NewChannelAvatar,
+  SilhouetteAvatar,
+  StyledImage,
+  StyledPlaceholder,
+  StyledTransitionGroup,
 } from './Avatar.style'
 
 export type AvatarProps = {

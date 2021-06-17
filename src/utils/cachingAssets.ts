@@ -1,4 +1,4 @@
-import { ApolloClient, gql, Reference } from '@apollo/client'
+import { ApolloClient, Reference, gql } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
 import { AssetAvailability, VideoEdge, VideoFieldsFragment, VideoFieldsFragmentDoc } from '@/api/queries'

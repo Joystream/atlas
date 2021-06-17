@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgGlyphClose, SvgAlertError, SvgLargeUploadImage, SvgLargeUploadVideo, SvgGlyphUpload } from '@/shared/icons'
+import { SvgAlertError, SvgGlyphClose, SvgGlyphUpload, SvgLargeUploadImage, SvgLargeUploadVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
 import {

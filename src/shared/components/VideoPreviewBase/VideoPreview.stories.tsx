@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { OverlayManagerProvider } from '@/hooks'
 import { Logger } from '@/utils/logger'
 
-import { VideoPreviewBaseProps, VideoPreviewBase } from './VideoPreviewBase'
+import { VideoPreviewBase, VideoPreviewBaseProps } from './VideoPreviewBase'
 
 export default {
   title: 'Shared/V/VideoPreview',

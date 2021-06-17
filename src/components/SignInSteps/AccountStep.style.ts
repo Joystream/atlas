@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { Button, Text, RadioButton } from '@/shared/components'
+import { Button, RadioButton, Text } from '@/shared/components'
 import { Spinner } from '@/shared/components/Spinner'
 import { SvgAccountCreationIllustration } from '@/shared/illustrations'
-import { sizes, colors, typography, transitions, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { StepWrapper } from './SignInSteps.style'
 

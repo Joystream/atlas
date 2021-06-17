@@ -1,16 +1,16 @@
-import React, { useRef, useState, useEffect, ReactNode } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {
+  SnackbarActionButton,
+  SnackbarButtonsContainer,
+  SnackbarDescription,
+  SnackbarHeader,
+  SnackbarIconContainer,
+  SnackbarTitle,
   SnackbarWrapper,
   StyledInnerWrapper,
-  SnackbarHeader,
-  SnackbarTitle,
-  SnackbarButtonsContainer,
-  SnackbarActionButton,
-  SnackbarDescription,
-  SnackbarIconContainer,
 } from './Snackbar.style'
 
 import { IconButton } from '../IconButton'

@@ -4,7 +4,7 @@ import React from 'react'
 
 import { colors } from '@/shared/theme'
 
-import { CarouselProps, Carousel } from './Carousel'
+import { Carousel, CarouselProps } from './Carousel'
 
 export default {
   title: 'Shared/C/Carousel',

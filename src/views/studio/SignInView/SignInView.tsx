@@ -4,19 +4,19 @@ import { useNavigate } from 'react-router'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser, useConnectionStatus } from '@/hooks'
+import { useConnectionStatus, useUser } from '@/hooks'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 
 import {
+  CardWrapper,
+  HandleText,
   Header,
   Hero,
   MemberGrid,
+  StyledAvatar,
+  StyledButton,
   SubTitle,
   Wrapper,
-  StyledButton,
-  CardWrapper,
-  HandleText,
-  StyledAvatar,
 } from './SignInView.style'
 
 export const SignInView = () => {

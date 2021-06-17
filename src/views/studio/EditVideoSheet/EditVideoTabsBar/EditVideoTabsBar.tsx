@@ -5,12 +5,12 @@ import { IconButton } from '@/shared/components'
 import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
 
 import {
+  AddDraftButtonContainer,
   ButtonsContainer,
   Tab,
-  TabsContainer,
   TabTitle,
+  TabsContainer,
   Topbar,
-  AddDraftButtonContainer,
 } from './EditVideoTabsBar.style'
 
 type TabsBarProps = {

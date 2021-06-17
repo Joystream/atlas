@@ -3,7 +3,7 @@ import React from 'react'
 
 import { PersonalDataProvider, usePersonalData } from '@/hooks'
 
-import { DismissibleMessageProps, DismissibleMessage } from './DismissibleMessage'
+import { DismissibleMessage, DismissibleMessageProps } from './DismissibleMessage'
 
 import { Button } from '../Button'
 

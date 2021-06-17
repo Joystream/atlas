@@ -1,9 +1,9 @@
-import { css, SerializedStyles } from '@emotion/react'
+import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
 
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
-import { colors, transitions, typography, media } from '@/shared/theme'
+import { colors, media, transitions, typography } from '@/shared/theme'
 
 import { Placeholder } from '../Placeholder'
 

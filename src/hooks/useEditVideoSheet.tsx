@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useOverlayManager, useDrafts, useAuthorizedUser } from '@/hooks'
+import { useAuthorizedUser, useDrafts, useOverlayManager } from '@/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { RoutingState } from '@/types/routing'
 import { createId } from '@/utils/createId'

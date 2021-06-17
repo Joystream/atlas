@@ -1,6 +1,6 @@
 import { QueryHookOptions } from '@apollo/client'
 
-import { useSearchQuery, SearchQueryVariables, SearchQuery } from '@/api/queries'
+import { SearchQuery, SearchQueryVariables, useSearchQuery } from '@/api/queries'
 
 type Opts = QueryHookOptions<SearchQuery>
 const useSearch = (variables: SearchQueryVariables, opts?: Opts) => {

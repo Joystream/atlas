@@ -1,22 +1,22 @@
 import axios, { AxiosError } from 'axios'
-import { throttle, debounce } from 'lodash'
-import React, { useCallback, useContext, useState, useEffect, useRef } from 'react'
+import { debounce, throttle } from 'lodash'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar, useUser, useStorageProviders } from '@/hooks'
+import { useSnackbar, useStorageProviders, useUser } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
 import { useUploadsManagerStore } from './store'
 import {
-  InputAssetUpload,
   AssetUploadWithProgress,
+  InputAssetUpload,
+  StartFileUploadOptions,
   UploadManagerValue,
   UploadsProgressRecord,
-  StartFileUploadOptions,
 } from './types'
 
 const RETRIES_COUNT = 3

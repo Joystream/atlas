@@ -4,7 +4,7 @@ import React from 'react'
 import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { ExtrinsicStatus } from '@/joystream-lib'
 
-import { TransactionDialogProps, TransactionDialog } from './TransactionDialog'
+import { TransactionDialog, TransactionDialogProps } from './TransactionDialog'
 
 export default {
   title: 'General/TransactionDialog',

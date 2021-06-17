@@ -4,7 +4,7 @@ import { SvgOutlineVideo } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 
 import { Container, PlayOverlay } from './VideoPlayer.style'
-import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
+import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   className?: string

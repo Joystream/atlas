@@ -1,4 +1,4 @@
-import { graphql, GraphQLHandler } from 'msw'
+import { GraphQLHandler, graphql } from 'msw'
 
 import {
   GetBasicChannelDocument,
@@ -15,35 +15,35 @@ import {
   GetChannelsConnectionQueryVariables,
   GetChannelsDocument,
   GetChannelsQuery,
+  GetMembershipDocument,
+  GetMembershipQuery,
+  GetMembershipQueryVariables,
+  GetMembershipsDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
+  GetVideoCategoriesDocument,
+  GetVideoCategoriesQuery,
   GetVideoCountDocument,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   GetVideoDocument,
   GetVideoQuery,
   GetVideoQueryVariables,
+  GetVideoViewsDocument,
+  GetVideoViewsQuery,
+  GetVideoViewsQueryVariables,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
   GetVideosDocument,
   GetVideosQuery,
   GetVideosQueryVariables,
-  GetVideoViewsDocument,
-  GetVideoViewsQuery,
-  GetVideoViewsQueryVariables,
-  GetMembershipQuery,
-  GetMembershipQueryVariables,
-  GetMembershipDocument,
-  GetMembershipsQuery,
-  GetMembershipsQueryVariables,
-  GetMembershipsDocument,
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
-  GetVideoCategoriesDocument,
-  GetVideoCategoriesQuery,
 } from '@/api/queries'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
-import { mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
+import { mockCategories, mockChannels, mockMemberships, mockVideos } from '@/mocking/data'
 
 import {
   createChannelFollowsAccessor,

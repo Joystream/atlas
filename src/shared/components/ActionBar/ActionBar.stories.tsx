@@ -3,8 +3,8 @@ import React from 'react'
 
 import { SvgGlyphInfo } from '@/shared/icons'
 
-import { ActionBarProps, ActionBar } from './ActionBar'
-import { ActionBarTransactionProps, ActionBarTransaction } from './ActionBarTransaction'
+import { ActionBar, ActionBarProps } from './ActionBar'
+import { ActionBarTransaction, ActionBarTransactionProps } from './ActionBarTransaction'
 
 export default {
   title: 'Shared/A/ActionBar',

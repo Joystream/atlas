@@ -2,7 +2,7 @@ import React, { forwardRef, useState } from 'react'
 
 import { StyledTextArea } from './TextArea.style'
 
-import { InputBaseProps, InputBase } from '../InputBase'
+import { InputBase, InputBaseProps } from '../InputBase'
 
 export type TextAreaProps = {
   name?: string

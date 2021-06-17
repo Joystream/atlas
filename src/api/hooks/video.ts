@@ -1,12 +1,12 @@
-import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
+import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
-  useGetVideoQuery,
-  useAddVideoViewMutation,
-  GetVideoQuery,
   AddVideoViewMutation,
+  GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
+  useAddVideoViewMutation,
+  useGetVideoQuery,
   useGetVideosQuery,
 } from '@/api/queries'
 

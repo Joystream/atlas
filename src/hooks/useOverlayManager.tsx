@@ -1,7 +1,7 @@
-import { css, Global } from '@emotion/react'
+import { Global, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import React, { useContext, useState, useRef, useEffect, useCallback } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { transitions } from '@/shared/theme'
 

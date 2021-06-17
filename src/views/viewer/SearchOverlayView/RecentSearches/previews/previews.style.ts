@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { colors, sizes, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 const previewSubtextCss = css`
   margin-top: ${sizes(1)};

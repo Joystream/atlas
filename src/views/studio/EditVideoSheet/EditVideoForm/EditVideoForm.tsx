@@ -1,21 +1,21 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm, FieldNamesMarkedBoolean, FieldError, DeepMap } from 'react-hook-form'
+import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import {
-  useDrafts,
-  useAuthorizedUser,
-  EditVideoSheetTab,
-  useEditVideoSheetTabData,
   EditVideoFormFields,
-  useEditVideoSheet,
-  useDeleteVideo,
+  EditVideoSheetTab,
+  useAuthorizedUser,
   useConnectionStatus,
+  useDeleteVideo,
+  useDrafts,
+  useEditVideoSheet,
+  useEditVideoSheetTabData,
 } from '@/hooks'
 import {
   Checkbox,
@@ -30,17 +30,17 @@ import {
 } from '@/shared/components'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { SvgGlyphInfo } from '@/shared/icons'
-import { requiredValidation, pastDateValidation, textFieldValidation } from '@/utils/formValidationOptions'
+import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { Logger } from '@/utils/logger'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 
 import {
+  DeleteVideoButton,
+  DeleteVideoContainer,
+  FormWrapper,
   InputsContainer,
   StyledHeaderTextField,
   StyledRadioContainer,
-  DeleteVideoContainer,
-  DeleteVideoButton,
-  FormWrapper,
 } from './EditVideoForm.style'
 
 const visibilityOptions: SelectItem<boolean>[] = [

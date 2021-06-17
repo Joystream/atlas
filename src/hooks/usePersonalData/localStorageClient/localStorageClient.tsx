@@ -2,16 +2,16 @@ import { promisify } from '@/utils/data'
 import { readFromLocalStorage, writeToLocalStorage } from '@/utils/localStorage'
 
 import {
-  CompletedVideo,
   COMPLETED_VIDEO,
-  FollowedChannel,
-  InterruptedVideo,
-  INTERRUPTED_VIDEO,
-  PersonalDataClient,
-  WatchedVideo,
-  RecentSearch,
+  CompletedVideo,
   DismissedMessage,
+  FollowedChannel,
+  INTERRUPTED_VIDEO,
+  InterruptedVideo,
+  PersonalDataClient,
   REMOVED_VIDEO,
+  RecentSearch,
+  WatchedVideo,
 } from './types'
 
 const watchedVideos = promisify(() => readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? [])

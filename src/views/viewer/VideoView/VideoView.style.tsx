@@ -3,7 +3,7 @@ import { fluidRange } from 'polished'
 
 import { ViewWrapper } from '@/components'
 import { Placeholder, Text } from '@/shared/components'
-import { sizes, colors, typography, breakpoints, media } from '@/shared/theme'
+import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;

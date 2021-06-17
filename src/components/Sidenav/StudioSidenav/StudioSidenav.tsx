@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import { useDrafts, useAuthorizedUser, useEditVideoSheet, useUploadsManager, useDisplayDataLostWarning } from '@/hooks'
+import { useAuthorizedUser, useDisplayDataLostWarning, useDrafts, useEditVideoSheet, useUploadsManager } from '@/hooks'
 import { Button } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'

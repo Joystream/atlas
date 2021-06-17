@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgEmptyVideosIllustration, SvgTheaterMaskIllustration } from '@/shared/illustrations'
-import { sizes, colors, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {

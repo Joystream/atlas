@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 

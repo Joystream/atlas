@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
-import { BasicMembershipFieldsFragment, BasicChannelFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import { useUser } from '@/hooks'
 import { Button, RadioButton } from '@/shared/components'
 

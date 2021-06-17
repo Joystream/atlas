@@ -6,14 +6,14 @@ import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  ChannelsWrapper,
-  ChannelsTitle,
-  ChannelsList,
   ChannelsItem,
-  ShowMoreButton,
-  StyledChannelLink,
-  ShowMoreIconWrapper,
+  ChannelsList,
+  ChannelsTitle,
+  ChannelsWrapper,
   FollowedChannelsWrapper,
+  ShowMoreButton,
+  ShowMoreIconWrapper,
+  StyledChannelLink,
 } from './FollowedChannels.style'
 
 const MAX_CHANNELS = 4

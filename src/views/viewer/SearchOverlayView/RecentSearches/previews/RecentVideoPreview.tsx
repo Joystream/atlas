@@ -8,12 +8,12 @@ import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 import {
-  PreviewSubtextPlaceholder,
   PreviewContainer,
+  PreviewSubtext,
+  PreviewSubtextPlaceholder,
+  PreviewTitlePlaceholder,
   VideoImage,
   VideoImagePlaceholder,
-  PreviewTitlePlaceholder,
-  PreviewSubtext,
 } from './previews.style'
 
 type RecentVideoPreviewProps = {

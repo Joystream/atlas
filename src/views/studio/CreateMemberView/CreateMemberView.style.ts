@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { StudioContainer } from '@/components'
-import { Button, Text, Avatar, TextField } from '@/shared/components'
+import { Avatar, Button, Text, TextField } from '@/shared/components'
 import { media, sizes } from '@/shared/theme'
 
 export const Header = styled.header`

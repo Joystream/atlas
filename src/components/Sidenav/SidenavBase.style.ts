@@ -5,7 +5,7 @@ import { Link, LinkProps } from 'react-router-dom'
 import { Text } from '@/shared/components'
 import { badgeStyles } from '@/shared/components/Badge'
 import { SvgJoystreamFullLogo } from '@/shared/illustrations'
-import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24

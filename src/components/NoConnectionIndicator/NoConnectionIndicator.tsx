@@ -6,7 +6,7 @@ import { Text } from '@/shared/components'
 import { SvgAlertWarning } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
-import { IndicatorWrapper, TextWrapper, IconWrapper } from './NoConnectionIndicator.style'
+import { IconWrapper, IndicatorWrapper, TextWrapper } from './NoConnectionIndicator.style'
 
 export type NoConnectionIndicatorProps = {
   nodeConnectionStatus: ConnectionStatus

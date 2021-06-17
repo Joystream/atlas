@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import { colors } from '@/shared/theme'
 
-import { HamburgerButtonProps, HamburgerButton } from './HamburgerButton'
+import { HamburgerButton, HamburgerButtonProps } from './HamburgerButton'
 
 export default {
   title: 'Shared/H/HamburgerButton',
