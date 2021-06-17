@@ -60,14 +60,26 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       }
     })
 
-    if (missingAssetsCount > 0) {
-      displaySnackbar({
-        title: `(${missingAssetsCount}) Asset${missingAssetsCount > 1 ? 's' : ''} waiting to resume upload`,
-        description: 'Reconnect files to fix the issue',
-        actionText: 'See',
-        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-        iconType: 'warning',
+        if (assetIsNotCompleted && assetIsAccepted) {
+          updateAsset(asset.contentId, 'completed')
+        }
+        if (assetIsNotCompleted && !assetIsAccepted) {
+          updateAsset(asset.contentId, 'missing')
+          missingAssetsCount++
+        } else {
+          setIgnoredAssetsIds((ignored) => [...ignored, asset.contentId])
+        }
       })
+
+      if (missingAssetsCount > 0) {
+        displaySnackbar({
+          title: `(${missingAssetsCount}) Asset${missingAssetsCount > 1 ? 's' : ''} waiting to resume upload`,
+          description: 'Reconnect files to fix the issue',
+          actionText: 'See',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+          iconType: 'warning',
+        })
+      }
     }
   }, [channelUploadsState, displaySnackbar, navigate, updateAsset])
 

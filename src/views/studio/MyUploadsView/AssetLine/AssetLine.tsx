@@ -59,6 +59,16 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
     secondaryButtonText: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
     exitButton: false,
   })
+  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useDialog({
+    title: 'Missing data',
+    description: 'Data for that asset is missing. Please reupload file from initial browser or make new transaction',
+    variant: 'warning',
+    onSecondaryButtonClick: () => {
+      closeMissingCropDataDialog()
+    },
+    secondaryButtonText: 'Close',
+    exitButton: false,
+  })
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
@@ -152,7 +162,15 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
     thumbnail: thumbnailDialogRef,
   }
   const reselectFile = () => {
-    asset.type === 'video' ? openFileSelect() : assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
+    if (asset.type === 'video') {
+      openFileSelect()
+      return
+    }
+    if (!asset.imageCropData) {
+      openMissingCropDataDialog()
+      return
+    }
+    assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
   }
 
   const renderStatusMessage = (asset: AssetUploadWithProgress) => {
