@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useAuthorizedUser, useDrafts } from '@/hooks'
+import { AssetType, useAsset, useAuthorizedUser, useDrafts } from '@/hooks'
 import {
   VideoPreviewBase,
   VideoPreviewBaseMetaProps,
@@ -21,18 +21,24 @@ export type VideoPreviewProps = {
 
 export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
 
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
-  const avatarPhotoUrl = getAssetUrl(
-    video?.channel?.avatarPhotoAvailability,
-    video?.channel?.avatarPhotoUrls,
-    video?.channel?.avatarPhotoDataObject
-  )
+  useEffect(() => {
+    if (avatarPhotoError) {
+      Logger.error('Failed to load avatar')
+    }
+    if (thumbnailPhotoError) {
+      Logger.error('Failed to load video thumbnail')
+    }
+  }, [thumbnailPhotoError, avatarPhotoError])
+
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -64,18 +70,23 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
 
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
-  const avatarPhotoUrl = getAssetUrl(
-    video?.channel.avatarPhotoAvailability,
-    video?.channel.avatarPhotoUrls,
-    video?.channel.avatarPhotoDataObject
-  )
+  useEffect(() => {
+    if (avatarPhotoError) {
+      Logger.error('Failed to load avatar')
+    }
+    if (thumbnailPhotoError) {
+      Logger.error('Failed to load video thumbnail')
+    }
+  }, [thumbnailPhotoError, avatarPhotoError])
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 

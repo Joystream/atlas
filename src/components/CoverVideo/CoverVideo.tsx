@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { useCoverVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 import {
   ButtonsContainer,
@@ -36,7 +37,20 @@ export const CoverVideo: React.FC = () => {
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [displayControls, setDisplayControls] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+    entity: data.video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: mediaUrl, error: mediaError } = useAsset({ entity: data.video, assetType: AssetType.MEDIA })
+
+  useEffect(() => {
+    if (mediaError) {
+      Logger.error('Failed to load video')
+    }
+    if (thumbnailPhotoError) {
+      Logger.error('Failed to load video thumbnail')
+    }
+  }, [thumbnailPhotoError, mediaError])
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
@@ -60,13 +74,6 @@ export const CoverVideo: React.FC = () => {
   const handlePause = () => {
     setVideoPlaying(false)
   }
-
-  const thumbnailPhotoUrl = getAssetUrl(
-    data.video?.thumbnailPhotoAvailability,
-    data.video?.thumbnailPhotoUrls,
-    data.video?.thumbnailPhotoDataObject
-  )
-  const mediaUrl = getAssetUrl(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
 
   return (
     <Container>

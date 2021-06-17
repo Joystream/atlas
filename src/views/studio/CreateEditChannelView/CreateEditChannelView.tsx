@@ -9,6 +9,7 @@ import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } fro
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import {
+  AssetType,
   useAsset,
   useConnectionStatus,
   useDisplayDataLostWarning,
@@ -34,6 +35,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
+import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -83,12 +85,28 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { displaySnackbar } = useSnackbar()
   const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
-  const { getAssetUrl } = useAsset()
 
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
   const startFileUpload = useStartFileUpload()
+  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+    entity: channel,
+    assetType: AssetType.AVATAR,
+  })
+  const { url: coverPhotoUrl, error: coverPhotoError } = useAsset({
+    entity: channel,
+    assetType: AssetType.COVER,
+  })
+
+  useEffect(() => {
+    if (avatarPhotoError) {
+      Logger.error('Failed to load avatar')
+    }
+    if (coverPhotoError) {
+      Logger.error('Failed to load video cover')
+    }
+  }, [avatarPhotoError, coverPhotoError])
 
   const {
     register,
@@ -130,21 +148,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    const {
-      avatarPhotoUrls,
-      avatarPhotoAvailability,
-      avatarPhotoDataObject,
-      coverPhotoUrls,
-      coverPhotoAvailability,
-      coverPhotoDataObject,
-      title,
-      description,
-      isPublic,
-      language,
-    } = channel
-
-    const avatarPhotoUrl = getAssetUrl(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
-    const coverPhotoUrl = getAssetUrl(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
+    const { title, description, isPublic, language } = channel
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
@@ -156,7 +160,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || languages[0].value,
     })
-  }, [channel, getAssetUrl, loading, newChannel, reset])
+  }, [channel, avatarPhotoUrl, coverPhotoUrl, loading, newChannel, reset])
 
   const avatarValue = watch('avatar')
   const coverValue = watch('cover')

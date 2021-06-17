@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/hooks'
 import { ChannelPreviewBase } from '@/shared/components'
+import { Logger } from '@/utils/logger'
 
 type ChannelPreviewProps = {
   id?: string
@@ -13,14 +14,19 @@ type ChannelPreviewProps = {
 }
 
 export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, onClick }) => {
-  const [{ url }, getAssetUrl] = useAsset()
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+  const { url, error: assetError } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { videoCount } = useChannelVideoCount(id ?? '', {
     fetchPolicy: 'cache-first',
     skip: !id,
   })
   const isLoading = loading || id === undefined
-  getAssetUrl(channel?.avatarPhotoAvailability, channel?.avatarPhotoUrls, channel?.avatarPhotoDataObject)
+
+  useEffect(() => {
+    if (assetError) {
+      Logger.error('Failed to load avatar image')
+    }
+  }, [assetError])
 
   return (
     <ChannelPreviewBase

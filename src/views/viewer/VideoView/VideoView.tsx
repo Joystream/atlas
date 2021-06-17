@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import knownLicenses from '@/data/knownLicenses.json'
-import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
+import { AssetType, useAsset, usePersonalData, useRouterQuery } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -33,7 +33,20 @@ export const VideoView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: mediaUrl, error: mediaError } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+
+  useEffect(() => {
+    if (mediaError) {
+      Logger.error('Failed to load video')
+    }
+    if (thumbnailPhotoError) {
+      Logger.error('Failed to load video thumbnail')
+    }
+  }, [mediaError, thumbnailPhotoError])
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -122,13 +135,6 @@ export const VideoView: React.FC = () => {
   }
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
-
-  const mediaUrl = getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
 
   return (
     <StyledViewWrapper>

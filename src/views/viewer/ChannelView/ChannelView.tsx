@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
+import { AssetType, useAsset, usePersonalData } from '@/hooks'
 import { Button, ChannelCover } from '@/shared/components'
-import AssetImage, { ImageType } from '@/shared/components/AssetImage'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -33,6 +32,16 @@ export const ChannelView: React.FC = () => {
     updateChannelFollowing,
   } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
+  const { url: coverPhotoUrl, error: coverPhotoError } = useAsset({
+    entity: channel,
+    assetType: AssetType.COVER,
+  })
+
+  useEffect(() => {
+    if (coverPhotoError) {
+      Logger.error('Fail to load channel cover')
+    }
+  }, [coverPhotoError])
 
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
@@ -65,7 +74,7 @@ export const ChannelView: React.FC = () => {
   return (
     <ViewWrapper>
       <Header>
-        <AssetImage entity={channel} component={<ChannelCover />} imageType={ImageType.COVER} />
+        <ChannelCover assetUrl={coverPhotoUrl} />
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>
