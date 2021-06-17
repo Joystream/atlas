@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { fluidRange, transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 
-import { colors, sizes, transitions, typography, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'

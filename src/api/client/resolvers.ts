@@ -1,16 +1,16 @@
-import { delegateToSchema, Transform } from '@graphql-tools/delegate'
+import { Transform, delegateToSchema } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
 import { Logger } from '@/utils/logger'
 
 import {
-  TransformOrionViewsField,
-  ORION_VIEWS_QUERY_NAME,
-  RemoveQueryNodeViewsField,
-  RemoveQueryNodeFollowsField,
   ORION_FOLLOWS_QUERY_NAME,
+  ORION_VIEWS_QUERY_NAME,
+  RemoveQueryNodeFollowsField,
+  RemoveQueryNodeViewsField,
   TransformOrionFollowsField,
+  TransformOrionViewsField,
 } from './transforms'
 
 const createResolverWithTransforms = (

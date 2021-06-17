@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/shared/components'
 import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
 import { SvgJoystreamLogo, SvgPolkadotLogo } from '@/shared/illustrations'
-import { sizes, colors } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 export const StepWrapper = styled.div`
   width: 100%;

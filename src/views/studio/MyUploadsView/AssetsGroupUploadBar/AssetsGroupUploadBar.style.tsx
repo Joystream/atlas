@@ -1,8 +1,8 @@
-import { keyframes, css } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components'
-import { colors, sizes, media, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
   progress: number

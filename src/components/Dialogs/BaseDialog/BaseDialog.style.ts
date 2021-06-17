@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/shared/components'
-import { colors, sizes, media, zIndex } from '@/shared/theme'
+import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 export const DialogBackDrop = styled.div`
   position: fixed;

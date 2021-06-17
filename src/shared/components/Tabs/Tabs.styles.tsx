@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, zIndex, sizes } from '@/shared/theme'
+import { colors, sizes, zIndex } from '@/shared/theme'
 
 import { badgeStyles } from '../Badge'
 

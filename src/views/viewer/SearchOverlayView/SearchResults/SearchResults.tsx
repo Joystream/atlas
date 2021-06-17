@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import React, { useState, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
-import { SearchQuery, AssetAvailability } from '@/api/queries'
-import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
+import { AssetAvailability, SearchQuery } from '@/api/queries'
+import { ChannelGrid, PlaceholderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
 import { usePersonalData } from '@/hooks'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'

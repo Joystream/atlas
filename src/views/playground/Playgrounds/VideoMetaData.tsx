@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Text } from '@/shared/components'
-import { getVideoMetadata, VideoMetadata as Metadata } from '@/utils/video'
+import { VideoMetadata as Metadata, getVideoMetadata } from '@/utils/video'
 
 export const VideoMetaData = () => {
   const [metadata, setmetadata] = useState<Metadata>()

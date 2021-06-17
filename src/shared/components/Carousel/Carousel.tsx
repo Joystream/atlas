@@ -3,9 +3,9 @@ import React, { useRef } from 'react'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
-import { Container, GliderContainer, Arrow, Track, BackgroundGradient } from './Carousel.style'
+import { Arrow, BackgroundGradient, Container, GliderContainer, Track } from './Carousel.style'
 
-import { useGlider, GliderProps } from '../Glider'
+import { GliderProps, useGlider } from '../Glider'
 
 export type CarouselProps = {
   paddingLeft?: number

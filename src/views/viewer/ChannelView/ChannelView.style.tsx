@@ -3,7 +3,7 @@ import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
 import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
-import { sizes, colors, typography, media } from '@/shared/theme'
+import { colors, media, sizes, typography } from '@/shared/theme'
 
 export const Header = styled.section`
   position: relative;

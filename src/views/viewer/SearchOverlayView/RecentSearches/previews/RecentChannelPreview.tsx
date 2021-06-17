@@ -9,10 +9,10 @@ import { transitions } from '@/shared/theme'
 
 import {
   PreviewContainer,
-  StyledChannelAvatar,
   PreviewSubtext,
-  PreviewTitlePlaceholder,
   PreviewSubtextPlaceholder,
+  PreviewTitlePlaceholder,
+  StyledChannelAvatar,
 } from './previews.style'
 
 type RecentChannelPreviewProps = {

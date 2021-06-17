@@ -1,9 +1,9 @@
-import { Story, Meta } from '@storybook/react'
+import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { OverlayManagerProvider } from '@/providers/useOverlayManager'
 
-import { MessageDialogProps, MessageDialog } from './MessageDialog'
+import { MessageDialog, MessageDialogProps } from './MessageDialog'
 
 export default {
   title: 'General/MessageDialog',

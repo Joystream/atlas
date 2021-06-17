@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography, zIndex, media } from '../../theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '../../theme'
 
 type ContainerProps = {
   isInBackground?: boolean

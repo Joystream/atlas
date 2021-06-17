@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { FormFieldProps, FormField } from './FormField'
+import { FormField, FormFieldProps } from './FormField'
 
 import { Select } from '../Select'
 import { TextArea } from '../TextArea'

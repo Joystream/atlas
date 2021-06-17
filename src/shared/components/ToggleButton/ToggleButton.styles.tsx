@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { sizes, colors, transitions } from '../../theme'
+import { colors, sizes, transitions } from '../../theme'
 import { ButtonVariant } from '../ButtonBase'
 
 export type ToggleButtonStyleProps = {

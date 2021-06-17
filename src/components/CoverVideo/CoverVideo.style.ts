@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { darken, fluidRange } from 'polished'
 
 import { Button, IconButton, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, media } from '@/shared/theme'
+import { breakpoints, colors, media, sizes } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
 

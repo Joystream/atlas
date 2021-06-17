@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { TextProps, Text } from './Text'
+import { Text, TextProps } from './Text'
 
 export default {
   title: 'Shared/T/Text',

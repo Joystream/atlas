@@ -4,7 +4,7 @@ import React from 'react'
 
 import { Button, Text } from '@/shared/components'
 import { SvgWellErrorIllustration } from '@/shared/illustrations'
-import { sizes, colors } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 
 const Container = styled.div`

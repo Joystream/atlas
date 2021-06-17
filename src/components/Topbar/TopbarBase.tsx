@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FullLogo, Header, LogoLink, StudioText, LogoContainer, ShortLogo } from './TopbarBase.style'
+import { FullLogo, Header, LogoContainer, LogoLink, ShortLogo, StudioText } from './TopbarBase.style'
 
 export type TopbarVariant = 'default' | 'studio'
 export type TopbarBaseProps = {

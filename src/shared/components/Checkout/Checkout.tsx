@@ -5,16 +5,16 @@ import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  Container,
   BottomRowContainer,
-  StepsProgressContainer,
-  StepsContainer,
+  CircularProgresaBarContainer,
+  Container,
   Step,
   StepInnerContainer,
   StepState,
   StepsCompletedText,
+  StepsContainer,
+  StepsProgressContainer,
   StyledCircularProgressbar,
-  CircularProgresaBarContainer,
   StyledSvgGlyphChevronDown,
 } from './Checkout.styles'
 

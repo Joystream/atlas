@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 export const MultiFileSelectContainer = styled.div`
   width: 100%;

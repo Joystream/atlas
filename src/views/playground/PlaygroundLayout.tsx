@@ -4,26 +4,25 @@ import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import {
-  DraftsProvider,
   ActiveUserProvider,
   ConnectionStatusProvider,
-  UploadManagerProvider,
+  DraftsProvider,
   SnackbarProvider,
-  DialogProvider,
+  UploadManagerProvider,
 } from '@/hooks'
 import { colors } from '@/shared/theme'
 
 import {
+  AutomaticCrop,
+  Dialogs,
   FileHashing,
   ImageDownsizing,
   PlaygroundConnectionState,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
-  UploadFiles,
   PlaygroundValidationForm,
+  UploadFiles,
   VideoMetaData,
-  AutomaticCrop,
-  Dialogs,
 } from './Playgrounds'
 
 const playgroundRoutes = [

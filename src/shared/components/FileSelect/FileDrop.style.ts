@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { darken } from 'polished'
 
-import { colors, sizes, transitions, media } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 import { Text } from '../Text'

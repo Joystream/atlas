@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/providers/useSnackbar/useSnackbar'
+import { DisplaySnackbarArgs, SnackbarProvider, useSnackbar } from '@/providers/useSnackbar'
 
 import { Snackbar } from './Snackbar'
 

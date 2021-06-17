@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Container, HeadingContainer } from './Gallery.style'
 
-import { CarouselProps, Carousel } from '../Carousel/Carousel'
+import { Carousel, CarouselProps } from '../Carousel/Carousel'
 import { Text } from '../Text'
 
 export type GalleryProps = {

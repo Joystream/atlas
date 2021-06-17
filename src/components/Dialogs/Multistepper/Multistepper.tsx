@@ -4,14 +4,14 @@ import { Text } from '@/shared/components'
 import { SvgGlyphCheck } from '@/shared/icons'
 
 import {
+  StyledChevron,
+  StyledCircle,
   StyledDialog,
   StyledHeader,
-  StyledStepsInfoContainer,
   StyledStepInfo,
-  StyledCircle,
   StyledStepInfoText,
-  StyledChevron,
   StyledStepTitle,
+  StyledStepsInfoContainer,
 } from './Multistepper.style'
 
 import { BaseDialogProps } from '../BaseDialog'

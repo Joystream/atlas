@@ -2,10 +2,10 @@ import { graphql } from 'msw'
 
 import {
   AllChannelFieldsFragment,
+  MembershipWhereInput,
   VideoFieldsFragment,
   VideoWhereInput,
   VideoWhereUniqueInput,
-  MembershipWhereInput,
 } from '@/api/queries'
 
 export type FilteringArgs<TWhere = VideoWhereInput | VideoWhereUniqueInput | MembershipWhereInput> = {

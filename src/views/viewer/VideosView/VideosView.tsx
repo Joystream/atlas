@@ -1,22 +1,22 @@
 import { ErrorBoundary } from '@sentry/react'
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import { useCategories, useVideos } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { ErrorFallback, BackgroundPattern, VideoGallery, TOP_NAVBAR_HEIGHT } from '@/components'
+import { BackgroundPattern, ErrorFallback, TOP_NAVBAR_HEIGHT, VideoGallery } from '@/components'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 import {
-  StyledViewWrapper,
-  StyledCategoryPicker,
-  StyledInfiniteVideoGrid,
-  IntersectionTarget,
-  Header,
-  GRID_TOP_PADDING,
   CategoriesVideosContainer,
   FeaturedVideosContainer,
+  GRID_TOP_PADDING,
+  Header,
+  IntersectionTarget,
+  StyledCategoryPicker,
+  StyledInfiniteVideoGrid,
+  StyledViewWrapper,
 } from './VideosView.style'
 
 export const VideosView: React.FC = () => {

@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/shared/theme'
 
-import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Tabs.styles'
+import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 type TabItem = {
   name: string

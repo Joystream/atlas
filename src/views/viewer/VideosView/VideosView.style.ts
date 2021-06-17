@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { InfiniteVideoGrid, ViewWrapper, TOP_NAVBAR_HEIGHT } from '@/components'
+import { InfiniteVideoGrid, TOP_NAVBAR_HEIGHT, ViewWrapper } from '@/components'
 import { CategoryPicker, Text } from '@/shared/components'
 import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 
