@@ -18,7 +18,7 @@ module.exports = {
     addWebpackPlugin(
       new BundleAnalyzerPlugin({
         // use value from environment var STATS or 'disabled'
-        analyzerMode: process.env.STATS || 'disabled',
+        analyzerMode: process.env.STATS || 'static',
         generateStatsFile: true,
       })
     ),
