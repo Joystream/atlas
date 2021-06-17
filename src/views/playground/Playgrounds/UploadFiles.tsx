@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 
-import { useAuthorizedUser, useUploadsManager } from '@/hooks'
+import { useAuthorizedUser, useStartFileUpload, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload, uploadsState } = useUploadsManager()
+  const { uploadsState } = useUploadsManager()
+  const startFileUpload = useStartFileUpload()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
