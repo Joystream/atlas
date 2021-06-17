@@ -29,7 +29,7 @@ import {
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { useStore } from '@/store'
+import { useSnackbar } from '@/store'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -80,7 +80,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
-  const displaySnackbar = useStore((state) => state.displaySnackbar)
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
   const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
   const { getAssetUrl } = useAsset()

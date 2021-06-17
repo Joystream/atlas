@@ -1,5 +1,5 @@
 import produce, { Draft } from 'immer'
-import { State, StateCreator } from 'zustand'
+import create, { State, StateCreator } from 'zustand'
 
 import { createId } from '@/utils/createId'
 
@@ -34,7 +34,7 @@ const immer = <T extends State>(config: StateCreator<T, (fn: (draft: Draft<T>) =
   api
 ) => config((fn) => set(produce<T>(fn)), get, api)
 
-export const useSnackbar: StateCreator<SnackbarState> = (set) => ({
+export const useSnackbar = create<SnackbarState>((set) => ({
   snackbars: [],
   updateSnackbar: (id, opts) => {
     set((state) => ({
@@ -61,4 +61,4 @@ export const useSnackbar: StateCreator<SnackbarState> = (set) => ({
     }
     return id
   },
-})
+}))

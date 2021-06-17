@@ -3,7 +3,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { DisplaySnackbarArgs, Snackbars } from '@/hooks'
-import { useStore } from '@/store'
+import { useSnackbar } from '@/store'
 
 import { Snackbar } from './Snackbar'
 
@@ -39,7 +39,7 @@ export default {
 } as Meta
 
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
-  const displaySnackbar = useStore((state) => state.displaySnackbar)
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
   return (
     <Button size="small" onClick={() => displaySnackbar({ ...args })}>
       Show snackbar

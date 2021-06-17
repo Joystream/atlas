@@ -7,7 +7,7 @@ import * as rax from 'retry-axios'
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useStorageProviders, useUser } from '@/hooks'
-import { useStore } from '@/store'
+import { useSnackbar, useUploadsManagerStore } from '@/store'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
@@ -29,14 +29,16 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const displaySnackbar = useStore((state) => state.displaySnackbar)
-  const addAsset = useStore((state) => state.addAsset)
-  const updateAsset = useStore((state) => state.updateAsset)
-  const uploadsState = useStore((state) => state.uploadsState)
-  const uploadsProgress = useStore((state) => state.uploadsProgress)
-  const setUploadsProgress = useStore((state) => state.setUploadsProgress)
-  const assetsFiles = useStore((state) => state.assetsFiles)
-  const setAssetsFiles = useStore((state) => state.setAssetsFiles)
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const {
+    addAsset,
+    updateAsset,
+    uploadsState,
+    uploadsProgress,
+    setUploadsProgress,
+    assetsFiles,
+    setAssetsFiles,
+  } = useUploadsManagerStore()
 
   // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
   const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])

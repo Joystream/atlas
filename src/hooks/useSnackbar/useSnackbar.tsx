@@ -5,7 +5,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Snackbar } from '@/shared/components'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
-import { useStore } from '@/store'
+import { useSnackbar } from '@/store'
 
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
@@ -29,8 +29,7 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
 const SNACKBARS_LIMIT = 3
 
 export const Snackbars: React.FC = () => {
-  const closeSnackbar = useStore((state) => state.closeSnackbar)
-  const snackbars = useStore((state) => state.snackbars)
+  const { closeSnackbar, snackbars } = useSnackbar()
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {

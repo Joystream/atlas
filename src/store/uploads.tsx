@@ -1,4 +1,5 @@
-import { StateCreator } from 'zustand'
+import create from 'zustand'
+import { persist } from 'zustand/middleware'
 
 import { LiaisonJudgement } from '@/api/queries'
 import { AssetUploadStatus } from '@/hooks/useUploadsManager/types'
@@ -57,40 +58,50 @@ export type UploadStoreState = {
   setAssetsFiles: (assetFile: AssetFile) => void
 }
 
-export const useUploadsManagerStore: StateCreator<UploadStoreState> = (set, get) => ({
-  uploadsState: [],
-  notifications: {
-    uploaded: 0,
-    uploading: 0,
-  },
-  uploadsProgress: {},
-  setUploadsProgress: (contentId, progress) => {
-    set((state) => ({ ...state, uploadsProgress: { ...state.uploadsProgress, [contentId]: progress } }))
-  },
-  assetsFiles: [],
-  setAssetsFiles: (assetFile) => set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] })),
-  addAsset: (asset) => {
-    const state = get()
-    set({ ...state, uploadsState: [...state.uploadsState, asset] })
-  },
-  updateAsset: (contentId, lastStatus?) => {
-    const state = get()
+const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
-    set({
-      ...state,
-      uploadsState: state.uploadsState.map((asset) => {
-        if (asset.contentId !== contentId) {
-          return asset
-        }
-        const assetUpdates = lastStatus ? { lastStatus } : {}
-        return { ...asset, ...assetUpdates }
-      }),
-    })
-  },
-  removeAsset: (contentId) => {
-    set((state) => ({
-      ...state,
-      uploadsState: state.uploadsState.filter((asset) => asset.contentId !== contentId),
-    }))
-  },
-})
+export const useUploadsManagerStore = create<UploadStoreState>(
+  persist(
+    (set, get) => ({
+      uploadsState: [],
+      notifications: {
+        uploaded: 0,
+        uploading: 0,
+      },
+      uploadsProgress: {},
+      setUploadsProgress: (contentId, progress) => {
+        set((state) => ({ ...state, uploadsProgress: { ...state.uploadsProgress, [contentId]: progress } }))
+      },
+      assetsFiles: [],
+      setAssetsFiles: (assetFile) => set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] })),
+      addAsset: (asset) => {
+        const state = get()
+        set({ ...state, uploadsState: [...state.uploadsState, asset] })
+      },
+      updateAsset: (contentId, lastStatus?) => {
+        const state = get()
+
+        set({
+          ...state,
+          uploadsState: state.uploadsState.map((asset) => {
+            if (asset.contentId !== contentId) {
+              return asset
+            }
+            const assetUpdates = lastStatus ? { lastStatus } : {}
+            return { ...asset, ...assetUpdates }
+          }),
+        })
+      },
+      removeAsset: (contentId) => {
+        set((state) => ({
+          ...state,
+          uploadsState: state.uploadsState.filter((asset) => asset.contentId !== contentId),
+        }))
+      },
+    }),
+    {
+      name: UPLOADS_LOCAL_STORAGE_KEY,
+      whitelist: ['uploadsState'],
+    }
+  )
+)

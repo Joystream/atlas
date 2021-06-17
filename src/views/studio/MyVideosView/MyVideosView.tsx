@@ -7,7 +7,7 @@ import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useAuthorizedUser, useDeleteVideo, useDialog, useDrafts, useEditVideoSheet } from '@/hooks'
 import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
-import { useStore } from '@/store'
+import { useSnackbar } from '@/store'
 
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import {
@@ -34,7 +34,7 @@ const SNACKBAR_TIMEOUT = 5000
 export const MyVideosView = () => {
   const navigate = useNavigate()
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
-  const { displaySnackbar, updateSnackbar } = useStore()
+  const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
     VideoOrderByInput.CreatedAtDesc

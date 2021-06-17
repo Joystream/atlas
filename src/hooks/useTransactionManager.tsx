@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { useStore } from '@/store'
+import { useSnackbar } from '@/store'
 import { Logger } from '@/utils/logger'
 
 import useConnectionStatus from './useConnectionStatus'
@@ -74,7 +74,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     },
   })
 
-  const displaySnackbar = useStore((state) => state.displaySnackbar)
+  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
 
   const handleDialogClose = useCallback(async () => {
     try {
