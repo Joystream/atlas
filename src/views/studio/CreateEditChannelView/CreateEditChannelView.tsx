@@ -14,6 +14,7 @@ import {
   useDisplayDataLostWarning,
   useEditVideoSheet,
   useJoystream,
+  useSnackbar,
   useStartFileUpload,
   useTransactionManager,
   useUser,
@@ -29,7 +30,6 @@ import {
   Tooltip,
 } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { useSnackbar } from '@/store'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'

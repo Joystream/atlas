@@ -2,8 +2,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { DisplaySnackbarArgs, Snackbars } from '@/hooks'
-import { useSnackbar } from '@/store'
+import { DisplaySnackbarArgs, Snackbars, useSnackbar } from '@/hooks'
 
 import { Snackbar } from './Snackbar'
 

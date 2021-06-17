@@ -17,6 +17,7 @@ import {
   useDrafts,
   useEditVideoSheet,
   useJoystream,
+  useStartFileUpload,
   useTransactionManager,
 } from '@/hooks'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'

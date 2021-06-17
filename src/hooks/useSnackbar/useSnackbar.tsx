@@ -5,19 +5,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Snackbar } from '@/shared/components'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
-import { useSnackbar } from '@/store'
+
+import { useSnackbar } from './store'
 
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
-
-export type DisplaySnackbarArgs = {
-  timeout?: number
-  variant?: 'primary' | 'secondary'
-  iconType?: SnackbarIconType
-  title: string
-  description?: string
-  actionText?: string
-  onActionClick?: () => void
-}
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertInfo />,

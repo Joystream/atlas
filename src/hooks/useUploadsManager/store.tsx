@@ -1,49 +1,14 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { LiaisonJudgement } from '@/api/queries'
-import { AssetUploadStatus } from '@/hooks/useUploadsManager/types'
-import { ChannelId, VideoId } from '@/joystream-lib'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
-
-type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
-type AssetParent = 'video' | 'channel'
-
-export type AssetUpload = {
-  contentId: string
-  parentObject: {
-    type: AssetParent
-    id: ChannelId | VideoId
-  }
-  owner: ChannelId
-  type: AssetType
-  lastStatus: AssetUploadStatus
-  liaisonJudgement?: LiaisonJudgement
-  ipfsContentId?: string
-  // size in bytes
-  size: number
-  dimensions?: AssetDimensions
-  imageCropData?: ImageCropData
-  metadata?: string
-  title?: string | null
-}
-export type InputAssetUpload = Omit<AssetUpload, 'lastStatus' | 'size'>
-
-export type UploadsManagerState = AssetUpload[]
-
-export type StartFileUploadOptions = {
-  isReUpload?: boolean
-  changeHost?: boolean
-}
-
-export type UploadsProgressRecord = Record<string, number>
+import { AssetUpload, AssetUploadStatus, UploadsProgressRecord } from './types'
 
 type AssetFile = {
   contentId: string
   blob: File | Blob
 }
 
-export type UploadStoreState = {
+type UploadStoreState = {
   uploadsState: AssetUpload[]
   addAsset: (asset: AssetUpload) => void
   setUploadsProgress: (contentId: string, progress: number) => void
@@ -60,9 +25,9 @@ export type UploadStoreState = {
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
-export const useUploadsManagerStore = create<UploadStoreState>(
+export const useUploadsStore = create<UploadStoreState>(
   persist(
-    (set, get) => ({
+    (set) => ({
       uploadsState: [],
       notifications: {
         uploaded: 0,
@@ -73,15 +38,14 @@ export const useUploadsManagerStore = create<UploadStoreState>(
         set((state) => ({ ...state, uploadsProgress: { ...state.uploadsProgress, [contentId]: progress } }))
       },
       assetsFiles: [],
-      setAssetsFiles: (assetFile) => set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] })),
+      setAssetsFiles: (assetFile) => {
+        set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] }))
+      },
       addAsset: (asset) => {
-        const state = get()
-        set({ ...state, uploadsState: [...state.uploadsState, asset] })
+        set((state) => ({ ...state, uploadsState: [...state.uploadsState, asset] }))
       },
       updateAsset: (contentId, lastStatus?) => {
-        const state = get()
-
-        set({
+        set((state) => ({
           ...state,
           uploadsState: state.uploadsState.map((asset) => {
             if (asset.contentId !== contentId) {
@@ -90,7 +54,7 @@ export const useUploadsManagerStore = create<UploadStoreState>(
             const assetUpdates = lastStatus ? { lastStatus } : {}
             return { ...asset, ...assetUpdates }
           }),
-        })
+        }))
       },
       removeAsset: (contentId) => {
         set((state) => ({

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import { useSnackbar } from '@/store'
+import { useSnackbar } from './useSnackbar'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 

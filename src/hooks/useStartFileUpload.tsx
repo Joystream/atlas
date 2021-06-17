@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
-import { InputAssetUpload, StartFileUploadOptions, useSnackbar, useUploadsManagerStore } from '@/store'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-import { useStorageProviders } from '.'
+import { useSnackbar } from './useSnackbar'
+import { useStorageProviders } from './useStorageProviders'
+import { InputAssetUpload, StartFileUploadOptions, useUploadsStore } from './useUploadsManager'
 
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
@@ -20,7 +21,12 @@ export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
-  const { addAsset, updateAsset, setUploadsProgress, assetsFiles, setAssetsFiles } = useUploadsManagerStore()
+
+  const setAssetsFiles = useUploadsStore((state) => state.setAssetsFiles)
+  const addAsset = useUploadsStore((state) => state.addAsset)
+  const assetsFiles = useUploadsStore((state) => state.assetsFiles)
+  const updateAsset = useUploadsStore((state) => state.updateAsset)
+  const setUploadsProgress = useUploadsStore((state) => state.setUploadsProgress)
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
@@ -107,10 +113,12 @@ export const useStartFileUpload = () => {
         if (!opts?.isReUpload && file) {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
+        if (opts?.isReUpload && file) {
+          updateAsset(asset.contentId, 'inProgress')
+        }
         setAssetUploadProgress(0)
 
         const setUploadProgress = ({ loaded, total }: ProgressEvent) => {
-          updateAsset(asset.contentId, 'inProgress')
           setAssetUploadProgress((loaded / total) * 100)
         }
 

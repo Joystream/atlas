@@ -3,11 +3,11 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { useSnackbar } from '@/store'
 import { Logger } from '@/utils/logger'
 
 import useConnectionStatus from './useConnectionStatus'
 import { useDialog } from './useDialog'
+import { useSnackbar } from './useSnackbar'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {

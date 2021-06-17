@@ -1,40 +1,48 @@
+import { isEqual } from 'lodash'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import shallow from 'zustand/shallow'
 
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/hooks'
-import { useSnackbar, useUploadsManagerStore } from '@/store'
 
-import { AssetUploadWithProgress, UploadManagerValue } from './types'
+import { useUploadsStore } from './store'
+import { UploadManagerValue } from './types'
 
-type GroupByParentObjectIdAcc = {
-  [key: string]: AssetUploadWithProgress[]
-}
+import { useSnackbar } from '../useSnackbar/store'
 
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
 
 export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
+  const { activeChannelId } = useUser()
 
   const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
-  const { updateAsset, uploadsState, uploadsProgress } = useUploadsManagerStore()
+  const updateAsset = useUploadsStore((state) => state.updateAsset)
 
+  const uploadsStateIds = useUploadsStore(
+    (state) =>
+      state.uploadsState.filter((item) => item.parentObject?.type === 'video').map((item) => item.parentObject.id),
+    shallow
+  )
+  const chanelUploadsState = useUploadsStore(
+    (state) => state.uploadsState.filter((asset) => asset.owner === activeChannelId),
+    (prevState, newState) => isEqual(prevState, newState)
+  )
   // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
   const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
-  const { activeChannelId } = useUser()
   const { loading: channelLoading } = useChannel(activeChannelId ?? '')
   const { loading: videosLoading } = useVideos(
     {
       where: {
-        id_in: uploadsState.filter((item) => item.parentObject?.type === 'video').map((item) => item.parentObject.id),
+        id_in: uploadsStateIds,
       },
     },
-    { skip: !uploadsState.length }
+    { skip: !uploadsStateIds.length }
   )
 
-  // Will set all incomplete assets' status to missing on initial mount
   const isInitialMount = useRef(true)
   useEffect(() => {
     if (!isInitialMount.current) {
@@ -43,7 +51,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     isInitialMount.current = false
 
     let missingAssetsCount = 0
-    uploadsState.forEach((asset) => {
+    chanelUploadsState.forEach((asset) => {
       if (asset.lastStatus !== 'completed') {
         updateAsset(asset.contentId, 'missing')
         missingAssetsCount++
@@ -61,38 +69,15 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         iconType: 'warning',
       })
     }
-  }, [updateAsset, uploadsState, displaySnackbar, navigate])
-
-  const filteredUploadStateWithProgress: AssetUploadWithProgress[] = uploadsState
-    .filter((asset) => asset.owner === activeChannelId && !ignoredAssetsIds.includes(asset.contentId))
-    .map((asset) => ({
-      ...asset,
-      progress: uploadsProgress[asset.contentId] ?? 0,
-    }))
-
-  // Grouping all assets by parent id (videos, channel)
-  const groupedUploadsState = Object.values(
-    filteredUploadStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
-      if (!asset) {
-        return acc
-      }
-      const key = asset.parentObject.id
-      if (!acc[key]) {
-        acc[key] = []
-      }
-      acc[key].push(asset)
-      return acc
-    }, {})
-  )
+  }, [chanelUploadsState, displaySnackbar, navigate, updateAsset])
 
   const isLoading = channelLoading || videosLoading
 
   return (
     <UploadManagerContext.Provider
       value={{
-        // startFileUpload,
         isLoading,
-        uploadsState: groupedUploadsState,
+        chanelUploadsState: chanelUploadsState.filter((asset) => !ignoredAssetsIds.includes(asset.contentId)),
       }}
     >
       {children}
@@ -105,5 +90,5 @@ export const useUploadsManager = () => {
   if (ctx === undefined) {
     throw new Error('useUploadsManager must be used within a UploadManagerProvider')
   }
-  return ctx
+  return { ...ctx }
 }
