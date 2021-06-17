@@ -80,10 +80,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
           iconType: 'warning',
         })
       }
+      setSyncUpLoading(false)
     }
   }, [channelUploadsState, displaySnackbar, navigate, updateAsset])
 
-  const isLoading = channelLoading || videosLoading
+  const isLoading = channelLoading || videosLoading || syncUpLoading
 
   return (
     <UploadManagerContext.Provider
