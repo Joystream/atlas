@@ -3,7 +3,7 @@ import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
-import { OverlayManagerProvider } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
 import { Avatar, Placeholder } from '@/shared/components'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 

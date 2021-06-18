@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useUploadsManager } from '@/hooks'
+import { useUploadsManager } from '@/providers'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'

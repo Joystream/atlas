@@ -6,7 +6,6 @@ import * as rax from 'retry-axios'
 
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar, useStorageProviders, useUser } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
@@ -18,6 +17,8 @@ import {
   UploadManagerValue,
   UploadsProgressRecord,
 } from './types'
+
+import { useSnackbar, useStorageProviders, useUser } from '..'
 
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000

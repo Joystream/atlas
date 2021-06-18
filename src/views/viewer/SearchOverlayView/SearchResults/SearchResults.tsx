@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import { useSearch } from '@/api/hooks'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
 import { ChannelGrid, PlaceholderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/providers'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 

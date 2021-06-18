@@ -6,8 +6,9 @@ import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@
 import { useSnackbar } from '@/providers/useSnackbar'
 import { Logger } from '@/utils/logger'
 
-import useConnectionStatus from './useConnectionStatus'
 import { useDialog } from './useDialog'
+
+import { useConnectionStatus } from '.'
 
 type UpdateStatusFn = (status: ExtrinsicStatus) => void
 type SuccessMessage = {

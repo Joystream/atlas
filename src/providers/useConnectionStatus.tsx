@@ -13,11 +13,6 @@ type ConnectionStatusValue = {
   isUserConnectedToInternet: boolean
 }
 
-const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
-  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
-  return await Promise.race([timeoutPromise, promise])
-}
-
 const SNACKBAR_TIMEOUT = 15000
 
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
@@ -88,4 +83,7 @@ export const useConnectionStatus = () => {
   return ctx
 }
 
-export default useConnectionStatus
+const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
+  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
+  return await Promise.race([timeoutPromise, promise])
+}

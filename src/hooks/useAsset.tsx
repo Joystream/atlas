@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { AssetAvailability, DataObject } from '@/api/queries'
-import { useStorageProviders } from '@/hooks'
+import { useStorageProviders } from '@/providers'
 import { createStorageNodeUrl } from '@/utils/asset'
 
 export const useAsset = () => {

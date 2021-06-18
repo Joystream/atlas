@@ -5,7 +5,7 @@ import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/providers'
 import { transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16

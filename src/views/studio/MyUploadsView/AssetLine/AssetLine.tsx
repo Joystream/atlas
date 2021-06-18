@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useDialog, useUploadsManager } from '@/hooks'
+import { useDialog, useUploadsManager } from '@/providers'
 import { AssetUploadWithProgress } from '@/providers/useUploadsManager/types'
 import { Button, CircularProgressbar, Text } from '@/shared/components'
 import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'

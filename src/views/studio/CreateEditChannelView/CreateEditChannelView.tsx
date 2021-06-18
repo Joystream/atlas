@@ -8,18 +8,17 @@ import { AssetAvailability } from '@/api/queries'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
+import { useAsset, useDisplayDataLostWarning } from '@/hooks'
+import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import {
-  useAsset,
   useConnectionStatus,
-  useDisplayDataLostWarning,
   useEditVideoSheet,
   useJoystream,
   useSnackbar,
   useTransactionManager,
   useUploadsManager,
   useUser,
-} from '@/hooks'
-import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
+} from '@/providers'
 import {
   ActionBarTransaction,
   ChannelCover,

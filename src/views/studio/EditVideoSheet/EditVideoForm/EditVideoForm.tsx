@@ -7,16 +7,16 @@ import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
+import { useDeleteVideo } from '@/hooks'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useAuthorizedUser,
   useConnectionStatus,
-  useDeleteVideo,
   useDrafts,
   useEditVideoSheet,
   useEditVideoSheetTabData,
-} from '@/hooks'
+} from '@/providers'
 import {
   Checkbox,
   Datepicker,

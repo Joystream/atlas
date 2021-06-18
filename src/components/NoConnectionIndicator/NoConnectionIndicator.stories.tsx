@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { ConnectionStatusProvider, SnackbarProvider } from '@/hooks'
+import { ConnectionStatusProvider, SnackbarProvider } from '@/providers'
 
 import { NoConnectionIndicator, NoConnectionIndicatorProps } from './NoConnectionIndicator'
 

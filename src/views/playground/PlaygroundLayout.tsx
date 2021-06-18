@@ -9,7 +9,7 @@ import {
   DraftsProvider,
   SnackbarProvider,
   UploadManagerProvider,
-} from '@/hooks'
+} from '@/providers'
 import { colors } from '@/shared/theme'
 
 import {

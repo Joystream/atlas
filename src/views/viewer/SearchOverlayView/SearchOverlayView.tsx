@@ -3,7 +3,8 @@ import React, { useEffect } from 'react'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { QUERY_PARAMS } from '@/config/routes'
-import { useOverlayManager, useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks'
+import { useOverlayManager } from '@/providers'
 import { colors, zIndex } from '@/shared/theme'
 
 import { RecentSearches } from './RecentSearches'

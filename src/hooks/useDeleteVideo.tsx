@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 
-import { useAuthorizedUser, useJoystream, useTransactionManager } from '@/hooks'
+import { useAuthorizedUser, useJoystream, useTransactionManager } from '@/providers'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 import { useDialog } from '../providers/useDialog'

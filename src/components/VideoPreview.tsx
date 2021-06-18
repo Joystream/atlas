@@ -3,7 +3,8 @@ import React from 'react'
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useAuthorizedUser, useDrafts } from '@/hooks'
+import { useAsset } from '@/hooks'
+import { useAuthorizedUser, useDrafts } from '@/providers'
 import {
   VideoPreviewBase,
   VideoPreviewBaseMetaProps,

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useDialog, useRouterQuery, useUser } from '@/hooks'
+import { useRouterQuery } from '@/hooks'
+import { useDialog, useUser } from '@/providers'
 import { Button, Text } from '@/shared/components'
 import { SvgGlyphExternal } from '@/shared/icons'
 

@@ -9,18 +9,18 @@ import {
   GetVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
+import { useDisplayDataLostWarning } from '@/hooks'
+import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useAuthorizedUser,
-  useDisplayDataLostWarning,
   useDrafts,
   useEditVideoSheet,
   useJoystream,
   useTransactionManager,
   useUploadsManager,
-} from '@/hooks'
-import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+} from '@/providers'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { Logger } from '@/utils/logger'

@@ -2,15 +2,15 @@ import { ApolloProvider } from '@apollo/client'
 import React from 'react'
 
 import { createApolloClient } from '@/api'
+
+import { MainLayout } from './MainLayout'
 import {
   ConnectionStatusProvider,
   DialogProvider,
   OverlayManagerProvider,
   SnackbarProvider,
   StorageProvidersProvider,
-} from '@/hooks'
-
-import { MainLayout } from './MainLayout'
+} from './providers'
 
 export const App = () => {
   // create client on render so the mocking setup is done if needed

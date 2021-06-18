@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { PersonalDataProvider, usePersonalData } from '@/hooks'
+import { PersonalDataProvider, usePersonalData } from '@/providers'
 
 import { DismissibleMessage, DismissibleMessageProps } from './DismissibleMessage'
 

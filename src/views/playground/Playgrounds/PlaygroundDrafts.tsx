@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
-import { VideoDraft, useDrafts, useUser } from '@/hooks'
+import { VideoDraft, useDrafts, useUser } from '@/providers'
 import { Button, FormField, Text } from '@/shared/components'
 import { Select } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'

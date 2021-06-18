@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/providers'
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {

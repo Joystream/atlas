@@ -27,7 +27,7 @@ import {
   useDialog,
   useUser,
   useVideoEditSheetRouting,
-} from '@/hooks'
+} from '@/providers'
 import { isAllowedBrowser } from '@/utils/broswer'
 
 import {

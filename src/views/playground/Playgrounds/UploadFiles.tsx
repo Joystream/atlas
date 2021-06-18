@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useAuthorizedUser, useUploadsManager } from '@/hooks'
+import { useAuthorizedUser, useUploadsManager } from '@/providers'
 import { Button, TextField } from '@/shared/components'
 
 export const UploadFiles = () => {

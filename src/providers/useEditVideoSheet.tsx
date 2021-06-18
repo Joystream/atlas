@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useAuthorizedUser, useDrafts, useOverlayManager } from '@/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { RoutingState } from '@/types/routing'
 import { createId } from '@/utils/createId'
 
+import { useAuthorizedUser, useDrafts, useOverlayManager } from '.'
 import { useAsset } from '../hooks/useAsset'
 
 export type EditVideoSheetTab = {
