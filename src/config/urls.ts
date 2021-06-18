@@ -13,3 +13,5 @@ export const NODE_URL = readEnv('REACT_APP_NODE_URL') || 'ws://127.0.0.1:9944'
 export const FAUCET_URL = readEnv('REACT_APP_FAUCET_URL') || '/mocked-faucet'
 
 export const STORAGE_URL_PATH = 'asset/v0'
+
+export const COVER_VIDEO_INFO_URL = 'https://eu-central-1.linodeobjects.com/atlas-hero/cover-info.json'

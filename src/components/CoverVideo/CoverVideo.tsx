@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
-import { useCoverVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
@@ -27,11 +26,12 @@ import {
   ControlsContainer,
   ButtonsContainer,
 } from './CoverVideo.style'
+import { useCoverVideo } from './coverVideoData'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
 const CoverVideo: React.FC = () => {
-  const { data } = useCoverVideo()
+  const coverVideo = useCoverVideo()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [displayControls, setDisplayControls] = useState(false)
@@ -62,18 +62,17 @@ const CoverVideo: React.FC = () => {
   }
 
   const thumbnailPhotoUrl = getAssetUrl(
-    data.video?.thumbnailPhotoAvailability,
-    data.video?.thumbnailPhotoUrls,
-    data.video?.thumbnailPhotoDataObject
+    coverVideo?.video?.thumbnailPhotoAvailability,
+    coverVideo?.video?.thumbnailPhotoUrls,
+    coverVideo?.video?.thumbnailPhotoDataObject
   )
-  const mediaUrl = getAssetUrl(data.video?.mediaAvailability, data.video?.mediaUrls, data.video?.mediaDataObject)
 
   return (
     <Container>
       <MediaWrapper>
         <Media>
           <PlayerContainer>
-            {data ? (
+            {coverVideo ? (
               <VideoPlayer
                 fluid
                 isInBackground
@@ -83,30 +82,30 @@ const CoverVideo: React.FC = () => {
                 onDataLoaded={handlePlaybackDataLoaded}
                 onPlay={handlePlay}
                 onPause={handlePause}
-                src={mediaUrl}
+                src={coverVideo?.coverCutMediaUrl}
               />
             ) : (
               <PlayerPlaceholder />
             )}
           </PlayerContainer>
-          {data && <HorizontalGradientOverlay />}
+          {coverVideo && <HorizontalGradientOverlay />}
           <VerticalGradientOverlay />
         </Media>
       </MediaWrapper>
-      <InfoContainer isLoading={!data}>
+      <InfoContainer isLoading={!coverVideo}>
         <StyledChannelLink
-          id={data?.video.channel.id}
+          id={coverVideo?.video.channel.id}
           hideHandle
-          overrideChannel={data?.video.channel}
+          overrideChannel={coverVideo?.video.channel}
           avatarSize="cover"
         />
         <TitleContainer>
-          {data ? (
+          {coverVideo ? (
             <>
-              <Link to={absoluteRoutes.viewer.video(data.video.id)}>
-                <Title variant="h2">{data.video.title}</Title>
+              <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
+                <Title variant="h2">{coverVideo.coverTitle}</Title>
               </Link>
-              <span>{data.coverDescription}</span>
+              <span>{coverVideo.coverDescription}</span>
             </>
           ) : (
             <>
