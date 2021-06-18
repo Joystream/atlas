@@ -1,3 +1,6 @@
+export const ENV_DEVELOPMENT = 'DEVELOPMENT'
+export const ENV_STAGING = 'STAGING'
+
 const readEnv = (name: string): string | undefined => {
   return process.env[name]
 }

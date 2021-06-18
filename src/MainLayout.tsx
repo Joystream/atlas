@@ -9,6 +9,7 @@ import { routingTransitions } from '@/styles/routingTransitions'
 import { isBrowserOutdated } from '@/utils/broswer'
 
 import { useDialog } from './providers'
+import { AdminView } from './views/admin'
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'
 import { ViewerLayout } from './views/viewer'
@@ -48,6 +49,7 @@ export const MainLayout: React.FC = () => {
           <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
           <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
           <Route path={BASE_PATHS.playground + '/*'} element={<PlaygroundLayout />} />
+          <Route path={BASE_PATHS.admin + '/*'} element={<AdminView />} />
         </Routes>
       </BrowserRouter>
     </>
