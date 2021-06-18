@@ -57,6 +57,13 @@ export const useUploadsStore = create<UploadStoreState>(
     }),
     {
       name: UPLOADS_LOCAL_STORAGE_KEY,
+      migrate: (state) => {
+        const uploads = window.localStorage.getItem(UPLOADS_LOCAL_STORAGE_KEY)
+        return {
+          ...state,
+          uploadsState: JSON.parse(uploads || ''),
+        }
+      },
       whitelist: ['uploadsState'],
     }
   )
