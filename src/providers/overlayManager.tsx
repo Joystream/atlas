@@ -55,6 +55,35 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   )
 }
 
+const PortalContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+`
+
+export const useOverlayManager = () => {
+  const context = useContext(OverlayManagerContext)
+  if (!context) {
+    throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
+  }
+  const { setOverlaysOpenCount, dialogContainerRef, contextMenuContainerRef } = context
+
+  const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
+    setOverlaysOpenCount,
+  ])
+  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
+    setOverlaysOpenCount,
+  ])
+
+  return {
+    incrementOverlaysOpenCount,
+    decrementOverlaysOpenCount,
+    dialogContainerRef,
+    contextMenuContainerRef,
+  }
+}
+
 const overlayManagerStyles = (scrollbarGap = 0) => css`
   :root {
     --scrollbar-gap-width: ${scrollbarGap}px;
@@ -88,32 +117,3 @@ const dialogTransitions = css`
     transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `
-
-const PortalContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-`
-
-export const useOverlayManager = () => {
-  const context = useContext(OverlayManagerContext)
-  if (!context) {
-    throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
-  }
-  const { setOverlaysOpenCount, dialogContainerRef, contextMenuContainerRef } = context
-
-  const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
-    setOverlaysOpenCount,
-  ])
-  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
-    setOverlaysOpenCount,
-  ])
-
-  return {
-    incrementOverlaysOpenCount,
-    decrementOverlaysOpenCount,
-    dialogContainerRef,
-    contextMenuContainerRef,
-  }
-}
