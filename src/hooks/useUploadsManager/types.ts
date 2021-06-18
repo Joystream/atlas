@@ -36,7 +36,7 @@ export type StartFileUploadOptions = {
 }
 
 export type UploadManagerValue = {
-  chanelUploadsState: AssetUpload[]
+  channelUploadsState: AssetUpload[]
   isLoading: boolean
 }
 export type UploadsProgressRecord = Record<string, number>

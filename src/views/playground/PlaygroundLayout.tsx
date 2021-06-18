@@ -8,7 +8,6 @@ import {
   ConnectionStatusProvider,
   DialogProvider,
   DraftsProvider,
-  Snackbars,
   UploadManagerProvider,
 } from '@/hooks'
 import { colors } from '@/shared/theme'
@@ -60,7 +59,6 @@ export const PlaygroundLayout = () => {
                       <Route key={route.path} path={route.path} element={route.element} />
                     ))}
                   </Routes>
-                  <Snackbars />
                 </ContentContainer>
               </Container>
             </DraftsProvider>

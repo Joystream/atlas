@@ -11,14 +11,10 @@ type AssetFile = {
 type UploadStoreState = {
   uploadsState: AssetUpload[]
   addAsset: (asset: AssetUpload) => void
-  setUploadsProgress: (contentId: string, progress: number) => void
   updateAsset: (contentId: string, lastStatus: AssetUploadStatus) => void
   removeAsset: (contentId: string) => void
   uploadsProgress: UploadsProgressRecord
-  notifications: {
-    uploading: number
-    uploaded: number
-  }
+  setUploadsProgress: (contentId: string, progress: number) => void
   assetsFiles: AssetFile[]
   setAssetsFiles: (assetFile: AssetFile) => void
 }
@@ -29,10 +25,6 @@ export const useUploadsStore = create<UploadStoreState>(
   persist(
     (set) => ({
       uploadsState: [],
-      notifications: {
-        uploaded: 0,
-        uploading: 0,
-      },
       uploadsProgress: {},
       setUploadsProgress: (contentId, progress) => {
         set((state) => ({ ...state, uploadsProgress: { ...state.uploadsProgress, [contentId]: progress } }))

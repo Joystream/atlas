@@ -5,7 +5,7 @@ import { Button, TextField } from '@/shared/components'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
-  const { chanelUploadsState } = useUploadsManager()
+  const { channelUploadsState } = useUploadsManager()
   const startFileUpload = useStartFileUpload()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -42,8 +42,8 @@ export const UploadFiles = () => {
       <input type="file" onChange={handleFileChange} />
       <Button onClick={handleUploadClick}>Start upload</Button>
       <h2>Uploading files data:</h2>
-      {chanelUploadsState.length > 0 ? (
-        <pre>{JSON.stringify(chanelUploadsState, undefined, 2)}</pre>
+      {channelUploadsState.length > 0 ? (
+        <pre>{JSON.stringify(channelUploadsState, undefined, 2)}</pre>
       ) : (
         <p style={{ color: 'rgba(255,255,255,0.3)' }}>Add file</p>
       )}

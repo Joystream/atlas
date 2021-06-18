@@ -15,9 +15,9 @@ type GroupByParentObjectIdAcc = {
 export const MyUploadsView: React.FC = () => {
   const { isLoading } = useUploadsManager()
   const uploadsProgress = useUploadsStore((state) => state.uploadsProgress)
-  const { chanelUploadsState } = useUploadsManager()
+  const { channelUploadsState } = useUploadsManager()
 
-  const filteredUploadStateWithProgress = chanelUploadsState.map((asset) => ({
+  const filteredUploadStateWithProgress = channelUploadsState.map((asset) => ({
     ...asset,
     progress: uploadsProgress[asset.contentId] ?? 0,
   }))

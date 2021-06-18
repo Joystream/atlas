@@ -27,7 +27,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       state.uploadsState.filter((item) => item.parentObject?.type === 'video').map((item) => item.parentObject.id),
     shallow
   )
-  const chanelUploadsState = useUploadsStore(
+  const channelUploadsState = useUploadsStore(
     (state) => state.uploadsState.filter((asset) => asset.owner === activeChannelId),
     (prevState, newState) => isEqual(prevState, newState)
   )
@@ -51,7 +51,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     isInitialMount.current = false
 
     let missingAssetsCount = 0
-    chanelUploadsState.forEach((asset) => {
+    channelUploadsState.forEach((asset) => {
       if (asset.lastStatus !== 'completed') {
         updateAsset(asset.contentId, 'missing')
         missingAssetsCount++
@@ -69,7 +69,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
         iconType: 'warning',
       })
     }
-  }, [chanelUploadsState, displaySnackbar, navigate, updateAsset])
+  }, [channelUploadsState, displaySnackbar, navigate, updateAsset])
 
   const isLoading = channelLoading || videosLoading
 
@@ -77,7 +77,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     <UploadManagerContext.Provider
       value={{
         isLoading,
-        chanelUploadsState: chanelUploadsState.filter((asset) => !ignoredAssetsIds.includes(asset.contentId)),
+        channelUploadsState: channelUploadsState.filter((asset) => !ignoredAssetsIds.includes(asset.contentId)),
       }}
     >
       {children}
@@ -90,5 +90,5 @@ export const useUploadsManager = () => {
   if (ctx === undefined) {
     throw new Error('useUploadsManager must be used within a UploadManagerProvider')
   }
-  return { ...ctx }
+  return ctx
 }

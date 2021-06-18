@@ -8,9 +8,11 @@ import { absoluteRoutes } from '@/config/routes'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-import { useSnackbar } from './useSnackbar'
-import { useStorageProviders } from './useStorageProviders'
-import { InputAssetUpload, StartFileUploadOptions, useUploadsStore } from './useUploadsManager'
+import { useUploadsStore } from './store'
+import { InputAssetUpload, StartFileUploadOptions } from './types'
+
+import { useSnackbar } from '../useSnackbar'
+import { useStorageProviders } from '../useStorageProviders'
 
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
