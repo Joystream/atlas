@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useDialog } from '@/providers/useDialog'
+import { useDialog } from '@/providers/dialogs'
 import { Button } from '@/shared/components'
 
 export const Dialogs = () => {

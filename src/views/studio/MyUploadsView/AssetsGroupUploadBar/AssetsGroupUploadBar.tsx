@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 import { useChannel, useVideo } from '@/api/hooks'
-import { AssetUploadWithProgress } from '@/providers/useUploadsManager/types'
+import { AssetUploadWithProgress } from '@/providers/uploadsManager/types'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
 import { AssetGroupUploadBarPlaceholder } from '@/views/studio/MyUploadsView/AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'

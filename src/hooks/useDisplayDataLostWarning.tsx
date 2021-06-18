@@ -1,4 +1,4 @@
-import { useDialog } from '../providers/useDialog'
+import { useDialog } from '../providers/dialogs'
 
 type OpenWarningDialogArgs = {
   onCancel?: () => void

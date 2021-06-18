@@ -3,10 +3,10 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { useSnackbar } from '@/providers/useSnackbar'
+import { useSnackbar } from '@/providers/snackbar'
 import { Logger } from '@/utils/logger'
 
-import { useDialog } from './useDialog'
+import { useDialog } from './dialogs'
 
 import { useConnectionStatus } from '.'
 
