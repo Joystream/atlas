@@ -107,8 +107,9 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-fullscreen-control {
+      margin-left: auto;
       ${media.small} {
-        margin-left: auto;
+        margin-left: 0;
       }
     }
 
