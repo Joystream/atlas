@@ -23,12 +23,12 @@ export const useSnackbar = () => {
   const displaySnackbar = useSnackbarStore((state) => state.displaySnackbar)
   const closeSnackbar = useSnackbarStore((state) => state.closeSnackbar)
   const updateSnackbar = useSnackbarStore((state) => state.updateSnackbar)
-  const snackbars = useSnackbarStore((state) => state.snackbars)
-  return { displaySnackbar, closeSnackbar, snackbars, updateSnackbar }
+  return { displaySnackbar, closeSnackbar, updateSnackbar }
 }
 
 export const Snackbars: React.FC = () => {
-  const { closeSnackbar, snackbars } = useSnackbar()
+  const { closeSnackbar } = useSnackbar()
+  const snackbars = useSnackbarStore((state) => state.snackbars)
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
