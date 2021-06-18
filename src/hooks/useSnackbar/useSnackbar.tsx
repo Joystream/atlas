@@ -6,7 +6,7 @@ import { Snackbar } from '@/shared/components'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 
-import { useSnackbar } from './store'
+import { useSnackbarStore } from './store'
 
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
 
@@ -18,6 +18,10 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
 }
 
 const SNACKBARS_LIMIT = 3
+
+export const useSnackbar = () => {
+  return useSnackbarStore()
+}
 
 export const Snackbars: React.FC = () => {
   const { closeSnackbar, snackbars } = useSnackbar()

@@ -74,7 +74,7 @@ export const TransactionManagerProvider: React.FC = ({ children }) => {
     },
   })
 
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const { displaySnackbar } = useSnackbar()
 
   const handleDialogClose = useCallback(async () => {
     try {

@@ -21,7 +21,7 @@ const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const { displaySnackbar } = useSnackbar()
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
   const setAssetsFiles = useUploadsStore((state) => state.setAssetsFiles)

@@ -80,7 +80,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const { displaySnackbar } = useSnackbar()
   const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
   const { getAssetUrl } = useAsset()

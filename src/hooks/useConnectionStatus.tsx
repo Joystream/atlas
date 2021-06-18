@@ -23,7 +23,7 @@ const SNACKBAR_TIMEOUT = 15000
 export const ConnectionStatusProvider: React.FC = ({ children }) => {
   const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
   const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const { displaySnackbar } = useSnackbar()
 
   const checkConnection = useCallback(async () => {
     try {

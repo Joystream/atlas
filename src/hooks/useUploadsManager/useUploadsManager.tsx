@@ -10,7 +10,7 @@ import { useUser } from '@/hooks'
 import { useUploadsStore } from './store'
 import { UploadManagerValue } from './types'
 
-import { useSnackbar } from '../useSnackbar/store'
+import { useSnackbar } from '../useSnackbar'
 
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'
@@ -19,7 +19,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const navigate = useNavigate()
   const { activeChannelId } = useUser()
 
-  const displaySnackbar = useSnackbar((state) => state.displaySnackbar)
+  const { displaySnackbar } = useSnackbar()
   const updateAsset = useUploadsStore((state) => state.updateAsset)
 
   const uploadsStateIds = useUploadsStore(

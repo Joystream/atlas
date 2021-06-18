@@ -27,7 +27,7 @@ export type SnackbarState = {
   closeSnackbar: (id: string) => void
 }
 
-export const useSnackbar = create<SnackbarState>((set) => ({
+export const useSnackbarStore = create<SnackbarState>((set) => ({
   snackbars: [],
   updateSnackbar: (id, opts) => {
     set((state) => ({
