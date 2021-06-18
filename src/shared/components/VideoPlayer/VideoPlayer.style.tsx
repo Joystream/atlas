@@ -113,6 +113,16 @@ export const Container = styled.div<ContainerProps>`
       }
     }
 
+    /* 
+  Targeting firefox, picture-in-picture in firefox is not placed in the bar,
+  thus we need margin-left to move button to the right side
+   */
+    @-moz-document url-prefix() {
+      .vjs-fullscreen-control {
+        margin-left: auto;
+      }
+    }
+
     .vjs-slider {
       background-color: ${colors.gray[400]};
 
@@ -197,16 +207,6 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-big-play-button {
     display: none !important;
-  }
-
-  /* 
-  Targeting firefox, picture-in-picture in firefox is not placed in the bar,
-  thus we need margin-left to move button to the right side
-   */
-  @-moz-document url-prefix() {
-    .vjs-fullscreen-control {
-      margin-left: auto;
-    }
   }
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
