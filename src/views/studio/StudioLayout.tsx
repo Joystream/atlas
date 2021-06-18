@@ -18,7 +18,6 @@ import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
   ActiveUserProvider,
   DraftsProvider,
-  EditVideoSheetProvider,
   JoystreamProvider,
   PersonalDataProvider,
   TransactionManagerProvider,
