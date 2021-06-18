@@ -1,7 +1,12 @@
 export const ENV_DEVELOPMENT = 'DEVELOPMENT'
+export const ENV_PRODUCTION = 'PRODUCTION'
 export const ENV_STAGING = 'STAGING'
 
 const readEnv = (name: string): string | undefined => {
+  const env = window.localStorage.getItem('env')
+  if (env === ENV_PRODUCTION) {
+    return process.env[`${name}_${ENV_PRODUCTION}`]
+  }
   return process.env[name]
 }
 

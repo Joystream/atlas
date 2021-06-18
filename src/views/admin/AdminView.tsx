@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { absoluteRoutes } from '@/config/routes'
-import { ENV_DEVELOPMENT, ENV_STAGING } from '@/config/urls'
+import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_STAGING } from '@/config/urls'
 import { Select, Text } from '@/shared/components'
 
 const items = [
   { name: ENV_DEVELOPMENT, value: ENV_DEVELOPMENT },
+  { name: ENV_PRODUCTION, value: ENV_PRODUCTION },
   { name: ENV_STAGING, value: ENV_STAGING },
 ]
 
