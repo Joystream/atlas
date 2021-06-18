@@ -18,40 +18,18 @@ export default {
   },
 } as Meta
 
-const Template: Story<TextFieldProps> = (args) => (
-  <TextField
-    {...args}
-    css={css`
-      max-width: 400px;
-    `}
-  />
-)
+const Template: Story<TextFieldProps> = (args) => <TextField {...args} />
 
 const TemplateWithControlledInput: Story<TextFieldProps> = (args) => {
   const [value, setValue] = useState('')
-  return (
-    <TextField
-      {...args}
-      onChange={(e) => setValue(e.target.value)}
-      value={value}
-      css={css`
-        max-width: 400px;
-      `}
-    />
-  )
+  return <TextField {...args} onChange={(e) => setValue(e.target.value)} value={value} />
 }
 
 const TemplateWithUncontrolledInput: Story<TextFieldProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
   return (
     <>
-      <TextField
-        {...args}
-        ref={ref}
-        css={css`
-          max-width: 400px;
-        `}
-      />
+      <TextField {...args} ref={ref} />
       <Button onClick={() => alert(ref.current?.value)}>Show input value</Button>
     </>
   )
