@@ -35,7 +35,6 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
-import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -90,23 +89,14 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     skip: newChannel || !activeChannelId,
   })
   const startFileUpload = useStartFileUpload()
-  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+  const { url: avatarPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.AVATAR,
   })
-  const { url: coverPhotoUrl, error: coverPhotoError } = useAsset({
+  const { url: coverPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.COVER,
   })
-
-  useEffect(() => {
-    if (avatarPhotoError) {
-      Logger.error('Failed to load avatar')
-    }
-    if (coverPhotoError) {
-      Logger.error('Failed to load video cover')
-    }
-  }, [avatarPhotoError, coverPhotoError])
 
   const {
     register,

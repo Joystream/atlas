@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from '@/api/queries'
 import { AssetType, useStorageProviders } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
+import { Logger } from '@/utils/logger'
 
 type UseAssetDataArgs =
   | { entity?: VideoFieldsFragment | null; assetType: AssetType.THUMBNAIL | AssetType.MEDIA }
@@ -24,6 +25,12 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
   const [error, setError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined)
   const [url, setUrl] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    if (error) {
+      Logger.error(`Fail to load ${assetType}`)
+    }
+  }, [error, assetType])
 
   const assetData = useMemo(() => {
     if (entity && entity.__typename === 'Channel') {

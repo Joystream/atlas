@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
@@ -6,7 +6,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
 
 import {
   PreviewContainer,
@@ -21,16 +20,10 @@ type RecentChannelPreviewProps = {
 }
 
 export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
-  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+  const { url: avatarPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.AVATAR,
   })
-
-  useEffect(() => {
-    if (avatarPhotoError) {
-      Logger.error('Failed to load avatar')
-    }
-  }, [avatarPhotoError])
 
   return (
     <PreviewContainer to={absoluteRoutes.viewer.channel(channel?.id)}>

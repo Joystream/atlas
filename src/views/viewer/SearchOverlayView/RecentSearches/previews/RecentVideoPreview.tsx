@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoFieldsFragment } from '@/api/queries'
@@ -6,7 +6,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/hooks'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
 
 import {
   PreviewContainer,
@@ -22,16 +21,10 @@ type RecentVideoPreviewProps = {
 }
 
 export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
-  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+  const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-
-  useEffect(() => {
-    if (thumbnailPhotoError) {
-      Logger.error('Failed to load video thumbnail')
-    }
-  }, [thumbnailPhotoError])
 
   return (
     <PreviewContainer to={absoluteRoutes.viewer.video(video?.id)}>

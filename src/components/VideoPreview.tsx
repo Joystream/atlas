@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
@@ -21,23 +21,14 @@ export type VideoPreviewProps = {
 
 export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
-  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+  const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+  const { url: avatarPhotoUrl } = useAsset({
     entity: video?.channel,
     assetType: AssetType.AVATAR,
   })
-
-  useEffect(() => {
-    if (avatarPhotoError) {
-      Logger.error('Failed to load avatar')
-    }
-    if (thumbnailPhotoError) {
-      Logger.error('Failed to load video thumbnail')
-    }
-  }, [thumbnailPhotoError, avatarPhotoError])
 
   return (
     <VideoPreviewBase
@@ -70,23 +61,14 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
-  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+  const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+  const { url: avatarPhotoUrl } = useAsset({
     entity: video?.channel,
     assetType: AssetType.AVATAR,
   })
-
-  useEffect(() => {
-    if (avatarPhotoError) {
-      Logger.error('Failed to load avatar')
-    }
-    if (thumbnailPhotoError) {
-      Logger.error('Failed to load video thumbnail')
-    }
-  }, [thumbnailPhotoError, avatarPhotoError])
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 

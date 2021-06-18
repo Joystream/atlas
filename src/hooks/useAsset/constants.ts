@@ -1,6 +1,6 @@
 export enum AssetType {
-  COVER,
-  AVATAR,
-  THUMBNAIL,
-  MEDIA,
+  COVER = 'cover',
+  AVATAR = 'avatar',
+  THUMBNAIL = 'thumbnail',
+  MEDIA = 'media',
 }

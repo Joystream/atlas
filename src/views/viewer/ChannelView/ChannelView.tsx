@@ -32,16 +32,10 @@ export const ChannelView: React.FC = () => {
     updateChannelFollowing,
   } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
-  const { url: coverPhotoUrl, error: coverPhotoError } = useAsset({
+  const { url: coverPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.COVER,
   })
-
-  useEffect(() => {
-    if (coverPhotoError) {
-      Logger.error('Fail to load channel cover')
-    }
-  }, [coverPhotoError])
 
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)

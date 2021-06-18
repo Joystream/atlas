@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
@@ -36,18 +36,12 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => Logger.error('Failed to fetch channel', error),
   })
-  const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+  const { url: avatarPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.AVATAR,
   })
 
   const displayedChannel = overrideChannel || channel
-
-  useEffect(() => {
-    if (avatarPhotoError) {
-      Logger.error('Failed to load avatar')
-    }
-  }, [avatarPhotoError])
 
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>

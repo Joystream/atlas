@@ -8,7 +8,6 @@ import { AssetType, useAsset, useDisplayDataLostWarning, useEditVideoSheet, useU
 import { Button, ExpandButton, IconButton, Placeholder, Text } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
 
 import {
   AvatarPlaceholder,
@@ -206,16 +205,10 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const { url: avatarPhotoUrl, error: avatarPhotoError } = useAsset({
+    const { url: avatarPhotoUrl } = useAsset({
       entity: channel,
       assetType: AssetType.AVATAR,
     })
-
-    useEffect(() => {
-      if (avatarPhotoError) {
-        Logger.error('Failed to load avatar')
-      }
-    }, [avatarPhotoError])
 
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>

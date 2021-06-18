@@ -33,20 +33,11 @@ export const VideoView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
-  const { url: thumbnailPhotoUrl, error: thumbnailPhotoError } = useAsset({
+  const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: mediaUrl, error: mediaError } = useAsset({ entity: video, assetType: AssetType.MEDIA })
-
-  useEffect(() => {
-    if (mediaError) {
-      Logger.error('Failed to load video')
-    }
-    if (thumbnailPhotoError) {
-      Logger.error('Failed to load video thumbnail')
-    }
-  }, [mediaError, thumbnailPhotoError])
+  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
