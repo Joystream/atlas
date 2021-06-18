@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
