@@ -18,6 +18,10 @@ type HasPadding = {
   paddingTop: number
 }
 
+type ArrowProps = {
+  arrowPosition?: number
+}
+
 export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
   position: absolute;
   top: 0;
@@ -36,8 +40,9 @@ export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
   pointer-events: none;
 `
 
-export const Arrow = styled(IconButton)`
+export const Arrow = styled(IconButton)<ArrowProps>`
   position: absolute;
+  top: ${({ arrowPosition }) => arrowPosition && `${arrowPosition}px`};
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
 
