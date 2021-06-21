@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { RoutingState } from '@/types/routing'
 
@@ -27,9 +27,12 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
-  const { getAssetUrl } = useAsset()
-
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
+  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
 
   if (!tab) {
     return {
@@ -51,14 +54,10 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
     : {
         video: {
-          url: getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject),
+          url: mediaUrl,
         },
         thumbnail: {
-          url: getAssetUrl(
-            video?.thumbnailPhotoAvailability,
-            video?.thumbnailPhotoUrls,
-            video?.thumbnailPhotoDataObject
-          ),
+          url: thumbnailPhotoUrl,
         },
       }
 
