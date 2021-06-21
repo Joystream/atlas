@@ -7,7 +7,8 @@ import { transitions } from '@/shared/theme'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
-  setOverlaysOpenCount: React.Dispatch<React.SetStateAction<number>>
+  setOpenedSheetsClosed: React.Dispatch<React.SetStateAction<number>>
+  setOpenedDialogsCount: React.Dispatch<React.SetStateAction<number>>
   dialogContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
 }
@@ -18,22 +19,23 @@ OverlayManagerContext.displayName = 'OverlayManagerContext'
 export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
-  const [overlaysOpenCount, setOverlaysOpenCount] = useState(0)
+  const [openedSheetsCount, setOpenedSheetsClosed] = useState(0)
+  const [openedDialogsCount, setOpenedDialogsCount] = useState(0)
   const dialogContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (overlaysOpenCount === 0 && scrollLocked) {
+    if (openedDialogsCount + openedSheetsCount === 0 && scrollLocked) {
       setScrollLocked(false)
       setScrollbarGap(0)
       enableBodyScroll(document.body)
-    } else if (overlaysOpenCount > 0 && !scrollLocked) {
+    } else if (openedDialogsCount + openedSheetsCount > 0 && !scrollLocked) {
       const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
       setScrollLocked(true)
       setScrollbarGap(scrollbarGap)
       disableBodyScroll(document.body, { reserveScrollBarGap: true })
     }
-  }, [overlaysOpenCount, scrollLocked])
+  }, [openedDialogsCount, openedSheetsCount, scrollLocked])
 
   return (
     <>
@@ -41,7 +43,8 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
-          setOverlaysOpenCount,
+          setOpenedSheetsClosed,
+          setOpenedDialogsCount,
           dialogContainerRef,
           contextMenuContainerRef,
         }}

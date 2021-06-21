@@ -22,13 +22,13 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
   onExitClick,
   className,
 }) => {
-  const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const { dialogContainerRef, incrementOpenedDialogsCount, decrementOpenedDialogsCount } = useOverlayManager()
 
   useEffect(() => {
     return () => {
-      decrementOverlaysOpenCount()
+      decrementOpenedDialogsCount()
     }
-  }, [decrementOverlaysOpenCount])
+  }, [decrementOpenedDialogsCount])
 
   return (
     <Portal containerRef={dialogContainerRef}>
@@ -41,8 +41,8 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
         classNames={transitions.names.dialog}
         mountOnEnter
         unmountOnExit
-        onEnter={incrementOverlaysOpenCount}
-        onExited={decrementOverlaysOpenCount}
+        onEnter={incrementOpenedDialogsCount}
+        onExited={decrementOpenedDialogsCount}
       >
         <StyledContainer className={className}>
           {exitButton && (

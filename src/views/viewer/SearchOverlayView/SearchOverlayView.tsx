@@ -12,16 +12,16 @@ import { SearchResults } from './SearchResults'
 
 export const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const { incrementOpenedSheetsCount, decrementOpenedSheetsCount } = useOverlayManager()
 
   // prevent body scroll
   useEffect(() => {
-    incrementOverlaysOpenCount()
+    incrementOpenedSheetsCount()
 
     return () => {
-      decrementOverlaysOpenCount()
+      decrementOpenedSheetsCount()
     }
-  }, [incrementOverlaysOpenCount, decrementOverlaysOpenCount])
+  }, [incrementOpenedSheetsCount, decrementOpenedSheetsCount])
 
   return (
     <OverlayContainer role="dialog">
