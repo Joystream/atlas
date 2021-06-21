@@ -16,7 +16,7 @@
     "url": "https://github.com/Joystream/joystream/issues"
   },
   "scripts": {
-    "bundle-stats": "STATS=server npm run build",
+    "bundle-stats": "yarn build --stats && webpack-bundle-analyzer dist/bundle-stats.json -m static -r dist/stats.html",
     "start": "react-app-rewired start",
     "dev": "yarn start",
     "build": "react-app-rewired build",
