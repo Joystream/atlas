@@ -82,4 +82,12 @@ export interface PersonalDataClient {
 
   // add a dismissed message
   setDismissedMessage: (id: string, add?: boolean) => Promise<void>
+
+  // === video player ====
+
+  // get player volume
+  playerVolume: () => Promise<number>
+
+  // set player volume
+  setPlayerVolume: (volume?: number) => Promise<void>
 }

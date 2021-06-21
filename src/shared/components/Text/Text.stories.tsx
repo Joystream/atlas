@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
@@ -10,17 +9,7 @@ export default {
 } as Meta
 
 const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
-  <div
-    css={css`
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-
-      > * {
-        margin-top: 12px;
-      }
-    `}
-  >
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
     <Text {...args} variant="hero">
       Hero
     </Text>

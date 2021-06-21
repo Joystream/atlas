@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 import {
   ActiveUserProvider,
   ConnectionStatusProvider,
+  DialogProvider,
   DraftsProvider,
-  SnackbarProvider,
   UploadManagerProvider,
 } from '@/hooks'
 import { colors } from '@/shared/theme'
@@ -40,8 +40,8 @@ const playgroundRoutes = [
 
 export const PlaygroundLayout = () => {
   return (
-    <SnackbarProvider>
-      <ActiveUserProvider>
+    <ActiveUserProvider>
+      <DialogProvider>
         <UploadManagerProvider>
           <ConnectionStatusProvider>
             <DraftsProvider>
@@ -64,8 +64,8 @@ export const PlaygroundLayout = () => {
             </DraftsProvider>
           </ConnectionStatusProvider>
         </UploadManagerProvider>
-      </ActiveUserProvider>
-    </SnackbarProvider>
+      </DialogProvider>
+    </ActiveUserProvider>
   )
 }
 

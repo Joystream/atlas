@@ -15,8 +15,8 @@ import {
   useEditVideoSheet,
   useJoystream,
   useSnackbar,
+  useStartFileUpload,
   useTransactionManager,
-  useUploadsManager,
   useUser,
 } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
@@ -88,7 +88,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
-  const { startFileUpload } = useUploadsManager()
+  const startFileUpload = useStartFileUpload()
 
   const {
     register,

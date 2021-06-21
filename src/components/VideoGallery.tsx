@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useCallback, useMemo, useState } from 'react'
 
@@ -64,9 +63,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       return
     }
     const topPx = (coverHeight - CAROUSEL_ARROW_HEIGHT) / 2
-    return css`
-      top: ${topPx}px;
-    `
+    return topPx
   }, [coverHeight])
 
   if (!loading && videos?.length === 0) {
@@ -86,7 +83,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
-      arrowCss={arrowPosition}
+      arrowPosition={arrowPosition}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview

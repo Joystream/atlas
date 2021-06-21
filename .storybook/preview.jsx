@@ -1,10 +1,10 @@
-import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { GlobalStyle } from '../src/shared/components'
 
-const wrapperStyle = css`
+const Wrapper = styled.div`
   padding: 10px;
   height: calc(100vh - 20px);
 
@@ -13,24 +13,17 @@ const wrapperStyle = css`
   }
 `
 
-const sizeIndicatorStyle = css`
-  position: absolute;
-  font-size: 12px;
-  right: 4px;
-  top: 4px;
-`
-
 const StylesWrapperDecorator = (styleFn) => {
   const ref = useRef(null)
   const { width, height } = useResizeObserver({ ref })
   return (
-    <div ref={ref} css={wrapperStyle}>
-      <div css={sizeIndicatorStyle}>
+    <Wrapper ref={ref}>
+      <div style={{ position: 'absolute', fontSize: '12px', right: '4px', top: '4px' }}>
         {width}px x {height}px
       </div>
       <GlobalStyle />
       {styleFn()}
-    </div>
+    </Wrapper>
   )
 }
 
