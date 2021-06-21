@@ -6,14 +6,15 @@ import ReactDOM from 'react-dom'
 import { Logger } from '@/utils/logger'
 
 import { App } from './App'
-import { ENV_DEVELOPMENT, SENTRY_DSN } from './config/urls'
+import { BUILD_ENV, TARGET_DEV_ENV } from './config/envs'
+import { SENTRY_DSN } from './config/urls'
 
 type Env = 'production' | 'staging' | 'development'
 
 const env = (process.env.REACT_APP_ENV?.toLowerCase() || 'development') as Env
 
 const initApp = async () => {
-  if ((env === 'development' || env === 'staging') && window.localStorage.getItem('env') === ENV_DEVELOPMENT) {
+  if (BUILD_ENV !== 'production' && TARGET_DEV_ENV === 'mocking') {
     try {
       const { worker } = await import('./mocking/browser')
       await worker.start()
