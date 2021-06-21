@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
@@ -37,14 +36,7 @@ export default {
 
 type WithChildren = FormFieldProps & { children?: React.ReactNode }
 
-const Template: Story<WithChildren> = (args) => (
-  <FormField
-    {...args}
-    css={css`
-      max-width: 450px;
-    `}
-  />
-)
+const Template: Story<WithChildren> = (args) => <FormField {...args} />
 
 export const Default = Template.bind({})
 

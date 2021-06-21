@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
@@ -24,27 +23,11 @@ export default {
   },
 } as Meta
 
-const Template: Story<SelectProps> = (args) => (
-  <Select
-    {...args}
-    css={css`
-      max-width: 400px;
-    `}
-  />
-)
+const Template: Story<SelectProps> = (args) => <Select {...args} />
 
 const TemplateWithControlledInput: Story<SelectProps> = (args) => {
   const [value, setValue] = useState<string | null>(null)
-  return (
-    <Select
-      {...args}
-      onChange={(value) => setValue(value ?? null)}
-      value={value}
-      css={css`
-        max-width: 400px;
-      `}
-    />
-  )
+  return <Select {...args} onChange={(value) => setValue(value ?? null)} value={value} />
 }
 
 export const Default = Template.bind({})

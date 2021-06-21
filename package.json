@@ -46,7 +46,6 @@
   "dependencies": {
     "@apollo/client": "^3.3.0",
     "@emotion/babel-plugin": "~11.0.0",
-    "@emotion/babel-preset-css-prop": "~11.0.0",
     "@emotion/eslint-plugin": "^11.2.0",
     "@emotion/react": "~11.0.0",
     "@emotion/styled": "~11.0.0",
