@@ -10,6 +10,7 @@ import { Logger } from '@/utils/logger'
 
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions } from './types'
+import { useUploadsManager } from './useUploadsManager'
 
 import { useSnackbar } from '../snackbars'
 import { useStorageProviders } from '../storageProviders'
@@ -23,10 +24,10 @@ export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
+  const { updateAssetStatus } = useUploadsManager()
 
   const setAssetsFiles = useUploadsStore((state) => state.setAssetsFiles)
   const addAsset = useUploadsStore((state) => state.addAsset)
-  const updateAsset = useUploadsStore((state) => state.updateAsset)
   const setUploadsProgress = useUploadsStore((state) => state.setUploadsProgress)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
 
@@ -116,7 +117,7 @@ export const useStartFileUpload = () => {
           addAsset({ ...asset, lastStatus: 'inProgress', size: file.size })
         }
         if (opts?.isReUpload && file) {
-          updateAsset(asset.contentId, 'inProgress')
+          updateAssetStatus(asset.contentId, 'inProgress')
         }
         setAssetUploadProgress(0)
 
@@ -152,24 +153,21 @@ export const useStartFileUpload = () => {
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
               if (cfg?.currentRetryAttempt === 1) {
-                updateAsset(asset.contentId, 'reconnecting')
+                updateAssetStatus(asset.contentId, 'reconnecting')
               }
             },
           },
           onUploadProgress: setUploadProgress,
         })
 
-        // Cancel delayed functions that would overwrite asset status back to 'inProgres'
-
-        // TODO: remove assets from the same parent if all finished
-        updateAsset(asset.contentId, 'completed')
+        updateAssetStatus(asset.contentId, 'completed')
         setAssetUploadProgress(100)
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
       } catch (e) {
         Logger.error('Failed to upload to storage provider', { storageUrl, error: e })
-        updateAsset(asset.contentId, 'error')
+        updateAssetStatus(asset.contentId, 'error')
         setAssetUploadProgress(0)
 
         const axiosError = e as AxiosError
@@ -199,7 +197,7 @@ export const useStartFileUpload = () => {
       navigate,
       setAssetsFiles,
       setUploadsProgress,
-      updateAsset,
+      updateAssetStatus,
     ]
   )
 
