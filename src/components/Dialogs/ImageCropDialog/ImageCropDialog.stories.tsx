@@ -61,7 +61,7 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '24px' }}>
-      <Avatar imageUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
+      <Avatar assetUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
 
       {thumbnailImageUrl ? (
         <Image src={thumbnailImageUrl} onClick={() => thumbnailDialogRef.current?.open()} />

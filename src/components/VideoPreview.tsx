@@ -4,6 +4,7 @@ import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
+import { AssetType } from '@/hooks/useAsset'
 import { useAuthorizedUser, useDrafts } from '@/providers'
 import {
   VideoPreviewBase,
@@ -22,18 +23,15 @@ export type VideoPreviewProps = {
 
 export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
 
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
-  const avatarPhotoUrl = getAssetUrl(
-    video?.channel?.avatarPhotoAvailability,
-    video?.channel?.avatarPhotoUrls,
-    video?.channel?.avatarPhotoDataObject
-  )
   return (
     <VideoPreviewBase
       publisherMode={false}
@@ -65,18 +63,14 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
-  const { getAssetUrl } = useAsset()
-
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
-  const avatarPhotoUrl = getAssetUrl(
-    video?.channel.avatarPhotoAvailability,
-    video?.channel.avatarPhotoUrls,
-    video?.channel.avatarPhotoDataObject
-  )
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 

@@ -8,7 +8,7 @@ import { AssetAvailability } from '@/api/queries'
 import { ImageCropDialog, ImageCropDialogImperativeHandle, StudioContainer } from '@/components'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset, useDisplayDataLostWarning } from '@/hooks'
+import { AssetType, useAsset, useDisplayDataLostWarning } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import {
   useConnectionStatus,
@@ -82,12 +82,19 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { displaySnackbar } = useSnackbar()
   const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
-  const { getAssetUrl } = useAsset()
 
   const { channel, loading, error, refetch: refetchChannel, client } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
   })
   const startFileUpload = useStartFileUpload()
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.AVATAR,
+  })
+  const { url: coverPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.COVER,
+  })
 
   const {
     register,
@@ -129,21 +136,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    const {
-      avatarPhotoUrls,
-      avatarPhotoAvailability,
-      avatarPhotoDataObject,
-      coverPhotoUrls,
-      coverPhotoAvailability,
-      coverPhotoDataObject,
-      title,
-      description,
-      isPublic,
-      language,
-    } = channel
-
-    const avatarPhotoUrl = getAssetUrl(avatarPhotoAvailability, avatarPhotoUrls, avatarPhotoDataObject)
-    const coverPhotoUrl = getAssetUrl(coverPhotoAvailability, coverPhotoUrls, coverPhotoDataObject)
+    const { title, description, isPublic, language } = channel
 
     const foundLanguage = languages.find(({ value }) => value === language?.iso)
 
@@ -155,7 +148,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       isPublic: isPublic ?? false,
       language: foundLanguage?.value || languages[0].value,
     })
-  }, [channel, getAssetUrl, loading, newChannel, reset])
+  }, [channel, avatarPhotoUrl, coverPhotoUrl, loading, newChannel, reset])
 
   const avatarValue = watch('avatar')
   const coverValue = watch('cover')
@@ -344,7 +337,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           render={({ field: { value, onChange } }) => (
             <>
               <ChannelCover
-                coverPhotoUrl={loading ? null : value.url}
+                assetUrl={loading ? null : value.url}
                 hasCoverUploadFailed={hasCoverUploadFailed}
                 onCoverEditClick={() => coverDialogRef.current?.open()}
                 editable
@@ -374,7 +367,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             render={({ field: { value, onChange } }) => (
               <>
                 <StyledAvatar
-                  imageUrl={value.url}
+                  assetUrl={value.url}
                   hasAvatarUploadFailed={hasAvatarUploadFailed}
                   size="fill"
                   onEditClick={() => avatarDialogRef.current?.open()}

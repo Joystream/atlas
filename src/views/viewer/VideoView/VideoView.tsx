@@ -1,11 +1,12 @@
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useMatch, useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
-import { useAsset, useRouterQuery } from '@/hooks'
+import { AssetType, useAsset, useRouterQuery } from '@/hooks'
 import { usePersonalData } from '@/providers'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -34,8 +35,14 @@ export const VideoView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
-  const { getAssetUrl } = useAsset()
 
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+
+  const videoRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
@@ -58,13 +65,22 @@ export const VideoView: React.FC = () => {
   const videoId = video?.id
 
   const [playing, setPlaying] = useState(true)
-  const handleUserKeyPress = useCallback((event: Event) => {
-    const { keyCode } = event as KeyboardEvent
-    if (keyCode === 32) {
-      event.preventDefault()
-      setPlaying((prevState) => !prevState)
-    }
-  }, [])
+  const handleUserKeyPress = useCallback(
+    (event: Event) => {
+      const { keyCode } = event as KeyboardEvent
+      if (videoRouteMatch) {
+        switch (keyCode) {
+          case 32:
+            event.preventDefault()
+            setPlaying((prevState) => !prevState)
+            break
+          default:
+            break
+        }
+      }
+    },
+    [videoRouteMatch]
+  )
 
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress)
@@ -123,13 +139,6 @@ export const VideoView: React.FC = () => {
   }
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
-
-  const mediaUrl = getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
 
   return (
     <StyledViewWrapper>

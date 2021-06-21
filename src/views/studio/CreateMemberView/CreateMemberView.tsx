@@ -152,7 +152,7 @@ export const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
+        <StyledAvatar size="view" assetUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/hooks'
 import { usePersonalData } from '@/providers'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -33,7 +33,10 @@ export const ChannelView: React.FC = () => {
     updateChannelFollowing,
   } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
-  const { getAssetUrl } = useAsset()
+  const { url: coverPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.COVER,
+  })
 
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
@@ -62,16 +65,11 @@ export const ChannelView: React.FC = () => {
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
-  const coverPhotoUrl = getAssetUrl(
-    channel?.coverPhotoAvailability,
-    channel?.coverPhotoUrls,
-    channel?.coverPhotoDataObject
-  )
 
   return (
     <ViewWrapper>
       <Header>
-        <ChannelCover coverPhotoUrl={coverPhotoUrl} />
+        <ChannelCover assetUrl={coverPhotoUrl} />
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>
