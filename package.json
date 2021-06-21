@@ -16,10 +16,10 @@
     "url": "https://github.com/Joystream/joystream/issues"
   },
   "scripts": {
-    "bundle-stats": "yarn build --stats && webpack-bundle-analyzer dist/bundle-stats.json -m static -r dist/stats.html",
+    "bundle-stats": "webpack-bundle-analyzer dist/bundle-stats.json -m static -r dist/stats.html",
     "start": "react-app-rewired start",
     "dev": "yarn start",
-    "build": "react-app-rewired build",
+    "build": "react-app-rewired build --stats && yarn bundle-stats",
     "eject": "react-app-rewired eject",
     "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:prettier": "prettier --check .",
