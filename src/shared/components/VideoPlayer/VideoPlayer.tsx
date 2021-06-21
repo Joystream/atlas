@@ -116,7 +116,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     player.play()
   }
 
-  const handleVolumeChange = useRef(
+  const debouncedVolumeChange = useRef(
     debounce((volume: number) => {
       updatePlayerVolume(volume)
     }, 500)
@@ -131,10 +131,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
     player.volume(playerVolume)
 
-    const volumeChange = () => handleVolumeChange.current(player.volume())
-    player.on('volumechange', volumeChange)
+    const handleVolumeChange = () => debouncedVolumeChange.current(player.volume())
+    player.on('volumechange', handleVolumeChange)
     return () => {
-      player.off('volumechange', volumeChange)
+      player.off('volumechange', handleVolumeChange)
     }
   }, [player, playerVolume])
 
