@@ -203,7 +203,7 @@ export const VideoView: React.FC = () => {
             ready={!loading}
             channelId={video?.channel.id}
             showChannel={false}
-            currentLyWatchedVideoId={video?.id}
+            currentlyWatchedVideoId={video?.id}
           />
         </MoreVideosContainer>
       </InfoContainer>
