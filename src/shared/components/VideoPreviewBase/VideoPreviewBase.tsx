@@ -289,7 +289,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <StyledAvatar
-                      imageUrl={channelAvatarUrl}
+                      assetUrl={channelAvatarUrl}
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
                     />

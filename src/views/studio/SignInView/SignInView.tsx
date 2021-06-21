@@ -91,7 +91,7 @@ export type StudioCardProps = {
 export const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
   return (
     <CardWrapper onClick={onClick} disabled={disabled}>
-      <StyledAvatar imageUrl={avatarUri} />
+      <StyledAvatar assetUrl={avatarUri} />
       <HandleText variant="h4">{handle}</HandleText>
     </CardWrapper>
   )

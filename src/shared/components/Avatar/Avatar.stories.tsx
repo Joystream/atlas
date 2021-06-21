@@ -20,5 +20,5 @@ export const Default = Template.bind({})
 
 export const WithAvatar = Template.bind({})
 WithAvatar.args = {
-  imageUrl: 'https://picsum.photos/200/300',
+  assetUrl: 'https://picsum.photos/200/300',
 }

@@ -18,7 +18,7 @@ import {
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   onEditClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  imageUrl?: string | null
+  assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
   loading?: boolean
   className?: string
@@ -29,7 +29,7 @@ export type AvatarProps = {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
-  imageUrl,
+  assetUrl,
   hasAvatarUploadFailed,
   loading = false,
   size = 'default',
@@ -52,7 +52,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
           <SvgGlyphImage />
-          <span>{imageUrl ? 'Edit Avatar' : 'Add avatar'}</span>
+          <span>{assetUrl ? 'Edit Avatar' : 'Add avatar'}</span>
         </EditButton>
       )}
       {newChannel && !isEditable ? (
@@ -68,8 +68,8 @@ export const Avatar: React.FC<AvatarProps> = ({
           >
             {loading ? (
               <StyledPlaceholder rounded />
-            ) : imageUrl ? (
-              <StyledImage src={imageUrl} onError={onError} />
+            ) : assetUrl ? (
+              <StyledImage src={assetUrl} onError={onError} />
             ) : hasAvatarUploadFailed ? (
               <NewChannelAvatar>
                 <SvgLargeUploadFailed />
