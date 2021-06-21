@@ -15,10 +15,10 @@ import {
   useEditVideoSheet,
   useJoystream,
   useSnackbar,
-  useStartFileUpload,
   useTransactionManager,
   useUser,
 } from '@/providers'
+import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import {
   ActionBarTransaction,
   ChannelCover,

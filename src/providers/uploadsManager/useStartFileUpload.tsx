@@ -11,8 +11,8 @@ import { Logger } from '@/utils/logger'
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions } from './types'
 
-import { useSnackbar } from '../useSnackbar'
-import { useStorageProviders } from '../useStorageProviders'
+import { useSnackbar } from '../snackbar'
+import { useStorageProviders } from '../storageProvider'
 
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
