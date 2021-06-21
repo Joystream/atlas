@@ -29,6 +29,7 @@ type InfiniteVideoGridProps = {
   ready?: boolean
   showChannel?: boolean
   className?: string
+  currentLyWatchedVideoId?: string
 }
 
 const INITIAL_ROWS = 4
@@ -48,6 +49,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   ready = true,
   showChannel = true,
   className,
+  currentLyWatchedVideoId,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -88,7 +90,18 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     skipCount,
     queryVariables,
     targetRowsCount,
-    dataAccessor: (rawData) => rawData?.videosConnection,
+    dataAccessor: (rawData) => {
+      if (currentLyWatchedVideoId) {
+        return (
+          rawData?.videosConnection && {
+            ...rawData.videosConnection,
+            totalCount: rawData.videosConnection.totalCount - 1,
+            edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentLyWatchedVideoId),
+          }
+        )
+      }
+      return rawData?.videosConnection
+    },
     itemsPerRow: videosPerRow,
   })
 
