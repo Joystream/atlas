@@ -35,8 +35,7 @@ export const VideoView: React.FC = () => {
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
   const { getAssetUrl } = useAsset()
-  const searchRouteMatch = !!useMatch({ path: absoluteRoutes.viewer.search() })
-
+  const searchRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
@@ -62,7 +61,7 @@ export const VideoView: React.FC = () => {
   const handleUserKeyPress = useCallback(
     (event: Event) => {
       const { keyCode } = event as KeyboardEvent
-      if (!searchRouteMatch) {
+      if (searchRouteMatch) {
         switch (keyCode) {
           case 32:
             event.preventDefault()
