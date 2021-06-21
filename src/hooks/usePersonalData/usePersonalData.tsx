@@ -30,12 +30,17 @@ type UpdateDismissedMessagesAction = {
   type: 'UPDATE_DISMISSED_MESSAGES'
   dismissedMessages: DismissedMessage[]
 }
+type UpdatePlayerVolume = {
+  type: 'UPDATE_PLAYER_VOLUME'
+  playerVolume: number
+}
 
 type Action =
   | UpdateWatchedVideosAction
   | UpdateChannelFollowingAction
   | UpdateSearchesAction
   | UpdateDismissedMessagesAction
+  | UpdatePlayerVolume
 const asyncReducer = (state: PersonalData, action: Action) => {
   switch (action.type) {
     case 'UPDATE_WATCHED_VIDEOS': {
@@ -60,6 +65,12 @@ const asyncReducer = (state: PersonalData, action: Action) => {
       return {
         ...state,
         dismissedMessages: action.dismissedMessages,
+      }
+    }
+    case 'UPDATE_PLAYER_VOLUME': {
+      return {
+        ...state,
+        playerVolume: action.playerVolume,
       }
     }
     default: {
@@ -131,13 +142,33 @@ const usePersonalData = () => {
     },
     [dispatch]
   )
-  return { state, updateWatchedVideos, updateChannelFollowing, updateRecentSearches, updateDismissedMessages }
+  const updatePlayerVolume = useCallback(
+    async (...setPlayerVolumeArgs: Parameters<PersonalDataClient['setPlayerVolume']>) => {
+      try {
+        await personalClient.setPlayerVolume(...setPlayerVolumeArgs)
+        const updatedPlayerVolume = await personalClient.playerVolume()
+        dispatch({ type: 'UPDATE_PLAYER_VOLUME', playerVolume: updatedPlayerVolume })
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    },
+    [dispatch]
+  )
+  return {
+    state,
+    updateWatchedVideos,
+    updateChannelFollowing,
+    updateRecentSearches,
+    updateDismissedMessages,
+    updatePlayerVolume,
+  }
 }
 type PersonalData = {
   watchedVideos: WatchedVideo[]
   followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
+  playerVolume: number
 }
 const PersonalDataProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<typeof asyncReducer, undefined>(asyncReducer, undefined, () => ({

@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { debounce } from 'lodash'
+import React, { useEffect, useRef, useState } from 'react'
 
+import { usePersonalData } from '@/hooks'
 import { SvgOutlineVideo } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 
@@ -18,6 +20,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
+  const {
+    state: { playerVolume },
+    updatePlayerVolume,
+  } = usePersonalData()
+
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)
 
@@ -108,6 +115,28 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     player.play()
   }
+
+  const debouncedVolumeChange = useRef(
+    debounce((volume: number) => {
+      updatePlayerVolume(volume)
+    }, 500)
+  )
+
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (!player || !isInitialMount) {
+      return
+    }
+    isInitialMount.current = false
+
+    player.volume(playerVolume)
+
+    const handleVolumeChange = () => debouncedVolumeChange.current(player.volume())
+    player.on('volumechange', handleVolumeChange)
+    return () => {
+      player.off('volumechange', handleVolumeChange)
+    }
+  }, [player, playerVolume])
 
   return (
     <Container className={className} isInBackground={isInBackground}>
