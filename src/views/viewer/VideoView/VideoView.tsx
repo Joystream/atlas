@@ -1,9 +1,10 @@
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useMatch, useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { AssetType, useAsset, usePersonalData, useRouterQuery } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
@@ -33,12 +34,14 @@ export const VideoView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
   const { state, updateWatchedVideos } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
+
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
   const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
+  const videoRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
@@ -61,13 +64,22 @@ export const VideoView: React.FC = () => {
   const videoId = video?.id
 
   const [playing, setPlaying] = useState(true)
-  const handleUserKeyPress = useCallback((event: Event) => {
-    const { keyCode } = event as KeyboardEvent
-    if (keyCode === 32) {
-      event.preventDefault()
-      setPlaying((prevState) => !prevState)
-    }
-  }, [])
+  const handleUserKeyPress = useCallback(
+    (event: Event) => {
+      const { keyCode } = event as KeyboardEvent
+      if (videoRouteMatch) {
+        switch (keyCode) {
+          case 32:
+            event.preventDefault()
+            setPlaying((prevState) => !prevState)
+            break
+          default:
+            break
+        }
+      }
+    },
+    [videoRouteMatch]
+  )
 
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress)
