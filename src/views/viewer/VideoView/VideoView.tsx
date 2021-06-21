@@ -4,7 +4,7 @@ import { useMatch, useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { absoluteRoutes, QUERY_PARAMS } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
 import { Placeholder, VideoPlayer } from '@/shared/components'
