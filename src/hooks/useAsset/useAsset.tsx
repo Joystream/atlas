@@ -14,7 +14,7 @@ type UseAssetDataArgs =
 
 type UseAssetData = {
   url?: string
-  error: boolean
+  error: ErrorEvent | null
   isLoading?: boolean
 }
 
@@ -22,13 +22,13 @@ type UseAsset = ({ entity, assetType }: UseAssetDataArgs) => UseAssetData
 
 export const useAsset: UseAsset = ({ entity, assetType }) => {
   const { getStorageProvider } = useStorageProviders()
-  const [error, setError] = useState<boolean>(false)
+  const [error, setError] = useState<ErrorEvent | null>(null)
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined)
   const [url, setUrl] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (error) {
-      Logger.error(`Fail to load ${assetType}`)
+      Logger.error(error.message)
     }
   }, [error, assetType])
 
@@ -36,7 +36,7 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
     if (entity && entity.__typename === 'Channel') {
       return {
         availability: assetType === AssetType.COVER ? entity.coverPhotoAvailability : entity.avatarPhotoAvailability,
-        urls: assetType === AssetType.COVER ? entity.coverPhotoUrls : entity.coverPhotoUrls,
+        urls: assetType === AssetType.COVER ? entity.coverPhotoUrls : entity.avatarPhotoUrls,
         dataObject: assetType === AssetType.COVER ? entity.coverPhotoDataObject : entity.avatarPhotoDataObject,
       }
     }
@@ -60,9 +60,9 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
   const testAsset = useCallback(
     (assetUrl: string) => {
       setIsLoading(true)
-      const onError = () => {
+      const onError = (error: ErrorEvent) => {
         setIsLoading(false)
-        setError(true)
+        setError(error)
       }
 
       const onLoad = () => {
