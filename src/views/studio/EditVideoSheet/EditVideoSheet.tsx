@@ -19,8 +19,8 @@ import {
   useEditVideoSheet,
   useJoystream,
   useTransactionManager,
-  useUploadsManager,
 } from '@/providers'
+import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { Logger } from '@/utils/logger'
@@ -58,7 +58,7 @@ export const EditVideoSheet: React.FC = () => {
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const { startFileUpload } = useUploadsManager()
+  const startFileUpload = useStartFileUpload()
   const { joystream } = useJoystream()
   const { fee, handleTransaction } = useTransactionManager()
   const client = useApolloClient()

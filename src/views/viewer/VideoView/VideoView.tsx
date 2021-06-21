@@ -200,7 +200,12 @@ export const VideoView: React.FC = () => {
           <MoreVideosHeader>
             {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
-          <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
+          <InfiniteVideoGrid
+            ready={!loading}
+            channelId={video?.channel.id}
+            showChannel={false}
+            currentlyWatchedVideoId={video?.id}
+          />
         </MoreVideosContainer>
       </InfoContainer>
     </StyledViewWrapper>

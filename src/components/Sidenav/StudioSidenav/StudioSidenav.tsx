@@ -35,13 +35,13 @@ export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useAuthorizedUser()
   const { unseenDrafts } = useDrafts('video', activeChannelId)
-  const { uploadsState } = useUploadsManager()
+  const { channelUploadsState } = useUploadsManager()
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
 
   const { openWarningDialog } = useDisplayDataLostWarning()
 
-  const assetsInProgress = uploadsState.flat().filter((asset) => asset.lastStatus === 'inProgress')
+  const assetsInProgress = channelUploadsState.filter((asset) => asset.lastStatus === 'inProgress')
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
     if (item.to === absoluteRoutes.studio.videos()) {

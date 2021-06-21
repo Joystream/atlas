@@ -1,7 +1,9 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
-import { DisplaySnackbarArgs, SnackbarProvider, useSnackbar } from '@/providers/snackbar'
+import { Snackbars, useSnackbar } from '@/providers/snackbar'
+import { DisplaySnackbarArgs } from '@/providers/store'
 
 import { Snackbar } from './Snackbar'
 
@@ -26,9 +28,12 @@ export default {
   },
   decorators: [
     (Story) => (
-      <SnackbarProvider>
-        <Story />
-      </SnackbarProvider>
+      <>
+        <BrowserRouter>
+          <Story />
+          <Snackbars />
+        </BrowserRouter>
+      </>
     ),
   ],
 } as Meta

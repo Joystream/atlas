@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
@@ -61,17 +60,7 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   }
 
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-
-        > * {
-          margin-bottom: 24px !important;
-        }
-      `}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '24px' }}>
       <Avatar imageUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
 
       {thumbnailImageUrl ? (

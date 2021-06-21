@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
@@ -20,40 +19,18 @@ export default {
   },
 } as Meta
 
-const Template: Story<TextAreaProps> = (args) => (
-  <TextArea
-    {...args}
-    css={css`
-      max-width: 400px;
-    `}
-  />
-)
+const Template: Story<TextAreaProps> = (args) => <TextArea {...args} />
 
 const TemplateWithControlledInput: Story<TextAreaProps> = (args) => {
   const [value, setValue] = useState('')
-  return (
-    <TextArea
-      {...args}
-      onChange={(e) => setValue(e.target.value)}
-      value={value}
-      css={css`
-        max-width: 400px;
-      `}
-    />
-  )
+  return <TextArea {...args} onChange={(e) => setValue(e.target.value)} value={value} />
 }
 
 const TemplateWithUncontrolledInput: Story<TextAreaProps> = (args) => {
   const ref = useRef<HTMLTextAreaElement | null>(null)
   return (
     <>
-      <TextArea
-        {...args}
-        ref={ref}
-        css={css`
-          max-width: 400px;
-        `}
-      />
+      <TextArea {...args} ref={ref} />
       <Button onClick={() => alert(ref.current?.value)}>Show input value</Button>
     </>
   )

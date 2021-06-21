@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
 import { VideoDraft, useDrafts, useUser } from '@/providers'
@@ -112,12 +111,7 @@ export const PlaygroundDrafts = () => {
           Remove all drafts
         </Button>
       </div>
-      <Text
-        variant="h4"
-        css={css`
-          margin: 20px 0;
-        `}
-      >
+      <Text variant="h4" style={{ margin: '20px 0' }}>
         Saved drafts
       </Text>
       <pre>{JSON.stringify(drafts, null, 2)}</pre>

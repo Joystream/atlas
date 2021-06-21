@@ -107,16 +107,23 @@ const setDismissedMessage = async (id: string, add = true) => {
   writeToLocalStorage('dismissedMessages', newDismissedMessages)
 }
 
+const playerVolume = promisify(() => readFromLocalStorage<number>('playerVolume') ?? 1)
+const setPlayerVolume = async (volume?: number) => {
+  writeToLocalStorage('playerVolume', volume)
+}
+
 export const getInitialPersonalData = () => {
   const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
   const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
   const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
   const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
+  const playerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
   return {
     watchedVideos,
     followedChannels,
     recentSearches,
     dismissedMessages,
+    playerVolume,
   }
 }
 
@@ -133,6 +140,8 @@ const localStorageClient: PersonalDataClient = {
   setRecentSearch,
   dismissedMessages,
   setDismissedMessage,
+  playerVolume,
+  setPlayerVolume,
 }
 
 export default localStorageClient
