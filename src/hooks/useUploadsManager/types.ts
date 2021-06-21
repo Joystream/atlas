@@ -36,23 +36,7 @@ export type StartFileUploadOptions = {
 }
 
 export type UploadManagerValue = {
-  uploadsState: AssetUploadWithProgress[][]
-  startFileUpload: (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => Promise<void>
+  channelUploadsState: AssetUpload[]
   isLoading: boolean
 }
 export type UploadsProgressRecord = Record<string, number>
-
-type AddAssetAction = {
-  type: 'ADD_ASSET'
-  asset: AssetUpload
-}
-type UpdateAssetAction = {
-  type: 'UPDATE_ASSET'
-  contentId: string
-  lastStatus?: AssetUploadStatus
-}
-type RemoveAssetAction = {
-  type: 'REMOVE_ASSET'
-  contentId: string
-}
-export type UploadsManagerStateAction = AddAssetAction | UpdateAssetAction | RemoveAssetAction

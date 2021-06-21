@@ -6,7 +6,7 @@ import {
   ConnectionStatusProvider,
   DialogProvider,
   OverlayManagerProvider,
-  SnackbarProvider,
+  Snackbars,
   StorageProvidersProvider,
 } from '@/hooks'
 
@@ -19,17 +19,16 @@ export const App = () => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <SnackbarProvider>
-        <ConnectionStatusProvider>
-          <OverlayManagerProvider>
-            <StorageProvidersProvider>
-              <DialogProvider>
-                <MainLayout />
-              </DialogProvider>
-            </StorageProvidersProvider>
-          </OverlayManagerProvider>
-        </ConnectionStatusProvider>
-      </SnackbarProvider>
+      <ConnectionStatusProvider>
+        <OverlayManagerProvider>
+          <StorageProvidersProvider>
+            <DialogProvider>
+              <MainLayout />
+              <Snackbars />
+            </DialogProvider>
+          </StorageProvidersProvider>
+        </OverlayManagerProvider>
+      </ConnectionStatusProvider>
     </ApolloProvider>
   )
 }

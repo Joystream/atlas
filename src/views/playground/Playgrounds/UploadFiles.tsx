@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 
-import { useAuthorizedUser, useUploadsManager } from '@/hooks'
+import { useAuthorizedUser, useStartFileUpload, useUploadsManager } from '@/hooks'
 import { Button, TextField } from '@/shared/components'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload, uploadsState } = useUploadsManager()
+  const { channelUploadsState } = useUploadsManager()
+  const startFileUpload = useStartFileUpload()
   const [contentId, setContentId] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +42,8 @@ export const UploadFiles = () => {
       <input type="file" onChange={handleFileChange} />
       <Button onClick={handleUploadClick}>Start upload</Button>
       <h2>Uploading files data:</h2>
-      {uploadsState.length > 0 ? (
-        <pre>{JSON.stringify(uploadsState, undefined, 2)}</pre>
+      {channelUploadsState.length > 0 ? (
+        <pre>{JSON.stringify(channelUploadsState, undefined, 2)}</pre>
       ) : (
         <p style={{ color: 'rgba(255,255,255,0.3)' }}>Add file</p>
       )}

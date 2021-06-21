@@ -93,6 +93,7 @@
     "graphql-tools": "^7.0.2",
     "history": "^5.0.0",
     "husky": "^4.2.5",
+    "immer": "^9.0.2",
     "ipfs-only-hash": "^2.1.0",
     "lint-staged": "^10.2.7",
     "lodash": "^4.17.19",
@@ -122,7 +123,8 @@
     "typescript": "^4.2.3",
     "use-resize-observer": "^7.0.0",
     "video.js": "^7.8.3",
-    "webpack-merge": "^5.7.3"
+    "webpack-merge": "^5.7.3",
+    "zustand": "^3.5.2"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.1.16",
