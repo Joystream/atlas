@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/hooks'
 import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { RoutingState } from '@/types/routing'
 
@@ -13,7 +14,6 @@ import { EditVideoSheetContext } from './provider'
 import { EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
 
 import { useAuthorizedUser, useDrafts } from '..'
-import { useAsset } from '../../hooks/useAsset'
 
 export const useEditVideoSheet = () => {
   const ctx = useContext(EditVideoSheetContext)
