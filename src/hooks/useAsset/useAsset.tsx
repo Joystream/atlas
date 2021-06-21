@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import isEqual from 'lodash/isEqual'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from '@/api/queries'
 import { AssetType, useStorageProviders } from '@/hooks'
@@ -25,10 +26,11 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
   const [error, setError] = useState<ErrorEvent | null>(null)
   const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined)
   const [url, setUrl] = useState<string | undefined>(undefined)
+  const cachedAssetData = useRef({})
 
   useEffect(() => {
     if (error) {
-      Logger.error(error.message)
+      Logger.error(`Failed to load ${assetType}`, error.message)
     }
   }, [error, assetType])
 
@@ -86,7 +88,8 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
   )
 
   useEffect(() => {
-    if (!url && assetData && isLoading === undefined) {
+    if (assetData && (!url || !isEqual(assetData, cachedAssetData.current)) && !isLoading) {
+      cachedAssetData.current = assetData
       if (assetData.availability !== AssetAvailability.Accepted) {
         return
       }
