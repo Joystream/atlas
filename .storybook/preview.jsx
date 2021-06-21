@@ -1,4 +1,4 @@
-import styled from '@emotion'
+import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
