@@ -4,6 +4,7 @@ module.exports = {
     node: true,
     es6: true,
     jest: true,
+    'cypress/globals': true,
   },
   parser: '@typescript-eslint/parser',
   extends: [
@@ -13,8 +14,9 @@ module.exports = {
     'plugin:react-hooks/recommended',
     // turns off the rules which may conflict with prettier
     'prettier',
+    'plugin:cypress/recommended',
   ],
-  plugins: ['@emotion', '@typescript-eslint'],
+  plugins: ['@emotion', '@typescript-eslint', 'cypress'],
   settings: {
     react: {
       version: 'detect',

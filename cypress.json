@@ -1,0 +1,15 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "defaultCommandTimeout": 10000,
+  "env": {
+    "accounts": [
+      {
+        "address": "5DyUv5DhD2CRqhjrPkAdNNzdq2noCtkAnKCEPudguGyxbqRT",
+        "name": "cypress_test",
+        "type": ["scrypt", "xsalsa20-poly1305"]
+      }
+    ]
+  }
+}
