@@ -6,7 +6,7 @@ import { VideoOrderByInput } from '@/api/queries'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
-import { useAuthorizedUser, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/providers'
+import { useAuthorizedUser, useDialog, useDraftStore, useEditVideoSheet, useSnackbar } from '@/providers'
 import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
@@ -53,11 +53,19 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
-  const drafts =
-    sortVideosBy === VideoOrderByInput.CreatedAtAsc
-      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+  const { drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts } = useDraftStore(
+    ({ drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts }) => {
+      return {
+        drafts:
+          sortVideosBy === VideoOrderByInput.CreatedAtAsc
+            ? drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+            : drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()),
+        removeDrafts,
+        unseenDrafts,
+        removeAllUnseenDrafts,
+      }
+    }
+  )
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
@@ -108,7 +116,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        await removeAllUnseenDrafts(activeChannelId)
+        await removeAllUnseenDrafts()
       }
     }
   }
@@ -176,7 +184,7 @@ export const MyVideosView = () => {
       },
       onPrimaryButtonClick: () => {
         closeDeleteDraftDialog()
-        removeDraft(draftId)
+        removeDrafts([draftId])
         removeDraftNotificationsCount.current++
         if (removeDraftNotificationsCount.current > 1) {
           updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })

@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 
-import { VideoDraft, useDrafts, useUser } from '@/providers'
+import { RawDraft, useDraftStore, useUser } from '@/providers'
 import { Button, FormField, Text } from '@/shared/components'
 import { Select } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
 
-const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
+const INITIAL_STATE: RawDraft = {
   channelId: '100',
   title: '',
+  type: 'video',
   description: '',
   isExplicit: undefined,
 }
@@ -21,18 +22,19 @@ const CONTENT_RATING = [
 export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
-    'video',
-    activeChannelId || INITIAL_STATE.channelId
-  )
+  const { drafts, removeDrafts, getDraft, removeAllDrafts, updateDraft, addDraft } = useDraftStore((state) => state)
+  // const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDraftStore(
+  //   'video',
+  //   activeChannelId || INITIAL_STATE.channelId
+  // )
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
-    const draft = await getDraft(draftID)
+    const draft = getDraft(draftID)
     if (draft) {
-      const { title, description, isExplicit, channelId } = draft
-      setForm({ title, description, isExplicit, channelId: activeChannelId || channelId })
+      const { title, description, isExplicit, channelId, type } = draft
+      setForm({ title, description, isExplicit, channelId: activeChannelId || channelId, type })
     } else {
       setForm({ ...INITIAL_STATE, channelId: activeChannelId || INITIAL_STATE.channelId })
     }
@@ -82,8 +84,8 @@ export const PlaygroundDrafts = () => {
       </FormField>
       <div style={{ display: 'flex', gap: '20px' }}>
         <Button
-          onClick={async () => {
-            const newDraft = await addDraft(form)
+          onClick={() => {
+            const newDraft = addDraft(form)
             if (newDraft) {
               setCurrentDraft(newDraft.id)
             }
@@ -91,20 +93,18 @@ export const PlaygroundDrafts = () => {
         >
           Create new draft
         </Button>
-        {currentDraftId && (
-          <Button onClick={async () => await updateDraft(currentDraftId, form)}>Save this draft</Button>
-        )}
+        {currentDraftId && <Button onClick={() => updateDraft(currentDraftId, form)}>Save this draft</Button>}
         <Button
-          onClick={async () => {
-            await removeDraft(currentDraftId)
+          onClick={() => {
+            removeDrafts([currentDraftId])
             setCurrentDraft('')
           }}
         >
           Discard draft
         </Button>
         <Button
-          onClick={async () => {
-            await removeAllDrafts()
+          onClick={() => {
+            removeAllDrafts()
             setCurrentDraft('')
           }}
         >

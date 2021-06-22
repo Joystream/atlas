@@ -13,7 +13,7 @@ import { RoutingState } from '@/types/routing'
 import { EditVideoSheetContext } from './provider'
 import { EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
 
-import { useAuthorizedUser, useDrafts } from '..'
+import { useAuthorizedUser, useDraftStore } from '..'
 
 export const useEditVideoSheet = () => {
   const ctx = useContext(EditVideoSheetContext)
@@ -24,8 +24,8 @@ export const useEditVideoSheet = () => {
 }
 
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
-  const { activeChannelId } = useAuthorizedUser()
-  const { drafts } = useDrafts('video', activeChannelId)
+  // const { activeChannelId } = useAuthorizedUser()
+  const drafts = useDraftStore(({ drafts }) => drafts)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
   const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })

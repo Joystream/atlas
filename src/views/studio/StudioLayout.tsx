@@ -17,7 +17,6 @@ import {
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
   ActiveUserProvider,
-  DraftsProvider,
   EditVideoSheetProvider,
   JoystreamProvider,
   PersonalDataProvider,
@@ -172,15 +171,13 @@ const StudioLayoutWrapper: React.FC = () => {
       <ActiveUserProvider>
         <PersonalDataProvider>
           <UploadManagerProvider>
-            <DraftsProvider>
-              <EditVideoSheetProvider>
-                <JoystreamProvider>
-                  <TransactionManagerProvider>
-                    <StudioLayout />
-                  </TransactionManagerProvider>
-                </JoystreamProvider>
-              </EditVideoSheetProvider>
-            </DraftsProvider>
+            <EditVideoSheetProvider>
+              <JoystreamProvider>
+                <TransactionManagerProvider>
+                  <StudioLayout />
+                </TransactionManagerProvider>
+              </JoystreamProvider>
+            </EditVideoSheetProvider>
           </UploadManagerProvider>
         </PersonalDataProvider>
       </ActiveUserProvider>

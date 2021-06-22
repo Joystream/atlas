@@ -11,9 +11,10 @@ import { useDeleteVideo } from '@/hooks'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
+  RawDraft,
   useAuthorizedUser,
   useConnectionStatus,
-  useDrafts,
+  useDraftStore,
   useEditVideoSheet,
   useEditVideoSheetTabData,
 } from '@/providers'
@@ -92,7 +93,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setSelectedVideoTabCachedDirtyFormData,
     sheetState,
   } = useEditVideoSheet()
-  const { addDraft, updateDraft } = useDrafts('video', activeChannelId)
+  const { updateDraft, addDraft } = useDraftStore(({ updateDraft, addDraft }) => ({ updateDraft, addDraft }))
 
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
@@ -167,8 +168,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         updateDraftFn: typeof updateDraft,
         updateSelectedTabFn: typeof updateSelectedVideoTab
       ) => {
-        const draftData = {
+        const draftData: RawDraft = {
           ...data,
+          channelId: activeChannelId,
+          type: 'video',
           publishedBeforeJoystream: isValid(data.publishedBeforeJoystream)
             ? formatISO(data.publishedBeforeJoystream as Date)
             : null,

@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
-import { useAuthorizedUser, useDrafts, useEditVideoSheet, useUploadsManager } from '@/providers'
+import { useAuthorizedUser, useDraftStore, useEditVideoSheet, useUploadsManager } from '@/providers'
 import { Button } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -33,8 +33,8 @@ const studioNavbarItems: NavItemType[] = [
 
 export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
-  const { activeChannelId } = useAuthorizedUser()
-  const { unseenDrafts } = useDrafts('video', activeChannelId)
+  // const { activeChannelId } = useAuthorizedUser()
+  const unseenDrafts = useDraftStore(({ unseenDrafts }) => unseenDrafts)
   const { channelUploadsState } = useUploadsManager()
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()

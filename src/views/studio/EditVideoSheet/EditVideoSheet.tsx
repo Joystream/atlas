@@ -15,7 +15,7 @@ import {
   EditVideoFormFields,
   EditVideoSheetTab,
   useAuthorizedUser,
-  useDrafts,
+  useDraftStore,
   useEditVideoSheet,
   useJoystream,
   useTransactionManager,
@@ -53,7 +53,7 @@ export const EditVideoSheet: React.FC = () => {
   const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
   const { openWarningDialog } = useDisplayDataLostWarning()
-  const { removeDraft } = useDrafts('video', activeChannelId)
+  const removeDrafts = useDraftStore(({ removeDrafts }) => removeDrafts)
 
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -217,7 +217,7 @@ export const EditVideoSheet: React.FC = () => {
           id: videoId,
           isDraft: false,
         })
-        removeDraft(selectedVideoTab?.id)
+        removeDrafts([selectedVideoTab?.id])
       } else {
         writeUrlInCache({
           url: data.assets.thumbnail?.url,
