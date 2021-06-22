@@ -9,10 +9,6 @@ import { App } from './App'
 import { BUILD_ENV, TARGET_DEV_ENV } from './config/envs'
 import { SENTRY_DSN } from './config/urls'
 
-type Env = 'production' | 'staging' | 'development'
-
-const env = (process.env.REACT_APP_ENV?.toLowerCase() || 'development') as Env
-
 const initApp = async () => {
   if (BUILD_ENV !== 'production' && TARGET_DEV_ENV === 'mocking') {
     try {
@@ -23,7 +19,7 @@ const initApp = async () => {
     }
   }
 
-  if (env === 'production') {
+  if (BUILD_ENV === 'production') {
     Sentry.init({
       dsn: SENTRY_DSN,
       integrations: [

@@ -1,7 +1,9 @@
 import { writeToLocalStorage } from '@/utils/localStorage'
 
-export const BUILD_ENV = process.env.REACT_APP_ENV || 'production'
-export const TARGET_DEV_ENV = window.localStorage.getItem('target_env') || 'staging'
+type BuildEnv = 'production' | 'development'
+
+export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
+export const TARGET_DEV_ENV = window.localStorage.getItem('target_env') || 'development'
 export const ENV_PREFIX = 'REACT_APP'
 
 export const setEnvInLocalStorage = (value: string) => {
@@ -22,11 +24,16 @@ export const availableEnvs = () => {
   )
 }
 
-export const readEnv = (name: string): string | undefined => {
-  if (BUILD_ENV === 'production') {
-    const fullName = `${ENV_PREFIX}_PRODUCTION_${name}`
-    return process.env[fullName]
+export const readEnv = (name: string, required = true): string => {
+  const fullName =
+    BUILD_ENV === 'production'
+      ? `${ENV_PREFIX}_PRODUCTION_${name}`
+      : `${ENV_PREFIX}_${TARGET_DEV_ENV.toUpperCase()}_${name}`
+  const value = process.env[fullName]
+  if (!value && required) {
+    throw new Error(`Missing required env variable "${name}", tried access via "${fullName}"`)
+  } else if (!value) {
+    return ''
   }
-  const fullName = `${ENV_PREFIX}_${TARGET_DEV_ENV.toUpperCase()}_${name}`
-  return process.env[fullName]
+  return value
 }

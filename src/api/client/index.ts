@@ -62,6 +62,7 @@ const createApolloClient = () => {
     uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
     options: {
       reconnect: true,
+      reconnectionAttempts: 5,
     },
   })
 
