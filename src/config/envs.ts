@@ -1,5 +1,3 @@
-import { writeToLocalStorage } from '@/utils/localStorage'
-
 type BuildEnv = 'production' | 'development'
 
 export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
@@ -8,7 +6,7 @@ export const ENV_PREFIX = 'REACT_APP'
 
 export const setEnvInLocalStorage = (value: string) => {
   if (availableEnvs().includes(value)) {
-    writeToLocalStorage<string>('target_env', value)
+    window.localStorage.setItem('target_env', value)
   }
 }
 
