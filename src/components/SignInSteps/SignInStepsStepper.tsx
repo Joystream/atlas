@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useRouterQuery } from '@/hooks'
@@ -12,6 +12,15 @@ import { Multistepper } from '../Dialogs'
 export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
+  const [isStepperOpen, setIsStepperOpen] = useState(false)
+
+  useEffect(() => {
+    if (step >= 1 || step > 3) {
+      setIsStepperOpen(true)
+    } else {
+      setIsStepperOpen(false)
+    }
+  }, [step])
 
   const steps = [
     {
@@ -32,7 +41,7 @@ export const SignInStepsStepper: React.FC = () => {
     <Multistepper
       currentStepIdx={step <= 0 ? 0 : step - 1}
       steps={steps}
-      showDialog={step >= 1}
+      showDialog={isStepperOpen}
       onExitClick={() => navigate('?step=0')}
     />
   )
