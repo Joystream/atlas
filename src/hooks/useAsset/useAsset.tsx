@@ -114,6 +114,9 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
         return
       }
     }
+    if (!assetData) {
+      setUrl(undefined)
+    }
   }, [assetData, getStorageProvider, url, testAsset, isLoading, error])
 
   return { url, error, isLoading }
