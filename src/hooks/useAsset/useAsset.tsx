@@ -31,7 +31,7 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
 
   useEffect(() => {
     if (error) {
-      Logger.error(`Failed to load ${assetType}`, error.message)
+      Logger.error(`Failed to load ${assetType}`, error)
     }
   }, [error, assetType])
 
@@ -89,7 +89,7 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
   )
 
   useEffect(() => {
-    if (assetData && (!url || !isEqual(assetData, cachedAssetData.current)) && !isLoading) {
+    if (assetData && (!url || !isEqual(assetData, cachedAssetData.current)) && !isLoading && !error) {
       cachedAssetData.current = assetData
       if (assetData.availability !== AssetAvailability.Accepted) {
         return
@@ -114,7 +114,7 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
         return
       }
     }
-  }, [assetData, getStorageProvider, url, testAsset, isLoading])
+  }, [assetData, getStorageProvider, url, testAsset, isLoading, error])
 
   return { url, error, isLoading }
 }
