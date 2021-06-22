@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import { useUser } from '@/providers'
 import { Button, RadioButton } from '@/shared/components'
 
 const account = 'POLKADOT_ACCOUNT'
@@ -91,13 +92,4 @@ export const PlaygroundMemberChannel = () => {
       <Button onClick={resetActiveUser}>Remove user</Button>
     </>
   )
-}
-function useUser(): {
-  activeAccountId: any
-  activeMemberId: any
-  activeChannelId: any
-  setActiveUser: any
-  resetActiveUser: any
-} {
-  throw new Error('Function not implemented.')
 }
