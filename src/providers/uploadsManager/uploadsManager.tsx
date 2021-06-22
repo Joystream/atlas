@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { isEqual } from 'lodash'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import {
@@ -16,7 +16,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { createLookup } from '@/utils/data'
 
 import { useUploadsStore } from './store'
-import { AssetUpload, AssetUploadStatus, UploadManagerValue } from './types'
+import { AssetUpload, UploadManagerValue } from './types'
 
 import { useSnackbar, useUser } from '..'
 
@@ -166,10 +166,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       channelUploadsState.forEach((asset) => {
         const isPending = pendingAssets.some((item) => item.contentId === asset.contentId)
         if (!isPending && asset.lastStatus !== 'completed') {
-          updateAsset(asset.contentId, 'completed')
+          updateAsset(asset.contentId, { lastStatus: 'completed' })
         }
         if (isPending && asset.lastStatus !== 'completed') {
-          updateAsset(asset.contentId, 'missing')
+          updateAsset(asset.contentId, { lastStatus: 'missing' })
         } else {
           setIgnoredAssetsIds((ignored) => [...ignored, asset.contentId])
         }
@@ -198,27 +198,11 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       !ignoredAssetsIds.includes(asset.contentId)
   )
 
-  const updateAssetStatus = useCallback(
-    (contentId: string, lastStatus: AssetUploadStatus) => {
-      updateAsset(contentId, lastStatus)
-      setQueryNodePendingAssets((assets) =>
-        assets.map((asset) => {
-          if (asset.contentId === contentId) {
-            return { ...asset, lastStatus }
-          }
-          return asset
-        })
-      )
-    },
-    [updateAsset]
-  )
-
   return (
     <UploadManagerContext.Provider
       value={{
         isLoading: syncUpLoading,
         channelUploadsState: assetsUpload,
-        updateAssetStatus,
       }}
     >
       {children}

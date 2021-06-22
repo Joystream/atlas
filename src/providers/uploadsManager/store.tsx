@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { AssetUpload, AssetUploadStatus, UploadsProgressRecord } from './types'
+import { AssetUpload, AssetUploadStatus, UploadsStatusRecord } from './types'
 
 type AssetFile = {
   contentId: string
@@ -11,12 +11,11 @@ type AssetFile = {
 type UploadStoreState = {
   uploadsState: AssetUpload[]
   addAsset: (asset: AssetUpload) => void
-  updateAsset: (contentId: string, lastStatus: AssetUploadStatus) => void
   removeAsset: (contentId: string) => void
-  uploadsProgress: UploadsProgressRecord
-  setUploadsProgress: (contentId: string, progress: number) => void
   assetsFiles: AssetFile[]
   setAssetsFiles: (assetFile: AssetFile) => void
+  uploadsStatus: UploadsStatusRecord
+  updateAsset: (contentId: string, opts: { lastStatus?: AssetUploadStatus; progress?: number }) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
@@ -25,28 +24,35 @@ export const useUploadsStore = create<UploadStoreState>(
   persist(
     (set) => ({
       uploadsState: [],
-      uploadsProgress: {},
-      setUploadsProgress: (contentId, progress) => {
-        set((state) => ({ ...state, uploadsProgress: { ...state.uploadsProgress, [contentId]: progress } }))
-      },
       assetsFiles: [],
       setAssetsFiles: (assetFile) => {
         set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] }))
       },
+      uploadsStatus: {},
+      updateAsset: (contentId, opts) => {
+        set((state) => {
+          const lastStatus = opts.lastStatus
+            ? { lastStatus: opts.lastStatus }
+            : { lastStatus: state.uploadsStatus[contentId].lastStatus }
+          const progress = opts.progress ? { progress: opts.progress } : {}
+          return {
+            ...state,
+            uploadsStatus: {
+              ...state.uploadsStatus,
+              [contentId]: { ...lastStatus, ...progress },
+            },
+            uploadsState: state.uploadsState.map((asset) => {
+              if (asset.contentId !== contentId) {
+                return asset
+              }
+              const assetUpdates = opts.lastStatus ? { lastStatus: opts.lastStatus } : {}
+              return { ...asset, ...assetUpdates }
+            }),
+          }
+        })
+      },
       addAsset: (asset) => {
         set((state) => ({ ...state, uploadsState: [...state.uploadsState, asset] }))
-      },
-      updateAsset: (contentId, lastStatus?) => {
-        set((state) => ({
-          ...state,
-          uploadsState: state.uploadsState.map((asset) => {
-            if (asset.contentId !== contentId) {
-              return asset
-            }
-            const assetUpdates = lastStatus ? { lastStatus } : {}
-            return { ...asset, ...assetUpdates }
-          }),
-        }))
       },
       removeAsset: (contentId) => {
         set((state) => ({
