@@ -93,8 +93,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setSelectedVideoTabCachedDirtyFormData,
     sheetState,
   } = useEditVideoSheet()
-  const { updateDraft, addDraft } = useDraftStore(({ updateDraft, addDraft }) => ({ updateDraft, addDraft }))
-
+  const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
   const { nodeConnectionStatus } = useConnectionStatus()

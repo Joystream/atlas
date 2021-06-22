@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import shallow from 'zustand/shallow'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -53,19 +54,18 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts } = useDraftStore(
-    ({ drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts }) => {
-      return {
-        drafts:
-          sortVideosBy === VideoOrderByInput.CreatedAtAsc
-            ? drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-            : drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()),
-        removeDrafts,
-        unseenDrafts,
-        removeAllUnseenDrafts,
-      }
+  const { drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts } = useDraftStore(({ actions }) => {
+    const draft = actions.getDraftsForChannel(activeChannelId)
+    const unseenDrafts = actions.getUnseenDraftsForChannel(activeChannelId)
+    return {
+      drafts:
+        sortVideosBy === VideoOrderByInput.CreatedAtAsc
+          ? draft.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+          : draft.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()),
+      unseenDrafts,
+      ...actions,
     }
-  )
+  }, shallow)
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
@@ -116,7 +116,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        await removeAllUnseenDrafts()
+        removeAllUnseenDrafts(activeChannelId ?? '')
       }
     }
   }

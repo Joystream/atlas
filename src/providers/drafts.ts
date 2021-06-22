@@ -1,6 +1,7 @@
 import create from 'zustand'
 
 import { Language, License, VideoCategory } from '@/api/queries'
+import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
 
 export type CommonDraftProps = {
@@ -37,56 +38,67 @@ export type UnseenDraft = {
 // TODO: persistance and migration
 // const DRAFTS_STORAGE_KEY = 'drafts'
 
-interface DraftStore {
+interface DraftStoreState {
   //TODO: state here should probably be a map of channelIds so we get the right data when channel changes
-  drafts: Draft[]
-  unseenDrafts: UnseenDraft[]
+  allDrafts: Draft[]
+  allUnseenDrafts: UnseenDraft[]
+}
+
+interface DraftStoreActions {
   addDraft: (draft: RawDraft, explicitId?: string) => Draft
   updateDraft: (draftId: string, draftProps: RawDraft) => void
   getDraft: (draftId: string) => Draft | undefined
+  getDraftsForChannel: (draftIds: string) => Draft[]
+  getUnseenDraftsForChannel: (draftIds: string) => UnseenDraft[]
   removeDrafts: (draftIds: string[]) => void
-  removeAllDrafts: () => void
-  removeAllUnseenDrafts: () => void
+  removeAllDrafts: (channelId: string) => void
+  removeAllUnseenDrafts: (channelId: string) => void
 }
 
-export const useDraftStore = create<DraftStore>((set, get) => ({
-  drafts: [],
-  unseenDrafts: [],
-  addDraft: (draft, explicitId) => {
-    const id = explicitId ?? createId()
-    const updatedAt = new Date().toISOString()
-    const newDraft: Draft = { ...draft, updatedAt, id }
-    set((state) => ({
-      ...state,
-      drafts: [newDraft, ...state.drafts],
-      unseenDrafts: [{ draftId: newDraft.id, channelId: newDraft.channelId }, ...state.unseenDrafts],
-    }))
-    return newDraft
+export const useDraftStore = createStore<DraftStoreState, DraftStoreActions>({
+  state: {
+    allDrafts: [], // includes drafts for different channels
+    allUnseenDrafts: [], // includes unseenDrafts for different channels
   },
-  updateDraft: (draftId, draftProps) => {
-    const updatedAt = new Date().toISOString()
-    set((state) => ({
-      ...state,
-      drafts: state.drafts.map((draft) => {
-        if (draft.id !== draftId) {
-          return draft
+  actionsFactory: (set, get) => ({
+    addDraft: (draft, explicitId) => {
+      const id = explicitId ?? createId()
+      const updatedAt = new Date().toISOString()
+      const newDraft: Draft = { ...draft, updatedAt, id }
+      set((draft) => {
+        draft.allDrafts = [newDraft, ...draft.allDrafts]
+        draft.allUnseenDrafts = [{ draftId: newDraft.id, channelId: newDraft.channelId }, ...draft.allUnseenDrafts]
+      })
+      return newDraft
+    },
+    updateDraft: (draftId, draftProps) => {
+      const updatedAt = new Date().toISOString()
+      set((draft) => {
+        const idx = draft.allDrafts.findIndex((d) => d.id === draftId)
+        if (idx >= 0) {
+          draft.allDrafts[idx] = { ...draft.allDrafts[idx], ...draftProps, updatedAt }
         }
-        return { ...draft, ...draftProps, updatedAt }
-      }),
-    }))
-  },
-  getDraft: (id) => get().drafts.find((draft) => draft.id === id),
-  removeDrafts: (draftIds) => {
-    set((state) => ({
-      ...state,
-      drafts: state.drafts.filter((draft) => !draftIds.includes(draft.id)),
-      unseenDrafts: state.unseenDrafts.filter((draft) => !draftIds.includes(draft.draftId)),
-    }))
-  },
-  removeAllDrafts: () => {
-    set((state) => ({ ...state, drafts: [], unseenDrafts: [] }))
-  },
-  removeAllUnseenDrafts: () => {
-    set((state) => ({ ...state, unseenDrafts: [] }))
-  },
-}))
+      })
+    },
+    getDraft: (id) => get().allDrafts.find((draft) => draft.id === id),
+    getDraftsForChannel: (channelId) => get().allDrafts.filter((d) => d.channelId === channelId),
+    getUnseenDraftsForChannel: (channelId) => get().allUnseenDrafts.filter((d) => d.channelId === channelId),
+    removeDrafts: (draftIds) => {
+      set((draft) => {
+        draft.allDrafts = draft.allDrafts.filter((draft) => !draftIds.includes(draft.id))
+        draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => !draftIds.includes(draft.draftId))
+      })
+    },
+    removeAllDrafts: (channelId) => {
+      set((draft) => {
+        draft.allDrafts = draft.allDrafts.filter((draft) => draft.channelId !== channelId)
+        draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => draft.channelId !== channelId)
+      })
+    },
+    removeAllUnseenDrafts: (channelId) => {
+      set((draft) => {
+        draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => draft.channelId !== channelId)
+      })
+    },
+  }),
+})

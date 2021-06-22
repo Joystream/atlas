@@ -60,8 +60,8 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   ...metaProps
 }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
-  // const { activeChannelId } = useAuthorizedUser()
-  const drafts = useDraftStore(({ drafts }) => drafts)
+  const { activeChannelId } = useAuthorizedUser()
+  const drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId))
   const draft = id ? drafts.find((draft) => draft.id === id) : undefined
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,

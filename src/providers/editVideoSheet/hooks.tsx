@@ -24,8 +24,8 @@ export const useEditVideoSheet = () => {
 }
 
 export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
-  // const { activeChannelId } = useAuthorizedUser()
-  const drafts = useDraftStore(({ drafts }) => drafts)
+  const { activeChannelId } = useAuthorizedUser()
+  const drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId))
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
   const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })

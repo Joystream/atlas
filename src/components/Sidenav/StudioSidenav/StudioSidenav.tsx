@@ -33,8 +33,8 @@ const studioNavbarItems: NavItemType[] = [
 
 export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
-  // const { activeChannelId } = useAuthorizedUser()
-  const unseenDrafts = useDraftStore(({ unseenDrafts }) => unseenDrafts)
+  const { activeChannelId } = useAuthorizedUser()
+  const unseenDrafts = useDraftStore(({ actions }) => actions.getUnseenDraftsForChannel(activeChannelId))
   const { channelUploadsState } = useUploadsManager()
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()

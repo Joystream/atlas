@@ -53,7 +53,7 @@ export const EditVideoSheet: React.FC = () => {
   const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
   const { openWarningDialog } = useDisplayDataLostWarning()
-  const removeDrafts = useDraftStore(({ removeDrafts }) => removeDrafts)
+  const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
 
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
