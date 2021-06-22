@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Portal } from '@/components'
@@ -22,13 +22,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
   onExitClick,
   className,
 }) => {
-  const { dialogContainerRef, incrementOpenedDialogsCount, decrementOpenedDialogsCount } = useOverlayManager()
-
-  useEffect(() => {
-    return () => {
-      decrementOpenedDialogsCount()
-    }
-  }, [decrementOpenedDialogsCount])
+  const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   return (
     <Portal containerRef={dialogContainerRef}>
@@ -41,8 +35,8 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
         classNames={transitions.names.dialog}
         mountOnEnter
         unmountOnExit
-        onEnter={incrementOpenedDialogsCount}
-        onExited={decrementOpenedDialogsCount}
+        onEnter={incrementOverlaysOpenCount}
+        onExited={decrementOverlaysOpenCount}
       >
         <StyledContainer className={className}>
           {exitButton && (

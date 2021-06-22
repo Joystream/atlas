@@ -7,8 +7,7 @@ import { transitions } from '@/shared/theme'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
-  setOpenedSheetsClosed: React.Dispatch<React.SetStateAction<number>>
-  setOpenedDialogsCount: React.Dispatch<React.SetStateAction<number>>
+  setOverlaysOpenCount: React.Dispatch<React.SetStateAction<number>>
   dialogContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
 }
@@ -19,23 +18,22 @@ OverlayManagerContext.displayName = 'OverlayManagerContext'
 export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
-  const [openedSheetsCount, setOpenedSheetsClosed] = useState(0)
-  const [openedDialogsCount, setOpenedDialogsCount] = useState(0)
+  const [overlaysOpenCount, setOverlaysOpenCount] = useState(0)
   const dialogContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (openedDialogsCount + openedSheetsCount === 0 && scrollLocked) {
+    if (overlaysOpenCount === 0 && scrollLocked) {
       setScrollLocked(false)
       setScrollbarGap(0)
       enableBodyScroll(document.body)
-    } else if (openedDialogsCount + openedSheetsCount > 0 && !scrollLocked) {
+    } else if (overlaysOpenCount > 0 && !scrollLocked) {
       const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
       setScrollLocked(true)
       setScrollbarGap(scrollbarGap)
       disableBodyScroll(document.body, { reserveScrollBarGap: true })
     }
-  }, [openedDialogsCount, openedSheetsCount, scrollLocked])
+  }, [overlaysOpenCount, scrollLocked])
 
   return (
     <>
@@ -43,8 +41,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
-          setOpenedSheetsClosed,
-          setOpenedDialogsCount,
+          setOverlaysOpenCount,
           dialogContainerRef,
           contextMenuContainerRef,
         }}
@@ -75,7 +72,7 @@ export const useOverlayManager = () => {
   const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
     setOverlaysOpenCount,
   ])
-  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
+  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count - 1), [
     setOverlaysOpenCount,
   ])
 
