@@ -1,7 +1,7 @@
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/providers'
 import { SvgOutlineVideo } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 

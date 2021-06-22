@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useUser } from '@/hooks'
+import { useUser } from '@/providers'
 import { Text } from '@/shared/components'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { transitions } from '@/shared/theme'

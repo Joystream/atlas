@@ -5,12 +5,11 @@ import shallow from 'zustand/shallow'
 
 import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser } from '@/hooks'
 
 import { useUploadsStore } from './store'
 import { UploadManagerValue } from './types'
 
-import { useSnackbar } from '../useSnackbar'
+import { useSnackbar, useUser } from '..'
 
 const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
 UploadManagerContext.displayName = 'UploadManagerContext'

@@ -2,11 +2,10 @@ import { web3FromAddress } from '@polkadot/extension-dapp'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { NODE_URL } from '@/config/urls'
-import { useUser } from '@/hooks'
 import { JoystreamJs } from '@/joystream-lib'
 import { Logger } from '@/utils/logger'
 
-import useConnectionStatus from '../useConnectionStatus'
+import { useConnectionStatus, useUser } from '..'
 
 type JoystreamContextValue = {
   joystream: JoystreamJs | null

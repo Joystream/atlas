@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { OverlayManagerProvider } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
 import { Logger } from '@/utils/logger'
 
 import { VideoPreviewBase, VideoPreviewBaseProps } from './VideoPreviewBase'

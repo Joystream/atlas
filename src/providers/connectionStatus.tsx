@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import { useSnackbar } from './useSnackbar'
+import { useSnackbar } from '@/providers/snackbars'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
@@ -11,11 +11,6 @@ type ConnectionStatusValue = {
   setNodeConnection: (connection: ConnectionStatus) => void
   nodeConnectionStatus: ConnectionStatus
   isUserConnectedToInternet: boolean
-}
-
-const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
-  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
-  return await Promise.race([timeoutPromise, promise])
 }
 
 const SNACKBAR_TIMEOUT = 15000
@@ -88,4 +83,7 @@ export const useConnectionStatus = () => {
   return ctx
 }
 
-export default useConnectionStatus
+const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
+  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
+  return await Promise.race([timeoutPromise, promise])
+}

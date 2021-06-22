@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { useUploadsManager } from '@/hooks'
-import { AssetUploadWithProgress, useUploadsStore } from '@/hooks/useUploadsManager'
+import { useUploadsManager } from '@/providers'
+import { useUploadsStore } from '@/providers/uploadsManager/store'
+import { AssetUploadWithProgress } from '@/providers/uploadsManager/types'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'

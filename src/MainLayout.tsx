@@ -4,11 +4,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import { StudioLoading, TopbarBase } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
-import { useDialog } from '@/hooks'
 import { GlobalStyle } from '@/shared/components'
 import { routingTransitions } from '@/styles/routingTransitions'
 import { isBrowserOutdated } from '@/utils/broswer'
 
+import { useDialog } from './providers'
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'
 import { ViewerLayout } from './views/viewer'

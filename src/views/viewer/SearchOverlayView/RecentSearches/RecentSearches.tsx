@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { useChannels, useVideos } from '@/api/hooks'
-import { usePersonalData } from '@/hooks'
+import { usePersonalData } from '@/providers'
 import { Text } from '@/shared/components'
 import { createLookup } from '@/utils/data'
 

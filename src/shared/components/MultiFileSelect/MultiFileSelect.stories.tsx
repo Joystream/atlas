@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { OverlayManagerProvider } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
 
 import { InputFilesState, MultiFileSelect, MultiFileSelectProps } from './MultiFileSelect'
 

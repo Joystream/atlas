@@ -2,7 +2,8 @@ import isEqual from 'lodash/isEqual'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from '@/api/queries'
-import { AssetType, useStorageProviders } from '@/hooks'
+import { AssetType } from '@/hooks'
+import { useStorageProviders } from '@/providers'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 

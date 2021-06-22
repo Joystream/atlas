@@ -1,8 +1,8 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
 import { ExtrinsicStatus } from '@/joystream-lib'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { TransactionDialog, TransactionDialogProps } from './TransactionDialog'
 
