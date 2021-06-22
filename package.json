@@ -70,7 +70,7 @@
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^7.0.2",
     "history": "^5.0.0",
-    "immer": "^9.0.2",
+    "immer": "^9.0.3",
     "ipfs-only-hash": "^2.1.0",
     "lodash": "^4.17.19",
     "msw": "^0.27.0",

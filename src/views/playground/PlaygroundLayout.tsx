@@ -17,6 +17,7 @@ import {
   Dialogs,
   FileHashing,
   ImageDownsizing,
+  PlaygroundCommonStore,
   PlaygroundConnectionState,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
@@ -36,6 +37,7 @@ const playgroundRoutes = [
   { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
   { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
   { path: 'dialogs', element: <Dialogs />, name: 'Dialogs' },
+  { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
 ]
 
 export const PlaygroundLayout = () => {
