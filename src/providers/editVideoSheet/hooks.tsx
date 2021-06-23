@@ -83,7 +83,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   return {
     tabData: normalizedData,
-    loading: tab.isDraft ? false : loading || !(thumbnailPhotoUrl && mediaUrl),
+    loading: tab.isDraft ? false : loading || (!thumbnailPhotoUrl && !mediaUrl),
     error,
   }
 }
