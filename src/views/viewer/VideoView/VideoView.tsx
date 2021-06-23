@@ -7,7 +7,7 @@ import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { AssetType, useAsset, useRouterQuery } from '@/hooks'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -34,9 +34,9 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
   const {
-    state: { watchedVideos },
+    watchedVideos,
     actions: { updateWatchedVideos },
-  } = usePersonalData()
+  } = usePersonalDataStore()
   const timestampFromQuery = Number(useRouterQuery('time'))
 
   const { url: thumbnailPhotoUrl } = useAsset({

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { AssetType, useAsset } from '@/hooks'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -29,9 +29,9 @@ export const ChannelView: React.FC = () => {
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const {
-    state: { followedChannels },
+    followedChannels,
     actions: { updateChannelFollowing },
-  } = usePersonalData()
+  } = usePersonalDataStore()
   const [isFollowing, setFollowing] = useState<boolean>()
   const { url: coverPhotoUrl } = useAsset({
     entity: channel,

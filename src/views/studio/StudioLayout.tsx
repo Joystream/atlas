@@ -20,7 +20,6 @@ import {
   DraftsProvider,
   EditVideoSheetProvider,
   JoystreamProvider,
-  PersonalDataProvider,
   TransactionManager,
   UploadsManager,
   useConnectionStatus,
@@ -170,17 +169,15 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <PersonalDataProvider>
-          <DraftsProvider>
-            <EditVideoSheetProvider>
-              <JoystreamProvider>
-                <UploadsManager />
-                <TransactionManager />
-                <StudioLayout />
-              </JoystreamProvider>
-            </EditVideoSheetProvider>
-          </DraftsProvider>
-        </PersonalDataProvider>
+        <DraftsProvider>
+          <EditVideoSheetProvider>
+            <JoystreamProvider>
+              <UploadsManager />
+              <TransactionManager />
+              <StudioLayout />
+            </JoystreamProvider>
+          </EditVideoSheetProvider>
+        </DraftsProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

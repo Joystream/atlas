@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { PersonalDataProvider, usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 
 import { DismissibleMessage, DismissibleMessageProps } from './DismissibleMessage'
 
@@ -22,19 +22,13 @@ export default {
         'This mean you can only access one on the device you used to create it. Clearing your browser history will delete all your drafts.',
     },
   },
-  decorators: [
-    (Story) => (
-      <PersonalDataProvider>
-        <Story />
-      </PersonalDataProvider>
-    ),
-  ],
+  decorators: [(Story) => <Story />],
 } as Meta
 
 const Template: Story<DismissibleMessageProps> = (args) => {
   const {
     actions: { updateDismissedMessages },
-  } = usePersonalData()
+  } = usePersonalDataStore()
   return (
     <>
       <DismissibleMessage {...args} />

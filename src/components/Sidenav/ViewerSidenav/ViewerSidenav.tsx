@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
@@ -30,9 +30,9 @@ const viewerSidenavItems: NavItemType[] = [
 export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const {
-    state: { followedChannels },
+    followedChannels,
     actions: { updateChannelFollowing },
-  } = usePersonalData()
+  } = usePersonalDataStore()
 
   const handleChannelNotFound = (id: string) => {
     Logger.warn(`Followed channel not found, removing id: ${id}`)

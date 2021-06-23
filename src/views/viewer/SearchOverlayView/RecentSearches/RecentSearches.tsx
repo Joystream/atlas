@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { useChannels, useVideos } from '@/api/hooks'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Text } from '@/shared/components'
 import { createLookup } from '@/utils/data'
 
@@ -14,9 +14,7 @@ type IdsLookup = {
 }
 
 export const RecentSearches: React.FC = () => {
-  const {
-    state: { recentSearches },
-  } = usePersonalData()
+  const { recentSearches } = usePersonalDataStore()
 
   const { videoIds, channelIds } = useMemo(() => {
     return recentSearches.reduce(

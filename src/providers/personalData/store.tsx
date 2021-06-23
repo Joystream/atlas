@@ -34,48 +34,42 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           const currentVideo = state.watchedVideos.find((v) => v.id === id)
           if (!currentVideo) {
             const newVideo = __typename === 'COMPLETED' ? { __typename, id } : { __typename, id, timestamp }
-            return {
-              ...state,
-              watchedVideos: [...state.watchedVideos, newVideo],
-            }
+            state.watchedVideos.push(newVideo)
           } else {
-            return {
-              ...state,
-              watchedVideos: state.watchedVideos.map((v) => (v.id === id ? { __typename, id, timestamp } : v)),
-            }
+            const index = state.watchedVideos.findIndex((v) => v.id === id)
+            if (index !== -1) state.watchedVideos[index] = { __typename, id, timestamp }
           }
         })
       },
       updateChannelFollowing: (id, follow) => {
         set((state) => {
           const isFollowing = state.followedChannels.some((channel) => channel.id === id)
-          let newFollowedChannels = []
-          if (isFollowing) {
-            newFollowedChannels = follow
-              ? state.followedChannels
-              : state.followedChannels.filter((channel) => channel.id !== id)
-          } else {
-            newFollowedChannels = follow ? [...state.followedChannels, { id }] : state.followedChannels
+          if (isFollowing && !follow) {
+            state.followedChannels = state.followedChannels.filter((channel) => channel.id !== id)
           }
-          return { ...state, followedChannels: newFollowedChannels }
+          if (!isFollowing && follow) {
+            state.followedChannels.push({ id })
+          }
         })
       },
       updateRecentSearches: (id, type) => {
         set((state) => {
-          const newRecentSearches = [{ id, type }, ...state.recentSearches.filter((search) => search.id !== id)]
-          return { ...state, recentSearches: newRecentSearches }
+          state.recentSearches = state.recentSearches.filter((search) => search.id !== id)
+          state.recentSearches.unshift({ id, type })
         })
       },
       updateDismissedMessages: (id, add = true) => {
         set((state) => {
-          const newDismissedMessages = add
-            ? [{ id }, ...state.dismissedMessages.filter((dissmissedMessage) => dissmissedMessage.id !== id)]
-            : [...state.dismissedMessages.filter((dissmissedMessage) => dissmissedMessage.id !== id)]
-
-          return { ...state, dismissedMessages: newDismissedMessages }
+          state.dismissedMessages = state.dismissedMessages.filter((dissmissedMessage) => dissmissedMessage.id !== id)
+          if (add) {
+            state.dismissedMessages.unshift({ id })
+          }
         })
       },
-      updatePlayerVolume: (volume) => set((state) => ({ ...state, playerVolume: volume })),
+      updatePlayerVolume: (volume) =>
+        set((state) => {
+          state.playerVolume = volume
+        }),
     }),
   },
   {
