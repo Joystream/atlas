@@ -10,7 +10,7 @@ const INTERRUPTED_VIDEOS_COUNT = 16
 export const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
   const {
     state: { watchedVideos },
-    updateWatchedVideos,
+    actions: { updateWatchedVideos },
   } = usePersonalData()
 
   const interruptedVideosState = watchedVideos

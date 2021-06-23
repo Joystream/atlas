@@ -20,7 +20,7 @@ export type DismissibleMessageProps = {
 
 export const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, description, id, className }) => {
   const {
-    updateDismissedMessages,
+    actions: { updateDismissedMessages },
     state: { dismissedMessages },
   } = usePersonalData()
   const [isDismissedMessage, setDismissedMessage] = useState<boolean>()

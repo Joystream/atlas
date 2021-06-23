@@ -22,7 +22,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const {
     state: { playerVolume },
-    updatePlayerVolume,
+    actions: { updatePlayerVolume },
   } = usePersonalData()
 
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)

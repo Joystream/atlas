@@ -33,7 +33,10 @@ export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
-  const { state, updateWatchedVideos } = usePersonalData()
+  const {
+    state,
+    actions: { updateWatchedVideos },
+  } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
 
   const { url: thumbnailPhotoUrl } = useAsset({

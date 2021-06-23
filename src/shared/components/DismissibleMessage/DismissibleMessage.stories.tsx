@@ -32,7 +32,9 @@ export default {
 } as Meta
 
 const Template: Story<DismissibleMessageProps> = (args) => {
-  const { updateDismissedMessages } = usePersonalData()
+  const {
+    actions: { updateDismissedMessages },
+  } = usePersonalData()
   return (
     <>
       <DismissibleMessage {...args} />

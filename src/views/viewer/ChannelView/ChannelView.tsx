@@ -30,7 +30,7 @@ export const ChannelView: React.FC = () => {
   const { unfollowChannel } = useUnfollowChannel()
   const {
     state: { followedChannels },
-    updateChannelFollowing,
+    actions: { updateChannelFollowing },
   } = usePersonalData()
   const [isFollowing, setFollowing] = useState<boolean>()
   const { url: coverPhotoUrl } = useAsset({

@@ -31,7 +31,7 @@ export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const {
     state: { followedChannels },
-    updateChannelFollowing,
+    actions: { updateChannelFollowing },
   } = usePersonalData()
 
   const handleChannelNotFound = (id: string) => {
