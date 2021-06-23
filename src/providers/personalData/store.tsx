@@ -1,6 +1,13 @@
 import { createStore } from '@/store'
 
-import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
+import {
+  DismissedMessage,
+  FollowedChannel,
+  RecentSearch,
+  RecentSearchType,
+  WatchedVideo,
+  WatchedVideoStatus,
+} from './types'
 
 export type PersonalDataStoreState = {
   watchedVideos: WatchedVideo[]
@@ -13,7 +20,7 @@ export type PersonalDataStoreState = {
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
   updateChannelFollowing: (id: string, follow: boolean) => void
-  updateRecentSearches: (id: string, type: 'video' | 'channel') => void
+  updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   updatePlayerVolume: (volume: number) => void
 }
@@ -78,7 +85,6 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       version: 1,
       migrate: (oldState, oldVersion, storageValue) => {
         if (!oldVersion && oldVersion !== 0) {
-          // legacy store
           return {
             personalData: storageValue,
           }

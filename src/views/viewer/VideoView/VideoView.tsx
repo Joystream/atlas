@@ -34,7 +34,7 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
   const {
-    state,
+    state: { watchedVideos },
     actions: { updateWatchedVideos },
   } = usePersonalData()
   const timestampFromQuery = Number(useRouterQuery('time'))
@@ -51,10 +51,10 @@ export const VideoView: React.FC = () => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
+    const currentVideo = watchedVideos.find((v) => v.id === video?.id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [state.watchedVideos, startTimestamp, video?.duration, video?.id])
+  }, [watchedVideos, startTimestamp, video?.duration, video?.id])
 
   useEffect(() => {
     const duration = video?.duration ?? 0

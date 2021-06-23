@@ -10,9 +10,10 @@ export type FollowedChannel = {
   id: string
 }
 
+export type RecentSearchType = 'video' | 'channel'
 export type RecentSearch = {
   id: string
-  type: 'video' | 'channel'
+  type: RecentSearchType
 }
 
 export type DismissedMessage = {
