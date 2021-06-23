@@ -20,10 +20,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
-  const {
-    playerVolume,
-    actions: { updatePlayerVolume },
-  } = usePersonalDataStore()
+
+  const playerVolume = usePersonalDataStore((state) => state.playerVolume)
+  const updatePlayerVolume = usePersonalDataStore((state) => state.actions.updatePlayerVolume)
 
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)

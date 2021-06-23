@@ -38,9 +38,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
-  const {
-    actions: { updateRecentSearches },
-  } = usePersonalDataStore()
+  const updateRecentSearches = usePersonalDataStore((state) => state.actions.updateRecentSearches)
 
   const handleVideoClick = (id: string) => {
     updateRecentSearches(id, 'video')

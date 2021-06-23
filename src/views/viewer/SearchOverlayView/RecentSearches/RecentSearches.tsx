@@ -14,7 +14,7 @@ type IdsLookup = {
 }
 
 export const RecentSearches: React.FC = () => {
-  const { recentSearches } = usePersonalDataStore()
+  const recentSearches = usePersonalDataStore((state) => state.recentSearches)
 
   const { videoIds, channelIds } = useMemo(() => {
     return recentSearches.reduce(

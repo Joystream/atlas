@@ -26,9 +26,7 @@ export default {
 } as Meta
 
 const Template: Story<DismissibleMessageProps> = (args) => {
-  const {
-    actions: { updateDismissedMessages },
-  } = usePersonalDataStore()
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   return (
     <>
       <DismissibleMessage {...args} />

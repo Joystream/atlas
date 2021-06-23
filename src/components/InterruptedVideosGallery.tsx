@@ -8,10 +8,8 @@ import { Logger } from '@/utils/logger'
 const INTERRUPTED_VIDEOS_COUNT = 16
 
 export const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
-  const {
-    watchedVideos,
-    actions: { updateWatchedVideos },
-  } = usePersonalDataStore()
+  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
+  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
 
   const interruptedVideosState = watchedVideos
     .filter((video) => video.__typename === 'INTERRUPTED')

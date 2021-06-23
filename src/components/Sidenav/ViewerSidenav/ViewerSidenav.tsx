@@ -29,10 +29,8 @@ const viewerSidenavItems: NavItemType[] = [
 
 export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
-  const {
-    followedChannels,
-    actions: { updateChannelFollowing },
-  } = usePersonalDataStore()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
+  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
   const handleChannelNotFound = (id: string) => {
     Logger.warn(`Followed channel not found, removing id: ${id}`)

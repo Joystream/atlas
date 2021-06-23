@@ -13,7 +13,7 @@ const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
 export const HomeView: React.FC = () => {
-  const { followedChannels } = usePersonalDataStore()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
