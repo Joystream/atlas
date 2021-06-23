@@ -7,6 +7,7 @@ export type CommonDraftProps = {
   id: string
   channelId: string
   updatedAt: string
+  seen?: boolean
 }
 
 export type Draft = VideoDraft
@@ -29,72 +30,71 @@ export type VideoDraft = {
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt'>
-
-export type UnseenDraft = {
-  draftId: string
-  channelId: string
-}
-
-interface DraftStoreState {
+interface DraftStoreStateV1 {
   allDrafts: Draft[]
-  allUnseenDrafts: UnseenDraft[]
+  allUnseenDrafts: Array<{
+    draftId: string
+    channelId: string
+  }>
 }
-
+interface DraftStoreStateV2 {
+  allDrafts: Draft[]
+}
 interface DraftStoreActions {
   addDraft: (draft: RawDraft, explicitId?: string) => Draft
   updateDraft: (draftId: string, draftProps: RawDraft) => void
   getDraft: (draftId: string) => Draft | undefined
   getDraftsForChannel: (draftIds: string) => Draft[]
-  getUnseenDraftsForChannel: (draftIds: string) => UnseenDraft[]
+  getUnseenDraftsForChannel: (draftIds: string) => Draft[]
+  markAllDraftsAsSeenForChannel: (channelId: string) => void
   removeDrafts: (draftIds: string[]) => void
   removeAllDrafts: (channelId: string) => void
-  removeAllUnseenDrafts: (channelId: string) => void
 }
 
-export const useDraftStore = createStore<DraftStoreState, DraftStoreActions>(
+export const useDraftStore = createStore<DraftStoreStateV2, DraftStoreActions>(
   {
     state: {
       allDrafts: [], // includes drafts for different channels
-      allUnseenDrafts: [], // includes unseenDrafts for different channels
     },
     actionsFactory: (set, get) => ({
       addDraft: (draft, explicitId) => {
         const id = explicitId ?? createId()
         const updatedAt = new Date().toISOString()
-        const newDraft: Draft = { ...draft, updatedAt, id }
-        set((draft) => {
-          draft.allDrafts = [newDraft, ...draft.allDrafts]
-          draft.allUnseenDrafts = [{ draftId: newDraft.id, channelId: newDraft.channelId }, ...draft.allUnseenDrafts]
+        const newDraft: Draft = { ...draft, updatedAt, id, seen: false }
+        set((draftState) => {
+          draftState.allDrafts = [newDraft, ...draftState.allDrafts]
         })
         return newDraft
       },
       updateDraft: (draftId, draftProps) => {
         const updatedAt = new Date().toISOString()
-        set((draft) => {
-          const idx = draft.allDrafts.findIndex((d) => d.id === draftId)
+        set((draftState) => {
+          const idx = draftState.allDrafts.findIndex((d) => d.id === draftId)
           if (idx >= 0) {
-            draft.allDrafts[idx] = { ...draft.allDrafts[idx], ...draftProps, updatedAt }
+            draftState.allDrafts[idx] = { ...draftState.allDrafts[idx], ...draftProps, updatedAt }
           }
         })
       },
       getDraft: (id) => get().allDrafts.find((draft) => draft.id === id),
       getDraftsForChannel: (channelId) => get().allDrafts.filter((d) => d.channelId === channelId),
-      getUnseenDraftsForChannel: (channelId) => get().allUnseenDrafts.filter((d) => d.channelId === channelId),
+      getUnseenDraftsForChannel: (channelId) =>
+        get().allDrafts.filter((d) => d.channelId === channelId && d.seen === false),
       removeDrafts: (draftIds) => {
-        set((draft) => {
-          draft.allDrafts = draft.allDrafts.filter((draft) => !draftIds.includes(draft.id))
-          draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => !draftIds.includes(draft.draftId))
+        set((draftState) => {
+          draftState.allDrafts = draftState.allDrafts.filter((draft) => !draftIds.includes(draft.id))
         })
       },
       removeAllDrafts: (channelId) => {
-        set((draft) => {
-          draft.allDrafts = draft.allDrafts.filter((draft) => draft.channelId !== channelId)
-          draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => draft.channelId !== channelId)
+        set((draftState) => {
+          draftState.allDrafts = draftState.allDrafts.filter((draft) => draft.channelId !== channelId)
         })
       },
-      removeAllUnseenDrafts: (channelId) => {
-        set((draft) => {
-          draft.allUnseenDrafts = draft.allUnseenDrafts.filter((draft) => draft.channelId !== channelId)
+      markAllDraftsAsSeenForChannel: (channelId) => {
+        set((draftState) => {
+          draftState.allDrafts = draftState.allDrafts.map((draft) => ({
+            ...draft,
+            seen: draft.channelId === channelId ? true : draft.seen,
+          }))
         })
       },
     }),
@@ -102,14 +102,36 @@ export const useDraftStore = createStore<DraftStoreState, DraftStoreActions>(
   {
     persist: {
       key: 'drafts',
-      whitelist: ['allDrafts', 'allUnseenDrafts'],
-      version: 1,
+      whitelist: ['allDrafts'],
+      version: 2,
       migrate: (oldState, oldVersion, storageValue) => {
         // migrate store before zustand was added
+        // console.log({ oldState, oldVersion, storageValue })
         if (oldVersion === undefined) {
+          const unseenDrafts = readFromLocalStorage<
+            Array<{
+              draftId: string
+              channelId: string
+            }>
+          >('unseenDrafts')
+          const drafts = [...(storageValue as Array<Draft>)].map((draft) => {
+            unseenDrafts?.find((unseen) => unseen.draftId === draft.id)
+              ? { ...draft, seen: false }
+              : { ...draft, seen: true }
+          })
           return {
-            allDrafts: [...storageValue],
-            allUnseenDrafts: readFromLocalStorage<UnseenDraft[]>('unseenDrafts') ?? [],
+            allDrafts: drafts,
+          }
+          // combine unseen draft and drafts
+        } else if (oldVersion === 1) {
+          // console.log({ oldState, oldVersion, storageValue })
+          const state = oldState as DraftStoreStateV1
+          const drafts = state.allDrafts.map((draft) => ({
+            ...draft,
+            seen: state.allUnseenDrafts.find((unseen) => unseen.draftId === draft.id) ? false : true,
+          }))
+          return {
+            allDrafts: drafts,
           }
         }
       },

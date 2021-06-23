@@ -54,18 +54,13 @@ export const MyVideosView = () => {
   // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts, removeDrafts, unseenDrafts, removeAllUnseenDrafts } = useDraftStore(({ actions }) => {
-    const draft = actions.getDraftsForChannel(activeChannelId)
-    const unseenDrafts = actions.getUnseenDraftsForChannel(activeChannelId)
-    return {
-      drafts:
-        sortVideosBy === VideoOrderByInput.CreatedAtAsc
-          ? draft.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-          : draft.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()),
-      unseenDrafts,
-      ...actions,
-    }
-  }, shallow)
+  const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
+  const unseenDrafts = useDraftStore(({ actions }) => actions.getUnseenDraftsForChannel(activeChannelId))
+  const _drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId))
+  const drafts =
+    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
@@ -116,7 +111,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        removeAllUnseenDrafts(activeChannelId ?? '')
+        markAllDraftsAsSeenForChannel(activeChannelId ?? '')
       }
     }
   }
