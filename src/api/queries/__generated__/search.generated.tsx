@@ -2,8 +2,10 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
-import { VideoFieldsFragment, VideoFieldsFragmentDoc } from './videos.generated'
+import { BasicChannelFieldsFragment } from './channels.generated'
+import { BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { VideoFieldsFragment } from './videos.generated'
+import { VideoFieldsFragmentDoc } from './videos.generated'
 
 export type SearchQueryVariables = Types.Exact<{
   text: Types.Scalars['String']

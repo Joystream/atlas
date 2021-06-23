@@ -106,6 +106,13 @@ query GetVideoViews($videoId: ID!) {
   }
 }
 
+query GetBatchedVideoViews($videoIdList: [ID!]!) {
+  batchedVideoViews(videoIdList: $videoIdList) {
+    id
+    views
+  }
+}
+
 mutation AddVideoView($videoId: ID!, $channelId: ID!) {
   addVideoView(videoId: $videoId, channelId: $channelId) {
     id
