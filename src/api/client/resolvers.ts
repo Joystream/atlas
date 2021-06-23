@@ -12,6 +12,9 @@ import {
   TransformOrionFollowsField,
   TransformOrionViewsField,
 } from './transforms'
+import { BATCHED_ORION_VIEWS_QUERY_NAME, TransformBatchedOrionViewsField } from './transforms/orionViews'
+
+import { VideoEdge } from '../queries'
 
 const createResolverWithTransforms = (
   schema: GraphQLSchema,
@@ -57,31 +60,57 @@ export const queryNodeStitchingResolvers = (
       RemoveQueryNodeFollowsField,
     ]),
   },
-  Video: {
-    // TODO: Resolve the views count in parallel to the videosConnection query
-    // this can be done by writing a resolver for the query itself in which two requests in the same fashion as below would be made
-    // then the results could be combined
-    views: async (parent, args, context, info) => {
-      try {
-        return await delegateToSchema({
-          schema: orionSchema,
-          operation: 'query',
-          // operationName has to be manually kept in sync with the query name used
-          operationName: 'GetVideoViews',
-          fieldName: ORION_VIEWS_QUERY_NAME,
-          args: {
-            videoId: parent.id,
-          },
-          context,
-          info,
-          transforms: [TransformOrionViewsField],
-        })
-      } catch (error) {
-        Logger.warn('Failed to resolve views field', { error })
-        return null
-      }
+  VideoConnection: {
+    edges: async (parent, args, context, info) => {
+      const batchedVideoViews = await delegateToSchema({
+        schema: orionSchema,
+        operation: 'query',
+        operationName: 'GetBatchedVideoViews',
+        fieldName: BATCHED_ORION_VIEWS_QUERY_NAME,
+        args: {
+          videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id),
+        },
+        context,
+        info,
+        transforms: [TransformBatchedOrionViewsField],
+      })
+
+      return parent.edges.map((edge: VideoEdge) => ({
+        ...edge,
+        node: {
+          ...edge.node,
+          views:
+            batchedVideoViews.find((videoView: { id: string; views: number }) => videoView?.id === edge.node.id)
+              ?.views || 0,
+        },
+      }))
     },
   },
+  // Video: {
+  //   // TODO: Resolve the views count in parallel to the videosConnection query
+  //   // this can be done by writing a resolver for the query itself in which two requests in the same fashion as below would be made
+  //   // then the results could be combined
+  //   views: async (parent, args, context, info) => {
+  //     try {
+  //       return await delegateToSchema({
+  //         schema: orionSchema,
+  //         operation: 'query',
+  //         // operationName has to be manually kept in sync with the query name used
+  //         operationName: 'GetVideoViews',
+  //         fieldName: ORION_VIEWS_QUERY_NAME,
+  //         args: {
+  //           videoId: parent.id,
+  //         },
+  //         context,
+  //         info,
+  //         transforms: [TransformOrionViewsField],
+  //       })
+  //     } catch (error) {
+  //       Logger.warn('Failed to resolve views field', { error })
+  //       return null
+  //     }
+  //   },
+  // },
   Channel: {
     follows: async (parent, args, context, info) => {
       try {

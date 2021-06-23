@@ -74,3 +74,41 @@ export const TransformOrionViewsField: Transform = {
     return { data }
   },
 }
+
+export const BATCHED_ORION_VIEWS_QUERY_NAME = 'batchedVideoViews'
+
+export const TransformBatchedOrionViewsField: Transform = {
+  transformRequest(request) {
+    request.document = {
+      ...request.document,
+      definitions: request.document.definitions.map((definition) => {
+        if (definition.kind === 'OperationDefinition') {
+          return {
+            ...definition,
+            selectionSet: {
+              ...definition.selectionSet,
+              selections: definition.selectionSet.selections.map((selection) => {
+                if (selection.kind === 'Field' && selection.name.value === BATCHED_ORION_VIEWS_QUERY_NAME) {
+                  return {
+                    ...selection,
+                    selectionSet: VIDEO_INFO_SELECTION_SET,
+                  }
+                }
+                return selection
+              }),
+            },
+          }
+        }
+        return definition
+      }),
+    }
+
+    return request
+  },
+  transformResult(result) {
+    if (result.errors) {
+      throw new OrionError(result.errors)
+    }
+    return result
+  },
+}
