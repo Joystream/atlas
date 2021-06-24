@@ -5,7 +5,8 @@ import { CSSTransition } from 'react-transition-group'
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
-import { useAuthorizedUser, useDrafts, useEditVideoSheet, useUploadsManager } from '@/providers'
+import { useAuthorizedUser, useDrafts, useEditVideoSheet } from '@/providers'
+import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { Button } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -35,13 +36,13 @@ export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useAuthorizedUser()
   const { unseenDrafts } = useDrafts('video', activeChannelId)
-  const { channelUploadsState } = useUploadsManager()
   const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
+  const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
   const { openWarningDialog } = useDisplayDataLostWarning()
 
-  const assetsInProgress = channelUploadsState.filter((asset) => asset.lastStatus === 'inProgress')
+  const assetsInProgress = Object.values(uploadsStatus).filter((asset) => asset?.lastStatus === 'inProgress')
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
     if (item.to === absoluteRoutes.studio.videos()) {
