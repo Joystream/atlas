@@ -6,11 +6,9 @@ import { Logger } from '@/utils/logger'
 
 import {
   ORION_FOLLOWS_QUERY_NAME,
-  ORION_VIEWS_QUERY_NAME,
   RemoveQueryNodeFollowsField,
   RemoveQueryNodeViewsField,
   TransformOrionFollowsField,
-  TransformOrionViewsField,
 } from './transforms'
 import { BATCHED_ORION_VIEWS_QUERY_NAME, TransformBatchedOrionViewsField } from './transforms/orionViews'
 
@@ -86,31 +84,6 @@ export const queryNodeStitchingResolvers = (
       }))
     },
   },
-  // Video: {
-  //   // TODO: Resolve the views count in parallel to the videosConnection query
-  //   // this can be done by writing a resolver for the query itself in which two requests in the same fashion as below would be made
-  //   // then the results could be combined
-  //   views: async (parent, args, context, info) => {
-  //     try {
-  //       return await delegateToSchema({
-  //         schema: orionSchema,
-  //         operation: 'query',
-  //         // operationName has to be manually kept in sync with the query name used
-  //         operationName: 'GetVideoViews',
-  //         fieldName: ORION_VIEWS_QUERY_NAME,
-  //         args: {
-  //           videoId: parent.id,
-  //         },
-  //         context,
-  //         info,
-  //         transforms: [TransformOrionViewsField],
-  //       })
-  //     } catch (error) {
-  //       Logger.warn('Failed to resolve views field', { error })
-  //       return null
-  //     }
-  //   },
-  // },
   Channel: {
     follows: async (parent, args, context, info) => {
       try {

@@ -1,27 +1,23 @@
 import {
+  GetBatchedVideoViewsQuery,
+  GetBatchedVideoViewsQueryVariables,
   GetChannelFollowsQuery,
   GetChannelFollowsQueryVariables,
-  GetVideoViewsQuery,
-  GetVideoViewsQueryVariables,
 } from '@/api/queries'
 
 import { MocksStore } from '../types'
 
-export const createVideoViewsAccessor = (store: MocksStore) => (
-  variables: GetVideoViewsQueryVariables
-): GetVideoViewsQuery['videoViews'] => {
-  const { videoId } = variables
+export const createBatchedVideoViewsAccessor = (store: MocksStore) => (
+  variables: GetBatchedVideoViewsQueryVariables
+): GetBatchedVideoViewsQuery['batchedVideoViews'] => {
+  const { videoIdList } = variables
 
-  const views = store.videoViews[videoId]
-
-  if (views == null) {
-    return null
+  const batchedVideoViews = store.batchedVideoViews.filter((view) => videoIdList.includes(view.id))
+  if (!batchedVideoViews.length) {
+    return []
   }
 
-  return {
-    id: videoId,
-    views,
-  }
+  return batchedVideoViews
 }
 
 export const createChannelFollowsAccessor = (store: MocksStore) => (
