@@ -1,8 +1,9 @@
 import React from 'react'
+import shallow from 'zustand/shallow'
 
-import { useUploadsManager } from '@/providers'
+import { useUser } from '@/providers'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
-import { AssetUploadWithProgress } from '@/providers/uploadsManager/types'
+import { AssetUpload } from '@/providers/uploadsManager/types'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
@@ -10,22 +11,21 @@ import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 
 type GroupByParentObjectIdAcc = {
-  [key: string]: AssetUploadWithProgress[]
+  [key: string]: AssetUpload[]
 }
 
 export const MyUploadsView: React.FC = () => {
-  const { isLoading } = useUploadsManager()
-  const uploadsProgress = useUploadsStore((state) => state.uploadsProgress)
-  const { channelUploadsState } = useUploadsManager()
+  const { activeChannelId } = useUser()
 
-  const filteredUploadStateWithProgress = channelUploadsState.map((asset) => ({
-    ...asset,
-    progress: uploadsProgress[asset.contentId] ?? 0,
-  }))
+  const channelUploads = useUploadsStore(
+    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
+    shallow
+  )
+  const isSyncing = useUploadsStore((state) => state.isSyncing)
 
   // Grouping all assets by parent id (videos, channel)
   const groupedUploadsState = Object.values(
-    filteredUploadStateWithProgress.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+    channelUploads.reduce((acc: GroupByParentObjectIdAcc, asset) => {
       if (!asset) {
         return acc
       }
@@ -44,10 +44,10 @@ export const MyUploadsView: React.FC = () => {
   return (
     <UploadsContainer>
       <StyledText variant="h2">My uploads</StyledText>
-      {isLoading ? (
+      {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (
-        groupedUploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploadData={files} />)
+        groupedUploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploads={files} />)
       ) : (
         <EmptyUploadsView />
       )}
