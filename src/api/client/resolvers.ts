@@ -2,6 +2,7 @@ import { Transform, delegateToSchema } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
+import { createLookup } from '@/utils/data'
 import { Logger } from '@/utils/logger'
 
 import {
@@ -75,13 +76,13 @@ export const queryNodeStitchingResolvers = (
         transforms: [TransformBatchedOrionViewsField],
       })
 
+      const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+
       return parent.edges.map((edge: VideoEdge) => ({
         ...edge,
         node: {
           ...edge.node,
-          views:
-            batchedVideoViews.find((videoView: { id: string; views: number }) => videoView?.id === edge.node.id)
-              ?.views || 0,
+          views: viewsLookup[edge.node.id]?.views || 0,
         },
       }))
     },
