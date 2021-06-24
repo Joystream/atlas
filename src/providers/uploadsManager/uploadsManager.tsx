@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { isEqual } from 'lodash'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -27,7 +28,10 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
   const { activeChannelId } = useUser()
 
   const { displaySnackbar } = useSnackbar()
-  const uploadsState = useUploadsStore((state) => state.uploadsState)
+  const channelUploadsState = useUploadsStore(
+    (state) => state.uploadsState.filter((asset) => asset.owner === activeChannelId),
+    (prevState, newState) => isEqual(prevState, newState)
+  )
   const addAsset = useUploadsStore((state) => state.addAsset)
   const updateAsset = useUploadsStore((state) => state.updateAsset)
   const removeAsset = useUploadsStore((state) => state.removeAsset)
@@ -80,7 +84,7 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
 
       const channel = channelResponse.data.channelByUniqueInput
 
-      uploadsState.forEach((asset) => {
+      channelUploadsState.forEach((asset) => {
         if (asset.owner !== activeChannelId) {
           return
         }
@@ -110,82 +114,47 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
       let notificationsCount = 0
 
       videosLookup.forEach((video) => {
-        if (
-          video.mediaAvailability === AssetAvailability.Pending &&
-          video.mediaDataObject?.joystreamContentId &&
-          !uploadsState.some((asset) => asset.contentId === video.mediaDataObject?.joystreamContentId)
-        ) {
-          addAsset({
-            contentId: video.mediaDataObject?.joystreamContentId,
-            ipfsContentId: video.mediaDataObject?.ipfsContentId,
-            parentObject: {
-              type: 'video',
-              id: video.id,
-            },
-            owner: activeChannelId,
-            type: 'video',
-            lastStatus: 'missing',
-            size: video.mediaDataObject?.size ?? 0,
-            dimensions: uploadsState.find((asset) => asset.contentId === video.mediaDataObject?.joystreamContentId)
-              ?.dimensions,
-          })
+        if (video.mediaAvailability === AssetAvailability.Pending && video.mediaDataObject?.joystreamContentId) {
+          !channelUploadsState.some((asset) => asset.contentId === video.mediaDataObject?.joystreamContentId)
+            ? addAsset({
+                contentId: video.mediaDataObject?.joystreamContentId,
+                ipfsContentId: video.mediaDataObject?.ipfsContentId,
+                parentObject: {
+                  type: 'video',
+                  id: video.id,
+                },
+                owner: activeChannelId,
+                type: 'video',
+                lastStatus: 'missing',
+                size: video.mediaDataObject?.size ?? 0,
+                dimensions: channelUploadsState.find(
+                  (asset) => asset.contentId === video.mediaDataObject?.joystreamContentId
+                )?.dimensions,
+              })
+            : updateAsset(video.mediaDataObject.joystreamContentId, 'missing')
           notificationsCount++
         }
         if (
           video.thumbnailPhotoAvailability === AssetAvailability.Pending &&
-          video.thumbnailPhotoDataObject?.joystreamContentId &&
-          !uploadsState.some((asset) => asset.contentId === video.thumbnailPhotoDataObject?.joystreamContentId)
+          video.thumbnailPhotoDataObject?.joystreamContentId
         ) {
-          addAsset({
-            contentId: video.thumbnailPhotoDataObject?.joystreamContentId ?? '',
-            ipfsContentId: video.thumbnailPhotoDataObject?.ipfsContentId,
-            parentObject: {
-              type: 'video',
-              id: video.id,
-            },
-            owner: activeChannelId,
-            type: 'thumbnail',
-            lastStatus: 'missing',
-            size: video.thumbnailPhotoDataObject?.size ?? 0,
-          })
+          !channelUploadsState.some((asset) => asset.contentId === video.thumbnailPhotoDataObject?.joystreamContentId)
+            ? addAsset({
+                contentId: video.thumbnailPhotoDataObject.joystreamContentId,
+                ipfsContentId: video.thumbnailPhotoDataObject?.ipfsContentId,
+                parentObject: {
+                  type: 'video',
+                  id: video.id,
+                },
+                owner: activeChannelId,
+                type: 'thumbnail',
+                lastStatus: 'missing',
+                size: video.thumbnailPhotoDataObject?.size ?? 0,
+              })
+            : updateAsset(video.thumbnailPhotoDataObject.joystreamContentId, 'missing')
           notificationsCount++
         }
       })
-
-      // if (
-      //   channel?.avatarPhotoAvailability === AssetAvailability.Pending &&
-      //   !uploadsState.some((asset) => asset.contentId === channel.avatarPhotoDataObject?.joystreamContentId)
-      // ) {
-      //   addAsset({
-      //     contentId: channel.avatarPhotoDataObject?.joystreamContentId ?? '',
-      //     owner: activeChannelId,
-      //     parentObject: {
-      //       type: 'channel',
-      //       id: activeChannelId,
-      //     },
-      //     type: 'avatar',
-      //     size: channel.avatarPhotoDataObject?.size ?? 0,
-      //     lastStatus: 'missing',
-      //   })
-      // }
-      // if (
-      //   channel?.coverPhotoAvailability === AssetAvailability.Pending &&
-      //   !uploadsState.some((asset) => asset.contentId === channel?.coverPhotoDataObject?.joystreamContentId)
-      // ) {
-      //   addAsset({
-      //     contentId: channel.coverPhotoDataObject?.joystreamContentId ?? '',
-      //     owner: activeChannelId,
-      //     parentObject: {
-      //       type: 'channel',
-      //       id: activeChannelId,
-      //     },
-      //     type: 'cover',
-      //     size: channel.coverPhotoDataObject?.size ?? 0,
-      //     lastStatus: 'missing',
-      //   })
-      // }
-
-      notificationsCount = notificationsCount + uploadsState.length
 
       if (notificationsCount > 0) {
         displaySnackbar({
@@ -200,13 +169,13 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     }
 
     init()
-  }, [activeChannelId, uploadsState, client, displaySnackbar, navigate, updateAsset, removeAsset, addAsset])
+  }, [activeChannelId, channelUploadsState, client, displaySnackbar, navigate, updateAsset, removeAsset, addAsset])
 
   return (
     <UploadManagerContext.Provider
       value={{
         isLoading: syncUpLoading,
-        channelUploadsState: uploadsState,
+        channelUploadsState: channelUploadsState,
       }}
     >
       {children}
