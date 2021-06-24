@@ -254,7 +254,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       }
 
       const callback = () => {
-        setForceReset(true)
+        if (!isEdit) {
+          setForceReset(true)
+        }
       }
 
       debouncedDraftSave.current.flush()
