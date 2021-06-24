@@ -75,3 +75,7 @@ yarn-error.log
 
 # JetBrains
 .idea
+
+# Cypress
+cypress/screenshots
+cypress/videos
