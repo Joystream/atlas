@@ -65,12 +65,14 @@ export const useAsset: UseAsset = ({ entity, assetType }) => {
       setIsLoading(true)
       const onError = (error: ErrorEvent) => {
         setIsLoading(false)
+        setUrl(undefined)
         setError(error)
       }
 
       const onLoad = () => {
         setIsLoading(false)
         setUrl(assetUrl)
+        setError(null)
       }
 
       if ([AssetType.COVER, AssetType.THUMBNAIL, AssetType.AVATAR].includes(assetType)) {
