@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
@@ -10,10 +10,7 @@ import { useUploadsStore } from './store'
 
 import { useSnackbar, useUser } from '..'
 
-const UploadManagerContext = React.createContext<undefined>(undefined)
-UploadManagerContext.displayName = 'UploadManagerContext'
-
-export const UploadManagerProvider: React.FC = ({ children }) => {
+export const UploadsManager: React.FC = () => {
   const navigate = useNavigate()
   const { activeChannelId } = useUser()
   const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)
@@ -157,13 +154,5 @@ export const UploadManagerProvider: React.FC = ({ children }) => {
     setIsSyncing,
   ])
 
-  return <UploadManagerContext.Provider value={undefined}>{children}</UploadManagerContext.Provider>
-}
-
-export const useUploadsManager = () => {
-  const ctx = useContext(UploadManagerContext)
-  if (ctx === undefined) {
-    throw new Error('useUploadsManager must be used within a UploadManagerProvider')
-  }
-  return ctx
+  return null
 }
