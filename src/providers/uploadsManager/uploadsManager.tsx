@@ -1,93 +1,158 @@
-import { isEqual } from 'lodash'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useApolloClient } from '@apollo/client'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
-import { useChannel, useVideos } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
+import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 
 import { useUploadsStore } from './store'
-import { UploadManagerValue } from './types'
 
 import { useSnackbar, useUser } from '..'
 
-const UploadManagerContext = React.createContext<UploadManagerValue | undefined>(undefined)
-UploadManagerContext.displayName = 'UploadManagerContext'
-
-export const UploadManagerProvider: React.FC = ({ children }) => {
+export const UploadsManager: React.FC = () => {
   const navigate = useNavigate()
   const { activeChannelId } = useUser()
+  const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)
 
   const { displaySnackbar } = useSnackbar()
-  const updateAsset = useUploadsStore((state) => state.updateAsset)
-
-  const uploadsStateIds = useUploadsStore(
-    (state) =>
-      state.uploadsState.filter((item) => item.parentObject?.type === 'video').map((item) => item.parentObject.id),
+  const channelUploadsState = useUploadsStore(
+    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const channelUploadsState = useUploadsStore(
-    (state) => state.uploadsState.filter((asset) => asset.owner === activeChannelId),
-    (prevState, newState) => isEqual(prevState, newState)
+  const { addAsset, removeAsset, setIsSyncing, isSyncing } = useUploadsStore(
+    (state) => ({
+      addAsset: state.addAsset,
+      removeAsset: state.removeAsset,
+      setIsSyncing: state.setIsSyncing,
+      isSyncing: state.isSyncing,
+    }),
+    shallow
   )
-  // \/ workaround for now to not show completed uploads but not delete them since we may want to show history of uploads in the future
-  const [ignoredAssetsIds, setIgnoredAssetsIds] = useState<string[]>([])
-  const { loading: channelLoading } = useChannel(activeChannelId ?? '')
-  const { loading: videosLoading } = useVideos(
-    {
-      where: {
-        id_in: uploadsStateIds,
-      },
-    },
-    { skip: !uploadsStateIds.length }
-  )
+  const client = useApolloClient()
 
-  const isInitialMount = useRef(true)
   useEffect(() => {
-    if (!isInitialMount.current) {
+    // do this only on first render or when active channel changes
+    if (!activeChannelId || cachedActiveChannelId === activeChannelId || isSyncing) {
       return
     }
-    isInitialMount.current = false
+    setCachedActiveChannelId(activeChannelId)
+    setIsSyncing(true)
 
-    let missingAssetsCount = 0
-    channelUploadsState.forEach((asset) => {
-      if (asset.lastStatus !== 'completed') {
-        updateAsset(asset.contentId, 'missing')
-        missingAssetsCount++
-      } else {
-        setIgnoredAssetsIds((ignored) => [...ignored, asset.contentId])
-      }
-    })
+    const init = async () => {
+      const [fetchedVideos, fetchedChannel, pendingAssetsLookup] = await fetchMissingAssets(client, activeChannelId)
 
-    if (missingAssetsCount > 0) {
-      displaySnackbar({
-        title: `(${missingAssetsCount}) Asset${missingAssetsCount > 1 ? 's' : ''} waiting to resume upload`,
-        description: 'Reconnect files to fix the issue',
-        actionText: 'See',
-        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-        iconType: 'warning',
+      // start with assumption that all assets are missing
+      const missingLocalAssetsLookup = { ...pendingAssetsLookup }
+
+      // remove assets from local state that weren't returned by the query node
+      // mark asset as not missing in local state
+      channelUploadsState.forEach((asset) => {
+        if (asset.owner !== activeChannelId) {
+          return
+        }
+
+        if (!pendingAssetsLookup[asset.contentId]) {
+          removeAsset(asset.contentId)
+        } else {
+          // mark asset as not missing from local state
+          delete missingLocalAssetsLookup[asset.contentId]
+        }
       })
+
+      // add missing video assets
+      fetchedVideos.forEach((video) => {
+        const media = video.mediaDataObject
+        const thumbnail = video.thumbnailPhotoDataObject
+
+        if (media && missingLocalAssetsLookup[media.joystreamContentId]) {
+          addAsset({
+            contentId: media.joystreamContentId,
+            ipfsContentId: media.ipfsContentId,
+            parentObject: {
+              type: 'video',
+              id: video.id,
+            },
+            owner: activeChannelId,
+            type: 'video',
+            size: media.size,
+          })
+        }
+
+        if (thumbnail && missingLocalAssetsLookup[thumbnail.joystreamContentId]) {
+          addAsset({
+            contentId: thumbnail.joystreamContentId,
+            ipfsContentId: thumbnail.ipfsContentId,
+            parentObject: {
+              type: 'video',
+              id: video.id,
+            },
+            owner: activeChannelId,
+            type: 'thumbnail',
+            size: thumbnail.size,
+          })
+        }
+      })
+
+      // add missing channel assets
+      const avatar = fetchedChannel?.avatarPhotoDataObject
+      const cover = fetchedChannel?.coverPhotoDataObject
+
+      if (avatar && missingLocalAssetsLookup[avatar.joystreamContentId]) {
+        addAsset({
+          contentId: avatar.joystreamContentId,
+          ipfsContentId: avatar.ipfsContentId,
+          parentObject: {
+            type: 'channel',
+            id: fetchedChannel?.id || '',
+          },
+          owner: activeChannelId,
+          type: 'avatar',
+          size: avatar.size,
+        })
+      }
+      if (cover && missingLocalAssetsLookup[cover.joystreamContentId]) {
+        addAsset({
+          contentId: cover.joystreamContentId,
+          ipfsContentId: cover.ipfsContentId,
+          parentObject: {
+            type: 'channel',
+            id: fetchedChannel?.id || '',
+          },
+          owner: activeChannelId,
+          type: 'cover',
+          size: cover.size,
+        })
+      }
+
+      const missingAssetsNotificationCount = Object.values(pendingAssetsLookup).length
+      if (missingAssetsNotificationCount > 0) {
+        displaySnackbar({
+          title: `${missingAssetsNotificationCount} asset${
+            missingAssetsNotificationCount > 1 ? 's' : ''
+          } waiting to resume upload`,
+          description: 'Reconnect files to fix the issue',
+          actionText: 'See',
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+          iconType: 'warning',
+        })
+      }
+      setIsSyncing(false)
     }
-  }, [channelUploadsState, displaySnackbar, navigate, updateAsset])
 
-  const isLoading = channelLoading || videosLoading
+    init()
+  }, [
+    activeChannelId,
+    channelUploadsState,
+    client,
+    displaySnackbar,
+    navigate,
+    removeAsset,
+    addAsset,
+    cachedActiveChannelId,
+    isSyncing,
+    setIsSyncing,
+  ])
 
-  return (
-    <UploadManagerContext.Provider
-      value={{
-        isLoading,
-        channelUploadsState: channelUploadsState.filter((asset) => !ignoredAssetsIds.includes(asset.contentId)),
-      }}
-    >
-      {children}
-    </UploadManagerContext.Provider>
-  )
-}
-
-export const useUploadsManager = () => {
-  const ctx = useContext(UploadManagerContext)
-  if (ctx === undefined) {
-    throw new Error('useUploadsManager must be used within a UploadManagerProvider')
-  }
-  return ctx
+  return null
 }
