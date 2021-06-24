@@ -15,13 +15,12 @@ type GroupByParentObjectIdAcc = {
 
 export const MyUploadsView: React.FC = () => {
   const { isLoading } = useUploadsManager()
-  const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
+  const uploadsProgress = useUploadsStore((state) => state.uploadsProgress)
   const { channelUploadsState } = useUploadsManager()
 
   const filteredUploadStateWithProgress = channelUploadsState.map((asset) => ({
     ...asset,
-    progress: uploadsStatus[asset.contentId]?.progress ?? 0,
-    lastStatus: uploadsStatus[asset.contentId]?.lastStatus ?? asset.lastStatus,
+    progress: uploadsProgress[asset.contentId] ?? 0,
   }))
 
   // Grouping all assets by parent id (videos, channel)

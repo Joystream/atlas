@@ -39,4 +39,4 @@ export type UploadManagerValue = {
   channelUploadsState: AssetUpload[]
   isLoading: boolean
 }
-export type UploadsStatusRecord = Record<string, { lastStatus?: AssetUploadStatus; progress?: number }>
+export type UploadsProgressRecord = Record<string, number>
