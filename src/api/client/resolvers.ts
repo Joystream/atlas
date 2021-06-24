@@ -13,6 +13,7 @@ import {
   TransformBatchedOrionViewsField,
   TransformOrionFollowsField,
 } from './transforms'
+import { ORION_VIEWS_QUERY_NAME, TransformOrionViewsField } from './transforms/orionViews'
 
 import { VideoEdge } from '../queries'
 
@@ -60,6 +61,31 @@ export const queryNodeStitchingResolvers = (
       RemoveQueryNodeFollowsField,
     ]),
   },
+  Video: {
+    views: async (parent, args, context, info) => {
+      if (parent.views !== null) {
+        return parent.views
+      }
+      try {
+        return await delegateToSchema({
+          schema: orionSchema,
+          operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetVideoViews',
+          fieldName: ORION_VIEWS_QUERY_NAME,
+          args: {
+            videoId: parent.id,
+          },
+          context,
+          info,
+          transforms: [TransformOrionViewsField],
+        })
+      } catch (error) {
+        Logger.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
+  },
   VideoConnection: {
     edges: async (parent, args, context, info) => {
       const batchedVideoViews = await delegateToSchema({
@@ -87,6 +113,7 @@ export const queryNodeStitchingResolvers = (
       }))
     },
   },
+
   Channel: {
     follows: async (parent, args, context, info) => {
       try {

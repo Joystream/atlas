@@ -42,9 +42,10 @@ export const createAddVideoViewMutationHandler = (link: Link, store: MocksStore)
     (variables) => {
       const { videoId } = variables
       const idx = store.batchedVideoViews.findIndex((view) => view.id === videoId)
-      const currentValue = store.batchedVideoViews[idx].views || 0
+      const currentValue = store.batchedVideoViews[idx].views || store.videoViews[videoId] || 0
       const newValue = currentValue + 1
       store.batchedVideoViews[idx].views = newValue
+      store.videoViews[videoId] = newValue
 
       return {
         addVideoView: {
