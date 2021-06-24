@@ -5,12 +5,13 @@ import { GraphQLSchema } from 'graphql'
 import { Logger } from '@/utils/logger'
 
 import {
+  ORION_BATCHED_VIEWS_QUERY_NAME,
   ORION_FOLLOWS_QUERY_NAME,
   RemoveQueryNodeFollowsField,
   RemoveQueryNodeViewsField,
+  TransformBatchedOrionViewsField,
   TransformOrionFollowsField,
 } from './transforms'
-import { BATCHED_ORION_VIEWS_QUERY_NAME, TransformBatchedOrionViewsField } from './transforms/orionViews'
 
 import { VideoEdge } from '../queries'
 
@@ -63,8 +64,9 @@ export const queryNodeStitchingResolvers = (
       const batchedVideoViews = await delegateToSchema({
         schema: orionSchema,
         operation: 'query',
+        // operationName has to be manually kept in sync with the query name used
         operationName: 'GetBatchedVideoViews',
-        fieldName: BATCHED_ORION_VIEWS_QUERY_NAME,
+        fieldName: ORION_BATCHED_VIEWS_QUERY_NAME,
         args: {
           videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id),
         },

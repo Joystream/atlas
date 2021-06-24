@@ -106,6 +106,7 @@ query GetVideoViews($videoId: ID!) {
   }
 }
 
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetBatchedVideoViews($videoIdList: [ID!]!) {
   batchedVideoViews(videoIdList: $videoIdList) {
     id

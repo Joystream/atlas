@@ -30,7 +30,7 @@ const VIDEO_INFO_SELECTION_SET: SelectionSetNode = {
   ],
 }
 
-export const BATCHED_ORION_VIEWS_QUERY_NAME = 'batchedVideoViews'
+export const ORION_BATCHED_VIEWS_QUERY_NAME = 'batchedVideoViews'
 
 export const TransformBatchedOrionViewsField: Transform = {
   transformRequest(request) {
@@ -43,7 +43,7 @@ export const TransformBatchedOrionViewsField: Transform = {
             selectionSet: {
               ...definition.selectionSet,
               selections: definition.selectionSet.selections.map((selection) => {
-                if (selection.kind === 'Field' && selection.name.value === BATCHED_ORION_VIEWS_QUERY_NAME) {
+                if (selection.kind === 'Field' && selection.name.value === ORION_BATCHED_VIEWS_QUERY_NAME) {
                   return {
                     ...selection,
                     selectionSet: VIDEO_INFO_SELECTION_SET,
