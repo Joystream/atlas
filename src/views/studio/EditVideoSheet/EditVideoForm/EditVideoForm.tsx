@@ -375,20 +375,17 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <Controller
           name="assets"
           control={control}
-          render={({ field: { value, ref }, fieldState }) => {
-            console.log(ref, fieldState, value.thumbnail)
-            return (
-              <MultiFileSelect
-                files={value}
-                onVideoChange={handleVideoFileChange}
-                onThumbnailChange={handleThumbnailFileChange}
-                editMode={isEdit}
-                error={fileSelectError}
-                onError={handleFileSelectError}
-                maxVideoSize={10 * 1024 * 1024 * 1024}
-              />
-            )
-          }}
+          render={({ field: { value } }) => (
+            <MultiFileSelect
+              files={value}
+              onVideoChange={handleVideoFileChange}
+              onThumbnailChange={handleThumbnailFileChange}
+              editMode={isEdit}
+              error={fileSelectError}
+              onError={handleFileSelectError}
+              maxVideoSize={10 * 1024 * 1024 * 1024}
+            />
+          )}
         />
         <InputsContainer>
           <StyledHeaderTextField
