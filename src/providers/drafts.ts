@@ -30,17 +30,11 @@ export type VideoDraft = {
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt'>
-interface DraftStoreStateV1 {
-  allDrafts: Draft[]
-  allUnseenDrafts: Array<{
-    draftId: string
-    channelId: string
-  }>
-}
-interface DraftStoreStateV2 {
+
+type DraftStoreStateV1 = {
   allDrafts: Draft[]
 }
-interface DraftStoreActions {
+type DraftStoreActions = {
   addDraft: (draft: RawDraft, explicitId?: string) => Draft
   updateDraft: (draftId: string, draftProps: RawDraft) => void
   getDraft: (draftId: string) => Draft | undefined
@@ -51,7 +45,7 @@ interface DraftStoreActions {
   removeAllDrafts: (channelId: string) => void
 }
 
-export const useDraftStore = createStore<DraftStoreStateV2, DraftStoreActions>(
+export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
   {
     state: {
       allDrafts: [], // includes drafts for different channels
@@ -106,7 +100,6 @@ export const useDraftStore = createStore<DraftStoreStateV2, DraftStoreActions>(
       version: 1,
       migrate: (oldState, oldVersion, storageValue) => {
         // migrate store before zustand was added
-        // console.log({ oldState, oldVersion, storageValue })
         if (oldVersion === undefined) {
           const unseenDrafts = readFromLocalStorage<
             Array<{
