@@ -25,6 +25,7 @@ type CommonStorePersistOpts<TState> = {
   // we can't really know what the previous value is, may be different than the current TState
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   migrate: (oldState: any, oldVersion: number, storageValue: any) => any // TODO: provide better return value
+  onRehydrateStorage?: (state: TState) => void
 }
 
 type CommonStoreOpts<TState extends object> = {
@@ -61,6 +62,9 @@ export const createStore = <TState extends object, TActions extends object>(
           Logger.error(`Failed to migrate store "${config.key}"`, e)
           return {} as CommonStore<TState, TActions>
         }
+      },
+      onRehydrateStorage: (state) => {
+        return config.onRehydrateStorage?.(state)
       },
     })
   }

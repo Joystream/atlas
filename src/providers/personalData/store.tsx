@@ -1,4 +1,5 @@
 import { createStore } from '@/store'
+import { readFromLocalStorage } from '@/utils/localStorage'
 
 import {
   DismissedMessage,
@@ -17,6 +18,14 @@ export type PersonalDataStoreState = {
   playerVolume: number
 }
 
+const WHITELIST = [
+  'watchedVideos',
+  'followedChannels',
+  'recentSearches',
+  'dismissedMessages',
+  'playerVolume',
+] as (keyof PersonalDataStoreState)[]
+
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
   updateChannelFollowing: (id: string, follow: boolean) => void
@@ -25,9 +34,21 @@ export type PersonalDataStoreActions = {
   updatePlayerVolume: (volume: number) => void
 }
 
+const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
+const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
+const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
+const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
+const playerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
+
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
-    state: { watchedVideos: [], followedChannels: [], recentSearches: [], dismissedMessages: [], playerVolume: 1 },
+    state: {
+      watchedVideos,
+      followedChannels,
+      recentSearches,
+      dismissedMessages,
+      playerVolume,
+    },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
@@ -75,19 +96,14 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
   {
     persist: {
       key: 'personalData',
-      whitelist: ['watchedVideos', 'followedChannels', 'recentSearches', 'dismissedMessages', 'playerVolume'],
+      whitelist: WHITELIST,
       version: 1,
-      migrate: (oldState, oldVersion, storageValue) => {
-        if (!oldVersion && oldVersion !== 0) {
-          return {
-            personalData: storageValue,
-          }
-        } else if (oldVersion === 0) {
-          return {
-            personalData: oldState,
-          }
-        }
+      onRehydrateStorage: () => {
+        WHITELIST.forEach((item) => {
+          window.localStorage.removeItem(item)
+        })
       },
+      migrate: () => null,
     },
   }
 )
