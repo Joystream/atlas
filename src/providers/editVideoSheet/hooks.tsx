@@ -23,16 +23,19 @@ export const useEditVideoSheet = () => {
   return ctx
 }
 
-export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
+export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab, skipAssets = false) => {
   const { activeChannelId } = useAuthorizedUser()
   const { drafts } = useDrafts('video', activeChannelId)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
-  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
+  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA }, { skip: skipAssets })
+  const { url: thumbnailPhotoUrl } = useAsset(
+    {
+      entity: video,
+      assetType: AssetType.THUMBNAIL,
+    },
+    { skip: skipAssets }
+  )
 
   if (!tab) {
     return {
@@ -83,7 +86,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   return {
     tabData: normalizedData,
-    loading: tab.isDraft ? false : loading,
+    loading: tab.isDraft ? false : loading || (!skipAssets && (!thumbnailPhotoUrl || !mediaUrl)),
     error,
   }
 }

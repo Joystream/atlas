@@ -86,7 +86,7 @@ type EditVideoTabProps = {
 }
 
 const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, selected, onTabSelect, onRemoveTabClick }) => {
-  const { tabData } = useEditVideoSheetTabData(tab)
+  const { tabData } = useEditVideoSheetTabData(tab, true)
 
   return (
     <Tab key={tab.id} selected={selected} onClick={onTabSelect}>
