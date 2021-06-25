@@ -1,5 +1,3 @@
-// /// <reference path="../../support/index.d.ts" />
-/// <reference types="Cypress" />
 before(() => {
   cy.login()
 })

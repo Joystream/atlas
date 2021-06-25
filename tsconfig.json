@@ -23,9 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "types": [
       "cypress",
-      "@testing-library/cypress",
-      "cypress/support/index.ts",
-      "cypress/support/index.d.ts"
+      "@testing-library/cypress"
     ]
   },
   "exclude": [

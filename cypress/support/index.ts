@@ -1,5 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
+import './commands'
+
 // load the global Cypress types
 /// <reference types="cypress" />
 // ***********************************************************
@@ -17,7 +19,6 @@ import '@testing-library/cypress/add-commands'
 // https://on.cypress.io/configuration
 // ***********************************************************
 // Import commands.js using ES2015 syntax:
-import './commands'
 
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/
 Cypress.on('uncaught:exception', (err) => {
@@ -27,40 +28,6 @@ Cypress.on('uncaught:exception', (err) => {
   }
 })
 
-Cypress.on('window:before:load', (window) => {
-  // const enable = async () => {
-  //   return {
-  //     accounts: {
-  //       get: () => new Promise((resolve) => resolve(Cypress.env('accounts'))),
-  //     },
-  //   }
-  // }
-  // window['injectedWeb3'] = {
-  //   'polkadot-js': {
-  //     enable,
-  //     version: '0.38.3',
-  //   },
-  // }
-})
-
 before(() => {
   cy.visit('/')
-})
-
-Cypress.Commands.add('login', () => {
-  const enable = async () => {
-    return {
-      accounts: {
-        get: () => new Promise((resolve) => resolve(Cypress.env('accounts'))),
-      },
-    }
-  }
-  cy.window().then((window) => {
-    window['injectedWeb3'] = {
-      'polkadot-js': {
-        enable,
-        version: '0.38.3',
-      },
-    }
-  })
 })

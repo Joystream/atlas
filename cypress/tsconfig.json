@@ -10,5 +10,5 @@
       "@testing-library/cypress"
     ]
   },
-  "include": ["**/*.ts", "support/index.ts", "support/index.d.ts", "."]
+  "include": ["**/*.ts", "support/index.ts"]
 }
