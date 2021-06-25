@@ -304,6 +304,7 @@ export const EditVideoSheet: React.FC = () => {
         <EditVideoTabsBar
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
+          sheetState={sheetState}
           onAddNewTabClick={() => addVideoTab()}
           onRemoveTabClick={handleRemoveVideoTab}
           onTabSelect={(tabIdx) => {
