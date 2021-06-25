@@ -18,9 +18,9 @@ import {
   useDrafts,
   useEditVideoSheet,
   useJoystream,
-  useTransactionManager,
+  useStartFileUpload,
+  useTransaction,
 } from '@/providers'
-import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { Logger } from '@/utils/logger'
@@ -60,7 +60,7 @@ export const EditVideoSheet: React.FC = () => {
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const startFileUpload = useStartFileUpload()
   const { joystream } = useJoystream()
-  const { fee, handleTransaction } = useTransactionManager()
+  const handleTransaction = useTransaction()
   const client = useApolloClient()
 
   useEffect(() => {
@@ -191,7 +191,7 @@ export const EditVideoSheet: React.FC = () => {
         })
         uploadPromises.push(uploadPromise)
       }
-      await Promise.all(uploadPromises)
+      Promise.all(uploadPromises).catch((e) => Logger.error('Failed assets upload', e))
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
@@ -235,37 +235,25 @@ export const EditVideoSheet: React.FC = () => {
       })
     }
 
-    try {
-      await handleTransaction({
-        preProcess: processAssets,
-        txFactory: (updateStatus) =>
-          isNew
-            ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-            : joystream.updateVideo(
-                selectedVideoTab.id,
-                activeMemberId,
-                activeChannelId,
-                metadata,
-                assets,
-                updateStatus
-              ),
-        onTxFinalize: uploadAssets,
-        onTxSync: refetchDataAndCacheAssets,
-        onTxClose: (completed) => {
-          if (completed) {
-            setSheetState('minimized')
-            removeVideoTab(selectedVideoTabIdx)
-          }
-        },
-        successMessage: {
-          title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-          description: isNew
-            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-            : 'Changes to your video were saved on the blockchain.',
-        },
-      })
-    } catch (e) {
-      Logger.error('Transaction handler failed', e)
+    const completed = await handleTransaction({
+      preProcess: processAssets,
+      txFactory: (updateStatus) =>
+        isNew
+          ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+          : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
+      onTxFinalize: uploadAssets,
+      onTxSync: refetchDataAndCacheAssets,
+      successMessage: {
+        title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+        description: isNew
+          ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+          : 'Changes to your video were saved on the blockchain.',
+      },
+    })
+
+    if (completed) {
+      setSheetState('minimized')
+      removeVideoTab(selectedVideoTabIdx)
     }
   }
 
@@ -320,7 +308,7 @@ export const EditVideoSheet: React.FC = () => {
           onSubmit={handleSubmit}
           onThumbnailFileChange={handleThumbnailFileChange}
           onVideoFileChange={handleVideoFileChange}
-          fee={fee}
+          fee={0}
         />
       </Container>
     </>

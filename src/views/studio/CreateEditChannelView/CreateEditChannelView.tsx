@@ -10,14 +10,7 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset, useDisplayDataLostWarning } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import {
-  useConnectionStatus,
-  useEditVideoSheet,
-  useJoystream,
-  useSnackbar,
-  useTransactionManager,
-  useUser,
-} from '@/providers'
+import { useConnectionStatus, useEditVideoSheet, useJoystream, useSnackbar, useTransaction, useUser } from '@/providers'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import {
   ActionBarTransaction,
@@ -33,6 +26,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { writeUrlInCache } from '@/utils/cachingAssets'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
+import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -78,7 +72,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream } = useJoystream()
-  const { fee, handleTransaction } = useTransactionManager()
+  const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const { nodeConnectionStatus } = useConnectionStatus()
   const navigate = useNavigate()
@@ -217,9 +211,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const uploadAssets = (channelId: ChannelId) => {
+    const uploadAssets = async (channelId: ChannelId) => {
+      const uploadPromises: Promise<unknown>[] = []
       if (data.avatar.blob && avatarContentId) {
-        startFileUpload(data.avatar.blob, {
+        const uploadPromise = startFileUpload(data.avatar.blob, {
           contentId: avatarContentId,
           owner: channelId,
           parentObject: {
@@ -230,9 +225,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           imageCropData: data.avatar.imageCropData ?? undefined,
           type: 'avatar',
         })
+        uploadPromises.push(uploadPromise)
       }
       if (data.cover.blob && coverContentId) {
-        startFileUpload(data.cover.blob, {
+        const uploadPromise = startFileUpload(data.cover.blob, {
           contentId: coverContentId,
           owner: channelId,
           parentObject: {
@@ -243,7 +239,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           imageCropData: data.cover.imageCropData ?? undefined,
           type: 'cover',
         })
+        uploadPromises.push(uploadPromise)
       }
+      Promise.all(uploadPromises).catch((e) => Logger.error('Failed assets upload', e))
     }
 
     const refetchDataAndCacheAssets = async (channelId: ChannelId) => {
@@ -280,7 +278,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    handleTransaction({
+    const completed = await handleTransaction({
       preProcess: processAssets,
       txFactory: (updateStatus) =>
         newChannel
@@ -288,7 +286,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           : joystream.updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, updateStatus),
       onTxFinalize: uploadAssets,
       onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => (completed && newChannel ? navigate(absoluteRoutes.studio.videos()) : undefined),
       successMessage: {
         title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
         description: newChannel
@@ -296,6 +293,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           : 'Changes to your channel were saved on the blockchain.',
       },
     })
+
+    if (completed && newChannel) {
+      navigate(absoluteRoutes.studio.videos())
+    }
   }
 
   if (error) {
@@ -488,7 +489,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           >
             <ActionBarTransaction
               disabled={nodeConnectionStatus !== 'connected'}
-              fee={fee}
+              fee={0}
               checkoutSteps={!activeChannelId ? checkoutSteps : undefined}
               isActive={newChannel || (!loading && isDirty)}
               fullWidth={!activeChannelId}
