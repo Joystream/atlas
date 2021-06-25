@@ -240,9 +240,11 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
 
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
