@@ -244,6 +244,7 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
