@@ -73,6 +73,12 @@ export const Anchor = styled(Link)`
   color: inherit;
 `
 
+export const TitleHeaderAnchor = styled(Link)`
+  all: unset;
+  color: inherit;
+  display: grid;
+`
+
 export const Container = styled.article<MainProps>`
   width: 100%;
   color: ${colors.gray[300]};

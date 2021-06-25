@@ -1,13 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 
-import { useAuthorizedUser, useJoystream, useTransactionManager, useUploadsStore } from '@/providers'
+import { useAuthorizedUser, useDialog, useJoystream, useTransaction, useUploadsStore } from '@/providers'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
-
-import { useDialog } from '../providers/dialogs'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
-  const { handleTransaction } = useTransactionManager()
+  const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
   const removeAssetsFromUploads = useUploadsStore((state) => state.removeAssetsWithParent)
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()

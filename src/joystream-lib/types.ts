@@ -37,7 +37,7 @@ export enum ExtrinsicStatus {
   Completed,
   Error,
 }
-export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus) => void
+export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus.Unsigned | ExtrinsicStatus.Signed) => void
 export type ExtrinsicResult<T> = {
   block: number
   data: T
