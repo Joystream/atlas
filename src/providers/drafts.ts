@@ -103,7 +103,7 @@ export const useDraftStore = createStore<DraftStoreStateV2, DraftStoreActions>(
     persist: {
       key: 'drafts',
       whitelist: ['allDrafts'],
-      version: 2,
+      version: 1,
       migrate: (oldState, oldVersion, storageValue) => {
         // migrate store before zustand was added
         // console.log({ oldState, oldVersion, storageValue })
@@ -119,17 +119,6 @@ export const useDraftStore = createStore<DraftStoreStateV2, DraftStoreActions>(
               ? { ...draft, seen: false }
               : { ...draft, seen: true }
           })
-          return {
-            allDrafts: drafts,
-          }
-          // combine unseen draft and drafts
-        } else if (oldVersion === 1) {
-          // console.log({ oldState, oldVersion, storageValue })
-          const state = oldState as DraftStoreStateV1
-          const drafts = state.allDrafts.map((draft) => ({
-            ...draft,
-            seen: state.allUnseenDrafts.find((unseen) => unseen.draftId === draft.id) ? false : true,
-          }))
           return {
             allDrafts: drafts,
           }
