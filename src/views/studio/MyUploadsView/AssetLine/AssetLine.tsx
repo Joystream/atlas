@@ -61,8 +61,9 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
     exitButton: false,
   })
   const [openMissingCropDataDialog, closeMissingCropDataDialog] = useDialog({
-    title: 'Missing data',
-    description: 'Data for that asset is missing. Please reupload file from initial browser or make new transaction',
+    title: 'Missing asset details',
+    description:
+      "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
     variant: 'warning',
     onSecondaryButtonClick: () => {
       closeMissingCropDataDialog()
