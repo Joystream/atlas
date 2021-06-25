@@ -32,6 +32,9 @@ import {
   GetVideoDocument,
   GetVideoQuery,
   GetVideoQueryVariables,
+  GetVideoViewsDocument,
+  GetVideoViewsQuery,
+  GetVideoViewsQueryVariables,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
@@ -53,6 +56,7 @@ import {
   createSearchAccessor,
   createSingleItemAccessor,
   createTotalCountAccessor,
+  createVideoViewsAccessor,
 } from './accessors'
 import {
   createAddVideoViewMutationHandler,
@@ -138,6 +142,11 @@ const orionHandlers = [
     orion,
     GetBatchedVideoViewsDocument,
     createBatchedVideoViewsAccessor(store)
+  ),
+  createQueryHandler<GetVideoViewsQuery, GetVideoViewsQueryVariables>(
+    orion,
+    GetVideoViewsDocument,
+    createVideoViewsAccessor(store)
   ),
   createQueryHandler<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(
     orion,
