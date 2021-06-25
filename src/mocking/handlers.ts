@@ -4,6 +4,9 @@ import {
   GetBasicChannelDocument,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
+  GetBatchedVideoViewsDocument,
+  GetBatchedVideoViewsQuery,
+  GetBatchedVideoViewsQueryVariables,
   GetChannelDocument,
   GetChannelFollowsDocument,
   GetChannelFollowsQuery,
@@ -46,6 +49,7 @@ import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
 import { mockCategories, mockChannels, mockMemberships, mockVideos } from '@/mocking/data'
 
 import {
+  createBatchedVideoViewsAccessor,
   createChannelFollowsAccessor,
   createCursorPaginationAccessor,
   createOffsetLimitPaginationAccessor,
@@ -134,6 +138,11 @@ const queryNodeHandlers = [
 ]
 
 const orionHandlers = [
+  createQueryHandler<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
+    orion,
+    GetBatchedVideoViewsDocument,
+    createBatchedVideoViewsAccessor(store)
+  ),
   createQueryHandler<GetVideoViewsQuery, GetVideoViewsQueryVariables>(
     orion,
     GetVideoViewsDocument,
