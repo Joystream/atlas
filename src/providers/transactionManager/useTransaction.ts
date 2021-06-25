@@ -21,7 +21,7 @@ type HandleTransactionFn = <T>(opts: HandleTransactionOpts<T>) => Promise<boolea
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 
 export const useTransaction = (): HandleTransactionFn => {
-  const { addCallback, setDialogStep } = useTransactionManagerStore((state) => state.actions)
+  const { addBlockAction, setDialogStep } = useTransactionManagerStore((state) => state.actions)
   const { nodeConnectionStatus } = useConnectionStatus()
   const { displaySnackbar } = useSnackbar()
 
@@ -78,10 +78,10 @@ export const useTransaction = (): HandleTransactionFn => {
           }
           resolve()
         }
-        addCallback({ callback: syncCallback, targetBlock: block })
+        addBlockAction({ callback: syncCallback, targetBlock: block })
       })
 
-      return new Promise<boolean>((resolve) => {
+      return new Promise((resolve) => {
         const handleDialogClose = () => {
           closeCompletedDialog()
           resolve(true)

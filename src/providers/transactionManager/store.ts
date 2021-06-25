@@ -1,7 +1,7 @@
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { createStore } from '@/store'
 
-type TransactionSyncCallback = {
+type ProcessedBlockAction = {
   targetBlock: number
   callback: () => void
 }
@@ -14,26 +14,26 @@ export type TransactionDialogStep =
   | null
 
 type TransactionManagerStoreState = {
-  syncCallbacks: TransactionSyncCallback[]
+  blockActions: ProcessedBlockAction[]
   dialogStep: TransactionDialogStep
 }
 
 type TransactionManagerStoreActions = {
-  addCallback: (callback: TransactionSyncCallback) => void
-  removeOldCallbacks: (currentBlock: number) => void
+  addBlockAction: (action: ProcessedBlockAction) => void
+  removeOldBlockActions: (currentBlock: number) => void
   setDialogStep: (step: TransactionDialogStep) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
-  state: { syncCallbacks: [], dialogStep: null },
+  state: { blockActions: [], dialogStep: null },
   actionsFactory: (set) => ({
-    addCallback: (callback) =>
-      set((draft) => {
-        draft.syncCallbacks.push(callback)
+    addBlockAction: (action) =>
+      set((state) => {
+        state.blockActions.push(action)
       }),
-    removeOldCallbacks: (currentBlock) =>
-      set((draft) => {
-        draft.syncCallbacks = draft.syncCallbacks.filter((cb) => cb.targetBlock > currentBlock)
+    removeOldBlockActions: (currentBlock) =>
+      set((state) => {
+        state.blockActions = state.blockActions.filter((action) => action.targetBlock > currentBlock)
       }),
     setDialogStep: (step) =>
       set((state) => {

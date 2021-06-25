@@ -8,9 +8,9 @@ import { useTransactionManagerStore } from './store'
 
 export const TransactionManager: React.FC = () => {
   const {
-    syncCallbacks,
+    blockActions,
     dialogStep,
-    actions: { removeOldCallbacks, setDialogStep },
+    actions: { removeOldBlockActions, setDialogStep },
   } = useTransactionManagerStore((state) => state)
 
   useQueryNodeStateSubscription({
@@ -19,16 +19,16 @@ export const TransactionManager: React.FC = () => {
 
       const indexerHead = subscriptionData.data.stateSubscription.indexerHead
 
-      const syncedCallbacks = syncCallbacks.filter((cb) => indexerHead >= cb.targetBlock)
-      syncedCallbacks.forEach((cb) => {
+      const syncedActions = blockActions.filter((action) => indexerHead >= action.targetBlock)
+      syncedActions.forEach((action) => {
         try {
-          cb.callback()
+          action.callback()
         } catch (e) {
           Logger.error('Failed to execute tx sync callback', e)
         }
       })
 
-      removeOldCallbacks(indexerHead)
+      removeOldBlockActions(indexerHead)
     },
   })
 

@@ -11,7 +11,7 @@ export type CommonStore<TState, TActions> = {
 type CommonStoreInit<TState extends object, TActions extends object> = {
   state: TState
   actionsFactory: (
-    set: (fn: (draft: Draft<CommonStore<TState, TActions>>) => void) => void,
+    set: (fn: (state: Draft<CommonStore<TState, TActions>>) => void) => void,
     get: GetState<CommonStore<TState, TActions>>,
     api: StoreApi<CommonStore<TState, TActions>>
   ) => TActions
@@ -31,7 +31,7 @@ type CommonStoreOpts<TState extends object> = {
   persist?: CommonStorePersistOpts<TState>
 }
 
-const immer = <T extends State>(config: StateCreator<T, (fn: (draft: Draft<T>) => void) => void>): StateCreator<T> => (
+const immer = <T extends State>(config: StateCreator<T, (fn: (state: Draft<T>) => void) => void>): StateCreator<T> => (
   set,
   get,
   api
