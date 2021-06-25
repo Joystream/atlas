@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -26,4 +24,12 @@ import '@testing-library/cypress/add-commands'
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-// cypress/support/command.js
+declare namespace Cypress {
+  interface Chainable {
+    /**
+     * Custom command to select DOM element by data-cy attribute.
+     * @example cy.login('greeting')
+     */
+    login(): Chainable<void>
+  }
+}
