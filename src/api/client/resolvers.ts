@@ -63,7 +63,7 @@ export const queryNodeStitchingResolvers = (
   },
   Video: {
     views: async (parent, args, context, info) => {
-      if (parent.views !== null) {
+      if (parent.views != null) {
         return parent.views
       }
       try {
