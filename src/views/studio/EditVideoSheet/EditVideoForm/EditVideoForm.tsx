@@ -137,6 +137,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       },
     },
   })
+
+  // workaround for the issue with mixed up thumbnails in MultiFileSelect
+  const thumbnail = tabData?.assets.thumbnail
+  useEffect(() => {
+    if (thumbnail) {
+      setValue('assets.thumbnail', thumbnail)
+    }
+  }, [setValue, thumbnail])
+
   useEffect(() => {
     // reset form for edited video on sheet close
     if (isEdit && sheetState === 'closed' && tabData && !tabDataLoading) {
@@ -366,17 +375,20 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <Controller
           name="assets"
           control={control}
-          render={({ field: { value } }) => (
-            <MultiFileSelect
-              files={value}
-              onVideoChange={handleVideoFileChange}
-              onThumbnailChange={handleThumbnailFileChange}
-              editMode={isEdit}
-              error={fileSelectError}
-              onError={handleFileSelectError}
-              maxVideoSize={10 * 1024 * 1024 * 1024}
-            />
-          )}
+          render={({ field: { value, ref }, fieldState }) => {
+            console.log(ref, fieldState, value.thumbnail)
+            return (
+              <MultiFileSelect
+                files={value}
+                onVideoChange={handleVideoFileChange}
+                onThumbnailChange={handleThumbnailFileChange}
+                editMode={isEdit}
+                error={fileSelectError}
+                onError={handleFileSelectError}
+                maxVideoSize={10 * 1024 * 1024 * 1024}
+              />
+            )
+          }}
         />
         <InputsContainer>
           <StyledHeaderTextField
