@@ -2,6 +2,30 @@ name: Checks
 on: [push, pull_request]
 
 jobs:
+  #  cypress-run:
+  #    name: Cypress
+  #    runs-on: ${{ matrix.os }}
+  #    strategy:
+  #      matrix:
+  #        os: [ubuntu-latest]
+  #        node-version: [14.x]
+  #    needs: [lint]
+  #    steps:
+  #      - name: Setup Node
+  #        uses: actions/setup-node@v1
+  #        with:
+  #          node-version: ${{ matrix.node }}
+  #      - name: Checkout
+  #        uses: actions/checkout@v2
+  #      - name: Cypress run
+  #        uses: cypress-io/github-action@v2
+  #        with:
+  #          install-command: yarn --frozen-lockfile --silent
+  #          start: yarn start
+  #          wait-on: 'http://localhost:3000'
+  #          wait-on-timeout: 360
+  #          browser: chrome
+  #          headless: true
   lint:
     name: Linting
     runs-on: ${{ matrix.os }}

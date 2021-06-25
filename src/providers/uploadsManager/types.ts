@@ -4,7 +4,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 export type AssetParent = 'video' | 'channel'
 
-export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'missing'
+export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting'
 
 export type AssetUpload = {
   contentId: string
@@ -15,18 +15,13 @@ export type AssetUpload = {
   }
   owner: ChannelId
   type: AssetType
-  lastStatus: AssetUploadStatus
   // size in bytes
   size: number
   dimensions?: AssetDimensions
   imageCropData?: ImageCropData
   metadata?: string
 }
-export type AssetUploadWithProgress = AssetUpload & {
-  // progress of upload - 0...1
-  progress: number
-}
-export type InputAssetUpload = Omit<AssetUpload, 'lastStatus' | 'size'>
+export type InputAssetUpload = Omit<AssetUpload, 'size'>
 
 export type UploadsManagerState = AssetUpload[]
 
@@ -35,8 +30,8 @@ export type StartFileUploadOptions = {
   changeHost?: boolean
 }
 
-export type UploadManagerValue = {
-  channelUploadsState: AssetUpload[]
-  isLoading: boolean
+export type UploadStatus = {
+  lastStatus?: AssetUploadStatus
+  progress?: number
 }
-export type UploadsProgressRecord = Record<string, number>
+export type UploadsStatusRecord = Record<string, UploadStatus | undefined>
