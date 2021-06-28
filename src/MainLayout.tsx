@@ -1,4 +1,6 @@
 import loadable from '@loadable/component'
+import Feedback from 'feeder-react-feedback'
+import 'feeder-react-feedback/dist/feeder-react-feedback.css'
 import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
@@ -42,6 +44,7 @@ export const MainLayout: React.FC = () => {
 
   return (
     <>
+      <Feedback projectId="60d97fe1f85c5e0004270d70" />;
       <GlobalStyle additionalStyles={[routingTransitions]} />
       <BrowserRouter>
         <Routes>
