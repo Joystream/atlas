@@ -11,5 +11,9 @@
         "type": ["scrypt", "xsalsa20-poly1305"]
       }
     ]
+  },
+  "retries": {
+    "runMode": 1,
+    "openMode": 3
   }
 }
