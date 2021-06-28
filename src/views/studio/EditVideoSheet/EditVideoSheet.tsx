@@ -195,6 +195,14 @@ export const EditVideoSheet: React.FC = () => {
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
+      if (!isNew) {
+        writeUrlInCache({
+          url: data.assets.thumbnail?.url,
+          fileType: 'thumbnail',
+          parentId: videoId,
+          client,
+        })
+      }
       const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
         query: GetVideosConnectionDocument,
         variables: {
@@ -204,6 +212,7 @@ export const EditVideoSheet: React.FC = () => {
           },
         },
       })
+
       if (isNew) {
         if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
@@ -218,13 +227,6 @@ export const EditVideoSheet: React.FC = () => {
           isDraft: false,
         })
         removeDraft(selectedVideoTab?.id)
-      } else {
-        writeUrlInCache({
-          url: data.assets.thumbnail?.url,
-          fileType: 'thumbnail',
-          parentId: videoId,
-          client,
-        })
       }
       setSelectedVideoTabCachedAssets({ video: null, thumbnail: null })
       setSelectedVideoTabCachedDirtyFormData({})

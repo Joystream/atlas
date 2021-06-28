@@ -1,120 +1,60 @@
-import isEqual from 'lodash/isEqual'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { isEqual } from 'lodash'
+import { useEffect, useState } from 'react'
 
-import { AllChannelFieldsFragment, AssetAvailability, VideoFieldsFragment } from '@/api/queries'
-import { AssetType } from '@/hooks'
 import { useStorageProviders } from '@/providers'
-import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-type UseAssetDataArgs =
-  | { entity?: VideoFieldsFragment | null; assetType: AssetType.THUMBNAIL | AssetType.MEDIA }
-  | {
-      entity?: Partial<AllChannelFieldsFragment> | null
-      assetType: AssetType.COVER | AssetType.AVATAR
-    }
-
-type UseAssetData = {
-  url?: string
-  error: ErrorEvent | null
-  isLoading?: boolean
-}
-
-type UseAsset = ({ entity, assetType }: UseAssetDataArgs) => UseAssetData
+import { getAssetUrl, readAssetData, testAssetDownload } from './helpers'
+import { AssetData, UseAsset } from './types'
 
 export const useAsset: UseAsset = ({ entity, assetType }) => {
   const { getStorageProvider } = useStorageProviders()
   const [error, setError] = useState<ErrorEvent | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean | undefined>(undefined)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [url, setUrl] = useState<string | undefined>(undefined)
-  const cachedAssetData = useRef({})
+  const [cachedAssetData, setCachedAssetData] = useState<AssetData | null | undefined>(undefined) // undefined is used to tell that cachedAssetData wasn't set yet
+
+  const assetData = readAssetData(entity, assetType)
+  const assetDataNotChanged = isEqual(assetData, cachedAssetData)
 
   useEffect(() => {
-    if (error) {
-      Logger.error(`Failed to load ${assetType}`, error)
+    if (!entity || assetDataNotChanged) {
+      // only run if asset data changed
+      return
     }
-  }, [error, assetType])
+    setCachedAssetData(assetData)
+    setUrl(undefined)
+    setIsLoading(true)
 
-  const assetData = useMemo(() => {
-    if (entity && entity.__typename === 'Channel') {
-      return {
-        availability: assetType === AssetType.COVER ? entity.coverPhotoAvailability : entity.avatarPhotoAvailability,
-        urls: assetType === AssetType.COVER ? entity.coverPhotoUrls : entity.avatarPhotoUrls,
-        dataObject: assetType === AssetType.COVER ? entity.coverPhotoDataObject : entity.avatarPhotoDataObject,
-      }
+    if (!assetData) {
+      Logger.warn('Unable to read asset data from entity')
+      return
     }
-    if (entity && entity.__typename === 'Video') {
-      if (assetType === AssetType.MEDIA) {
-        return {
-          availability: entity.mediaAvailability,
-          urls: entity.mediaUrls,
-          dataObject: entity.mediaDataObject,
-        }
-      }
-      return {
-        availability: entity.thumbnailPhotoAvailability,
-        urls: entity.thumbnailPhotoUrls,
-        dataObject: entity.thumbnailPhotoDataObject,
-      }
+    const assetUrl = getAssetUrl(assetData, getStorageProvider()?.url)
+    if (assetUrl === null) {
+      Logger.warn('Unable to create asset url', assetData)
+      return
+    } else if (!assetUrl) {
+      return
     }
-    return null
-  }, [entity, assetType])
+    setUrl(assetUrl)
 
-  const testAsset = useCallback(
-    (assetUrl: string) => {
+    const testAsset = async () => {
       setIsLoading(true)
-      const onError = (error: ErrorEvent) => {
+      setError(null)
+
+      try {
+        await testAssetDownload(assetUrl, assetType)
+      } catch (e) {
+        setError(e)
+        Logger.error(`Failed to load ${assetType}`, e)
+      } finally {
         setIsLoading(false)
-        setError(error)
-      }
-
-      const onLoad = () => {
-        setIsLoading(false)
-        setUrl(assetUrl)
-      }
-
-      if ([AssetType.COVER, AssetType.THUMBNAIL, AssetType.AVATAR].includes(assetType)) {
-        const img = new Image()
-        img.addEventListener('error', onError)
-        img.addEventListener('load', onLoad)
-        img.src = assetUrl
-      } else {
-        const video = document.createElement('video')
-        video.addEventListener('error', onError)
-        video.addEventListener('loadstart', onLoad)
-        video.src = assetUrl
-      }
-    },
-    [assetType]
-  )
-
-  useEffect(() => {
-    if (assetData && (!url || !isEqual(assetData, cachedAssetData.current)) && !isLoading && !error) {
-      cachedAssetData.current = assetData
-      if (assetData.availability !== AssetAvailability.Accepted) {
-        return
-      }
-      if (assetData.urls?.length) {
-        testAsset(assetData.urls[0])
-        return
-      }
-      if (!assetData.dataObject?.joystreamContentId) {
-        return
-      }
-      if (assetData.dataObject?.liaison?.isActive && assetData.dataObject?.liaison?.metadata) {
-        testAsset(
-          createStorageNodeUrl(assetData.dataObject.joystreamContentId, assetData.dataObject?.liaison?.metadata)
-        )
-        return
-      }
-
-      const randomStorageUrl = getStorageProvider()
-      if (randomStorageUrl && assetData.dataObject) {
-        testAsset(createStorageNodeUrl(assetData.dataObject.joystreamContentId, randomStorageUrl.url))
-        return
       }
     }
-  }, [assetData, getStorageProvider, url, testAsset, isLoading, error])
 
-  return { url, error, isLoading }
+    testAsset()
+  }, [assetType, assetData, assetDataNotChanged, entity, getStorageProvider])
+
+  return { url: assetDataNotChanged ? url : undefined, error, isLoading }
 }
