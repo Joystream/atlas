@@ -7,18 +7,18 @@ import { Logger } from '@/utils/logger'
 import { getAssetUrl, readAssetData, testAssetDownload } from './helpers'
 import { AssetData, UseAsset } from './types'
 
-export const useAsset: UseAsset = ({ entity, assetType }, opts = {}) => {
+export const useAsset: UseAsset = ({ entity, assetType }) => {
   const { getStorageProvider } = useStorageProviders()
   const [error, setError] = useState<ErrorEvent | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [url, setUrl] = useState<string | undefined>(undefined)
-  const [cachedAssetData, setCachedAssetData] = useState<AssetData | null | undefined>(undefined)
+  const [cachedAssetData, setCachedAssetData] = useState<AssetData | null | undefined>(undefined) // undefined is used to tell that cachedAssetData wasn't set yet
 
-  const assetData = entity ? readAssetData(entity, assetType) : null
-  const assetDataNotChanged = entity ? isEqual(assetData, cachedAssetData) : false
+  const assetData = readAssetData(entity, assetType)
+  const assetDataNotChanged = isEqual(assetData, cachedAssetData)
 
   useEffect(() => {
-    if (!entity || assetDataNotChanged || opts.skip) {
+    if (!entity || assetDataNotChanged) {
       // only run if asset data changed
       return
     }
@@ -54,7 +54,7 @@ export const useAsset: UseAsset = ({ entity, assetType }, opts = {}) => {
     }
 
     testAsset()
-  }, [assetType, assetData, assetDataNotChanged, entity, getStorageProvider, opts.skip])
+  }, [assetType, assetData, assetDataNotChanged, entity, getStorageProvider])
 
   return { url: assetDataNotChanged ? url : undefined, error, isLoading }
 }

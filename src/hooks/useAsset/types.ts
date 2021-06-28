@@ -12,17 +12,13 @@ export type UseAssetDataArgs =
   | { entity?: AllChannelFieldsFragment | null; assetType: AssetType.COVER | AssetType.AVATAR }
   | { entity?: BasicChannelFieldsFragment | null; assetType: AssetType.AVATAR }
 
-type UseAssetOpts = {
-  skip?: boolean
-}
-
 export type UseAssetData = {
   url?: string
   error: ErrorEvent | null
   isLoading: boolean
 }
 
-export type UseAsset = (args: UseAssetDataArgs, opts?: UseAssetOpts) => UseAssetData
+export type UseAsset = (args: UseAssetDataArgs) => UseAssetData
 
 export type AssetData = {
   availability: AssetAvailability
