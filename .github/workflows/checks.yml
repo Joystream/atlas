@@ -23,7 +23,7 @@ jobs:
           install-command: yarn --frozen-lockfile --silent
           build: yarn build
           start: yarn start:build
-          wait-on: 'http://localhost:8080/'
+          wait-on: 'http://localhost:3000/'
           wait-on-timeout: 360
           browser: chrome
           headless: true
