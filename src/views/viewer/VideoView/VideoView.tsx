@@ -8,7 +8,7 @@ import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { AssetType, useAsset, useRouterQuery } from '@/hooks'
 import { usePersonalData } from '@/providers'
-import { Placeholder, VideoPlayer } from '@/shared/components'
+import { Placeholder, SocialShare, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -25,6 +25,7 @@ import {
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
+  SocialShareContainer,
   StyledViewWrapper,
   TitleText,
 } from './VideoView.style'
@@ -205,6 +206,13 @@ export const VideoView: React.FC = () => {
             <Placeholder height={12} width={200} />
           )}
         </LicenseContainer>
+        <SocialShareContainer>
+          {video ? (
+            <SocialShare url={window.location.href} message={'I am watching ' + video.title || ''} hashtags={['']} />
+          ) : (
+            <Placeholder height={23} width={300} />
+          )}
+        </SocialShareContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
             {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
