@@ -1,7 +1,8 @@
 type BuildEnv = 'production' | 'development'
 
 export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
-export const TARGET_DEV_ENV = JSON.parse(window.localStorage.getItem('target_env') || 'development')
+const target_env = window.localStorage.getItem('target_env')
+export const TARGET_DEV_ENV = target_env ? JSON.parse(target_env) : 'development'
 export const ENV_PREFIX = 'REACT_APP'
 
 export const setEnvInLocalStorage = (value: string) => {
