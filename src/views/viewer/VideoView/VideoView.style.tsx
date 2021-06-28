@@ -95,3 +95,7 @@ export const LicenseContainer = styled.div`
     color: ${colors.gray[500]};
   }
 `
+export const SocialShareContainer = styled.div`
+  display: flex;
+  justify-content: left;
+`
