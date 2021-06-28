@@ -67,6 +67,7 @@
     "date-fns": "^2.15.0",
     "downshift": "^6.1.0",
     "emotion-normalize": "~11.0.0",
+    "feeder-react-feedback": "^0.0.6",
     "glider-js": "^1.7.3",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
