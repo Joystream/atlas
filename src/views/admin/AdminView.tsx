@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -11,9 +10,8 @@ const items = availableEnvs().map((item) => ({ name: item, value: item }))
 export const AdminView = () => {
   const env = availableEnvs().includes(TARGET_DEV_ENV) ? TARGET_DEV_ENV : null
   const [value, setValue] = useState<null | string>(env)
-  const [file, setFile] = useState<File | null>(null)
 
-  const handleChange = (value?: string | null | undefined) => {
+  const handleEnvironmentChange = (value?: string | null | undefined) => {
     if (!value) {
       return
     }
@@ -26,61 +24,57 @@ export const AdminView = () => {
   }
 
   const handleExportClick = () => {
-    const fileName = 'atlas_local_state'
-    const state = Object.keys(localStorage).reduce((obj, k) => {
-      return { ...obj, [k]: localStorage.getItem(k) }
-    }, {})
+    const storageKeys = Object.keys(window.localStorage)
+    const storage = storageKeys.reduce((acc, key) => {
+      const rawValue = window.localStorage.getItem(key)
+      if (rawValue) {
+        acc[key] = JSON.parse(rawValue)
+      }
 
-    const json = JSON.stringify(state)
-    const blob = new Blob([json], { type: 'application/json' })
-    const href = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = href
-    link.download = fileName + '.json'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+      return acc
+    }, {} as Record<string, unknown>)
+    const jsonStorage = JSON.stringify(storage)
+
+    const linkElement = document.createElement('a')
+    linkElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStorage))
+    linkElement.setAttribute('download', 'atlas-export.json')
+    linkElement.click()
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || !e.target.files.length) {
-      return
-    }
-    setFile(e.target.files[0])
+  const handleFileChange = async (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    const fileText = await file.text()
+    const storage = JSON.parse(fileText)
+    Object.keys(storage).forEach((key) => {
+      window.localStorage.setItem(key, JSON.stringify(storage[key]))
+    })
   }
 
   const handleImportClick = async () => {
-    if (!file) {
-      return
-    }
-    const text = await file.text()
-    const state = JSON.parse(text)
-    Object.keys(state).forEach((key) => localStorage.setItem(key, state[key]))
+    const inputElement = document.createElement('input')
+    inputElement.setAttribute('type', 'file')
+    inputElement.onchange = handleFileChange
+    inputElement.click()
   }
 
   return (
     <>
       <div>
         <Text variant="h2">Choose environment</Text>
-        <Select
-          items={items}
-          onChange={handleChange}
-          value={value}
-          css={css`
-            margin-top: 20px;
-            max-width: 400px;
-          `}
-        />
+        <Select items={items} onChange={handleEnvironmentChange} value={value} />
       </div>
       <div>
         <Text variant="h2">Import/Export Local state</Text>
-        <Button onClick={handleExportClick}>Export local state</Button>
         <div style={{ margin: '20px 0' }}>
-          <input type="file" onChange={handleFileChange} accept="application/json" />
-          <Button onClick={handleImportClick}>Import state</Button>
+          <Button onClick={handleExportClick}>Export local state</Button>
         </div>
+        <Button onClick={handleImportClick}>Import local state</Button>
       </div>
-      <Link to={absoluteRoutes.viewer.index()}>Back to homepage</Link>
+      <div style={{ marginTop: '40px' }}>
+        {' '}
+        <Link to={absoluteRoutes.viewer.index()}>Back to homepage</Link>
+      </div>
     </>
   )
 }
