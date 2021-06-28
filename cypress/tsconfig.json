@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "lib": [
+      "dom",
+      "es2019"
+    ],
+    "types": [
+      "cypress",
+      "@testing-library/cypress"
+    ]
+  },
+  "include": ["**/*.ts", "support/index.ts"]
+}

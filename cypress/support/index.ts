@@ -1,3 +1,9 @@
+import '@testing-library/cypress/add-commands'
+
+import './commands'
+
+// load the global Cypress types
+/// <reference types="cypress" />
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.
@@ -13,32 +19,12 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 // Import commands.js using ES2015 syntax:
-import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/
 Cypress.on('uncaught:exception', (err) => {
   /* returning false here prevents Cypress from failing the test */
   if (resizeObserverLoopErrRe.test(err.message)) {
     return false
-  }
-})
-
-Cypress.on('window:before:load', (window) => {
-  const enable = async () => {
-    return {
-      accounts: {
-        get: () => new Promise((resolve) => resolve(Cypress.env('accounts'))),
-      },
-    }
-  }
-
-  window['injectedWeb3'] = {
-    'polkadot-js': {
-      enable,
-      version: '0.38.3',
-    },
   }
 })
 
