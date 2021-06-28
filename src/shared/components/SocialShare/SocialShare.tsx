@@ -1,5 +1,5 @@
 import React from 'react'
-import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share'
+import { FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton } from 'react-share'
 
 import { Container } from './SocialShare.style'
 
