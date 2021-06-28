@@ -1,34 +1,30 @@
+import { isEqual } from 'lodash'
 import { useEffect, useState } from 'react'
 
 import { useStorageProviders } from '@/providers'
 import { Logger } from '@/utils/logger'
 
 import { getAssetUrl, readAssetData, testAssetDownload } from './helpers'
-import { UseAsset } from './types'
+import { AssetData, UseAsset } from './types'
 
 export const useAsset: UseAsset = ({ entity, assetType }, opts = {}) => {
   const { getStorageProvider } = useStorageProviders()
   const [error, setError] = useState<ErrorEvent | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [url, setUrl] = useState<string | undefined>(undefined)
-  const [cachedEntityId, setCachedEntityId] = useState<string | null>()
+  const [cachedAssetData, setCachedAssetData] = useState<AssetData | null | undefined>(undefined)
+
+  const assetData = entity ? readAssetData(entity, assetType) : null
+  const assetDataNotChanged = entity ? isEqual(assetData, cachedAssetData) : false
 
   useEffect(() => {
-    if (error) {
-      Logger.error(`Failed to load ${assetType}`, error)
-    }
-  }, [error, assetType])
-
-  useEffect(() => {
-    if (!entity || entity.id === cachedEntityId || opts.skip) {
-      // only run if entity changed
+    if (!entity || assetDataNotChanged || opts.skip) {
+      // only run if asset data changed
       return
     }
-    setCachedEntityId(entity.id)
+    setCachedAssetData(assetData)
     setUrl(undefined)
     setIsLoading(true)
-
-    const assetData = readAssetData(entity, assetType)
 
     if (!assetData) {
       Logger.warn('Unable to read asset data from entity')
@@ -51,13 +47,14 @@ export const useAsset: UseAsset = ({ entity, assetType }, opts = {}) => {
         await testAssetDownload(assetUrl, assetType)
       } catch (e) {
         setError(e)
+        Logger.error(`Failed to load ${assetType}`, e)
       } finally {
         setIsLoading(false)
       }
     }
 
     testAsset()
-  }, [assetType, cachedEntityId, entity, getStorageProvider, opts.skip])
+  }, [assetType, assetData, assetDataNotChanged, entity, getStorageProvider, opts.skip])
 
-  return { url: entity?.id === cachedEntityId ? url : undefined, error, isLoading }
+  return { url: assetDataNotChanged ? url : undefined, error, isLoading }
 }

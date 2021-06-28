@@ -26,7 +26,7 @@ export const testAssetDownload = (url: string, type: AssetType) => {
   })
 }
 export const readAssetData = (
-  entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment,
+  entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment | null | undefined,
   assetType: AssetType
 ): AssetData | null => {
   if (entity?.__typename === 'Channel') {
