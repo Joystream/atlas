@@ -310,7 +310,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     onClick={onClick}
                     clickable={clickable}
                   >
-                    {title}
+                    {title || 'Untitled'}
                   </TitleHeader>
                 </TitleHeaderAnchor>
               )}
