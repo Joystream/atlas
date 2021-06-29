@@ -11,11 +11,13 @@ import { useDeleteVideo } from '@/hooks'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
+  useAssetStore,
   useAuthorizedUser,
   useConnectionStatus,
   useDrafts,
   useEditVideoSheet,
   useEditVideoSheetTabData,
+  useRawAsset,
 } from '@/providers'
 import {
   Checkbox,
@@ -30,6 +32,7 @@ import {
 } from '@/shared/components'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { SvgGlyphInfo } from '@/shared/icons'
+import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { Logger } from '@/utils/logger'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
@@ -97,7 +100,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
   const { nodeConnectionStatus } = useConnectionStatus()
-
   const deleteVideo = useDeleteVideo()
 
   if (categoriesError) {
@@ -132,11 +134,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       publishedBeforeJoystream: null,
       isExplicit: null,
       assets: {
-        video: null,
-        thumbnail: null,
+        video: {
+          contentId: null,
+        },
+        thumbnail: { cropContentId: null, originalContentId: null },
       },
     },
   })
+
+  const addAsset = useAssetStore((state) => state.actions.addAsset)
+  const mediaAsset = useRawAsset(watch('assets.video').contentId)
+  const thumbnailAsset = useRawAsset(watch('assets.thumbnail').cropContentId)
+  const originalThumbnailAsset = useRawAsset(watch('assets.thumbnail').originalContentId)
+
   useEffect(() => {
     // reset form for edited video on sheet close
     if (isEdit && sheetState === 'closed' && tabData && !tabDataLoading) {
@@ -151,8 +161,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     // reset multifileselect when sheetState is closed
     if (sheetState === 'closed') {
       setValue('assets', {
-        video: null,
-        thumbnail: null,
+        video: { contentId: null },
+        thumbnail: { cropContentId: null, originalContentId: null },
       })
     }
   }, [sheetState, setValue, isEdit])
@@ -244,11 +254,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const handleSubmit = createSubmitHandler(
     async (data: EditVideoFormFields) => {
       // do initial validation
-      if (!isEdit && !data.assets.video?.blob) {
+      if (!isEdit && !data.assets.video.contentId) {
         setFileSelectError('Video file cannot be empty')
         return
       }
-      if (!data.assets.thumbnail?.url) {
+      if (!data.assets.thumbnail.cropContentId) {
         setFileSelectError('Thumbnail cannot be empty')
         return
       }
@@ -302,11 +312,26 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   ])
 
   const handleVideoFileChange = async (video: VideoInputFile | null) => {
+    const currentAssetsValue = getValues('assets')
+
+    if (!video) {
+      setValue('assets', { ...currentAssetsValue, video: { contentId: null } }, { shouldDirty: true })
+      return
+    }
+
+    const newAssetId = `local-video-${createId()}`
+    addAsset(newAssetId, { url: video.url, blob: video.blob })
+
+    const updatedVideo = {
+      contentId: newAssetId,
+      ...video,
+    }
     const updatedAssets = {
-      ...getValues('assets'),
-      video,
+      ...currentAssetsValue,
+      video: updatedVideo,
     }
     setValue('assets', updatedAssets, { shouldDirty: true })
+
     if (selectedVideoTab?.isDraft) {
       setSelectedVideoTabCachedAssets(updatedAssets)
     }
@@ -323,11 +348,33 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   }
 
   const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
+    const currentAssetsValue = getValues('assets')
+
+    if (!thumbnail) {
+      setValue(
+        'assets',
+        { ...currentAssetsValue, thumbnail: { cropContentId: null, originalContentId: null } },
+        { shouldDirty: true }
+      )
+      return
+    }
+
+    const newCropAssetId = `local-thumbnail-crop-${createId()}`
+    addAsset(newCropAssetId, { url: thumbnail.url, blob: thumbnail.blob })
+    const newOriginalAssetId = `local-thumbnail-original-${createId()}`
+    addAsset(newOriginalAssetId, { blob: thumbnail.originalBlob })
+
+    const updatedThumbnail = {
+      cropContentId: newCropAssetId,
+      originalContentId: newOriginalAssetId,
+      ...thumbnail,
+    }
     const updatedAssets = {
-      ...getValues('assets'),
-      thumbnail,
+      ...currentAssetsValue,
+      thumbnail: updatedThumbnail,
     }
     setValue('assets', updatedAssets, { shouldDirty: true })
+
     if (selectedVideoTab?.isDraft) {
       setSelectedVideoTabCachedAssets(updatedAssets)
     }
@@ -366,9 +413,12 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         <Controller
           name="assets"
           control={control}
-          render={({ field: { value } }) => (
+          render={() => (
             <MultiFileSelect
-              files={value}
+              files={{
+                video: mediaAsset,
+                thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+              }}
               onVideoChange={handleVideoFileChange}
               onThumbnailChange={handleThumbnailFileChange}
               editMode={isEdit}

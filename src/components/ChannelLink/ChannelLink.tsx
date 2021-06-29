@@ -3,7 +3,7 @@ import React from 'react'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
 import { Logger } from '@/utils/logger'
 

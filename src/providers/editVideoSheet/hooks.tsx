@@ -6,12 +6,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/hooks'
-import { InputFilesState } from '@/shared/components/MultiFileSelect/MultiFileSelect'
 import { RoutingState } from '@/types/routing'
 
 import { EditVideoSheetContext } from './provider'
-import { EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
+import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
 
 import { useAuthorizedUser, useDrafts } from '..'
 
@@ -28,11 +26,6 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { drafts } = useDrafts('video', activeChannelId)
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
   const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
-  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
 
   if (!tab) {
     return {
@@ -50,14 +43,21 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   const draft = drafts.find((d) => d.id === tab.id)
 
-  const assets: InputFilesState = tab.isDraft
-    ? selectedVideoTabCachedAssets || { video: null, thumbnail: null }
+  const assets: EditVideoAssets = tab.isDraft
+    ? selectedVideoTabCachedAssets || {
+        video: { contentId: null },
+        thumbnail: {
+          cropContentId: null,
+          originalContentId: null,
+        },
+      }
     : {
         video: {
-          url: mediaUrl,
+          contentId: video?.mediaDataObject?.joystreamContentId ?? null,
         },
         thumbnail: {
-          url: thumbnailPhotoUrl,
+          cropContentId: video?.thumbnailPhotoDataObject?.joystreamContentId ?? null,
+          originalContentId: null,
         },
       }
 
@@ -83,7 +83,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   return {
     tabData: normalizedData,
-    loading: tab.isDraft ? false : loading || !thumbnailPhotoUrl || !mediaUrl,
+    loading: tab.isDraft ? false : loading,
     error,
   }
 }

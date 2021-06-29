@@ -19,19 +19,25 @@ type InputFile = {
   title?: string
 }
 
-export type VideoInputFile = {
+export type VideoInputMetadata = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
   mimeType?: string
   size?: number
-} & InputFile
+}
+
+export type VideoInputFile = VideoInputMetadata & InputFile
+
+export type ImageInputMetadata = {
+  imageCropData?: ImageCropData
+  assetDimensions?: AssetDimensions
+}
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null
-  imageCropData?: ImageCropData
-  assetDimensions?: AssetDimensions
-} & InputFile
+} & ImageInputMetadata &
+  InputFile
 
 export type InputFilesState = {
   video: VideoInputFile | null
@@ -66,20 +72,12 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)
 
   useEffect(() => {
-    if (editMode) {
+    if (editMode || files.video) {
       setStep('image')
     } else {
       setStep('video')
     }
-  }, [editMode])
-
-  useEffect(() => {
-    if (files.video) {
-      setStep('image')
-    } else {
-      setStep('video')
-    }
-  }, [files.video])
+  }, [editMode, files.video])
 
   useEffect(() => {
     if (!isLoading) {
@@ -219,7 +217,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <FileStep
           stepNumber={2}
           active={step === 'image'}
-          isFileSet={!!files.thumbnail}
+          isFileSet={!!files.thumbnail?.url}
           type="image"
           onDelete={() => handleDeleteFile('image')}
           onSelect={handleChangeStep}

@@ -4,11 +4,11 @@ import {
   BasicChannelFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
-import { AssetType } from '@/hooks'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-import { AssetData } from './types'
+import { AssetType } from './constants'
+import { AssetResolutionData } from './types'
 
 export const testAssetDownload = (url: string, type: AssetType) => {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export const testAssetDownload = (url: string, type: AssetType) => {
 export const readAssetData = (
   entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment | null | undefined,
   assetType: AssetType
-): AssetData | null => {
+): AssetResolutionData | null => {
   if (entity?.__typename === 'Channel') {
     return {
       availability:
@@ -41,27 +41,29 @@ export const readAssetData = (
         assetType === AssetType.COVER
           ? (entity as AllChannelFieldsFragment).coverPhotoDataObject
           : entity.avatarPhotoDataObject,
+      assetType,
     }
   } else if (entity?.__typename === 'Video') {
     return {
       availability: assetType === AssetType.MEDIA ? entity.mediaAvailability : entity.thumbnailPhotoAvailability,
       urls: assetType === AssetType.MEDIA ? entity.mediaUrls : entity.thumbnailPhotoUrls,
       dataObject: assetType === AssetType.MEDIA ? entity.mediaDataObject : entity.thumbnailPhotoDataObject,
+      assetType,
     }
   }
   return null
 }
 export const getAssetUrl = (
-  assetData: AssetData,
+  assetData: AssetResolutionData,
   randomStorageUrl: string | null | undefined
 ): string | null | void => {
   if (assetData.availability !== AssetAvailability.Accepted) {
     return
   }
-  if (assetData.urls?.length) {
-    return assetData.urls[0]
-  }
   if (!assetData.dataObject?.joystreamContentId) {
+    if (assetData.urls?.length) {
+      return assetData.urls[0]
+    }
     return
   }
 
