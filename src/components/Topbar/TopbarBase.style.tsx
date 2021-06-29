@@ -55,6 +55,7 @@ export const LogoLink = styled(Link)`
 
   ${media.medium} {
     padding: 0;
+    padding-left: calc(var(--global-horizontal-padding) - ${sizes(3)});
     margin-left: 2px;
     margin-right: ${sizes(5)};
   }
