@@ -8,7 +8,8 @@
     "types": [
       "cypress",
       "@testing-library/cypress"
-    ]
+    ],
+    "moduleResolution": "node",
   },
   "include": ["**/*.ts", "support/index.ts"]
 }
