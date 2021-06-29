@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useOverlayManager } from '@/providers'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -15,7 +14,6 @@ export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
-  const { decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
     if (!termsBoxRef.current) {
@@ -55,11 +53,7 @@ export const TermsStep: React.FC = () => {
         </TermsOverlay>
       </TermsBox>
       <StepFooter>
-        <ContinueButton
-          onClick={decrementOverlaysOpenCount}
-          to={absoluteRoutes.studio.newMembership()}
-          disabled={!hasScrolledToBottom}
-        >
+        <ContinueButton to={absoluteRoutes.studio.newMembership()} disabled={!hasScrolledToBottom}>
           Accept terms
         </ContinueButton>
       </StepFooter>
