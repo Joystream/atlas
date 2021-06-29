@@ -22,9 +22,9 @@ export const useConnectionStatusStore = create<ConnectionStatusValue>((set) => (
       state.nodeConnectionStatus = connection
     })
   },
-  setInternetConnection: (value) => {
+  setInternetConnection: (isConnected) => {
     set((state) => {
-      state.isUserConnectedToInternet = value
+      state.isUserConnectedToInternet = isConnected
     })
   },
 }))
