@@ -56,7 +56,7 @@ export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
         const updatedAt = new Date().toISOString()
         const newDraft: Draft = { ...draft, updatedAt, id, seen: false }
         set((draftState) => {
-          draftState.allDrafts = [newDraft, ...draftState.allDrafts]
+          draftState.allDrafts.unshift(newDraft)
         })
         return newDraft
       },
