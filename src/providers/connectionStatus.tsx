@@ -18,16 +18,14 @@ export const useConnectionStatusStore = create<ConnectionStatusValue>((set) => (
   isUserConnectedToInternet: true,
   nodeConnectionStatus: 'connecting',
   setNodeConnection: (connection) => {
-    set((state) => ({
-      ...state,
-      nodeConnectionStatus: connection,
-    }))
+    set((state) => {
+      state.nodeConnectionStatus = connection
+    })
   },
   setInternetConnection: (value) => {
-    set((state) => ({
-      ...state,
-      isUserConnectedToInternet: value,
-    }))
+    set((state) => {
+      state.isUserConnectedToInternet = value
+    })
   },
 }))
 
