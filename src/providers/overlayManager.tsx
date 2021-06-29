@@ -4,10 +4,11 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { transitions } from '@/shared/theme'
+import { createId } from '@/utils/createId'
 
 type OverlayManagerContextValue = {
   scrollLocked: boolean
-  setOverlaysOpenCount: React.Dispatch<React.SetStateAction<number>>
+  setOverlaysSet: React.Dispatch<React.SetStateAction<Set<string>>>
   dialogContainerRef: React.RefObject<HTMLDivElement>
   contextMenuContainerRef: React.RefObject<HTMLDivElement>
 }
@@ -18,22 +19,23 @@ OverlayManagerContext.displayName = 'OverlayManagerContext'
 export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
-  const [overlaysOpenCount, setOverlaysOpenCount] = useState(0)
+  const [overlaysSet, setOverlaysSet] = useState(new Set<string>())
+
   const dialogContainerRef = useRef<HTMLDivElement>(null)
   const contextMenuContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (overlaysOpenCount === 0 && scrollLocked) {
+    if (overlaysSet.size === 0 && scrollLocked) {
       setScrollLocked(false)
       setScrollbarGap(0)
       enableBodyScroll(document.body)
-    } else if (overlaysOpenCount > 0 && !scrollLocked) {
+    } else if (overlaysSet.size > 0 && !scrollLocked) {
       const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
       setScrollLocked(true)
       setScrollbarGap(scrollbarGap)
       disableBodyScroll(document.body, { reserveScrollBarGap: true })
     }
-  }, [overlaysOpenCount, scrollLocked])
+  }, [overlaysSet.size, scrollLocked])
 
   return (
     <>
@@ -41,7 +43,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
-          setOverlaysOpenCount,
+          setOverlaysSet,
           dialogContainerRef,
           contextMenuContainerRef,
         }}
@@ -67,14 +69,19 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setOverlaysOpenCount, dialogContainerRef, contextMenuContainerRef } = context
+  const { setOverlaysSet, dialogContainerRef, contextMenuContainerRef } = context
 
-  const incrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => count + 1), [
-    setOverlaysOpenCount,
-  ])
-  const decrementOverlaysOpenCount = useCallback(() => setOverlaysOpenCount((count) => (count > 0 ? count - 1 : 0)), [
-    setOverlaysOpenCount,
-  ])
+  const overlayId = useRef(createId()).current
+  const incrementOverlaysOpenCount = useCallback(() => {
+    setOverlaysSet((prevSet) => new Set(prevSet).add(overlayId))
+  }, [setOverlaysSet, overlayId])
+
+  const decrementOverlaysOpenCount = useCallback(() => {
+    setOverlaysSet((prevSet) => {
+      prevSet.delete(overlayId)
+      return new Set(prevSet)
+    })
+  }, [overlayId, setOverlaysSet])
 
   return {
     incrementOverlaysOpenCount,
