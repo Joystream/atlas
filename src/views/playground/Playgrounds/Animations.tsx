@@ -1,46 +1,57 @@
 import styled from '@emotion/styled'
-import React from 'react'
-import Lottie from 'react-lottie-player'
+import loadable from '@loadable/component'
+import React, { useEffect, useState } from 'react'
 
-import * as loaderL from '@/shared/animations/loader-L.json'
-import * as loaderM from '@/shared/animations/loader-M.json'
-import * as loaderS from '@/shared/animations/loader-S.json'
-import * as loaderXL from '@/shared/animations/loader-XL.json'
-import * as loaderXS from '@/shared/animations/loader-XS.json'
-
+const LoadableLottie = loadable(() => import('react-lottie-player'), {
+  fallback: <>LOADING LOTTIE</>,
+})
 export const Animations = () => {
+  const [XL, setXL] = useState<any>(null)
+  const [L, setL] = useState<any>(null)
+  const [M, setM] = useState<any>(null)
+  const [S, setS] = useState<any>(null)
+  const [XS, setXS] = useState<any>(null)
+
+  useEffect(() => {
+    import('@/shared/animations/loader-XL.json').then((loader) => setXL(loader.default))
+    import('@/shared/animations/loader-L.json').then((loader) => setL(loader.default))
+    import('@/shared/animations/loader-M.json').then((loader) => setM(loader.default))
+    import('@/shared/animations/loader-S.json').then((loader) => setS(loader.default))
+    import('@/shared/animations/loader-XS.json').then((loader) => setXS(loader.default))
+  }, [])
+
   return (
     <Container>
       ANIMATIONS
-      <Lottie
+      <LoadableLottie
         loop
         play
         // @ts-ignore it has to be liek that
-        animationData={loaderXL.default}
+        animationData={XL}
       />
-      <Lottie
+      <LoadableLottie
         loop
         play
         // @ts-ignore it has to be liek that
-        animationData={loaderL.default}
+        animationData={L}
       />
-      <Lottie
+      <LoadableLottie
         loop
         play
         // @ts-ignore it has to be liek that
-        animationData={loaderM.default}
+        animationData={M}
       />
-      <Lottie
+      <LoadableLottie
         loop
         play
         // @ts-ignore it has to be liek that
-        animationData={loaderS.default}
+        animationData={S}
       />
-      <Lottie
+      <LoadableLottie
         loop
         play
         // @ts-ignore it has to be liek that
-        animationData={loaderXS.default}
+        animationData={XS}
       />
     </Container>
   )
