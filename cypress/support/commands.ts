@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+import '@testing-library/cypress/add-commands'
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -25,8 +25,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-
-// eslint-disable-next-line @typescript-eslint/no-namespace
 
 Cypress.Commands.add('injectPolkadot', (accounts = []) => {
   const enable = async () => {
