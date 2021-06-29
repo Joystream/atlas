@@ -20,11 +20,7 @@
     "sourceMap": true,
     "strict": true,
     "jsx": "react",
-    "noFallthroughCasesInSwitch": true,
-    "types": [
-      "cypress",
-      "@testing-library/cypress"
-    ]
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": [
     "node_modules",
