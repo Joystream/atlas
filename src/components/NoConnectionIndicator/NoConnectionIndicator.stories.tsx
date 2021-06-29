@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { Snackbars } from '@/providers'
+import { ConnectionStatusManager, Snackbars } from '@/providers'
 
 import { NoConnectionIndicator, NoConnectionIndicatorProps } from './NoConnectionIndicator'
 
@@ -16,6 +16,7 @@ export default {
       <>
         <Story />
         <Snackbars />
+        <ConnectionStatusManager />
       </>
     ),
   ],
