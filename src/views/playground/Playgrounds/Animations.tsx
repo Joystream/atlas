@@ -23,36 +23,11 @@ export const Animations = () => {
   return (
     <Container>
       ANIMATIONS
-      <LoadableLottie
-        loop
-        play
-        // @ts-ignore it has to be liek that
-        animationData={XL}
-      />
-      <LoadableLottie
-        loop
-        play
-        // @ts-ignore it has to be liek that
-        animationData={L}
-      />
-      <LoadableLottie
-        loop
-        play
-        // @ts-ignore it has to be liek that
-        animationData={M}
-      />
-      <LoadableLottie
-        loop
-        play
-        // @ts-ignore it has to be liek that
-        animationData={S}
-      />
-      <LoadableLottie
-        loop
-        play
-        // @ts-ignore it has to be liek that
-        animationData={XS}
-      />
+      <LoadableLottie loop play animationData={XL} />
+      <LoadableLottie loop play animationData={L} />
+      <LoadableLottie loop play animationData={M} />
+      <LoadableLottie loop play animationData={S} />
+      <LoadableLottie loop play animationData={XS} />
     </Container>
   )
 }
