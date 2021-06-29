@@ -27,7 +27,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
   const [animationState, setAnimationState] = useState<'enter' | 'exit' | null>(null)
 
   useEffect(() => {
-    if (animationState === 'enter' || (animationState === null && showDialog)) {
+    if (animationState === 'enter') {
       incrementOverlaysOpenCount()
     }
     if (animationState === 'enter' && showDialog) {
