@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { BaseDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatus } from '@/providers'
+import { useConnectionStatusStore } from '@/providers'
 import { Button, Text } from '@/shared/components'
 import { Logger } from '@/utils/logger'
 
@@ -13,7 +13,9 @@ const fakeNodeConnection = async () => {
 }
 
 export const PlaygroundConnectionState = () => {
-  const { nodeConnectionStatus, setNodeConnection, isUserConnectedToInternet } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
+  const setNodeConnection = useConnectionStatusStore((state) => state.setNodeConnection)
+  const isUserConnectedToInternet = useConnectionStatusStore((state) => state.isUserConnectedToInternet)
 
   const connectToNode = useCallback(async () => {
     const isConnected = await fakeNodeConnection()

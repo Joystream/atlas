@@ -14,8 +14,8 @@ import {
   RawDraft,
   useAssetStore,
   useAuthorizedUser,
-  useConnectionStatus,
-  useDraftStore,
+  useConnectionStatusStore,
+  useDraftsStore,
   useEditVideoSheet,
   useEditVideoSheetTabData,
   useRawAsset,
@@ -99,7 +99,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
   const { categories, error: categoriesError } = useCategories()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
+
   const deleteVideo = useDeleteVideo()
 
   if (categoriesError) {

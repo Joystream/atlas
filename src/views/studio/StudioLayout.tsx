@@ -17,11 +17,12 @@ import {
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
   ActiveUserProvider,
+  ConnectionStatusManager,
   EditVideoSheetProvider,
   JoystreamProvider,
   TransactionManager,
   UploadsManager,
-  useConnectionStatus,
+  useConnectionStatusStore,
   useDialog,
   useUser,
   useVideoEditSheetRouting,
@@ -43,7 +44,8 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
-  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
+  const isUserConnectedToInternet = useConnectionStatusStore((state) => state.isUserConnectedToInternet)
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
     activeAccountId,
@@ -170,6 +172,7 @@ const StudioLayoutWrapper: React.FC = () => {
       <ActiveUserProvider>
         <EditVideoSheetProvider>
           <JoystreamProvider>
+            <ConnectionStatusManager />
             <UploadsManager />
             <TransactionManager />
             <StudioLayout />

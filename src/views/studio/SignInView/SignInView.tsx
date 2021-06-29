@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatus, useUser } from '@/providers'
+import { useConnectionStatusStore, useUser } from '@/providers'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 
 import {
@@ -22,7 +22,7 @@ import {
 export const SignInView = () => {
   const navigate = useNavigate()
   const { activeChannelId, setActiveUser, memberships } = useUser()
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
     const newActiveUser = {

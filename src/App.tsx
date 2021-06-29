@@ -6,7 +6,6 @@ import { createApolloClient } from '@/api'
 import { MainLayout } from './MainLayout'
 import {
   AssetsManager,
-  ConnectionStatusProvider,
   DialogProvider,
   OverlayManagerProvider,
   Snackbars,
@@ -20,17 +19,15 @@ export const App = () => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <ConnectionStatusProvider>
-        <OverlayManagerProvider>
-          <StorageProvidersProvider>
-            <DialogProvider>
-              <MainLayout />
-              <Snackbars />
-              <AssetsManager />
-            </DialogProvider>
-          </StorageProvidersProvider>
-        </OverlayManagerProvider>
-      </ConnectionStatusProvider>
+      <OverlayManagerProvider>
+        <StorageProvidersProvider>
+          <DialogProvider>
+            <MainLayout />
+            <Snackbars />
+            <AssetsManager />
+          </DialogProvider>
+        </StorageProvidersProvider>
+      </OverlayManagerProvider>
     </ApolloProvider>
   )
 }

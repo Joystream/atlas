@@ -10,8 +10,7 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import { useConnectionStatus, useEditVideoSheet, useJoystream, useSnackbar, useTransaction, useUser } from '@/providers'
-import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers'
+import { useConnectionStatusStore, useAsset, useEditVideoSheet, useJoystream, useSnackbar, useTransaction, useUser, AssetType, useAssetStore, useRawAsset } from '@/providers'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import {
   ActionBarTransaction,
@@ -74,7 +73,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
 
   const { channel, loading, error, refetch: refetchChannel } = useChannel(activeChannelId || '', {
