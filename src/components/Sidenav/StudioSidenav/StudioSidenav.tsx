@@ -3,7 +3,6 @@ import { CSSTransition } from 'react-transition-group'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks'
 import { useAuthorizedUser, useDrafts, useEditVideoSheet } from '@/providers'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { Button } from '@/shared/components'
@@ -39,8 +38,6 @@ export const StudioSidenav: React.FC = () => {
   const { sheetState } = useEditVideoSheet()
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
-  const { openWarningDialog } = useDisplayDataLostWarning()
-
   const assetsInProgress = Object.values(uploadsStatus).filter((asset) => asset?.lastStatus === 'inProgress')
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
@@ -52,21 +49,10 @@ export const StudioSidenav: React.FC = () => {
     }
     return item
   })
-  const { anyVideoTabsCachedAssets } = useEditVideoSheet()
 
   const handleClick = () => {
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({
-        onConfirm: () => {
-          setExpanded(false)
-          openInNewTab(absoluteRoutes.viewer.index(), true)
-        },
-        onCancel: () => setExpanded(false),
-      })
-    } else {
-      setExpanded(false)
-      openInNewTab(absoluteRoutes.viewer.index(), true)
-    }
+    setExpanded(false)
+    openInNewTab(absoluteRoutes.viewer.index(), true)
   }
 
   return (
