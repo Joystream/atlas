@@ -87,18 +87,6 @@ export type GetVideosQuery = {
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
-export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never }>
-
-export type GetCoverVideoQuery = {
-  __typename?: 'Query'
-  coverVideo: {
-    __typename?: 'CoverVideo'
-    coverDescription: string
-    video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
-  }
-}
-
 export type GetVideoViewsQueryVariables = Types.Exact<{
   videoId: Types.Scalars['ID']
 }>
@@ -325,50 +313,6 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
-export const GetCoverVideoDocument = gql`
-  query GetCoverVideo {
-    coverVideo {
-      video {
-        ...VideoFields
-      }
-      coverDescription
-      coverCutMediaMetadata {
-        ...VideoMediaMetadataFields
-      }
-    }
-  }
-  ${VideoFieldsFragmentDoc}
-  ${VideoMediaMetadataFieldsFragmentDoc}
-`
-
-/**
- * __useGetCoverVideoQuery__
- *
- * To run a query within a React component, call `useGetCoverVideoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCoverVideoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCoverVideoQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCoverVideoQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCoverVideoQuery, GetCoverVideoQueryVariables>
-) {
-  return Apollo.useQuery<GetCoverVideoQuery, GetCoverVideoQueryVariables>(GetCoverVideoDocument, baseOptions)
-}
-export function useGetCoverVideoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCoverVideoQuery, GetCoverVideoQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetCoverVideoQuery, GetCoverVideoQueryVariables>(GetCoverVideoDocument, baseOptions)
-}
-export type GetCoverVideoQueryHookResult = ReturnType<typeof useGetCoverVideoQuery>
-export type GetCoverVideoLazyQueryHookResult = ReturnType<typeof useGetCoverVideoLazyQuery>
-export type GetCoverVideoQueryResult = Apollo.QueryResult<GetCoverVideoQuery, GetCoverVideoQueryVariables>
 export const GetVideoViewsDocument = gql`
   query GetVideoViews($videoId: ID!) {
     videoViews(videoId: $videoId) {

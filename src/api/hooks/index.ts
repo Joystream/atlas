@@ -1,9 +1,8 @@
 import useCategories from './categories'
-import useCoverVideo from './coverVideo'
 import useSearch from './search'
 import useVideosConnection from './videosConnection'
 
-export { useCoverVideo, useVideosConnection, useCategories, useSearch }
+export { useVideosConnection, useCategories, useSearch }
 
 export * from './channel'
 export * from './video'

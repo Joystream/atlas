@@ -240,17 +240,6 @@ export enum WorkerOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
 }
 
-export type CoverVideo = {
-  __typename?: 'CoverVideo'
-  id: Scalars['ID']
-  video: Video
-  coverDescription: Scalars['String']
-  coverCutMediaMetadata: VideoMediaMetadata
-  coverCutMediaDataObject?: Maybe<DataObject>
-  coverCutMediaAvailability: AssetAvailability
-  coverCutMediaUrl?: Maybe<Scalars['String']>
-}
-
 export type SearchResult = Video | Channel
 
 export type SearchFtsOutput = {
@@ -284,7 +273,6 @@ export type Query = {
   channelViews?: Maybe<EntityViewsInfo>
   channels: Array<Channel>
   channelsConnection: ChannelConnection
-  coverVideo: CoverVideo
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   search: Array<SearchFtsOutput>
