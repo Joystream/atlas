@@ -28,7 +28,7 @@ import {
   useUser,
   useVideoEditSheetRouting,
 } from '@/providers'
-import { isAllowedBrowser } from '@/utils/broswer'
+import { isAllowedBrowser } from '@/utils/browser'
 
 import {
   CreateEditChannelView,

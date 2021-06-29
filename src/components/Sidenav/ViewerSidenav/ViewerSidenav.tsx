@@ -5,6 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { usePersonalData } from '@/providers'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { openInNewTab } from '@/utils/browser'
 import { Logger } from '@/utils/logger'
 
 import { FollowedChannels } from './FollowedChannels'
@@ -56,9 +57,11 @@ export const ViewerSidenav: React.FC = () => {
         <>
           <Button
             variant="secondary"
-            onClick={() => setExpanded(false)}
+            onClick={() => {
+              setExpanded(false)
+              openInNewTab(absoluteRoutes.studio.index(), true)
+            }}
             icon={<SvgGlyphExternal />}
-            to={absoluteRoutes.studio.index()}
           >
             Joystream studio
           </Button>

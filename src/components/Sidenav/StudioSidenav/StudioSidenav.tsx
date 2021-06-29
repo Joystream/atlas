@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
@@ -10,6 +9,7 @@ import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { Button } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { openInNewTab } from '@/utils/browser'
 
 const studioNavbarItems: NavItemType[] = [
   {
@@ -36,7 +36,6 @@ export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useAuthorizedUser()
   const { unseenDrafts } = useDrafts('video', activeChannelId)
-  const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
@@ -60,12 +59,13 @@ export const StudioSidenav: React.FC = () => {
       openWarningDialog({
         onConfirm: () => {
           setExpanded(false)
-          navigate(absoluteRoutes.viewer.index())
+          openInNewTab(absoluteRoutes.viewer.index(), true)
         },
         onCancel: () => setExpanded(false),
       })
     } else {
-      navigate(absoluteRoutes.viewer.index())
+      setExpanded(false)
+      openInNewTab(absoluteRoutes.viewer.index(), true)
     }
   }
 

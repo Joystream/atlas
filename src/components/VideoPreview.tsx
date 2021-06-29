@@ -12,7 +12,7 @@ import {
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { copyToClipboard } from '@/utils/broswer'
+import { copyToClipboard } from '@/utils/browser'
 import { Logger } from '@/utils/logger'
 
 export type VideoPreviewProps = {
