@@ -1,5 +1,5 @@
 import { Language, License, VideoCategory } from '@/api/queries'
-import { createStore } from '@/store'
+import { CommonStore, createStore } from '@/store'
 import { createId } from '@/utils/createId'
 import { readFromLocalStorage } from '@/utils/localStorage'
 
@@ -37,12 +37,9 @@ type DraftStoreStateV1 = {
 type DraftStoreActions = {
   addDraft: (draft: RawDraft, explicitId?: string) => Draft
   updateDraft: (draftId: string, draftProps: RawDraft) => void
-  getDraft: (draftId: string) => Draft | undefined
-  getDraftsForChannel: (draftIds: string) => Draft[]
-  getUnseenDraftsForChannel: (draftIds: string) => Draft[]
-  markAllDraftsAsSeenForChannel: (channelId: string) => void
   removeDrafts: (draftIds: string[]) => void
   removeAllDrafts: (channelId: string) => void
+  markAllDraftsAsSeenForChannel: (channelId: string) => void
 }
 
 export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
@@ -50,7 +47,7 @@ export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
     state: {
       allDrafts: [], // includes drafts for different channels
     },
-    actionsFactory: (set, get) => ({
+    actionsFactory: (set) => ({
       addDraft: (draft, explicitId) => {
         const id = explicitId ?? createId()
         const updatedAt = new Date().toISOString()
@@ -69,10 +66,6 @@ export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
           }
         })
       },
-      getDraft: (id) => get().allDrafts.find((draft) => draft.id === id),
-      getDraftsForChannel: (channelId) => get().allDrafts.filter((d) => d.channelId === channelId),
-      getUnseenDraftsForChannel: (channelId) =>
-        get().allDrafts.filter((d) => d.channelId === channelId && d.seen === false),
       removeDrafts: (draftIds) => {
         set((draftState) => {
           draftState.allDrafts = draftState.allDrafts.filter((draft) => !draftIds.includes(draft.id))
@@ -120,3 +113,11 @@ export const useDraftStore = createStore<DraftStoreStateV1, DraftStoreActions>(
     },
   }
 )
+
+export const getDraft = (id: string) => (store: CommonStore<DraftStoreStateV1, DraftStoreActions>) =>
+  store.allDrafts.find((draft) => draft.id === id)
+export const getDraftsForChannel = (channelId: string) => (store: CommonStore<DraftStoreStateV1, DraftStoreActions>) =>
+  store.allDrafts.filter((d) => d.channelId === channelId)
+export const getUnseenDraftsForChannel = (channelId: string) => (
+  store: CommonStore<DraftStoreStateV1, DraftStoreActions>
+) => store.allDrafts.filter((d) => d.channelId === channelId && d.seen === false)

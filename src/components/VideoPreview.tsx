@@ -5,7 +5,7 @@ import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/hooks'
 import { AssetType } from '@/hooks/useAsset'
-import { useAuthorizedUser, useDraftStore } from '@/providers'
+import { getDraft, getDraftsForChannel, useAuthorizedUser, useDraftStore } from '@/providers'
 import {
   VideoPreviewBase,
   VideoPreviewBaseMetaProps,
@@ -60,9 +60,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   ...metaProps
 }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
-  const { activeChannelId } = useAuthorizedUser()
-  const drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId))
-  const draft = id ? drafts.find((draft) => draft.id === id) : undefined
+  const draft = useDraftStore(getDraft(id ?? ''))
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,

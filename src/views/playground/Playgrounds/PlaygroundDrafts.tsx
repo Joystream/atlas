@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { RawDraft, useDraftStore, useUser } from '@/providers'
+import { getDraftsForChannel, RawDraft, useDraftStore, useUser } from '@/providers'
 import { Button, FormField, Text } from '@/shared/components'
 import { Select } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
@@ -23,14 +23,14 @@ export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
 
-  const drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId || INITIAL_STATE.channelId))
-  const { removeDrafts, getDraft, removeAllDrafts, updateDraft, addDraft } = useDraftStore((state) => state.actions)
+  const drafts = useDraftStore(getDraftsForChannel(activeChannelId || INITIAL_STATE.channelId))
+  const { removeDrafts, removeAllDrafts, updateDraft, addDraft } = useDraftStore((state) => state.actions)
 
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
-    const draft = getDraft(draftID)
+    const draft = drafts.find((draft) => draft.id === draftID)
     if (draft) {
       const { title, description, isExplicit, channelId, type } = draft
       setForm({ title, description, isExplicit, channelId: activeChannelId || channelId, type })

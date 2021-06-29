@@ -6,7 +6,15 @@ import { VideoOrderByInput } from '@/api/queries'
 import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
-import { useAuthorizedUser, useDialog, useDraftStore, useEditVideoSheet, useSnackbar } from '@/providers'
+import {
+  getDraftsForChannel,
+  getUnseenDraftsForChannel,
+  useAuthorizedUser,
+  useDialog,
+  useDraftStore,
+  useEditVideoSheet,
+  useSnackbar,
+} from '@/providers'
 import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
@@ -54,8 +62,8 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
-  const unseenDrafts = useDraftStore(({ actions }) => actions.getUnseenDraftsForChannel(activeChannelId))
-  const _drafts = useDraftStore(({ actions }) => actions.getDraftsForChannel(activeChannelId))
+  const unseenDrafts = useDraftStore(getUnseenDraftsForChannel(activeChannelId))
+  const _drafts = useDraftStore(getDraftsForChannel(activeChannelId))
   const drafts =
     sortVideosBy === VideoOrderByInput.CreatedAtAsc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
