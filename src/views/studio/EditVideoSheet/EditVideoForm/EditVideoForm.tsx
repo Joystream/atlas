@@ -139,10 +139,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   })
   useEffect(() => {
     // reset form for edited video on sheet close
-    if (isEdit && sheetState === 'closed' && tabData) {
+    if (isEdit && sheetState === 'closed' && tabData && !tabDataLoading) {
       reset(tabData)
     }
-  }, [isEdit, reset, setValue, sheetState, tabData])
+  }, [isEdit, reset, setValue, sheetState, tabData, tabDataLoading])
 
   useEffect(() => {
     if (isEdit) {
@@ -256,7 +256,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       }
 
       const callback = () => {
-        setForceReset(true)
+        if (!isEdit) {
+          setForceReset(true)
+        }
       }
 
       debouncedDraftSave.current.flush()

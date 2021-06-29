@@ -2,7 +2,8 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { BasicChannelFieldsFragment } from './channels.generated'
+import { BasicChannelFieldsFragmentDoc } from './channels.generated'
 
 export type BasicMembershipFieldsFragment = {
   __typename?: 'Membership'

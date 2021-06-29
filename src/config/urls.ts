@@ -10,3 +10,5 @@ export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
 
 export const WEB3_APP_NAME = 'Joystream Atlas'
 export const STORAGE_URL_PATH = 'asset/v0'
+
+export const COVER_VIDEO_INFO_URL = 'https://eu-central-1.linodeobjects.com/atlas-hero/cover-info.json'

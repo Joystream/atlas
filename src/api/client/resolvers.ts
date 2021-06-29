@@ -2,16 +2,20 @@ import { Transform, delegateToSchema } from '@graphql-tools/delegate'
 import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
+import { createLookup } from '@/utils/data'
 import { Logger } from '@/utils/logger'
 
 import {
+  ORION_BATCHED_VIEWS_QUERY_NAME,
   ORION_FOLLOWS_QUERY_NAME,
-  ORION_VIEWS_QUERY_NAME,
   RemoveQueryNodeFollowsField,
   RemoveQueryNodeViewsField,
+  TransformBatchedOrionViewsField,
   TransformOrionFollowsField,
-  TransformOrionViewsField,
 } from './transforms'
+import { ORION_VIEWS_QUERY_NAME, TransformOrionViewsField } from './transforms/orionViews'
+
+import { VideoEdge } from '../queries'
 
 const createResolverWithTransforms = (
   schema: GraphQLSchema,
@@ -58,10 +62,10 @@ export const queryNodeStitchingResolvers = (
     ]),
   },
   Video: {
-    // TODO: Resolve the views count in parallel to the videosConnection query
-    // this can be done by writing a resolver for the query itself in which two requests in the same fashion as below would be made
-    // then the results could be combined
     views: async (parent, args, context, info) => {
+      if (parent.views != null) {
+        return parent.views
+      }
       try {
         return await delegateToSchema({
           schema: orionSchema,
@@ -82,6 +86,34 @@ export const queryNodeStitchingResolvers = (
       }
     },
   },
+  VideoConnection: {
+    edges: async (parent, args, context, info) => {
+      const batchedVideoViews = await delegateToSchema({
+        schema: orionSchema,
+        operation: 'query',
+        // operationName has to be manually kept in sync with the query name used
+        operationName: 'GetBatchedVideoViews',
+        fieldName: ORION_BATCHED_VIEWS_QUERY_NAME,
+        args: {
+          videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id),
+        },
+        context,
+        info,
+        transforms: [TransformBatchedOrionViewsField],
+      })
+
+      const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+
+      return parent.edges.map((edge: VideoEdge) => ({
+        ...edge,
+        node: {
+          ...edge.node,
+          views: viewsLookup[edge.node.id]?.views || 0,
+        },
+      }))
+    },
+  },
+
   Channel: {
     follows: async (parent, args, context, info) => {
       try {

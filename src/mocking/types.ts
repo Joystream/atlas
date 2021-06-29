@@ -31,6 +31,10 @@ export type HasControllerAccount = {
 }
 export type MocksStore = {
   videoViews: Record<string, number>
+  batchedVideoViews: {
+    views: number
+    id: string
+  }[]
   channelFollows: Record<string, number>
 }
 export type Link = ReturnType<typeof graphql.link>

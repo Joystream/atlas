@@ -62,7 +62,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
       }
 
   const normalizedData: EditVideoFormFields = {
-    title: tab.isDraft ? draft?.title ?? 'New Draft' : video?.title ?? '',
+    title: tab.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
     licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? null,
@@ -83,7 +83,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   return {
     tabData: normalizedData,
-    loading: tab.isDraft ? false : loading,
+    loading: tab.isDraft ? false : loading || !thumbnailPhotoUrl || !mediaUrl,
     error,
   }
 }

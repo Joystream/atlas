@@ -50,6 +50,7 @@ import {
   StyledAvatar,
   TextContainer,
   TitleHeader,
+  TitleHeaderAnchor,
 } from './VideoPreviewBase.styles'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'
@@ -301,7 +302,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               {isLoading ? (
                 <Placeholder height={main ? 45 : 18} width="60%" />
               ) : (
-                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                   <TitleHeader
                     variant="h6"
                     main={main}
@@ -309,9 +310,9 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     onClick={onClick}
                     clickable={clickable}
                   >
-                    {title}
+                    {title || 'Untitled'}
                   </TitleHeader>
-                </Anchor>
+                </TitleHeaderAnchor>
               )}
               {displayChannel &&
                 (isLoading ? (

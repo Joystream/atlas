@@ -73,6 +73,12 @@ export const Anchor = styled(Link)`
   color: inherit;
 `
 
+export const TitleHeaderAnchor = styled(Link)`
+  all: unset;
+  color: inherit;
+  display: grid;
+`
+
 export const Container = styled.article<MainProps>`
   width: 100%;
   color: ${colors.gray[300]};
@@ -234,8 +240,11 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
 
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`

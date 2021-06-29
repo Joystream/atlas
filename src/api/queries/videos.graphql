@@ -84,23 +84,19 @@ query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: Vi
   }
 }
 
-query GetCoverVideo {
-  coverVideo {
-    video {
-      ...VideoFields
-    }
-    coverDescription
-    coverCutMediaMetadata {
-      ...VideoMediaMetadataFields
-    }
-  }
-}
-
 ### Orion
 
 # modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetVideoViews($videoId: ID!) {
   videoViews(videoId: $videoId) {
+    id
+    views
+  }
+}
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetBatchedVideoViews($videoIdList: [ID!]!) {
+  batchedVideoViews(videoIdList: $videoIdList) {
     id
     views
   }

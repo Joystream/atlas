@@ -2,8 +2,10 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment, BasicChannelFieldsFragmentDoc } from './channels.generated'
-import { DataObjectFieldsFragment, DataObjectFieldsFragmentDoc } from './shared.generated'
+import { BasicChannelFieldsFragment } from './channels.generated'
+import { BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { DataObjectFieldsFragment } from './shared.generated'
+import { DataObjectFieldsFragmentDoc } from './shared.generated'
 
 export type VideoMediaMetadataFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
@@ -85,18 +87,6 @@ export type GetVideosQuery = {
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
-export type GetCoverVideoQueryVariables = Types.Exact<{ [key: string]: never }>
-
-export type GetCoverVideoQuery = {
-  __typename?: 'Query'
-  coverVideo: {
-    __typename?: 'CoverVideo'
-    coverDescription: string
-    video: { __typename?: 'Video' } & VideoFieldsFragment
-    coverCutMediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
-  }
-}
-
 export type GetVideoViewsQueryVariables = Types.Exact<{
   videoId: Types.Scalars['ID']
 }>
@@ -104,6 +94,15 @@ export type GetVideoViewsQueryVariables = Types.Exact<{
 export type GetVideoViewsQuery = {
   __typename?: 'Query'
   videoViews?: Types.Maybe<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>
+}
+
+export type GetBatchedVideoViewsQueryVariables = Types.Exact<{
+  videoIdList: Array<Types.Scalars['ID']> | Types.Scalars['ID']
+}>
+
+export type GetBatchedVideoViewsQuery = {
+  __typename?: 'Query'
+  batchedVideoViews: Array<Types.Maybe<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -314,50 +313,6 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
-export const GetCoverVideoDocument = gql`
-  query GetCoverVideo {
-    coverVideo {
-      video {
-        ...VideoFields
-      }
-      coverDescription
-      coverCutMediaMetadata {
-        ...VideoMediaMetadataFields
-      }
-    }
-  }
-  ${VideoFieldsFragmentDoc}
-  ${VideoMediaMetadataFieldsFragmentDoc}
-`
-
-/**
- * __useGetCoverVideoQuery__
- *
- * To run a query within a React component, call `useGetCoverVideoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCoverVideoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCoverVideoQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCoverVideoQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetCoverVideoQuery, GetCoverVideoQueryVariables>
-) {
-  return Apollo.useQuery<GetCoverVideoQuery, GetCoverVideoQueryVariables>(GetCoverVideoDocument, baseOptions)
-}
-export function useGetCoverVideoLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetCoverVideoQuery, GetCoverVideoQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetCoverVideoQuery, GetCoverVideoQueryVariables>(GetCoverVideoDocument, baseOptions)
-}
-export type GetCoverVideoQueryHookResult = ReturnType<typeof useGetCoverVideoQuery>
-export type GetCoverVideoLazyQueryHookResult = ReturnType<typeof useGetCoverVideoLazyQuery>
-export type GetCoverVideoQueryResult = Apollo.QueryResult<GetCoverVideoQuery, GetCoverVideoQueryVariables>
 export const GetVideoViewsDocument = gql`
   query GetVideoViews($videoId: ID!) {
     videoViews(videoId: $videoId) {
@@ -396,6 +351,53 @@ export function useGetVideoViewsLazyQuery(
 export type GetVideoViewsQueryHookResult = ReturnType<typeof useGetVideoViewsQuery>
 export type GetVideoViewsLazyQueryHookResult = ReturnType<typeof useGetVideoViewsLazyQuery>
 export type GetVideoViewsQueryResult = Apollo.QueryResult<GetVideoViewsQuery, GetVideoViewsQueryVariables>
+export const GetBatchedVideoViewsDocument = gql`
+  query GetBatchedVideoViews($videoIdList: [ID!]!) {
+    batchedVideoViews(videoIdList: $videoIdList) {
+      id
+      views
+    }
+  }
+`
+
+/**
+ * __useGetBatchedVideoViewsQuery__
+ *
+ * To run a query within a React component, call `useGetBatchedVideoViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBatchedVideoViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBatchedVideoViewsQuery({
+ *   variables: {
+ *      videoIdList: // value for 'videoIdList'
+ *   },
+ * });
+ */
+export function useGetBatchedVideoViewsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
+) {
+  return Apollo.useQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
+    GetBatchedVideoViewsDocument,
+    baseOptions
+  )
+}
+export function useGetBatchedVideoViewsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
+    GetBatchedVideoViewsDocument,
+    baseOptions
+  )
+}
+export type GetBatchedVideoViewsQueryHookResult = ReturnType<typeof useGetBatchedVideoViewsQuery>
+export type GetBatchedVideoViewsLazyQueryHookResult = ReturnType<typeof useGetBatchedVideoViewsLazyQuery>
+export type GetBatchedVideoViewsQueryResult = Apollo.QueryResult<
+  GetBatchedVideoViewsQuery,
+  GetBatchedVideoViewsQueryVariables
+>
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: ID!, $channelId: ID!) {
     addVideoView(videoId: $videoId, channelId: $channelId) {

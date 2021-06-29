@@ -41,6 +41,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
         classNames={transitions.names.dialog}
         mountOnEnter
         unmountOnExit
+        appear
         onEnter={incrementOverlaysOpenCount}
         onExited={decrementOverlaysOpenCount}
       >

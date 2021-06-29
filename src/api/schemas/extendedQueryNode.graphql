@@ -238,16 +238,6 @@ enum WorkerOrderByInput {
   createdAt_ASC
   createdAt_DESC
 }
-# Isn't provided by query node yet
-type CoverVideo {
-  id: ID!
-  video: Video!
-  coverDescription: String!
-  coverCutMediaMetadata: VideoMediaMetadata!
-  coverCutMediaDataObject: DataObject
-  coverCutMediaAvailability: AssetAvailability!
-  coverCutMediaUrl: String
-}
 
 union SearchResult = Video | Channel
 
@@ -301,9 +291,6 @@ type Query {
   workers(offset: Int, limit: Int, where: WorkerWhereInput): [Worker!]
 
   workerByUniqueInput(where: WorkerWhereUniqueInput!): Worker
-
-  # Get the current cover video
-  coverVideo: CoverVideo!
 
   # Free text search across videos and channels
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
