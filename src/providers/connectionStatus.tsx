@@ -9,7 +9,7 @@ type ConnectionStatusValue = {
   nodeConnectionStatus: ConnectionStatus
   isUserConnectedToInternet: boolean
   setNodeConnection: (connection: ConnectionStatus) => void
-  setInternetConnection: (value: boolean) => void
+  setInternetConnection: (isConnected: boolean) => void
 }
 
 const SNACKBAR_TIMEOUT = 15000
