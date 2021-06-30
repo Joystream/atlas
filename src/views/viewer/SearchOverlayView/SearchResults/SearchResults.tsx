@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import { useSearch } from '@/api/hooks'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
 import { ChannelGrid, PlaceholderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
@@ -38,7 +38,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
-  const { updateRecentSearches } = usePersonalData()
+  const updateRecentSearches = usePersonalDataStore((state) => state.actions.updateRecentSearches)
 
   const handleVideoClick = (id: string) => {
     updateRecentSearches(id, 'video')

@@ -1,7 +1,7 @@
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { SvgOutlineVideo } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 
@@ -20,10 +20,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
-  const {
-    state: { playerVolume },
-    updatePlayerVolume,
-  } = usePersonalData()
+
+  const playerVolume = usePersonalDataStore((state) => state.playerVolume)
+  const updatePlayerVolume = usePersonalDataStore((state) => state.actions.updatePlayerVolume)
 
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)

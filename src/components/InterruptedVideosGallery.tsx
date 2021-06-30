@@ -2,16 +2,14 @@ import { RouteComponentProps } from '@reach/router'
 import React from 'react'
 
 import { VideoGallery } from '@/components'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Logger } from '@/utils/logger'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 
 export const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
-  const {
-    state: { watchedVideos },
-    updateWatchedVideos,
-  } = usePersonalData()
+  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
+  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
 
   const interruptedVideosState = watchedVideos
     .filter((video) => video.__typename === 'INTERRUPTED')
