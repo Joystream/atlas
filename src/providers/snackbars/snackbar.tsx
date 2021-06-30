@@ -19,12 +19,7 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
 
 const SNACKBARS_LIMIT = 3
 
-export const useSnackbar = () => {
-  const displaySnackbar = useSnackbarStore((state) => state.displaySnackbar)
-  const closeSnackbar = useSnackbarStore((state) => state.closeSnackbar)
-  const updateSnackbar = useSnackbarStore((state) => state.updateSnackbar)
-  return { displaySnackbar, closeSnackbar, updateSnackbar }
-}
+export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 
 export const Snackbars: React.FC = () => {
   const { closeSnackbar } = useSnackbar()
