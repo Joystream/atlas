@@ -4,14 +4,7 @@ import React from 'react'
 import { createApolloClient } from '@/api'
 
 import { MainLayout } from './MainLayout'
-import {
-  AssetsManager,
-  ConnectionStatusProvider,
-  DialogProvider,
-  OverlayManagerProvider,
-  Snackbars,
-  StorageProvidersProvider,
-} from './providers'
+import { AssetsManager, DialogProvider, OverlayManagerProvider, Snackbars, StorageProvidersProvider } from './providers'
 
 export const App = () => {
   // create client on render so the mocking setup is done if needed
@@ -20,17 +13,15 @@ export const App = () => {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <ConnectionStatusProvider>
-        <OverlayManagerProvider>
-          <StorageProvidersProvider>
-            <DialogProvider>
-              <MainLayout />
-              <Snackbars />
-              <AssetsManager />
-            </DialogProvider>
-          </StorageProvidersProvider>
-        </OverlayManagerProvider>
-      </ConnectionStatusProvider>
+      <OverlayManagerProvider>
+        <StorageProvidersProvider>
+          <DialogProvider>
+            <MainLayout />
+            <Snackbars />
+            <AssetsManager />
+          </DialogProvider>
+        </StorageProvidersProvider>
+      </OverlayManagerProvider>
     </ApolloProvider>
   )
 }

@@ -11,7 +11,7 @@ import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { MemberId } from '@/joystream-lib'
-import { useConnectionStatus, useDialog, useUser } from '@/providers'
+import { useConnectionStatusStore, useDialog, useUser } from '@/providers'
 import { Spinner } from '@/shared/components'
 import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
@@ -36,7 +36,7 @@ type Inputs = {
 
 export const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const navigate = useNavigate()
   const {

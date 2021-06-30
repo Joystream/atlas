@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { ConnectionStatusProvider, Snackbars } from '@/providers'
+import { ConnectionStatusManager, Snackbars } from '@/providers'
 
 import { NoConnectionIndicator, NoConnectionIndicatorProps } from './NoConnectionIndicator'
 
@@ -13,10 +13,11 @@ export default {
   },
   decorators: [
     (Story) => (
-      <ConnectionStatusProvider>
+      <>
         <Story />
         <Snackbars />
-      </ConnectionStatusProvider>
+        <ConnectionStatusManager />
+      </>
     ),
   ],
 } as Meta

@@ -1,23 +1,41 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { useSnackbar } from '@/providers/snackbars'
+import { createStore } from '@/store'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
-const ConnectionStatusContext = React.createContext<undefined | ConnectionStatusValue>(undefined)
-ConnectionStatusContext.displayName = 'ConnectionStatusContext'
-
-type ConnectionStatusValue = {
-  setNodeConnection: (connection: ConnectionStatus) => void
+type ConnectionStatusStoreState = {
   nodeConnectionStatus: ConnectionStatus
-  isUserConnectedToInternet: boolean
+  internetConnectionStatus: ConnectionStatus
+}
+
+type ConnectionStatusStoreActions = {
+  setNodeConnection: (connection: ConnectionStatus) => void
+  setInternetConnection: (connection: ConnectionStatus) => void
 }
 
 const SNACKBAR_TIMEOUT = 15000
 
-export const ConnectionStatusProvider: React.FC = ({ children }) => {
-  const [nodeConnectionStatus, setNodeConnection] = useState<ConnectionStatus>('connecting')
-  const [isUserConnectedToInternet, setIsUserConnectedToInternet] = useState(true)
+export const useConnectionStatusStore = createStore<ConnectionStatusStoreState, ConnectionStatusStoreActions>({
+  state: { internetConnectionStatus: 'connected', nodeConnectionStatus: 'connecting' },
+  actionsFactory: (set) => ({
+    setNodeConnection: (connection) => {
+      set((state) => {
+        state.nodeConnectionStatus = connection
+      })
+    },
+    setInternetConnection: (connection) => {
+      set((state) => {
+        state.internetConnectionStatus = connection
+      })
+    },
+  }),
+})
+
+export const ConnectionStatusManager: React.FC = () => {
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const setInternetConnection = useConnectionStatusStore((state) => state.actions.setInternetConnection)
   const { displaySnackbar } = useSnackbar()
 
   const checkConnection = useCallback(async () => {
@@ -30,12 +48,12 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
         4000
       )
       if (res) {
-        setIsUserConnectedToInternet(true)
+        setInternetConnection('connected')
       }
     } catch (error) {
-      setIsUserConnectedToInternet(false)
+      setInternetConnection('disconnected')
     }
-  }, [])
+  }, [setInternetConnection])
 
   useEffect(() => {
     // ping google every five seconds to check if user is connected to internet
@@ -54,33 +72,15 @@ export const ConnectionStatusProvider: React.FC = ({ children }) => {
     if (isInitialMount.current) {
       isInitialMount.current = false
     } else {
-      if (isUserConnectedToInternet) {
+      if (internetConnectionStatus === 'connected') {
         displaySnackbar({ title: 'Network connection restored', iconType: 'success', timeout: SNACKBAR_TIMEOUT })
       } else {
         displaySnackbar({ title: 'Network connection lost', iconType: 'error', timeout: SNACKBAR_TIMEOUT })
       }
     }
-  }, [displaySnackbar, isUserConnectedToInternet])
+  }, [displaySnackbar, internetConnectionStatus])
 
-  return (
-    <ConnectionStatusContext.Provider
-      value={{
-        nodeConnectionStatus,
-        setNodeConnection,
-        isUserConnectedToInternet,
-      }}
-    >
-      {children}
-    </ConnectionStatusContext.Provider>
-  )
-}
-
-export const useConnectionStatus = () => {
-  const ctx = useContext(ConnectionStatusContext)
-  if (ctx === undefined) {
-    throw new Error('useConnectionStatus must be used within a ConnectionStatusProvider')
-  }
-  return ctx
+  return null
 }
 
 const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {

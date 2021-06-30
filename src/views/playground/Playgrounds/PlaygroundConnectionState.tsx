@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 
 import { BaseDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatus } from '@/providers'
+import { useConnectionStatusStore } from '@/providers'
 import { Button, Text } from '@/shared/components'
 import { Logger } from '@/utils/logger'
 
@@ -13,7 +13,9 @@ const fakeNodeConnection = async () => {
 }
 
 export const PlaygroundConnectionState = () => {
-  const { nodeConnectionStatus, setNodeConnection, isUserConnectedToInternet } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
 
   const connectToNode = useCallback(async () => {
     const isConnected = await fakeNodeConnection()
@@ -37,7 +39,7 @@ export const PlaygroundConnectionState = () => {
             <Button to={absoluteRoutes.viewer.index()}>Back to homepage</Button>
           </>
         )}
-        {isUserConnectedToInternet && (
+        {internetConnectionStatus === 'connected' && (
           <>
             <Text variant="h3">No internet</Text>
             <Text variant="body2">Waiting to reconnect...</Text>
