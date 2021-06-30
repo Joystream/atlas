@@ -40,7 +40,7 @@ export const AdminView = () => {
 
     const linkElement = document.createElement('a')
     linkElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStorage))
-    linkElement.setAttribute('download', `atlas-export-${new Date().toLocaleString()}.json`)
+    linkElement.setAttribute('download', `atlas-export-${new Date().toISOString()}.json`)
     linkElement.click()
   }
 
