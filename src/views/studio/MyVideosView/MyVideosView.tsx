@@ -7,8 +7,8 @@ import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
 import {
-  getDraftsForChannel,
-  getUnseenDraftsForChannel,
+  channelDraftsSelector,
+  chanelUnseenDraftsSelector,
   useAuthorizedUser,
   useDialog,
   useDraftStore,
@@ -62,8 +62,8 @@ export const MyVideosView = () => {
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
-  const unseenDrafts = useDraftStore(getUnseenDraftsForChannel(activeChannelId))
-  const _drafts = useDraftStore(getDraftsForChannel(activeChannelId))
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
+  const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
   const drafts =
     sortVideosBy === VideoOrderByInput.CreatedAtAsc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())

@@ -3,7 +3,7 @@ import React from 'react'
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, getDraft, useAsset, useDraftStore } from '@/providers'
+import { AssetType, singleDraftSelector, useAsset, useDraftStore } from '@/providers'
 import {
   VideoPreviewBase,
   VideoPreviewBaseMetaProps,
@@ -58,7 +58,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
   ...metaProps
 }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
-  const draft = useDraftStore(getDraft(id ?? ''))
+  const draft = useDraftStore(singleDraftSelector(id ?? ''))
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,

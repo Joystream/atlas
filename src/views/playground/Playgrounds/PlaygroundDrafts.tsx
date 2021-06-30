@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { getDraftsForChannel, RawDraft, useDraftStore, useUser } from '@/providers'
+import { channelDraftsSelector, RawDraft, useDraftStore, useUser } from '@/providers'
 import { Button, FormField, Text } from '@/shared/components'
 import { Select } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
@@ -23,7 +23,7 @@ export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
 
-  const drafts = useDraftStore(getDraftsForChannel(activeChannelId || INITIAL_STATE.channelId))
+  const drafts = useDraftStore(channelDraftsSelector(activeChannelId || INITIAL_STATE.channelId))
   const { removeDrafts, removeAllDrafts, updateDraft, addDraft } = useDraftStore((state) => state.actions)
 
   const [currentDraftId, setCurrentDraftId] = useState('')

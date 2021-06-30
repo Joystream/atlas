@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import {
-  getUnseenDraftsForChannel,
+  chanelUnseenDraftsSelector,
   useAuthorizedUser,
   useDraftStore,
   useEditVideoSheet,
@@ -39,7 +39,7 @@ const studioNavbarItems: NavItemType[] = [
 export const StudioSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useAuthorizedUser()
-  const unseenDrafts = useDraftStore(getUnseenDraftsForChannel(activeChannelId))
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
 
   const { sheetState } = useEditVideoSheet()
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
