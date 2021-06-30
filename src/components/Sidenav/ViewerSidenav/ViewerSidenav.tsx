@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { openInNewTab } from '@/utils/browser'
 import { Logger } from '@/utils/logger'
 
 import { FollowedChannels } from './FollowedChannels'
@@ -29,10 +30,8 @@ const viewerSidenavItems: NavItemType[] = [
 
 export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
-  const {
-    state: { followedChannels },
-    updateChannelFollowing,
-  } = usePersonalData()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
+  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
   const handleChannelNotFound = (id: string) => {
     Logger.warn(`Followed channel not found, removing id: ${id}`)
@@ -56,9 +55,11 @@ export const ViewerSidenav: React.FC = () => {
         <>
           <Button
             variant="secondary"
-            onClick={() => setExpanded(false)}
+            onClick={() => {
+              setExpanded(false)
+              openInNewTab(absoluteRoutes.studio.index(), true)
+            }}
             icon={<SvgGlyphExternal />}
-            to={absoluteRoutes.studio.index()}
           >
             Joystream studio
           </Button>

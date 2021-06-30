@@ -47,10 +47,6 @@ export const LogoLink = styled(Link)`
   margin-top: 24px;
   margin-left: 80px;
   text-decoration: none;
-
-  ${media.medium} {
-    margin-left: 86px;
-  }
 `
 
 export const Logo = styled(SvgJoystreamFullLogo)`

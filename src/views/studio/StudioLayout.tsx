@@ -19,7 +19,6 @@ import {
   ActiveUserProvider,
   EditVideoSheetProvider,
   JoystreamProvider,
-  PersonalDataProvider,
   TransactionManager,
   UploadsManager,
   useConnectionStatus,
@@ -27,7 +26,7 @@ import {
   useUser,
   useVideoEditSheetRouting,
 } from '@/providers'
-import { isAllowedBrowser } from '@/utils/broswer'
+import { isAllowedBrowser } from '@/utils/browser'
 
 import {
   CreateEditChannelView,
@@ -169,15 +168,13 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <PersonalDataProvider>
-          <EditVideoSheetProvider>
-            <JoystreamProvider>
-              <UploadsManager />
-              <TransactionManager />
-              <StudioLayout />
-            </JoystreamProvider>
-          </EditVideoSheetProvider>
-        </PersonalDataProvider>
+        <EditVideoSheetProvider>
+          <JoystreamProvider>
+            <UploadsManager />
+            <TransactionManager />
+            <StudioLayout />
+          </JoystreamProvider>
+        </EditVideoSheetProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

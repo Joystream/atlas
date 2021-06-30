@@ -6,8 +6,8 @@ import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
-import { AssetType, useAsset, useRouterQuery } from '@/hooks'
-import { usePersonalData } from '@/providers'
+import { useRouterQuery } from '@/hooks'
+import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -33,7 +33,9 @@ export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
-  const { state, updateWatchedVideos } = usePersonalData()
+  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
+  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
+
   const timestampFromQuery = Number(useRouterQuery('time'))
 
   const { url: thumbnailPhotoUrl } = useAsset({
@@ -48,10 +50,10 @@ export const VideoView: React.FC = () => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
+    const currentVideo = watchedVideos.find((v) => v.id === video?.id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [state.watchedVideos, startTimestamp, video?.duration, video?.id])
+  }, [watchedVideos, startTimestamp, video?.duration, video?.id])
 
   useEffect(() => {
     const duration = video?.duration ?? 0

@@ -211,14 +211,13 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               {isLoading ? (
                 <CoverPlaceholder />
               ) : (
-                <CoverImageContainer>
+                <CoverImageContainer ref={imgRef}>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
-                        ref={imgRef}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
                     ) : hasThumbnailUploadFailed ? (

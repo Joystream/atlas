@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks'
 import {
   getUnseenDraftsForChannel,
   useAuthorizedUser,
@@ -15,6 +13,7 @@ import {
 import { Button } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { openInNewTab } from '@/utils/browser'
 
 const studioNavbarItems: NavItemType[] = [
   {
@@ -42,11 +41,8 @@ export const StudioSidenav: React.FC = () => {
   const { activeChannelId } = useAuthorizedUser()
   const unseenDrafts = useDraftStore(getUnseenDraftsForChannel(activeChannelId))
 
-  const navigate = useNavigate()
   const { sheetState } = useEditVideoSheet()
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
-
-  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const assetsInProgress = Object.values(uploadsStatus).filter((asset) => asset?.lastStatus === 'inProgress')
 
@@ -59,20 +55,10 @@ export const StudioSidenav: React.FC = () => {
     }
     return item
   })
-  const { anyVideoTabsCachedAssets } = useEditVideoSheet()
 
   const handleClick = () => {
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({
-        onConfirm: () => {
-          setExpanded(false)
-          navigate(absoluteRoutes.viewer.index())
-        },
-        onCancel: () => setExpanded(false),
-      })
-    } else {
-      navigate(absoluteRoutes.viewer.index())
-    }
+    setExpanded(false)
+    openInNewTab(absoluteRoutes.viewer.index(), true)
   }
 
   return (

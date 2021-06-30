@@ -5,7 +5,7 @@ import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/providers'
+import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
@@ -13,9 +13,7 @@ const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
 export const HomeView: React.FC = () => {
-  const {
-    state: { followedChannels },
-  } = usePersonalData()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0

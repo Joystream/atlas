@@ -3,7 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
@@ -35,7 +35,7 @@ export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video })
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={thumbnailPhotoUrl} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={thumbnailPhotoUrl ?? undefined} /> : <VideoImagePlaceholder />}
             <div>
               {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
               {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}

@@ -7,7 +7,6 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { TOP_NAVBAR_HEIGHT, ViewErrorFallback, ViewerSidenav, ViewerTopbar } from '@/components'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { PersonalDataProvider } from '@/providers'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 
@@ -52,7 +51,7 @@ export const ViewerLayout: React.FC = () => {
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (
-    <PersonalDataProvider>
+    <>
       <ViewerTopbar />
       <ViewerSidenav />
       <MainContainer>
@@ -86,7 +85,7 @@ export const ViewerLayout: React.FC = () => {
           </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
-    </PersonalDataProvider>
+    </>
   )
 }
 

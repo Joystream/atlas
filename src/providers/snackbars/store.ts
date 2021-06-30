@@ -1,5 +1,4 @@
-import create from 'zustand'
-
+import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
 
 type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
@@ -20,38 +19,46 @@ type Snackbar = {
   id: string
 } & Omit<DisplaySnackbarArgs, 'time'>
 
-export type SnackbarState = {
+export type SnackbarStoreState = {
   snackbars: Snackbar[]
+}
+
+type SnackbarStoreActions = {
   displaySnackbar: (args: DisplaySnackbarArgs, onActionClick?: () => void) => string
   updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
   closeSnackbar: (id: string) => void
 }
 
-export const useSnackbarStore = create<SnackbarState>((set) => ({
-  snackbars: [],
-  updateSnackbar: (id, opts) => {
-    set((state) => ({
-      ...state,
-      snackbars: state.snackbars.map((snackbar) => (snackbar.id === id ? { ...snackbar, ...opts } : snackbar)),
-    }))
+export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreActions>({
+  state: {
+    snackbars: [],
   },
-  closeSnackbar: (id) =>
-    set((state) => ({ ...state, snackbars: state.snackbars.filter((snackbar) => snackbar.id !== id) })),
-  displaySnackbar: ({ timeout, customId, onExit, ...args }) => {
-    const id = customId ?? createId()
-    set((state) => ({
-      ...state,
-      snackbars: [...state.snackbars, { id, ...args }],
-    }))
-    if (timeout) {
-      onExit?.()
-      setTimeout(() => {
-        set((state) => ({
-          ...state,
-          snackbars: state.snackbars.filter((snackbar) => snackbar.id !== id),
-        }))
-      }, timeout)
-    }
-    return id
-  },
-}))
+  actionsFactory: (set) => ({
+    updateSnackbar: (id, opts) => {
+      set((state) => {
+        const snackbarIdx = state.snackbars.findIndex((s) => s.id === id)
+        if (snackbarIdx === -1) return
+        state.snackbars[snackbarIdx] = { ...state.snackbars[snackbarIdx], ...opts }
+      })
+    },
+    closeSnackbar: (id) =>
+      set((state) => {
+        state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
+      }),
+    displaySnackbar: ({ timeout, customId, onExit, ...args }) => {
+      const id = customId ?? createId()
+      set((state) => {
+        state.snackbars.push({ id, ...args })
+      })
+      if (timeout) {
+        onExit?.()
+        setTimeout(() => {
+          set((state) => {
+            state.snackbars.shift()
+          })
+        }, timeout)
+      }
+      return id
+    },
+  }),
+})

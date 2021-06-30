@@ -1,4 +1,4 @@
-import { Draft, produce } from 'immer'
+import { Draft, enableMapSet, produce } from 'immer'
 import create, { GetState, State, StateCreator, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -25,12 +25,15 @@ type CommonStorePersistOpts<TState> = {
   // we can't really know what the previous value is, may be different than the current TState
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   migrate: (oldState: any, oldVersion: number, storageValue: any) => any // TODO: provide better return value
+  onRehydrateStorage?: (state: TState) => void
 }
 
 type CommonStoreOpts<TState extends object> = {
   persist?: CommonStorePersistOpts<TState>
 }
 
+// enable immer support for Map and Set
+enableMapSet()
 const immer = <T extends State>(config: StateCreator<T, (fn: (state: Draft<T>) => void) => void>): StateCreator<T> => (
   set,
   get,
@@ -61,6 +64,9 @@ export const createStore = <TState extends object, TActions extends object>(
           Logger.error(`Failed to migrate store "${config.key}"`, e)
           return {} as CommonStore<TState, TActions>
         }
+      },
+      onRehydrateStorage: (state) => {
+        return config.onRehydrateStorage?.(state)
       },
     })
   }
