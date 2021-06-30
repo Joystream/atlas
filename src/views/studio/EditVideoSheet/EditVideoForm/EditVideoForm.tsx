@@ -15,7 +15,7 @@ import {
   useAssetStore,
   useAuthorizedUser,
   useConnectionStatusStore,
-  useDraftsStore,
+  useDraftStore,
   useEditVideoSheet,
   useEditVideoSheetTabData,
   useRawAsset,
