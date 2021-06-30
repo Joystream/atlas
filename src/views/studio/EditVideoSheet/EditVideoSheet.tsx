@@ -212,6 +212,7 @@ export const EditVideoSheet: React.FC = () => {
             id_eq: videoId,
           },
         },
+        fetchPolicy: 'network-only',
       })
 
       if (isNew) {
