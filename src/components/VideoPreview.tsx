@@ -12,7 +12,7 @@ import {
   VideoPreviewBaseProps,
   VideoPreviewPublisherProps,
 } from '@/shared/components/VideoPreviewBase/VideoPreviewBase'
-import { copyToClipboard } from '@/utils/broswer'
+import { copyToClipboard, openInNewTab } from '@/utils/browser'
 import { Logger } from '@/utils/logger'
 
 export type VideoPreviewProps = {
@@ -87,7 +87,7 @@ export const VideoPreviewPublisher: React.FC<VideoPreviewWPublisherProps> = ({
       hasThumbnailUploadFailed={hasThumbnailUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
-      onOpenInTabClick={isDraft || !id ? undefined : () => window.open(absoluteRoutes.viewer.video(id))?.focus()}
+      onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}

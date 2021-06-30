@@ -14,3 +14,8 @@ export const isChromiumBased = (): boolean => !!window.chrome
 export const isAllowedBrowser = () => isFirefox() || isChromiumBased()
 
 export const isBrowserOutdated = !('ResizeObserver' in window) || !('IntersectionObserver' in window)
+
+export const openInNewTab = (url: string, local?: boolean) => {
+  const origin = window.location.origin
+  window.open(`${local ? origin : ''}${url}`, '_blank')?.focus()
+}

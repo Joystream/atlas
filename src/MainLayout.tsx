@@ -6,7 +6,7 @@ import { StudioLoading, TopbarBase } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
 import { GlobalStyle } from '@/shared/components'
 import { routingTransitions } from '@/styles/routingTransitions'
-import { isBrowserOutdated } from '@/utils/broswer'
+import { isBrowserOutdated } from '@/utils/browser'
 
 import { useDialog } from './providers'
 import { AdminView } from './views/admin'
