@@ -6,11 +6,11 @@ const LoadableLottie = loadable(() => import('react-lottie-player'), {
   fallback: <>LOADING LOTTIE</>,
 })
 export const Animations = () => {
-  const [XL, setXL] = useState<any>(null)
-  const [L, setL] = useState<any>(null)
-  const [M, setM] = useState<any>(null)
-  const [S, setS] = useState<any>(null)
-  const [XS, setXS] = useState<any>(null)
+  const [XL, setXL] = useState<unknown>(null)
+  const [L, setL] = useState<unknown>(null)
+  const [M, setM] = useState<unknown>(null)
+  const [S, setS] = useState<unknown>(null)
+  const [XS, setXS] = useState<unknown>(null)
 
   useEffect(() => {
     import('@/shared/animations/loader-XL.json').then((loader) => setXL(loader.default))
