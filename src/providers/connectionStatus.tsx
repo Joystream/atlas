@@ -1,37 +1,41 @@
 import React, { useCallback, useEffect, useRef } from 'react'
-import create from 'zustand'
 
 import { useSnackbar } from '@/providers/snackbars'
+import { createStore } from '@/store'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
-type ConnectionStatusValue = {
+type ConnectionStatusStoreState = {
   nodeConnectionStatus: ConnectionStatus
-  isUserConnectedToInternet: boolean
+  internetConnectionStatus: ConnectionStatus
+}
+
+type ConnectionStatusStoreActions = {
   setNodeConnection: (connection: ConnectionStatus) => void
-  setInternetConnection: (isConnected: boolean) => void
+  setInternetConnection: (connection: ConnectionStatus) => void
 }
 
 const SNACKBAR_TIMEOUT = 15000
 
-export const useConnectionStatusStore = create<ConnectionStatusValue>((set) => ({
-  isUserConnectedToInternet: true,
-  nodeConnectionStatus: 'connecting',
-  setNodeConnection: (connection) => {
-    set((state) => {
-      state.nodeConnectionStatus = connection
-    })
-  },
-  setInternetConnection: (isConnected) => {
-    set((state) => {
-      state.isUserConnectedToInternet = isConnected
-    })
-  },
-}))
+export const useConnectionStatusStore = createStore<ConnectionStatusStoreState, ConnectionStatusStoreActions>({
+  state: { internetConnectionStatus: 'connected', nodeConnectionStatus: 'connecting' },
+  actionsFactory: (set) => ({
+    setNodeConnection: (connection) => {
+      set((state) => {
+        state.nodeConnectionStatus = connection
+      })
+    },
+    setInternetConnection: (connection) => {
+      set((state) => {
+        state.internetConnectionStatus = connection
+      })
+    },
+  }),
+})
 
 export const ConnectionStatusManager: React.FC = () => {
-  const isUserConnectedToInternet = useConnectionStatusStore((state) => state.isUserConnectedToInternet)
-  const setInternetConnection = useConnectionStatusStore((state) => state.setInternetConnection)
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const setInternetConnection = useConnectionStatusStore((state) => state.actions.setInternetConnection)
   const { displaySnackbar } = useSnackbar()
 
   const checkConnection = useCallback(async () => {
@@ -44,10 +48,10 @@ export const ConnectionStatusManager: React.FC = () => {
         4000
       )
       if (res) {
-        setInternetConnection(true)
+        setInternetConnection('connected')
       }
     } catch (error) {
-      setInternetConnection(false)
+      setInternetConnection('disconnected')
     }
   }, [setInternetConnection])
 
@@ -68,13 +72,13 @@ export const ConnectionStatusManager: React.FC = () => {
     if (isInitialMount.current) {
       isInitialMount.current = false
     } else {
-      if (isUserConnectedToInternet) {
+      if (internetConnectionStatus === 'connected') {
         displaySnackbar({ title: 'Network connection restored', iconType: 'success', timeout: SNACKBAR_TIMEOUT })
       } else {
         displaySnackbar({ title: 'Network connection lost', iconType: 'error', timeout: SNACKBAR_TIMEOUT })
       }
     }
-  }, [displaySnackbar, isUserConnectedToInternet])
+  }, [displaySnackbar, internetConnectionStatus])
 
   return null
 }

@@ -44,7 +44,7 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
-  const isUserConnectedToInternet = useConnectionStatusStore((state) => state.isUserConnectedToInternet)
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
@@ -89,7 +89,7 @@ const StudioLayout = () => {
     <>
       <NoConnectionIndicator
         nodeConnectionStatus={nodeConnectionStatus}
-        isConnectedToInternet={isUserConnectedToInternet}
+        isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
