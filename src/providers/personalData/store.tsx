@@ -97,7 +97,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
     persist: {
       key: 'personalData',
       whitelist: WHITELIST,
-      version: 1,
+      version: 0,
       onRehydrateStorage: () => {
         WHITELIST.forEach((item) => {
           window.localStorage.removeItem(item)
