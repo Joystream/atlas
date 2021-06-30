@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useRouterQuery, useUser, useDialog } from '@/hooks'
-import { Text, Button } from '@/shared/components'
+import { useRouterQuery } from '@/hooks'
+import { useDialog, useUser } from '@/providers'
+import { Button, Text } from '@/shared/components'
 import { SvgGlyphExternal } from '@/shared/icons'
 
-import { StyledButton, StyledStepFooter, StyledListItem, PolkadotExtensionRejectedWrapper } from './ExtensionStep.style'
+import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'
 import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
 
 type ExtensionStepProps = {
   nextStepPath: string
 }
 
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
+export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery('step')
   const { extensionConnected } = useUser()
@@ -75,5 +76,3 @@ export const PolkadotExtensionRejected: React.FC = () => (
     </ol>
   </PolkadotExtensionRejectedWrapper>
 )
-
-export default ExtensionStep

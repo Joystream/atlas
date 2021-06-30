@@ -14,7 +14,7 @@ type AllResultsTabProps = {
   onChannelClick: (id: string) => void
 }
 
-const AllResultsTab: React.FC<AllResultsTabProps> = ({
+export const AllResultsTab: React.FC<AllResultsTabProps> = ({
   videos: allVideos,
   channels,
   loading,
@@ -57,5 +57,3 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({
 const SectionHeader = styled(Text)`
   margin: 0 0 ${sizes(4)};
 `
-
-export default AllResultsTab

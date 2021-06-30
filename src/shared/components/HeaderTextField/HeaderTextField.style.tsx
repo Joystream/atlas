@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { Text } from '@/shared/components'
-import { colors, sizes, typography, media } from '@/shared/theme'
+import { colors, media, sizes, typography } from '@/shared/theme'
+
+import { Text } from '../Text'
 
 type HelperTextProps = {
   error?: boolean
@@ -28,9 +29,11 @@ export const StyledInput = styled.input<StyledInputProps>`
   ${media.medium} {
     --input-max-width: 600px;
   }
+
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
+
   color: white;
   background-color: ${colors.transparent};
   white-space: nowrap;
@@ -43,14 +46,17 @@ export const StyledInput = styled.input<StyledInputProps>`
   max-width: var(--input-max-width);
   width: ${({ widthSize }) => (widthSize ? `${widthSize}ch` : '100%')};
   height: ${sizes(13)};
+
   &:hover {
     filter: brightness(80%);
   }
 `
 
 export const HelperText = styled(Text)<HelperTextProps>`
-  color: ${({ warning }) => warning && colors.warning};
-  color: ${({ error }) => error && colors.error};
+  color: ${({ warning, error }) => {
+    if (warning) return colors.warning
+    if (error) return colors.error
+  }};
   background-color: ${colors.gray[800]};
   width: fit-content;
   max-width: 600px;

@@ -1,31 +1,56 @@
 import React from 'react'
+import shallow from 'zustand/shallow'
 
-import { useUploadsManager } from '@/hooks'
+import { useUser } from '@/providers'
+import { useUploadsStore } from '@/providers/uploadsManager/store'
+import { AssetUpload } from '@/providers/uploadsManager/types'
 
 import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
 import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
 import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 
-const MyUploadsView: React.FC = () => {
-  const { uploadsState, isLoading } = useUploadsManager()
+type GroupByParentObjectIdAcc = {
+  [key: string]: AssetUpload[]
+}
 
-  const hasUploads = uploadsState.length > 0
+export const MyUploadsView: React.FC = () => {
+  const { activeChannelId } = useUser()
 
+  const channelUploads = useUploadsStore(
+    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
+    shallow
+  )
+  const isSyncing = useUploadsStore((state) => state.isSyncing)
+
+  // Grouping all assets by parent id (videos, channel)
+  const groupedUploadsState = Object.values(
+    channelUploads.reduce((acc: GroupByParentObjectIdAcc, asset) => {
+      if (!asset) {
+        return acc
+      }
+      const key = asset.parentObject.id
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(asset)
+      return acc
+    }, {})
+  )
+
+  const hasUploads = groupedUploadsState.length > 0
   const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <AssetGroupUploadBarPlaceholder key={idx} />)
 
   return (
     <UploadsContainer>
       <StyledText variant="h2">My uploads</StyledText>
-      {isLoading ? (
+      {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (
-        uploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploadData={files} />)
+        groupedUploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploads={files} />)
       ) : (
         <EmptyUploadsView />
       )}
     </UploadsContainer>
   )
 }
-
-export default MyUploadsView

@@ -4,18 +4,16 @@ import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
-import { ErrorFallback, CoverVideo, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
+import { CoverVideo, ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
+import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
 const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
-const HomeView: React.FC = () => {
-  const {
-    state: { followedChannels },
-  } = usePersonalData()
+export const HomeView: React.FC = () => {
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
@@ -57,6 +55,7 @@ const HomeView: React.FC = () => {
 
 const Container = styled.div`
   position: relative;
+
   & > * {
     margin-bottom: 3rem;
   }
@@ -66,5 +65,3 @@ const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
 `
-
-export default HomeView

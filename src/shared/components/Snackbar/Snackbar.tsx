@@ -1,18 +1,19 @@
-import React, { useRef, useState, useEffect, ReactNode } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
-import { IconButton } from '@/shared/components'
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {
+  SnackbarActionButton,
+  SnackbarButtonsContainer,
+  SnackbarDescription,
+  SnackbarHeader,
+  SnackbarIconContainer,
+  SnackbarTitle,
   SnackbarWrapper,
   StyledInnerWrapper,
-  SnackbarHeader,
-  SnackbarTitle,
-  SnackbarButtonsContainer,
-  SnackbarActionButton,
-  SnackbarDescription,
-  SnackbarIconContainer,
 } from './Snackbar.style'
+
+import { IconButton } from '../IconButton'
 
 export type SnackbarVariant = 'primary' | 'secondary'
 export type SnackbarProps = {
@@ -25,7 +26,7 @@ export type SnackbarProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const Snackbar: React.FC<SnackbarProps> = ({
+export const Snackbar: React.FC<SnackbarProps> = ({
   variant = 'secondary',
   icon,
   title,
@@ -77,5 +78,3 @@ const Snackbar: React.FC<SnackbarProps> = ({
     </SnackbarWrapper>
   )
 }
-
-export default Snackbar

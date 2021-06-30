@@ -3,12 +3,13 @@ import React from 'react'
 
 import { Text } from '@/shared/components'
 import { SvgEmptyStateIllustration } from '@/shared/illustrations'
-import { sizes, colors } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 650px;
   }
@@ -30,7 +31,7 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-const EmptyFallback: React.FC = () => (
+export const EmptyFallback: React.FC = () => (
   <Container>
     <SvgEmptyStateIllustration />
     <Message>
@@ -39,5 +40,3 @@ const EmptyFallback: React.FC = () => (
     </Message>
   </Container>
 )
-
-export default EmptyFallback

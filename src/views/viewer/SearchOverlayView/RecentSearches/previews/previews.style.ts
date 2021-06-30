@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar, Placeholder, Text } from '@/shared/components'
-import { colors, sizes, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 const previewSubtextCss = css`
   margin-top: ${sizes(1)};
@@ -32,11 +32,10 @@ export const StyledChannelAvatar = styled(Avatar)`
 
 export const PreviewContainer = styled(Link)`
   text-decoration: none;
-
   display: inline-flex;
   align-items: center;
-
   margin-bottom: ${sizes(8)};
+
   &:last-child {
     margin-bottom: 0;
   }

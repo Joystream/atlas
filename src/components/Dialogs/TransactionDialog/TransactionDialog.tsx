@@ -3,10 +3,10 @@ import React from 'react'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { Tooltip } from '@/shared/components'
 
-import { TextContainer, StyledTransactionIllustration, StyledSpinner, StepsBar, Step } from './TransactionDialog.style'
+import { Step, StepsBar, StyledSpinner, StyledTransactionIllustration, TextContainer } from './TransactionDialog.style'
 
-import ActionDialog, { ActionDialogProps } from '../ActionDialog/ActionDialog'
-import { StyledTitleText, StyledDescriptionText } from '../MessageDialog/MessageDialog.style'
+import { ActionDialog, ActionDialogProps } from '../ActionDialog/ActionDialog'
+import { StyledDescriptionText, StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
@@ -39,18 +39,17 @@ const TRANSACTION_STEPS_DETAILS = {
   },
 }
 
-const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
+export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
   const stepDetails =
     status != null && status !== ExtrinsicStatus.Error && status !== ExtrinsicStatus.Completed
       ? TRANSACTION_STEPS_DETAILS[status]
       : null
 
-  const canCancel = status === ExtrinsicStatus.ProcessingAssets || ExtrinsicStatus.Unsigned
+  const canCancel = status === ExtrinsicStatus.ProcessingAssets || status === ExtrinsicStatus.Unsigned
 
   const transactionStepsWithoutProcessingAssets = Object.values(TRANSACTION_STEPS_DETAILS).filter(
     (step) => step.title !== TRANSACTION_STEPS_DETAILS[ExtrinsicStatus.ProcessingAssets].title
   )
-
   return (
     <ActionDialog
       showDialog={!!stepDetails}
@@ -61,7 +60,7 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, 
       {...actionDialogProps}
     >
       <StepsBar>
-        {transactionStepsWithoutProcessingAssets.map(({ title, tooltip }, idx) => (
+        {transactionStepsWithoutProcessingAssets.map(({ tooltip }, idx) => (
           <Tooltip key={idx} text={tooltip} placement="top-end">
             <Step isActive={!!status && status > idx} />
           </Tooltip>
@@ -76,5 +75,3 @@ const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, 
     </ActionDialog>
   )
 }
-
-export default TransactionDialog

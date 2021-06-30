@@ -2,40 +2,37 @@ import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { BackgroundPattern } from '@/components'
-import { Text } from '@/shared/components'
-import { SvgGlyphFileImage, SvgGlyphImage, SvgGlyphTrash, SvgLargeUploadFailed } from '@/shared/icons'
+import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
   CoverImage,
-  EditableControls,
-  EditCoverDesktopOverlay,
+  CoverWrapper,
   EditButtonMessage,
+  EditCoverDesktopOverlay,
+  EditCoverMobileButton,
+  EditableControls,
+  FailedUploadContainer,
   Media,
   MediaWrapper,
-  RemoveCoverDesktopButton,
-  CoverWrapper,
-  RemoveCoverMobileButton,
-  EditCoverMobileButton,
-  FailedUploadContainer,
 } from './ChannelCover.style'
 
+import { Text } from '../Text'
+
 export type ChannelCoverProps = {
-  coverPhotoUrl?: string | null
+  assetUrl?: string | null
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
   onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
-  onCoverRemoveClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const ChannelCover: React.FC<ChannelCoverProps> = ({
-  coverPhotoUrl,
+export const ChannelCover: React.FC<ChannelCoverProps> = ({
+  assetUrl,
   hasCoverUploadFailed,
   editable,
   disabled,
   onCoverEditClick,
-  onCoverRemoveClick,
 }) => {
   return (
     <CoverWrapper>
@@ -44,34 +41,22 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgGlyphImage />
-              <EditButtonMessage variant="subtitle2">
-                {`${coverPhotoUrl ? 'Edit ' : 'Add '} cover image`}
-              </EditButtonMessage>
+              <EditButtonMessage variant="subtitle2">{`${assetUrl ? 'Edit ' : 'Add '} cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
               <SvgGlyphFileImage />
             </EditCoverMobileButton>
-            {coverPhotoUrl && (
-              <>
-                <RemoveCoverDesktopButton onClick={onCoverRemoveClick} icon={<SvgGlyphTrash />} variant="tertiary">
-                  Remove cover
-                </RemoveCoverDesktopButton>
-                <RemoveCoverMobileButton onClick={onCoverRemoveClick} variant="tertiary">
-                  <SvgGlyphTrash />
-                </RemoveCoverMobileButton>
-              </>
-            )}
           </EditableControls>
         )}
         <Media>
           <TransitionGroup>
             <CSSTransition
-              key={coverPhotoUrl ? 'cover' : 'pattern'}
+              key={assetUrl ? 'cover' : 'pattern'}
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              {coverPhotoUrl ? (
-                <CoverImage src={coverPhotoUrl} />
+              {assetUrl ? (
+                <CoverImage $src={assetUrl} />
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <SvgLargeUploadFailed />
@@ -89,5 +74,3 @@ const ChannelCover: React.FC<ChannelCoverProps> = ({
     </CoverWrapper>
   )
 }
-
-export default ChannelCover

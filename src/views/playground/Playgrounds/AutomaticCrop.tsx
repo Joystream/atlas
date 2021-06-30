@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button } from '@/shared/components'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { computeFileHash } from '@/utils/hashing'
 
-const AutomaticCrop: React.FC = () => {
+export const AutomaticCrop: React.FC = () => {
   const [cropData, setCropData] = useState<ImageCropData>()
   const [initialHash, setInitialHash] = useState('')
   const [automaticCropHash, setAutomaticCropHash] = useState('')
@@ -44,5 +44,3 @@ const AutomaticCrop: React.FC = () => {
     </>
   )
 }
-
-export default AutomaticCrop

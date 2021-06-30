@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 
-import { transitions, sizes } from '@/shared/theme'
+import { sizes, transitions } from '@/shared/theme'
 
 export const routingTransitions = css`
   .${transitions.names.fadeAndSlide}-enter {
@@ -17,6 +17,7 @@ export const routingTransitions = css`
       transform: translateY(0);
       transition: ${transitions.timings.routing} ${transitions.routingEasing};
     }
+
     transition: ${transitions.timings.routing} ${transitions.routingEasing};
   }
 

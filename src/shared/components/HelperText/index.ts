@@ -1,3 +1,1 @@
-import HelperText from './HelperText'
-
-export default HelperText
+export * from './HelperText'

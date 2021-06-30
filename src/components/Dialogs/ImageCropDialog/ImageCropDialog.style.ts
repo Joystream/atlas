@@ -2,10 +2,10 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Placeholder, Text } from '@/shared/components'
-import Slider from '@/shared/components/Slider'
+import { Slider } from '@/shared/components/Slider'
 import { colors, sizes } from '@/shared/theme'
 
-import ActionDialog from '../ActionDialog'
+import { ActionDialog } from '../ActionDialog'
 
 export const StyledActionDialog = styled(ActionDialog)`
   max-width: 536px;
@@ -59,6 +59,7 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
   ${cropAreaSizeCss};
 
   ${({ rounded }) => rounded && roundedCropperCss};
+
   .cropper-view-box {
     outline: none;
 
@@ -70,7 +71,6 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
       height: 100%;
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
-
       box-shadow: inset 0 0 0 2px ${colors.transparentWhite[32]};
     }
   }
@@ -84,7 +84,6 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
 
 export const StyledImage = styled.img`
   display: block;
-
   max-width: 100%;
 `
 

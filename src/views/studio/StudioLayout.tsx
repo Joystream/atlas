@@ -2,43 +2,41 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import {
-  ViewErrorFallback,
-  StudioTopbar,
-  StudioSidenav,
   NoConnectionIndicator,
-  TOP_NAVBAR_HEIGHT,
-  StudioEntrypoint,
   PrivateRoute,
+  StudioEntrypoint,
   StudioLoading,
+  StudioSidenav,
+  StudioTopbar,
+  TOP_NAVBAR_HEIGHT,
+  ViewErrorFallback,
 } from '@/components'
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
-  JoystreamProvider,
   ActiveUserProvider,
-  DraftsProvider,
-  PersonalDataProvider,
+  ConnectionStatusManager,
   EditVideoSheetProvider,
-  useVideoEditSheetRouting,
-  useConnectionStatus,
-  useUser,
-  UploadManagerProvider,
-  TransactionManagerProvider,
-  DialogProvider,
+  JoystreamProvider,
+  TransactionManager,
+  UploadsManager,
+  useConnectionStatusStore,
   useDialog,
-} from '@/hooks'
-import { isAllowedBrowser } from '@/utils/broswer'
+  useUser,
+  useVideoEditSheetRouting,
+} from '@/providers'
+import { isAllowedBrowser } from '@/utils/browser'
 
 import {
   CreateEditChannelView,
+  CreateMemberView,
   EditVideoSheet,
   MyUploadsView,
   MyVideosView,
-  SignInView,
   SignInJoinView,
-  CreateMemberView,
+  SignInView,
 } from '.'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
@@ -46,7 +44,8 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
-  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
     activeAccountId,
@@ -90,7 +89,7 @@ const StudioLayout = () => {
     <>
       <NoConnectionIndicator
         nodeConnectionStatus={nodeConnectionStatus}
-        isConnectedToInternet={isUserConnectedToInternet}
+        isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
@@ -170,23 +169,16 @@ const StudioLayoutWrapper: React.FC = () => {
         navigate(absoluteRoutes.studio.index())
       }}
     >
-      <DialogProvider>
-        <ActiveUserProvider>
-          <PersonalDataProvider>
-            <UploadManagerProvider>
-              <DraftsProvider>
-                <EditVideoSheetProvider>
-                  <JoystreamProvider>
-                    <TransactionManagerProvider>
-                      <StudioLayout />
-                    </TransactionManagerProvider>
-                  </JoystreamProvider>
-                </EditVideoSheetProvider>
-              </DraftsProvider>
-            </UploadManagerProvider>
-          </PersonalDataProvider>
-        </ActiveUserProvider>
-      </DialogProvider>
+      <ActiveUserProvider>
+        <EditVideoSheetProvider>
+          <JoystreamProvider>
+            <ConnectionStatusManager />
+            <UploadsManager />
+            <TransactionManager />
+            <StudioLayout />
+          </JoystreamProvider>
+        </EditVideoSheetProvider>
+      </ActiveUserProvider>
     </ErrorBoundary>
   )
 }

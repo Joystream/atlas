@@ -1,3 +1,1 @@
-import SignInStepsStepper from './SignInStepsStepper'
-
-export default SignInStepsStepper
+export * from './SignInStepsStepper'

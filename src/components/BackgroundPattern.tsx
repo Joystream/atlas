@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { SvgBgPattern } from '@/shared/illustrations'
-import { zIndex, transitions, media } from '@/shared/theme'
+import { media, transitions, zIndex } from '@/shared/theme'
 
 const PATTERN_OFFSET = {
   SMALL: '-150px',
@@ -37,12 +37,10 @@ const StyledBackgroundPattern = styled(SvgBgPattern)`
   }
 `
 
-const BackgroundPattern: React.FC = () => {
+export const BackgroundPattern: React.FC = () => {
   return (
     <StyledBackgroundPatternContainer>
       <StyledBackgroundPattern />
     </StyledBackgroundPatternContainer>
   )
 }
-
-export default BackgroundPattern

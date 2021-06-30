@@ -26,25 +26,31 @@ export const FormGroup = styled.label<FormGroupProps>`
     padding: 10px ${sizes(4)};
     font-size: ${typography.sizes.body1};
     line-height: 28px;
+
+    :disabled {
+      cursor: not-allowed;
+    }
+
     ::placeholder {
       color: ${colors.gray[300]};
     }
+
     :not(:placeholder-shown) {
       border: 1px solid ${colors.gray[200]};
     }
+
     :focus {
       border: 1px solid ${colors.blue[500]};
     }
+
     :not(:focus) {
       border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
     }
   }
+
   input,
   textarea {
     color: ${colors.gray[50]};
-  }
-  :disabled {
-    cursor: not-allowed;
   }
 `
 

@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import { SvgGlyphUpload } from '@/shared/icons'
 import { SvgTheaterMaskIllustration } from '@/shared/illustrations'
-import { sizes, media, zIndex } from '@/shared/theme'
+import { media, sizes, zIndex } from '@/shared/theme'
 
 export const EmptyUploadsView: React.FC = () => {
   return (

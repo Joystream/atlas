@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
 import { Text } from '@/shared/components'
 import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
-import { colors, sizes, transitions, typography, zIndex, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { TopbarVariant } from './TopbarBase'
 
@@ -23,19 +23,14 @@ export const Header = styled.header<TopNavbarStyleProps>`
   top: 0;
   left: var(--sidenav-collapsed-width);
   right: 0;
-
   z-index: ${zIndex.header};
   min-height: ${TOP_NAVBAR_HEIGHT}px;
   max-height: ${TOP_NAVBAR_HEIGHT}px;
-
   display: flex;
   justify-content: space-between;
-
   border-bottom: 1px solid ${colors.gray[800]};
-
   background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
   transition: background-color 0.4s ${transitions.easing};
-
   padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
   ${media.small} {
@@ -60,6 +55,7 @@ export const LogoLink = styled(Link)`
 
   ${media.medium} {
     padding: 0;
+    padding-left: calc(var(--global-horizontal-padding) - ${sizes(3)});
     margin-left: 2px;
     margin-right: ${sizes(5)};
   }
@@ -96,6 +92,7 @@ export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
 export const LogoContainer = styled.div<LogoContainerProps>`
   margin-left: ${({ variant }) => (variant === 'default' ? sizes(10) : sizes(12))};
   ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
+
   margin-top: ${({ variant }) => (variant === 'default' ? sizes(1) : '0')};
   display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
   align-items: center;

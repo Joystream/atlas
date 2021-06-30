@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks'
-import { Text } from '@/shared/components'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -11,11 +10,11 @@ import {
   SvgGlyphEdit,
   SvgGlyphHide,
   SvgGlyphMore,
+  SvgGlyphPlay,
   SvgGlyphTrash,
   SvgLargeEdit,
-  SvgOutlineVideo,
   SvgLargeUploadFailed,
-  SvgGlyphPlay,
+  SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
@@ -23,38 +22,40 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { PullUp } from './PullUp'
 import {
+  Anchor,
   AvatarContainer,
+  ChannelHandle,
   Container,
   CoverContainer,
-  InfoContainer,
-  MetaContainer,
-  TextContainer,
-  CoverWrapper,
-  ChannelHandle,
   CoverDurationOverlay,
   CoverHoverOverlay,
+  CoverIconWrapper,
   CoverImage,
+  CoverImageContainer,
+  CoverNoImage,
+  CoverPlaceholder,
+  CoverThumbnailUploadFailed,
+  CoverTopLeftContainer,
+  CoverVideoPublishingStateOverlay,
+  CoverWrapper,
+  InfoContainer,
+  KebabMenuIconContainer,
+  MetaContainer,
   MetaText,
   ProgressBar,
   ProgressOverlay,
-  StyledAvatar,
-  TitleHeader,
-  Anchor,
-  CoverPlaceholder,
-  SpacedPlaceholder,
-  CoverImageContainer,
-  CoverVideoPublishingStateOverlay,
-  CoverNoImage,
-  CoverThumbnailUploadFailed,
-  ContextMenuContainer,
-  KebabMenuIconContainer,
-  CoverTopLeftContainer,
-  RemoveButton,
   PublishingStateText,
-  CoverIconWrapper,
+  RemoveButton,
+  SpacedPlaceholder,
+  StyledAvatar,
+  TextContainer,
+  TitleHeader,
+  TitleHeaderAnchor,
 } from './VideoPreviewBase.styles'
 
-import { ContextMenu, ContextMenuItem, Placeholder } from '..'
+import { ContextMenu, ContextMenuItem } from '../ContextMenu'
+import { Placeholder } from '../Placeholder'
+import { Text } from '../Text'
 
 export type VideoPreviewBaseMetaProps = {
   showChannel?: boolean
@@ -120,7 +121,7 @@ const calculateScalingFactor = (videoPreviewWidth: number) =>
   ((videoPreviewWidth - MIN_VIDEO_PREVIEW_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
     (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_PREVIEW_WIDTH)
 
-const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
+export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   title,
   channelTitle,
   channelAvatarUrl,
@@ -210,14 +211,13 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               {isLoading ? (
                 <CoverPlaceholder />
               ) : (
-                <CoverImageContainer>
+                <CoverImageContainer ref={imgRef}>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
-                        ref={imgRef}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
                     ) : hasThumbnailUploadFailed ? (
@@ -289,7 +289,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <StyledAvatar
-                      imageUrl={channelAvatarUrl}
+                      assetUrl={channelAvatarUrl}
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
                     />
@@ -301,7 +301,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               {isLoading ? (
                 <Placeholder height={main ? 45 : 18} width="60%" />
               ) : (
-                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                   <TitleHeader
                     variant="h6"
                     main={main}
@@ -309,9 +309,9 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     onClick={onClick}
                     clickable={clickable}
                   >
-                    {title}
+                    {title || 'Untitled'}
                   </TitleHeader>
-                </Anchor>
+                </TitleHeaderAnchor>
               )}
               {displayChannel &&
                 (isLoading ? (
@@ -344,7 +344,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
               )}
             </TextContainer>
             {publisherMode && !isLoading && (
-              <ContextMenuContainer>
+              <div>
                 <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
@@ -370,7 +370,7 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                     </ContextMenuItem>
                   )}
                 </ContextMenu>
-              </ContextMenuContainer>
+              </div>
             )}
           </InfoContainer>
         </CSSTransition>
@@ -378,5 +378,3 @@ const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
     </Container>
   )
 }
-
-export default VideoPreviewBase

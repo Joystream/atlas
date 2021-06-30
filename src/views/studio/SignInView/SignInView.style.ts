@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { StudioContainer } from '@/components'
-import { Button, Text, Avatar } from '@/shared/components'
-import { sizes, colors, transitions } from '@/shared/theme'
+import { Avatar, Button, Text } from '@/shared/components'
+import { colors, sizes, transitions } from '@/shared/theme'
 
 export const Header = styled.header`
   margin: 0 auto;
@@ -50,11 +50,13 @@ export const CardWrapper = styled.button`
   background-color: ${colors.gray[900]};
   text-decoration: none;
   transition: background-color ${transitions.timings.routing} ${transitions.easing};
+
   &:disabled,
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
   }
+
   :hover {
     background-color: ${colors.gray[800]};
   }

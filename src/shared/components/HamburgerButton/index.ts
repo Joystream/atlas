@@ -1,3 +1,1 @@
-import HamburgerButton from './HamburgerButton'
-
-export default HamburgerButton
+export * from './HamburgerButton'

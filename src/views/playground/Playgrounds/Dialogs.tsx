@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { useDialog } from '@/hooks/useDialog'
+import { useDialog } from '@/providers/dialogs'
 import { Button } from '@/shared/components'
 
-const Dialogs = () => {
+export const Dialogs = () => {
   const [openFirstDialog, closeFirstDialog] = useDialog({
     description: 'This is first dialog',
     title: 'first dialog',
@@ -39,5 +39,3 @@ const Dialogs = () => {
     </div>
   )
 }
-
-export default Dialogs

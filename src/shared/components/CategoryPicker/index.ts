@@ -1,3 +1,1 @@
-import CategoryPicker from './CategoryPicker'
-
-export default CategoryPicker
+export * from './CategoryPicker'

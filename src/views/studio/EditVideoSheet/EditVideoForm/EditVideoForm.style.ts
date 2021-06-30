@@ -1,13 +1,14 @@
 import styled from '@emotion/styled'
 
 import { studioContainerStyle } from '@/components/StudioContainer'
-import { HeaderTextField, Button } from '@/shared/components'
-import { media, sizes, colors } from '@/shared/theme'
+import { Button, HeaderTextField } from '@/shared/components'
+import { colors, media, sizes } from '@/shared/theme'
 
 export const StyledRadioContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   > * + * {
     margin-top: ${sizes(2)};
   }
@@ -18,7 +19,6 @@ export const FormWrapper = styled.form`
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
   overflow-y: auto;
-
   padding: ${sizes(8)} ${sizes(4)};
 
   ${media.small} {
@@ -43,7 +43,6 @@ export const FormWrapper = styled.form`
 export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
-
   padding: ${sizes(4)};
   margin-top: ${sizes(8)};
   ${media.medium} {

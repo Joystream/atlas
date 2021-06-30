@@ -1,10 +1,11 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import CircularProgressbar from '../CircularProgressbar'
-import Text from '../Text'
+import { CircularProgressbar } from '../CircularProgressbar'
+import { Text } from '../Text'
 
 export const Container = styled.div`
   width: 280px;
@@ -54,7 +55,9 @@ export const StepsContainer = styled.div<StepsContainerProps>`
   z-index: 1;
 `
 
-export const StyledSvgGlyphChevronDown = styled(SvgGlyphChevronDown)<StepsContainerProps>`
+export const StyledSvgGlyphChevronDown = styled(SvgGlyphChevronDown, { shouldForwardProp: isPropValid })<
+  StepsContainerProps
+>`
   transform: rotate(${({ isHidden }) => (isHidden ? '-180deg' : '0deg')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 `
@@ -86,8 +89,10 @@ export const Step = styled.div<StepStateProps>`
   align-items: center;
   padding: ${sizes(2)};
   margin-bottom: ${sizes(2)};
+
   :last-of-type {
     position: relative;
+
     ::after {
       bottom: -${sizes(4)};
       position: absolute;

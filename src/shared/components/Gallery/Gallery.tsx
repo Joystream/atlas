@@ -2,15 +2,15 @@ import React from 'react'
 
 import { Container, HeadingContainer } from './Gallery.style'
 
-import Carousel, { CarouselProps } from '../Carousel/Carousel'
-import Text from '../Text'
+import { Carousel, CarouselProps } from '../Carousel/Carousel'
+import { Text } from '../Text'
 
 export type GalleryProps = {
   title?: string
   className?: string
 } & CarouselProps
 
-const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps }) => {
+export const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps }) => {
   return (
     <Container className={className}>
       {title && (
@@ -22,5 +22,3 @@ const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselProps })
     </Container>
   )
 }
-
-export default Gallery

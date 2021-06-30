@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
-import { BasicMembershipFieldsFragment, BasicChannelFieldsFragment } from '@/api/queries'
-import { useUser } from '@/hooks'
+import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import { useUser } from '@/providers'
 import { Button, RadioButton } from '@/shared/components'
 
 const account = 'POLKADOT_ACCOUNT'
 
-const PlaygroundMemberChannel = () => {
+export const PlaygroundMemberChannel = () => {
   const [selectedChannel, setSelectedChannel] = useState<BasicChannelFieldsFragment>()
   const [selectedMember, setSelectedMember] = useState<BasicMembershipFieldsFragment>()
   const [activeUserString, setActiveUserString] = useState('')
@@ -93,5 +93,3 @@ const PlaygroundMemberChannel = () => {
     </>
   )
 }
-
-export default PlaygroundMemberChannel

@@ -1,8 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
 
-import { colors, sizes, transitions, typography, zIndex, media } from '../../theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '../../theme'
 
 type ContainerProps = {
   isInBackground?: boolean
@@ -23,8 +22,8 @@ const backgroundContainerCss = css`
     transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
 
-  .vjs-paused:not(.vjs-has-started) .vjs-poster,
-  .vjs-ended .vjs-poster {
+  .vjs-ended .vjs-poster,
+  .vjs-paused:not(.vjs-has-started) .vjs-poster {
     opacity: 1;
   }
 `
@@ -32,6 +31,7 @@ const backgroundContainerCss = css`
 export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
+
   *:focus {
     outline: none;
   }
@@ -39,6 +39,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-poster {
     background-size: cover;
   }
+
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background: none;
@@ -67,25 +68,31 @@ export const Container = styled.div<ContainerProps>`
       user-select: none;
       height: unset;
     }
+
     .vjs-play-control {
       order: -5;
     }
+
     .vjs-current-time {
       order: -4;
       padding-right: 0;
     }
+
     .vjs-time-divider {
       order: -3;
       padding: 0 4px;
       min-width: 0;
     }
+
     .vjs-duration {
       order: -2;
       padding-left: 0;
     }
+
     .vjs-volume-panel {
       order: -1;
     }
+
     .vjs-remaining-time {
       display: none;
     }
@@ -98,8 +105,20 @@ export const Container = styled.div<ContainerProps>`
         margin-left: auto;
       }
     }
+
     .vjs-fullscreen-control {
+      margin-left: auto;
       ${media.small} {
+        margin-left: 0;
+      }
+    }
+
+    /* 
+  Targeting firefox, picture-in-picture in firefox is not placed in the bar,
+  thus we need margin-left to move button to the right side
+   */
+    @-moz-document url-prefix() {
+      .vjs-fullscreen-control {
         margin-left: auto;
       }
     }
@@ -137,6 +156,7 @@ export const Container = styled.div<ContainerProps>`
           .vjs-time-tooltip {
             display: none;
           }
+
           ::before {
             position: absolute;
             top: -5px;
@@ -166,13 +186,16 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-volume-control {
       width: 72px !important;
+
       .vjs-volume-bar {
         width: 72px;
         margin-left: 0;
         margin-right: 0;
         height: 4px;
+
         .vjs-volume-level {
           height: 4px;
+
           ::before {
             font-size: ${typography.sizes.icon.small};
             top: -0.25em;
@@ -185,15 +208,6 @@ export const Container = styled.div<ContainerProps>`
   .vjs-big-play-button {
     display: none !important;
   }
-  /* 
-  Targeting firefox, picture-in-picture in firefox is not placed in the bar,
-  thus we need margin-left to move button to the right side
-   */
-  @-moz-document url-prefix() {
-    .vjs-fullscreen-control {
-      margin-left: auto;
-    }
-  }
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
@@ -205,12 +219,9 @@ export const PlayOverlay = styled.div`
   bottom: 0;
   left: 0;
   z-index: ${zIndex.overlay};
-
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   cursor: pointer;
 `

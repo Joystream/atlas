@@ -5,13 +5,12 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { ViewerSidenav, ViewErrorFallback, ViewerTopbar, TOP_NAVBAR_HEIGHT } from '@/components'
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import { PersonalDataProvider } from '@/hooks'
+import { TOP_NAVBAR_HEIGHT, ViewErrorFallback, ViewerSidenav, ViewerTopbar } from '@/components'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 
-import { ChannelsView, ChannelView, HomeView, SearchOverlayView, VideosView, VideoView } from '.'
+import { ChannelView, ChannelsView, HomeView, SearchOverlayView, VideoView, VideosView } from '.'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
@@ -21,7 +20,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
 ]
 
-const ViewerLayout: React.FC = () => {
+export const ViewerLayout: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: absoluteRoutes.viewer.search() })
@@ -52,7 +51,7 @@ const ViewerLayout: React.FC = () => {
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (
-    <PersonalDataProvider>
+    <>
       <ViewerTopbar />
       <ViewerSidenav />
       <MainContainer>
@@ -86,7 +85,7 @@ const ViewerLayout: React.FC = () => {
           </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
-    </PersonalDataProvider>
+    </>
   )
 }
 
@@ -95,5 +94,3 @@ const MainContainer = styled.main`
   padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
   margin-left: var(--sidenav-collapsed-width);
 `
-
-export default ViewerLayout

@@ -1,3 +1,1 @@
-import SignInProcessView from './SignInProcessView'
-
-export default SignInProcessView
+export * from './SignInProcessView'

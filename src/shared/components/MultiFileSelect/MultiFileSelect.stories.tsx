@@ -1,9 +1,9 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { OverlayManagerProvider } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
 
-import MultiFileSelect, { MultiFileSelectProps, InputFilesState } from './MultiFileSelect'
+import { InputFilesState, MultiFileSelect, MultiFileSelectProps } from './MultiFileSelect'
 
 export default {
   title: 'Shared/M/MultiFileSelect',

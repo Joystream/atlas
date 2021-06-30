@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button, Text } from '@/shared/components'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgEmptyVideosIllustration, SvgTheaterMaskIllustration } from '@/shared/illustrations'
-import { sizes, colors, media } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {
@@ -38,7 +38,6 @@ const StyledWEmptyIllustration = styled(SvgEmptyVideosIllustration)`
   margin: 0 auto;
   grid-row-start: 1;
   width: 100%;
-
   max-height: 50vh;
   max-width: 75vw;
 
@@ -112,6 +111,7 @@ export const EmptyVideos: React.FC<{ text: string }> = ({ text }) => {
 const Container = styled.div`
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 100%;
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { HelperTextsWrapper, StyledHelperText, HelperTextCount } from './HelperText.style'
+import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.style'
 
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -20,7 +20,7 @@ export type HelperTextProps = {
   className?: string
 }
 
-const HelperText: React.FC<HelperTextProps> = ({
+export const HelperText: React.FC<HelperTextProps> = ({
   maxLength,
   warning,
   error,
@@ -60,5 +60,3 @@ const HelperText: React.FC<HelperTextProps> = ({
     </HelperTextsWrapper>
   )
 }
-
-export default HelperText

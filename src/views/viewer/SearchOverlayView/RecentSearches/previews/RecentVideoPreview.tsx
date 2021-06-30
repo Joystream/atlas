@@ -3,30 +3,28 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 
 import {
-  PreviewSubtextPlaceholder,
   PreviewContainer,
+  PreviewSubtext,
+  PreviewSubtextPlaceholder,
+  PreviewTitlePlaceholder,
   VideoImage,
   VideoImagePlaceholder,
-  PreviewTitlePlaceholder,
-  PreviewSubtext,
 } from './previews.style'
 
 type RecentVideoPreviewProps = {
   video?: VideoFieldsFragment
 }
 
-const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
-  const { getAssetUrl } = useAsset()
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
+export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
 
   return (
     <PreviewContainer to={absoluteRoutes.viewer.video(video?.id)}>
@@ -37,7 +35,7 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={thumbnailPhotoUrl} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={thumbnailPhotoUrl ?? undefined} /> : <VideoImagePlaceholder />}
             <div>
               {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
               {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}
@@ -48,5 +46,3 @@ const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
     </PreviewContainer>
   )
 }
-
-export default RecentVideoPreview

@@ -2,42 +2,42 @@ import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useUser } from '@/hooks'
+import { useUser } from '@/providers'
 import { Text } from '@/shared/components'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  StyledSpinner,
-  AccountStepImg,
-  AccountsWrapper,
-  AccountWrapper,
-  AccountInfo,
-  IconWrapper,
-  OrderedSteps,
-  OrderedStep,
-  IconGroup,
   AccountAddress,
-  StyledRadioButton,
+  AccountInfo,
+  AccountStepImg,
+  AccountWrapper,
+  AccountsWrapper,
+  IconGroup,
+  IconWrapper,
+  OrderedStep,
+  OrderedSteps,
   StyledButton,
-  SubTitle,
+  StyledRadioButton,
+  StyledSpinner,
   StyledStepWrapper,
+  SubTitle,
 } from './AccountStep.style'
 import {
-  StepFooter,
   BottomBarIcon,
+  StepFooter,
   StepSubTitle,
   StepTitle,
   StepWrapper,
-  StyledPolkadotLogo,
   StyledJoystreamLogo,
+  StyledPolkadotLogo,
 } from './SignInSteps.style'
 
 type AccountStepProps = {
   nextStepPath: string
 }
 
-const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
+export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
@@ -135,7 +135,7 @@ export type AccountBarProps = {
   selectedValue?: string
 }
 
-const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
+export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
   return (
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
@@ -153,5 +153,3 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     </AccountWrapper>
   )
 }
-
-export default AccountStep

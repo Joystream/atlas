@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { Button, Text } from '@/shared/components'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { AssetDimensions } from '@/types/cropper'
 import { formatBytes } from '@/utils/size'
 
 const LARGE_FILE_IMAGES = [
@@ -42,6 +42,7 @@ const LARGE_WIDTH_HEIGHT_IMAGES = [
 const StyledLink = styled.a`
   text-decoration: none;
   color: white;
+
   :hover {
     opacity: 0.8;
   }
@@ -56,7 +57,7 @@ const StyledImg = styled.img`
   display: block;
 `
 
-const ImageDownsizing = () => {
+export const ImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarImgRef = useRef<HTMLImageElement | null>(null)
@@ -112,12 +113,7 @@ const ImageDownsizing = () => {
     })
   }, [coverSizes])
 
-  const handleConfirmAvatar = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
-  ) => {
+  const handleConfirmAvatar = (croppedBlob: Blob, croppedUrl: string, assetDimensions: AssetDimensions) => {
     setAvatarUrl(croppedUrl)
     setAvatarSizes({
       ...avatarSizes,
@@ -126,12 +122,7 @@ const ImageDownsizing = () => {
     })
   }
 
-  const handleConfirmCover = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
-  ) => {
+  const handleConfirmCover = (croppedBlob: Blob, croppedUrl: string, assetDimensions: AssetDimensions) => {
     setCoverUrl(croppedUrl)
     setCoverSizes({
       ...coverSizes,
@@ -199,5 +190,3 @@ const ImageDownsizing = () => {
     </div>
   )
 }
-
-export default ImageDownsizing

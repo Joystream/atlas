@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 
-import { Button, Text } from '@/shared/components'
 import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { SnackbarVariant } from './Snackbar'
+
+import { Button } from '../Button'
+import { Text } from '../Text'
 
 type SnackbarWrapperProps = {
   colorVariant?: SnackbarVariant
@@ -25,37 +27,39 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
+
   &.snackbar-enter {
     transform: translateY(500px) translateX(0);
     height: 0;
     margin-bottom: 0;
   }
+
   &.snackbar-enter-active,
   &.snackbar-enter-done {
     transform: translateY(0) translateX(0);
     height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: ${sizes(3)};
   }
+
   &.snackbar-exit {
     transform: translateY(0) translateX(0);
     height: ${({ snackbarHeight }) => snackbarHeight && snackbarHeight}px;
     margin-bottom: ${sizes(3)};
   }
+
   &.snackbar-exit-active {
     transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
+    transition: transform ${transitions.timings.regular} ${transitions.easing},
+      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
+      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
 
   &.snackbar-enter-active {
     transition: height ${transitions.timings.regular} ${transitions.easing},
       margin-bottom ${transitions.timings.regular} ${transitions.easing},
       transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
-  }
-  &.snackbar-exit-active {
-    transition: transform ${transitions.timings.regular} ${transitions.easing},
-      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
   }
 `
 
@@ -93,7 +97,6 @@ export const SnackbarActionButton = styled(Button)`
   align-items: center;
   padding: ${sizes(2)};
   min-width: auto;
-  font-size: ${sizes(3)};
   margin-right: ${sizes(2)};
   font-size: ${typography.sizes.body1};
 `

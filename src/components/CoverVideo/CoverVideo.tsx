@@ -3,40 +3,43 @@ import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
+  ButtonsContainer,
   Container,
+  ControlsContainer,
   HorizontalGradientOverlay,
   InfoContainer,
   Media,
   MediaWrapper,
   PlayButton,
   PlayerContainer,
+  PlayerPlaceholder,
   SoundButton,
   StyledChannelLink,
-  TitleContainer,
-  VerticalGradientOverlay,
   Title,
+  TitleContainer,
   TitlePlaceholder,
-  PlayerPlaceholder,
-  ControlsContainer,
-  ButtonsContainer,
+  VerticalGradientOverlay,
 } from './CoverVideo.style'
 import { useCoverVideo } from './coverVideoData'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
-const CoverVideo: React.FC = () => {
+export const CoverVideo: React.FC = () => {
   const coverVideo = useCoverVideo()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [displayControls, setDisplayControls] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
-  const { getAssetUrl } = useAsset()
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: coverVideo?.video,
+    assetType: AssetType.THUMBNAIL,
+  })
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
@@ -60,12 +63,6 @@ const CoverVideo: React.FC = () => {
   const handlePause = () => {
     setVideoPlaying(false)
   }
-
-  const thumbnailPhotoUrl = getAssetUrl(
-    coverVideo?.video?.thumbnailPhotoAvailability,
-    coverVideo?.video?.thumbnailPhotoUrls,
-    coverVideo?.video?.thumbnailPhotoDataObject
-  )
 
   return (
     <Container>
@@ -141,5 +138,3 @@ const CoverVideo: React.FC = () => {
     </Container>
   )
 }
-
-export default CoverVideo

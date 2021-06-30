@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/shared/components'
-import { media, sizes, colors, typography } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 type ButtonProps = {
   error?: boolean
@@ -35,7 +35,6 @@ export const ButtonsContainer = styled.div`
 export const ActionsContainer = styled.div`
   display: flex;
   flex-direction: column;
-
   padding-top: ${sizes(6)};
 
   ${media.small} {
@@ -78,12 +77,14 @@ const buttonColorsFromProps = ({ error, warning }: ButtonProps) => {
     color: ${color};
     background-color: ${bgColor};
     border-color: ${borderColor};
+
     &:hover {
       color: ${color};
       background-color: ${bgColor};
       border-color: ${borderColor};
       box-shadow: none;
     }
+
     &:active {
       color: ${color};
       background-color: ${bgActiveColor};

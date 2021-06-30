@@ -9,13 +9,11 @@ type ChannelAvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
-const ChannelAvatar: React.FC<ChannelAvatarProps> = ({ title, avatarUrl, className, onClick }) => {
+export const ChannelAvatar: React.FC<ChannelAvatarProps> = ({ title, avatarUrl, className, onClick }) => {
   return (
     <Container className={className} onClick={onClick}>
-      <StyledAvatar imageUrl={avatarUrl} />
+      <StyledAvatar assetUrl={avatarUrl} />
       <Name>{title}</Name>
     </Container>
   )
 }
-
-export default ChannelAvatar

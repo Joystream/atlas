@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
+import { ChannelLink } from '@/components'
 import { Text } from '@/shared/components'
-import { sizes, colors, typography } from '@/shared/theme'
+import { colors, sizes, typography } from '@/shared/theme'
 
-import ChannelLink from '../../ChannelLink'
-import { NAVBAR_LEFT_PADDING, EXPANDED_SIDENAVBAR_WIDTH } from '../SidenavBase.style'
+import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase.style'
 
 export const FollowedChannelsWrapper = styled.div`
   display: grid;
@@ -16,9 +16,7 @@ export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
-
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-
   color: ${colors.gray[300]};
 `
 export const ChannelsWrapper = styled.div`
@@ -49,11 +47,9 @@ export const ChannelsItem = styled.li`
 export const ShowMoreButton = styled.button`
   border: none;
   background: none;
-
   font-family: ${typography.fonts.base};
   font-size: 1rem;
   font-weight: bold;
-
   cursor: pointer;
   padding: ${sizes(5)} 0;
   display: flex;

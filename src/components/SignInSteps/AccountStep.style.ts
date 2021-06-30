@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { Button, Text, RadioButton } from '@/shared/components'
-import Spinner from '@/shared/components/Spinner'
+import { Button, RadioButton, Text } from '@/shared/components'
+import { Spinner } from '@/shared/components/Spinner'
 import { SvgAccountCreationIllustration } from '@/shared/illustrations'
-import { sizes, colors, typography, transitions, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { StepWrapper } from './SignInSteps.style'
 
@@ -22,6 +22,7 @@ export const StyledSpinner = styled(Spinner)`
 export const IconGroup = styled.div`
   display: flex;
   align-items: center;
+
   > * {
     margin: 0 ${sizes(2)};
   }
@@ -54,6 +55,7 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
     background-color ${transitions.timings.sharp} ${transitions.easing};
+
   :hover {
     border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : colors.gray[50])};
     background-color: ${colors.transparentPrimary[12]};
@@ -86,7 +88,6 @@ export const AccountAddress = styled(Text)`
 `
 
 export const StyledRadioButton = styled(RadioButton)`
-  display: block;
   align-self: center;
   margin: 0;
   margin-right: 20px;
@@ -118,6 +119,7 @@ export const OrderedStep = styled(Text)`
   align-items: center;
   max-width: 170px;
   flex-direction: column;
+
   ::before {
     margin-bottom: ${sizes(2)};
     content: '0' counter(ordered-list-counter);

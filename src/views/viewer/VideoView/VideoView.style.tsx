@@ -3,7 +3,7 @@ import { fluidRange } from 'polished'
 
 import { ViewWrapper } from '@/components'
 import { Placeholder, Text } from '@/shared/components'
-import { sizes, colors, typography, breakpoints, media } from '@/shared/theme'
+import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
@@ -84,10 +84,12 @@ export const LicenseContainer = styled.div`
   color: ${colors.gray[500]};
   letter-spacing: 0.03rem;
   line-height: 1.7;
+
   p {
     max-width: 60ch;
     margin: 0;
   }
+
   a {
     text-decoration: none;
     color: ${colors.gray[500]};

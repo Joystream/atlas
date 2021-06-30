@@ -1,11 +1,13 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
-import { SnackbarProvider, useSnackbar, DisplaySnackbarArgs } from '@/hooks/useSnackbar/useSnackbar'
+import { Snackbars, useSnackbar } from '@/providers/snackbars'
+import { DisplaySnackbarArgs } from '@/providers/snackbars/store'
 
-import Snackbar from './Snackbar'
+import { Snackbar } from './Snackbar'
 
-import Button from '../Button'
+import { Button } from '../Button'
 
 export default {
   title: 'Shared/S/Snackbar',
@@ -26,9 +28,12 @@ export default {
   },
   decorators: [
     (Story) => (
-      <SnackbarProvider>
-        <Story />
-      </SnackbarProvider>
+      <>
+        <BrowserRouter>
+          <Story />
+          <Snackbars />
+        </BrowserRouter>
+      </>
     ),
   ],
 } as Meta

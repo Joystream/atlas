@@ -4,7 +4,7 @@ import React from 'react'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Grid } from '@/shared/components'
 
-import ChannelPreview from './ChannelPreview'
+import { ChannelPreview } from './ChannelPreview'
 
 const StyledChannelPreview = styled(ChannelPreview)`
   margin: 0 auto;
@@ -15,7 +15,7 @@ type ChannelGridProps = {
   onChannelClick?: (id: string) => void
 } & React.ComponentProps<typeof Grid>
 
-const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...gridProps }) => {
+export const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...gridProps }) => {
   const handleClick = (id: string) => {
     if (onChannelClick) {
       onChannelClick(id)
@@ -30,4 +30,3 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...
     </Grid>
   )
 }
-export default ChannelGrid

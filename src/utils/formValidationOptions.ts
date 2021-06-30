@@ -1,15 +1,5 @@
 import { isValid } from 'date-fns'
-import { ValidationRule, Message, Validate } from 'react-hook-form'
-
-type RegisterOptions = Partial<{
-  required: Message | ValidationRule<boolean>
-  min: ValidationRule<number | string>
-  max: ValidationRule<number | string>
-  maxLength: ValidationRule<number | string>
-  minLength: ValidationRule<number | string>
-  pattern: ValidationRule<RegExp>
-  validate: Validate | Record<string, Validate>
-}>
+import { RegisterOptions, Validate } from 'react-hook-form'
 
 type TextValidationArgs = {
   name: string
@@ -18,7 +8,7 @@ type TextValidationArgs = {
   required?: boolean
   pattern?: RegExp
   patternMessage?: string
-  validate?: Validate
+  validate?: Validate<string>
 }
 
 export const textFieldValidation = ({
@@ -61,7 +51,7 @@ export const requiredValidation: (name: string) => RegisterOptions = (name) => (
 })
 
 // Validates DD/MM/YYYY formatted dates
-export const pastDateValidation = (date: Date, required = false) => {
+export const pastDateValidation = (date: Date | null, required = false) => {
   if (!date) return !required
 
   if (!isValid(date)) return false

@@ -1,21 +1,22 @@
 import styled from '@emotion/styled'
 import { isValid } from 'date-fns'
 import React from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import {
-  Button as _Button,
-  FormField,
-  TextField,
-  Select,
   Checkbox,
-  TextArea,
-  HeaderTextField,
   Datepicker,
+  FormField,
+  HeaderTextField,
   RadioButton,
+  Select,
+  TextArea,
+  TextField,
+  Button as _Button,
 } from '@/shared/components'
 import { SelectItem } from '@/shared/components/Select'
 import { textFieldValidation } from '@/utils/formValidationOptions'
+import { Logger } from '@/utils/logger'
 
 const items: SelectItem<boolean>[] = [
   { name: 'Public (Anyone can see this video', value: true },
@@ -32,8 +33,16 @@ type Inputs = {
   radioGroup: string
 }
 
-const PlaygroundValidationForm = () => {
-  const { register, handleSubmit, control, setValue, reset, clearErrors, errors } = useForm<Inputs>({
+export const PlaygroundValidationForm = () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       title: '',
@@ -47,7 +56,7 @@ const PlaygroundValidationForm = () => {
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    Logger.log('Playground validation form data:', data)
     reset()
   })
 
@@ -55,8 +64,7 @@ const PlaygroundValidationForm = () => {
     <>
       <form onSubmit={onSubmit}>
         <HeaderTextField
-          name="header"
-          ref={register(textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
+          {...register('header', textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
           value="Lorem ipsum"
           error={!!errors.header}
           helperText={errors.header?.message}
@@ -64,9 +72,8 @@ const PlaygroundValidationForm = () => {
 
         <FormField title="Title" description="Lorem ipsum dolor sit amet">
           <TextField
-            name="title"
             label="Title"
-            ref={register(textFieldValidation({ name: 'Title', minLength: 3, maxLength: 20 }))}
+            {...register('title', textFieldValidation({ name: 'Title', minLength: 3, maxLength: 20 }))}
             error={!!errors.title}
             helperText={errors.title?.message}
           />
@@ -76,8 +83,8 @@ const PlaygroundValidationForm = () => {
           <Controller
             name="selectedVideoVisibility"
             control={control}
-            rules={{ validate: (data) => data === true || data === false }}
-            render={({ value, onChange }) => (
+            rules={{ validate: (data) => data !== null }}
+            render={({ field: { value, onChange } }) => (
               <Select
                 items={items}
                 onChange={onChange}
@@ -91,13 +98,17 @@ const PlaygroundValidationForm = () => {
         <FormField title="Marketing" description="Lorem ipsum dolor sit amet.">
           <StyledCheckboxContainer>
             <Controller
-              as={Checkbox}
               name="check"
               rules={{ required: true }}
-              error={!!errors.check}
               control={control}
-              value={false}
-              label="My video features a paid promotion material"
+              render={({ field: { value, onChange } }) => (
+                <Checkbox
+                  value={value}
+                  error={!!errors.check}
+                  label="My video features a paid promotion material"
+                  onChange={onChange}
+                />
+              )}
             />
           </StyledCheckboxContainer>
         </FormField>
@@ -122,7 +133,7 @@ const PlaygroundValidationForm = () => {
             name="radioGroup"
             control={control}
             rules={{ required: true }}
-            render={(props) => (
+            render={({ field: { value } }) => (
               <StyledRadioContainer>
                 <RadioButton
                   value="all"
@@ -131,7 +142,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selectedValue={props.value}
+                  selectedValue={value}
                   error={!!errors.radioGroup}
                 />
                 <RadioButton
@@ -141,7 +152,7 @@ const PlaygroundValidationForm = () => {
                     clearErrors('radioGroup')
                     setValue('radioGroup', e.currentTarget.value)
                   }}
-                  selectedValue={props.value}
+                  selectedValue={value}
                   error={!!errors.radioGroup}
                 />
               </StyledRadioContainer>
@@ -151,8 +162,7 @@ const PlaygroundValidationForm = () => {
 
         <FormField title="Description">
           <TextArea
-            name="textarea"
-            ref={register(textFieldValidation({ name: 'Description', minLength: 3, maxLength: 20 }))}
+            {...register('textarea', textFieldValidation({ name: 'Description', minLength: 3, maxLength: 20 }))}
             maxLength={20}
             error={!!errors.textarea}
             helperText={errors.textarea?.message}
@@ -172,6 +182,7 @@ const Button = styled(_Button)`
 const StyledCheckboxContainer = styled.div`
   display: flex;
   margin-bottom: 50px;
+
   p {
     margin-left: 20px;
   }
@@ -182,5 +193,3 @@ const StyledRadioContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
 `
-
-export default PlaygroundValidationForm

@@ -3,8 +3,9 @@ import React from 'react'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
-import Avatar, { AvatarSize } from '@/shared/components/Avatar'
+import { AssetType, useAsset } from '@/providers'
+import { Avatar, AvatarSize } from '@/shared/components/Avatar'
+import { Logger } from '@/utils/logger'
 
 import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 
@@ -20,7 +21,7 @@ type ChannelLinkProps = {
   onNotFound?: () => void
 }
 
-const ChannelLink: React.FC<ChannelLinkProps> = ({
+export const ChannelLink: React.FC<ChannelLinkProps> = ({
   id,
   hideHandle,
   hideAvatar,
@@ -33,21 +34,18 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => console.error('Failed to fetch channel', error),
+    onError: (error) => Logger.error('Failed to fetch channel', error),
   })
-  const { getAssetUrl } = useAsset()
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.AVATAR,
+  })
 
   const displayedChannel = overrideChannel || channel
 
-  const avatarPhotoUrl = getAssetUrl(
-    displayedChannel?.avatarPhotoAvailability,
-    displayedChannel?.avatarPhotoUrls,
-    displayedChannel?.avatarPhotoDataObject
-  )
-
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && <Avatar imageUrl={avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />}
+      {!hideAvatar && <Avatar loading={!displayedChannel} size={avatarSize} assetUrl={avatarPhotoUrl} />}
       {!hideHandle &&
         (displayedChannel ? (
           <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
@@ -57,5 +55,3 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
     </Container>
   )
 }
-
-export default ChannelLink

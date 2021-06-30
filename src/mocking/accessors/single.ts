@@ -1,4 +1,4 @@
-import { VideoWhereUniqueInput, MembershipWhereUniqueInput } from '@/api/queries'
+import { MembershipWhereUniqueInput, VideoWhereUniqueInput } from '@/api/queries'
 
 import { FilteringArgs, HasId } from '../types'
 

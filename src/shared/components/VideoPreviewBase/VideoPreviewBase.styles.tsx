@@ -1,15 +1,14 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { fluidRange, transparentize } from 'polished'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { colors, sizes, transitions, typography, media } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
-import Avatar from '../Avatar'
-import IconButton from '../IconButton'
-import Placeholder from '../Placeholder'
-import Text from '../Text'
+import { Avatar } from '../Avatar'
+import { IconButton } from '../IconButton'
+import { Placeholder } from '../Placeholder'
+import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -57,6 +56,7 @@ export const CoverContainer = styled.div<ClickableProps>`
   padding-top: 56.25%;
   transition: all ${transitions.timings.regular} ${transitions.easing};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+
   :hover {
     ${(props) => clickableAnimation(props.clickable)}
   }
@@ -73,10 +73,15 @@ export const Anchor = styled(Link)`
   color: inherit;
 `
 
+export const TitleHeaderAnchor = styled(Link)`
+  all: unset;
+  color: inherit;
+  display: grid;
+`
+
 export const Container = styled.article<MainProps>`
   width: 100%;
   color: ${colors.gray[300]};
-
   display: inline-flex;
   flex-direction: column;
   ${({ main }) => main && mainContainerCss}
@@ -109,9 +114,11 @@ export const TextContainer = styled.div`
 
 type MetaContainerProps = { noMarginTop: boolean } & MainProps
 export const MetaContainer = styled.div<MetaContainerProps>`
-  margin-top: ${sizes(2)};
-  margin-top: ${({ noMarginTop }) => noMarginTop && 0};
-  margin-top: ${({ main }) => main && sizes(3)};
+  margin-top: ${({ noMarginTop, main }) => {
+    if (noMarginTop) return 0
+    if (main) return sizes(3)
+    return sizes(2)
+  }};
   width: 100%;
 `
 
@@ -156,12 +163,9 @@ export const CoverHoverOverlay = styled.div`
   bottom: 0;
   left: 0;
   opacity: 0;
-
   transition: opacity ${transitions.timings.regular} ${transitions.easing};
-
   border: ${HOVER_BORDER_SIZE} solid ${colors.white};
-  background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
-
+  background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -202,10 +206,8 @@ export const CoverVideoPublishingStateOverlay = styled.div`
   bottom: ${sizes(2)};
   left: ${sizes(2)};
   padding: ${sizes(1)} ${sizes(2)};
-
   display: flex;
   align-items: center;
-
   background-color: ${colors.gray['900']};
   opacity: 0.7;
 `
@@ -235,10 +237,14 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   font-weight: ${typography.weights.bold};
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
+
   line-height: ${({ main }) => (main ? 1 : 1.25)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
@@ -249,7 +255,7 @@ export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
 
 export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
   font-size: ${({ main, scalingFactor }) =>
-    main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2})`};
+    main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2}) `};
 `
 
 export const SpacedPlaceholder = styled(Placeholder)`
@@ -288,8 +294,7 @@ export const KebabMenuIconContainer = styled.div`
     path:not([fill='none']) {
       fill: ${colors.white};
     }
+
     background-color: ${transparentize(1 - 0.06, colors.white)};
   }
 `
-
-export const ContextMenuContainer = styled.div``

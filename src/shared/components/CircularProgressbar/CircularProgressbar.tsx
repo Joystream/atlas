@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { SVG, Background, Trail, StyledPath } from './CircularProgressbar.style'
+import { Background, SVG, StyledPath, Trail } from './CircularProgressbar.style'
 
 export const VIEWBOX_WIDTH = 100
 export const VIEWBOX_HEIGHT = 100
@@ -20,7 +20,7 @@ export type CircularProgressbarProps = {
   className?: string
 }
 
-const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
+export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
   value,
   background = false,
   backgroundPadding = 0,
@@ -62,5 +62,3 @@ const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
     </>
   )
 }
-
-export default CircularProgressbar

@@ -1,1 +1,1 @@
-export { default as AssetLine } from './AssetLine'
+export { AssetLine } from './AssetLine'

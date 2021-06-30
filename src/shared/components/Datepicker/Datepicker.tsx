@@ -2,13 +2,13 @@ import { format, isValid, parse } from 'date-fns'
 import React, { forwardRef, useEffect, useState } from 'react'
 import NumberFormat from 'react-number-format'
 
-import TextField from '../TextField'
+import { TextField } from '../TextField'
 
 const DATE_FORMAT = 'dd/MM/yyyy'
 
 export type DatepickerProps = {
   name?: string
-  value?: Date
+  value?: Date | null
   required?: boolean
   error?: boolean
   disabled?: boolean
@@ -58,8 +58,6 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
   )
 }
 
-const Datepicker = forwardRef(DatepickerComponent)
+export const Datepicker = forwardRef(DatepickerComponent)
 
 Datepicker.displayName = 'Datepicker'
-
-export default Datepicker

@@ -12,7 +12,7 @@ export type LinkProps = {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
-const Link: React.FC<LinkProps> = ({ to = '', disabled = false, replace = false, ref, children, className }) => {
+export const Link: React.FC<LinkProps> = ({ to = '', disabled = false, replace = false, ref, children, className }) => {
   if (disabled) return <DisabledLabel>{children}</DisabledLabel>
   return (
     <StyledLink to={to} className={className} replace={replace} ref={ref}>
@@ -20,5 +20,3 @@ const Link: React.FC<LinkProps> = ({ to = '', disabled = false, replace = false,
     </StyledLink>
   )
 }
-
-export default Link

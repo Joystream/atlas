@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import FileStep, { FileStepProps } from './FileStep'
+import { FileStep, FileStepProps } from './FileStep'
 
 export default {
   title: 'Shared/F/FileStep',

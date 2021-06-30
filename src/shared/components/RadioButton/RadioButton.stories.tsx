@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import RadioButton from './RadioButton'
+import { RadioButton } from './RadioButton'
 
 export default {
   title: 'Shared/R/RadioButton',

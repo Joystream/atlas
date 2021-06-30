@@ -8,17 +8,17 @@ import {
   AvatarContainer,
   Info,
   InnerContainer,
-  NameHeader,
   OuterContainer,
   StyledAvatar,
+  TextBase,
   VideoCount,
   VideoCountContainer,
 } from './ChannelPreviewBase.style'
 
-import Placeholder from '../Placeholder'
+import { Placeholder } from '../Placeholder'
 
 export type ChannelPreviewBaseProps = {
-  avatarUrl?: string | null
+  assetUrl?: string | null
   title?: string | null
   videoCount?: number
   channelHref?: string
@@ -27,8 +27,8 @@ export type ChannelPreviewBaseProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
-  avatarUrl,
+export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
+  assetUrl,
   title,
   videoCount,
   loading = true,
@@ -57,13 +57,13 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
           >
             <InnerContainer animated={isAnimated}>
               <AvatarContainer>
-                {loading ? <Placeholder rounded /> : <StyledAvatar imageUrl={avatarUrl} />}
+                {loading ? <Placeholder rounded /> : <StyledAvatar assetUrl={assetUrl} />}
               </AvatarContainer>
               <Info>
                 {loading ? (
                   <Placeholder width="140px" height="16px" />
                 ) : (
-                  <NameHeader variant="h6">{title || '\u00A0'}</NameHeader>
+                  <TextBase variant="h6">{title || '\u00A0'}</TextBase>
                 )}
                 <VideoCountContainer>
                   {loading ? (
@@ -86,5 +86,3 @@ const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
     </OuterContainer>
   )
 }
-
-export default ChannelPreviewBase

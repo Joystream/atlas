@@ -1,3 +1,1 @@
-import MyUploadsView from './MyUploadsView'
-
-export default MyUploadsView
+export * from './MyUploadsView'

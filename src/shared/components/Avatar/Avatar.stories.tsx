@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import Avatar, { AvatarProps } from './Avatar'
+import { Avatar, AvatarProps } from './Avatar'
 
 export default {
   title: 'Shared/A/Avatar',
@@ -20,5 +20,5 @@ export const Default = Template.bind({})
 
 export const WithAvatar = Template.bind({})
 WithAvatar.args = {
-  imageUrl: 'https://picsum.photos/200/300',
+  assetUrl: 'https://picsum.photos/200/300',
 }

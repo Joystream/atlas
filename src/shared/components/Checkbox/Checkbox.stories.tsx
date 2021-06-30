@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import Checkbox, { CheckboxProps } from './Checkbox'
+import { Checkbox, CheckboxProps } from './Checkbox'
 
 import { WithValue } from '../../../../.storybook/WithValue'
 

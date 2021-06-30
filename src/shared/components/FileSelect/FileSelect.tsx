@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgGlyphClose, SvgAlertError, SvgLargeUploadImage, SvgLargeUploadVideo, SvgGlyphUpload } from '@/shared/icons'
+import { SvgAlertError, SvgGlyphClose, SvgGlyphUpload, SvgLargeUploadImage, SvgLargeUploadVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
 import {
@@ -19,7 +19,7 @@ import {
   Title,
 } from './FileDrop.style'
 
-import Button from '../Button'
+import { Button } from '../Button'
 
 export type FileSelectProps = {
   fileType: FileType
@@ -35,7 +35,7 @@ export type FileSelectProps = {
   maxSize?: number
 }
 
-const FileSelect: React.FC<FileSelectProps> = ({
+export const FileSelect: React.FC<FileSelectProps> = ({
   onUploadFile,
   fileType,
   maxSize,
@@ -114,5 +114,3 @@ const FileSelect: React.FC<FileSelectProps> = ({
     </DragAndDropArea>
   )
 }
-
-export default FileSelect

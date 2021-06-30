@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Avatar, HeaderTextField } from '@/shared/components'
-import { sizes, media } from '@/shared/theme'
-import { TitleSection, SubTitle } from '@/views/viewer/ChannelView/ChannelView.style'
+import { media, sizes } from '@/shared/theme'
+import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
@@ -12,6 +12,7 @@ export const StyledTitleSection = styled(TitleSection)`
   ${media.small} {
     padding-top: 0;
   }
+
   /* Hidden visibility on container to not block hover state on Channel cover. 
   HeaderTextField, SubTitle and Avatar must be visible  */
   visibility: hidden;

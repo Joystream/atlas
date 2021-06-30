@@ -12,32 +12,34 @@ import {
   ChannelUpdateParameters,
   ContentActor,
   NewAsset,
+  VideoId as RuntimeVideoId,
   VideoCreationParameters,
   VideoUpdateParameters,
-  VideoId as RuntimeVideoId,
 } from '@joystream/types/content'
 import { ContentId } from '@joystream/types/media'
 import { ContentParameters } from '@joystream/types/storage'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer, SubmittableExtrinsic } from '@polkadot/api/types'
 import {
-  GenericAccountId as RuntimeAccountId,
   Bytes,
   GenericEvent,
-  Raw,
   Option,
-  Vec,
+  Raw,
+  GenericAccountId as RuntimeAccountId,
   TypeRegistry,
   u64 as U64,
+  Vec,
 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
 
+import { Logger } from '@/utils/logger'
+
 import {
   AccountNotSelectedError,
   ApiNotConnectedError,
-  ExtrinsicSignCancelledError,
   ExtrinsicFailedError,
+  ExtrinsicSignCancelledError,
   ExtrinsicUnknownError,
 } from './errors'
 import {
@@ -45,14 +47,14 @@ import {
   AssetMetadata,
   ChannelAssets,
   ChannelId,
-  VideoId,
   CreateChannelMetadata,
+  CreateVideoMetadata,
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   MemberId,
-  CreateVideoMetadata,
   VideoAssets,
+  VideoId,
 } from './types'
 
 export class JoystreamJs {
@@ -90,22 +92,22 @@ export class JoystreamJs {
 
   /* Private utilities */
   private log(msg: string) {
-    console.log(`[JoystreamJS] ${msg}`)
+    Logger.log(`[JoystreamJS] ${msg}`)
   }
 
   private logWarn(msg: string) {
-    console.warn(`[JoystreamJS] ${msg}`)
+    Logger.warn(`[JoystreamJS] ${msg}`)
   }
 
   private logError(msg: string) {
-    console.error(`[JoystreamJS] ${msg}`)
+    Logger.error(`[JoystreamJS] ${msg}`)
   }
 
   private async ensureApi() {
     try {
       await this.api.isReady
     } catch (e) {
-      console.error('Polkadot API init error', e)
+      Logger.error('Polkadot API init error', e)
       throw new ApiNotConnectedError()
     }
   }
@@ -171,8 +173,8 @@ export class JoystreamJs {
                     .then(({ number }) => resolve({ block: number.toNumber(), data: unpackedEvents }))
                     .catch((reason) => reject(new ExtrinsicFailedError(reason)))
                 } else {
-                  console.warn('Unknown event method')
-                  console.warn(event)
+                  Logger.warn('Unknown event method')
+                  Logger.warn('Event:', event)
                 }
               })
           }

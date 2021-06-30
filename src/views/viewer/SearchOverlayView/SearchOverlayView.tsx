@@ -3,13 +3,14 @@ import React, { useEffect } from 'react'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { QUERY_PARAMS } from '@/config/routes'
-import { useOverlayManager, useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks'
+import { useOverlayManager } from '@/providers'
 import { colors, zIndex } from '@/shared/theme'
 
-import RecentSearches from './RecentSearches'
-import SearchResults from './SearchResults'
+import { RecentSearches } from './RecentSearches'
+import { SearchResults } from './SearchResults'
 
-const SearchOverlayView: React.FC = () => {
+export const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
@@ -36,10 +37,7 @@ const OverlayContainer = styled.div`
   left: var(--sidenav-collapsed-width);
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
-
   background-color: ${colors.black};
   padding: 0 var(--global-horizontal-padding);
   overflow: auto;
 `
-
-export default SearchOverlayView

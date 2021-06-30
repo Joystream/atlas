@@ -2,8 +2,9 @@ import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState }
 
 import { IconButton } from '@/shared/components'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
+import { Logger } from '@/utils/logger'
 
 import {
   AlignInfo,
@@ -39,7 +40,7 @@ export type ImageCropDialogImperativeHandle = {
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   ImageCropDialogImperativeHandle,
   ImageCropDialogProps
-> = ({ imageType, onConfirm, onExitClick, onError }, ref) => {
+> = ({ imageType, onConfirm, onError }, ref) => {
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
@@ -85,7 +86,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const handleFileChange = async () => {
     const files = inputRef.current?.files
     if (!files?.length) {
-      console.error('no files selected')
+      Logger.error('no files selected')
       return
     }
     try {
@@ -96,7 +97,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       setShowDialog(true)
     } catch (error) {
       onError?.(error)
-      console.error(error)
+      Logger.error(error)
     }
   }
 
@@ -160,7 +161,5 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   )
 }
 
-const ImageCropDialog = forwardRef(ImageCropDialogComponent)
+export const ImageCropDialog = forwardRef(ImageCropDialogComponent)
 ImageCropDialog.displayName = 'ImageCropDialog'
-
-export default ImageCropDialog

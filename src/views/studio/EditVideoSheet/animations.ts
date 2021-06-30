@@ -1,8 +1,7 @@
 import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { EditVideoSheetState } from '@/hooks'
+import { EditVideoSheetState } from '@/providers'
 import { transitions } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './EditVideoTabsBar'

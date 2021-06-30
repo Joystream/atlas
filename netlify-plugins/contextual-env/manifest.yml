@@ -1,6 +1,0 @@
-name: contextual-env
-inputs:
-  - name: production_branch
-    description: Branch for which production envariables should be used
-  - name: app_env_prefix
-    description: Prefix to add to env variables for build tool support (e.g. CRA)

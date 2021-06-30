@@ -1,13 +1,12 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Gallery, CAROUSEL_ARROW_HEIGHT, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 
-import VideoPreview from './VideoPreview'
+import { VideoPreview } from './VideoPreview'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -46,7 +45,7 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({
+export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,
@@ -64,9 +63,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       return
     }
     const topPx = (coverHeight - CAROUSEL_ARROW_HEIGHT) / 2
-    return css`
-      top: ${topPx}px;
-    `
+    return topPx
   }, [coverHeight])
 
   if (!loading && videos?.length === 0) {
@@ -86,7 +83,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
-      arrowCss={arrowPosition}
+      arrowPosition={arrowPosition}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview
@@ -108,8 +105,7 @@ const StyledVideoPreview = styled(VideoPreview)`
   & + & {
     margin-left: ${sizes(6)};
   }
+
   /* MIN_VIDEO_PREVIEW_WIDTH */
   min-width: 300px;
 `
-
-export default VideoGallery

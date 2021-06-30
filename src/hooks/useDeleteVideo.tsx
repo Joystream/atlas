@@ -1,14 +1,13 @@
 import { useApolloClient } from '@apollo/client'
 
-import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
+import { useAuthorizedUser, useDialog, useJoystream, useTransaction, useUploadsStore } from '@/providers'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
-
-import { useDialog } from './useDialog'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
-  const { handleTransaction } = useTransactionManager()
+  const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
+  const removeAssetsFromUploads = useUploadsStore((state) => state.removeAssetsWithParent)
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()
 
   const client = useApolloClient()
@@ -42,6 +41,7 @@ export const useDeleteVideo = () => {
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
       onTxSync: async () => {
         removeVideoFromCache(videoId, client)
+        removeAssetsFromUploads('video', videoId)
         onTxSync?.()
       },
       successMessage: {

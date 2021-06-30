@@ -1,3 +1,1 @@
-import ChannelAvatar from './ChannelAvatar'
-
-export default ChannelAvatar
+export * from './ChannelAvatar'

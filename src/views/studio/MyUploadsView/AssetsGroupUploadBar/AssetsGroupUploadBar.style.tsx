@@ -1,11 +1,12 @@
-import { keyframes } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components'
-import { colors, sizes, zIndex, media, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
   progress: number
+  hasUploadingAsset: boolean
 }
 
 type AssetsGroupUploadBarProps = {
@@ -31,6 +32,7 @@ export const AssetsGroupUploadBarContainer = styled.div<AssetsGroupUploadBarProp
   background-color: ${({ isActive }) => (isActive ? colors.gray[900] : colors.black)};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+
   &:hover {
     background-color: ${colors.gray[900]};
   }
@@ -51,6 +53,13 @@ const pulse = keyframes`
   }
 `
 
+const pulseAnimationCss = (props: ProgressbarProps) =>
+  props.hasUploadingAsset
+    ? css`
+        animation: ${pulse} 2.5s infinite ease-in-out;
+      `
+    : null
+
 export const ProgressBar = styled.div<ProgressbarProps>`
   position: absolute;
   top: 0;
@@ -61,7 +70,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  animation: ${pulse} 2.5s infinite ease-in-out;
+  ${pulseAnimationCss}
 `
 
 export const Thumbnail = styled.div`

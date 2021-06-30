@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-import { usePersonalData } from '@/hooks'
+import { usePersonalDataStore } from '@/providers'
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {
-  MessageWrapper,
-  MessageTitle,
   MessageButton,
   MessageDescription,
+  MessageTitle,
+  MessageWrapper,
   StyledSvgGlyphInfo,
 } from './DismissibleMessage.style'
 
@@ -18,11 +18,9 @@ export type DismissibleMessageProps = {
   className?: string
 }
 
-const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, description, id, className }) => {
-  const {
-    updateDismissedMessages,
-    state: { dismissedMessages },
-  } = usePersonalData()
+export const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, description, id, className }) => {
+  const dismissedMessages = usePersonalDataStore((state) => state.dismissedMessages)
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
   const [isDismissedMessage, setDismissedMessage] = useState<boolean>()
 
   useEffect(() => {
@@ -47,5 +45,3 @@ const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ title, descript
     </MessageWrapper>
   )
 }
-
-export default DismissibleMessage

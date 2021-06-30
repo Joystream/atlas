@@ -5,9 +5,9 @@ import { Placeholder } from '@/shared/components'
 import { colors, media } from '@/shared/theme'
 
 import {
-  Container,
   AssetsGroupUploadBarContainer,
   AssetsInfoContainer,
+  Container,
   UploadInfoContainer,
 } from './AssetsGroupUploadBar.style'
 

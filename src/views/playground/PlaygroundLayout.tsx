@@ -3,27 +3,21 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import {
-  DraftsProvider,
-  ActiveUserProvider,
-  ConnectionStatusProvider,
-  UploadManagerProvider,
-  SnackbarProvider,
-  DialogProvider,
-} from '@/hooks'
+import { ActiveUserProvider, ConnectionStatusManager, DialogProvider } from '@/providers'
 import { colors } from '@/shared/theme'
 
 import {
+  AutomaticCrop,
+  Dialogs,
   FileHashing,
   ImageDownsizing,
+  PlaygroundCommonStore,
   PlaygroundConnectionState,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
-  UploadFiles,
   PlaygroundValidationForm,
+  UploadFiles,
   VideoMetaData,
-  AutomaticCrop,
-  Dialogs,
 } from './Playgrounds'
 
 const playgroundRoutes = [
@@ -37,38 +31,32 @@ const playgroundRoutes = [
   { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
   { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
   { path: 'dialogs', element: <Dialogs />, name: 'Dialogs' },
+  { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
 ]
 
 export const PlaygroundLayout = () => {
   return (
-    <SnackbarProvider>
-      <ActiveUserProvider>
-        <DialogProvider>
-          <UploadManagerProvider>
-            <ConnectionStatusProvider>
-              <DraftsProvider>
-                <Container>
-                  <NavContainer>
-                    {playgroundRoutes.map((route) => (
-                      <Link key={route.path} to={route.path}>
-                        {route.name}
-                      </Link>
-                    ))}
-                  </NavContainer>
-                  <ContentContainer>
-                    <Routes>
-                      {playgroundRoutes.map((route) => (
-                        <Route key={route.path} path={route.path} element={route.element} />
-                      ))}
-                    </Routes>
-                  </ContentContainer>
-                </Container>
-              </DraftsProvider>
-            </ConnectionStatusProvider>
-          </UploadManagerProvider>
-        </DialogProvider>
-      </ActiveUserProvider>
-    </SnackbarProvider>
+    <ActiveUserProvider>
+      <DialogProvider>
+        <Container>
+          <NavContainer>
+            {playgroundRoutes.map((route) => (
+              <Link key={route.path} to={route.path}>
+                {route.name}
+              </Link>
+            ))}
+          </NavContainer>
+          <ContentContainer>
+            <Routes>
+              {playgroundRoutes.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+          </ContentContainer>
+        </Container>
+        <ConnectionStatusManager />
+      </DialogProvider>
+    </ActiveUserProvider>
   )
 }
 
@@ -95,5 +83,3 @@ const ContentContainer = styled.div`
   padding-left: 30px;
   overflow: hidden;
 `
-
-export default PlaygroundLayout

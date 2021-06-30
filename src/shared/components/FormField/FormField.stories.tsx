@@ -1,12 +1,11 @@
-import { css } from '@emotion/react'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import FormField, { FormFieldProps } from './FormField'
+import { FormField, FormFieldProps } from './FormField'
 
-import Select from '../Select'
-import TextArea from '../TextArea'
-import TextField from '../TextField'
+import { Select } from '../Select'
+import { TextArea } from '../TextArea'
+import { TextField } from '../TextField'
 
 export default {
   title: 'Shared/F/FormField',
@@ -37,14 +36,7 @@ export default {
 
 type WithChildren = FormFieldProps & { children?: React.ReactNode }
 
-const Template: Story<WithChildren> = (args) => (
-  <FormField
-    {...args}
-    css={css`
-      max-width: 450px;
-    `}
-  />
-)
+const Template: Story<WithChildren> = (args) => <FormField {...args} />
 
 export const Default = Template.bind({})
 

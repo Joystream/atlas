@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
+import { FollowedChannel } from '@/providers/personalData/types'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  ChannelsWrapper,
-  ChannelsTitle,
-  ChannelsList,
   ChannelsItem,
-  ShowMoreButton,
-  StyledChannelLink,
-  ShowMoreIconWrapper,
+  ChannelsList,
+  ChannelsTitle,
+  ChannelsWrapper,
   FollowedChannelsWrapper,
+  ShowMoreButton,
+  ShowMoreIconWrapper,
+  StyledChannelLink,
 } from './FollowedChannels.style'
 
 const MAX_CHANNELS = 4
@@ -25,7 +25,7 @@ type FollowedChannelsProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-const FollowedChannels: React.FC<FollowedChannelsProps> = ({
+export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
   followedChannels,
   expanded,
   onClick,
@@ -66,5 +66,3 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({
     </CSSTransition>
   )
 }
-
-export default FollowedChannels

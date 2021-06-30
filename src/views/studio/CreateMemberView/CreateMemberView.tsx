@@ -10,21 +10,22 @@ import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables 
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
-import { useUser, useConnectionStatus, useDialog } from '@/hooks'
 import { MemberId } from '@/joystream-lib'
+import { useConnectionStatusStore, useDialog, useUser } from '@/providers'
 import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
+import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
+import { Logger } from '@/utils/logger'
 
 import {
   Form,
-  StyledButton,
-  Wrapper,
   Header,
   Hero,
-  SubTitle,
   StyledAvatar,
+  StyledButton,
   StyledTextField,
+  SubTitle,
+  Wrapper,
 } from './CreateMemberView.style'
 
 type Inputs = {
@@ -33,12 +34,16 @@ type Inputs = {
   about: string
 }
 
-const CreateMemberView = () => {
+export const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -147,13 +152,12 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
+        <StyledAvatar size="view" assetUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
-          name="avatar"
-          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          ref={register(
+          {...register(
+            'avatar',
             textFieldValidation({
               name: 'Avatar URL',
               pattern: URL_PATTERN,
@@ -163,14 +167,15 @@ const CreateMemberView = () => {
               validate: debouncedAvatarValidation.current,
             })
           )}
+          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
         <StyledTextField
-          name="handle"
           placeholder="johnnysmith"
           label="Member handle"
-          ref={register(
+          {...register(
+            'handle',
             textFieldValidation({
               name: 'Member handle',
               maxLength: 40,
@@ -187,11 +192,10 @@ const CreateMemberView = () => {
           }
         />
         <TextArea
-          name="about"
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
-          ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
+          {...register('about', textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />
@@ -208,7 +212,7 @@ type NewMemberResponse = {
   block: number
 }
 
-const createNewMember = async (accountId: string, inputs: Inputs) => {
+export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {
     const body = {
       account: accountId,
@@ -217,9 +221,7 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    console.error('Failed to create a new member', error)
+    Logger.error('Failed to create a new member', error)
     throw error
   }
 }
-
-export default CreateMemberView

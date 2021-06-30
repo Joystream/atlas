@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import Portal from '@/components/Portal'
-import { useOverlayManager } from '@/hooks'
+import { Portal } from '@/components'
+import { useOverlayManager } from '@/providers'
 import { SvgGlyphClose } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -15,7 +15,13 @@ export type BaseDialogProps = {
   className?: string
 }
 
-const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButton = true, onExitClick, className }) => {
+export const BaseDialog: React.FC<BaseDialogProps> = ({
+  children,
+  showDialog,
+  exitButton = true,
+  onExitClick,
+  className,
+}) => {
   const { dialogContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -35,6 +41,7 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
         classNames={transitions.names.dialog}
         mountOnEnter
         unmountOnExit
+        appear
         onEnter={incrementOverlaysOpenCount}
         onExited={decrementOverlaysOpenCount}
       >
@@ -50,5 +57,3 @@ const BaseDialog: React.FC<BaseDialogProps> = ({ children, showDialog, exitButto
     </Portal>
   )
 }
-
-export default BaseDialog

@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { OverlayManagerProvider } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
+import { Logger } from '@/utils/logger'
 
-import VideoPreviewBase, { VideoPreviewBaseProps } from './VideoPreviewBase'
+import { VideoPreviewBase, VideoPreviewBaseProps } from './VideoPreviewBase'
 
 export default {
   title: 'Shared/V/VideoPreview',
@@ -45,7 +46,7 @@ const Publisher: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
 
   const handler = () => {
-    console.log('called')
+    Logger.log('called')
   }
   return (
     <BrowserRouter>
@@ -134,7 +135,7 @@ PublisherUnlisted.args = {
 const Mix: Story<VideoPreviewBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
   const handler = () => {
-    console.log('called')
+    Logger.log('called')
   }
   return (
     <BrowserRouter>
@@ -187,7 +188,7 @@ Mixed.args = {
   publisherMode: true,
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
   onClick: () => {
-    console.log('Click')
+    Logger.log('Click')
   },
 }
 

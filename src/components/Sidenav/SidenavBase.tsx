@@ -4,24 +4,24 @@ import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import HamburgerButton from '@/shared/components/HamburgerButton'
+import { HamburgerButton } from '@/shared/components/HamburgerButton'
 import { transitions } from '@/shared/theme'
 
 import {
-  SidebarNav,
-  SidebarNavList,
-  SidebarNavItem,
-  SidebarNavLink,
+  ButtonGroup,
   DrawerOverlay,
-  SubItem,
-  SubItemsWrapper,
+  LegalLink,
+  LegalLinksWrapper,
   Logo,
   LogoLink,
-  ButtonGroup,
-  LegalLink,
+  SidebarNav,
   SidebarNavFooter,
+  SidebarNavItem,
+  SidebarNavLink,
+  SidebarNavList,
   StudioText,
-  LegalLinksWrapper,
+  SubItem,
+  SubItemsWrapper,
 } from './SidenavBase.style'
 
 type NavSubitem = {
@@ -151,5 +151,5 @@ const NavItem: React.FC<NavItemProps> = ({
   )
 }
 
-export { SidenavBase as default, NavItem }
+export { SidenavBase, NavItem }
 export type { NavItemType }

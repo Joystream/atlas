@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/shared/theme'
 
-import { BackgroundGradient, Tab, TabsGroup, TabsWrapper, TAB_WIDTH } from './Tabs.styles'
+import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 type TabItem = {
   name: string
@@ -18,7 +18,7 @@ export type TabsProps = {
 
 const SCROLL_SHADOW_OFFSET = 10
 
-const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
+export const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [isContentOverflown, setIsContentOverflown] = useState(false)
   const tabsRef = useRef<HTMLDivElement>(null)
@@ -98,4 +98,3 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => 
     </TabsWrapper>
   )
 }
-export default Tabs

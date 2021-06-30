@@ -25,7 +25,7 @@ export const getVideoMetadata = async (file: File): Promise<VideoMetadata> => {
   const canPlay = videoEl.canPlayType(mimeType)
 
   return new Promise((resolve, reject) => {
-    const handleLoadedData = (e: Event) => {
+    const handleLoadedData = () => {
       // Video should now be loaded but we can add a second check
       if (videoEl.readyState >= 3) {
         const height = videoEl.videoHeight

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { sizes, media } from '../../theme'
+import { media, sizes } from '../../theme'
 import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
@@ -17,7 +17,7 @@ type GridProps = {
   onResize?: (sizes: number[]) => void
 }
 
-const Grid: React.FC<GridProps> = ({
+export const Grid: React.FC<GridProps> = ({
   className,
   gap = sizes(6),
   onResize,
@@ -89,5 +89,3 @@ export function breakpointsOfGrid({
     .fill(null)
     .map((_, n) => (n + 1) * minItemWidth + n * gridColumnGap + viewportContainerDifference)
 }
-
-export default Grid

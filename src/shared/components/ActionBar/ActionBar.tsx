@@ -1,18 +1,21 @@
 import React, { ReactNode } from 'react'
 
-import { Button, Text, Tooltip } from '@/shared/components'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 import {
+  DetailsContainer,
+  DetailsIconWrapper,
   StyledActionBarContainer,
-  StyledInnerContainer,
+  StyledButtonsContainer,
   StyledInfoContainer,
+  StyledInnerContainer,
   StyledPrimaryText,
   StyledSecondaryText,
-  StyledButtonsContainer,
-  DetailsIconWrapper,
-  DetailsContainer,
 } from './ActionBar.style'
+
+import { Button } from '../Button'
+import { Text } from '../Text'
+import { Tooltip } from '../Tooltip'
 
 export type ActionBarProps = {
   primaryText?: string
@@ -31,58 +34,50 @@ export type ActionBarProps = {
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  (
-    {
-      primaryText,
-      secondaryText,
-      primaryButtonText,
-      secondaryButtonText,
-      detailsText,
-      tooltipText,
-      detailsTextIcon,
-      secondaryButtonIcon,
-      className,
-      disabled,
-      onConfirmClick,
-      onCancelClick,
-    },
-    ref
-  ) => {
-    return (
-      <StyledActionBarContainer className={className}>
-        <StyledInnerContainer>
-          <StyledInfoContainer>
-            <StyledPrimaryText>{primaryText}</StyledPrimaryText>
-            <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
-          </StyledInfoContainer>
-          <StyledButtonsContainer>
-            {detailsText && tooltipText && (
-              <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
-                <DetailsContainer>
-                  <Text variant="body2" secondary>
-                    {detailsText}
-                  </Text>
-                  <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
-                </DetailsContainer>
-              </Tooltip>
-            )}
-            {secondaryButtonText && !detailsText && (
-              <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
-                {secondaryButtonText}
-              </Button>
-            )}
-            {primaryButtonText && (
-              <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
-                {primaryButtonText}
-              </Button>
-            )}
-          </StyledButtonsContainer>
-        </StyledInnerContainer>
-      </StyledActionBarContainer>
-    )
-  }
-)
-ActionBar.displayName = 'ActionBar'
-
-export default ActionBar
+export const ActionBar: React.FC<ActionBarProps> = ({
+  primaryText,
+  secondaryText,
+  primaryButtonText,
+  secondaryButtonText,
+  detailsText,
+  tooltipText,
+  detailsTextIcon,
+  secondaryButtonIcon,
+  className,
+  disabled,
+  onConfirmClick,
+  onCancelClick,
+}) => {
+  return (
+    <StyledActionBarContainer className={className}>
+      <StyledInnerContainer>
+        <StyledInfoContainer>
+          <StyledPrimaryText>{primaryText}</StyledPrimaryText>
+          <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
+        </StyledInfoContainer>
+        <StyledButtonsContainer>
+          {detailsText && tooltipText && (
+            <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
+              <DetailsContainer>
+                <Text variant="body2" secondary>
+                  {detailsText}
+                </Text>
+                <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
+              </DetailsContainer>
+            </Tooltip>
+          )}
+          {secondaryButtonText && !detailsText && (
+            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
+              {secondaryButtonText}
+            </Button>
+          )}
+          {primaryButtonText && (
+            <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+              {primaryButtonText}
+            </Button>
+          )}
+        </StyledButtonsContainer>
+      </StyledInnerContainer>
+    </StyledActionBarContainer>
+  )
+}

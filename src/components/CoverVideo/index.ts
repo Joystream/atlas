@@ -1,3 +1,1 @@
-import CoverVideo from './CoverVideo'
-
-export default CoverVideo
+export * from './CoverVideo'

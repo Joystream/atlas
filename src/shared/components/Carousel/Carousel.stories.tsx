@@ -4,7 +4,7 @@ import React from 'react'
 
 import { colors } from '@/shared/theme'
 
-import Carousel, { CarouselProps } from './Carousel'
+import { Carousel, CarouselProps } from './Carousel'
 
 export default {
   title: 'Shared/C/Carousel',
@@ -43,6 +43,7 @@ const CarouselItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
   :not(:last-child) {
     margin-right: 12px;
   }
