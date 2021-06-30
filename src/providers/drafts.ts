@@ -101,7 +101,7 @@ export const useDraftStore = createStore<DraftStoreState, DraftStoreActions>(
             }>
           >('unseenDrafts')
           const drafts = [...(storageValue as Array<Draft>)].map((draft) => {
-            unseenDrafts?.find((unseen) => unseen.draftId === draft.id)
+            return unseenDrafts?.find((unseen) => unseen.draftId === draft.id)
               ? { ...draft, seen: false }
               : { ...draft, seen: true }
           })
