@@ -1,4 +1,4 @@
-import { Draft, produce } from 'immer'
+import { Draft, enableMapSet, produce } from 'immer'
 import create, { GetState, State, StateCreator, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -32,6 +32,8 @@ type CommonStoreOpts<TState extends object> = {
   persist?: CommonStorePersistOpts<TState>
 }
 
+// enable immer support for Map and Set
+enableMapSet()
 const immer = <T extends State>(config: StateCreator<T, (fn: (state: Draft<T>) => void) => void>): StateCreator<T> => (
   set,
   get,

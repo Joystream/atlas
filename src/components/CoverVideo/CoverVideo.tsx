@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { Placeholder, VideoPlayer } from '@/shared/components'
 import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -40,7 +40,6 @@ export const CoverVideo: React.FC = () => {
     entity: coverVideo?.video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: mediaUrl } = useAsset({ entity: coverVideo?.video, assetType: AssetType.MEDIA })
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {

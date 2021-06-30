@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { InputFilesState } from '@/shared/components'
 import { createId } from '@/utils/createId'
 
 import {
   ContextValue,
+  EditVideoAssets,
   EditVideoAssetsCache,
   EditVideoFormFields,
   EditVideoSheetState,
@@ -50,10 +50,10 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
 
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
   const setSelectedVideoTabCachedAssets = useCallback(
-    (files: InputFilesState) => {
+    (assets: EditVideoAssets | null) => {
       setAssetsCache((existingAssets) => ({
         ...existingAssets,
-        [selectedVideoTab?.id]: files,
+        [selectedVideoTab?.id]: assets,
       }))
     },
     [selectedVideoTab?.id]
@@ -135,7 +135,9 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
     addVideoTab,
   ])
 
-  const anyVideoTabsCachedAssets = Object.values(assetsCache).some((val) => val.thumbnail || val.video)
+  const anyVideoTabsCachedAssets = Object.values(assetsCache).some(
+    (val) => val?.thumbnail.cropContentId || val?.video.contentId
+  )
 
   const hasVideoTabAnyCachedAssets = (tabIdx: number) => {
     const tabId = videoTabs[tabIdx].id

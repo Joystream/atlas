@@ -5,6 +5,7 @@ import { createApolloClient } from '@/api'
 
 import { MainLayout } from './MainLayout'
 import {
+  AssetsManager,
   ConnectionStatusProvider,
   DialogProvider,
   OverlayManagerProvider,
@@ -25,6 +26,7 @@ export const App = () => {
             <DialogProvider>
               <MainLayout />
               <Snackbars />
+              <AssetsManager />
             </DialogProvider>
           </StorageProvidersProvider>
         </OverlayManagerProvider>

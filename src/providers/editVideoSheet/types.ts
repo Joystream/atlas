@@ -1,4 +1,14 @@
-import { InputFilesState } from '@/shared/components'
+import { ImageInputMetadata, VideoInputMetadata } from '@/shared/components'
+
+export type EditVideoAssets = {
+  video: {
+    contentId: string | null
+  } & VideoInputMetadata
+  thumbnail: {
+    cropContentId: string | null
+    originalContentId: string | null
+  } & ImageInputMetadata
+}
 
 export type EditVideoSheetTab = {
   id: string
@@ -6,7 +16,7 @@ export type EditVideoSheetTab = {
   isNew?: boolean
 }
 
-export type EditVideoAssetsCache = Record<string, InputFilesState>
+export type EditVideoAssetsCache = Record<string, EditVideoAssets | null>
 export type EditVideoTabCachedDirtyFormData = Record<string, Partial<EditVideoFormFields>>
 
 export type ContextValue = {
@@ -18,8 +28,8 @@ export type ContextValue = {
   setSelectedVideoTabIdx: (tabIdx: number) => void
   selectedVideoTabCachedDirtyFormData: Partial<EditVideoFormFields> | undefined
   setSelectedVideoTabCachedDirtyFormData: (formData: Partial<EditVideoFormFields>) => void
-  selectedVideoTabCachedAssets: InputFilesState
-  setSelectedVideoTabCachedAssets: (files: InputFilesState) => void
+  selectedVideoTabCachedAssets: EditVideoAssets | null
+  setSelectedVideoTabCachedAssets: (assets: EditVideoAssets | null) => void
   sheetState: EditVideoSheetState
   setSheetState: (state: EditVideoSheetState) => void
   anyVideoTabsCachedAssets: boolean
@@ -38,7 +48,7 @@ export type EditVideoFormFields = {
   isPublic: boolean
   isExplicit: boolean | null
   publishedBeforeJoystream: Date | null
-  assets: InputFilesState
+  assets: EditVideoAssets
 }
 
 export type EditVideoSheetState = 'closed' | 'open' | 'minimized'

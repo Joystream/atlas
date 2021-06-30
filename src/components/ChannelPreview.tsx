@@ -3,7 +3,7 @@ import React from 'react'
 import { useChannel } from '@/api/hooks'
 import { useChannelVideoCount } from '@/api/hooks/channel'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/hooks'
+import { AssetType, useAsset } from '@/providers'
 import { ChannelPreviewBase } from '@/shared/components'
 
 type ChannelPreviewProps = {

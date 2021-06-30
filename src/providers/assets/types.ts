@@ -5,7 +5,13 @@ import {
   DataObject,
   VideoFieldsFragment,
 } from '@/api/queries'
-import { AssetType } from '@/hooks'
+
+export enum AssetType {
+  COVER = 'cover',
+  AVATAR = 'avatar',
+  THUMBNAIL = 'thumbnail',
+  MEDIA = 'media',
+}
 
 export type UseAssetDataArgs =
   | { entity?: VideoFieldsFragment | null; assetType: AssetType.THUMBNAIL | AssetType.MEDIA }
@@ -14,14 +20,13 @@ export type UseAssetDataArgs =
 
 export type UseAssetData = {
   url?: string
-  error: ErrorEvent | null
-  isLoading: boolean
 }
 
 export type UseAsset = (args: UseAssetDataArgs) => UseAssetData
 
-export type AssetData = {
+export type AssetResolutionData = {
   availability: AssetAvailability
-  urls: string[]
+  urls?: string[]
   dataObject?: DataObject | null
+  assetType: AssetType
 }

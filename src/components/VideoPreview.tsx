@@ -3,9 +3,7 @@ import React from 'react'
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/hooks'
-import { AssetType } from '@/hooks/useAsset'
-import { useAuthorizedUser, useDrafts } from '@/providers'
+import { AssetType, useAsset, useAuthorizedUser, useDrafts } from '@/providers'
 import {
   VideoPreviewBase,
   VideoPreviewBaseMetaProps,
