@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { channelDraftsSelector, RawDraft, useDraftStore, useUser } from '@/providers'
+import { RawDraft, channelDraftsSelector, useDraftStore, useUser } from '@/providers'
 import { Button, FormField, Text } from '@/shared/components'
 import { Select } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'

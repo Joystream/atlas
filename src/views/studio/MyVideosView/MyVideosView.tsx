@@ -7,8 +7,8 @@ import { StudioContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
 import {
-  channelDraftsSelector,
   chanelUnseenDraftsSelector,
+  channelDraftsSelector,
   useAuthorizedUser,
   useDialog,
   useDraftStore,
