@@ -6,7 +6,12 @@ import {
   VideoFieldsFragment,
 } from '@/api/queries'
 
-import { AssetType } from './constants'
+export enum AssetType {
+  COVER = 'cover',
+  AVATAR = 'avatar',
+  THUMBNAIL = 'thumbnail',
+  MEDIA = 'media',
+}
 
 export type UseAssetDataArgs =
   | { entity?: VideoFieldsFragment | null; assetType: AssetType.THUMBNAIL | AssetType.MEDIA }

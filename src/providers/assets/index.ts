@@ -1,4 +1,4 @@
 export * from './useAsset'
-export * from './constants'
+export { AssetType } from './types'
 export * from './assetsManager'
 export * from './store'

@@ -7,8 +7,7 @@ import {
 import { createStorageNodeUrl } from '@/utils/asset'
 import { Logger } from '@/utils/logger'
 
-import { AssetType } from './constants'
-import { AssetResolutionData } from './types'
+import { AssetResolutionData, AssetType } from './types'
 
 export const testAssetDownload = (url: string, type: AssetType) => {
   return new Promise((resolve, reject) => {
