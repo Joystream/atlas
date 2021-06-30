@@ -4,13 +4,7 @@ import React from 'react'
 import { createApolloClient } from '@/api'
 
 import { MainLayout } from './MainLayout'
-import {
-  AssetsManager,
-  DialogProvider,
-  OverlayManagerProvider,
-  Snackbars,
-  StorageProvidersProvider,
-} from './providers'
+import { AssetsManager, DialogProvider, OverlayManagerProvider, Snackbars, StorageProvidersProvider } from './providers'
 
 export const App = () => {
   // create client on render so the mocking setup is done if needed
