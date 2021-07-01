@@ -43,15 +43,10 @@ export const Container = styled.div<ContainerProps>`
   .vjs-control-bar {
     font-family: ${typography.fonts.base};
     background: none;
-    margin-top: auto;
-    z-index: ${zIndex.overlay + 1};
-    align-items: center;
-    height: ${sizes(16)} !important;
-
-    ${media.small} {
-      padding: 5px ${sizes(8)} 0;
-      background-color: rgba(0, 0, 0, 0.3);
-    }
+    background-image: linear-gradient(180deg, rgba(11, 12, 15, 0) 0%, #0b0c0f 100%);
+    align-items: flex-end;
+    padding-bottom: ${sizes(8)};
+    height: ${sizes(32)} !important;
 
     .vjs-control {
       height: 30px;
@@ -136,16 +131,13 @@ export const Container = styled.div<ContainerProps>`
       position: absolute;
       transition: none !important;
       top: initial;
-      height: 2px;
+      height: ${sizes(1)};
       left: 0;
+      bottom: 0;
       width: 100%;
-      bottom: -2px;
 
-      ${media.small} {
-        top: 0;
-        left: ${sizes(8)};
-        width: calc(100% - 2 * ${sizes(8)});
-        height: 5px;
+      :hover .vjs-progress-control {
+        opacity: 0;
       }
 
       .vjs-progress-holder {
@@ -159,18 +151,13 @@ export const Container = styled.div<ContainerProps>`
 
           ::before {
             position: absolute;
-            top: -5px;
+            top: -6px;
             content: '';
             display: initial;
-            width: 14px;
-            height: 14px;
-            background: ${colors.blue[500]};
+            width: ${sizes(4)};
+            height: ${sizes(4)};
+            background: ${colors.white};
             border-radius: 100%;
-            border: 2px solid ${colors.white};
-
-            ${media.small} {
-              display: none;
-            }
           }
         }
 
