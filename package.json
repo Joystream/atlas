@@ -90,7 +90,7 @@
     "retry-axios": "^2.4.0",
     "subscriptions-transport-ws": "^0.9.18",
     "use-resize-observer": "^7.0.0",
-    "video.js": "^7.8.3",
+    "video.js": "^7.13.3",
     "zustand": "^3.5.2"
   },
   "devDependencies": {
@@ -121,7 +121,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-transition-group": "^4.4.0",
-    "@types/video.js": "^7.3.10",
+    "@types/video.js": "^7.3.22",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "eslint": "^7.28.0",

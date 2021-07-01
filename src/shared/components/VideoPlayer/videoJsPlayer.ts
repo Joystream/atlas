@@ -44,7 +44,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       playsinline: true,
     }
 
-    const playerInstance = videojs(playerRef.current, videoJsOptions)
+    const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
     setPlayer(playerInstance)
 
     return () => {
