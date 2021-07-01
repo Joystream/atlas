@@ -270,7 +270,16 @@ export const MyVideosView = () => {
               <StyledDismissibleMessage
                 id="video-draft-saved-locally-warning"
                 title="Video drafts are saved locally"
+                icon="info"
                 description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
+              />
+            )}
+            {currentTabName === 'Unlisted' && (
+              <StyledDismissibleMessage
+                id="unlisted-video-link-info"
+                title="Unlisted videos can be seen only with direct link"
+                icon="info"
+                description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>

@@ -21,6 +21,15 @@ export default {
       defaultValue:
         'This mean you can only access one on the device you used to create it. Clearing your browser history will delete all your drafts.',
     },
+    variant: {
+      control: { type: 'select', options: ['primary', 'secondary', 'tertiary'] },
+      defaultValue: 'primary',
+    },
+    actionText: { defaultValue: 'Action' },
+    icon: {
+      control: { type: 'select', options: [null, 'error', 'success', 'info', 'warning'] },
+      defaultValue: null,
+    },
   },
   decorators: [(Story) => <Story />],
 } as Meta
