@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button, Text } from '@/shared/components'
-import { colors, sizes, typography } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 import { DismissibleMessageVariant } from './DismissibleMessage'
 
@@ -17,11 +17,11 @@ export const MessageHeader = styled.div`
 `
 
 export const MessageIconContainer = styled.div`
-  width: ${sizes(6)};
-  height: ${sizes(6)};
   display: flex;
   justify-content: center;
   align-content: center;
+  width: ${sizes(6)};
+  height: ${sizes(6)};
   margin-right: ${sizes(2)};
 `
 
@@ -41,7 +41,6 @@ export const MessageActionButton = styled(Button)`
   align-items: center;
   padding: ${sizes(2)};
   min-width: auto;
-  font-size: ${typography.sizes.body1};
 `
 
 export const MessageDescription = styled(Text)`
