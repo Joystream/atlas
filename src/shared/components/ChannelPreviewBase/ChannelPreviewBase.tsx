@@ -74,7 +74,7 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                       timeout={parseInt(transitions.timings.loading) * 0.5}
                       classNames={transitions.names.fade}
                     >
-                      <VideoCount variant="subtitle2">{videoCount ? `${videoCount} Uploads` : '⠀'}</VideoCount>
+                      <VideoCount variant="subtitle2">{`${videoCount ?? 0} Uploads`}</VideoCount>
                     </CSSTransition>
                   )}
                 </VideoCountContainer>
