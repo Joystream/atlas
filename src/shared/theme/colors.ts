@@ -16,6 +16,7 @@ export default {
   },
   blue: {
     900: '#030041',
+    800: '#221BCC',
     700: '#261EE4',
     600: '#2F2FF4',
     500: '#4038FF',
@@ -24,11 +25,34 @@ export default {
     200: '#B4BBFF',
     50: '#E0E1FF',
   },
+  secondary: {
+    alert: {
+      300: '#73130D',
+      200: '#A5261D',
+      100: '#CC392F',
+      50: '#FF6157',
+      5: '#F1C4C1',
+    },
+    warning: {
+      300: '#97800C',
+      200: '#D4B411',
+      100: '#EFCF34',
+      50: '#FBE36A',
+      5: '#FDF1B5',
+    },
+    success: {
+      300: '#0B8E41',
+      200: '#0EAF51',
+      100: '#10CC5E',
+      50: '#55F699',
+      5: '#B3FFD2',
+    },
+  },
   success: '#1CCB00',
-  transparentSuccess: 'rgba(0, 219, 176, 0.08)',
   error: '#FF3861',
-  transparentError: 'rgba(255, 56, 97, 0.08)',
   warning: '#EB4F1E',
+  transparentSuccess: 'rgba(26, 183, 0, 0.08)',
+  transparentError: 'rgba(176, 0, 32, 0.08)',
   transparentWhite: {
     4: 'rgba(255,255,255, 0.04)',
     6: 'rgba(255,255,255, 0.06)',
@@ -39,6 +63,7 @@ export default {
     24: 'rgba(0,0,0, 0.24)',
     54: 'rgba(0,0,0, 0.54)',
     66: 'rgba(0,0,0, 0.66)',
+    86: 'rgba(0,0,0, 0.86)',
   },
   transparentPrimary: {
     6: 'rgba(180, 187, 255, 0.06)',
@@ -46,5 +71,8 @@ export default {
     12: 'rgba(180, 187, 255, 0.12)',
     18: 'rgba(180, 187, 255, 0.18)',
     20: 'rgba(180, 187, 255, 0.20)',
+  },
+  transparentNeutral: {
+    54: 'rgba(24, 28, 32, 0.54)',
   },
 }
