@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { studioContainerStyle } from '@/components/StudioContainer'
+import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
 import { Button, HeaderTextField } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
@@ -37,7 +37,7 @@ export const FormWrapper = styled.form`
     padding: ${sizes(8)} 0 0 0;
   }
 
-  ${studioContainerStyle};
+  ${limitedWidthContainerStyle};
 `
 
 export const InputsContainer = styled.div`

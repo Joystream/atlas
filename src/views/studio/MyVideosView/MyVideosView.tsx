@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { StudioContainer, VideoPreviewPublisher } from '@/components'
+import { LimitedWidthContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
 import { useAuthorizedUser, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/providers'
@@ -242,7 +242,7 @@ export const MyVideosView = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <StudioContainer>
+    <LimitedWidthContainer>
       <ViewContainer>
         <Text variant="h2">My videos</Text>
         {hasNoVideos ? (
@@ -291,7 +291,7 @@ export const MyVideosView = () => {
           </>
         )}
       </ViewContainer>
-    </StudioContainer>
+    </LimitedWidthContainer>
   )
 }
 
