@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
-import { InfiniteVideoGrid, ViewWrapper } from '@/components'
+import { InfiniteVideoGrid, LimitedWidthContainer, ViewWrapper } from '@/components'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
@@ -10,7 +10,6 @@ import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 
 import {
-  Header,
   StyledButtonContainer,
   StyledChannelLink,
   SubTitle,
@@ -65,8 +64,8 @@ export const ChannelView: React.FC = () => {
 
   return (
     <ViewWrapper>
-      <Header>
-        <ChannelCover assetUrl={coverPhotoUrl} />
+      <ChannelCover assetUrl={coverPhotoUrl} />
+      <LimitedWidthContainer>
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
           <TitleContainer>
@@ -83,15 +82,15 @@ export const ChannelView: React.FC = () => {
             )}
           </TitleContainer>
           <StyledButtonContainer>
-            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow} size="large">
+            <Button icon={''} variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow} size="large">
               {isFollowing ? 'Unfollow' : 'Follow'}
             </Button>
           </StyledButtonContainer>
         </TitleSection>
-      </Header>
-      <VideoSection className={transitions.names.slide}>
-        <InfiniteVideoGrid channelId={id} showChannel={false} />
-      </VideoSection>
+        <VideoSection className={transitions.names.slide}>
+          <InfiniteVideoGrid channelId={id} showChannel={false} />
+        </VideoSection>
+      </LimitedWidthContainer>
     </ViewWrapper>
   )
 }
