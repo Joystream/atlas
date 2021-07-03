@@ -5,17 +5,6 @@ import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/
 import { IconButton } from '../IconButton'
 import { Text } from '../Text'
 
-export const CONTENT_OVERLAP_MAP = {
-  BASE: 0,
-  SMALL: 0,
-  MEDIUM: 0,
-  LARGE: 100,
-  XLARGE: 200,
-  XXLARGE: 300,
-}
-const GRADIENT_OVERLAP = 50
-const GRADIENT_HEIGHT = 100
-
 type CoverImageProps = {
   $src: string
 }
@@ -45,87 +34,11 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-attachment: local;
   background-size: cover;
 
-  /* as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-  this helps with keeping a consistent background behind a page content - we don\'t want the media to peek out in the content spacing */
-  background-image: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 4}px),
-    url(${({ $src }) => $src});
-
-  ${media.small} {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${Math.min(CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP, 0)}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.SMALL - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ $src }) => $src});
-  }
-
-  ${media.medium} {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${Math.min(CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP, 0)}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.MEDIUM - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ $src }) => $src});
-  }
-
-  ${media.large} {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.LARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ $src }) => $src});
-  }
-
-  ${media.xlarge} {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ $src }) => $src});
-  }
-
-  ${media.xxlarge} {
-    background-image: linear-gradient(
-        0deg,
-        black 0%,
-        black ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP}px,
-        rgba(0, 0, 0, 0) ${CONTENT_OVERLAP_MAP.XXLARGE - GRADIENT_OVERLAP + GRADIENT_HEIGHT}px
-      ),
-      url(${({ $src }) => $src});
-  }
+  background-image: url(${({ $src }) => $src});
 `
 
 export const CoverWrapper = styled.div`
   position: relative;
-
-  /* because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
-   so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin */
-  margin-bottom: -${CONTENT_OVERLAP_MAP.BASE}px;
-  ${media.small} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
-  }
-
-  ${media.medium} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
-  }
-
-  ${media.large} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
-  }
-
-  ${media.xlarge} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
-  }
-
-  ${media.xxlarge} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
-  }
 `
 
 export const EditableControls = styled.div`

@@ -2,54 +2,24 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
-
-export const Header = styled.section`
-  position: relative;
-  padding-bottom: 50px;
-
-  ${media.medium} {
-    padding-bottom: 0;
-  }
-`
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
-const INFO_BOTTOM_MARGIN = 75
-
 export const TitleSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
   width: 100%;
-  margin-top: -64px;
+  margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
   ${media.small} {
-    margin-top: -100px;
     flex-direction: row;
     align-items: center;
-  }
-
-  ${media.medium} {
-    position: absolute;
-    margin-top: 0;
-    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.large} {
-    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xxlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
   }
 `
 export const TitleContainer = styled.div`
@@ -67,8 +37,8 @@ export const Title = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
 
   line-height: 1;
-  padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
-  background-color: ${colors.gray[800]};
+  margin-bottom: 0;
+  padding: ${sizes(1)} ${sizes(2)} ${0};
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -77,11 +47,9 @@ export const Title = styled(Text)`
 
 export const SubTitle = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
-
   padding: ${sizes(1)} ${sizes(2)};
-  margin-top: ${sizes(2)};
-  color: ${colors.white};
-  background-color: ${colors.gray[800]};
+  margin-top: ${sizes(1)};
+  color: ${colors.gray[300]};
   display: inline-block;
 `
 
