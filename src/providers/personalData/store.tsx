@@ -15,7 +15,8 @@ export type PersonalDataStoreState = {
   followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
-  playerVolume: number
+  cachedPlayerVolume: number
+  isMuted: boolean
 }
 
 const WHITELIST = [
@@ -23,7 +24,8 @@ const WHITELIST = [
   'followedChannels',
   'recentSearches',
   'dismissedMessages',
-  'playerVolume',
+  'cachedPlayerVolume',
+  'isMuted',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -31,14 +33,15 @@ export type PersonalDataStoreActions = {
   updateChannelFollowing: (id: string, follow: boolean) => void
   updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
-  updatePlayerVolume: (volume: number) => void
+  updateCachedPlayerVolume: (volume: number) => void
+  setIsMuted: (isMuted: boolean) => void
 }
 
 const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
 const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
 const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
 const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
-const playerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
+const cachedPlayerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
@@ -47,7 +50,8 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       followedChannels,
       recentSearches,
       dismissedMessages,
-      playerVolume,
+      cachedPlayerVolume,
+      isMuted: false,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -87,9 +91,19 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updatePlayerVolume: (volume) =>
+      setIsMuted: (isMuted) => {
         set((state) => {
-          state.playerVolume = volume
+          state.isMuted = isMuted
+        })
+      },
+      updateCachedPlayerVolume: (volume) =>
+        set((state) => {
+          if (volume === 0) {
+            state.isMuted = true
+          } else {
+            state.cachedPlayerVolume = volume
+            state.isMuted = false
+          }
         }),
     }),
   },
