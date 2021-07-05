@@ -2,13 +2,15 @@ import { To } from 'history'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
+import { BorderWrapper, ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
 
 export type ButtonBaseProps = {
   disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
   type?: 'button' | 'submit'
+  textOnly?: boolean
+  iconOnly?: boolean
   children?: React.ReactNode
   className?: string
 } & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant'>>
@@ -26,7 +28,21 @@ const getLinkPropsFromTo = (to?: To) => {
 }
 
 export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
-  ({ onClick, to, type = 'button', children, size = 'medium', variant = 'primary', disabled, ...styleProps }, ref) => {
+  (
+    {
+      onClick,
+      to,
+      type = 'button',
+      children,
+      size = 'medium',
+      variant = 'primary',
+      textOnly = false,
+      iconOnly = false,
+      disabled,
+      ...styleProps
+    },
+    ref
+  ) => {
     const clickable = !!onClick || !!to || type === 'submit'
 
     const linkProps = getLinkPropsFromTo(to)
@@ -42,9 +58,11 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         {...linkProps}
         size={size}
         variant={variant}
+        textOnly={textOnly}
+        iconOnly={iconOnly}
         {...styleProps}
       >
-        {children}
+        <BorderWrapper textOnly={textOnly}>{children}</BorderWrapper>
       </StyledButtonBase>
     )
   }
