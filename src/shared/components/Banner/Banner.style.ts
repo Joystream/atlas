@@ -3,20 +3,20 @@ import styled from '@emotion/styled'
 import { Button, Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 
-import { DismissibleMessageVariant } from './DismissibleMessage'
+import { BannerVariant } from './Banner'
 
-type MessageProps = {
-  variant: DismissibleMessageVariant
+type BannerProps = {
+  variant: BannerVariant
 }
 
-export const MessageHeader = styled.div`
+export const BannerHeader = styled.div`
   width: 100%;
   height: ${sizes(8)};
   display: flex;
   align-items: center;
 `
 
-export const MessageIconContainer = styled.div`
+export const BannerIconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-content: center;
@@ -25,39 +25,39 @@ export const MessageIconContainer = styled.div`
   margin-right: ${sizes(2)};
 `
 
-export const MessageTitle = styled(Text)`
+export const BannerTitle = styled(Text)`
   display: flex;
   align-items: center;
   word-break: break-word;
 `
 
-export const MessageButtonsContainer = styled.div`
+export const BannerButtonsContainer = styled.div`
   display: flex;
   margin-left: auto;
 `
 
-export const MessageActionButton = styled(Button)`
+export const BannerActionButton = styled(Button)`
   display: flex;
   align-items: center;
   padding: ${sizes(2)};
   min-width: auto;
 `
 
-export const MessageDescription = styled(Text)`
+export const BannerDescription = styled(Text)`
   margin-top: ${sizes(2)};
   line-height: ${sizes(5)};
   color: ${colors.gray[300]};
   word-break: break-word;
 `
 
-export const MessageWrapper = styled.div<MessageProps>`
+export const BannerWrapper = styled.div<BannerProps>`
   position: relative;
   padding: ${sizes(4)};
-  box-shadow: ${({ variant }) => variant === 'primary' && `inset 0px 0px 0px 1px ${colors.gray[700]}`};
+  box-shadow: ${({ variant }) => variant === 'primary' && `inset 0 0 0 1px ${colors.gray[700]}`};
   width: 100%;
   background-color: ${({ variant }) =>
     variant === 'tertiary' ? colors.gray[700] : variant === 'secondary' ? colors.blue[500] : colors.transparent};
-  ${MessageDescription} {
+  ${BannerDescription} {
     color: ${({ variant }) => variant === 'secondary' && colors.blue[200]};
   }
 `
