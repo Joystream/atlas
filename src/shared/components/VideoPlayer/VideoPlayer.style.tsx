@@ -35,8 +35,8 @@ const focusStyles = css`
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   height: 100%;
-  bottom: 0;
-  padding: ${({ isFullScreen }) => (isFullScreen ? sizes(12) : sizes(6))} ${sizes(6)};
+  bottom: ${({ isFullScreen }) => (isFullScreen ? sizes(12) : sizes(6))};
+  padding: 0 ${sizes(6)};
   left: 0;
   z-index: ${zIndex.overlay};
   display: flex;
@@ -203,7 +203,7 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(${sizes(2)});
     opacity: 0;
   }
 
@@ -227,7 +227,7 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-progress-control {
       height: ${sizes(8)};
-      z-index: 20;
+      z-index: ${zIndex.nearOverlay};
       position: absolute;
       top: initial;
       left: 0;
