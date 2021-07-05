@@ -33,7 +33,6 @@ export const CoverImage = styled.div<CoverImageProps>`
   background-position: center;
   background-attachment: local;
   background-size: cover;
-
   background-image: url(${({ $src }) => $src});
 `
 
