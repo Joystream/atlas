@@ -36,7 +36,7 @@ export default {
     warning: {
       300: '#97800C',
       200: '#D4B411',
-      100: '#CCAB06',
+      100: '#EFCF34',
       50: '#FBE36A',
       5: '#FDF1B5',
     },
