@@ -82,7 +82,7 @@ export const ChannelView: React.FC = () => {
             )}
           </TitleContainer>
           <StyledButtonContainer>
-            <Button icon={''} variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow} size="large">
+            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow} size="large">
               {isFollowing ? 'Unfollow' : 'Follow'}
             </Button>
           </StyledButtonContainer>
