@@ -51,8 +51,8 @@ export default {
   success: '#1CCB00',
   error: '#FF3861',
   warning: '#EB4F1E',
-  transparentSuccess: 'rgba(0, 219, 176, 0.08)',
-  transparentError: 'rgba(255, 56, 97, 0.08)',
+  transparentSuccess: 'rgba(26, 183, 0, 0.08)',
+  transparentError: 'rgba(176, 0, 32, 0.08)',
   transparentWhite: {
     4: 'rgba(255,255,255, 0.04)',
     6: 'rgba(255,255,255, 0.06)',
