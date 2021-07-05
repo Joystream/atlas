@@ -28,6 +28,7 @@ const getTrackProps = getPropsFor('glider-track')
 const getNextArrowProps = getPropsFor('glider-next')
 const getPrevArrowProps = getPropsFor('glider-prev')
 const getContainerProps = getPropsFor('glider-contain')
+const getDotsProps = getPropsFor('glider-dots')
 
 export function useGlider<T extends HTMLElement>({
   onAdd,
@@ -80,6 +81,7 @@ export function useGlider<T extends HTMLElement>({
     getNextArrowProps,
     getPrevArrowProps,
     getContainerProps,
+    getDotsProps,
   }
 }
 
