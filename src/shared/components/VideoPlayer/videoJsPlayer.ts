@@ -18,6 +18,67 @@ export type VideoJsConfig = {
   onTimeUpdated?: (time: number) => void
 }
 
+const hotkeysHandler = (e: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
+  const currentTime = playerInstance.currentTime()
+  const currentVolume = playerInstance.volume()
+  const isMuted = playerInstance.muted()
+  const isFullscreen = playerInstance.isFullscreen()
+  const isPaused = playerInstance.paused()
+
+  switch (e.code) {
+    case 'Space':
+    case 'KeyK':
+      if (isPaused) {
+        playerInstance.play()
+      } else {
+        playerInstance.pause()
+      }
+      return
+    case 'ArrowLeft':
+      playerInstance.currentTime(currentTime - 5)
+      return
+    case 'ArrowRight':
+      playerInstance.currentTime(currentTime + 5)
+      return
+    case 'KeyJ':
+      playerInstance.currentTime(currentTime - 10)
+      return
+    case 'KeyL':
+      playerInstance.currentTime(currentTime + 10)
+      return
+    case 'ArrowUp':
+      if (currentVolume <= 0.95) {
+        playerInstance.volume(currentVolume + 0.05)
+      } else {
+        playerInstance.volume(1)
+      }
+      return
+    case 'ArrowDown':
+      if (currentVolume >= 0.05) {
+        playerInstance.volume(currentVolume - 0.05)
+      } else {
+        playerInstance.volume(0)
+      }
+      return
+    case 'KeyM':
+      if (isMuted) {
+        playerInstance.muted(false)
+      } else {
+        playerInstance.muted(true)
+      }
+      return
+    case 'KeyF':
+      if (isFullscreen) {
+        playerInstance.exitFullscreen()
+      } else {
+        playerInstance.requestFullscreen()
+      }
+      return
+    default:
+      return
+  }
+}
+
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
 export const useVideoJsPlayer: VideoJsPlayerHook = ({
   fill,
@@ -38,13 +99,26 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
   useEffect(() => {
+    if (!playerRef.current || !player) {
+      return
+    }
+    playerRef.current.focus()
+  }, [player])
+
+  useEffect(() => {
     const videoJsOptions: VideoJsPlayerOptions = {
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
     }
 
-    const playerInstance = videojs(playerRef.current, videoJsOptions)
+    const playerInstance: VideoJsPlayer = videojs(playerRef.current as Element, {
+      ...videoJsOptions,
+      userActions: {
+        hotkeys: (e) => hotkeysHandler(e, playerInstance),
+      },
+    })
+
     setPlayer(playerInstance)
 
     return () => {
