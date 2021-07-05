@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { usePersonalDataStore } from '@/providers'
 
@@ -9,14 +9,10 @@ export type DismissibleMessageProps = {
 } & Omit<BannerProps, 'onExitClick'>
 
 export const DismissibleMessage: React.FC<DismissibleMessageProps> = ({ id, ...dismissedMessageProps }) => {
-  const dismissedMessages = usePersonalDataStore((state) => state.dismissedMessages)
+  const isDismissedMessage = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === id)
+  )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
-  const [isDismissedMessage, setDismissedMessage] = useState<boolean>()
-
-  useEffect(() => {
-    const isDissmised = dismissedMessages.some((channel) => channel.id === id)
-    setDismissedMessage(isDissmised)
-  }, [dismissedMessages, id])
 
   if (isDismissedMessage) {
     return null
