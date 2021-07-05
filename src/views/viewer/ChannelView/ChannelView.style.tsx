@@ -47,8 +47,8 @@ export const Title = styled(Text)`
 
 export const SubTitle = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
-  padding: ${sizes(1)} ${sizes(2)};
 
+  padding: ${sizes(1)} ${sizes(2)};
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
   display: inline-block;
