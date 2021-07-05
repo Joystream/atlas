@@ -618,7 +618,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </FormField>
           {isEdit && (
             <DeleteVideoContainer>
-              <DeleteVideoButton size="large" variant="tertiary" textColorVariant="error" onClick={handleDeleteVideo}>
+              <DeleteVideoButton size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
                 Delete video
               </DeleteVideoButton>
             </DeleteVideoContainer>
