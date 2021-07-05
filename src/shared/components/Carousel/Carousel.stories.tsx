@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import React, { useRef } from 'react'
 
 import { colors } from '@/shared/theme'
 
@@ -12,8 +12,10 @@ export default {
 } as Meta
 
 const Template: Story<CarouselProps> = (args) => {
+  const prevArrowRef = useRef<HTMLButtonElement>(null)
+  const nextArrowRef = useRef<HTMLButtonElement>(null)
   return (
-    <Carousel {...args}>
+    <Carousel {...args} prevArrowRef={prevArrowRef} nextArrowRef={nextArrowRef} dotsVisible>
       {Array.from({ length: 10 }, (_, i) => (
         <CarouselItem key={i}> Carousel Item {i}</CarouselItem>
       ))}
