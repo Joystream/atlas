@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import React, { useCallback, useMemo, useState } from 'react'
+import React from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_TILE_WIDTH } from '@/shared/components'
+import { Gallery } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 
@@ -45,6 +45,8 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
+const MIN_VIDEO_PREVIEW_WIDTH = 281
+
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
@@ -54,18 +56,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   onRemoveButtonClick,
   onVideoNotFound,
 }) => {
-  const [coverHeight, setCoverHeight] = useState<number>()
-  const onCoverResize = useCallback((_, imgHeight) => {
-    setCoverHeight(imgHeight)
-  }, [])
-  const arrowPosition = useMemo(() => {
-    if (!coverHeight) {
-      return
-    }
-    const topPx = (coverHeight - CAROUSEL_ARROW_HEIGHT) / 2
-    return topPx
-  }, [coverHeight])
-
   if (!loading && videos?.length === 0) {
     return null
   }
@@ -82,8 +72,8 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingLeft={sizes(2, true)}
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
-      itemWidth={MIN_VIDEO_TILE_WIDTH}
-      arrowPosition={arrowPosition}
+      itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
+      dotsVisible
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoTile
@@ -91,7 +81,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
           progress={video?.progress}
           key={idx}
           removeButton={video ? removeButton : false}
-          onCoverResize={onCoverResize}
           onClick={createClickHandler(video.id)}
           onNotFound={createNotFoundHandler(video.id)}
           onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
