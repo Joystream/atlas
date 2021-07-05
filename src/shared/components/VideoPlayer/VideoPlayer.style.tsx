@@ -8,6 +8,10 @@ import { Text } from '../Text'
 
 type ContainerProps = {
   isInBackground?: boolean
+  isFullScreen?: boolean
+}
+type CustomControlsProps = {
+  isFullScreen?: boolean
 }
 
 const focusStyles = css`
@@ -28,11 +32,11 @@ const focusStyles = css`
   }
 `
 
-export const CustomControls = styled.div`
+export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   height: 100%;
-  bottom: ${sizes(5)};
-  padding: 0 ${sizes(4)};
+  bottom: 0;
+  padding: ${({ isFullScreen }) => (isFullScreen ? sizes(12) : sizes(6))} ${sizes(6)};
   left: 0;
   z-index: ${zIndex.overlay};
   display: flex;
@@ -185,6 +189,10 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
 
+  .video-js {
+    background-color: ${colors.gray[900]};
+  }
+
   .vjs-playing:hover ${CustomControls} {
     transform: translateY(-${sizes(2)});
     opacity: 1;
@@ -207,7 +215,7 @@ export const Container = styled.div<ContainerProps>`
     opacity: 0;
     background: linear-gradient(180deg, rgba(11, 12, 15, 0) 0%, #0b0c0f 100%);
     align-items: flex-end;
-    height: ${sizes(32)} !important;
+    height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
     transition: opacity ${transitions.timings.player} ${transitions.easing};
 
     :hover {
@@ -220,23 +228,25 @@ export const Container = styled.div<ContainerProps>`
     .vjs-progress-control {
       height: ${sizes(8)};
       z-index: 20;
-      padding: 0 ${sizes(2)};
       position: absolute;
       top: initial;
       left: 0;
       bottom: 0;
       width: 100%;
-      transition: height ${transitions.timings.player} ${transitions.easing} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(7)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
+        border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
         height: ${sizes(1)};
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
+        transition: height ${transitions.timings.player} ${transitions.easing} !important;
 
         ${focusStyles}
 
         .vjs-slider-bar {
+          border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
           background-color: ${colors.blue[500]};
         }
 
@@ -263,6 +273,7 @@ export const Container = styled.div<ContainerProps>`
         }
 
         .vjs-load-progress {
+          border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
           background-color: ${colors.transparentWhite[32]};
 
           > div {

@@ -276,7 +276,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
   return (
-    <Container className={className} isInBackground={isInBackground}>
+    <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
         <PlayOverlay onClick={handlePlayOverlayClick}>
           <SvgOutlineVideo width={72} height={72} viewBox="0 0 24 24" />
@@ -285,7 +285,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
         {!isInBackground && !playOverlayVisible && (
-          <CustomControls>
+          <CustomControls isFullScreen={isFullScreen}>
             <ControlButton onClick={handlePlayPause}>
               {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
             </ControlButton>
