@@ -42,6 +42,14 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
+      bigPlayButton: false,
+      controlBar: {
+        // hide all videojs controls besides progress bar
+        children: [],
+        progressControl: {
+          seekBar: true,
+        },
+      },
     }
 
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)

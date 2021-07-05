@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
-import { colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -103,10 +103,6 @@ export const VolumeSlider = styled.input`
   transition: transform ${transitions.timings.player} ${transitions.easing},
     opacity ${transitions.timings.player} ${transitions.easing};
 
-  ::-moz-range-track {
-    border-radius: 4px;
-  }
-
   ::-moz-range-thumb {
     ${thumbStyles};
   }
@@ -187,10 +183,6 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
 
-  *:focus {
-    outline: none;
-  }
-
   .vjs-playing:hover ${CustomControls} {
     transform: translateY(-${sizes(2)});
     opacity: 1;
@@ -211,34 +203,10 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-control-bar {
     opacity: 0;
-    font-family: ${typography.fonts.base};
     background: linear-gradient(180deg, rgba(11, 12, 15, 0) 0%, #0b0c0f 100%);
     align-items: flex-end;
-    padding-bottom: ${sizes(8)};
     height: ${sizes(32)} !important;
     transition: opacity ${transitions.timings.player} ${transitions.easing};
-
-    .vjs-duration,
-    .vjs-remaining-time,
-    .vjs-time-divider,
-    .vjs-current-time,
-    .vjs-time-control,
-    .vjs-volume-panel,
-    .vjs-picture-in-picture-control,
-    .vjs-fullscreen-control,
-    .vjs-play-control {
-      display: none;
-    }
-
-    .vjs-slider {
-      background-color: ${colors.transparentWhite[32]};
-
-      ${focusStyles}
-
-      .vjs-slider-bar {
-        background-color: ${colors.blue[500]};
-      }
-    }
 
     .vjs-progress-control {
       position: absolute;
@@ -253,9 +221,16 @@ export const Container = styled.div<ContainerProps>`
         height: ${sizes(2)};
       }
 
-      .vjs-progress-holder {
+      .vjs-slider {
         height: 100%;
         margin: 0;
+        background-color: ${colors.transparentWhite[32]};
+
+        ${focusStyles}
+
+        .vjs-slider-bar {
+          background-color: ${colors.blue[500]};
+        }
 
         /* ::before is progress timeline thumb */
 
@@ -300,10 +275,6 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-paused .vjs-control-bar {
     opacity: 1;
-  }
-
-  .vjs-big-play-button {
-    display: none !important;
   }
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
