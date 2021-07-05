@@ -99,27 +99,22 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
   useEffect(() => {
-    if (!playerRef.current || !player) {
+    if (!playerRef.current) {
       return
     }
-    playerRef.current.focus()
-  }, [player])
-
-  useEffect(() => {
     const videoJsOptions: VideoJsPlayerOptions = {
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
-    }
-
-    const playerInstance: VideoJsPlayer = videojs(playerRef.current as Element, {
-      ...videoJsOptions,
       userActions: {
         hotkeys: (e) => hotkeysHandler(e, playerInstance),
       },
-    })
+    }
+
+    const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
 
     setPlayer(playerInstance)
+    playerRef.current.focus()
 
     return () => {
       playerInstance.dispose()

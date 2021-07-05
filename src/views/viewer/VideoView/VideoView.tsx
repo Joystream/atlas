@@ -69,16 +69,8 @@ export const VideoView: React.FC = () => {
   const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback(
     (event: Event) => {
-      const { keyCode } = event as KeyboardEvent
       if (videoRouteMatch) {
-        switch (keyCode) {
-          case 32:
-            event.preventDefault()
-            setPlaying((prevState) => !prevState)
-            break
-          default:
-            break
-        }
+        event.preventDefault()
       }
     },
     [videoRouteMatch]
