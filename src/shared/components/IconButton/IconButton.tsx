@@ -4,7 +4,7 @@ import { StyledButtonBase } from './IconButton.style'
 
 import { ButtonBaseProps } from '../ButtonBase'
 
-export type IconButtonProps = ButtonBaseProps & {
+export type IconButtonProps = Omit<ButtonBaseProps, 'textOnly'> & {
   children: ReactNode
 }
 

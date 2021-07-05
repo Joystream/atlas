@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { ButtonIconWrapper, StyledButtonBase, StyledText, TextColorVariant } from './Button.style'
+import { ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.style'
 
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 import { TextVariant } from '../Text'
 
 export type ButtonProps = {
   icon?: React.ReactNode
-  textColorVariant?: TextColorVariant
+  iconPlacement?: IconPlacement
   children: string
 } & Omit<ButtonBaseProps, 'children'>
 
@@ -18,14 +18,24 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ icon, children, size = 'medium', textColorVariant = 'default', ...baseButtonProps }, ref) => {
+  ({ icon, children, size = 'medium', iconPlacement = 'left', variant, textOnly, ...baseButtonProps }, ref) => {
     return (
-      <StyledButtonBase ref={ref} size={size} {...baseButtonProps}>
-        {icon && <ButtonIconWrapper>{icon}</ButtonIconWrapper>}
+      <StyledButtonBase ref={ref} size={size} {...baseButtonProps} textOnly={textOnly} variant={variant}>
+        {icon && iconPlacement === 'left' && (
+          <ButtonIconWrapper iconPlacement={iconPlacement}>{icon}</ButtonIconWrapper>
+        )}
         {children && (
-          <StyledText variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} textColorVariant={textColorVariant} size={size}>
+          <StyledText
+            variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]}
+            textColorVariant={variant || 'primary'}
+            textOnly={textOnly}
+            size={size}
+          >
             {children}
           </StyledText>
+        )}
+        {icon && iconPlacement === 'right' && (
+          <ButtonIconWrapper iconPlacement={iconPlacement}>{icon}</ButtonIconWrapper>
         )}
       </StyledButtonBase>
     )

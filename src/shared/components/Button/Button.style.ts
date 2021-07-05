@@ -1,21 +1,31 @@
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, sizes } from '@/shared/theme'
+import { sizes } from '@/shared/theme'
 
-import { ButtonBase, ButtonSize } from '../ButtonBase'
+import { ButtonBase, ButtonSize, ButtonVariant } from '../ButtonBase'
 import { Text } from '../Text'
+
+export type IconPlacement = 'left' | 'right'
+type ButtonIconWrapperProps = {
+  iconPlacement: IconPlacement
+}
 
 type ButtonSizeProps = {
   size: ButtonSize
 }
 
-export type TextColorVariant = 'default' | 'error'
 type TextProps = {
-  textColorVariant?: TextColorVariant
+  textColorVariant?: ButtonVariant
+  textOnly?: boolean
 } & ButtonSizeProps
 
-const sizeOverwriteStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
+const sizeOverwriteStyles = ({ size, textOnly }: Pick<TextProps, 'size' | 'textOnly'>): SerializedStyles => {
+  if (textOnly)
+    return css`
+      padding-left: 0;
+      padding-right: 0;
+    `
   switch (size) {
     case 'large':
       return css`
@@ -58,13 +68,14 @@ export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles};
 `
 
-export const ButtonIconWrapper = styled.span`
-  margin-right: ${sizes(2)};
+export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps>`
+  margin-right: ${({ iconPlacement }) => (iconPlacement === 'left' ? sizes(2) : 0)};
+  margin-left: ${({ iconPlacement }) => (iconPlacement === 'right' ? sizes(2) : 0)};
 `
 
 export const StyledText = styled(Text)<TextProps>`
   /* compensate for line-height being 1 */
-  ${textPaddingStyles};
+  ${textPaddingStyles}
 
-  color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error};
+  color: inherit;
 `
