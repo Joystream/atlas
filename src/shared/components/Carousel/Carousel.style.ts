@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
+
 import { IconButton } from '../IconButton'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
@@ -9,45 +10,24 @@ export const Container = styled.div`
   position: relative;
 `
 
-type HasDirection = {
-  direction: 'prev' | 'next'
-}
-
 type HasPadding = {
   paddingLeft: number
   paddingTop: number
 }
 
-type ArrowProps = {
-  arrowPosition?: number
-}
-
-export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
-  position: absolute;
-  top: 0;
-  left: ${(props) => (props.direction === 'prev' ? 0 : 'auto')};
-  right: ${(props) => (props.direction === 'next' ? 0 : 'auto')};
-  bottom: 0;
-  margin-left: ${(props) => -props.paddingLeft}px;
-  margin-top: ${(props) => -props.paddingTop}px;
-  width: 10%;
-  z-index: ${zIndex.overlay};
-  background-image: linear-gradient(
-    ${(props) => (props.direction === 'prev' ? 270 : 90)}deg,
-    transparent,
-    var(--gradientColor, transparent)
-  );
-  pointer-events: none;
-`
-
-export const Arrow = styled(IconButton)<ArrowProps>`
-  position: absolute;
-  top: ${({ arrowPosition }) => arrowPosition && `${arrowPosition}px`};
+export const Arrow = styled(IconButton)`
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
 
   &.disabled {
-    display: none;
+    opacity: 0.5;
+  }
+
+  &.glider-prev,
+  &.glider-next {
+    position: relative;
+    top: 0;
+    padding: ${sizes(2)};
   }
 
   &.glider-prev {
@@ -56,12 +36,6 @@ export const Arrow = styled(IconButton)<ArrowProps>`
 
   &.glider-next {
     right: 0;
-  }
-  + ${BackgroundGradient} {
-    --gradientColor: black;
-  }
-  &.disabled + ${BackgroundGradient} {
-    --gradientColor: transparent;
   }
 `
 
@@ -74,4 +48,38 @@ export const GliderContainer = styled.div<HasPadding>`
 
 export const Track = styled.div`
   align-items: flex-start;
+`
+
+export const Dots = styled.div`
+  margin-top: ${sizes(13)};
+
+  .glider-dot {
+    background-color: transparent;
+    width: ${sizes(10)};
+    border-radius: 0;
+    padding: ${sizes(1)};
+    margin: 0;
+
+    &::after {
+      content: '';
+      width: 100%;
+      height: ${sizes(1)};
+      display: block;
+      background-color: ${colors.gray[700]};
+      transition: all ${transitions.timings.regular} ${transitions.easing};
+    }
+
+    &:hover:not(.active) {
+      &::after {
+        background-color: ${colors.gray[50]};
+        transform: translateY(-2px);
+      }
+    }
+
+    &.active {
+      &::after {
+        background-color: ${colors.gray[300]};
+      }
+    }
+  }
 `
