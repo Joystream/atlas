@@ -275,7 +275,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player?.requestFullscreen()
     }
   }
-
   return (
     <Container className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
@@ -305,7 +304,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 />
               </VolumeSliderContainer>
             </VolumeControl>
-            <CurrentTime variant="caption">
+            <CurrentTime variant="body2">
               {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
             </CurrentTime>
             <ScreenControls>

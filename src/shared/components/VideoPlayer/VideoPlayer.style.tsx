@@ -150,7 +150,9 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 export const CurrentTime = styled(Text)`
   display: flex;
   height: ${sizes(10)};
+  color: ${colors.white};
   margin-left: ${sizes(4)};
+  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
 `
 
@@ -208,21 +210,27 @@ export const Container = styled.div<ContainerProps>`
     height: ${sizes(32)} !important;
     transition: opacity ${transitions.timings.player} ${transitions.easing};
 
+    :hover {
+      & ~ ${CustomControls} {
+        opacity: 0;
+        transform: translateY(${sizes(2)});
+      }
+    }
+
     .vjs-progress-control {
+      height: ${sizes(8)};
+      z-index: 20;
+      padding: 0 ${sizes(2)};
       position: absolute;
       top: initial;
-      height: ${sizes(1)};
       left: 0;
       bottom: 0;
       width: 100%;
       transition: height ${transitions.timings.player} ${transitions.easing} !important;
 
-      :hover {
-        height: ${sizes(2)};
-      }
-
       .vjs-slider {
-        height: 100%;
+        align-self: flex-end;
+        height: ${sizes(1)};
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
 
@@ -248,10 +256,6 @@ export const Container = styled.div<ContainerProps>`
           transition: opacity ${transitions.timings.player} ${transitions.easing};
         }
 
-        :hover .vjs-play-progress::before {
-          opacity: 1;
-        }
-
         .vjs-play-progress {
           .vjs-time-tooltip {
             display: none;
@@ -265,6 +269,14 @@ export const Container = styled.div<ContainerProps>`
             display: none;
           }
         }
+      }
+
+      :hover .vjs-play-progress::before {
+        opacity: 1;
+      }
+
+      :hover .vjs-slider {
+        height: ${sizes(2)};
       }
     }
   }
