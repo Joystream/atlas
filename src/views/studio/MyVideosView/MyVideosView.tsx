@@ -19,7 +19,7 @@ import {
 } from './MyVideos.styles'
 
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
-const SORT_OPTIONS = [
+export const SORT_OPTIONS = [
   { name: 'Newest first', value: VideoOrderByInput.CreatedAtDesc },
   { name: 'Oldest first', value: VideoOrderByInput.CreatedAtAsc },
 ]
@@ -50,7 +50,6 @@ export const MyVideosView = () => {
   const removeDraftNotificationsCount = useRef(0)
   const addToTabNotificationsCount = useRef(0)
 
-  // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
