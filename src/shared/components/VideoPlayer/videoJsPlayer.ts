@@ -18,7 +18,7 @@ export type VideoJsConfig = {
   onTimeUpdated?: (time: number) => void
 }
 
-const hotkeysHandler = (e: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
+const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
   const currentTime = playerInstance.currentTime()
   const currentVolume = playerInstance.volume()
   const isMuted = playerInstance.muted()
