@@ -35,8 +35,8 @@ const focusStyles = css`
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   height: 100%;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? sizes(12) : sizes(6))};
-  padding: 0 ${sizes(6)};
+  bottom: ${({ isFullScreen }) => (isFullScreen ? sizes(10) : sizes(4))};
+  padding: 0 ${sizes(4)};
   left: 0;
   z-index: ${zIndex.overlay};
   display: flex;
@@ -64,6 +64,10 @@ export const ControlButton = styled.button`
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
+  }
+
+  :active {
+    background-color: ${colors.transparentPrimary[10]};
   }
 
   ${focusStyles}
@@ -162,6 +166,10 @@ export const CurrentTime = styled(Text)`
 
 export const ScreenControls = styled.div`
   margin-left: auto;
+
+  ${ControlButton}:last-of-type {
+    margin-right: 0;
+  }
 `
 
 const backgroundContainerCss = css`
@@ -203,7 +211,6 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(${sizes(2)});
     opacity: 0;
   }
 
@@ -233,11 +240,10 @@ export const Container = styled.div<ContainerProps>`
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(7)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(6)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
-        border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
         height: ${sizes(1)};
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
@@ -246,7 +252,6 @@ export const Container = styled.div<ContainerProps>`
         ${focusStyles}
 
         .vjs-slider-bar {
-          border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
           background-color: ${colors.blue[500]};
         }
 
@@ -273,7 +278,6 @@ export const Container = styled.div<ContainerProps>`
         }
 
         .vjs-load-progress {
-          border-radius: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : 'unset')};
           background-color: ${colors.transparentWhite[32]};
 
           > div {
