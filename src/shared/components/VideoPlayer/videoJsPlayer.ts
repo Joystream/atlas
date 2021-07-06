@@ -47,6 +47,9 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       playerInstance.currentTime(currentTime + 10)
       return
     case 'ArrowUp':
+      if (playerInstance.muted()) {
+        playerInstance.muted(false)
+      }
       if (currentVolume <= 0.95) {
         playerInstance.volume(currentVolume + 0.05)
       } else {
@@ -57,6 +60,7 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       if (currentVolume >= 0.05) {
         playerInstance.volume(currentVolume - 0.05)
       } else {
+        playerInstance.muted(true)
         playerInstance.volume(0)
       }
       return

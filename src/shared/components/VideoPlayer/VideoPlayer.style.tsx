@@ -162,6 +162,7 @@ export const CurrentTime = styled(Text)`
   margin-left: ${sizes(4)};
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
 export const ScreenControls = styled.div`
