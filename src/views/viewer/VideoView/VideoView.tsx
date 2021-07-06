@@ -132,7 +132,7 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {video ? (
             <VideoPlayer
-              autoplay={true}
+              autoplay
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}
