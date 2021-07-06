@@ -4961,10 +4961,10 @@
   dependencies:
     vfile "*"
 
-"@types/video.js@^7.3.22":
-  version "7.3.22"
-  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.22.tgz#8378ba7d6a22458f04639e733b227c67eb6ec1f1"
-  integrity sha512-HBk0qHiYbQxrTA0C0eJ4+tm9FwzwtTmVMpyJvY7DYP7PmaJ86Liirorhrc9RLVQaTpkI3sQ6oSfoH07jkvc/Hw==
+"@types/video.js@^7.3.23":
+  version "7.3.23"
+  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.23.tgz#13c08a8eb52aca2774d27ca3be25c81c4d44a314"
+  integrity sha512-cTwyy15AOxxTVN6fWWwX7D/zLzOOx3smUCk9630wUb4t/E5tWOjcJ7kZoS86OjThberkQjI3WlN4S7rLmUFuaA==
 
 "@types/webpack-env@^1.15.3":
   version "1.16.0"
