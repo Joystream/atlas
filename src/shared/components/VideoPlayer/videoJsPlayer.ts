@@ -107,19 +107,20 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
       bigPlayButton: false,
+      userActions: {
+        hotkeys: (event) => hotkeysHandler(event, playerInstance),
+      },
       controlBar: {
         // hide all videojs controls besides progress bar
         children: [],
         progressControl: {
           seekBar: true,
         },
-      userActions: {
-        hotkeys: (event) => hotkeysHandler(event, playerInstance),
       },
     }
 
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
-    
+
     setPlayer(playerInstance)
     playerRef.current.focus()
 
