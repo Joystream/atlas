@@ -66,19 +66,10 @@ export const VideoView: React.FC = () => {
   const channelId = video?.channel.id
   const videoId = video?.id
 
-  const [playing, setPlaying] = useState(true)
   const handleUserKeyPress = useCallback(
     (event: Event) => {
-      const { keyCode } = event as KeyboardEvent
       if (videoRouteMatch) {
-        switch (keyCode) {
-          case 32:
-            event.preventDefault()
-            setPlaying((prevState) => !prevState)
-            break
-          default:
-            break
-        }
+        event.preventDefault()
       }
     },
     [videoRouteMatch]
@@ -125,13 +116,6 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
-  const handlePlay = useCallback(() => {
-    setPlaying(true)
-  }, [])
-  const handlePause = useCallback(() => {
-    setPlaying(false)
-  }, [])
-
   if (error) {
     throw error
   }
@@ -148,14 +132,12 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {video ? (
             <VideoPlayer
-              playing={playing}
+              autoplay
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
-              onPlay={handlePlay}
-              onPause={handlePause}
               startTime={startTimestamp}
             />
           ) : (
