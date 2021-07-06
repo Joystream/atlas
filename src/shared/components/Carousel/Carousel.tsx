@@ -34,7 +34,6 @@ export const Carousel = forwardRef<
     },
     ref
   ) => {
-    // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
     const dotsRef = useRef<HTMLDivElement>(null)
     const {
       ref: gliderRef,

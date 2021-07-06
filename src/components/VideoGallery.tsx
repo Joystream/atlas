@@ -45,6 +45,8 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
+const MIN_VIDEO_PREVIEW_WIDTH = 281
+
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
@@ -70,7 +72,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingLeft={sizes(2, true)}
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
-      itemWidth={281}
+      itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       dotsVisible
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (

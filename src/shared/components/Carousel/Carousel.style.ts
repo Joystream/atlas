@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 
@@ -59,6 +59,12 @@ export const Dots = styled.div`
     height: ${sizes(1)};
     border-radius: 0;
     margin: 0 ${sizes(1)};
+    transition: all ${transitions.timings.regular} ${transitions.easing};
+
+    &:hover {
+      background-color: ${colors.gray[50]};
+      transform: translateY(-2px);
+    }
 
     &.active {
       background-color: ${colors.gray[300]};
