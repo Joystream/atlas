@@ -25,7 +25,7 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
   const isFullscreen = playerInstance.isFullscreen()
   const isPaused = playerInstance.paused()
 
-  switch (e.code) {
+  switch (event.code) {
     case 'Space':
     case 'KeyK':
       if (isPaused) {
