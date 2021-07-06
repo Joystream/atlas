@@ -56,14 +56,6 @@ export const CoverVideo: React.FC = () => {
     setSoundMuted(!soundMuted)
   }
 
-  const handlePlay = () => {
-    setVideoPlaying(true)
-  }
-
-  const handlePause = () => {
-    setVideoPlaying(false)
-  }
-
   return (
     <Container>
       <MediaWrapper>
@@ -77,8 +69,6 @@ export const CoverVideo: React.FC = () => {
                 playing={videoPlaying}
                 posterUrl={thumbnailPhotoUrl}
                 onDataLoaded={handlePlaybackDataLoaded}
-                onPlay={handlePlay}
-                onPause={handlePause}
                 src={coverVideo?.coverCutMediaUrl}
               />
             ) : (
