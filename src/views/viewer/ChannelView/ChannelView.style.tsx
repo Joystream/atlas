@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { Placeholder, Text } from '@/shared/components'
+import { Placeholder, Text, Select } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
@@ -43,6 +43,16 @@ export const Title = styled(Text)`
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
+`
+
+export const SortContainer = styled.div`
+  display: none;
+  grid-gap: 8px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  ${media.medium} {
+    display: grid;
+  }
 `
 
 export const SubTitle = styled(Text)`
@@ -98,4 +108,12 @@ export const StyledButtonContainer = styled.div`
     margin-left: auto;
     align-self: center;
   }
+`
+
+export const PaginationContainer = styled.div`
+  padding-top: ${sizes(6)};
+  padding-bottom: ${sizes(16)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
