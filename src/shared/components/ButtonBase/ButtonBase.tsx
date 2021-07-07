@@ -10,6 +10,7 @@ export type ButtonBaseProps = {
   to?: To
   type?: 'button' | 'submit'
   textOnly?: boolean
+  iconOnly?: boolean
   children?: React.ReactNode
   className?: string
 } & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant'>>
@@ -36,6 +37,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
       size = 'medium',
       variant = 'primary',
       textOnly = false,
+      iconOnly = false,
       disabled,
       ...styleProps
     },
@@ -57,6 +59,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         size={size}
         variant={variant}
         textOnly={textOnly}
+        iconOnly={iconOnly}
         {...styleProps}
       >
         <BorderWrapper textOnly={textOnly}>{children}</BorderWrapper>

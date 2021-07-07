@@ -9,6 +9,7 @@ import { Text } from '../Text'
 export type IconPlacement = 'left' | 'right'
 type ButtonIconWrapperProps = {
   iconPlacement: IconPlacement
+  iconOnly?: boolean
 }
 
 type ButtonSizeProps = {
@@ -18,14 +19,24 @@ type ButtonSizeProps = {
 type TextProps = {
   textColorVariant?: ButtonVariant
   textOnly?: boolean
+  iconOnly: boolean
 } & ButtonSizeProps
 
-const sizeOverwriteStyles = ({ size, textOnly }: Pick<TextProps, 'size' | 'textOnly'>): SerializedStyles => {
+const sizeOverwriteStyles = ({
+  size,
+  textOnly,
+  iconOnly,
+}: Pick<TextProps, 'size' | 'textOnly' | 'iconOnly'>): SerializedStyles => {
   if (textOnly)
     return css`
       padding-left: 0;
       padding-right: 0;
     `
+  if (iconOnly) {
+    /* stylelint-disable no-empty-source */
+    return css``
+  }
+
   switch (size) {
     case 'large':
       return css`
@@ -69,8 +80,8 @@ export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
 `
 
 export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps>`
-  margin-right: ${({ iconPlacement }) => (iconPlacement === 'left' ? sizes(2) : 0)};
-  margin-left: ${({ iconPlacement }) => (iconPlacement === 'right' ? sizes(2) : 0)};
+  margin-right: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'left' && !iconOnly ? sizes(2) : 0)};
+  margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `
 
 export const StyledText = styled(Text)<TextProps>`
