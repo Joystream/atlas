@@ -54,20 +54,32 @@ export const Dots = styled.div`
   margin-top: ${sizes(13)};
 
   .glider-dot {
-    background-color: ${colors.gray[700]};
-    width: ${sizes(8)};
-    height: ${sizes(1)};
+    background-color: transparent;
+    width: ${sizes(10)};
     border-radius: 0;
-    margin: 0 ${sizes(1)};
-    transition: all ${transitions.timings.regular} ${transitions.easing};
+    padding: ${sizes(1)};
+    margin: 0;
 
-    &:hover {
-      background-color: ${colors.gray[50]};
-      transform: translateY(-2px);
+    &::after {
+      content: '';
+      width: 100%;
+      height: ${sizes(1)};
+      display: block;
+      background-color: ${colors.gray[700]};
+      transition: all ${transitions.timings.regular} ${transitions.easing};
+    }
+
+    &:hover:not(.active) {
+      &::after {
+        background-color: ${colors.gray[50]};
+        transform: translateY(-2px);
+      }
     }
 
     &.active {
-      background-color: ${colors.gray[300]};
+      &::after {
+        background-color: ${colors.gray[300]};
+      }
     }
   }
 `
