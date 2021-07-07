@@ -53,11 +53,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
-  const isMuted = usePersonalDataStore((state) => state.isMuted)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
-  const setIsMuted = usePersonalDataStore((state) => state.actions.setIsMuted)
 
-  const [volume, setVolume] = useState(isMuted ? 0 : cachedPlayerVolume)
+  const [isMuted, setIsMuted] = useState(false)
+  const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
@@ -66,6 +65,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [initialized, setInitialized] = useState(false)
 
   const displayPlayOverlay = playOverlayVisible && !isInBackground
+
+  useEffect(() => {
+    if (volume === 0) {
+      setIsMuted(true)
+    } else {
+      setIsMuted(false)
+    }
+  }, [volume])
 
   useEffect(() => {
     if (!player) {
@@ -160,23 +167,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     player.play()
   }
 
-  const debouncedVolumeChange = useRef(
-    debounce((volume: number) => {
-      updateCachedPlayerVolume(volume)
-    }, 500)
-  )
-
-  const isInitialMount = useRef(true)
-  useEffect(() => {
-    if (!player || !isInitialMount) {
-      return
-    }
-    isInitialMount.current = false
-    debouncedVolumeChange.current(volume)
-
-    player.volume(volume)
-  }, [player, volume])
-
   useEffect(() => {
     if (!player) {
       return
@@ -242,19 +232,57 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [player])
 
+  const debouncedVolumeChange = useRef(
+    debounce((volume: number) => {
+      updateCachedPlayerVolume(volume)
+    }, 500)
+  )
+
+  // update volume on keyboard input
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+
+    const handler = () => {
+      setVolume(player.volume())
+      if (player.volume()) {
+        debouncedVolumeChange.current(player.volume())
+      }
+    }
+
+    player.on('volumechange', handler)
+    return () => {
+      player.off('volumechange', handler)
+    }
+  }, [cachedPlayerVolume, player])
+
+  // update volume on mouse input
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    player?.volume(volume)
+
+    if (volume) {
+      debouncedVolumeChange.current(volume)
+    }
+  }, [isMuted, player, volume])
+
+  const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const volume = parseInt(e.target.value) / 100
+    setVolume(volume)
+  }
+
   const handlePlayPause = () => (isPlaying ? player?.pause() : player?.play())
 
   const handleMute = () => {
-    if (isMuted) {
-      setIsMuted(false)
-      setVolume(cachedPlayerVolume)
+    if (volume === 0) {
+      setVolume(cachedPlayerVolume || 0.05)
     } else {
-      setIsMuted(true)
       setVolume(0)
     }
   }
-
-  const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => setVolume(parseInt(e.target.value) / 100)
 
   const handlePictureInPicture = () => {
     if (document.pictureInPictureElement) {
@@ -275,6 +303,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player?.requestFullscreen()
     }
   }
+
+  const renderVolumeButton = () => {
+    if (volume === 0) {
+      return <StyledSvgPlayerSoundOff />
+    } else {
+      return volume <= 0.5 ? <SvgPlayerSoundHalf /> : <SvgPlayerSoundOn />
+    }
+  }
+
+  const volumeSlider = useRef(null)
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
@@ -290,15 +328,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
             </ControlButton>
             <VolumeControl>
-              <VolumeButton onClick={handleMute}>
-                {volume ? volume <= 0.5 ? <SvgPlayerSoundHalf /> : <SvgPlayerSoundOn /> : <StyledSvgPlayerSoundOff />}
-              </VolumeButton>
+              <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
               <VolumeSliderContainer>
                 <VolumeSlider
-                  value={volume * 100}
+                  ref={volumeSlider}
                   step={1}
                   max={100}
                   min={0}
+                  value={volume * 100}
                   onChange={handleChangeVolume}
                   type="range"
                 />

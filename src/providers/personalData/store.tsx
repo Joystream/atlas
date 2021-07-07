@@ -16,7 +16,6 @@ export type PersonalDataStoreState = {
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
   cachedPlayerVolume: number
-  isMuted: boolean
 }
 
 const WHITELIST = [
@@ -25,7 +24,6 @@ const WHITELIST = [
   'recentSearches',
   'dismissedMessages',
   'cachedPlayerVolume',
-  'isMuted',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -34,7 +32,6 @@ export type PersonalDataStoreActions = {
   updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   updateCachedPlayerVolume: (volume: number) => void
-  setIsMuted: (isMuted: boolean) => void
 }
 
 const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
@@ -51,7 +48,6 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       recentSearches,
       dismissedMessages,
       cachedPlayerVolume,
-      isMuted: false,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -91,19 +87,9 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      setIsMuted: (isMuted) => {
-        set((state) => {
-          state.isMuted = isMuted
-        })
-      },
       updateCachedPlayerVolume: (volume) =>
         set((state) => {
-          if (volume === 0) {
-            state.isMuted = true
-          } else {
-            state.cachedPlayerVolume = volume
-            state.isMuted = false
-          }
+          state.cachedPlayerVolume = volume
         }),
     }),
   },

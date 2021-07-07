@@ -60,7 +60,6 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       if (currentVolume >= 0.05) {
         playerInstance.volume(currentVolume - 0.05)
       } else {
-        playerInstance.muted(true)
         playerInstance.volume(0)
       }
       return
