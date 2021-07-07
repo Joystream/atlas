@@ -20,7 +20,7 @@ export type VideoJsConfig = {
 
 const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
   const currentTime = playerInstance.currentTime()
-  const currentVolume = playerInstance.volume()
+  const currentVolume = Number(playerInstance.volume().toFixed(2))
   const isMuted = playerInstance.muted()
   const isFullscreen = playerInstance.isFullscreen()
   const isPaused = playerInstance.paused()
@@ -65,8 +65,10 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       return
     case 'KeyM':
       if (isMuted) {
+        playerInstance.trigger('unmute')
         playerInstance.muted(false)
       } else {
+        playerInstance.trigger('mute')
         playerInstance.muted(true)
       }
       return

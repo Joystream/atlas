@@ -89,7 +89,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       },
       updateCachedPlayerVolume: (volume) =>
         set((state) => {
-          state.cachedPlayerVolume = volume > 1 ? 0 : volume
+          state.cachedPlayerVolume = volume
         }),
     }),
   },

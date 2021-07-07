@@ -235,21 +235,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
 
-    const handler = () => {
-      setVolume(player.volume())
-      if (player.volume()) {
-        debouncedVolumeChange.current(player.volume())
-      }
-      if (player.muted()) {
+    const handler = (e: Event) => {
+      if (e.type === 'mute') {
         setVolume(0)
+        return
       }
-      if (!player.muted() && volume === 0) {
+      if (e.type === 'unmute') {
         setVolume(cachedPlayerVolume || 0.05)
+        return
+      }
+      if (e.type === 'volumechange') {
+        setVolume(player.volume())
       }
     }
-    player.on('volumechange', handler)
+    player.on(['volumechange', 'mute', 'unmute'], handler)
     return () => {
-      player.off('volumechange', handler)
+      player.off(['volumechange', 'mute', 'unmute'], handler)
     }
   }, [cachedPlayerVolume, volume, player])
 
