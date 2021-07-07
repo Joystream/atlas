@@ -26,15 +26,14 @@ const sizeOverwriteStyles = ({
   size,
   textOnly,
   iconOnly,
-}: Pick<TextProps, 'size' | 'textOnly' | 'iconOnly'>): SerializedStyles => {
+}: Pick<TextProps, 'size' | 'textOnly' | 'iconOnly'>): SerializedStyles | null => {
   if (textOnly)
     return css`
       padding-left: 0;
       padding-right: 0;
     `
   if (iconOnly) {
-    /* stylelint-disable no-empty-source */
-    return css``
+    return null
   }
 
   switch (size) {
