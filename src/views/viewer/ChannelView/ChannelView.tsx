@@ -5,7 +5,7 @@ import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection }
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { Button, ChannelCover, Grid, Pagination, Select, Text } from '@/shared/components'
+import { Button, ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -18,6 +18,7 @@ import {
   StyledChannelLink,
   SubTitle,
   SubTitlePlaceholder,
+  TabsContainer,
   Title,
   TitleContainer,
   TitlePlaceholder,
@@ -25,6 +26,7 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
+const TABS = ['Videos', 'About'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -36,6 +38,8 @@ export const ChannelView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
   const [isFollowing, setFollowing] = useState<boolean>()
+  const [currentVideosTab, setCurrentVideosTab] = useState(0)
+  const currentTabName = TABS[currentVideosTab]
   const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
     VideoOrderByInput.CreatedAtDesc
   )
@@ -45,16 +49,7 @@ export const ChannelView: React.FC = () => {
     assetType: AssetType.COVER,
   })
   const { currentPage, setCurrentPage } = usePagination(0)
-  const {
-    edges,
-    totalCount,
-    loading: loadingVideos,
-    error: videosError,
-    fetchMore,
-    refetch,
-    variables,
-    pageInfo,
-  } = useVideosConnection(
+  const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
@@ -85,13 +80,12 @@ export const ChannelView: React.FC = () => {
       Logger.warn('Failed to update Channel following', { error })
     }
   }
-  if (error) {
+  if (videosError) {
+    throw videosError
+  } else if (error) {
     throw error
   }
 
-  if (!loading && !channel) {
-    return <span>Channel not found</span>
-  }
   const handleSorting = (value?: VideoOrderByInput | null | undefined) => {
     if (value) {
       setSortVideosBy(value)
@@ -101,6 +95,9 @@ export const ChannelView: React.FC = () => {
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
+  }
+  const handleSetCurrentTab = async (tab: number) => {
+    setCurrentVideosTab(tab)
   }
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
@@ -115,7 +112,11 @@ export const ChannelView: React.FC = () => {
     })
   )
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
+  if (!loading && !channel) {
+    return <span>Channel not found</span>
+  }
   return (
     <ViewWrapper>
       <ChannelCover assetUrl={coverPhotoUrl} />
@@ -140,26 +141,40 @@ export const ChannelView: React.FC = () => {
               {isFollowing ? 'Unfollow' : 'Follow'}
             </Button>
           </StyledButtonContainer>
+        </TitleSection>
+        <TabsContainer>
+          <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
           <SortContainer>
             <Text variant="body2">Sort by</Text>
             <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
           </SortContainer>
-        </TitleSection>
-        <VideoSection className={transitions.names.slide}>
-          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-            {videosWithPlaceholders.map((video, idx) => (
-              <VideoPreview key={idx} id={video.id} showChannel={false} />
-            ))}
-          </Grid>
-        </VideoSection>
-        <PaginationContainer>
-          <Pagination
-            onChangePage={handleChangePage}
-            page={currentPage}
-            itemsPerPage={videosPerPage}
-            totalCount={totalCount}
-          />
-        </PaginationContainer>
+        </TabsContainer>
+        {(() => {
+          switch (currentTabName) {
+            case 'Videos':
+              return (
+                <>
+                  <VideoSection className={transitions.names.slide}>
+                    <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+                      {videosWithPlaceholders.map((video, idx) => (
+                        <VideoPreview key={idx} id={video.id} showChannel={false} />
+                      ))}
+                    </Grid>
+                  </VideoSection>
+                  <PaginationContainer>
+                    <Pagination
+                      onChangePage={handleChangePage}
+                      page={currentPage}
+                      itemsPerPage={videosPerPage}
+                      totalCount={totalCount}
+                    />
+                  </PaginationContainer>
+                </>
+              )
+            case 'About':
+              return null
+          }
+        })()}
       </LimitedWidthContainer>
     </ViewWrapper>
   )
