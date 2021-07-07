@@ -35,7 +35,6 @@ const sizeOverwriteStyles = ({
   if (iconOnly) {
     return null
   }
-
   switch (size) {
     case 'large':
       return css`
