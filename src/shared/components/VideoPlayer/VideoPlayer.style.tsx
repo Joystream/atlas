@@ -100,7 +100,7 @@ export const VolumeSlider = styled.input`
   background: linear-gradient(
     to right,
     ${colors.white} 0%,
-    ${colors.white} ${({ value }) => (value ? Number(value) : 0)}%,
+    ${colors.white} ${({ value }) => (value ? Number(value) * 100 : 0)}%,
     ${colors.transparentWhite[32]} 30%,
     ${colors.transparentWhite[32]} 100%
   );
