@@ -117,3 +117,14 @@ export const PaginationContainer = styled.div`
   align-items: center;
   justify-content: center;
 `
+
+export const TabsContainer = styled.div`
+  padding-top: ${sizes(8)};
+  margin-bottom: ${sizes(8)};
+  border-bottom: solid 1px ${colors.gray[800]};
+
+  ${media.medium} {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+  }
+`
