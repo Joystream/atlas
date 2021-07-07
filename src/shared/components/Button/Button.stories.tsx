@@ -14,9 +14,7 @@ export default {
     className: { table: { disable: true } },
     to: { table: { disable: true } },
     type: { table: { disable: true } },
-    variant: { table: { disable: true } },
     textOnly: { table: { disable: true } },
-    icon: { table: { disable: true } },
     iconPlacement: {
       control: { type: 'select', options: ['left', 'right'] },
       defaultValue: 'left',
@@ -116,8 +114,33 @@ const TextOnlyTemplate: Story<ButtonProps> = (args) => (
   </div>
 )
 
+const IconOnlyTemplate: Story<ButtonProps> = (args) => (
+  <>
+    <Button {...args} size="large"></Button>
+    <Button {...args} size="medium"></Button>
+    <Button {...args} size="small"></Button>
+    <Button {...args} size="large" variant="secondary"></Button>
+    <Button {...args} size="medium" variant="secondary"></Button>
+    <Button {...args} size="small" variant="secondary"></Button>
+    <Button {...args} size="large" variant="tertiary"></Button>
+    <Button {...args} size="medium" variant="tertiary"></Button>
+    <Button {...args} size="small" variant="tertiary"></Button>
+    <Button {...args} size="large" variant="destructive-secondary"></Button>
+    <Button {...args} size="medium" variant="destructive-secondary"></Button>
+    <Button {...args} size="small" variant="destructive-secondary"></Button>
+    <Button {...args} size="large" variant="warning-secondary"></Button>
+    <Button {...args} size="medium" variant="warning-secondary"></Button>
+    <Button {...args} size="small" variant="warning-secondary"></Button>
+  </>
+)
+
 export const TextOnly = TextOnlyTemplate.bind({})
 TextOnly.args = {
   textOnly: true,
+  icon: <SvgGlyphAddVideo />,
+}
+
+export const IconOnly = IconOnlyTemplate.bind({})
+IconOnly.args = {
   icon: <SvgGlyphAddVideo />,
 }

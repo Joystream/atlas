@@ -18,9 +18,10 @@ export type ButtonBaseStyleProps = {
   size: ButtonSize
   clickable?: boolean
   textOnly: boolean
+  iconOnly: boolean
 }
 
-const variantStyles = ({ variant, textOnly }: ButtonBaseStyleProps): SerializedStyles => {
+const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
   switch (variant) {
     case 'primary':
       return css`
@@ -54,12 +55,11 @@ const variantStyles = ({ variant, textOnly }: ButtonBaseStyleProps): SerializedS
         color: ${colors.gray[50]};
 
         &:hover {
-          box-shadow: inset 0 0 0 1px ${colors.gray[50]};
+          box-shadow: inset 0 0 0 2px ${colors.gray[50]};
         }
 
         &:active {
-          box-shadow: inset 0 0 0 1px ${colors.gray[50]};
-          background-color: ${colors.blue[500]};
+          box-shadow: inset 0 0 0 2px ${colors.gray[50]};
           color: ${textOnly && colors.gray[300]};
           border-color: ${colors.gray[300]};
 
@@ -71,6 +71,7 @@ const variantStyles = ({ variant, textOnly }: ButtonBaseStyleProps): SerializedS
     case 'tertiary':
       return css`
         color: ${colors.gray[50]};
+        ${iconOnly && `border-radius: 50%`};
 
         &:hover {
           background-color: ${colors.transparentPrimary[12]};
@@ -221,6 +222,7 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
 
 export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   display: flex;
+  align-items: center;
   box-sizing: border-box;
   margin-top: -0.5px;
   margin-bottom: -0.5px;
