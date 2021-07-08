@@ -79,11 +79,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [indicator, setIndicator] = useState<EventState | null>(null)
 
   useEffect(() => {
-    if (!player) {
+    if (!player || isInBackground) {
       return
     }
     const indicatorEvents = ['play', 'pause', ...Object.values(CustomVideojsEvents)]
     const handler = (e: Event) => {
+      if (e.type === 'play' && !player.currentTime()) {
+        return
+      }
       const indicator = createIndicator(e.type as VideoEvent, player)
       if (indicator) {
         setIndicator({ ...indicator, isVisible: true })
@@ -94,7 +97,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(indicatorEvents, handler)
     }
-  }, [player])
+  }, [isInBackground, player])
 
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -390,7 +393,7 @@ const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
   const volume = Math.floor(player.volume() * 100) + '%'
   const isMuted = player.muted() || player.volume() === 0
 
-  const playerIcon = isMuted ? (
+  const volumeIcon = isMuted ? (
     <SvgPlayerSoundOff />
   ) : player.volume() >= 0.5 ? (
     <SvgPlayerSoundOn />
@@ -437,25 +440,25 @@ const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
       }
     case CustomVideojsEvents.Unmuted:
       return {
-        icon: playerIcon,
+        icon: volumeIcon,
         description: volume,
         type,
       }
     case CustomVideojsEvents.Muted:
       return {
-        icon: playerIcon,
+        icon: volumeIcon,
         description: 'Mute',
         type,
       }
     case CustomVideojsEvents.VolumeIncrease:
       return {
-        icon: playerIcon,
+        icon: volumeIcon,
         description: volume,
         type,
       }
     case CustomVideojsEvents.VolumeDecrease:
       return {
-        icon: playerIcon,
+        icon: volumeIcon,
         description: isMuted ? 'Mute' : volume,
         type,
       }
