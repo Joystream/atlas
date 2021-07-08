@@ -51,7 +51,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   { className, autoplay, isInBackground, playing, ...videoJsConfig },
   externalRef
 ) => {
-  const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
+  const [player, playerRef] = useVideoJsPlayer({ ...videoJsConfig })
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
 
@@ -256,7 +256,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // update volume on mouse input
   useEffect(() => {
-    if (!player) {
+    if (!player || videoJsConfig.muted) {
       return
     }
     player?.volume(volume)
@@ -267,7 +267,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     } else {
       player.muted(true)
     }
-  }, [player, volume])
+  }, [player, videoJsConfig.muted, volume])
 
   const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value))
