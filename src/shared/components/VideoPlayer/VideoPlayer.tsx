@@ -256,7 +256,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // update volume on mouse input
   useEffect(() => {
-    if (!player || videoJsConfig.muted) {
+    if (!player || isInBackground) {
       return
     }
     player?.volume(volume)
@@ -267,7 +267,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     } else {
       player.muted(true)
     }
-  }, [player, videoJsConfig.muted, volume])
+  }, [isInBackground, player, volume])
 
   const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVolume(Number(e.target.value))
