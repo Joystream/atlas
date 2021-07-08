@@ -55,7 +55,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         color: ${colors.gray[50]};
 
         &:hover {
-          box-shadow: inset 0 0 0 2px ${colors.gray[50]};
+          box-shadow: inset 0 0 0 2px ${colors.gray[300]};
+          border-color: ${colors.gray[300]};
         }
 
         &:active {
