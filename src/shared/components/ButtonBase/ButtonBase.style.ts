@@ -199,6 +199,26 @@ const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | 
       `
     : null
 
+export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: -0.5px;
+  margin-bottom: -0.5px;
+  height: 100%;
+  visibility: hidden;
+  border-bottom-width: ${({ textOnly }) => textOnly && '1px'};
+  border-bottom-style: ${({ textOnly }) => textOnly && 'solid'};
+
+  &:hover {
+    visibility: visible;
+  }
+
+  * {
+    visibility: visible;
+  }
+`
+
 export const StyledButtonBase = styled('button', { shouldForwardProp: isPropValid })<ButtonBaseStyleProps>`
   display: inline-flex;
   align-items: center;
@@ -221,25 +241,8 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   ${variantStyles};
   ${sizeStyles};
   ${textOnlyStyles};
-`
 
-export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  margin-top: -0.5px;
-  margin-bottom: -0.5px;
-  height: 100%;
-  visibility: hidden;
-  border-bottom-width: ${({ textOnly }) => textOnly && '1px'};
-  border-bottom-style: ${({ textOnly }) => textOnly && 'solid'};
-
-  &:hover,
-  &:focus {
-    visibility: visible;
-  }
-
-  * {
+  :focus ${BorderWrapper} {
     visibility: visible;
   }
 `
