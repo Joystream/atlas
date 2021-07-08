@@ -27,7 +27,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
       return css`
         background-color: ${colors.blue[500]};
         color: ${textOnly ? colors.blue[300] : colors.gray[50]};
-        border-color: ${colors.blue[300]};
 
         path {
           fill: ${textOnly && colors.blue[300]};
@@ -40,7 +39,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         &:active {
           background-color: ${colors.blue[900]};
           color: ${textOnly && colors.blue[400]};
-          border-color: ${colors.blue[400]};
 
           path {
             fill: ${textOnly && colors.blue[400]};
@@ -51,7 +49,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
       return css`
         /* 1px inset border */
         box-shadow: inset 0 0 0 1px ${colors.gray[500]};
-        border-color: ${colors.gray[50]};
         color: ${colors.gray[50]};
 
         &:hover {
@@ -61,7 +58,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         &:active {
           box-shadow: inset 0 0 0 2px ${colors.gray[50]};
           color: ${textOnly && colors.gray[300]};
-          border-color: ${colors.gray[300]};
 
           path {
             fill: ${textOnly && colors.gray[300]};
@@ -98,7 +94,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
       return css`
         box-shadow: inset 0 0 0 1px ${colors.gray[400]};
         color: ${colors.secondary.alert[50]};
-        border-color: ${colors.secondary.alert[50]};
 
         path {
           fill: ${colors.secondary.alert[50]};
@@ -137,7 +132,6 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
     case 'warning-secondary':
       return css`
         color: ${colors.secondary.warning[100]};
-        border-color: ${colors.secondary.warning[100]};
         box-shadow: inset 0 0 0 1px ${colors.gray[400]};
 
         path {
