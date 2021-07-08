@@ -19,7 +19,7 @@ type ButtonSizeProps = {
 type TextProps = {
   textColorVariant?: ButtonVariant
   textOnly?: boolean
-  iconOnly: boolean
+  iconOnly?: boolean
 } & ButtonSizeProps
 
 const sizeOverwriteStyles = ({
