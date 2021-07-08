@@ -171,6 +171,58 @@ export const ScreenControls = styled.div`
   }
 `
 
+export const ControlsIndicatorWrapper = styled.div`
+  position: absolute;
+  top: calc(50% - ${sizes(16)});
+  left: calc(50% - ${sizes(16)});
+  display: flex;
+  flex-direction: column;
+`
+
+export const ControlsIndicator = styled.div`
+  width: ${sizes(32)};
+  height: ${sizes(32)};
+  backdrop-filter: blur(${sizes(8)});
+  background-color: ${colors.transparentBlack[54]};
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > svg {
+    width: ${sizes(18)};
+    height: ${sizes(18)};
+  }
+`
+
+export const ControlsIndicatorTooltip = styled.div`
+  align-self: center;
+  backdrop-filter: blur(${sizes(8)});
+  background-color: ${colors.transparentBlack[54]};
+  margin-top: ${sizes(4)};
+  padding: ${sizes(2)};
+  text-align: center;
+`
+
+const indicatorTransitions = css`
+  .indicator-exit {
+    opacity: 1;
+  }
+
+  .indicator-exit-active {
+    opacity: 0;
+    transition: opacity ${transitions.timings.loading} ${transitions.easing};
+    ${ControlsIndicator} {
+      transform: scale(0.7);
+      transition: transform ${transitions.timings.loading} ${transitions.easing};
+    }
+    ${ControlsIndicatorTooltip} {
+      transform: translateY(-${sizes(2)});
+      transition: transform ${transitions.timings.loading} ${transitions.easing};
+    }
+  }
+`
+
 const backgroundContainerCss = css`
   .vjs-waiting .vjs-loading-spinner {
     display: none;
@@ -193,6 +245,8 @@ const backgroundContainerCss = css`
 `
 
 export const Container = styled.div<ContainerProps>`
+  ${indicatorTransitions}
+
   position: relative;
   height: 100%;
 

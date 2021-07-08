@@ -2,6 +2,17 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
+export enum CustomVideojsEvents {
+  BackwardFiveSec = 'BackwardFiveSec',
+  BackwardTenSec = 'BackwardTenSec',
+  ForwardFiveSec = 'ForwardFiveSec',
+  ForwardTenSec = 'ForwardTenSec',
+  Muted = 'MUTED',
+  Unmuted = 'UNMUTED',
+  VolumeIncrease = 'VOLUME_INCREASE',
+  VolumeDecrease = 'VOLUME_DECREASE',
+}
+
 export type VideoJsConfig = {
   src?: string | null
   width?: number
@@ -37,36 +48,43 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       }
       return
     case 'ArrowLeft':
+      playerInstance.trigger(CustomVideojsEvents.BackwardFiveSec)
       playerInstance.currentTime(currentTime - 5)
       return
     case 'ArrowRight':
+      playerInstance.trigger(CustomVideojsEvents.ForwardFiveSec)
       playerInstance.currentTime(currentTime + 5)
       return
     case 'KeyJ':
+      playerInstance.trigger(CustomVideojsEvents.BackwardTenSec)
       playerInstance.currentTime(currentTime - 10)
       return
     case 'KeyL':
+      playerInstance.trigger(CustomVideojsEvents.ForwardTenSec)
       playerInstance.currentTime(currentTime + 10)
       return
     case 'ArrowUp':
-      if (playerInstance.muted()) {
-        playerInstance.muted(false)
-      }
-      if (currentVolume <= 1) {
-        playerInstance.volume(Math.min(currentVolume + VOLUME_STEP, 1))
+      playerInstance.trigger(CustomVideojsEvents.VolumeIncrease)
+      if (currentVolume <= 0.9) {
+        playerInstance.volume(currentVolume + VOLUME_STEP)
+      } else {
+        playerInstance.volume(1)
       }
       return
     case 'ArrowDown':
-      if (currentVolume >= 0) {
-        playerInstance.volume(Math.max(currentVolume - VOLUME_STEP, 0))
+      playerInstance.trigger(CustomVideojsEvents.VolumeDecrease)
+      if (currentVolume >= VOLUME_STEP) {
+        playerInstance.volume(currentVolume - VOLUME_STEP)
+      } else {
+        playerInstance.volume(0)
       }
       return
     case 'KeyM':
       if (isMuted) {
-        playerInstance.trigger('unmute')
+        playerInstance.trigger(CustomVideojsEvents.Unmuted)
         playerInstance.muted(false)
       } else {
-        playerInstance.trigger('mute')
+        playerInstance.trigger(CustomVideojsEvents.Muted)
         playerInstance.muted(true)
       }
       return
