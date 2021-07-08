@@ -46,3 +46,19 @@ export const Tertiary = Template.bind({})
 Tertiary.args = {
   variant: 'tertiary',
 }
+export const Destructive = Template.bind({})
+Destructive.args = {
+  variant: 'destructive',
+}
+export const DestructiveSecondary = Template.bind({})
+DestructiveSecondary.args = {
+  variant: 'destructive-secondary',
+}
+export const Warning = Template.bind({})
+Warning.args = {
+  variant: 'warning',
+}
+export const WarningSecondary = Template.bind({})
+WarningSecondary.args = {
+  variant: 'warning-secondary',
+}
