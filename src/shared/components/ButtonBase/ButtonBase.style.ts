@@ -32,7 +32,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           fill: ${textOnly && colors.blue[300]};
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: ${colors.blue[700]};
         }
 
@@ -51,7 +52,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         box-shadow: inset 0 0 0 1px ${colors.gray[500]};
         color: ${colors.gray[50]};
 
-        &:hover {
+        &:hover,
+        &:focus {
           box-shadow: inset 0 0 0 2px ${colors.gray[300]};
           border-color: ${colors.gray[300]};
         }
@@ -70,7 +72,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         color: ${colors.gray[50]};
         ${iconOnly && `border-radius: 50%`};
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: ${colors.transparentPrimary[12]};
         }
 
@@ -83,7 +86,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         background-color: ${colors.secondary.alert[100]};
         color: ${colors.gray[50]};
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: ${colors.secondary.alert[200]};
         }
 
@@ -100,7 +104,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           fill: ${colors.secondary.alert[50]};
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
           box-shadow: inset 0 0 0 2px ${colors.gray[300]};
         }
 
@@ -122,7 +127,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           fill: ${colors.gray[900]};
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: ${colors.secondary.warning[200]};
         }
 
@@ -139,7 +145,8 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           fill: ${colors.secondary.warning[100]};
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
           box-shadow: inset 0 0 0 2px ${colors.gray[300]};
         }
 
@@ -179,7 +186,8 @@ const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | 
         box-shadow: none;
         padding: 0;
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: ${colors.transparent};
           box-shadow: none;
         }
@@ -226,7 +234,8 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   border-bottom-width: ${({ textOnly }) => textOnly && '1px'};
   border-bottom-style: ${({ textOnly }) => textOnly && 'solid'};
 
-  &:hover {
+  &:hover,
+  &:focus {
     visibility: visible;
   }
 
