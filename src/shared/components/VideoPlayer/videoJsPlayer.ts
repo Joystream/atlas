@@ -52,17 +52,13 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       if (playerInstance.muted()) {
         playerInstance.muted(false)
       }
-      if (currentVolume <= 0.9) {
-        playerInstance.volume(currentVolume + VOLUME_STEP)
-      } else {
-        playerInstance.volume(1)
+      if (currentVolume <= 1) {
+        playerInstance.volume(Math.min(currentVolume + VOLUME_STEP, 1))
       }
       return
     case 'ArrowDown':
-      if (currentVolume >= VOLUME_STEP) {
-        playerInstance.volume(currentVolume - VOLUME_STEP)
-      } else {
-        playerInstance.volume(0)
+      if (currentVolume >= 0) {
+        playerInstance.volume(Math.max(currentVolume - VOLUME_STEP, 0))
       }
       return
     case 'KeyM':

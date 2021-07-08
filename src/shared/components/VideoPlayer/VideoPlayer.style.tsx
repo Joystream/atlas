@@ -79,10 +79,9 @@ export const VolumeSliderContainer = styled.div`
 `
 
 export const thumbStyles = css`
+  appearance: none;
   border: none;
   background: ${colors.white};
-  -webkit-appearance: none;
-  appearance: none;
   width: ${sizes(3)};
   height: ${sizes(3)};
   border-radius: 100%;
@@ -90,7 +89,6 @@ export const thumbStyles = css`
 `
 
 export const VolumeSlider = styled.input`
-  -webkit-appearance: none;
   appearance: none;
   border-radius: 2px;
   margin: 0;

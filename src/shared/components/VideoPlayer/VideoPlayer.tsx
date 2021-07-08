@@ -45,7 +45,7 @@ declare global {
   }
 }
 
-const isPictureInPictureSupported = 'pictureInPictureEnabled' in document
+const isPiPSupported = 'pictureInPictureEnabled' in document
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, autoplay, isInBackground, playing, ...videoJsConfig },
@@ -65,27 +65,25 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const displayPlayOverlay = playOverlayVisible && !isInBackground
 
+  // handle loading video
   useEffect(() => {
     if (!player) {
       return
     }
-
     const handler = () => {
       setInitialized(true)
     }
-
     player.on('loadstart', handler)
-
     return () => {
       player.off('loadstart', handler)
     }
   }, [player])
 
+  // handle autoplay
   useEffect(() => {
     if (!player || !initialized || !autoplay) {
       return
     }
-
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
@@ -94,49 +92,44 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [player, initialized, autoplay])
 
+  // handle playing and pausing with props
   useEffect(() => {
     if (!player) {
       return
     }
-
-    if (playing != null) {
-      if (playing) {
-        const playPromise = player.play()
-        if (playPromise) {
-          playPromise.catch((e) => {
-            if (e.name === 'NotAllowedError') {
-              Logger.warn('Video play failed:', e)
-            } else {
-              Logger.error('Video play failed:', e)
-            }
-          })
-        }
-      } else {
-        player.pause()
+    if (playing) {
+      const playPromise = player.play()
+      if (playPromise) {
+        playPromise.catch((e) => {
+          if (e.name === 'NotAllowedError') {
+            Logger.warn('Video play failed:', e)
+          } else {
+            Logger.error('Video play failed:', e)
+          }
+        })
       }
+    } else {
+      player.pause()
     }
   }, [player, playing])
 
+  // handle playing and pausing
   useEffect(() => {
     if (!player) {
       return
     }
-
-    const playHandler = () => {
-      setPlayOverlayVisible(false)
-      setIsPlaying(true)
+    const handler = (event: Event) => {
+      if (event.type === 'play') {
+        setPlayOverlayVisible(false)
+        setIsPlaying(true)
+      }
+      if (event.type === 'pause') {
+        setIsPlaying(false)
+      }
     }
-
-    const pauseHandler = () => {
-      setIsPlaying(false)
-    }
-
-    player.on('play', playHandler)
-    player.on('pause', pauseHandler)
-
+    player.on(['play', 'pause'], handler)
     return () => {
-      player.off('play', playHandler)
-      player.off('pause', pauseHandler)
+      player.off(['play', 'pause'], handler)
     }
   }, [player])
 
@@ -151,83 +144,48 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [externalRef, playerRef])
 
-  const handlePlayOverlayClick = () => {
-    if (!player) {
-      return
-    }
-    player.play()
-  }
-
+  // handle video timer
   useEffect(() => {
     if (!player) {
       return
     }
     const handler = () => setVideoTime(Math.floor(player.currentTime()))
-
     player.on('timeupdate', handler)
     return () => {
       player.off('timeupdate', handler)
     }
   }, [player])
 
+  // handle fullscreen mode
   useEffect(() => {
     if (!player) {
       return
     }
-    const handler = () => {
-      if (player.isFullscreen()) {
-        setIsFullScreen(true)
-      } else {
-        setIsFullScreen(false)
-      }
-    }
+    const handler = () => setIsFullScreen(player.isFullscreen())
     player.on('fullscreenchange', handler)
     return () => {
       player.off('fullscreenchange', handler)
     }
   }, [player])
 
+  // handle picture in picture
   useEffect(() => {
     if (!player) {
       return
     }
-    const handler = () => {
-      if (player.isFullscreen()) {
-        setIsFullScreen(true)
-      } else {
-        setIsFullScreen(false)
+    const handler = (event: Event) => {
+      if (event.type === 'enterpictureinpicture') {
+        setIsPiPEnabled(true)
+      }
+      if (event.type === 'leavepictureinpicture') {
+        setIsPiPEnabled(false)
       }
     }
-    player.on('fullscreenchange', handler)
+    player.on(['enterpictureinpicture', 'leavepictureinpicture'], handler)
     return () => {
-      player.off('fullscreenchange', handler)
+      player.off(['enterpictureinpicture', 'leavepictureinpicture'], handler)
     }
   }, [player])
-
-  useEffect(() => {
-    if (!player) {
-      return
-    }
-    const enterPiPhandler = () => {
-      setIsPiPEnabled(true)
-    }
-    const exitPiPhandler = () => {
-      setIsPiPEnabled(false)
-    }
-
-    player.on('enterpictureinpicture', enterPiPhandler)
-    player.on('leavepictureinpicture', exitPiPhandler)
-    return () => {
-      player.off('enterpictureinpicture', enterPiPhandler)
-      player.off('leavepictureinpicture', exitPiPhandler)
-    }
-  }, [player])
-
-  const debouncedVolumeChange = useRef(
-    debounce((volume: number) => {
-      updateCachedPlayerVolume(volume)
-    }, 500)
-  )
 
   // update volume on keyboard input
   useEffect(() => {
@@ -235,16 +193,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
 
-    const handler = (e: Event) => {
-      if (e.type === 'mute') {
+    const handler = (event: Event) => {
+      if (event.type === 'mute') {
         setVolume(0)
         return
       }
-      if (e.type === 'unmute') {
+      if (event.type === 'unmute') {
         setVolume(cachedPlayerVolume || VOLUME_STEP)
         return
       }
-      if (e.type === 'volumechange') {
+      if (event.type === 'volumechange') {
         setVolume(player.volume())
       }
     }
@@ -254,6 +212,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [cachedPlayerVolume, volume, player])
 
+  const debouncedVolumeChange = useRef(
+    debounce((volume: number) => {
+      updateCachedPlayerVolume(volume)
+    }, 125)
+  )
   // update volume on mouse input
   useEffect(() => {
     if (!player || isInBackground) {
@@ -269,11 +232,18 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [isInBackground, player, volume])
 
-  const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(Number(e.target.value))
+  const handlePlayOverlayClick = () => {
+    if (!player) {
+      return
+    }
+    player.play()
   }
 
   const handlePlayPause = () => (isPlaying ? player?.pause() : player?.play())
+
+  const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(e.target.value))
+  }
 
   const handleMute = () => {
     if (volume === 0) {
@@ -321,28 +291,21 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
         {!isInBackground && !playOverlayVisible && (
-          <CustomControls isFullScreen={isFullScreen}>
+          <CustomControls isFullScreen={isFullScreen} onClick={handlePlayPause}>
             <ControlButton onClick={handlePlayPause}>
               {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
             </ControlButton>
             <VolumeControl>
               <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
               <VolumeSliderContainer>
-                <VolumeSlider
-                  step={VOLUME_STEP}
-                  max={1}
-                  min={0}
-                  value={volume}
-                  onChange={handleChangeVolume}
-                  type="range"
-                />
+                <VolumeSlider step={0.01} max={1} min={0} value={volume} onChange={handleChangeVolume} type="range" />
               </VolumeSliderContainer>
             </VolumeControl>
             <CurrentTime variant="body2">
               {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
             </CurrentTime>
             <ScreenControls>
-              {isPictureInPictureSupported && (
+              {isPiPSupported && (
                 <ControlButton onClick={handlePictureInPicture}>
                   {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
                 </ControlButton>
