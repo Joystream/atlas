@@ -21,7 +21,6 @@ import {
   SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
@@ -368,7 +367,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         )}
         <CSSTransition
           in={indicator?.isVisible}
-          timeout={parseInt(transitions.timings.loading)}
+          timeout={indicator?.isVisible ? 0 : 500}
           classNames="indicator"
           mountOnEnter
           unmountOnExit

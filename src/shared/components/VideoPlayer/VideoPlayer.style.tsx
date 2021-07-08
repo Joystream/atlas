@@ -197,28 +197,28 @@ export const ControlsIndicator = styled.div`
 
 export const ControlsIndicatorTooltip = styled.div`
   align-self: center;
-  backdrop-filter: blur(${sizes(8)});
   background-color: ${colors.transparentBlack[54]};
   margin-top: ${sizes(4)};
   padding: ${sizes(2)};
   text-align: center;
+  backdrop-filter: blur(${sizes(8)});
 `
 
-const indicatorTransitions = css`
+export const indicatorTransitions = css`
   .indicator-exit {
     opacity: 1;
   }
 
   .indicator-exit-active {
-    opacity: 0;
-    transition: opacity ${transitions.timings.loading} ${transitions.easing};
     ${ControlsIndicator} {
-      transform: scale(0.7);
-      transition: transform ${transitions.timings.loading} ${transitions.easing};
+      transform: scale(1.1);
+      opacity: 0;
+      transition: transform 500ms ease-out, opacity 500ms 150ms ease-out;
     }
     ${ControlsIndicatorTooltip} {
-      transform: translateY(-${sizes(2)});
-      transition: transform ${transitions.timings.loading} ${transitions.easing};
+      transform: translateY(${sizes(2)});
+      opacity: 0;
+      transition: transform 500ms ease-out, opacity 500ms 150ms ease-out;
     }
   }
 `
