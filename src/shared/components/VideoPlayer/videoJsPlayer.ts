@@ -18,6 +18,8 @@ export type VideoJsConfig = {
   onTimeUpdated?: (time: number) => void
 }
 
+export const VOLUME_STEP = 0.1
+
 const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
   const currentTime = playerInstance.currentTime()
   const currentVolume = Number(playerInstance.volume().toFixed(2))
@@ -50,15 +52,15 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       if (playerInstance.muted()) {
         playerInstance.muted(false)
       }
-      if (currentVolume <= 0.95) {
-        playerInstance.volume(currentVolume + 0.05)
+      if (currentVolume <= 0.9) {
+        playerInstance.volume(currentVolume + VOLUME_STEP)
       } else {
         playerInstance.volume(1)
       }
       return
     case 'ArrowDown':
-      if (currentVolume >= 0.05) {
-        playerInstance.volume(currentVolume - 0.05)
+      if (currentVolume >= VOLUME_STEP) {
+        playerInstance.volume(currentVolume - VOLUME_STEP)
       } else {
         playerInstance.volume(0)
       }

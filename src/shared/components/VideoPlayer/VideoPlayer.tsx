@@ -29,7 +29,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.style'
-import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
+import { VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   className?: string
@@ -241,7 +241,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         return
       }
       if (e.type === 'unmute') {
-        setVolume(cachedPlayerVolume || 0.05)
+        setVolume(cachedPlayerVolume || VOLUME_STEP)
         return
       }
       if (e.type === 'volumechange') {
@@ -328,7 +328,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             <VolumeControl>
               <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
               <VolumeSliderContainer>
-                <VolumeSlider step={0.05} max={1} min={0} value={volume} onChange={handleChangeVolume} type="range" />
+                <VolumeSlider
+                  step={VOLUME_STEP}
+                  max={1}
+                  min={0}
+                  value={volume}
+                  onChange={handleChangeVolume}
+                  type="range"
+                />
               </VolumeSliderContainer>
             </VolumeControl>
             <CurrentTime variant="body2">
