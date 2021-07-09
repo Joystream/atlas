@@ -375,7 +375,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         )}
         <CSSTransition
           in={indicator?.isVisible}
-          timeout={indicator?.isVisible ? 0 : 500}
+          timeout={indicator?.isVisible ? 0 : 750}
           classNames="indicator"
           mountOnEnter
           unmountOnExit

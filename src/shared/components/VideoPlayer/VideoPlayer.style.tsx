@@ -182,7 +182,7 @@ export const ControlsIndicatorWrapper = styled.div`
 export const ControlsIndicator = styled.div`
   width: ${sizes(32)};
   height: ${sizes(32)};
-  backdrop-filter: blur(${sizes(8)});
+  backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
   display: flex;
@@ -202,6 +202,7 @@ export const ControlsIndicatorTooltip = styled.div`
   background-color: ${colors.transparentBlack[54]};
   padding: ${sizes(2)};
   text-align: center;
+  margin-top: ${sizes(3)};
   backdrop-filter: blur(${sizes(8)});
 `
 
@@ -216,17 +217,16 @@ export const indicatorTransitions = css`
     ${ControlsIndicator} {
       transform: scale(1);
       opacity: 0;
-      transition: transform 500ms ${animationEasing}, opacity 500ms 100ms ${animationEasing};
+      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
 
       > svg {
         transform: scale(1);
-        transition: transform 500ms ${animationEasing};
+        transition: transform 750ms ${animationEasing};
       }
     }
     ${ControlsIndicatorTooltip} {
-      transform: translateY(${sizes(4)});
       opacity: 0;
-      transition: transform 500ms ${animationEasing}, opacity 500ms 100ms ${animationEasing};
+      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
     }
   }
 `
@@ -272,6 +272,7 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
+    transform: translateY(${sizes(2)});
     opacity: 0;
   }
 
@@ -281,10 +282,10 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-control-bar {
     opacity: 0;
-    background: linear-gradient(180deg, rgba(11, 12, 15, 0) 0%, #0b0c0f 100%);
+    background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     align-items: flex-end;
     height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
-    transition: opacity ${transitions.timings.player} ${transitions.easing};
+    transition: transform 200ms ${transitions.easing} !important;
 
     :hover {
       & ~ ${CustomControls} {
