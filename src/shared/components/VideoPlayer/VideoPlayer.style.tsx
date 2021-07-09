@@ -186,10 +186,12 @@ export const ControlsIndicator = styled.div`
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
   display: flex;
+  transform: scale(0.5);
   justify-content: center;
   align-items: center;
 
   > svg {
+    transform: scale(0.75);
     width: ${sizes(18)};
     height: ${sizes(18)};
   }
@@ -198,11 +200,12 @@ export const ControlsIndicator = styled.div`
 export const ControlsIndicatorTooltip = styled.div`
   align-self: center;
   background-color: ${colors.transparentBlack[54]};
-  margin-top: ${sizes(4)};
   padding: ${sizes(2)};
   text-align: center;
   backdrop-filter: blur(${sizes(8)});
 `
+
+const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
 
 export const indicatorTransitions = css`
   .indicator-exit {
@@ -211,14 +214,19 @@ export const indicatorTransitions = css`
 
   .indicator-exit-active {
     ${ControlsIndicator} {
-      transform: scale(1.1);
+      transform: scale(1);
       opacity: 0;
-      transition: transform 500ms ease-out, opacity 500ms 150ms ease-out;
+      transition: transform 500ms ${animationEasing}, opacity 500ms 100ms ${animationEasing};
+
+      > svg {
+        transform: scale(1);
+        transition: transform 500ms ${animationEasing};
+      }
     }
     ${ControlsIndicatorTooltip} {
-      transform: translateY(${sizes(2)});
+      transform: translateY(${sizes(4)});
       opacity: 0;
-      transition: transform 500ms ease-out, opacity 500ms 150ms ease-out;
+      transition: transform 500ms ${animationEasing}, opacity 500ms 100ms ${animationEasing};
     }
   }
 `

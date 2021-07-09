@@ -59,7 +59,7 @@ declare global {
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
-type VideoEvent = CustomVideojsEvents | 'play' | 'pause' | null
+type VideoEvent = CustomVideojsEvents | null
 
 type EventState = {
   type: VideoEvent
@@ -81,11 +81,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player || isInBackground) {
       return
     }
-    const indicatorEvents = ['play', 'pause', ...Object.values(CustomVideojsEvents)]
+    const indicatorEvents = Object.values(CustomVideojsEvents)
     const handler = (e: Event) => {
-      if (e.type === 'play' && !player.currentTime()) {
-        return
-      }
       const indicator = createIndicator(e.type as VideoEvent, player)
       if (indicator) {
         setIndicator({ ...indicator, isVisible: true })
@@ -390,24 +387,16 @@ export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
 
 const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
   const volume = Math.floor(player.volume() * 100) + '%'
-  const isMuted = player.muted() || player.volume() === 0
-
-  const volumeIcon = isMuted ? (
-    <SvgPlayerSoundOff />
-  ) : player.volume() >= 0.5 ? (
-    <SvgPlayerSoundOn />
-  ) : (
-    <SvgPlayerSoundHalf />
-  )
+  const isMuted = player.muted() || !Number(player.volume().toFixed(2))
 
   switch (type) {
-    case 'pause':
+    case CustomVideojsEvents.PauseControl:
       return {
         icon: <SvgPlayerPause />,
         description: 'Pause',
         type,
       }
-    case 'play':
+    case CustomVideojsEvents.PlayControl:
       return {
         icon: <SvgPlayerPlay />,
         description: 'Play',
@@ -439,25 +428,25 @@ const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
       }
     case CustomVideojsEvents.Unmuted:
       return {
-        icon: volumeIcon,
+        icon: <SvgPlayerSoundOn />,
         description: volume,
         type,
       }
     case CustomVideojsEvents.Muted:
       return {
-        icon: volumeIcon,
+        icon: <SvgPlayerSoundOff />,
         description: 'Mute',
         type,
       }
     case CustomVideojsEvents.VolumeIncrease:
       return {
-        icon: volumeIcon,
+        icon: <SvgPlayerSoundOn />,
         description: volume,
         type,
       }
     case CustomVideojsEvents.VolumeDecrease:
       return {
-        icon: volumeIcon,
+        icon: isMuted ? <SvgPlayerSoundOff /> : <SvgPlayerSoundHalf />,
         description: isMuted ? 'Mute' : volume,
         type,
       }

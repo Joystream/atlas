@@ -3,14 +3,16 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
 export enum CustomVideojsEvents {
-  BackwardFiveSec = 'BackwardFiveSec',
-  BackwardTenSec = 'BackwardTenSec',
-  ForwardFiveSec = 'ForwardFiveSec',
-  ForwardTenSec = 'ForwardTenSec',
+  BackwardFiveSec = 'BACKWARD_FIVE_SEC',
+  BackwardTenSec = 'BACKWARD_TEN_SEC',
+  ForwardFiveSec = 'FORWARD_FIVE_SEC',
+  ForwardTenSec = 'FORWARD_TEN_SEC',
   Muted = 'MUTED',
   Unmuted = 'UNMUTED',
   VolumeIncrease = 'VOLUME_INCREASE',
   VolumeDecrease = 'VOLUME_DECREASE',
+  PlayControl = 'PLAY_CONTROL',
+  PauseControl = 'PAUSE_CONTROL',
 }
 
 export type VideoJsConfig = {
@@ -42,8 +44,10 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
     case 'Space':
     case 'KeyK':
       if (isPaused) {
+        playerInstance.trigger(CustomVideojsEvents.PlayControl)
         playerInstance.play()
       } else {
+        playerInstance.trigger(CustomVideojsEvents.PauseControl)
         playerInstance.pause()
       }
       return
