@@ -40,6 +40,9 @@ export default {
     54: 'rgba(0,0,0, 0.54)',
     66: 'rgba(0,0,0, 0.66)',
   },
+  transparentGray: {
+    54: 'rgba(24, 28, 32, 0.54)',
+  },
   transparentPrimary: {
     6: 'rgba(180, 187, 255, 0.06)',
     10: 'rgba(180, 187, 255, 0.10)',
