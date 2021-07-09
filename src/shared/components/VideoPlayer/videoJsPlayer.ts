@@ -18,9 +18,11 @@ export type VideoJsConfig = {
   onTimeUpdated?: (time: number) => void
 }
 
+export const VOLUME_STEP = 0.1
+
 const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
   const currentTime = playerInstance.currentTime()
-  const currentVolume = playerInstance.volume()
+  const currentVolume = Number(playerInstance.volume().toFixed(2))
   const isMuted = playerInstance.muted()
   const isFullscreen = playerInstance.isFullscreen()
   const isPaused = playerInstance.paused()
@@ -47,23 +49,24 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
       playerInstance.currentTime(currentTime + 10)
       return
     case 'ArrowUp':
-      if (currentVolume <= 0.95) {
-        playerInstance.volume(currentVolume + 0.05)
-      } else {
-        playerInstance.volume(1)
+      if (playerInstance.muted()) {
+        playerInstance.muted(false)
+      }
+      if (currentVolume <= 1) {
+        playerInstance.volume(Math.min(currentVolume + VOLUME_STEP, 1))
       }
       return
     case 'ArrowDown':
-      if (currentVolume >= 0.05) {
-        playerInstance.volume(currentVolume - 0.05)
-      } else {
-        playerInstance.volume(0)
+      if (currentVolume >= 0) {
+        playerInstance.volume(Math.max(currentVolume - VOLUME_STEP, 0))
       }
       return
     case 'KeyM':
       if (isMuted) {
+        playerInstance.trigger('unmute')
         playerInstance.muted(false)
       } else {
+        playerInstance.trigger('mute')
         playerInstance.muted(true)
       }
       return
@@ -106,8 +109,16 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
+      bigPlayButton: false,
       userActions: {
         hotkeys: (event) => hotkeysHandler(event, playerInstance),
+      },
+      controlBar: {
+        // hide all videojs controls besides progress bar
+        children: [],
+        progressControl: {
+          seekBar: true,
+        },
       },
     }
 

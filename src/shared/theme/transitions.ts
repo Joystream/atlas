@@ -6,6 +6,7 @@ const transitions = {
     regular: '400ms',
     routingSearchOverlay: '400ms',
     routing: '300ms',
+    player: '150ms',
     sharp: '125ms',
   },
   names: {
