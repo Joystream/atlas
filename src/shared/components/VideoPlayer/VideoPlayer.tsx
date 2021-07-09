@@ -1,5 +1,6 @@
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
+import { useCallback } from 'react'
 
 import { usePersonalDataStore } from '@/providers'
 import {
@@ -51,7 +52,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   { className, autoplay, isInBackground, playing, ...videoJsConfig },
   externalRef
 ) => {
-  const [player, playerRef] = useVideoJsPlayer({ ...videoJsConfig })
+  const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
 
@@ -64,6 +65,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [initialized, setInitialized] = useState(false)
 
   const displayPlayOverlay = playOverlayVisible && !isInBackground
+
+  const playVideo = useCallback(() => {
+    if (!player) {
+      return
+    }
+    const playPromise = player.play()
+    if (playPromise) {
+      playPromise.catch((e) => {
+        if (e.name === 'NotAllowedError') {
+          Logger.warn('Video play failed:', e)
+        } else {
+          Logger.error('Video play failed:', e)
+        }
+      })
+    }
+  }, [player])
 
   // handle loading video
   useEffect(() => {
@@ -92,26 +109,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [player, initialized, autoplay])
 
-  // handle playing and pausing with props
+  // handle playing and pausing from outside the component
   useEffect(() => {
     if (!player) {
       return
     }
     if (playing) {
-      const playPromise = player.play()
-      if (playPromise) {
-        playPromise.catch((e) => {
-          if (e.name === 'NotAllowedError') {
-            Logger.warn('Video play failed:', e)
-          } else {
-            Logger.error('Video play failed:', e)
-          }
-        })
-      }
+      playVideo()
     } else {
       player.pause()
     }
-  }, [player, playing])
+  }, [playVideo, player, playing])
 
   // handle playing and pausing
   useEffect(() => {
@@ -232,20 +240,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [isInBackground, player, volume])
 
-  const handlePlayOverlayClick = () => {
-    if (!player) {
-      return
-    }
-    player.play()
+  // button/input handlers
+  const handlePlayPause = () => {
+    isPlaying ? player?.pause() : playVideo()
   }
 
-  const handlePlayPause = () => (isPlaying ? player?.pause() : player?.play())
-
-  const handleChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(Number(e.target.value))
+  const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setVolume(Number(event.target.value))
   }
 
-  const handleMute = () => {
+  const handleMute = (event: React.MouseEvent) => {
+    event.stopPropagation()
     if (volume === 0) {
       setVolume(cachedPlayerVolume || 0.05)
     } else {
@@ -260,7 +265,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     } else {
       if (document.pictureInPictureEnabled) {
         // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
-        player.requestPictureInPicture()
+        player.requestPictureInPicture().catch((e) => {
+          Logger.warn('Picture in picture failed:', e)
+        })
       }
     }
   }
@@ -284,14 +291,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
-        <PlayOverlay onClick={handlePlayOverlayClick}>
+        <PlayOverlay onClick={handlePlayPause}>
           <SvgOutlineVideo width={72} height={72} viewBox="0 0 24 24" />
         </PlayOverlay>
       )}
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
         {!isInBackground && !playOverlayVisible && (
-          <CustomControls isFullScreen={isFullScreen} onClick={handlePlayPause}>
+          <CustomControls isFullScreen={isFullScreen}>
             <ControlButton onClick={handlePlayPause}>
               {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
             </ControlButton>
