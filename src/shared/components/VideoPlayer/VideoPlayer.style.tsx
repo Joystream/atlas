@@ -285,7 +285,7 @@ export const Container = styled.div<ContainerProps>`
     background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     align-items: flex-end;
     height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
-    transition: transform 200ms ${transitions.easing} !important;
+    transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
       & ~ ${CustomControls} {
