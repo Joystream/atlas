@@ -61,6 +61,7 @@ export default {
   },
   transparentBlack: {
     24: 'rgba(0,0,0, 0.24)',
+    32: 'rgba(0,0,0, 0.32)',
     54: 'rgba(0,0,0, 0.54)',
     66: 'rgba(0,0,0, 0.66)',
     86: 'rgba(0,0,0, 0.86)',

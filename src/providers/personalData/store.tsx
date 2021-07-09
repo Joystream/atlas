@@ -15,7 +15,7 @@ export type PersonalDataStoreState = {
   followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
-  playerVolume: number
+  cachedPlayerVolume: number
 }
 
 const WHITELIST = [
@@ -23,7 +23,7 @@ const WHITELIST = [
   'followedChannels',
   'recentSearches',
   'dismissedMessages',
-  'playerVolume',
+  'cachedPlayerVolume',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -31,14 +31,14 @@ export type PersonalDataStoreActions = {
   updateChannelFollowing: (id: string, follow: boolean) => void
   updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
-  updatePlayerVolume: (volume: number) => void
+  updateCachedPlayerVolume: (volume: number) => void
 }
 
 const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
 const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
 const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
 const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
-const playerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
+const cachedPlayerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
@@ -47,7 +47,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       followedChannels,
       recentSearches,
       dismissedMessages,
-      playerVolume,
+      cachedPlayerVolume,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -87,9 +87,9 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updatePlayerVolume: (volume) =>
+      updateCachedPlayerVolume: (volume) =>
         set((state) => {
-          state.playerVolume = volume
+          state.cachedPlayerVolume = volume
         }),
     }),
   },
