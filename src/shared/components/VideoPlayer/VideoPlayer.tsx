@@ -1,8 +1,6 @@
 import { debounce } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
-import { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { VideoJsPlayer } from 'video.js'
 
 import { usePersonalDataStore } from '@/providers'
 import {
@@ -77,24 +75,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
   const [indicator, setIndicator] = useState<EventState | null>(null)
 
-  useEffect(() => {
-    if (!player || isInBackground) {
-      return
-    }
-    const indicatorEvents = Object.values(CustomVideojsEvents)
-    const handler = (e: Event) => {
-      const indicator = createIndicator(e.type as VideoEvent, player)
-      if (indicator) {
-        setIndicator({ ...indicator, isVisible: true })
-      }
-    }
-    player.on(indicatorEvents, handler)
-
-    return () => {
-      player.off(indicatorEvents, handler)
-    }
-  }, [isInBackground, player])
-
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoTime, setVideoTime] = useState(0)
@@ -105,10 +85,30 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const displayPlayOverlay = playOverlayVisible && !isInBackground
 
+  useEffect(() => {
+    if (!player || isInBackground) {
+      return
+    }
+    const indicatorEvents = Object.values(CustomVideojsEvents)
+    const handler = (e: Event) => {
+      const playerVolume = e.type === CustomVideojsEvents.Unmuted ? cachedPlayerVolume || VOLUME_STEP : player.volume()
+      const indicator = createIndicator(e.type as VideoEvent, playerVolume, player.muted())
+      if (indicator) {
+        setIndicator({ ...indicator, isVisible: true })
+      }
+    }
+    player.on(indicatorEvents, handler)
+
+    return () => {
+      player.off(indicatorEvents, handler)
+    }
+  }, [cachedPlayerVolume, isInBackground, player])
+
   const playVideo = useCallback(() => {
     if (!player) {
       return
     }
+    player.trigger(CustomVideojsEvents.PlayControl)
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
@@ -239,23 +239,29 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
+    const events = [
+      CustomVideojsEvents.VolumeIncrease,
+      CustomVideojsEvents.VolumeDecrease,
+      CustomVideojsEvents.Muted,
+      CustomVideojsEvents.Unmuted,
+    ]
 
     const handler = (event: Event) => {
-      if (event.type === 'mute') {
+      if (event.type === CustomVideojsEvents.Muted) {
         setVolume(0)
         return
       }
-      if (event.type === 'unmute') {
+      if (event.type === CustomVideojsEvents.Unmuted) {
         setVolume(cachedPlayerVolume || VOLUME_STEP)
         return
       }
-      if (event.type === 'volumechange') {
+      if (event.type === CustomVideojsEvents.VolumeIncrease || CustomVideojsEvents.VolumeDecrease) {
         setVolume(player.volume())
       }
     }
-    player.on(['volumechange', 'mute', 'unmute'], handler)
+    player.on(events, handler)
     return () => {
-      player.off(['volumechange', 'mute', 'unmute'], handler)
+      player.off(events, handler)
     }
   }, [cachedPlayerVolume, volume, player])
 
@@ -281,7 +287,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // button/input handlers
   const handlePlayPause = () => {
-    isPlaying ? player?.pause() : playVideo()
+    if (isPlaying) {
+      player?.pause()
+      player?.trigger(CustomVideojsEvents.PauseControl)
+    } else {
+      playVideo()
+    }
   }
 
   const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -385,9 +396,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
 export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
 
-const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
-  const volume = Math.floor(player.volume() * 100) + '%'
-  const isMuted = player.muted() || !Number(player.volume().toFixed(2))
+const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMuted: boolean) => {
+  const formattedVolume = Math.floor(playerVolume * 100) + '%'
+  const isMuted = playerMuted || !Number(playerVolume.toFixed(2))
 
   switch (type) {
     case CustomVideojsEvents.PauseControl:
@@ -429,7 +440,7 @@ const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
     case CustomVideojsEvents.Unmuted:
       return {
         icon: <SvgPlayerSoundOn />,
-        description: volume,
+        description: formattedVolume,
         type,
       }
     case CustomVideojsEvents.Muted:
@@ -441,13 +452,13 @@ const createIndicator = (type: VideoEvent | null, player: VideoJsPlayer) => {
     case CustomVideojsEvents.VolumeIncrease:
       return {
         icon: <SvgPlayerSoundOn />,
-        description: volume,
+        description: formattedVolume,
         type,
       }
     case CustomVideojsEvents.VolumeDecrease:
       return {
         icon: isMuted ? <SvgPlayerSoundOff /> : <SvgPlayerSoundHalf />,
-        description: isMuted ? 'Mute' : volume,
+        description: isMuted ? 'Mute' : formattedVolume,
         type,
       }
     default:

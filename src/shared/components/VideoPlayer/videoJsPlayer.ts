@@ -44,44 +44,43 @@ const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPla
     case 'Space':
     case 'KeyK':
       if (isPaused) {
-        playerInstance.trigger(CustomVideojsEvents.PlayControl)
         playerInstance.play()
+        playerInstance.trigger(CustomVideojsEvents.PlayControl)
       } else {
-        playerInstance.trigger(CustomVideojsEvents.PauseControl)
         playerInstance.pause()
+        playerInstance.trigger(CustomVideojsEvents.PauseControl)
       }
       return
     case 'ArrowLeft':
-      playerInstance.trigger(CustomVideojsEvents.BackwardFiveSec)
       playerInstance.currentTime(currentTime - 5)
+      playerInstance.trigger(CustomVideojsEvents.BackwardFiveSec)
       return
     case 'ArrowRight':
-      playerInstance.trigger(CustomVideojsEvents.ForwardFiveSec)
       playerInstance.currentTime(currentTime + 5)
+      playerInstance.trigger(CustomVideojsEvents.ForwardFiveSec)
       return
     case 'KeyJ':
-      playerInstance.trigger(CustomVideojsEvents.BackwardTenSec)
       playerInstance.currentTime(currentTime - 10)
+      playerInstance.trigger(CustomVideojsEvents.BackwardTenSec)
       return
     case 'KeyL':
-      playerInstance.trigger(CustomVideojsEvents.ForwardTenSec)
       playerInstance.currentTime(currentTime + 10)
+      playerInstance.trigger(CustomVideojsEvents.ForwardTenSec)
       return
     case 'ArrowUp':
-      playerInstance.trigger(CustomVideojsEvents.VolumeIncrease)
-      if (currentVolume <= 0.9) {
-        playerInstance.volume(currentVolume + VOLUME_STEP)
-      } else {
-        playerInstance.volume(1)
+      if (playerInstance.muted()) {
+        playerInstance.muted(false)
       }
+      if (currentVolume <= 1) {
+        playerInstance.volume(Math.min(currentVolume + VOLUME_STEP, 1))
+      }
+      playerInstance.trigger(CustomVideojsEvents.VolumeIncrease)
       return
     case 'ArrowDown':
-      playerInstance.trigger(CustomVideojsEvents.VolumeDecrease)
-      if (currentVolume >= VOLUME_STEP) {
-        playerInstance.volume(currentVolume - VOLUME_STEP)
-      } else {
-        playerInstance.volume(0)
+      if (currentVolume >= 0) {
+        playerInstance.volume(Math.max(currentVolume - VOLUME_STEP, 0))
       }
+      playerInstance.trigger(CustomVideojsEvents.VolumeDecrease)
       return
     case 'KeyM':
       if (isMuted) {
