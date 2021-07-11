@@ -11,6 +11,7 @@ import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 import { SORT_OPTIONS } from '@/views/studio/MyVideosView/MyVideosView'
 
+import { ChannelAbout } from './ChannelAbout'
 import {
   PaginationContainer,
   SortContainer,
@@ -114,6 +115,7 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
+  console.log({ channel })
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
@@ -172,7 +174,7 @@ export const ChannelView: React.FC = () => {
                 </>
               )
             case 'About':
-              return null
+              return <ChannelAbout />
           }
         })()}
       </LimitedWidthContainer>
