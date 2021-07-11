@@ -1,5 +1,5 @@
 import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { TransactionDialogStep, useConnectionStatus, useDialog, useSnackbar } from '@/providers'
+import { TransactionDialogStep, useConnectionStatusStore, useDialog, useSnackbar } from '@/providers'
 import { Logger } from '@/utils/logger'
 
 import { useTransactionManagerStore } from './store'
@@ -22,7 +22,7 @@ const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 
 export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, setDialogStep } = useTransactionManagerStore((state) => state.actions)
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
 
   const [openErrorDialog, closeErrorDialog] = useDialog({

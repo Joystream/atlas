@@ -17,12 +17,12 @@ import {
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
   ActiveUserProvider,
-  DraftsProvider,
+  ConnectionStatusManager,
   EditVideoSheetProvider,
   JoystreamProvider,
   TransactionManager,
   UploadsManager,
-  useConnectionStatus,
+  useConnectionStatusStore,
   useDialog,
   useUser,
   useVideoEditSheetRouting,
@@ -44,7 +44,8 @@ const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
-  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
     activeAccountId,
@@ -88,7 +89,7 @@ const StudioLayout = () => {
     <>
       <NoConnectionIndicator
         nodeConnectionStatus={nodeConnectionStatus}
-        isConnectedToInternet={isUserConnectedToInternet}
+        isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
@@ -169,15 +170,14 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <DraftsProvider>
-          <EditVideoSheetProvider>
-            <JoystreamProvider>
-              <UploadsManager />
-              <TransactionManager />
-              <StudioLayout />
-            </JoystreamProvider>
-          </EditVideoSheetProvider>
-        </DraftsProvider>
+        <EditVideoSheetProvider>
+          <JoystreamProvider>
+            <ConnectionStatusManager />
+            <UploadsManager />
+            <TransactionManager />
+            <StudioLayout />
+          </JoystreamProvider>
+        </EditVideoSheetProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

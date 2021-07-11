@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { ActiveUserProvider, ConnectionStatusProvider, DialogProvider, DraftsProvider } from '@/providers'
+import { ActiveUserProvider, ConnectionStatusManager, DialogProvider } from '@/providers'
 import { colors } from '@/shared/theme'
 
 import {
@@ -38,26 +38,23 @@ export const PlaygroundLayout = () => {
   return (
     <ActiveUserProvider>
       <DialogProvider>
-        <ConnectionStatusProvider>
-          <DraftsProvider>
-            <Container>
-              <NavContainer>
-                {playgroundRoutes.map((route) => (
-                  <Link key={route.path} to={route.path}>
-                    {route.name}
-                  </Link>
-                ))}
-              </NavContainer>
-              <ContentContainer>
-                <Routes>
-                  {playgroundRoutes.map((route) => (
-                    <Route key={route.path} path={route.path} element={route.element} />
-                  ))}
-                </Routes>
-              </ContentContainer>
-            </Container>
-          </DraftsProvider>
-        </ConnectionStatusProvider>
+        <Container>
+          <NavContainer>
+            {playgroundRoutes.map((route) => (
+              <Link key={route.path} to={route.path}>
+                {route.name}
+              </Link>
+            ))}
+          </NavContainer>
+          <ContentContainer>
+            <Routes>
+              {playgroundRoutes.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+          </ContentContainer>
+        </Container>
+        <ConnectionStatusManager />
       </DialogProvider>
     </ActiveUserProvider>
   )

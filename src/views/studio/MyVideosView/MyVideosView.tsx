@@ -6,7 +6,15 @@ import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
-import { useAuthorizedUser, useDialog, useDrafts, useEditVideoSheet, useSnackbar } from '@/providers'
+import {
+  chanelUnseenDraftsSelector,
+  channelDraftsSelector,
+  useAuthorizedUser,
+  useDialog,
+  useDraftStore,
+  useEditVideoSheet,
+  useSnackbar,
+} from '@/providers'
 import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
@@ -52,7 +60,9 @@ export const MyVideosView = () => {
 
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
-  const { drafts: _drafts, removeDraft, unseenDrafts, removeAllUnseenDrafts } = useDrafts('video', activeChannelId)
+  const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
+  const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
   const drafts =
     sortVideosBy === VideoOrderByInput.CreatedAtAsc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
@@ -107,7 +117,7 @@ export const MyVideosView = () => {
     setCurrentVideosTab(tab)
     if (TABS[tab] === 'Drafts') {
       if (unseenDrafts.length > 0) {
-        await removeAllUnseenDrafts(activeChannelId)
+        markAllDraftsAsSeenForChannel(activeChannelId ?? '')
       }
     }
   }
@@ -175,7 +185,7 @@ export const MyVideosView = () => {
       },
       onPrimaryButtonClick: () => {
         closeDeleteDraftDialog()
-        removeDraft(draftId)
+        removeDrafts([draftId])
         removeDraftNotificationsCount.current++
         if (removeDraftNotificationsCount.current > 1) {
           updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })
@@ -259,7 +269,16 @@ export const MyVideosView = () => {
               <StyledDismissibleMessage
                 id="video-draft-saved-locally-warning"
                 title="Video drafts are saved locally"
+                icon="info"
                 description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
+              />
+            )}
+            {currentTabName === 'Unlisted' && (
+              <StyledDismissibleMessage
+                id="unlisted-video-link-info"
+                title="Unlisted videos can be seen only with direct link"
+                icon="info"
+                description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
