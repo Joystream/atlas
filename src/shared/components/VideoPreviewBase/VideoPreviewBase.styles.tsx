@@ -43,7 +43,7 @@ const clickableAnimation = (clickable: boolean) =>
           opacity: 1;
         }
         ${CoverIconWrapper} {
-          transform: translateY(0);
+          opacity: 1;
         }
       `
     : css`
@@ -53,7 +53,7 @@ const clickableAnimation = (clickable: boolean) =>
         }
 
         ${CoverIconWrapper} {
-          transform: translateY(0);
+          opacity: 1;
         }
       `
 export const CoverContainer = styled.div<ClickableProps>`
@@ -123,11 +123,11 @@ export const AvatarContainer = styled.div<ScalesWithCoverProps>`
   width: calc(40px * ${(props) => props.scalingFactor});
   min-width: calc(40px * ${(props) => props.scalingFactor});
   height: calc(40px * ${(props) => props.scalingFactor});
-  margin-right: ${sizes(2)};
+  margin-right: ${sizes(3)};
 `
 
 export const TextContainer = styled.div`
-  width: calc(100% - 86px);
+  width: calc(100% - 87px);
 `
 
 type MetaContainerProps = { noMarginTop: boolean } & MainProps
@@ -191,8 +191,8 @@ export const RemoveButton = styled(IconButton)`
 `
 
 export const CoverIconWrapper = styled.div`
-  transform: translateY(40px);
-  transition: all ${transitions.timings.regular} ${transitions.easing};
+  opacity: 0;
+  transition: all ${transitions.timings.regular} ease-out;
 `
 
 export const ProgressOverlay = styled.div`
@@ -232,8 +232,8 @@ export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   position: relative;
   border-radius: 100%;
