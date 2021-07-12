@@ -1,9 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { fluidRange } from 'polished'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
-import { colors, sizes, transitions, zIndex } from '../../theme'
+import { breakpoints, colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -33,9 +34,11 @@ const focusStyles = css`
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
+  ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)};
+
   position: absolute;
   height: 100%;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? sizes(10) : sizes(4))};
+  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
   padding: 0 ${sizes(4)};
   left: 0;
   z-index: ${zIndex.overlay};
@@ -47,18 +50,20 @@ export const CustomControls = styled.div<CustomControlsProps>`
 `
 
 export const ControlButton = styled.button`
-  margin-right: ${sizes(2)};
+  margin-right: 0.5em;
   cursor: pointer;
   border: none;
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${sizes(2)};
+  padding: 0.5em;
   transition: background-color ${transitions.timings.player} ${transitions.easing} !important;
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
+    width: 1.5em;
+    height: 1.5em;
   }
 
   :hover {
@@ -93,8 +98,8 @@ export const VolumeSlider = styled.input`
   border-radius: 2px;
   margin: 0;
   padding: 0;
-  width: ${sizes(16)};
-  height: ${sizes(1)};
+  width: 4em;
+  height: 0.25em;
   background: linear-gradient(
     to right,
     ${colors.white} 0%,
@@ -120,15 +125,15 @@ export const VolumeSlider = styled.input`
 
 export const VolumeControl = styled.div`
   display: flex;
-  border-radius: 20px;
-  width: ${sizes(10)};
+  border-radius: 1.25em;
+  width: 2.5em;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing},
     width ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
-    width: ${sizes(30)};
+    width: 7.5em;
     ${VolumeSlider} {
       opacity: 1;
       transform: scaleX(1);
@@ -154,10 +159,11 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 `
 
 export const CurrentTime = styled(Text)`
+  font-size: inherit;
   display: flex;
-  height: ${sizes(10)};
+  height: 2.5em;
   color: ${colors.white};
-  margin-left: ${sizes(4)};
+  margin-left: 1em;
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
   font-feature-settings: 'tnum' on, 'lnum' on;
@@ -172,16 +178,18 @@ export const ScreenControls = styled.div`
 `
 
 export const ControlsIndicatorWrapper = styled.div`
+  ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)};
+
   position: absolute;
-  top: calc(50% - ${sizes(16)});
-  left: calc(50% - ${sizes(16)});
+  top: calc(50% - 4em);
+  left: calc(50% - 4em);
   display: flex;
   flex-direction: column;
 `
 
 export const ControlsIndicator = styled.div`
-  width: ${sizes(32)};
-  height: ${sizes(32)};
+  width: 8em;
+  height: 8em;
   backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
@@ -192,18 +200,22 @@ export const ControlsIndicator = styled.div`
 
   > svg {
     transform: scale(0.75);
-    width: ${sizes(18)};
-    height: ${sizes(18)};
+    width: 4.5em;
+    height: 4.5em;
   }
 `
 
 export const ControlsIndicatorTooltip = styled.div`
   align-self: center;
   background-color: ${colors.transparentBlack[54]};
-  padding: ${sizes(2)};
+  padding: 0.5em;
   text-align: center;
-  margin-top: ${sizes(3)};
+  margin-top: 0.5em;
   backdrop-filter: blur(${sizes(8)});
+`
+
+export const TooltipText = styled(Text)`
+  font-size: inherit;
 `
 
 const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
@@ -259,20 +271,22 @@ export const Container = styled.div<ContainerProps>`
   height: 100%;
 
   .video-js {
+    ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)}
+
     background-color: ${colors.gray[900]};
   }
 
   .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
   .vjs-paused ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(${sizes(2)});
+    transform: translateY(0.5em);
     opacity: 0;
   }
 
@@ -284,29 +298,29 @@ export const Container = styled.div<ContainerProps>`
     opacity: 0;
     background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     align-items: flex-end;
-    height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
+    height: ${({ isFullScreen }) => (isFullScreen ? '10em' : '8em')} !important;
     transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
       & ~ ${CustomControls} {
         opacity: 0;
-        transform: translateY(${sizes(2)});
+        transform: translateY(0.5em);
       }
     }
 
     .vjs-progress-control {
-      height: ${sizes(8)};
+      height: 2em;
       z-index: ${zIndex.nearOverlay};
       position: absolute;
       top: initial;
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(6)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
-        height: ${sizes(1)};
+        height: 0.25em;
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
@@ -326,10 +340,10 @@ export const Container = styled.div<ContainerProps>`
           opacity: 0;
           border-radius: 100%;
           background: ${colors.white};
-          right: -${sizes(2)};
-          width: ${sizes(4)};
-          height: ${sizes(4)};
-          top: -${sizes(1)};
+          right: -0.5em;
+          width: 1em;
+          height: 1em;
+          top: -0.25em;
           transition: opacity ${transitions.timings.player} ${transitions.easing};
         }
 
@@ -353,7 +367,7 @@ export const Container = styled.div<ContainerProps>`
       }
 
       :hover .vjs-slider {
-        height: ${sizes(2)};
+        height: 0.5em;
       }
     }
   }
