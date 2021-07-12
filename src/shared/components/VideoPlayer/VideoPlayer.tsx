@@ -40,7 +40,7 @@ import {
 } from './VideoPlayer.style'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
-import { TooltipText } from '../Tooltip/Tooltip.style'
+import { Text } from '../Text'
 
 export type VideoPlayerProps = {
   className?: string
@@ -385,7 +385,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           <ControlsIndicatorWrapper>
             <ControlsIndicator>{indicator?.icon}</ControlsIndicator>
             <ControlsIndicatorTooltip>
-              <TooltipText variant="caption">{indicator?.description}</TooltipText>
+              <Text variant="caption">{indicator?.description}</Text>
             </ControlsIndicatorTooltip>
           </ControlsIndicatorWrapper>
         </CSSTransition>

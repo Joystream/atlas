@@ -1,10 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
-import { breakpoints, colors, sizes, transitions, zIndex } from '../../theme'
+import { colors, media, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -34,8 +33,7 @@ const focusStyles = css`
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
-  ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)};
-
+  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
   height: 100%;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
@@ -87,8 +85,8 @@ export const thumbStyles = css`
   appearance: none;
   border: none;
   background: ${colors.white};
-  width: ${sizes(3)};
-  height: ${sizes(3)};
+  width: 0.75em;
+  height: 0.75em;
   border-radius: 100%;
   cursor: pointer;
 `
@@ -178,18 +176,16 @@ export const ScreenControls = styled.div`
 `
 
 export const ControlsIndicatorWrapper = styled.div`
-  ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)};
-
   position: absolute;
-  top: calc(50% - 4em);
-  left: calc(50% - 4em);
+  top: calc(50% - ${sizes(16)});
+  left: calc(50% - ${sizes(16)});
   display: flex;
   flex-direction: column;
 `
 
 export const ControlsIndicator = styled.div`
-  width: 8em;
-  height: 8em;
+  width: ${sizes(32)};
+  height: ${sizes(32)};
   backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
@@ -200,22 +196,23 @@ export const ControlsIndicator = styled.div`
 
   > svg {
     transform: scale(0.75);
-    width: 4.5em;
-    height: 4.5em;
+    width: ${sizes(18)};
+    height: ${sizes(18)};
   }
 `
 
 export const ControlsIndicatorTooltip = styled.div`
+  display: none;
   align-self: center;
   background-color: ${colors.transparentBlack[54]};
-  padding: 0.5em;
+  padding: ${sizes(2)};
   text-align: center;
-  margin-top: 0.5em;
+  margin-top: ${sizes(3)};
   backdrop-filter: blur(${sizes(8)});
-`
 
-export const TooltipText = styled(Text)`
-  font-size: inherit;
+  ${media.small} {
+    display: block;
+  }
 `
 
 const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
@@ -271,22 +268,20 @@ export const Container = styled.div<ContainerProps>`
   height: 100%;
 
   .video-js {
-    ${fluidRange({ prop: 'fontSize', fromSize: '16px', toSize: '24px' }, breakpoints.compact, breakpoints.xlarge)}
-
     background-color: ${colors.gray[900]};
   }
 
   .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-0.5em);
+    transform: translateY(-${sizes(2)});
     opacity: 1;
   }
   .vjs-paused ${CustomControls} {
-    transform: translateY(-0.5em);
+    transform: translateY(-${sizes(2)});
     opacity: 1;
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(0.5em);
+    transform: translateY(${sizes(2)});
     opacity: 0;
   }
 
@@ -298,7 +293,7 @@ export const Container = styled.div<ContainerProps>`
     opacity: 0;
     background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     align-items: flex-end;
-    height: ${({ isFullScreen }) => (isFullScreen ? '10em' : '8em')} !important;
+    height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
     transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
@@ -309,18 +304,18 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-progress-control {
-      height: 2em;
+      height: ${sizes(8)};
       z-index: ${zIndex.nearOverlay};
       position: absolute;
       top: initial;
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(6)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
-        height: 0.25em;
+        height: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : sizes(1))};
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
@@ -340,10 +335,10 @@ export const Container = styled.div<ContainerProps>`
           opacity: 0;
           border-radius: 100%;
           background: ${colors.white};
-          right: -0.5em;
-          width: 1em;
-          height: 1em;
-          top: -0.25em;
+          right: ${({ isFullScreen }) => (isFullScreen ? `-${sizes(4)}` : `-${sizes(2)}`)};
+          height: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+          width: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+          top: ${({ isFullScreen }) => (isFullScreen ? `-${sizes(2)}` : `-${sizes(1)}`)};
           transition: opacity ${transitions.timings.player} ${transitions.easing};
         }
 
@@ -367,7 +362,7 @@ export const Container = styled.div<ContainerProps>`
       }
 
       :hover .vjs-slider {
-        height: 0.5em;
+        height: ${({ isFullScreen }) => (isFullScreen ? sizes(4) : sizes(2))};
       }
     }
   }
