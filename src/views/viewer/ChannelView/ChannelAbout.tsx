@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Button, Text } from '@/shared/components'
 
-import { Container, TextContainer } from './ChannelAbout.style'
+import { Container, Links, LinksContainer, TextContainer } from './ChannelAbout.style'
 
 export const ChannelAbout = () => {
   return (
@@ -18,11 +18,28 @@ export const ChannelAbout = () => {
             experts preparing content for this channel.
           </Text>
         </TextContainer>
-        <div>
+        <LinksContainer>
           <Text variant="h4">Links</Text>
-          {/* <Button></Button> */}
-        </div>
+          <Links>
+            <Button textOnly>content</Button>
+            <Button textOnly>channel</Button>
+            <Button textOnly>preparing</Button>
+            <Button textOnly>Official channel</Button>
+            <Button textOnly>wildcrypto.com</Button>
+            <Button textOnly>content</Button>
+            <Button textOnly>channel</Button>
+            <Button textOnly>preparing</Button>
+            <Button textOnly>Official channel</Button>
+            <Button textOnly>wildcrypto.com</Button>
+            <Button textOnly>content</Button>
+            <Button textOnly>channel</Button>
+            <Button textOnly>preparing</Button>
+            <Button textOnly>Official channel</Button>
+            <Button textOnly>wildcrypto.com</Button>
+          </Links>
+        </LinksContainer>
       </div>
+      <div>sidebar</div>
     </Container>
   )
 }
