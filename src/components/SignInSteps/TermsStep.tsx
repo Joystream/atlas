@@ -1,13 +1,13 @@
+import { StepFooter, StepWrapper } from './SignInSteps.style'
+import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
+import TermsOfService from '@/components/TermsOfService'
 import { absoluteRoutes } from '@/config/routes'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { StepFooter, StepWrapper } from './SignInSteps.style'
-import { TermsBox, TextWrapper, TermsOverlay, ScrollButton, ContinueButton } from './TermsStep.style'
-import TermsOfService from '@/components/TermsOfService'
 
-const TermsStep: React.FC = () => {
+export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)
@@ -20,12 +20,13 @@ const TermsStep: React.FC = () => {
     const scrollHeight = termsBoxRef.current.scrollHeight
     const boxHeight = termsBoxRef.current.clientHeight
 
-    if (scrollPosition === scrollHeight - boxHeight) {
+    if (scrollPosition >= (scrollHeight - boxHeight) * 0.95) {
       setHasScrolledToBottom(true)
     }
   }, [scrollPosition])
 
   const handleScrollToBottom = () => {
+    setHasScrolledToBottom(true)
     if (!termsBoxRef?.current) return
     termsBoxRef?.current?.scrollTo(0, termsBoxRef.current.scrollHeight)
   }
@@ -57,5 +58,3 @@ const TermsStep: React.FC = () => {
     </StepWrapper>
   )
 }
-
-export default TermsStep

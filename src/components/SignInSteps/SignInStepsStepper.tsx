@@ -1,10 +1,10 @@
-import { useRouterQuery } from '@/hooks'
-import React from 'react'
-import { useNavigate } from 'react-router'
 import { Multistepper } from '../Dialogs'
 import AccountStep from './AccountStep'
 import ExtensionStep from './ExtensionStep'
-import TermsStep from './TermsStep'
+import { TermsStep } from './TermsStep'
+import { useRouterQuery } from '@/hooks'
+import React from 'react'
+import { useNavigate } from 'react-router'
 
 const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
