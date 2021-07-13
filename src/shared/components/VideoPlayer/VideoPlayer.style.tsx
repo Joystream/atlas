@@ -32,14 +32,24 @@ const focusStyles = css`
   }
 `
 
+export const ControlsOverlay = styled.div<CustomControlsProps>`
+  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
+  height: 8em;
+  transition: opacity 200ms ${transitions.easing}, visibility 200ms ${transitions.easing};
+`
+
 export const CustomControls = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
-  height: 100%;
+  height: 2.5em;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
   padding: 0 1em;
   left: 0;
-  z-index: ${zIndex.overlay};
   display: flex;
   align-items: flex-end;
   width: 100%;
@@ -157,7 +167,7 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 `
 export const CurrentTimeWrapper = styled.div`
   display: flex;
-  height: 2.5em;
+  height: 100%;
   color: ${colors.white};
   margin-left: 1em;
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
@@ -205,6 +215,7 @@ export const ControlsIndicator = styled.div`
 `
 
 export const ControlsIndicatorTooltip = styled.div`
+  user-select: none;
   display: none;
   align-self: center;
   background-color: ${colors.transparentBlack[54]};
@@ -292,15 +303,26 @@ export const Container = styled.div<ContainerProps>`
     opacity: 0;
   }
 
+  .vjs-playing:hover ${ControlsOverlay} {
+    opacity: 1;
+  }
+  .vjs-paused ${ControlsOverlay} {
+    opacity: 1;
+  }
+  .vjs-user-inactive.vjs-playing > ${ControlsOverlay} {
+    opacity: 0;
+  }
+
   .vjs-poster {
     background-size: cover;
   }
 
   .vjs-control-bar {
     opacity: 0;
-    background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
+    background: none;
     align-items: flex-end;
-    height: 8em;
+    height: 2em;
+    z-index: ${zIndex.overlay};
     transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
@@ -312,7 +334,7 @@ export const Container = styled.div<ContainerProps>`
 
     .vjs-progress-control {
       height: 2em;
-      z-index: ${zIndex.nearOverlay};
+      z-index: ${zIndex.overlay};
       position: absolute;
       top: initial;
       left: 0;
