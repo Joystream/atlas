@@ -11,7 +11,7 @@ export type ButtonBaseProps = {
   type?: 'button' | 'submit'
   children?: React.ReactNode
   className?: string
-} & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant'>>
+} & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant' | 'fullWidth'>>
 
 const getLinkPropsFromTo = (to?: To) => {
   if (!to) {

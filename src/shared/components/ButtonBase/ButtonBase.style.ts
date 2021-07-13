@@ -10,6 +10,7 @@ export type ButtonBaseStyleProps = {
   variant: ButtonVariant
   size: ButtonSize
   clickable?: boolean
+  fullWidth?: boolean
 }
 
 const variantStyles = ({ variant }: ButtonBaseStyleProps): SerializedStyles => {
@@ -78,6 +79,7 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   border: 0;
   background-color: transparent;
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 
   &:disabled,
   &[aria-disabled='true'] {

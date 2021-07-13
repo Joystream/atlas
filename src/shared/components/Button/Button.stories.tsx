@@ -15,6 +15,11 @@ export default {
     to: { table: { disable: true } },
     type: { table: { disable: true } },
     variant: { table: { disable: true } },
+    fullWidth: {
+      table: { disable: false, type: { summary: 'boolean' }, defaultValue: { summary: false } },
+      type: { name: 'boolean', required: false },
+      defaultValue: false,
+    },
   },
 } as Meta
 
