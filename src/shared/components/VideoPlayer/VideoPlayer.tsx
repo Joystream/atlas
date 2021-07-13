@@ -29,6 +29,7 @@ import {
   ControlsIndicatorTooltip,
   ControlsIndicatorWrapper,
   CurrentTime,
+  CurrentTimeWrapper,
   CustomControls,
   PlayOverlay,
   ScreenControls,
@@ -358,9 +359,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 <VolumeSlider step={0.01} max={1} min={0} value={volume} onChange={handleChangeVolume} type="range" />
               </VolumeSliderContainer>
             </VolumeControl>
-            <CurrentTime variant="body2">
-              {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
-            </CurrentTime>
+            <CurrentTimeWrapper>
+              <CurrentTime variant="body2">
+                {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+              </CurrentTime>
+            </CurrentTimeWrapper>
             <ScreenControls>
               {isPiPSupported && (
                 <ControlButton onClick={handlePictureInPicture}>

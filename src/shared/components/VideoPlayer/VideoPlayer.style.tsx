@@ -37,7 +37,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   height: 100%;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
-  padding: 0 ${sizes(4)};
+  padding: 0 1em;
   left: 0;
   z-index: ${zIndex.overlay};
   display: flex;
@@ -155,9 +155,7 @@ export const VolumeButton = styled(ControlButton)`
 export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
   opacity: 0.5;
 `
-
-export const CurrentTime = styled(Text)`
-  font-size: inherit;
+export const CurrentTimeWrapper = styled.div`
   display: flex;
   height: 2.5em;
   color: ${colors.white};
@@ -165,6 +163,11 @@ export const CurrentTime = styled(Text)`
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
   font-feature-settings: 'tnum' on, 'lnum' on;
+`
+
+export const CurrentTime = styled(Text)`
+  /* 14px */
+  font-size: 0.875em;
 `
 
 export const ScreenControls = styled.div`
@@ -267,21 +270,25 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
 
+  [class^='vjs'] {
+    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
+  }
+
   .video-js {
     background-color: ${colors.gray[900]};
   }
 
   .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
   .vjs-paused ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(${sizes(2)});
+    transform: translateY(0.5em);
     opacity: 0;
   }
 
@@ -293,7 +300,7 @@ export const Container = styled.div<ContainerProps>`
     opacity: 0;
     background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     align-items: flex-end;
-    height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
+    height: 8em;
     transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
@@ -304,18 +311,18 @@ export const Container = styled.div<ContainerProps>`
     }
 
     .vjs-progress-control {
-      height: ${sizes(8)};
+      height: 2em;
       z-index: ${zIndex.nearOverlay};
       position: absolute;
       top: initial;
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(6)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
-        height: ${({ isFullScreen }) => (isFullScreen ? sizes(2) : sizes(1))};
+        height: 0.25em;
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
@@ -335,10 +342,10 @@ export const Container = styled.div<ContainerProps>`
           opacity: 0;
           border-radius: 100%;
           background: ${colors.white};
-          right: ${({ isFullScreen }) => (isFullScreen ? `-${sizes(4)}` : `-${sizes(2)}`)};
-          height: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
-          width: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
-          top: ${({ isFullScreen }) => (isFullScreen ? `-${sizes(2)}` : `-${sizes(1)}`)};
+          right: -0.5em;
+          height: 1em;
+          width: 1em;
+          top: -0.25em;
           transition: opacity ${transitions.timings.player} ${transitions.easing};
         }
 
@@ -362,7 +369,7 @@ export const Container = styled.div<ContainerProps>`
       }
 
       :hover .vjs-slider {
-        height: ${({ isFullScreen }) => (isFullScreen ? sizes(4) : sizes(2))};
+        height: 0.5em;
       }
     }
   }
