@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
+
 import { zIndex } from '../../theme'
-import IconButton from '../IconButton'
+import { IconButton } from '../IconButton'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -15,6 +16,10 @@ type HasDirection = {
 type HasPadding = {
   paddingLeft: number
   paddingTop: number
+}
+
+type ArrowProps = {
+  arrowPosition?: number
 }
 
 export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
@@ -35,10 +40,12 @@ export const BackgroundGradient = styled.div<HasDirection & HasPadding>`
   pointer-events: none;
 `
 
-export const Arrow = styled(IconButton)`
+export const Arrow = styled(IconButton)<ArrowProps>`
   position: absolute;
+  top: ${({ arrowPosition }) => arrowPosition && `${arrowPosition}px`};
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
+
   &.disabled {
     display: none;
   }
@@ -46,6 +53,7 @@ export const Arrow = styled(IconButton)`
   &.glider-prev {
     left: 0;
   }
+
   &.glider-next {
     right: 0;
   }

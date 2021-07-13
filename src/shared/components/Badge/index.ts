@@ -1,1 +1,1 @@
-export { badgeStyles } from './Badge.styles'
+export * from './Badge.styles'

@@ -1,14 +1,14 @@
+import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+
 import {
-  useGetVideoQuery,
-  useAddVideoViewMutation,
-  GetVideoQuery,
   AddVideoViewMutation,
+  GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
+  useAddVideoViewMutation,
+  useGetVideoQuery,
   useGetVideosQuery,
-  useGetVideoCountQuery,
 } from '@/api/queries'
-import { QueryHookOptions, MutationHookOptions } from '@apollo/client'
 
 type VideoOpts = QueryHookOptions<GetVideoQuery>
 export const useVideo = (id: string, opts?: VideoOpts) => {
@@ -24,19 +24,9 @@ export const useVideo = (id: string, opts?: VideoOpts) => {
 
 type VideosOpts = QueryHookOptions<GetVideosQuery>
 export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
-  const { data, loading: videosLoading, ...rest } = useGetVideosQuery({ ...opts, variables })
-  // Only way to get the video count for pagination as of now
-  const { data: connectionData, loading: countLoading, refetch: refetchCount } = useGetVideoCountQuery({
-    ...opts,
-    variables: {
-      where: variables?.where,
-    },
-  })
+  const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
   return {
     videos: data?.videos,
-    loading: videosLoading || countLoading,
-    totalCount: connectionData?.videosConnection.totalCount,
-    refetchCount,
     ...rest,
   }
 }

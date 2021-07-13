@@ -1,8 +1,10 @@
+import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
-import Dialog, { BaseDialogProps } from './BaseDialog'
-import { Story, Meta } from '@storybook/react'
+
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Button } from '@/shared/components'
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+
+import { BaseDialogProps, BaseDialog as Dialog } from './BaseDialog'
 
 export default {
   title: 'General/BaseDialog',

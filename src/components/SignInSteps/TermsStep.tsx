@@ -1,11 +1,14 @@
-import { StepFooter, StepWrapper } from './SignInSteps.style'
-import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
-import TermsOfService from '@/components/TermsOfService'
+import React, { useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
+
 import { absoluteRoutes } from '@/config/routes'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import React, { useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+
+import { StepFooter, StepWrapper } from './SignInSteps.style'
+import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
+
+import { TermsOfService } from '../TermsOfService'
 
 export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)

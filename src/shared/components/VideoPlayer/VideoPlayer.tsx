@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { Container, PlayOverlay } from './VideoPlayer.style'
-import { useVideoJsPlayer, VideoJsConfig } from './videoJsPlayer'
+import { debounce } from 'lodash'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { usePersonalDataStore } from '@/providers'
 import { SvgOutlineVideo } from '@/shared/icons'
+import { Logger } from '@/utils/logger'
+
+import { Container, PlayOverlay } from './VideoPlayer.style'
+import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   className?: string
@@ -10,11 +15,15 @@ export type VideoPlayerProps = {
   playing?: boolean
 } & VideoJsConfig
 
-const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
+const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, autoplay, isInBackground, playing, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
+
+  const playerVolume = usePersonalDataStore((state) => state.playerVolume)
+  const updatePlayerVolume = usePersonalDataStore((state) => state.actions.updatePlayerVolume)
+
   const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)
 
@@ -44,7 +53,7 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
-        console.warn('Autoplay failed:', e)
+        Logger.warn('Autoplay failed:', e)
       })
     }
   }, [player, initialized, autoplay])
@@ -59,7 +68,11 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
         const playPromise = player.play()
         if (playPromise) {
           playPromise.catch((e) => {
-            console.error('Video play failed:', e)
+            if (e.name === 'NotAllowedError') {
+              Logger.warn('Video play failed:', e)
+            } else {
+              Logger.error('Video play failed:', e)
+            }
           })
         }
       } else {
@@ -102,6 +115,28 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
     player.play()
   }
 
+  const debouncedVolumeChange = useRef(
+    debounce((volume: number) => {
+      updatePlayerVolume(volume)
+    }, 500)
+  )
+
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (!player || !isInitialMount) {
+      return
+    }
+    isInitialMount.current = false
+
+    player.volume(playerVolume)
+
+    const handleVolumeChange = () => debouncedVolumeChange.current(player.volume())
+    player.on('volumechange', handleVolumeChange)
+    return () => {
+      player.off('volumechange', handleVolumeChange)
+    }
+  }, [player, playerVolume])
+
   return (
     <Container className={className} isInBackground={isInBackground}>
       {displayPlayOverlay && (
@@ -116,4 +151,4 @@ const VideoPlayer: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerP
   )
 }
 
-export default React.forwardRef(VideoPlayer)
+export const VideoPlayer = React.forwardRef(VideoPlayerComponent)

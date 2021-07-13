@@ -1,14 +1,17 @@
-import ImageCropDialog, { ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
-import { FileType } from '@/types/files'
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
-import FileSelect from '../FileSelect'
-import FileStep from '../FileStep'
-import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import { getVideoMetadata } from '@/utils/video'
-import { validateImage } from '@/utils/image'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { FileType } from '@/types/files'
+import { validateImage } from '@/utils/image'
+import { getVideoMetadata } from '@/utils/video'
+
+import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+
+import { FileSelect } from '../FileSelect'
+import { FileStep } from '../FileStep'
 
 type InputFile = {
   url?: string | null
@@ -16,19 +19,25 @@ type InputFile = {
   title?: string
 }
 
-export type VideoInputFile = {
+export type VideoInputMetadata = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
   mimeType?: string
   size?: number
-} & InputFile
+}
+
+export type VideoInputFile = VideoInputMetadata & InputFile
+
+export type ImageInputMetadata = {
+  imageCropData?: ImageCropData
+  assetDimensions?: AssetDimensions
+}
 
 export type ImageInputFile = {
   originalBlob?: Blob | File | null
-  imageCropData?: ImageCropData
-  assetDimensions?: AssetDimensions
-} & InputFile
+} & ImageInputMetadata &
+  InputFile
 
 export type InputFilesState = {
   video: VideoInputFile | null
@@ -47,7 +56,7 @@ export type MultiFileSelectProps = {
   error?: string | null
 }
 
-const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
+export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onVideoChange,
   onThumbnailChange,
   files,
@@ -63,20 +72,12 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)
 
   useEffect(() => {
-    if (editMode) {
+    if (editMode || files.video) {
       setStep('image')
     } else {
       setStep('video')
     }
-  }, [editMode])
-
-  useEffect(() => {
-    if (files.video) {
-      setStep('image')
-    } else {
-      setStep('video')
-    }
-  }, [files.video])
+  }, [editMode, files.video])
 
   useEffect(() => {
     if (!isLoading) {
@@ -216,7 +217,7 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <FileStep
           stepNumber={2}
           active={step === 'image'}
-          isFileSet={!!files.thumbnail}
+          isFileSet={!!files.thumbnail?.url}
           type="image"
           onDelete={() => handleDeleteFile('image')}
           onSelect={handleChangeStep}
@@ -227,5 +228,3 @@ const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     </MultiFileSelectContainer>
   )
 }
-
-export default MultiFileSelect

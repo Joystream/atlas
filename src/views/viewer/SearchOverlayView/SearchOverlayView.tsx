@@ -1,24 +1,27 @@
-import React, { useEffect } from 'react'
-import { useOverlayManager, useRouterQuery } from '@/hooks'
-import RecentSearches from './RecentSearches'
-import SearchResults from './SearchResults'
 import styled from '@emotion/styled'
-import { colors, zIndex } from '@/shared/theme'
+import React, { useEffect } from 'react'
+
 import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { QUERY_PARAMS } from '@/config/routes'
+import { useRouterQuery } from '@/hooks'
+import { useOverlayManager } from '@/providers'
+import { colors, zIndex } from '@/shared/theme'
 
-const SearchOverlayView: React.FC = () => {
+import { RecentSearches } from './RecentSearches'
+import { SearchResults } from './SearchResults'
+
+export const SearchOverlayView: React.FC = () => {
   const searchQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
-  const { lockScroll, unlockScroll } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   // prevent body scroll
   useEffect(() => {
-    lockScroll()
+    incrementOverlaysOpenCount()
 
     return () => {
-      unlockScroll()
+      decrementOverlaysOpenCount()
     }
-  }, [lockScroll, unlockScroll])
+  }, [incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
   return (
     <OverlayContainer role="dialog">
@@ -34,10 +37,7 @@ const OverlayContainer = styled.div`
   left: var(--sidenav-collapsed-width);
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
-
   background-color: ${colors.black};
   padding: 0 var(--global-horizontal-padding);
   overflow: auto;
 `
-
-export default SearchOverlayView

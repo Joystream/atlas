@@ -1,11 +1,14 @@
-import { absoluteRoutes, QUERY_PARAMS } from '@/config/routes'
-import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { RoutingState } from '@/types/routing'
-import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
-import TopbarBase from '../TopbarBase'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-const ViewerTopbar: React.FC = () => {
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { RoutingState } from '@/types/routing'
+
+import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
+
+import { TopbarBase } from '../TopbarBase'
+
+export const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
@@ -86,5 +89,3 @@ const ViewerTopbar: React.FC = () => {
     </TopbarBase>
   )
 }
-
-export default ViewerTopbar

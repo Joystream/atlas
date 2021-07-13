@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import Checkout, { CheckoutProps } from './Checkout'
 import { Meta, Story } from '@storybook/react'
-import { WithValue } from '../../../../.storybook/WithValue'
+import React, { useState } from 'react'
+
+import { Checkout, CheckoutProps } from './Checkout'
 
 export default {
-  title: 'Shared/Checkout',
+  title: 'Shared/C/Checkout',
   component: Checkout,
   argTypes: {},
 } as Meta

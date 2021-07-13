@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Container, HelperText, StyledInput } from './HeaderTextField.style'
 
 export type HeaderTextFieldProps = {
@@ -13,7 +14,7 @@ export type HeaderTextFieldProps = {
   className?: string
 }
 
-const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
+export const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>(
   ({ name, value, helperText, placeholder, error, warning, onChange, onBlur, className }, ref) => {
     const controlled = onChange?.name === 'onChange'
     return (
@@ -39,5 +40,3 @@ const HeaderTextField = React.forwardRef<HTMLInputElement, HeaderTextFieldProps>
 )
 
 HeaderTextField.displayName = 'HeaderTextField'
-
-export default HeaderTextField

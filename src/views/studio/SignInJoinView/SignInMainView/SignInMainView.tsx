@@ -1,5 +1,10 @@
-import { Button, Text } from '@/shared/components'
 import React from 'react'
+
+import { absoluteRoutes } from '@/config/routes'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
+import { SvgJoystreamFullLogo } from '@/shared/illustrations'
+
 import {
   BackLink,
   ButtonGroup,
@@ -11,9 +16,6 @@ import {
   StyledSignInIllustrationSVG,
   SubTitle,
 } from './SignInMainView.style'
-import { ReactComponent as FullLogoSVG } from '@/assets/full-logo.svg'
-import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
 
 export type Membership = {
   id: string
@@ -22,12 +24,12 @@ export type Membership = {
   avatarUri?: string
 }
 
-const SignInMainView: React.FC = () => {
+export const SignInMainView: React.FC = () => {
   return (
     <StyledContainer>
       <Header>
         <LogoContainer>
-          <FullLogoSVG />
+          <SvgJoystreamFullLogo />
         </LogoContainer>
         <StyledHero variant="hero">Welcome to Joystream Studio</StyledHero>
         <SubTitle variant="body1">
@@ -50,5 +52,3 @@ const SignInMainView: React.FC = () => {
     </StyledContainer>
   )
 }
-
-export default SignInMainView

@@ -1,9 +1,10 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { Grid } from '@/shared/components'
-import VideoPreview from './VideoPreview'
 import { VideoFieldsFragment } from '@/api/queries'
+import { Grid } from '@/shared/components'
+
+import { VideoPreview } from './VideoPreview'
 
 const StyledVideoPreview = styled(VideoPreview)`
   margin: 0 auto;
@@ -16,7 +17,7 @@ type VideoGridProps = {
   onVideoClick?: (id: string) => void
   onChannelClick?: (id: string) => void
 }
-const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVideoClick, onChannelClick }) => {
+export const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVideoClick, onChannelClick }) => {
   return (
     <Grid>
       {videos.map((v, idx) => (
@@ -39,4 +40,3 @@ const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVid
     </Grid>
   )
 }
-export default VideoGrid

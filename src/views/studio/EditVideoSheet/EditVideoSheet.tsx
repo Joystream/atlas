@@ -1,26 +1,36 @@
+import { useApolloClient } from '@apollo/client'
+import { formatISO } from 'date-fns'
 import React, { useEffect, useState } from 'react'
+import { FieldNamesMarkedBoolean } from 'react-hook-form'
+
 import {
-  useEditVideoSheet,
-  useAuthorizedUser,
-  useUploadsManager,
-  useSnackbar,
-  useJoystream,
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  VideoOrderByInput,
+} from '@/api/queries'
+import { useDisplayDataLostWarning } from '@/hooks'
+import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+import {
   EditVideoFormFields,
   EditVideoSheetTab,
-  useDrafts,
-  useDisplayDataLostWarning,
-  useTransactionManager,
-} from '@/hooks'
-import { Container, DrawerOverlay } from './EditVideoSheet.style'
-import { useEditVideoSheetAnimations } from './animations'
-import { EditVideoTabsBar } from './EditVideoTabsBar'
-import { EditVideoForm } from './EditVideoForm'
-import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import { useVideo, useRandomStorageProviderUrl, useVideos } from '@/api/hooks'
+  useAssetStore,
+  useAuthorizedUser,
+  useDraftStore,
+  useEditVideoSheet,
+  useJoystream,
+  useRawAssetResolver,
+  useStartFileUpload,
+  useTransaction,
+} from '@/providers'
+import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
-import { FieldNamesMarkedBoolean } from 'react-hook-form'
-import { formatISO } from 'date-fns'
-import { writeUrlInCache, writeVideoDataInCache } from '@/utils/cachingAssets'
+import { Logger } from '@/utils/logger'
+
+import { EditVideoForm } from './EditVideoForm'
+import { Container, DrawerOverlay } from './EditVideoSheet.style'
+import { EditVideoTabsBar } from './EditVideoTabsBar'
+import { useEditVideoSheetAnimations } from './animations'
 
 export const EditVideoSheet: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
@@ -44,37 +54,29 @@ export const EditVideoSheet: React.FC = () => {
   const isEdit = !selectedVideoTab?.isDraft
   const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
 
-  const { removeDraft } = useDrafts('video', activeChannelId)
+  const { openWarningDialog } = useDisplayDataLostWarning()
+  const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
 
   // transaction management
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
-  const { displaySnackbar } = useSnackbar()
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const { startFileUpload } = useUploadsManager(activeChannelId)
+  const startFileUpload = useStartFileUpload()
   const { joystream } = useJoystream()
-  const { fee, handleTransaction } = useTransactionManager()
-  const { client, refetch: refetchVideo } = useVideo(selectedVideoTab?.id || '', {
-    skip: !selectedVideoTab || selectedVideoTab.isDraft,
-  })
-  const { refetchCount: refetchVideosCount } = useVideos({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const handleTransaction = useTransaction()
+  const client = useApolloClient()
+  const addAsset = useAssetStore((state) => state.actions.addAsset)
+  const resolveAsset = useRawAssetResolver()
 
   useEffect(() => {
     if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
       return
     }
-
-    const beforeUnload = (e: BeforeUnloadEvent) => {
+    window.onbeforeunload = (e: BeforeUnloadEvent) => {
       e.preventDefault()
+      return ''
     }
-    window.addEventListener('beforeunload', beforeUnload)
     return () => {
-      window.removeEventListener('beforeunload', beforeUnload)
+      window.onbeforeunload = null
     }
   }, [sheetState, anyVideoTabsCachedAssets])
 
@@ -97,6 +99,8 @@ export const EditVideoSheet: React.FC = () => {
       return
     }
     const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
+    const videoAsset = resolveAsset(videoInputFile.contentId)
+    const thumbnailAsset = resolveAsset(thumbnailInputFile.cropContentId)
 
     if (!joystream) {
       return
@@ -140,96 +144,92 @@ export const EditVideoSheet: React.FC = () => {
     let thumbnailContentId = ''
 
     const processAssets = async () => {
-      if (videoInputFile?.blob && videoHashPromise) {
+      if (videoAsset?.blob && videoHashPromise) {
         const [asset, contentId] = joystream.createFileAsset({
-          size: videoInputFile.blob.size,
+          size: videoAsset.blob.size,
           ipfsContentId: await videoHashPromise,
         })
         assets.video = asset
         videoContentId = contentId
       } else if (dirtyFields.assets?.video) {
-        console.warn('Missing video data')
+        Logger.warn('Missing video data')
       }
 
-      if (thumbnailInputFile?.blob && thumbnailHashPromise) {
+      if (thumbnailAsset?.blob && thumbnailHashPromise) {
         const [asset, contentId] = joystream.createFileAsset({
-          size: thumbnailInputFile.blob.size,
+          size: thumbnailAsset.blob.size,
           ipfsContentId: await thumbnailHashPromise,
         })
         assets.thumbnail = asset
         thumbnailContentId = contentId
       } else if (dirtyFields.assets?.thumbnail) {
-        console.warn('Missing thumbnail data')
+        Logger.warn('Missing thumbnail data')
       }
     }
 
-    const uploadAssets = (videoId: VideoId) => {
-      const randomStorageProviderUrl = getRandomStorageProviderUrl()
-
-      if (videoInputFile?.blob && videoContentId && randomStorageProviderUrl) {
+    const uploadAssets = async (videoId: VideoId) => {
+      const uploadPromises: Promise<unknown>[] = []
+      if (videoAsset?.blob && videoContentId) {
         const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
-        startFileUpload(
-          videoInputFile.blob,
-          {
-            contentId: videoContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
+        const uploadPromise = startFileUpload(videoAsset.blob, {
+          contentId: videoContentId,
+          owner: activeChannelId,
+          parentObject: {
             type: 'video',
-            dimensions: width && height ? { width, height } : undefined,
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'video',
+          dimensions: width && height ? { width, height } : undefined,
+        })
+        uploadPromises.push(uploadPromise)
       }
-      if (thumbnailInputFile?.blob && thumbnailContentId && randomStorageProviderUrl) {
-        startFileUpload(
-          thumbnailInputFile.blob,
-          {
-            contentId: thumbnailContentId,
-            owner: activeChannelId,
-            parentObject: {
-              type: 'video',
-              id: videoId,
-            },
-            type: 'thumbnail',
-            dimensions: thumbnailInputFile.assetDimensions,
-            imageCropData: thumbnailInputFile.imageCropData,
+      if (thumbnailAsset?.blob && thumbnailContentId) {
+        const uploadPromise = startFileUpload(thumbnailAsset.blob, {
+          contentId: thumbnailContentId,
+          owner: activeChannelId,
+          parentObject: {
+            type: 'video',
+            id: videoId,
           },
-          randomStorageProviderUrl
-        )
+          type: 'thumbnail',
+          dimensions: thumbnailInputFile.assetDimensions,
+          imageCropData: thumbnailInputFile.imageCropData,
+        })
+        uploadPromises.push(uploadPromise)
       }
+      Promise.all(uploadPromises).catch((e) => Logger.error('Failed assets upload', e))
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
-      const fetchedVideo = await refetchVideo({ where: { id: videoId } })
+      // add resolution for newly created asset
+      addAsset(thumbnailContentId, { url: thumbnailAsset?.url })
+
+      const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
+        query: GetVideosConnectionDocument,
+        variables: {
+          orderBy: VideoOrderByInput.CreatedAtDesc,
+          where: {
+            id_eq: videoId,
+          },
+        },
+        fetchPolicy: 'network-only',
+      })
 
       if (isNew) {
-        if (fetchedVideo.data.videoByUniqueInput) {
+        if (fetchedVideo.data.videosConnection?.edges[0]) {
           writeVideoDataInCache({
-            data: fetchedVideo.data.videoByUniqueInput,
-            thumbnailUrl: data.assets.thumbnail?.url,
+            edge: fetchedVideo.data.videosConnection.edges[0],
             client,
           })
         }
-        // update videos count only after inserting video in cache to not trigger refetch in "my videos" on missing video
-        await refetchVideosCount()
 
         updateSelectedVideoTab({
           id: videoId,
           isDraft: false,
         })
-        removeDraft(selectedVideoTab?.id)
-      } else {
-        writeUrlInCache({
-          url: data.assets.thumbnail?.url,
-          fileType: 'thumbnail',
-          parentId: videoId,
-          client,
-        })
+        removeDrafts([selectedVideoTab?.id])
       }
-      setSelectedVideoTabCachedAssets({ video: null, thumbnail: null })
+      setSelectedVideoTabCachedAssets(null)
       setSelectedVideoTabCachedDirtyFormData({})
 
       // allow for the changes in refetched video to propagate first
@@ -238,7 +238,7 @@ export const EditVideoSheet: React.FC = () => {
       })
     }
 
-    handleTransaction({
+    const completed = await handleTransaction({
       preProcess: processAssets,
       txFactory: (updateStatus) =>
         isNew
@@ -246,7 +246,6 @@ export const EditVideoSheet: React.FC = () => {
           : joystream.updateVideo(selectedVideoTab.id, activeMemberId, activeChannelId, metadata, assets, updateStatus),
       onTxFinalize: uploadAssets,
       onTxSync: refetchDataAndCacheAssets,
-      onTxClose: (completed) => completed && setSheetState('minimized'),
       successMessage: {
         title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
         description: isNew
@@ -254,13 +253,18 @@ export const EditVideoSheet: React.FC = () => {
           : 'Changes to your video were saved on the blockchain.',
       },
     })
+
+    if (completed) {
+      setSheetState('minimized')
+      removeVideoTab(selectedVideoTabIdx)
+    }
   }
 
   const toggleMinimizedSheet = () => {
     setSheetState(sheetState === 'open' ? 'minimized' : 'open')
   }
 
-  const handleDeleteVideo = async (videoId: string) => {
+  const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
     removeVideoTab(videoTabIdx)
 
@@ -286,15 +290,18 @@ export const EditVideoSheet: React.FC = () => {
 
   return (
     <>
-      <DataLostWarningDialog />
       <DrawerOverlay style={drawerOverlayAnimationProps} />
       <Container ref={containerRef} role="dialog" style={sheetAnimationProps}>
         <EditVideoTabsBar
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
+          sheetState={sheetState}
           onAddNewTabClick={() => addVideoTab()}
           onRemoveTabClick={handleRemoveVideoTab}
-          onTabSelect={setSelectedVideoTabIdx}
+          onTabSelect={(tabIdx) => {
+            setSelectedVideoTabIdx(tabIdx)
+            setSheetState('open')
+          }}
           onCloseClick={closeSheet}
           onToggleMinimizedClick={toggleMinimizedSheet}
         />
@@ -304,7 +311,7 @@ export const EditVideoSheet: React.FC = () => {
           onSubmit={handleSubmit}
           onThumbnailFileChange={handleThumbnailFileChange}
           onVideoFileChange={handleVideoFileChange}
-          fee={fee}
+          fee={0}
         />
       </Container>
     </>

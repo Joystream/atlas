@@ -1,8 +1,10 @@
+import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import ButtonBase, { ButtonSize } from '../ButtonBase'
-import Text from '../Text'
-import { css, SerializedStyles } from '@emotion/react'
+
 import { colors, sizes } from '@/shared/theme'
+
+import { ButtonBase, ButtonSize } from '../ButtonBase'
+import { Text } from '../Text'
 
 type ButtonSizeProps = {
   size: ButtonSize
@@ -53,7 +55,6 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
 }
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
-  ${sizeOverwriteStyles}
   ${sizeOverwriteStyles};
 `
 
@@ -62,7 +63,8 @@ export const ButtonIconWrapper = styled.span`
 `
 
 export const StyledText = styled(Text)<TextProps>`
-  // compensate for line-height being 1
-  ${textPaddingStyles}
-  color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error}
+  /* compensate for line-height being 1 */
+  ${textPaddingStyles};
+
+  color: ${({ textColorVariant }) => textColorVariant === 'error' && colors.error};
 `

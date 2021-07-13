@@ -1,49 +1,51 @@
-import React, { useState } from 'react'
-import { Route, Routes } from 'react-router'
-import { useNavigate, useLocation } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
+import React, { useEffect, useState } from 'react'
+import { Route, Routes } from 'react-router'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+import {
+  NoConnectionIndicator,
+  PrivateRoute,
+  StudioEntrypoint,
+  StudioLoading,
+  StudioSidenav,
+  StudioTopbar,
+  TOP_NAVBAR_HEIGHT,
+  ViewErrorFallback,
+} from '@/components'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import {
+  ActiveUserProvider,
+  ConnectionStatusManager,
+  EditVideoSheetProvider,
+  JoystreamProvider,
+  TransactionManager,
+  UploadsManager,
+  useConnectionStatusStore,
+  useDialog,
+  useUser,
+  useVideoEditSheetRouting,
+} from '@/providers'
+import { isAllowedBrowser } from '@/utils/browser'
 
 import {
   CreateEditChannelView,
+  CreateMemberView,
   EditVideoSheet,
   MyUploadsView,
   MyVideosView,
-  SignInView,
   SignInJoinView,
-  CreateMemberView,
+  SignInView,
 } from '.'
-import {
-  JoystreamProvider,
-  ActiveUserProvider,
-  DraftsProvider,
-  PersonalDataProvider,
-  EditVideoSheetProvider,
-  useVideoEditSheetRouting,
-  useConnectionStatus,
-  useUser,
-  UploadManagerProvider,
-  TransactionManagerProvider,
-} from '@/hooks'
-
-import { relativeRoutes, absoluteRoutes } from '@/config/routes'
-import {
-  ViewErrorFallback,
-  StudioTopbar,
-  StudioSidenav,
-  NoConnectionIndicator,
-  TOP_NAVBAR_HEIGHT,
-  StudioEntrypoint,
-  PrivateRoute,
-  StudioLoading,
-} from '@/components'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
   const location = useLocation()
   const displayedLocation = useVideoEditSheetRouting()
-  const { isUserConnectedToInternet, nodeConnectionStatus } = useConnectionStatus()
+  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const {
     activeAccountId,
@@ -54,6 +56,7 @@ const StudioLayout = () => {
     userInitialized,
   } = useUser()
 
+  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
@@ -61,15 +64,32 @@ const StudioLayout = () => {
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
 
+  useEffect(() => {
+    if (!isAllowedBrowser()) {
+      openUnsupportedBrowserDialog({
+        variant: 'warning',
+        title: 'Unsupported browser detected',
+        description:
+          'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',
+        primaryButtonText: 'I understand',
+        onPrimaryButtonClick: () => {
+          closeUnsupportedBrowserDialog()
+        },
+        onExitClick: () => {
+          closeUnsupportedBrowserDialog()
+        },
+      })
+    }
+  }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
+
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
   //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
-
   return (
     <>
       <NoConnectionIndicator
         nodeConnectionStatus={nodeConnectionStatus}
-        isConnectedToInternet={isUserConnectedToInternet}
+        isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
       <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
       {channelSet && <StudioSidenav />}
@@ -150,19 +170,14 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <PersonalDataProvider>
-          <UploadManagerProvider>
-            <DraftsProvider>
-              <EditVideoSheetProvider>
-                <JoystreamProvider>
-                  <TransactionManagerProvider>
-                    <StudioLayout />
-                  </TransactionManagerProvider>
-                </JoystreamProvider>
-              </EditVideoSheetProvider>
-            </DraftsProvider>
-          </UploadManagerProvider>
-        </PersonalDataProvider>
+        <EditVideoSheetProvider>
+          <JoystreamProvider>
+            <ConnectionStatusManager />
+            <UploadsManager />
+            <TransactionManager />
+            <StudioLayout />
+          </JoystreamProvider>
+        </EditVideoSheetProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

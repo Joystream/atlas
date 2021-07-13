@@ -1,22 +1,31 @@
-import React, { useState, useMemo } from 'react'
 import styled from '@emotion/styled'
-import { sizes } from '@/shared/theme'
-import { Tabs } from '@/shared/components'
-import { VideoGrid, PlaceholderVideoGrid, ChannelGrid, ViewWrapper } from '@/components'
-import { usePersonalData } from '@/hooks'
-import AllResultsTab from './AllResultsTab'
-import EmptyFallback from './EmptyFallback'
+import React, { useMemo, useState } from 'react'
+
 import { useSearch } from '@/api/hooks'
-import { SearchQuery } from '@/api/queries'
+import { AssetAvailability, SearchQuery } from '@/api/queries'
+import { ChannelGrid, PlaceholderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
+import { usePersonalDataStore } from '@/providers'
+import { Tabs } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import { AllResultsTab } from './AllResultsTab'
+import { EmptyFallback } from './EmptyFallback'
 
 type SearchResultsProps = {
   query: string
 }
 const tabs = ['all results', 'videos', 'channels']
 
-const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({ text: query })
+  const { data, loading, error } = useSearch({
+    text: query,
+    whereVideo: {
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+    },
+    whereChannel: {},
+  })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
@@ -29,7 +38,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   }
 
   const { channels, videos } = useMemo(() => getChannelsAndVideos(loading, data), [loading, data])
-  const { updateRecentSearches } = usePersonalData()
+  const updateRecentSearches = usePersonalDataStore((state) => state.actions.updateRecentSearches)
 
   const handleVideoClick = (id: string) => {
     updateRecentSearches(id, 'video')
@@ -83,9 +92,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
 
 const Container = styled.div`
   margin: ${sizes(4)} 0;
+
   > * {
     margin-bottom: ${sizes(12)};
   }
 `
-
-export default SearchResults

@@ -1,18 +1,20 @@
-import { FileType } from '@/types/files'
 import React, { useEffect, useState } from 'react'
-import {
-  StepWrapper,
-  StepStatus,
-  StepNumber,
-  StepDetails,
-  Overhead,
-  FileName,
-  Thumbnail,
-  StyledProgress,
-} from './FileStep.style'
-import { IconButton } from '@/shared/components'
+
 import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
-import { CSSTransition } from 'react-transition-group'
+import { FileType } from '@/types/files'
+
+import {
+  FileName,
+  Overhead,
+  StepDetails,
+  StepNumber,
+  StepStatus,
+  StepWrapper,
+  StyledProgress,
+  Thumbnail,
+} from './FileStep.style'
+
+import { IconButton } from '../IconButton'
 
 export type FileStepProps = {
   stepNumber: number
@@ -26,7 +28,7 @@ export type FileStepProps = {
   isLoading?: boolean
 }
 
-const FileStep: React.FC<FileStepProps> = ({
+export const FileStep: React.FC<FileStepProps> = ({
   stepNumber = 1,
   active,
   isFileSet,
@@ -89,5 +91,3 @@ const FileStep: React.FC<FileStepProps> = ({
     </StepWrapper>
   )
 }
-
-export default FileStep

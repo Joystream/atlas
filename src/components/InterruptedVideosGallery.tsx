@@ -1,16 +1,15 @@
-import React from 'react'
 import { RouteComponentProps } from '@reach/router'
+import React from 'react'
 
-import { usePersonalData } from '@/hooks'
 import { VideoGallery } from '@/components'
+import { usePersonalDataStore } from '@/providers'
+import { Logger } from '@/utils/logger'
 
 const INTERRUPTED_VIDEOS_COUNT = 16
 
-const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
-  const {
-    state: { watchedVideos },
-    updateWatchedVideos,
-  } = usePersonalData()
+export const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
+  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
+  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
 
   const interruptedVideosState = watchedVideos
     .filter((video) => video.__typename === 'INTERRUPTED')
@@ -24,6 +23,11 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
     updateWatchedVideos('REMOVED', id)
   }
 
+  const onVideoNotFound = (id: string) => {
+    Logger.warn(`Interrupted video not found, removing id: ${id}`)
+    updateWatchedVideos('REMOVED', id)
+  }
+
   return (
     <VideoGallery
       title="Continue watching"
@@ -31,8 +35,7 @@ const InterruptedVideosGallery: React.FC<RouteComponentProps> = () => {
       loading={false}
       removeButton
       onRemoveButtonClick={onRemoveButtonClick}
+      onVideoNotFound={onVideoNotFound}
     />
   )
 }
-
-export default InterruptedVideosGallery

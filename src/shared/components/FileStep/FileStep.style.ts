@@ -1,7 +1,9 @@
-import { media, colors, sizes, transitions, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import CircularProgressbar from '../CircularProgressbar'
-import Text from '../Text'
+
+import { colors, sizes, transitions, typography } from '@/shared/theme'
+
+import { CircularProgressbar } from '../CircularProgressbar'
+import { Text } from '../Text'
 
 type StepProps = {
   active?: boolean
@@ -16,13 +18,15 @@ export const StepWrapper = styled.div<StepProps>`
   justify-content: space-between;
   align-items: center;
   border: 1px solid ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
-  transition: border ${transitions.timings.routing} ${transitions.easing};
+  transition: border ${transitions.timings.routing} ${transitions.easing},
+    background-color ${transitions.timings.routing} ${transitions.easing};
   cursor: pointer;
-  transition: background-color ${transitions.timings.routing} ${transitions.easing};
   background-color: ${({ active }) => (active ? 'rgba(180, 187, 255, 0.06)' : 'none')};
+
   :hover:not([aria-disabled='true']) {
     background-color: rgba(180, 187, 255, 0.12);
   }
+
   &[aria-disabled='true'] {
     opacity: 0.6;
     cursor: not-allowed;
@@ -84,7 +88,6 @@ export const Thumbnail = styled.div`
   background: ${colors.gray[600]};
   width: ${sizes(7)};
   height: ${sizes(6)};
-
   display: flex;
   align-items: center;
   justify-content: center;

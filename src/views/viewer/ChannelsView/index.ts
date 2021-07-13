@@ -1,3 +1,1 @@
-import ChannelsView from './ChannelsView'
-
-export default ChannelsView
+export * from './ChannelsView'

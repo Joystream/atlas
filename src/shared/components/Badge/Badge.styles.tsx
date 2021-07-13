@@ -1,8 +1,9 @@
 import { css } from '@emotion/react'
+
 import { colors, sizes, typography } from '@/shared/theme'
 
 export const badgeStyles = css`
-  &[data-badge]:after {
+  &[data-badge]::after {
     position: absolute;
     width: ${sizes(4)};
     height: ${sizes(4)};
@@ -17,9 +18,9 @@ export const badgeStyles = css`
     text-align: center;
   }
 
-  &[data-badge^='-']:after,
-  &[data-badge='0']:after,
-  &[data-badge='']:after {
+  &[data-badge^='-']::after,
+  &[data-badge='0']::after,
+  &[data-badge='']::after {
     display: none;
   }
 `

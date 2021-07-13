@@ -1,17 +1,18 @@
-import React, { useCallback, useState } from 'react'
-import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+import React, { useCallback, useState } from 'react'
 
-import { sizes } from '@/shared/theme'
-import { Grid, Text } from '@/shared/components'
 import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
-  AssetAvailability,
 } from '@/api/queries'
-import ChannelPreview from '@/components/ChannelPreview'
-import useInfiniteGrid from './useInfiniteGrid'
+import { Grid, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import { useInfiniteGrid } from './useInfiniteGrid'
+
+import { ChannelPreview } from '../ChannelPreview'
 
 type InfiniteChannelGridProps = {
   title?: string
@@ -29,7 +30,12 @@ const QUERY_VARIABLES = {
   },
 }
 
-const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({ title, skipCount = 0, ready = true, className }) => {
+export const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({
+  title,
+  skipCount = 0,
+  ready = true,
+  className,
+}) => {
   const [channelsPerRow, setChannelsPerRow] = useState(INITIAL_CHANNELS_PER_ROW)
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
 
@@ -91,5 +97,3 @@ const previewCss = css`
 const StyledChannelPreview = styled(ChannelPreview)`
   ${previewCss};
 `
-
-export default InfiniteChannelGrid

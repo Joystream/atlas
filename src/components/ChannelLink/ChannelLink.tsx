@@ -1,10 +1,13 @@
 import React from 'react'
-import Avatar, { AvatarSize } from '@/shared/components/Avatar'
-import { absoluteRoutes } from '@/config/routes'
-import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
+
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { useAsset } from '@/hooks'
+import { absoluteRoutes } from '@/config/routes'
+import { AssetType, useAsset } from '@/providers'
+import { Avatar, AvatarSize } from '@/shared/components/Avatar'
+import { Logger } from '@/utils/logger'
+
+import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
 
 type ChannelLinkProps = {
   id?: string
@@ -15,31 +18,34 @@ type ChannelLinkProps = {
   overrideChannel?: BasicChannelFieldsFragment
   avatarSize?: AvatarSize
   className?: string
+  onNotFound?: () => void
 }
 
-const ChannelLink: React.FC<ChannelLinkProps> = ({
+export const ChannelLink: React.FC<ChannelLinkProps> = ({
   id,
   hideHandle,
   hideAvatar,
   noLink,
   overrideChannel,
   avatarSize = 'default',
+  onNotFound,
   className,
 }) => {
-  const { channel } = useBasicChannel(id || '', { fetchPolicy: 'cache-first', skip: !id })
-  const { getAssetUrl } = useAsset()
+  const { channel } = useBasicChannel(id || '', {
+    skip: !id,
+    onCompleted: (data) => !data && onNotFound?.(),
+    onError: (error) => Logger.error('Failed to fetch channel', error),
+  })
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.AVATAR,
+  })
 
   const displayedChannel = overrideChannel || channel
 
-  const avatarPhotoUrl = getAssetUrl(
-    displayedChannel?.avatarPhotoAvailability,
-    displayedChannel?.avatarPhotoUrls,
-    displayedChannel?.avatarPhotoDataObject
-  )
-
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && <Avatar imageUrl={avatarPhotoUrl} loading={!displayedChannel} size={avatarSize} />}
+      {!hideAvatar && <Avatar loading={!displayedChannel} size={avatarSize} assetUrl={avatarPhotoUrl} />}
       {!hideHandle &&
         (displayedChannel ? (
           <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
@@ -49,5 +55,3 @@ const ChannelLink: React.FC<ChannelLinkProps> = ({
     </Container>
   )
 }
-
-export default ChannelLink

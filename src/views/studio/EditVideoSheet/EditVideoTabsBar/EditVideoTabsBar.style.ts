@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { colors, media, sizes } from '@/shared/theme'
+
 import { Text } from '@/shared/components'
+import { colors, media, sizes } from '@/shared/theme'
 
 type AddDraftButtonContainerProps = {
   hasOverflow?: boolean
@@ -24,9 +25,11 @@ export const TabsContainer = styled.div`
   align-items: center;
   overflow: auto hidden;
   width: 100%;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
 `
 
@@ -47,7 +50,6 @@ export const Tab = styled.div<{ selected: boolean }>`
   height: 100%;
   display: flex;
   align-items: center;
-
   padding: 0 ${sizes(1)} 0 ${sizes(3)};
   cursor: pointer;
   user-select: none;

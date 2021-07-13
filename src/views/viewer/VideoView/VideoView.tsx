@@ -1,47 +1,59 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { throttle } from 'lodash'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useMatch, useParams } from 'react-router-dom'
+
+import { useAddVideoView, useVideo } from '@/api/hooks'
+import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
+import knownLicenses from '@/data/knownLicenses.json'
+import { useRouterQuery } from '@/hooks'
+import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
+import { Placeholder, VideoPlayer } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
+import { formatVideoViewsAndDate } from '@/utils/video'
+
 import {
   ChannelContainer,
-  StyledViewWrapper,
   DescriptionContainer,
   DescriptionPlaceholder,
   InfoContainer,
+  LicenseContainer,
   Meta,
   MoreVideosContainer,
   MoreVideosHeader,
   PlayerContainer,
   PlayerPlaceholder,
   PlayerWrapper,
-  LicenseContainer,
+  StyledViewWrapper,
   TitleText,
 } from './VideoView.style'
-import { transitions } from '@/shared/theme'
-import { Placeholder, VideoPlayer } from '@/shared/components'
-import { formatVideoViewsAndDate } from '@/utils/video'
 
-import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { useAsset, usePersonalData, useRouterQuery } from '@/hooks'
-import { useVideo, useAddVideoView } from '@/api/hooks'
-import knownLicenses from '@/data/knownLicenses.json'
-
-const VideoView: React.FC = () => {
+export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id)
   const { addVideoView } = useAddVideoView()
-  const { state, updateWatchedVideos } = usePersonalData()
-  const timestampFromQuery = Number(useRouterQuery('time'))
-  const { getAssetUrl } = useAsset()
+  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
+  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
 
+  const timestampFromQuery = Number(useRouterQuery('time'))
+
+  const { url: thumbnailPhotoUrl } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+
+  const videoRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
       return
     }
-    const currentVideo = state.watchedVideos.find((v) => v.id === video?.id)
+    const currentVideo = watchedVideos.find((v) => v.id === video?.id)
 
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [state.watchedVideos, startTimestamp, video?.duration, video?.id])
+  }, [watchedVideos, startTimestamp, video?.duration, video?.id])
 
   useEffect(() => {
     const duration = video?.duration ?? 0
@@ -55,13 +67,22 @@ const VideoView: React.FC = () => {
   const videoId = video?.id
 
   const [playing, setPlaying] = useState(true)
-  const handleUserKeyPress = useCallback((event: Event) => {
-    const { keyCode } = event as KeyboardEvent
-    if (keyCode === 32) {
-      event.preventDefault()
-      setPlaying((prevState) => !prevState)
-    }
-  }, [])
+  const handleUserKeyPress = useCallback(
+    (event: Event) => {
+      const { keyCode } = event as KeyboardEvent
+      if (videoRouteMatch) {
+        switch (keyCode) {
+          case 32:
+            event.preventDefault()
+            setPlaying((prevState) => !prevState)
+            break
+          default:
+            break
+        }
+      }
+    },
+    [videoRouteMatch]
+  )
 
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress)
@@ -81,7 +102,7 @@ const VideoView: React.FC = () => {
         channelId,
       },
     }).catch((error) => {
-      console.warn('Failed to increase video views', { error })
+      Logger.warn('Failed to increase video views', { error })
     })
   }, [addVideoView, videoId, channelId])
 
@@ -120,13 +141,6 @@ const VideoView: React.FC = () => {
   }
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
-
-  const mediaUrl = getAssetUrl(video?.mediaAvailability, video?.mediaUrls, video?.mediaDataObject)
-  const thumbnailPhotoUrl = getAssetUrl(
-    video?.thumbnailPhotoAvailability,
-    video?.thumbnailPhotoUrls,
-    video?.thumbnailPhotoDataObject
-  )
 
   return (
     <StyledViewWrapper>
@@ -197,11 +211,14 @@ const VideoView: React.FC = () => {
           <MoreVideosHeader>
             {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
           </MoreVideosHeader>
-          <InfiniteVideoGrid ready={!loading} channelId={video?.channel.id} showChannel={false} />
+          <InfiniteVideoGrid
+            ready={!loading}
+            channelId={video?.channel.id}
+            showChannel={false}
+            currentlyWatchedVideoId={video?.id}
+          />
         </MoreVideosContainer>
       </InfoContainer>
     </StyledViewWrapper>
   )
 }
-
-export default VideoView

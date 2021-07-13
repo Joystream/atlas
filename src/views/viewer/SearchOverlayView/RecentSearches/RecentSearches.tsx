@@ -1,20 +1,20 @@
 import React, { useMemo } from 'react'
+
+import { useChannels, useVideos } from '@/api/hooks'
+import { usePersonalDataStore } from '@/providers'
+import { Text } from '@/shared/components'
+import { createLookup } from '@/utils/data'
+
 import { Container, SearchesList, Title } from './RecentSearches.style'
 import { RecentChannelPreview, RecentVideoPreview } from './previews'
-import { usePersonalData } from '@/hooks'
-import { Text } from '@/shared/components'
-import { useVideos, useChannels } from '@/api/hooks'
-import { createLookup } from '@/utils/data'
 
 type IdsLookup = {
   videoIds: string[]
   channelIds: string[]
 }
 
-const RecentSearches: React.FC = () => {
-  const {
-    state: { recentSearches },
-  } = usePersonalData()
+export const RecentSearches: React.FC = () => {
+  const recentSearches = usePersonalDataStore((state) => state.recentSearches)
 
   const { videoIds, channelIds } = useMemo(() => {
     return recentSearches.reduce(
@@ -60,5 +60,3 @@ const RecentSearches: React.FC = () => {
     </Container>
   )
 }
-
-export default RecentSearches

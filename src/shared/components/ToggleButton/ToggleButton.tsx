@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
+
 import { StyledToggleButton } from './ToggleButton.styles'
 
 import type { ButtonProps } from '../Button/Button'
-import { Text } from '@/shared/components'
+import { Text } from '../Text'
 
 export type ToggleButtonProps = {
   controlled?: boolean
   toggled?: boolean
 } & Omit<ButtonProps, 'variant'>
 
-const ToggleButton: React.FC<ToggleButtonProps> = ({
+export const ToggleButton: React.FC<ToggleButtonProps> = ({
   onClick,
   controlled = false,
   toggled: externalToggled = false,
@@ -38,5 +39,3 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
     </StyledToggleButton>
   )
 }
-
-export default ToggleButton

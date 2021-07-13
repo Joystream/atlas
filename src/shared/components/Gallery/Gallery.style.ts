@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+
 import { sizes, typography } from '../../theme'
 
 export const Container = styled.section`
@@ -15,6 +16,7 @@ export const HeadingContainer = styled.div`
     font-size: ${typography.sizes.h5};
     margin: 0;
   }
+
   > button {
     font-size: ${typography.sizes.subtitle2};
     padding: 0;

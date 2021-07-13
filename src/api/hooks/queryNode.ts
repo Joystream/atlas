@@ -1,4 +1,5 @@
 import { SubscriptionHookOptions } from '@apollo/client'
+
 import {
   GetQueryNodeStateSubscription,
   GetQueryNodeStateSubscriptionVariables,

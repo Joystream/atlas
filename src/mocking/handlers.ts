@@ -1,9 +1,12 @@
-import { graphql, GraphQLHandler } from 'msw'
-import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
+import { GraphQLHandler, graphql } from 'msw'
+
 import {
   GetBasicChannelDocument,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
+  GetBatchedVideoViewsDocument,
+  GetBatchedVideoViewsQuery,
+  GetBatchedVideoViewsQueryVariables,
   GetChannelDocument,
   GetChannelFollowsDocument,
   GetChannelFollowsQuery,
@@ -15,36 +18,38 @@ import {
   GetChannelsConnectionQueryVariables,
   GetChannelsDocument,
   GetChannelsQuery,
+  GetMembershipDocument,
+  GetMembershipQuery,
+  GetMembershipQueryVariables,
+  GetMembershipsDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
+  GetVideoCategoriesDocument,
+  GetVideoCategoriesQuery,
   GetVideoCountDocument,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   GetVideoDocument,
   GetVideoQuery,
   GetVideoQueryVariables,
+  GetVideoViewsDocument,
+  GetVideoViewsQuery,
+  GetVideoViewsQueryVariables,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
   GetVideosDocument,
   GetVideosQuery,
   GetVideosQueryVariables,
-  GetVideoViewsDocument,
-  GetVideoViewsQuery,
-  GetVideoViewsQueryVariables,
-  GetMembershipQuery,
-  GetMembershipQueryVariables,
-  GetMembershipDocument,
-  GetMembershipsQuery,
-  GetMembershipsQueryVariables,
-  GetMembershipsDocument,
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
-  GetVideoCategoriesDocument,
-  GetVideoCategoriesQuery,
 } from '@/api/queries'
-import { mockCategories, mockChannels, mockVideos, mockMemberships } from '@/mocking/data'
-import { createQueryHandler } from './queries'
+import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
+import { mockCategories, mockChannels, mockMemberships, mockVideos } from '@/mocking/data'
+
 import {
+  createBatchedVideoViewsAccessor,
   createChannelFollowsAccessor,
   createCursorPaginationAccessor,
   createOffsetLimitPaginationAccessor,
@@ -53,12 +58,13 @@ import {
   createTotalCountAccessor,
   createVideoViewsAccessor,
 } from './accessors'
-import { createStore } from './store'
 import {
   createAddVideoViewMutationHandler,
   createFollowChannelMutationHandler,
   createUnfollowChannelMutationHandler,
 } from './mutations'
+import { createQueryHandler } from './queries'
+import { createStore } from './store'
 
 const store = createStore({ videos: mockVideos, channels: mockChannels })
 
@@ -132,6 +138,11 @@ const queryNodeHandlers = [
 ]
 
 const orionHandlers = [
+  createQueryHandler<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
+    orion,
+    GetBatchedVideoViewsDocument,
+    createBatchedVideoViewsAccessor(store)
+  ),
   createQueryHandler<GetVideoViewsQuery, GetVideoViewsQueryVariables>(
     orion,
     GetVideoViewsDocument,

@@ -1,11 +1,13 @@
-import React from 'react'
 import { Meta, Story } from '@storybook/react'
-import ActionBar, { ActionBarProps } from './ActionBar'
-import ActionBarTransaction, { ActionBarTransactionProps } from './ActionBarTransaction'
+import React from 'react'
+
 import { SvgGlyphInfo } from '@/shared/icons'
 
+import { ActionBar, ActionBarProps } from './ActionBar'
+import { ActionBarTransaction, ActionBarTransactionProps } from './ActionBarTransaction'
+
 export default {
-  title: 'Shared/ActionBar',
+  title: 'Shared/A/ActionBar',
   component: ActionBar,
   args: {
     primaryText: 'Fee: 0.2 Joy',
@@ -16,6 +18,7 @@ export default {
     primaryButtonText: 'Edit the channel',
     secondaryButtonText: 'Cancel',
     fee: 1,
+    isActive: true,
   },
 } as Meta
 

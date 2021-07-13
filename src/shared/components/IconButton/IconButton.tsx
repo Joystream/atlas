@@ -1,12 +1,14 @@
 import React, { ReactNode } from 'react'
-import { ButtonBaseProps } from '../ButtonBase'
+
 import { StyledButtonBase } from './IconButton.style'
+
+import { ButtonBaseProps } from '../ButtonBase'
 
 export type IconButtonProps = ButtonBaseProps & {
   children: ReactNode
 }
 
-const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = 'primary', children, ...buttonBaseProps }, ref) => {
     return (
       <StyledButtonBase ref={ref} variant={variant} {...buttonBaseProps}>
@@ -16,5 +18,3 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   }
 )
 IconButton.displayName = 'IconButton'
-
-export default IconButton

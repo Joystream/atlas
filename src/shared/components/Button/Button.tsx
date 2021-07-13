@@ -1,7 +1,9 @@
 import React from 'react'
+
 import { ButtonIconWrapper, StyledButtonBase, StyledText, TextColorVariant } from './Button.style'
-import { TextVariant } from '../Text'
+
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
+import { TextVariant } from '../Text'
 
 export type ButtonProps = {
   icon?: React.ReactNode
@@ -15,7 +17,7 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
   small: 'button3',
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ icon, children, size = 'medium', textColorVariant = 'default', ...baseButtonProps }, ref) => {
     return (
       <StyledButtonBase ref={ref} size={size} {...baseButtonProps}>
@@ -30,5 +32,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 )
 Button.displayName = 'Button'
-
-export default Button

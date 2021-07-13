@@ -1,49 +1,84 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
-import { useUploadsManager, useAuthorizedUser } from '@/hooks'
-import { useRandomStorageProviderUrl } from '@/api/hooks'
+
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { formatBytes } from '@/utils/size'
+import { useDialog, useUploadsStore } from '@/providers'
+import { AssetUpload } from '@/providers/uploadsManager/types'
+import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
+import { Button, CircularProgressbar, Text } from '@/shared/components'
+import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { computeFileHash } from '@/utils/hashing'
+import { formatBytes } from '@/utils/size'
+
 import {
-  FileLineContainer,
-  FileLinePoint,
-  FileLineLastPoint,
-  FileStatusContainer,
   FileInfoContainer,
   FileInfoType,
-  StatusMessage,
+  FileLineContainer,
+  FileLineLastPoint,
+  FileLinePoint,
+  FileStatusContainer,
   ProgressbarContainer,
+  StatusMessage,
 } from './AssetLine.style'
-import { AssetUploadWithProgress } from '@/hooks/useUploadsManager/types'
-import { MessageDialog } from '@/components'
-import { Text, CircularProgressbar, Button } from '@/shared/components'
-import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
-import { LiaisonJudgement } from '@/api/queries'
 
 type AssetLineProps = {
   isLast?: boolean
-  asset: AssetUploadWithProgress
+  asset: AssetUpload
 }
 
-const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
+export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
   const navigate = useNavigate()
-  const { activeChannelId } = useAuthorizedUser()
-  const { startFileUpload } = useUploadsManager(activeChannelId)
-  const { getRandomStorageProviderUrl } = useRandomStorageProviderUrl()
+  const startFileUpload = useStartFileUpload()
+  const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
+
+  const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+
+  const [openDifferentFileDialog, closeDifferentFileDialog] = useDialog({
+    title: 'Different file was selected!',
+    description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
+      asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
+    } to use the new file.`,
+    variant: 'warning',
+    onSecondaryButtonClick: () => {
+      if (asset.parentObject.type === 'video') {
+        navigate(absoluteRoutes.studio.editVideo())
+      }
+      if (asset.parentObject.type === 'channel') {
+        navigate(absoluteRoutes.studio.editChannel())
+      }
+      closeDifferentFileDialog()
+    },
+    onPrimaryButtonClick: () => {
+      reselectFile()
+      closeDifferentFileDialog()
+    },
+    primaryButtonText: 'Reselect file',
+    secondaryButtonText: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
+    exitButton: false,
+  })
+  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useDialog({
+    title: 'Missing asset details',
+    description:
+      "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
+    variant: 'warning',
+    onSecondaryButtonClick: () => {
+      closeMissingCropDataDialog()
+    },
+    secondaryButtonText: 'Close',
+    exitButton: false,
+  })
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
       const fileHash = await computeFileHash(file)
       if (fileHash !== asset.ipfsContentId) {
-        setShowDialog(true)
+        openDifferentFileDialog()
       } else {
-        const randomStorageProviderUrl = getRandomStorageProviderUrl()
-        if (!randomStorageProviderUrl) {
-          return
-        }
         startFileUpload(
           file,
           {
@@ -55,34 +90,28 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
             },
             type: asset.type,
           },
-          randomStorageProviderUrl,
           {
             isReUpload: true,
           }
         )
       }
     },
-    [asset, getRandomStorageProviderUrl, startFileUpload]
+    [asset, openDifferentFileDialog, startFileUpload]
   )
 
+  const isVideo = asset.type === 'video'
   const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
     onDrop,
     maxFiles: 1,
     multiple: false,
     noClick: true,
     noKeyboard: true,
+    accept: isVideo ? 'video/*' : 'image/*',
   })
 
-  const [showDialog, setShowDialog] = useState(false)
-
-  const isVideo = asset.type === 'video'
   const fileTypeText = isVideo ? 'Video file' : `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} image`
 
   const handleChangeHost = () => {
-    const randomStorageProviderUrl = getRandomStorageProviderUrl()
-    if (!randomStorageProviderUrl) {
-      return
-    }
     startFileUpload(
       null,
       {
@@ -94,11 +123,33 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
         },
         type: asset.type,
       },
-      randomStorageProviderUrl,
       {
         changeHost: true,
       }
     )
+  }
+
+  const handleCropConfirm = async (croppedBlob: Blob) => {
+    const fileHash = await computeFileHash(croppedBlob)
+    if (fileHash !== asset.ipfsContentId) {
+      openDifferentFileDialog()
+    } else {
+      startFileUpload(
+        croppedBlob,
+        {
+          contentId: asset.contentId,
+          owner: asset.owner,
+          parentObject: {
+            type: asset.parentObject.type,
+            id: asset.parentObject.id,
+          },
+          type: asset.type,
+        },
+        {
+          isReUpload: true,
+        }
+      )
+    }
   }
 
   const dimension =
@@ -107,25 +158,39 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
       : ''
   const size = formatBytes(asset.size)
 
-  const renderStatusMessage = (asset: AssetUploadWithProgress) => {
-    if (asset.lastStatus === 'reconnecting') {
-      return 'Trying to reconnect...'
+  const assetsDialogs = {
+    avatar: avatarDialogRef,
+    cover: coverDialogRef,
+    thumbnail: thumbnailDialogRef,
+  }
+  const reselectFile = () => {
+    if (asset.type === 'video') {
+      openFileSelect()
+      return
     }
-    if (asset.lastStatus === 'reconnectionError') {
+    if (!asset.imageCropData) {
+      openMissingCropDataDialog()
+      return
+    }
+    assetsDialogs[asset.type].current?.open(undefined, asset.imageCropData)
+  }
+
+  const renderStatusMessage = () => {
+    if (uploadStatus?.lastStatus === 'reconnecting') {
+      return 'Reconnecting...'
+    }
+    if (uploadStatus?.lastStatus === 'error') {
       return (
         <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
-          Change host
+          Try again
         </Button>
       )
     }
-    if (
-      asset.lastStatus === 'error' ||
-      (asset.lastStatus === 'inProgress' && asset.progress === 0 && asset.liaisonJudgement === LiaisonJudgement.Pending)
-    ) {
+    if (!uploadStatus?.lastStatus) {
       return (
         <div {...getRootProps()}>
           <input {...getInputProps()} />
-          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={() => openFileSelect()}>
+          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
             Reconnect file
           </Button>
         </div>
@@ -133,49 +198,25 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
     }
   }
 
-  const renderStatusIndicator = (asset: AssetUploadWithProgress) => {
-    if (asset.lastStatus === 'completed') {
+  const renderStatusIndicator = () => {
+    if (uploadStatus?.lastStatus === 'completed') {
       return <SvgAlertSuccess />
     }
-    if (asset.lastStatus === 'error') {
+    if (uploadStatus?.lastStatus === 'error' || !uploadStatus?.lastStatus) {
       return <SvgAlertError />
     }
     return (
       <ProgressbarContainer>
-        <CircularProgressbar value={asset.progress} />
+        <CircularProgressbar value={uploadStatus?.progress ?? 0} />
       </ProgressbarContainer>
     )
   }
 
   return (
     <>
-      <MessageDialog
-        title="Different file was selected!"
-        description={`We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
-          asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
-        } to use the new file.`}
-        showDialog={showDialog}
-        variant="warning"
-        onSecondaryButtonClick={() => {
-          setShowDialog(false)
-          if (asset.parentObject.type === 'video') {
-            navigate(absoluteRoutes.studio.editVideo())
-          }
-          if (asset.parentObject.type === 'channel') {
-            navigate(absoluteRoutes.studio.editChannel())
-          }
-        }}
-        primaryButtonText="Reselect file"
-        onPrimaryButtonClick={() => {
-          setShowDialog(false)
-          openFileSelect()
-        }}
-        secondaryButtonText={`Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`}
-        exitButton={false}
-      />
       <FileLineContainer isLast={isLast}>
         {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
-        <FileStatusContainer>{renderStatusIndicator(asset)}</FileStatusContainer>
+        <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
         <FileInfoContainer>
           <FileInfoType>
             {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
@@ -184,10 +225,11 @@ const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) => {
           <Text variant="body2">{dimension}</Text>
           <Text>{size}</Text>
         </FileInfoContainer>
-        <StatusMessage variant="subtitle2">{renderStatusMessage(asset)}</StatusMessage>
+        <StatusMessage variant="subtitle2">{renderStatusMessage()}</StatusMessage>
       </FileLineContainer>
+      <ImageCropDialog ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
+      <ImageCropDialog ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />
+      <ImageCropDialog ref={coverDialogRef} imageType="cover" onConfirm={handleCropConfirm} />
     </>
   )
 }
-
-export default AssetLine

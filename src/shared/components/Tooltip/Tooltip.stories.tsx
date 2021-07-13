@@ -1,11 +1,15 @@
-import React from 'react'
-import Tooltip, { TooltipProps } from './Tooltip'
-import { Text, Button, ChannelPreviewBase } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Tooltip, TooltipProps } from './Tooltip'
+
+import { Button } from '../Button'
+import { ChannelPreviewBase } from '../ChannelPreviewBase'
+import { Text } from '../Text'
+
 export default {
-  title: 'Shared/Tooltip',
+  title: 'Shared/T/Tooltip',
   component: Tooltip,
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },
@@ -43,7 +47,7 @@ const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
       <Tooltip {...args}>
         <ChannelPreviewBase
           title="Lorem"
-          avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
+          assetUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
           loading={false}
         />
       </Tooltip>

@@ -1,6 +1,8 @@
 import React from 'react'
-import { Container, StyledToggleButton, StyledPlaceholder } from './CategoryPicker.style'
+
 import { VideoCategoryFieldsFragment } from '@/api/queries'
+
+import { Container, StyledPlaceholder, StyledToggleButton } from './CategoryPicker.style'
 
 type CategoryPickerProps = {
   categories?: VideoCategoryFieldsFragment[]
@@ -18,7 +20,7 @@ export const ALL_CATEGORY = {
 
 const CATEGORY_PLACEHOLDER_WIDTHS = [80, 170, 120, 110, 80, 170, 120]
 
-const CategoryPicker: React.FC<CategoryPickerProps> = ({
+export const CategoryPicker: React.FC<CategoryPickerProps> = ({
   categories,
   selectedCategoryId,
   loading,
@@ -51,5 +53,3 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({
     </Container>
   )
 }
-
-export default CategoryPicker

@@ -1,31 +1,32 @@
-import { MessageDialog } from '@/components/Dialogs'
-import { absoluteRoutes } from '@/config/routes'
-import { useUser, useConnectionStatus } from '@/hooks'
-import { Spinner } from '@/shared/components'
-import TextArea from '@/shared/components/TextArea'
-import { textFieldValidation } from '@/utils/formValidationOptions'
+import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
+import axios, { AxiosError } from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+
+import { useQueryNodeStateSubscription } from '@/api/hooks'
+import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
+import { MemberId } from '@/joystream-lib'
+import { useConnectionStatusStore, useDialog, useUser } from '@/providers'
+import { Spinner } from '@/shared/components'
+import { TextArea } from '@/shared/components/TextArea'
+import { textFieldValidation } from '@/utils/formValidationOptions'
+import { Logger } from '@/utils/logger'
+
 import {
   Form,
-  StyledButton,
-  Wrapper,
   Header,
   Hero,
-  SubTitle,
   StyledAvatar,
+  StyledButton,
   StyledTextField,
+  SubTitle,
+  Wrapper,
 } from './CreateMemberView.style'
-import { useQueryNodeStateSubscription } from '@/api/hooks'
-
-import axios, { AxiosError } from 'axios'
-import { MemberId } from '@/joystream-lib'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
-import { useApolloClient } from '@apollo/client'
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 
 type Inputs = {
   handle: string
@@ -33,12 +34,16 @@ type Inputs = {
   about: string
 }
 
-const CreateMemberView = () => {
+export const CreateMemberView = () => {
   const { activeAccountId, refetchMemberships } = useUser()
-  const { nodeConnectionStatus } = useConnectionStatus()
+  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const navigate = useNavigate()
-  const { register, handleSubmit, errors } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     shouldFocusError: false,
     defaultValues: {
       handle: '',
@@ -48,9 +53,15 @@ const CreateMemberView = () => {
   })
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [error, setError] = useState<string | undefined>()
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useDialog({
+    exitButton: false,
+    icon: <Spinner />,
+    title: 'Creating membership...',
+    description:
+      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+  })
+  const [openErrorDialog, closeErrorDialog] = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   if (queryNodeStateError) {
@@ -61,18 +72,18 @@ const CreateMemberView = () => {
 
   // success
   useEffect(() => {
-    if (!isSubmitting || !membershipBlock || !queryNodeState || !activeAccountId) {
+    if (!membershipBlock || !queryNodeState || !activeAccountId) {
       return
     }
 
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
+      closeCreatingMemberDialog()
       refetchMemberships().then(() => {
-        setIsSubmitting(false)
         navigate(absoluteRoutes.studio.signIn())
       })
     }
-  }, [isSubmitting, membershipBlock, queryNodeState, activeAccountId, navigate, refetchMemberships])
+  }, [activeAccountId, closeCreatingMemberDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
@@ -80,13 +91,19 @@ const CreateMemberView = () => {
     }
 
     try {
-      setIsSubmitting(true)
+      openCreatingMemberDialog()
       const { block } = await createNewMember(activeAccountId, data)
       setMembershipBlock(block)
     } catch (error) {
-      setIsSubmitting(false)
+      closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
-      setError(errorMessage)
+      openErrorDialog({
+        variant: 'error',
+        title: 'Something went wrong...',
+        description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
+        secondaryButtonText: 'Close',
+        onSecondaryButtonClick: () => closeErrorDialog(),
+      })
     }
   })
 
@@ -135,13 +152,12 @@ const CreateMemberView = () => {
         </SubTitle>
       </Header>
       <Form onSubmit={handleCreateMember}>
-        <StyledAvatar size="view" imageUrl={errors.avatar ? undefined : avatarImageUrl} />
+        <StyledAvatar size="view" assetUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
-          name="avatar"
-          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          ref={register(
+          {...register(
+            'avatar',
             textFieldValidation({
               name: 'Avatar URL',
               pattern: URL_PATTERN,
@@ -151,14 +167,15 @@ const CreateMemberView = () => {
               validate: debouncedAvatarValidation.current,
             })
           )}
+          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
         <StyledTextField
-          name="handle"
           placeholder="johnnysmith"
           label="Member handle"
-          ref={register(
+          {...register(
+            'handle',
             textFieldValidation({
               name: 'Member handle',
               maxLength: 40,
@@ -175,11 +192,10 @@ const CreateMemberView = () => {
           }
         />
         <TextArea
-          name="about"
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
-          ref={register(textFieldValidation({ name: 'About', maxLength: 1000 }))}
+          {...register('about', textFieldValidation({ name: 'About', maxLength: 1000 }))}
           error={!!errors.about}
           helperText={errors.about?.message}
         />
@@ -187,22 +203,6 @@ const CreateMemberView = () => {
           Create membership
         </StyledButton>
       </Form>
-      <MessageDialog
-        showDialog={isSubmitting}
-        exitButton={false}
-        icon={<Spinner />}
-        title="Creating membership..."
-        description="Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds."
-      />
-      <MessageDialog
-        variant="error"
-        title="Something went wrong..."
-        showDialog={!isSubmitting && !!error}
-        description={`Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${error}`}
-        secondaryButtonText="Close"
-        onExitClick={() => setError(undefined)}
-        onSecondaryButtonClick={() => setError(undefined)}
-      />
     </Wrapper>
   )
 }
@@ -212,7 +212,7 @@ type NewMemberResponse = {
   block: number
 }
 
-const createNewMember = async (accountId: string, inputs: Inputs) => {
+export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {
     const body = {
       account: accountId,
@@ -221,9 +221,7 @@ const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    console.error('Failed to create a new member', error)
+    Logger.error('Failed to create a new member', error)
     throw error
   }
 }
-
-export default CreateMemberView

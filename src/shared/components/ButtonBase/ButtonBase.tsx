@@ -1,6 +1,7 @@
+import { To } from 'history'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { To } from 'history'
+
 import { ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
 
 export type ButtonBaseProps = {
@@ -24,7 +25,7 @@ const getLinkPropsFromTo = (to?: To) => {
   return { as: Link, to: to }
 }
 
-const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
+export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
   ({ onClick, to, type = 'button', children, size = 'medium', variant = 'primary', disabled, ...styleProps }, ref) => {
     const clickable = !!onClick || !!to || type === 'submit'
 
@@ -49,5 +50,3 @@ const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
   }
 )
 ButtonBase.displayName = 'ButtonBase'
-
-export default ButtonBase

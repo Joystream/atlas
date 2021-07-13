@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react'
-import InputBase, { InputBaseProps } from '../InputBase'
+
 import { TextInput } from './TextField.style'
+
+import { InputBase, InputBaseProps } from '../InputBase'
 
 export type TextFieldProps = {
   name?: string
@@ -37,8 +39,6 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   )
 }
 
-const TextField = forwardRef(TextFieldComponent)
+export const TextField = forwardRef(TextFieldComponent)
 
 TextField.displayName = 'TextField'
-
-export default TextField

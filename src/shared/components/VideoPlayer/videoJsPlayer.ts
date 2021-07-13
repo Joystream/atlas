@@ -132,7 +132,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   }, [player, startTime])
 
   useEffect(() => {
-    if (!player || !onPlay) {
+    if (!player || !onPlay || !player.paused()) {
       return
     }
 
@@ -144,7 +144,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   }, [player, onPlay])
 
   useEffect(() => {
-    if (!player || !onPause) {
+    if (!player || !onPause || player.paused()) {
       return
     }
 

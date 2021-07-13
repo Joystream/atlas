@@ -1,7 +1,8 @@
-import * as Types from './baseTypes.generated'
-
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+
+import * as Types from './baseTypes.generated'
+
 export type GetQueryNodeStateSubscriptionVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetQueryNodeStateSubscription = {

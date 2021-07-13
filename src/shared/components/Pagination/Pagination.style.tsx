@@ -1,7 +1,9 @@
-import { colors, sizes, transitions, typography, media } from '@/shared/theme'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import IconButton from '../IconButton'
+
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
+
+import { IconButton } from '../IconButton'
 
 type PaginationButtonProps = {
   isActive?: boolean
@@ -24,6 +26,7 @@ export const ChevronButton = styled(IconButton)`
     &:first-of-type {
       margin-right: ${sizes(8)};
     }
+
     &:last-of-type {
       margin-left: ${sizes(8)};
     }
@@ -61,20 +64,21 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   font-size: ${typography.sizes.subtitle2};
   justify-content: center;
   align-items: center;
-
   background: none;
   border-radius: 100%;
   text-decoration: none;
   font-family: ${typography.fonts.headers};
   transition: background-color ${transitions.timings.loading} ${transitions.easing},
     color ${transitions.timings.loading} ${transitions.easing}, opacity 200ms ${transitions.easing};
+
   :hover,
   :focus {
     background-color: ${colors.transparentPrimary[18]};
     color: ${colors.gray[50]};
   }
+
   :active {
-    ${buttonActiveState}
+    ${buttonActiveState};
   }
 
   ${({ isActive }) => isActive && buttonActiveState};

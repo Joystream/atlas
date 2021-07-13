@@ -1,14 +1,16 @@
 import React from 'react'
-import { Step } from '../Checkout/Checkout'
-import ActionBar, { ActionBarProps } from './ActionBar'
+
+import { ActionBar, ActionBarProps } from './ActionBar'
 import { ActionBarTransactionWrapper, StyledCheckout } from './ActionBarTransaction.style'
+
+import { Step } from '../Checkout/Checkout'
 
 export type ActionBarTransactionProps = {
   fee: number
   checkoutSteps?: Step[]
 } & Omit<ActionBarProps, 'primaryText' | 'secondaryText'>
 
-const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
+export const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
   fee,
   fullWidth,
   isActive,
@@ -27,5 +29,3 @@ const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
     </ActionBarTransactionWrapper>
   )
 }
-
-export default ActionBarTransaction

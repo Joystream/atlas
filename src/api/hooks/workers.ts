@@ -1,5 +1,6 @@
-import { getRandomIntInclusive } from '@/utils/number'
 import { QueryHookOptions } from '@apollo/client'
+
+import { WorkerType } from '@/api/queries'
 import {
   GetWorkerQuery,
   GetWorkersQuery,
@@ -7,8 +8,6 @@ import {
   useGetWorkerQuery,
   useGetWorkersQuery,
 } from '@/api/queries/__generated__/workers.generated'
-import { WorkerType } from '@/api/queries'
-import { useCallback } from 'react'
 
 type WorkerOpts = QueryHookOptions<GetWorkerQuery>
 export const useWorker = (id: string, opts?: WorkerOpts) => {
@@ -23,7 +22,7 @@ export const useWorker = (id: string, opts?: WorkerOpts) => {
 }
 
 type WorkersOpts = QueryHookOptions<GetWorkersQuery>
-export const useStorageProviders = (variables: GetWorkersQueryVariables, opts?: WorkersOpts) => {
+export const useStorageWorkers = (variables: GetWorkersQueryVariables, opts?: WorkersOpts) => {
   const { data, loading, ...rest } = useGetWorkersQuery({
     ...opts,
     variables: {
@@ -41,20 +40,4 @@ export const useStorageProviders = (variables: GetWorkersQueryVariables, opts?: 
     loading,
     ...rest,
   }
-}
-
-export const useRandomStorageProviderUrl = () => {
-  const { storageProviders, loading } = useStorageProviders({ limit: 100 }, { fetchPolicy: 'network-only' })
-
-  const getRandomStorageProviderUrl = useCallback(() => {
-    if (storageProviders?.length && !loading) {
-      const randomStorageIdx = getRandomIntInclusive(0, storageProviders.length - 1)
-      return storageProviders[randomStorageIdx].metadata
-    } else if (!loading) {
-      console.error('No active storage provider available')
-    }
-    return null
-  }, [loading, storageProviders])
-
-  return { getRandomStorageProviderUrl }
 }

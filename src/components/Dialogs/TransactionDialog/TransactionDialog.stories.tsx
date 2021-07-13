@@ -1,8 +1,10 @@
-import React from 'react'
-import TransactionDialog, { TransactionDialogProps } from './TransactionDialog'
 import { Meta, Story } from '@storybook/react'
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+import React from 'react'
+
 import { ExtrinsicStatus } from '@/joystream-lib'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
+
+import { TransactionDialog, TransactionDialogProps } from './TransactionDialog'
 
 export default {
   title: 'General/TransactionDialog',

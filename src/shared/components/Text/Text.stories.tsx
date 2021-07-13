@@ -1,25 +1,15 @@
-import React from 'react'
-import Text, { TextProps } from './Text'
 import { Meta, Story } from '@storybook/react'
-import { css } from '@emotion/react'
+import React from 'react'
+
+import { Text, TextProps } from './Text'
 
 export default {
-  title: 'Shared/Text',
+  title: 'Shared/T/Text',
   component: Text,
 } as Meta
 
 const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
-  <div
-    css={css`
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-
-      > * {
-        margin-top: 12px;
-      }
-    `}
-  >
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
     <Text {...args} variant="hero">
       Hero
     </Text>

@@ -1,4 +1,5 @@
 import { DocumentNode } from 'graphql'
+
 import {
   AddVideoViewDocument,
   AddVideoViewMutation,
@@ -10,6 +11,8 @@ import {
   UnfollowChannelMutation,
   UnfollowChannelMutationVariables,
 } from '@/api/queries'
+import { Logger } from '@/utils/logger'
+
 import { BaseDataQuery, DataMutator, Link, MocksStore } from './types'
 import { normalizeVariables, parseOperationDocument } from './utils'
 
@@ -20,7 +23,7 @@ const createGenericMutationHandler = <TQuery extends BaseDataQuery, TVariables =
 ) => {
   const { operationName } = parseOperationDocument(mutationDocument)
   if (!operationName) {
-    console.error('Unable to resolve operation name for mocking', mutationDocument)
+    Logger.error('Unable to resolve operation name for mocking', mutationDocument)
     return
   }
 
@@ -38,9 +41,10 @@ export const createAddVideoViewMutationHandler = (link: Link, store: MocksStore)
     AddVideoViewDocument,
     (variables) => {
       const { videoId } = variables
-
-      const currentValue = store.videoViews[videoId] || 0
+      const idx = store.batchedVideoViews.findIndex((view) => view.id === videoId)
+      const currentValue = store.batchedVideoViews[idx].views || store.videoViews[videoId] || 0
       const newValue = currentValue + 1
+      store.batchedVideoViews[idx].views = newValue
       store.videoViews[videoId] = newValue
 
       return {

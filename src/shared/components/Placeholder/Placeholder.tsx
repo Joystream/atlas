@@ -1,7 +1,8 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors } from '@/shared/theme'
 import { darken } from 'polished'
+
+import { colors } from '@/shared/theme'
 
 type PlaceholderProps = {
   width?: string | number
@@ -21,7 +22,7 @@ const pulse = keyframes`
   }
 `
 
-const Placeholder = styled.div<PlaceholderProps>`
+export const Placeholder = styled.div<PlaceholderProps>`
   width: ${({ width = '100%' }) => getPropValue(width)};
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
@@ -29,5 +30,3 @@ const Placeholder = styled.div<PlaceholderProps>`
   background-color: ${colors.gray['400']};
   animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `
-
-export default Placeholder

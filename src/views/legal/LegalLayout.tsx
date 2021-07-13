@@ -1,18 +1,20 @@
+import styled from '@emotion/styled'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import styled from '@emotion/styled'
-import { relativeRoutes } from '@/config/routes'
-import TermsOfServiceView from './TermsOfServiceView'
-import CopyrightPolicyView from './CopyrightPolicyView'
+
 import { TopbarBase } from '@/components'
+import { relativeRoutes } from '@/config/routes'
 import { colors, sizes } from '@/shared/theme'
+
+import { CopyrightPolicyView } from './CopyrightPolicyView'
+import { TermsOfServiceView } from './TermsOfServiceView'
 
 const legalRoutes = [
   { path: relativeRoutes.legal.termsOfService(), element: <TermsOfServiceView /> },
   { path: relativeRoutes.legal.copyright(), element: <CopyrightPolicyView /> },
 ]
 
-const LegalLayout: React.FC = () => {
+export const LegalLayout: React.FC = () => {
   return (
     <div>
       <StyledTopbarBase />
@@ -43,5 +45,3 @@ const Container = styled.div`
     color: ${colors.gray[50]};
   }
 `
-
-export default LegalLayout

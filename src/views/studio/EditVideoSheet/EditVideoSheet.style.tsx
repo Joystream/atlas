@@ -1,8 +1,9 @@
-import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { colors, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
+
+import { TOP_NAVBAR_HEIGHT } from '@/components'
 import { ActionBarTransaction } from '@/shared/components'
+import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`
   position: fixed;
@@ -11,10 +12,8 @@ export const Container = styled(animated.div)`
   left: var(--sidenav-collapsed-width);
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
-
   display: flex;
   flex-direction: column;
-
   background-color: ${colors.gray[900]};
   box-shadow: 0 4px 52px ${colors.black};
 `

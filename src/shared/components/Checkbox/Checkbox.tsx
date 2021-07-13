@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import Text from '../Text'
+
+import { SvgGlyphMinus } from '@/shared/icons'
+
 import {
   CheckboxLabel,
   Checkmark,
@@ -9,7 +11,8 @@ import {
   StyledGlyphCheck,
   StyledHelperText,
 } from './Checkbox.styles'
-import { SvgGlyphCheck, SvgGlyphMinus } from '@/shared/icons'
+
+import { Text } from '../Text'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
@@ -48,7 +51,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
 
-    const handleChange = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleChange = () => {
       if (!disabled && onChange) {
         onChange(!value)
       }
@@ -97,5 +100,3 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 )
 
 Checkbox.displayName = 'Checkbox'
-
-export default Checkbox

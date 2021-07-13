@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
 import Tippy from '@tippyjs/react/headless'
+import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { StyledTooltip, TooltipText, IconWrapper, Arrow, TooltipHeader } from './Tooltip.style'
+
 import { SvgGlyphInfo } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
+import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.style'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
 export type TooltipProps = {
@@ -17,7 +19,7 @@ export type TooltipProps = {
   className?: string
 }
 
-const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: React.FC<TooltipProps> = ({
   text,
   headerText,
   icon,
@@ -65,5 +67,3 @@ const Tooltip: React.FC<TooltipProps> = ({
     </Tippy>
   )
 }
-
-export default Tooltip

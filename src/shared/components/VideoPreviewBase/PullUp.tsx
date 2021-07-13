@@ -1,7 +1,9 @@
 import React from 'react'
-import styled from '@emotion/styled'
-import { IconButton, Tooltip } from '..'
+
 import { SvgGlyphNewTab } from '@/shared/icons'
+
+import { IconButton } from '../IconButton'
+import { Tooltip } from '../Tooltip'
 
 type StateProps = {
   disabled: boolean

@@ -1,20 +1,26 @@
 import React, { useEffect } from 'react'
-import { StyledButton } from './ExtensionStep.style'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
-import polkadotIcon from '@/assets/polkadot-logo.svg'
-import { Text } from '@/shared/components'
 import { useNavigate } from 'react-router'
-import { useRouterQuery, useUser } from '@/hooks'
+
+import { useRouterQuery } from '@/hooks'
+import { useDialog, useUser } from '@/providers'
+import { Button, Text } from '@/shared/components'
 import { SvgGlyphExternal } from '@/shared/icons'
+
+import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'
+import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
 
 type ExtensionStepProps = {
   nextStepPath: string
 }
 
-const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
+export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery('step')
   const { extensionConnected } = useUser()
+  const [openEnableExtensionDialog, closeEnableExtensionDialog] = useDialog({
+    description: <PolkadotExtensionRejected />,
+    onExitClick: () => closeEnableExtensionDialog(),
+  })
 
   useEffect(() => {
     if (extensionConnected && step === '1') {
@@ -23,8 +29,8 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   }, [extensionConnected, navigate, nextStepPath, step])
 
   return (
-    <StepWrapper withBottomBar>
-      <StyledLogo src={polkadotIcon} alt="polkadot icon" />
+    <StepWrapper>
+      <StyledPolkadotLogo />
       <StepTitle variant="h4">Add Polkadot extension</StepTitle>
       <StepSubTitle secondary variant="body2">
         To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
@@ -33,14 +39,40 @@ const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
       <StyledButton icon={<SvgGlyphExternal />} to="https://polkadot.js.org/extension/">
         Install extension
       </StyledButton>
-      <StepFooter>
+      <Button variant="tertiary" size="small" onClick={() => openEnableExtensionDialog()}>
+        Polkadot extension already installed? Click here
+      </Button>
+      <StyledStepFooter>
         <BottomBarIcon />
         <Text variant="body2" secondary>
           Please reload the page and allow access after installing the extension
         </Text>
-      </StepFooter>
+      </StyledStepFooter>
     </StepWrapper>
   )
 }
 
-export default ExtensionStep
+export const PolkadotExtensionRejected: React.FC = () => (
+  <PolkadotExtensionRejectedWrapper>
+    <StyledPolkadotLogo />
+    <StepTitle variant="h4">Allow Polkadot extension access</StepTitle>
+    <StepSubTitle secondary variant="body2">
+      If you’ve denied Polkadot extension access for this website, you won’t be able to use Joystream studio. To allow
+      access, you can take the following steps:
+    </StepSubTitle>
+    <ol>
+      <StyledListItem secondary as="li" variant="caption">
+        Open the extension popup with the icon in your browser bar
+      </StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        Use cog icon in upper right corner to open settings and select {'"Manage Website Access"'}
+      </StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        Find play.joystream.org address and switch it to allowed
+      </StyledListItem>
+      <StyledListItem secondary as="li" variant="caption">
+        Reload the page
+      </StyledListItem>
+    </ol>
+  </PolkadotExtensionRejectedWrapper>
+)

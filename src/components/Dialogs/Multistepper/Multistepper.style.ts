@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
-import BaseDialog from '../BaseDialog'
+
 import { Text } from '@/shared/components'
-import { colors, sizes, media, typography } from '@/shared/theme'
 import { SvgGlyphChevronRight } from '@/shared/icons'
+import { colors, media, sizes, typography } from '@/shared/theme'
+
+import { BaseDialog } from '../BaseDialog'
 
 type CircleProps = {
   isFilled?: boolean
@@ -21,10 +23,10 @@ export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
   border-bottom: 1px solid ${colors.gray[500]};
   margin: 0 calc(-1 * var(--dialog-padding));
-  // account for close button
+
+  /* account for close button */
   padding: 0 calc(var(--dialog-padding) + 40px) var(--dialog-padding) var(--dialog-padding);
 
   hr {
@@ -68,8 +70,7 @@ export const StyledCircle = styled.div<CircleProps>`
   width: 32px;
   height: 32px;
   border-radius: 100%;
-  background-color: ${colors.gray[400]};
-  background-color: ${({ isActive }) => isActive && colors.blue[500]};
+  background-color: ${({ isActive }) => (isActive ? colors.blue[500] : colors.gray[400])};
   color: ${colors.gray[50]};
 `
 export const StyledStepInfoText = styled.div<StyledStepInfoProps>`
@@ -88,7 +89,6 @@ export const StyledStepTitle = styled(Text)`
 export const StyledChevron = styled(SvgGlyphChevronRight)`
   margin: 0 ${sizes(1)};
   flex-shrink: 0;
-
   display: none;
   ${media.small} {
     display: block;

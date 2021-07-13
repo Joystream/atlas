@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
-import {
-  ChannelsWrapper,
-  ChannelsTitle,
-  ChannelsList,
-  ChannelsItem,
-  ShowMoreButton,
-  StyledChannelLink,
-  ShowMoreIconWrapper,
-  FollowedChannelsWrapper,
-} from './FollowedChannels.style'
-import { transitions } from '@/shared/theme'
 import { CSSTransition } from 'react-transition-group'
-import { FollowedChannel } from '@/hooks/usePersonalData/localStorageClient/types'
+
+import { FollowedChannel } from '@/providers/personalData/types'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
+import {
+  ChannelsItem,
+  ChannelsList,
+  ChannelsTitle,
+  ChannelsWrapper,
+  FollowedChannelsWrapper,
+  ShowMoreButton,
+  ShowMoreIconWrapper,
+  StyledChannelLink,
+} from './FollowedChannels.style'
 
 const MAX_CHANNELS = 4
 
@@ -20,9 +22,15 @@ type FollowedChannelsProps = {
   followedChannels: FollowedChannel[]
   expanded: boolean
   onClick: () => void
+  onChannelNotFound?: (id: string) => void
 }
 
-const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, expanded, onClick }) => {
+export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
+  followedChannels,
+  expanded,
+  onClick,
+  onChannelNotFound,
+}) => {
   const [isShowingMore, setIsShowingMore] = useState(false)
 
   const numberOfChannels = followedChannels.length
@@ -41,7 +49,7 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
           <ChannelsList>
             {channels.map(({ id }) => (
               <ChannelsItem key={id} onClick={onClick}>
-                <StyledChannelLink id={id} />
+                <StyledChannelLink id={id} onNotFound={() => onChannelNotFound?.(id)} />
               </ChannelsItem>
             ))}
           </ChannelsList>
@@ -58,5 +66,3 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({ followedChannels, e
     </CSSTransition>
   )
 }
-
-export default FollowedChannels

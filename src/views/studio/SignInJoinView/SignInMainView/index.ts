@@ -1,3 +1,1 @@
-import SignInMainView from './SignInMainView'
-
-export default SignInMainView
+export * from './SignInMainView'

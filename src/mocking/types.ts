@@ -1,10 +1,11 @@
 import { graphql } from 'msw'
+
 import {
   AllChannelFieldsFragment,
+  MembershipWhereInput,
   VideoFieldsFragment,
   VideoWhereInput,
   VideoWhereUniqueInput,
-  MembershipWhereInput,
 } from '@/api/queries'
 
 export type FilteringArgs<TWhere = VideoWhereInput | VideoWhereUniqueInput | MembershipWhereInput> = {
@@ -30,6 +31,10 @@ export type HasControllerAccount = {
 }
 export type MocksStore = {
   videoViews: Record<string, number>
+  batchedVideoViews: {
+    views: number
+    id: string
+  }[]
   channelFollows: Record<string, number>
 }
 export type Link = ReturnType<typeof graphql.link>

@@ -1,14 +1,15 @@
-import { useDrafts, VideoDraft, useUser } from '@/hooks'
-import { FormField, Button, Text } from '@/shared/components'
-import Select from '@/shared/components/Select'
-import TextArea from '@/shared/components/TextArea'
-import TextField from '@/shared/components/TextField'
-import { css } from '@emotion/react'
 import React, { useState } from 'react'
 
-const INITIAL_STATE: Omit<VideoDraft, 'id' | 'updatedAt' | 'type'> = {
+import { RawDraft, channelDraftsSelector, useDraftStore, useUser } from '@/providers'
+import { Button, FormField, Text } from '@/shared/components'
+import { Select } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { TextField } from '@/shared/components/TextField'
+
+const INITIAL_STATE: RawDraft = {
   channelId: '100',
   title: '',
+  type: 'video',
   description: '',
   isExplicit: undefined,
 }
@@ -18,21 +19,21 @@ const CONTENT_RATING = [
   { value: true, name: 'mature' },
 ]
 
-const PlaygroundDrafts = () => {
+export const PlaygroundDrafts = () => {
   const [form, setForm] = useState(INITIAL_STATE)
   const { activeChannelId } = useUser()
-  const { drafts, getDraft, removeDraft, removeAllDrafts, updateDraft, addDraft } = useDrafts(
-    'video',
-    activeChannelId || INITIAL_STATE.channelId
-  )
+
+  const drafts = useDraftStore(channelDraftsSelector(activeChannelId || INITIAL_STATE.channelId))
+  const { removeDrafts, removeAllDrafts, updateDraft, addDraft } = useDraftStore((state) => state.actions)
+
   const [currentDraftId, setCurrentDraftId] = useState('')
 
   const setCurrentDraft = async (draftID: string) => {
     setCurrentDraftId(draftID)
-    const draft = await getDraft(draftID)
+    const draft = drafts.find((draft) => draft.id === draftID)
     if (draft) {
-      const { title, description, isExplicit, channelId } = draft
-      setForm({ title, description, isExplicit, channelId: activeChannelId || channelId })
+      const { title, description, isExplicit, channelId, type } = draft
+      setForm({ title, description, isExplicit, channelId: activeChannelId || channelId, type })
     } else {
       setForm({ ...INITIAL_STATE, channelId: activeChannelId || INITIAL_STATE.channelId })
     }
@@ -82,8 +83,8 @@ const PlaygroundDrafts = () => {
       </FormField>
       <div style={{ display: 'flex', gap: '20px' }}>
         <Button
-          onClick={async () => {
-            const newDraft = await addDraft(form)
+          onClick={() => {
+            const newDraft = addDraft(form)
             if (newDraft) {
               setCurrentDraft(newDraft.id)
             }
@@ -91,37 +92,28 @@ const PlaygroundDrafts = () => {
         >
           Create new draft
         </Button>
-        {currentDraftId && (
-          <Button onClick={async () => await updateDraft(currentDraftId, form)}>Save this draft</Button>
-        )}
+        {currentDraftId && <Button onClick={() => updateDraft(currentDraftId, form)}>Save this draft</Button>}
         <Button
-          onClick={async () => {
-            await removeDraft(currentDraftId)
+          onClick={() => {
+            removeDrafts([currentDraftId])
             setCurrentDraft('')
           }}
         >
           Discard draft
         </Button>
         <Button
-          onClick={async () => {
-            await removeAllDrafts()
+          onClick={() => {
+            removeAllDrafts(activeChannelId ?? '')
             setCurrentDraft('')
           }}
         >
           Remove all drafts
         </Button>
       </div>
-      <Text
-        variant="h4"
-        css={css`
-          margin: 20px 0;
-        `}
-      >
+      <Text variant="h4" style={{ margin: '20px 0' }}>
         Saved drafts
       </Text>
       <pre>{JSON.stringify(drafts, null, 2)}</pre>
     </div>
   )
 }
-
-export default PlaygroundDrafts

@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
 import Cropper from 'cropperjs'
-import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import 'cropperjs/dist/cropper.min.css'
+import { useEffect, useState } from 'react'
+
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { Logger } from '@/utils/logger'
 
 const MAX_ZOOM = 3
 
@@ -10,6 +12,7 @@ export type CropperImageType = 'avatar' | 'videoThumbnail' | 'cover'
 type UseCropperOpts = {
   imageEl: HTMLImageElement | null
   imageType: CropperImageType
+  cropData?: ImageCropData | null
 }
 
 const ASPECT_RATIO_PER_TYPE: Record<CropperImageType, number> = {
@@ -45,7 +48,7 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
   },
 }
 
-export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
+export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => {
   const [cropper, setCropper] = useState<Cropper | null>(null)
   const [currentZoom, setCurrentZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState<[number, number]>([0, 1])
@@ -90,6 +93,14 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
 
       const middleZoom = minZoom + (maxZoom - minZoom) / 2
       cropper.zoomTo(middleZoom)
+
+      if (cropData) {
+        const { data, canvasData, cropBoxData, zoom } = cropData
+        cropper.zoomTo(zoom)
+        cropper.setCropBoxData(cropBoxData)
+        cropper.setCanvasData(canvasData)
+        cropper.setData(data)
+      }
     }
 
     const cropper = new Cropper(imageEl, {
@@ -110,7 +121,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
     return () => {
       cropper.destroy()
     }
-  }, [imageEl, imageType])
+  }, [cropData, imageEl, imageType])
 
   // handle zoom event
   useEffect(() => {
@@ -144,8 +155,10 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
         reject(new Error('No cropper instance'))
         return
       }
-
-      const imageCropData = cropper.getCropBoxData()
+      const data = cropper.getData()
+      const cropBoxData = cropper.getCropBoxData()
+      const canvasData = cropper.getCanvasData()
+      const imageCropData = { data, cropBoxData, canvasData, zoom: currentZoom }
       const canvas = cropper.getCroppedCanvas(CANVAS_OPTS_PER_TYPE[imageType])
       const assetDimensions = {
         width: canvas.width,
@@ -153,7 +166,7 @@ export const useCropper = ({ imageEl, imageType }: UseCropperOpts) => {
       }
       canvas.toBlob((blob) => {
         if (!blob) {
-          console.error('Empty blob from cropped canvas', { blob })
+          Logger.error('Empty blob from cropped canvas', { blob })
           return
         }
         const url = URL.createObjectURL(blob)

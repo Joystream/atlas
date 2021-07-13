@@ -1,32 +1,47 @@
-import { useVideos } from '@/api/hooks'
-import { useState } from 'react'
-import { useJoystream, useAuthorizedUser, useTransactionManager } from '@/hooks'
+import { useApolloClient } from '@apollo/client'
+
+import { useAuthorizedUser, useDialog, useJoystream, useTransaction, useUploadsStore } from '@/providers'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
-  const { handleTransaction } = useTransactionManager()
-  const { activeMemberId, activeChannelId } = useAuthorizedUser()
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const handleTransaction = useTransaction()
+  const { activeMemberId } = useAuthorizedUser()
+  const removeAssetsFromUploads = useUploadsStore((state) => state.removeAssetsWithParent)
+  const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()
 
-  const { refetchCount: refetchVideosCount, client } = useVideos({
-    where: {
-      channelId_eq: activeChannelId,
-    },
-  })
+  const client = useApolloClient()
+
+  const deleteVideo = (videoId: string, onDeleteVideo?: () => void) => {
+    openDeleteVideoDialog({
+      title: 'Delete this video?',
+      exitButton: false,
+      description:
+        'You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets.',
+      onPrimaryButtonClick: () => {
+        confirmDeleteVideo(videoId, () => onDeleteVideo?.())
+        closeDeleteVideoDialog()
+      },
+      onSecondaryButtonClick: () => {
+        closeDeleteVideoDialog()
+      },
+      error: true,
+      variant: 'warning',
+      primaryButtonText: 'Delete video',
+      secondaryButtonText: 'Cancel',
+    })
+  }
 
   const confirmDeleteVideo = async (videoId: string, onTxSync?: () => void) => {
     if (!joystream) {
       return
     }
 
-    setIsDeleteDialogOpen(false)
-
     handleTransaction({
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
       onTxSync: async () => {
-        await refetchVideosCount()
         removeVideoFromCache(videoId, client)
+        removeAssetsFromUploads('video', videoId)
         onTxSync?.()
       },
       successMessage: {
@@ -36,10 +51,5 @@ export const useDeleteVideo = () => {
     })
   }
 
-  return {
-    closeVideoDeleteDialog: () => setIsDeleteDialogOpen(false),
-    openVideoDeleteDialog: () => setIsDeleteDialogOpen(true),
-    confirmDeleteVideo,
-    isDeleteDialogOpen,
-  }
+  return deleteVideo
 }

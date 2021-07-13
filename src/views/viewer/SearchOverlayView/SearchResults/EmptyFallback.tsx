@@ -1,14 +1,15 @@
-import React from 'react'
 import styled from '@emotion/styled'
+import React from 'react'
 
-import { ReactComponent as EmptyStateIllustration } from '@/assets/empty-state-illustration.svg'
 import { Text } from '@/shared/components'
-import { sizes, colors } from '@/shared/theme'
+import { SvgEmptyStateIllustration } from '@/shared/illustrations'
+import { colors, sizes } from '@/shared/theme'
 
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 650px;
   }
@@ -30,14 +31,12 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-const EmptyFallback: React.FC = () => (
+export const EmptyFallback: React.FC = () => (
   <Container>
-    <EmptyStateIllustration />
+    <SvgEmptyStateIllustration />
     <Message>
       <Title variant="h3">Sorry, we couldn&apos;t find any matches.</Title>
       <Subtitle>Please try a different keyword.</Subtitle>
     </Message>
   </Container>
 )
-
-export default EmptyFallback

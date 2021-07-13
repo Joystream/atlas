@@ -1,12 +1,12 @@
-import React, { useState, useMemo, useCallback } from 'react'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import React, { useCallback, useMemo, useState } from 'react'
 
-import { Gallery, MIN_VIDEO_PREVIEW_WIDTH, CAROUSEL_ARROW_HEIGHT } from '@/shared/components'
-import { breakpointsOfGrid } from '@/shared/components/Grid'
-import VideoPreview from './VideoPreview'
-import { sizes } from '@/shared/theme'
 import { VideoFieldsFragment } from '@/api/queries'
+import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+import { breakpointsOfGrid } from '@/shared/components/Grid'
+import { sizes } from '@/shared/theme'
+
+import { VideoPreview } from './VideoPreview'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -25,6 +25,7 @@ type VideoGalleryProps = {
   loading?: boolean
   removeButton?: boolean
   onRemoveButtonClick?: (id: string) => void
+  onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
 }
 
@@ -44,13 +45,14 @@ const breakpoints = breakpointsOfGrid({
   },
 }))
 
-const VideoGallery: React.FC<VideoGalleryProps> = ({
+export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,
   onVideoClick,
   removeButton,
   onRemoveButtonClick,
+  onVideoNotFound,
 }) => {
   const [coverHeight, setCoverHeight] = useState<number>()
   const onCoverResize = useCallback((_, imgHeight) => {
@@ -61,9 +63,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       return
     }
     const topPx = (coverHeight - CAROUSEL_ARROW_HEIGHT) / 2
-    return css`
-      top: ${topPx}px;
-    `
+    return topPx
   }, [coverHeight])
 
   if (!loading && videos?.length === 0) {
@@ -75,6 +75,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   }))
   const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
   const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
+  const createNotFoundHandler = (id?: string) => () => id && onVideoNotFound && onVideoNotFound(id)
   return (
     <Gallery
       title={title}
@@ -82,7 +83,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
-      arrowCss={arrowPosition}
+      arrowPosition={arrowPosition}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview
@@ -92,6 +93,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
           removeButton={video ? removeButton : false}
           onCoverResize={onCoverResize}
           onClick={createClickHandler(video.id)}
+          onNotFound={createNotFoundHandler(video.id)}
           onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
         />
       ))}
@@ -104,7 +106,6 @@ const StyledVideoPreview = styled(VideoPreview)`
     margin-left: ${sizes(6)};
   }
 
-  min-width: ${MIN_VIDEO_PREVIEW_WIDTH};
+  /* MIN_VIDEO_PREVIEW_WIDTH */
+  min-width: 300px;
 `
-
-export default VideoGallery

@@ -1,9 +1,10 @@
-import React from 'react'
-import { Placeholder, Text } from '@/shared/components'
 import styled from '@emotion/styled'
-import { sizes } from '@/shared/theme'
-import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
+import React from 'react'
+
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
+import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
+import { Placeholder, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
 
 type AllResultsTabProps = {
   videos: VideoFieldsFragment[]
@@ -13,7 +14,7 @@ type AllResultsTabProps = {
   onChannelClick: (id: string) => void
 }
 
-const AllResultsTab: React.FC<AllResultsTabProps> = ({
+export const AllResultsTab: React.FC<AllResultsTabProps> = ({
   videos: allVideos,
   channels,
   loading,
@@ -56,5 +57,3 @@ const AllResultsTab: React.FC<AllResultsTabProps> = ({
 const SectionHeader = styled(Text)`
   margin: 0 0 ${sizes(4)};
 `
-
-export default AllResultsTab

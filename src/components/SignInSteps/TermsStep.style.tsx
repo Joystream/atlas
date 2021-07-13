@@ -1,7 +1,7 @@
-import React from 'react'
+import styled from '@emotion/styled'
+
 import { Button, IconButton } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
-import styled from '@emotion/styled'
 
 export const TermsBox = styled.div`
   scroll-behavior: smooth;
@@ -15,6 +15,7 @@ export const TermsBox = styled.div`
 `
 export const TextWrapper = styled.div`
   margin: ${sizes(9)} ${sizes(17)} ${sizes(9)} ${sizes(8)};
+
   a {
     text-decoration: none;
     color: ${colors.gray[50]};

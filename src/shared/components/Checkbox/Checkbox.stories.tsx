@@ -1,11 +1,12 @@
+import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
+import { Checkbox, CheckboxProps } from './Checkbox'
+
 import { WithValue } from '../../../../.storybook/WithValue'
-import { Meta, Story } from '@storybook/react'
-import Checkbox, { CheckboxProps } from './Checkbox'
 
 export default {
-  title: 'Shared/Checkbox',
+  title: 'Shared/C/Checkbox',
   component: Checkbox,
   argTypes: {
     label: {

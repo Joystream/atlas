@@ -1,5 +1,6 @@
 import React from 'react'
-import { FullLogo, Header, LogoLink, StudioText, LogoContainer, ShortLogo } from './TopbarBase.style'
+
+import { FullLogo, Header, LogoContainer, LogoLink, ShortLogo, StudioText } from './TopbarBase.style'
 
 export type TopbarVariant = 'default' | 'studio'
 export type TopbarBaseProps = {
@@ -9,7 +10,7 @@ export type TopbarBaseProps = {
   isHamburgerButtonPresent?: boolean
 }
 
-const TopbarBase: React.FC<TopbarBaseProps> = ({
+export const TopbarBase: React.FC<TopbarBaseProps> = ({
   children,
   variant = 'default',
   hasFocus,
@@ -31,5 +32,3 @@ const TopbarBase: React.FC<TopbarBaseProps> = ({
     </Header>
   )
 }
-
-export default TopbarBase

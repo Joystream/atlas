@@ -1,12 +1,16 @@
-import React from 'react'
-import ContextMenu, { ContextMenuItem } from './ContextMenu'
-import { OverlayManagerProvider, useContextMenu } from '@/hooks'
-import { Button } from '@/shared/components'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import { useContextMenu } from '@/hooks'
+import { OverlayManagerProvider } from '@/providers'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
+import { ContextMenu, ContextMenuItem } from './ContextMenu'
+
+import { Button } from '../Button'
+
 export default {
-  title: 'Shared/ContextMenu',
+  title: 'Shared/C/ContextMenu',
   component: ContextMenu,
   decorators: [
     (Story) => (

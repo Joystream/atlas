@@ -1,8 +1,10 @@
+import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
-import ActionDialog, { ActionDialogProps } from './ActionDialog'
-import { Story, Meta } from '@storybook/react'
+
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Button } from '@/shared/components'
-import { OverlayManagerProvider } from '@/hooks/useOverlayManager'
+
+import { ActionDialog, ActionDialogProps } from './ActionDialog'
 
 export default {
   title: 'General/ActionDialog',

@@ -1,34 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useUser, useDisplayDataLostWarning, useEditVideoSheet, useAsset } from '@/hooks'
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { CSSTransition } from 'react-transition-group'
+
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { Placeholder, Text, Button, ExpandButton, IconButton } from '@/shared/components'
+import { useDisplayDataLostWarning } from '@/hooks'
+import { AssetType, useAsset, useEditVideoSheet, useUser } from '@/providers'
+import { Button, ExpandButton, IconButton, Placeholder, Text } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
-  StyledTopbarBase,
-  StudioTopbarContainer,
-  MemberInfoContainer,
-  MemberInnerContainer,
+  AvatarPlaceholder,
+  ChannelInfoContainer,
+  DrawerChannelsContainer,
+  DrawerContainer,
   DrawerMemberText,
   DrawerMemberTitleText,
-  StyledChannelInfoText,
-  MemberTextContainer,
-  ChannelInfoContainer,
-  NewChannelAvatar,
-  StyledAvatar,
-  TextContainer,
-  DrawerContainer,
-  DrawerChannelsContainer,
-  NewChannel,
-  NewChannelIconContainer,
-  StyledLink,
-  AvatarPlaceholder,
   GlyphCheckContainer,
+  MemberInfoContainer,
+  MemberInnerContainer,
+  MemberTextContainer,
+  NewChannel,
+  NewChannelAvatar,
+  NewChannelIconContainer,
+  StudioTopbarContainer,
+  StyledAvatar,
+  StyledChannelInfoText,
+  StyledLink,
+  StyledTopbarBase,
+  TextContainer,
 } from './StudioTopbar.style'
-import { CSSTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { useNavigate } from 'react-router'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
@@ -57,7 +59,7 @@ type NavDrawerProps = {
   handleClose: () => void
 }
 
-const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
+export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
   const {
     activeChannelId,
     setActiveUser,
@@ -71,7 +73,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
   const navigate = useNavigate()
 
   const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
-  const { DataLostWarningDialog, openWarningDialog } = useDisplayDataLostWarning()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -139,12 +141,11 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth 
 
   return (
     <>
-      <DataLostWarningDialog />
       <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={sheetState !== 'open'}
+              in={sheetState !== 'open' && !!activeChannelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}
@@ -190,7 +191,7 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
   return (
     <MemberInfoContainer hasChannels={hasChannels}>
       <MemberInnerContainer>
-        <StyledAvatar imageUrl={memberAvatar} />
+        <StyledAvatar assetUrl={memberAvatar} />
         <MemberTextContainer>
           <DrawerMemberText>{memberName}</DrawerMemberText>
           <DrawerMemberTitleText variant="caption">Member</DrawerMemberTitleText>
@@ -205,16 +206,14 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const { getAssetUrl } = useAsset()
-    const avatarPhotoUrl = getAssetUrl(
-      channel?.avatarPhotoAvailability,
-      channel?.avatarPhotoUrls,
-      channel?.avatarPhotoDataObject
-    )
+    const { url: avatarPhotoUrl } = useAsset({
+      entity: channel,
+      assetType: AssetType.AVATAR,
+    })
 
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
-        <StyledAvatar size="small" imageUrl={avatarPhotoUrl} />
+        <StyledAvatar size="small" assetUrl={avatarPhotoUrl} />
         <TextContainer>
           <StyledChannelInfoText variant="body1">{channel ? channel.title : 'New Channel'}</StyledChannelInfoText>
           {memberName && (
@@ -287,5 +286,3 @@ const ChannelInfoPlaceholder = () => {
     </ChannelInfoContainer>
   )
 }
-
-export default StudioTopbar

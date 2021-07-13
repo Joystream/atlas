@@ -1,6 +1,8 @@
-import { media, transitions, zIndex } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Checkout from '../Checkout'
+
+import { media, transitions, zIndex } from '@/shared/theme'
+
+import { Checkout } from '../Checkout'
 
 type ActionBarTransactionWrapperProps = {
   fullWidth?: boolean
@@ -13,7 +15,6 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
   right: 0;
   z-index: ${zIndex.header};
-
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
 

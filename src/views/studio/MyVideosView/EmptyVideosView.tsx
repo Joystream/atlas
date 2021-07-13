@@ -1,11 +1,11 @@
-import React from 'react'
 import styled from '@emotion/styled'
-import { ReactComponent as EmptyIllustration } from '@/assets/empty-videos-illustration.svg'
-import { ReactComponent as TheaterMaskIllustration } from '@/assets/theater-mask.svg'
-import { Button, Text } from '@/shared/components'
-import { sizes, colors, media } from '@/shared/theme'
-import { SvgGlyphAddVideo } from '@/shared/icons'
+import React from 'react'
+
 import { absoluteRoutes } from '@/config/routes'
+import { Button, Text } from '@/shared/components'
+import { SvgGlyphAddVideo } from '@/shared/icons'
+import { SvgEmptyVideosIllustration, SvgTheaterMaskIllustration } from '@/shared/illustrations'
+import { colors, media, sizes } from '@/shared/theme'
 
 // for when there is absolutely no videos available
 export const EmptyVideosView: React.FC = () => {
@@ -34,10 +34,10 @@ const Subtitle = styled(Text)`
   color: ${colors.gray[300]};
 `
 
-const StyledWEmptyIllustration = styled(EmptyIllustration)`
+const StyledWEmptyIllustration = styled(SvgEmptyVideosIllustration)`
   margin: 0 auto;
   grid-row-start: 1;
-
+  width: 100%;
   max-height: 50vh;
   max-width: 75vw;
 
@@ -95,7 +95,7 @@ const MessageView = styled.div`
 export const EmptyVideos: React.FC<{ text: string }> = ({ text }) => {
   return (
     <Container>
-      <TheaterMaskIllustration />
+      <SvgTheaterMaskIllustration />
       <Message>
         <Text secondary variant="body2">
           {text}
@@ -111,6 +111,7 @@ export const EmptyVideos: React.FC<{ text: string }> = ({ text }) => {
 const Container = styled.div`
   display: grid;
   place-items: center;
+
   > svg {
     max-width: 100%;
   }

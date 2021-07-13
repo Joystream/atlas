@@ -1,8 +1,9 @@
+import React from 'react'
+
 import { SignInStepsStepper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import React from 'react'
 
 import {
   HeroContainer,
@@ -17,7 +18,7 @@ import {
   UnOrderedList,
 } from './SignInProcessView.style'
 
-const SignInProcessView = () => {
+export const SignInProcessView = () => {
   return (
     <>
       <StyledStudioContainer>
@@ -83,5 +84,3 @@ const SignInProcessView = () => {
     </>
   )
 }
-
-export default SignInProcessView

@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
-import { usePersonalData } from '@/hooks'
+
+import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
+import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
-import SidenavBase, { NavItemType } from '@/components/Sidenav/SidenavBase'
-import FollowedChannels from './FollowedChannels'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { openInNewTab } from '@/utils/browser'
+import { Logger } from '@/utils/logger'
+
+import { FollowedChannels } from './FollowedChannels'
 
 const viewerSidenavItems: NavItemType[] = [
   {
@@ -26,9 +30,13 @@ const viewerSidenavItems: NavItemType[] = [
 
 export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
-  const {
-    state: { followedChannels },
-  } = usePersonalData()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
+  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
+
+  const handleChannelNotFound = (id: string) => {
+    Logger.warn(`Followed channel not found, removing id: ${id}`)
+    updateChannelFollowing(id, false)
+  }
 
   return (
     <SidenavBase
@@ -36,15 +44,22 @@ export const ViewerSidenav: React.FC = () => {
       toggleSideNav={setExpanded}
       items={viewerSidenavItems}
       additionalContent={
-        <FollowedChannels onClick={() => setExpanded(false)} followedChannels={followedChannels} expanded={expanded} />
+        <FollowedChannels
+          onClick={() => setExpanded(false)}
+          onChannelNotFound={handleChannelNotFound}
+          followedChannels={followedChannels}
+          expanded={expanded}
+        />
       }
       buttonsContent={
         <>
           <Button
             variant="secondary"
-            onClick={() => setExpanded(false)}
+            onClick={() => {
+              setExpanded(false)
+              openInNewTab(absoluteRoutes.studio.index(), true)
+            }}
             icon={<SvgGlyphExternal />}
-            to={absoluteRoutes.studio.index()}
           >
             Joystream studio
           </Button>

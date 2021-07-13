@@ -1,9 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { colors, sizes, transitions, typography } from '../../theme'
-import { Avatar } from '..'
-import Text from '@/shared/components/Text'
 import { Link } from 'react-router-dom'
+
+import { colors, sizes, transitions, typography } from '../../theme'
+import { Avatar } from '../Avatar'
+import { Text } from '../Text'
 
 const imageTopOverflow = '2rem'
 const containerPadding = '22px'
@@ -12,6 +13,7 @@ export const OuterContainer = styled.article`
   display: flex;
   min-height: calc(178px + ${imageTopOverflow});
   padding-top: ${imageTopOverflow};
+
   :hover {
     cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
   }
@@ -24,6 +26,7 @@ const hoverTransition = ({ animated }: InnerContainerProps) =>
   animated
     ? css`
         transition: all 0.4s ${transitions.easing};
+
         &:hover {
           transform: translate3d(-${sizes(2)}, -${sizes(2)}, 0);
           border: 1px solid ${colors.white};
@@ -35,10 +38,8 @@ const hoverTransition = ({ animated }: InnerContainerProps) =>
 export const InnerContainer = styled.div<InnerContainerProps>`
   background-color: ${colors.gray[800]};
   color: ${colors.gray[300]};
-
   width: calc(156px + calc(2 * ${containerPadding}));
   padding: 0 ${containerPadding} ${sizes(3)} ${containerPadding};
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,7 +57,6 @@ export const Info = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-
   margin-top: ${sizes(3)};
   padding: 0 ${sizes(1)};
   max-width: 100%;
@@ -82,8 +82,6 @@ export const TextBase = styled(Text)`
   max-width: 100%;
 `
 
-export const NameHeader = styled(TextBase)``
-
 export const VideoCount = styled(TextBase)`
   color: ${colors.gray[300]};
 `
@@ -91,6 +89,7 @@ export const VideoCount = styled(TextBase)`
 export const StyledAvatar = styled(Avatar)`
   width: 100%;
   height: 100%;
+
   span {
     font-size: ${typography.sizes.h2};
   }

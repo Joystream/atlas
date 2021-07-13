@@ -1,7 +1,7 @@
+import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
-import Select, { SelectProps, SelectItem } from '.'
-import { Story, Meta } from '@storybook/react'
-import { css } from '@emotion/react'
+
+import { Select, SelectItem, SelectProps } from '.'
 
 const items: SelectItem[] = [
   { name: 'first', value: 'first' },
@@ -10,7 +10,7 @@ const items: SelectItem[] = [
 ]
 
 export default {
-  title: 'Shared/Select',
+  title: 'Shared/S/Select',
   component: Select,
   args: {
     items,
@@ -23,27 +23,11 @@ export default {
   },
 } as Meta
 
-const Template: Story<SelectProps> = (args) => (
-  <Select
-    {...args}
-    css={css`
-      max-width: 400px;
-    `}
-  />
-)
+const Template: Story<SelectProps> = (args) => <Select {...args} />
 
 const TemplateWithControlledInput: Story<SelectProps> = (args) => {
   const [value, setValue] = useState<string | null>(null)
-  return (
-    <Select
-      {...args}
-      onChange={(value) => setValue(value ?? null)}
-      value={value}
-      css={css`
-        max-width: 400px;
-      `}
-    />
-  )
+  return <Select {...args} onChange={(value) => setValue(value ?? null)} value={value} />
 }
 
 export const Default = Template.bind({})

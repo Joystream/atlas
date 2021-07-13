@@ -1,5 +1,6 @@
-import { colors, sizes, media } from '@/shared/theme'
 import styled from '@emotion/styled'
+
+import { colors, media, sizes } from '@/shared/theme'
 
 export const MultiFileSelectContainer = styled.div`
   width: 100%;
@@ -26,11 +27,13 @@ export const StepDivider = styled.div`
   align-items: center;
   width: ${sizes(8)};
   height: initial;
+
   svg {
     display: none;
     ${media.small} {
       display: initial;
     }
+
     transform: rotate(0deg);
   }
 `

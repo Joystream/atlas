@@ -1,36 +1,43 @@
-import accountCreation from '@/assets/account-creation.svg'
-import { useUser } from '@/hooks'
-import { Text } from '@/shared/components'
-import { transitions } from '@/shared/theme'
 import React, { FormEvent, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import {
-  StyledSpinner,
-  AccountStepImg,
-  AccountsWrapper,
-  AccountWrapper,
-  AccountInfo,
-  IconWrapper,
-  OrderedSteps,
-  OrderedStep,
-  IconGroup,
-  AccountAddress,
-  StyledRadioButton,
-  StyledButton,
-  SubTitle,
-  StyledStepWrapper,
-} from './AccountStep.style'
-import polkadotIcon from '@/assets/polkadot-logo.svg'
-import joystreamIcon from '@/assets/joystream-logo.svg'
-import { StepFooter, BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledLogo } from './SignInSteps.style'
 import { useNavigate } from 'react-router'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { useUser } from '@/providers'
+import { Text } from '@/shared/components'
 import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
+
+import {
+  AccountAddress,
+  AccountInfo,
+  AccountStepImg,
+  AccountWrapper,
+  AccountsWrapper,
+  IconGroup,
+  IconWrapper,
+  OrderedStep,
+  OrderedSteps,
+  StyledButton,
+  StyledRadioButton,
+  StyledSpinner,
+  StyledStepWrapper,
+  SubTitle,
+} from './AccountStep.style'
+import {
+  BottomBarIcon,
+  StepFooter,
+  StepSubTitle,
+  StepTitle,
+  StepWrapper,
+  StyledJoystreamLogo,
+  StyledPolkadotLogo,
+} from './SignInSteps.style'
 
 type AccountStepProps = {
   nextStepPath: string
 }
 
-const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
+export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
@@ -61,8 +68,8 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accountsWithNoMembership?.length ? (
-          <StyledStepWrapper withBottomBar>
-            <AccountStepImg src={accountCreation} />
+          <StyledStepWrapper>
+            <AccountStepImg />
             <StepTitle variant="h4">Create blockchain account</StepTitle>
             <SubTitle variant="body2" secondary>
               Use the Polkadot extension to generate your personal keypair. Follow these instructions:
@@ -89,9 +96,9 @@ const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
           <form onSubmit={handleSubmitSelectedAccount}>
             <StepWrapper>
               <IconGroup>
-                <StyledLogo src={polkadotIcon} alt="Polkadot icon" />
+                <StyledPolkadotLogo />
                 <SvgOutlineConnect />
-                <StyledLogo src={joystreamIcon} alt="Joystream icon" />
+                <StyledJoystreamLogo />
               </IconGroup>
               <StepTitle variant="h4">Connect account</StepTitle>
               <StepSubTitle secondary>
@@ -128,7 +135,7 @@ export type AccountBarProps = {
   selectedValue?: string
 }
 
-const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
+export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
   return (
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
@@ -146,5 +153,3 @@ const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedVal
     </AccountWrapper>
   )
 }
-
-export default AccountStep

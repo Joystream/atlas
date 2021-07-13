@@ -1,9 +1,11 @@
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { darken, fluidRange } from 'polished'
+
 import { Button, IconButton, Placeholder, Text } from '@/shared/components'
-import { breakpoints, colors, sizes, media } from '@/shared/theme'
-import { css, keyframes } from '@emotion/react'
-import ChannelLink from '../ChannelLink'
+import { breakpoints, colors, media, sizes } from '@/shared/theme'
+
+import { ChannelLink } from '../ChannelLink'
 
 const CONTENT_OVERLAP_MAP = {
   SMALL: 25,
@@ -20,8 +22,8 @@ const BUTTONS_HEIGHT_PX = '54px'
 export const Container = styled.section`
   position: relative;
 
-  // because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
-  // so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin
+  /* because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
+   so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin */
   ${media.small} {
     margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
   }
@@ -78,12 +80,14 @@ const pulse = keyframes`
 
 export const PlayerPlaceholder = styled.div`
   ${absoluteMediaCss};
+
   background-color: ${colors.gray[800]};
   animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `
 
 export const HorizontalGradientOverlay = styled.div`
   ${absoluteMediaCss};
+
   display: none;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 11.76%, rgba(0, 0, 0, 0) 100%);
 
@@ -95,10 +99,9 @@ export const HorizontalGradientOverlay = styled.div`
 export const VerticalGradientOverlay = styled.div`
   ${absoluteMediaCss};
 
-  // as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
-  // this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing
+  /* as the content overlaps the media more and more as the viewport width grows, we need to hide some part of the media with a gradient
+   this helps with keeping a consistent background behind a page content - we don't want the media to peek out in the content spacing */
   background: linear-gradient(0deg, black 0%, rgba(0, 0, 0, 0) ${GRADIENT_HEIGHT / 2}px);
-
   ${media.small} {
     background: linear-gradient(
       0deg,
@@ -182,6 +185,7 @@ export const TitleContainer = styled.div`
   a {
     text-decoration: none;
   }
+
   margin-bottom: ${sizes(8)};
 
   ${media.medium} {
@@ -193,6 +197,7 @@ export const TitleContainer = styled.div`
     max-width: 40ch;
     ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '22px' }, breakpoints.base, breakpoints.xlarge)};
     ${fluidRange({ prop: 'lineHeight', fromSize: '20px', toSize: '26px' }, breakpoints.base, breakpoints.xlarge)};
+
     color: ${colors.white};
   }
 `

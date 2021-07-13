@@ -1,1 +1,1 @@
-export { default as AssetsGroupUploadBar } from './AssetsGroupUploadBar'
+export { AssetsGroupUploadBar } from './AssetsGroupUploadBar'

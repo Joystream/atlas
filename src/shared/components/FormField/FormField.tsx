@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { ChildrenWrapper, FormFieldDescription, FormFieldTitle, FormFieldWrapper } from './FormField.style'
 
 export type FormFieldProps = {
@@ -7,7 +8,7 @@ export type FormFieldProps = {
   className?: string
 }
 
-const FormField: React.FC<FormFieldProps> = ({ children, title, description, className }) => {
+export const FormField: React.FC<FormFieldProps> = ({ children, title, description, className }) => {
   return (
     <FormFieldWrapper className={className}>
       <FormFieldTitle variant="h6">{title}</FormFieldTitle>
@@ -25,5 +26,3 @@ const FormField: React.FC<FormFieldProps> = ({ children, title, description, cla
     </FormFieldWrapper>
   )
 }
-
-export default FormField

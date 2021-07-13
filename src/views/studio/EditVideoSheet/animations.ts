@@ -1,8 +1,9 @@
 import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
+
+import { EditVideoSheetState } from '@/providers'
 import { transitions } from '@/shared/theme'
-import { EditVideoSheetState } from '@/hooks'
-import { TOP_NAVBAR_HEIGHT } from '@/components'
+
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './EditVideoTabsBar'
 
 export const useEditVideoSheetAnimations = (sheetState: EditVideoSheetState) => {

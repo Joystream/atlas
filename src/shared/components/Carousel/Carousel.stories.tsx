@@ -1,11 +1,13 @@
-import React from 'react'
-import Carousel, { CarouselProps } from './Carousel'
-import { Meta, Story } from '@storybook/react'
-import { colors } from '@/shared/theme'
 import styled from '@emotion/styled'
+import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import { colors } from '@/shared/theme'
+
+import { Carousel, CarouselProps } from './Carousel'
 
 export default {
-  title: 'Shared/Carousel',
+  title: 'Shared/C/Carousel',
   component: Carousel,
 } as Meta
 
@@ -41,6 +43,7 @@ const CarouselItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
   :not(:last-child) {
     margin-right: 12px;
   }

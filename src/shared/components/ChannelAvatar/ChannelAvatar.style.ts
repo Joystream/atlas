@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
+
 import { colors, sizes, typography } from '@/shared/theme'
-import { Avatar } from '@/shared/components'
+
+import { Avatar } from '../Avatar'
 
 export const Container = styled.div`
   display: flex;

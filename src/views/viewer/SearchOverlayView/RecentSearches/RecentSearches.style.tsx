@@ -1,5 +1,5 @@
-import React from 'react'
 import styled from '@emotion/styled'
+
 import { Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 

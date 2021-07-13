@@ -1,24 +1,24 @@
-import { SerializedStyles } from '@emotion/react'
 import React, { useRef } from 'react'
 
-import { useGlider, GliderProps } from '../Glider'
-
-import { Container, GliderContainer, Arrow, Track, BackgroundGradient } from './Carousel.style'
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
+
+import { Arrow, BackgroundGradient, Container, GliderContainer, Track } from './Carousel.style'
+
+import { GliderProps, useGlider } from '../Glider'
 
 export type CarouselProps = {
   paddingLeft?: number
   paddingTop?: number
   className?: string
-  arrowCss?: SerializedStyles
+  arrowPosition?: number
 } & GliderProps
 
-const Carousel: React.FC<CarouselProps> = ({
+export const Carousel: React.FC<CarouselProps> = ({
   children,
   paddingLeft = 0,
   paddingTop = 0,
   className = '',
-  arrowCss,
+  arrowPosition,
   slidesToShow = 'auto',
   ...gliderOptions
 }) => {
@@ -35,18 +35,17 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <Container {...getContainerProps({ className })}>
-      <Arrow {...getPrevArrowProps()} ref={prevArrowRef} css={arrowCss} size="large">
+      <Arrow {...getPrevArrowProps()} ref={prevArrowRef} arrowPosition={arrowPosition} size="large">
         <SvgGlyphChevronLeft />
       </Arrow>
       <BackgroundGradient direction="prev" paddingLeft={paddingLeft} paddingTop={paddingTop} />
       <GliderContainer {...getGliderProps()} paddingLeft={paddingLeft} paddingTop={paddingTop} ref={ref}>
         <Track {...getTrackProps()}>{children}</Track>
       </GliderContainer>
-      <Arrow {...getNextArrowProps()} ref={nextArrowRef} css={arrowCss} size="large">
+      <Arrow {...getNextArrowProps()} ref={nextArrowRef} arrowPosition={arrowPosition} size="large">
         <SvgGlyphChevronRight />
       </Arrow>
       <BackgroundGradient direction="next" paddingLeft={paddingLeft} paddingTop={paddingTop} />
     </Container>
   )
 }
-export default Carousel

@@ -1,9 +1,10 @@
-import Spinner, { SpinnerProps } from './Spinner'
-import React from 'react'
 import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import { Spinner, SpinnerProps } from './Spinner'
 
 export default {
-  title: 'Shared/Spinner',
+  title: 'Shared/S/Spinner',
   component: Spinner,
   argTypes: {
     size: {

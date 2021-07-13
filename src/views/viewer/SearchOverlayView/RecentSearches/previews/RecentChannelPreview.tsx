@@ -1,33 +1,33 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+
+import { BasicChannelFieldsFragment } from '@/api/queries'
+import { absoluteRoutes } from '@/config/routes'
+import { AssetType, useAsset } from '@/providers'
 import { Text } from '@/shared/components'
+import { transitions } from '@/shared/theme'
+
 import {
   PreviewContainer,
-  StyledChannelAvatar,
   PreviewSubtext,
-  PreviewTitlePlaceholder,
   PreviewSubtextPlaceholder,
+  PreviewTitlePlaceholder,
+  StyledChannelAvatar,
 } from './previews.style'
-import { absoluteRoutes } from '@/config/routes'
-import { BasicChannelFieldsFragment } from '@/api/queries'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { transitions } from '@/shared/theme'
-import { useAsset } from '@/hooks'
 
 type RecentChannelPreviewProps = {
   channel?: BasicChannelFieldsFragment
 }
 
-const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
-  const { getAssetUrl } = useAsset()
-  const avatarPhotoUrl = getAssetUrl(
-    channel?.avatarPhotoAvailability,
-    channel?.avatarPhotoUrls,
-    channel?.avatarPhotoDataObject
-  )
+export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
+  const { url: avatarPhotoUrl } = useAsset({
+    entity: channel,
+    assetType: AssetType.AVATAR,
+  })
 
   return (
     <PreviewContainer to={absoluteRoutes.viewer.channel(channel?.id)}>
-      <StyledChannelAvatar imageUrl={avatarPhotoUrl} loading={!channel} />
+      <StyledChannelAvatar loading={!channel} assetUrl={avatarPhotoUrl} />
       <SwitchTransition>
         <CSSTransition
           key={channel ? 'placeholder' : 'content'}
@@ -43,5 +43,3 @@ const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) 
     </PreviewContainer>
   )
 }
-
-export default RecentChannelPreview

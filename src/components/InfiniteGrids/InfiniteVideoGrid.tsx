@@ -1,17 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
+import React, { useCallback, useEffect, useState } from 'react'
 
-import { sizes } from '@/shared/theme'
-import { Grid, Text, Placeholder } from '@/shared/components'
-import VideoPreview from '@/components/VideoPreview'
 import {
+  AssetAvailability,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
-  AssetAvailability,
 } from '@/api/queries'
-import useInfiniteGrid from './useInfiniteGrid'
+import { Grid, Placeholder, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import { useInfiniteGrid } from './useInfiniteGrid'
+
+import { VideoPreview } from '../VideoPreview'
 
 type InfiniteVideoGridProps = {
   title?: string
@@ -27,12 +29,13 @@ type InfiniteVideoGridProps = {
   ready?: boolean
   showChannel?: boolean
   className?: string
+  currentlyWatchedVideoId?: string
 }
 
 const INITIAL_ROWS = 4
 const INITIAL_VIDEOS_PER_ROW = 4
 
-const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
+export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
   categoryId = '',
   channelId = null,
@@ -46,6 +49,7 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   ready = true,
   showChannel = true,
   className,
+  currentlyWatchedVideoId,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -86,7 +90,18 @@ const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     skipCount,
     queryVariables,
     targetRowsCount,
-    dataAccessor: (rawData) => rawData?.videosConnection,
+    dataAccessor: (rawData) => {
+      if (currentlyWatchedVideoId) {
+        return (
+          rawData?.videosConnection && {
+            ...rawData.videosConnection,
+            totalCount: rawData.videosConnection.totalCount - 1,
+            edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
+          }
+        )
+      }
+      return rawData?.videosConnection
+    },
     itemsPerRow: videosPerRow,
   })
 
@@ -152,5 +167,3 @@ const Title = styled(Text)`
 const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
 `
-
-export default InfiniteVideoGrid

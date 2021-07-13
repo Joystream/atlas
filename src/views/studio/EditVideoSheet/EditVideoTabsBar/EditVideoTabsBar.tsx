@@ -1,20 +1,22 @@
 import React, { useRef } from 'react'
-import { EditVideoSheetTab, useEditVideoSheetTabData } from '@/hooks'
+
+import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheetTabData } from '@/providers'
 import { IconButton } from '@/shared/components'
-import { SvgGlyphClose, SvgGlyphMinus, SvgGlyphPlus } from '@/shared/icons'
+import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 
 import {
+  AddDraftButtonContainer,
   ButtonsContainer,
   Tab,
-  TabsContainer,
   TabTitle,
+  TabsContainer,
   Topbar,
-  AddDraftButtonContainer,
 } from './EditVideoTabsBar.style'
 
 type TabsBarProps = {
   videoTabs: EditVideoSheetTab[]
   selectedVideoTab?: EditVideoSheetTab
+  sheetState: EditVideoSheetState
   onAddNewTabClick: () => void
   onRemoveTabClick: (tabIdx: number) => void
   onTabSelect: (tabIdx: number) => void
@@ -25,6 +27,7 @@ type TabsBarProps = {
 export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
   videoTabs,
   selectedVideoTab,
+  sheetState,
   onAddNewTabClick,
   onRemoveTabClick,
   onTabSelect,
@@ -65,7 +68,7 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
       </TabsContainer>
       <ButtonsContainer>
         <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
-          <SvgGlyphMinus />
+          {sheetState === 'open' ? <SvgGlyphMinimize /> : <SvgGlyphMaximize />}
         </IconButton>
         <IconButton variant="tertiary" onClick={onCloseClick}>
           <SvgGlyphClose />

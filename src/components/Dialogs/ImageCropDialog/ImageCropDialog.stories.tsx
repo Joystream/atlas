@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react'
-import { Story, Meta } from '@storybook/react'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
-import ImageCropDialog, { ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
-import { Avatar, Placeholder } from '@/shared/components'
-import { OverlayManagerProvider } from '@/hooks'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
+import { Meta, Story } from '@storybook/react'
+import React, { useRef, useState } from 'react'
+
+import { OverlayManagerProvider } from '@/providers'
+import { Avatar, Placeholder } from '@/shared/components'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+
+import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
 
 export default {
   title: 'General/ImageCropDialog',
@@ -34,8 +35,8 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleAvatarConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setAvatarImageUrl(url)
   }
@@ -43,8 +44,8 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleThumbnailConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setThumbnailImageUrl(url)
   }
@@ -52,24 +53,15 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
   const handleCoverConfirm = (
     blob: Blob,
     url: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
+    _assetDimensions: AssetDimensions,
+    _imageCropData: ImageCropData
   ) => {
     setCoverImageUrl(url)
   }
 
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        > * {
-          margin-bottom: 24px !important;
-        }
-      `}
-    >
-      <Avatar imageUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', gap: '24px' }}>
+      <Avatar assetUrl={avatarImageUrl} editable onEditClick={() => avatarDialogRef.current?.open()} size="cover" />
 
       {thumbnailImageUrl ? (
         <Image src={thumbnailImageUrl} onClick={() => thumbnailDialogRef.current?.open()} />

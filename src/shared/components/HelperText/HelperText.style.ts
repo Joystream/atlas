@@ -1,6 +1,8 @@
-import { colors, sizes, typography } from '@/shared/theme'
 import styled from '@emotion/styled'
-import Text from '../Text'
+
+import { colors, typography } from '@/shared/theme'
+
+import { Text } from '../Text'
 
 export type HelperTextProps = {
   helperTextVariant?: 'default' | 'error' | 'warning'
@@ -13,7 +15,6 @@ const helperVariants = {
 }
 
 export const StyledHelperText = styled(Text)<HelperTextProps>`
-  margin-right: ${sizes(4)};
   margin: 0;
   color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
   word-break: break-all;

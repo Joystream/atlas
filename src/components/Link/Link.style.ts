@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
-import { typography, colors } from '@/shared/theme'
+import { Link } from 'react-router-dom'
+
+import { colors, typography } from '@/shared/theme'
 
 export const StyledLink = styled(Link)`
   font-family: ${typography.fonts.base};

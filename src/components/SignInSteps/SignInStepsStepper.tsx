@@ -1,12 +1,15 @@
-import { Multistepper } from '../Dialogs'
-import AccountStep from './AccountStep'
-import ExtensionStep from './ExtensionStep'
-import { TermsStep } from './TermsStep'
-import { useRouterQuery } from '@/hooks'
 import React from 'react'
 import { useNavigate } from 'react-router'
 
-const SignInStepsStepper: React.FC = () => {
+import { useRouterQuery } from '@/hooks'
+
+import { AccountStep } from './AccountStep'
+import { ExtensionStep } from './ExtensionStep'
+import { TermsStep } from './TermsStep'
+
+import { Multistepper } from '../Dialogs'
+
+export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
   const step = Number(useRouterQuery('step'))
 
@@ -34,5 +37,3 @@ const SignInStepsStepper: React.FC = () => {
     />
   )
 }
-
-export default SignInStepsStepper

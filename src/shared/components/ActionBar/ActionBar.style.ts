@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
-import { colors, sizes, typography, media } from '@/shared/theme'
-import { Text } from '@/shared/components'
+
+import { colors, media, sizes, typography } from '@/shared/theme'
+
+import { Text } from '../Text'
 
 export const StyledActionBarContainer = styled.div`
   display: flex;
@@ -66,6 +68,7 @@ export const StyledButtonsContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+
   > *:not(:last-child) {
     margin-right: ${sizes(4)};
   }

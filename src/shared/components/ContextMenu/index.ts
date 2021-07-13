@@ -1,2 +1,1 @@
-import ContextMenu, { ContextMenuItem } from './ContextMenu'
-export { ContextMenu, ContextMenuItem }
+export * from './ContextMenu'

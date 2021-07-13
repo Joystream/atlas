@@ -1,10 +1,11 @@
 import { QueryHookOptions } from '@apollo/client'
+
 import {
   GetMembershipQuery,
-  useGetMembershipQuery,
-  useGetMembershipsQuery,
   GetMembershipQueryVariables,
   GetMembershipsQueryVariables,
+  useGetMembershipQuery,
+  useGetMembershipsQuery,
 } from '@/api/queries'
 
 type MembershipOpts = QueryHookOptions<GetMembershipQuery>

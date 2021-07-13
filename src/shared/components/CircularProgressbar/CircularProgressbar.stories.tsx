@@ -1,44 +1,23 @@
-import React from 'react'
-import CircularProgressbar, { CircularProgressbarProps } from './CircularProgressbar'
 import { Meta, Story } from '@storybook/react'
-import { css } from '@emotion/react'
+import React from 'react'
+
+import { CircularProgressbar, CircularProgressbarProps } from './CircularProgressbar'
 
 export default {
-  title: 'Shared/CircularProgressbar',
+  title: 'Shared/C/CircularProgressbar',
   component: CircularProgressbar,
   argTypes: {},
 } as Meta
 
 const SingleTemplate: Story<CircularProgressbarProps> = (args) => (
-  <div
-    css={css`
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    `}
-  >
-    <div
-      css={css`
-        width: 24px;
-        height: 24px;
-      `}
-    >
+  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <div style={{ width: '24px', height: '24px' }}>
       <CircularProgressbar {...args}></CircularProgressbar>
     </div>
-    <div
-      css={css`
-        width: 48px;
-        height: 48px;
-      `}
-    >
+    <div style={{ width: '48px', height: '48px' }}>
       <CircularProgressbar {...args}></CircularProgressbar>
     </div>
-    <div
-      css={css`
-        width: 96px;
-        height: 96px;
-      `}
-    >
+    <div style={{ width: '96px', height: '96px' }}>
       <CircularProgressbar {...args}></CircularProgressbar>
     </div>
   </div>

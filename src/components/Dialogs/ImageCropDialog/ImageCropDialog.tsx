@@ -1,8 +1,11 @@
-import { IconButton } from '@/shared/components'
-import { ImageCropData, AssetDimensions } from '@/types/cropper'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { ActionDialogProps } from '../ActionDialog'
-import { CropperImageType, useCropper } from './cropper'
+
+import { IconButton } from '@/shared/components'
+import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { validateImage } from '@/utils/image'
+import { Logger } from '@/utils/logger'
+
 import {
   AlignInfo,
   AlignInfoContainer,
@@ -15,8 +18,9 @@ import {
   StyledSlider,
   ZoomControl,
 } from './ImageCropDialog.style'
-import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
-import { validateImage } from '@/utils/image'
+import { CropperImageType, useCropper } from './cropper'
+
+import { ActionDialogProps } from '../ActionDialog'
 
 export type ImageCropDialogProps = {
   imageType: CropperImageType
@@ -30,30 +34,38 @@ export type ImageCropDialogProps = {
 } & Pick<ActionDialogProps, 'onExitClick'>
 
 export type ImageCropDialogImperativeHandle = {
-  open: (file?: File | Blob) => void
+  open: (file?: File | Blob, cropData?: ImageCropData) => void
 }
 
 const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   ImageCropDialogImperativeHandle,
   ImageCropDialogProps
-> = ({ imageType, onConfirm, onExitClick, onError }, ref) => {
+> = ({ imageType, onConfirm, onError }, ref) => {
   const [showDialog, setShowDialog] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [editedImageHref, setEditedImageHref] = useState<string | null>(null)
-  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({ imageEl, imageType })
+  const [cropData, setCropData] = useState<ImageCropData | null>(null)
+  const { currentZoom, zoomRange, zoomStep, handleZoomChange, cropImage } = useCropper({
+    imageEl,
+    imageType,
+    cropData,
+  })
+
+  const cropEditDisabled = !!cropData
 
   // not great - ideally we'd have a data flow trigger this via prop change
   // however, since there's no way to detect whether the file pick succeeds, the component wouldn't be able to report back whether it was actually opened
   // because of that we're letting the consumer trigger the open manually
   useImperativeHandle(ref, () => ({
-    open: (file) => {
+    open: (file, cropData) => {
       if (file) {
         const fileUrl = URL.createObjectURL(file)
         setEditedImageHref(fileUrl)
         setShowDialog(true)
       } else {
         inputRef.current?.click()
+        if (cropData) setCropData(cropData)
       }
     },
   }))
@@ -74,7 +86,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const handleFileChange = async () => {
     const files = inputRef.current?.files
     if (!files?.length) {
-      console.error('no files selected')
+      Logger.error('no files selected')
       return
     }
     try {
@@ -85,7 +97,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       setShowDialog(true)
     } catch (error) {
       onError?.(error)
-      console.error(error)
+      Logger.error(error)
     }
   }
 
@@ -97,7 +109,11 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
 
   const zoomControlNode = (
     <ZoomControl>
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom - zoomStep)}>
+      <IconButton
+        variant="tertiary"
+        onClick={() => handleZoomChange(currentZoom - zoomStep)}
+        disabled={cropEditDisabled}
+      >
         <SvgGlyphZoomOut />
       </IconButton>
       <StyledSlider
@@ -106,8 +122,13 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
         min={zoomRange[0]}
         max={zoomRange[1]}
         step={zoomStep}
+        disabled={cropEditDisabled}
       />
-      <IconButton variant="tertiary" onClick={() => handleZoomChange(currentZoom + zoomStep)}>
+      <IconButton
+        variant="tertiary"
+        onClick={() => handleZoomChange(currentZoom + zoomStep)}
+        disabled={cropEditDisabled}
+      >
         <SvgGlyphZoomIn />
       </IconButton>
     </ZoomControl>
@@ -131,7 +152,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
           <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (
-          <CropContainer rounded={imageType === 'avatar'}>
+          <CropContainer rounded={imageType === 'avatar'} disabled={cropEditDisabled}>
             <StyledImage src={editedImageHref} ref={imageElRefCallback} />
           </CropContainer>
         )}
@@ -140,7 +161,5 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   )
 }
 
-const ImageCropDialog = forwardRef(ImageCropDialogComponent)
+export const ImageCropDialog = forwardRef(ImageCropDialogComponent)
 ImageCropDialog.displayName = 'ImageCropDialog'
-
-export default ImageCropDialog
