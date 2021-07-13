@@ -1,45 +1,111 @@
 import React from 'react'
+import { useParams } from 'react-router'
 
-import { Button, Text } from '@/shared/components'
+import { useChannel } from '@/api/hooks'
+import { languages } from '@/config/languages'
+import { Avatar, Button, Text } from '@/shared/components'
 
-import { Container, Links, LinksContainer, TextContainer } from './ChannelAbout.style'
+import {
+  AvatarContainer,
+  Container,
+  Details,
+  DetailsContainer,
+  DetailsText,
+  Links,
+  LinksContainer,
+  StyledAvatar,
+  TextContainer,
+} from './ChannelAbout.style'
 
 export const ChannelAbout = () => {
+  const { id } = useParams()
+  const { channel } = useChannel(id)
+
   return (
     <Container>
       <div>
         <TextContainer>
           <Text variant="h4">Description</Text>
           <Text variant="body1" secondary>
-            Official channel of wildcrypto.com. Join us and follow our channel on Joystream! Wildcrypto.com has changed.
-            Its a completely new video studio and a new approach to create videos about cryptocurrency. We prepare
-            explainers, facts & myths, current news and touch on every aspect of crypto. Our motivation and diverse
-            content prepared by specialists are the factors which make us stand out. We work together closely with many
-            experts preparing content for this channel.
+            {channel?.description}
           </Text>
         </TextContainer>
         <LinksContainer>
           <Text variant="h4">Links</Text>
           <Links>
-            <Button textOnly>content</Button>
-            <Button textOnly>channel</Button>
-            <Button textOnly>preparing</Button>
-            <Button textOnly>Official channel</Button>
-            <Button textOnly>wildcrypto.com</Button>
-            <Button textOnly>content</Button>
-            <Button textOnly>channel</Button>
-            <Button textOnly>preparing</Button>
-            <Button textOnly>Official channel</Button>
-            <Button textOnly>wildcrypto.com</Button>
-            <Button textOnly>content</Button>
-            <Button textOnly>channel</Button>
-            <Button textOnly>preparing</Button>
-            <Button textOnly>Official channel</Button>
-            <Button textOnly>wildcrypto.com</Button>
+            <Button to="www.google.com" textOnly>
+              content
+            </Button>
+            <Button to="www.google.com" textOnly>
+              channel
+            </Button>
+            <Button to="www.google.com" textOnly>
+              preparing
+            </Button>
+            <Button to="www.google.com" textOnly>
+              Official channel
+            </Button>
+            <Button to="www.google.com" textOnly>
+              wildcrypto.com
+            </Button>
+            <Button to="www.google.com" textOnly>
+              content
+            </Button>
+            <Button to="www.google.com" textOnly>
+              channel
+            </Button>
+            <Button to="www.google.com" textOnly>
+              preparing
+            </Button>
+            <Button to="www.google.com" textOnly>
+              Official channel
+            </Button>
           </Links>
         </LinksContainer>
       </div>
-      <div>sidebar</div>
+      <DetailsContainer>
+        <DetailsText variant="h4">Details</DetailsText>
+
+        <Details>
+          <Text variant="caption" secondary>
+            Owned by member
+          </Text>
+          <AvatarContainer>
+            <StyledAvatar />
+            <Text variant="h6">Garry Covin</Text>
+          </AvatarContainer>
+        </Details>
+
+        <Details>
+          <Text variant="caption" secondary>
+            Joined on
+          </Text>
+          <Text variant="h6">6 Jan 2019</Text>
+        </Details>
+
+        <Details>
+          <Text variant="caption" secondary>
+            Num. of views
+          </Text>
+          <Text variant="h6">7 245 345</Text>
+        </Details>
+
+        <Details>
+          <Text variant="caption" secondary>
+            Num. of videos
+          </Text>
+          <Text variant="h6">116</Text>
+        </Details>
+
+        <Details>
+          <Text variant="caption" secondary>
+            Language
+          </Text>
+          <Text variant="h6">
+            {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
+          </Text>
+        </Details>
+      </DetailsContainer>
     </Container>
   )
 }
