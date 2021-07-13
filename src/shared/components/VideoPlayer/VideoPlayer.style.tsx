@@ -36,7 +36,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
   height: 100%;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
+  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.5em')};
   padding: 0 1em;
   left: 0;
   z-index: ${zIndex.overlay};
