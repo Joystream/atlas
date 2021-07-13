@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { Placeholder, Text } from '@/shared/components'
+import { Button, Placeholder, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
@@ -11,15 +11,15 @@ const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
 export const TitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-row-gap: ${sizes(4)};
+  align-items: center;
   width: 100%;
   margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
-  ${media.small} {
-    flex-direction: row;
-    align-items: center;
+  ${media.compact} {
+    grid-template-columns: auto 1fr auto;
   }
 `
 export const TitleContainer = styled.div`
@@ -34,7 +34,7 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
 
   line-height: 1;
   margin-bottom: 0;
@@ -102,12 +102,19 @@ export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
   z-index: 2;
   background-color: ${colors.transparentBlack[54]};
+  grid-column: 1 / span 2;
+  width: 100%;
 
-  ${media.small} {
+  ${media.compact} {
+    grid-column: initial;
     margin-top: 0;
     margin-left: auto;
     align-self: center;
   }
+`
+
+export const StyledButton = styled(Button)`
+  width: 100%;
 `
 
 export const PaginationContainer = styled.div`
