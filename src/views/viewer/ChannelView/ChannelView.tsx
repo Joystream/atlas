@@ -5,7 +5,8 @@ import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection }
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { Button, ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -15,6 +16,7 @@ import { ChannelAbout } from './ChannelAbout'
 import {
   PaginationContainer,
   SortContainer,
+  StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
   SubTitle,
@@ -115,7 +117,6 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
-  console.log({ channel })
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
@@ -124,7 +125,7 @@ export const ChannelView: React.FC = () => {
       <ChannelCover assetUrl={coverPhotoUrl} />
       <LimitedWidthContainer>
         <TitleSection className={transitions.names.slide}>
-          <StyledChannelLink id={channel?.id} avatarSize="view" hideHandle noLink />
+          <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
           <TitleContainer>
             {channel ? (
               <>
@@ -139,9 +140,14 @@ export const ChannelView: React.FC = () => {
             )}
           </TitleContainer>
           <StyledButtonContainer>
-            <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollow} size="large">
+            <StyledButton
+              icon={isFollowing ? <SvgGlyphCheck /> : <SvgGlyphPlus />}
+              variant={isFollowing ? 'secondary' : 'primary'}
+              onClick={handleFollow}
+              size="large"
+            >
               {isFollowing ? 'Unfollow' : 'Follow'}
-            </Button>
+            </StyledButton>
           </StyledButtonContainer>
         </TitleSection>
         <TabsContainer>
