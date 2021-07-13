@@ -29,6 +29,7 @@ export const TermsStep: React.FC = () => {
   }, [scrollPosition])
 
   const handleScrollToBottom = () => {
+    setHasScrolledToBottom(true)
     if (!termsBoxRef?.current) return
     termsBoxRef?.current?.scrollTo(0, termsBoxRef.current.scrollHeight)
   }
