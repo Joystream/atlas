@@ -146,10 +146,12 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-          <SortContainer>
-            <Text variant="body2">Sort by</Text>
-            <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-          </SortContainer>
+          {currentTabName === 'Videos' && (
+            <SortContainer>
+              <Text variant="body2">Sort by</Text>
+              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            </SortContainer>
+          )}
         </TabsContainer>
         {(() => {
           switch (currentTabName) {
