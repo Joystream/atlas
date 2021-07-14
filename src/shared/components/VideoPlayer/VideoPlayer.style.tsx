@@ -12,6 +12,7 @@ type ContainerProps = {
 }
 type CustomControlsProps = {
   isFullScreen?: boolean
+  isEnded?: boolean
 }
 
 const focusStyles = css`
@@ -49,6 +50,8 @@ export const CustomControls = styled.div<CustomControlsProps>`
   height: 2.5em;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
   padding: 0 1em;
+  border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
+  padding: ${sizes(2)} ${sizes(4)};
   left: 0;
   display: flex;
   align-items: flex-end;
@@ -322,8 +325,8 @@ export const Container = styled.div<ContainerProps>`
     background: none;
     align-items: flex-end;
     height: 2em;
-    z-index: ${zIndex.overlay};
     transition: opacity 200ms ${transitions.easing} !important;
+    z-index: ${zIndex.overlay};
 
     :hover {
       & ~ ${CustomControls} {
@@ -405,18 +408,4 @@ export const Container = styled.div<ContainerProps>`
   }
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
-`
-
-export const PlayOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: ${zIndex.overlay};
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 `

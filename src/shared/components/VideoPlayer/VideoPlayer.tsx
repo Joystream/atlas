@@ -2,6 +2,7 @@ import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
 import {
   SvgOutlineVideo,
@@ -14,6 +15,7 @@ import {
   SvgPlayerPip,
   SvgPlayerPipDisable,
   SvgPlayerPlay,
+  SvgPlayerRestart,
   SvgPlayerSmallScreen,
   SvgPlayerSoundHalf,
   SvgPlayerSoundOff,
@@ -32,7 +34,6 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
-  PlayOverlay,
   ScreenControls,
   StyledSvgPlayerSoundOff,
   VolumeButton,
@@ -40,15 +41,19 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.style'
+import VideoPlayerOverlay, { PlayerState } from './VideoPlayerOverlay'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 import { Text } from '../Text'
 
 export type VideoPlayerProps = {
+  nextVideo?: VideoFieldsFragment | null
   className?: string
   autoplay?: boolean
   isInBackground?: boolean
   playing?: boolean
+  channelId?: string
+  videoId?: string
 } & VideoJsConfig
 
 declare global {
@@ -69,7 +74,7 @@ type EventState = {
 }
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, autoplay, isInBackground, playing, ...videoJsConfig },
+  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -82,10 +87,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
-  const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
-  const [initialized, setInitialized] = useState(false)
 
-  const displayPlayOverlay = playOverlayVisible && !isInBackground
+  const [playerState, setPlayerState] = useState<PlayerState>(null)
+  const [initialized, setInitialized] = useState(false)
 
   // handle showing player indicators
   useEffect(() => {
@@ -123,6 +127,19 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       })
     }
   }, [player])
+
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      setPlayerState('ended')
+    }
+    player.on('ended', handler)
+    return () => {
+      player.off('ended', handler)
+    }
+  }, [nextVideo, player])
 
   // handle loading video
   useEffect(() => {
@@ -170,7 +187,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
-        setPlayOverlayVisible(false)
         setIsPlaying(true)
       }
       if (event.type === 'pause') {
@@ -205,6 +221,23 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player.off('timeupdate', handler)
     }
   }, [player])
+
+  // handle seeking
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      setPlayerState(null)
+      if (playerState === 'ended') {
+        player.play()
+      }
+    }
+    player.on('seeking', handler)
+    return () => {
+      player.off('seeking', handler)
+    }
+  }, [player, playerState])
 
   // handle fullscreen mode
   useEffect(() => {
@@ -343,29 +376,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
-      {displayPlayOverlay && (
-        <PlayOverlay onClick={handlePlayPause}>
-          <SvgOutlineVideo width={72} height={72} viewBox="0 0 24 24" />
-        </PlayOverlay>
-      )}
       <div data-vjs-player>
-        <video
-          ref={playerRef}
-          className="video-js"
-          onClick={() => {
-            if (player?.paused()) {
-              player?.trigger(CustomVideojsEvents.PauseControl)
-            } else {
-              player?.trigger(CustomVideojsEvents.PlayControl)
-            }
-          }}
-        />
-        {!isInBackground && !playOverlayVisible && (
+        <video ref={playerRef} className="video-js" />
+
+        <VideoPlayerOverlay playerState={playerState} channelId={channelId} onPlayAgain={handlePlayPause} />
+        {!isInBackground && initialized && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen} />
-            <CustomControls isFullScreen={isFullScreen}>
+            <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
               <ControlButton onClick={handlePlayPause}>
-                {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
+                {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
               </ControlButton>
               <VolumeControl>
                 <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
