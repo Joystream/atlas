@@ -1,3 +1,5 @@
+import { SerializedStyles, css } from '@emotion/react'
+
 const base = 4
 
 export function sizes<B extends boolean>(n: number, raw?: B): B extends false ? string : number
@@ -15,4 +17,11 @@ export const zIndex = {
   nearSheetOverlay: 160,
   sideNav: 200,
   globalOverlay: 999,
+}
+
+export function square(size: string | number): SerializedStyles {
+  return css`
+    width: ${size};
+    height: ${size};
+  `
 }

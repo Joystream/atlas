@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange, transparentize } from 'polished'
+import { fluidRange } from 'polished'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -147,21 +147,21 @@ type CoverImageProps = {
   darkenImg: boolean
 }
 export const CoverImage = styled.img<CoverImageProps>`
+  ${square('100%')}
+
   display: block;
-  width: 100%;
-  height: 100%;
   ${({ darkenImg }) => darkenImg && `filter: brightness(45%);`}
 `
 
 export const CoverNoImage = styled.div`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
 `
 
 export const CoverThumbnailUploadFailed = styled.div`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
   display: flex;
   flex-direction: column;
@@ -229,11 +229,11 @@ export const PublishingStateText = styled(Text)`
 `
 
 export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
+  ${square(sizes(9))};
+
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
   cursor: pointer;
   position: relative;
   border-radius: 100%;
@@ -249,7 +249,7 @@ export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
       fill: ${colors.white};
     }
 
-    background-color: ${transparentize(1 - 0.06, colors.white)};
+    background-color: ${colors.transparentPrimary[18]};
   }
 `
 
@@ -265,8 +265,8 @@ export const CoverDurationOverlay = styled.div`
 `
 
 export const StyledAvatar = styled(Avatar)<ChannelProps>`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
@@ -301,11 +301,11 @@ export const SpacedPlaceholder = styled(Placeholder)`
   margin-top: 6px;
 `
 export const CoverPlaceholder = styled(Placeholder)`
+  ${square('100%')}
+
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
 `
 
 export const CoverTopLeftContainer = styled.div`
