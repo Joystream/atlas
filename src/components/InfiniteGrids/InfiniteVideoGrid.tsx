@@ -8,7 +8,7 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, Placeholder, Text } from '@/shared/components'
+import { Grid, LoadMoreButton, Placeholder, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
@@ -32,7 +32,7 @@ type InfiniteVideoGridProps = {
   currentlyWatchedVideoId?: string
 }
 
-const INITIAL_ROWS = 4
+const INITIAL_ROWS = 2
 const INITIAL_VIDEOS_PER_ROW = 4
 
 export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
@@ -72,24 +72,24 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
 
-  const onScrollToBottom = useCallback(() => {
+  const fetchMore = useCallback(() => {
     setTargetRowsCountByCategory((prevState) => ({
       ...prevState,
       [cachedCategoryId]: targetRowsCount + 2,
     }))
   }, [cachedCategoryId, targetRowsCount])
 
-  const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
+  const { placeholdersCount, displayedItems, error, allItemsLoaded, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
   >({
     query: GetVideosConnectionDocument,
-    onScrollToBottom,
     isReady: ready,
     skipCount,
     queryVariables,
     targetRowsCount,
+    onDemand: true,
     dataAccessor: (rawData) => {
       if (currentlyWatchedVideoId) {
         return (
@@ -156,6 +156,11 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     <section className={className}>
       {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
+      {!allItemsLoaded && !loading && (
+        <LoadMoreButtonWrapper>
+          <LoadMoreButton onClick={fetchMore} />
+        </LoadMoreButtonWrapper>
+      )}
     </section>
   )
 }
@@ -166,4 +171,8 @@ const Title = styled(Text)`
 
 const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
+`
+
+const LoadMoreButtonWrapper = styled.div`
+  margin-top: ${sizes(10)};
 `
