@@ -5,7 +5,6 @@ import { CSSTransition } from 'react-transition-group'
 import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
 import {
-  SvgOutlineVideo,
   SvgPlayerBackwardFiveSec,
   SvgPlayerBackwardTenSec,
   SvgPlayerForwardFiveSec,
@@ -430,9 +429,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                       />
                     </VolumeSliderContainer>
                   </VolumeControl>
-                  <CurrentTime variant="body2">
-                    {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
-                  </CurrentTime>
+                  <CurrentTimeWrapper>
+                    <CurrentTime variant="body2">
+                      {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+                    </CurrentTime>
+                  </CurrentTimeWrapper>
                   <ScreenControls>
                     {isPiPSupported && (
                       <ControlButton onClick={handlePictureInPicture}>

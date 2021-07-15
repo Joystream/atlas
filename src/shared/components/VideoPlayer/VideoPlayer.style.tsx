@@ -51,7 +51,6 @@ export const CustomControls = styled.div<CustomControlsProps>`
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
   padding: 0 1em;
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
-  padding: ${sizes(2)} ${sizes(4)};
   left: 0;
   display: flex;
   z-index: ${zIndex.nearOverlay - 1};
