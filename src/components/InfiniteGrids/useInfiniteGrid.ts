@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql'
 import { debounce } from 'lodash'
 import { useEffect } from 'react'
 
-type PaginatedData<T> = {
+export type PaginatedData<T> = {
   edges: {
     cursor: string
     node: T
@@ -35,14 +35,15 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   targetRowsCount: number
   itemsPerRow: number
   skipCount: number
-  onScrollToBottom: () => void
   queryVariables: TArgs
-}
+} & ({ onDemand?: false; onScrollToBottom: () => void } | { onDemand: true; onScrollToBottom?: undefined })
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   displayedItems: TPaginatedData['edges'][0]['node'][]
   placeholdersCount: number
   error?: ApolloError
+  allItemsLoaded: boolean
+  loading: boolean
 }
 
 export const useInfiniteGrid = <
@@ -58,6 +59,7 @@ export const useInfiniteGrid = <
   skipCount,
   onScrollToBottom,
   queryVariables,
+  onDemand,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -96,17 +98,20 @@ export const useInfiniteGrid = <
 
   // handle scroll to bottom
   useEffect(() => {
+    if (onDemand) {
+      return
+    }
     const scrollHandler = debounce(() => {
       const scrolledToBottom =
         window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight
-      if (scrolledToBottom && isReady && !loading && !allItemsLoaded) {
+      if (onScrollToBottom && scrolledToBottom && isReady && !loading && !allItemsLoaded) {
         onScrollToBottom()
       }
     }, 100)
 
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [isReady, loading, allItemsLoaded, onScrollToBottom])
+  }, [isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
 
   const displayedEdges = data?.edges.slice(skipCount, targetLoadedItemsCount) ?? []
   const displayedItems = displayedEdges.map((edge) => edge.node)
@@ -119,6 +124,8 @@ export const useInfiniteGrid = <
   return {
     displayedItems,
     placeholdersCount,
+    allItemsLoaded,
     error,
+    loading,
   }
 }
