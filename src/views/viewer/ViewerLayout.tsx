@@ -10,10 +10,11 @@ import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 
-import { ChannelView, ChannelsView, HomeView, SearchOverlayView, VideoView, VideosView } from '.'
+import { ChannelView, ChannelsView, HomeView, PopularView, SearchOverlayView, VideoView, VideosView } from '.'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
+  { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
