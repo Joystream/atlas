@@ -41,6 +41,7 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
+      onCopyVideoURLClick={() => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       contentKey={id}

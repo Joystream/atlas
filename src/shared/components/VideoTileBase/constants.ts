@@ -1,0 +1,4 @@
+export const MIN_VIDEO_PREVIEW_WIDTH = 300
+export const MAX_VIDEO_PREVIEW_WIDTH = 600
+export const MIN_SCALING_FACTOR = 1
+export const MAX_SCALING_FACTOR = 1.375
