@@ -1,3 +1,4 @@
+export * from './NewView'
 export * from './PopularView'
 export * from './ChannelView'
 export * from './ChannelsView'
