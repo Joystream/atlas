@@ -4,7 +4,7 @@ import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
-import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavPopular, SvgNavVideos } from '@/shared/icons'
 import { openInNewTab } from '@/utils/browser'
 import { Logger } from '@/utils/logger'
 
@@ -15,6 +15,11 @@ const viewerSidenavItems: NavItemType[] = [
     icon: <SvgNavHome />,
     name: 'Home',
     to: absoluteRoutes.viewer.index(),
+  },
+  {
+    icon: <SvgNavPopular />,
+    name: 'Popular',
+    to: absoluteRoutes.viewer.popular(),
   },
   {
     icon: <SvgNavVideos />,
