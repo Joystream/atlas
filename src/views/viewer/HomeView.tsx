@@ -4,7 +4,7 @@ import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
-import { CoverVideo, ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, ViewWrapper } from '@/components'
+import { CoverVideo, ErrorFallback, InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 
@@ -39,7 +39,6 @@ export const HomeView: React.FC = () => {
     <ViewWrapper>
       <CoverVideo />
       <Container className={transitions.names.slide}>
-        <InterruptedVideosGallery />
         <ErrorBoundary fallback={ErrorFallback}>
           <StyledInfiniteVideoGrid
             title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
