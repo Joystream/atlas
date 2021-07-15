@@ -24,6 +24,7 @@ import {
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
+import { LoadingOverlay } from './LoadingOverlay'
 import {
   Container,
   ControlButton,
@@ -41,7 +42,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.style'
-import VideoPlayerOverlay, { PlayerState } from './VideoPlayerOverlay'
+import { PlayerState } from './VideoPlayerOverlay'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 import { Text } from '../Text'
@@ -88,7 +89,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
 
-  const [playerState, setPlayerState] = useState<PlayerState>(null)
+  const [playerState, setPlayerState] = useState<PlayerState>('not-initialized')
   const [initialized, setInitialized] = useState(false)
 
   // handle showing player indicators
@@ -128,6 +129,25 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [player])
 
+  // handle video loading
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = (event: Event) => {
+      if (event.type === 'waiting') {
+        setPlayerState('loading')
+      }
+      if (event.type === 'canplay') {
+        setPlayerState(null)
+      }
+    }
+    player.on(['waiting', 'canplay'], handler)
+    return () => {
+      player.off(['waiting', 'canplay'], handler)
+    }
+  }, [nextVideo, player])
+
   useEffect(() => {
     if (!player) {
       return
@@ -141,7 +161,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [nextVideo, player])
 
-  // handle loading video
+  // handle loadstart
   useEffect(() => {
     if (!player) {
       return
@@ -378,8 +398,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
-
-        <VideoPlayerOverlay playerState={playerState} channelId={channelId} onPlayAgain={handlePlayPause} />
         {!isInBackground && initialized && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen} />
@@ -409,6 +427,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </ControlButton>
               </ScreenControls>
             </CustomControls>
+            {playerState === 'loading' && <LoadingOverlay />}
           </>
         )}
         <CSSTransition

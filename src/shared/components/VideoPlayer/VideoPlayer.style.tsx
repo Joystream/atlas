@@ -54,6 +54,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   padding: ${sizes(2)} ${sizes(4)};
   left: 0;
   display: flex;
+  z-index: ${zIndex.nearOverlay - 1};
   align-items: flex-end;
   width: 100%;
   opacity: 0;
@@ -64,6 +65,7 @@ export const ControlButton = styled.button`
   margin-right: 0.5em;
   cursor: pointer;
   border: none;
+  background: none;
   border-radius: 100%;
   display: flex;
   align-items: center;
@@ -326,7 +328,7 @@ export const Container = styled.div<ContainerProps>`
     align-items: flex-end;
     height: 2em;
     transition: opacity 200ms ${transitions.easing} !important;
-    z-index: ${zIndex.overlay};
+    z-index: ${zIndex.nearOverlay};
 
     :hover {
       & ~ ${CustomControls} {
