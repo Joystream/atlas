@@ -411,3 +411,33 @@ export const Container = styled.div<ContainerProps>`
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
+
+export const BigPlayButtonOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: ${zIndex.overlay};
+  background: ${colors.transparentBlack[86]};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const BigPlayButton = styled(ControlButton)`
+  display: flex !important;
+  width: ${sizes(20)};
+  height: ${sizes(20)};
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  background-color: ${colors.transparentPrimary[18]};
+  backdrop-filter: blur(${sizes(8)});
+
+  > svg {
+    width: ${sizes(10)} !important;
+    height: ${sizes(10)} !important;
+  }
+`

@@ -26,6 +26,8 @@ import { formatDurationShort } from '@/utils/time'
 
 import { LoadingOverlay } from './LoadingOverlay'
 import {
+  BigPlayButton,
+  BigPlayButtonOverlay,
   Container,
   ControlButton,
   ControlsIndicator,
@@ -90,6 +92,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('not-initialized')
+  const [bigPlayButtonVisible, setIsBigPlayButtonVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)
 
   // handle showing player indicators
@@ -207,6 +210,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
+        setIsBigPlayButtonVisible(false)
         setIsPlaying(true)
       }
       if (event.type === 'pause') {
@@ -396,6 +400,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
+      {bigPlayButtonVisible && !isInBackground && (
+        <BigPlayButtonOverlay>
+          <BigPlayButton onClick={handlePlayPause}>
+            <SvgPlayerPlay />
+          </BigPlayButton>
+        </BigPlayButtonOverlay>
+      )}
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
         {!isInBackground && initialized && (
