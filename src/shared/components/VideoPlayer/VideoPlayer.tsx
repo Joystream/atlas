@@ -24,6 +24,7 @@ import {
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
+import { EndingOverlay, PlayerState } from './EndingOverlay'
 import { LoadingOverlay } from './LoadingOverlay'
 import {
   BigPlayButton,
@@ -44,7 +45,6 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.style'
-import { PlayerState } from './VideoPlayerOverlay'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 import { Text } from '../Text'
@@ -400,45 +400,66 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
-      {bigPlayButtonVisible && !isInBackground && (
-        <BigPlayButtonOverlay>
-          <BigPlayButton onClick={handlePlayPause}>
-            <SvgPlayerPlay />
-          </BigPlayButton>
-        </BigPlayButtonOverlay>
-      )}
       <div data-vjs-player>
         <video ref={playerRef} className="video-js" />
         {!isInBackground && initialized && (
           <>
-            <ControlsOverlay isFullScreen={isFullScreen} />
-            <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-              <ControlButton onClick={handlePlayPause}>
-                {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-              </ControlButton>
-              <VolumeControl>
-                <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
-                <VolumeSliderContainer>
-                  <VolumeSlider step={0.01} max={1} min={0} value={volume} onChange={handleChangeVolume} type="range" />
-                </VolumeSliderContainer>
-              </VolumeControl>
-              <CurrentTimeWrapper>
-                <CurrentTime variant="body2">
-                  {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
-                </CurrentTime>
-              </CurrentTimeWrapper>
-              <ScreenControls>
-                {isPiPSupported && (
-                  <ControlButton onClick={handlePictureInPicture}>
-                    {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
+            {!bigPlayButtonVisible && (
+              <>
+                <ControlsOverlay isFullScreen={isFullScreen} />
+                <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
+                  <ControlButton onClick={handlePlayPause}>
+                    {playerState === 'ended' ? (
+                      <SvgPlayerRestart />
+                    ) : isPlaying ? (
+                      <SvgPlayerPause />
+                    ) : (
+                      <SvgPlayerPlay />
+                    )}
                   </ControlButton>
-                )}
-                <ControlButton onClick={handleFullScreen}>
-                  {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
-                </ControlButton>
-              </ScreenControls>
-            </CustomControls>
+                  <VolumeControl>
+                    <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
+                    <VolumeSliderContainer>
+                      <VolumeSlider
+                        step={0.01}
+                        max={1}
+                        min={0}
+                        value={volume}
+                        onChange={handleChangeVolume}
+                        type="range"
+                      />
+                    </VolumeSliderContainer>
+                  </VolumeControl>
+                  <CurrentTime variant="body2">
+                    {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+                  </CurrentTime>
+                  <ScreenControls>
+                    {isPiPSupported && (
+                      <ControlButton onClick={handlePictureInPicture}>
+                        {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
+                      </ControlButton>
+                    )}
+                    <ControlButton onClick={handleFullScreen}>
+                      {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+                    </ControlButton>
+                  </ScreenControls>
+                </CustomControls>
+              </>
+            )}
+            {bigPlayButtonVisible && !isInBackground && (
+              <BigPlayButtonOverlay>
+                <BigPlayButton onClick={handlePlayPause}>
+                  <SvgPlayerPlay />
+                </BigPlayButton>
+              </BigPlayButtonOverlay>
+            )}
             {playerState === 'loading' && <LoadingOverlay />}
+            <EndingOverlay
+              isEnded={playerState === 'ended'}
+              channelId={channelId}
+              onPlayAgain={handlePlayPause}
+              isFullScreen={isFullScreen}
+            />
           </>
         )}
         <CSSTransition

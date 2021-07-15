@@ -433,8 +433,8 @@ export const BigPlayButton = styled(ControlButton)`
   align-items: center;
   cursor: pointer;
   position: absolute;
-  background-color: ${colors.transparentPrimary[18]};
-  backdrop-filter: blur(${sizes(8)});
+  background-color: ${colors.transparentPrimary[18]} !important;
+  backdrop-filter: blur(${sizes(8)}) !important;
 
   > svg {
     width: ${sizes(10)} !important;

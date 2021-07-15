@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
@@ -7,7 +6,7 @@ import { useVideos } from '@/api/hooks'
 import { AssetAvailability, VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
-import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerRestart } from '@/shared/icons'
+import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/shared/icons'
 import { colors, transitions } from '@/shared/theme'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -15,25 +14,30 @@ import {
   CountDownButton,
   CountDownWrapper,
   Heading,
+  InnerContainer,
   OverlayBackground,
-  PlayOverlay,
   RestartButton,
   StyledChannelLink,
   StyledCircularProgressBar,
-} from './VideoPlayerOverlay.style'
+  VideoInfo,
+} from './EndingOverlay.style'
 
 import { Text } from '../Text'
 
-export type PlayerState = 'loading' | 'ended' | 'error' | null
+export type PlayerState = 'loading' | 'ended' | 'error' | 'not-initialized' | null
 
-type VideoPlayerOverlayProps = {
-  playerState: PlayerState
+type EndingOverlayProps = {
   channelId?: string
+  isFullScreen?: boolean
   onPlayAgain?: () => void
+  isEnded: boolean
 }
 
-const VideoPlayerOverlay: React.FC<VideoPlayerOverlayProps> = ({ playerState, onPlayAgain, channelId }) => {
+export const EndingOverlay: React.FC<EndingOverlayProps> = ({ onPlayAgain, channelId, isEnded, isFullScreen }) => {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const [countdownProgress, setCountdownProgress] = useState(0)
+  const [isCountDownStarted, setIsCountDownStarted] = useState(false)
   const [randomNextVideo, setRandomNextVideo] = useState<VideoFieldsFragment | null>(null)
   const { videos } = useVideos({
     where: {
@@ -57,21 +61,17 @@ const VideoPlayerOverlay: React.FC<VideoPlayerOverlayProps> = ({ playerState, on
     setRandomNextVideo(filteredVideos[randomNumber])
   }, [id, getRandomNumber, videos])
 
-  const [countdownProgress, setCountdownProgress] = useState(0)
-  const [isCountDownStarted, setIsCountDownStarted] = useState(false)
-  const navigate = useNavigate()
-
-  const { url: thumbnail } = useAsset({
+  const { url: randomNextVideoThumbnail } = useAsset({
     entity: randomNextVideo,
     assetType: AssetType.THUMBNAIL,
   })
 
   useEffect(() => {
-    if (!randomNextVideo || playerState !== 'ended') {
+    if (!randomNextVideo || !isEnded) {
       return
     }
     setIsCountDownStarted(true)
-  }, [playerState, randomNextVideo])
+  }, [isEnded, randomNextVideo])
 
   useEffect(() => {
     if (!randomNextVideo || !isCountDownStarted) {
@@ -85,7 +85,7 @@ const VideoPlayerOverlay: React.FC<VideoPlayerOverlayProps> = ({ playerState, on
       navigate(absoluteRoutes.viewer.video(randomNextVideo.id))
     }
 
-    if (playerState !== 'ended') {
+    if (!isEnded) {
       clearTimeout(timeout)
       setCountdownProgress(0)
       setIsCountDownStarted(false)
@@ -94,7 +94,7 @@ const VideoPlayerOverlay: React.FC<VideoPlayerOverlayProps> = ({ playerState, on
     return () => {
       clearTimeout(timeout)
     }
-  }, [countdownProgress, isCountDownStarted, navigate, playerState, randomNextVideo])
+  }, [countdownProgress, isCountDownStarted, navigate, isEnded, randomNextVideo])
 
   const handleCountDownmButton = () => {
     if (isCountDownStarted) {
@@ -104,44 +104,46 @@ const VideoPlayerOverlay: React.FC<VideoPlayerOverlayProps> = ({ playerState, on
       navigate(absoluteRoutes.viewer.video(randomNextVideo?.id))
     }
   }
-
+  if (!isEnded) {
+    return null
+  }
   return (
-    <CSSTransition in={!!playerState} classNames={transitions.names.fade} timeout={200}>
-      <div>
-        {playerState === 'ended' && randomNextVideo && (
-          <PlayOverlay>
-            <Text variant="body1" secondary>
-              Up next
-            </Text>
-            <Heading variant="h3">{randomNextVideo.title}</Heading>
-            <StyledChannelLink id={randomNextVideo.channel.id} avatarSize={'default'} />
+    <CSSTransition in={isEnded} classNames={transitions.names.fade} timeout={200}>
+      <OverlayBackground thumbnail={randomNextVideo ? randomNextVideoThumbnail : ''}>
+        {randomNextVideo ? (
+          <InnerContainer isFullScreen={isFullScreen}>
+            <VideoInfo>
+              <Text variant="body1" secondary style={{ flexShrink: 0 }}>
+                Up next
+              </Text>
+              <Heading variant="h3">{randomNextVideo.title}</Heading>
+              <StyledChannelLink id={randomNextVideo.channel.id} avatarSize="default" />
+            </VideoInfo>
             <CountDownWrapper>
               <StyledCircularProgressBar
                 value={countdownProgress}
                 strokeWidth={8}
                 trailColor={isCountDownStarted ? 'transparent' : colors.transparentWhite[32]}
               />
-              <CountDownButton onClick={handleCountDownmButton}>
+              <CountDownButton variant="tertiary" onClick={handleCountDownmButton}>
                 {isCountDownStarted ? <SvgPlayerPause /> : <SvgPlayerPlay />}
               </CountDownButton>
             </CountDownWrapper>
-          </PlayOverlay>
+          </InnerContainer>
+        ) : (
+          <InnerContainer isFullScreen={isFullScreen}>
+            <VideoInfo>
+              <Text variant="body1" secondary>
+                You’ve finished watching a video from
+              </Text>
+              <StyledChannelLink id={channelId} avatarSize="small" noNextVideo />
+              <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgGlyphRestart />}>
+                Play again
+              </RestartButton>
+            </VideoInfo>
+          </InnerContainer>
         )}
-        {playerState === 'ended' && !randomNextVideo && (
-          <PlayOverlay>
-            <Text variant="body1" secondary>
-              You’ve finished watching a video from
-            </Text>
-            <StyledChannelLink id={channelId} avatarSize="small" noNextVideo />
-            <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgPlayerRestart />}>
-              Play again
-            </RestartButton>
-          </PlayOverlay>
-        )}
-        {playerState && <OverlayBackground playerState={playerState} thumbnail={thumbnail} />}
-      </div>
+      </OverlayBackground>
     </CSSTransition>
   )
 }
-
-export default VideoPlayerOverlay
