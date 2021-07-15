@@ -43,6 +43,7 @@ type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   placeholdersCount: number
   error?: ApolloError
   allItemsLoaded: boolean
+  loading: boolean
 }
 
 export const useInfiniteGrid = <
@@ -125,5 +126,6 @@ export const useInfiniteGrid = <
     placeholdersCount,
     allItemsLoaded,
     error,
+    loading,
   }
 }

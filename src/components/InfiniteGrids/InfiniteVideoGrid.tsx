@@ -79,7 +79,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     }))
   }, [cachedCategoryId, targetRowsCount])
 
-  const { placeholdersCount, displayedItems, error, allItemsLoaded } = useInfiniteGrid<
+  const { placeholdersCount, displayedItems, error, allItemsLoaded, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
@@ -156,7 +156,11 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     <section className={className}>
       {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
-      {!allItemsLoaded && <LoadMoreButton onClick={fetchMore} />}
+      {!allItemsLoaded && !loading && (
+        <LoadMoreButtonWrapper>
+          <LoadMoreButton onClick={fetchMore} />
+        </LoadMoreButtonWrapper>
+      )}
     </section>
   )
 }
@@ -167,4 +171,8 @@ const Title = styled(Text)`
 
 const StyledPlaceholder = styled(Placeholder)`
   margin-bottom: ${sizes(4)};
+`
+
+const LoadMoreButtonWrapper = styled.div`
+  margin-top: ${sizes(10)};
 `
