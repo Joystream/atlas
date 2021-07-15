@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { SvgPlayerLoaderFallback } from '@/shared/icons'
-
-import { OverlayBackground, StyledLottie } from './LoadingOverlay.style'
+import { OverlayBackground, StyledLottie, StyledSvgPlayerLoaderFallback } from './LoadingOverlay.style'
 
 export const LoadingOverlay = () => {
   const [loadingAnimation, setLoadingAnimation] = useState<object>()
@@ -13,7 +11,11 @@ export const LoadingOverlay = () => {
 
   return (
     <OverlayBackground>
-      {!loadingAnimation ? <SvgPlayerLoaderFallback /> : <StyledLottie play animationData={loadingAnimation} loop />}
+      {!loadingAnimation ? (
+        <StyledSvgPlayerLoaderFallback />
+      ) : (
+        <StyledLottie play animationData={loadingAnimation} loop />
+      )}
     </OverlayBackground>
   )
 }
