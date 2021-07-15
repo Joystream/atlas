@@ -87,6 +87,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const displayPlayOverlay = playOverlayVisible && !isInBackground
 
+  // handle showing player indicators
   useEffect(() => {
     if (!player || isInBackground) {
       return
@@ -433,7 +434,7 @@ const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMu
     case CustomVideojsEvents.BackwardFiveSec:
       return {
         icon: <SvgPlayerBackwardFiveSec />,
-        description: 'Backward 5 s',
+        description: 'Backward 5s',
         type,
       }
     case CustomVideojsEvents.ForwardFiveSec:

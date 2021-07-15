@@ -2,30 +2,12 @@
 import * as React from 'react'
 
 export const SvgPlayerForwardTenSec = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={72} height={72} viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <g filter="url(#player-forward-ten-sec_svg__filter0_b)">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M36 12c13.255 0 24 10.745 24 24S49.255 60 36 60v6c16.569 0 30-13.431 30-30C66 19.431 52.569 6 36 6v6zM24 27l12 9-12 9V27zm15 0l12 9-12 9V27z"
-        fill="#F4F6F8"
-      />
-    </g>
-    <defs>
-      <filter
-        id="player-forward-ten-sec_svg__filter0_b"
-        x={-32}
-        y={-32}
-        width={136}
-        height={136}
-        filterUnits="userSpaceOnUse"
-        colorInterpolationFilters="sRGB"
-      >
-        <feFlood floodOpacity={0} result="BackgroundImageFix" />
-        <feGaussianBlur in="BackgroundImage" stdDeviation={16} />
-        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur" />
-        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur" result="shape" />
-      </filter>
-    </defs>
+  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 4a8 8 0 110 16v2c5.523 0 10-4.477 10-10S17.523 2 12 2v2zM8 9l4 3-4 3V9zm5 0l4 3-4 3V9z"
+      fill="#F4F6F8"
+    />
   </svg>
 )

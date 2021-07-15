@@ -2,30 +2,12 @@
 import * as React from 'react'
 
 export const SvgPlayerBackwardFiveSec = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={72} height={72} viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <g filter="url(#player-backward-five-sec_svg__filter0_b)">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M36 12c-13.255 0-24 10.745-24 24H6C6 19.431 19.431 6 36 6v6zm12 15l-12 9 12 9V27zm-15 0l-12 9 12 9V27z"
-        fill="#F4F6F8"
-      />
-    </g>
-    <defs>
-      <filter
-        id="player-backward-five-sec_svg__filter0_b"
-        x={-32}
-        y={-32}
-        width={136}
-        height={136}
-        filterUnits="userSpaceOnUse"
-        colorInterpolationFilters="sRGB"
-      >
-        <feFlood floodOpacity={0} result="BackgroundImageFix" />
-        <feGaussianBlur in="BackgroundImage" stdDeviation={16} />
-        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur" />
-        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur" result="shape" />
-      </filter>
-    </defs>
+  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 4a8 8 0 00-8 8H2C2 6.477 6.477 2 12 2v2zm4 5l-4 3 4 3V9zm-5 0l-4 3 4 3V9z"
+      fill="#F4F6F8"
+    />
   </svg>
 )
