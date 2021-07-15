@@ -14,6 +14,12 @@ export default {
     className: { table: { disable: true } },
     to: { table: { disable: true } },
     type: { table: { disable: true } },
+    variant: { table: { disable: true } },
+    fullWidth: {
+      table: { disable: false, type: { summary: 'boolean' }, defaultValue: { summary: false } },
+      type: { name: 'boolean', required: false },
+      defaultValue: false,
+    },
     textOnly: { table: { disable: true } },
     iconPlacement: {
       control: { type: 'select', options: ['left', 'right'] },
