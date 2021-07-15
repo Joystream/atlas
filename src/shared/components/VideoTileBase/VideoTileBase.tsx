@@ -62,7 +62,7 @@ export type VideoTileBaseMetaProps = {
   showMeta?: boolean
   main?: boolean
   removeButton?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -88,7 +88,7 @@ export type VideoTilePublisherProps =
       onPullupClick?: undefined
       onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
-      onCopyVideoURLClick?: undefined
+      onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: undefined
     }
 
@@ -172,25 +172,25 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
-  const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
     }
-    onChannelClick(e)
+    onChannelClick(event)
   }
 
-  const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
-      e.preventDefault()
+      event.preventDefault()
     }
   }
-  const handleCoverHoverOverlayClick = (e: React.MouseEvent<HTMLElement>) => {
-    onClick?.(e)
+  const handleCoverHoverOverlayClick = (event: React.MouseEvent<HTMLElement>) => {
+    onClick?.(event)
   }
-  const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleRemoveClick = (event: React.MouseEvent<HTMLElement>) => {
     if (onRemoveButtonClick) {
-      e.preventDefault()
-      onRemoveButtonClick(e)
+      event.preventDefault()
+      onRemoveButtonClick(event)
     }
   }
   const handleFailedThumbnailLoad = () => {
@@ -198,6 +198,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
       setFailedLoadImage(true)
     }
   }
+
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
@@ -243,9 +244,9 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                           <PullUp
                             // set to true when video is already on the snackbar
                             disabled={!!isPullupDisabled}
-                            onClick={(e) => {
-                              e.preventDefault()
-                              onPullupClick && onPullupClick(e)
+                            onClick={(event) => {
+                              event.preventDefault()
+                              onPullupClick && onPullupClick(event)
                             }}
                           />
                         </CoverTopLeftContainer>
@@ -254,7 +255,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                         {publisherMode ? (
                           <SvgLargeEdit />
                         ) : (
-                          <SvgOutlineVideo width={48} height={48} viewBox="0 0 24 24" />
+                          <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
                         )}
                       </CoverIconWrapper>
                       {removeButton && (
@@ -264,17 +265,17 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       )}
                     </CoverHoverOverlay>
                   </Anchor>
-                  {!!progress && (
-                    <ProgressOverlay>
-                      <ProgressBar style={{ width: `${progress}%` }} />
-                    </ProgressOverlay>
-                  )}
                 </CoverImageContainer>
               )}
             </CSSTransition>
           </SwitchTransition>
         </CoverContainer>
       </CoverWrapper>
+      {!!progress && (
+        <ProgressOverlay>
+          <ProgressBar style={{ width: `${progress}%` }} />
+        </ProgressOverlay>
+      )}
       <SwitchTransition>
         <CSSTransition
           key={isLoading ? 'placeholder' : `content-${contentKey}`}
@@ -343,34 +344,47 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                 </MetaContainer>
               )}
             </TextContainer>
-            {publisherMode && !isLoading && (
-              <div>
-                <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
+            {!isLoading && (
+              <>
+                <KebabMenuIconContainer
+                  onClick={(event) => openContextMenu(event, 200)}
+                  isActive={contextMenuOpts.isActive}
+                >
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {onOpenInTabClick && (
-                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                      Play in Joystream
-                    </ContextMenuItem>
-                  )}
-                  {onCopyVideoURLClick && (
-                    <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                      Copy video URL
-                    </ContextMenuItem>
-                  )}
-                  {onEditVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                      {isDraft ? 'Edit draft' : 'Edit video'}
-                    </ContextMenuItem>
-                  )}
-                  {onDeleteVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                      {isDraft ? 'Delete draft' : 'Delete video'}
-                    </ContextMenuItem>
+                  {publisherMode ? (
+                    <>
+                      {onOpenInTabClick && (
+                        <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                          Play in Joystream
+                        </ContextMenuItem>
+                      )}
+                      {onCopyVideoURLClick && (
+                        <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
+                          Copy video URL
+                        </ContextMenuItem>
+                      )}
+                      {onEditVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                          {isDraft ? 'Edit draft' : 'Edit video'}
+                        </ContextMenuItem>
+                      )}
+                      {onDeleteVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                          {isDraft ? 'Delete draft' : 'Delete video'}
+                        </ContextMenuItem>
+                      )}
+                    </>
+                  ) : (
+                    onCopyVideoURLClick && (
+                      <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                        Copy video URL
+                      </ContextMenuItem>
+                    )
                   )}
                 </ContextMenu>
-              </div>
+              </>
             )}
           </InfoContainer>
         </CSSTransition>
