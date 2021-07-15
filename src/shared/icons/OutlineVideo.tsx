@@ -2,18 +2,11 @@
 import * as React from 'react'
 
 export const SvgOutlineVideo = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <rect
-      x={3}
-      y={3}
-      width={18}
-      height={18}
-      rx={9}
-      stroke="#F4F6F8"
-      strokeWidth={2}
-      strokeMiterlimit={10}
-      strokeLinecap="square"
+  <svg viewBox="0 0 34 34" {...props}>
+    <path
+      fill="#F4F6F8"
+      d="M17 34C7.6 34 0 26.4 0 17S7.6 0 17 0s17 7.6 17 17-7.6 17-17 17zm0-32C8.7 2 2 8.7 2 17s6.7 15 15 15 15-6.7 15-15S25.3 2 17 2z"
     />
-    <path d="M10 9l5 3-5 3V9z" fill="#F4F6F8" />
+    <path fill="#F4F6F8" d="M14 11l9 6-9 6V11z" />
   </svg>
 )

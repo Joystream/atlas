@@ -52,6 +52,7 @@ import {
   TitleHeader,
   TitleHeaderAnchor,
 } from './VideoPreviewBase.styles'
+import { MAX_SCALING_FACTOR, MAX_VIDEO_PREVIEW_WIDTH, MIN_SCALING_FACTOR, MIN_VIDEO_PREVIEW_WIDTH } from './constants'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'
 import { Placeholder } from '../Placeholder'
@@ -62,7 +63,7 @@ export type VideoPreviewBaseMetaProps = {
   showMeta?: boolean
   main?: boolean
   removeButton?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -88,7 +89,7 @@ export type VideoPreviewPublisherProps =
       onPullupClick?: undefined
       onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
-      onCopyVideoURLClick?: undefined
+      onCopyVideoURLClick?: () => void
       onDeleteVideoClick?: undefined
     }
 
@@ -111,10 +112,6 @@ export type VideoPreviewBaseProps = {
 } & VideoPreviewBaseMetaProps &
   VideoPreviewPublisherProps
 
-export const MIN_VIDEO_PREVIEW_WIDTH = 300
-const MAX_VIDEO_PREVIEW_WIDTH = 600
-const MIN_SCALING_FACTOR = 1
-const MAX_SCALING_FACTOR = 1.375
 // Linear Interpolation, see https://en.wikipedia.org/wiki/Linear_interpolation
 const calculateScalingFactor = (videoPreviewWidth: number) =>
   MIN_SCALING_FACTOR +
@@ -172,25 +169,25 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
-  const handleChannelClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
     if (!onChannelClick) {
       return
     }
-    onChannelClick(e)
+    onChannelClick(event)
   }
 
-  const createAnchorClickHandler = (href?: string) => (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
-      e.preventDefault()
+      event.preventDefault()
     }
   }
-  const handleCoverHoverOverlayClick = (e: React.MouseEvent<HTMLElement>) => {
-    onClick?.(e)
+  const handleCoverHoverOverlayClick = (event: React.MouseEvent<HTMLElement>) => {
+    onClick?.(event)
   }
-  const handleRemoveClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleRemoveClick = (event: React.MouseEvent<HTMLElement>) => {
     if (onRemoveButtonClick) {
-      e.preventDefault()
-      onRemoveButtonClick(e)
+      event.preventDefault()
+      onRemoveButtonClick(event)
     }
   }
   const handleFailedThumbnailLoad = () => {
@@ -198,6 +195,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
       setFailedLoadImage(true)
     }
   }
+
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
@@ -243,9 +241,9 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                           <PullUp
                             // set to true when video is already on the snackbar
                             disabled={!!isPullupDisabled}
-                            onClick={(e) => {
-                              e.preventDefault()
-                              onPullupClick && onPullupClick(e)
+                            onClick={(event) => {
+                              event.preventDefault()
+                              onPullupClick && onPullupClick(event)
                             }}
                           />
                         </CoverTopLeftContainer>
@@ -254,7 +252,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                         {publisherMode ? (
                           <SvgLargeEdit />
                         ) : (
-                          <SvgOutlineVideo width={48} height={48} viewBox="0 0 24 24" />
+                          <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
                         )}
                       </CoverIconWrapper>
                       {removeButton && (
@@ -264,17 +262,17 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                       )}
                     </CoverHoverOverlay>
                   </Anchor>
-                  {!!progress && (
-                    <ProgressOverlay>
-                      <ProgressBar style={{ width: `${progress}%` }} />
-                    </ProgressOverlay>
-                  )}
                 </CoverImageContainer>
               )}
             </CSSTransition>
           </SwitchTransition>
         </CoverContainer>
       </CoverWrapper>
+      {!!progress && (
+        <ProgressOverlay>
+          <ProgressBar style={{ width: `${progress}%` }} />
+        </ProgressOverlay>
+      )}
       <SwitchTransition>
         <CSSTransition
           key={isLoading ? 'placeholder' : `content-${contentKey}`}
@@ -343,34 +341,47 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
                 </MetaContainer>
               )}
             </TextContainer>
-            {publisherMode && !isLoading && (
-              <div>
-                <KebabMenuIconContainer onClick={(e) => openContextMenu(e, 200)}>
+            {!isLoading && (
+              <>
+                <KebabMenuIconContainer
+                  onClick={(event) => openContextMenu(event, 200)}
+                  isActive={contextMenuOpts.isActive}
+                >
                   <SvgGlyphMore />
                 </KebabMenuIconContainer>
                 <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {onOpenInTabClick && (
-                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                      Play in Joystream
-                    </ContextMenuItem>
-                  )}
-                  {onCopyVideoURLClick && (
-                    <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                      Copy video URL
-                    </ContextMenuItem>
-                  )}
-                  {onEditVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                      {isDraft ? 'Edit draft' : 'Edit video'}
-                    </ContextMenuItem>
-                  )}
-                  {onDeleteVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                      {isDraft ? 'Delete draft' : 'Delete video'}
-                    </ContextMenuItem>
+                  {publisherMode ? (
+                    <>
+                      {onOpenInTabClick && (
+                        <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                          Play in Joystream
+                        </ContextMenuItem>
+                      )}
+                      {onCopyVideoURLClick && (
+                        <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
+                          Copy video URL
+                        </ContextMenuItem>
+                      )}
+                      {onEditVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                          {isDraft ? 'Edit draft' : 'Edit video'}
+                        </ContextMenuItem>
+                      )}
+                      {onDeleteVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                          {isDraft ? 'Delete draft' : 'Delete video'}
+                        </ContextMenuItem>
+                      )}
+                    </>
+                  ) : (
+                    onCopyVideoURLClick && (
+                      <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                        Copy video URL
+                      </ContextMenuItem>
+                    )
                   )}
                 </ContextMenu>
-              </div>
+              </>
             )}
           </InfoContainer>
         </CSSTransition>
