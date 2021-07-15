@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { Button, Placeholder, Text } from '@/shared/components'
+import { Button, Placeholder, Tabs, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
@@ -46,13 +46,11 @@ export const Title = styled(Text)`
 `
 
 export const SortContainer = styled.div`
-  display: none;
+  grid-area: sort;
+  display: grid;
   grid-gap: 8px;
   grid-template-columns: auto 1fr;
   align-items: center;
-  ${media.medium} {
-    display: grid;
-  }
 `
 
 export const SubTitle = styled(Text)`
@@ -126,12 +124,38 @@ export const PaginationContainer = styled.div`
 `
 
 export const TabsContainer = styled.div`
+  display: grid;
   padding-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
   border-bottom: solid 1px ${colors.gray[800]};
-
-  ${media.medium} {
-    display: grid;
-    grid-template-columns: 1fr 250px;
+  gap: ${sizes(2)};
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    'tabs tabs tabs'
+    'search sort sort';
+  ${media.small} {
+    grid-template-areas:
+      'tabs tabs '
+      'search  sort';
   }
+  ${media.medium} {
+    grid-template-areas: initial;
+    gap: ${sizes(8)};
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr 250px;
+  }
+`
+
+export const SearchContainer = styled.div`
+  grid-area: search;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  ${media.compact} {
+    width: 190px;
+  }
+`
+
+export const StyledTabs = styled(Tabs)`
+  grid-area: tabs;
 `

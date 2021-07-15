@@ -14,11 +14,12 @@ export type TabsProps = {
   tabs: TabItem[]
   initialIndex?: number
   onSelectTab: (idx: number) => void
+  className?: string
 }
 
 const SCROLL_SHADOW_OFFSET = 10
 
-export const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1 }) => {
+export const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1, className }) => {
   const [selected, setSelected] = useState(initialIndex)
   const [isContentOverflown, setIsContentOverflown] = useState(false)
   const tabsRef = useRef<HTMLDivElement>(null)
@@ -71,7 +72,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, onSelectTab, initialIndex = -1
   }
 
   return (
-    <TabsWrapper>
+    <TabsWrapper className={className}>
       <CSSTransition
         in={shadowsVisible.left && isContentOverflown}
         timeout={100}

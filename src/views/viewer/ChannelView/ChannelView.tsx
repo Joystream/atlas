@@ -5,7 +5,7 @@ import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection }
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { ChannelCover, Grid, Pagination, Select, Tabs, Text, TextField } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -15,10 +15,12 @@ import { SORT_OPTIONS } from '@/views/studio/MyVideosView/MyVideosView'
 import { ChannelAbout } from './ChannelAbout'
 import {
   PaginationContainer,
+  SearchContainer,
   SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledTabs,
   SubTitle,
   SubTitlePlaceholder,
   TabsContainer,
@@ -151,7 +153,16 @@ export const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
         <TabsContainer>
-          <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+          <StyledTabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+          <SearchContainer>
+            <TextField
+              // {...register('licenseAttribution', textFieldValidation({ name: 'License attribution', maxLength: 5000 }))}
+              // error={!!errors.licenseAttribution}
+              placeholder="Search for videos"
+              type="search"
+              helperText={null}
+            />
+          </SearchContainer>
           {currentTabName === 'Videos' && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
