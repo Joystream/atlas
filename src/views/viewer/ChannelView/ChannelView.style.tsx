@@ -51,6 +51,9 @@ export const SortContainer = styled.div`
   grid-gap: 8px;
   grid-template-columns: auto 1fr;
   align-items: center;
+  ${media.medium} {
+    grid-area: initial;
+  }
 `
 
 export const SubTitle = styled(Text)`
@@ -154,8 +157,15 @@ export const SearchContainer = styled.div`
   ${media.compact} {
     width: 190px;
   }
+
+  ${media.medium} {
+    grid-area: initial;
+  }
 `
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
+  ${media.medium} {
+    grid-area: initial;
+  }
 `

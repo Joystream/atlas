@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import { useChannel, useFollowChannel, useSearch, useUnfollowChannel, useVideosConnection } from '@/api/hooks'
+import { AssetAvailability, SearchQuery, VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { ChannelCover, Grid, Pagination, Select, Tabs, Text, TextField } from '@/shared/components'
+import { ChannelCover, Grid, Pagination, Select, Text, TextField } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -31,6 +31,15 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
+const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
+  if (loading || !data) {
+    return { channels: [], videos: [] }
+  }
+  const results = data
+  const searchVideos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+  return { searchVideos }
+}
+
 const TABS = ['Videos', 'About'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -53,8 +62,22 @@ export const ChannelView: React.FC = () => {
     entity: channel,
     assetType: AssetType.COVER,
   })
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+
+  // TODO: this is not sorting by channel Id
+  const { data: search, loading: loadingSearch, error: errorSearch } = useSearch({
+    text: searchQuery,
+    whereVideo: {
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+    },
+    whereChannel: {
+      id_in: [id],
+    },
+  })
   const { currentPage, setCurrentPage } = usePagination(0)
-  const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
+  const { edges, totalCount: _totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
@@ -104,11 +127,28 @@ export const ChannelView: React.FC = () => {
   const handleSetCurrentTab = async (tab: number) => {
     setCurrentVideosTab(tab)
   }
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+      if (searchQuery.trim() === '') {
+        setIsSearching(false)
+      } else {
+        setIsSearching(true)
+      }
+    }
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      setIsSearching(false)
+      setSearchQuery('')
+    }
+  }
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
-  const videos = edges
-    ?.map((edge) => edge.node)
-    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+  const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, search), [loadingSearch, search])
+  const videos = ((isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []).slice(
+    currentPage * videosPerPage,
+    currentPage * videosPerPage + videosPerPage
+  )
+  const totalCount = isSearching ? searchVideos?.length : _totalCount
+
   const placeholderItems = Array.from(
     { length: loadingVideos ? videosPerPage - (videos ? videos.length : 0) : 0 },
     () => ({
@@ -116,8 +156,11 @@ export const ChannelView: React.FC = () => {
       progress: undefined,
     })
   )
+
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
+
+  console.log({ searchVideos, errorSearch, loadingSearch, searchQuery })
 
   if (!loading && !channel) {
     return <span>Channel not found</span>
@@ -154,16 +197,19 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <StyledTabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-          <SearchContainer>
-            <TextField
-              // {...register('licenseAttribution', textFieldValidation({ name: 'License attribution', maxLength: 5000 }))}
-              // error={!!errors.licenseAttribution}
-              placeholder="Search for videos"
-              type="search"
-              helperText={null}
-            />
-          </SearchContainer>
           {currentTabName === 'Videos' && (
+            <SearchContainer>
+              <TextField
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Search for videos"
+                type="search"
+                helperText={null}
+              />
+            </SearchContainer>
+          )}
+          {currentTabName === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
@@ -177,9 +223,13 @@ export const ChannelView: React.FC = () => {
                 <>
                   <VideoSection className={transitions.names.slide}>
                     <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-                      {videosWithPlaceholders.map((video, idx) => (
-                        <VideoPreview key={idx} id={video.id} showChannel={false} />
-                      ))}
+                      {isSearching
+                        ? searchVideos?.map((video, idx) => (
+                            <VideoPreview key={idx} id={video.id} showChannel={false} />
+                          ))
+                        : videosWithPlaceholders.map((video, idx) => (
+                            <VideoPreview key={idx} id={video.id} showChannel={false} />
+                          ))}
                     </Grid>
                   </VideoSection>
                   <PaginationContainer>
