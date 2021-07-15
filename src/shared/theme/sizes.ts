@@ -1,4 +1,4 @@
-import { SerializedStyles, css } from '@emotion/react'
+import { css } from '@emotion/react'
 
 const base = 4
 
@@ -19,7 +19,7 @@ export const zIndex = {
   globalOverlay: 999,
 }
 
-export function square(size: string | number): SerializedStyles {
+export function square(size: string | number) {
   return css`
     width: ${size};
     height: ${size};
