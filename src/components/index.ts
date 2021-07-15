@@ -15,7 +15,6 @@ export * from './BackgroundPattern'
 export * from './InfiniteGrids'
 export * from './Sidenav'
 
-export * from './InterruptedVideosGallery'
 export * from './ViewWrapper'
 export * from './Portal'
 export * from './Dialogs'
