@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -8,9 +7,17 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, LoadMoreButton, Placeholder, Text } from '@/shared/components'
-import { sizes } from '@/shared/theme'
+import { Button, Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 
+import {
+  LoadMoreButtonWrapper,
+  StyledPlaceholder,
+  StyledSvgGlyphPlay,
+  Title,
+  TitleWrapper,
+  WatchAllLink,
+} from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoPreview } from '../VideoPreview'
@@ -30,6 +37,8 @@ type InfiniteVideoGridProps = {
   showChannel?: boolean
   className?: string
   currentlyWatchedVideoId?: string
+  additionalLinkUrl?: string
+  showWatchAll?: boolean
 }
 
 const INITIAL_ROWS = 2
@@ -50,6 +59,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   showChannel = true,
   className,
   currentlyWatchedVideoId,
+  additionalLinkUrl,
+  showWatchAll,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -154,7 +165,30 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
+      {title && (
+        <GridHeadingContainer>
+          <TitleWrapper>
+            {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h4">{title}</Title>}
+            {showWatchAll && channelId && (
+              <WatchAllLink to={`/channel/${channelId}`}>
+                <StyledSvgGlyphPlay width={14} height={14} />
+                Watch all
+              </WatchAllLink>
+            )}
+          </TitleWrapper>
+          {additionalLinkUrl && (
+            <Button
+              to={additionalLinkUrl}
+              size="medium"
+              variant="secondary"
+              iconPlacement="right"
+              icon={<SvgGlyphChevronRight width={12} height={12} />}
+            >
+              Browse following
+            </Button>
+          )}
+        </GridHeadingContainer>
+      )}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
       {!allItemsLoaded && !loading && (
         <LoadMoreButtonWrapper>
@@ -164,15 +198,3 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     </section>
   )
 }
-
-const Title = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
-const StyledPlaceholder = styled(Placeholder)`
-  margin-bottom: ${sizes(4)};
-`
-
-const LoadMoreButtonWrapper = styled.div`
-  margin-top: ${sizes(10)};
-`
