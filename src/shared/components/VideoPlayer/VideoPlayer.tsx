@@ -472,6 +472,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             )}
             {playerState === 'loading' && <LoadingOverlay />}
             <EndingOverlay
+              currentThumbnail={videoJsConfig.posterUrl}
               isEnded={playerState === 'ended'}
               channelId={channelId}
               onPlayAgain={handlePlayPause}

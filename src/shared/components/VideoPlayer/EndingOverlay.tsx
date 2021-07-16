@@ -29,11 +29,18 @@ export type PlayerState = 'loading' | 'ended' | 'error' | 'not-initialized' | nu
 type EndingOverlayProps = {
   channelId?: string
   isFullScreen?: boolean
+  currentThumbnail?: string | null
   onPlayAgain?: () => void
   isEnded: boolean
 }
 
-export const EndingOverlay: React.FC<EndingOverlayProps> = ({ onPlayAgain, channelId, isEnded, isFullScreen }) => {
+export const EndingOverlay: React.FC<EndingOverlayProps> = ({
+  onPlayAgain,
+  channelId,
+  isEnded,
+  isFullScreen,
+  currentThumbnail,
+}) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [countdownProgress, setCountdownProgress] = useState(0)
@@ -109,7 +116,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({ onPlayAgain, chann
   }
   return (
     <CSSTransition in={isEnded} classNames={transitions.names.fade} timeout={200}>
-      <OverlayBackground thumbnail={randomNextVideo ? randomNextVideoThumbnail : ''}>
+      <OverlayBackground thumbnail={randomNextVideo ? randomNextVideoThumbnail : currentThumbnail}>
         {randomNextVideo ? (
           <InnerContainer isFullScreen={isFullScreen}>
             <VideoInfo>
