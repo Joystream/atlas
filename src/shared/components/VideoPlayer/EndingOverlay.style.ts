@@ -33,7 +33,7 @@ type InnerContainerProps = {
 
 export const InnerContainer = styled.div<InnerContainerProps>`
   padding: ${sizes(6)};
-  height: calc(100% - 76px);
+  height: calc(100% - 72px);
   overflow-y: auto;
   width: 100%;
   display: flex;

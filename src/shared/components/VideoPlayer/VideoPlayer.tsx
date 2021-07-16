@@ -24,6 +24,7 @@ import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
 import { EndingOverlay, PlayerState } from './EndingOverlay'
+import { ErrorOverlay } from './ErrorOverlay'
 import { LoadingOverlay } from './LoadingOverlay'
 import {
   BigPlayButton,
@@ -79,7 +80,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
   externalRef
 ) => {
-  const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
+  const [player, playerRef] = useVideoJsPlayer({ ...videoJsConfig })
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
   const [indicator, setIndicator] = useState<EventState | null>(null)
@@ -91,8 +92,23 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
 
   const [playerState, setPlayerState] = useState<PlayerState>('not-initialized')
+  const [playerError, setPlayerError] = useState<MediaError | null>(null)
   const [bigPlayButtonVisible, setIsBigPlayButtonVisible] = useState(true)
   const [initialized, setInitialized] = useState(false)
+
+  // handle error
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      setPlayerError(player.error())
+    }
+    player.on('error', handler)
+    return () => {
+      player.off('error', handler)
+    }
+  })
 
   // handle showing player indicators
   useEffect(() => {
@@ -480,6 +496,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           </ControlsIndicatorWrapper>
         </CSSTransition>
       </div>
+      {playerError && <ErrorOverlay />}
     </Container>
   )
 }

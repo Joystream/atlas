@@ -47,14 +47,13 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 export const CustomControls = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
-  height: 2.5em;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
-  padding: 0 1em;
+  padding: 0.5em 1em 0;
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
   display: flex;
+  align-items: center;
   z-index: ${zIndex.nearOverlay - 1};
-  align-items: flex-end;
   width: 100%;
   opacity: 0;
   transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
@@ -171,17 +170,17 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 `
 export const CurrentTimeWrapper = styled.div`
   display: flex;
-  height: 100%;
-  color: ${colors.white};
-  margin-left: 1em;
-  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  height: 100%;
+  margin-left: 1em;
 `
 
 export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  color: ${colors.white};
+  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
 export const ScreenControls = styled.div`
