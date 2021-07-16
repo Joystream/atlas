@@ -1,14 +1,15 @@
 import styled from '@emotion/styled'
+import { fluidRange } from 'polished'
 import Lottie from 'react-lottie-player'
 
-import { colors, media, sizes, zIndex } from '@/shared/theme'
+import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { Button } from '../Button'
 import { Text } from '../Text'
 
 export const OverlayBackground = styled.div`
   display: flex;
-  z-index: ${zIndex.overlay};
+  z-index: ${zIndex.nearOverlay};
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -38,34 +39,36 @@ export const InnerContainer = styled.div`
 `
 
 export const AnimationWrapper = styled.div`
-  --animation-height: 50px;
-
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: var(--animation-height);
+  height: ${sizes(10)};
   position: relative;
   ${media.small} {
-    --animation-height: 100px;
+    height: ${sizes(20)};
   }
 `
 
 export const StyledLottie = styled(Lottie)`
   width: 108px;
-  top: calc(-1 * var(--animation-height));
   position: absolute;
+  bottom: 0;
   ${media.small} {
     width: 216px;
   }
 `
 
 export const Heading = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.base, breakpoints.medium)};
+
   margin-top: ${sizes(8)};
   text-align: center;
 `
 
 export const ErrorMessage = styled(Text)`
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.base, breakpoints.medium)};
+
   max-width: 560px;
   margin-top: ${sizes(2)};
   text-align: center;

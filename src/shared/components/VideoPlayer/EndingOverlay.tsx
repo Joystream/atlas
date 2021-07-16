@@ -19,10 +19,9 @@ import {
   RestartButton,
   StyledChannelLink,
   StyledCircularProgressBar,
+  SubHeading,
   VideoInfo,
 } from './EndingOverlay.style'
-
-import { Text } from '../Text'
 
 export type PlayerState = 'loading' | 'ended' | 'error' | 'not-initialized' | null
 
@@ -120,9 +119,9 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
         {randomNextVideo ? (
           <InnerContainer isFullScreen={isFullScreen}>
             <VideoInfo>
-              <Text variant="body1" secondary style={{ flexShrink: 0 }}>
+              <SubHeading variant="body1" secondary style={{ flexShrink: 0 }}>
                 Up next
-              </Text>
+              </SubHeading>
               <Heading variant="h3">{randomNextVideo.title}</Heading>
               <StyledChannelLink id={randomNextVideo.channel.id} avatarSize="default" />
             </VideoInfo>
@@ -140,9 +139,9 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
         ) : (
           <InnerContainer isFullScreen={isFullScreen}>
             <VideoInfo>
-              <Text variant="body1" secondary>
+              <SubHeading variant="body1" secondary>
                 You’ve finished watching a video from
-              </Text>
+              </SubHeading>
               <StyledChannelLink id={channelId} avatarSize="small" noNextVideo />
               <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgGlyphRestart />}>
                 Play again

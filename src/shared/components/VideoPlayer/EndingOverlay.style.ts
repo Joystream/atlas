@@ -32,7 +32,7 @@ type InnerContainerProps = {
 }
 
 export const InnerContainer = styled.div<InnerContainerProps>`
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
   height: calc(100% - 72px);
   overflow-y: auto;
   width: 100%;
@@ -47,6 +47,7 @@ export const InnerContainer = styled.div<InnerContainerProps>`
 
   ${media.small} {
     flex-direction: column;
+    padding: ${sizes(6)};
   }
 `
 
@@ -55,6 +56,10 @@ export const VideoInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+export const SubHeading = styled(Text)`
+  text-align: center;
 `
 
 export const Heading = styled(Text)`
@@ -75,14 +80,29 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
   flex-shrink: 0;
   margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
 
-  span {
-    ${({ noNextVideo }) => noNextVideo && `font-size: ${sizes(10)}`};
+  ${media.small} {
+    margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
+  }
 
+  span {
+    font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(5) : '14px')};
     display: flex;
     align-items: center;
     margin-left: ${sizes(2)};
     ${media.small} {
+      font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(4))};
       margin-left: ${sizes(3)};
+    }
+  }
+
+  div {
+    width: ${sizes(6)};
+    height: ${sizes(6)};
+    min-width: ${sizes(6)};
+    ${media.small} {
+      width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
+      height: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
+      min-width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
     }
   }
 `
@@ -115,5 +135,8 @@ export const CountDownButton = styled(IconButton)`
 `
 
 export const RestartButton = styled(Button)`
-  margin-top: ${sizes(12)};
+  margin-top: ${sizes(6)};
+  ${media.small} {
+    margin-top: ${sizes(12)};
+  }
 `
