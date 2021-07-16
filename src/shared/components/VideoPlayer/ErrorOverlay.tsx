@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import {
+  AnimationWrapper,
   ButtonGroup,
   ErrorMessage,
   Heading,
@@ -22,7 +23,9 @@ export const ErrorOverlay = () => {
   return (
     <OverlayBackground>
       <InnerContainer>
-        <StyledLottie animationData={errorAnimation} play loop={false}></StyledLottie>
+        <AnimationWrapper>
+          <StyledLottie animationData={errorAnimation} play loop={false}></StyledLottie>
+        </AnimationWrapper>
         <Heading variant="h3">Aw, shucks!</Heading>
         <ErrorMessage variant="body1" secondary>
           The video could not be loaded because of an error. Please try again later. If the issue persists, reach out to
