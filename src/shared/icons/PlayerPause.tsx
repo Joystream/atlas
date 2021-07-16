@@ -3,6 +3,6 @@ import * as React from 'react'
 
 export const SvgPlayerPause = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M8 4v16M16 4v16M16 4v16" stroke="#F4F6F8" strokeWidth={4} strokeMiterlimit={10} />
+    <path fillRule="evenodd" clipRule="evenodd" d="M6 20V4h4v16H6zM14 20V4h4v16h-4z" fill="#F4F6F8" />
   </svg>
 )
