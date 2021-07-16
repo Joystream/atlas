@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
-import { colors, sizes, transitions, zIndex } from '../../theme'
+import { colors, media, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -32,13 +32,24 @@ const focusStyles = css`
   }
 `
 
-export const CustomControls = styled.div<CustomControlsProps>`
+export const ControlsOverlay = styled.div<CustomControlsProps>`
+  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+  opacity: 0;
   position: absolute;
-  height: 100%;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? sizes(10) : sizes(4))};
-  padding: 0 ${sizes(4)};
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
+  height: 8em;
+  transition: opacity 200ms ${transitions.easing}, visibility 200ms ${transitions.easing};
+`
+
+export const CustomControls = styled.div<CustomControlsProps>`
+  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+  position: absolute;
+  height: 2.5em;
+  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
+  padding: 0 1em;
   left: 0;
-  z-index: ${zIndex.overlay};
   display: flex;
   align-items: flex-end;
   width: 100%;
@@ -47,18 +58,20 @@ export const CustomControls = styled.div<CustomControlsProps>`
 `
 
 export const ControlButton = styled.button`
-  margin-right: ${sizes(2)};
+  margin-right: 0.5em;
   cursor: pointer;
   border: none;
   border-radius: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${sizes(2)};
+  padding: 0.5em;
   transition: background-color ${transitions.timings.player} ${transitions.easing} !important;
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
+    width: 1.5em;
+    height: 1.5em;
   }
 
   :hover {
@@ -82,8 +95,8 @@ export const thumbStyles = css`
   appearance: none;
   border: none;
   background: ${colors.white};
-  width: ${sizes(3)};
-  height: ${sizes(3)};
+  width: 0.75em;
+  height: 0.75em;
   border-radius: 100%;
   cursor: pointer;
 `
@@ -93,8 +106,8 @@ export const VolumeSlider = styled.input`
   border-radius: 2px;
   margin: 0;
   padding: 0;
-  width: ${sizes(16)};
-  height: ${sizes(1)};
+  width: 4em;
+  height: 0.25em;
   background: linear-gradient(
     to right,
     ${colors.white} 0%,
@@ -120,15 +133,15 @@ export const VolumeSlider = styled.input`
 
 export const VolumeControl = styled.div`
   display: flex;
-  border-radius: 20px;
-  width: ${sizes(10)};
+  border-radius: 1.25em;
+  width: 2.5em;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing},
     width ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
-    width: ${sizes(30)};
+    width: 7.5em;
     ${VolumeSlider} {
       opacity: 1;
       transform: scaleX(1);
@@ -152,15 +165,19 @@ export const VolumeButton = styled(ControlButton)`
 export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
   opacity: 0.5;
 `
-
-export const CurrentTime = styled(Text)`
+export const CurrentTimeWrapper = styled.div`
   display: flex;
-  height: ${sizes(10)};
+  height: 100%;
   color: ${colors.white};
-  margin-left: ${sizes(4)};
+  margin-left: 1em;
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
   font-feature-settings: 'tnum' on, 'lnum' on;
+`
+
+export const CurrentTime = styled(Text)`
+  /* 14px */
+  font-size: 0.875em;
 `
 
 export const ScreenControls = styled.div`
@@ -168,6 +185,72 @@ export const ScreenControls = styled.div`
 
   ${ControlButton}:last-of-type {
     margin-right: 0;
+  }
+`
+
+export const ControlsIndicatorWrapper = styled.div`
+  position: absolute;
+  top: calc(50% - ${sizes(16)});
+  left: calc(50% - ${sizes(16)});
+  display: flex;
+  flex-direction: column;
+`
+
+export const ControlsIndicator = styled.div`
+  width: ${sizes(32)};
+  height: ${sizes(32)};
+  backdrop-filter: blur(${sizes(6)});
+  background-color: ${colors.transparentBlack[54]};
+  border-radius: 100%;
+  display: flex;
+  transform: scale(0.5);
+  justify-content: center;
+  align-items: center;
+
+  > svg {
+    transform: scale(0.75);
+    width: ${sizes(18)};
+    height: ${sizes(18)};
+  }
+`
+
+export const ControlsIndicatorTooltip = styled.div`
+  user-select: none;
+  display: none;
+  align-self: center;
+  background-color: ${colors.transparentBlack[54]};
+  padding: ${sizes(2)};
+  text-align: center;
+  margin-top: ${sizes(3)};
+  backdrop-filter: blur(${sizes(8)});
+
+  ${media.small} {
+    display: block;
+  }
+`
+
+const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
+
+export const indicatorTransitions = css`
+  .indicator-exit {
+    opacity: 1;
+  }
+
+  .indicator-exit-active {
+    ${ControlsIndicator} {
+      transform: scale(1);
+      opacity: 0;
+      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+
+      > svg {
+        transform: scale(1);
+        transition: transform 750ms ${animationEasing};
+      }
+    }
+    ${ControlsIndicatorTooltip} {
+      opacity: 0;
+      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+    }
   }
 `
 
@@ -193,23 +276,40 @@ const backgroundContainerCss = css`
 `
 
 export const Container = styled.div<ContainerProps>`
+  ${indicatorTransitions}
+
   position: relative;
   height: 100%;
+
+  [class^='vjs'] {
+    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
+  }
 
   .video-js {
     background-color: ${colors.gray[900]};
   }
 
   .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
   .vjs-paused ${CustomControls} {
-    transform: translateY(-${sizes(2)});
+    transform: translateY(-0.5em);
     opacity: 1;
   }
 
   .vjs-user-inactive.vjs-playing > ${CustomControls} {
+    transform: translateY(0.5em);
+    opacity: 0;
+  }
+
+  .vjs-playing:hover ${ControlsOverlay} {
+    opacity: 1;
+  }
+  .vjs-paused ${ControlsOverlay} {
+    opacity: 1;
+  }
+  .vjs-user-inactive.vjs-playing > ${ControlsOverlay} {
     opacity: 0;
   }
 
@@ -219,31 +319,32 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-control-bar {
     opacity: 0;
-    background: linear-gradient(180deg, rgba(11, 12, 15, 0) 0%, #0b0c0f 100%);
+    background: none;
     align-items: flex-end;
-    height: ${({ isFullScreen }) => (isFullScreen ? sizes(40) : sizes(32))} !important;
-    transition: opacity ${transitions.timings.player} ${transitions.easing};
+    height: 2em;
+    z-index: ${zIndex.overlay};
+    transition: opacity 200ms ${transitions.easing} !important;
 
     :hover {
       & ~ ${CustomControls} {
         opacity: 0;
-        transform: translateY(${sizes(2)});
+        transform: translateY(0.5em);
       }
     }
 
     .vjs-progress-control {
-      height: ${sizes(8)};
-      z-index: ${zIndex.nearOverlay};
+      height: 2em;
+      z-index: ${zIndex.overlay};
       position: absolute;
       top: initial;
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `${sizes(6)} ${sizes(6)}` : `0 ${sizes(2)}`)} !important;
+      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
 
       .vjs-slider {
         align-self: flex-end;
-        height: ${sizes(1)};
+        height: 0.25em;
         margin: 0;
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
@@ -263,10 +364,10 @@ export const Container = styled.div<ContainerProps>`
           opacity: 0;
           border-radius: 100%;
           background: ${colors.white};
-          right: -${sizes(2)};
-          width: ${sizes(4)};
-          height: ${sizes(4)};
-          top: -${sizes(1)};
+          right: -0.5em;
+          height: 1em;
+          width: 1em;
+          top: -0.25em;
           transition: opacity ${transitions.timings.player} ${transitions.easing};
         }
 
@@ -290,7 +391,7 @@ export const Container = styled.div<ContainerProps>`
       }
 
       :hover .vjs-slider {
-        height: ${sizes(2)};
+        height: 0.5em;
       }
     }
   }
