@@ -61,6 +61,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
 
 export const ControlButton = styled.button`
   margin-right: 0.5em;
+  display: flex !important;
   cursor: pointer;
   border: none;
   background: none;
@@ -171,7 +172,7 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 export const CurrentTimeWrapper = styled.div`
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 2.5em;
   margin-left: 1em;
 `
 
@@ -185,6 +186,7 @@ export const CurrentTime = styled(Text)`
 
 export const ScreenControls = styled.div`
   margin-left: auto;
+  display: flex;
 
   ${ControlButton}:last-of-type {
     margin-right: 0;
@@ -193,15 +195,19 @@ export const ScreenControls = styled.div`
 
 export const ControlsIndicatorWrapper = styled.div`
   position: absolute;
-  top: calc(50% - ${sizes(16)});
-  left: calc(50% - ${sizes(16)});
   display: flex;
   flex-direction: column;
+  top: calc(50% - ${sizes(10)});
+  left: calc(50% - ${sizes(10)});
+  ${media.small} {
+    top: calc(50% - ${sizes(16)});
+    left: calc(50% - ${sizes(16)});
+  }
 `
 
 export const ControlsIndicator = styled.div`
-  width: ${sizes(32)};
-  height: ${sizes(32)};
+  width: ${sizes(20)};
+  height: ${sizes(20)};
   backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
@@ -212,8 +218,18 @@ export const ControlsIndicator = styled.div`
 
   > svg {
     transform: scale(0.75);
-    width: ${sizes(18)};
-    height: ${sizes(18)};
+    width: ${sizes(12)};
+    height: ${sizes(12)};
+  }
+  ${media.small} {
+    width: ${sizes(32)};
+    height: ${sizes(32)};
+
+    > svg {
+      transform: scale(0.75);
+      width: ${sizes(18)};
+      height: ${sizes(18)};
+    }
   }
 `
 
