@@ -1,16 +1,11 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
-
-const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
-// last three months
-const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -22,30 +17,29 @@ export const HomeView: React.FC = () => {
     {
       where: {
         channelId_in: channelIdIn,
-        createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
       },
     },
     { skip: !anyFollowedChannels }
   )
 
   const followedChannelsVideosCount = videosConnection?.totalCount
-  const shouldShowFollowedChannels =
-    followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
 
   if (error) {
     throw error
   }
+
+  if (loading) {
+    return null
+  }
+
   return (
     <ViewWrapper>
       <CoverVideo />
       <Container className={transitions.names.slide}>
         <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid
-            title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
-            channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
-            createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
-            ready={!loading}
-          />
+          {followedChannelsVideosCount && (
+            <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
+          )}
           <OfficialJoystreamUpdate />
         </ErrorBoundary>
       </Container>
