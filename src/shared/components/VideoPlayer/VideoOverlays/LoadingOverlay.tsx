@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 
 import { OverlayBackground, StyledLottie, StyledSvgPlayerLoaderFallback } from './LoadingOverlay.style'
 
-export const LoadingOverlay = () => {
+type LoadingOverlayProps = {
+  onPlay: () => void
+}
+
+export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ onPlay }) => {
   const [loadingAnimation, setLoadingAnimation] = useState<object>()
 
   useEffect(() => {
@@ -10,7 +14,7 @@ export const LoadingOverlay = () => {
   }, [])
 
   return (
-    <OverlayBackground>
+    <OverlayBackground onClick={onPlay}>
       {!loadingAnimation ? (
         <StyledSvgPlayerLoaderFallback />
       ) : (

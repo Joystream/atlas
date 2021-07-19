@@ -4,10 +4,10 @@ import { fluidRange } from 'polished'
 import { ChannelLink } from '@/components/ChannelLink'
 import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
-import { Button } from '../Button'
-import { CircularProgressbar } from '../CircularProgressbar'
-import { IconButton } from '../IconButton'
-import { Text } from '../Text'
+import { Button } from '../../Button'
+import { CircularProgressbar } from '../../CircularProgressbar'
+import { IconButton } from '../../IconButton'
+import { Text } from '../../Text'
 
 type OverlayBackgroundProps = {
   thumbnail?: string | null
@@ -38,12 +38,8 @@ export const InnerContainer = styled.div<InnerContainerProps>`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: ${({ isFullScreen }) => (isFullScreen ? 'center' : 'unset')};
   align-items: center;
-
-  ${media.compact} {
-    justify-content: center;
-  }
+  justify-content: center;
 
   ${media.small} {
     flex-direction: column;
@@ -52,10 +48,14 @@ export const InnerContainer = styled.div<InnerContainerProps>`
 `
 
 export const VideoInfo = styled.div`
+  margin: auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  ${media.small} {
+    margin: unset;
+  }
 `
 
 export const SubHeading = styled(Text)`

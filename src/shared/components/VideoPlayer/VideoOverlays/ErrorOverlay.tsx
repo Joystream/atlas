@@ -11,7 +11,7 @@ import {
   StyledLottie,
 } from './ErrorOverlay.style'
 
-import { Button } from '../Button'
+import { Button } from '../../Button'
 
 export const ErrorOverlay = () => {
   const [errorAnimation, setErrorAnimation] = useState<object>()

@@ -23,9 +23,7 @@ import {
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
-import { EndingOverlay, PlayerState } from './EndingOverlay'
-import { ErrorOverlay } from './ErrorOverlay'
-import { LoadingOverlay } from './LoadingOverlay'
+import { VideoOverlayManager } from './VideoOverlayManager'
 import {
   BigPlayButton,
   BigPlayButtonOverlay,
@@ -76,11 +74,13 @@ type EventState = {
   isVisible: boolean
 }
 
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | null
+
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
   externalRef
 ) => {
-  const [player, playerRef] = useVideoJsPlayer({ ...videoJsConfig })
+  const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
   const [indicator, setIndicator] = useState<EventState | null>(null)
@@ -91,10 +91,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
 
-  const [playerState, setPlayerState] = useState<PlayerState>('not-initialized')
-  const [playerError, setPlayerError] = useState<MediaError | null>(null)
-  const [bigPlayButtonVisible, setIsBigPlayButtonVisible] = useState(true)
-  const [initialized, setInitialized] = useState(false)
+  const [playerState, setPlayerState] = useState<PlayerState>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   // handle error
   useEffect(() => {
@@ -102,7 +100,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = () => {
-      setPlayerError(player.error())
+      setPlayerState('error')
     }
     player.on('error', handler)
     return () => {
@@ -157,14 +155,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         setPlayerState('loading')
       }
       if (event.type === 'canplay') {
-        setPlayerState(null)
+        if (playerState !== null) {
+          setPlayerState('playing')
+        }
       }
     }
     player.on(['waiting', 'canplay'], handler)
     return () => {
       player.off(['waiting', 'canplay'], handler)
     }
-  }, [nextVideo, player])
+  }, [player, playerState])
 
   useEffect(() => {
     if (!player) {
@@ -185,7 +185,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = () => {
-      setInitialized(true)
+      setIsLoaded(true)
     }
     player.on('loadstart', handler)
     return () => {
@@ -195,7 +195,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // handle autoplay
   useEffect(() => {
-    if (!player || !initialized || !autoplay) {
+    if (!player || !isLoaded || !autoplay) {
       return
     }
     const playPromise = player.play()
@@ -204,7 +204,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         Logger.warn('Autoplay failed:', e)
       })
     }
-  }, [player, initialized, autoplay])
+  }, [player, isLoaded, autoplay])
 
   // handle playing and pausing from outside the component
   useEffect(() => {
@@ -225,7 +225,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
-        setIsBigPlayButtonVisible(false)
+        setPlayerState('playing')
         setIsPlaying(true)
       }
       if (event.type === 'pause') {
@@ -267,7 +267,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = () => {
-      setPlayerState(null)
       if (playerState === 'ended') {
         player.play()
       }
@@ -413,70 +412,62 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
+  const showBigPlayButton = playerState === null && !isInBackground
+  const showPlayerControls = !isInBackground && isLoaded && playerState
+
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
+        {showBigPlayButton && (
+          <BigPlayButtonOverlay>
+            <BigPlayButton onClick={handlePlayPause}>
+              <SvgPlayerPlay />
+            </BigPlayButton>
+          </BigPlayButtonOverlay>
+        )}
         <video ref={playerRef} className="video-js" />
-        {!isInBackground && initialized && (
+        {showPlayerControls && (
           <>
-            {!bigPlayButtonVisible && (
-              <>
-                <ControlsOverlay isFullScreen={isFullScreen} />
-                <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                  <ControlButton onClick={handlePlayPause}>
-                    {playerState === 'ended' ? (
-                      <SvgPlayerRestart />
-                    ) : isPlaying ? (
-                      <SvgPlayerPause />
-                    ) : (
-                      <SvgPlayerPlay />
-                    )}
-                  </ControlButton>
-                  <VolumeControl>
-                    <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
-                    <VolumeSliderContainer>
-                      <VolumeSlider
-                        step={0.01}
-                        max={1}
-                        min={0}
-                        value={volume}
-                        onChange={handleChangeVolume}
-                        type="range"
-                      />
-                    </VolumeSliderContainer>
-                  </VolumeControl>
-                  <CurrentTimeWrapper>
-                    <CurrentTime variant="body2">
-                      {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
-                    </CurrentTime>
-                  </CurrentTimeWrapper>
-                  <ScreenControls>
-                    {isPiPSupported && (
-                      <ControlButton onClick={handlePictureInPicture}>
-                        {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
-                      </ControlButton>
-                    )}
-                    <ControlButton onClick={handleFullScreen}>
-                      {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+            <ControlsOverlay isFullScreen={isFullScreen}>
+              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
+                <ControlButton onClick={handlePlayPause}>
+                  {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
+                </ControlButton>
+                <VolumeControl>
+                  <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
+                  <VolumeSliderContainer>
+                    <VolumeSlider
+                      step={0.01}
+                      max={1}
+                      min={0}
+                      value={volume}
+                      onChange={handleChangeVolume}
+                      type="range"
+                    />
+                  </VolumeSliderContainer>
+                </VolumeControl>
+                <CurrentTimeWrapper>
+                  <CurrentTime variant="body2">
+                    {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+                  </CurrentTime>
+                </CurrentTimeWrapper>
+                <ScreenControls>
+                  {isPiPSupported && (
+                    <ControlButton onClick={handlePictureInPicture}>
+                      {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
                     </ControlButton>
-                  </ScreenControls>
-                </CustomControls>
-              </>
-            )}
-            {bigPlayButtonVisible && !isInBackground && (
-              <BigPlayButtonOverlay>
-                <BigPlayButton onClick={handlePlayPause}>
-                  <SvgPlayerPlay />
-                </BigPlayButton>
-              </BigPlayButtonOverlay>
-            )}
-            {playerState === 'loading' && <LoadingOverlay />}
-            <EndingOverlay
-              currentThumbnail={videoJsConfig.posterUrl}
-              isEnded={playerState === 'ended'}
+                  )}
+                  <ControlButton onClick={handleFullScreen}>
+                    {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+                  </ControlButton>
+                </ScreenControls>
+              </CustomControls>
+            </ControlsOverlay>
+            <VideoOverlayManager
+              playerState={playerState}
+              onPlay={handlePlayPause}
               channelId={channelId}
-              onPlayAgain={handlePlayPause}
-              isFullScreen={isFullScreen}
+              currentThumbnail={videoJsConfig.posterUrl}
             />
           </>
         )}
@@ -497,7 +488,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           </ControlsIndicatorWrapper>
         </CSSTransition>
       </div>
-      {playerError && <ErrorOverlay />}
     </Container>
   )
 }

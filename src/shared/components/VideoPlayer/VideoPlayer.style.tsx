@@ -55,7 +55,6 @@ export const CustomControls = styled.div<CustomControlsProps>`
   align-items: center;
   z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
-  opacity: 0;
   transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
 `
 
@@ -66,7 +65,6 @@ export const ControlButton = styled.button`
   border: none;
   background: none;
   border-radius: 100%;
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5em;
@@ -308,28 +306,31 @@ export const Container = styled.div<ContainerProps>`
     background-color: ${colors.gray[900]};
   }
 
-  .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-0.5em);
-    opacity: 1;
-  }
-  .vjs-paused ${CustomControls} {
-    transform: translateY(-0.5em);
-    opacity: 1;
-  }
-
-  .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(0.5em);
-    opacity: 0;
+  .vjs-playing:hover {
+    ${ControlsOverlay} {
+      opacity: 1;
+      ${CustomControls} {
+        transform: translateY(-0.5em);
+      }
+    }
   }
 
-  .vjs-playing:hover ${ControlsOverlay} {
-    opacity: 1;
+  .vjs-user-inactive.vjs-playing {
+    ${ControlsOverlay} {
+      opacity: 0;
+      ${CustomControls} {
+        transform: translateY(0.5em);
+      }
+    }
   }
-  .vjs-paused ${ControlsOverlay} {
-    opacity: 1;
-  }
-  .vjs-user-inactive.vjs-playing > ${ControlsOverlay} {
-    opacity: 0;
+
+  .vjs-paused {
+    ${ControlsOverlay} {
+      opacity: 1;
+      ${CustomControls} {
+        transform: translateY(-0.5em);
+      }
+    }
   }
 
   .vjs-poster {
@@ -345,7 +346,7 @@ export const Container = styled.div<ContainerProps>`
     z-index: ${zIndex.nearOverlay};
 
     :hover {
-      & ~ ${CustomControls} {
+      & ~ ${ControlsOverlay} ${CustomControls} {
         opacity: 0;
         transform: translateY(0.5em);
       }

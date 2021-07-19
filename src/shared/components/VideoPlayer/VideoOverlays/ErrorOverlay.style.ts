@@ -4,8 +4,8 @@ import Lottie from 'react-lottie-player'
 
 import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
-import { Button } from '../Button'
-import { Text } from '../Text'
+import { Button } from '../../Button'
+import { Text } from '../../Text'
 
 export const OverlayBackground = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ export const OverlayBackground = styled.div`
 `
 
 export const InnerContainer = styled.div`
-  padding: ${sizes(6)};
+  padding: ${sizes(4)};
   height: 100%;
   overflow-y: auto;
   flex-direction: column;
@@ -34,7 +34,7 @@ export const InnerContainer = styled.div`
   align-items: center;
 
   ${media.small} {
-    padding: ${sizes(4)};
+    padding: ${sizes(6)};
   }
 `
 
@@ -43,10 +43,10 @@ export const AnimationWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: ${sizes(10)};
+  margin-top: ${sizes(40)};
   position: relative;
   ${media.small} {
-    height: ${sizes(20)};
+    margin-top: ${sizes(20)};
   }
 `
 
