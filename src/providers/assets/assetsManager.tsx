@@ -33,11 +33,10 @@ export const AssetsManager: React.FC = () => {
       try {
         await testAssetDownload(assetUrl, resolutionData.assetType)
         addAsset(contentId, { url: assetUrl })
-      } catch (e) {
-        Logger.error(`Failed to load ${resolutionData.assetType}`, { contentId, assetUrl })
-      } finally {
         removePendingAsset(contentId)
         removeAssetBeingResolved(contentId)
+      } catch (e) {
+        Logger.error(`Failed to load ${resolutionData.assetType}`, { contentId, assetUrl })
       }
     })
   }, [
