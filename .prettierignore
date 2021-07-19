@@ -7,3 +7,6 @@ tsconfig.json
 public/mockServiceWorker.js
 .history
 docs/
+
+# Ignore animations as they become huge
+src/shared/animations
