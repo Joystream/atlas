@@ -7,6 +7,7 @@ import { ActiveUserProvider, ConnectionStatusManager, DialogProvider } from '@/p
 import { colors } from '@/shared/theme'
 
 import {
+  Animations,
   AutomaticCrop,
   Dialogs,
   FileHashing,
@@ -21,6 +22,7 @@ import {
 } from './Playgrounds'
 
 const playgroundRoutes = [
+  { path: 'animations', element: <Animations />, name: 'Animations' },
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
   { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
@@ -78,6 +80,7 @@ const NavContainer = styled.div`
 `
 
 const ContentContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   padding-left: 30px;
