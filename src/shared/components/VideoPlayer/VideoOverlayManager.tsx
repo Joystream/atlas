@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideos } from '@/api/hooks'
 import { AssetAvailability, VideoFieldsFragment } from '@/api/queries'
+import { transitions } from '@/shared/theme'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, LoadingOverlay } from './VideoOverlays'
@@ -45,18 +47,29 @@ export const VideoOverlayManager: React.FC<VideoOverlayManagerProps> = ({
   }, [getRandomNumber, id, videos])
 
   return (
-    <>
-      {playerState === 'loading' && <LoadingOverlay onPlay={onPlay} />}
-      {playerState === 'ended' && (
-        <EndingOverlay
-          isEnded={true}
-          onPlayAgain={onPlay}
-          channelId={channelId}
-          currentThumbnail={currentThumbnail}
-          randomNextVideo={randomNextVideo}
-        />
-      )}
-      {playerState === 'error' && <ErrorOverlay />}
-    </>
+    <SwitchTransition>
+      <CSSTransition
+        key={playerState}
+        timeout={parseInt(transitions.timings.player)}
+        classNames={transitions.names.fade}
+        mountOnEnter
+        unmountOnExit
+        appear
+      >
+        <div>
+          {playerState === 'loading' && <LoadingOverlay onPlay={onPlay} />}
+          {playerState === 'ended' && (
+            <EndingOverlay
+              isEnded={true}
+              onPlayAgain={onPlay}
+              channelId={channelId}
+              currentThumbnail={currentThumbnail}
+              randomNextVideo={randomNextVideo}
+            />
+          )}
+          {playerState === 'error' && <ErrorOverlay />}
+        </div>
+      </CSSTransition>
+    </SwitchTransition>
   )
 }

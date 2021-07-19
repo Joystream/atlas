@@ -186,8 +186,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
-        setPlayerState('playing')
-        setIsPlaying(true)
+        if (playerState !== 'loading') {
+          setPlayerState('playing')
+          setIsPlaying(true)
+        }
       }
       if (event.type === 'pause') {
         setIsPlaying(false)
@@ -197,7 +199,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(['play', 'pause'], handler)
     }
-  }, [player])
+  }, [player, playerState])
 
   useEffect(() => {
     if (!externalRef) {
