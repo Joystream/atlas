@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { Button, Text } from '@/shared/components'
+import { Text } from '@/shared/components'
 
 import {
   AvatarContainer,
@@ -11,8 +11,6 @@ import {
   Details,
   DetailsContainer,
   DetailsText,
-  Links,
-  LinksContainer,
   StyledAvatar,
   TextContainer,
 } from './ChannelAbout.style'
@@ -32,7 +30,8 @@ export const ChannelAbout = () => {
             </Text>
           </TextContainer>
         )}
-        <LinksContainer>
+        {/* hidding this until we can add links to channels */}
+        {/* <LinksContainer>
           <Text variant="h4">Links</Text>
           <Links>
             <Button to="www.google.com" textOnly>
@@ -63,7 +62,7 @@ export const ChannelAbout = () => {
               Official channel
             </Button>
           </Links>
-        </LinksContainer>
+        </LinksContainer> */}
       </div>
       <DetailsContainer>
         <DetailsText variant="h4">Details</DetailsText>
