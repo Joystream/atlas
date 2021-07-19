@@ -4,6 +4,7 @@ import { useParams } from 'react-router'
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { Text } from '@/shared/components'
+import { formatDate } from '@/utils/time'
 
 import {
   AvatarContainer,
@@ -72,8 +73,8 @@ export const ChannelAbout = () => {
             Owned by member
           </Text>
           <AvatarContainer>
-            <StyledAvatar />
-            <Text variant="h6">Garry Covin</Text>
+            <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
+            <Text variant="h6">{channel?.ownerMember?.handle}</Text>
           </AvatarContainer>
         </Details>
 
@@ -81,7 +82,7 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Joined on
           </Text>
-          <Text variant="h6">6 Jan 2019</Text>
+          <Text variant="h6">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
