@@ -1,3 +1,4 @@
+import Tippy from '@tippyjs/react/headless'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -14,6 +15,7 @@ import {
   SvgPlayerSoundHalf,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
@@ -472,6 +474,45 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       </div>
       {!isInBackground && <ControlsIndicator player={player} />}
     </Container>
+  )
+}
+
+type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
+
+type VideoControlTooltipProps = {
+  placement: Placement
+  text: string
+  onClick?: () => void
+  className?: string
+}
+
+const VideoControlWithTooltip: React.FC<VideoControlTooltipProps> = ({
+  placement,
+  children,
+  onClick,
+  text,
+  className,
+}) => {
+  const [isVisible, setIsVisible] = useState(false)
+  return (
+    <span className={className}>
+      <Tippy
+        interactive={true}
+        offset={[0, 8]}
+        onMount={() => setIsVisible(true)}
+        onHide={() => setIsVisible(false)}
+        placement={placement}
+        render={(attrs) => (
+          <CSSTransition in={isVisible} timeout={200} classNames={transitions.names.fade}>
+            <ControlTooltip variant="caption" {...attrs}>
+              {text}
+            </ControlTooltip>
+          </CSSTransition>
+        )}
+      >
+        <ControlButton onClick={onClick}>{children}</ControlButton>
+      </Tippy>
+    </span>
   )
 }
 

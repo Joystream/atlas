@@ -183,6 +183,9 @@ export const CurrentTime = styled(Text)`
 `
 
 export const ScreenControls = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5em;
   margin-left: auto;
   display: flex;
 
@@ -382,4 +385,16 @@ export const BigPlayButton = styled(ControlButton)`
     width: ${sizes(10)} !important;
     height: ${sizes(10)} !important;
   }
+`
+
+export const ControlTooltip = styled(Text)`
+  font-size: 0.875em;
+  background: ${colors.transparentBlack[54]};
+  backdrop-filter: blur(${sizes(8)});
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
 `
