@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 
 import { useChannel } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { Avatar, Button, Text } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 
 import {
   AvatarContainer,
