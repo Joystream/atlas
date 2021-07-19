@@ -9,6 +9,15 @@ type CoverImageProps = {
   $src: string
 }
 
+export const CONTENT_OVERLAP_MAP = {
+  BASE: 0,
+  SMALL: 0,
+  MEDIUM: 0,
+  LARGE: 100,
+  XLARGE: 200,
+  XXLARGE: 300,
+}
+
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   width: calc(100% + calc(2 * var(--global-horizontal-padding)));
@@ -55,10 +64,6 @@ export const EditableControls = styled.div`
     :hover {
       opacity: 1;
     }
-  }
-
-  ${media.xlarge} {
-    height: 80%;
   }
 `
 

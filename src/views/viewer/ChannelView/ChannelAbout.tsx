@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { useChannel } from '@/api/hooks'
+import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { Avatar, Button, Text } from '@/shared/components'
+import { Button, Text } from '@/shared/components'
 
 import {
   AvatarContainer,
@@ -20,16 +20,18 @@ import {
 export const ChannelAbout = () => {
   const { id } = useParams()
   const { channel } = useChannel(id)
-
+  const { videoCount } = useChannelVideoCount(id)
   return (
     <Container>
       <div>
-        <TextContainer>
-          <Text variant="h4">Description</Text>
-          <Text variant="body1" secondary>
-            {channel?.description}
-          </Text>
-        </TextContainer>
+        {!!channel?.description && (
+          <TextContainer>
+            <Text variant="h4">Description</Text>
+            <Text variant="body1" secondary>
+              {channel.description}
+            </Text>
+          </TextContainer>
+        )}
         <LinksContainer>
           <Text variant="h4">Links</Text>
           <Links>
@@ -94,7 +96,7 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Num. of videos
           </Text>
-          <Text variant="h6">116</Text>
+          <Text variant="h6">{videoCount}</Text>
         </Details>
 
         <Details>

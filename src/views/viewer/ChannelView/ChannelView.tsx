@@ -61,7 +61,7 @@ export const ChannelView: React.FC = () => {
         isPublic_eq: true,
       },
     },
-    { notifyOnNetworkStatusChange: true }
+    { notifyOnNetworkStatusChange: true, fetchPolicy: 'cache-and-network' }
   )
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
@@ -117,6 +117,7 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
+  console.log({ channel, videosWithPlaceholders, videos, loadingVideos, edges, videosError })
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
