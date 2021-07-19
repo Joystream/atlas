@@ -13,7 +13,13 @@ import {
   TransformBatchedOrionViewsField,
   TransformOrionFollowsField,
 } from './transforms'
-import { ORION_VIEWS_QUERY_NAME, TransformOrionViewsField } from './transforms/orionViews'
+import {
+  ORION_CHANNEL_VIEWS_QUERY_NAME,
+  ORION_VIEWS_QUERY_NAME,
+  TransformOrionChannelViewsField,
+  TransformOrionViewsField,
+} from './transforms/orionViews'
+import { RemoveQueryNodeChanneliewsField } from './transforms/queryNodeViews'
 
 import { VideoEdge } from '../queries'
 
@@ -50,10 +56,15 @@ export const queryNodeStitchingResolvers = (
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChanneliewsField,
     ]),
-    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
+    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [
+      RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChanneliewsField,
+    ]),
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChanneliewsField,
     ]),
     // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
@@ -115,6 +126,29 @@ export const queryNodeStitchingResolvers = (
   },
 
   Channel: {
+    views: async (parent, args, context, info) => {
+      if (parent.views != null) {
+        return parent.views
+      }
+      try {
+        return await delegateToSchema({
+          schema: orionSchema,
+          operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetChannelViews',
+          fieldName: ORION_CHANNEL_VIEWS_QUERY_NAME,
+          args: {
+            channelId: parent.id,
+          },
+          context,
+          info,
+          transforms: [TransformOrionChannelViewsField],
+        })
+      } catch (error) {
+        Logger.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
     follows: async (parent, args, context, info) => {
       try {
         return await delegateToSchema({
