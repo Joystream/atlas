@@ -1,14 +1,9 @@
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
 import {
-  SvgPlayerBackwardFiveSec,
-  SvgPlayerBackwardTenSec,
-  SvgPlayerForwardFiveSec,
-  SvgPlayerForwardTenSec,
   SvgPlayerFullScreen,
   SvgPlayerPause,
   SvgPlayerPip,
@@ -17,21 +12,18 @@ import {
   SvgPlayerRestart,
   SvgPlayerSmallScreen,
   SvgPlayerSoundHalf,
-  SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
+import { ControlsIndicatorManager } from './ControlsIndicatorManager'
 import { VideoOverlayManager } from './VideoOverlayManager'
 import {
   BigPlayButton,
   BigPlayButtonOverlay,
   Container,
   ControlButton,
-  ControlsIndicator,
-  ControlsIndicatorTooltip,
-  ControlsIndicatorWrapper,
   ControlsOverlay,
   CurrentTime,
   CurrentTimeWrapper,
@@ -44,8 +36,6 @@ import {
   VolumeSliderContainer,
 } from './VideoPlayer.style'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
-
-import { Text } from '../Text'
 
 export type VideoPlayerProps = {
   nextVideo?: VideoFieldsFragment | null
@@ -65,14 +55,6 @@ declare global {
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
-type VideoEvent = CustomVideojsEvents | null
-
-type EventState = {
-  type: VideoEvent
-  description: string | null
-  icon: React.ReactNode | null
-  isVisible: boolean
-}
 
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | null
 
@@ -83,7 +65,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
-  const [indicator, setIndicator] = useState<EventState | null>(null)
 
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -107,26 +88,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player.off('error', handler)
     }
   })
-
-  // handle showing player indicators
-  useEffect(() => {
-    if (!player || isInBackground) {
-      return
-    }
-    const indicatorEvents = Object.values(CustomVideojsEvents)
-    const handler = (e: Event) => {
-      const playerVolume = e.type === CustomVideojsEvents.Unmuted ? cachedPlayerVolume || VOLUME_STEP : player.volume()
-      const indicator = createIndicator(e.type as VideoEvent, playerVolume, player.muted())
-      if (indicator) {
-        setIndicator({ ...indicator, isVisible: true })
-      }
-    }
-    player.on(indicatorEvents, handler)
-
-    return () => {
-      player.off(indicatorEvents, handler)
-    }
-  }, [cachedPlayerVolume, isInBackground, player])
 
   const playVideo = useCallback(() => {
     if (!player) {
@@ -425,7 +386,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </BigPlayButton>
           </BigPlayButtonOverlay>
         )}
-        <video ref={playerRef} className="video-js" />
+        <video
+          ref={playerRef}
+          className="video-js"
+          onClick={() =>
+            player?.paused()
+              ? player?.trigger(CustomVideojsEvents.PauseControl)
+              : player?.trigger(CustomVideojsEvents.PlayControl)
+          }
+        />
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
@@ -471,95 +440,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        <CSSTransition
-          in={indicator?.isVisible}
-          timeout={indicator?.isVisible ? 0 : 750}
-          classNames="indicator"
-          mountOnEnter
-          unmountOnExit
-          onEntered={() => setIndicator((indicator) => (indicator ? { ...indicator, isVisible: false } : null))}
-          onExited={() => setIndicator(null)}
-        >
-          <ControlsIndicatorWrapper>
-            <ControlsIndicator>{indicator?.icon}</ControlsIndicator>
-            <ControlsIndicatorTooltip>
-              <Text variant="caption">{indicator?.description}</Text>
-            </ControlsIndicatorTooltip>
-          </ControlsIndicatorWrapper>
-        </CSSTransition>
       </div>
+      {!isInBackground && <ControlsIndicatorManager player={player} cachedPlayerVolume={cachedPlayerVolume} />}
     </Container>
   )
 }
 
 export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
-
-const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMuted: boolean) => {
-  const formattedVolume = Math.floor(playerVolume * 100) + '%'
-  const isMuted = playerMuted || !Number(playerVolume.toFixed(2))
-
-  switch (type) {
-    case CustomVideojsEvents.PauseControl:
-      return {
-        icon: <SvgPlayerPause />,
-        description: 'Pause',
-        type,
-      }
-    case CustomVideojsEvents.PlayControl:
-      return {
-        icon: <SvgPlayerPlay />,
-        description: 'Play',
-        type,
-      }
-    case CustomVideojsEvents.BackwardFiveSec:
-      return {
-        icon: <SvgPlayerBackwardFiveSec />,
-        description: 'Backward 5s',
-        type,
-      }
-    case CustomVideojsEvents.ForwardFiveSec:
-      return {
-        icon: <SvgPlayerForwardFiveSec />,
-        description: 'Forward 5s',
-        type,
-      }
-    case CustomVideojsEvents.BackwardTenSec:
-      return {
-        icon: <SvgPlayerBackwardTenSec />,
-        description: 'Backward 10s',
-        type,
-      }
-    case CustomVideojsEvents.ForwardTenSec:
-      return {
-        icon: <SvgPlayerForwardTenSec />,
-        description: 'Forward 10s',
-        type,
-      }
-    case CustomVideojsEvents.Unmuted:
-      return {
-        icon: <SvgPlayerSoundOn />,
-        description: formattedVolume,
-        type,
-      }
-    case CustomVideojsEvents.Muted:
-      return {
-        icon: <SvgPlayerSoundOff />,
-        description: 'Mute',
-        type,
-      }
-    case CustomVideojsEvents.VolumeIncrease:
-      return {
-        icon: <SvgPlayerSoundOn />,
-        description: formattedVolume,
-        type,
-      }
-    case CustomVideojsEvents.VolumeDecrease:
-      return {
-        icon: isMuted ? <SvgPlayerSoundOff /> : <SvgPlayerSoundHalf />,
-        description: isMuted ? 'Mute' : formattedVolume,
-        type,
-      }
-    default:
-      return null
-  }
-}
