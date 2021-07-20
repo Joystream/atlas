@@ -30,7 +30,7 @@ export const RemoveQueryNodeChanneliewsField: Transform = {
     request.document = {
       ...request.document,
       definitions: request.document.definitions.map((definition) => {
-        if (definition.kind === 'FragmentDefinition' && definition.name.value === 'ChannelFields') {
+        if (definition.kind === 'FragmentDefinition' && definition.name.value === 'AllChannelFields') {
           return {
             ...definition,
             selectionSet: {

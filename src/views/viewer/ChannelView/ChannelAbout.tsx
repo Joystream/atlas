@@ -4,6 +4,7 @@ import { useParams } from 'react-router'
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { Text } from '@/shared/components'
+import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -89,7 +90,7 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Num. of views
           </Text>
-          <Text variant="h6">7 245 345</Text>
+          <Text variant="h6">{formatNumberShort(channel?.views ?? 0)}</Text>
         </Details>
 
         <Details>
