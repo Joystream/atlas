@@ -50,7 +50,7 @@ export const VideoOverlayManager: React.FC<VideoOverlayManagerProps> = ({
     <SwitchTransition>
       <CSSTransition
         key={playerState}
-        timeout={parseInt(transitions.timings.player)}
+        timeout={playerState !== 'error' ? parseInt(transitions.timings.sharp) : 0}
         classNames={transitions.names.fade}
         mountOnEnter
         unmountOnExit

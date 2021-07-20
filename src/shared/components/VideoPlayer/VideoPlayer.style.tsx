@@ -200,6 +200,10 @@ const backgroundContainerCss = css`
     display: none;
   }
 
+  .vjs-error-display {
+    display: block;
+  }
+
   .vjs-poster {
     display: block !important;
     opacity: 0;
@@ -215,6 +219,7 @@ const backgroundContainerCss = css`
 export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
+  z-index: 0;
 
   [class^='vjs'] {
     font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
@@ -222,6 +227,10 @@ export const Container = styled.div<ContainerProps>`
 
   .video-js {
     background-color: ${colors.gray[900]};
+  }
+
+  .vjs-error-display {
+    display: none;
   }
 
   .vjs-playing:hover {
