@@ -8,5 +8,5 @@ public/mockServiceWorker.js
 .history
 docs/
 
-# Ignore animations as they become huge
-src/shared/animations
+# don't prettify minified animation JSONs
+src/shared/assets/animations
