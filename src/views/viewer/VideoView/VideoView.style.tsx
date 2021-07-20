@@ -13,9 +13,9 @@ export const StyledViewWrapper = styled(ViewWrapper)`
 export const PlayerContainer = styled.div`
   width: 100%;
   height: calc(100vw * 0.5625);
-
   ${media.medium} {
-    height: 70vh;
+    height: calc((100vw - var(--sidenav-collapsed-width)) * 0.5625);
+    max-height: calc(70vh);
   }
 `
 

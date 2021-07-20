@@ -130,6 +130,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
+      loadingSpinner: false,
       bigPlayButton: false,
       userActions: {
         hotkeys: (event) => hotkeysHandler(event, playerInstance),

@@ -132,6 +132,7 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {video ? (
             <VideoPlayer
+              channelId={video.channel.id}
               autoplay
               src={mediaUrl}
               fill

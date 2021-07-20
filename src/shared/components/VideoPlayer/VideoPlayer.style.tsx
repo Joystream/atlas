@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
-import { colors, media, sizes, transitions, zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -12,6 +12,7 @@ type ContainerProps = {
 }
 type CustomControlsProps = {
   isFullScreen?: boolean
+  isEnded?: boolean
 }
 
 const focusStyles = css`
@@ -46,23 +47,24 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 export const CustomControls = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
-  height: 2.5em;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
-  padding: 0 1em;
+  padding: 0.5em 1em 0;
+  border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
-  opacity: 0;
   transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
 `
 
 export const ControlButton = styled.button`
   margin-right: 0.5em;
+  display: flex !important;
   cursor: pointer;
   border: none;
+  background: none;
   border-radius: 100%;
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5em;
@@ -167,90 +169,25 @@ export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
 `
 export const CurrentTimeWrapper = styled.div`
   display: flex;
-  height: 100%;
-  color: ${colors.white};
-  margin-left: 1em;
-  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   align-items: center;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  height: 2.5em;
+  margin-left: 1em;
 `
 
 export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  color: ${colors.white};
+  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
 export const ScreenControls = styled.div`
   margin-left: auto;
+  display: flex;
 
   ${ControlButton}:last-of-type {
     margin-right: 0;
-  }
-`
-
-export const ControlsIndicatorWrapper = styled.div`
-  position: absolute;
-  top: calc(50% - ${sizes(16)});
-  left: calc(50% - ${sizes(16)});
-  display: flex;
-  flex-direction: column;
-`
-
-export const ControlsIndicator = styled.div`
-  width: ${sizes(32)};
-  height: ${sizes(32)};
-  backdrop-filter: blur(${sizes(6)});
-  background-color: ${colors.transparentBlack[54]};
-  border-radius: 100%;
-  display: flex;
-  transform: scale(0.5);
-  justify-content: center;
-  align-items: center;
-
-  > svg {
-    transform: scale(0.75);
-    width: ${sizes(18)};
-    height: ${sizes(18)};
-  }
-`
-
-export const ControlsIndicatorTooltip = styled.div`
-  user-select: none;
-  display: none;
-  align-self: center;
-  background-color: ${colors.transparentBlack[54]};
-  padding: ${sizes(2)};
-  text-align: center;
-  margin-top: ${sizes(3)};
-  backdrop-filter: blur(${sizes(8)});
-
-  ${media.small} {
-    display: block;
-  }
-`
-
-const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
-
-export const indicatorTransitions = css`
-  .indicator-exit {
-    opacity: 1;
-  }
-
-  .indicator-exit-active {
-    ${ControlsIndicator} {
-      transform: scale(1);
-      opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
-
-      > svg {
-        transform: scale(1);
-        transition: transform 750ms ${animationEasing};
-      }
-    }
-    ${ControlsIndicatorTooltip} {
-      opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
-    }
   }
 `
 
@@ -261,6 +198,10 @@ const backgroundContainerCss = css`
 
   .vjs-control-bar {
     display: none;
+  }
+
+  .vjs-error-display {
+    display: block;
   }
 
   .vjs-poster {
@@ -276,10 +217,9 @@ const backgroundContainerCss = css`
 `
 
 export const Container = styled.div<ContainerProps>`
-  ${indicatorTransitions}
-
   position: relative;
   height: 100%;
+  z-index: 0;
 
   [class^='vjs'] {
     font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
@@ -289,28 +229,35 @@ export const Container = styled.div<ContainerProps>`
     background-color: ${colors.gray[900]};
   }
 
-  .vjs-playing:hover ${CustomControls} {
-    transform: translateY(-0.5em);
-    opacity: 1;
-  }
-  .vjs-paused ${CustomControls} {
-    transform: translateY(-0.5em);
-    opacity: 1;
+  .vjs-error-display {
+    display: none;
   }
 
-  .vjs-user-inactive.vjs-playing > ${CustomControls} {
-    transform: translateY(0.5em);
-    opacity: 0;
+  .vjs-playing:hover {
+    ${ControlsOverlay} {
+      opacity: 1;
+      ${CustomControls} {
+        transform: translateY(-0.5em);
+      }
+    }
   }
 
-  .vjs-playing:hover ${ControlsOverlay} {
-    opacity: 1;
+  .vjs-user-inactive.vjs-playing {
+    ${ControlsOverlay} {
+      opacity: 0;
+      ${CustomControls} {
+        transform: translateY(0.5em);
+      }
+    }
   }
-  .vjs-paused ${ControlsOverlay} {
-    opacity: 1;
-  }
-  .vjs-user-inactive.vjs-playing > ${ControlsOverlay} {
-    opacity: 0;
+
+  .vjs-paused {
+    ${ControlsOverlay} {
+      opacity: 1;
+      ${CustomControls} {
+        transform: translateY(-0.5em);
+      }
+    }
   }
 
   .vjs-poster {
@@ -322,11 +269,11 @@ export const Container = styled.div<ContainerProps>`
     background: none;
     align-items: flex-end;
     height: 2em;
-    z-index: ${zIndex.overlay};
     transition: opacity 200ms ${transitions.easing} !important;
+    z-index: ${zIndex.nearOverlay};
 
     :hover {
-      & ~ ${CustomControls} {
+      & ~ ${ControlsOverlay} ${CustomControls} {
         opacity: 0;
         transform: translateY(0.5em);
       }
@@ -407,16 +354,32 @@ export const Container = styled.div<ContainerProps>`
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
 
-export const PlayOverlay = styled.div`
+export const BigPlayButtonOverlay = styled.div`
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: ${zIndex.overlay};
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+  background: ${colors.transparentBlack[86]};
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+export const BigPlayButton = styled(ControlButton)`
+  display: flex !important;
+  width: ${sizes(20)};
+  height: ${sizes(20)};
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  position: absolute;
+  background-color: ${colors.transparentPrimary[18]} !important;
+  backdrop-filter: blur(${sizes(8)}) !important;
+
+  > svg {
+    width: ${sizes(10)} !important;
+    height: ${sizes(10)} !important;
+  }
 `
