@@ -29,10 +29,12 @@ const VARIANT_TO_CONFIG: Record<LoaderVariant, LoaderConfig> = {
 
 export const Loader: React.FC<LoaderProps> = ({ variant = 'medium', className }) => {
   const config = VARIANT_TO_CONFIG[variant]
-  return <StyledLottie play animationData={config.data} $size={config.size} className={className} />
+  return <StyledLottie play animationData={config.data} size={config.size} className={className} />
 }
 
-const StyledLottie = styled(Lottie)<{ $size: number }>`
-  width: ${({ $size }) => `${$size}px`};
-  height: ${({ $size }) => `${$size}px`};
+const StyledLottie = styled(Lottie, {
+  shouldForwardProp: (prop) => prop !== 'size',
+})<{ size: number }>`
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
 `
