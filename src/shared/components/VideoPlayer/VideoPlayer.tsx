@@ -1,3 +1,4 @@
+import Tippy from '@tippyjs/react/headless'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
@@ -19,12 +20,14 @@ import {
   SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
 import {
   Container,
   ControlButton,
+  ControlTooltip,
   ControlsIndicator,
   ControlsIndicatorTooltip,
   ControlsIndicatorWrapper,
@@ -364,9 +367,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           <>
             <ControlsOverlay isFullScreen={isFullScreen} />
             <CustomControls isFullScreen={isFullScreen}>
-              <ControlButton onClick={handlePlayPause}>
+              <VideoControlWithTooltip
+                placement="top-start"
+                onClick={handlePlayPause}
+                text={isPlaying ? 'Pause (k)' : 'Play (k)'}
+              >
                 {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-              </ControlButton>
+              </VideoControlWithTooltip>
               <VolumeControl>
                 <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
                 <VolumeSliderContainer>
@@ -380,13 +387,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               </CurrentTimeWrapper>
               <ScreenControls>
                 {isPiPSupported && (
-                  <ControlButton onClick={handlePictureInPicture}>
+                  <VideoControlWithTooltip placement="top" onClick={handlePictureInPicture} text="Picture-in-picture">
                     {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
-                  </ControlButton>
+                  </VideoControlWithTooltip>
                 )}
-                <ControlButton onClick={handleFullScreen}>
+                <VideoControlWithTooltip
+                  placement="top-end"
+                  onClick={handleFullScreen}
+                  text={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
+                >
                   {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
-                </ControlButton>
+                </VideoControlWithTooltip>
               </ScreenControls>
             </CustomControls>
           </>
@@ -409,6 +420,45 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         </CSSTransition>
       </div>
     </Container>
+  )
+}
+
+type Placement = 'top-start' | 'top-end' | 'top'
+
+type VideoControlTooltipProps = {
+  placement: Placement
+  text: string
+  onClick?: () => void
+  className?: string
+}
+
+const VideoControlWithTooltip: React.FC<VideoControlTooltipProps> = ({
+  placement,
+  children,
+  onClick,
+  text,
+  className,
+}) => {
+  const [isVisible, setIsVisible] = useState(false)
+  return (
+    <span className={className}>
+      <Tippy
+        interactive={true}
+        offset={[0, 8]}
+        onMount={() => setIsVisible(true)}
+        onHide={() => setIsVisible(false)}
+        placement={placement}
+        render={(attrs) => (
+          <CSSTransition in={isVisible} timeout={200} classNames={transitions.names.fade}>
+            <ControlTooltip variant="caption" {...attrs}>
+              {text}
+            </ControlTooltip>
+          </CSSTransition>
+        )}
+      >
+        <ControlButton onClick={onClick}>{children}</ControlButton>
+      </Tippy>
+    </span>
   )
 }
 

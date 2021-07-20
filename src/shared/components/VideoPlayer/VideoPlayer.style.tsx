@@ -62,7 +62,7 @@ export const ControlButton = styled.button`
   cursor: pointer;
   border: none;
   border-radius: 100%;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   padding: 0.5em;
@@ -181,6 +181,9 @@ export const CurrentTime = styled(Text)`
 `
 
 export const ScreenControls = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5em;
   margin-left: auto;
 
   ${ControlButton}:last-of-type {
@@ -419,4 +422,16 @@ export const PlayOverlay = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+`
+
+export const ControlTooltip = styled(Text)`
+  font-size: 0.875em;
+  background: ${colors.transparentBlack[54]};
+  backdrop-filter: blur(${sizes(8)});
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
 `
