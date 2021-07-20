@@ -66,7 +66,7 @@ export const useStorageProviders = () => {
     setNotWorkingStorageProvidersIds,
   } = ctx
 
-  const getStorageProvider = useCallback(() => {
+  const getStorageProviders = useCallback(() => {
     // make sure we finished fetching providers list
     if (storageProvidersLoading) {
       // TODO: we need to handle that somehow, possibly make it async and block until ready
@@ -86,6 +86,14 @@ export const useStorageProviders = () => {
       )
     }
 
+    return workingStorageProviders
+  }, [notWorkingStorageProvidersIds, storageProviders, storageProvidersLoading])
+
+  const getRandomStorageProvider = useCallback(() => {
+    const workingStorageProviders = getStorageProviders()
+    if (!workingStorageProviders) {
+      return null
+    }
     const randomStorageProviderIdx = getRandomIntInclusive(0, workingStorageProviders.length - 1)
     const randomStorageProvider = workingStorageProviders[randomStorageProviderIdx]
 
@@ -93,7 +101,7 @@ export const useStorageProviders = () => {
       id: randomStorageProvider.workerId,
       url: randomStorageProvider.metadata as string,
     }
-  }, [notWorkingStorageProvidersIds, storageProvidersLoading, storageProviders])
+  }, [getStorageProviders])
 
   const markStorageProviderNotWorking = useCallback(
     (workerId: string) => {
@@ -102,5 +110,5 @@ export const useStorageProviders = () => {
     [setNotWorkingStorageProvidersIds]
   )
 
-  return { getStorageProvider, markStorageProviderNotWorking }
+  return { getStorageProviders, getRandomStorageProvider, markStorageProviderNotWorking }
 }

@@ -4,13 +4,14 @@ import {
   BasicChannelFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
+import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { Logger } from '@/utils/logger'
+import { withTimeout } from '@/utils/misc'
 
 import { AssetResolutionData, AssetType } from './types'
 
 export const testAssetDownload = (url: string, type: AssetType) => {
-  return new Promise((resolve, reject) => {
+  const testPromise = new Promise((resolve, reject) => {
     if ([AssetType.COVER, AssetType.THUMBNAIL, AssetType.AVATAR].includes(type)) {
       const img = new Image()
       img.addEventListener('error', reject)
@@ -23,6 +24,7 @@ export const testAssetDownload = (url: string, type: AssetType) => {
       video.src = url
     }
   })
+  return withTimeout(testPromise, ASSET_RESPONSE_TIMEOUT)
 }
 export const readAssetData = (
   entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment | null | undefined,
@@ -52,10 +54,7 @@ export const readAssetData = (
   }
   return null
 }
-export const getAssetUrl = (
-  assetData: AssetResolutionData,
-  randomStorageUrl: string | null | undefined
-): string | null | void => {
+export const getAssetUrl = (assetData: AssetResolutionData, storageProviderUrl: string): string | null | void => {
   if (assetData.availability !== AssetAvailability.Accepted) {
     return
   }
@@ -66,14 +65,5 @@ export const getAssetUrl = (
     return
   }
 
-  if (assetData.dataObject.liaison?.isActive && assetData.dataObject.liaison.metadata) {
-    return createStorageNodeUrl(assetData.dataObject.joystreamContentId, assetData.dataObject.liaison.metadata)
-  } else {
-    if (randomStorageUrl) {
-      return createStorageNodeUrl(assetData.dataObject.joystreamContentId, randomStorageUrl)
-    } else {
-      Logger.warn('Unable to create asset url', assetData)
-      return null
-    }
-  }
+  return createStorageNodeUrl(assetData.dataObject.joystreamContentId, storageProviderUrl)
 }
