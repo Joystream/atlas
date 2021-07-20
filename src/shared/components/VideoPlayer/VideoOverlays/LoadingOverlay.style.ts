@@ -1,12 +1,6 @@
 import styled from '@emotion/styled'
 
-import { SvgPlayerLoaderFallback } from '@/shared/icons'
-import { colors, sizes } from '@/shared/theme'
-
-export const StyledSvgPlayerLoaderFallback = styled(SvgPlayerLoaderFallback)`
-  width: ${sizes(18)};
-  height: ${sizes(18)};
-`
+import { colors } from '@/shared/theme'
 
 export const OverlayBackground = styled.div`
   position: absolute;
