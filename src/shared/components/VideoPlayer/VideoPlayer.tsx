@@ -81,8 +81,20 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player || isInBackground) {
       return
     }
+
     const handler = (e: KeyboardEvent) => {
-      hotkeysHandler(e, player)
+      if (
+        (document.activeElement?.tagName === 'BUTTON' && e.key === ' ') ||
+        document.activeElement?.tagName === 'INPUT'
+      ) {
+        return
+      }
+
+      const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
+      if (playerReservedKeys.includes(e.key)) {
+        e.preventDefault()
+        hotkeysHandler(e, player)
+      }
     }
     document.addEventListener('keydown', handler)
 

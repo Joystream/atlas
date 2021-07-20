@@ -1,10 +1,9 @@
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useMatch, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
@@ -44,7 +43,6 @@ export const VideoView: React.FC = () => {
   })
   const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
-  const videoRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
@@ -65,26 +63,6 @@ export const VideoView: React.FC = () => {
 
   const channelId = video?.channel.id
   const videoId = video?.id
-
-  const handleUserKeyPress = useCallback(
-    (event: KeyboardEvent) => {
-      if (videoRouteMatch) {
-        const usedKeys = ['k', ' ', 'Space', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
-        if (usedKeys.includes(event.key)) {
-          event.preventDefault()
-        }
-      }
-    },
-    [videoRouteMatch]
-  )
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleUserKeyPress)
-
-    return () => {
-      window.removeEventListener('keydown', handleUserKeyPress)
-    }
-  }, [handleUserKeyPress])
 
   useEffect(() => {
     if (!videoId || !channelId) {
