@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, zIndex } from '@/shared/theme'
+import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 
@@ -18,6 +18,8 @@ type HasPadding = {
 export const Arrow = styled(IconButton)`
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
+  font-size: ${typography.sizes.subtitle2};
+  padding: 0;
 
   &.disabled {
     opacity: 0.5;

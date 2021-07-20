@@ -1,9 +1,10 @@
 import React, { ComponentProps, useRef } from 'react'
 
+import { GridHeadingContainer } from '@/shared/components'
 import { Arrow } from '@/shared/components/Carousel/Carousel.style'
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
-import { CarouselArrowsContainer, Container, HeadingContainer } from './Gallery.style'
+import { CarouselArrowsContainer, Container } from './Gallery.style'
 
 import { Carousel, CarouselProps } from '../Carousel/Carousel'
 import { Text } from '../Text'
@@ -25,7 +26,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselP
   const carouselRef = useRef<ImperativeHandleData>(null)
   return (
     <Container className={className}>
-      <HeadingContainer>
+      <GridHeadingContainer>
         {title && <Text variant="h4">{title}</Text>}
         <CarouselArrowsContainer>
           <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">
@@ -35,7 +36,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, ...carouselP
             <SvgGlyphChevronRight />
           </Arrow>
         </CarouselArrowsContainer>
-      </HeadingContainer>
+      </GridHeadingContainer>
       <Carousel
         {...carouselProps}
         prevArrowRef={prevArrowRef}
