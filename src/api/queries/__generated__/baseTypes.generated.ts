@@ -115,7 +115,6 @@ export type Channel = {
   avatarPhotoUrls: Array<Scalars['String']>
   avatarPhotoAvailability: AssetAvailability
   follows?: Maybe<Scalars['Int']>
-  views?: Maybe<Scalars['Int']>
 }
 
 export type ChannelWhereInput = {
