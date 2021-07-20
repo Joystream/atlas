@@ -10,14 +10,7 @@ import {
 import { Button, Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
-import {
-  LoadMoreButtonWrapper,
-  StyledPlaceholder,
-  StyledSvgGlyphPlay,
-  Title,
-  TitleWrapper,
-  WatchAllLink,
-} from './InfiniteGrid.style'
+import { LoadMoreButtonWrapper, StyledPlaceholder, Title, TitleWrapper } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoPreview } from '../VideoPreview'
@@ -37,8 +30,10 @@ type InfiniteVideoGridProps = {
   showChannel?: boolean
   className?: string
   currentlyWatchedVideoId?: string
-  additionalLinkUrl?: string
-  showWatchAll?: boolean
+  additionalLink?: {
+    name: string
+    url: string
+  }
 }
 
 const INITIAL_ROWS = 2
@@ -59,8 +54,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   showChannel = true,
   className,
   currentlyWatchedVideoId,
-  additionalLinkUrl,
-  showWatchAll,
+  additionalLink,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -169,22 +163,16 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
         <GridHeadingContainer>
           <TitleWrapper>
             {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h4">{title}</Title>}
-            {showWatchAll && channelId && (
-              <WatchAllLink to={`/channel/${channelId}`}>
-                <StyledSvgGlyphPlay width={14} height={14} />
-                Watch all
-              </WatchAllLink>
-            )}
           </TitleWrapper>
-          {additionalLinkUrl && (
+          {additionalLink && (
             <Button
-              to={additionalLinkUrl}
+              to={additionalLink.url}
               size="medium"
               variant="secondary"
               iconPlacement="right"
               icon={<SvgGlyphChevronRight width={12} height={12} />}
             >
-              Browse following
+              {additionalLink.name}
             </Button>
           )}
         </GridHeadingContainer>
