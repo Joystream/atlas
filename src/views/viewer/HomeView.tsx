@@ -28,18 +28,14 @@ export const HomeView: React.FC = () => {
     throw error
   }
 
-  if (loading) {
-    return null
-  }
-
   return (
     <ViewWrapper>
       <CoverVideo />
       <Container className={transitions.names.slide}>
         <ErrorBoundary fallback={ErrorFallback}>
-          {followedChannelsVideosCount && (
+          {!loading && followedChannelsVideosCount ? (
             <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
-          )}
+          ) : null}
           <OfficialJoystreamUpdate />
         </ErrorBoundary>
       </Container>
