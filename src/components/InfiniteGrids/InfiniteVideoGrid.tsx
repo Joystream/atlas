@@ -10,7 +10,7 @@ import {
 import { Button, Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
-import { LoadMoreButtonWrapper, StyledPlaceholder, Title, TitleWrapper } from './InfiniteGrid.style'
+import { LoadMoreButtonWrapper, StyledPlaceholder, Title } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoPreview } from '../VideoPreview'
@@ -161,9 +161,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     <section className={className}>
       {title && (
         <GridHeadingContainer>
-          <TitleWrapper>
-            {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h4">{title}</Title>}
-          </TitleWrapper>
+          {!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h4">{title}</Title>}
           {additionalLink && (
             <Button
               to={additionalLink.url}

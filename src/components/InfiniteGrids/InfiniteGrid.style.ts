@@ -14,8 +14,3 @@ export const StyledPlaceholder = styled(Placeholder)`
 export const LoadMoreButtonWrapper = styled.div`
   margin-top: ${sizes(10)};
 `
-
-export const TitleWrapper = styled.div`
-  align-items: baseline;
-  display: flex;
-`
