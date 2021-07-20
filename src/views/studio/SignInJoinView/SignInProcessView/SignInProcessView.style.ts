@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 
-import { StudioContainer } from '@/components'
+import { LimitedWidthContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { SvgCoinsIllustration } from '@/shared/illustrations'
 import { colors, media, sizes } from '@/shared/theme'
 
-export const StyledStudioContainer = styled(StudioContainer)`
+export const StyledStudioContainer = styled(LimitedWidthContainer)`
   display: flex;
   margin-top: 64px;
   justify-content: space-between;

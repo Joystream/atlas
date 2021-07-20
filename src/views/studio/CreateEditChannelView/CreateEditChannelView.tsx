@@ -5,7 +5,12 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps, StudioContainer } from '@/components'
+import {
+  ImageCropDialog,
+  ImageCropDialogImperativeHandle,
+  ImageCropDialogProps,
+  LimitedWidthContainer,
+} from '@/components'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
@@ -39,7 +44,7 @@ import { requiredValidation, textFieldValidation } from '@/utils/formValidationO
 import { computeFileHash } from '@/utils/hashing'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
-import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
+import { SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
 
 import {
   InnerFormContainer,
@@ -358,99 +363,97 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   return (
     <form onSubmit={handleSubmit}>
-      <Header>
+      <Controller
+        name="cover"
+        control={control}
+        render={() => (
+          <>
+            <ChannelCover
+              assetUrl={loading ? null : coverAsset?.url}
+              hasCoverUploadFailed={hasCoverUploadFailed}
+              onCoverEditClick={() => coverDialogRef.current?.open()}
+              editable
+              disabled={loading}
+            />
+            <ImageCropDialog
+              imageType="cover"
+              onConfirm={handleCoverChange}
+              onError={() =>
+                displaySnackbar({
+                  title: 'Cannot load the image. Choose another.',
+                  iconType: 'error',
+                })
+              }
+              ref={coverDialogRef}
+            />
+          </>
+        )}
+      />
+
+      <StyledTitleSection className={transitions.names.slide}>
         <Controller
-          name="cover"
+          name="avatar"
           control={control}
           render={() => (
             <>
-              <ChannelCover
-                assetUrl={loading ? null : coverAsset?.url}
-                hasCoverUploadFailed={hasCoverUploadFailed}
-                onCoverEditClick={() => coverDialogRef.current?.open()}
+              <StyledAvatar
+                assetUrl={avatarAsset?.url}
+                hasAvatarUploadFailed={hasAvatarUploadFailed}
+                size="fill"
+                onEditClick={() => avatarDialogRef.current?.open()}
                 editable
-                disabled={loading}
+                loading={loading}
               />
               <ImageCropDialog
-                imageType="cover"
-                onConfirm={handleCoverChange}
+                imageType="avatar"
+                onConfirm={handleAvatarChange}
                 onError={() =>
                   displaySnackbar({
                     title: 'Cannot load the image. Choose another.',
                     iconType: 'error',
                   })
                 }
-                ref={coverDialogRef}
+                ref={avatarDialogRef}
               />
             </>
           )}
         />
 
-        <StyledTitleSection className={transitions.names.slide}>
-          <Controller
-            name="avatar"
-            control={control}
-            render={() => (
-              <>
-                <StyledAvatar
-                  assetUrl={avatarAsset?.url}
-                  hasAvatarUploadFailed={hasAvatarUploadFailed}
-                  size="fill"
-                  onEditClick={() => avatarDialogRef.current?.open()}
-                  editable
-                  loading={loading}
-                />
-                <ImageCropDialog
-                  imageType="avatar"
-                  onConfirm={handleAvatarChange}
-                  onError={() =>
-                    displaySnackbar({
-                      title: 'Cannot load the image. Choose another.',
-                      iconType: 'error',
-                    })
-                  }
-                  ref={avatarDialogRef}
-                />
-              </>
-            )}
-          />
-
-          <TitleContainer>
-            {!loading || newChannel ? (
-              <>
-                <Controller
-                  name="title"
-                  control={control}
-                  rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                  render={({ field: { ref, value, onChange } }) => (
-                    <Tooltip text="Click to edit channel title">
-                      <StyledHeaderTextField
-                        ref={ref}
-                        placeholder="Channel title"
-                        value={value}
-                        onChange={(e) => {
-                          onChange(e.currentTarget.value)
-                        }}
-                        error={!!errors.title}
-                        helperText={errors.title?.message}
-                      />
-                    </Tooltip>
-                  )}
-                />
-                {!newChannel && (
-                  <StyledSubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</StyledSubTitle>
+        <TitleContainer>
+          {!loading || newChannel ? (
+            <>
+              <Controller
+                name="title"
+                control={control}
+                rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
+                render={({ field: { ref, value, onChange } }) => (
+                  <Tooltip text="Click to edit channel title">
+                    <StyledHeaderTextField
+                      ref={ref}
+                      placeholder="Channel title"
+                      value={value}
+                      onChange={(e) => {
+                        onChange(e.currentTarget.value)
+                      }}
+                      error={!!errors.title}
+                      helperText={errors.title?.message}
+                    />
+                  </Tooltip>
                 )}
-              </>
-            ) : (
-              <>
-                <TitlePlaceholder />
-                <SubTitlePlaceholder />
-              </>
-            )}
-          </TitleContainer>
-        </StyledTitleSection>
-      </Header>
-      <StudioContainer>
+              />
+              {!newChannel && (
+                <StyledSubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</StyledSubTitle>
+              )}
+            </>
+          ) : (
+            <>
+              <TitlePlaceholder />
+              <SubTitlePlaceholder />
+            </>
+          )}
+        </TitleContainer>
+      </StyledTitleSection>
+      <LimitedWidthContainer>
         <InnerFormContainer>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
@@ -523,7 +526,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             />
           </CSSTransition>
         </InnerFormContainer>
-      </StudioContainer>
+      </LimitedWidthContainer>
     </form>
   )
 }

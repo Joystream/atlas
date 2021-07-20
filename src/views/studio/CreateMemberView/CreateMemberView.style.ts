@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { StudioContainer } from '@/components'
+import { LimitedWidthContainer } from '@/components'
 import { Avatar, Button, Text, TextField } from '@/shared/components'
 import { media, sizes } from '@/shared/theme'
 
@@ -20,7 +20,7 @@ export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
 `
 
-export const Wrapper = styled(StudioContainer)`
+export const Wrapper = styled(LimitedWidthContainer)`
   display: flex;
   flex-direction: column;
   margin-left: auto;

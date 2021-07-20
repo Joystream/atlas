@@ -56,7 +56,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
               classNames={transitions.names.fade}
             >
               {assetUrl ? (
-                <CoverImage $src={assetUrl} />
+                <CoverImage src={assetUrl} />
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <SvgLargeUploadFailed />
