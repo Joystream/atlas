@@ -267,6 +267,19 @@ export const Container = styled.div<ContainerProps>`
 
         .vjs-slider-bar {
           background-color: ${colors.blue[500]};
+          z-index: 1;
+        }
+
+        .vjs-mouse-display {
+          background-color: ${colors.transparentWhite[32]};
+
+          .vjs-time-tooltip {
+            background: none;
+            font-family: ${typography.fonts.base};
+            font-size: 0.875em !important;
+            top: -3em;
+            font-feature-settings: 'tnum' on, 'lnum' on;
+          }
         }
 
         /* ::before is progress timeline thumb */
