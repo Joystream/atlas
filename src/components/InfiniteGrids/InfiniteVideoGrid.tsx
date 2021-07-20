@@ -30,6 +30,7 @@ type InfiniteVideoGridProps = {
   showChannel?: boolean
   className?: string
   currentlyWatchedVideoId?: string
+  onDemand?: boolean
 }
 
 const INITIAL_ROWS = 2
@@ -50,6 +51,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   showChannel = true,
   className,
   currentlyWatchedVideoId,
+  onDemand = false,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -79,7 +81,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     }))
   }, [cachedCategoryId, targetRowsCount])
 
-  const { placeholdersCount, displayedItems, error, allItemsLoaded, loading } = useInfiniteGrid<
+  const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
@@ -89,7 +91,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     skipCount,
     queryVariables,
     targetRowsCount,
-    onDemand: true,
+    onDemand,
+    onScrollToBottom: !onDemand ? fetchMore : undefined,
     dataAccessor: (rawData) => {
       if (currentlyWatchedVideoId) {
         return (
@@ -150,13 +153,15 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     return null
   }
 
+  const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
+
   // TODO: We should probably postpone doing first fetch until `onResize` gets called.
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
       {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
-      {!allItemsLoaded && !loading && (
+      {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
           <LoadMoreButton onClick={fetchMore} />
         </LoadMoreButtonWrapper>
