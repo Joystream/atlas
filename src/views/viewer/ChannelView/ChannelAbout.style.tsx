@@ -13,22 +13,22 @@ export const TextContainer = styled.div`
 
 export const Container = styled.div`
   display: grid;
-  gap: 142px;
-  grid-template-columns: minmax(0, 1fr) minmax(206px, 326px);
-  margin-bottom: 50px;
+  gap: ${sizes(36)};
+  grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(82)});
+  margin-bottom: ${sizes(13)};
   ${media.base} {
-    gap: 32px;
+    gap: ${sizes(8)};
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
   }
   ${media.small} {
-    gap: 79px;
+    gap: ${sizes(20)};
     grid-template-rows: initial;
-    grid-template-columns: minmax(0, 1fr) minmax(206px, 228px);
+    grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(57)});
   }
   ${media.medium} {
-    gap: 94px;
-    grid-template-columns: minmax(0, 1fr) minmax(206px, 260px);
+    gap: ${sizes(24)};
+    grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(65)});
   }
 `
 

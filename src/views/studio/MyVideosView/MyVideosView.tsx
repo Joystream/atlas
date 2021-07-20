@@ -5,6 +5,7 @@ import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
+import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks'
 import {
   chanelUnseenDraftsSelector,
@@ -16,7 +17,6 @@ import {
   useSnackbar,
 } from '@/providers'
 import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
-import { SORT_OPTIONS } from '@/utils/sorting'
 
 import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import {

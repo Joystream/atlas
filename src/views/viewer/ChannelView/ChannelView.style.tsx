@@ -126,9 +126,12 @@ export const PaginationContainer = styled.div`
 `
 
 export const TabsContainer = styled.div`
-  padding-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
   border-bottom: solid 1px ${colors.gray[800]};
+
+  ${media.compact} {
+    padding-top: ${sizes(8)};
+  }
 
   ${media.medium} {
     display: grid;
