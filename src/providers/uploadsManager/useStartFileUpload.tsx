@@ -22,7 +22,7 @@ const UPLOADED_SNACKBAR_TIMEOUT = 13000
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
-  const { getStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
+  const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
   const setAssetsFiles = useUploadsStore((state) => state.setAssetsFiles)
   const addAsset = useUploadsStore((state) => state.addAsset)
@@ -82,7 +82,7 @@ export const useStartFileUpload = () => {
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let storageUrl: string, storageProviderId: string
       try {
-        const storageProvider = getStorageProvider()
+        const storageProvider = getRandomStorageProvider()
         if (!storageProvider) {
           return
         }
@@ -190,7 +190,7 @@ export const useStartFileUpload = () => {
       addAsset,
       assetsFiles,
       displaySnackbar,
-      getStorageProvider,
+      getRandomStorageProvider,
       markStorageProviderNotWorking,
       navigate,
       setAssetsFiles,
