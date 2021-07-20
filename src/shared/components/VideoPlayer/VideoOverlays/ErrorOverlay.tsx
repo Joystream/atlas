@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import {
   AnimationWrapper,
@@ -7,24 +7,18 @@ import {
   Heading,
   InnerContainer,
   OverlayBackground,
+  StyledAnimatedError,
   StyledDiscordButton,
-  StyledLottie,
 } from './ErrorOverlay.style'
 
 import { Button } from '../../Button'
 
 export const ErrorOverlay = () => {
-  const [errorAnimation, setErrorAnimation] = useState<object>()
-
-  useEffect(() => {
-    import('@/shared/animations/player-error.json').then(setErrorAnimation)
-  }, [])
-
   return (
     <OverlayBackground>
       <InnerContainer>
         <AnimationWrapper>
-          <StyledLottie animationData={errorAnimation} play loop={false}></StyledLottie>
+          <StyledAnimatedError />
         </AnimationWrapper>
         <Heading variant="h3">Aw, shucks!</Heading>
         <ErrorMessage variant="body1" secondary>

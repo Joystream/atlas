@@ -1,13 +1,8 @@
 import styled from '@emotion/styled'
-import Lottie from 'react-lottie-player'
 
 import { SvgPlayerLoaderFallback } from '@/shared/icons'
 import { colors, sizes } from '@/shared/theme'
 
-export const StyledLottie = styled(Lottie)`
-  width: ${sizes(18)};
-  height: ${sizes(18)};
-`
 export const StyledSvgPlayerLoaderFallback = styled(SvgPlayerLoaderFallback)`
   width: ${sizes(18)};
   height: ${sizes(18)};

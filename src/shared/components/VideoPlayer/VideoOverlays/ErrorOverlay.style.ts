@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
-import Lottie from 'react-lottie-player'
 
 import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
+import { AnimatedError } from '../../AnimatedError'
 import { Button } from '../../Button'
 import { Text } from '../../Text'
 
@@ -50,7 +50,7 @@ export const AnimationWrapper = styled.div`
   }
 `
 
-export const StyledLottie = styled(Lottie)`
+export const StyledAnimatedError = styled(AnimatedError)`
   width: 108px;
   position: absolute;
   bottom: 0;
