@@ -67,9 +67,12 @@ export const VideoView: React.FC = () => {
   const videoId = video?.id
 
   const handleUserKeyPress = useCallback(
-    (event: Event) => {
+    (event: KeyboardEvent) => {
       if (videoRouteMatch) {
-        event.preventDefault()
+        const usedKeys = ['k', ' ', 'Space', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
+        if (usedKeys.includes(event.key)) {
+          event.preventDefault()
+        }
       }
     },
     [videoRouteMatch]

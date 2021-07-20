@@ -35,7 +35,8 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.style'
-import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
+import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
+import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
   nextVideo?: VideoFieldsFragment | null
@@ -74,6 +75,19 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const [playerState, setPlayerState] = useState<PlayerState>(null)
   const [isLoaded, setIsLoaded] = useState(false)
+
+  // handle hotkeys
+  useEffect(() => {
+    if (!player || isInBackground) {
+      return
+    }
+    const handler = (e: KeyboardEvent) => {
+      hotkeysHandler(e, player)
+    }
+    document.addEventListener('keydown', handler)
+
+    return () => document.removeEventListener('keydown', handler)
+  }, [isInBackground, player])
 
   // handle error
   useEffect(() => {

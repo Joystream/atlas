@@ -2,19 +2,6 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
 import 'video.js/dist/video-js.css'
 
-export enum CustomVideojsEvents {
-  BackwardFiveSec = 'BACKWARD_FIVE_SEC',
-  BackwardTenSec = 'BACKWARD_TEN_SEC',
-  ForwardFiveSec = 'FORWARD_FIVE_SEC',
-  ForwardTenSec = 'FORWARD_TEN_SEC',
-  Muted = 'MUTED',
-  Unmuted = 'UNMUTED',
-  VolumeIncrease = 'VOLUME_INCREASE',
-  VolumeDecrease = 'VOLUME_DECREASE',
-  PlayControl = 'PLAY_CONTROL',
-  PauseControl = 'PAUSE_CONTROL',
-}
-
 export type VideoJsConfig = {
   src?: string | null
   width?: number
@@ -29,78 +16,6 @@ export type VideoJsConfig = {
   onPause?: () => void
   onEnd?: () => void
   onTimeUpdated?: (time: number) => void
-}
-
-export const VOLUME_STEP = 0.1
-
-const hotkeysHandler = (event: videojs.KeyboardEvent, playerInstance: VideoJsPlayer) => {
-  const currentTime = playerInstance.currentTime()
-  const currentVolume = Number(playerInstance.volume().toFixed(2))
-  const isMuted = playerInstance.muted()
-  const isFullscreen = playerInstance.isFullscreen()
-  const isPaused = playerInstance.paused()
-
-  switch (event.code) {
-    case 'Space':
-    case 'KeyK':
-      if (isPaused) {
-        playerInstance.play()
-        playerInstance.trigger(CustomVideojsEvents.PlayControl)
-      } else {
-        playerInstance.pause()
-        playerInstance.trigger(CustomVideojsEvents.PauseControl)
-      }
-      return
-    case 'ArrowLeft':
-      playerInstance.currentTime(currentTime - 5)
-      playerInstance.trigger(CustomVideojsEvents.BackwardFiveSec)
-      return
-    case 'ArrowRight':
-      playerInstance.currentTime(currentTime + 5)
-      playerInstance.trigger(CustomVideojsEvents.ForwardFiveSec)
-      return
-    case 'KeyJ':
-      playerInstance.currentTime(currentTime - 10)
-      playerInstance.trigger(CustomVideojsEvents.BackwardTenSec)
-      return
-    case 'KeyL':
-      playerInstance.currentTime(currentTime + 10)
-      playerInstance.trigger(CustomVideojsEvents.ForwardTenSec)
-      return
-    case 'ArrowUp':
-      if (playerInstance.muted()) {
-        playerInstance.muted(false)
-      }
-      if (currentVolume <= 1) {
-        playerInstance.volume(Math.min(currentVolume + VOLUME_STEP, 1))
-      }
-      playerInstance.trigger(CustomVideojsEvents.VolumeIncrease)
-      return
-    case 'ArrowDown':
-      if (currentVolume >= 0) {
-        playerInstance.volume(Math.max(currentVolume - VOLUME_STEP, 0))
-      }
-      playerInstance.trigger(CustomVideojsEvents.VolumeDecrease)
-      return
-    case 'KeyM':
-      if (isMuted) {
-        playerInstance.trigger(CustomVideojsEvents.Unmuted)
-        playerInstance.muted(false)
-      } else {
-        playerInstance.trigger(CustomVideojsEvents.Muted)
-        playerInstance.muted(true)
-      }
-      return
-    case 'KeyF':
-      if (isFullscreen) {
-        playerInstance.exitFullscreen()
-      } else {
-        playerInstance.requestFullscreen()
-      }
-      return
-    default:
-      return
-  }
 }
 
 type VideoJsPlayerHook = (config: VideoJsConfig) => [VideoJsPlayer | null, RefObject<HTMLVideoElement>]
@@ -132,9 +47,6 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       playsinline: true,
       loadingSpinner: false,
       bigPlayButton: false,
-      userActions: {
-        hotkeys: (event) => hotkeysHandler(event, playerInstance),
-      },
       controlBar: {
         // hide all videojs controls besides progress bar
         children: [],
@@ -147,7 +59,6 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
 
     setPlayer(playerInstance)
-    playerRef.current.focus()
 
     return () => {
       playerInstance.dispose()
