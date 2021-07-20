@@ -31,39 +31,6 @@ export const ChannelAbout = () => {
             </Text>
           </TextContainer>
         )}
-        {/* hidding this until we can add links to channels */}
-        {/* <LinksContainer>
-          <Text variant="h4">Links</Text>
-          <Links>
-            <Button to="www.google.com" textOnly>
-              content
-            </Button>
-            <Button to="www.google.com" textOnly>
-              channel
-            </Button>
-            <Button to="www.google.com" textOnly>
-              preparing
-            </Button>
-            <Button to="www.google.com" textOnly>
-              Official channel
-            </Button>
-            <Button to="www.google.com" textOnly>
-              wildcrypto.com
-            </Button>
-            <Button to="www.google.com" textOnly>
-              content
-            </Button>
-            <Button to="www.google.com" textOnly>
-              channel
-            </Button>
-            <Button to="www.google.com" textOnly>
-              preparing
-            </Button>
-            <Button to="www.google.com" textOnly>
-              Official channel
-            </Button>
-          </Links>
-        </LinksContainer> */}
       </div>
       <DetailsContainer>
         <DetailsText variant="h4">Details</DetailsText>
@@ -73,8 +40,8 @@ export const ChannelAbout = () => {
             Owned by member
           </Text>
           <AvatarContainer>
-            <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
-            <Text variant="h6">{channel?.ownerMember?.handle}</Text>
+            <StyledAvatar assetUrl={undefined} />
+            <Text variant="h6">placeholder</Text>
           </AvatarContainer>
         </Details>
 
