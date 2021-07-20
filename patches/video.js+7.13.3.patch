@@ -1,0 +1,13 @@
+diff --git a/node_modules/video.js/dist/video.es.js b/node_modules/video.js/dist/video.es.js
+index a07aa77..3f7bc30 100644
+--- a/node_modules/video.js/dist/video.es.js
++++ b/node_modules/video.js/dist/video.es.js
+@@ -13959,7 +13959,7 @@ var ProgressControl = /*#__PURE__*/function (_Component) {
+     }
+ 
+     var seekBarEl = seekBar.el();
+-    var seekBarRect = findPosition(seekBarEl);
++    var seekBarRect = getBoundingClientRect(seekBarEl);
+     var seekBarPoint = getPointerPosition(seekBarEl, event).x; // The default skin has a gap on either side of the `SeekBar`. This means
+     // that it's possible to trigger this behavior outside the boundaries of
+     // the `SeekBar`. This ensures we stay within it at all times.
