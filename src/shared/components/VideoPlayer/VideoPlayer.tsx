@@ -477,7 +477,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   )
 }
 
-type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
+type Placement = 'top-start' | 'top-end' | 'top'
 
 type VideoControlTooltipProps = {
   placement: Placement
