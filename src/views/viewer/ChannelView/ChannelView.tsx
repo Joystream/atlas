@@ -10,7 +10,7 @@ import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
-import { SORT_OPTIONS } from '@/views/studio/MyVideosView/MyVideosView'
+import { SORT_OPTIONS } from '@/utils/sorting'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
@@ -43,9 +43,7 @@ export const ChannelView: React.FC = () => {
   const [isFollowing, setFollowing] = useState<boolean>()
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
-  const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
-    VideoOrderByInput.CreatedAtDesc
-  )
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | undefined>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset({
     entity: channel,
@@ -117,7 +115,33 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
-  console.log({ channel, videosWithPlaceholders, videos, loadingVideos, edges, videosError })
+  const TabContent = () => {
+    switch (currentTabName) {
+      case 'Videos':
+        return (
+          <>
+            <VideoSection className={transitions.names.slide}>
+              <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+                {videosWithPlaceholders.map((video, idx) => (
+                  <VideoPreview key={idx} id={video.id} showChannel={false} />
+                ))}
+              </Grid>
+            </VideoSection>
+            <PaginationContainer>
+              <Pagination
+                onChangePage={handleChangePage}
+                page={currentPage}
+                itemsPerPage={videosPerPage}
+                totalCount={totalCount}
+              />
+            </PaginationContainer>
+          </>
+        )
+      case 'About':
+        return <ChannelAbout />
+    }
+  }
+
   if (!loading && !channel) {
     return <span>Channel not found</span>
   }
@@ -160,32 +184,7 @@ export const ChannelView: React.FC = () => {
             </SortContainer>
           )}
         </TabsContainer>
-        {(() => {
-          switch (currentTabName) {
-            case 'Videos':
-              return (
-                <>
-                  <VideoSection className={transitions.names.slide}>
-                    <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-                      {videosWithPlaceholders.map((video, idx) => (
-                        <VideoPreview key={idx} id={video.id} showChannel={false} />
-                      ))}
-                    </Grid>
-                  </VideoSection>
-                  <PaginationContainer>
-                    <Pagination
-                      onChangePage={handleChangePage}
-                      page={currentPage}
-                      itemsPerPage={videosPerPage}
-                      totalCount={totalCount}
-                    />
-                  </PaginationContainer>
-                </>
-              )
-            case 'About':
-              return <ChannelAbout />
-          }
-        })()}
+        <TabContent />
       </LimitedWidthContainer>
     </ViewWrapper>
   )
