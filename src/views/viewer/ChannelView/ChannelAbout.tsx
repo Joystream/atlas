@@ -4,6 +4,7 @@ import { useParams } from 'react-router'
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
 import { Text } from '@/shared/components'
+import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
