@@ -83,16 +83,6 @@ export const ControlButton = styled.button<ControlButtonProps>`
     height: 1.5em;
   }
 
-  :hover {
-    background-color: ${colors.transparentPrimary[18]};
-    backdrop-filter: blur(${sizes(8)});
-    transition: none !important;
-  }
-
-  :active {
-    background-color: ${colors.transparentPrimary[10]};
-  }
-
   ::before {
     ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
     ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
@@ -112,7 +102,21 @@ export const ControlButton = styled.button<ControlButtonProps>`
     transition: opacity ${transitions.timings.player} ease-in !important;
   }
 
-  ${({ showTooltipOnlyOnFocus }) => !showTooltipOnlyOnFocus && ':hover,'}
+  :hover {
+    background-color: ${colors.transparentPrimary[18]};
+    backdrop-filter: blur(${sizes(8)});
+    transition: none !important;
+
+    ::before {
+      transition: none !important;
+      opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
+    }
+  }
+
+  :active {
+    background-color: ${colors.transparentPrimary[10]};
+  }
+
   :focus {
     ::before {
       /* turn off transition on mouse enter, but turn on on mouse leave */
@@ -130,7 +134,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
   :focus:not(:focus-visible):hover {
     ::before {
       transition: none !important;
-      opacity: 1;
+      opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
     }
   }
 
