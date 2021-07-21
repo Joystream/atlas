@@ -13,22 +13,22 @@ export const TextContainer = styled.div`
 
 export const Container = styled.div`
   display: grid;
-  gap: ${sizes(36)};
-  grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(82)});
-  margin-bottom: ${sizes(13)};
+  gap: 142px;
+  grid-template-columns: minmax(0, 1fr) minmax(206px, 326px);
+  margin-bottom: 50px;
   ${media.base} {
-    gap: ${sizes(8)};
+    gap: 32px;
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
   }
   ${media.small} {
-    gap: ${sizes(20)};
+    gap: 79px;
     grid-template-rows: initial;
-    grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(57)});
+    grid-template-columns: minmax(0, 1fr) minmax(206px, 228px);
   }
   ${media.medium} {
-    gap: ${sizes(24)};
-    grid-template-columns: minmax(0, 1fr) minmax(${sizes(52)}, ${sizes(65)});
+    gap: 94px;
+    grid-template-columns: minmax(0, 1fr) minmax(206px, 260px);
   }
 `
 
@@ -51,12 +51,14 @@ export const DetailsContainer = styled.div`
   ${media.base} {
     grid-row: 1;
   }
-  ${media.compact} {
+  ${media.small} {
     grid-row: initial;
   }
 `
 
 export const Details = styled.div`
+  display: grid;
+  gap: ${sizes(2)};
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[600]};
   margin-bottom: ${sizes(4)};

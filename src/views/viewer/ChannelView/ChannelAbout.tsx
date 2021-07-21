@@ -41,7 +41,7 @@ export const ChannelAbout = () => {
           </Text>
           <AvatarContainer>
             <StyledAvatar assetUrl={undefined} />
-            <Text variant="h6">placeholder</Text>
+            <Text variant="body1">placeholder</Text>
           </AvatarContainer>
         </Details>
 
@@ -49,28 +49,28 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Joined on
           </Text>
-          <Text variant="h6">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
+          <Text variant="body1">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
           <Text variant="caption" secondary>
             Num. of views
           </Text>
-          <Text variant="h6">7 245 345</Text>
+          <Text variant="body1">7 245 345</Text>
         </Details>
 
         <Details>
           <Text variant="caption" secondary>
             Num. of videos
           </Text>
-          <Text variant="h6">{videoCount}</Text>
+          <Text variant="body1">{videoCount}</Text>
         </Details>
 
         <Details>
           <Text variant="caption" secondary>
             Language
           </Text>
-          <Text variant="h6">
+          <Text variant="body1">
             {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
           </Text>
         </Details>

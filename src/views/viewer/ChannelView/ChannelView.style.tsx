@@ -38,7 +38,7 @@ export const Title = styled(Text)`
 
   line-height: 1;
   margin-bottom: 0;
-  padding: ${sizes(1)} ${sizes(2)} ${0};
+  padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
