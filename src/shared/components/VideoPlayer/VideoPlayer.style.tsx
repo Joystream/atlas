@@ -15,6 +15,12 @@ type CustomControlsProps = {
   isEnded?: boolean
 }
 
+type ControlButtonProps = {
+  tooltipText?: string
+  tooltipPosition?: 'left' | 'right'
+  showTooltipOnlyOnFocus?: boolean
+}
+
 const focusStyles = css`
   :focus {
     /* Provide a fallback style for browsers
@@ -58,7 +64,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
 `
 
-export const ControlButton = styled.button`
+export const ControlButton = styled.button<ControlButtonProps>`
   margin-right: 0.5em;
   display: flex !important;
   cursor: pointer;
@@ -68,7 +74,8 @@ export const ControlButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 0.5em;
-  transition: background-color ${transitions.timings.player} ${transitions.easing} !important;
+  position: relative;
+  transition: opacity ${transitions.timings.player} ease-in !important;
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
@@ -79,10 +86,58 @@ export const ControlButton = styled.button`
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
+    transition: none !important;
   }
 
   :active {
     background-color: ${colors.transparentPrimary[10]};
+  }
+
+  ::before {
+    ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
+    ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
+
+    opacity: 0;
+    pointer-events: none;
+    content: ${({ tooltipText }) => tooltipText && `'${tooltipText}'`};
+    position: absolute;
+    font-size: 0.875em;
+    bottom: calc(3.5em - 1px);
+    background: ${colors.transparentBlack[54]};
+    backdrop-filter: blur(${sizes(8)});
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+    white-space: nowrap;
+    transition: opacity ${transitions.timings.player} ease-in !important;
+  }
+
+  ${({ showTooltipOnlyOnFocus }) => !showTooltipOnlyOnFocus && ':hover,'}
+  :focus {
+    ::before {
+      /* turn off transition on mouse enter, but turn on on mouse leave */
+      transition: none !important;
+      opacity: 1;
+    }
+  }
+
+  :focus-visible {
+    ::before {
+      opacity: 1;
+    }
+  }
+
+  :focus:not(:focus-visible):hover {
+    ::before {
+      transition: none !important;
+      opacity: 1;
+    }
+  }
+
+  :focus:not(:focus-visible):not(:hover) {
+    ::before {
+      opacity: 0;
+    }
   }
 
   ${focusStyles}
@@ -385,16 +440,4 @@ export const BigPlayButton = styled(ControlButton)`
     width: ${sizes(10)} !important;
     height: ${sizes(10)} !important;
   }
-`
-
-export const ControlTooltip = styled(Text)`
-  font-size: 0.875em;
-  background: ${colors.transparentBlack[54]};
-  backdrop-filter: blur(${sizes(8)});
-  display: flex;
-  align-items: center;
-  padding: 0.5em;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 `
