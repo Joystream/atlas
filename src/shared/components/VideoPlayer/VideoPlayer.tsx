@@ -91,7 +91,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
 
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
-      if (playerReservedKeys.includes(e.key)) {
+      if (playerReservedKeys.includes(event.key)) {
         e.preventDefault()
         hotkeysHandler(e, player)
       }
