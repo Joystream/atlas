@@ -2,6 +2,7 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   BasicChannelFieldsFragment,
+  VideoBasicFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
 import { createStorageNodeUrl } from '@/utils/asset'
@@ -25,7 +26,13 @@ export const testAssetDownload = (url: string, type: AssetType) => {
   })
 }
 export const readAssetData = (
-  entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment | null | undefined,
+  entity:
+    | VideoFieldsFragment
+    | VideoBasicFieldsFragment
+    | AllChannelFieldsFragment
+    | BasicChannelFieldsFragment
+    | null
+    | undefined,
   assetType: AssetType
 ): AssetResolutionData | null => {
   if (entity?.__typename === 'Channel') {
@@ -44,9 +51,15 @@ export const readAssetData = (
     }
   } else if (entity?.__typename === 'Video') {
     return {
-      availability: assetType === AssetType.MEDIA ? entity.mediaAvailability : entity.thumbnailPhotoAvailability,
-      urls: assetType === AssetType.MEDIA ? entity.mediaUrls : entity.thumbnailPhotoUrls,
-      dataObject: assetType === AssetType.MEDIA ? entity.mediaDataObject : entity.thumbnailPhotoDataObject,
+      availability:
+        assetType === AssetType.MEDIA
+          ? (entity as VideoFieldsFragment).mediaAvailability
+          : entity.thumbnailPhotoAvailability,
+      urls: assetType === AssetType.MEDIA ? (entity as VideoFieldsFragment).mediaUrls : entity.thumbnailPhotoUrls,
+      dataObject:
+        assetType === AssetType.MEDIA
+          ? (entity as VideoFieldsFragment).mediaDataObject
+          : entity.thumbnailPhotoDataObject,
       assetType,
     }
   }

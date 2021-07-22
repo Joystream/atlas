@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-import { VideoFieldsFragment } from '@/api/queries'
+import { VideoBasicFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
 import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/shared/icons'
@@ -24,7 +24,7 @@ type EndingOverlayProps = {
   currentThumbnailUrl?: string | null
   isFullScreen?: boolean
   onPlayAgain?: () => void
-  randomNextVideo?: VideoFieldsFragment | null
+  randomNextVideo?: VideoBasicFieldsFragment | null
   isEnded: boolean
 }
 // 10 seconds
@@ -97,7 +97,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               Up next
             </SubHeading>
             <Heading variant="h3">{randomNextVideo.title}</Heading>
-            <StyledChannelLink id={randomNextVideo.channel.id} avatarSize="default" />
+            <StyledChannelLink id={channelId} avatarSize="default" />
           </VideoInfo>
           <CountDownWrapper>
             <StyledCircularProgressBar

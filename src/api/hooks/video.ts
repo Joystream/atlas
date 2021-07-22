@@ -5,9 +5,12 @@ import {
   GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
+  GetVideosWithBasicInformationQuery,
+  GetVideosWithBasicInformationQueryVariables,
   useAddVideoViewMutation,
   useGetVideoQuery,
   useGetVideosQuery,
+  useGetVideosWithBasicInformationQuery,
 } from '@/api/queries'
 
 type VideoOpts = QueryHookOptions<GetVideoQuery>
@@ -49,6 +52,18 @@ export const useAddVideoView = (opts?: AddVideoViewOpts) => {
   })
   return {
     addVideoView,
+    ...rest,
+  }
+}
+
+type VideosWithBasicInformationOpts = QueryHookOptions<GetVideosWithBasicInformationQuery>
+export const useVideosWithBasicInformation = (
+  variables?: GetVideosWithBasicInformationQueryVariables,
+  opts?: VideosWithBasicInformationOpts
+) => {
+  const { data, ...rest } = useGetVideosWithBasicInformationQuery({ ...opts, variables })
+  return {
+    videos: data?.videos,
     ...rest,
   }
 }
