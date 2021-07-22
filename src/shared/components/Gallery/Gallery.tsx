@@ -2,15 +2,9 @@ import React, { ComponentProps, useRef } from 'react'
 
 import { GridHeadingContainer } from '@/shared/components'
 import { Arrow } from '@/shared/components/Carousel/Carousel.style'
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/shared/icons'
 
-import {
-  CarouselArrowsContainer,
-  Container,
-  SeeAllLink,
-  StyledSvgGlyphPlay,
-  TitleWrapper,
-} from './Gallery.style'
+import { CarouselArrowsContainer, Container, SeeAllLink, TitleWrapper } from './Gallery.style'
 
 import { Carousel, CarouselProps } from '../Carousel/Carousel'
 import { Text } from '../Text'
@@ -40,7 +34,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
             <>
               <SeeAllLink
                 iconPlacement="left"
-                icon={<StyledSvgGlyphPlay width={16} height={16} />}
+                icon={<SvgPlayerPlay width={16} height={16} />}
                 textOnly
                 to={seeAllUrl}
                 size="large"

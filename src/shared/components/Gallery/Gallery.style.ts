@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/shared/components'
-import { SvgPlayerPlay } from '@/shared/icons'
 
-import { colors, sizes } from '../../theme'
+import { sizes } from '../../theme'
 
 export const Container = styled.section`
   display: flex;
@@ -23,17 +22,5 @@ export const TitleWrapper = styled.div`
 `
 
 export const SeeAllLink = styled(Button)`
-  margin-left: ${sizes(9)};
-
-  :hover {
-    text-decoration: none;
-  }
-`
-
-export const StyledSvgGlyphPlay = styled(SvgPlayerPlay)`
-  margin-right: ${sizes(3)};
-
-  path {
-    fill: ${colors.blue[300]};
-  }
+  margin-left: ${sizes(8)};
 `
