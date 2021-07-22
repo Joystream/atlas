@@ -20,7 +20,7 @@ import {
   ControlsIndicatorTransitions,
   ControlsIndicatorWrapper,
 } from './ControlsIndicator.style'
-import { CustomVideojsEvents } from './videoJsPlayer'
+import { CustomVideojsEvents } from './utils'
 
 import { Text } from '../Text'
 
