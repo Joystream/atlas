@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button } from '@/shared/components'
+import { Button, ButtonProps } from '@/shared/components'
 
 import {
   ActionsContainer,
@@ -15,7 +15,7 @@ type DialogButtonProps = {
   text?: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
-}
+} & ButtonProps
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
@@ -42,19 +42,17 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
       {hasAnyAction && (
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
-          <ButtonsContainer>
+          <ButtonsContainer
+            primaryButtonIsTextOnly={primaryButton?.textOnly}
+            secondaryButtonIsTextOnly={secondaryButton?.textOnly}
+          >
             {primaryButton?.text && (
-              <StyledPrimaryButton
-                onClick={primaryButton.onClick}
-                warning={warning}
-                error={error}
-                disabled={primaryButton.disabled}
-              >
+              <StyledPrimaryButton warning={warning} error={error} {...primaryButton}>
                 {primaryButton.text}
               </StyledPrimaryButton>
             )}
             {secondaryButton?.text && (
-              <Button variant="secondary" onClick={secondaryButton.onClick} disabled={secondaryButton.disabled}>
+              <Button variant="secondary" {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
