@@ -6,7 +6,7 @@ import React from 'react'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
-import { transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/shared/theme'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
@@ -47,6 +47,7 @@ export const HomeView: React.FC = () => {
             ready={!loading}
           />
           <OfficialJoystreamUpdate />
+          <StyledInfiniteVideoGrid title="All content" />
         </ErrorBoundary>
       </Container>
     </ViewWrapper>
@@ -64,4 +65,8 @@ const Container = styled.div`
 const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
+
+  :not(:first-child) {
+    margin-top: ${sizes(36)};
+  }
 `
