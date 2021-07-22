@@ -427,11 +427,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                <ControlButton onClick={handlePlayPause}>
+                <ControlButton
+                  onClick={handlePlayPause}
+                  tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
+                  tooltipPosition="left"
+                >
                   {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
                 </ControlButton>
                 <VolumeControl>
-                  <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
+                  <VolumeButton onClick={handleMute} showTooltipOnlyOnFocus tooltipText="Volume">
+                    {renderVolumeButton()}
+                  </VolumeButton>
                   <VolumeSliderContainer>
                     <VolumeSlider
                       step={0.01}
@@ -450,11 +456,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </CurrentTimeWrapper>
                 <ScreenControls>
                   {isPiPSupported && (
-                    <ControlButton onClick={handlePictureInPicture}>
+                    <ControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
                       {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
                     </ControlButton>
                   )}
-                  <ControlButton onClick={handleFullScreen}>
+                  <ControlButton
+                    onClick={handleFullScreen}
+                    tooltipPosition="right"
+                    tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
+                  >
                     {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
                   </ControlButton>
                 </ScreenControls>
