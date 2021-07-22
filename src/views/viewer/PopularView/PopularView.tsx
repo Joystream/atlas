@@ -18,7 +18,7 @@ export const PopularView: FC = () => (
       <CallToActionButton label="Home" to={absoluteRoutes.viewer.index()} colorVariant="yellow" icon={<SvgNavHome />} />
       <CallToActionButton
         label="Browse channels"
-        to={absoluteRoutes.viewer.browse()}
+        to={absoluteRoutes.viewer.browseChannels()}
         colorVariant="blue"
         icon={<SvgNavChannels />}
       />
