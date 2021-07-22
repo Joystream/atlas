@@ -7,7 +7,7 @@ import { colors, media, transitions, typography } from '@/shared/theme'
 
 import { SkeletonLoader } from '../SkeletonLoader'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel'
 
 type ContainerProps = {
   size: AvatarSize
@@ -32,6 +32,17 @@ const coverAvatarCss = css`
     width: 88px;
     min-width: 88px;
     height: 88px;
+  }
+`
+
+const channelAvatarCss = css`
+  width: 88px;
+  min-width: 88px;
+  height: 88px;
+  ${media.medium} {
+    width: 136px;
+    min-width: 136px;
+    height: 136px;
   }
 `
 
@@ -71,6 +82,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return coverAvatarCss
     case 'view':
       return viewAvatarCss
+    case 'channel':
+      return channelAvatarCss
     case 'fill':
       return fillAvatarCss
     case 'small':
