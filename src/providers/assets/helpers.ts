@@ -2,6 +2,7 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   BasicChannelFieldsFragment,
+  BasicVideoFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
@@ -27,7 +28,13 @@ export const testAssetDownload = (url: string, type: AssetType) => {
   return withTimeout(testPromise, ASSET_RESPONSE_TIMEOUT)
 }
 export const readAssetData = (
-  entity: VideoFieldsFragment | AllChannelFieldsFragment | BasicChannelFieldsFragment | null | undefined,
+  entity:
+    | VideoFieldsFragment
+    | BasicVideoFieldsFragment
+    | AllChannelFieldsFragment
+    | BasicChannelFieldsFragment
+    | null
+    | undefined,
   assetType: AssetType
 ): AssetResolutionData | null => {
   if (entity?.__typename === 'Channel') {
@@ -46,9 +53,15 @@ export const readAssetData = (
     }
   } else if (entity?.__typename === 'Video') {
     return {
-      availability: assetType === AssetType.MEDIA ? entity.mediaAvailability : entity.thumbnailPhotoAvailability,
-      urls: assetType === AssetType.MEDIA ? entity.mediaUrls : entity.thumbnailPhotoUrls,
-      dataObject: assetType === AssetType.MEDIA ? entity.mediaDataObject : entity.thumbnailPhotoDataObject,
+      availability:
+        assetType === AssetType.MEDIA
+          ? (entity as VideoFieldsFragment).mediaAvailability
+          : entity.thumbnailPhotoAvailability,
+      urls: assetType === AssetType.MEDIA ? (entity as VideoFieldsFragment).mediaUrls : entity.thumbnailPhotoUrls,
+      dataObject:
+        assetType === AssetType.MEDIA
+          ? (entity as VideoFieldsFragment).mediaDataObject
+          : entity.thumbnailPhotoDataObject,
       assetType,
     }
   }
