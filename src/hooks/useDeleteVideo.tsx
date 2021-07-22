@@ -18,17 +18,21 @@ export const useDeleteVideo = () => {
       exitButton: false,
       description:
         'You will not be able to undo this. Deletion requires a blockchain transaction to complete. Currently there is no way to remove uploaded video assets.',
-      onPrimaryButtonClick: () => {
-        confirmDeleteVideo(videoId, () => onDeleteVideo?.())
-        closeDeleteVideoDialog()
+      primaryButton: {
+        text: 'Delete video',
+        onClick: () => {
+          confirmDeleteVideo(videoId, () => onDeleteVideo?.())
+          closeDeleteVideoDialog()
+        },
       },
-      onSecondaryButtonClick: () => {
-        closeDeleteVideoDialog()
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => {
+          closeDeleteVideoDialog()
+        },
       },
       error: true,
       variant: 'warning',
-      primaryButtonText: 'Delete video',
-      secondaryButtonText: 'Cancel',
     })
   }
 

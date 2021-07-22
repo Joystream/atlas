@@ -11,32 +11,30 @@ import {
 
 import { BaseDialog, BaseDialogProps } from '../BaseDialog'
 
+type DialogButtonProps = {
+  text?: string
+  disabled?: boolean
+  onClick?: (e: React.MouseEvent) => void
+}
+
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
-  primaryButtonText?: string
-  secondaryButtonText?: string
-  primaryButtonDisabled?: boolean
-  secondaryButtonDisabled?: boolean
-  onPrimaryButtonClick?: (e: React.MouseEvent) => void
-  onSecondaryButtonClick?: (e: React.MouseEvent) => void
+  primaryButton?: DialogButtonProps
+  secondaryButton?: DialogButtonProps
   warning?: boolean
   error?: boolean
 } & BaseDialogProps
 
 export const ActionDialog: React.FC<ActionDialogProps> = ({
   additionalActionsNode,
-  primaryButtonText,
-  secondaryButtonText,
-  primaryButtonDisabled,
-  secondaryButtonDisabled,
-  onPrimaryButtonClick,
-  onSecondaryButtonClick,
+  primaryButton,
+  secondaryButton,
   warning,
   error,
   children,
   ...baseDialogProps
 }) => {
-  const hasAnyAction = additionalActionsNode || primaryButtonText || secondaryButtonText
+  const hasAnyAction = additionalActionsNode || primaryButton?.text || secondaryButton?.text
 
   return (
     <BaseDialog {...baseDialogProps}>
@@ -45,19 +43,19 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
-            {primaryButtonText && (
+            {primaryButton?.text && (
               <StyledPrimaryButton
-                onClick={onPrimaryButtonClick}
+                onClick={primaryButton.onClick}
                 warning={warning}
                 error={error}
-                disabled={primaryButtonDisabled}
+                disabled={primaryButton.disabled}
               >
-                {primaryButtonText}
+                {primaryButton.text}
               </StyledPrimaryButton>
             )}
-            {secondaryButtonText && (
-              <Button variant="secondary" onClick={onSecondaryButtonClick} disabled={secondaryButtonDisabled}>
-                {secondaryButtonText}
+            {secondaryButton?.text && (
+              <Button variant="secondary" onClick={secondaryButton.onClick} disabled={secondaryButton.disabled}>
+                {secondaryButton.text}
               </Button>
             )}
           </ButtonsContainer>

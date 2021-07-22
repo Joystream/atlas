@@ -176,29 +176,33 @@ export const MyVideosView = () => {
       description: 'You will not be able to undo this.',
       variant: 'warning',
       error: true,
-      primaryButtonText: 'Remove draft',
-      secondaryButtonText: 'Cancel',
+      primaryButton: {
+        text: 'Remove draft',
+        onClick: () => {
+          closeDeleteDraftDialog()
+          removeDrafts([draftId])
+          removeDraftNotificationsCount.current++
+          if (removeDraftNotificationsCount.current > 1) {
+            updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })
+          } else {
+            displaySnackbar({
+              customId: REMOVE_DRAFT_SNACKBAR,
+              title: 'Draft deleted',
+              iconType: 'success',
+              timeout: SNACKBAR_TIMEOUT,
+              onExit: () => (removeDraftNotificationsCount.current = 0),
+            })
+          }
+        },
+      },
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => {
+          closeDeleteDraftDialog()
+        },
+      },
       onExitClick: () => {
         closeDeleteDraftDialog()
-      },
-      onSecondaryButtonClick: () => {
-        closeDeleteDraftDialog()
-      },
-      onPrimaryButtonClick: () => {
-        closeDeleteDraftDialog()
-        removeDrafts([draftId])
-        removeDraftNotificationsCount.current++
-        if (removeDraftNotificationsCount.current > 1) {
-          updateSnackbar(REMOVE_DRAFT_SNACKBAR, { title: `${removeDraftNotificationsCount.current} drafts deleted` })
-        } else {
-          displaySnackbar({
-            customId: REMOVE_DRAFT_SNACKBAR,
-            title: 'Draft deleted',
-            iconType: 'success',
-            timeout: SNACKBAR_TIMEOUT,
-            onExit: () => (removeDraftNotificationsCount.current = 0),
-          })
-        }
       },
     })
   }
