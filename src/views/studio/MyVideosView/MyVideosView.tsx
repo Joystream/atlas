@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { StudioContainer, VideoPreviewPublisher } from '@/components'
+import { LimitedWidthContainer, VideoPreviewPublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
+import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks'
 import {
   chanelUnseenDraftsSelector,
@@ -27,10 +28,6 @@ import {
 } from './MyVideos.styles'
 
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
-const SORT_OPTIONS = [
-  { name: 'Newest first', value: VideoOrderByInput.CreatedAtDesc },
-  { name: 'Oldest first', value: VideoOrderByInput.CreatedAtAsc },
-]
 
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -44,9 +41,7 @@ export const MyVideosView = () => {
   const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const [sortVideosBy, setSortVideosBy] = useState<typeof SORT_OPTIONS[number]['value'] | undefined>(
-    VideoOrderByInput.CreatedAtDesc
-  )
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | undefined>(VideoOrderByInput.CreatedAtDesc)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
@@ -58,7 +53,6 @@ export const MyVideosView = () => {
   const removeDraftNotificationsCount = useRef(0)
   const addToTabNotificationsCount = useRef(0)
 
-  // Drafts calls can run into race conditions
   const { currentPage, setCurrentPage } = usePagination(currentVideosTab)
   const { activeChannelId } = useAuthorizedUser()
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
@@ -252,7 +246,7 @@ export const MyVideosView = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <StudioContainer>
+    <LimitedWidthContainer>
       <ViewContainer>
         <Text variant="h2">My videos</Text>
         {hasNoVideos ? (
@@ -310,7 +304,7 @@ export const MyVideosView = () => {
           </>
         )}
       </ViewContainer>
-    </StudioContainer>
+    </LimitedWidthContainer>
   )
 }
 

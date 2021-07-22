@@ -2,54 +2,24 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
+import { Button, Placeholder, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
-
-export const Header = styled.section`
-  position: relative;
-  padding-bottom: 50px;
-
-  ${media.medium} {
-    padding-bottom: 0;
-  }
-`
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
-const INFO_BOTTOM_MARGIN = 75
-
 export const TitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-row-gap: ${sizes(4)};
+  align-items: center;
   width: 100%;
-  margin-top: -64px;
+  margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
-  ${media.small} {
-    margin-top: -100px;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  ${media.medium} {
-    position: absolute;
-    margin-top: 0;
-    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.large} {
-    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xxlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
+  ${media.compact} {
+    grid-template-columns: auto 1fr auto;
   }
 `
 export const TitleContainer = styled.div`
@@ -64,24 +34,33 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
 
   line-height: 1;
-  padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
-  background-color: ${colors.gray[800]};
+  margin-bottom: 0;
+  padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
 `
 
+export const SortContainer = styled.div`
+  display: none;
+  grid-gap: 8px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  ${media.medium} {
+    display: grid;
+  }
+`
+
 export const SubTitle = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
 
   padding: ${sizes(1)} ${sizes(2)};
-  margin-top: ${sizes(2)};
-  color: ${colors.white};
-  background-color: ${colors.gray[800]};
+  margin-top: ${sizes(1)};
+  color: ${colors.gray[300]};
   display: inline-block;
 `
 
@@ -123,10 +102,39 @@ export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
   z-index: 2;
   background-color: ${colors.transparentBlack[54]};
+  grid-column: 1 / span 2;
+  width: 100%;
 
-  ${media.small} {
+  ${media.compact} {
+    grid-column: initial;
     margin-top: 0;
     margin-left: auto;
     align-self: center;
+  }
+`
+
+export const StyledButton = styled(Button)`
+  width: 100%;
+`
+
+export const PaginationContainer = styled.div`
+  padding-top: ${sizes(6)};
+  padding-bottom: ${sizes(16)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const TabsContainer = styled.div`
+  margin-bottom: ${sizes(8)};
+  border-bottom: solid 1px ${colors.gray[800]};
+
+  ${media.compact} {
+    padding-top: ${sizes(8)};
+  }
+
+  ${media.medium} {
+    display: grid;
+    grid-template-columns: 1fr 250px;
   }
 `
