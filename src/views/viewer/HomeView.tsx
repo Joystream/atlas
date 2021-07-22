@@ -8,6 +8,7 @@ import {
   InterruptedVideosGallery,
   LimitedWidthContainer,
   VideoHero,
+  OfficialJoystreamUpdate,
   ViewErrorFallback,
 } from '@/components'
 import { usePersonalDataStore } from '@/providers'
@@ -53,6 +54,7 @@ export const HomeView: React.FC = () => {
           createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
           ready={!loading}
         />
+        <OfficialJoystreamUpdate />
       </Container>
     </LimitedWidthContainer>
   )
