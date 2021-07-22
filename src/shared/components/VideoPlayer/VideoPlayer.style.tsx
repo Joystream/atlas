@@ -246,7 +246,6 @@ export const ScreenControls = styled.div`
   grid-template-columns: auto auto;
   gap: 0.5em;
   margin-left: auto;
-  display: flex;
 
   ${ControlButton}:last-of-type {
     margin-right: 0;
