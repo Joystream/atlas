@@ -29,7 +29,7 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
-const TABS = ['Videos', 'About'] as const
+const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -137,7 +137,7 @@ export const ChannelView: React.FC = () => {
             </PaginationContainer>
           </>
         )
-      case 'About':
+      case 'Information':
         return <ChannelAbout />
     }
   }
