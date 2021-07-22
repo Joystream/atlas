@@ -8,7 +8,7 @@ import { TextVariant } from '../Text'
 export type ButtonProps = {
   icon?: React.ReactNode
   iconPlacement?: IconPlacement
-  children: string
+  children?: string
 } & Omit<ButtonBaseProps, 'children'>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {

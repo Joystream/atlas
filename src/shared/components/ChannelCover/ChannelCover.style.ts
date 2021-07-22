@@ -5,8 +5,13 @@ import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/
 import { IconButton } from '../IconButton'
 import { Text } from '../Text'
 
-type CoverImageProps = {
-  $src: string
+export const CONTENT_OVERLAP_MAP = {
+  BASE: 0,
+  SMALL: 0,
+  MEDIUM: 0,
+  LARGE: 100,
+  XLARGE: 200,
+  XXLARGE: 300,
 }
 
 export const MediaWrapper = styled.div`
@@ -23,17 +28,13 @@ export const Media = styled.div`
   z-index: ${zIndex.background};
 `
 
-export const CoverImage = styled.div<CoverImageProps>`
+export const CoverImage = styled.img`
+  width: 100%;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: local;
-  background-size: cover;
-  background-image: url(${({ $src }) => $src});
 `
 
 export const CoverWrapper = styled.div`
@@ -55,10 +56,6 @@ export const EditableControls = styled.div`
     :hover {
       opacity: 1;
     }
-  }
-
-  ${media.xlarge} {
-    height: 80%;
   }
 `
 
