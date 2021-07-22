@@ -43,11 +43,13 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) 
     if (!player) {
       return
     }
-    let timeout: NodeJS.Timeout
+    let timeout: number
     const indicatorEvents = Object.values(CustomVideojsEvents)
 
     const handler = (e: Event) => {
-      timeout = setTimeout(() => {
+      // This setTimeout is needed to get current value from `player.volume()`
+      // if we omit this we'll get stale results
+      timeout = window.setTimeout(() => {
         const indicator = createIndicator(e.type as VideoEvent, player.volume(), player.muted())
         if (indicator) {
           setIndicator({ ...indicator, isVisible: true })
