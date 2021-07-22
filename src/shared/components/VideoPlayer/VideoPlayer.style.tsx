@@ -75,7 +75,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
   justify-content: center;
   padding: 0.5em;
   position: relative;
-  transition: opacity ${transitions.timings.player} ease-in !important;
+  transition: background ${transitions.timings.player} ease-in !important;
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
