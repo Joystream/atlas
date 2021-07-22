@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import { useSnackbar } from '@/providers/snackbars'
 import { createStore } from '@/store'
+import { withTimeout } from '@/utils/misc'
 
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
 
@@ -81,9 +82,4 @@ export const ConnectionStatusManager: React.FC = () => {
   }, [displaySnackbar, internetConnectionStatus])
 
   return null
-}
-
-const withTimeout = async <T,>(promise: Promise<T>, timeout: number) => {
-  const timeoutPromise = new Promise<T>((resolve, reject) => setTimeout(() => reject(new Error('Timed out!')), timeout))
-  return await Promise.race([timeoutPromise, promise])
 }
