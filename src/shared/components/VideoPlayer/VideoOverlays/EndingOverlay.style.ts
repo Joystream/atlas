@@ -10,7 +10,7 @@ import { IconButton } from '../../IconButton'
 import { Text } from '../../Text'
 
 type OverlayBackgroundProps = {
-  thumbnail?: string | null
+  thumbnailUrl?: string | null
 }
 
 export const OverlayBackground = styled.div<OverlayBackgroundProps>`
@@ -21,8 +21,8 @@ export const OverlayBackground = styled.div<OverlayBackgroundProps>`
   bottom: 0;
   left: 0;
   z-index: ${zIndex.overlay};
-  background-image: ${({ thumbnail }) =>
-    `linear-gradient(to right, ${colors.transparentBlack[86]}, ${colors.transparentBlack[86]}), url(${thumbnail}) `};
+  background-image: ${({ thumbnailUrl }) =>
+    `linear-gradient(to right, ${colors.transparentBlack[86]}, ${colors.transparentBlack[86]}), url(${thumbnailUrl}) `};
   background-size: cover;
   height: 100%;
 `

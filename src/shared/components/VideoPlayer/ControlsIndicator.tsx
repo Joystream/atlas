@@ -15,12 +15,12 @@ import {
 } from '@/shared/icons'
 
 import {
-  ControlsIndicator,
+  ControlsIndicatorIconWrapper,
   ControlsIndicatorTooltip,
   ControlsIndicatorTransitions,
   ControlsIndicatorWrapper,
-} from './ControlsIndicatorManager.style'
-import { CustomVideojsEvents, VOLUME_STEP } from './videoJsPlayer'
+} from './ControlsIndicator.style'
+import { CustomVideojsEvents } from './videoJsPlayer'
 
 import { Text } from '../Text'
 
@@ -33,31 +33,34 @@ type EventState = {
   isVisible: boolean
 }
 
-type ControlsIndicatorManagerProps = {
+type ControlsIndicatorProps = {
   player: VideoJsPlayer | null
-  cachedPlayerVolume: number
 }
 
-export const ControlsIndicatorManager: React.FC<ControlsIndicatorManagerProps> = ({ player, cachedPlayerVolume }) => {
+export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) => {
   const [indicator, setIndicator] = useState<EventState | null>(null)
   useEffect(() => {
     if (!player) {
       return
     }
+    let timeout: NodeJS.Timeout
     const indicatorEvents = Object.values(CustomVideojsEvents)
+
     const handler = (e: Event) => {
-      const playerVolume = e.type === CustomVideojsEvents.Unmuted ? cachedPlayerVolume || VOLUME_STEP : player.volume()
-      const indicator = createIndicator(e.type as VideoEvent, playerVolume, player.muted())
-      if (indicator) {
-        setIndicator({ ...indicator, isVisible: true })
-      }
+      timeout = setTimeout(() => {
+        const indicator = createIndicator(e.type as VideoEvent, player.volume(), player.muted())
+        if (indicator) {
+          setIndicator({ ...indicator, isVisible: true })
+        }
+      }, 0)
     }
     player.on(indicatorEvents, handler)
 
     return () => {
+      clearTimeout(timeout)
       player.off(indicatorEvents, handler)
     }
-  }, [cachedPlayerVolume, player])
+  }, [player])
 
   return (
     <ControlsIndicatorTransitions>
@@ -71,7 +74,7 @@ export const ControlsIndicatorManager: React.FC<ControlsIndicatorManagerProps> =
         onExited={() => setIndicator(null)}
       >
         <ControlsIndicatorWrapper>
-          <ControlsIndicator>{indicator?.icon}</ControlsIndicator>
+          <ControlsIndicatorIconWrapper>{indicator?.icon}</ControlsIndicatorIconWrapper>
           <ControlsIndicatorTooltip>
             <Text variant="caption">{indicator?.description}</Text>
           </ControlsIndicatorTooltip>

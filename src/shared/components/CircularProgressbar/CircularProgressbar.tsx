@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Background, SVG, StyledPath, Trail } from './CircularProgressbar.style'
+import { Background, SVG, StyledPath, Trail, TrailVariant } from './CircularProgressbar.style'
 
 export const VIEWBOX_WIDTH = 100
 export const VIEWBOX_HEIGHT = 100
@@ -10,7 +10,6 @@ export const VIEWBOX_CENTER_Y = VIEWBOX_HEIGHT / 2
 
 export type CircularProgressbarProps = {
   value: number
-  trailColor?: string
   circleRatio?: number
   counterClockwise?: boolean
   maxValue?: number
@@ -19,6 +18,8 @@ export type CircularProgressbarProps = {
   background?: boolean
   backgroundPadding?: number
   className?: string
+  variant?: TrailVariant
+  noTrail?: boolean
 }
 
 export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
@@ -30,7 +31,8 @@ export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
   maxValue = 100,
   minValue = 0,
   strokeWidth = 15,
-  trailColor,
+  variant = 'default',
+  noTrail,
   className,
 }) => {
   const getBackgroundPadding = () => (background ? backgroundPadding : 0)
@@ -48,13 +50,15 @@ export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
     <>
       <SVG viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`} className={className}>
         {background ? <Background cx={VIEWBOX_CENTER_X} cy={VIEWBOX_CENTER_Y} r={VIEWBOX_HEIGHT_HALF} /> : null}
-        <Trail
-          trailColor={trailColor}
-          counterClockwise={counterClockwise}
-          dashRatio={circleRatio}
-          pathRadius={pathRadius}
-          strokeWidth={strokeWidth}
-        />
+        {noTrail && (
+          <Trail
+            counterClockwise={counterClockwise}
+            dashRatio={circleRatio}
+            pathRadius={pathRadius}
+            variant={variant}
+            strokeWidth={strokeWidth}
+          />
+        )}
         <StyledPath
           counterClockwise={counterClockwise}
           dashRatio={pathRatio * circleRatio}

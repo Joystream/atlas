@@ -4,8 +4,21 @@ import { colors } from '@/shared/theme'
 
 import { Path } from './Path'
 
+export type TrailVariant = 'default' | 'player'
+
 type TrailProps = {
-  trailColor?: string
+  variant?: TrailVariant
+}
+
+const getStrokeColor = (variant?: TrailVariant) => {
+  switch (variant) {
+    case 'default':
+      return colors.gray[700]
+    case 'player':
+      return colors.transparentWhite[32]
+    default:
+      return colors.gray[700]
+  }
 }
 
 export const SVG = styled.svg`
@@ -13,7 +26,7 @@ export const SVG = styled.svg`
   width: 100%;
 `
 export const Trail = styled(Path)<TrailProps>`
-  stroke: ${({ trailColor = colors.gray[700] }) => trailColor};
+  stroke: ${({ variant }) => getStrokeColor(variant)};
 `
 export const StyledPath = styled(Path)`
   stroke: ${colors.blue[500]};

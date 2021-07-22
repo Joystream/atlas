@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideos } from '@/api/hooks'
@@ -10,19 +9,20 @@ import { getRandomIntInclusive } from '@/utils/number'
 import { EndingOverlay, ErrorOverlay, LoadingOverlay } from './VideoOverlays'
 import { PlayerState } from './VideoPlayer'
 
-type VideoOverlayManagerProps = {
+type VideoOverlaProps = {
   playerState: PlayerState
   onPlay: () => void
   channelId?: string
-  currentThumbnail?: string | null
+  currentThumbnailUrl?: string | null
+  videoId?: string
 }
-export const VideoOverlayManager: React.FC<VideoOverlayManagerProps> = ({
+export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   playerState,
   onPlay,
   channelId,
-  currentThumbnail,
+  currentThumbnailUrl,
+  videoId,
 }) => {
-  const { id } = useParams()
   const [randomNextVideo, setRandomNextVideo] = useState<VideoFieldsFragment | null>(null)
   const { videos } = useVideos({
     where: {
@@ -32,19 +32,15 @@ export const VideoOverlayManager: React.FC<VideoOverlayManagerProps> = ({
     },
   })
 
-  const getRandomNumber = useCallback((videosLength: number) => {
-    return getRandomIntInclusive(0, videosLength - 1)
-  }, [])
-
   useEffect(() => {
     if (!videos?.length || videos.length <= 1) {
       return
     }
-    const filteredVideos = videos.filter((video) => video.id !== id)
-    const randomNumber = getRandomNumber(filteredVideos.length)
+    const filteredVideos = videos.filter((video) => video.id !== videoId)
+    const randomNumber = getRandomIntInclusive(0, filteredVideos.length - 1)
 
     setRandomNextVideo(filteredVideos[randomNumber])
-  }, [getRandomNumber, id, videos])
+  }, [videoId, videos])
 
   return (
     <SwitchTransition>
@@ -63,7 +59,7 @@ export const VideoOverlayManager: React.FC<VideoOverlayManagerProps> = ({
               isEnded={true}
               onPlayAgain={onPlay}
               channelId={channelId}
-              currentThumbnail={currentThumbnail}
+              currentThumbnailUrl={currentThumbnailUrl}
               randomNextVideo={randomNextVideo}
             />
           )}

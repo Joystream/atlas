@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
+
 import {
   AnimationWrapper,
   ButtonGroup,
@@ -13,7 +15,7 @@ import {
 
 import { Button } from '../../Button'
 
-export const ErrorOverlay = () => {
+export const ErrorOverlay: React.FC = () => {
   return (
     <OverlayBackground>
       <InnerContainer>
@@ -26,7 +28,7 @@ export const ErrorOverlay = () => {
           our community on Discord.
         </ErrorMessage>
         <ButtonGroup>
-          <StyledDiscordButton variant="secondary" to="https://discord.gg/DE9UN3YpRP">
+          <StyledDiscordButton variant="secondary" to={JOYSTREAM_DISCORD_URL}>
             Open Discord
           </StyledDiscordButton>
           <Button onClick={() => window.location.reload()}>Refresh the page</Button>

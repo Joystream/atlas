@@ -14,7 +14,7 @@ export const ControlsIndicatorWrapper = styled.div`
   }
 `
 
-export const ControlsIndicator = styled.div`
+export const ControlsIndicatorIconWrapper = styled.div`
   width: ${sizes(20)};
   height: ${sizes(20)};
   backdrop-filter: blur(${sizes(6)});
@@ -65,7 +65,7 @@ export const ControlsIndicatorTransitions = styled.div`
   }
 
   .indicator-exit-active {
-    ${ControlsIndicator} {
+    ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
       opacity: 0;
       transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};

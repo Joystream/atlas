@@ -17,8 +17,8 @@ import {
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
-import { ControlsIndicatorManager } from './ControlsIndicatorManager'
-import { VideoOverlayManager } from './VideoOverlayManager'
+import { ControlsIndicator } from './ControlsIndicator'
+import { VideoOverlay } from './VideoOverlay'
 import {
   BigPlayButton,
   BigPlayButtonOverlay,
@@ -434,16 +434,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </ScreenControls>
               </CustomControls>
             </ControlsOverlay>
-            <VideoOverlayManager
+            <VideoOverlay
+              videoId={videoId}
               playerState={playerState}
               onPlay={handlePlayPause}
               channelId={channelId}
-              currentThumbnail={videoJsConfig.posterUrl}
+              currentThumbnailUrl={videoJsConfig.posterUrl}
             />
           </>
         )}
       </div>
-      {!isInBackground && <ControlsIndicatorManager player={player} cachedPlayerVolume={cachedPlayerVolume} />}
+      {!isInBackground && <ControlsIndicator player={player} />}
     </Container>
   )
 }
