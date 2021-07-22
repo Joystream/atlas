@@ -11,7 +11,7 @@ fragment LicenseFields on License {
   customText
 }
 
-fragment VideoBasicFields on Video {
+fragment BasicVideoFields on Video {
   id
   title
   thumbnailPhotoUrls
@@ -94,9 +94,9 @@ query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: Vi
   }
 }
 
-query GetVideosWithBasicInformation($where: VideoWhereInput) {
+query GetBasicVideos($where: VideoWhereInput) {
   videos(where: $where) {
-    ...VideoBasicFields
+    ...BasicVideoFields
   }
 }
 

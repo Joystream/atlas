@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useVideosWithBasicInformation } from '@/api/hooks'
-import { AssetAvailability, VideoBasicFieldsFragment } from '@/api/queries'
+import { useBasicVideos } from '@/api/hooks'
+import { AssetAvailability, BasicVideoFieldsFragment } from '@/api/queries'
 import { transitions } from '@/shared/theme'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -23,8 +23,8 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   currentThumbnailUrl,
   videoId,
 }) => {
-  const [randomNextVideo, setRandomNextVideo] = useState<VideoBasicFieldsFragment | null>(null)
-  const { videos } = useVideosWithBasicInformation({
+  const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
+  const { videos } = useBasicVideos({
     where: {
       channelId_eq: channelId,
       isPublic_eq: true,

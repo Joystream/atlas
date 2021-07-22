@@ -22,7 +22,7 @@ export type LicenseFieldsFragment = {
   customText?: Types.Maybe<string>
 }
 
-export type VideoBasicFieldsFragment = {
+export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: Types.Maybe<string>
@@ -96,13 +96,13 @@ export type GetVideosQuery = {
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
-export type GetVideosWithBasicInformationQueryVariables = Types.Exact<{
+export type GetBasicVideosQueryVariables = Types.Exact<{
   where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
-export type GetVideosWithBasicInformationQuery = {
+export type GetBasicVideosQuery = {
   __typename?: 'Query'
-  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoBasicFieldsFragment>>
+  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & BasicVideoFieldsFragment>>
 }
 
 export type GetVideoViewsQueryVariables = Types.Exact<{
@@ -133,8 +133,8 @@ export type AddVideoViewMutation = {
   addVideoView: { __typename?: 'EntityViewsInfo'; id: string; views: number }
 }
 
-export const VideoBasicFieldsFragmentDoc = gql`
-  fragment VideoBasicFields on Video {
+export const BasicVideoFieldsFragmentDoc = gql`
+  fragment BasicVideoFields on Video {
     id
     title
     thumbnailPhotoUrls
@@ -343,58 +343,44 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
-export const GetVideosWithBasicInformationDocument = gql`
-  query GetVideosWithBasicInformation($where: VideoWhereInput) {
+export const GetBasicVideosDocument = gql`
+  query GetBasicVideos($where: VideoWhereInput) {
     videos(where: $where) {
-      ...VideoBasicFields
+      ...BasicVideoFields
     }
   }
-  ${VideoBasicFieldsFragmentDoc}
+  ${BasicVideoFieldsFragmentDoc}
 `
 
 /**
- * __useGetVideosWithBasicInformationQuery__
+ * __useGetBasicVideosQuery__
  *
- * To run a query within a React component, call `useGetVideosWithBasicInformationQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideosWithBasicInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetBasicVideosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetVideosWithBasicInformationQuery({
+ * const { data, loading, error } = useGetBasicVideosQuery({
  *   variables: {
  *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetVideosWithBasicInformationQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetVideosWithBasicInformationQuery, GetVideosWithBasicInformationQueryVariables>
+export function useGetBasicVideosQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) {
-  return Apollo.useQuery<GetVideosWithBasicInformationQuery, GetVideosWithBasicInformationQueryVariables>(
-    GetVideosWithBasicInformationDocument,
-    baseOptions
-  )
+  return Apollo.useQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, baseOptions)
 }
-export function useGetVideosWithBasicInformationLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetVideosWithBasicInformationQuery,
-    GetVideosWithBasicInformationQueryVariables
-  >
+export function useGetBasicVideosLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetVideosWithBasicInformationQuery, GetVideosWithBasicInformationQueryVariables>(
-    GetVideosWithBasicInformationDocument,
-    baseOptions
-  )
+  return Apollo.useLazyQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, baseOptions)
 }
-export type GetVideosWithBasicInformationQueryHookResult = ReturnType<typeof useGetVideosWithBasicInformationQuery>
-export type GetVideosWithBasicInformationLazyQueryHookResult = ReturnType<
-  typeof useGetVideosWithBasicInformationLazyQuery
->
-export type GetVideosWithBasicInformationQueryResult = Apollo.QueryResult<
-  GetVideosWithBasicInformationQuery,
-  GetVideosWithBasicInformationQueryVariables
->
+export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQuery>
+export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
+export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 export const GetVideoViewsDocument = gql`
   query GetVideoViews($videoId: ID!) {
     videoViews(videoId: $videoId) {

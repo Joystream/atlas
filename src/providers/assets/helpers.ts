@@ -2,7 +2,7 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   BasicChannelFieldsFragment,
-  VideoBasicFieldsFragment,
+  BasicVideoFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
 import { createStorageNodeUrl } from '@/utils/asset'
@@ -28,7 +28,7 @@ export const testAssetDownload = (url: string, type: AssetType) => {
 export const readAssetData = (
   entity:
     | VideoFieldsFragment
-    | VideoBasicFieldsFragment
+    | BasicVideoFieldsFragment
     | AllChannelFieldsFragment
     | BasicChannelFieldsFragment
     | null
