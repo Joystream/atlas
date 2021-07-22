@@ -24,7 +24,7 @@ export const OfficialJoystreamUpdate = () => {
       <VideoGallery
         title="Official Joystream updates"
         videos={videos || []}
-        watchAllUrl={`/channel/${channelId}`}
+        seeAllUrl={`/channel/${channelId}`}
         loading={loading}
       />
     </Wrapper>

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
+import { Button } from '@/shared/components'
 import { SvgPlayerPlay } from '@/shared/icons'
 
 import { colors, sizes } from '../../theme'
@@ -22,13 +22,12 @@ export const TitleWrapper = styled.div`
   display: flex;
 `
 
-export const WatchAllLink = styled(Link)`
-  display: inline-flex;
-  text-decoration: none;
-  color: ${colors.blue[300]};
-  align-items: center;
-  font-weight: 700;
+export const SeeAllLink = styled(Button)`
   margin-left: ${sizes(9)};
+
+  :hover {
+    text-decoration: none;
+  }
 `
 
 export const StyledSvgGlyphPlay = styled(SvgPlayerPlay)`

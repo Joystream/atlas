@@ -7,9 +7,9 @@ import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 import {
   CarouselArrowsContainer,
   Container,
+  SeeAllLink,
   StyledSvgGlyphPlay,
   TitleWrapper,
-  WatchAllLink,
 } from './Gallery.style'
 
 import { Carousel, CarouselProps } from '../Carousel/Carousel'
@@ -18,7 +18,7 @@ import { Text } from '../Text'
 export type GalleryProps = {
   title?: string
   className?: string
-  watchAllUrl?: string
+  seeAllUrl?: string
 } & CarouselProps
 
 type ImperativeHandleData = {
@@ -26,7 +26,7 @@ type ImperativeHandleData = {
   getNextArrowProps: () => ComponentProps<typeof Arrow>
 }
 
-export const Gallery: React.FC<GalleryProps> = ({ title, className, watchAllUrl, ...carouselProps }) => {
+export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, ...carouselProps }) => {
   // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
   const prevArrowRef = useRef<HTMLButtonElement>(null)
   const nextArrowRef = useRef<HTMLButtonElement>(null)
@@ -36,11 +36,19 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, watchAllUrl,
       <GridHeadingContainer>
         <TitleWrapper>
           {title && <Text variant="h4">{title}</Text>}
-          {watchAllUrl && (
-            <WatchAllLink to={watchAllUrl}>
-              <StyledSvgGlyphPlay width={14} height={14} />
-              Watch all
-            </WatchAllLink>
+          {seeAllUrl && (
+            <>
+              <SeeAllLink
+                iconPlacement="left"
+                icon={<StyledSvgGlyphPlay width={16} height={16} />}
+                textOnly
+                to={seeAllUrl}
+                size="large"
+                variant="primary"
+              >
+                See all
+              </SeeAllLink>
+            </>
           )}
         </TitleWrapper>
         <CarouselArrowsContainer>
