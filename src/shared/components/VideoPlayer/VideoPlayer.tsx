@@ -1,38 +1,33 @@
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
+import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
 import {
-  SvgOutlineVideo,
-  SvgPlayerBackwardFiveSec,
-  SvgPlayerBackwardTenSec,
-  SvgPlayerForwardFiveSec,
-  SvgPlayerForwardTenSec,
   SvgPlayerFullScreen,
   SvgPlayerPause,
   SvgPlayerPip,
   SvgPlayerPipDisable,
   SvgPlayerPlay,
+  SvgPlayerRestart,
   SvgPlayerSmallScreen,
   SvgPlayerSoundHalf,
-  SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
 import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
+import { ControlsIndicator } from './ControlsIndicator'
+import { VideoOverlay } from './VideoOverlay'
 import {
+  BigPlayButton,
+  BigPlayButtonOverlay,
   Container,
   ControlButton,
-  ControlsIndicator,
-  ControlsIndicatorTooltip,
-  ControlsIndicatorWrapper,
   ControlsOverlay,
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
-  PlayOverlay,
   ScreenControls,
   StyledSvgPlayerSoundOff,
   VolumeButton,
@@ -42,13 +37,14 @@ import {
 } from './VideoPlayer.style'
 import { CustomVideojsEvents, VOLUME_STEP, VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
-import { Text } from '../Text'
-
 export type VideoPlayerProps = {
+  nextVideo?: VideoFieldsFragment | null
   className?: string
   autoplay?: boolean
   isInBackground?: boolean
   playing?: boolean
+  channelId?: string
+  videoId?: string
 } & VideoJsConfig
 
 declare global {
@@ -59,53 +55,39 @@ declare global {
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
-type VideoEvent = CustomVideojsEvents | null
 
-type EventState = {
-  type: VideoEvent
-  description: string | null
-  icon: React.ReactNode | null
-  isVisible: boolean
-}
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | null
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, autoplay, isInBackground, playing, ...videoJsConfig },
+  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
-  const [indicator, setIndicator] = useState<EventState | null>(null)
 
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoTime, setVideoTime] = useState(0)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
-  const [playOverlayVisible, setPlayOverlayVisible] = useState(true)
-  const [initialized, setInitialized] = useState(false)
 
-  const displayPlayOverlay = playOverlayVisible && !isInBackground
+  const [playerState, setPlayerState] = useState<PlayerState>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
 
-  // handle showing player indicators
+  // handle error
   useEffect(() => {
-    if (!player || isInBackground) {
+    if (!player) {
       return
     }
-    const indicatorEvents = Object.values(CustomVideojsEvents)
-    const handler = (e: Event) => {
-      const playerVolume = e.type === CustomVideojsEvents.Unmuted ? cachedPlayerVolume || VOLUME_STEP : player.volume()
-      const indicator = createIndicator(e.type as VideoEvent, playerVolume, player.muted())
-      if (indicator) {
-        setIndicator({ ...indicator, isVisible: true })
-      }
+    const handler = () => {
+      setPlayerState('error')
     }
-    player.on(indicatorEvents, handler)
-
+    player.on('error', handler)
     return () => {
-      player.off(indicatorEvents, handler)
+      player.off('error', handler)
     }
-  }, [cachedPlayerVolume, isInBackground, player])
+  })
 
   const playVideo = useCallback(() => {
     if (!player) {
@@ -124,13 +106,47 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [player])
 
-  // handle loading video
+  // handle video loading
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = (event: Event) => {
+      if (event.type === 'waiting') {
+        setPlayerState('loading')
+      }
+      if (event.type === 'canplay') {
+        if (playerState !== null) {
+          setPlayerState('playing')
+        }
+      }
+    }
+    player.on(['waiting', 'canplay'], handler)
+    return () => {
+      player.off(['waiting', 'canplay'], handler)
+    }
+  }, [player, playerState])
+
   useEffect(() => {
     if (!player) {
       return
     }
     const handler = () => {
-      setInitialized(true)
+      setPlayerState('ended')
+    }
+    player.on('ended', handler)
+    return () => {
+      player.off('ended', handler)
+    }
+  }, [nextVideo, player])
+
+  // handle loadstart
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      setIsLoaded(true)
     }
     player.on('loadstart', handler)
     return () => {
@@ -140,7 +156,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // handle autoplay
   useEffect(() => {
-    if (!player || !initialized || !autoplay) {
+    if (!player || !isLoaded || !autoplay) {
       return
     }
     const playPromise = player.play()
@@ -149,7 +165,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         Logger.warn('Autoplay failed:', e)
       })
     }
-  }, [player, initialized, autoplay])
+  }, [player, isLoaded, autoplay])
 
   // handle playing and pausing from outside the component
   useEffect(() => {
@@ -170,8 +186,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
-        setPlayOverlayVisible(false)
-        setIsPlaying(true)
+        if (playerState !== 'loading') {
+          setPlayerState('playing')
+          setIsPlaying(true)
+        }
       }
       if (event.type === 'pause') {
         setIsPlaying(false)
@@ -181,7 +199,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(['play', 'pause'], handler)
     }
-  }, [player])
+  }, [player, playerState])
 
   useEffect(() => {
     if (!externalRef) {
@@ -205,6 +223,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player.off('timeupdate', handler)
     }
   }, [player])
+
+  // handle seeking
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      if (playerState === 'ended') {
+        player.play()
+      }
+    }
+    player.on('seeking', handler)
+    return () => {
+      player.off('seeking', handler)
+    }
+  }, [player, playerState])
 
   // handle fullscreen mode
   useEffect(() => {
@@ -341,145 +375,78 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
+  const showBigPlayButton = playerState === null && !isInBackground
+  const showPlayerControls = !isInBackground && isLoaded && playerState
+
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
-      {displayPlayOverlay && (
-        <PlayOverlay onClick={handlePlayPause}>
-          <SvgOutlineVideo width={72} height={72} viewBox="0 0 24 24" />
-        </PlayOverlay>
-      )}
       <div data-vjs-player>
+        {showBigPlayButton && (
+          <BigPlayButtonOverlay>
+            <BigPlayButton onClick={handlePlayPause}>
+              <SvgPlayerPlay />
+            </BigPlayButton>
+          </BigPlayButtonOverlay>
+        )}
         <video
           ref={playerRef}
           className="video-js"
-          onClick={() => {
-            if (player?.paused()) {
-              player?.trigger(CustomVideojsEvents.PauseControl)
-            } else {
-              player?.trigger(CustomVideojsEvents.PlayControl)
-            }
-          }}
+          onClick={() =>
+            player?.paused()
+              ? player?.trigger(CustomVideojsEvents.PauseControl)
+              : player?.trigger(CustomVideojsEvents.PlayControl)
+          }
         />
-        {!isInBackground && !playOverlayVisible && (
+        {showPlayerControls && (
           <>
-            <ControlsOverlay isFullScreen={isFullScreen} />
-            <CustomControls isFullScreen={isFullScreen}>
-              <ControlButton onClick={handlePlayPause}>
-                {isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-              </ControlButton>
-              <VolumeControl>
-                <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
-                <VolumeSliderContainer>
-                  <VolumeSlider step={0.01} max={1} min={0} value={volume} onChange={handleChangeVolume} type="range" />
-                </VolumeSliderContainer>
-              </VolumeControl>
-              <CurrentTimeWrapper>
-                <CurrentTime variant="body2">
-                  {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
-                </CurrentTime>
-              </CurrentTimeWrapper>
-              <ScreenControls>
-                {isPiPSupported && (
-                  <ControlButton onClick={handlePictureInPicture}>
-                    {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
-                  </ControlButton>
-                )}
-                <ControlButton onClick={handleFullScreen}>
-                  {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+            <ControlsOverlay isFullScreen={isFullScreen}>
+              <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
+                <ControlButton onClick={handlePlayPause}>
+                  {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
                 </ControlButton>
-              </ScreenControls>
-            </CustomControls>
+                <VolumeControl>
+                  <VolumeButton onClick={handleMute}>{renderVolumeButton()}</VolumeButton>
+                  <VolumeSliderContainer>
+                    <VolumeSlider
+                      step={0.01}
+                      max={1}
+                      min={0}
+                      value={volume}
+                      onChange={handleChangeVolume}
+                      type="range"
+                    />
+                  </VolumeSliderContainer>
+                </VolumeControl>
+                <CurrentTimeWrapper>
+                  <CurrentTime variant="body2">
+                    {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+                  </CurrentTime>
+                </CurrentTimeWrapper>
+                <ScreenControls>
+                  {isPiPSupported && (
+                    <ControlButton onClick={handlePictureInPicture}>
+                      {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
+                    </ControlButton>
+                  )}
+                  <ControlButton onClick={handleFullScreen}>
+                    {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+                  </ControlButton>
+                </ScreenControls>
+              </CustomControls>
+            </ControlsOverlay>
+            <VideoOverlay
+              videoId={videoId}
+              playerState={playerState}
+              onPlay={handlePlayPause}
+              channelId={channelId}
+              currentThumbnailUrl={videoJsConfig.posterUrl}
+            />
           </>
         )}
-        <CSSTransition
-          in={indicator?.isVisible}
-          timeout={indicator?.isVisible ? 0 : 750}
-          classNames="indicator"
-          mountOnEnter
-          unmountOnExit
-          onEntered={() => setIndicator((indicator) => (indicator ? { ...indicator, isVisible: false } : null))}
-          onExited={() => setIndicator(null)}
-        >
-          <ControlsIndicatorWrapper>
-            <ControlsIndicator>{indicator?.icon}</ControlsIndicator>
-            <ControlsIndicatorTooltip>
-              <Text variant="caption">{indicator?.description}</Text>
-            </ControlsIndicatorTooltip>
-          </ControlsIndicatorWrapper>
-        </CSSTransition>
       </div>
+      {!isInBackground && <ControlsIndicator player={player} />}
     </Container>
   )
 }
 
 export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
-
-const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMuted: boolean) => {
-  const formattedVolume = Math.floor(playerVolume * 100) + '%'
-  const isMuted = playerMuted || !Number(playerVolume.toFixed(2))
-
-  switch (type) {
-    case CustomVideojsEvents.PauseControl:
-      return {
-        icon: <SvgPlayerPause />,
-        description: 'Pause',
-        type,
-      }
-    case CustomVideojsEvents.PlayControl:
-      return {
-        icon: <SvgPlayerPlay />,
-        description: 'Play',
-        type,
-      }
-    case CustomVideojsEvents.BackwardFiveSec:
-      return {
-        icon: <SvgPlayerBackwardFiveSec />,
-        description: 'Backward 5s',
-        type,
-      }
-    case CustomVideojsEvents.ForwardFiveSec:
-      return {
-        icon: <SvgPlayerForwardFiveSec />,
-        description: 'Forward 5s',
-        type,
-      }
-    case CustomVideojsEvents.BackwardTenSec:
-      return {
-        icon: <SvgPlayerBackwardTenSec />,
-        description: 'Backward 10s',
-        type,
-      }
-    case CustomVideojsEvents.ForwardTenSec:
-      return {
-        icon: <SvgPlayerForwardTenSec />,
-        description: 'Forward 10s',
-        type,
-      }
-    case CustomVideojsEvents.Unmuted:
-      return {
-        icon: <SvgPlayerSoundOn />,
-        description: formattedVolume,
-        type,
-      }
-    case CustomVideojsEvents.Muted:
-      return {
-        icon: <SvgPlayerSoundOff />,
-        description: 'Mute',
-        type,
-      }
-    case CustomVideojsEvents.VolumeIncrease:
-      return {
-        icon: <SvgPlayerSoundOn />,
-        description: formattedVolume,
-        type,
-      }
-    case CustomVideojsEvents.VolumeDecrease:
-      return {
-        icon: isMuted ? <SvgPlayerSoundOff /> : <SvgPlayerSoundHalf />,
-        description: isMuted ? 'Mute' : formattedVolume,
-        type,
-      }
-    default:
-      return null
-  }
-}
