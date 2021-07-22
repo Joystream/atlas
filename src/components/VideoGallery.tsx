@@ -27,6 +27,7 @@ type VideoGalleryProps = {
   onRemoveButtonClick?: (id: string) => void
   onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
+  seeAllUrl?: string
 }
 
 const PLACEHOLDERS_COUNT = 12
@@ -55,6 +56,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   removeButton,
   onRemoveButtonClick,
   onVideoNotFound,
+  seeAllUrl,
 }) => {
   if (!loading && videos?.length === 0) {
     return null
@@ -74,6 +76,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       dotsVisible
+      seeAllUrl={seeAllUrl}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <StyledVideoPreview
