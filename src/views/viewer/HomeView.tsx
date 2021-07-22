@@ -1,23 +1,17 @@
 import styled from '@emotion/styled'
-import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import {
   InfiniteVideoGrid,
-  InterruptedVideosGallery,
   LimitedWidthContainer,
-  VideoHero,
   OfficialJoystreamUpdate,
+  VideoHero,
   ViewErrorFallback,
 } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
-
-const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
-// last three months
-const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -29,15 +23,12 @@ export const HomeView: React.FC = () => {
     {
       where: {
         channelId_in: channelIdIn,
-        createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
       },
     },
     { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
   )
 
   const followedChannelsVideosCount = videosConnection?.totalCount
-  const shouldShowFollowedChannels =
-    followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
 
   if (error) {
     return <ViewErrorFallback />
@@ -47,13 +38,9 @@ export const HomeView: React.FC = () => {
     <LimitedWidthContainer big>
       <VideoHero />
       <Container className={transitions.names.slide}>
-        <InterruptedVideosGallery />
-        <StyledInfiniteVideoGrid
-          title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
-          channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
-          createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
-          ready={!loading}
-        />
+        {!loading && followedChannelsVideosCount ? (
+          <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
+        ) : null}
         <OfficialJoystreamUpdate />
       </Container>
     </LimitedWidthContainer>

@@ -35,10 +35,11 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   targetRowsCount: number
   itemsPerRow: number
   skipCount: number
-  onScrollToBottom: () => void
   onError?: (error: unknown) => void
   queryVariables: TArgs
-} & ({ onDemand?: false; onScrollToBottom: () => void } | { onDemand: true; onScrollToBottom?: undefined })
+  onDemand?: boolean
+  onScrollToBottom?: () => void
+}
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   displayedItems: TPaginatedData['edges'][0]['node'][]
@@ -46,6 +47,7 @@ type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   error?: ApolloError
   allItemsLoaded: boolean
   loading: boolean
+  totalCount: number
 }
 
 export const useInfiniteGrid = <
@@ -143,5 +145,6 @@ export const useInfiniteGrid = <
     allItemsLoaded,
     error,
     loading,
+    totalCount: data?.totalCount || 0,
   }
 }
