@@ -41,8 +41,8 @@ export const ChannelAbout = () => {
             Owned by member
           </Text>
           <AvatarContainer>
-            <StyledAvatar assetUrl={undefined} />
-            <Text variant="body1">placeholder</Text>
+            <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
+            <Text variant="body1">{channel?.ownerMember?.handle}</Text>
           </AvatarContainer>
         </Details>
 
@@ -57,7 +57,7 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Num. of views
           </Text>
-          <Text variant="body1">7 245 345</Text>
+          <Text variant="body1">{channel?.views ? formatNumberShort(channel.views) : ''}</Text>
         </Details>
 
         <Details>
