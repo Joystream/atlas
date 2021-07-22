@@ -18,8 +18,8 @@ type HasPadding = {
 export const Arrow = styled(IconButton)`
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
+  padding: ${sizes(2)};
   font-size: ${typography.sizes.subtitle2};
-  padding: 0;
 
   &.disabled {
     opacity: 0.5;
