@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import { useChannel, useFollowChannel, useSearch, useUnfollowChannel, useVideosConnection } from '@/api/hooks'
+import { AssetAvailability, SearchQuery, VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
-import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
+import { ChannelCover, Grid, Pagination, Select, Text } from '@/shared/components'
+import { SvgGlyphCheck, SvgGlyphPlus, SvgOutlineSearch2 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -15,10 +15,14 @@ import { formatNumberShort } from '@/utils/number'
 import { ChannelAbout } from './ChannelAbout'
 import {
   PaginationContainer,
+  SearchButton,
+  SearchContainer,
   SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledTabs,
+  StyledTextField,
   SubTitle,
   SubTitlePlaceholder,
   TabsContainer,
@@ -36,6 +40,19 @@ const ROWS_AMOUNT = 4
 export const ChannelView: React.FC = () => {
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
+  const {
+    searchVideos,
+    search,
+    loadingSearch,
+    isSearchInputOpen,
+    setIsSearchingInputOpen,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    setIsSearching,
+    searchInputRef,
+    errorSearch,
+  } = useSearchVideos({ id })
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -49,7 +66,8 @@ export const ChannelView: React.FC = () => {
     entity: channel,
     assetType: AssetType.COVER,
   })
-  const { currentPage, setCurrentPage } = usePagination(0)
+
+  const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
     {
       first: INITIAL_FIRST,
@@ -85,9 +103,15 @@ export const ChannelView: React.FC = () => {
     throw videosError
   } else if (error) {
     throw error
+  } else if (errorSearch) {
+    throw errorSearch
   }
 
-  const handleSorting = (value?: VideoOrderByInput | null | undefined) => {
+  const handleSetCurrentTab = async (tab: number) => {
+    setIsSearching(false)
+    setCurrentVideosTab(tab)
+  }
+  const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
       setSortVideosBy(value)
       refetch({ orderBy: value })
@@ -95,23 +119,39 @@ export const ChannelView: React.FC = () => {
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const handleChangePage = (page: number) => {
-    setCurrentPage(page)
+    isSearching ? setCurrentSearchPage(page) : setCurrentPage(page)
   }
-  const handleSetCurrentTab = async (tab: number) => {
-    setCurrentVideosTab(tab)
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+      if (searchQuery.trim() === '') {
+        setSearchQuery('')
+        setIsSearching(false)
+      } else {
+        search()
+        setIsSearching(true)
+      }
+    }
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+      setSearchQuery('')
+    }
   }
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
-  const videos = edges
-    ?.map((edge) => edge.node)
-    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+  const videos = ((isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []).slice(
+    (isSearching ? currentSearchPage : currentPage) * videosPerPage,
+    (isSearching ? currentSearchPage : currentPage) * videosPerPage + videosPerPage
+  )
+
   const placeholderItems = Array.from(
-    { length: loadingVideos ? videosPerPage - (videos ? videos.length : 0) : 0 },
+    { length: loadingVideos || loadingSearch ? videosPerPage - (videos ? videos.length : 0) : 0 },
     () => ({
       id: undefined,
       progress: undefined,
     })
   )
+
   const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
@@ -130,9 +170,9 @@ export const ChannelView: React.FC = () => {
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}
-                page={currentPage}
+                page={isSearching ? currentSearchPage : currentPage}
                 itemsPerPage={videosPerPage}
-                totalCount={totalCount}
+                totalCount={isSearching ? searchVideos?.length : totalCount}
               />
             </PaginationContainer>
           </>
@@ -176,8 +216,35 @@ export const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
         <TabsContainer>
-          <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+          <StyledTabs
+            selected={isSearching ? -1 : undefined}
+            initialIndex={0}
+            tabs={mappedTabs}
+            onSelectTab={handleSetCurrentTab}
+          />
           {currentTabName === 'Videos' && (
+            <SearchContainer>
+              <StyledTextField
+                ref={searchInputRef}
+                isOpen={isSearchInputOpen}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Search"
+                type="search"
+                helperText={null}
+              />
+              <SearchButton
+                onClick={() => {
+                  setIsSearchingInputOpen(true)
+                  searchInputRef.current?.focus()
+                }}
+                variant="tertiary"
+                icon={<SvgOutlineSearch2 />}
+              ></SearchButton>
+            </SearchContainer>
+          )}
+          {currentTabName === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
@@ -192,9 +259,60 @@ export const ChannelView: React.FC = () => {
 
 const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)
+  const [currentSearchPage, setCurrentSearchPage] = useState(0)
   // reset the pagination when changing tabs
   useEffect(() => {
     setCurrentPage(0)
+    setCurrentSearchPage(0)
   }, [currentTab])
-  return { currentPage, setCurrentPage }
+  return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
+}
+
+type useSearchVideosParams = {
+  id: string
+}
+const useSearchVideos = ({ id }: useSearchVideosParams) => {
+  const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [triggeredSearchQuery, setTriggeredSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  // TODO: bug this is not querying by channel Id and results don't seem accurate
+  const { data: searchData, loading: loadingSearch, error: errorSearch } = useSearch({
+    text: triggeredSearchQuery,
+    whereVideo: {
+      isPublic_eq: true,
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+    },
+    whereChannel: {
+      id_in: [id],
+    },
+  })
+  const search = () => {
+    setTriggeredSearchQuery(searchQuery)
+  }
+  const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
+    if (loading || !data) {
+      return { channels: [], videos: [] }
+    }
+    const results = data
+    const searchVideos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+    return { searchVideos }
+  }
+  const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData), [loadingSearch, searchData])
+
+  return {
+    searchVideos,
+    search,
+    loadingSearch,
+    isSearchInputOpen,
+    setIsSearchingInputOpen,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    setIsSearching,
+    searchInputRef,
+    errorSearch,
+  }
 }

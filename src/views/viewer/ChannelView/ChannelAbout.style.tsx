@@ -51,14 +51,12 @@ export const DetailsContainer = styled.div`
   ${media.base} {
     grid-row: 1;
   }
-  ${media.small} {
+  ${media.compact} {
     grid-row: initial;
   }
 `
 
 export const Details = styled.div`
-  display: grid;
-  gap: ${sizes(2)};
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[600]};
   margin-bottom: ${sizes(4)};

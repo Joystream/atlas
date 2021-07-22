@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { Button, Placeholder, Text } from '@/shared/components'
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { Button, Placeholder, Tabs, Text, TextField } from '@/shared/components'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -46,12 +46,19 @@ export const Title = styled(Text)`
 `
 
 export const SortContainer = styled.div`
-  display: none;
+  grid-area: sort;
+  display: grid;
   grid-gap: 8px;
-  grid-template-columns: auto 1fr;
   align-items: center;
+
+  ${media.base} {
+    grid-template-columns: 1fr;
+  }
+  ${media.small} {
+    grid-template-columns: auto 1fr;
+  }
   ${media.medium} {
-    display: grid;
+    grid-area: initial;
   }
 `
 
@@ -126,15 +133,82 @@ export const PaginationContainer = styled.div`
 `
 
 export const TabsContainer = styled.div`
+  display: grid;
   margin-bottom: ${sizes(8)};
-  border-bottom: solid 1px ${colors.gray[800]};
-
+  gap: ${sizes(2)};
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'tabs tabs tabs'
+    'search sort sort';
+  align-items: baseline;
   ${media.compact} {
     padding-top: ${sizes(8)};
   }
-
-  ${media.medium} {
-    display: grid;
-    grid-template-columns: 1fr 250px;
+  ${media.small} {
+    border-bottom: solid 1px ${colors.gray[800]};
+    grid-template-areas:
+      'tabs tabs '
+      'search  sort';
   }
+  ${media.medium} {
+    grid-template-areas: initial;
+    gap: ${sizes(8)};
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr 250px;
+  }
+`
+
+export const SearchContainer = styled.div`
+  display: flex;
+  grid-area: search;
+  width: 100%;
+  align-items: center;
+
+  ${media.base} {
+    align-self: end;
+  }
+  ${media.small} {
+    align-self: initial;
+  }
+  ${media.medium} {
+    grid-area: initial;
+  }
+`
+
+export const StyledTabs = styled(Tabs)`
+  grid-area: tabs;
+  ${media.base} {
+    border-bottom: solid 1px ${colors.gray[800]};
+  }
+  ${media.small} {
+    border-bottom: none;
+  }
+  ${media.medium} {
+    grid-area: initial;
+  }
+`
+
+type TextFieldProps = {
+  isOpen?: boolean
+}
+export const StyledTextField = styled(TextField)<TextFieldProps>`
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+  will-change: max-width;
+  width: 100%;
+  align-items: center;
+  max-width: ${({ isOpen }) => (isOpen ? '192px' : '0px')};
+
+  > input {
+    padding: 10px 16px 10px 42px;
+    border: ${({ isOpen }) => isOpen == false && 'none !important'};
+
+    ::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+  }
+`
+
+export const SearchButton = styled(Button)`
+  position: absolute;
 `
