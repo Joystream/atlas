@@ -4,7 +4,7 @@ import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
-import { ErrorFallback, InfiniteVideoGrid, VideoHero, ViewWrapper } from '@/components'
+import { ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, VideoHero, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 
@@ -46,6 +46,7 @@ export const HomeView: React.FC = () => {
             createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
             ready={!loading}
           />
+          <OfficialJoystreamUpdate />
         </ErrorBoundary>
       </Container>
     </ViewWrapper>
