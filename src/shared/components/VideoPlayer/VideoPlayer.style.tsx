@@ -6,7 +6,7 @@ import { SvgPlayerSoundOff } from '@/shared/icons'
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.style'
 
-import { colors, sizes, transitions, zIndex } from '../../theme'
+import { colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
