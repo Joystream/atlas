@@ -110,6 +110,7 @@ type Channel {
 
   # === extended from Orion ===
   follows: Int
+  views: Int
 }
 
 input ChannelWhereInput {

@@ -17,6 +17,8 @@ import {
   TransformOrionFollowsField,
   TransformOrionViewsField,
 } from './transforms'
+import { ORION_CHANNEL_VIEWS_QUERY_NAME, TransformOrionChannelViewsField } from './transforms/orionViews'
+import { RemoveQueryNodeChannelViewsField } from './transforms/queryNodeViews'
 
 import { Channel, ChannelEdge, Video, VideoEdge } from '../queries'
 
@@ -84,6 +86,7 @@ export const queryNodeStitchingResolvers = (
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     channels: async (parent, args, context, info) => {
       try {
@@ -117,6 +120,7 @@ export const queryNodeStitchingResolvers = (
     },
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
@@ -181,6 +185,29 @@ export const queryNodeStitchingResolvers = (
     },
   },
   Channel: {
+    views: async (parent, args, context, info) => {
+      if (parent.views != null) {
+        return parent.views
+      }
+      try {
+        return await delegateToSchema({
+          schema: orionSchema,
+          operation: 'query',
+          // operationName has to be manually kept in sync with the query name used
+          operationName: 'GetChannelViews',
+          fieldName: ORION_CHANNEL_VIEWS_QUERY_NAME,
+          args: {
+            channelId: parent.id,
+          },
+          context,
+          info,
+          transforms: [TransformOrionChannelViewsField],
+        })
+      } catch (error) {
+        Logger.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
     follows: async (parent, args, context, info) => {
       if (parent.follows !== undefined) {
         return parent.follows
