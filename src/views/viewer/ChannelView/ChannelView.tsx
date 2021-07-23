@@ -5,7 +5,7 @@ import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection }
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
-import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
+import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
 import { ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -34,6 +34,7 @@ const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
 export const ChannelView: React.FC = () => {
+  const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
   const { followChannel } = useFollowChannel()
@@ -69,9 +70,23 @@ export const ChannelView: React.FC = () => {
   const handleFollow = () => {
     try {
       if (isFollowing) {
-        updateChannelFollowing(id, false)
-        unfollowChannel(id)
-        setFollowing(false)
+        openUnfollowDialog({
+          variant: 'info',
+          exitButton: false,
+          error: true,
+          description: `Do you want to unfollow ${channel?.title}?`,
+          primaryButtonText: 'Unfollow',
+          onPrimaryButtonClick: () => {
+            updateChannelFollowing(id, false)
+            unfollowChannel(id)
+            setFollowing(false)
+            closeUnfollowDialog()
+          },
+          secondaryButtonText: 'Cancel',
+          onSecondaryButtonClick: () => {
+            closeUnfollowDialog()
+          },
+        })
       } else {
         updateChannelFollowing(id, true)
         followChannel(id)

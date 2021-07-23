@@ -14,12 +14,17 @@ fragment AllChannelFields on Channel {
   ...BasicChannelFields
   description
   follows
+  views
   isPublic
   isCensored
   language {
     iso
   }
-
+  ownerMember {
+    id
+    handle
+    avatarUri
+  }
   coverPhotoUrls
   coverPhotoAvailability
   coverPhotoDataObject {
@@ -74,6 +79,14 @@ query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
     id
     follows
+  }
+}
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelViews($channelId: ID!) {
+  channelViews(channelId: $channelId) {
+    id
+    views
   }
 }
 
