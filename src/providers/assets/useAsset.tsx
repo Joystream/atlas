@@ -6,7 +6,7 @@ import { UseAssetDataArgs } from './types'
 
 export const useAsset = ({ entity, assetType }: UseAssetDataArgs) => {
   const assetData = readAssetData(entity, assetType)
-  const contentId = assetData?.dataObject?.joystreamContentId ?? null
+  const contentId = assetData?.dataObject?.joystreamContentId ?? assetData?.urls?.[0] ?? null
   const asset = useAssetStore((state) => (contentId ? state.assets[contentId] : null))
   const pendingAsset = useAssetStore((state) => (contentId ? state.pendingAssets[contentId] : null))
   const addPendingAsset = useAssetStore((state) => state.actions.addPendingAsset)
