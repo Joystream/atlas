@@ -79,7 +79,7 @@ export type GetVideosQueryVariables = Types.Exact<{
   offset?: Types.Maybe<Types.Scalars['Int']>
   limit?: Types.Maybe<Types.Scalars['Int']>
   where?: Types.Maybe<Types.VideoWhereInput>
-  orderBy?: Types.Maybe<Types.VideoOrderByInput>
+  orderBy?: Types.Maybe<Array<Types.VideoOrderByInput> | Types.VideoOrderByInput>
 }>
 
 export type GetVideosQuery = {
@@ -275,7 +275,12 @@ export type GetVideosConnectionQueryResult = Apollo.QueryResult<
   GetVideosConnectionQueryVariables
 >
 export const GetVideosDocument = gql`
-  query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput = createdAt_DESC) {
+  query GetVideos(
+    $offset: Int
+    $limit: Int
+    $where: VideoWhereInput
+    $orderBy: [VideoOrderByInput!] = [createdAt_DESC]
+  ) {
     videos(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
       ...VideoFields
     }

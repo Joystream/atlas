@@ -348,7 +348,7 @@ export type QueryVideosArgs = {
   offset?: Maybe<Scalars['Int']>
   limit?: Maybe<Scalars['Int']>
   where?: Maybe<VideoWhereInput>
-  orderBy?: Maybe<VideoOrderByInput>
+  orderBy?: Maybe<Array<VideoOrderByInput>>
 }
 
 export type QueryVideosConnectionArgs = {
