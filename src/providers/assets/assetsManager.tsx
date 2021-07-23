@@ -29,10 +29,9 @@ export const AssetsManager: React.FC = () => {
       const storageProvidersWithoutLiaison = allStorageProviders.filter(
         (provider) => provider.id !== resolutionData.dataObject?.liaison?.id
       )
-      const storageProvidersToTry = [
-        ...(resolutionData.dataObject?.liaison?.isActive ? [resolutionData.dataObject.liaison] : []),
-        ...storageProvidersWithoutLiaison,
-      ]
+      const liaison = resolutionData.dataObject?.liaison
+      const liaisonActive = liaison?.isActive && !!liaison.metadata?.match(/^https?/)
+      const storageProvidersToTry = [...(liaison && liaisonActive ? [liaison] : []), ...storageProvidersWithoutLiaison]
       for (const storageProvider of storageProvidersToTry) {
         const assetUrl = getAssetUrl(resolutionData, storageProvider.metadata ?? '')
         if (!assetUrl) {
