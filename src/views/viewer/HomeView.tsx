@@ -66,7 +66,7 @@ const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
 
-  :not(:first-child) {
+  :not(:first-of-type) {
     margin-top: ${sizes(36)};
   }
 `
