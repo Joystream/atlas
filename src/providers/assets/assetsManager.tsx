@@ -30,7 +30,7 @@ export const AssetsManager: React.FC = () => {
         (provider) => provider.id !== resolutionData.dataObject?.liaison?.id
       )
       const storageProvidersToTry = [
-        ...(resolutionData.dataObject?.liaison ? [resolutionData.dataObject.liaison] : []),
+        ...(resolutionData.dataObject?.liaison?.isActive ? [resolutionData.dataObject.liaison] : []),
         ...storageProvidersWithoutLiaison,
       ]
       for (const storageProvider of storageProvidersToTry) {
