@@ -19,7 +19,7 @@ import {
   TransformOrionChannelViewsField,
   TransformOrionViewsField,
 } from './transforms/orionViews'
-import { RemoveQueryNodeChanneliewsField } from './transforms/queryNodeViews'
+import { RemoveQueryNodeChannelViewsField } from './transforms/queryNodeViews'
 
 import { VideoEdge } from '../queries'
 
@@ -56,15 +56,15 @@ export const queryNodeStitchingResolvers = (
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
       RemoveQueryNodeFollowsField,
-      RemoveQueryNodeChanneliewsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     channels: createResolverWithTransforms(queryNodeSchema, 'channels', [
       RemoveQueryNodeFollowsField,
-      RemoveQueryNodeChanneliewsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
-      RemoveQueryNodeChanneliewsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [

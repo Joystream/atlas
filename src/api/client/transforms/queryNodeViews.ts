@@ -25,7 +25,7 @@ export const RemoveQueryNodeViewsField: Transform = {
 }
 
 // remove views field from the query node video request
-export const RemoveQueryNodeChanneliewsField: Transform = {
+export const RemoveQueryNodeChannelViewsField: Transform = {
   transformRequest: (request) => {
     request.document = {
       ...request.document,
