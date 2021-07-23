@@ -5,7 +5,7 @@ import React from 'react'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, VideoHero, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
-import { transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/shared/theme'
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -37,6 +37,7 @@ export const HomeView: React.FC = () => {
             <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
           ) : null}
           <OfficialJoystreamUpdate />
+          <StyledInfiniteVideoGrid title="All content" onDemand />
         </ErrorBoundary>
       </Container>
     </ViewWrapper>
@@ -54,4 +55,8 @@ const Container = styled.div`
 const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
+
+  :not(:first-of-type) {
+    margin-top: ${sizes(36)};
+  }
 `
