@@ -10,7 +10,7 @@ import {
   ViewErrorFallback,
 } from '@/components'
 import { usePersonalDataStore } from '@/providers'
-import { transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: React.FC = () => {
@@ -42,6 +42,7 @@ export const HomeView: React.FC = () => {
           <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
         ) : null}
         <OfficialJoystreamUpdate />
+        <StyledInfiniteVideoGrid title="All content" onDemand />
       </Container>
     </LimitedWidthContainer>
   )
@@ -58,4 +59,8 @@ const Container = styled.div`
 const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   margin: 0;
   padding-bottom: 4rem;
+
+  :not(:first-of-type) {
+    margin-top: ${sizes(36)};
+  }
 `
