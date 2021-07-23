@@ -4,8 +4,11 @@ import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, ViewWrapper } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
 import { sizes, transitions } from '@/shared/theme'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
+import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -38,6 +41,26 @@ export const HomeView: React.FC = () => {
           ) : null}
           <OfficialJoystreamUpdate />
           <StyledInfiniteVideoGrid title="All content" onDemand />
+          <CallToActionWrapper>
+            <CallToActionButton
+              label="Popular on Joystream"
+              to={absoluteRoutes.viewer.popular()}
+              colorVariant="red"
+              icon={<SvgNavPopular />}
+            />
+            <CallToActionButton
+              label="New & Noteworthy"
+              to={absoluteRoutes.viewer.new()}
+              colorVariant="green"
+              icon={<SvgNavNew />}
+            />
+            <CallToActionButton
+              label="Browse channels"
+              to={absoluteRoutes.viewer.browse()}
+              colorVariant="blue"
+              icon={<SvgNavChannels />}
+            />
+          </CallToActionWrapper>
         </ErrorBoundary>
       </Container>
     </ViewWrapper>
