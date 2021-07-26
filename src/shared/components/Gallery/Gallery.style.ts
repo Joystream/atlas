@@ -22,5 +22,6 @@ export const TitleWrapper = styled.div`
 `
 
 export const SeeAllLink = styled(Button)`
+  flex-shrink: 0;
   margin-left: ${sizes(8)};
 `

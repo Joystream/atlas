@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
-import { sizes } from '@/shared/theme'
+import { AvatarContainer } from '@/shared/components/VideoPreviewBase/VideoPreviewBase.styles'
+import { media, sizes } from '@/shared/theme'
 
 import { VideoPreview } from './VideoPreview'
 
@@ -27,24 +28,11 @@ type VideoGalleryProps = {
   onRemoveButtonClick?: (id: string) => void
   onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
+  hasRanking?: boolean
   seeAllUrl?: string
 }
 
 const PLACEHOLDERS_COUNT = 12
-
-// This is needed since Gliderjs and the Grid have different resizing policies
-const breakpoints = breakpointsOfGrid({
-  breakpoints: 6,
-  minItemWidth: 300,
-  gridColumnGap: 24,
-  viewportContainerDifference: 64,
-}).map((breakpoint, idx) => ({
-  breakpoint,
-  settings: {
-    slidesToShow: idx + 1,
-    slidesToScroll: idx + 1,
-  },
-}))
 
 const MIN_VIDEO_PREVIEW_WIDTH = 281
 
@@ -57,7 +45,33 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   onRemoveButtonClick,
   onVideoNotFound,
   seeAllUrl,
+  hasRanking = true,
 }) => {
+  const breakpoints = useMemo(() => {
+    return breakpointsOfGrid({
+      breakpoints: 6,
+      minItemWidth: 300,
+      gridColumnGap: 24,
+      viewportContainerDifference: 64,
+    }).map((breakpoint, idx) => {
+      if (breakpoint <= 688 && hasRanking) {
+        return {
+          breakpoint,
+          settings: {
+            slidesToShow: idx + 1.5,
+            slidesToScroll: idx + 1,
+          },
+        }
+      }
+      return {
+        breakpoint,
+        settings: {
+          slidesToShow: idx + 1,
+          slidesToScroll: idx + 1,
+        },
+      }
+    })
+  }, [hasRanking])
   if (!loading && videos?.length === 0) {
     return null
   }
@@ -79,25 +93,85 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       seeAllUrl={seeAllUrl}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <StyledVideoPreview
-          id={video.id}
-          progress={video?.progress}
-          key={idx}
-          removeButton={video ? removeButton : false}
-          onClick={createClickHandler(video.id)}
-          onNotFound={createNotFoundHandler(video.id)}
-          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-        />
+        <GalleryWrapper key={`${idx}-${video.id}`} hasRanking={hasRanking}>
+          {hasRanking && <RankingNumber>{idx + 1}</RankingNumber>}
+          <StyledVideoPreview
+            id={video.id}
+            progress={video?.progress}
+            removeButton={video ? removeButton : false}
+            onClick={createClickHandler(video.id)}
+            onNotFound={createNotFoundHandler(video.id)}
+            onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+          />
+        </GalleryWrapper>
       ))}
     </Gallery>
   )
 }
 
 const StyledVideoPreview = styled(VideoPreview)`
+  flex-shrink: 0;
+
+  ${AvatarContainer} {
+    display: none;
+
+    ${media.medium} {
+      display: block;
+    }
+  }
+`
+
+const GalleryWrapper = styled.div<{ hasRanking?: boolean }>`
+  position: relative;
+  ${({ hasRanking }) => `
+    display: ${hasRanking ? 'flex' : 'block'};
+    justify-content: ${hasRanking ? 'flex-end' : 'unset'};
+  `}
+
+  ${StyledVideoPreview} {
+    width: ${({ hasRanking }) => (hasRanking ? '75%' : '100%')};
+  }
+
   & + & {
     margin-left: ${sizes(6)};
   }
+`
 
-  /* MIN_VIDEO_PREVIEW_WIDTH */
-  min-width: 300px;
+const RankingNumber = styled.span`
+  position: absolute;
+  left: 9px;
+  top: -38px;
+  color: black;
+  font-weight: 700;
+  font-size: 100px;
+  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-color: #424e57;
+  font-family: 'PxGrotesk', sans-serif;
+  letter-spacing: -0.25em;
+  line-height: 144px;
+
+  ${media.small} {
+    left: 23px;
+    top: -24px;
+  }
+
+  ${media.medium} {
+    left: 14px;
+    top: -20px;
+  }
+
+  ${media.large} {
+    font-size: 160px;
+    top: -17px;
+    left: -2px;
+  }
+  ${media.xlarge} {
+    left: 0;
+    font-size: 150px;
+  }
+
+  ${media.xxlarge} {
+    top: -5px;
+    font-size: 180px;
+  }
 `
