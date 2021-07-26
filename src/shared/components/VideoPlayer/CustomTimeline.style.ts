@@ -27,7 +27,7 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   :hover ${() => PlayProgressThumb} {
     opacity: 1;
   }
-  :hover ${() => MouseDisplay} {
+  :hover ${() => MouseDisplayWrapper} {
     opacity: 1;
   }
   :hover ${() => MouseDisplayTooltip} {
@@ -52,13 +52,17 @@ export const LoadProgress = styled.div`
   background-color: ${colors.transparentWhite[32]};
 `
 
-export const MouseDisplay = styled.div`
+export const MouseDisplayWrapper = styled.div`
+  width: 100%;
   opacity: 0;
+  transition: opacity 200ms ${transitions.easing};
+`
+
+export const MouseDisplay = styled.div`
   height: 100%;
   position: absolute;
   top: 0;
   background-color: ${colors.transparentWhite[32]};
-  transition: opacity 200ms ${transitions.easing};
 `
 
 type MouseDisplayTooltipProps = {
