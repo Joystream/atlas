@@ -6,9 +6,9 @@ import useVideosConnection from '@/api/hooks/videosConnection'
 import { CoverVideo, ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
-import { sizes, transitions } from '@/shared/theme'
 import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
 import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
+import { sizes, transitions } from '@/shared/theme'
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
