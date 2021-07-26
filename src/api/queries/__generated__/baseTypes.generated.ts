@@ -318,7 +318,7 @@ export type QueryChannelsConnectionArgs = {
   first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
   where?: Maybe<ChannelWhereInput>
-  orderBy?: Maybe<ChannelOrderByInput>
+  orderBy?: Maybe<Array<ChannelOrderByInput>>
 }
 
 export type QueryMembershipByUniqueInputArgs = {
@@ -348,14 +348,14 @@ export type QueryVideosArgs = {
   offset?: Maybe<Scalars['Int']>
   limit?: Maybe<Scalars['Int']>
   where?: Maybe<VideoWhereInput>
-  orderBy?: Maybe<VideoOrderByInput>
+  orderBy?: Maybe<Array<VideoOrderByInput>>
 }
 
 export type QueryVideosConnectionArgs = {
   first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
   where?: Maybe<VideoWhereInput>
-  orderBy?: Maybe<VideoOrderByInput>
+  orderBy?: Maybe<Array<VideoOrderByInput>>
 }
 
 export type QueryWorkerByUniqueInputArgs = {
