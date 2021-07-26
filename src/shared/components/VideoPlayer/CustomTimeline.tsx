@@ -1,5 +1,6 @@
 import { clamp, round } from 'lodash'
 import React, { useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
 import { formatDurationShort } from '@/utils/time'
@@ -22,99 +23,113 @@ type CustomTimelineProps = {
   playerState: PlayerState
 }
 
+const UPDATE_INTERVAL = 70
+
 export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullScreen, playerState }) => {
-  const progressControlRef = useRef<HTMLDivElement>(null)
   const playProgressRef = useRef<HTMLDivElement>(null)
   const playProgressThumbRef = useRef<HTMLDivElement>(null)
   const seekBarRef = useRef<HTMLDivElement>(null)
-  const loadProgressRef = useRef<HTMLDivElement>(null)
-  const mouseDisplayRef = useRef<HTMLDivElement>(null)
   const mouseDisplayTooltipRef = useRef<HTMLDivElement>(null)
-  const mouseDisplayTooltipTextRef = useRef<HTMLDivElement>(null)
+
+  const [playProgressWidth, setPlayProgressWidth] = useState(0)
+  const [loadProgressWidth, setLoadProgressWidth] = useState(0)
+  const [mouseDisplayWidth, setMouseDisplayWidth] = useState(0)
+  const [mouseDisplayTooltipPosition, setMouseDisplayTooltipPosition] = useState(0)
+  const [mouseDisplayTooltipTime, setMouseDisplayTooltipTime] = useState('0:00')
+  const [playProgressThumbPosition, setPlayProgressThumbPosition] = useState(0)
 
   useEffect(() => {
-    if (!player || !playerState || playerState === 'ended' || playerState === 'error') {
+    if (!player) {
+      return
+    }
+    const handler = () => {
+      const duration = player.duration()
+      const bufferedEnd = player.bufferedEnd()
+      const loadProgressPercentage = round((bufferedEnd / duration) * 100, 2)
+      setLoadProgressWidth(loadProgressPercentage)
+    }
+    player.on('progress', handler)
+    return () => {
+      player.off('progress', handler)
+    }
+  }, [player])
+
+  useEffect(() => {
+    const playProgress = playProgressRef.current
+    const playProgressThumb = playProgressThumbRef.current
+    const seekBar = seekBarRef.current
+    if (
+      !player ||
+      !playerState ||
+      playerState === 'ended' ||
+      playerState === 'error' ||
+      !playProgress ||
+      !playProgressThumb ||
+      !seekBar
+    ) {
       return
     }
 
-    let animationFrame: number
-    const callback = () => {
-      const playProgress = playProgressRef.current
-      const playProgressThumb = playProgressThumbRef.current
-      const loadProgress = loadProgressRef.current
-      const seekBar = seekBarRef.current
-      if (!playProgress || !loadProgress || !playProgressThumb || !seekBar) {
-        return
-      }
-
+    const interval = window.setInterval(() => {
       const duration = player.duration()
       const currentTime = player.currentTime()
-      const bufferedEnd = player.bufferedEnd()
 
       const progressPercentage = round((currentTime / duration) * 100, 2)
-      const loadProgressPercentage = round((bufferedEnd / duration) * 100, 2)
-
-      playProgress.style.width = progressPercentage + '%'
-      loadProgress.style.width = loadProgressPercentage + '%'
+      setPlayProgressWidth(progressPercentage)
 
       // position of playProgressThumb
+
       const halfOfPlayProgressThumbWidth = playProgressThumb.clientWidth / 2
-
       if (halfOfPlayProgressThumbWidth > playProgress.clientWidth) {
-        const pullThumbBy = '-' + (halfOfPlayProgressThumbWidth * 2 - playProgress.clientWidth) + 'px'
-        playProgressThumb.style.right = pullThumbBy
+        const pullThumbBy = -(halfOfPlayProgressThumbWidth * 2 - playProgress.clientWidth)
+        setPlayProgressThumbPosition(pullThumbBy)
       } else if (halfOfPlayProgressThumbWidth + playProgress.clientWidth > seekBar.clientWidth) {
-        const pullThumbBy = '-' + (seekBar.clientWidth - playProgress.clientWidth) + 'px'
-        playProgressThumb.style.right = pullThumbBy
+        const pullThumbBy = -(seekBar.clientWidth - playProgress.clientWidth)
+        setPlayProgressThumbPosition(pullThumbBy)
       } else {
-        playProgressThumb.style.right = '-' + halfOfPlayProgressThumbWidth + 'px'
+        setPlayProgressThumbPosition(-halfOfPlayProgressThumbWidth)
       }
-
-      window.setTimeout(() => {
-        animationFrame = player.requestAnimationFrame(callback)
-        // ~ 10fps
-      }, 1000 / 10)
-    }
-    animationFrame = player.requestAnimationFrame(callback)
+    }, UPDATE_INTERVAL)
     return () => {
-      player.cancelAnimationFrame(animationFrame)
+      clearInterval(interval)
     }
   }, [player, playerState])
 
   const handleScrubbing = (e: React.MouseEvent) => {
     const seekBar = seekBarRef.current
-    const mouseDisplay = mouseDisplayRef.current
     const mouseDisplayTooltip = mouseDisplayTooltipRef.current
-    const mouseDisplayTooltipText = mouseDisplayTooltipTextRef.current
-    if (!seekBar || !mouseDisplay || !mouseDisplayTooltipText || !mouseDisplayTooltip) {
+    if (!seekBar || !mouseDisplayTooltip || !player) {
       return
     }
+    const duration = player.duration()
 
-    // position of mouseDisplay
+    // position of seekBar
     const { x: seekbarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
     const mousePosition = e.clientX - seekbarPosition
     const percentage = clamp(round((mousePosition / seekBarWidth) * 100, 2), 0, 100)
-    mouseDisplay.style.width = percentage + '%'
+    setMouseDisplayWidth(percentage)
 
     // position of mouseDisplayTooltip
     const halfOfTooltipWidth = mouseDisplayTooltip.clientWidth / 2
 
     if (halfOfTooltipWidth >= seekBarWidth - mousePosition) {
-      const pullTooltipBy = '-' + Math.max(seekBarWidth - mousePosition, 0) + 'px'
-      mouseDisplayTooltip.style.right = pullTooltipBy
+      const pullTooltipBy = -Math.max(seekBarWidth - mousePosition, 0)
+      setMouseDisplayTooltipPosition(pullTooltipBy)
     } else if (halfOfTooltipWidth >= mousePosition) {
-      const pullTooltipBy = '-' + Math.min(halfOfTooltipWidth * 2 - mousePosition, halfOfTooltipWidth * 2) + 'px'
-      mouseDisplayTooltip.style.right = pullTooltipBy
+      const pullTooltipBy = -Math.min(halfOfTooltipWidth * 2 - mousePosition, halfOfTooltipWidth * 2)
+      setMouseDisplayTooltipPosition(pullTooltipBy)
     } else {
-      mouseDisplayTooltip.style.right = '-' + halfOfTooltipWidth + 'px'
+      setMouseDisplayTooltipPosition(-halfOfTooltipWidth)
     }
 
     // tooltip text
-    mouseDisplayTooltipText.textContent = formatDurationShort(round((percentage / 100) * (player?.duration() || 0)))
+    if (duration) {
+      setMouseDisplayTooltipTime(formatDurationShort(round((percentage / 100) * duration)))
+    }
   }
 
   const handleJumpToTime = (e: React.MouseEvent) => {
-    if (!seekBarRef.current || !mouseDisplayRef.current || !mouseDisplayTooltipTextRef.current) {
+    if (!seekBarRef.current) {
       return
     }
     const { x: seekbarPosition, width: seekBarWidth } = seekBarRef.current.getBoundingClientRect()
@@ -126,21 +141,20 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   }
 
   return (
-    <ProgressControl
-      isFullScreen={isFullScreen}
-      ref={progressControlRef}
-      onMouseMove={handleScrubbing}
-      onClick={handleJumpToTime}
-    >
+    <ProgressControl isFullScreen={isFullScreen} onMouseMove={handleScrubbing} onClick={handleJumpToTime}>
       <SeekBar ref={seekBarRef}>
-        <LoadProgress ref={loadProgressRef} />
-        <MouseDisplay ref={mouseDisplayRef}>
-          <MouseDisplayTooltip ref={mouseDisplayTooltipRef} isFullScreen={isFullScreen}>
-            <StyledTooltipText variant="body2" ref={mouseDisplayTooltipTextRef} />
+        <LoadProgress style={{ width: loadProgressWidth + '%' }} />
+        <MouseDisplay style={{ width: mouseDisplayWidth + '%' }}>
+          <MouseDisplayTooltip
+            style={{ right: mouseDisplayTooltipPosition }}
+            ref={mouseDisplayTooltipRef}
+            isFullScreen={isFullScreen}
+          >
+            <StyledTooltipText variant="body2">{mouseDisplayTooltipTime}</StyledTooltipText>
           </MouseDisplayTooltip>
         </MouseDisplay>
-        <PlayProgress ref={playProgressRef}>
-          <PlayProgressThumb ref={playProgressThumbRef} />
+        <PlayProgress style={{ width: playProgressWidth + '%' }} ref={playProgressRef}>
+          <PlayProgressThumb ref={playProgressThumbRef} style={{ right: playProgressThumbPosition }} />
         </PlayProgress>
       </SeekBar>
     </ProgressControl>
