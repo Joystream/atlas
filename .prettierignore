@@ -7,3 +7,6 @@ tsconfig.json
 public/mockServiceWorker.js
 .history
 docs/
+
+# don't prettify minified animation JSONs
+src/shared/assets/animations

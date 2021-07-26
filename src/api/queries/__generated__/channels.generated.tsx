@@ -293,7 +293,7 @@ export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLaz
 export type GetChannelsQueryResult = Apollo.QueryResult<GetChannelsQuery, GetChannelsQueryVariables>
 export const GetChannelsConnectionDocument = gql`
   query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
-    channelsConnection(first: $first, after: $after, where: $where, orderBy: createdAt_DESC) {
+    channelsConnection(first: $first, after: $after, where: $where, orderBy: [createdAt_DESC]) {
       edges {
         cursor
         node {

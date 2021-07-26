@@ -45,8 +45,9 @@ import {
   SearchQuery,
   SearchQueryVariables,
 } from '@/api/queries'
+import { GetWorkersDocument, GetWorkersQuery } from '@/api/queries/__generated__/workers.generated'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
-import { mockCategories, mockChannels, mockMemberships, mockVideos } from '@/mocking/data'
+import { mockCategories, mockChannels, mockMemberships, mockVideos, mockWorkers } from '@/mocking/data'
 
 import {
   createBatchedVideoViewsAccessor,
@@ -135,6 +136,7 @@ const queryNodeHandlers = [
     SearchDocument,
     createSearchAccessor({ videos: mockVideos, channels: mockChannels })
   ),
+  createQueryHandler<GetWorkersQuery>(queryNode, GetWorkersDocument, () => mockWorkers),
 ]
 
 const orionHandlers = [
