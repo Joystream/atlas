@@ -273,7 +273,7 @@ type Query {
     first: Int
     after: String
     where: ChannelWhereInput
-    orderBy: ChannelOrderByInput
+    orderBy: [ChannelOrderByInput!]
   ): ChannelConnection!
 
   # Lookup video by its ID
@@ -283,7 +283,7 @@ type Query {
   videos(offset: Int, limit: Int, where: VideoWhereInput, orderBy: [VideoOrderByInput!]): [Video!]
 
   # List all videos by given constraints
-  videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: VideoOrderByInput): VideoConnection!
+  videosConnection(first: Int, after: String, where: VideoWhereInput, orderBy: [VideoOrderByInput!]): VideoConnection!
 
   # List all categories
   videoCategories: [VideoCategory!]!
