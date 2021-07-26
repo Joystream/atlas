@@ -6,7 +6,7 @@ import { SvgPlayerSoundOff } from '@/shared/icons'
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.style'
 
-import { colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -153,10 +153,6 @@ const backgroundContainerCss = css`
     display: none;
   }
 
-  .vjs-control-bar {
-    display: none;
-  }
-
   .vjs-error-display {
     display: block;
   }
@@ -186,7 +182,8 @@ export const Container = styled.div<ContainerProps>`
     background-color: ${colors.gray[900]};
   }
 
-  .vjs-error-display {
+  .vjs-error-display,
+  .vjs-control-bar {
     display: none;
   }
 
@@ -221,116 +218,6 @@ export const Container = styled.div<ContainerProps>`
     background-size: cover;
   }
 
-  .vjs-control-bar {
-    opacity: 0;
-    background: none;
-    align-items: flex-end;
-    height: 2em;
-    transition: opacity 200ms ${transitions.easing} !important;
-    z-index: ${zIndex.nearOverlay};
-
-    :hover {
-      & ~ ${ControlsOverlay} ${CustomControls} {
-        opacity: 0;
-        transform: translateY(0.5em);
-      }
-    }
-
-    .vjs-progress-control {
-      height: 2em;
-      z-index: ${zIndex.overlay};
-      position: absolute;
-      top: initial;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
-
-      .vjs-slider {
-        align-self: flex-end;
-        height: 0.25em;
-        margin: 0;
-        background-color: ${colors.transparentWhite[32]};
-        transition: height ${transitions.timings.player} ${transitions.easing} !important;
-
-        :focus {
-          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-        }
-
-        :focus-visible {
-          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-        }
-
-        :focus:not(:focus-visible) {
-          box-shadow: unset;
-        }
-
-        .vjs-slider-bar {
-          background-color: ${colors.blue[500]};
-          z-index: 1;
-        }
-
-        .vjs-mouse-display {
-          background-color: ${colors.transparentWhite[32]};
-
-          .vjs-time-tooltip {
-            background: none;
-            font-family: ${typography.fonts.base};
-            font-size: 0.875em !important;
-            top: -3em;
-            font-feature-settings: 'tnum' on, 'lnum' on;
-          }
-        }
-
-        /* ::before is progress timeline thumb */
-
-        .vjs-play-progress::before {
-          content: '';
-          position: absolute;
-          box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
-          opacity: 0;
-          border-radius: 100%;
-          background: ${colors.white};
-          right: -0.5em;
-          height: 1em;
-          width: 1em;
-          top: -0.25em;
-          transition: opacity ${transitions.timings.player} ${transitions.easing};
-        }
-
-        .vjs-play-progress {
-          .vjs-time-tooltip {
-            display: none;
-          }
-        }
-
-        .vjs-load-progress {
-          background-color: ${colors.transparentWhite[32]};
-
-          > div {
-            display: none;
-          }
-        }
-      }
-
-      :hover .vjs-play-progress::before {
-        opacity: 1;
-      }
-
-      :hover .vjs-slider {
-        height: 0.5em;
-      }
-    }
-  }
-
-  :hover .vjs-control-bar {
-    opacity: 1;
-  }
-
-  .vjs-paused .vjs-control-bar {
-    opacity: 1;
-  }
-
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
 
@@ -362,4 +249,94 @@ export const BigPlayButton = styled(ControlButton)`
     width: ${sizes(10)} !important;
     height: ${sizes(10)} !important;
   }
+`
+
+export const SeekBar = styled.div`
+  position: relative;
+  width: 100%;
+  height: 0.25em;
+  background-color: ${colors.transparentWhite[32]};
+  transition: height ${transitions.timings.player} ${transitions.easing} !important;
+`
+
+export const PlayProgress = styled.div`
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: ${colors.blue[500]};
+  z-index: 1;
+`
+
+export const PlayProgressThumb = styled.div`
+  opacity: 0;
+  content: '';
+  height: 1em;
+  width: 1em;
+  top: -0.25em;
+  position: absolute;
+  box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
+  border-radius: 100%;
+  background: ${colors.white};
+  transition: opacity ${transitions.timings.player} ${transitions.easing};
+`
+
+type ProgressControlProps = {
+  isFullScreen?: boolean
+}
+export const ProgressControl = styled.div<ProgressControlProps>`
+  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)} !important;
+  position: absolute;
+  height: 1.5em;
+  z-index: ${zIndex.nearOverlay};
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  :hover ${SeekBar} {
+    height: 0.5em;
+  }
+  :hover ${PlayProgressThumb} {
+    opacity: 1;
+  }
+  :hover ${() => MouseDisplay} {
+    opacity: 1;
+  }
+  :hover ~ ${CustomControls} {
+    opacity: 0;
+
+    /* figure out why I need important here */
+    transform: translateY(0.5em) !important;
+  }
+`
+
+export const LoadProgress = styled.div`
+  height: 100%;
+  background-color: ${colors.transparentWhite[32]};
+`
+
+export const MouseDisplay = styled.div`
+  opacity: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background-color: ${colors.transparentWhite[32]};
+`
+
+type MouseDisplayTooltipProps = {
+  isFullScreen?: boolean
+}
+
+export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
+  pointer-events: none;
+  position: absolute;
+  padding: ${({ isFullScreen }) => (isFullScreen ? `0` : `0 1em`)};
+  bottom: 2em;
+`
+
+export const StyledTooltipText = styled(Text)`
+  /* 14px */
+  font-size: 0.875em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
