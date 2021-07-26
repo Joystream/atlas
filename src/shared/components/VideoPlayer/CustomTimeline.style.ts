@@ -80,6 +80,10 @@ export const StyledTooltipText = styled(Text)`
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
+export const PlayProgressWrapper = styled.div`
+  width: 100%;
+`
+
 export const PlayProgress = styled.div`
   position: absolute;
   top: 0;
@@ -90,6 +94,7 @@ export const PlayProgress = styled.div`
 
 export const PlayProgressThumb = styled.div`
   opacity: 0;
+  z-index: 1;
   content: '';
   height: 1em;
   width: 1em;

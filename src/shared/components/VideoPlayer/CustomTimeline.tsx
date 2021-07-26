@@ -11,6 +11,7 @@ import {
   MouseDisplayTooltip,
   PlayProgress,
   PlayProgressThumb,
+  PlayProgressWrapper,
   ProgressControl,
   SeekBar,
   StyledTooltipText,
@@ -23,12 +24,10 @@ type CustomTimelineProps = {
   playerState: PlayerState
 }
 
-const UPDATE_INTERVAL = 70
+const UPDATE_INTERVAL = 30
 
 export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullScreen, playerState }) => {
   const playProgressRef = useRef<HTMLDivElement>(null)
-  const playProgressThumbRef = useRef<HTMLDivElement>(null)
-  const seekBarRef = useRef<HTMLDivElement>(null)
   const mouseDisplayTooltipRef = useRef<HTMLDivElement>(null)
 
   const [playProgressWidth, setPlayProgressWidth] = useState(0)
@@ -56,17 +55,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
   useEffect(() => {
     const playProgress = playProgressRef.current
-    const playProgressThumb = playProgressThumbRef.current
-    const seekBar = seekBarRef.current
-    if (
-      !player ||
-      !playerState ||
-      playerState === 'ended' ||
-      playerState === 'error' ||
-      !playProgress ||
-      !playProgressThumb ||
-      !seekBar
-    ) {
+    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress) {
       return
     }
 
@@ -76,19 +65,9 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
       const progressPercentage = round((currentTime / duration) * 100, 2)
       setPlayProgressWidth(progressPercentage)
+      setPlayProgressThumbPosition(progressPercentage)
 
       // position of playProgressThumb
-
-      const halfOfPlayProgressThumbWidth = playProgressThumb.clientWidth / 2
-      if (halfOfPlayProgressThumbWidth > playProgress.clientWidth) {
-        const pullThumbBy = -(halfOfPlayProgressThumbWidth * 2 - playProgress.clientWidth)
-        setPlayProgressThumbPosition(pullThumbBy)
-      } else if (halfOfPlayProgressThumbWidth + playProgress.clientWidth > seekBar.clientWidth) {
-        const pullThumbBy = -(seekBar.clientWidth - playProgress.clientWidth)
-        setPlayProgressThumbPosition(pullThumbBy)
-      } else {
-        setPlayProgressThumbPosition(-halfOfPlayProgressThumbWidth)
-      }
     }, UPDATE_INTERVAL)
     return () => {
       clearInterval(interval)
@@ -96,7 +75,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   }, [player, playerState])
 
   const handleScrubbing = (e: React.MouseEvent) => {
-    const seekBar = seekBarRef.current
+    const seekBar = e.currentTarget.querySelector(SeekBar.toString())
     const mouseDisplayTooltip = mouseDisplayTooltipRef.current
     if (!seekBar || !mouseDisplayTooltip || !player) {
       return
@@ -104,7 +83,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
     const duration = player.duration()
 
     // position of seekBar
-    const { x: seekbarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
+    const { x: seekbarPosition, width: seekBarWidth } = (seekBar as HTMLDivElement).getBoundingClientRect()
     const mousePosition = e.clientX - seekbarPosition
     const percentage = clamp(round((mousePosition / seekBarWidth) * 100, 2), 0, 100)
     setMouseDisplayWidth(percentage)
@@ -129,20 +108,21 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   }
 
   const handleJumpToTime = (e: React.MouseEvent) => {
-    if (!seekBarRef.current) {
+    const seekBar = e.currentTarget.querySelector(SeekBar.toString())
+    if (!seekBar) {
       return
     }
-    const { x: seekbarPosition, width: seekBarWidth } = seekBarRef.current.getBoundingClientRect()
+    const { x: seekbarPosition, width: seekBarWidth } = (seekBar as HTMLDivElement).getBoundingClientRect()
     const mousePosition = e.clientX - seekbarPosition
 
-    const percentage = clamp(round(mousePosition / seekBarWidth, 2), 0, 100)
+    const percentage = clamp(round(mousePosition / seekBarWidth, 4), 0, 100)
     const newTime = percentage * (player?.duration() || 0)
     player?.currentTime(newTime)
   }
 
   return (
     <ProgressControl isFullScreen={isFullScreen} onMouseMove={handleScrubbing} onClick={handleJumpToTime}>
-      <SeekBar ref={seekBarRef}>
+      <SeekBar>
         <LoadProgress style={{ width: loadProgressWidth + '%' }} />
         <MouseDisplay style={{ width: mouseDisplayWidth + '%' }}>
           <MouseDisplayTooltip
@@ -153,9 +133,12 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
             <StyledTooltipText variant="body2">{mouseDisplayTooltipTime}</StyledTooltipText>
           </MouseDisplayTooltip>
         </MouseDisplay>
-        <PlayProgress style={{ width: playProgressWidth + '%' }} ref={playProgressRef}>
-          <PlayProgressThumb ref={playProgressThumbRef} style={{ right: playProgressThumbPosition }} />
-        </PlayProgress>
+        <PlayProgressWrapper>
+          <PlayProgress style={{ width: playProgressWidth + '%' }} ref={playProgressRef}></PlayProgress>
+          <PlayProgressThumb
+            style={{ left: `clamp(0px, calc(${playProgressThumbPosition}% - 0.5em), calc(100% - 1em))` }}
+          />
+        </PlayProgressWrapper>
       </SeekBar>
     </ProgressControl>
   )
