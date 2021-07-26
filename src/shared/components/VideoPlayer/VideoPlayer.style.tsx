@@ -275,6 +275,9 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   :hover ${() => MouseDisplay} {
     opacity: 1;
   }
+  :hover ${() => MouseDisplayTooltip} {
+    transform: translateY(-0.5em) !important;
+  }
   :hover ~ ${CustomControls} {
     opacity: 0;
     transform: translateY(0.5em) !important;
@@ -300,6 +303,7 @@ export const MouseDisplay = styled.div`
   position: absolute;
   top: 0;
   background-color: ${colors.transparentWhite[32]};
+  transition: opacity 200ms ${transitions.easing};
 `
 
 type MouseDisplayTooltipProps = {
@@ -310,12 +314,14 @@ export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
   pointer-events: none;
   position: absolute;
   padding: ${({ isFullScreen }) => (isFullScreen ? `0` : `0 1em`)};
-  bottom: 2em;
+  bottom: 1.5em;
+  transition: transform 200ms ${transitions.easing};
 `
 
 export const StyledTooltipText = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
