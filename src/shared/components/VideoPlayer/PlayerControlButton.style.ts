@@ -89,7 +89,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
   }
 
-  ${focusStyles}
+  ${focusStyles};
 `
 
 type ControlButtonTooltipProps = {
@@ -103,7 +103,7 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  bottom: calc(3em);
+  bottom: 3em;
   background: ${colors.transparentBlack[54]};
   backdrop-filter: blur(${sizes(8)});
   display: flex;
