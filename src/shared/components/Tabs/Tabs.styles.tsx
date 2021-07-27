@@ -33,6 +33,7 @@ export const TabsGroup = styled.div`
 `
 
 export const Tab = styled.div<TabProps>`
+  transition: border-bottom 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
   padding: 22px 0;
@@ -42,7 +43,9 @@ export const Tab = styled.div<TabProps>`
   text-align: center;
   border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : 'none')};
 
-  :hover {
+  :hover,
+  :focus {
+    border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : `4px solid ${colors.gray[300]}`)};
     cursor: pointer;
   }
 
