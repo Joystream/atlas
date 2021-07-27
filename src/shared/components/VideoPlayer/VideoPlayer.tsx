@@ -24,6 +24,8 @@ import {
   BigPlayButtonOverlay,
   Container,
   ControlButton,
+  ControlButtonTooltip,
+  ControlButtonTooltipText,
   ControlsOverlay,
   CurrentTime,
   CurrentTimeWrapper,
@@ -66,6 +68,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
+  const [isFocusEnabled, setIsFocusEnabled] = useState(false)
 
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -75,6 +78,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const [playerState, setPlayerState] = useState<PlayerState>(null)
   const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!isFocusEnabled) {
+      return
+    }
+    const handler = () => setIsFocusEnabled(false)
+    window.addEventListener('mousemove', handler)
+    return () => window.removeEventListener('mousemove', handler)
+  }, [isFocusEnabled])
 
   // handle hotkeys
   useEffect(() => {
@@ -393,6 +405,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
+  const handleButtonFocus = () => setIsFocusEnabled(true)
+
   const renderVolumeButton = () => {
     if (volume === 0) {
       return <StyledSvgPlayerSoundOff />
@@ -403,7 +417,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showBigPlayButton = playerState === null && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
-
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
@@ -427,16 +440,25 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                <ControlButton
-                  onClick={handlePlayPause}
-                  tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
-                  tooltipPosition="left"
-                >
+                <ControlButton onFocus={handleButtonFocus} disableFocus={!isFocusEnabled} onClick={handlePlayPause}>
                   {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
+                  <ControlButtonTooltip tooltipPosition="left">
+                    <ControlButtonTooltipText variant="caption">
+                      {isPlaying ? 'Pause (k)' : 'Play (k)'}
+                    </ControlButtonTooltipText>
+                  </ControlButtonTooltip>
                 </ControlButton>
                 <VolumeControl>
-                  <VolumeButton onClick={handleMute} showTooltipOnlyOnFocus tooltipText="Volume">
+                  <VolumeButton
+                    onFocus={handleButtonFocus}
+                    disableFocus={!isFocusEnabled}
+                    showTooltipOnlyOnFocus
+                    onClick={handleMute}
+                  >
                     {renderVolumeButton()}
+                    <ControlButtonTooltip>
+                      <ControlButtonTooltipText variant="caption">Volume</ControlButtonTooltipText>
+                    </ControlButtonTooltip>
                   </VolumeButton>
                   <VolumeSliderContainer>
                     <VolumeSlider
@@ -456,16 +478,24 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </CurrentTimeWrapper>
                 <ScreenControls>
                   {isPiPSupported && (
-                    <ControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
+                    <ControlButton
+                      onFocus={handleButtonFocus}
+                      disableFocus={!isFocusEnabled}
+                      onClick={handlePictureInPicture}
+                    >
                       {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
+                      <ControlButtonTooltip>
+                        <ControlButtonTooltipText variant="caption">Picture-in-picture</ControlButtonTooltipText>
+                      </ControlButtonTooltip>
                     </ControlButton>
                   )}
-                  <ControlButton
-                    onClick={handleFullScreen}
-                    tooltipPosition="right"
-                    tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
-                  >
+                  <ControlButton onFocus={handleButtonFocus} disableFocus={!isFocusEnabled} onClick={handleFullScreen}>
                     {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+                    <ControlButtonTooltip tooltipPosition="right">
+                      <ControlButtonTooltipText variant="caption">
+                        {isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
+                      </ControlButtonTooltipText>
+                    </ControlButtonTooltip>
                   </ControlButton>
                 </ScreenControls>
               </CustomControls>

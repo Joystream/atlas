@@ -16,9 +16,8 @@ type CustomControlsProps = {
 }
 
 type ControlButtonProps = {
-  tooltipText?: string
-  tooltipPosition?: 'left' | 'right'
   showTooltipOnlyOnFocus?: boolean
+  disableFocus?: boolean
 }
 
 const focusStyles = css`
@@ -67,13 +66,13 @@ export const CustomControls = styled.div<CustomControlsProps>`
 export const ControlButton = styled.button<ControlButtonProps>`
   margin-right: 0.5em;
   display: flex !important;
+  padding: 0.5em;
   cursor: pointer;
   border: none;
   background: none;
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-  padding: 0.5em;
   position: relative;
   transition: background ${transitions.timings.player} ease-in !important;
 
@@ -83,31 +82,12 @@ export const ControlButton = styled.button<ControlButtonProps>`
     height: 1.5em;
   }
 
-  ::before {
-    ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
-    ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
-
-    opacity: 0;
-    pointer-events: none;
-    content: ${({ tooltipText }) => tooltipText && `'${tooltipText}'`};
-    position: absolute;
-    font-size: 0.875em;
-    bottom: calc(3.5em - 1px);
-    background: ${colors.transparentBlack[54]};
-    backdrop-filter: blur(${sizes(8)});
-    display: flex;
-    align-items: center;
-    padding: 0.5em;
-    white-space: nowrap;
-    transition: opacity ${transitions.timings.player} ease-in !important;
-  }
-
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
     transition: none !important;
 
-    ::before {
+    ${() => ControlButtonTooltip} {
       transition: none !important;
       opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
     }
@@ -118,33 +98,60 @@ export const ControlButton = styled.button<ControlButtonProps>`
   }
 
   :focus {
-    ::before {
+    ${() => ControlButtonTooltip} {
       /* turn off transition on mouse enter, but turn on on mouse leave */
       transition: none !important;
-      opacity: 1;
+      opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
     }
   }
 
   :focus-visible {
-    ::before {
-      opacity: 1;
+    ${() => ControlButtonTooltip} {
+      opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
     }
   }
 
   :focus:not(:focus-visible):hover {
-    ::before {
+    ${() => ControlButtonTooltip} {
       transition: none !important;
       opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
     }
   }
 
   :focus:not(:focus-visible):not(:hover) {
-    ::before {
+    ${() => ControlButtonTooltip} {
       opacity: 0;
     }
   }
 
   ${focusStyles}
+`
+
+type ControlButtonTooltipProps = {
+  tooltipPosition?: 'left' | 'right'
+  showTooltipOnlyOnFocus?: boolean
+}
+
+export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
+  ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
+  ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
+
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  bottom: calc(3em);
+  background: ${colors.transparentBlack[54]};
+  backdrop-filter: blur(${sizes(8)});
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+  white-space: nowrap;
+  transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in !important;
+`
+
+export const ControlButtonTooltipText = styled(Text)`
+  /* 12px */
+  font-size: 0.75em;
 `
 
 export const VolumeSliderContainer = styled.div`
