@@ -35,6 +35,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   const [mouseDisplayWidth, setMouseDisplayWidth] = useState(0)
   const [mouseDisplayTooltipTime, setMouseDisplayTooltipTime] = useState('0:00')
   const [mouseDisplayTooltipWidth, setMouseDisplayTooltipWidth] = useState(0)
+  const [isScrubbing, setIsScrubbing] = useState(false)
 
   useEffect(() => {
     if (!player) {
@@ -54,7 +55,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
   useEffect(() => {
     const playProgress = playProgressRef.current
-    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress) {
+    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress || isScrubbing) {
       return
     }
 
@@ -70,20 +71,23 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
     return () => {
       clearInterval(interval)
     }
-  }, [player, playerState])
+  }, [isScrubbing, player, playerState])
 
-  const handleScrubbing = (e: React.MouseEvent) => {
+  const handleMouseAndTouchMove = (e: React.MouseEvent | React.TouchEvent) => {
     const seekBar = e.currentTarget.querySelector(SeekBar.toString())
     const mouseDisplayTooltip = e.currentTarget.querySelector(MouseDisplayTooltip.toString())
     if (!seekBar || !mouseDisplayTooltip || !player) {
       return
     }
+    // this will prevent hiding controls when scrubbing on mobile
+    player.enableTouchActivity()
+
     const duration = player.duration()
 
     // position of seekBar
     const { x: seekbarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
-    const mousePosition = e.clientX - seekbarPosition
-    const percentage = clamp(round((mousePosition / seekBarWidth) * 100, 2), 0, 100)
+    const position = 'clientX' in e ? e.clientX - seekbarPosition : e.touches[0].clientX - seekbarPosition
+    const percentage = clamp(round((position / seekBarWidth) * 100, 2), 0, 100)
     setMouseDisplayWidth(percentage)
     setMouseDisplayTooltipWidth(mouseDisplayTooltip.clientWidth)
 
@@ -91,9 +95,17 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
     if (duration) {
       setMouseDisplayTooltipTime(formatDurationShort(round((percentage / 100) * duration)))
     }
+    if (isScrubbing) {
+      setPlayProgressWidth(percentage)
+      const newTime = percentage * (player?.duration() || 0)
+      player?.currentTime(newTime / 100)
+    }
   }
 
   const handleJumpToTime = (e: React.MouseEvent) => {
+    if (isScrubbing) {
+      return
+    }
     const seekBar = e.currentTarget.querySelector(SeekBar.toString())
     if (!seekBar) {
       return
@@ -108,11 +120,20 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   }
 
   return (
-    <ProgressControl isFullScreen={isFullScreen} onMouseMove={handleScrubbing} onClick={handleJumpToTime}>
+    <ProgressControl
+      isFullScreen={isFullScreen}
+      onMouseMove={handleMouseAndTouchMove}
+      onTouchMove={handleMouseAndTouchMove}
+      onClick={handleJumpToTime}
+      onMouseDown={() => setIsScrubbing(true)}
+      onTouchStart={() => setIsScrubbing(true)}
+      onMouseUp={() => setIsScrubbing(false)}
+      onTouchEnd={() => setIsScrubbing(false)}
+    >
       <SeekBar>
         <LoadProgress style={{ width: loadProgressWidth + '%' }} />
         <MouseDisplayWrapper>
-          <MouseDisplay style={{ width: mouseDisplayWidth + '%' }}></MouseDisplay>
+          <MouseDisplay style={{ width: mouseDisplayWidth + '%' }} />
           <MouseDisplayTooltip
             style={{
               left: `clamp(0px, calc(${mouseDisplayWidth}% - ${

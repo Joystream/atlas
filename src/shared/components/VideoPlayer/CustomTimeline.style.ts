@@ -80,6 +80,7 @@ export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
 export const StyledTooltipText = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  pointer-events: none;
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
@@ -96,7 +97,8 @@ export const PlayProgress = styled.div`
   z-index: 1;
 `
 
-export const PlayProgressThumb = styled.div`
+export const PlayProgressThumb = styled.button`
+  border: none;
   opacity: 0;
   z-index: 1;
   content: '';
@@ -106,6 +108,6 @@ export const PlayProgressThumb = styled.div`
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
-  background: ${colors.white};
+  background: ${colors.white} !important;
   transition: opacity ${transitions.timings.player} ${transitions.easing};
 `
