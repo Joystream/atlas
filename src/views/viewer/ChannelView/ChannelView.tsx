@@ -14,7 +14,7 @@ import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
 import { ChannelCover, Grid, Pagination, Select, Text } from '@/shared/components'
-import { SvgGlyphCheck, SvgGlyphPlus, SvgOutlineSearch2 } from '@/shared/icons'
+import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
@@ -273,7 +273,7 @@ export const ChannelView: React.FC = () => {
                 }}
                 variant="tertiary"
               >
-                <SvgOutlineSearch2 />
+                <SvgGlyphSearch />
               </SearchButton>
             </SearchContainer>
           )}
