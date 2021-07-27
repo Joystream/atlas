@@ -102,6 +102,20 @@ query GetBatchedVideoViews($videoIdList: [ID!]!) {
   }
 }
 
+query GetMostViewedVideos($period: Int!, $limit: Int) {
+  mostViewedVideos(period: $period, limit: $limit) {
+    id
+    views
+  }
+}
+
+query GetMostViewedChannels($period: Int!, $limit: Int) {
+  mostViewedChannels(period: $period, limit: $limit) {
+    id
+    views
+  }
+}
+
 mutation AddVideoView($videoId: ID!, $channelId: ID!) {
   addVideoView(videoId: $videoId, channelId: $channelId) {
     id

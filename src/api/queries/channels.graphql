@@ -70,6 +70,14 @@ query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInp
 ### Orion
 
 # modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelViews($channelId: ID!) {
+  channelViews(channelId: $channelId) {
+    id
+    views
+  }
+}
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
     id
