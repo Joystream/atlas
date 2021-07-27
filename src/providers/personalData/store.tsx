@@ -1,3 +1,5 @@
+import { round } from 'lodash'
+
 import { createStore } from '@/store'
 import { readFromLocalStorage } from '@/utils/localStorage'
 
@@ -16,6 +18,7 @@ export type PersonalDataStoreState = {
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
   cachedPlayerVolume: number
+  volumeBeforeMuted: number
 }
 
 const WHITELIST = [
@@ -24,6 +27,7 @@ const WHITELIST = [
   'recentSearches',
   'dismissedMessages',
   'cachedPlayerVolume',
+  'volumeBeforeMuted',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -32,6 +36,7 @@ export type PersonalDataStoreActions = {
   updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   updateCachedPlayerVolume: (volume: number) => void
+  updateVolumeBeforeMuted: (volume: number) => void
 }
 
 const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
@@ -43,6 +48,7 @@ const cachedPlayerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: {
+      volumeBeforeMuted: 0,
       watchedVideos,
       followedChannels,
       recentSearches,
@@ -89,7 +95,11 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       },
       updateCachedPlayerVolume: (volume) =>
         set((state) => {
-          state.cachedPlayerVolume = volume
+          state.cachedPlayerVolume = round(volume, 2)
+        }),
+      updateVolumeBeforeMuted: (volume) =>
+        set((state) => {
+          state.volumeBeforeMuted = round(volume, 2)
         }),
     }),
   },

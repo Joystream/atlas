@@ -65,7 +65,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const cachedPlayerVolume = usePersonalDataStore((state) => state.cachedPlayerVolume)
+  const volumeBeforeMuted = usePersonalDataStore((state) => state.volumeBeforeMuted)
   const updateCachedPlayerVolume = usePersonalDataStore((state) => state.actions.updateCachedPlayerVolume)
+  const updateVolumeBeforeMuted = usePersonalDataStore((state) => state.actions.updateVolumeBeforeMuted)
 
   const [volume, setVolume] = useState(cachedPlayerVolume)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -311,11 +313,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
     const handler = (event: Event) => {
       if (event.type === CustomVideojsEvents.Muted) {
+        if (cachedPlayerVolume) {
+          updateVolumeBeforeMuted(cachedPlayerVolume)
+        }
         setVolume(0)
         return
       }
       if (event.type === CustomVideojsEvents.Unmuted) {
-        setVolume(cachedPlayerVolume || VOLUME_STEP)
+        setVolume(volumeBeforeMuted || VOLUME_STEP)
         return
       }
       if (event.type === CustomVideojsEvents.VolumeIncrease || CustomVideojsEvents.VolumeDecrease) {
@@ -326,7 +331,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(events, handler)
     }
-  }, [cachedPlayerVolume, volume, player])
+  }, [cachedPlayerVolume, volume, player, volumeBeforeMuted, updateVolumeBeforeMuted])
 
   const debouncedVolumeChange = useRef(
     debounce((volume: number) => {
@@ -340,13 +345,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     player?.volume(volume)
 
+    debouncedVolumeChange.current(volume)
     if (volume) {
       player.muted(false)
-      debouncedVolumeChange.current(volume)
     } else {
+      if (cachedPlayerVolume) {
+        updateVolumeBeforeMuted(cachedPlayerVolume)
+      }
       player.muted(true)
     }
-  }, [isInBackground, player, volume])
+  }, [cachedPlayerVolume, isInBackground, player, updateVolumeBeforeMuted, volume])
 
   // button/input handlers
   const handlePlayPause = () => {
@@ -365,7 +373,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const handleMute = (event: React.MouseEvent) => {
     event.stopPropagation()
     if (volume === 0) {
-      setVolume(cachedPlayerVolume || 0.05)
+      setVolume(volumeBeforeMuted || 0.05)
     } else {
       setVolume(0)
     }
@@ -407,7 +415,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
         {showBigPlayButton && (
-          <BigPlayButtonOverlay>
+          <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgPlayerPlay />
             </BigPlayButton>
@@ -478,8 +486,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
+        {!isInBackground && <ControlsIndicator player={player} />}
       </div>
-      {!isInBackground && <ControlsIndicator player={player} />}
     </Container>
   )
 }
