@@ -332,6 +332,7 @@ const useSearchVideos = ({ id }: UseSearchVideosParams) => {
           thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
           channelId_eq: id,
         },
+        limit: 100,
       },
     })
   }
