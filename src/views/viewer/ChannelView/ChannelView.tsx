@@ -41,6 +41,7 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
+const DATE_ONE_MONTH_PAST = subMonths(new Date(), 1)
 const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -75,8 +76,6 @@ export const ChannelView: React.FC = () => {
     entity: channel,
     assetType: AssetType.COVER,
   })
-  const [dateOneMonthPast] = useState(subMonths(new Date(), 1))
-
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
     {
@@ -89,7 +88,7 @@ export const ChannelView: React.FC = () => {
     },
     { notifyOnNetworkStatusChange: true, fetchPolicy: 'cache-and-network' }
   )
-  const { videoCount: videosLastMonth } = useChannelVideoCount(id, dateOneMonthPast)
+  const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST)
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
     setFollowing(isFollowing)
@@ -176,20 +175,20 @@ export const ChannelView: React.FC = () => {
   }
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
-  const videos = ((isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []).slice(
-    (isSearching ? currentSearchPage : currentPage) * videosPerPage,
-    (isSearching ? currentSearchPage : currentPage) * videosPerPage + videosPerPage
-  )
+  const videos = (isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []
+  const paginatedVideos = isSearching
+    ? videos.slice(currentSearchPage * videosPerPage, currentSearchPage * videosPerPage + videosPerPage)
+    : videos.slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
 
   const placeholderItems = Array.from(
-    { length: loadingVideos || loadingSearch ? videosPerPage - (videos ? videos.length : 0) : 0 },
+    { length: loadingVideos || loadingSearch ? videosPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
     () => ({
       id: undefined,
       progress: undefined,
     })
   )
 
-  const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
+  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
   const TabContent = () => {
