@@ -3,6 +3,9 @@ import styled from '@emotion/styled'
 
 import { SvgPlayerSoundOff } from '@/shared/icons'
 
+import { PlayerControlButton } from './PlayerControlButton'
+import { ControlButton } from './PlayerControlButton.style'
+
 import { colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
@@ -14,30 +17,6 @@ type CustomControlsProps = {
   isFullScreen?: boolean
   isEnded?: boolean
 }
-
-type ControlButtonProps = {
-  tooltipText?: string
-  tooltipPosition?: 'left' | 'right'
-  showTooltipOnlyOnFocus?: boolean
-}
-
-const focusStyles = css`
-  :focus {
-    /* Provide a fallback style for browsers
-     that don't support :focus-visible e.g safari */
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  /* https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible */
-
-  :focus-visible {
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  :focus:not(:focus-visible) {
-    box-shadow: unset;
-  }
-`
 
 export const ControlsOverlay = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
@@ -62,89 +41,6 @@ export const CustomControls = styled.div<CustomControlsProps>`
   z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
   transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
-`
-
-export const ControlButton = styled.button<ControlButtonProps>`
-  margin-right: 0.5em;
-  display: flex !important;
-  cursor: pointer;
-  border: none;
-  background: none;
-  border-radius: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5em;
-  position: relative;
-  transition: background ${transitions.timings.player} ease-in !important;
-
-  & > svg {
-    filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
-    width: 1.5em;
-    height: 1.5em;
-  }
-
-  ::before {
-    ${({ tooltipPosition }) => tooltipPosition === 'left' && 'left: 0'};
-    ${({ tooltipPosition }) => tooltipPosition === 'right' && 'right: 0'};
-
-    opacity: 0;
-    pointer-events: none;
-    content: ${({ tooltipText }) => tooltipText && `'${tooltipText}'`};
-    position: absolute;
-    font-size: 0.875em;
-    bottom: calc(3.5em - 1px);
-    background: ${colors.transparentBlack[54]};
-    backdrop-filter: blur(${sizes(8)});
-    display: flex;
-    align-items: center;
-    padding: 0.5em;
-    white-space: nowrap;
-    transition: opacity ${transitions.timings.player} ease-in !important;
-  }
-
-  :hover {
-    background-color: ${colors.transparentPrimary[18]};
-    backdrop-filter: blur(${sizes(8)});
-    transition: none !important;
-
-    ::before {
-      transition: none !important;
-      opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
-    }
-  }
-
-  :active {
-    background-color: ${colors.transparentPrimary[10]};
-  }
-
-  :focus {
-    ::before {
-      /* turn off transition on mouse enter, but turn on on mouse leave */
-      transition: none !important;
-      opacity: 1;
-    }
-  }
-
-  :focus-visible {
-    ::before {
-      opacity: 1;
-    }
-  }
-
-  :focus:not(:focus-visible):hover {
-    ::before {
-      transition: none !important;
-      opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
-    }
-  }
-
-  :focus:not(:focus-visible):not(:hover) {
-    ::before {
-      opacity: 0;
-    }
-  }
-
-  ${focusStyles}
 `
 
 export const VolumeSliderContainer = styled.div`
@@ -209,7 +105,7 @@ export const VolumeControl = styled.div`
     }
   }
 `
-export const VolumeButton = styled(ControlButton)`
+export const VolumeButton = styled(PlayerControlButton)`
   cursor: pointer;
   margin-right: 0;
   display: flex;
@@ -357,7 +253,17 @@ export const Container = styled.div<ContainerProps>`
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
 
-        ${focusStyles}
+        :focus {
+          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+        }
+
+        :focus-visible {
+          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+        }
+
+        :focus:not(:focus-visible) {
+          box-shadow: unset;
+        }
 
         .vjs-slider-bar {
           background-color: ${colors.blue[500]};
