@@ -18,24 +18,6 @@ type CustomControlsProps = {
   isEnded?: boolean
 }
 
-const focusStyles = css`
-  :focus {
-    /* Provide a fallback style for browsers
-     that don't support :focus-visible e.g safari */
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  /* https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible */
-
-  :focus-visible {
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  :focus:not(:focus-visible) {
-    box-shadow: unset;
-  }
-`
-
 export const ControlsOverlay = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   opacity: 0;
@@ -271,7 +253,17 @@ export const Container = styled.div<ContainerProps>`
         background-color: ${colors.transparentWhite[32]};
         transition: height ${transitions.timings.player} ${transitions.easing} !important;
 
-        ${focusStyles}
+        :focus {
+          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+        }
+
+        :focus-visible {
+          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+        }
+
+        :focus:not(:focus-visible) {
+          box-shadow: unset;
+        }
 
         .vjs-slider-bar {
           background-color: ${colors.blue[500]};

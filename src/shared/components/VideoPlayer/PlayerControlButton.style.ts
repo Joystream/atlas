@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { colors, sizes, transitions } from '@/shared/theme'
@@ -9,24 +8,6 @@ type ControlButtonProps = {
   showTooltipOnlyOnFocus?: boolean
   disableFocus?: boolean
 }
-
-const focusStyles = css`
-  :focus {
-    /* Provide a fallback style for browsers
-     that don't support :focus-visible e.g safari */
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  /* https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible */
-
-  :focus-visible {
-    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-  }
-
-  :focus:not(:focus-visible) {
-    box-shadow: unset;
-  }
-`
 
 export const ControlButton = styled.button<ControlButtonProps>`
   margin-right: 0.5em;
@@ -47,13 +28,21 @@ export const ControlButton = styled.button<ControlButtonProps>`
     height: 1.5em;
   }
 
+  :hover,
+  :focus,
+  :focus-visible {
+    /* turn off transition on mouse enter, but turn on on mouse leave */
+    transition: none !important;
+    ${() => ControlButtonTooltip} {
+      transition: none !important;
+    }
+  }
+
   :hover {
     background-color: ${colors.transparentPrimary[18]};
     backdrop-filter: blur(${sizes(8)});
-    transition: none !important;
 
     ${() => ControlButtonTooltip} {
-      transition: none !important;
       opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
     }
   }
@@ -63,22 +52,33 @@ export const ControlButton = styled.button<ControlButtonProps>`
   }
 
   :focus {
+    /* Provide a fallback style for browsers
+    that don't support :focus-visible e.g safari */
+    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
     ${() => ControlButtonTooltip} {
-      /* turn off transition on mouse enter, but turn on on mouse leave */
-      transition: none !important;
       opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
     }
   }
 
   :focus-visible {
+    box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
     ${() => ControlButtonTooltip} {
       opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
     }
   }
 
+  :focus:not(:focus-visible) {
+    box-shadow: unset;
+  }
+
+  :hover:focus {
+    ${() => ControlButtonTooltip} {
+      opacity: 1;
+    }
+  }
+
   :focus:not(:focus-visible):hover {
     ${() => ControlButtonTooltip} {
-      transition: none !important;
       opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
     }
   }
@@ -88,8 +88,6 @@ export const ControlButton = styled.button<ControlButtonProps>`
       opacity: 0;
     }
   }
-
-  ${focusStyles};
 `
 
 type ControlButtonTooltipProps = {
