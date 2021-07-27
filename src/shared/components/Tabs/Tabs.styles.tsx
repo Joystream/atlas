@@ -33,7 +33,7 @@ export const TabsGroup = styled.div`
 `
 
 export const Tab = styled.div<TabProps>`
-  transition: all 0.125s ease;
+  transition: border-bottom 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
   padding: 22px 0;
