@@ -18,6 +18,8 @@ type CustomControlsProps = {
   isEnded?: boolean
 }
 
+export const TRANSITION_DELAY = '50ms'
+
 export const ControlsOverlay = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   opacity: 0;
@@ -26,7 +28,8 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   width: 100%;
   background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
   height: 8em;
-  transition: opacity 200ms ${transitions.easing}, visibility 200ms ${transitions.easing};
+  transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
+    visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
@@ -40,7 +43,8 @@ export const CustomControls = styled.div<CustomControlsProps>`
   align-items: center;
   z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
-  transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
+  transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
+    opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const VolumeSliderContainer = styled.div`

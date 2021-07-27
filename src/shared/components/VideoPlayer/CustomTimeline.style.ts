@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, transitions, zIndex } from '@/shared/theme'
 
-import { CustomControls } from './VideoPlayer.style'
+import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.style'
 
 import { Text } from '../Text'
 
@@ -33,6 +33,7 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   }
   :hover ${() => MouseDisplayTooltip} {
     transform: translateY(-0.5em) !important;
+    opacity: 1;
   }
   :hover ~ ${CustomControls} {
     opacity: 0;
@@ -59,7 +60,7 @@ export const SeekBar = styled.div`
   width: 100%;
   height: 0.25em;
   background-color: ${colors.transparentWhite[32]};
-  transition: height ${transitions.timings.player} ${transitions.easing};
+  transition: height ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const LoadProgress = styled.div`
@@ -87,10 +88,12 @@ type MouseDisplayTooltipProps = {
 export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
   pointer-events: none;
   user-select: none;
+  opacity: 0;
   position: absolute;
   padding: ${({ isFullScreen }) => (isFullScreen ? `0` : `0 1em`)};
   bottom: 1.5em;
-  transition: transform 200ms ${transitions.easing};
+  transition: transform ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing},
+    opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const StyledTooltipText = styled(Text)`
@@ -125,5 +128,5 @@ export const PlayProgressThumb = styled.button`
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
   background: ${colors.white} !important;
-  transition: opacity ${transitions.timings.player} ${transitions.easing};
+  transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing} !important;
 `
