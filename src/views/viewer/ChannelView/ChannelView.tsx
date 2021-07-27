@@ -140,6 +140,11 @@ export const ChannelView: React.FC = () => {
   }
 
   const handleSetCurrentTab = async (tab: number) => {
+    if (TABS[tab] === 'Videos' && isSearching) {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+      setSearchQuery('')
+    }
     setIsSearching(false)
     setCurrentVideosTab(tab)
   }
