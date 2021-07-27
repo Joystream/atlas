@@ -1,5 +1,5 @@
 import { subMonths } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
@@ -204,12 +204,19 @@ export const ChannelView: React.FC = () => {
     }
   }
 
+  // At mount set the tab from the search params
   useEffect(() => {
     const tabIndex = TABS.findIndex((t) => t === searchParams.get('tab'))
     if (tabIndex !== -1) setCurrentTabIndex(tabIndex)
 
     switch (searchParams.get('tab')) {
-      case 'videos':
+      case 'Information':
+        setSearchParams({ 'tab': 'Information' }, { replace: true })
+        break
+      case 'Videos':
+      default:
+        setSearchParams({ 'tab': 'Videos' }, { replace: true })
+        break
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
