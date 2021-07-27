@@ -52,7 +52,7 @@ export const ChannelView: React.FC = () => {
   const { channel, loading, error } = useChannel(id)
   const {
     searchVideos,
-    search,
+    handleSearchInputKeyPress,
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
@@ -157,22 +157,7 @@ export const ChannelView: React.FC = () => {
   const handleChangePage = (page: number) => {
     isSearching ? setCurrentSearchPage(page) : setCurrentPage(page)
   }
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
-      if (searchQuery.trim() === '') {
-        setSearchQuery('')
-        setIsSearching(false)
-      } else {
-        search()
-        setIsSearching(true)
-      }
-    }
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      setIsSearchingInputOpen(false)
-      searchInputRef.current?.blur()
-      setSearchQuery('')
-    }
-  }
+
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
   const videos = (isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []
@@ -265,7 +250,7 @@ export const ChannelView: React.FC = () => {
                 isOpen={isSearchInputOpen}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyPress}
+                onKeyDown={handleSearchInputKeyPress}
                 placeholder="Search"
                 type="search"
                 helperText={null}
@@ -305,17 +290,38 @@ const usePagination = (currentTab: number) => {
   return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
 }
 
-type useSearchVideosParams = {
+const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
+  if (loading || !data) {
+    return { channels: [], videos: [] }
+  }
+  const searchVideos = data.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+  return { searchVideos }
+}
+type UseSearchVideosParams = {
   id: string
 }
-const useSearchVideos = ({ id }: useSearchVideosParams) => {
+const useSearchVideos = ({ id }: UseSearchVideosParams) => {
   const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-
   const [isSearching, setIsSearching] = useState(false)
-  const searchInputRef = useRef<HTMLInputElement>(null)
   const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery()
-
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const handleSearchInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+      if (searchQuery.trim() === '') {
+        setSearchQuery('')
+        setIsSearching(false)
+      } else {
+        search()
+        setIsSearching(true)
+      }
+    }
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+      setSearchQuery('')
+    }
+  }
   const search = () => {
     searchVideo({
       variables: {
@@ -329,14 +335,7 @@ const useSearchVideos = ({ id }: useSearchVideosParams) => {
       },
     })
   }
-  const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
-    if (loading || !data) {
-      return { channels: [], videos: [] }
-    }
-    const results = data
-    const searchVideos = results.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
-    return { searchVideos }
-  }
+
   const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData?.search), [
     loadingSearch,
     searchData,
@@ -354,5 +353,6 @@ const useSearchVideos = ({ id }: useSearchVideosParams) => {
     setIsSearching,
     searchInputRef,
     errorSearch,
+    handleSearchInputKeyPress,
   }
 }
