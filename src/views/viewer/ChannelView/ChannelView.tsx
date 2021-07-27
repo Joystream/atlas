@@ -300,10 +300,8 @@ const usePagination = (currentTab: number) => {
   // reset the pagination when changing tabs
   useEffect(() => {
     setCurrentPage(0)
-  }, [currentTab])
-  useEffect(() => {
     setCurrentSearchPage(0)
-  }, [currentSearchPage])
+  }, [currentTab])
   return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
 }
 
