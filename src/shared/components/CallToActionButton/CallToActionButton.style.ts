@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
-import { CallToActionButtonProps } from './CallToActionButton.types'
+import { CallToActionButtonProps } from '.'
 
 const mappedColors = {
   blue: colors.blue[500],
@@ -37,7 +37,9 @@ export const ContentWrapper = styled.div`
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `
 
-export const StyledContainer = styled.button<Omit<CallToActionButtonProps, 'label'>>`
+export const StyledContainer = styled('button', { shouldForwardProp: (prop) => prop !== 'colorVariant' })<
+  Omit<CallToActionButtonProps, 'label'>
+>`
   display: block;
   width: 100%;
   align-items: center;
