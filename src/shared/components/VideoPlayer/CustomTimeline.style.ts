@@ -8,12 +8,13 @@ import { Text } from '../Text'
 
 type ProgressControlProps = {
   isFullScreen?: boolean
+  isScrubbing?: boolean
 }
 
 export const ProgressControl = styled.div<ProgressControlProps>`
   padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
   position: absolute;
-  height: 1.5em;
+  height: ${({ isScrubbing }) => (isScrubbing ? '100%' : '1.5em')};
   z-index: ${zIndex.nearOverlay};
   left: 0;
   bottom: 0;
@@ -36,6 +37,20 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   :hover ~ ${CustomControls} {
     opacity: 0;
     transform: translateY(0.5em) !important;
+  }
+
+  ${() => SeekBar} {
+    ${({ isScrubbing }) => isScrubbing && `height: 0.5em`}
+  }
+
+  ${() => MouseDisplayWrapper}, ${() => PlayProgressThumb} {
+    ${({ isScrubbing }) => isScrubbing && `opacity: 1`}
+  }
+  ${() => MouseDisplayTooltip} {
+    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em) !important`}
+  }
+  ~ ${CustomControls} {
+    ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em) !important`};
   }
 `
 
@@ -71,6 +86,7 @@ type MouseDisplayTooltipProps = {
 
 export const MouseDisplayTooltip = styled.div<MouseDisplayTooltipProps>`
   pointer-events: none;
+  user-select: none;
   position: absolute;
   padding: ${({ isFullScreen }) => (isFullScreen ? `0` : `0 1em`)};
   bottom: 1.5em;

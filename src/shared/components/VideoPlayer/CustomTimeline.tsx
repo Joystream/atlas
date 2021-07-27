@@ -38,6 +38,19 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   const [mouseDisplayTooltipTime, setMouseDisplayTooltipTime] = useState('0:00')
   const [mouseDisplayTooltipWidth, setMouseDisplayTooltipWidth] = useState(0)
   const [isScrubbing, setIsScrubbing] = useState(false)
+  const [playedBefore, setPlayedBefore] = useState(false)
+
+  useEffect(() => {
+    if (!player || !playedBefore) {
+      return
+    }
+    if (isScrubbing) {
+      player.pause()
+    } else {
+      player.play()
+      setPlayedBefore(false)
+    }
+  }, [isScrubbing, player, playedBefore])
 
   useEffect(() => {
     if (!player) {
@@ -114,9 +127,12 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       setMouseDisplayTooltipTime(formatDurationShort(round((percentage / 100) * duration)))
     }
     if (isScrubbing) {
+      if (!player.paused()) {
+        setPlayedBefore(true)
+      }
       setPlayProgressWidth(percentage)
-      const newTime = percentage * (player?.duration() || 0)
-      player?.currentTime(newTime / 100)
+      const newTime = (percentage / 100) * (player?.duration() || 0)
+      player?.currentTime(newTime)
     }
   }
 
@@ -136,9 +152,11 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
   return (
     <ProgressControl
+      isScrubbing={isScrubbing}
       isFullScreen={isFullScreen}
       onMouseMove={handleMouseAndTouchMove}
       onTouchMove={handleMouseAndTouchMove}
+      onMouseLeave={() => setIsScrubbing(false)}
       onClick={handleJumpToTime}
       onMouseDown={() => setIsScrubbing(true)}
       onTouchStart={() => setIsScrubbing(true)}
