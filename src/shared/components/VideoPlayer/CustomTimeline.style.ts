@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, transitions, zIndex } from '@/shared/theme'
+import { colors, media, transitions, zIndex } from '@/shared/theme'
 
 import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.style'
 
@@ -27,10 +27,14 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   left: 0;
   bottom: 0;
   width: 100%;
-  cursor: pointer;
   display: flex;
   align-items: flex-end;
   ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
+
+  ${media.compact} {
+    cursor: pointer;
+  }
+
   :hover ${() => SeekBar} {
     height: 0.5em;
   }
@@ -67,9 +71,12 @@ export const ProgressControl = styled.div<ProgressControlProps>`
 export const SeekBar = styled.div`
   position: relative;
   width: 100%;
-  height: 0.25em;
   background-color: ${colors.transparentWhite[32]};
   transition: height ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
+  height: 0.5em;
+  ${media.compact} {
+    height: 0.25em;
+  }
 `
 
 export const LoadProgress = styled.div`
@@ -126,17 +133,19 @@ export const PlayProgress = styled.div`
 `
 
 export const PlayProgressThumb = styled.button`
-  cursor: pointer;
   border: none;
   opacity: 0;
   z-index: 1;
   content: '';
   height: 1em;
-  width: 1em;
   top: -0.25em;
+  width: 1em;
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
   background: ${colors.white} !important;
   transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing} !important;
+  ${media.compact} {
+    cursor: pointer;
+  }
 `

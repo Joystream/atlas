@@ -9,10 +9,13 @@ export const ControlsIndicatorWrapper = styled.div`
   width: 100%;
   height: 100%;
   pointer-events: none;
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
+  ${media.small} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `
 
 const INDICATOR_SIZE = sizes(20)
