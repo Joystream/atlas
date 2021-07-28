@@ -13,10 +13,10 @@ type ProgressControlProps = {
 }
 
 // expand ProgressControl area when scrubbing
-const scrubbingStyles = css`
+const scrubbingStyles = (isFullScreen?: boolean) => css`
   height: 100vh;
-  bottom: -200px;
-  padding-bottom: 200px;
+  bottom: ${isFullScreen ? 0 : '-200px'};
+  padding-bottom: ${isFullScreen ? `1.5em 1.5em` : '200px'};
 `
 
 export const ProgressControl = styled.div<ProgressControlProps>`
@@ -30,7 +30,7 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   cursor: pointer;
   display: flex;
   align-items: flex-end;
-  ${({ isScrubbing }) => isScrubbing && scrubbingStyles};
+  ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
   :hover ${() => SeekBar} {
     height: 0.5em;
   }
@@ -126,6 +126,7 @@ export const PlayProgress = styled.div`
 `
 
 export const PlayProgressThumb = styled.button`
+  cursor: pointer;
   border: none;
   opacity: 0;
   z-index: 1;

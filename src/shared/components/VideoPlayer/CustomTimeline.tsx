@@ -53,13 +53,22 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   }, [isScrubbing, player, playedBefore])
 
   useEffect(() => {
-    if (!player) {
+    const playProgress = playProgressRef.current
+    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress || isScrubbing) {
       return
     }
-    const handler = () => {
+
+    const interval = window.setInterval(() => {
       const duration = player.duration()
-      const buffered = player.buffered()
       const currentTime = player.currentTime()
+      const buffered = player.buffered()
+
+      // set playProgress
+
+      const progressPercentage = round((currentTime / duration) * 100, 2)
+      setPlayProgressWidth(progressPercentage)
+
+      // set loadProgress
 
       // get all buffered time ranges
       const bufferedTimeRanges = Array.from({ length: buffered.length }).map((_, idx) => ({
@@ -77,27 +86,6 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       } else {
         setLoadProgressWidth(0)
       }
-    }
-    player.on('progress', handler)
-    return () => {
-      player.off('progress', handler)
-    }
-  }, [player])
-
-  useEffect(() => {
-    const playProgress = playProgressRef.current
-    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress || isScrubbing) {
-      return
-    }
-
-    const interval = window.setInterval(() => {
-      const duration = player.duration()
-      const currentTime = player.currentTime()
-
-      const progressPercentage = round((currentTime / duration) * 100, 2)
-      setPlayProgressWidth(progressPercentage)
-
-      // position of playProgressThumb
     }, UPDATE_INTERVAL)
     return () => {
       clearInterval(interval)
@@ -131,8 +119,6 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
         setPlayedBefore(true)
       }
       setPlayProgressWidth(percentage)
-      const newTime = (percentage / 100) * (player?.duration() || 0)
-      player?.currentTime(newTime)
     }
   }
 
