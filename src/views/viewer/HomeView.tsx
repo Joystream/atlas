@@ -56,7 +56,7 @@ export const HomeView: React.FC = () => {
             />
             <CallToActionButton
               label="Browse channels"
-              to={absoluteRoutes.viewer.browseChannels()}
+              to={absoluteRoutes.viewer.channels()}
               colorVariant="blue"
               icon={<SvgNavChannels />}
             />

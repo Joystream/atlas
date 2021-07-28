@@ -12,7 +12,7 @@ export const NewView: FC = () => (
       <CallToActionButton label="Home" to={absoluteRoutes.viewer.index()} colorVariant="yellow" icon={<SvgNavHome />} />
       <CallToActionButton
         label="Browse channels"
-        to={absoluteRoutes.viewer.browseChannels()}
+        to={absoluteRoutes.viewer.channels()}
         colorVariant="blue"
         icon={<SvgNavChannels />}
       />
