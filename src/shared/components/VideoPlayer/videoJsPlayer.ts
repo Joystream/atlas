@@ -47,13 +47,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       playsinline: true,
       loadingSpinner: false,
       bigPlayButton: false,
-      controlBar: {
-        // hide all videojs controls besides progress bar
-        children: [],
-        progressControl: {
-          seekBar: true,
-        },
-      },
+      controlBar: false,
     }
 
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
