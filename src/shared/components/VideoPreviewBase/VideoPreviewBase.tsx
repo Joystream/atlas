@@ -45,6 +45,7 @@ import {
   ProgressBar,
   ProgressOverlay,
   PublishingStateText,
+  RankingNumber,
   RemoveButton,
   SpacedPlaceholder,
   StyledAvatar,
@@ -67,6 +68,7 @@ export type VideoPreviewBaseMetaProps = {
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
+  rankingNumber?: number
 }
 
 export type VideoPreviewPublisherProps =
@@ -150,6 +152,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   onCopyVideoURLClick,
   onDeleteVideoClick,
   isPullupDisabled,
+  rankingNumber,
 }) => {
   const { openContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -199,6 +202,7 @@ export const VideoPreviewBase: React.FC<VideoPreviewBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
+        {rankingNumber && <RankingNumber>{rankingNumber}</RankingNumber>}
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition

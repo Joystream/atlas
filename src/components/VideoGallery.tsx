@@ -33,8 +33,8 @@ type VideoGalleryProps = {
 }
 
 const PLACEHOLDERS_COUNT = 12
-
 const MIN_VIDEO_PREVIEW_WIDTH = 281
+const CAROUSEL_SMALL_BREAKPOINT = 688
 
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
@@ -54,7 +54,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       gridColumnGap: 24,
       viewportContainerDifference: 64,
     }).map((breakpoint, idx) => {
-      if (breakpoint <= 688 && hasRanking) {
+      if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
         return {
           breakpoint,
           settings: {
@@ -94,7 +94,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <GalleryWrapper key={`${idx}-${video.id}`} hasRanking={hasRanking}>
-          {hasRanking && <RankingNumber>{idx + 1}</RankingNumber>}
           <StyledVideoPreview
             id={video.id}
             progress={video?.progress}
@@ -102,6 +101,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
             onClick={createClickHandler(video.id)}
             onNotFound={createNotFoundHandler(video.id)}
             onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+            rankingNumber={hasRanking ? idx + 1 : undefined}
           />
         </GalleryWrapper>
       ))}
@@ -129,49 +129,10 @@ const GalleryWrapper = styled.div<{ hasRanking?: boolean }>`
   `}
 
   ${StyledVideoPreview} {
-    width: ${({ hasRanking }) => (hasRanking ? '75%' : '100%')};
+    width: ${({ hasRanking }) => (hasRanking ? '78%' : '100%')};
   }
 
   & + & {
     margin-left: ${sizes(6)};
-  }
-`
-
-const RankingNumber = styled.span`
-  position: absolute;
-  left: 9px;
-  top: -38px;
-  color: black;
-  font-weight: 700;
-  font-size: 100px;
-  -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: #424e57;
-  font-family: 'PxGrotesk', sans-serif;
-  letter-spacing: -0.25em;
-  line-height: 144px;
-
-  ${media.small} {
-    left: 23px;
-    top: -24px;
-  }
-
-  ${media.medium} {
-    left: 14px;
-    top: -20px;
-  }
-
-  ${media.large} {
-    font-size: 160px;
-    top: -17px;
-    left: -2px;
-  }
-  ${media.xlarge} {
-    left: 0;
-    font-size: 150px;
-  }
-
-  ${media.xxlarge} {
-    top: -5px;
-    font-size: 180px;
   }
 `
