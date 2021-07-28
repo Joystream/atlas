@@ -42,7 +42,7 @@ export const useChannel = (id: string, opts?: ChannelOpts) => {
 }
 
 type VideoCountOpts = QueryHookOptions<GetVideoCountQuery>
-export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) => {
+export const useChannelVideoCount = (channelId: string, createdAt_gte?: Date, opts?: VideoCountOpts) => {
   const { data, ...rest } = useGetVideoCountQuery({
     ...opts,
     variables: {
@@ -52,6 +52,7 @@ export const useChannelVideoCount = (channelId: string, opts?: VideoCountOpts) =
         mediaAvailability_eq: AssetAvailability.Accepted,
         isPublic_eq: true,
         isCensored_eq: false,
+        createdAt_gte: createdAt_gte,
       },
     },
   })
