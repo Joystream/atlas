@@ -18,6 +18,8 @@ type CustomControlsProps = {
   isEnded?: boolean
 }
 
+export const TRANSITION_DELAY = '50ms'
+
 export const ControlsOverlay = styled.div<CustomControlsProps>`
   font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   opacity: 0;
@@ -26,7 +28,8 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   width: 100%;
   background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
   height: 8em;
-  transition: opacity 200ms ${transitions.easing}, visibility 200ms ${transitions.easing};
+  transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
+    visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
@@ -40,7 +43,8 @@ export const CustomControls = styled.div<CustomControlsProps>`
   align-items: center;
   z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
-  transition: transform 200ms ${transitions.easing}, opacity 200ms ${transitions.easing};
+  transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
+    opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
 `
 
 export const VolumeSliderContainer = styled.div`
@@ -132,6 +136,7 @@ export const CurrentTimeWrapper = styled.div`
 export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  user-select: none;
   color: ${colors.white};
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   font-feature-settings: 'tnum' on, 'lnum' on;
@@ -150,10 +155,6 @@ export const ScreenControls = styled.div`
 
 const backgroundContainerCss = css`
   .vjs-waiting .vjs-loading-spinner {
-    display: none;
-  }
-
-  .vjs-control-bar {
     display: none;
   }
 
@@ -186,7 +187,8 @@ export const Container = styled.div<ContainerProps>`
     background-color: ${colors.gray[900]};
   }
 
-  .vjs-error-display {
+  .vjs-error-display,
+  .vjs-control-bar {
     display: none;
   }
 
@@ -219,103 +221,6 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-poster {
     background-size: cover;
-  }
-
-  .vjs-control-bar {
-    opacity: 0;
-    background: none;
-    align-items: flex-end;
-    height: 2em;
-    transition: opacity 200ms ${transitions.easing} !important;
-    z-index: ${zIndex.nearOverlay};
-
-    :hover {
-      & ~ ${ControlsOverlay} ${CustomControls} {
-        opacity: 0;
-        transform: translateY(0.5em);
-      }
-    }
-
-    .vjs-progress-control {
-      height: 2em;
-      z-index: ${zIndex.overlay};
-      position: absolute;
-      top: initial;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0 0.5em`)} !important;
-
-      .vjs-slider {
-        align-self: flex-end;
-        height: 0.25em;
-        margin: 0;
-        background-color: ${colors.transparentWhite[32]};
-        transition: height ${transitions.timings.player} ${transitions.easing} !important;
-
-        :focus {
-          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-        }
-
-        :focus-visible {
-          box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
-        }
-
-        :focus:not(:focus-visible) {
-          box-shadow: unset;
-        }
-
-        .vjs-slider-bar {
-          background-color: ${colors.blue[500]};
-        }
-
-        /* ::before is progress timeline thumb */
-
-        .vjs-play-progress::before {
-          content: '';
-          position: absolute;
-          box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
-          opacity: 0;
-          border-radius: 100%;
-          background: ${colors.white};
-          right: -0.5em;
-          height: 1em;
-          width: 1em;
-          top: -0.25em;
-          transition: opacity ${transitions.timings.player} ${transitions.easing};
-        }
-
-        .vjs-play-progress {
-          .vjs-time-tooltip {
-            display: none;
-          }
-        }
-
-        .vjs-load-progress {
-          background-color: ${colors.transparentWhite[32]};
-
-          > div {
-            display: none;
-          }
-        }
-      }
-
-      :hover .vjs-play-progress::before {
-        opacity: 1;
-      }
-
-      :hover .vjs-slider {
-        height: 0.5em;
-      }
-    }
-  }
-
-  :hover .vjs-control-bar {
-    opacity: 1;
-  }
-
-  .vjs-paused .vjs-control-bar {
-    opacity: 1;
   }
 
   ${({ isInBackground }) => isInBackground && backgroundContainerCss};

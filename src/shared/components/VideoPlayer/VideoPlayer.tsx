@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce, round } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
@@ -18,6 +18,7 @@ import { Logger } from '@/utils/logger'
 import { formatDurationShort } from '@/utils/time'
 
 import { ControlsIndicator } from './ControlsIndicator'
+import { CustomTimeline } from './CustomTimeline'
 import { PlayerControlButton } from './PlayerControlButton'
 import { VideoOverlay } from './VideoOverlay'
 import {
@@ -212,9 +213,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
+        setIsPlaying(true)
         if (playerState !== 'loading') {
           setPlayerState('playing')
-          setIsPlaying(true)
         }
       }
       if (event.type === 'pause') {
@@ -243,7 +244,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
-    const handler = () => setVideoTime(Math.floor(player.currentTime()))
+    const handler = () => {
+      const currentTime = round(player.currentTime())
+      setVideoTime(currentTime)
+    }
     player.on('timeupdate', handler)
     return () => {
       player.off('timeupdate', handler)
@@ -425,6 +429,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
+              <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayerControlButton
                   onClick={handlePlayPause}
@@ -450,7 +455,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </VolumeControl>
                 <CurrentTimeWrapper>
                   <CurrentTime variant="body2">
-                    {formatDurationShort(videoTime)} / {formatDurationShort(Math.floor(player?.duration() || 0))}
+                    {formatDurationShort(videoTime)} / {formatDurationShort(round(player?.duration() || 0))}
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
@@ -478,8 +483,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
+        {!isInBackground && <ControlsIndicator player={player} />}
       </div>
-      {!isInBackground && <ControlsIndicator player={player} />}
     </Container>
   )
 }
