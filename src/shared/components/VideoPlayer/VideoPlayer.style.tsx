@@ -136,6 +136,7 @@ export const CurrentTimeWrapper = styled.div`
 export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
+  user-select: none;
   color: ${colors.white};
   text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   font-feature-settings: 'tnum' on, 'lnum' on;

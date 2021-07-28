@@ -213,9 +213,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = (event: Event) => {
       if (event.type === 'play') {
+        setIsPlaying(true)
         if (playerState !== 'loading') {
           setPlayerState('playing')
-          setIsPlaying(true)
         }
       }
       if (event.type === 'pause') {
