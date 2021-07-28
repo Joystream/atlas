@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
@@ -36,10 +37,9 @@ export const ContentWrapper = styled.div`
   background-color: ${colors.gray[800]};
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `
+type StyledContainerProps = Omit<CallToActionButtonProps, 'label'>
 
-export const StyledContainer = styled('button', { shouldForwardProp: (prop) => prop !== 'colorVariant' })<
-  Omit<CallToActionButtonProps, 'label'>
->`
+export const StyledContainer = styled('button', { shouldForwardProp: isPropValid })<StyledContainerProps>`
   display: block;
   width: 100%;
   align-items: center;
