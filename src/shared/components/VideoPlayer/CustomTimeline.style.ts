@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { colors, transitions, zIndex } from '@/shared/theme'
@@ -11,10 +12,17 @@ type ProgressControlProps = {
   isScrubbing?: boolean
 }
 
+// expand ProgressControl area when scrubbing
+const scrubbingStyles = css`
+  height: 100vh;
+  bottom: -200px;
+  padding-bottom: 200px;
+`
+
 export const ProgressControl = styled.div<ProgressControlProps>`
   padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
   position: absolute;
-  height: ${({ isScrubbing }) => (isScrubbing ? '100%' : '1.5em')};
+  height: 1.5em;
   z-index: ${zIndex.nearOverlay};
   left: 0;
   bottom: 0;
@@ -22,6 +30,7 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   cursor: pointer;
   display: flex;
   align-items: flex-end;
+  ${({ isScrubbing }) => isScrubbing && scrubbingStyles};
   :hover ${() => SeekBar} {
     height: 0.5em;
   }
