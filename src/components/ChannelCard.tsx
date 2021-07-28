@@ -15,7 +15,7 @@ type ChannelCardProps = {
 export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick }) => {
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
-  const { videoCount } = useChannelVideoCount(id ?? '', {
+  const { videoCount } = useChannelVideoCount(id ?? '', undefined, {
     fetchPolicy: 'cache-first',
     skip: !id,
   })

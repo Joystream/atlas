@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from 'react'
+import { subMonths } from 'date-fns'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useChannel, useFollowChannel, useUnfollowChannel, useVideosConnection } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import {
+  useChannel,
+  useChannelVideoCount,
+  useFollowChannel,
+  useUnfollowChannel,
+  useVideosConnection,
+} from '@/api/hooks'
+import { AssetAvailability, SearchQuery, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
 import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
-import { ChannelCover, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
-import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
+import { ChannelCover, Grid, Pagination, Select, Text } from '@/shared/components'
+import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
+  DialogAccentText,
   PaginationContainer,
+  SearchButton,
+  SearchContainer,
   SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledTabs,
+  StyledTextField,
   SubTitle,
   SubTitleSkeletonLoader,
   TabsContainer,
@@ -29,6 +41,7 @@ import {
   VideoSection,
 } from './ChannelView.style'
 
+const DATE_ONE_MONTH_PAST = subMonths(new Date(), 1)
 const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
@@ -37,6 +50,19 @@ export const ChannelView: React.FC = () => {
   const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
+  const {
+    searchVideos,
+    handleSearchInputKeyPress,
+    loadingSearch,
+    isSearchInputOpen,
+    setIsSearchingInputOpen,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    setIsSearching,
+    searchInputRef,
+    errorSearch,
+  } = useSearchVideos({ id })
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -50,7 +76,7 @@ export const ChannelView: React.FC = () => {
     entity: channel,
     assetType: AssetType.COVER,
   })
-  const { currentPage, setCurrentPage } = usePagination(0)
+  const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
     {
       first: INITIAL_FIRST,
@@ -62,6 +88,7 @@ export const ChannelView: React.FC = () => {
     },
     { notifyOnNetworkStatusChange: true, fetchPolicy: 'cache-and-network' }
   )
+  const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST)
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
     setFollowing(isFollowing)
@@ -71,27 +98,27 @@ export const ChannelView: React.FC = () => {
     try {
       if (isFollowing) {
         openUnfollowDialog({
-          variant: 'info',
+          variant: 'error',
           exitButton: false,
-          description: `Do you want to unfollow ${channel?.title}?`,
-          primaryButton: {
-            text: 'Unfollow',
-            textOnly: true,
-            variant: 'destructive-secondary',
-            onClick: () => {
-              updateChannelFollowing(id, false)
-              unfollowChannel(id)
-              setFollowing(false)
-              closeUnfollowDialog()
-            },
+          error: true,
+          title: 'Would you consider staying?',
+          description: (
+            <>
+              {channel?.title} released <DialogAccentText>{videosLastMonth} new videos </DialogAccentText>
+              this month.
+              <br /> Cancel to follow for more fresh content!
+            </>
+          ),
+          primaryButtonText: 'Unfollow',
+          onPrimaryButtonClick: () => {
+            updateChannelFollowing(id, false)
+            unfollowChannel(id)
+            setFollowing(false)
+            closeUnfollowDialog()
           },
-          secondaryButton: {
-            text: 'Cancel',
-            textOnly: true,
-            variant: 'secondary',
-            onClick: () => {
-              closeUnfollowDialog()
-            },
+          secondaryButtonText: 'Keep following',
+          onSecondaryButtonClick: () => {
+            closeUnfollowDialog()
           },
         })
       } else {
@@ -107,9 +134,20 @@ export const ChannelView: React.FC = () => {
     throw videosError
   } else if (error) {
     throw error
+  } else if (errorSearch) {
+    throw errorSearch
   }
 
-  const handleSorting = (value?: VideoOrderByInput | null | undefined) => {
+  const handleSetCurrentTab = async (tab: number) => {
+    if (TABS[tab] === 'Videos' && isSearching) {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+      setSearchQuery('')
+    }
+    setIsSearching(false)
+    setCurrentVideosTab(tab)
+  }
+  const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
       setSortVideosBy(value)
       refetch({ orderBy: value })
@@ -117,24 +155,25 @@ export const ChannelView: React.FC = () => {
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const handleChangePage = (page: number) => {
-    setCurrentPage(page)
+    isSearching ? setCurrentSearchPage(page) : setCurrentPage(page)
   }
-  const handleSetCurrentTab = async (tab: number) => {
-    setCurrentVideosTab(tab)
-  }
+
   const videosPerPage = ROWS_AMOUNT * videosPerRow
 
-  const videos = edges
-    ?.map((edge) => edge.node)
-    .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+  const videos = (isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []
+  const paginatedVideos = isSearching
+    ? videos.slice(currentSearchPage * videosPerPage, currentSearchPage * videosPerPage + videosPerPage)
+    : videos.slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
+
   const placeholderItems = Array.from(
-    { length: loadingVideos ? videosPerPage - (videos ? videos.length : 0) : 0 },
+    { length: loadingVideos || loadingSearch ? videosPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
     () => ({
       id: undefined,
       progress: undefined,
     })
   )
-  const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
+
+  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
 
   const TabContent = () => {
@@ -152,9 +191,9 @@ export const ChannelView: React.FC = () => {
             <PaginationContainer>
               <Pagination
                 onChangePage={handleChangePage}
-                page={currentPage}
+                page={isSearching ? currentSearchPage : currentPage}
                 itemsPerPage={videosPerPage}
-                totalCount={totalCount}
+                totalCount={isSearching ? searchVideos?.length : totalCount}
               />
             </PaginationContainer>
           </>
@@ -198,8 +237,36 @@ export const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
         <TabsContainer>
-          <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+          <StyledTabs
+            selected={isSearching ? -1 : undefined}
+            initialIndex={0}
+            tabs={mappedTabs}
+            onSelectTab={handleSetCurrentTab}
+          />
           {currentTabName === 'Videos' && (
+            <SearchContainer>
+              <StyledTextField
+                ref={searchInputRef}
+                isOpen={isSearchInputOpen}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchInputKeyPress}
+                placeholder="Search"
+                type="search"
+                helperText={null}
+              />
+              <SearchButton
+                onClick={() => {
+                  setIsSearchingInputOpen(true)
+                  searchInputRef.current?.focus()
+                }}
+                variant="tertiary"
+              >
+                <SvgGlyphSearch />
+              </SearchButton>
+            </SearchContainer>
+          )}
+          {currentTabName === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
@@ -214,9 +281,79 @@ export const ChannelView: React.FC = () => {
 
 const usePagination = (currentTab: number) => {
   const [currentPage, setCurrentPage] = useState(0)
+  const [currentSearchPage, setCurrentSearchPage] = useState(0)
   // reset the pagination when changing tabs
   useEffect(() => {
     setCurrentPage(0)
+    setCurrentSearchPage(0)
   }, [currentTab])
-  return { currentPage, setCurrentPage }
+  return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
+}
+
+const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
+  if (loading || !data) {
+    return { channels: [], videos: [] }
+  }
+  const searchVideos = data.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+  return { searchVideos }
+}
+type UseSearchVideosParams = {
+  id: string
+}
+const useSearchVideos = ({ id }: UseSearchVideosParams) => {
+  const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery()
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const handleSearchInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+      if (searchQuery.trim() === '') {
+        setSearchQuery('')
+        setIsSearching(false)
+      } else {
+        search()
+        setIsSearching(true)
+      }
+    }
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+      setSearchQuery('')
+    }
+  }
+  const search = () => {
+    searchVideo({
+      variables: {
+        text: searchQuery,
+        whereVideo: {
+          isPublic_eq: true,
+          mediaAvailability_eq: AssetAvailability.Accepted,
+          thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+          channelId_eq: id,
+        },
+        limit: 100,
+      },
+    })
+  }
+
+  const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData?.search), [
+    loadingSearch,
+    searchData,
+  ])
+
+  return {
+    searchVideos,
+    search,
+    loadingSearch,
+    isSearchInputOpen,
+    setIsSearchingInputOpen,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    setIsSearching,
+    searchInputRef,
+    errorSearch,
+    handleSearchInputKeyPress,
+  }
 }
