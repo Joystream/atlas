@@ -15,7 +15,7 @@ export const HomeView: React.FC = () => {
 
   const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
     limit: 200,
-    period: 30,
+    viewedWithinDays: 30,
   })
   const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
 

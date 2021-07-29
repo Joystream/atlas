@@ -106,7 +106,7 @@ export type GetBatchedVideoViewsQuery = {
 }
 
 export type GetMostViewedVideosQueryVariables = Types.Exact<{
-  period: Types.Scalars['Int']
+  viewedWithinDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
@@ -116,7 +116,7 @@ export type GetMostViewedVideosQuery = {
 }
 
 export type GetMostViewedChannelsQueryVariables = Types.Exact<{
-  period: Types.Scalars['Int']
+  viewedWithinDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
@@ -419,8 +419,8 @@ export type GetBatchedVideoViewsQueryResult = Apollo.QueryResult<
   GetBatchedVideoViewsQueryVariables
 >
 export const GetMostViewedVideosDocument = gql`
-  query GetMostViewedVideos($period: Int!, $limit: Int) {
-    mostViewedVideos(period: $period, limit: $limit) {
+  query GetMostViewedVideos($viewedWithinDays: Int!, $limit: Int) {
+    mostViewedVideos(period: $viewedWithinDays, limit: $limit) {
       id
       views
     }
@@ -439,7 +439,7 @@ export const GetMostViewedVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedVideosQuery({
  *   variables: {
- *      period: // value for 'period'
+ *      viewedWithinDays: // value for 'viewedWithinDays'
  *      limit: // value for 'limit'
  *   },
  * });
@@ -467,8 +467,8 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
   GetMostViewedVideosQueryVariables
 >
 export const GetMostViewedChannelsDocument = gql`
-  query GetMostViewedChannels($period: Int!, $limit: Int) {
-    mostViewedChannels(period: $period, limit: $limit) {
+  query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
+    mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
       id
       views
     }
@@ -487,7 +487,7 @@ export const GetMostViewedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedChannelsQuery({
  *   variables: {
- *      period: // value for 'period'
+ *      viewedWithinDays: // value for 'viewedWithinDays'
  *      limit: // value for 'limit'
  *   },
  * });
