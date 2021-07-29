@@ -142,24 +142,25 @@ export const VolumeSlider = styled.input`
 `
 
 export const VolumeControl = styled.div`
-  /* hide volume control on compact view */
+  /* hide volume control on devices which dont support :hover i.e. mobiles, tablets */
   display: none;
   border-radius: 1.25em;
   width: 2.5em;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing},
     width ${transitions.timings.sharp} ${transitions.easing};
 
-  @media (hover: hover) : hover {
-    background-color: ${colors.transparentPrimary[18]};
-    backdrop-filter: blur(${sizes(8)});
-    width: 7.5em;
-    ${VolumeSlider} {
-      opacity: 1;
-      transform: scaleX(1);
-    }
-  }
-  ${media.compact} {
+  @media (hover: hover) {
     display: flex;
+
+    :hover {
+      background-color: ${colors.transparentPrimary[18]};
+      backdrop-filter: blur(${sizes(8)});
+      width: 7.5em;
+      ${VolumeSlider} {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+    }
   }
 `
 export const VolumeButton = styled(PlayerControlButton)`

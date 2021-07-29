@@ -134,30 +134,17 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
     }
   }
 
-  const handleJumpToTime = (e: React.MouseEvent) => {
+  const handleJumpToTime = (e: React.MouseEvent | React.TouchEvent) => {
     const seekBar = seekBarRef.current
-    if (!seekBar || isScrubbing) {
+    if (!seekBar || (e.type === 'mouseleave' && !isScrubbing)) {
       return
     }
 
     const { x: seekBarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
-    const mousePosition = e.clientX - seekBarPosition
+    const mouseOrTouchPosition =
+      'clientX' in e ? e.clientX - seekBarPosition : e.changedTouches[0].clientX - seekBarPosition
 
-    const percentage = clamp(round(mousePosition / seekBarWidth, 4), 0, 100)
-    const newTime = percentage * (player?.duration() || 0)
-    player?.currentTime(newTime)
-  }
-
-  const handleReleaseTouch = (e: React.TouchEvent) => {
-    const seekBar = seekBarRef.current
-    if (!seekBar || !isScrubbing) {
-      return
-    }
-
-    const { x: seekBarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
-    const mousePosition = e.changedTouches[0].clientX - seekBarPosition
-
-    const percentage = clamp(round(mousePosition / seekBarWidth, 4), 0, 100)
+    const percentage = clamp(round(mouseOrTouchPosition / seekBarWidth, 4), 0, 100)
     const newTime = percentage * (player?.duration() || 0)
     player?.currentTime(newTime)
     setIsScrubbing(false)
@@ -169,12 +156,12 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       isFullScreen={isFullScreen}
       onMouseMove={handleMouseAndTouchMove}
       onTouchMove={handleMouseAndTouchMove}
-      onMouseLeave={() => setIsScrubbing(false)}
+      onMouseLeave={handleJumpToTime}
       onClick={handleJumpToTime}
       onMouseDown={() => setIsScrubbing(true)}
       onTouchStart={() => setIsScrubbing(true)}
       onMouseUp={() => setIsScrubbing(false)}
-      onTouchEnd={handleReleaseTouch}
+      onTouchEnd={handleJumpToTime}
     >
       <SeekBar ref={seekBarRef}>
         <LoadProgress style={{ width: loadProgressWidth + '%' }} />
