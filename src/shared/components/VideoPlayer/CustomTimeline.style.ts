@@ -29,12 +29,12 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
 
   ${media.compact} {
     cursor: pointer;
     @media (hover: hover) {
       padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+      ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
     }
   }
 
