@@ -20,7 +20,7 @@ const scrubbingStyles = (isFullScreen?: boolean) => css`
 `
 
 export const ProgressControl = styled.div<ProgressControlProps>`
-  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1em` : `0`)};
   position: absolute;
   height: 1.5em;
   z-index: ${zIndex.nearOverlay};
@@ -33,6 +33,9 @@ export const ProgressControl = styled.div<ProgressControlProps>`
 
   ${media.compact} {
     cursor: pointer;
+    @media (hover: hover) {
+      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+    }
   }
 
   :hover ${() => SeekBar} {
