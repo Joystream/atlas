@@ -28,13 +28,16 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   width: 100%;
   background: ${colors.transparentBlack[54]};
   height: 100%;
+  visibility: hidden;
+  z-index: ${zIndex.nearOverlay - 1};
   transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
     visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
   ${media.compact} {
     height: 8em;
     background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
   }
-  ${media.medium} {
+
+  @media (hover: hover) {
     font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   }
 `
@@ -46,7 +49,6 @@ export const CustomControls = styled.div<CustomControlsProps>`
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
   display: flex;
-  z-index: ${zIndex.nearOverlay - 1};
   width: 100%;
   transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
     opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
@@ -252,6 +254,7 @@ export const Container = styled.div<ContainerProps>`
   .vjs-playing:hover {
     ${ControlsOverlay} {
       opacity: 1;
+      visibility: visible;
       ${CustomControls} {
         transform: translateY(-0.5em);
       }
@@ -261,15 +264,19 @@ export const Container = styled.div<ContainerProps>`
   .vjs-user-inactive.vjs-playing {
     ${ControlsOverlay} {
       opacity: 0;
+      visibility: hidden;
       ${CustomControls} {
         transform: translateY(0.5em);
       }
     }
   }
 
-  .vjs-paused {
+  .vjs-ended,
+  .vjs-paused,
+  .vjs-user-active {
     ${ControlsOverlay} {
       opacity: 1;
+      visibility: visible;
       ${CustomControls} {
         transform: translateY(-0.5em);
       }
