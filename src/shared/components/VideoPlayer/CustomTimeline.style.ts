@@ -143,6 +143,7 @@ export const PlayProgressThumb = styled.button`
   height: 1em;
   top: -0.25em;
   width: 1em;
+  padding: 0;
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;

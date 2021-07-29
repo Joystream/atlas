@@ -26,6 +26,11 @@ export const ControlButton = styled.button<ControlButtonProps>`
     height: 1.5em;
   }
 
+  :active {
+    background-color: ${colors.transparentPrimary[10]};
+    backdrop-filter: blur(${sizes(8)});
+  }
+
   @media (hover: hover) {
     :hover,
     :focus,
