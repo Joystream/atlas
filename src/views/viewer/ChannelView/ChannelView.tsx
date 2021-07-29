@@ -9,7 +9,13 @@ import {
   useUnfollowChannel,
   useVideosConnection,
 } from '@/api/hooks'
-import { AssetAvailability, SearchQuery, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
+import {
+  AssetAvailability,
+  SearchQuery,
+  VideoFieldsFragment,
+  VideoOrderByInput,
+  useSearchLazyQuery,
+} from '@/api/queries'
 import { LimitedWidthContainer, VideoPreview, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
@@ -75,7 +81,16 @@ export const ChannelView: React.FC = () => {
     assetType: AssetType.COVER,
   })
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
-  const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
+  const {
+    edges,
+    totalCount,
+    loading: loadingVideos,
+    error: videosError,
+    fetchMore,
+    refetch,
+    variables,
+    pageInfo,
+  } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
@@ -284,7 +299,9 @@ const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | und
   if (loading || !data) {
     return { channels: [], videos: [] }
   }
-  const searchVideos = data.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+  const searchVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
+    result.item.__typename === 'Video' ? [result.item] : []
+  )
   return { searchVideos }
 }
 type UseSearchVideosParams = {
