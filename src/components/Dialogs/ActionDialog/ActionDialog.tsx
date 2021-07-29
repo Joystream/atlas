@@ -42,10 +42,7 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
       {hasAnyAction && (
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
-          <ButtonsContainer
-            primaryButtonIsTextOnly={primaryButton?.textOnly}
-            secondaryButtonIsTextOnly={secondaryButton?.textOnly}
-          >
+          <ButtonsContainer>
             {primaryButton?.text && (
               <StyledPrimaryButton warning={warning} error={error} {...primaryButton}>
                 {primaryButton.text}

@@ -9,7 +9,7 @@ type ButtonProps = {
   warning?: boolean
 }
 
-export const ButtonsContainer = styled.div<{ primaryButtonIsTextOnly?: boolean; secondaryButtonIsTextOnly?: boolean }>`
+export const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -21,13 +21,9 @@ export const ButtonsContainer = styled.div<{ primaryButtonIsTextOnly?: boolean; 
     flex-direction: row-reverse;
     margin-left: auto;
 
-    > :first-child {
-      margin-left: ${({ secondaryButtonIsTextOnly }) => (secondaryButtonIsTextOnly ? sizes(6) : sizes(2))};
-    }
-
     > * + * {
       margin-top: 0;
-      margin-right: ${({ secondaryButtonIsTextOnly }) => (secondaryButtonIsTextOnly ? sizes(6) : sizes(2))};
+      margin-right: ${sizes(2)};
     }
 
     * + & {
