@@ -24,7 +24,7 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const setAssetsFiles = useUploadsStore((state) => state.setAssetsFiles)
+  const addAssetFile = useUploadsStore((state) => state.addAssetFile)
   const addAsset = useUploadsStore((state) => state.addAsset)
   const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
@@ -100,25 +100,22 @@ export const useStartFileUpload = () => {
       }
       const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
       if (!fileInState && file) {
-        setAssetsFiles({ contentId: asset.contentId, blob: file })
+        addAssetFile({ contentId: asset.contentId, blob: file })
       }
 
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
 
       try {
-        rax.attach()
-        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
         }
-        if (!opts?.isReUpload && file) {
+        rax.attach()
+        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
+        if (!opts?.isReUpload && !opts?.changeHost && file) {
           addAsset({ ...asset, size: file.size })
-          setAssetStatus({ lastStatus: 'inProgress' })
         }
-        if (opts?.isReUpload && file) {
-          setAssetStatus({ lastStatus: 'inProgress' })
-        }
-        setAssetStatus({ progress: 0 })
+
+        setAssetStatus({ lastStatus: 'inProgress', progress: 0 })
 
         const setUploadProgress = ({ loaded, total }: ProgressEvent) => {
           setAssetStatus({ progress: (loaded / total) * 100 })
@@ -193,7 +190,7 @@ export const useStartFileUpload = () => {
       getRandomStorageProvider,
       markStorageProviderNotWorking,
       navigate,
-      setAssetsFiles,
+      addAssetFile,
       setUploadStatus,
     ]
   )
