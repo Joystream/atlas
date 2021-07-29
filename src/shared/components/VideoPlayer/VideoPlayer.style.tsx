@@ -6,7 +6,7 @@ import { SvgPlayerSoundOff } from '@/shared/icons'
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.style'
 
-import { colors, media, sizes, transitions, zIndex } from '../../theme'
+import { colors, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -21,7 +21,7 @@ type CustomControlsProps = {
 export const TRANSITION_DELAY = '50ms'
 
 export const ControlsOverlay = styled.div<CustomControlsProps>`
-  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(6) : sizes(4))};
+  font-size: ${sizes(4)};
   opacity: 0;
   position: absolute;
   bottom: 0;
@@ -29,33 +29,32 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   background: ${colors.transparentBlack[54]};
   height: 100%;
   visibility: hidden;
-  z-index: ${zIndex.nearOverlay - 1};
   transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
     visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
-  ${media.compact} {
-    height: 8em;
-    background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
-  }
 
   @media (hover: hover) {
+    height: 8em;
+    background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
     font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   }
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
-  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
-  padding: 0.5em 0.5em 0;
+  transform: translateY(0.5em);
+  bottom: 0;
+  padding: ${({ isFullScreen }) => (isFullScreen ? ' 0.5em 0.5em 2.5em 0.5em' : '1em 0.5em')};
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
+  z-index: ${zIndex.nearOverlay - 1};
   display: flex;
   width: 100%;
   transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
     opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
   top: ${({ isEnded }) => (isEnded ? 'unset' : 0)};
   align-items: flex-end;
-  ${media.compact} {
-    padding: 0.5em 1em 0;
+  @media (hover: hover) {
+    padding: ${({ isFullScreen }) => (isFullScreen ? '2.5em 1em' : '1.25em 1em')};
     top: unset;
     align-items: center;
     height: unset;
@@ -66,15 +65,16 @@ export const PlayControl = styled.div`
   align-self: center;
   width: 100%;
   position: absolute;
+  align-items: center;
   display: flex;
   justify-content: center;
   left: 0;
-  ${media.compact} {
+  @media (hover: hover) {
     margin-right: 0.5em;
     align-self: unset;
     width: unset;
-    left: unset;
     position: unset;
+    transform: unset;
   }
 `
 
@@ -83,14 +83,14 @@ type StyledPlayButtonProps = {
 }
 
 export const PlayButton = styled(PlayerControlButton)<StyledPlayButtonProps>`
-  ${media.compact} {
+  @media (hover: hover) {
     display: flex !important;
   }
 
   svg {
     width: ${({ isEnded }) => (isEnded ? '1.5em' : '2.5em')};
     height: ${({ isEnded }) => (isEnded ? '1.5em' : '2.5em')};
-    ${media.compact} {
+    @media (hover: hover) {
       width: 1.5em;
       height: 1.5em;
     }
@@ -187,7 +187,7 @@ export const CurrentTimeWrapper = styled.div`
   align-items: center;
   height: 2.5em;
   margin-left: 0.5em;
-  ${media.compact} {
+  @media (hover: hover) {
     margin-left: 1em;
   }
 `
@@ -251,17 +251,8 @@ export const Container = styled.div<ContainerProps>`
     display: none;
   }
 
-  .vjs-playing:hover {
-    ${ControlsOverlay} {
-      opacity: 1;
-      visibility: visible;
-      ${CustomControls} {
-        transform: translateY(-0.5em);
-      }
-    }
-  }
-
-  .vjs-user-inactive.vjs-playing {
+  .vjs-user-inactive.vjs-playing,
+  .vjs-user-inactive:not(.vjs-ended) {
     ${ControlsOverlay} {
       opacity: 0;
       visibility: hidden;
@@ -278,7 +269,40 @@ export const Container = styled.div<ContainerProps>`
       opacity: 1;
       visibility: visible;
       ${CustomControls} {
-        transform: translateY(-0.5em);
+        transform: translateY(0);
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    .vjs-user-active.vjs-playing {
+      ${ControlsOverlay} {
+        opacity: 0;
+        visibility: hidden;
+        ${CustomControls} {
+          transform: translateY(0.5em);
+        }
+      }
+    }
+
+    .vjs-playing:hover {
+      ${ControlsOverlay} {
+        opacity: 1;
+        visibility: visible;
+        ${CustomControls} {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .vjs-user-inactive.vjs-playing,
+    .vjs-user-inactive.vjs-paused:not(.vjs-ended) {
+      ${ControlsOverlay} {
+        opacity: 0;
+        visibility: hidden;
+        ${CustomControls} {
+          transform: translateY(0.5em);
+        }
       }
     }
   }
@@ -317,7 +341,7 @@ export const BigPlayButton = styled(ControlButton)`
     width: ${sizes(10)} !important;
     height: ${sizes(10)} !important;
   }
-  ${media.compact} {
+  @media (hover: hover) {
     cursor: pointer;
   }
 `

@@ -30,12 +30,10 @@ export const ProgressControl = styled.div<ProgressControlProps>`
   display: flex;
   align-items: flex-end;
 
-  ${media.compact} {
+  @media (hover: hover) {
     cursor: pointer;
-    @media (hover: hover) {
-      padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
-      ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
-    }
+    padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+    ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
   }
 
   :hover ${() => SeekBar} {

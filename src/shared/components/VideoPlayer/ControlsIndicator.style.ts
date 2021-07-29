@@ -5,12 +5,12 @@ import { colors, media, sizes, transitions } from '@/shared/theme'
 import { Loader } from '../Loader'
 
 export const ControlsIndicatorWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
   display: none;
-  ${media.small} {
+  @media (hover: hover) {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
