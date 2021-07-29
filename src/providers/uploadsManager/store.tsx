@@ -18,7 +18,7 @@ type UploadStoreState = {
   uploadsStatus: UploadsStatusRecord
   setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
   assetsFiles: AssetFile[]
-  setAssetsFiles: (assetFile: AssetFile) => void
+  addAssetFile: (assetFile: AssetFile) => void
   isSyncing: boolean
   setIsSyncing: (isSyncing: boolean) => void
 }
@@ -39,8 +39,8 @@ export const useUploadsStore = create<UploadStoreState>(
           uploadsStatus: { ...state.uploadsStatus, [contentId]: { ...state.uploadsStatus[contentId], ...status } },
         }))
       },
-      setAssetsFiles: (assetFile) => {
-        set((state) => ({ ...state, assetFiles: [...state.assetsFiles, assetFile] }))
+      addAssetFile: (assetFile) => {
+        set((state) => ({ ...state, assetsFiles: [...state.assetsFiles, assetFile] }))
       },
       addAsset: (asset) => {
         set((state) => ({ ...state, uploads: [...state.uploads, asset] }))
