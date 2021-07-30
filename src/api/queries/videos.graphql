@@ -11,6 +11,16 @@ fragment LicenseFields on License {
   customText
 }
 
+fragment BasicVideoFields on Video {
+  id
+  title
+  thumbnailPhotoUrls
+  thumbnailPhotoAvailability
+  thumbnailPhotoDataObject {
+    ...DataObjectFields
+  }
+}
+
 fragment VideoFields on Video {
   id
   title
@@ -81,6 +91,12 @@ query GetVideosConnection(
 query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
   videos(offset: $offset, limit: $limit, where: $where, orderBy: [$orderBy]) {
     ...VideoFields
+  }
+}
+
+query GetBasicVideos($where: VideoWhereInput) {
+  videos(where: $where) {
+    ...BasicVideoFields
   }
 }
 

@@ -4,11 +4,10 @@ import * as React from 'react'
 export const SvgPlayerSmallScreen = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M16 4v3a1 1 0 001 1h3M8 4v3a1 1 0 01-1 1H4M8 20v-3a1 1 0 00-1-1H4M16 20v-3a1 1 0 011-1h3"
-      stroke="#F4F6F8"
-      strokeWidth={2}
-      strokeMiterlimit={10}
-      strokeLinecap="square"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M17 3v4h4v2h-4a2 2 0 01-2-2V3h2zM9 3v4a2 2 0 01-2 2H3V7h4V3h2zM7 21v-4H3v-2h4a2 2 0 012 2v4H7zM15 21v-4a2 2 0 012-2h4v2h-4v4h-2z"
+      fill="#F4F6F8"
     />
   </svg>
 )

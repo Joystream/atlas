@@ -1,10 +1,9 @@
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useMatch, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
-import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
@@ -44,7 +43,6 @@ export const VideoView: React.FC = () => {
   })
   const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
-  const videoRouteMatch = useMatch({ path: absoluteRoutes.viewer.video(id) })
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
     if (startTimestamp != null) {
@@ -65,32 +63,6 @@ export const VideoView: React.FC = () => {
 
   const channelId = video?.channel.id
   const videoId = video?.id
-
-  const [playing, setPlaying] = useState(true)
-  const handleUserKeyPress = useCallback(
-    (event: Event) => {
-      const { keyCode } = event as KeyboardEvent
-      if (videoRouteMatch) {
-        switch (keyCode) {
-          case 32:
-            event.preventDefault()
-            setPlaying((prevState) => !prevState)
-            break
-          default:
-            break
-        }
-      }
-    },
-    [videoRouteMatch]
-  )
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleUserKeyPress)
-
-    return () => {
-      window.removeEventListener('keydown', handleUserKeyPress)
-    }
-  }, [handleUserKeyPress])
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -125,13 +97,6 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
-  const handlePlay = useCallback(() => {
-    setPlaying(true)
-  }, [])
-  const handlePause = useCallback(() => {
-    setPlaying(false)
-  }, [])
-
   if (error) {
     throw error
   }
@@ -148,14 +113,13 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {video ? (
             <VideoPlayer
-              playing={playing}
+              channelId={video.channel.id}
+              autoplay
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
-              onPlay={handlePlay}
-              onPause={handlePause}
               startTime={startTimestamp}
             />
           ) : (

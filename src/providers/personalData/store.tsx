@@ -1,3 +1,5 @@
+import { round } from 'lodash'
+
 import { createStore } from '@/store'
 import { readFromLocalStorage } from '@/utils/localStorage'
 
@@ -15,7 +17,8 @@ export type PersonalDataStoreState = {
   followedChannels: FollowedChannel[]
   recentSearches: RecentSearch[]
   dismissedMessages: DismissedMessage[]
-  playerVolume: number
+  currentVolume: number
+  cachedVolume: number
 }
 
 const WHITELIST = [
@@ -23,7 +26,8 @@ const WHITELIST = [
   'followedChannels',
   'recentSearches',
   'dismissedMessages',
-  'playerVolume',
+  'currentVolume',
+  'cachedVolume',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -31,23 +35,25 @@ export type PersonalDataStoreActions = {
   updateChannelFollowing: (id: string, follow: boolean) => void
   updateRecentSearches: (id: string, type: RecentSearchType) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
-  updatePlayerVolume: (volume: number) => void
+  setCurrentVolume: (volume: number) => void
+  setCachedVolume: (volume: number) => void
 }
 
 const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
 const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
 const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
 const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
-const playerVolume = readFromLocalStorage<number>('playerVolume') ?? 1
+const currentVolume = readFromLocalStorage<number>('playerVolume') ?? 1
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: {
+      cachedVolume: 0,
       watchedVideos,
       followedChannels,
       recentSearches,
       dismissedMessages,
-      playerVolume,
+      currentVolume,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -87,9 +93,13 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updatePlayerVolume: (volume) =>
+      setCurrentVolume: (volume) =>
         set((state) => {
-          state.playerVolume = volume
+          state.currentVolume = round(volume, 2)
+        }),
+      setCachedVolume: (volume) =>
+        set((state) => {
+          state.cachedVolume = round(volume, 2)
         }),
     }),
   },

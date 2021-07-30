@@ -2,6 +2,7 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   BasicChannelFieldsFragment,
+  BasicVideoFieldsFragment,
   DataObject,
   VideoFieldsFragment,
 } from '@/api/queries'
@@ -14,6 +15,7 @@ export enum AssetType {
 }
 
 export type UseAssetDataArgs =
+  | { entity?: BasicVideoFieldsFragment | null; assetType: AssetType.THUMBNAIL }
   | { entity?: VideoFieldsFragment | null; assetType: AssetType.THUMBNAIL | AssetType.MEDIA }
   | { entity?: AllChannelFieldsFragment | null; assetType: AssetType.COVER | AssetType.AVATAR }
   | { entity?: BasicChannelFieldsFragment | null; assetType: AssetType.AVATAR }

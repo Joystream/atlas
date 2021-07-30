@@ -38,13 +38,20 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   const [player, setPlayer] = useState<VideoJsPlayer | null>(null)
 
   useEffect(() => {
+    if (!playerRef.current) {
+      return
+    }
     const videoJsOptions: VideoJsPlayerOptions = {
       controls: true,
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       playsinline: true,
+      loadingSpinner: false,
+      bigPlayButton: false,
+      controlBar: false,
     }
 
-    const playerInstance = videojs(playerRef.current, videoJsOptions)
+    const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
+
     setPlayer(playerInstance)
 
     return () => {
