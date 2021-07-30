@@ -1,4 +1,5 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { useMemo } from 'react'
 
 import {
   AssetAvailability,
@@ -7,12 +8,15 @@ import {
   GetChannelQuery,
   GetChannelsQuery,
   GetChannelsQueryVariables,
+  GetMostViewedChannelsQuery,
+  GetMostViewedChannelsQueryVariables,
   GetVideoCountQuery,
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
+  useGetMostViewedChannelsQuery,
   useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
@@ -119,6 +123,46 @@ export const useUnfollowChannel = (opts?: UnfollowChannelOpts) => {
           })
         },
       }),
+    ...rest,
+  }
+}
+
+type MostPopularChannelsOpts = QueryHookOptions<GetMostViewedChannelsQuery>
+export const useMostViewedChannelsIds = (
+  variables?: GetMostViewedChannelsQueryVariables,
+  opts?: MostPopularChannelsOpts
+) => {
+  const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
+  return {
+    mostViewedChannels: data?.mostViewedChannels,
+    ...rest,
+  }
+}
+
+export const useMostViewedChannels = (
+  variables?: GetMostViewedChannelsQueryVariables,
+  opts?: MostPopularChannelsOpts
+) => {
+  const { mostViewedChannels } = useMostViewedChannelsIds(variables, opts)
+
+  const mostViewedChannelsIds = useMemo(() => {
+    if (mostViewedChannels) {
+      return mostViewedChannels.map((item) => item.id)
+    }
+    return null
+  }, [mostViewedChannels])
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostViewedChannelsIds,
+      },
+    },
+    { skip: !mostViewedChannelsIds }
+  )
+
+  return {
+    channels,
     ...rest,
   }
 }

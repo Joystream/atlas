@@ -21,6 +21,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
   const idEq = args?.where?.id_eq || ''
+  const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
@@ -30,7 +31,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
+  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${idIn}`
 }
 
 const createDateHandler = () => ({
