@@ -1,11 +1,15 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { useMemo } from 'react'
 
 import {
   AddVideoViewMutation,
+  GetMostViewedVideosQuery,
+  GetMostViewedVideosQueryVariables,
   GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
   useAddVideoViewMutation,
+  useGetMostViewedVideosQuery,
   useGetVideoQuery,
   useGetVideosQuery,
 } from '@/api/queries'
@@ -49,6 +53,47 @@ export const useAddVideoView = (opts?: AddVideoViewOpts) => {
   })
   return {
     addVideoView,
+    ...rest,
+  }
+}
+
+type MostViewedVideosOpts = QueryHookOptions<GetMostViewedVideosQuery>
+export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
+  return {
+    mostViewedVideos: data?.mostViewedVideos,
+    ...rest,
+  }
+}
+
+export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+  const { mostViewedVideos } = useMostViewedVideosIds(variables, opts)
+
+  const mostViewedVideosIds = useMemo(() => {
+    if (mostViewedVideos) {
+      return mostViewedVideos.map((item) => item.id)
+    }
+    return null
+  }, [mostViewedVideos])
+
+  const { videos, ...rest } = useVideos(
+    {
+      where: {
+        id_in: mostViewedVideosIds,
+      },
+    },
+    { skip: !mostViewedVideosIds }
+  )
+
+  const sortedVideos = useMemo(() => {
+    if (videos) {
+      return [...videos].sort((a, b) => (b.views && a.views ? b.views - a.views : 0))
+    }
+    return null
+  }, [videos])
+
+  return {
+    videos: sortedVideos,
     ...rest,
   }
 }
