@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import useVideosConnection from '@/api/hooks/videosConnection'
+import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
 import {
   InfiniteVideoGrid,
   LimitedWidthContainer,
@@ -19,7 +19,13 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { videosConnection, loading, error } = useVideosConnection(
+  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
+    limit: 200,
+    viewedWithinDays: 30,
+  })
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+
+  const { videosConnection, loading: followedLoading, error: followedError } = useVideosConnection(
     {
       where: {
         channelId_in: channelIdIn,
@@ -30,7 +36,7 @@ export const HomeView: React.FC = () => {
 
   const followedChannelsVideosCount = videosConnection?.totalCount
 
-  if (error) {
+  if (mostViewedVideosError || followedError) {
     return <ViewErrorFallback />
   }
 
@@ -38,8 +44,21 @@ export const HomeView: React.FC = () => {
     <LimitedWidthContainer big>
       <VideoHero />
       <Container className={transitions.names.slide}>
-        {!loading && followedChannelsVideosCount ? (
-          <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
+        {!followedLoading && followedChannelsVideosCount ? (
+          <StyledInfiniteVideoGrid
+            title="Followed channels"
+            channelIdIn={channelIdIn}
+            ready={!followedLoading}
+            onDemand
+          />
+        ) : null}
+        {!mostViewedVideosLoading && mostViewedVideos?.length ? (
+          <StyledInfiniteVideoGrid
+            title="Popular on Joystream"
+            idIn={mostViewedVideosIds}
+            ready={!mostViewedVideosLoading}
+            onDemand
+          />
         ) : null}
         <OfficialJoystreamUpdate />
         <StyledInfiniteVideoGrid title="All content" onDemand />
