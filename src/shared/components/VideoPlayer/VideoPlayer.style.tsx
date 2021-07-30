@@ -63,6 +63,7 @@ export const thumbStyles = css`
 `
 
 export const VolumeSlider = styled.input`
+  cursor: pointer;
   appearance: none;
   border-radius: 2px;
   margin: 0;
