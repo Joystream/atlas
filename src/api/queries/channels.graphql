@@ -75,6 +75,14 @@ query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInp
 ### Orion
 
 # modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelViews($channelId: ID!) {
+  channelViews(channelId: $channelId) {
+    id
+    views
+  }
+}
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
     id
@@ -86,13 +94,6 @@ query GetBatchedChannelFollows($channelIdList: [ID!]!) {
   batchedChannelFollows(channelIdList: $channelIdList) {
     id
     follows
-  }
-}
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelViews($channelId: ID!) {
-  channelViews(channelId: $channelId) {
-    id
-    views
   }
 }
 
@@ -114,5 +115,12 @@ mutation UnfollowChannel($channelId: ID!) {
   unfollowChannel(channelId: $channelId) {
     id
     follows
+  }
+}
+
+query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
+  mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
+    id
+    views
   }
 }
