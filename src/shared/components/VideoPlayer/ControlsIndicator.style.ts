@@ -109,8 +109,6 @@ export const ControlsIndicatorTransitions = styled.div`
   }
 `
 export const StyledLoader = styled(Loader)`
-  width: ${sizes(9)};
-
   /* align position with indicator */
   margin-bottom: calc(${INDICATOR_SIZE} / 2);
 `
