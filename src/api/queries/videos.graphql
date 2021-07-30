@@ -109,13 +109,6 @@ query GetMostViewedVideos($viewedWithinDays: Int!, $limit: Int) {
   }
 }
 
-query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
-  mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
-    id
-    views
-  }
-}
-
 mutation AddVideoView($videoId: ID!, $channelId: ID!) {
   addVideoView(videoId: $videoId, channelId: $channelId) {
     id

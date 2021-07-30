@@ -67,7 +67,7 @@ type Query {
   mostViewedVideos(period: Int!, limit: Int): [EntityViewsInfo!]
 
   """
-  Get list of most viewed videos in given period
+  Get list of channels with most views in given period
   """
   mostViewedChannels(period: Int!, limit: Int): [EntityViewsInfo!]
 }

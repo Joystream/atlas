@@ -275,7 +275,7 @@ export type Query = {
   channelsConnection: ChannelConnection
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
-  /** Get list of most viewed videos in given period */
+  /** Get list of channels with most views in given period */
   mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
   /** Get list of most viewed videos in given period */
   mostViewedVideos?: Maybe<Array<EntityViewsInfo>>

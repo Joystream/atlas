@@ -98,3 +98,10 @@ mutation UnfollowChannel($channelId: ID!) {
     follows
   }
 }
+
+query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
+  mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
+    id
+    views
+  }
+}
