@@ -24,8 +24,8 @@ export const ErrorOverlay: React.FC = () => {
         </AnimationWrapper>
         <Heading variant="h3">Aw, shucks!</Heading>
         <ErrorMessage variant="body1" secondary>
-          The video could not be loaded because of an error. Please try again later. If the issue persists, reach out to
-          our community on Discord.
+          The video could not be played because the data is corrupted or the encoding is not supported. This issue has
+          been logged. If you need support, reach out to our community on Discord.
         </ErrorMessage>
         <ButtonGroup>
           <StyledDiscordButton variant="secondary" to={JOYSTREAM_DISCORD_URL}>
