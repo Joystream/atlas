@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import React from 'react'
 
-import useVideosConnection from '@/api/hooks/videosConnection'
+import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
 import { ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, VideoHero, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { sizes, transitions } from '@/shared/theme'
@@ -13,7 +13,13 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { videosConnection, loading, error } = useVideosConnection(
+  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
+    limit: 200,
+    viewedWithinDays: 30,
+  })
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+
+  const { videosConnection, loading: followedLoading, error: followedError } = useVideosConnection(
     {
       where: {
         channelId_in: channelIdIn,
@@ -24,8 +30,12 @@ export const HomeView: React.FC = () => {
 
   const followedChannelsVideosCount = videosConnection?.totalCount
 
-  if (error) {
-    throw error
+  if (mostViewedVideosError) {
+    throw mostViewedVideosError
+  }
+
+  if (followedError) {
+    throw followedError
   }
 
   return (
@@ -33,8 +43,21 @@ export const HomeView: React.FC = () => {
       <VideoHero />
       <Container className={transitions.names.slide}>
         <ErrorBoundary fallback={ErrorFallback}>
-          {!loading && followedChannelsVideosCount ? (
-            <StyledInfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!loading} onDemand />
+          {!followedLoading && followedChannelsVideosCount ? (
+            <StyledInfiniteVideoGrid
+              title="Followed channels"
+              channelIdIn={channelIdIn}
+              ready={!followedLoading}
+              onDemand
+            />
+          ) : null}
+          {!mostViewedVideosLoading && mostViewedVideos?.length ? (
+            <StyledInfiniteVideoGrid
+              title="Popular on Joystream"
+              idIn={mostViewedVideosIds}
+              ready={!mostViewedVideosLoading}
+              onDemand
+            />
           ) : null}
           <OfficialJoystreamUpdate />
           <StyledInfiniteVideoGrid title="All content" onDemand />
