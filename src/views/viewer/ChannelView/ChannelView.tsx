@@ -1,6 +1,6 @@
 import { subMonths } from 'date-fns'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
   useChannel,
@@ -49,6 +49,7 @@ const ROWS_AMOUNT = 4
 export const ChannelView: React.FC = () => {
   const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id)
   const {
     searchVideos,
@@ -68,8 +69,7 @@ export const ChannelView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
   const [isFollowing, setFollowing] = useState<boolean>()
-  const [currentVideosTab, setCurrentVideosTab] = useState(0)
-  const currentTabName = TABS[currentVideosTab]
+  const currentTabName = searchParams.get('tab')
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | undefined>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset({
@@ -145,7 +145,7 @@ export const ChannelView: React.FC = () => {
       setSearchQuery('')
     }
     setIsSearching(false)
-    setCurrentVideosTab(tab)
+    setSearchParams({ 'tab': TABS[tab] }, { replace: true })
   }
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
@@ -175,9 +175,9 @@ export const ChannelView: React.FC = () => {
 
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
-
   const TabContent = () => {
     switch (currentTabName) {
+      default:
       case 'Videos':
         return (
           <>
@@ -202,6 +202,13 @@ export const ChannelView: React.FC = () => {
         return <ChannelAbout />
     }
   }
+
+  // At mount set the tab from the search params
+  useEffect(() => {
+    const tabIndex = TABS.findIndex((t) => t === currentTabName)
+    if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (!loading && !channel) {
     return <span>Channel not found</span>
@@ -238,7 +245,7 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <StyledTabs
-            selected={isSearching ? -1 : undefined}
+            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
             initialIndex={0}
             tabs={mappedTabs}
             onSelectTab={handleSetCurrentTab}
