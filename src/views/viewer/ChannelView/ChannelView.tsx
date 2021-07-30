@@ -49,7 +49,7 @@ const ROWS_AMOUNT = 4
 export const ChannelView: React.FC = () => {
   const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
-  const [searchParams, setSearchParams] = useSearchParams({ tab: [...TABS] })
+  const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id)
   const {
     searchVideos,
@@ -205,7 +205,7 @@ export const ChannelView: React.FC = () => {
 
   // At mount set the tab from the search params
   useEffect(() => {
-    const tabIndex = TABS.findIndex((t) => t === searchParams.get('tab'))
+    const tabIndex = TABS.findIndex((t) => t === currentTabName)
     if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -245,7 +245,7 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <StyledTabs
-            selected={isSearching ? -1 : TABS.findIndex((x) => x === searchParams.get('tab'))}
+            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
             initialIndex={0}
             tabs={mappedTabs}
             onSelectTab={handleSetCurrentTab}
