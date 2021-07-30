@@ -277,7 +277,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
-    const handler = () => setIsFullScreen(player.isFullscreen())
+    const handler = () => {
+      // will remove focus from fullscreen button and apply to player.
+      player.focus()
+      setIsFullScreen(player.isFullscreen())
+    }
     player.on('fullscreenchange', handler)
     return () => {
       player.off('fullscreenchange', handler)
