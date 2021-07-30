@@ -15,7 +15,7 @@ type DialogButtonProps = {
   text?: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
-} & ButtonProps
+} & Omit<ButtonProps, 'children'>
 
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
