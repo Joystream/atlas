@@ -491,7 +491,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        {!isInBackground && <ControlsIndicator player={player} />}
+        {!isInBackground && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
   )
