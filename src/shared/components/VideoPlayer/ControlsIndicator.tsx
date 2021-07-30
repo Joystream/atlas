@@ -13,12 +13,14 @@ import {
   SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
   ControlsIndicatorIconWrapper,
   ControlsIndicatorTooltip,
   ControlsIndicatorTransitions,
   ControlsIndicatorWrapper,
+  StyledLoader,
 } from './ControlsIndicator.style'
 import { CustomVideojsEvents } from './utils'
 
@@ -35,9 +37,10 @@ type EventState = {
 
 type ControlsIndicatorProps = {
   player: VideoJsPlayer | null
+  isLoading?: boolean
 }
 
-export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) => {
+export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, isLoading }) => {
   const [indicator, setIndicator] = useState<EventState | null>(null)
   useEffect(() => {
     if (!player) {
@@ -66,6 +69,17 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) 
 
   return (
     <ControlsIndicatorTransitions>
+      <CSSTransition
+        in={!indicator && isLoading}
+        timeout={parseInt(transitions.timings.sharp)}
+        classNames="indicator"
+        mountOnEnter
+        unmountOnExit
+      >
+        <ControlsIndicatorWrapper>
+          <StyledLoader variant="player" />
+        </ControlsIndicatorWrapper>
+      </CSSTransition>
       <CSSTransition
         in={indicator?.isVisible}
         timeout={indicator?.isVisible ? 0 : 750}

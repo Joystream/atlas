@@ -1,22 +1,25 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
+
+import { Loader } from '../Loader'
 
 export const ControlsIndicatorWrapper = styled.div`
   position: absolute;
-  display: flex;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
   flex-direction: column;
-  top: calc(50% - ${sizes(10)});
-  left: calc(50% - ${sizes(10)});
-  ${media.small} {
-    top: calc(50% - ${sizes(16)});
-    left: calc(50% - ${sizes(16)});
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
+const INDICATOR_SIZE = sizes(20)
+
 export const ControlsIndicatorIconWrapper = styled.div`
-  width: ${sizes(20)};
-  height: ${sizes(20)};
+  width: ${INDICATOR_SIZE};
+  height: ${INDICATOR_SIZE};
   backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
@@ -60,11 +63,35 @@ export const ControlsIndicatorTooltip = styled.div`
 const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
 
 export const ControlsIndicatorTransitions = styled.div`
+  .indicator-enter {
+    ${() => StyledLoader} {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
+
+  .indicator-enter-active {
+    ${() => StyledLoader} {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity ${transitions.timings.sharp} ease-in, transform ${transitions.timings.sharp} ease-in;
+    }
+  }
+
   .indicator-exit {
     opacity: 1;
+    ${() => StyledLoader} {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .indicator-exit-active {
+    ${() => StyledLoader} {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0ms ease-in, transform 0ms ease-in;
+    }
     ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
       opacity: 0;
@@ -80,4 +107,8 @@ export const ControlsIndicatorTransitions = styled.div`
       transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
     }
   }
+`
+export const StyledLoader = styled(Loader)`
+  /* align position with indicator */
+  margin-bottom: calc(${INDICATOR_SIZE} / 2);
 `
