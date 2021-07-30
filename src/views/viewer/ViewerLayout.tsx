@@ -27,7 +27,7 @@ export const ViewerLayout: React.FC = () => {
   const [cachedLocation, setCachedLocation] = useState(location)
 
   useEffect(() => {
-    if (location === cachedLocation) {
+    if (location.pathname === cachedLocation.pathname) {
       return
     }
 
