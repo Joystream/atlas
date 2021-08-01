@@ -84,7 +84,7 @@ type StyledPlayButtonProps = {
 
 export const PlayButton = styled(PlayerControlButton)<StyledPlayButtonProps>`
   @media (hover: hover) {
-    display: flex !important;
+    display: flex;
   }
 
   svg {
@@ -213,16 +213,12 @@ export const ScreenControls = styled.div`
 `
 
 const backgroundContainerCss = css`
-  .vjs-waiting .vjs-loading-spinner {
-    display: none;
-  }
-
   .vjs-error-display {
     display: block;
   }
 
   .vjs-poster {
-    display: block !important;
+    display: block;
     opacity: 0;
     transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
@@ -238,15 +234,26 @@ export const Container = styled.div<ContainerProps>`
   height: 100%;
   z-index: 0;
 
-  [class^='vjs'] {
-    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
-  }
-
   .video-js {
     background-color: ${colors.gray[900]};
+    position: relative;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vjs-tech {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .vjs-error-display,
+  .vjs-text-track-display,
+  .vjs-modal-dialog,
+  .vjs-loading-spinner,
   .vjs-control-bar {
     display: none;
   }
@@ -328,18 +335,18 @@ export const BigPlayButtonOverlay = styled.div`
 `
 
 export const BigPlayButton = styled(ControlButton)`
-  display: flex !important;
+  display: flex;
   width: ${sizes(20)};
   height: ${sizes(20)};
   justify-content: center;
   align-items: center;
   position: absolute;
-  background-color: ${colors.transparentPrimary[18]} !important;
-  backdrop-filter: blur(${sizes(8)}) !important;
+  background-color: ${colors.transparentPrimary[18]};
+  backdrop-filter: blur(${sizes(8)});
 
   > svg {
-    width: ${sizes(10)} !important;
-    height: ${sizes(10)} !important;
+    width: ${sizes(10)};
+    height: ${sizes(10)};
   }
   @media (hover: hover) {
     cursor: pointer;

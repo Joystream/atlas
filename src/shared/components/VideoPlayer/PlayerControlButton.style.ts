@@ -10,7 +10,7 @@ type ControlButtonProps = {
 }
 
 export const ControlButton = styled.button<ControlButtonProps>`
-  display: flex !important;
+  display: flex;
   padding: 0.5em;
   border: none;
   background: none;
@@ -18,7 +18,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: background ${transitions.timings.player} ease-in !important;
+  transition: background ${transitions.timings.player} ease-in;
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
@@ -36,9 +36,9 @@ export const ControlButton = styled.button<ControlButtonProps>`
     :focus,
     :focus-visible {
       /* turn off transition on mouse enter, but turn on on mouse leave */
-      transition: none !important;
+      transition: none;
       ${() => ControlButtonTooltip} {
-        transition: none !important;
+        transition: none;
       }
     }
 
@@ -118,7 +118,7 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   align-items: center;
   padding: 0.5em;
   white-space: nowrap;
-  transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in !important;
+  transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in;
   ${media.compact} {
     display: flex;
   }

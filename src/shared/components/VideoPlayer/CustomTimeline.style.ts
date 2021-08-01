@@ -46,26 +46,26 @@ export const ProgressControl = styled.div<ProgressControlProps>`
     opacity: 1;
   }
   :hover ${() => MouseDisplayTooltip} {
-    transform: translateY(-0.5em) !important;
+    transform: translateY(-0.5em);
     opacity: 1;
   }
   :hover ~ ${CustomControls} {
     opacity: 0;
-    transform: translateY(0.5em) !important;
+    transform: translateY(0.5em);
   }
 
   ${() => SeekBar} {
-    ${({ isScrubbing }) => isScrubbing && `height: 0.5em`}
+    ${({ isScrubbing }) => isScrubbing && `height: 0.5em;`}
   }
 
   ${() => MouseDisplayWrapper}, ${() => PlayProgressThumb} {
-    ${({ isScrubbing }) => isScrubbing && `opacity: 1`}
+    ${({ isScrubbing }) => isScrubbing && `opacity: 1;`}
   }
   ${() => MouseDisplayTooltip} {
-    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em) !important`}
+    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em);`}
   }
   ~ ${CustomControls} {
-    ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em) !important`};
+    ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em);`}
   }
 `
 
@@ -145,8 +145,8 @@ export const PlayProgressThumb = styled.button`
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
-  background: ${colors.white} !important;
-  transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing} !important;
+  background: ${colors.white};
+  transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
   ${media.compact} {
     cursor: pointer;
   }
