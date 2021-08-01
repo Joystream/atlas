@@ -264,7 +264,7 @@ export const Container = styled.div<ContainerProps>`
 
   .vjs-ended,
   .vjs-paused,
-  .vjs-user-active {
+  .vjs-user-active:not(.vjs-waiting) {
     ${ControlsOverlay} {
       opacity: 1;
       visibility: visible;
