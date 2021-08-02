@@ -96,6 +96,13 @@ query GetChannelViews($channelId: ID!) {
   }
 }
 
+query GetBatchedChannelViews($channelIdList: [ID!]!) {
+  batchedChannelsViews(channelIdList: $channelIdList) {
+    id
+    views
+  }
+}
+
 mutation FollowChannel($channelId: ID!) {
   followChannel(channelId: $channelId) {
     id

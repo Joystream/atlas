@@ -57,7 +57,7 @@ export const ChannelAbout = () => {
           <Text variant="caption" secondary>
             Num. of views
           </Text>
-          <Text variant="body1">{channel?.views ? formatNumberShort(channel.views) : ''}</Text>
+          <Text variant="body1">{typeof channel?.views === 'number' ? formatNumberShort(channel.views) : ''}</Text>
         </Details>
 
         <Details>
