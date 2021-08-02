@@ -19,7 +19,7 @@ export type VideoPreviewProps = {
 } & VideoPreviewBaseMetaProps &
   Pick<VideoPreviewBaseProps, 'progress' | 'className'>
 
-export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...metaProps }) => {
+export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, rankingNumber, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
@@ -44,6 +44,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ id, onNotFound, ...m
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       contentKey={id}
+      rankingNumber={rankingNumber}
       {...metaProps}
     />
   )
