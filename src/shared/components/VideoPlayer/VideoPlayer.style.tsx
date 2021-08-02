@@ -29,8 +29,10 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   background: ${colors.transparentBlack[54]};
   height: 100%;
   visibility: hidden;
-  transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
-    visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
+  transition: opacity, visibility;
+  transition-delay: ${TRANSITION_DELAY};
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
 
   @media (hover: hover) {
     height: 8em;
@@ -49,8 +51,10 @@ export const CustomControls = styled.div<CustomControlsProps>`
   z-index: ${zIndex.nearOverlay - 1};
   display: flex;
   width: 100%;
-  transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
-    opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
+  transition: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
+  transition-delay: ${TRANSITION_DELAY};
   top: ${({ isEnded }) => (isEnded ? 'unset' : 0)};
   align-items: flex-end;
   @media (hover: hover) {
@@ -132,8 +136,9 @@ export const VolumeSlider = styled.input`
   opacity: 0;
   transform-origin: left;
   transform: scaleX(0);
-  transition: transform ${transitions.timings.player} ${transitions.easing},
-    opacity ${transitions.timings.player} ${transitions.easing};
+  transition: opacity, transform;
+  transition-duration: ${transitions.timings.player};
+  transition-timing-function: ${transitions.easing};
 
   ::-moz-range-thumb {
     ${thumbStyles};
@@ -149,8 +154,9 @@ export const VolumeControl = styled.div`
   display: none;
   border-radius: 1.25em;
   width: 2.5em;
-  transition: background-color ${transitions.timings.sharp} ${transitions.easing},
-    width ${transitions.timings.sharp} ${transitions.easing};
+  transition: background-color, width;
+  transition-duration: ${transitions.timings.sharp};
+  transition-timing-function: ${transitions.easing};
 
   @media (hover: hover) {
     display: flex;

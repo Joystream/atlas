@@ -92,9 +92,11 @@ export const ControlsIndicatorTransitions = styled.div`
     ${() => StyledLoader} {
       opacity: 1;
       transform: scale(1);
-      transition: opacity 150ms ease-in, transform 150ms ease-in;
+      transition: opacity, transform;
+      transition-timing-function: ease-in;
+      transition-duration: 150ms;
       @media (hover: hover) {
-        transition: opacity 150ms 600ms ease-in, transform 150ms 600ms ease-in;
+        transition-delay: ${INDICATOR_TIMEOUT - 150}ms;
       }
     }
   }
@@ -111,13 +113,14 @@ export const ControlsIndicatorTransitions = styled.div`
     ${() => StyledLoader} {
       opacity: 0;
       transform: scale(0.5);
-      transition: opacity 0ms ease-in, transform 0ms ease-in;
+      transition: opacity, transform;
+      transition-timing-function: ease-in;
     }
     ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
       opacity: 0;
       transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
-        opacity ${INDICATOR_TIMEOUT - 150}ms 150ms ${animationEasing};
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
 
       > svg {
         transform: scale(1);
@@ -127,7 +130,7 @@ export const ControlsIndicatorTransitions = styled.div`
     ${ControlsIndicatorTooltip} {
       opacity: 0;
       transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
-        opacity ${INDICATOR_TIMEOUT - 150}ms 150ms ${animationEasing};
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
     }
   }
 `
