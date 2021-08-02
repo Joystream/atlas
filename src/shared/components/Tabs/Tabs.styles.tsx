@@ -41,7 +41,7 @@ export const Tab = styled.div<TabProps>`
   color: ${(props) => (props.selected ? colors.white : colors.gray[300])};
   text-transform: capitalize;
   text-align: center;
-  border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : 'none')};
+  border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : '4px solid transparent')};
 
   :hover,
   :focus {

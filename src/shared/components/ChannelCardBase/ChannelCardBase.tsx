@@ -74,7 +74,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
                       timeout={parseInt(transitions.timings.loading) * 0.5}
                       classNames={transitions.names.fade}
                     >
-                      <VideoCount variant="subtitle2">{`${videoCount} Uploads`}</VideoCount>
+                      <VideoCount variant="subtitle2">{`${videoCount ?? ''} Uploads`}</VideoCount>
                     </CSSTransition>
                   )}
                 </VideoCountContainer>

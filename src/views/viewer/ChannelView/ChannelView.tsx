@@ -1,5 +1,5 @@
 import { subMonths } from 'date-fns'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
@@ -59,15 +59,13 @@ export const ChannelView: React.FC = () => {
   const { channel, loading, error } = useChannel(id)
   const {
     searchVideos,
-    handleSearchInputKeyPress,
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
-    searchQuery,
-    setSearchQuery,
     isSearching,
     setIsSearching,
     searchInputRef,
+    search,
     errorSearch,
   } = useSearchVideos({ id })
   const { followChannel } = useFollowChannel()
@@ -164,7 +162,6 @@ export const ChannelView: React.FC = () => {
     if (TABS[tab] === 'Videos' && isSearching) {
       setIsSearchingInputOpen(false)
       searchInputRef.current?.blur()
-      setSearchQuery('')
     }
     setIsSearching(false)
     setSearchParams({ 'tab': TABS[tab] }, { replace: true })
@@ -286,27 +283,13 @@ export const ChannelView: React.FC = () => {
             onSelectTab={handleSetCurrentTab}
           />
           {currentTabName === 'Videos' && (
-            <SearchContainer>
-              <StyledTextField
-                ref={searchInputRef}
-                isOpen={isSearchInputOpen}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchInputKeyPress}
-                placeholder="Search"
-                type="search"
-                helperText={null}
-              />
-              <SearchButton
-                onClick={() => {
-                  setIsSearchingInputOpen(true)
-                  searchInputRef.current?.focus()
-                }}
-                variant="tertiary"
-              >
-                <SvgGlyphSearch />
-              </SearchButton>
-            </SearchContainer>
+            <Search
+              searchInputRef={searchInputRef}
+              isSearchInputOpen={isSearchInputOpen}
+              setIsSearchingInputOpen={setIsSearchingInputOpen}
+              setIsSearching={setIsSearching}
+              search={search}
+            />
           )}
           {currentTabName === 'Videos' && !isSearching && (
             <SortContainer>
@@ -346,40 +329,26 @@ type UseSearchVideosParams = {
 }
 const useSearchVideos = ({ id }: UseSearchVideosParams) => {
   const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
   const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery()
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const handleSearchInputKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
-      if (searchQuery.trim() === '') {
-        setSearchQuery('')
-        setIsSearching(false)
-      } else {
-        search()
-        setIsSearching(true)
-      }
-    }
-    if (event.key === 'Escape' || event.key === 'Esc') {
-      setIsSearchingInputOpen(false)
-      searchInputRef.current?.blur()
-      setSearchQuery('')
-    }
-  }
-  const search = () => {
-    searchVideo({
-      variables: {
-        text: searchQuery,
-        whereVideo: {
-          isPublic_eq: true,
-          mediaAvailability_eq: AssetAvailability.Accepted,
-          thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-          channelId_eq: id,
+  const search = useCallback(
+    (searchQuery: string) => {
+      searchVideo({
+        variables: {
+          text: searchQuery,
+          whereVideo: {
+            isPublic_eq: true,
+            mediaAvailability_eq: AssetAvailability.Accepted,
+            thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+            channelId_eq: id,
+          },
+          limit: 100,
         },
-        limit: 100,
-      },
-    })
-  }
+      })
+    },
+    [id, searchVideo]
+  )
 
   const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData?.search), [
     loadingSearch,
@@ -392,12 +361,69 @@ const useSearchVideos = ({ id }: UseSearchVideosParams) => {
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
-    searchQuery,
-    setSearchQuery,
+    errorSearch,
     isSearching,
     setIsSearching,
     searchInputRef,
-    errorSearch,
-    handleSearchInputKeyPress,
   }
+}
+
+type SearchProps = {
+  searchInputRef: React.RefObject<HTMLInputElement>
+  isSearchInputOpen: boolean
+  setIsSearchingInputOpen: (isOpen: boolean) => void
+  setIsSearching: (isOpen: boolean) => void
+  search: (searchQuery: string) => void
+}
+const Search: React.FC<SearchProps> = ({
+  searchInputRef,
+  isSearchInputOpen,
+  setIsSearching,
+  search,
+  setIsSearchingInputOpen,
+}) => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const handleSearchInputKeyPress = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter' || event.key === 'NumpadEnter') {
+        if (searchQuery.trim() === '') {
+          setSearchQuery('')
+          setIsSearching(false)
+        } else {
+          search(searchQuery)
+          setIsSearching(true)
+        }
+      }
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        setIsSearchingInputOpen(false)
+        searchInputRef.current?.blur()
+        setSearchQuery('')
+      }
+    },
+    [search, searchInputRef, searchQuery, setIsSearching, setIsSearchingInputOpen, setSearchQuery]
+  )
+
+  return (
+    <SearchContainer>
+      <StyledTextField
+        ref={searchInputRef}
+        isOpen={isSearchInputOpen}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleSearchInputKeyPress}
+        placeholder="Search"
+        type="search"
+        helperText={null}
+      />
+      <SearchButton
+        onClick={() => {
+          setIsSearchingInputOpen(true)
+          searchInputRef.current?.focus()
+        }}
+        variant="tertiary"
+      >
+        <SvgGlyphSearch />
+      </SearchButton>
+    </SearchContainer>
+  )
 }
