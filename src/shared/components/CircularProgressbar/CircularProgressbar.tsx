@@ -50,7 +50,7 @@ export const CircularProgressbar: React.FC<CircularProgressbarProps> = ({
     <>
       <SVG viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`} className={className}>
         {background ? <Background cx={VIEWBOX_CENTER_X} cy={VIEWBOX_CENTER_Y} r={VIEWBOX_HEIGHT_HALF} /> : null}
-        {noTrail && (
+        {!noTrail && (
           <Trail
             counterClockwise={counterClockwise}
             dashRatio={circleRatio}
