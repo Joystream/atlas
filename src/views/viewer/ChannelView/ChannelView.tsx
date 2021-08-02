@@ -99,7 +99,7 @@ export const ChannelView: React.FC = () => {
         isPublic_eq: true,
       },
     },
-    { notifyOnNetworkStatusChange: true, fetchPolicy: 'cache-and-network' }
+    { notifyOnNetworkStatusChange: true }
   )
   const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST)
   useEffect(() => {
@@ -167,7 +167,20 @@ export const ChannelView: React.FC = () => {
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const handleChangePage = (page: number) => {
-    isSearching ? setCurrentSearchPage(page) : setCurrentPage(page)
+    if (isSearching) {
+      setCurrentSearchPage(page)
+    } else {
+      setCurrentPage(page)
+      if (!!edges && page * videosPerPage + videosPerPage > edges?.length) {
+        fetchMore({
+          variables: {
+            ...variables,
+            first: page * videosPerPage + videosPerPage * 3,
+            after: pageInfo?.endCursor,
+          },
+        })
+      }
+    }
   }
 
   const videosPerPage = ROWS_AMOUNT * videosPerRow
