@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { useVideos } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
 import { VideoGallery } from '@/components'
 import { readEnv } from '@/config/envs'
 import { sizes } from '@/shared/theme'
@@ -15,7 +14,6 @@ export const OfficialJoystreamUpdate = () => {
     where: {
       channelId_eq: channelId,
     },
-    orderBy: VideoOrderByInput.CreatedAtDesc,
     limit: MAX_VIDEOS,
   })
 
