@@ -21,30 +21,85 @@ type CustomControlsProps = {
 export const TRANSITION_DELAY = '50ms'
 
 export const ControlsOverlay = styled.div<CustomControlsProps>`
-  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+  font-size: ${sizes(4)};
   opacity: 0;
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
-  height: 8em;
-  transition: opacity 200ms ${TRANSITION_DELAY} ${transitions.easing},
-    visibility 200ms ${TRANSITION_DELAY} ${transitions.easing};
+  background: ${colors.transparentBlack[54]};
+  height: 100%;
+  visibility: hidden;
+  transition: opacity, visibility;
+  transition-delay: ${TRANSITION_DELAY};
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
+
+  @media (hover: hover) {
+    height: 8em;
+    background: linear-gradient(180deg, transparent 0%, ${colors.gray[900]} 100%);
+    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
+  }
 `
 
 export const CustomControls = styled.div<CustomControlsProps>`
-  font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   position: absolute;
+  transform: translateY(0.5em);
+  padding: ${({ isFullScreen }) => (isFullScreen ? ' 0.5em 0.5em 0 0.5em' : '1em 0.5em 0 0.5em')};
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
-  padding: 0.5em 1em 0;
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
-  display: flex;
-  align-items: center;
   z-index: ${zIndex.nearOverlay - 1};
+  display: flex;
   width: 100%;
-  transition: transform 200ms ${TRANSITION_DELAY} ${transitions.easing},
-    opacity 200ms ${TRANSITION_DELAY} ${transitions.easing};
+  transition: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ${transitions.easing};
+  transition-delay: ${TRANSITION_DELAY};
+  top: ${({ isEnded }) => (isEnded ? 'unset' : 0)};
+  align-items: flex-end;
+  @media (hover: hover) {
+    padding: ${({ isFullScreen }) => (isFullScreen ? '2.5em 1em 0 1em' : '1.25em 1em 0 1em')};
+    bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
+    top: unset;
+    align-items: center;
+    height: unset;
+  }
+`
+
+export const PlayControl = styled.div`
+  align-self: center;
+  width: 100%;
+  position: absolute;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  @media (hover: hover) {
+    margin-right: 0.5em;
+    align-self: unset;
+    width: unset;
+    position: unset;
+    transform: unset;
+  }
+`
+
+type StyledPlayButtonProps = {
+  isEnded?: boolean
+}
+
+export const PlayButton = styled(PlayerControlButton)<StyledPlayButtonProps>`
+  @media (hover: hover) {
+    display: flex;
+  }
+
+  svg {
+    width: ${({ isEnded }) => (isEnded ? '1.5em' : '2.5em')};
+    height: ${({ isEnded }) => (isEnded ? '1.5em' : '2.5em')};
+    @media (hover: hover) {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
 `
 
 export const VolumeSliderContainer = styled.div`
@@ -81,8 +136,9 @@ export const VolumeSlider = styled.input`
   opacity: 0;
   transform-origin: left;
   transform: scaleX(0);
-  transition: transform ${transitions.timings.player} ${transitions.easing},
-    opacity ${transitions.timings.player} ${transitions.easing};
+  transition: opacity, transform;
+  transition-duration: ${transitions.timings.player};
+  transition-timing-function: ${transitions.easing};
 
   ::-moz-range-thumb {
     ${thumbStyles};
@@ -94,19 +150,25 @@ export const VolumeSlider = styled.input`
 `
 
 export const VolumeControl = styled.div`
-  display: flex;
+  /* hide volume control on devices which dont support :hover i.e. mobiles, tablets */
+  display: none;
   border-radius: 1.25em;
   width: 2.5em;
-  transition: background-color ${transitions.timings.sharp} ${transitions.easing},
-    width ${transitions.timings.sharp} ${transitions.easing};
+  transition: background-color, width;
+  transition-duration: ${transitions.timings.sharp};
+  transition-timing-function: ${transitions.easing};
 
-  :hover {
-    background-color: ${colors.transparentPrimary[18]};
-    backdrop-filter: blur(${sizes(8)});
-    width: 7.5em;
-    ${VolumeSlider} {
-      opacity: 1;
-      transform: scaleX(1);
+  @media (hover: hover) {
+    display: flex;
+
+    :hover {
+      background-color: ${colors.transparentPrimary[18]};
+      backdrop-filter: blur(${sizes(8)});
+      width: 7.5em;
+      ${VolumeSlider} {
+        opacity: 1;
+        transform: scaleX(1);
+      }
     }
   }
 `
@@ -131,7 +193,10 @@ export const CurrentTimeWrapper = styled.div`
   display: flex;
   align-items: center;
   height: 2.5em;
-  margin-left: 1em;
+  margin-left: 0.5em;
+  @media (hover: hover) {
+    margin-left: 1em;
+  }
 `
 
 export const CurrentTime = styled(Text)`
@@ -155,16 +220,12 @@ export const ScreenControls = styled.div`
 `
 
 const backgroundContainerCss = css`
-  .vjs-waiting .vjs-loading-spinner {
-    display: none;
-  }
-
   .vjs-error-display {
     display: block;
   }
 
   .vjs-poster {
-    display: block !important;
+    display: block;
     opacity: 0;
     transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
@@ -180,42 +241,82 @@ export const Container = styled.div<ContainerProps>`
   height: 100%;
   z-index: 0;
 
-  [class^='vjs'] {
-    font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))} !important;
-  }
-
   .video-js {
     background-color: ${colors.gray[900]};
+    position: relative;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vjs-tech {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .vjs-error-display,
+  .vjs-text-track-display,
+  .vjs-modal-dialog,
+  .vjs-loading-spinner,
   .vjs-control-bar {
     display: none;
   }
 
-  .vjs-playing:hover {
-    ${ControlsOverlay} {
-      opacity: 1;
-      ${CustomControls} {
-        transform: translateY(-0.5em);
-      }
-    }
-  }
-
-  .vjs-user-inactive.vjs-playing {
+  .vjs-user-inactive.vjs-playing,
+  .vjs-user-inactive:not(.vjs-ended) {
     ${ControlsOverlay} {
       opacity: 0;
+      visibility: hidden;
       ${CustomControls} {
         transform: translateY(0.5em);
       }
     }
   }
 
-  .vjs-paused {
+  .vjs-ended,
+  .vjs-paused,
+  .vjs-user-active:not(.vjs-waiting) {
     ${ControlsOverlay} {
       opacity: 1;
+      visibility: visible;
       ${CustomControls} {
-        transform: translateY(-0.5em);
+        transform: translateY(0);
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    .vjs-user-active.vjs-playing {
+      ${ControlsOverlay} {
+        opacity: 0;
+        visibility: hidden;
+        ${CustomControls} {
+          transform: translateY(0.5em);
+        }
+      }
+    }
+
+    .vjs-playing:hover {
+      ${ControlsOverlay} {
+        opacity: 1;
+        visibility: visible;
+        ${CustomControls} {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .vjs-user-inactive.vjs-playing,
+    .vjs-user-inactive.vjs-paused:not(.vjs-ended) {
+      ${ControlsOverlay} {
+        opacity: 0;
+        visibility: hidden;
+        ${CustomControls} {
+          transform: translateY(0.5em);
+        }
       }
     }
   }
@@ -241,18 +342,20 @@ export const BigPlayButtonOverlay = styled.div`
 `
 
 export const BigPlayButton = styled(ControlButton)`
-  display: flex !important;
+  display: flex;
   width: ${sizes(20)};
   height: ${sizes(20)};
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   position: absolute;
-  background-color: ${colors.transparentPrimary[18]} !important;
-  backdrop-filter: blur(${sizes(8)}) !important;
+  background-color: ${colors.transparentPrimary[18]};
+  backdrop-filter: blur(${sizes(8)});
 
   > svg {
-    width: ${sizes(10)} !important;
-    height: ${sizes(10)} !important;
+    width: ${sizes(10)};
+    height: ${sizes(10)};
+  }
+  @media (hover: hover) {
+    cursor: pointer;
   }
 `

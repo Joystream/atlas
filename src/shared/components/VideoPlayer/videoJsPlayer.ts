@@ -1,6 +1,5 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js'
-import 'video.js/dist/video-js.css'
 
 export type VideoJsConfig = {
   src?: string | null

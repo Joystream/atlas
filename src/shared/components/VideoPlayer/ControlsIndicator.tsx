@@ -13,13 +13,15 @@ import {
   SvgPlayerSoundOff,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
 
 import {
   ControlsIndicatorIconWrapper,
   ControlsIndicatorTooltip,
   ControlsIndicatorTransitions,
   ControlsIndicatorWrapper,
+  INDICATOR_TIMEOUT,
+  INDICATOR_TRANSITION,
+  LoaderWrapper,
   StyledLoader,
 } from './ControlsIndicator.style'
 import { CustomVideojsEvents } from './utils'
@@ -70,20 +72,20 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, is
   return (
     <ControlsIndicatorTransitions>
       <CSSTransition
-        in={!indicator && isLoading}
-        timeout={parseInt(transitions.timings.sharp)}
-        classNames="indicator"
+        in={!indicator?.isVisible && isLoading}
+        timeout={INDICATOR_TIMEOUT}
+        classNames={INDICATOR_TRANSITION}
         mountOnEnter
         unmountOnExit
       >
-        <ControlsIndicatorWrapper>
+        <LoaderWrapper>
           <StyledLoader variant="player" />
-        </ControlsIndicatorWrapper>
+        </LoaderWrapper>
       </CSSTransition>
       <CSSTransition
         in={indicator?.isVisible}
-        timeout={indicator?.isVisible ? 0 : 750}
-        classNames="indicator"
+        timeout={indicator?.isVisible ? 0 : INDICATOR_TIMEOUT}
+        classNames={INDICATOR_TRANSITION}
         mountOnEnter
         unmountOnExit
         onEntered={() => setIndicator((indicator) => (indicator ? { ...indicator, isVisible: false } : null))}
