@@ -11,6 +11,7 @@ export type SearchQueryVariables = Types.Exact<{
   text: Types.Scalars['String']
   whereVideo?: Types.Maybe<Types.VideoWhereInput>
   whereChannel?: Types.Maybe<Types.ChannelWhereInput>
+  limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
 export type SearchQuery = {
@@ -22,8 +23,8 @@ export type SearchQuery = {
 }
 
 export const SearchDocument = gql`
-  query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: ChannelWhereInput) {
-    search(text: $text, whereVideo: $whereVideo, whereChannel: $whereChannel) {
+  query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: ChannelWhereInput, $limit: Int) {
+    search(text: $text, whereVideo: $whereVideo, whereChannel: $whereChannel, limit: $limit) {
       item {
         ... on Video {
           ...VideoFields
@@ -53,6 +54,7 @@ export const SearchDocument = gql`
  *      text: // value for 'text'
  *      whereVideo: // value for 'whereVideo'
  *      whereChannel: // value for 'whereChannel'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
