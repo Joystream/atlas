@@ -6,7 +6,7 @@ import { useUploadsStore } from '@/providers'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Text } from '@/shared/components'
 import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
-import { AssetGroupUploadBarSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/AssetGroupUploadBarSkeletonLoader'
+import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
   AssetsDrawerContainer,
@@ -87,7 +87,7 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
         })
 
   if (videoLoading || channelLoading) {
-    return <AssetGroupUploadBarSkeletonLoader />
+    return <UploadStatusGroupSkeletonLoader />
   }
 
   return (

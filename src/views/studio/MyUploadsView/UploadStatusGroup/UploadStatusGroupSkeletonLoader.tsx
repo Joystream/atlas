@@ -11,7 +11,7 @@ import {
   UploadStatusGroupContainer,
 } from './UploadStatusGroup.style'
 
-export const AssetGroupUploadBarSkeletonLoader: React.FC = () => {
+export const UploadStatusGroupSkeletonLoader: React.FC = () => {
   return (
     <Container>
       <UploadStatusGroupContainer style={{ backgroundColor: `${colors.gray[800]}` }}>

@@ -8,7 +8,7 @@ import { AssetUpload } from '@/providers/uploadsManager/types'
 import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 import { UploadStatusGroup } from './UploadStatusGroup'
-import { AssetGroupUploadBarSkeletonLoader } from './UploadStatusGroup/AssetGroupUploadBarSkeletonLoader'
+import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 type GroupByParentObjectIdAcc = {
   [key: string]: AssetUpload[]
@@ -39,7 +39,7 @@ export const MyUploadsView: React.FC = () => {
   )
 
   const hasUploads = groupedUploadsState.length > 0
-  const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <AssetGroupUploadBarSkeletonLoader key={idx} />)
+  const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <UploadStatusGroupSkeletonLoader key={idx} />)
 
   return (
     <UploadsContainer>
