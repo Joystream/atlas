@@ -1,21 +1,39 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 import { Loader } from '../Loader'
 
+const INDICATOR_SIZE = sizes(20)
+export const INDICATOR_TIMEOUT = 750
+export const INDICATOR_TRANSITION = 'indicator'
+
 export const ControlsIndicatorWrapper = styled.div`
-  position: absolute;
+  display: none;
   width: 100%;
   height: 100%;
+  position: absolute;
   pointer-events: none;
   flex-direction: column;
-  display: flex;
   align-items: center;
   justify-content: center;
+  @media (hover: hover) {
+    display: flex;
+  }
 `
 
-const INDICATOR_SIZE = sizes(20)
+export const LoaderWrapper = styled(ControlsIndicatorWrapper)`
+  display: flex;
+`
+
+export const StyledLoader = styled(Loader)`
+  width: ${sizes(9)};
+  @media (hover: hover) {
+    /* align position with indicator */
+    margin-bottom: calc(${INDICATOR_SIZE} / 2);
+    width: ${sizes(18)};
+  }
+`
 
 export const ControlsIndicatorIconWrapper = styled.div`
   width: ${INDICATOR_SIZE};
@@ -63,22 +81,27 @@ export const ControlsIndicatorTooltip = styled.div`
 const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
 
 export const ControlsIndicatorTransitions = styled.div`
-  .indicator-enter {
+  .${INDICATOR_TRANSITION}-enter {
     ${() => StyledLoader} {
       opacity: 0;
       transform: scale(0.5);
     }
   }
 
-  .indicator-enter-active {
+  .${INDICATOR_TRANSITION}-enter-active {
     ${() => StyledLoader} {
       opacity: 1;
       transform: scale(1);
-      transition: opacity ${transitions.timings.sharp} ease-in, transform ${transitions.timings.sharp} ease-in;
+      transition: opacity, transform;
+      transition-timing-function: ease-in;
+      transition-duration: 150ms;
+      @media (hover: hover) {
+        transition-delay: ${INDICATOR_TIMEOUT - 150}ms;
+      }
     }
   }
 
-  .indicator-exit {
+  .${INDICATOR_TRANSITION}-exit {
     opacity: 1;
     ${() => StyledLoader} {
       opacity: 1;
@@ -86,29 +109,28 @@ export const ControlsIndicatorTransitions = styled.div`
     }
   }
 
-  .indicator-exit-active {
+  .${INDICATOR_TRANSITION}-exit-active {
     ${() => StyledLoader} {
       opacity: 0;
       transform: scale(0.5);
-      transition: opacity 0ms ease-in, transform 0ms ease-in;
+      transition: opacity, transform;
+      transition-timing-function: ease-in;
     }
     ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
       opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+      transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
 
       > svg {
         transform: scale(1);
-        transition: transform 750ms ${animationEasing};
+        transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing};
       }
     }
     ${ControlsIndicatorTooltip} {
       opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+      transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
     }
   }
-`
-export const StyledLoader = styled(Loader)`
-  /* align position with indicator */
-  margin-bottom: calc(${INDICATOR_SIZE} / 2);
 `

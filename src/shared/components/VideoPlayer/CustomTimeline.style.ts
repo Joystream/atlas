@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, transitions, zIndex } from '@/shared/theme'
+import { colors, media, transitions, zIndex } from '@/shared/theme'
 
 import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.style'
 
@@ -20,17 +20,22 @@ const scrubbingStyles = (isFullScreen?: boolean) => css`
 `
 
 export const ProgressControl = styled.div<ProgressControlProps>`
-  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+  padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1em` : `0`)};
   position: absolute;
   height: 1.5em;
   z-index: ${zIndex.nearOverlay};
   left: 0;
   bottom: 0;
   width: 100%;
-  cursor: pointer;
   display: flex;
   align-items: flex-end;
-  ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
+
+  @media (hover: hover) {
+    cursor: pointer;
+    padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
+    ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
+  }
+
   :hover ${() => SeekBar} {
     height: 0.5em;
   }
@@ -41,35 +46,38 @@ export const ProgressControl = styled.div<ProgressControlProps>`
     opacity: 1;
   }
   :hover ${() => MouseDisplayTooltip} {
-    transform: translateY(-0.5em) !important;
+    transform: translateY(-0.5em);
     opacity: 1;
   }
   :hover ~ ${CustomControls} {
     opacity: 0;
-    transform: translateY(0.5em) !important;
+    transform: translateY(0.5em);
   }
 
   ${() => SeekBar} {
-    ${({ isScrubbing }) => isScrubbing && `height: 0.5em`}
+    ${({ isScrubbing }) => isScrubbing && `height: 0.5em;`}
   }
 
   ${() => MouseDisplayWrapper}, ${() => PlayProgressThumb} {
-    ${({ isScrubbing }) => isScrubbing && `opacity: 1`}
+    ${({ isScrubbing }) => isScrubbing && `opacity: 1;`}
   }
   ${() => MouseDisplayTooltip} {
-    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em) !important`}
+    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em);`}
   }
   ~ ${CustomControls} {
-    ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em) !important`};
+    ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em);`}
   }
 `
 
 export const SeekBar = styled.div`
   position: relative;
   width: 100%;
-  height: 0.25em;
   background-color: ${colors.transparentWhite[32]};
   transition: height ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
+  height: 0.5em;
+  ${media.compact} {
+    height: 0.25em;
+  }
 `
 
 export const LoadProgress = styled.div`
@@ -126,17 +134,20 @@ export const PlayProgress = styled.div`
 `
 
 export const PlayProgressThumb = styled.button`
-  cursor: pointer;
   border: none;
   opacity: 0;
   z-index: 1;
   content: '';
   height: 1em;
-  width: 1em;
   top: -0.25em;
+  width: 1em;
+  padding: 0;
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
-  background: ${colors.white} !important;
-  transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing} !important;
+  background: ${colors.white};
+  transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
+  ${media.compact} {
+    cursor: pointer;
+  }
 `

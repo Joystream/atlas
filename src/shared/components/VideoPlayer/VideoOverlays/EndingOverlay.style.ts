@@ -122,8 +122,7 @@ export const StyledCircularProgressBar = styled(CircularProgressbar)`
 `
 
 export const CountDownButton = styled(IconButton)`
-  /* we need important, because video.js is setting this value to inline-block */
-  display: block !important;
+  display: block;
   position: absolute;
   width: ${sizes(10)};
   height: ${sizes(10)};

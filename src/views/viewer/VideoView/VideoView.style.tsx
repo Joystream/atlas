@@ -48,6 +48,8 @@ export const Meta = styled(Text)`
 
 export const TitleText = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
+
+  word-break: break-word;
 `
 
 export const ChannelContainer = styled.div`

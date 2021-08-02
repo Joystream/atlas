@@ -29,6 +29,8 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
+  PlayButton,
+  PlayControl,
   ScreenControls,
   StyledSvgPlayerSoundOff,
   VolumeButton,
@@ -443,13 +445,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                <PlayerControlButton
-                  onClick={handlePlayPause}
-                  tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
-                  tooltipPosition="left"
-                >
-                  {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-                </PlayerControlButton>
+                <PlayControl>
+                  <PlayButton
+                    isEnded={playerState === 'ended'}
+                    onClick={handlePlayPause}
+                    tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
+                    tooltipPosition="left"
+                  >
+                    {playerState === 'ended' ? (
+                      <SvgPlayerRestart />
+                    ) : isPlaying ? (
+                      <SvgPlayerPause />
+                    ) : (
+                      <SvgPlayerPlay />
+                    )}
+                  </PlayButton>
+                </PlayControl>
                 <VolumeControl>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
                     {renderVolumeButton()}
