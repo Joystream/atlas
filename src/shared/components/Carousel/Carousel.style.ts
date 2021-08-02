@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 
@@ -16,10 +16,15 @@ type HasPadding = {
 }
 
 export const Arrow = styled(IconButton)`
+  display: none;
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
   padding: ${sizes(2)};
   font-size: ${typography.sizes.subtitle2};
+
+  ${media.medium} {
+    display: block;
+  }
 
   &.disabled {
     opacity: 0.5;
@@ -54,6 +59,11 @@ export const Track = styled.div`
 
 export const Dots = styled.div`
   margin-top: ${sizes(13)};
+  display: none;
+
+  ${media.medium} {
+    display: flex;
+  }
 
   .glider-dot {
     background-color: transparent;
