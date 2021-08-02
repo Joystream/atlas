@@ -1,0 +1,6 @@
+query GetLanguages($offset: Int, $limit: Int, $where: LanguageWhereInput, $orderBy: [LanguageOrderByInput!]) {
+  languages(offset: $offset, limit: $limit, where: $where, orderBy: $orderBy) {
+    id
+    iso
+  }
+}

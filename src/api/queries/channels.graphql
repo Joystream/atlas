@@ -17,6 +17,7 @@ fragment AllChannelFields on Channel {
   isPublic
   isCensored
   language {
+    id
     iso
   }
 
