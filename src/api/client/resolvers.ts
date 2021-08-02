@@ -126,7 +126,7 @@ export const queryNodeStitchingResolvers = (
   },
   Video: {
     views: async (parent, args, context, info) => {
-      if (parent.views != null) {
+      if (parent.views !== undefined) {
         return parent.views
       }
       const orionViewsResolver = createResolverWithTransforms(
@@ -182,7 +182,7 @@ export const queryNodeStitchingResolvers = (
   },
   Channel: {
     follows: async (parent, args, context, info) => {
-      if (parent.follows != null) {
+      if (parent.follows !== undefined) {
         return parent.follows
       }
       const orionFollowsResolver = createResolverWithTransforms(
