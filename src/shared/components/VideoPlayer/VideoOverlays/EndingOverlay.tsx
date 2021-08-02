@@ -105,7 +105,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               maxValue={NEXT_VIDEO_TIMEOUT}
               strokeWidth={8}
               variant={'player'}
-              noTrail={!isCountDownStarted}
+              noTrail={isCountDownStarted}
             />
             <CountDownButton variant="tertiary" onClick={handleCountDownButton}>
               {isCountDownStarted ? <SvgPlayerPause /> : <SvgPlayerPlay />}
