@@ -10,17 +10,17 @@ import { transitions } from '@/shared/theme'
 import {
   PreviewContainer,
   PreviewSubtext,
-  PreviewSubtextPlaceholder,
-  PreviewTitlePlaceholder,
+  PreviewSubtextSkeletonLoader,
+  PreviewTitleSkeletonLoader,
   VideoImage,
-  VideoImagePlaceholder,
+  VideoImageSkeletonLoader,
 } from './previews.style'
 
-type RecentVideoPreviewProps = {
+type RecentVideoTileProps = {
   video?: VideoFieldsFragment
 }
 
-export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video }) => {
+export const RecentVideoTile: React.FC<RecentVideoTileProps> = ({ video }) => {
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
     assetType: AssetType.THUMBNAIL,
@@ -35,10 +35,10 @@ export const RecentVideoPreview: React.FC<RecentVideoPreviewProps> = ({ video })
           classNames={transitions.names.fade}
         >
           <>
-            {video ? <VideoImage src={thumbnailPhotoUrl ?? undefined} /> : <VideoImagePlaceholder />}
+            {video ? <VideoImage src={thumbnailPhotoUrl ?? undefined} /> : <VideoImageSkeletonLoader />}
             <div>
-              {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitlePlaceholder />}
-              {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextPlaceholder />}
+              {video ? <Text variant="h6">{video.title}</Text> : <PreviewTitleSkeletonLoader />}
+              {video ? <PreviewSubtext>Video</PreviewSubtext> : <PreviewSubtextSkeletonLoader />}
             </div>
           </>
         </CSSTransition>

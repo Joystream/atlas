@@ -7,7 +7,7 @@ import { AssetType, useAsset } from '@/providers'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
 import { Logger } from '@/utils/logger'
 
-import { Container, Handle, HandlePlaceholder } from './ChannelLink.style'
+import { Container, Handle, HandleSkeletonLoader } from './ChannelLink.style'
 
 type ChannelLinkProps = {
   id?: string
@@ -50,7 +50,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
         (displayedChannel ? (
           <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
         ) : (
-          <HandlePlaceholder withAvatar={!hideAvatar} height={16} width={150} />
+          <HandleSkeletonLoader withAvatar={!hideAvatar} height={16} width={150} />
         ))}
     </Container>
   )

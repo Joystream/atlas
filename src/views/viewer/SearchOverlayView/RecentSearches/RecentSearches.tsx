@@ -6,7 +6,7 @@ import { Text } from '@/shared/components'
 import { createLookup } from '@/utils/data'
 
 import { Container, SearchesList, Title } from './RecentSearches.style'
-import { RecentChannelPreview, RecentVideoPreview } from './previews'
+import { RecentChannelCard, RecentVideoTile } from './previews'
 
 type IdsLookup = {
   videoIds: string[]
@@ -48,9 +48,9 @@ export const RecentSearches: React.FC = () => {
         {recentSearches.length ? (
           recentSearches.map((recentSearch) => {
             if (recentSearch.type === 'channel') {
-              return <RecentChannelPreview key={recentSearch.id} channel={channelsLookup[recentSearch.id]} />
+              return <RecentChannelCard key={recentSearch.id} channel={channelsLookup[recentSearch.id]} />
             } else {
-              return <RecentVideoPreview key={recentSearch.id} video={videosLookup[recentSearch.id]} />
+              return <RecentVideoTile key={recentSearch.id} video={videosLookup[recentSearch.id]} />
             }
           })
         ) : (

@@ -39,13 +39,13 @@ import { requiredValidation, textFieldValidation } from '@/utils/formValidationO
 import { computeFileHash } from '@/utils/hashing'
 import { Logger } from '@/utils/logger'
 import { formatNumberShort } from '@/utils/number'
-import { Header, SubTitlePlaceholder, TitlePlaceholder } from '@/views/viewer/ChannelView/ChannelView.style'
+import { Header, SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
 
 import {
   InnerFormContainer,
   StyledAvatar,
-  StyledHeaderTextField,
   StyledSubTitle,
+  StyledTitleArea,
   StyledTitleSection,
   TitleContainer,
 } from './CreateEditChannelView.style'
@@ -330,7 +330,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     throw error
   }
 
-  const checkoutSteps = [
+  const progressDrawerSteps = [
     {
       title: 'Add channel title',
       completed: !!dirtyFields.title,
@@ -424,7 +424,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
                   render={({ field: { ref, value, onChange } }) => (
                     <Tooltip text="Click to edit channel title">
-                      <StyledHeaderTextField
+                      <StyledTitleArea
                         ref={ref}
                         placeholder="Channel title"
                         value={value}
@@ -443,8 +443,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               </>
             ) : (
               <>
-                <TitlePlaceholder />
-                <SubTitlePlaceholder />
+                <TitleSkeletonLoader />
+                <SubTitleSkeletonLoader />
               </>
             )}
           </TitleContainer>
@@ -513,7 +513,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             <ActionBarTransaction
               disabled={nodeConnectionStatus !== 'connected'}
               fee={0}
-              checkoutSteps={!activeChannelId ? checkoutSteps : undefined}
+              progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
               isActive={newChannel || (!loading && isDirty)}
               fullWidth={!activeChannelId}
               primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}

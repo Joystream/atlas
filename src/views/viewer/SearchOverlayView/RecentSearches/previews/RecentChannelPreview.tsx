@@ -10,16 +10,16 @@ import { transitions } from '@/shared/theme'
 import {
   PreviewContainer,
   PreviewSubtext,
-  PreviewSubtextPlaceholder,
-  PreviewTitlePlaceholder,
+  PreviewSubtextSkeletonLoader,
+  PreviewTitleSkeletonLoader,
   StyledChannelAvatar,
 } from './previews.style'
 
-type RecentChannelPreviewProps = {
+type RecentChannelCardProps = {
   channel?: BasicChannelFieldsFragment
 }
 
-export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ channel }) => {
+export const RecentChannelCard: React.FC<RecentChannelCardProps> = ({ channel }) => {
   const { url: avatarPhotoUrl } = useAsset({
     entity: channel,
     assetType: AssetType.AVATAR,
@@ -35,8 +35,8 @@ export const RecentChannelPreview: React.FC<RecentChannelPreviewProps> = ({ chan
           classNames={transitions.names.fade}
         >
           <div>
-            {channel ? <Text variant="h6">{channel.title}</Text> : <PreviewTitlePlaceholder />}
-            {channel ? <PreviewSubtext>Channel</PreviewSubtext> : <PreviewSubtextPlaceholder />}
+            {channel ? <Text variant="h6">{channel.title}</Text> : <PreviewTitleSkeletonLoader />}
+            {channel ? <PreviewSubtext>Channel</PreviewSubtext> : <PreviewSubtextSkeletonLoader />}
           </div>
         </CSSTransition>
       </SwitchTransition>

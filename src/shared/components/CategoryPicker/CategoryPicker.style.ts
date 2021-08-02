@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { sizes, transitions } from '@/shared/theme'
 
-import { Placeholder } from '../Placeholder'
+import { SkeletonLoader } from '../SkeletonLoader'
 import { ToggleButton } from '../ToggleButton'
 
 const fadeIn = keyframes`
@@ -24,7 +24,7 @@ export const Container = styled.div`
   flex-wrap: wrap;
 `
 
-export const StyledPlaceholder = styled(Placeholder)`
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
   margin: 0 ${sizes(3)} ${sizes(3)} 0;
 `
 

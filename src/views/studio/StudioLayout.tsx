@@ -86,7 +86,7 @@ const StudioLayout = () => {
 
   // TODO: add route transition
   // TODO: remove dependency on PersonalDataProvider
-  //  we need PersonalDataProvider because DismissibleMessage in video drafts depends on it
+  //  we need PersonalDataProvider because DismissibleBanner in video drafts depends on it
   return (
     <>
       <NoConnectionIndicator

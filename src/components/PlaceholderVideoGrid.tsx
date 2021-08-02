@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Grid } from '@/shared/components'
 
-import { VideoPreview } from './VideoPreview'
+import { VideoTile } from './VideoTile'
 
 type PlaceholderVideoGridProps = {
   videosCount?: number
@@ -11,7 +11,7 @@ export const PlaceholderVideoGrid: React.FC<PlaceholderVideoGridProps> = ({ vide
   return (
     <Grid>
       {Array.from({ length: videosCount }).map((_, idx) => (
-        <VideoPreview key={idx} />
+        <VideoTile key={idx} />
       ))}
     </Grid>
   )

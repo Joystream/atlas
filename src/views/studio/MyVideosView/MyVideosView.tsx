@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { StudioContainer, VideoPreviewPublisher } from '@/components'
+import { StudioContainer, VideoTilePublisher } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeleteVideo } from '@/hooks'
 import {
@@ -21,7 +21,7 @@ import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import {
   PaginationContainer,
   SortContainer,
-  StyledDismissibleMessage,
+  StyledDismissibleBanner,
   TabsContainer,
   ViewContainer,
 } from './MyVideos.styles'
@@ -91,7 +91,7 @@ export const MyVideosView = () => {
     progress: undefined,
   }))
 
-  const videosWithPlaceholders = [...(videos || []), ...placeholderItems]
+  const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
 
@@ -219,7 +219,7 @@ export const MyVideosView = () => {
         // pagination slice
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => (
-          <VideoPreviewPublisher
+          <VideoTilePublisher
             key={idx}
             id={draft.id}
             showChannel={false}
@@ -234,8 +234,8 @@ export const MyVideosView = () => {
             onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
           />
         ))
-    : videosWithPlaceholders.map((video, idx) => (
-        <VideoPreviewPublisher
+    : videosWithSkeletonLoaders.map((video, idx) => (
+        <VideoTilePublisher
           key={idx}
           id={video.id}
           showChannel={false}
@@ -271,7 +271,7 @@ export const MyVideosView = () => {
               </SortContainer>
             </TabsContainer>
             {isDraftTab && (
-              <StyledDismissibleMessage
+              <StyledDismissibleBanner
                 id="video-draft-saved-locally-warning"
                 title="Video drafts are saved locally"
                 icon="info"
@@ -279,7 +279,7 @@ export const MyVideosView = () => {
               />
             )}
             {currentTabName === 'Unlisted' && (
-              <StyledDismissibleMessage
+              <StyledDismissibleBanner
                 id="unlisted-video-link-info"
                 title="Unlisted videos can be seen only with direct link"
                 icon="info"

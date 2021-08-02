@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
 import { OverlayManagerProvider } from '@/providers'
-import { Avatar, Placeholder } from '@/shared/components'
+import { Avatar, SkeletonLoader } from '@/shared/components'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'
@@ -66,12 +66,12 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
       {thumbnailImageUrl ? (
         <Image src={thumbnailImageUrl} onClick={() => thumbnailDialogRef.current?.open()} />
       ) : (
-        <ImagePlaceholder onClick={() => thumbnailDialogRef.current?.open()} />
+        <ImageSkeletonLoader onClick={() => thumbnailDialogRef.current?.open()} />
       )}
       {coverImageUrl ? (
         <Image src={coverImageUrl} onClick={() => coverDialogRef.current?.open()} />
       ) : (
-        <ImagePlaceholder onClick={() => coverDialogRef.current?.open()} />
+        <ImageSkeletonLoader onClick={() => coverDialogRef.current?.open()} />
       )}
 
       <ImageCropDialog imageType="avatar" onConfirm={handleAvatarConfirm} ref={avatarDialogRef} />
@@ -82,7 +82,7 @@ const RegularTemplate: Story<ImageCropDialogProps> = () => {
 }
 export const Regular = RegularTemplate.bind({})
 
-const ImagePlaceholder = styled(Placeholder)`
+const ImageSkeletonLoader = styled(SkeletonLoader)`
   width: 600px;
   min-height: 200px;
   cursor: pointer;

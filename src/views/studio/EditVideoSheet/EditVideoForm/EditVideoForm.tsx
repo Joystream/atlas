@@ -43,7 +43,7 @@ import {
   DeleteVideoContainer,
   FormWrapper,
   InputsContainer,
-  StyledHeaderTextField,
+  StyledTitleArea,
   StyledRadioContainer,
 } from './EditVideoForm.style'
 
@@ -432,7 +432,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           )}
         />
         <InputsContainer>
-          <StyledHeaderTextField
+          <StyledTitleArea
             {...register(
               'title',
               textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })

@@ -57,7 +57,7 @@ export const SignInView = () => {
 
         <MemberGrid>
           {memberships?.map((membership) => (
-            <StudioCard
+            <MembershipCard
               onClick={() => handlePickMembership(membership)}
               key={membership.id}
               handle={membership.handle}
@@ -81,7 +81,7 @@ export const SignInView = () => {
   )
 }
 
-export type StudioCardProps = {
+export type MembershipCardProps = {
   handle?: string
   follows?: number
   avatarUri?: string | null
@@ -89,7 +89,7 @@ export type StudioCardProps = {
   disabled?: boolean
 }
 
-export const StudioCard: React.FC<StudioCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
+export const MembershipCard: React.FC<MembershipCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
   return (
     <CardWrapper onClick={onClick} disabled={disabled}>
       <StyledAvatar assetUrl={avatarUri} />
