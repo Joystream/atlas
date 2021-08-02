@@ -1,23 +1,40 @@
 import styled from '@emotion/styled'
 import React, { FC } from 'react'
 
+import { useMostViewedVideosIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
 import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
-import { InfiniteChannelWithVideosGrid, VideoGallery, ViewWrapper } from '@/components'
+import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid, VideoGallery, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
 import { SvgNavChannels, SvgNavHome, SvgNavNew } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
 export const PopularView: FC = () => {
+  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
+    limit: 200,
+    viewedWithinDays: 30,
+  })
   const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds({ limit: 15 })
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
   const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
   const { videos, loading } = useMostViewedVideos({ viewedWithinDays: 30, limit: 10 })
+
+  if (mostViewedVideosError) {
+    throw mostViewedVideosError
+  }
+
   return (
     <StyledViewWrapper>
       <Header variant="h2">Popular</Header>
       <StyledVideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
-      <StyledInfiniteChannelWithVideosGrid
+      <StyledInfiniteVideoGrid
+        title="Popular videos"
+        idIn={mostViewedVideosIds}
+        ready={!mostViewedVideosLoading}
+        onDemand
+      />
+      <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand
         idIn={mostViewedChannelsAllTimeIds}
@@ -59,7 +76,7 @@ const StyledViewWrapper = styled(ViewWrapper)`
   padding-bottom: ${sizes(10)};
 `
 
-const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
+const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
   :not(:last-of-type) {
     margin-bottom: ${sizes(38)};
   }
