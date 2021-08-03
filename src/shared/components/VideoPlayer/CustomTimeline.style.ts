@@ -144,9 +144,9 @@ export const PlayProgressThumb = styled.button`
   border-radius: 100%;
   background: ${colors.white};
   transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
-  top: -0.5em;
-  height: 1.5em;
-  width: 1.5em;
+  top: -0.75em;
+  height: 2em;
+  width: 2em;
   ${media.compact} {
     cursor: pointer;
     top: -0.25em;
