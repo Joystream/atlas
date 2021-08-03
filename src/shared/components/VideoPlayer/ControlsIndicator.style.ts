@@ -93,10 +93,10 @@ export const ControlsIndicatorTransitions = styled.div`
       opacity: 1;
       transform: scale(1);
       transition: opacity, transform;
-      transition-timing-function: ease-in;
-      transition-duration: 150ms;
+      transition-timing-function: ${animationEasing};
+      transition-duration: 200ms;
       @media (hover: hover) {
-        transition-delay: ${INDICATOR_TIMEOUT - 150}ms;
+        transition-delay: ${INDICATOR_TIMEOUT - 200}ms;
       }
     }
   }
@@ -114,7 +114,7 @@ export const ControlsIndicatorTransitions = styled.div`
       opacity: 0;
       transform: scale(0.5);
       transition: opacity, transform;
-      transition-timing-function: ease-in;
+      transition-timing-function: ${animationEasing};
     }
     ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
