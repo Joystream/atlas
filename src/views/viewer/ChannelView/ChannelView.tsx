@@ -175,7 +175,7 @@ export const ChannelView: React.FC = () => {
         fetchMore({
           variables: {
             ...variables,
-            first: page * videosPerPage + videosPerPage * 3,
+            first: page * videosPerPage + videosPerPage * 3 - edges.length,
             after: pageInfo?.endCursor,
           },
         })
