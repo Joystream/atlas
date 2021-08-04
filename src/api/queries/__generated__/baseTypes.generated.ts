@@ -311,6 +311,8 @@ export type QueryChannelViewsArgs = {
 }
 
 export type QueryChannelsArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
   where?: Maybe<ChannelWhereInput>
 }
 

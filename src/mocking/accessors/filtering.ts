@@ -80,11 +80,11 @@ const createPredicate = (key: string, value: any, testData: GenericData): Predic
 
 export const genericSort = <TData extends GenericData>(data: TData[], variables: SortingArgs): TData[] => {
   const { orderBy } = variables
-  if (!orderBy) {
+  if (!orderBy?.length) {
     return data
   }
 
-  const [field, direction] = orderBy.split('_')
+  const [field, direction] = orderBy[0].split('_')
   if (!field || !direction) {
     Logger.warn(`error parsing orderBy: "${orderBy}"`)
     return data
