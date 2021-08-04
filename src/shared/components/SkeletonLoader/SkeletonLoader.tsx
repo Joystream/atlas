@@ -1,6 +1,6 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { darken } from 'polished'
+import React from 'react'
 
 import { colors } from '@/shared/theme'
 
@@ -9,24 +9,47 @@ type SkeletonLoaderProps = {
   height?: string | number
   bottomSpace?: string | number
   rounded?: boolean
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const getPropValue = (v: string | number) => (typeof v === 'string' ? v : `${v}px`)
 
 const pulse = keyframes`
-  0, 100% { 
-    background-color: ${colors.gray[400]}
+  0 { 
+    transform: translateX(-100%)
   }
-  50% {
-    background-color: ${darken(0.15, colors.gray[400])}
+  100% {
+    transform: translateX(100%)
   }
 `
 
-export const SkeletonLoader = styled.div<SkeletonLoaderProps>`
+export const SkeletonLoader: React.FC<SkeletonLoaderProps> = (props) => (
+  <SkeletonLoaderContainer {...props}>
+    <SkeletonLoaderAnimated {...props} />
+  </SkeletonLoaderContainer>
+)
+
+const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   width: ${({ width = '100%' }) => getPropValue(width)};
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
-  background-color: ${colors.gray['400']};
-  animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: ${colors.gray['900']};
+  overflow: hidden;
+`
+
+const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
+  height: ${({ height = '100%' }) => getPropValue(height)};
+  transform: translateX(-100%);
+  background: linear-gradient(
+    104deg,
+    ${colors.gray['800']}00 15%,
+    ${colors.gray['800']}3F 25%,
+    ${colors.gray['800']}7F 30%,
+    ${colors.gray['800']}FF 48%,
+    ${colors.gray['800']}FF 52%,
+    ${colors.gray['800']}7F 70%,
+    ${colors.gray['800']}3F 75%,
+    ${colors.gray['800']}00 85%
+  );
+  animation: ${pulse} 2s cubic-bezier(0, 0.1, 0.2, 1) infinite;
 `
