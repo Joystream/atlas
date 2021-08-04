@@ -6,6 +6,7 @@ import {
   InfiniteVideoGrid,
   LimitedWidthContainer,
   OfficialJoystreamUpdate,
+  TopTenThisWeek,
   VideoHero,
   ViewErrorFallback,
 } from '@/components'
@@ -61,6 +62,7 @@ export const HomeView: React.FC = () => {
           />
         ) : null}
         <OfficialJoystreamUpdate />
+        <TopTenThisWeek />
         <StyledInfiniteVideoGrid title="All content" onDemand />
       </Container>
     </LimitedWidthContainer>
