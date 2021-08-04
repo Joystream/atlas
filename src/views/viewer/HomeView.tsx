@@ -3,7 +3,14 @@ import { ErrorBoundary } from '@sentry/react'
 import React from 'react'
 
 import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
-import { ErrorFallback, InfiniteVideoGrid, OfficialJoystreamUpdate, VideoHero, ViewWrapper } from '@/components'
+import {
+  ErrorFallback,
+  InfiniteVideoGrid,
+  OfficialJoystreamUpdate,
+  TopTenThisWeek,
+  VideoHero,
+  ViewWrapper,
+} from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { sizes, transitions } from '@/shared/theme'
 
@@ -60,6 +67,7 @@ export const HomeView: React.FC = () => {
             />
           ) : null}
           <OfficialJoystreamUpdate />
+          <TopTenThisWeek />
           <StyledInfiniteVideoGrid title="All content" onDemand />
         </ErrorBoundary>
       </Container>
