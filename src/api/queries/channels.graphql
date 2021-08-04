@@ -45,8 +45,8 @@ query GetVideoCount($where: VideoWhereInput) {
   }
 }
 
-query GetChannels($where: ChannelWhereInput) {
-  channels(where: $where) {
+query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
+  channels(offset: $offset, limit: $limit, where: $where) {
     ...AllChannelFields
   }
 }
@@ -72,6 +72,13 @@ query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInp
 # modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
+    id
+    follows
+  }
+}
+
+query GetBatchedChannelFollows($channelIdList: [ID!]!) {
+  batchedChannelFollows(channelIdList: $channelIdList) {
     id
     follows
   }

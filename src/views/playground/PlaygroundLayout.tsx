@@ -20,6 +20,7 @@ import {
   UploadFiles,
   VideoMetaData,
 } from './Playgrounds'
+import OrionTesting from './Playgrounds/OrionTesting'
 
 const playgroundRoutes = [
   { path: 'animations', element: <Animations />, name: 'Animations' },
@@ -34,6 +35,7 @@ const playgroundRoutes = [
   { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
   { path: 'dialogs', element: <Dialogs />, name: 'Dialogs' },
   { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
+  { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
 ]
 
 export const PlaygroundLayout = () => {

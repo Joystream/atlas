@@ -12,7 +12,7 @@ export type FilteringArgs<TWhere = VideoWhereInput | VideoWhereUniqueInput | Mem
   where?: TWhere | null
 }
 export type SortingArgs = {
-  orderBy?: string
+  orderBy?: [string]
 }
 export type GenericData = Record<string, unknown>
 export type CountData = {
@@ -36,6 +36,10 @@ export type MocksStore = {
     id: string
   }[]
   channelFollows: Record<string, number>
+  batchedChannelFollows: {
+    follows: number
+    id: string
+  }[]
 }
 export type Link = ReturnType<typeof graphql.link>
 export type BaseDataQuery<TQueryData = unknown> = {

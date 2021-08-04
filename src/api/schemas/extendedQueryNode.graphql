@@ -266,7 +266,7 @@ type Query {
   channelByUniqueInput(where: ChannelWhereUniqueInput!): Channel
 
   # List all channels by given constraints
-  channels(where: ChannelWhereInput): [Channel!]!
+  channels(offset: Int, limit: Int, where: ChannelWhereInput): [Channel!]!
 
   # List all channel by given constraints
   channelsConnection(
