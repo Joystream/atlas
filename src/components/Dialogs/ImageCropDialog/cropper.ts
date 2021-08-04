@@ -91,8 +91,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
 
       setZoomRange([minZoom, maxZoom])
 
-      const middleZoom = minZoom + (maxZoom - minZoom) / 2
-      cropper.zoomTo(middleZoom)
+      cropper.zoomTo(minZoom)
 
       if (cropData) {
         const { data, canvasData, cropBoxData, zoom } = cropData
