@@ -43,14 +43,26 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   const [playedBefore, setPlayedBefore] = useState(false)
 
   useEffect(() => {
-    if (!player || !playedBefore) {
+    if (!player) {
       return
     }
-    if (isScrubbing) {
-      player.pause()
-    } else {
-      player.play()
-      setPlayedBefore(false)
+    const handler = (event: Event) => {
+      if (event.type === 'seeking') {
+        if (!player.paused()) {
+          setPlayedBefore(true)
+          player.pause()
+        }
+      }
+      if (event.type === 'seeked') {
+        if (playedBefore) {
+          player.play()
+          setPlayedBefore(false)
+        }
+      }
+    }
+    player.on(['seeking', 'seeked'], handler)
+    return () => {
+      player.off(['seeking', 'seeked'], handler)
     }
   }, [isScrubbing, player, playedBefore])
 
@@ -127,16 +139,13 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       setMouseDisplayTooltipTime(formatDurationShort(round((percentage / 100) * duration)))
     }
     if (isScrubbing) {
-      if (!player.paused()) {
-        setPlayedBefore(true)
-      }
       setPlayProgressWidth(percentage)
     }
   }
 
   const handleJumpToTime = (e: React.MouseEvent | React.TouchEvent) => {
     const seekBar = seekBarRef.current
-    if (!seekBar || (e.type === 'mouseleave' && !isScrubbing)) {
+    if (!seekBar || (e.type === 'mouseleave' && !isScrubbing) || !player) {
       return
     }
 
