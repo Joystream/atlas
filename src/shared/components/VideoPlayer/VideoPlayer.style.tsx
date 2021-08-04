@@ -223,10 +223,6 @@ export const ScreenControls = styled.div`
 `
 
 const backgroundContainerCss = css`
-  .vjs-error-display {
-    display: block;
-  }
-
   .vjs-poster {
     display: block;
     opacity: 0;
