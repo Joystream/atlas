@@ -45,7 +45,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   onRemoveButtonClick,
   onVideoNotFound,
   seeAllUrl,
-  hasRanking = true,
+  hasRanking = false,
 }) => {
   const breakpoints = useMemo(() => {
     return breakpointsOfGrid({
