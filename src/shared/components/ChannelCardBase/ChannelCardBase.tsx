@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
-import { usePersonalDataStore } from '@/providers'
+import { useHandleFollowChannel } from '@/hooks'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
 
 import {
   Anchor,
@@ -46,11 +44,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   follows,
   channelId,
 }) => {
-  const { followChannel } = useFollowChannel()
-  const { unfollowChannel } = useUnfollowChannel()
-  const [isFollowing, setFollowing] = useState<boolean>()
-  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
-  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
+  const { followChannel, isFollowing } = useHandleFollowChannel(channelId)
   const isAnimated = !loading && !!channelHref && variant === 'primary'
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return
@@ -62,29 +56,10 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
     }
   }
 
-  useEffect(() => {
-    const isFollowing = followedChannels.some((channel) => channel.id === channelId)
-    setFollowing(isFollowing)
-  }, [followedChannels, channelId])
-
-  const onFollowClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleFollow = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     event.preventDefault()
-    if (channelId) {
-      try {
-        if (isFollowing) {
-          updateChannelFollowing(channelId, false)
-          unfollowChannel(channelId)
-          setFollowing(false)
-        } else {
-          updateChannelFollowing(channelId, true)
-          followChannel(channelId)
-          setFollowing(true)
-        }
-      } catch (error) {
-        Logger.warn('Failed to update Channel following', { error })
-      }
-    }
+    followChannel()
   }
 
   const followersLabel = follows && follows >= 1 ? `${follows} Follower` : `${follows} Followers`
@@ -125,7 +100,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
                   )}
                 </VideoCountContainer>
                 {variant === 'secondary' && (
-                  <FollowButton variant="secondary" onClick={onFollowClick}>
+                  <FollowButton variant="secondary" onClick={handleFollow}>
                     {isFollowing ? 'Unfollow' : 'Follow'}
                   </FollowButton>
                 )}

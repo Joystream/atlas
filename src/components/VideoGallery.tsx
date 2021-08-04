@@ -87,8 +87,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   return (
     <Gallery
       title={title}
-      paddingLeft={sizes(2, true)}
-      paddingTop={sizes(2, true)}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       dotsVisible

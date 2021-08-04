@@ -302,13 +302,24 @@ export type Query = {
   languages: Array<Language>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
-  /** Get list of channels with most views in given period */
+  /** Get list of most followed channels */
+  mostFollowedChannels: Array<ChannelFollowsInfo>
+  /** Get list of most followed channels of all time */
+  mostFollowedChannelsAllTime?: Maybe<Array<ChannelFollowsInfo>>
+  /**
+   * Get list of channels with most views in given period
+   * Get most viewed list of categories
+   */
+  mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
+  /** Get most viewed list of categories of all time */
+  mostViewedCategoriesAllTime?: Maybe<Array<EntityViewsInfo>>
+  /** Get most viewed list of channels */
   mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
   /** Get list of channels with most views in given period */
   mostViewedChannelsAllTime?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed videos in given period */
+  /** Get most viewed list of videos */
   mostViewedVideos?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed videos in given period */
+  /** Get most viewed list of videos of all time */
   mostViewedVideosAllTime?: Maybe<Array<EntityViewsInfo>>
   search: Array<SearchFtsOutput>
   videoByUniqueInput?: Maybe<Video>
@@ -374,18 +385,36 @@ export type QueryMembershipsArgs = {
   where: MembershipWhereInput
 }
 
-export type QueryMostViewedChannelsArgs = {
-  period: Scalars['Int']
+export type QueryMostFollowedChannelsArgs = {
   limit?: Maybe<Scalars['Int']>
+  period: Scalars['Int']
+}
+
+export type QueryMostFollowedChannelsAllTimeArgs = {
+  limit: Scalars['Int']
+}
+
+export type QueryMostViewedCategoriesArgs = {
+  limit?: Maybe<Scalars['Int']>
+  period: Scalars['Int']
+}
+
+export type QueryMostViewedCategoriesAllTimeArgs = {
+  limit: Scalars['Int']
+}
+
+export type QueryMostViewedChannelsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  period: Scalars['Int']
 }
 
 export type QueryMostViewedChannelsAllTimeArgs = {
-  limit?: Maybe<Scalars['Int']>
+  limit: Scalars['Int']
 }
 
 export type QueryMostViewedVideosArgs = {
-  period: Scalars['Int']
   limit?: Maybe<Scalars['Int']>
+  period: Scalars['Int']
 }
 
 export type QueryMostViewedVideosAllTimeArgs = {
@@ -459,6 +488,7 @@ export type Mutation = {
 }
 
 export type MutationAddVideoViewArgs = {
+  categoryId?: Maybe<Scalars['ID']>
   channelId: Scalars['ID']
   videoId: Scalars['ID']
 }
