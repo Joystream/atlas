@@ -143,18 +143,18 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = (event: Event) => {
-      if (event.type === 'waiting') {
+      if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
       }
-      if (event.type === 'canplay') {
+      if (event.type === 'canplay' || event.type === 'seeked') {
         if (playerState !== null) {
           setPlayerState('playing')
         }
       }
     }
-    player.on(['waiting', 'canplay'], handler)
+    player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplay'], handler)
+      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
