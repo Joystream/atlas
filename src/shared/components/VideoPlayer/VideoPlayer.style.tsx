@@ -6,7 +6,7 @@ import { SvgPlayerSoundOff } from '@/shared/icons'
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.style'
 
-import { colors, sizes, transitions, zIndex } from '../../theme'
+import { colors, media, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -44,8 +44,8 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   transform: translateY(0.5em);
-  padding: ${({ isFullScreen }) => (isFullScreen ? ' 0.5em 0.5em 0 0.5em' : '1em 0.5em 0 0.5em')};
-  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1em')};
+  padding: ${({ isFullScreen }) => (isFullScreen ? ' 0.5em 0.5em 0 0.5em' : '0.25em 0.5em 0 0.5em')};
+  bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
   z-index: ${zIndex.nearOverlay - 1};
@@ -211,22 +211,22 @@ export const CurrentTime = styled(Text)`
 export const ScreenControls = styled.div`
   display: grid;
   grid-template-columns: auto auto;
-  gap: 0.5em;
+  gap: 0.25em;
   margin-left: auto;
 
   ${ControlButton}:last-of-type {
     margin-right: 0;
   }
+  ${media.small} {
+    gap: 0.5em;
+  }
 `
 
 const backgroundContainerCss = css`
-  .vjs-error-display {
-    display: block;
-  }
-
   .vjs-poster {
     display: block;
     opacity: 0;
+    height: 100%;
     transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
 
@@ -266,7 +266,8 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-user-inactive.vjs-playing,
-  .vjs-user-inactive:not(.vjs-ended) {
+  /* don't hide player controls when paused(mobile) */
+  .vjs-user-inactive:not(.vjs-ended):not(.vjs-paused) {
     ${ControlsOverlay} {
       opacity: 0;
       visibility: hidden;

@@ -138,16 +138,19 @@ export const PlayProgressThumb = styled.button`
   opacity: 0;
   z-index: 1;
   content: '';
-  height: 1em;
-  top: -0.25em;
-  width: 1em;
   padding: 0;
   position: absolute;
   box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
   border-radius: 100%;
   background: ${colors.white};
   transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
+  top: -0.75em;
+  height: 2em;
+  width: 2em;
   ${media.compact} {
     cursor: pointer;
+    top: -0.25em;
+    height: 1em;
+    width: 1em;
   }
 `
