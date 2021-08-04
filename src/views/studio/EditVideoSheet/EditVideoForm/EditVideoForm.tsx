@@ -43,8 +43,8 @@ import {
   DeleteVideoContainer,
   FormWrapper,
   InputsContainer,
-  StyledTitleArea,
   StyledRadioContainer,
+  StyledTitleArea,
 } from './EditVideoForm.style'
 
 const visibilityOptions: SelectItem<boolean>[] = [
