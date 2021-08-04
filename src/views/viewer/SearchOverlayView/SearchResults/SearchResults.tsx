@@ -26,7 +26,6 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
       thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
     },
     whereChannel: {},
-    limit: 100,
   })
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
