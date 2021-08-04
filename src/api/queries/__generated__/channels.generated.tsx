@@ -317,7 +317,7 @@ export const GetChannelsConnectionDocument = gql`
     $first: Int
     $after: String
     $where: ChannelWhereInput
-    $orderBy: [ChannelOrderByInput!]
+    $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
   ) {
     channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
       edges {

@@ -23,6 +23,11 @@ export const OuterContainer = styled.article<{ variant?: string }>`
             background-color: ${colors.gray[800]};
             flex-direction: unset;
             width: calc(156px + calc(2 * ${containerPadding}));
+            margin-top: ${sizes(3)};
+          }
+
+          ${Info} {
+            align-items: center;
           }
 
           ${AvatarContainer} {
@@ -40,6 +45,12 @@ export const OuterContainer = styled.article<{ variant?: string }>`
             background-color: transparent;
             flex-direction: row;
             width: auto;
+            align-items: center;
+          }
+
+          ${Info} {
+            align-items: flex-start;
+            margin-top: 0;
           }
 
           ${AvatarContainer} {
@@ -90,9 +101,7 @@ export const Anchor = styled(Link)`
 export const Info = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-align: center;
-  margin-top: ${sizes(3)};
   padding: 0 ${sizes(1)};
   max-width: 100%;
 `

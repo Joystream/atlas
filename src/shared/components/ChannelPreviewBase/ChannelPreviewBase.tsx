@@ -67,8 +67,7 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
     setFollowing(isFollowing)
   }, [followedChannels, channelId])
 
-  // @ts-ignore test
-  const onFollowClick = (event) => {
+  const onFollowClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     event.preventDefault()
     if (channelId) {
