@@ -154,7 +154,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplay', 'seeking', 'seekeed'], handler)
+      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
