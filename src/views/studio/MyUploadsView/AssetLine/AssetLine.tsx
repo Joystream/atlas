@@ -8,7 +8,7 @@ import { useDialog, useUploadsStore } from '@/providers'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { Button, CircularProgressbar, Text } from '@/shared/components'
-import { SvgAlertError, SvgAlertSuccess, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
+import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
@@ -203,7 +203,7 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
       return <SvgAlertSuccess />
     }
     if (uploadStatus?.lastStatus === 'error' || !uploadStatus?.lastStatus) {
-      return <SvgAlertError />
+      return <SvgAlertWarning />
     }
     return (
       <ProgressbarContainer>
