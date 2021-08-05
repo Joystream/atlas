@@ -6,9 +6,10 @@ import { SvgGlyphChevronDown } from '@/shared/icons'
 
 type LoadMoreButtonProps = {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void
+  label?: string
 }
 
-export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick }) => (
+export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick, label = 'Show more videos' }) => (
   <LoadMore
     variant="secondary"
     size="large"
@@ -17,7 +18,7 @@ export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick }) => (
     iconPlacement="right"
     icon={<SvgGlyphChevronDown width={12} height={12} />}
   >
-    Show more videos
+    {label}
   </LoadMore>
 )
 

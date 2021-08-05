@@ -10,9 +10,10 @@ type ChannelCardProps = {
   id?: string
   className?: string
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  variant?: 'primary' | 'secondary'
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick }) => {
+export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick, variant = 'primary' }) => {
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { videoCount } = useChannelVideoCount(id ?? '', undefined, {
@@ -30,6 +31,9 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick
       loading={isLoading}
       onClick={onClick}
       assetUrl={url}
+      variant={variant}
+      follows={channel?.follows}
+      channelId={id}
     />
   )
 }
