@@ -18,6 +18,7 @@ fragment AllChannelFields on Channel {
   isPublic
   isCensored
   language {
+    id
     iso
   }
   ownerMember {
@@ -56,8 +57,13 @@ query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
   }
 }
 
-query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
-  channelsConnection(first: $first, after: $after, where: $where, orderBy: [createdAt_DESC]) {
+query GetChannelsConnection(
+  $first: Int
+  $after: String
+  $where: ChannelWhereInput
+  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+) {
+  channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {
@@ -94,13 +100,6 @@ query GetBatchedChannelFollows($channelIdList: [ID!]!) {
   batchedChannelFollows(channelIdList: $channelIdList) {
     id
     follows
-  }
-}
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelViews($channelId: ID!) {
-  channelViews(channelId: $channelId) {
-    id
-    views
   }
 }
 

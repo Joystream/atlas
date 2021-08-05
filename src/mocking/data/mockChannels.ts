@@ -18,6 +18,7 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
   isPublic: Boolean(Math.round(Math.random())),
   isCensored: Boolean(Math.round(Math.random())),
   language: {
+    id: String(Math.floor(Math.random() * 10)),
     iso: languages[Math.floor(Math.random() * languages.length)].value,
   },
 }))
