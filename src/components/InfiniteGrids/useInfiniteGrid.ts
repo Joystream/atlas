@@ -1,8 +1,10 @@
 import { ApolloError, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
-import { debounce } from 'lodash'
-import { useEffect } from 'react'
+import { debounce, isEqual } from 'lodash'
+import { useEffect, useRef } from 'react'
+
+import { ChannelOrderByInput } from '@/api/queries'
 
 export type PaginatedData<T> = {
   edges: {
@@ -39,6 +41,7 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   queryVariables: TArgs
   onDemand?: boolean
   onScrollToBottom?: () => void
+  orderBy?: ChannelOrderByInput
 }
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
@@ -65,15 +68,19 @@ export const useInfiniteGrid = <
   onError,
   queryVariables,
   onDemand,
+  orderBy = ChannelOrderByInput.CreatedAtDesc,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
 
-  const { loading, data: rawData, error, fetchMore } = useQuery<TRawData, TArgs>(query, {
+  const queryVariablesRef = useRef(queryVariables)
+
+  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
       ...queryVariables,
+      orderBy,
       first: targetLoadedItemsCount,
     },
     onError,
@@ -111,6 +118,13 @@ export const useInfiniteGrid = <
     endCursor,
     isReady,
   ])
+
+  useEffect(() => {
+    if (!isEqual(queryVariablesRef.current, queryVariables)) {
+      queryVariablesRef.current = queryVariables
+      refetch()
+    }
+  }, [queryVariables, refetch])
 
   // handle scroll to bottom
   useEffect(() => {

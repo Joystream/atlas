@@ -8,6 +8,8 @@ import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphIn
 import { InputBase, InputBaseProps, LabelText } from '../InputBase'
 import { Tooltip } from '../Tooltip'
 
+export type SelectSizes = 'regular' | 'small'
+
 export type SelectItem<T = string> = {
   value: T
   name: string
@@ -21,6 +23,7 @@ export type SelectProps<T = string> = {
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
+  size?: SelectSizes
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -33,6 +36,7 @@ export const Select = <T,>({
   disabled,
   onChange,
   containerRef,
+  size = 'regular',
   ...inputBaseProps
 }: SelectProps<T>) => {
   const itemsValues = items.map((item) => item.value)
@@ -67,6 +71,7 @@ export const Select = <T,>({
           type="button"
           {...getToggleButtonProps()}
           tabIndex={disabled ? -1 : 0}
+          size={size}
         >
           {selectedItem?.name || placeholder}
           <SvgGlyphChevronDown />
