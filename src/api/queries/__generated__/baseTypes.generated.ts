@@ -12,11 +12,6 @@ export type Scalars = {
   DateTime: Date
 }
 
-export type Language = {
-  __typename?: 'Language'
-  iso: Scalars['String']
-}
-
 export type VideoCategory = {
   __typename?: 'VideoCategory'
   id: Scalars['ID']
@@ -125,6 +120,7 @@ export type ChannelWhereInput = {
   isCensored_eq?: Maybe<Scalars['Boolean']>
   coverPhotoAvailability_eq?: Maybe<AssetAvailability>
   avatarPhotoAvailability_eq?: Maybe<AssetAvailability>
+  languageId_eq?: Maybe<Scalars['ID']>
 }
 
 export type ChannelWhereUniqueInput = {
@@ -258,6 +254,35 @@ export type ProcessorState = {
   chainHead: Scalars['Float']
 }
 
+export type Language = {
+  __typename?: 'Language'
+  id: Scalars['ID']
+  iso: Scalars['String']
+}
+
+export type LanguageWhereInput = {
+  id_eq?: Maybe<Scalars['ID']>
+  id_in?: Maybe<Array<Scalars['ID']>>
+  iso_eq?: Maybe<Scalars['String']>
+  iso_contains?: Maybe<Scalars['String']>
+  iso_startsWith?: Maybe<Scalars['String']>
+  iso_endsWith?: Maybe<Scalars['String']>
+  iso_in?: Maybe<Array<Scalars['String']>>
+}
+
+export enum LanguageOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  IsoAsc = 'iso_ASC',
+  IsoDesc = 'iso_DESC',
+  CreatedInBlockAsc = 'createdInBlock_ASC',
+  CreatedInBlockDesc = 'createdInBlock_DESC',
+}
+
 export type Query = {
   __typename?: 'Query'
   /** Get follows counts for a list of channels */
@@ -273,6 +298,7 @@ export type Query = {
   channelViews?: Maybe<EntityViewsInfo>
   channels: Array<Channel>
   channelsConnection: ChannelConnection
+  languages: Array<Language>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   /** Get list of channels with most views in given period */
@@ -323,6 +349,13 @@ export type QueryChannelsConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<ChannelWhereInput>
   orderBy?: Maybe<Array<ChannelOrderByInput>>
+}
+
+export type QueryLanguagesArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<LanguageWhereInput>
+  orderBy?: Maybe<Array<LanguageOrderByInput>>
 }
 
 export type QueryMembershipByUniqueInputArgs = {

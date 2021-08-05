@@ -20,6 +20,10 @@ export default {
     error: '',
     helperText: '',
     warning: '',
+    fullWidth: {
+      control: { type: 'select', options: ['regular', 'small'] },
+      defaultValue: 'regular',
+    },
   },
 } as Meta
 

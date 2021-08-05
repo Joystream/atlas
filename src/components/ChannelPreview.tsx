@@ -10,9 +10,10 @@ type ChannelPreviewProps = {
   id?: string
   className?: string
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  variant?: 'primary' | 'secondary'
 }
 
-export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, onClick }) => {
+export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, onClick, variant = 'primary' }) => {
   const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { videoCount } = useChannelVideoCount(id ?? '', {
@@ -30,6 +31,9 @@ export const ChannelPreview: React.FC<ChannelPreviewProps> = ({ id, className, o
       loading={isLoading}
       onClick={onClick}
       assetUrl={url}
+      variant={variant}
+      follows={channel?.follows}
+      channelId={id}
     />
   )
 }

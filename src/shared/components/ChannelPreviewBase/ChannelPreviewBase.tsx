@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
+import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 import {
   Anchor,
   AvatarContainer,
+  FollowButton,
   Info,
   InnerContainer,
   OuterContainer,
@@ -25,6 +29,9 @@ export type ChannelPreviewBaseProps = {
   className?: string
   loading?: boolean
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  variant?: 'primary' | 'secondary'
+  follows?: number | null
+  channelId?: string
 }
 
 export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
@@ -35,8 +42,16 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
   channelHref,
   className,
   onClick,
+  variant,
+  follows,
+  channelId,
 }) => {
-  const isAnimated = !loading && !!channelHref
+  const { followChannel } = useFollowChannel()
+  const { unfollowChannel } = useUnfollowChannel()
+  const [isFollowing, setFollowing] = useState<boolean>()
+  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
+  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
+  const isAnimated = !loading && !!channelHref && variant === 'primary'
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return
     onClick(e)
@@ -46,8 +61,36 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
       e.preventDefault()
     }
   }
+
+  useEffect(() => {
+    const isFollowing = followedChannels.some((channel) => channel.id === channelId)
+    setFollowing(isFollowing)
+  }, [followedChannels, channelId])
+
+  const onFollowClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if (channelId) {
+      try {
+        if (isFollowing) {
+          updateChannelFollowing(channelId, false)
+          unfollowChannel(channelId)
+          setFollowing(false)
+        } else {
+          updateChannelFollowing(channelId, true)
+          followChannel(channelId)
+          setFollowing(true)
+        }
+      } catch (error) {
+        Logger.warn('Failed to update Channel following', { error })
+      }
+    }
+  }
+
+  const followersLabel = follows && follows >= 1 ? `${follows} Follower` : `${follows} Followers`
+
   return (
-    <OuterContainer className={className} onClick={handleClick}>
+    <OuterContainer className={className} onClick={handleClick} variant={variant}>
       <Anchor to={channelHref ?? ''} onClick={handleAnchorClick}>
         <SwitchTransition>
           <CSSTransition
@@ -74,10 +117,18 @@ export const ChannelPreviewBase: React.FC<ChannelPreviewBaseProps> = ({
                       timeout={parseInt(transitions.timings.loading) * 0.5}
                       classNames={transitions.names.fade}
                     >
-                      <VideoCount variant="subtitle2">{videoCount ? `${videoCount} Uploads` : '⠀'}</VideoCount>
+                      <VideoCount variant="subtitle2">
+                        {videoCount && variant === 'primary' ? `${videoCount} Uploads` : null}
+                        {follows && variant === 'secondary' ? followersLabel : '0 Followers'}
+                      </VideoCount>
                     </CSSTransition>
                   )}
                 </VideoCountContainer>
+                {variant === 'secondary' && (
+                  <FollowButton variant="secondary" onClick={onFollowClick}>
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </FollowButton>
+                )}
               </Info>
             </InnerContainer>
           </CSSTransition>
