@@ -33,7 +33,7 @@ type InnerContainerProps = {
 
 export const InnerContainer = styled.div<InnerContainerProps>`
   padding: ${sizes(4)};
-  height: calc(100% - 4em);
+  height: calc(100% - ${({ isFullScreen }) => (isFullScreen ? '5.5em' : '4.25em')});
   overflow-y: auto;
   width: 100%;
   display: flex;

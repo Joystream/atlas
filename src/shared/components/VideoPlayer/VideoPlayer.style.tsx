@@ -44,7 +44,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   transform: translateY(0.5em);
-  padding: ${({ isFullScreen }) => (isFullScreen ? ' 0.5em 0.5em 0 0.5em' : '0.25em 0.5em 0 0.5em')};
+  padding: 0.5em 0.5em 0 0.5em;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${colors.transparentPrimary[18]}` : 'unset')};
   left: 0;
@@ -58,8 +58,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   top: ${({ isEnded }) => (isEnded ? 'unset' : 0)};
   align-items: flex-end;
   @media (hover: hover) {
-    padding: ${({ isFullScreen }) => (isFullScreen ? '2.5em 1em 0 1em' : '1.25em 1em 0 1em')};
-    bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
+    padding: 0.5em 1em 0 1em;
     top: unset;
     align-items: center;
     height: unset;

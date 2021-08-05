@@ -499,6 +499,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </ControlsOverlay>
             <VideoOverlay
               videoId={videoId}
+              isFullScreen={isFullScreen}
               playerState={playerState}
               onPlay={handlePlayPause}
               channelId={channelId}
