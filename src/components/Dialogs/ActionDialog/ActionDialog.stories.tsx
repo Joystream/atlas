@@ -34,6 +34,8 @@ export default {
 
 type StoryProps = ActionDialogProps & {
   showAdditionalAction?: boolean
+  primaryButtonText?: string
+  secondaryButtonText?: string
 }
 
 const additionalActionNode = (
@@ -49,7 +51,7 @@ const content = (
   </div>
 )
 
-const RegularTemplate: Story<StoryProps & any> = ({
+const RegularTemplate: Story<StoryProps> = ({
   showAdditionalAction,
   primaryButtonText,
   secondaryButtonText,
@@ -67,7 +69,7 @@ const RegularTemplate: Story<StoryProps & any> = ({
 }
 export const Regular = RegularTemplate.bind({})
 
-const ContentTemplate: Story<StoryProps & any> = ({
+const ContentTemplate: Story<StoryProps> = ({
   showAdditionalAction,
   primaryButtonText,
   secondaryButtonText,
@@ -87,7 +89,7 @@ const ContentTemplate: Story<StoryProps & any> = ({
 }
 export const WithContent = ContentTemplate.bind({})
 
-const TransitionTemplate: Story<StoryProps & any> = ({
+const TransitionTemplate: Story<StoryProps> = ({
   showAdditionalAction,
   primaryButtonText,
   secondaryButtonText,
