@@ -1,6 +1,6 @@
-import { css, keyframes } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { darken, fluidRange } from 'polished'
+import { fluidRange } from 'polished'
 
 import { Button, IconButton, SkeletonLoader, Text } from '@/shared/components'
 import { breakpoints, colors, media, sizes } from '@/shared/theme'
@@ -67,22 +67,6 @@ const absoluteMediaCss = css`
 
 export const PlayerContainer = styled.div`
   ${absoluteMediaCss};
-`
-
-const pulse = keyframes`
-  0, 100% { 
-    background-color: ${colors.gray[800]}
-  }
-  50% {
-    background-color: ${darken(0.15, colors.gray[800])}
-  }
-`
-
-export const PlayerSkeletonLoader = styled.div`
-  ${absoluteMediaCss};
-
-  background-color: ${colors.gray[800]};
-  animation: ${pulse} 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 `
 
 export const HorizontalGradientOverlay = styled.div`

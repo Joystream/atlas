@@ -18,7 +18,6 @@ import {
   MediaWrapper,
   PlayButton,
   PlayerContainer,
-  PlayerSkeletonLoader,
   SoundButton,
   StyledChannelLink,
   Title,
@@ -61,7 +60,7 @@ export const VideoHero: React.FC = () => {
       <MediaWrapper>
         <Media>
           <PlayerContainer>
-            {coverVideo ? (
+            {coverVideo && (
               <VideoPlayer
                 fluid
                 isInBackground
@@ -71,8 +70,6 @@ export const VideoHero: React.FC = () => {
                 onDataLoaded={handlePlaybackDataLoaded}
                 src={coverVideo?.coverCutMediaUrl}
               />
-            ) : (
-              <PlayerSkeletonLoader />
             )}
           </PlayerContainer>
           {coverVideo && <HorizontalGradientOverlay />}

@@ -22,8 +22,8 @@ const pulse = keyframes`
   }
 `
 
-export const SkeletonLoader: React.FC<SkeletonLoaderProps> = (props) => (
-  <SkeletonLoaderContainer {...props}>
+export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ className, ...props }) => (
+  <SkeletonLoaderContainer {...props} className={className}>
     <SkeletonLoaderAnimated {...props} />
   </SkeletonLoaderContainer>
 )
