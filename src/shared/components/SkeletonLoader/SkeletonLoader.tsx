@@ -35,6 +35,10 @@ const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
   background-color: ${colors.gray['900']};
   overflow: hidden;
+
+  /* Safari fix
+     https://stackoverflow.com/questions/49066011/overflow-hidden-with-border-radius-not-working-on-safari */
+  transform: translateZ(0);
 `
 
 const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
