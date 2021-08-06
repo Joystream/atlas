@@ -73,7 +73,7 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, is
     <ControlsIndicatorTransitions>
       <CSSTransition
         in={!indicator?.isVisible && isLoading}
-        timeout={INDICATOR_TIMEOUT}
+        timeout={!indicator?.isVisible && isLoading ? INDICATOR_TIMEOUT : 0}
         classNames={INDICATOR_TRANSITION}
         mountOnEnter
         unmountOnExit
