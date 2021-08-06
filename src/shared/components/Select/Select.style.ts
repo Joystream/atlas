@@ -35,7 +35,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
     switch (size) {
       case 'regular':
         return css`
-          min-height: 42px;
+          min-height: 40px;
         `
       case 'small':
         return css`

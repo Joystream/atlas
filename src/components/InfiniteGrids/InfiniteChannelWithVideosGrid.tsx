@@ -112,7 +112,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
               items={mappedLanguages || []}
               disabled={languagesLoading}
               value={selectedLanguage}
-              size="small"
+              size="regular"
               onChange={onSelectLanguage}
             />
           </LanguageSelectWrapper>

@@ -23,11 +23,6 @@ export const TitleWrapper = styled.div`
 export const LanguageSelectWrapper = styled.div`
   margin-left: ${sizes(6)};
   width: ${sizes(34)};
-
-  button {
-    /* change height of custom select */
-    min-height: ${sizes(10)};
-  }
 `
 
 export const Separator = styled.div`
