@@ -201,7 +201,7 @@ export const ProgressBar = styled.div`
   background-color: ${colors.blue['500']};
 `
 
-export const VideoHeroPublishingStateOverlay = styled.div`
+export const CoverVideoPublishingStateOverlay = styled.div`
   position: absolute;
   bottom: ${sizes(2)};
   left: ${sizes(2)};
