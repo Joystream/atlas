@@ -17,7 +17,6 @@ export const LoadMoreButtonWrapper = styled.div`
 
 export const TitleWrapper = styled.div`
   display: flex;
-  padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[700]};
 `
 
