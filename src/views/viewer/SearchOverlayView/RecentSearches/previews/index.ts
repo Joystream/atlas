@@ -1,2 +1,2 @@
-export * from './RecentChannelPreview'
-export * from './RecentVideoPreview'
+export * from './RecentChannelCard'
+export * from './RecentVideoTile'

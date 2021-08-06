@@ -2,19 +2,19 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar, Placeholder, Text } from '@/shared/components'
+import { Avatar, SkeletonLoader, Text } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
 const previewSubtextCss = css`
   margin-top: ${sizes(1)};
 `
 
-export const PreviewTitlePlaceholder = styled(Placeholder)`
+export const PreviewTitleSkeletonLoader = styled(SkeletonLoader)`
   width: 120px;
   height: 18px;
 `
 
-export const PreviewSubtextPlaceholder = styled(Placeholder)`
+export const PreviewSubtextSkeletonLoader = styled(SkeletonLoader)`
   width: 70px;
   height: 16px;
   ${previewSubtextCss};
@@ -60,6 +60,6 @@ export const VideoImage = styled.img`
   ${videoImageCss};
 `
 
-export const VideoImagePlaceholder = styled(Placeholder)`
+export const VideoImageSkeletonLoader = styled(SkeletonLoader)`
   ${videoImageCss};
 `

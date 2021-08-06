@@ -4,7 +4,7 @@ import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { media, sizes } from '../../theme'
-import { MIN_VIDEO_PREVIEW_WIDTH } from '../VideoPreviewBase'
+import { MIN_VIDEO_TILE_WIDTH } from '../VideoTileBase'
 
 const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
 
@@ -23,7 +23,7 @@ export const Grid: React.FC<GridProps> = ({
   onResize,
   repeat = 'fill',
   maxColumns = 6,
-  minWidth = MIN_VIDEO_PREVIEW_WIDTH,
+  minWidth = MIN_VIDEO_TILE_WIDTH,
   ...props
 }) => {
   const gridRef = useRef<HTMLImageElement>(null)

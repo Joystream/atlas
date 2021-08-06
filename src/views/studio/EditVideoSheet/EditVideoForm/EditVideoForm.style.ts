@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { studioContainerStyle } from '@/components/StudioContainer'
-import { Button, HeaderTextField } from '@/shared/components'
+import { Button, TitleArea } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const StyledRadioContainer = styled.div`
@@ -55,7 +55,7 @@ export const InputsContainer = styled.div`
   }
 `
 
-export const StyledHeaderTextField = styled(HeaderTextField)`
+export const StyledTitleArea = styled(TitleArea)`
   margin-bottom: ${sizes(4)};
 `
 

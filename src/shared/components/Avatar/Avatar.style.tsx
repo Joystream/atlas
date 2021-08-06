@@ -5,7 +5,7 @@ import { TransitionGroup } from 'react-transition-group'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, transitions, typography } from '@/shared/theme'
 
-import { Placeholder } from '../Placeholder'
+import { SkeletonLoader } from '../SkeletonLoader'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
 
@@ -126,7 +126,7 @@ export const EditButton = styled.button<EditButtonProps>`
   }
 `
 
-export const StyledPlaceholder = styled(Placeholder)`
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   left: 0;
 `

@@ -7,7 +7,7 @@ import { ChannelLink, InfiniteVideoGrid } from '@/components'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { Placeholder, VideoPlayer } from '@/shared/components'
+import { SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -15,14 +15,14 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import {
   ChannelContainer,
   DescriptionContainer,
-  DescriptionPlaceholder,
+  DescriptionSkeletonLoader,
   InfoContainer,
   LicenseContainer,
   Meta,
   MoreVideosContainer,
   MoreVideosHeader,
   PlayerContainer,
-  PlayerPlaceholder,
+  PlayerSkeletonLoader,
   PlayerWrapper,
   StyledViewWrapper,
   TitleText,
@@ -123,17 +123,17 @@ export const VideoView: React.FC = () => {
               startTime={startTimestamp}
             />
           ) : (
-            <PlayerPlaceholder />
+            <PlayerSkeletonLoader />
           )}
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer className={transitions.names.slide}>
-        {video ? <TitleText variant="h2">{video.title}</TitleText> : <Placeholder height={46} width={400} />}
+        {video ? <TitleText variant="h2">{video.title}</TitleText> : <SkeletonLoader height={46} width={400} />}
         <Meta variant="subtitle1">
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
-            <Placeholder height={18} width={200} />
+            <SkeletonLoader height={18} width={200} />
           )}
         </Meta>
         <ChannelContainer>
@@ -148,10 +148,10 @@ export const VideoView: React.FC = () => {
             </>
           ) : (
             <>
-              <DescriptionPlaceholder width={700} />
-              <DescriptionPlaceholder width={400} />
-              <DescriptionPlaceholder width={800} />
-              <DescriptionPlaceholder width={300} />
+              <DescriptionSkeletonLoader width={700} />
+              <DescriptionSkeletonLoader width={400} />
+              <DescriptionSkeletonLoader width={800} />
+              <DescriptionSkeletonLoader width={300} />
             </>
           )}
         </DescriptionContainer>
@@ -168,12 +168,12 @@ export const VideoView: React.FC = () => {
               {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
             </>
           ) : (
-            <Placeholder height={12} width={200} />
+            <SkeletonLoader height={12} width={200} />
           )}
         </LicenseContainer>
         <MoreVideosContainer>
           <MoreVideosHeader>
-            {video ? `More from ${video.channel.title}` : <Placeholder height={23} width={300} />}
+            {video ? `More from ${video.channel.title}` : <SkeletonLoader height={23} width={300} />}
           </MoreVideosHeader>
           <InfiniteVideoGrid
             ready={!loading}

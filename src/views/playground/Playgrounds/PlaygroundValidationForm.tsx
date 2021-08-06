@@ -7,11 +7,11 @@ import {
   Checkbox,
   Datepicker,
   FormField,
-  HeaderTextField,
   RadioButton,
   Select,
   TextArea,
   TextField,
+  TitleArea,
   Button as _Button,
 } from '@/shared/components'
 import { SelectItem } from '@/shared/components/Select'
@@ -63,7 +63,7 @@ export const PlaygroundValidationForm = () => {
   return (
     <>
       <form onSubmit={onSubmit}>
-        <HeaderTextField
+        <TitleArea
           {...register('header', textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
           value="Lorem ipsum"
           error={!!errors.header}

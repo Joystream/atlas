@@ -5,7 +5,7 @@ import { ChannelLink } from '@/components/ChannelLink'
 import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { Button } from '../../Button'
-import { CircularProgressbar } from '../../CircularProgressbar'
+import { CircularProgress } from '../../CircularProgress'
 import { IconButton } from '../../IconButton'
 import { Text } from '../../Text'
 
@@ -116,7 +116,7 @@ export const CountDownWrapper = styled.div`
   align-items: center;
 `
 
-export const StyledCircularProgressBar = styled(CircularProgressbar)`
+export const StyledCircularProgress = styled(CircularProgress)`
   width: ${sizes(14)};
   height: ${sizes(14)};
 `

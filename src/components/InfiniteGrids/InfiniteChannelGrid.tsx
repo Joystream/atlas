@@ -12,7 +12,7 @@ import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
-import { ChannelPreview } from '../ChannelPreview'
+import { ChannelCard } from '../ChannelCard'
 
 type InfiniteChannelGridProps = {
   title?: string
@@ -67,7 +67,7 @@ export const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({
     <>
       {/* we are reusing the components below by giving them the same keys */}
       {[...displayedItems, ...placeholderItems].map((channel, idx) => (
-        <StyledChannelPreview key={idx} id={channel.id} />
+        <StyledChannelCard key={idx} id={channel.id} />
       ))}
     </>
   )
@@ -94,6 +94,6 @@ const previewCss = css`
   margin: 0 auto;
 `
 
-const StyledChannelPreview = styled(ChannelPreview)`
+const StyledChannelCard = styled(ChannelCard)`
   ${previewCss};
 `

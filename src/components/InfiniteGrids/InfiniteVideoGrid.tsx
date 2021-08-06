@@ -8,12 +8,12 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, Placeholder, Text } from '@/shared/components'
+import { Grid, SkeletonLoader, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
-import { VideoPreview } from '../VideoPreview'
+import { VideoTile } from '../VideoTile'
 
 type InfiniteVideoGridProps = {
   title?: string
@@ -141,7 +141,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   const gridContent = (
     <>
       {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
-        <VideoPreview id={video.id} key={idx} showChannel={showChannel} />
+        <VideoTile id={video.id} key={idx} showChannel={showChannel} />
       ))}
     </>
   )
@@ -154,7 +154,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      {title && (!ready ? <StyledPlaceholder height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
+      {title && (!ready ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </section>
   )
@@ -164,6 +164,6 @@ const Title = styled(Text)`
   margin-bottom: ${sizes(4)};
 `
 
-const StyledPlaceholder = styled(Placeholder)`
+const StyledSkeletonLoader = styled(SkeletonLoader)`
   margin-bottom: ${sizes(4)};
 `

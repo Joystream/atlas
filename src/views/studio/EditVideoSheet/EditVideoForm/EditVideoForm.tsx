@@ -43,8 +43,8 @@ import {
   DeleteVideoContainer,
   FormWrapper,
   InputsContainer,
-  StyledHeaderTextField,
   StyledRadioContainer,
+  StyledTitleArea,
 } from './EditVideoForm.style'
 
 const visibilityOptions: SelectItem<boolean>[] = [
@@ -432,7 +432,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           )}
         />
         <InputsContainer>
-          <StyledHeaderTextField
+          <StyledTitleArea
             {...register(
               'title',
               textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })

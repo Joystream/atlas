@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Placeholder } from '@/shared/components'
+import { SkeletonLoader } from '@/shared/components'
 import { colors, sizes, typography } from '@/shared/theme'
 
 type ContainerProps = {
@@ -29,6 +29,6 @@ export const Handle = styled.span<HandleProps>`
   margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
 `
 
-export const HandlePlaceholder = styled(Placeholder)<HandleProps>`
+export const HandleSkeletonLoader = styled(SkeletonLoader)<HandleProps>`
   margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
 `

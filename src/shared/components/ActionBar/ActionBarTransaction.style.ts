@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { media, transitions, zIndex } from '@/shared/theme'
 
-import { Checkout } from '../Checkout'
+import { ProgressDrawer } from '../ProgressDrawer'
 
 type ActionBarTransactionWrapperProps = {
   fullWidth?: boolean
@@ -23,7 +23,7 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   }
 `
 
-export const StyledCheckout = styled(Checkout)`
+export const StyledProgressDrawer = styled(ProgressDrawer)`
   display: none;
   ${media.medium} {
     position: absolute;
