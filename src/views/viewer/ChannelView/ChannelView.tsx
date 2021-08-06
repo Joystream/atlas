@@ -97,6 +97,9 @@ export const ChannelView: React.FC = () => {
       where: {
         channelId_eq: id,
         isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
       },
     },
     { notifyOnNetworkStatusChange: true }
