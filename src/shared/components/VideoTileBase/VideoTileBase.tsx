@@ -36,6 +36,7 @@ import {
   CoverSkeletonLoader,
   CoverThumbnailUploadFailed,
   CoverTopLeftContainer,
+  CoverVideoPublishingStateOverlay,
   CoverWrapper,
   InfoContainer,
   KebabMenuIconContainer,
@@ -50,7 +51,6 @@ import {
   TextContainer,
   TitleHeader,
   TitleHeaderAnchor,
-  VideoHeroPublishingStateOverlay,
 } from './VideoTileBase.styles'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'
@@ -231,10 +231,10 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       <CoverNoImage />
                     )}
                     {(videoPublishState === 'unlisted' || isDraft) && (
-                      <VideoHeroPublishingStateOverlay>
+                      <CoverVideoPublishingStateOverlay>
                         {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
                         <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
-                      </VideoHeroPublishingStateOverlay>
+                      </CoverVideoPublishingStateOverlay>
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
