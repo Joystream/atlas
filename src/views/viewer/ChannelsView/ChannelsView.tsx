@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { useMostFollowedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, TopTenChannels, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
@@ -8,11 +9,14 @@ import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
 export const ChannelsView = () => {
+  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds({ limit: 15 })
+  const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
   return (
     <StyledViewWrapper>
       <Header variant="h2">Browse channels</Header>
       <TopTenChannels />
-      <StyledInfiniteChannelWithVideosGrid title="Channels in your language:" languageSelector onDemand />
+      <StyledInfiniteChannelWithVideosGrid title="Discover channels" onDemand idIn={mostFollowedChannelsAllTimeIds} />
+      <StyledInfiniteChannelWithVideosGrid title="Channels in your language" languageSelector onDemand />
       <CallToActionWrapper>
         <CallToActionButton
           label="Popular on Joystream"
@@ -46,5 +50,7 @@ const StyledViewWrapper = styled(ViewWrapper)`
 `
 
 const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
-  margin-top: ${sizes(36)};
+  :not(:last-of-type) {
+    margin-bottom: ${sizes(38)};
+  }
 `
