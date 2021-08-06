@@ -7,21 +7,27 @@ export const Dialogs = () => {
   const [openFirstDialog, closeFirstDialog] = useDialog({
     description: 'This is first dialog',
     title: 'first dialog',
-    primaryButtonText: 'Confirm',
+    primaryButton: {
+      text: 'Confirm',
+    },
     onExitClick: () => closeFirstDialog(),
   })
 
   const [openSecondDialog, closeSecondDialog] = useDialog({
     description: 'This is second dialog',
     title: 'second dialog',
-    primaryButtonText: 'Confirm',
+    primaryButton: {
+      text: 'Confirm',
+    },
     onExitClick: () => closeSecondDialog(),
   })
 
   const [openThirdDialog, closeThirdDialog] = useDialog({
     description: 'This is third dialog',
     title: 'third dialog',
-    primaryButtonText: 'Confirm',
+    primaryButton: {
+      text: 'Confirm',
+    },
     onExitClick: () => closeThirdDialog(),
   })
   return (

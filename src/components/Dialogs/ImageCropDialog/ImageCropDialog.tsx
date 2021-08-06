@@ -139,8 +139,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       <HiddenInput type="file" accept="image/*" onChange={handleFileChange} ref={inputRef} />
       <StyledActionDialog
         showDialog={showDialog && !!editedImageHref}
-        primaryButtonText="Confirm"
-        onPrimaryButtonClick={handleConfirmClick}
+        primaryButton={{ text: 'Confirm', onClick: handleConfirmClick }}
         onExitClick={resetDialog}
         additionalActionsNode={zoomControlNode}
       >

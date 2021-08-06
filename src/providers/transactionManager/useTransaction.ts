@@ -30,9 +30,11 @@ export const useTransaction = (): HandleTransactionFn => {
     title: 'Something went wrong...',
     description:
       'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-    secondaryButtonText: 'Close',
-    onSecondaryButtonClick: () => {
-      closeErrorDialog()
+    secondaryButton: {
+      text: 'Close',
+      onClick: () => {
+        closeErrorDialog()
+      },
     },
     onExitClick: () => {
       closeErrorDialog()
@@ -93,8 +95,10 @@ export const useTransaction = (): HandleTransactionFn => {
             variant: 'success',
             title: successMessage.title,
             description: successMessage.description,
-            secondaryButtonText: 'Close',
-            onSecondaryButtonClick: handleDialogClose,
+            secondaryButton: {
+              text: 'Close',
+              onClick: handleDialogClose,
+            },
             onExitClick: handleDialogClose,
           })
         })
