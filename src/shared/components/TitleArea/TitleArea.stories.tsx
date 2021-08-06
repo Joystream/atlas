@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { TitleArea, TitleAreaProps } from './TitleArea'
 
 export default {
-  title: 'Shared/H/TitleArea',
+  title: 'Shared/T/TitleArea',
   component: TitleArea,
   argTypes: {
     helperText: { control: 'text', defaultValue: 'Channel title must be at least 2 character' },
