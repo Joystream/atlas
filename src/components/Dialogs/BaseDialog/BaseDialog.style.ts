@@ -15,6 +15,7 @@ export const DialogBackDrop = styled.div`
 `
 
 export const StyledContainer = styled.div`
+  display: grid;
   --dialog-padding: ${sizes(4)};
   ${media.small} {
     --dialog-padding: ${sizes(6)};

@@ -43,21 +43,25 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
       asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
     } to use the new file.`,
     variant: 'warning',
-    onSecondaryButtonClick: () => {
-      if (asset.parentObject.type === 'video') {
-        navigate(absoluteRoutes.studio.editVideo())
-      }
-      if (asset.parentObject.type === 'channel') {
-        navigate(absoluteRoutes.studio.editChannel())
-      }
-      closeDifferentFileDialog()
+    primaryButton: {
+      text: 'Reselect file',
+      onClick: () => {
+        reselectFile()
+        closeDifferentFileDialog()
+      },
     },
-    onPrimaryButtonClick: () => {
-      reselectFile()
-      closeDifferentFileDialog()
+    secondaryButton: {
+      text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
+      onClick: () => {
+        if (asset.parentObject.type === 'video') {
+          navigate(absoluteRoutes.studio.editVideo())
+        }
+        if (asset.parentObject.type === 'channel') {
+          navigate(absoluteRoutes.studio.editChannel())
+        }
+        closeDifferentFileDialog()
+      },
     },
-    primaryButtonText: 'Reselect file',
-    secondaryButtonText: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
     exitButton: false,
   })
   const [openMissingCropDataDialog, closeMissingCropDataDialog] = useDialog({
@@ -65,10 +69,12 @@ export const AssetLine: React.FC<AssetLineProps> = ({ isLast = false, asset }) =
     description:
       "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
     variant: 'warning',
-    onSecondaryButtonClick: () => {
-      closeMissingCropDataDialog()
+    secondaryButton: {
+      text: 'Close',
+      onClick: () => {
+        closeMissingCropDataDialog()
+      },
     },
-    secondaryButtonText: 'Close',
     exitButton: false,
   })
 

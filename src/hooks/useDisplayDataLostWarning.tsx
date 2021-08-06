@@ -17,15 +17,19 @@ export const useDisplayDataLostWarning = () => {
       title: "Drafts' video & image data will be lost",
       description:
         "Drafts' assets aren't stored permanently. If you proceed, you will need to reselect the files again.",
-      primaryButtonText: 'Proceed',
-      secondaryButtonText: 'Cancel',
-      onPrimaryButtonClick: () => {
-        onConfirm?.()
-        closeDialog()
+      primaryButton: {
+        text: 'Proceed',
+        onClick: () => {
+          onConfirm?.()
+          closeDialog()
+        },
       },
-      onSecondaryButtonClick: () => {
-        cancelDialog(onCancel)
-        closeDialog()
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => {
+          cancelDialog(onCancel)
+          closeDialog()
+        },
       },
       onExitClick: () => {
         cancelDialog(onCancel)

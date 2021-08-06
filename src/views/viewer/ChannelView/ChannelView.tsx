@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { useChannel, useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { InfiniteVideoGrid, ViewWrapper } from '@/components'
-import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
+import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
 import { Button, ChannelCover } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -23,6 +23,7 @@ import {
 } from './ChannelView.style'
 
 export const ChannelView: React.FC = () => {
+  const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
   const { channel, loading, error } = useChannel(id)
   const { followChannel } = useFollowChannel()
@@ -43,9 +44,30 @@ export const ChannelView: React.FC = () => {
   const handleFollow = () => {
     try {
       if (isFollowing) {
-        updateChannelFollowing(id, false)
-        unfollowChannel(id)
-        setFollowing(false)
+        openUnfollowDialog({
+          variant: 'info',
+          exitButton: false,
+          description: `Do you want to unfollow ${channel?.title}?`,
+          primaryButton: {
+            text: 'Unfollow',
+            textOnly: true,
+            variant: 'destructive-secondary',
+            onClick: () => {
+              updateChannelFollowing(id, false)
+              unfollowChannel(id)
+              setFollowing(false)
+              closeUnfollowDialog()
+            },
+          },
+          secondaryButton: {
+            text: 'Cancel',
+            textOnly: true,
+            variant: 'secondary',
+            onClick: () => {
+              closeUnfollowDialog()
+            },
+          },
+        })
       } else {
         updateChannelFollowing(id, true)
         followChannel(id)
