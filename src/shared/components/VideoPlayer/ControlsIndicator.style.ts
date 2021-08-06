@@ -74,7 +74,7 @@ export const ControlsIndicatorTooltip = styled.div`
   backdrop-filter: blur(${sizes(8)});
 
   ${media.small} {
-    display: block;
+    display: flex;
   }
 `
 

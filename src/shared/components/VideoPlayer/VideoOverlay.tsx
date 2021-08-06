@@ -16,6 +16,7 @@ type VideoOverlaProps = {
   channelId?: string
   currentThumbnailUrl?: string | null
   videoId?: string
+  isFullScreen?: boolean
 }
 export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   playerState,
@@ -23,6 +24,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   channelId,
   currentThumbnailUrl,
   videoId,
+  isFullScreen,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const { videos } = useBasicVideos({
@@ -57,6 +59,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
           {playerState === 'loading' && <LoadingOverlay />}
           {playerState === 'ended' && (
             <EndingOverlay
+              isFullScreen={isFullScreen}
               isEnded={true}
               onPlayAgain={onPlay}
               channelId={channelId}
