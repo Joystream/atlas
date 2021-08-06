@@ -64,8 +64,11 @@ export const CustomControls = styled.div<CustomControlsProps>`
     height: unset;
   }
 `
+type PlayControlProps = {
+  isLoading?: boolean
+}
 
-export const PlayControl = styled.div`
+export const PlayControl = styled.div<PlayControlProps>`
   align-self: center;
   width: 100%;
   position: absolute;
@@ -73,7 +76,11 @@ export const PlayControl = styled.div`
   display: flex;
   justify-content: center;
   left: 0;
+
+  /* hide PlayControl when loading on mobile */
+  ${({ isLoading }) => isLoading && `opacity: 0;`}
   @media (hover: hover) {
+    opacity: 1;
     margin-right: 0.5em;
     align-self: unset;
     width: unset;

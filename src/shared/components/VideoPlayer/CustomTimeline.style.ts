@@ -34,35 +34,40 @@ export const ProgressControl = styled.div<ProgressControlProps>`
     cursor: pointer;
     padding: ${({ isFullScreen }) => (isFullScreen ? `1.5em 1.5em` : `0`)};
     ${({ isScrubbing, isFullScreen }) => isScrubbing && scrubbingStyles(isFullScreen)};
+
+    :hover ${() => SeekBar} {
+      height: 0.5em;
+    }
+    :hover ${() => PlayProgressThumb} {
+      opacity: 1;
+    }
+    :hover ${() => MouseDisplayWrapper} {
+      opacity: 1;
+    }
+    :hover ${() => MouseDisplayTooltip} {
+      transform: translateY(-0.5em);
+      opacity: 1;
+    }
+    :hover ~ ${CustomControls} {
+      opacity: 0;
+      transform: translateY(0.5em);
+    }
   }
 
-  :hover ${() => SeekBar} {
-    height: 0.5em;
-  }
-  :hover ${() => PlayProgressThumb} {
-    opacity: 1;
-  }
-  :hover ${() => MouseDisplayWrapper} {
-    opacity: 1;
-  }
-  :hover ${() => MouseDisplayTooltip} {
-    transform: translateY(-0.5em);
-    opacity: 1;
-  }
-  :hover ~ ${CustomControls} {
-    opacity: 0;
-    transform: translateY(0.5em);
-  }
-
-  ${() => SeekBar} {
-    ${({ isScrubbing }) => isScrubbing && `height: 0.5em;`}
+  :active {
+    ${() => PlayProgressThumb} {
+      ${({ isScrubbing }) => isScrubbing && `opacity: 1;`}
+    }
   }
 
   ${() => MouseDisplayWrapper}, ${() => PlayProgressThumb} {
     ${({ isScrubbing }) => isScrubbing && `opacity: 1;`}
   }
   ${() => MouseDisplayTooltip} {
-    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em);`}
+    ${({ isScrubbing }) => isScrubbing && `transform: translateY(-0.5em); opacity: 1;`}
+  }
+  ${() => SeekBar} {
+    ${({ isScrubbing }) => isScrubbing && `height: 0.5em;`}
   }
   ~ ${CustomControls} {
     ${({ isScrubbing }) => isScrubbing && `opacity: 0; transform: translateY(0.5em);`}
