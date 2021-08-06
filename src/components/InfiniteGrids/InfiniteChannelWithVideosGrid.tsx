@@ -105,14 +105,14 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   return (
     <section className={className}>
       <TitleWrapper>
-        {title && <Text variant="h5">{title}</Text>}
+        {title && <Text variant="h4">{title}</Text>}
         {languageSelector && (
           <LanguageSelectWrapper>
             <Select
               items={mappedLanguages || []}
               disabled={languagesLoading}
               value={selectedLanguage}
-              size="small"
+              size="regular"
               onChange={onSelectLanguage}
             />
           </LanguageSelectWrapper>
