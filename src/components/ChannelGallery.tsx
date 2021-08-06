@@ -5,7 +5,7 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
-import { ChannelPreview } from './ChannelPreview'
+import { ChannelCard } from './ChannelCard'
 
 type ChannelGalleryProps = {
   title?: string
@@ -27,13 +27,13 @@ export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels 
   return (
     <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes(2, true)} paddingTop={sizes(2, true)}>
       {[...channels, ...placeholderItems].map((channel, idx) => (
-        <StyledChannelPreview key={idx} id={channel.id} onClick={createClickHandler(channel.id)} />
+        <StyledChannelCard key={idx} id={channel.id} onClick={createClickHandler(channel.id)} />
       ))}
     </Gallery>
   )
 }
 
-const StyledChannelPreview = styled(ChannelPreview)`
+const StyledChannelCard = styled(ChannelCard)`
   + * {
     margin-left: 16px;
   }

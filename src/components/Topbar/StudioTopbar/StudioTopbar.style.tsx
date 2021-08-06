@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar, Placeholder, Text } from '@/shared/components'
+import { Avatar, SkeletonLoader, Text } from '@/shared/components'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { TopbarBase } from '../TopbarBase'
@@ -186,7 +186,7 @@ export const DrawerChannelsContainer = styled.div`
   overflow-x: hidden;
 `
 
-export const AvatarPlaceholder = styled(Placeholder)`
+export const AvatarSkeletonLoader = styled(SkeletonLoader)`
   border-radius: 100%;
   width: 42px;
   height: 42px;

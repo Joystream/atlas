@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
-import { ChannelGrid, PlaceholderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
+import { ChannelGrid, SkeletonLoaderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
@@ -76,13 +76,13 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
         )}
         {selectedIndex === 1 &&
           (loading ? (
-            <PlaceholderVideoGrid />
+            <SkeletonLoaderVideoGrid />
           ) : (
             <VideoGrid videos={videos} onVideoClick={handleVideoClick} onChannelClick={handleChannelClick} />
           ))}
         {selectedIndex === 2 &&
           (loading ? (
-            <PlaceholderVideoGrid />
+            <SkeletonLoaderVideoGrid />
           ) : (
             <ChannelGrid channels={channels} repeat="fill" onChannelClick={handleChannelClick} />
           ))}

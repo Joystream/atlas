@@ -11,7 +11,7 @@ import {
   NewChannelAvatar,
   SilhouetteAvatar,
   StyledImage,
-  StyledPlaceholder,
+  StyledSkeletonLoader,
   StyledTransitionGroup,
 } from './Avatar.style'
 
@@ -67,7 +67,7 @@ export const Avatar: React.FC<AvatarProps> = ({
             classNames={transitions.names.fade}
           >
             {loading ? (
-              <StyledPlaceholder rounded />
+              <StyledSkeletonLoader rounded />
             ) : assetUrl ? (
               <StyledImage src={assetUrl} onError={onError} />
             ) : hasAvatarUploadFailed ? (

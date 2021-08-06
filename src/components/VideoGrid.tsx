@@ -4,9 +4,9 @@ import React from 'react'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Grid } from '@/shared/components'
 
-import { VideoPreview } from './VideoPreview'
+import { VideoTile } from './VideoTile'
 
-const StyledVideoPreview = styled(VideoPreview)`
+const StyledVideoTile = styled(VideoTile)`
   margin: 0 auto;
   width: 100%;
 `
@@ -21,7 +21,7 @@ export const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true
   return (
     <Grid>
       {videos.map((v, idx) => (
-        <StyledVideoPreview
+        <StyledVideoTile
           key={idx}
           id={v.id}
           showChannel={showChannel}

@@ -6,12 +6,12 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
 import { AssetType, useAsset, useEditVideoSheet, useUser } from '@/providers'
-import { Button, ExpandButton, IconButton, Placeholder, Text } from '@/shared/components'
+import { Button, ExpandButton, IconButton, SkeletonLoader, Text } from '@/shared/components'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  AvatarPlaceholder,
+  AvatarSkeletonLoader,
   ChannelInfoContainer,
   DrawerChannelsContainer,
   DrawerContainer,
@@ -156,7 +156,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
               </IconButton>
             </CSSTransition>
             {activeMembershipLoading ? (
-              <ChannelInfoPlaceholder />
+              <ChannelInfoSkeletonLoader />
             ) : activeMembership?.channels.length ? (
               <ChannelInfo channel={currentChannel} memberName={activeMembership.handle} onClick={handleDrawerToggle} />
             ) : (
@@ -275,13 +275,13 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
 )
 NavDrawer.displayName = 'NavDrawer'
 
-const ChannelInfoPlaceholder = () => {
+const ChannelInfoSkeletonLoader = () => {
   return (
     <ChannelInfoContainer>
-      <AvatarPlaceholder />
+      <AvatarSkeletonLoader />
       <TextContainer>
-        <Placeholder width="100%" height="15px" bottomSpace="6px" />
-        <Placeholder width="70%" height="10px" />
+        <SkeletonLoader width="100%" height="15px" bottomSpace="6px" />
+        <SkeletonLoader width="70%" height="10px" />
       </TextContainer>
     </ChannelInfoContainer>
   )

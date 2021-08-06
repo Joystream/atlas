@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 
-import { CircularProgressbar } from '../CircularProgressbar'
+import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
 
 type StepProps = {
@@ -77,7 +77,7 @@ export const FileName = styled(Text)`
   text-overflow: ellipsis;
 `
 
-export const StyledProgress = styled(CircularProgressbar)`
+export const StyledProgress = styled(CircularProgress)`
   width: ${sizes(7)};
   height: ${sizes(7)};
 `

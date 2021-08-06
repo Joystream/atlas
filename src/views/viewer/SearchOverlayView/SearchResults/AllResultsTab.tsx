@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { ChannelGallery, VideoGallery, VideoPreview } from '@/components'
-import { Placeholder, Text } from '@/shared/components'
+import { ChannelGallery, VideoGallery, VideoTile } from '@/components'
+import { SkeletonLoader, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
 type AllResultsTabProps = {
@@ -26,14 +26,14 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({
   return (
     <>
       <div>
-        {loading && <Placeholder width={200} height={16} bottomSpace={18} />}
+        {loading && <SkeletonLoader width={200} height={16} bottomSpace={18} />}
         {bestMatch && <h3>Best Match</h3>}
-        <VideoPreview id={bestMatch?.id} main onClick={() => onVideoClick(bestMatch?.id)} />
+        <VideoTile id={bestMatch?.id} main onClick={() => onVideoClick(bestMatch?.id)} />
       </div>
       {(videos.length > 0 || loading) && (
         <div>
           {loading ? (
-            <Placeholder width={200} height={16} bottomSpace={18} />
+            <SkeletonLoader width={200} height={16} bottomSpace={18} />
           ) : (
             <SectionHeader variant="h5">Videos</SectionHeader>
           )}
@@ -43,7 +43,7 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({
       {(channels.length > 0 || loading) && (
         <div>
           {loading ? (
-            <Placeholder width={200} height={16} bottomSpace={18} />
+            <SkeletonLoader width={200} height={16} bottomSpace={18} />
           ) : (
             <SectionHeader variant="h5">Channels</SectionHeader>
           )}

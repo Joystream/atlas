@@ -2,8 +2,8 @@ import { AllChannelFieldsFragment, AssetAvailability } from '@/api/queries'
 import { languages } from '@/config/languages'
 
 import { channelAvatarSources, channelPosterSources } from './mockImages'
+import rawVideoHero from './raw/VideoHero.json'
 import rawChannels from './raw/channels.json'
-import rawCoverVideo from './raw/coverVideo.json'
 
 export type MockChannel = AllChannelFieldsFragment
 
@@ -23,10 +23,10 @@ export const regularMockChannels: MockChannel[] = rawChannels.map((rawChannel, i
 }))
 
 export const coverMockChannel: MockChannel = {
-  ...rawCoverVideo.channel,
+  ...rawVideoHero.channel,
   __typename: 'Channel',
-  createdAt: new Date(rawCoverVideo.channel.createdAt),
-  avatarPhotoUrls: [rawCoverVideo.channel.avatarPhotoUrl],
+  createdAt: new Date(rawVideoHero.channel.createdAt),
+  avatarPhotoUrls: [rawVideoHero.channel.avatarPhotoUrl],
   coverPhotoUrls: [],
   avatarPhotoAvailability: AssetAvailability.Accepted,
   coverPhotoAvailability: AssetAvailability.Invalid,

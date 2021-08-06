@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { DismissibleMessage } from '@/shared/components'
+import { DismissibleBanner } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const ViewContainer = styled.div`
@@ -26,7 +26,7 @@ export const PaginationContainer = styled.div`
   justify-content: center;
 `
 
-export const StyledDismissibleMessage = styled(DismissibleMessage)`
+export const StyledDismissibleBanner = styled(DismissibleBanner)`
   margin-bottom: ${sizes(8)};
 `
 

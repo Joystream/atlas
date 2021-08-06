@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_PREVIEW_WIDTH } from '@/shared/components'
+import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_TILE_WIDTH } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { sizes } from '@/shared/theme'
 
-import { VideoPreview } from './VideoPreview'
+import { VideoTile } from './VideoTile'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -82,11 +82,11 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       paddingLeft={sizes(2, true)}
       paddingTop={sizes(2, true)}
       responsive={breakpoints}
-      itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
+      itemWidth={MIN_VIDEO_TILE_WIDTH}
       arrowPosition={arrowPosition}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <StyledVideoPreview
+        <StyledVideoTile
           id={video.id}
           progress={video?.progress}
           key={idx}
@@ -101,11 +101,11 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   )
 }
 
-const StyledVideoPreview = styled(VideoPreview)`
+const StyledVideoTile = styled(VideoTile)`
   & + & {
     margin-left: ${sizes(6)};
   }
 
-  /* MIN_VIDEO_PREVIEW_WIDTH */
+  /* MIN_VIDEO_TILE_WIDTH */
   min-width: 300px;
 `

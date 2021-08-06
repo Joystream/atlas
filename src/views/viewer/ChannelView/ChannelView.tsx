@@ -14,11 +14,11 @@ import {
   StyledButtonContainer,
   StyledChannelLink,
   SubTitle,
-  SubTitlePlaceholder,
+  SubTitleSkeletonLoader,
   Title,
   TitleContainer,
-  TitlePlaceholder,
   TitleSection,
+  TitleSkeletonLoader,
   VideoSection,
 } from './ChannelView.style'
 
@@ -99,8 +99,8 @@ export const ChannelView: React.FC = () => {
               </>
             ) : (
               <>
-                <TitlePlaceholder />
-                <SubTitlePlaceholder />
+                <TitleSkeletonLoader />
+                <SubTitleSkeletonLoader />
               </>
             )}
           </TitleContainer>

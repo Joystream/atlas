@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
+import { CONTENT_OVERLAP_MAP, SkeletonLoader, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 export const Header = styled.section`
@@ -101,7 +101,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   }
 `
 
-export const TitlePlaceholder = styled(Placeholder)`
+export const TitleSkeletonLoader = styled(SkeletonLoader)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
 
@@ -110,7 +110,7 @@ export const TitlePlaceholder = styled(Placeholder)`
   }
 `
 
-export const SubTitlePlaceholder = styled(Placeholder)`
+export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   width: 140px;
   margin-top: ${sizes(2)};
   height: ${SM_SUBTITLE_HEIGHT};
