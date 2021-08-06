@@ -9,7 +9,13 @@ import {
   useUnfollowChannel,
   useVideosConnection,
 } from '@/api/hooks'
-import { AssetAvailability, SearchQuery, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
+import {
+  AssetAvailability,
+  SearchQuery,
+  VideoFieldsFragment,
+  VideoOrderByInput,
+  useSearchLazyQuery,
+} from '@/api/queries'
 import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
@@ -77,16 +83,28 @@ export const ChannelView: React.FC = () => {
     assetType: AssetType.COVER,
   })
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
-  const { edges, totalCount, loading: loadingVideos, error: videosError, refetch } = useVideosConnection(
+  const {
+    edges,
+    totalCount,
+    loading: loadingVideos,
+    error: videosError,
+    fetchMore,
+    refetch,
+    variables,
+    pageInfo,
+  } = useVideosConnection(
     {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
         channelId_eq: id,
         isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
       },
     },
-    { notifyOnNetworkStatusChange: true, fetchPolicy: 'cache-and-network' }
+    { notifyOnNetworkStatusChange: true }
   )
   const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST)
   useEffect(() => {
@@ -109,16 +127,20 @@ export const ChannelView: React.FC = () => {
               <br /> Cancel to follow for more fresh content!
             </>
           ),
-          primaryButtonText: 'Unfollow',
-          onPrimaryButtonClick: () => {
-            updateChannelFollowing(id, false)
-            unfollowChannel(id)
-            setFollowing(false)
-            closeUnfollowDialog()
+          primaryButton: {
+            text: 'Unfollow',
+            onClick: () => {
+              updateChannelFollowing(id, false)
+              unfollowChannel(id)
+              setFollowing(false)
+              closeUnfollowDialog()
+            },
           },
-          secondaryButtonText: 'Keep following',
-          onSecondaryButtonClick: () => {
-            closeUnfollowDialog()
+          secondaryButton: {
+            text: 'Keep following',
+            onClick: () => {
+              closeUnfollowDialog()
+            },
           },
         })
       } else {
@@ -155,7 +177,20 @@ export const ChannelView: React.FC = () => {
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
   const handleChangePage = (page: number) => {
-    isSearching ? setCurrentSearchPage(page) : setCurrentPage(page)
+    if (isSearching) {
+      setCurrentSearchPage(page)
+    } else {
+      setCurrentPage(page)
+      if (!!edges && page * videosPerPage + videosPerPage > edges?.length) {
+        fetchMore({
+          variables: {
+            ...variables,
+            first: page * videosPerPage + videosPerPage * 3 - edges.length,
+            after: pageInfo?.endCursor,
+          },
+        })
+      }
+    }
   }
 
   const videosPerPage = ROWS_AMOUNT * videosPerRow
@@ -301,7 +336,9 @@ const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | und
   if (loading || !data) {
     return { channels: [], videos: [] }
   }
-  const searchVideos = data.flatMap((result) => (result.item.__typename === 'Video' ? [result.item] : []))
+  const searchVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
+    result.item.__typename === 'Video' ? [result.item] : []
+  )
   return { searchVideos }
 }
 type UseSearchVideosParams = {

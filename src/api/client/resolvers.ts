@@ -92,6 +92,7 @@ export const queryNodeStitchingResolvers = (
       try {
         const channelsResolver = createResolverWithTransforms(queryNodeSchema, 'channels', [
           RemoveQueryNodeFollowsField,
+          RemoveQueryNodeChannelViewsField,
         ])
         const channels = await channelsResolver(parent, args, context, info)
 
