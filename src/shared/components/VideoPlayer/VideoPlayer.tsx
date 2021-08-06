@@ -445,7 +445,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                <PlayControl>
+                <PlayControl isLoading={playerState === 'loading'}>
                   <PlayButton
                     isEnded={playerState === 'ended'}
                     onClick={handlePlayPause}
