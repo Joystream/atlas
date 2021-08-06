@@ -55,5 +55,5 @@ const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
     ${colors.gray['800']}3F 75%,
     ${colors.gray['800']}00 85%
   );
-  animation: ${pulse} 2s cubic-bezier(0, 0.1, 0.2, 1) infinite;
+  animation: ${pulse} 2s ease-in-out infinite;
 `
