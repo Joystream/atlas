@@ -17,6 +17,7 @@ import {
 
 const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
   // make sure queries asking for a specific category are separated in cache
+  const onlyCount = args?.first === 0
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
   const idEq = args?.where?.id_eq || ''
@@ -29,7 +30,7 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
+  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
 }
 
 const createDateHandler = () => ({
