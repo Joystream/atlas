@@ -17,6 +17,7 @@ export const LoadMoreButtonWrapper = styled.div`
 
 export const TitleWrapper = styled.div`
   display: flex;
+  border-bottom: 1px solid ${colors.gray[700]};
 `
 
 export const LanguageSelectWrapper = styled.div`
