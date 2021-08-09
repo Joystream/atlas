@@ -1,11 +1,13 @@
 import React from 'react'
 import shallow from 'zustand/shallow'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
+import { Button, EmptyFallback } from '@/shared/components'
+import { SvgGlyphUpload } from '@/shared/icons'
 
-import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
@@ -49,7 +51,15 @@ export const MyUploadsView: React.FC = () => {
       ) : hasUploads ? (
         groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
       ) : (
-        <EmptyUploadsView />
+        <EmptyFallback
+          title="No ongoing uploads"
+          subtitle="You will see statuses of ongoing uploads for each asset you transfer."
+          button={
+            <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
+              Upload video
+            </Button>
+          }
+        />
       )}
     </UploadsContainer>
   )

@@ -19,7 +19,7 @@ import {
 import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
-import { ChannelCover, Grid, Pagination, Select, Text } from '@/shared/components'
+import { ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -67,6 +67,7 @@ export const ChannelView: React.FC = () => {
     searchInputRef,
     search,
     errorSearch,
+    searchQuery,
   } = useSearchVideos({ id })
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
@@ -214,6 +215,12 @@ export const ChannelView: React.FC = () => {
         return (
           <>
             <VideoSection className={transitions.names.slide}>
+              {!videosWithPlaceholders.length && isSearching && (
+                <EmptyFallback subtitle={`No videos on the channels matching query “${searchQuery}”`} variant="small" />
+              )}
+              {!videosWithPlaceholders.length && !isSearching && (
+                <EmptyFallback subtitle="No videos found on the channel" variant="small" />
+              )}
               <Grid maxColumns={null} onResize={handleOnResizeGrid}>
                 {videosWithPlaceholders.map((video, idx) => (
                   <VideoTile key={idx} id={video.id} showChannel={false} />
@@ -330,10 +337,12 @@ type UseSearchVideosParams = {
 const useSearchVideos = ({ id }: UseSearchVideosParams) => {
   const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery()
   const searchInputRef = useRef<HTMLInputElement>(null)
   const search = useCallback(
     (searchQuery: string) => {
+      setSearchQuery(searchQuery)
       searchVideo({
         variables: {
           text: searchQuery,
@@ -365,6 +374,7 @@ const useSearchVideos = ({ id }: UseSearchVideosParams) => {
     isSearching,
     setIsSearching,
     searchInputRef,
+    searchQuery,
   }
 }
 
