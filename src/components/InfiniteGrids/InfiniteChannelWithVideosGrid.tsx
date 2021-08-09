@@ -3,7 +3,6 @@ import React, { FC, Fragment, useCallback, useEffect, useMemo, useState } from '
 import { useLanguages } from '@/api/hooks'
 import {
   ChannelOrderByInput,
-  ChannelWhereInput,
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
@@ -26,8 +25,11 @@ import {
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
+  sortByViews?: boolean
   title?: string
   skipCount?: number
+  first?: number
+  orderBy?: ChannelOrderByInput
   isReady?: boolean
   className?: string
   languageSelector?: boolean
@@ -46,7 +48,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   title,
   skipCount = 0,
   isReady = true,
+  first,
+  orderBy,
   className,
+  sortByViews,
   languageSelector,
   idIn = null,
   additionalLink,
@@ -58,7 +63,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     setTargetRowsCount((prevState) => prevState + 3)
   }, [])
 
-  const queryVariables: { where: ChannelWhereInput } = {
+  const queryVariables: GetChannelsConnectionQueryVariables = {
+    ...(first ? { first } : {}),
+    ...(orderBy ? { orderBy } : {}),
     where: {
       ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
       ...(idIn ? { id_in: idIn } : {}),
@@ -75,11 +82,12 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     query: GetChannelsConnectionDocument,
     isReady: languageSelector ? isReady && !!selectedLanguage : isReady,
     skipCount,
-    orderBy: ChannelOrderByInput.CreatedAtAsc,
+    orderBy: orderBy || ChannelOrderByInput.CreatedAtAsc,
     queryVariables,
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
+    sortByViews,
   })
 
   if (error) {
@@ -88,7 +96,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
-
   const itemsToShow = [...displayedItems, ...placeholderItems]
 
   const mappedLanguages = useMemo(() => {
@@ -131,7 +138,8 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
                   items={mappedLanguages || []}
                   disabled={languagesLoading}
                   value={selectedLanguage}
-                  size="regular"
+                  size="small"
+                  helperText={null}
                   onChange={onSelectLanguage}
                 />
               </LanguageSelectWrapper>
@@ -142,7 +150,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
                 size="medium"
                 variant="secondary"
                 iconPlacement="right"
-                icon={<SvgGlyphChevronRight width={12} height={12} />}
+                icon={<SvgGlyphChevronRight />}
               >
                 {additionalLink.name}
               </AdditionalLink>
