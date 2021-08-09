@@ -82,7 +82,7 @@ export const useStartFileUpload = () => {
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let storageUrl: string, storageProviderId: string
       try {
-        const storageProvider = getRandomStorageProvider()
+        const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
           return
         }
