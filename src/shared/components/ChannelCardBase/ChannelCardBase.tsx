@@ -4,7 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   Anchor,
@@ -82,7 +82,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
           setFollowing(true)
         }
       } catch (error) {
-        Logger.warn('Failed to update Channel following', { error })
+        SentryLogger.error('Failed to update channel following', 'ChannelView', error, { channel: { id: channelId } })
       }
     }
   }

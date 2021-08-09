@@ -10,7 +10,10 @@ import {
   VideoHero,
   ViewErrorFallback,
 } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
+import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -64,6 +67,26 @@ export const HomeView: React.FC = () => {
         <OfficialJoystreamUpdate />
         <TopTenThisWeek />
         <StyledInfiniteVideoGrid title="All content" onDemand />
+        <CallToActionWrapper>
+          <CallToActionButton
+            label="Popular on Joystream"
+            to={absoluteRoutes.viewer.popular()}
+            colorVariant="red"
+            icon={<SvgNavPopular />}
+          />
+          <CallToActionButton
+            label="New & Noteworthy"
+            to={absoluteRoutes.viewer.new()}
+            colorVariant="green"
+            icon={<SvgNavNew />}
+          />
+          <CallToActionButton
+            label="Browse channels"
+            to={absoluteRoutes.viewer.channels()}
+            colorVariant="blue"
+            icon={<SvgNavChannels />}
+          />
+        </CallToActionWrapper>
       </Container>
     </LimitedWidthContainer>
   )
