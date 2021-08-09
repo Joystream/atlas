@@ -4,7 +4,7 @@ import React from 'react'
 import { InfiniteChannelWithVideosGrid, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
-import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
+import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
 export const ChannelsView = () => {
