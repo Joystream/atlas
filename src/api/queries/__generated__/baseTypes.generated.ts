@@ -346,6 +346,7 @@ export type QueryChannelViewsArgs = {
 export type QueryChannelsArgs = {
   offset?: Maybe<Scalars['Int']>
   limit?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<Array<ChannelOrderByInput>>
   where?: Maybe<ChannelWhereInput>
 }
 

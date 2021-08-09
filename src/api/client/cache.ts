@@ -7,6 +7,7 @@ import { parseISO } from 'date-fns'
 import {
   AllChannelFieldsFragment,
   AssetAvailability,
+  GetChannelsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   GetVideosQueryVariables,
   Query,
@@ -33,6 +34,16 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   }
 
   return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${isFeatured}`
+}
+
+const getChannelKeyArgs = (args: Record<string, GetChannelsConnectionQueryVariables['where']> | null) => {
+  // make sure queries asking for a specific category are separated in cache
+  const languageId = args?.where?.languageId_eq || ''
+  const idIn = args?.where?.id_in || []
+  const orderBy = args?.orderBy || []
+  const first = args?.first || ''
+
+  return `${first}:${languageId}:${idIn}:${orderBy}`
 }
 
 const createDateHandler = () => ({
@@ -88,7 +99,7 @@ const createCachedAvailabilityHandler = () => ({
 type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
-  channelsConnection: relayStylePagination(),
+  channelsConnection: relayStylePagination(getChannelKeyArgs),
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
