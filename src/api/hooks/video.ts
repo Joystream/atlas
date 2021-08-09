@@ -5,6 +5,8 @@ import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
+  GetMostViewedVideosAllTimeQuery,
+  GetMostViewedVideosAllTimeQueryVariables,
   GetMostViewedVideosQuery,
   GetMostViewedVideosQueryVariables,
   GetVideoQuery,
@@ -12,6 +14,7 @@ import {
   GetVideosQueryVariables,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
+  useGetMostViewedVideosAllTimeQuery,
   useGetMostViewedVideosQuery,
   useGetVideoQuery,
   useGetVideosQuery,
@@ -95,6 +98,53 @@ export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariable
       },
     },
     { skip: !mostViewedVideosIds }
+  )
+
+  const sortedVideos = useMemo(() => {
+    if (videos) {
+      return [...videos].sort((a, b) => (b.views && a.views ? b.views - a.views : 0))
+    }
+    return null
+  }, [videos])
+
+  return {
+    videos: sortedVideos,
+    ...rest,
+  }
+}
+
+type MostViewedVideosAllTimeOpts = QueryHookOptions<GetMostViewedVideosAllTimeQuery>
+export const useMostViewedVideosAllTimeIds = (
+  variables?: GetMostViewedVideosAllTimeQueryVariables,
+  opts?: MostViewedVideosAllTimeOpts
+) => {
+  const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
+  return {
+    mostViewedVideosAllTime: data?.mostViewedVideosAllTime,
+    ...rest,
+  }
+}
+
+export const useMostViewedVideosAllTime = (
+  variables?: GetMostViewedVideosAllTimeQueryVariables,
+  opts?: MostViewedVideosAllTimeOpts
+) => {
+  const { mostViewedVideosAllTime } = useMostViewedVideosAllTimeIds(variables, opts)
+
+  const mostViewedVideosAllTimeIds = useMemo(() => {
+    if (mostViewedVideosAllTime) {
+      return mostViewedVideosAllTime.map((item) => item.id)
+    }
+    return null
+  }, [mostViewedVideosAllTime])
+
+  const { videos, ...rest } = useVideos(
+    {
+      where: {
+        id_in: mostViewedVideosAllTimeIds,
+      },
+    },
+    { skip: !mostViewedVideosAllTimeIds }
   )
 
   const sortedVideos = useMemo(() => {

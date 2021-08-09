@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { FC } from 'react'
 
-import { useMostViewedVideosIds } from '@/api/hooks'
+import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
 import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid, VideoGallery, ViewWrapper } from '@/components'
@@ -11,12 +11,15 @@ import { SvgNavChannels, SvgNavHome, SvgNavNew } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
 export const PopularView: FC = () => {
-  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
+  const {
+    mostViewedVideosAllTime,
+    loading: mostViewedVideosLoading,
+    error: mostViewedVideosError,
+  } = useMostViewedVideosAllTimeIds({
     limit: 200,
-    viewedWithinDays: 30,
   })
+  const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
   const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds({ limit: 15 })
-  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
   const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
   const { videos, loading } = useMostViewedVideos({ viewedWithinDays: 30, limit: 10 })
 
