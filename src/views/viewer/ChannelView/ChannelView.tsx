@@ -74,7 +74,7 @@ export const ChannelView: React.FC = () => {
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
   const [isFollowing, setFollowing] = useState<boolean>()
   const currentTabName = searchParams.get('tab')
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | undefined>(VideoOrderByInput.CreatedAtDesc)
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset({
     entity: channel,
