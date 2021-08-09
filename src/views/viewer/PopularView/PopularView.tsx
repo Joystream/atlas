@@ -16,12 +16,12 @@ export const PopularView: FC = () => {
   return (
     <StyledViewWrapper>
       <Header variant="h2">Popular</Header>
-      <VideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
+      <StyledVideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
       <StyledInfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand
         idIn={mostViewedChannelsAllTimeIds}
-        additionalLink={{ name: 'Browse channels', url: '/channels' }}
+        additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }}
       />
       <CallToActionWrapper>
         <CallToActionButton
@@ -49,6 +49,10 @@ export const PopularView: FC = () => {
 
 const Header = styled(Text)`
   margin: ${sizes(16)} 0;
+`
+
+const StyledVideoGallery = styled(VideoGallery)`
+  margin-bottom: ${sizes(38)};
 `
 
 const StyledViewWrapper = styled(ViewWrapper)`

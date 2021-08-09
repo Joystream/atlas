@@ -177,7 +177,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
                 size="medium"
                 variant="secondary"
                 iconPlacement="right"
-                icon={<SvgGlyphChevronRight width={12} height={12} />}
+                icon={<SvgGlyphChevronRight />}
               >
                 {additionalLink.name}
               </AdditionalLink>
