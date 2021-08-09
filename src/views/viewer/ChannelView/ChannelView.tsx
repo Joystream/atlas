@@ -178,7 +178,7 @@ export const ChannelView: React.FC = () => {
       setCurrentSearchPage(page)
     } else {
       setCurrentPage(page)
-      if (!!edges && page * videosPerPage + videosPerPage > edges?.length) {
+      if (!!edges && page * videosPerPage + videosPerPage > edges?.length && edges?.length < (totalCount ?? 0)) {
         fetchMore({
           variables: {
             ...variables,
