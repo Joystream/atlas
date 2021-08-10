@@ -1,50 +1,45 @@
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
 
 import { media } from '@/shared/theme'
 
-// lenght = amount of media queries
-type ReponsivenessArray = Array<number | null> & { length: 7 }
+type ReponsivenessArray = Array<number | null>
 
 type GridProps = {
   gap?: number | ReponsivenessArray
   cols?: number | ReponsivenessArray
 }
 
-// // what do we name this?
-// export const Grid2: React.FC<GridProps> = ({ gap, cols }) => {
-//   return <GridStyles />
-// }
-
 const gridStyles = (props: GridProps) => {
   const stylesArr: SerializedStyles[] = []
-  const propToCSSRulesArray: Record<keyof GridProps, string> = {
-    gap: 'grid-gap:',
-    cols: '',
+  const propToCSSRulesArray: Record<keyof GridProps, { prependStyles: string; appendStyles: string }> = {
+    gap: { prependStyles: 'grid-gap:', appendStyles: 'px' },
+    cols: { prependStyles: 'grid-template-columns: repeat(', appendStyles: ', 1fr)' },
   }
 
   Object.entries(propToCSSRulesArray).forEach((entry, index) => {
-    const propValue = props[entry[0] as keyof GridProps]
     const cssRule = entry[1]
+    const propValue = props[entry[0] as keyof GridProps]
     console.log({ propValue, entry, gap: props['gap'], props })
     const queries = Object.values(media)
 
     if (Array.isArray(propValue)) {
-      propValue.forEach((gapValue, index) => {
+      for (let index = 0; index < propValue.length; index++) {
+        const value = propValue[index]
+        if (!value) continue
         stylesArr.push(css`
           ${queries[index]} {
-            /* @ts-styled-plugin-ignore */
-            ${cssRule}${gapValue}px;
+            ${cssRule.prependStyles.concat(' ', value.toString()).concat(cssRule.appendStyles)};
           }
         `)
-      })
+      }
     } else {
-      stylesArr.push(
-        css`
-          grid-gap: ${propValue}px;
-        `
-      )
+      propValue &&
+        stylesArr.push(
+          css`
+            ${cssRule.prependStyles.concat(' ', propValue.toString()).concat(cssRule.appendStyles)};
+          `
+        )
     }
   })
 
