@@ -169,7 +169,8 @@ export const ChannelView: React.FC = () => {
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
       setSortVideosBy(value)
-      refetch({ orderBy: value })
+      setCurrentPage(0)
+      refetch({ ...variables, orderBy: value })
     }
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)

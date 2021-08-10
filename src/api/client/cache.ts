@@ -8,14 +8,13 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   GetVideosConnectionQueryVariables,
-  GetVideosQueryVariables,
   Query,
   VideoConnection,
   VideoFieldsFragment,
   VideoOrderByInput,
 } from '../queries'
 
-const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
+const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   // make sure queries asking for a specific category are separated in cache
   const onlyCount = args?.first === 0
   const channelId = args?.where?.channelId_eq || ''
@@ -24,13 +23,14 @@ const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> 
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
 
   // only for counting videos in HomeView
   if (args?.where?.channelId_in && !args?.first) {
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
+  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${sorting}`
 }
 
 const createDateHandler = () => ({
