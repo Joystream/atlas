@@ -4,7 +4,7 @@ import { colors, sizes } from '@/shared/theme'
 
 export const GridHeadingContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  width: 100%;
   align-items: start;
   margin-bottom: ${sizes(10)};
   padding-bottom: ${sizes(4)};

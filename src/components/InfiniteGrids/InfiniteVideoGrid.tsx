@@ -7,11 +7,11 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Button, Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
+import { Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 
-import { LoadMoreButtonWrapper, StyledSkeletonLoader, Title } from './InfiniteGrid.style'
+import { AdditionalLink, LoadMoreButtonWrapper, StyledSkeletonLoader, Title, TitleWrapper } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoTile } from '../VideoTile'
@@ -169,22 +169,24 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      {title && (
-        <GridHeadingContainer>
-          {!ready ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
-          {additionalLink && (
-            <Button
-              to={additionalLink.url}
-              size="medium"
-              variant="secondary"
-              iconPlacement="right"
-              icon={<SvgGlyphChevronRight width={12} height={12} />}
-            >
-              {additionalLink.name}
-            </Button>
-          )}
-        </GridHeadingContainer>
-      )}
+      <TitleWrapper>
+        {title && (
+          <GridHeadingContainer>
+            {!ready ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
+            {additionalLink && (
+              <AdditionalLink
+                to={additionalLink.url}
+                size="medium"
+                variant="secondary"
+                iconPlacement="right"
+                icon={<SvgGlyphChevronRight />}
+              >
+                {additionalLink.name}
+              </AdditionalLink>
+            )}
+          </GridHeadingContainer>
+        )}
+      </TitleWrapper>
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
