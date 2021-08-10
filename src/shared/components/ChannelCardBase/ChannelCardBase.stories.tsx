@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ChannelCardBase, ChannelCardBaseProps } from './ChannelCardBase'
 
 export default {
-  title: 'Shared/C/ChannelCardBase',
+  title: 'Shared/C/ChannelCard',
   component: ChannelCardBase,
   args: {
     avatarUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg',
@@ -13,6 +13,12 @@ export default {
     id: '3',
     rankingNumber: 4,
     follows: 200,
+  },
+  argTypes: {
+    variant: {
+      control: { type: 'select', options: ['primary', 'secondary'] },
+      defaultValue: 'primary',
+    },
   },
   decorators: [
     (Story) => (

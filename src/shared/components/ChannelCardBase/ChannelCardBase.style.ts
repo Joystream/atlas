@@ -44,12 +44,11 @@ type ChannelCardAnchorProps = {
 
 export const ChannelCardAnchor = styled(Link)<ChannelCardAnchorProps>`
   text-decoration: none;
-  display: flex;
   align-items: center;
-  max-width: 256px;
   transition: transform, box-shadow;
   transition-duration: ${transitions.timings.regular};
   transition-timing-function: ${transitions.easing};
+  display: ${({ variant }) => (variant === 'primary' ? 'flex' : 'inline-flex')};
   justify-content: ${({ variant }) => (variant === 'primary' ? 'center' : 'unset')};
   flex-direction: ${({ variant }) => (variant === 'primary' ? 'column' : 'row')};
   background-color: ${({ variant }) => (variant === 'primary' ? colors.gray[900] : 'none')};
@@ -73,7 +72,6 @@ export const InfoWrapper = styled.div<InfoWrapperProps>`
   display: flex;
   flex-direction: column;
   align-items: ${({ variant }) => (variant === 'primary' ? 'center' : 'unset')};
-  margin-bottom: ${sizes(4)};
 `
 
 export const ChannelTitle = styled(Text)`
@@ -91,8 +89,12 @@ export const ChannelFollows = styled(Text)`
   white-space: nowrap;
 `
 
-export const FollowButton = styled(Button)`
-  margin-top: ${sizes(4)};
+type FollowButtonProps = {
+  channelVariant?: ChannelVariant
+}
+
+export const FollowButton = styled(Button)<FollowButtonProps>`
+  margin-top: ${({ channelVariant }) => (channelVariant === 'primary' ? sizes(4) : sizes(2))};
 `
 
 export const RankingNumber = styled.span`
@@ -128,12 +130,8 @@ export const RankingNumber = styled.span`
   }
 `
 
-export const TitleSkeletonLoader = styled(SkeletonLoader)`
-  margin-top: ${sizes(4)};
-`
-
 export const FollowsSkeletonLoader = styled(SkeletonLoader)`
-  margin-top: ${sizes(1)};
+  margin-top: ${sizes(4)};
 `
 
 export const ButtonSkeletonLoader = styled(SkeletonLoader)`

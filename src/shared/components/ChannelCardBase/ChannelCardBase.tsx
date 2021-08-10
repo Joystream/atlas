@@ -16,8 +16,9 @@ import {
   InfoWrapper,
   RankingNumber,
   StyledAvatar,
-  TitleSkeletonLoader,
 } from './ChannelCardBase.style'
+
+import { SkeletonLoader } from '../SkeletonLoader'
 
 export type ChannelCardBaseProps = {
   id?: string | null
@@ -47,11 +48,11 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   onClick,
 }) => {
   const loading = isLoading || id === undefined
-
+  const hasRanking = variant === 'primary' && !!rankingNumber
   return (
-    <ChannelCardWrapper className={className} hasRanking={!!rankingNumber}>
+    <ChannelCardWrapper className={className} hasRanking={hasRanking}>
       <ChannelCardArticle variant={variant}>
-        {rankingNumber && <RankingNumber>{rankingNumber}</RankingNumber>}
+        {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
         <ChannelCardAnchor onClick={onClick} variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
           <StyledAvatar
             variant={variant}
@@ -61,7 +62,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
           />
           <InfoWrapper variant={variant}>
             {loading ? (
-              <TitleSkeletonLoader width="140px" height="20px" />
+              <SkeletonLoader width="140px" height="20px" />
             ) : (
               <ChannelTitle variant="h6">{title}</ChannelTitle>
             )}
@@ -75,7 +76,12 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
             {loading ? (
               <ButtonSkeletonLoader width="70px" height="30px" />
             ) : (
-              <FollowButton variant="secondary" size={variant === 'primary' ? 'small' : 'medium'} onClick={onFollow}>
+              <FollowButton
+                channelVariant={variant}
+                variant="secondary"
+                size={variant === 'primary' ? 'small' : 'medium'}
+                onClick={onFollow}
+              >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </FollowButton>
             )}
