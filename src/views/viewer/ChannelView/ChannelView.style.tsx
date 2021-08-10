@@ -217,7 +217,12 @@ export const SearchButton = styled(IconButton)`
   position: absolute;
 `
 
-export const DialogAccentText = styled.span`
+export const UnfollowDescriptionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const UnfollowDescriptionAccentText = styled.span`
   font-size: ${typography.sizes.body2};
   line-height: ${typography.lineHeights.body2};
   font-weight: ${typography.weights.regular};

@@ -2,12 +2,7 @@ import React from 'react'
 
 import { Button, ButtonProps } from '@/shared/components'
 
-import {
-  ActionsContainer,
-  AdditionalActionsContainer,
-  ButtonsContainer,
-  StyledPrimaryButton,
-} from './ActionDialog.style'
+import { ActionsContainer, AdditionalActionsContainer, ButtonsContainer } from './ActionDialog.style'
 
 import { BaseDialog, BaseDialogProps } from '../BaseDialog'
 
@@ -44,9 +39,9 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
             {primaryButton?.text && (
-              <StyledPrimaryButton warning={warning} error={error} {...primaryButton}>
+              <Button variant={error ? 'destructive' : warning ? 'warning' : 'primary'} {...primaryButton}>
                 {primaryButton.text}
-              </StyledPrimaryButton>
+              </Button>
             )}
             {secondaryButton?.text && (
               <Button variant="secondary" {...secondaryButton}>
