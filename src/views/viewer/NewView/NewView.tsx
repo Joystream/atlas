@@ -1,16 +1,16 @@
 import styled from '@emotion/styled'
-import React, { FC } from 'react'
+import React from 'react'
 
-import { ViewWrapper } from '@/components'
+import { InfiniteVideoGrid, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
-import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
-import { Text } from '@/shared/components'
+import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
 import { SvgNavChannels, SvgNavHome, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
-export const NewView: FC = () => (
+export const NewView: React.FC = () => (
   <ViewWrapper>
     <Header variant="h2">New & Noteworthy</Header>
+    <StyledInfiniteVideoGrid title="Videos worth watching" isFeatured onDemand />
     <CallToActionWrapper>
       <CallToActionButton label="Home" to={absoluteRoutes.viewer.index()} colorVariant="yellow" icon={<SvgNavHome />} />
       <CallToActionButton
@@ -30,5 +30,14 @@ export const NewView: FC = () => (
 )
 
 const Header = styled(Text)`
-  margin-top: ${sizes(16)};
+  margin: ${sizes(16)} 0;
+`
+
+const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
+  margin: 0;
+  padding-bottom: 4rem;
+
+  :not(:first-of-type) {
+    margin-top: ${sizes(36)};
+  }
 `
