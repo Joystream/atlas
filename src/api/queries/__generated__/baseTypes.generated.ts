@@ -304,6 +304,8 @@ export type Query = {
   memberships: Array<Membership>
   /** Get list of channels with most views in given period */
   mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
+  /** Get list of channels with most views in given period */
+  mostViewedChannelsAllTime?: Maybe<Array<EntityViewsInfo>>
   /** Get list of most viewed videos in given period */
   mostViewedVideos?: Maybe<Array<EntityViewsInfo>>
   search: Array<SearchFtsOutput>
@@ -371,6 +373,10 @@ export type QueryMembershipsArgs = {
 
 export type QueryMostViewedChannelsArgs = {
   period: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
+}
+
+export type QueryMostViewedChannelsAllTimeArgs = {
   limit?: Maybe<Scalars['Int']>
 }
 

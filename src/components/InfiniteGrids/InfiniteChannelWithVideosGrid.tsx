@@ -11,9 +11,18 @@ import {
 import { ChannelWithVideos } from '@/components'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
-import { LoadMoreButton, Select, Text } from '@/shared/components'
+import { GridHeadingContainer, LoadMoreButton, Select } from '@/shared/components'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 
-import { LanguageSelectWrapper, LoadMoreButtonWrapper, Separator, TitleWrapper } from './InfiniteGrid.style'
+import {
+  AdditionalLink,
+  LanguageSelectWrapper,
+  LoadMoreButtonWrapper,
+  Separator,
+  StyledSkeletonLoader,
+  Title,
+  TitleWrapper,
+} from './InfiniteGrid.style'
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
@@ -22,6 +31,11 @@ type InfiniteChannelWithVideosGridProps = {
   isReady?: boolean
   className?: string
   languageSelector?: boolean
+  idIn?: string[] | null
+  additionalLink?: {
+    name: string
+    url: string
+  }
 }
 
 const INITIAL_ROWS = 3
@@ -34,6 +48,8 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   isReady = true,
   className,
   languageSelector,
+  idIn = null,
+  additionalLink,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
@@ -45,6 +61,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   const queryVariables: { where: ChannelWhereInput } = {
     where: {
       ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
+      ...(idIn ? { id_in: idIn } : {}),
       isPublic_eq: true,
       isCensored_eq: false,
     },
@@ -56,7 +73,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     GetChannelsConnectionQueryVariables
   >({
     query: GetChannelsConnectionDocument,
-    isReady: isReady && !!selectedLanguage,
+    isReady: languageSelector ? isReady && !!selectedLanguage : isReady,
     skipCount,
     orderBy: ChannelOrderByInput.CreatedAtAsc,
     queryVariables,
@@ -92,10 +109,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
 
   // Set initial language
   useEffect(() => {
-    if (mappedLanguages.length) {
+    if (mappedLanguages.length && languageSelector) {
       setSelectedLanguage(mappedLanguages.find((item) => item.name === 'English')?.value)
     }
-  }, [mappedLanguages])
+  }, [mappedLanguages, languageSelector])
 
   const onSelectLanguage = (value?: string | null) => {
     setTargetRowsCount(INITIAL_ROWS)
@@ -105,17 +122,32 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   return (
     <section className={className}>
       <TitleWrapper>
-        {title && <Text variant="h4">{title}</Text>}
-        {languageSelector && (
-          <LanguageSelectWrapper>
-            <Select
-              items={mappedLanguages || []}
-              disabled={languagesLoading}
-              value={selectedLanguage}
-              size="regular"
-              onChange={onSelectLanguage}
-            />
-          </LanguageSelectWrapper>
+        {title && (
+          <GridHeadingContainer>
+            {!isReady ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
+            {languageSelector && (
+              <LanguageSelectWrapper>
+                <Select
+                  items={mappedLanguages || []}
+                  disabled={languagesLoading}
+                  value={selectedLanguage}
+                  size="regular"
+                  onChange={onSelectLanguage}
+                />
+              </LanguageSelectWrapper>
+            )}
+            {additionalLink && (
+              <AdditionalLink
+                to={additionalLink.url}
+                size="medium"
+                variant="secondary"
+                iconPlacement="right"
+                icon={<SvgGlyphChevronRight width={12} height={12} />}
+              >
+                {additionalLink.name}
+              </AdditionalLink>
+            )}
+          </GridHeadingContainer>
         )}
       </TitleWrapper>
       {itemsToShow.map((channel, idx) => (

@@ -30,6 +30,7 @@ type VideoGalleryProps = {
   onVideoClick?: (id: string) => void
   hasRanking?: boolean
   seeAllUrl?: string
+  className?: string
 }
 
 const PLACEHOLDERS_COUNT = 12
@@ -46,6 +47,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   onVideoNotFound,
   seeAllUrl,
   hasRanking = false,
+  className,
 }) => {
   const breakpoints = useMemo(() => {
     return breakpointsOfGrid({
@@ -91,6 +93,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
       dotsVisible
       seeAllUrl={seeAllUrl}
+      className={className}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
         <GalleryWrapper key={`${idx}-${video.id}`} hasRanking={hasRanking}>

@@ -130,3 +130,10 @@ query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
     views
   }
 }
+
+query GetMostViewedChannelsAllTime($limit: Int!) {
+  mostViewedChannelsAllTime(limit: $limit) {
+    id
+    views
+  }
+}
