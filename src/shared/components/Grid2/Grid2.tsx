@@ -10,19 +10,16 @@ type GridProps = {
   cols?: number | ReponsivenessArray
 }
 
-const gridStyles = (props: GridProps) => {
+// Applies styles to the corresponding media queries given by the values passed to the ReponsivenessArray
+const applyStyles = <T extends Record<string, unknown & { toString: () => string }>>(
+  props: T,
+  propToCSSRulesMap: Record<keyof T, { prependStyles: string; appendStyles: string }>
+) => {
   const stylesArr: SerializedStyles[] = []
-  const propToCSSRulesArray: Record<keyof GridProps, { prependStyles: string; appendStyles: string }> = {
-    gap: { prependStyles: 'grid-gap:', appendStyles: 'px' },
-    cols: { prependStyles: 'grid-template-columns: repeat(', appendStyles: ', 1fr)' },
-  }
-
-  Object.entries(propToCSSRulesArray).forEach((entry, index) => {
+  Object.entries(propToCSSRulesMap).forEach((entry) => {
     const cssRule = entry[1]
-    const propValue = props[entry[0] as keyof GridProps]
-    console.log({ propValue, entry, gap: props['gap'], props })
+    const propValue = props[entry[0] as keyof T]
     const queries = Object.values(media)
-
     if (Array.isArray(propValue)) {
       for (let index = 0; index < propValue.length; index++) {
         const value = propValue[index]
@@ -42,14 +39,16 @@ const gridStyles = (props: GridProps) => {
         )
     }
   })
-
   return stylesArr
 }
 
+const gridPropToCSSRulesMap = {
+  gap: { prependStyles: 'grid-gap:', appendStyles: 'px' },
+  cols: { prependStyles: 'grid-template-columns: repeat(', appendStyles: ', 1fr)' },
+}
 export const Grid2 = styled.div<GridProps>`
   display: grid;
-  ${({ cols }) => cols && `grid-template-columns: repeat(${cols}, 1fr)`};
-  ${gridStyles}
+  ${(props) => applyStyles<GridProps>(props, gridPropToCSSRulesMap)}
 `
 
 type GridItemProps = {
@@ -61,11 +60,14 @@ type GridItemProps = {
   rowSpan?: number | ReponsivenessArray
 }
 
+const gridItemPropToCSSRulesMap = {
+  colStart: { prependStyles: 'grid-column-start: ', appendStyles: '' },
+  colEnd: { prependStyles: 'grid-column-end: ', appendStyles: '' },
+  colSpan: { prependStyles: 'grid-column-end: span', appendStyles: '' },
+  rowStart: { prependStyles: 'grid-row-start: ', appendStyles: '' },
+  rowEnd: { prependStyles: 'grid-row-end: ', appendStyles: '' },
+  rowSpan: { prependStyles: 'grid-row-end: span', appendStyles: '' },
+}
 export const GridItem = styled.div<GridItemProps>`
-  ${({ colStart }) => colStart && `grid-column-start: ${colStart}`};
-  ${({ colEnd }) => colEnd && `grid-column-end: ${colEnd}`};
-  ${({ colSpan }) => colSpan && `grid-column-end: span ${colSpan}`};
-  ${({ rowStart }) => rowStart && `grid-row-start: ${rowStart}`};
-  ${({ rowEnd }) => rowEnd && `grid-row-end: ${rowEnd}`};
-  ${({ rowSpan }) => rowSpan && `grid-row-end: span ${rowSpan}`};
+  ${(props) => applyStyles<GridItemProps>(props, gridItemPropToCSSRulesMap)}
 `
