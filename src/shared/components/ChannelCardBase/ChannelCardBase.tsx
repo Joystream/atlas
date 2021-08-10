@@ -45,6 +45,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   channelId,
 }) => {
   const { followChannel, isFollowing } = useHandleFollowChannel(channelId)
+
   const isAnimated = !loading && !!channelHref && variant === 'primary'
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!onClick) return

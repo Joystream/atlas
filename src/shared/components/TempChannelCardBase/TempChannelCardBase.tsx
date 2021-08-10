@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { ChannelVariant } from '@/components/TempChannelCard'
 import { absoluteRoutes } from '@/config/routes'
 import { formatNumberShort } from '@/utils/number'
 
@@ -10,14 +11,13 @@ import {
   ChannelCardWrapper,
   ChannelFollows,
   ChannelTitle,
+  FollowButton,
   FollowsSkeletonLoader,
   InfoWrapper,
   RankingNumber,
   StyledAvatar,
   TitleSkeletonLoader,
 } from './ChannelCardBase.style'
-
-import { Button } from '../Button'
 
 export type TempChannelCardBaseProps = {
   id?: string | null
@@ -28,6 +28,8 @@ export type TempChannelCardBaseProps = {
   avatarUrl?: string | null
   isFollowing?: boolean
   onFollow?: (event: React.MouseEvent) => void
+  variant?: ChannelVariant
+  className?: string
 }
 
 export const TempChannelCardBase: React.FC<TempChannelCardBaseProps> = ({
@@ -39,16 +41,23 @@ export const TempChannelCardBase: React.FC<TempChannelCardBaseProps> = ({
   avatarUrl,
   isFollowing,
   onFollow,
+  variant = 'primary',
+  className,
 }) => {
   const loading = isLoading || id === undefined
 
   return (
-    <ChannelCardWrapper hasRanking={!!rankingNumber}>
-      <ChannelCardArticle>
+    <ChannelCardWrapper className={className} hasRanking={!!rankingNumber}>
+      <ChannelCardArticle variant={variant}>
         {rankingNumber && <RankingNumber>{rankingNumber}</RankingNumber>}
-        <ChannelCardAnchor to={absoluteRoutes.viewer.channel(id || '')}>
-          <InfoWrapper>
-            <StyledAvatar loading={loading} assetUrl={avatarUrl} />
+        <ChannelCardAnchor variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
+          <StyledAvatar
+            variant={variant}
+            size={variant === 'primary' ? 'channel-card' : 'channel'}
+            loading={loading}
+            assetUrl={avatarUrl}
+          />
+          <InfoWrapper variant={variant}>
             {loading ? (
               <TitleSkeletonLoader width="140px" height="20px" />
             ) : (
@@ -61,14 +70,14 @@ export const TempChannelCardBase: React.FC<TempChannelCardBaseProps> = ({
                 {formatNumberShort(follows || 0)} followers
               </ChannelFollows>
             )}
+            {loading ? (
+              <ButtonSkeletonLoader width="70px" height="30px" />
+            ) : (
+              <FollowButton variant="secondary" size={variant === 'primary' ? 'small' : 'medium'} onClick={onFollow}>
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </FollowButton>
+            )}
           </InfoWrapper>
-          {loading ? (
-            <ButtonSkeletonLoader width="70px" height="30px" />
-          ) : (
-            <Button variant="secondary" size="small" onClick={onFollow}>
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Button>
-          )}
         </ChannelCardAnchor>
       </ChannelCardArticle>
     </ChannelCardWrapper>

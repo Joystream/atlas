@@ -1,10 +1,13 @@
-import React, { FC, Fragment, useState } from 'react'
+import styled from '@emotion/styled'
+import React, { FC, useState } from 'react'
 
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
-import { ChannelCard } from '@/components/ChannelCard'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { VideoTile } from '@/components/VideoTile'
 import { Grid } from '@/shared/components'
+import { sizes } from '@/shared/theme'
+
+import { TempChannelCard } from './TempChannelCard'
 
 type ChannelWithVideosProps = {
   channelId?: string
@@ -46,8 +49,12 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
 
   return (
     <>
-      <ChannelCard id={channelId} variant="secondary" />
+      <StyledChannelCard id={channelId} variant="secondary" />
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </>
   )
 }
+
+export const StyledChannelCard = styled(TempChannelCard)`
+  margin-bottom: ${sizes(10)};
+`
