@@ -6,7 +6,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { InfiniteChannelWithVideosGrid } from './InfiniteGrids'
 
 export const PromisingNewChannels = () => {
-  const additionalSort = (edges?: ChannelEdge[] | VideoEdge[]) => {
+  const sortChannelsByViewsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
     if (!edges) {
       return []
     }
@@ -25,7 +25,7 @@ export const PromisingNewChannels = () => {
         name: 'Browse Channels',
         url: absoluteRoutes.viewer.channels(),
       }}
-      additionalSort={additionalSort}
+      additionalSort={sortChannelsByViewsDesc}
       sortByViews
     />
   )
