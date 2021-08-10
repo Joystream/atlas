@@ -2,10 +2,12 @@ import React, { FC, Fragment, useCallback, useEffect, useMemo, useState } from '
 
 import { useLanguages } from '@/api/hooks'
 import {
+  ChannelEdge,
   ChannelOrderByInput,
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  VideoEdge,
 } from '@/api/queries'
 import { ChannelWithVideos } from '@/components'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
@@ -38,6 +40,7 @@ type InfiniteChannelWithVideosGridProps = {
     name: string
     url: string
   }
+  additionalSort?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 const INITIAL_ROWS = 3
@@ -49,12 +52,13 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   skipCount = 0,
   isReady = true,
   first,
-  orderBy,
+  orderBy = ChannelOrderByInput.CreatedAtAsc,
   className,
   sortByViews,
   languageSelector,
   idIn = null,
   additionalLink,
+  additionalSort,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
@@ -82,12 +86,13 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     query: GetChannelsConnectionDocument,
     isReady: languageSelector ? isReady && !!selectedLanguage : isReady,
     skipCount,
-    orderBy: orderBy || ChannelOrderByInput.CreatedAtAsc,
+    orderBy,
     queryVariables,
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
     sortByViews,
+    additionalSort,
   })
 
   if (error) {

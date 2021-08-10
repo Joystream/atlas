@@ -41,9 +41,8 @@ const getChannelKeyArgs = (args: Record<string, GetChannelsConnectionQueryVariab
   const languageId = args?.where?.languageId_eq || ''
   const idIn = args?.where?.id_in || []
   const orderBy = args?.orderBy || []
-  const first = args?.first || ''
 
-  return `${first}:${languageId}:${idIn}:${orderBy}`
+  return `${languageId}:${idIn}:${orderBy}`
 }
 
 const createDateHandler = () => ({
