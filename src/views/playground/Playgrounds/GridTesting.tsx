@@ -6,12 +6,12 @@ import { Grid2, GridItem } from '@/shared/components'
 export const GridTesting = () => {
   return (
     <div>
-      <Grid2 gap={20} cols={10}>
+      <Grid2 gap={24} cols={10}>
         <StyledGridItem></StyledGridItem>
         <StyledGridItem></StyledGridItem>
         <StyledGridItem></StyledGridItem>
         <StyledGridItem></StyledGridItem>
-        <StyledGridItem colSpan={2}></StyledGridItem>
+        <StyledGridItem colSpan={2} rowSpan={2}></StyledGridItem>
         <StyledGridItem></StyledGridItem>
         <StyledGridItem></StyledGridItem>
         <StyledGridItem></StyledGridItem>
