@@ -1,115 +1,87 @@
 import React from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useHandleFollowChannel } from '@/hooks'
-import { transitions } from '@/shared/theme'
+import { ChannelVariant } from '@/components/ChannelCard'
+import { absoluteRoutes } from '@/config/routes'
+import { formatNumberShort } from '@/utils/number'
 
 import {
-  Anchor,
-  AvatarContainer,
+  ButtonSkeletonLoader,
+  ChannelCardAnchor,
+  ChannelCardArticle,
+  ChannelCardWrapper,
+  ChannelFollows,
+  ChannelTitle,
   FollowButton,
-  Info,
-  InnerContainer,
-  OuterContainer,
+  FollowsSkeletonLoader,
+  InfoWrapper,
+  RankingNumber,
   StyledAvatar,
-  TextBase,
-  VideoCount,
-  VideoCountContainer,
+  TitleSkeletonLoader,
 } from './ChannelCardBase.style'
 
-import { SkeletonLoader } from '../SkeletonLoader'
-
 export type ChannelCardBaseProps = {
-  assetUrl?: string | null
+  id?: string | null
+  rankingNumber?: number
+  isLoading?: boolean
   title?: string | null
-  videoCount?: number
-  channelHref?: string
-  className?: string
-  loading?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  variant?: 'primary' | 'secondary'
   follows?: number | null
-  channelId?: string
+  avatarUrl?: string | null
+  isFollowing?: boolean
+  onFollow?: (event: React.MouseEvent) => void
+  variant?: ChannelVariant
+  className?: string
+  onClick?: () => void
 }
 
 export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
-  assetUrl,
+  id,
+  rankingNumber,
+  isLoading,
   title,
-  videoCount,
-  loading = true,
-  channelHref,
+  follows,
+  avatarUrl,
+  isFollowing,
+  onFollow,
+  variant = 'primary',
   className,
   onClick,
-  variant,
-  follows,
-  channelId,
 }) => {
-  const { followChannel, isFollowing } = useHandleFollowChannel(channelId)
-
-  const isAnimated = !loading && !!channelHref && variant === 'primary'
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (!onClick) return
-    onClick(e)
-  }
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!channelHref) {
-      e.preventDefault()
-    }
-  }
-
-  const handleFollow = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    event.preventDefault()
-    followChannel()
-  }
-
-  const followersLabel = follows && follows >= 1 ? `${follows} Follower` : `${follows} Followers`
+  const loading = isLoading || id === undefined
 
   return (
-    <OuterContainer className={className} onClick={handleClick} variant={variant}>
-      <Anchor to={channelHref ?? ''} onClick={handleAnchorClick}>
-        <SwitchTransition>
-          <CSSTransition
-            key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading) * 0.75}
-            classNames={transitions.names.fade}
-          >
-            <InnerContainer animated={isAnimated}>
-              <AvatarContainer>
-                {loading ? <SkeletonLoader rounded /> : <StyledAvatar assetUrl={assetUrl} />}
-              </AvatarContainer>
-              <Info>
-                {loading ? (
-                  <SkeletonLoader width="140px" height="16px" />
-                ) : (
-                  <TextBase variant="h6">{title || '\u00A0'}</TextBase>
-                )}
-                <VideoCountContainer>
-                  {loading ? (
-                    <SkeletonLoader width="140px" height="16px" />
-                  ) : (
-                    <CSSTransition
-                      in={!!videoCount}
-                      timeout={parseInt(transitions.timings.loading) * 0.5}
-                      classNames={transitions.names.fade}
-                    >
-                      <VideoCount variant="subtitle2">
-                        {videoCount && variant === 'primary' ? `${videoCount} Uploads` : null}
-                        {follows && variant === 'secondary' ? followersLabel : '0 Followers'}
-                      </VideoCount>
-                    </CSSTransition>
-                  )}
-                </VideoCountContainer>
-                {variant === 'secondary' && (
-                  <FollowButton variant="secondary" onClick={handleFollow}>
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </FollowButton>
-                )}
-              </Info>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
-      </Anchor>
-    </OuterContainer>
+    <ChannelCardWrapper className={className} hasRanking={!!rankingNumber}>
+      <ChannelCardArticle variant={variant}>
+        {rankingNumber && <RankingNumber>{rankingNumber}</RankingNumber>}
+        <ChannelCardAnchor onClick={onClick} variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
+          <StyledAvatar
+            variant={variant}
+            size={variant === 'primary' ? 'channel-card' : 'channel'}
+            loading={loading}
+            assetUrl={avatarUrl}
+          />
+          <InfoWrapper variant={variant}>
+            {loading ? (
+              <TitleSkeletonLoader width="140px" height="20px" />
+            ) : (
+              <ChannelTitle variant="h6">{title}</ChannelTitle>
+            )}
+            {loading ? (
+              <FollowsSkeletonLoader width="60px" height="20px" />
+            ) : (
+              <ChannelFollows variant="body2" secondary>
+                {formatNumberShort(follows || 0)} followers
+              </ChannelFollows>
+            )}
+            {loading ? (
+              <ButtonSkeletonLoader width="70px" height="30px" />
+            ) : (
+              <FollowButton variant="secondary" size={variant === 'primary' ? 'small' : 'medium'} onClick={onFollow}>
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </FollowButton>
+            )}
+          </InfoWrapper>
+        </ChannelCardAnchor>
+      </ChannelCardArticle>
+    </ChannelCardWrapper>
   )
 }

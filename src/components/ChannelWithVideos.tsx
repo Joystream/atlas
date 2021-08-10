@@ -7,7 +7,7 @@ import { VideoTile } from '@/components/VideoTile'
 import { Grid } from '@/shared/components'
 import { sizes } from '@/shared/theme'
 
-import { TempChannelCard } from './TempChannelCard'
+import { ChannelCard } from './ChannelCard'
 
 type ChannelWithVideosProps = {
   channelId?: string
@@ -55,6 +55,6 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   )
 }
 
-export const StyledChannelCard = styled(TempChannelCard)`
+export const StyledChannelCard = styled(ChannelCard)`
   margin-bottom: ${sizes(10)};
 `

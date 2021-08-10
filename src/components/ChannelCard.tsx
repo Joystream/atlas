@@ -1,39 +1,44 @@
 import React from 'react'
 
 import { useChannel } from '@/api/hooks'
-import { useChannelVideoCount } from '@/api/hooks/channel'
-import { absoluteRoutes } from '@/config/routes'
+import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
 import { ChannelCardBase } from '@/shared/components'
 
-type ChannelCardProps = {
+export type ChannelVariant = 'primary' | 'secondary'
+
+export type ChannelCardProps = {
   id?: string
+  rankingNumber?: number
+  isLoading?: boolean
+  variant?: ChannelVariant
   className?: string
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  variant?: 'primary' | 'secondary'
+  onClick?: () => void
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick, variant = 'primary' }) => {
-  const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+export const ChannelCard: React.FC<ChannelCardProps> = ({ id, rankingNumber, isLoading, variant, className }) => {
+  const { channel } = useChannel(id ?? '', { skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
-  const { videoCount } = useChannelVideoCount(id ?? '', undefined, {
-    fetchPolicy: 'cache-first',
-    skip: !id,
-  })
-  const isLoading = loading || id === undefined
+
+  const { followChannel, isFollowing } = useHandleFollowChannel(id)
+
+  const handleFollow = (e: React.MouseEvent) => {
+    e.preventDefault()
+    followChannel()
+  }
 
   return (
     <ChannelCardBase
       className={className}
-      title={channel?.title}
-      channelHref={id ? absoluteRoutes.viewer.channel(id) : undefined}
-      videoCount={videoCount}
-      loading={isLoading}
-      onClick={onClick}
-      assetUrl={url}
       variant={variant}
+      isLoading={isLoading}
+      id={channel?.id}
+      avatarUrl={url}
       follows={channel?.follows}
-      channelId={id}
+      onFollow={handleFollow}
+      isFollowing={isFollowing}
+      rankingNumber={rankingNumber}
+      title={channel?.title}
     />
   )
 }

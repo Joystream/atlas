@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { ChannelVariant } from '@/components/TempChannelCard'
+import { ChannelVariant } from '@/components/ChannelCard'
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
@@ -17,6 +17,7 @@ export const ChannelCardWrapper = styled.div<ChannelCardWrapperProps>`
   position: relative;
   display: flex;
   justify-content: ${({ hasRanking }) => (hasRanking ? 'flex-end' : 'unset')};
+  width: 100%;
 
   ${() => ChannelCardArticle} {
     width: ${({ hasRanking }) => (hasRanking ? '78%' : '100%')};
