@@ -40,7 +40,7 @@ type InfiniteChannelWithVideosGridProps = {
     name: string
     url: string
   }
-  additionalSort?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
+  additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 const INITIAL_ROWS = 3
@@ -58,7 +58,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   languageSelector,
   idIn = null,
   additionalLink,
-  additionalSort,
+  additionalSortFn,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
@@ -92,7 +92,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
     sortByViews,
-    additionalSort,
+    additionalSortFn,
   })
 
   if (error) {

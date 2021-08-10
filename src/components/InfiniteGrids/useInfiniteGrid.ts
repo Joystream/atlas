@@ -42,7 +42,7 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onScrollToBottom?: () => void
   orderBy?: ChannelOrderByInput
   sortByViews?: boolean
-  additionalSort?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
+  additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
@@ -70,7 +70,7 @@ export const useInfiniteGrid = <
   onDemand,
   sortByViews,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
-  additionalSort,
+  additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -134,7 +134,7 @@ export const useInfiniteGrid = <
     return () => window.removeEventListener('scroll', scrollHandler)
   }, [isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
 
-  const edges = additionalSort ? additionalSort(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
+  const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
 
   const displayedEdges = edges?.slice(skipCount, targetLoadedItemsCount) ?? []
   const displayedItems = displayedEdges.map((edge) => edge.node)
