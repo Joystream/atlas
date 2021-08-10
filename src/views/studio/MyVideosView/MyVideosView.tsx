@@ -256,7 +256,7 @@ export const MyVideosView = () => {
         {hasNoVideos ? (
           <EmptyFallback
             title="Add your first video"
-            subtitle="Your channel is empty! Start the publisher journey by adding your very first video to Joystream."
+            subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
             button={
               <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
                 Upload video
@@ -296,9 +296,9 @@ export const MyVideosView = () => {
               <EmptyFallback
                 title={
                   currentTabName === 'All Videos'
-                    ? 'No videos here yet'
+                    ? 'No videos yet'
                     : currentTabName === 'Public'
-                    ? 'No public videos here yet'
+                    ? 'No public videos yet'
                     : currentTabName === 'Drafts'
                     ? 'No drafts here yet'
                     : 'No unlisted videos here yet'
@@ -307,10 +307,10 @@ export const MyVideosView = () => {
                   currentTabName === 'All Videos'
                     ? null
                     : currentTabName === 'Public'
-                    ? 'Upload your first public video'
+                    ? 'Videos published with "Public" privacy setting will show up here.'
                     : currentTabName === 'Drafts'
-                    ? 'Each unfinished project will be saved here as a draft. Start publishing to see something here.'
-                    : 'To make one choose “unlisted” option in privacy settings of the video, or use video tile menu.'
+                    ? "Each video that hasn't been published yet will be available here as a draft."
+                    : 'Videos published with "Unlisted" privacy setting will show up here.'
                 }
                 button={
                   <Button

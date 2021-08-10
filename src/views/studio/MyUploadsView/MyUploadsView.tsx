@@ -53,7 +53,7 @@ export const MyUploadsView: React.FC = () => {
       ) : (
         <EmptyFallback
           title="No ongoing uploads"
-          subtitle="You will see statuses of ongoing uploads for each asset you transfer."
+          subtitle="You will see status of each ongoing upload here."
           button={
             <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
               Upload video

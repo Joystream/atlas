@@ -216,10 +216,10 @@ export const ChannelView: React.FC = () => {
           <>
             <VideoSection className={transitions.names.slide}>
               {!videosWithPlaceholders.length && isSearching && (
-                <EmptyFallback subtitle={`No videos on the channels matching query “${searchQuery}”`} variant="small" />
+                <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />
               )}
               {!videosWithPlaceholders.length && !isSearching && (
-                <EmptyFallback subtitle="No videos found on the channel" variant="small" />
+                <EmptyFallback title="No videos on this channel" variant="small" />
               )}
               <Grid maxColumns={null} onResize={handleOnResizeGrid}>
                 {videosWithPlaceholders.map((video, idx) => (

@@ -7,7 +7,7 @@ import { Container, Message, Subtitle, Title } from './EmptyFallback.styles'
 export type EmptyFallbackSizes = 'small' | 'large'
 
 export type EmptyFallbackProps = {
-  title?: string
+  title: string
   subtitle?: string | null
   variant?: EmptyFallbackSizes
   button?: ReactNode
@@ -28,8 +28,8 @@ export const EmptyFallback: FC<EmptyFallbackProps> = ({ title, subtitle, variant
   <Container variant={variant}>
     <SvgEmptyStateIllustration width={ILLUSTRATION_SIZES[variant].width} height={ILLUSTRATION_SIZES[variant].height} />
     <Message>
-      {title && <Title variant="h4">{title}</Title>}
-      {subtitle && <Subtitle single={!title}>{subtitle}</Subtitle>}
+      {title && <Title variant={variant === 'large' ? 'h4' : 'body1'}>{title}</Title>}
+      {subtitle && <Subtitle variant="body2">{subtitle}</Subtitle>}
     </Message>
     {button}
   </Container>
