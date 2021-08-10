@@ -27,7 +27,6 @@ import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
-  DialogAccentText,
   PaginationContainer,
   SearchButton,
   SearchContainer,
@@ -44,6 +43,8 @@ import {
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
+  UnfollowDescriptionAccentText,
+  UnfollowDescriptionContainer,
   VideoSection,
 } from './ChannelView.style'
 
@@ -119,11 +120,16 @@ export const ChannelView: React.FC = () => {
           error: true,
           title: 'Would you consider staying?',
           description: (
-            <>
-              {channel?.title} released <DialogAccentText>{videosLastMonth} new videos </DialogAccentText>
-              this month.
-              <br /> Cancel to follow for more fresh content!
-            </>
+            <UnfollowDescriptionContainer>
+              {videosLastMonth && (
+                <span>
+                  {channel?.title} released{' '}
+                  <UnfollowDescriptionAccentText>{videosLastMonth} new videos </UnfollowDescriptionAccentText>
+                  this month.
+                </span>
+              )}
+              <span>Keep following for more fresh content!</span>
+            </UnfollowDescriptionContainer>
           ),
           primaryButton: {
             text: 'Unfollow',
