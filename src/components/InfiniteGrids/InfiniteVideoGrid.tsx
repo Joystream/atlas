@@ -36,6 +36,7 @@ type InfiniteVideoGridProps = {
     name: string
     url: string
   }
+  isFeatured?: boolean
 }
 
 const INITIAL_ROWS = 2
@@ -59,6 +60,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   currentlyWatchedVideoId,
   onDemand = false,
   additionalLink,
+  isFeatured = false,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -70,6 +72,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ...(thumbnailPhotoAvailability ? { thumbnailPhotoAvailability_eq: thumbnailPhotoAvailability } : {}),
       ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
       ...(idIn ? { id_in: idIn } : {}),
+      isFeatured_eq: isFeatured,
       isPublic_eq: isPublic,
       isCensored_eq: isCensored,
     },
