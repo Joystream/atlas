@@ -17,7 +17,7 @@ export const CallToActionWrapper = styled.div`
 
   ${media.medium} {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: ${sizes(6)};
   }
 `

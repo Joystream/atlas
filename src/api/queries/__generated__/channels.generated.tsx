@@ -152,6 +152,15 @@ export type GetMostViewedChannelsQuery = {
   mostViewedChannels?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
 }
 
+export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+}>
+
+export type GetMostViewedChannelsAllTimeQuery = {
+  __typename?: 'Query'
+  mostViewedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+}
+
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
@@ -712,4 +721,56 @@ export type GetMostViewedChannelsLazyQueryHookResult = ReturnType<typeof useGetM
 export type GetMostViewedChannelsQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsQuery,
   GetMostViewedChannelsQueryVariables
+>
+export const GetMostViewedChannelsAllTimeDocument = gql`
+  query GetMostViewedChannelsAllTime($limit: Int!) {
+    mostViewedChannelsAllTime(limit: $limit) {
+      id
+      views
+    }
+  }
+`
+
+/**
+ * __useGetMostViewedChannelsAllTimeQuery__
+ *
+ * To run a query within a React component, call `useGetMostViewedChannelsAllTimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostViewedChannelsAllTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostViewedChannelsAllTimeQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetMostViewedChannelsAllTimeQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>
+) {
+  return Apollo.useQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
+    GetMostViewedChannelsAllTimeDocument,
+    baseOptions
+  )
+}
+export function useGetMostViewedChannelsAllTimeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostViewedChannelsAllTimeQuery,
+    GetMostViewedChannelsAllTimeQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
+    GetMostViewedChannelsAllTimeDocument,
+    baseOptions
+  )
+}
+export type GetMostViewedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostViewedChannelsAllTimeQuery>
+export type GetMostViewedChannelsAllTimeLazyQueryHookResult = ReturnType<
+  typeof useGetMostViewedChannelsAllTimeLazyQuery
+>
+export type GetMostViewedChannelsAllTimeQueryResult = Apollo.QueryResult<
+  GetMostViewedChannelsAllTimeQuery,
+  GetMostViewedChannelsAllTimeQueryVariables
 >
