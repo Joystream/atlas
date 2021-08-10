@@ -56,14 +56,12 @@ export const HomeView: React.FC = () => {
             onDemand
           />
         ) : null}
-        {!mostViewedVideosLoading && mostViewedVideos?.length ? (
-          <StyledInfiniteVideoGrid
-            title="Popular on Joystream"
-            idIn={mostViewedVideosIds}
-            ready={!mostViewedVideosLoading}
-            onDemand
-          />
-        ) : null}
+        <StyledInfiniteVideoGrid
+          title="Popular on Joystream"
+          idIn={mostViewedVideosIds}
+          ready={!mostViewedVideosLoading}
+          onDemand
+        />
         <OfficialJoystreamUpdate />
         <TopTenThisWeek />
         <StyledInfiniteVideoGrid title="All content" onDemand />
