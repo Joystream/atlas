@@ -27,7 +27,7 @@ import {
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
-  sortByViews?: boolean
+  sortByViewsOrFollowers?: boolean
   title?: string
   skipCount?: number
   first?: number
@@ -40,8 +40,6 @@ type InfiniteChannelWithVideosGridProps = {
     name: string
     url: string
   }
-  sortBy?: 'views' | 'follows'
-  onLoadMoreClick?: () => void
   maximumCount?: number
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
@@ -57,12 +55,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   first,
   orderBy = ChannelOrderByInput.CreatedAtAsc,
   className,
-  sortByViews,
+  sortByViewsOrFollowers,
   languageSelector,
   idIn = null,
   additionalLink,
-  sortBy,
-  onLoadMoreClick,
   maximumCount,
   additionalSortFn,
 }) => {
@@ -97,7 +93,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
-    sortByViews,
+    sortByViewsOrFollowers,
     additionalSortFn,
   })
 
@@ -109,17 +105,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   const shouldShowLoadMoreButton =
     onDemand && !loading && (displayedItems.length < totalCount || (maximumCount && totalCount < maximumCount))
 
-  const itemsToShow = useMemo(() => {
-    if (sortBy) {
-      return [
-        ...displayedItems
-          .map((channel) => ({ ...channel, views: channel.views || 0, follows: channel.follows || 0 }))
-          .sort((a, b) => b[sortBy] - a[sortBy]),
-        ...placeholderItems,
-      ]
-    }
-    return [...displayedItems, ...placeholderItems]
-  }, [displayedItems, placeholderItems, sortBy])
+  const itemsToShow = [...displayedItems, ...placeholderItems]
 
   const mappedLanguages = useMemo(() => {
     const mergedLanguages: Array<{ name: string; value: string }> = []
@@ -189,13 +175,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       ))}
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
-          <LoadMoreButton
-            onClick={() => {
-              fetchMore()
-              if (onLoadMoreClick) onLoadMoreClick()
-            }}
-            label="Show more channels"
-          />
+          <LoadMoreButton onClick={fetchMore} label="Show more channels" />
         </LoadMoreButtonWrapper>
       )}
     </section>

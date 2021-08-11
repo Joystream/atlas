@@ -26,7 +26,7 @@ export const PromisingNewChannels = () => {
         url: absoluteRoutes.viewer.channels(),
       }}
       additionalSortFn={sortChannelsByViewsDesc}
-      sortByViews
+      sortByViewsOrFollowers
     />
   )
 }
