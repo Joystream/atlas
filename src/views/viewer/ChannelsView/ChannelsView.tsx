@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useMostFollowedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, TopTenChannels, ViewWrapper } from '@/components'
@@ -8,14 +8,35 @@ import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/componen
 import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
+const INITIAL_MOST_FOLLOWED_CHANNELS_LIMIT = 3
+const MOST_FOLLOWED_CHANNELS_LIMIT = 15
+
 export const ChannelsView = () => {
-  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds({ limit: 15 })
+  const [mostFollowedChannelsAllTimeLimit, setMostFollowedChannelsAllTimeLimit] = useState(
+    INITIAL_MOST_FOLLOWED_CHANNELS_LIMIT
+  )
+  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds({
+    limit: mostFollowedChannelsAllTimeLimit,
+  })
   const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
+  const increaseMostFollowedChannelsAllTimeLimit = () => {
+    if (mostFollowedChannelsAllTimeLimit <= MOST_FOLLOWED_CHANNELS_LIMIT) {
+      setMostFollowedChannelsAllTimeLimit((prevState) => prevState + INITIAL_MOST_FOLLOWED_CHANNELS_LIMIT)
+    }
+  }
+
   return (
     <StyledViewWrapper>
       <Header variant="h2">Browse channels</Header>
       <TopTenChannels />
-      <StyledInfiniteChannelWithVideosGrid title="Discover channels" onDemand idIn={mostFollowedChannelsAllTimeIds} />
+      <StyledInfiniteChannelWithVideosGrid
+        title="Discover channels"
+        onDemand
+        idIn={mostFollowedChannelsAllTimeIds}
+        onLoadMoreClick={increaseMostFollowedChannelsAllTimeLimit}
+        sortBy="follows"
+        maximumCount={MOST_FOLLOWED_CHANNELS_LIMIT}
+      />
       <StyledInfiniteChannelWithVideosGrid title="Channels in your language" languageSelector onDemand />
       <CallToActionWrapper>
         <CallToActionButton

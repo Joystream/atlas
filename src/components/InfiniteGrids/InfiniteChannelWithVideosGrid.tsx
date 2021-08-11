@@ -40,6 +40,9 @@ type InfiniteChannelWithVideosGridProps = {
     name: string
     url: string
   }
+  sortBy?: 'views' | 'follows'
+  onLoadMoreClick?: () => void
+  maximumCount?: number
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -58,6 +61,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   languageSelector,
   idIn = null,
   additionalLink,
+  sortBy,
+  onLoadMoreClick,
+  maximumCount,
   additionalSortFn,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
@@ -100,8 +106,20 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   }
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
-  const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
-  const itemsToShow = [...displayedItems, ...placeholderItems]
+  const shouldShowLoadMoreButton =
+    onDemand && !loading && (displayedItems.length < totalCount || (maximumCount && totalCount < maximumCount))
+
+  const itemsToShow = useMemo(() => {
+    if (sortBy) {
+      return [
+        ...displayedItems
+          .map((channel) => ({ ...channel, views: channel.views || 0, follows: channel.follows || 0 }))
+          .sort((a, b) => b[sortBy] - a[sortBy]),
+        ...placeholderItems,
+      ]
+    }
+    return [...displayedItems, ...placeholderItems]
+  }, [displayedItems, placeholderItems, sortBy])
 
   const mappedLanguages = useMemo(() => {
     const mergedLanguages: Array<{ name: string; value: string }> = []
@@ -171,7 +189,13 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       ))}
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
-          <LoadMoreButton onClick={fetchMore} label="Show more channels" />
+          <LoadMoreButton
+            onClick={() => {
+              fetchMore()
+              if (onLoadMoreClick) onLoadMoreClick()
+            }}
+            label="Show more channels"
+          />
         </LoadMoreButtonWrapper>
       )}
     </section>
