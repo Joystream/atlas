@@ -14,11 +14,14 @@ export type SkeletonLoaderProps = {
 const getPropValue = (v: string | number) => (typeof v === 'string' ? v : `${v}px`)
 
 const pulse = keyframes`
-  0 { 
-    transform: translateX(-100%)
+  0% {
+    transform: translateX(0%);
   }
-  100% {
-    transform: translateX(100%)
+  49.999% {
+    transform: translateX(100%);
+  }
+  50% {
+    transform: translateX(-100%);
   }
 `
 
@@ -33,7 +36,7 @@ const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
-  background-color: ${colors.gray['900']};
+  background-color: ${colors.gray['800']};
   overflow: hidden;
 
   /* Safari fix
@@ -43,17 +46,17 @@ const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
 
 const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
   height: ${({ height = '100%' }) => getPropValue(height)};
-  transform: translateX(-100%);
+  transform: translateX(0%);
   background: linear-gradient(
     104deg,
-    ${colors.gray['800']}00 15%,
-    ${colors.gray['800']}3F 25%,
-    ${colors.gray['800']}7F 30%,
-    ${colors.gray['800']}FF 48%,
-    ${colors.gray['800']}FF 52%,
-    ${colors.gray['800']}7F 70%,
-    ${colors.gray['800']}3F 75%,
-    ${colors.gray['800']}00 85%
+    ${colors.gray['700']}00 15%,
+    ${colors.gray['700']}3F 25%,
+    ${colors.gray['700']}7F 30%,
+    ${colors.gray['700']}FF 48%,
+    ${colors.gray['700']}FF 52%,
+    ${colors.gray['700']}7F 70%,
+    ${colors.gray['700']}3F 75%,
+    ${colors.gray['700']}00 85%
   );
-  animation: ${pulse} 2s ease-in-out infinite;
+  animation: ${pulse} 1.5s linear infinite;
 `
