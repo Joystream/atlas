@@ -4,7 +4,7 @@ import React from 'react'
 
 import { colors } from '@/shared/theme'
 
-type SkeletonLoaderProps = {
+export type SkeletonLoaderProps = {
   width?: string | number
   height?: string | number
   bottomSpace?: string | number
