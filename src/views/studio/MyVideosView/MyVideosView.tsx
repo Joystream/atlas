@@ -16,9 +16,9 @@ import {
   useEditVideoSheet,
   useSnackbar,
 } from '@/providers'
-import { Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { Button, EmptyFallback, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { SvgGlyphUpload } from '@/shared/icons'
 
-import { EmptyVideos, EmptyVideosView } from './EmptyVideosView'
 import {
   PaginationContainer,
   SortContainer,
@@ -254,7 +254,15 @@ export const MyVideosView = () => {
       <ViewContainer>
         <Text variant="h2">My videos</Text>
         {hasNoVideos ? (
-          <EmptyVideosView />
+          <EmptyFallback
+            title="Add your first video"
+            subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
+            button={
+              <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+                Upload video
+              </Button>
+            }
+          />
         ) : (
           <>
             <TabsContainer>
@@ -285,15 +293,34 @@ export const MyVideosView = () => {
             </Grid>
             {((isDraftTab && drafts.length === 0) ||
               (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
-              <EmptyVideos
-                text={
+              <EmptyFallback
+                title={
                   currentTabName === 'All Videos'
-                    ? "You don't have any published videos at the moment"
+                    ? 'No videos yet'
                     : currentTabName === 'Public'
-                    ? "You don't have any public videos at the moment"
+                    ? 'No public videos yet'
                     : currentTabName === 'Drafts'
-                    ? "You don't have any drafts at the moment"
-                    : "You don't have any unlisted videos at the moment"
+                    ? 'No drafts here yet'
+                    : 'No unlisted videos here yet'
+                }
+                subtitle={
+                  currentTabName === 'All Videos'
+                    ? null
+                    : currentTabName === 'Public'
+                    ? 'Videos published with "Public" privacy setting will show up here.'
+                    : currentTabName === 'Drafts'
+                    ? "Each video that hasn't been published yet will be available here as a draft."
+                    : 'Videos published with "Unlisted" privacy setting will show up here.'
+                }
+                button={
+                  <Button
+                    icon={<SvgGlyphUpload />}
+                    to={absoluteRoutes.studio.editVideo()}
+                    variant="secondary"
+                    size="large"
+                  >
+                    Upload video
+                  </Button>
                 }
               />
             )}
