@@ -298,14 +298,14 @@ export const queryNodeStitchingResolvers = (
         info
       )
 
-      const followsLookup = createLookup<{ id: string; views: number }>(batchedChannelFollows || [])
+      const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
       const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
 
       return parent.edges.map((edge: ChannelEdge) => ({
         ...edge,
         node: {
           ...edge.node,
-          follows: followsLookup[edge.node.id]?.views || 0,
+          follows: followsLookup[edge.node.id]?.follows || 0,
           views: viewsLookup[edge.node.id]?.views || 0,
         },
       }))
