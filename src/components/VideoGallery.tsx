@@ -88,6 +88,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   const createNotFoundHandler = (id?: string) => () => id && onVideoNotFound && onVideoNotFound(id)
   return (
     <Gallery
+      hasRanking={hasRanking}
       title={title}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
@@ -96,17 +97,15 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       className={className}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <GalleryWrapper key={`${idx}-${video.id}`} hasRanking={hasRanking}>
-          <StyledVideoTile
-            id={video.id}
-            progress={video?.progress}
-            removeButton={video ? removeButton : false}
-            onClick={createClickHandler(video.id)}
-            onNotFound={createNotFoundHandler(video.id)}
-            onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-            rankingNumber={hasRanking ? idx + 1 : undefined}
-          />
-        </GalleryWrapper>
+        <StyledVideoTile
+          id={video.id}
+          key={`${idx}-${video.id}`}
+          progress={video?.progress}
+          removeButton={video ? removeButton : false}
+          onClick={createClickHandler(video.id)}
+          onNotFound={createNotFoundHandler(video.id)}
+          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+        />
       ))}
     </Gallery>
   )
@@ -121,21 +120,5 @@ const StyledVideoTile = styled(VideoTile)`
     ${media.medium} {
       display: block;
     }
-  }
-`
-
-const GalleryWrapper = styled.div<{ hasRanking?: boolean }>`
-  position: relative;
-  ${({ hasRanking }) => `
-    display: ${hasRanking ? 'flex' : 'block'};
-    justify-content: ${hasRanking ? 'flex-end' : 'unset'};
-  `}
-
-  ${StyledVideoTile} {
-    width: ${({ hasRanking }) => (hasRanking ? '78%' : '100%')};
-  }
-
-  & + & {
-    margin-left: ${sizes(6)};
   }
 `

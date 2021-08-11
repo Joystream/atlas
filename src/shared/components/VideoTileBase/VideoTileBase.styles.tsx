@@ -318,35 +318,3 @@ export const CoverTopLeftContainer = styled.div`
   top: ${sizes(2)};
   left: ${sizes(2)};
 `
-
-export const RankingNumber = styled.span`
-  position: absolute;
-  top: 0;
-  left: -48px;
-  height: 100%;
-  color: black;
-  font-weight: 700;
-  font-size: 100px;
-  -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: ${colors.gray[500]};
-  font-family: 'PxGrotesk', sans-serif;
-  letter-spacing: -0.17em;
-  display: flex;
-  align-items: center;
-
-  ${media.large} {
-    align-items: flex-end;
-    font-size: 160px;
-    left: -77px;
-  }
-
-  ${media.xlarge} {
-    left: -75px;
-    font-size: 150px;
-  }
-
-  ${media.xxlarge} {
-    left: -88px;
-    font-size: 180px;
-  }
-`

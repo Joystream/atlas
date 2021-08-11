@@ -17,6 +17,7 @@ export type CarouselProps = {
   className?: string
   arrowPosition?: number
   dotsVisible?: boolean
+  hasRanking?: boolean
 } & GliderProps
 export const Carousel = forwardRef<
   ReactNode,
@@ -35,6 +36,7 @@ export const Carousel = forwardRef<
       dotsVisible,
       prevArrowRef,
       nextArrowRef,
+      hasRanking,
       ...gliderOptions
     },
     ref
@@ -99,11 +101,12 @@ export const Carousel = forwardRef<
       getPrevArrowProps,
       getNextArrowProps,
     }))
-
     return (
       <Container {...getContainerProps({ className })}>
         <GliderContainer {...getGliderProps()} ref={gliderRef}>
-          <Track {...getTrackProps()}>{children}</Track>
+          <Track {...getTrackProps()} hasRanking={hasRanking}>
+            {children}
+          </Track>
         </GliderContainer>
         {dotsVisible && <Dots {...getDotsProps()} ref={dotsRef} />}
       </Container>
