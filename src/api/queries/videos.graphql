@@ -125,6 +125,13 @@ query GetMostViewedVideos($viewedWithinDays: Int!, $limit: Int) {
   }
 }
 
+query GetMostViewedVideosAllTime($limit: Int!) {
+  mostViewedVideosAllTime(limit: $limit) {
+    id
+    views
+  }
+}
+
 mutation AddVideoView($videoId: ID!, $channelId: ID!) {
   addVideoView(videoId: $videoId, channelId: $channelId) {
     id
