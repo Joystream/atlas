@@ -58,5 +58,5 @@ const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
     ${colors.gray['700']}3F 75%,
     ${colors.gray['700']}00 85%
   );
-  animation: ${pulse} 2s linear infinite;
+  animation: ${pulse} 1.5s linear infinite;
 `
