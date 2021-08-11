@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from 'react'
 
 import { SvgEmptyStateIllustration } from '@/shared/illustrations'
 
-import { Container, Message, Subtitle, Title } from './EmptyFallback.styles'
+import { ButtonWrapper, Container, Message, Subtitle, Title } from './EmptyFallback.styles'
 
 export type EmptyFallbackSizes = 'small' | 'large'
 
@@ -29,8 +29,12 @@ export const EmptyFallback: FC<EmptyFallbackProps> = ({ title, subtitle, variant
     <SvgEmptyStateIllustration width={ILLUSTRATION_SIZES[variant].width} height={ILLUSTRATION_SIZES[variant].height} />
     <Message>
       {title && <Title variant={variant === 'large' ? 'h4' : 'body1'}>{title}</Title>}
-      {subtitle && <Subtitle variant="body2">{subtitle}</Subtitle>}
+      {subtitle && (
+        <Subtitle variant="body2" secondary>
+          {subtitle}
+        </Subtitle>
+      )}
     </Message>
-    {button}
+    <ButtonWrapper>{button}</ButtonWrapper>
   </Container>
 )
