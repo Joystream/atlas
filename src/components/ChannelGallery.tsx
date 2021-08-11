@@ -6,7 +6,7 @@ import { Gallery, breakpointsOfGrid } from '@/shared/components'
 
 type ChannelGalleryProps = {
   title?: string
-  channels?: BasicChannelFieldsFragment[]
+  channels?: BasicChannelFieldsFragment[] | null
   loading?: boolean
   onChannelClick?: (id: string) => void
   hasRanking?: boolean
@@ -49,7 +49,7 @@ export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels 
   const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
   return (
     <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible>
-      {[...channels, ...placeholderItems].map((channel, idx) => (
+      {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) => (
         <ChannelCard key={idx} id={channel.id} rankingNumber={hasRanking ? idx + 1 : undefined} isLoading={loading} />
       ))}
     </Gallery>

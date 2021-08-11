@@ -1,18 +1,16 @@
 import React from 'react'
 
-import { ChannelVariant } from '@/components/ChannelCard'
+import { ChannelCardVariant } from '@/components/ChannelCard'
 import { absoluteRoutes } from '@/config/routes'
 import { formatNumberShort } from '@/utils/number'
 
 import {
-  ButtonSkeletonLoader,
   ChannelCardAnchor,
   ChannelCardArticle,
   ChannelCardWrapper,
   ChannelFollows,
   ChannelTitle,
   FollowButton,
-  FollowsSkeletonLoader,
   InfoWrapper,
   RankingNumber,
   StyledAvatar,
@@ -29,7 +27,7 @@ export type ChannelCardBaseProps = {
   avatarUrl?: string | null
   isFollowing?: boolean
   onFollow?: (event: React.MouseEvent) => void
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
   className?: string
   onClick?: () => void
 }
@@ -53,40 +51,44 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
     <ChannelCardWrapper className={className} hasRanking={hasRanking}>
       <ChannelCardArticle variant={variant}>
         {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
-        <ChannelCardAnchor onClick={onClick} variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
-          <StyledAvatar
-            variant={variant}
-            size={variant === 'primary' ? 'channel-card' : 'channel'}
-            loading={loading}
-            assetUrl={avatarUrl}
-          />
-          <InfoWrapper variant={variant}>
-            {loading ? (
-              <SkeletonLoader width="140px" height="20px" />
-            ) : (
-              <ChannelTitle variant="h6">{title}</ChannelTitle>
-            )}
-            {loading ? (
-              <FollowsSkeletonLoader width="60px" height="20px" />
-            ) : (
-              <ChannelFollows variant="body2" secondary>
-                {formatNumberShort(follows || 0)} followers
-              </ChannelFollows>
-            )}
-            {loading ? (
-              <ButtonSkeletonLoader width="70px" height="30px" />
-            ) : (
-              <FollowButton
-                channelVariant={variant}
-                variant="secondary"
-                size={variant === 'primary' ? 'small' : 'medium'}
-                onClick={onFollow}
-              >
-                {isFollowing ? 'Unfollow' : 'Follow'}
-              </FollowButton>
-            )}
-          </InfoWrapper>
-        </ChannelCardAnchor>
+        {loading && variant === 'primary' ? (
+          <SkeletonLoader height="240px" width="300px" />
+        ) : (
+          <ChannelCardAnchor onClick={onClick} variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
+            <StyledAvatar
+              variant={variant}
+              size={variant === 'primary' ? 'channel-card' : 'channel'}
+              loading={loading}
+              assetUrl={avatarUrl}
+            />
+            <InfoWrapper variant={variant}>
+              {loading ? (
+                <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
+              ) : (
+                <ChannelTitle variant="h6">{title}</ChannelTitle>
+              )}
+              {loading ? (
+                <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
+              ) : (
+                <ChannelFollows variant="body2" secondary>
+                  {formatNumberShort(follows || 0)} followers
+                </ChannelFollows>
+              )}
+              {loading ? (
+                <SkeletonLoader width="90px" height="40px" />
+              ) : (
+                <FollowButton
+                  channelVariant={variant}
+                  variant="secondary"
+                  size={variant === 'primary' ? 'small' : 'medium'}
+                  onClick={onFollow}
+                >
+                  {isFollowing ? 'Unfollow' : 'Follow'}
+                </FollowButton>
+              )}
+            </InfoWrapper>
+          </ChannelCardAnchor>
+        )}
       </ChannelCardArticle>
     </ChannelCardWrapper>
   )

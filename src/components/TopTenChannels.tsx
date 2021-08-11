@@ -10,7 +10,7 @@ export const TopTenChannels = () => {
   const { channels, loading } = useMostFollowedChannelsAllTime({ limit: 10 })
   return (
     <Wrapper>
-      <ChannelGallery hasRanking channels={channels || []} loading={loading} title="Top 10 Channels" />
+      <ChannelGallery hasRanking channels={channels} loading={loading} title="Top 10 Channels" />
     </Wrapper>
   )
 }

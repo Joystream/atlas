@@ -5,13 +5,13 @@ import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
 import { ChannelCardBase } from '@/shared/components'
 
-export type ChannelVariant = 'primary' | 'secondary'
+export type ChannelCardVariant = 'primary' | 'secondary'
 
 export type ChannelCardProps = {
   id?: string
   rankingNumber?: number
   isLoading?: boolean
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
   className?: string
   onClick?: () => void
 }
@@ -20,11 +20,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, rankingNumber, isL
   const { channel } = useChannel(id ?? '', { skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
 
-  const { followChannel, isFollowing } = useHandleFollowChannel(id)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id)
 
   const handleFollow = (e: React.MouseEvent) => {
     e.preventDefault()
-    followChannel()
+    toggleFollowing()
   }
 
   return (

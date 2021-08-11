@@ -8,7 +8,7 @@ export const useHandleFollowChannel = (id?: string) => {
   const isFollowing = usePersonalDataStore((state) => state.followedChannels.some((channel) => channel.id === id))
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
-  const _followChannel = () => {
+  const toggleFollowing = () => {
     if (!id) {
       return
     }
@@ -25,7 +25,7 @@ export const useHandleFollowChannel = (id?: string) => {
     }
   }
   return {
-    followChannel: _followChannel,
+    toggleFollowing,
     isFollowing,
   }
 }

@@ -1,12 +1,11 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { ChannelVariant } from '@/components/ChannelCard'
+import { ChannelCardVariant } from '@/components/ChannelCard'
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { Button } from '../Button'
-import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 type ChannelCardWrapperProps = {
@@ -25,7 +24,7 @@ export const ChannelCardWrapper = styled.div<ChannelCardWrapperProps>`
 `
 
 type ChannelCardArticleProps = {
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
 }
 export const ChannelCardArticle = styled.article<ChannelCardArticleProps>`
   position: relative;
@@ -39,7 +38,7 @@ export const ChannelCardArticle = styled.article<ChannelCardArticleProps>`
   }
 `
 type ChannelCardAnchorProps = {
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
 }
 
 export const ChannelCardAnchor = styled(Link)<ChannelCardAnchorProps>`
@@ -56,7 +55,7 @@ export const ChannelCardAnchor = styled(Link)<ChannelCardAnchorProps>`
 `
 
 type StyledAvatarProps = {
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
 }
 
 export const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
@@ -65,7 +64,7 @@ export const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
 `
 
 type InfoWrapperProps = {
-  variant?: ChannelVariant
+  variant?: ChannelCardVariant
 }
 
 export const InfoWrapper = styled.div<InfoWrapperProps>`
@@ -90,7 +89,7 @@ export const ChannelFollows = styled(Text)`
 `
 
 type FollowButtonProps = {
-  channelVariant?: ChannelVariant
+  channelVariant?: ChannelCardVariant
 }
 
 export const FollowButton = styled(Button)<FollowButtonProps>`
@@ -128,12 +127,4 @@ export const RankingNumber = styled.span`
     left: -88px;
     font-size: 180px;
   }
-`
-
-export const FollowsSkeletonLoader = styled(SkeletonLoader)`
-  margin-top: ${sizes(4)};
-`
-
-export const ButtonSkeletonLoader = styled(SkeletonLoader)`
-  margin-top: ${sizes(1)};
 `
