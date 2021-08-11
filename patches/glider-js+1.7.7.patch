@@ -1,0 +1,20 @@
+diff --git a/node_modules/glider-js/glider.js b/node_modules/glider-js/glider.js
+index 78e5adb..9b9bfb2 100644
+--- a/node_modules/glider-js/glider.js
++++ b/node_modules/glider-js/glider.js
+@@ -383,7 +383,14 @@
+           slide = _.slide
+         }
+ 
+-        if (backwards) slide -= _.opt.slidesToScroll
++        if (backwards) {
++          var itemsRemainder = _.slides.length % _.opt.slidesToScroll
++          if (_.arrows.next.classList.contains('disabled') && itemsRemainder) {
++            slide -= itemsRemainder
++          } else {
++            slide -= _.opt.slidesToScroll
++          }
++        }
+         else slide += _.opt.slidesToScroll
+ 
+         if (_.opt.rewind) {

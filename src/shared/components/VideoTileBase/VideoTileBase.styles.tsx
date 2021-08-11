@@ -128,7 +128,11 @@ export const AvatarContainer = styled.div<ScalesWithCoverProps>`
 `
 
 export const TextContainer = styled.div`
-  width: calc(100% - 87px);
+  width: calc(100% - 30px);
+
+  ${media.compact} {
+    width: calc(100% - 87px);
+  }
 `
 
 type MetaContainerProps = { noMarginTop: boolean } & MainProps
