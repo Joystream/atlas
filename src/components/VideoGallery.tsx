@@ -97,15 +97,16 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       className={className}
     >
       {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <StyledVideoTile
-          id={video.id}
-          key={`${idx}-${video.id}`}
-          progress={video?.progress}
-          removeButton={video ? removeButton : false}
-          onClick={createClickHandler(video.id)}
-          onNotFound={createNotFoundHandler(video.id)}
-          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-        />
+        <div key={`${idx}-${video.id}`}>
+          <StyledVideoTile
+            id={video.id}
+            progress={video?.progress}
+            removeButton={video ? removeButton : false}
+            onClick={createClickHandler(video.id)}
+            onNotFound={createNotFoundHandler(video.id)}
+            onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+          />
+        </div>
       ))}
     </Gallery>
   )

@@ -200,197 +200,195 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   }
 
   return (
-    <div>
-      <Container main={main} className={className}>
-        <CoverWrapper main={main}>
-          <CoverContainer clickable={clickable}>
-            <SwitchTransition>
-              <CSSTransition
-                key={isLoading ? 'placeholder' : `content-${contentKey}`}
-                timeout={parseInt(transitions.timings.sharp)}
-                classNames={transitions.names.fade}
-              >
-                {isLoading ? (
-                  <CoverSkeletonLoader />
-                ) : (
-                  <CoverImageContainer ref={imgRef}>
-                    <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                      {thumbnailUrl && !failedLoadImage ? (
-                        <CoverImage
-                          darkenImg={videoPublishState === 'unlisted' || !!isDraft}
-                          src={thumbnailUrl}
-                          onError={handleFailedThumbnailLoad}
-                          alt={`${title} by ${channelTitle} thumbnail`}
-                        />
-                      ) : hasThumbnailUploadFailed ? (
-                        <CoverThumbnailUploadFailed>
-                          <SvgLargeUploadFailed />
-                          <Text variant="subtitle2" secondary>
-                            Thumbnail upload failed
-                          </Text>
-                        </CoverThumbnailUploadFailed>
-                      ) : (
-                        <CoverNoImage />
-                      )}
-                      {(videoPublishState === 'unlisted' || isDraft) && (
-                        <CoverVideoPublishingStateOverlay>
-                          {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
-                          <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
-                        </CoverVideoPublishingStateOverlay>
-                      )}
-                      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                      <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                        {publisherMode && (
-                          <CoverTopLeftContainer>
-                            <PullUp
-                              // set to true when video is already on the snackbar
-                              disabled={!!isPullupDisabled}
-                              onClick={(event) => {
-                                event.preventDefault()
-                                onPullupClick && onPullupClick(event)
-                              }}
-                            />
-                          </CoverTopLeftContainer>
-                        )}
-                        <CoverIconWrapper>
-                          {publisherMode ? (
-                            <SvgLargeEdit />
-                          ) : (
-                            <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
-                          )}
-                        </CoverIconWrapper>
-                        {removeButton && (
-                          <RemoveButton onClick={handleRemoveClick}>
-                            <SvgGlyphClose />
-                          </RemoveButton>
-                        )}
-                      </CoverHoverOverlay>
-                    </Anchor>
-                  </CoverImageContainer>
-                )}
-              </CSSTransition>
-            </SwitchTransition>
-          </CoverContainer>
-        </CoverWrapper>
-        {!!progress && (
-          <ProgressOverlay>
-            <ProgressBar style={{ width: `${progress}%` }} />
-          </ProgressOverlay>
-        )}
-        <SwitchTransition>
-          <CSSTransition
-            key={isLoading ? 'placeholder' : `content-${contentKey}`}
-            timeout={parseInt(transitions.timings.sharp)}
-            classNames={transitions.names.fade}
-          >
-            <InfoContainer main={main}>
-              {displayChannel && (
-                <AvatarContainer scalingFactor={scalingFactor}>
-                  {isLoading ? (
-                    <SkeletonLoader rounded />
-                  ) : (
-                    <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
-                      <StyledAvatar
-                        assetUrl={channelAvatarUrl}
-                        channelClickable={channelClickable}
-                        onClick={handleChannelClick}
+    <Container main={main} className={className}>
+      <CoverWrapper main={main}>
+        <CoverContainer clickable={clickable}>
+          <SwitchTransition>
+            <CSSTransition
+              key={isLoading ? 'placeholder' : `content-${contentKey}`}
+              timeout={parseInt(transitions.timings.sharp)}
+              classNames={transitions.names.fade}
+            >
+              {isLoading ? (
+                <CoverSkeletonLoader />
+              ) : (
+                <CoverImageContainer ref={imgRef}>
+                  <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                    {thumbnailUrl && !failedLoadImage ? (
+                      <CoverImage
+                        darkenImg={videoPublishState === 'unlisted' || !!isDraft}
+                        src={thumbnailUrl}
+                        onError={handleFailedThumbnailLoad}
+                        alt={`${title} by ${channelTitle} thumbnail`}
                       />
-                    </Anchor>
-                  )}
-                </AvatarContainer>
-              )}
-              <TextContainer>
-                {isLoading ? (
-                  <SkeletonLoader height={main ? 45 : 18} width="60%" />
-                ) : (
-                  <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                    <TitleHeader
-                      variant="h6"
-                      main={main}
-                      scalingFactor={scalingFactor}
-                      onClick={onClick}
-                      clickable={clickable}
-                    >
-                      {title || 'Untitled'}
-                    </TitleHeader>
-                  </TitleHeaderAnchor>
-                )}
-                {displayChannel &&
-                  (isLoading ? (
-                    <SpacedSkeletonLoader height="12px" width="60%" />
-                  ) : (
-                    <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
-                      <ChannelHandle
-                        variant="subtitle2"
-                        channelClickable={channelClickable}
-                        onClick={handleChannelClick}
-                        scalingFactor={scalingFactor}
-                        secondary
-                      >
-                        {channelTitle}
-                      </ChannelHandle>
-                    </Anchor>
-                  ))}
-                {showMeta && (
-                  <MetaContainer noMarginTop={!showChannel} main={main}>
-                    {isLoading ? (
-                      <SpacedSkeletonLoader height={main ? 16 : 12} width={main ? '40%' : '80%'} />
-                    ) : createdAt ? (
-                      <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor} secondary>
-                        {isDraft
-                          ? `Last updated ${formatDateAgo(createdAt)}`
-                          : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
-                      </MetaText>
-                    ) : null}
-                  </MetaContainer>
-                )}
-              </TextContainer>
-              {!isLoading && (
-                <>
-                  <KebabMenuIconContainer
-                    onClick={(event) => openContextMenu(event, 200)}
-                    isActive={contextMenuOpts.isActive}
-                  >
-                    <SvgGlyphMore />
-                  </KebabMenuIconContainer>
-                  <ContextMenu contextMenuOpts={contextMenuOpts}>
-                    {publisherMode ? (
-                      <>
-                        {onOpenInTabClick && (
-                          <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                            Play in Joystream
-                          </ContextMenuItem>
-                        )}
-                        {onCopyVideoURLClick && (
-                          <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                            Copy video URL
-                          </ContextMenuItem>
-                        )}
-                        {onEditVideoClick && (
-                          <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                            {isDraft ? 'Edit draft' : 'Edit video'}
-                          </ContextMenuItem>
-                        )}
-                        {onDeleteVideoClick && (
-                          <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                            {isDraft ? 'Delete draft' : 'Delete video'}
-                          </ContextMenuItem>
-                        )}
-                      </>
+                    ) : hasThumbnailUploadFailed ? (
+                      <CoverThumbnailUploadFailed>
+                        <SvgLargeUploadFailed />
+                        <Text variant="subtitle2" secondary>
+                          Thumbnail upload failed
+                        </Text>
+                      </CoverThumbnailUploadFailed>
                     ) : (
-                      onCopyVideoURLClick && (
-                        <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                      <CoverNoImage />
+                    )}
+                    {(videoPublishState === 'unlisted' || isDraft) && (
+                      <CoverVideoPublishingStateOverlay>
+                        {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
+                        <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
+                      </CoverVideoPublishingStateOverlay>
+                    )}
+                    {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                    <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                      {publisherMode && (
+                        <CoverTopLeftContainer>
+                          <PullUp
+                            // set to true when video is already on the snackbar
+                            disabled={!!isPullupDisabled}
+                            onClick={(event) => {
+                              event.preventDefault()
+                              onPullupClick && onPullupClick(event)
+                            }}
+                          />
+                        </CoverTopLeftContainer>
+                      )}
+                      <CoverIconWrapper>
+                        {publisherMode ? (
+                          <SvgLargeEdit />
+                        ) : (
+                          <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
+                        )}
+                      </CoverIconWrapper>
+                      {removeButton && (
+                        <RemoveButton onClick={handleRemoveClick}>
+                          <SvgGlyphClose />
+                        </RemoveButton>
+                      )}
+                    </CoverHoverOverlay>
+                  </Anchor>
+                </CoverImageContainer>
+              )}
+            </CSSTransition>
+          </SwitchTransition>
+        </CoverContainer>
+      </CoverWrapper>
+      {!!progress && (
+        <ProgressOverlay>
+          <ProgressBar style={{ width: `${progress}%` }} />
+        </ProgressOverlay>
+      )}
+      <SwitchTransition>
+        <CSSTransition
+          key={isLoading ? 'placeholder' : `content-${contentKey}`}
+          timeout={parseInt(transitions.timings.sharp)}
+          classNames={transitions.names.fade}
+        >
+          <InfoContainer main={main}>
+            {displayChannel && (
+              <AvatarContainer scalingFactor={scalingFactor}>
+                {isLoading ? (
+                  <SkeletonLoader rounded />
+                ) : (
+                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
+                    <StyledAvatar
+                      assetUrl={channelAvatarUrl}
+                      channelClickable={channelClickable}
+                      onClick={handleChannelClick}
+                    />
+                  </Anchor>
+                )}
+              </AvatarContainer>
+            )}
+            <TextContainer>
+              {isLoading ? (
+                <SkeletonLoader height={main ? 45 : 18} width="60%" />
+              ) : (
+                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                  <TitleHeader
+                    variant="h6"
+                    main={main}
+                    scalingFactor={scalingFactor}
+                    onClick={onClick}
+                    clickable={clickable}
+                  >
+                    {title || 'Untitled'}
+                  </TitleHeader>
+                </TitleHeaderAnchor>
+              )}
+              {displayChannel &&
+                (isLoading ? (
+                  <SpacedSkeletonLoader height="12px" width="60%" />
+                ) : (
+                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
+                    <ChannelHandle
+                      variant="subtitle2"
+                      channelClickable={channelClickable}
+                      onClick={handleChannelClick}
+                      scalingFactor={scalingFactor}
+                      secondary
+                    >
+                      {channelTitle}
+                    </ChannelHandle>
+                  </Anchor>
+                ))}
+              {showMeta && (
+                <MetaContainer noMarginTop={!showChannel} main={main}>
+                  {isLoading ? (
+                    <SpacedSkeletonLoader height={main ? 16 : 12} width={main ? '40%' : '80%'} />
+                  ) : createdAt ? (
+                    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor} secondary>
+                      {isDraft
+                        ? `Last updated ${formatDateAgo(createdAt)}`
+                        : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
+                    </MetaText>
+                  ) : null}
+                </MetaContainer>
+              )}
+            </TextContainer>
+            {!isLoading && (
+              <>
+                <KebabMenuIconContainer
+                  onClick={(event) => openContextMenu(event, 200)}
+                  isActive={contextMenuOpts.isActive}
+                >
+                  <SvgGlyphMore />
+                </KebabMenuIconContainer>
+                <ContextMenu contextMenuOpts={contextMenuOpts}>
+                  {publisherMode ? (
+                    <>
+                      {onOpenInTabClick && (
+                        <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                          Play in Joystream
+                        </ContextMenuItem>
+                      )}
+                      {onCopyVideoURLClick && (
+                        <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
                           Copy video URL
                         </ContextMenuItem>
-                      )
-                    )}
-                  </ContextMenu>
-                </>
-              )}
-            </InfoContainer>
-          </CSSTransition>
-        </SwitchTransition>
-      </Container>
-    </div>
+                      )}
+                      {onEditVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                          {isDraft ? 'Edit draft' : 'Edit video'}
+                        </ContextMenuItem>
+                      )}
+                      {onDeleteVideoClick && (
+                        <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                          {isDraft ? 'Delete draft' : 'Delete video'}
+                        </ContextMenuItem>
+                      )}
+                    </>
+                  ) : (
+                    onCopyVideoURLClick && (
+                      <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                        Copy video URL
+                      </ContextMenuItem>
+                    )
+                  )}
+                </ContextMenu>
+              </>
+            )}
+          </InfoContainer>
+        </CSSTransition>
+      </SwitchTransition>
+    </Container>
   )
 }
