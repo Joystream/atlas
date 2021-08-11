@@ -51,8 +51,8 @@ query GetVideoCount($where: VideoWhereInput) {
   }
 }
 
-query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
-  channels(offset: $offset, limit: $limit, where: $where) {
+query GetChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]) {
+  channels(where: $where, orderBy: $orderBy, limit: $limit) {
     ...AllChannelFields
   }
 }
