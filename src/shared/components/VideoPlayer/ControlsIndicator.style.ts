@@ -2,21 +2,42 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes } from '@/shared/theme'
 
+import { Loader } from '../Loader'
+
+const INDICATOR_SIZE = sizes(20)
+export const INDICATOR_TIMEOUT = 750
+export const INDICATOR_TRANSITION = 'indicator'
+
 export const ControlsIndicatorWrapper = styled.div`
+  display: none;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  display: flex;
+  pointer-events: none;
   flex-direction: column;
-  top: calc(50% - ${sizes(10)});
-  left: calc(50% - ${sizes(10)});
-  ${media.small} {
-    top: calc(50% - ${sizes(16)});
-    left: calc(50% - ${sizes(16)});
+  align-items: center;
+  justify-content: center;
+  @media (hover: hover) {
+    display: flex;
+  }
+`
+
+export const LoaderWrapper = styled(ControlsIndicatorWrapper)`
+  display: flex;
+`
+
+export const StyledLoader = styled(Loader)`
+  width: ${sizes(9)};
+  @media (hover: hover) {
+    /* align position with indicator */
+    margin-bottom: calc(${INDICATOR_SIZE} / 2);
+    width: ${sizes(18)};
   }
 `
 
 export const ControlsIndicatorIconWrapper = styled.div`
-  width: ${sizes(20)};
-  height: ${sizes(20)};
+  width: ${INDICATOR_SIZE};
+  height: ${INDICATOR_SIZE};
   backdrop-filter: blur(${sizes(6)});
   background-color: ${colors.transparentBlack[54]};
   border-radius: 100%;
@@ -53,31 +74,63 @@ export const ControlsIndicatorTooltip = styled.div`
   backdrop-filter: blur(${sizes(8)});
 
   ${media.small} {
-    display: block;
+    display: flex;
   }
 `
 
 const animationEasing = 'cubic-bezier(0, 0, 0.3, 1)'
 
 export const ControlsIndicatorTransitions = styled.div`
-  .indicator-exit {
-    opacity: 1;
+  .${INDICATOR_TRANSITION}-enter {
+    ${() => StyledLoader} {
+      opacity: 0;
+      transform: scale(0.5);
+    }
   }
 
-  .indicator-exit-active {
+  .${INDICATOR_TRANSITION}-enter-active {
+    ${() => StyledLoader} {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity, transform;
+      transition-timing-function: ${animationEasing};
+      transition-duration: 200ms;
+      @media (hover: hover) {
+        transition-delay: ${INDICATOR_TIMEOUT - 200}ms;
+      }
+    }
+  }
+
+  .${INDICATOR_TRANSITION}-exit {
+    opacity: 1;
+    ${() => StyledLoader} {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .${INDICATOR_TRANSITION}-exit-active {
+    ${() => StyledLoader} {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity, transform;
+      transition-timing-function: ${animationEasing};
+    }
     ${ControlsIndicatorIconWrapper} {
       transform: scale(1);
       opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+      transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
 
       > svg {
         transform: scale(1);
-        transition: transform 750ms ${animationEasing};
+        transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing};
       }
     }
     ${ControlsIndicatorTooltip} {
       opacity: 0;
-      transition: transform 750ms ${animationEasing}, opacity 600ms 150ms ${animationEasing};
+      transition: transform ${INDICATOR_TIMEOUT}ms ${animationEasing},
+        opacity ${INDICATOR_TIMEOUT - 150}ms ${animationEasing} 150ms;
     }
   }
 `

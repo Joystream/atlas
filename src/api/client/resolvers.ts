@@ -6,28 +6,43 @@ import { createLookup } from '@/utils/data'
 import { Logger } from '@/utils/logger'
 
 import {
+  ORION_BATCHED_FOLLOWS_QUERY_NAME,
   ORION_BATCHED_VIEWS_QUERY_NAME,
   ORION_FOLLOWS_QUERY_NAME,
+  ORION_VIEWS_QUERY_NAME,
   RemoveQueryNodeFollowsField,
   RemoveQueryNodeViewsField,
+  TransformBatchedOrionFollowsField,
   TransformBatchedOrionViewsField,
   TransformOrionFollowsField,
+  TransformOrionViewsField,
 } from './transforms'
-import { ORION_VIEWS_QUERY_NAME, TransformOrionViewsField } from './transforms/orionViews'
+import {
+  ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+  ORION_CHANNEL_VIEWS_QUERY_NAME,
+  TransformBatchedChannelOrionViewsField,
+  TransformOrionChannelViewsField,
+} from './transforms/orionViews'
+import { RemoveQueryNodeChannelViewsField } from './transforms/queryNodeViews'
 
-import { VideoEdge } from '../queries'
+import { Channel, ChannelEdge, Video, VideoEdge } from '../queries'
+
+const BATCHED_VIDEO_VIEWS_QUERY_NAME = 'GetBatchedVideoViews'
+const BATCHED_CHANNEL_VIEWS_QUERY_NAME = 'GetBatchedChannelViews'
+const BATCHED_FOLLOWS_VIEWS_QUERY_NAME = 'GetBatchedChannelFollows'
 
 const createResolverWithTransforms = (
   schema: GraphQLSchema,
   fieldName: string,
-  transforms: Array<Transform>
+  transforms: Array<Transform>,
+  operationName?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ISchemaLevelResolver<any, any> => {
   return async (parent, args, context, info) =>
     delegateToSchema({
       schema,
       operation: 'query',
-      operationName: info?.operation?.name?.value,
+      operationName: operationName ? operationName : info?.operation?.name?.value,
       fieldName,
       args,
       context,
@@ -45,15 +60,96 @@ export const queryNodeStitchingResolvers = (
     videoByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'videoByUniqueInput', [
       RemoveQueryNodeViewsField,
     ]),
-    videos: createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField]),
+    videos: async (parent, args, context, info) => {
+      try {
+        const videosResolver = createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField])
+        const videos = await videosResolver(parent, args, context, info)
+
+        const batchedVideoViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_VIEWS_QUERY_NAME,
+          [TransformBatchedOrionViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_VIDEO_VIEWS_QUERY_NAME
+        )
+        const batchedVideoViews = await batchedVideoViewsResolver(
+          parent,
+          {
+            videoIdList: videos.map((video: Video) => video.id),
+          },
+          context,
+          info
+        )
+
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+        return videos.map((video: Video) => ({ ...video, views: viewsLookup[video.id]?.views || 0 }))
+      } catch (error) {
+        Logger.warn('Failed to resolve videos field', { error })
+        return null
+      }
+    },
     videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
-    channels: createResolverWithTransforms(queryNodeSchema, 'channels', [RemoveQueryNodeFollowsField]),
+    channels: async (parent, args, context, info) => {
+      try {
+        const channelsResolver = createResolverWithTransforms(queryNodeSchema, 'channels', [
+          RemoveQueryNodeFollowsField,
+          RemoveQueryNodeChannelViewsField,
+        ])
+        const channels = await channelsResolver(parent, args, context, info)
+
+        const batchedChannelFollowsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_FOLLOWS_QUERY_NAME,
+          [TransformBatchedOrionFollowsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_FOLLOWS_VIEWS_QUERY_NAME
+        )
+        const batchedChannelFollows = await batchedChannelFollowsResolver(
+          parent,
+          {
+            channelIdList: channels.map((channel: Channel) => channel.id),
+          },
+          context,
+          info
+        )
+        const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+
+        const batchedChannelViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+          [TransformBatchedChannelOrionViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_CHANNEL_VIEWS_QUERY_NAME
+        )
+        const batchedChannelViews = await batchedChannelViewsResolver(
+          parent,
+          {
+            channelIdList: channels.map((channel: Channel) => channel.id),
+          },
+          context,
+          info
+        )
+
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+
+        return channels.map((channel: Channel) => ({
+          ...channel,
+          follows: followsLookup[channel.id]?.follows || 0,
+          views: viewsLookup[channel.id]?.views || 0,
+        }))
+      } catch (error) {
+        Logger.warn('Failed to resolve channels field', { error })
+        return null
+      }
+    },
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
       RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelViewsField,
     ]),
     // mixed queries
     search: createResolverWithTransforms(queryNodeSchema, 'search', [
@@ -63,23 +159,25 @@ export const queryNodeStitchingResolvers = (
   },
   Video: {
     views: async (parent, args, context, info) => {
-      if (parent.views != null) {
+      if (parent.views !== undefined) {
         return parent.views
       }
+      const orionViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_VIEWS_QUERY_NAME,
+        [TransformOrionViewsField],
+        // operationName has to be manually kept in sync with the query name used
+        'GetVideoViews'
+      )
       try {
-        return await delegateToSchema({
-          schema: orionSchema,
-          operation: 'query',
-          // operationName has to be manually kept in sync with the query name used
-          operationName: 'GetVideoViews',
-          fieldName: ORION_VIEWS_QUERY_NAME,
-          args: {
+        return await orionViewsResolver(
+          parent,
+          {
             videoId: parent.id,
           },
           context,
-          info,
-          transforms: [TransformOrionViewsField],
-        })
+          info
+        )
       } catch (error) {
         Logger.warn('Failed to resolve views field', { error })
         return null
@@ -88,19 +186,21 @@ export const queryNodeStitchingResolvers = (
   },
   VideoConnection: {
     edges: async (parent, args, context, info) => {
-      const batchedVideoViews = await delegateToSchema({
-        schema: orionSchema,
-        operation: 'query',
+      const batchedVideoViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_VIEWS_QUERY_NAME,
+        [TransformBatchedOrionViewsField],
         // operationName has to be manually kept in sync with the query name used
-        operationName: 'GetBatchedVideoViews',
-        fieldName: ORION_BATCHED_VIEWS_QUERY_NAME,
-        args: {
+        BATCHED_VIDEO_VIEWS_QUERY_NAME
+      )
+      const batchedVideoViews = await batchedVideoViewsResolver(
+        parent,
+        {
           videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id),
         },
         context,
-        info,
-        transforms: [TransformBatchedOrionViewsField],
-      })
+        info
+      )
 
       const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
 
@@ -113,27 +213,102 @@ export const queryNodeStitchingResolvers = (
       }))
     },
   },
-
   Channel: {
-    follows: async (parent, args, context, info) => {
+    views: async (parent, args, context, info) => {
+      if (parent.views != null) {
+        return parent.views
+      }
+      const orionViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_CHANNEL_VIEWS_QUERY_NAME,
+        [TransformOrionChannelViewsField],
+        // operationName has to be manually kept in sync with the query name used
+        'GetChannelViews'
+      )
       try {
-        return await delegateToSchema({
-          schema: orionSchema,
-          operation: 'query',
-          // operationName has to be manually kept in sync with the query name used
-          operationName: 'GetChannelFollows',
-          fieldName: ORION_FOLLOWS_QUERY_NAME,
-          args: {
+        return await orionViewsResolver(
+          parent,
+          {
             channelId: parent.id,
           },
           context,
-          info,
-          transforms: [TransformOrionFollowsField],
-        })
+          info
+        )
+      } catch (error) {
+        Logger.warn('Failed to resolve views field', { error })
+        return null
+      }
+    },
+    follows: async (parent, args, context, info) => {
+      if (parent.follows !== undefined) {
+        return parent.follows
+      }
+      const orionFollowsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_FOLLOWS_QUERY_NAME,
+        [TransformOrionFollowsField],
+        'GetChannelFollows'
+      )
+      try {
+        return await orionFollowsResolver(
+          parent,
+          {
+            channelId: parent.id,
+          },
+          context,
+          info
+        )
       } catch (error) {
         Logger.warn('Failed to resolve follows field', { error })
         return null
       }
+    },
+  },
+  ChannelConnection: {
+    edges: async (parent, args, context, info) => {
+      const batchedChannelFollowsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_FOLLOWS_QUERY_NAME,
+        [TransformBatchedOrionFollowsField],
+        // operationName has to be manually kept in sync with the query name used
+        BATCHED_FOLLOWS_VIEWS_QUERY_NAME
+      )
+      const batchedChannelFollows = await batchedChannelFollowsResolver(
+        parent,
+        {
+          channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
+        },
+        context,
+        info
+      )
+
+      const batchedChannelViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+        [TransformBatchedChannelOrionViewsField],
+        // operationName has to be manually kept in sync with the query name used
+        BATCHED_CHANNEL_VIEWS_QUERY_NAME
+      )
+      const batchedChannelViews = await batchedChannelViewsResolver(
+        parent,
+        {
+          channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
+        },
+        context,
+        info
+      )
+
+      const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+      const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+
+      return parent.edges.map((edge: ChannelEdge) => ({
+        ...edge,
+        node: {
+          ...edge.node,
+          follows: followsLookup[edge.node.id]?.follows || 0,
+          views: viewsLookup[edge.node.id]?.views || 0,
+        },
+      }))
     },
   },
 })

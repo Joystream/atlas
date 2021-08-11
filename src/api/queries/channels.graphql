@@ -14,12 +14,17 @@ fragment AllChannelFields on Channel {
   ...BasicChannelFields
   description
   follows
+  views
   isPublic
   isCensored
   language {
     iso
   }
-
+  ownerMember {
+    id
+    handle
+    avatarUri
+  }
   coverPhotoUrls
   coverPhotoAvailability
   coverPhotoDataObject {
@@ -45,8 +50,8 @@ query GetVideoCount($where: VideoWhereInput) {
   }
 }
 
-query GetChannels($where: ChannelWhereInput) {
-  channels(where: $where) {
+query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
+  channels(offset: $offset, limit: $limit, where: $where) {
     ...AllChannelFields
   }
 }
@@ -74,6 +79,27 @@ query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
     id
     follows
+  }
+}
+
+query GetBatchedChannelFollows($channelIdList: [ID!]!) {
+  batchedChannelFollows(channelIdList: $channelIdList) {
+    id
+    follows
+  }
+}
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelViews($channelId: ID!) {
+  channelViews(channelId: $channelId) {
+    id
+    views
+  }
+}
+
+query GetBatchedChannelViews($channelIdList: [ID!]!) {
+  batchedChannelsViews(channelIdList: $channelIdList) {
+    id
+    views
   }
 }
 

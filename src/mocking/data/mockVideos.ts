@@ -5,7 +5,7 @@ import mockChannels, { coverMockChannel } from './mockChannels'
 import { thumbnailSources } from './mockImages'
 import mockLicenses from './mockLicenses'
 import mockVideosMedia from './mockVideosMedia'
-import rawCoverVideo from './raw/coverVideo.json'
+import rawVideoHero from './raw/VideoHero.json'
 import rawVideos from './raw/videos.json'
 
 export type MockVideo = VideoFieldsFragment
@@ -33,16 +33,16 @@ const regularMockVideos: MockVideo[] = rawVideos.map((rawVideo, idx) => {
 })
 
 const coverMockVideo: MockVideo = {
-  ...rawCoverVideo.video,
-  createdAt: new Date(rawCoverVideo.video.createdAt),
+  ...rawVideoHero.video,
+  createdAt: new Date(rawVideoHero.video.createdAt),
   channel: coverMockChannel,
-  license: rawCoverVideo.license,
+  license: rawVideoHero.license,
   mediaAvailability: AssetAvailability.Accepted,
-  mediaUrls: [rawCoverVideo.video.mediaUrl],
-  thumbnailPhotoUrls: [rawCoverVideo.video.thumbnailPhotoUrl],
+  mediaUrls: [rawVideoHero.video.mediaUrl],
+  thumbnailPhotoUrls: [rawVideoHero.video.thumbnailPhotoUrl],
   thumbnailPhotoAvailability: AssetAvailability.Accepted,
-  mediaMetadata: rawCoverVideo.mediaMetadata,
-  duration: rawCoverVideo.mediaMetadata.duration,
+  mediaMetadata: rawVideoHero.mediaMetadata,
+  duration: rawVideoHero.mediaMetadata.duration,
   category: mockCategories[0],
   isPublic: Boolean(Math.round(Math.random())),
   isCensored: Boolean(Math.round(Math.random())),

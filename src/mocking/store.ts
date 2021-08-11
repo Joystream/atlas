@@ -5,6 +5,7 @@ export const createStore = (data: VideosChannelsData): MocksStore => {
     videoViews: {},
     channelFollows: {},
     batchedVideoViews: [],
+    batchedChannelFollows: [],
   }
 
   const { videos, channels } = data
@@ -21,6 +22,10 @@ export const createStore = (data: VideosChannelsData): MocksStore => {
     if (c.follows) {
       store.channelFollows[c.id] = c.follows
     }
+    store.batchedChannelFollows.push({
+      id: c.id,
+      follows: c.follows || 0,
+    })
   })
 
   return store

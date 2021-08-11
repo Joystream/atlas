@@ -4,9 +4,9 @@ import React from 'react'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Grid } from '@/shared/components'
 
-import { ChannelPreview } from './ChannelPreview'
+import { ChannelCard } from './ChannelCard'
 
-const StyledChannelPreview = styled(ChannelPreview)`
+const StyledChannelCard = styled(ChannelCard)`
   margin: 0 auto;
 `
 
@@ -25,7 +25,7 @@ export const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelCli
   return (
     <Grid {...gridProps}>
       {channels.map(({ id }) => (
-        <StyledChannelPreview key={id} id={id} onClick={() => handleClick(id)} />
+        <StyledChannelCard key={id} id={id} onClick={() => handleClick(id)} />
       ))}
     </Grid>
   )

@@ -1,42 +1,35 @@
 import React from 'react'
 
-import { Button } from '@/shared/components'
+import { Button, ButtonProps } from '@/shared/components'
 
-import {
-  ActionsContainer,
-  AdditionalActionsContainer,
-  ButtonsContainer,
-  StyledPrimaryButton,
-} from './ActionDialog.style'
+import { ActionsContainer, AdditionalActionsContainer, ButtonsContainer } from './ActionDialog.style'
 
 import { BaseDialog, BaseDialogProps } from '../BaseDialog'
 
+type DialogButtonProps = {
+  text?: string
+  disabled?: boolean
+  onClick?: (e: React.MouseEvent) => void
+} & Omit<ButtonProps, 'children'>
+
 export type ActionDialogProps = {
   additionalActionsNode?: React.ReactNode
-  primaryButtonText?: string
-  secondaryButtonText?: string
-  primaryButtonDisabled?: boolean
-  secondaryButtonDisabled?: boolean
-  onPrimaryButtonClick?: (e: React.MouseEvent) => void
-  onSecondaryButtonClick?: (e: React.MouseEvent) => void
+  primaryButton?: DialogButtonProps
+  secondaryButton?: DialogButtonProps
   warning?: boolean
   error?: boolean
 } & BaseDialogProps
 
 export const ActionDialog: React.FC<ActionDialogProps> = ({
   additionalActionsNode,
-  primaryButtonText,
-  secondaryButtonText,
-  primaryButtonDisabled,
-  secondaryButtonDisabled,
-  onPrimaryButtonClick,
-  onSecondaryButtonClick,
+  primaryButton,
+  secondaryButton,
   warning,
   error,
   children,
   ...baseDialogProps
 }) => {
-  const hasAnyAction = additionalActionsNode || primaryButtonText || secondaryButtonText
+  const hasAnyAction = additionalActionsNode || primaryButton?.text || secondaryButton?.text
 
   return (
     <BaseDialog {...baseDialogProps}>
@@ -45,19 +38,14 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
         <ActionsContainer>
           {additionalActionsNode && <AdditionalActionsContainer>{additionalActionsNode}</AdditionalActionsContainer>}
           <ButtonsContainer>
-            {primaryButtonText && (
-              <StyledPrimaryButton
-                onClick={onPrimaryButtonClick}
-                warning={warning}
-                error={error}
-                disabled={primaryButtonDisabled}
-              >
-                {primaryButtonText}
-              </StyledPrimaryButton>
+            {primaryButton?.text && (
+              <Button variant={error ? 'destructive' : warning ? 'warning' : 'primary'} {...primaryButton}>
+                {primaryButton.text}
+              </Button>
             )}
-            {secondaryButtonText && (
-              <Button variant="secondary" onClick={onSecondaryButtonClick} disabled={secondaryButtonDisabled}>
-                {secondaryButtonText}
+            {secondaryButton?.text && (
+              <Button variant="secondary" {...secondaryButton}>
+                {secondaryButton.text}
               </Button>
             )}
           </ButtonsContainer>

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { VideoCategoryFieldsFragment } from '@/api/queries'
 
-import { Container, StyledPlaceholder, StyledToggleButton } from './CategoryPicker.style'
+import { Container, StyledSkeletonLoader, StyledToggleButton } from './CategoryPicker.style'
 
 type CategoryPickerProps = {
   categories?: VideoCategoryFieldsFragment[]
@@ -37,7 +37,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
     <Container className={className}>
       {isLoading
         ? CATEGORY_PLACEHOLDER_WIDTHS.map((width, idx) => (
-            <StyledPlaceholder key={`placeholder-${idx}`} width={width} height="48px" />
+            <StyledSkeletonLoader key={`placeholder-${idx}`} width={width} height="48px" />
           ))
         : displayedCategories.map((category) => (
             <StyledToggleButton

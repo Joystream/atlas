@@ -1,14 +1,16 @@
 import React from 'react'
 import shallow from 'zustand/shallow'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
+import { Button, EmptyFallback } from '@/shared/components'
+import { SvgGlyphUpload } from '@/shared/icons'
 
-import { AssetsGroupUploadBar } from './AssetsGroupUploadBar'
-import { AssetGroupUploadBarPlaceholder } from './AssetsGroupUploadBar/AssetGroupUploadBarPlaceholder'
-import { EmptyUploadsView } from './EmptyUploadsView'
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
+import { UploadStatusGroup } from './UploadStatusGroup'
+import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 type GroupByParentObjectIdAcc = {
   [key: string]: AssetUpload[]
@@ -39,7 +41,7 @@ export const MyUploadsView: React.FC = () => {
   )
 
   const hasUploads = groupedUploadsState.length > 0
-  const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <AssetGroupUploadBarPlaceholder key={idx} />)
+  const placeholderItems = Array.from({ length: 5 }).map((_, idx) => <UploadStatusGroupSkeletonLoader key={idx} />)
 
   return (
     <UploadsContainer>
@@ -47,9 +49,17 @@ export const MyUploadsView: React.FC = () => {
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (
-        groupedUploadsState.map((files) => <AssetsGroupUploadBar key={files[0].parentObject.id} uploads={files} />)
+        groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
       ) : (
-        <EmptyUploadsView />
+        <EmptyFallback
+          title="No ongoing uploads"
+          subtitle="You will see status of each ongoing upload here."
+          button={
+            <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
+              Upload video
+            </Button>
+          }
+        />
       )}
     </UploadsContainer>
   )

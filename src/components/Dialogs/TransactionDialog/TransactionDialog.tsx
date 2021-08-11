@@ -53,9 +53,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
   return (
     <ActionDialog
       showDialog={!!stepDetails}
-      onSecondaryButtonClick={onClose}
-      secondaryButtonText="Cancel"
-      secondaryButtonDisabled={!canCancel}
+      secondaryButton={{ text: 'Cancel', onClick: onClose, disabled: !canCancel }}
       exitButton={false}
       {...actionDialogProps}
     >

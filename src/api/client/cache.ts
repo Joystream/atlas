@@ -8,28 +8,29 @@ import {
   AllChannelFieldsFragment,
   AssetAvailability,
   GetVideosConnectionQueryVariables,
-  GetVideosQueryVariables,
   Query,
   VideoConnection,
   VideoFieldsFragment,
   VideoOrderByInput,
 } from '../queries'
 
-const getVideoKeyArgs = (args: Record<string, GetVideosQueryVariables['where']> | null) => {
+const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   // make sure queries asking for a specific category are separated in cache
+  const onlyCount = args?.first === 0
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
   const idEq = args?.where?.id_eq || ''
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
+  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
 
   // only for counting videos in HomeView
   if (args?.where?.channelId_in && !args?.first) {
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}`
+  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${sorting}`
 }
 
 const createDateHandler = () => ({
@@ -96,13 +97,10 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       const filteredEdges =
         existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
 
-      const sortingASC = args?.orderBy === VideoOrderByInput.CreatedAtAsc
-      const preSortedDESC = (filteredEdges || [])
-        .slice()
-        .sort(
-          (a, b) =>
-            (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
-        )
+      const sortingASC = args?.orderBy?.[0] === VideoOrderByInput.CreatedAtAsc
+      const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
+        return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
+      })
       const sortedEdges = sortingASC ? preSortedDESC.reverse() : preSortedDESC
 
       return (

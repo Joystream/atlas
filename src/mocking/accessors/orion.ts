@@ -1,4 +1,6 @@
 import {
+  GetBatchedChannelFollowsQuery,
+  GetBatchedChannelFollowsQueryVariables,
   GetBatchedVideoViewsQuery,
   GetBatchedVideoViewsQueryVariables,
   GetChannelFollowsQuery,
@@ -53,4 +55,17 @@ export const createChannelFollowsAccessor = (store: MocksStore) => (
     id: channelId,
     follows,
   }
+}
+
+export const createBatchedChannelFollowsAccessor = (store: MocksStore) => (
+  variables: GetBatchedChannelFollowsQueryVariables
+): GetBatchedChannelFollowsQuery['batchedChannelFollows'] => {
+  const { channelIdList } = variables
+
+  const batchedChannelFollows = store.batchedChannelFollows.filter((follow) => channelIdList.includes(follow.id))
+  if (!batchedChannelFollows.length) {
+    return []
+  }
+
+  return batchedChannelFollows
 }

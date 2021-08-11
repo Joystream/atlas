@@ -29,6 +29,8 @@ import {
   CurrentTime,
   CurrentTimeWrapper,
   CustomControls,
+  PlayButton,
+  PlayControl,
   ScreenControls,
   StyledSvgPlayerSoundOff,
   VolumeButton,
@@ -141,18 +143,18 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = (event: Event) => {
-      if (event.type === 'waiting') {
+      if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
       }
-      if (event.type === 'canplay') {
+      if (event.type === 'canplay' || event.type === 'seeked') {
         if (playerState !== null) {
           setPlayerState('playing')
         }
       }
     }
-    player.on(['waiting', 'canplay'], handler)
+    player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplay'], handler)
+      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
@@ -277,7 +279,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
-    const handler = () => setIsFullScreen(player.isFullscreen())
+    const handler = () => {
+      // will remove focus from fullscreen button and apply to player.
+      player.focus()
+      setIsFullScreen(player.isFullscreen())
+    }
     player.on('fullscreenchange', handler)
     return () => {
       player.off('fullscreenchange', handler)
@@ -439,13 +445,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
-                <PlayerControlButton
-                  onClick={handlePlayPause}
-                  tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
-                  tooltipPosition="left"
-                >
-                  {playerState === 'ended' ? <SvgPlayerRestart /> : isPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-                </PlayerControlButton>
+                <PlayControl isLoading={playerState === 'loading'}>
+                  <PlayButton
+                    isEnded={playerState === 'ended'}
+                    onClick={handlePlayPause}
+                    tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
+                    tooltipPosition="left"
+                  >
+                    {playerState === 'ended' ? (
+                      <SvgPlayerRestart />
+                    ) : isPlaying ? (
+                      <SvgPlayerPause />
+                    ) : (
+                      <SvgPlayerPlay />
+                    )}
+                  </PlayButton>
+                </PlayControl>
                 <VolumeControl>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
                     {renderVolumeButton()}
@@ -484,6 +499,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </ControlsOverlay>
             <VideoOverlay
               videoId={videoId}
+              isFullScreen={isFullScreen}
               playerState={playerState}
               onPlay={handlePlayPause}
               channelId={channelId}
@@ -491,7 +507,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        {!isInBackground && <ControlsIndicator player={player} />}
+        {!isInBackground && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
   )

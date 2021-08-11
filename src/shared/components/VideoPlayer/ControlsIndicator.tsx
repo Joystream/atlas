@@ -19,6 +19,10 @@ import {
   ControlsIndicatorTooltip,
   ControlsIndicatorTransitions,
   ControlsIndicatorWrapper,
+  INDICATOR_TIMEOUT,
+  INDICATOR_TRANSITION,
+  LoaderWrapper,
+  StyledLoader,
 } from './ControlsIndicator.style'
 import { CustomVideojsEvents } from './utils'
 
@@ -35,9 +39,10 @@ type EventState = {
 
 type ControlsIndicatorProps = {
   player: VideoJsPlayer | null
+  isLoading?: boolean
 }
 
-export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) => {
+export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, isLoading }) => {
   const [indicator, setIndicator] = useState<EventState | null>(null)
   useEffect(() => {
     if (!player) {
@@ -67,9 +72,20 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player }) 
   return (
     <ControlsIndicatorTransitions>
       <CSSTransition
+        in={!indicator?.isVisible && isLoading}
+        timeout={!indicator?.isVisible && isLoading ? INDICATOR_TIMEOUT : 0}
+        classNames={INDICATOR_TRANSITION}
+        mountOnEnter
+        unmountOnExit
+      >
+        <LoaderWrapper>
+          <StyledLoader variant="player" />
+        </LoaderWrapper>
+      </CSSTransition>
+      <CSSTransition
         in={indicator?.isVisible}
-        timeout={indicator?.isVisible ? 0 : 750}
-        classNames="indicator"
+        timeout={indicator?.isVisible ? 0 : INDICATOR_TIMEOUT}
+        classNames={INDICATOR_TRANSITION}
         mountOnEnter
         unmountOnExit
         onEntered={() => setIndicator((indicator) => (indicator ? { ...indicator, isVisible: false } : null))}

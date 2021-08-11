@@ -1,25 +1,25 @@
 import React from 'react'
 
 import { ActionBar, ActionBarProps } from './ActionBar'
-import { ActionBarTransactionWrapper, StyledCheckout } from './ActionBarTransaction.style'
+import { ActionBarTransactionWrapper, StyledProgressDrawer } from './ActionBarTransaction.style'
 
-import { Step } from '../Checkout/Checkout'
+import { Step } from '../ProgressDrawer/ProgressDrawer'
 
 export type ActionBarTransactionProps = {
   fee: number
-  checkoutSteps?: Step[]
+  progressDrawerSteps?: Step[]
 } & Omit<ActionBarProps, 'primaryText' | 'secondaryText'>
 
 export const ActionBarTransaction: React.FC<ActionBarTransactionProps> = ({
   fee,
   fullWidth,
   isActive,
-  checkoutSteps,
+  progressDrawerSteps,
   ...actionBarArgs
 }) => {
   return (
     <ActionBarTransactionWrapper fullWidth={fullWidth} isActive={isActive}>
-      {checkoutSteps?.length ? <StyledCheckout steps={checkoutSteps} /> : null}
+      {progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
       <ActionBar
         {...actionBarArgs}
         fullWidth={fullWidth}

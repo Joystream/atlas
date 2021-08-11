@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { StudioContainer } from '@/components'
+import { LimitedWidthContainer } from '@/components'
 import { Avatar, Button, Text } from '@/shared/components'
 import { colors, sizes, transitions } from '@/shared/theme'
 
@@ -19,7 +19,7 @@ export const SubTitle = styled(Text)`
   margin-top: ${sizes(6)};
 `
 
-export const Wrapper = styled(StudioContainer)`
+export const Wrapper = styled(LimitedWidthContainer)`
   margin: ${sizes(16)} auto;
   max-width: 600px;
   text-align: center;

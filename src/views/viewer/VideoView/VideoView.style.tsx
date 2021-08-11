@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ViewWrapper } from '@/components'
-import { Placeholder, Text } from '@/shared/components'
+import { SkeletonLoader, Text } from '@/shared/components'
 import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
@@ -25,11 +25,11 @@ export const PlayerWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
 `
 
-export const PlayerPlaceholder = styled(Placeholder)`
+export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   height: 100%;
 `
 
-export const DescriptionPlaceholder = styled(Placeholder)`
+export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
   height: 28px;
   margin: ${sizes(4)} 0 0;
 `
@@ -48,6 +48,8 @@ export const Meta = styled(Text)`
 
 export const TitleText = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
+
+  word-break: break-word;
 `
 
 export const ChannelContainer = styled.div`

@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Tooltip, TooltipProps } from './Tooltip'
 
 import { Button } from '../Button'
-import { ChannelPreviewBase } from '../ChannelPreviewBase'
+import { ChannelCardBase } from '../ChannelCardBase'
 import { Text } from '../Text'
 
 export default {
@@ -41,11 +41,11 @@ const HeadingTooltip: Story<TooltipProps> = (args) => (
 
 export const WithHeading = HeadingTooltip.bind({})
 
-const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
+const ChannelCardTooltip: Story<TooltipProps> = (args) => (
   <BrowserRouter>
     <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Tooltip {...args}>
-        <ChannelPreviewBase
+        <ChannelCardBase
           title="Lorem"
           assetUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
           loading={false}
@@ -55,7 +55,7 @@ const ChannelPreviewTooltip: Story<TooltipProps> = (args) => (
   </BrowserRouter>
 )
 
-export const WithChannelPreview = ChannelPreviewTooltip.bind({})
+export const WithChannelCard = ChannelCardTooltip.bind({})
 
 const ButtonTooltip: Story<TooltipProps> = (args) => (
   <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -2,54 +2,24 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components'
-import { CONTENT_OVERLAP_MAP, Placeholder, Text } from '@/shared/components'
-import { colors, media, sizes, typography } from '@/shared/theme'
-
-export const Header = styled.section`
-  position: relative;
-  padding-bottom: 50px;
-
-  ${media.medium} {
-    padding-bottom: 0;
-  }
-`
+import { Button, IconButton, SkeletonLoader, Tabs, Text, TextField } from '@/shared/components'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
-const INFO_BOTTOM_MARGIN = 75
-
 export const TitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-row-gap: ${sizes(4)};
+  align-items: center;
   width: 100%;
-  margin-top: -64px;
+  margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
-  ${media.small} {
-    margin-top: -100px;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  ${media.medium} {
-    position: absolute;
-    margin-top: 0;
-    bottom: ${CONTENT_OVERLAP_MAP.MEDIUM + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.large} {
-    bottom: ${CONTENT_OVERLAP_MAP.LARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XLARGE + INFO_BOTTOM_MARGIN}px;
-  }
-
-  ${media.xxlarge} {
-    bottom: ${CONTENT_OVERLAP_MAP.XXLARGE + INFO_BOTTOM_MARGIN}px;
+  ${media.compact} {
+    grid-template-columns: auto 1fr auto;
   }
 `
 export const TitleContainer = styled.div`
@@ -64,24 +34,39 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
 
   line-height: 1;
-  padding: ${sizes(1)} ${sizes(2)} ${sizes(2)};
-  background-color: ${colors.gray[800]};
+  margin-bottom: 0;
+  padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 600px;
 `
 
+export const SortContainer = styled.div`
+  grid-area: sort;
+  display: grid;
+  grid-gap: 8px;
+  align-items: center;
+  ${media.base} {
+    grid-template-columns: 1fr;
+  }
+  ${media.small} {
+    grid-template-columns: auto 1fr;
+  }
+  ${media.medium} {
+    grid-area: initial;
+  }
+`
+
 export const SubTitle = styled(Text)`
   ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
 
   padding: ${sizes(1)} ${sizes(2)};
-  margin-top: ${sizes(2)};
-  color: ${colors.white};
-  background-color: ${colors.gray[800]};
+  margin-top: ${sizes(1)};
+  color: ${colors.gray[300]};
   display: inline-block;
 `
 
@@ -101,7 +86,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   }
 `
 
-export const TitlePlaceholder = styled(Placeholder)`
+export const TitleSkeletonLoader = styled(SkeletonLoader)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
 
@@ -110,7 +95,7 @@ export const TitlePlaceholder = styled(Placeholder)`
   }
 `
 
-export const SubTitlePlaceholder = styled(Placeholder)`
+export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   width: 140px;
   margin-top: ${sizes(2)};
   height: ${SM_SUBTITLE_HEIGHT};
@@ -123,10 +108,123 @@ export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
   z-index: 2;
   background-color: ${colors.transparentBlack[54]};
+  grid-column: 1 / span 2;
+  width: 100%;
 
-  ${media.small} {
+  ${media.compact} {
+    grid-column: initial;
     margin-top: 0;
     margin-left: auto;
     align-self: center;
   }
+`
+
+export const StyledButton = styled(Button)`
+  width: 100%;
+`
+
+export const PaginationContainer = styled.div`
+  padding-top: ${sizes(6)};
+  padding-bottom: ${sizes(16)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const TabsContainer = styled.div`
+  display: grid;
+  margin-bottom: ${sizes(8)};
+  gap: ${sizes(2)};
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'tabs tabs tabs'
+    'search sort sort';
+  align-items: baseline;
+  ${media.compact} {
+    padding-top: ${sizes(8)};
+  }
+  ${media.small} {
+    border-bottom: solid 1px ${colors.gray[800]};
+    grid-template-areas:
+      'tabs tabs '
+      'search  sort';
+  }
+  ${media.medium} {
+    grid-template-areas: initial;
+    gap: ${sizes(8)};
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr 250px;
+  }
+`
+
+export const SearchContainer = styled.div`
+  display: flex;
+  grid-area: search;
+  width: 100%;
+  align-items: center;
+  ${media.base} {
+    align-self: end;
+  }
+  ${media.small} {
+    align-self: initial;
+  }
+  ${media.medium} {
+    grid-area: initial;
+  }
+`
+
+export const StyledTabs = styled(Tabs)`
+  grid-area: tabs;
+  ${media.base} {
+    border-bottom: solid 1px ${colors.gray[800]};
+  }
+  ${media.small} {
+    border-bottom: none;
+  }
+  ${media.medium} {
+    grid-area: initial;
+  }
+`
+
+type TextFieldProps = {
+  isOpen?: boolean
+}
+export const StyledTextField = styled(TextField)<TextFieldProps>`
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+  will-change: max-width;
+  width: 100%;
+  align-items: center;
+  max-width: ${({ isOpen }) => (isOpen ? '192px' : '0px')};
+
+  > input {
+    ${({ isOpen }) => isOpen === false && 'border: none !important'};
+
+    padding: 10px 16px 10px 42px;
+    caret-color: ${colors.blue[500]};
+
+    &:focus {
+      border: 1px solid ${colors.white};
+    }
+
+    ::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+  }
+`
+
+export const SearchButton = styled(IconButton)`
+  position: absolute;
+`
+
+export const UnfollowDescriptionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const UnfollowDescriptionAccentText = styled.span`
+  font-size: ${typography.sizes.body2};
+  line-height: ${typography.lineHeights.body2};
+  font-weight: ${typography.weights.regular};
+  color: ${colors.gray[50]};
 `

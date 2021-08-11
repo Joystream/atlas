@@ -14,12 +14,14 @@ export default {
   },
   argTypes: {
     exitButton: { defaultValue: true },
-    primaryButtonText: { defaultValue: 'hello darkness' },
-    secondaryButtonText: { defaultValue: 'my old friend' },
+    primaryButtonText: { defaultValue: 'hello darkness', type: { name: 'string', required: false } },
+    secondaryButtonText: { defaultValue: 'my old friend', type: { name: 'string', required: false } },
     showDialog: { table: { disable: true } },
     additionalActionsNode: { table: { disable: true } },
     warning: { defaultValue: false },
     error: { defaultValue: false },
+    primaryButton: { table: { disable: true } },
+    secondaryButton: { table: { disable: true } },
   },
   decorators: [
     (Story) => (
@@ -32,6 +34,8 @@ export default {
 
 type StoryProps = ActionDialogProps & {
   showAdditionalAction?: boolean
+  primaryButtonText?: string
+  secondaryButtonText?: string
 }
 
 const additionalActionNode = (
@@ -47,23 +51,50 @@ const content = (
   </div>
 )
 
-const RegularTemplate: Story<StoryProps> = ({ showAdditionalAction, ...args }) => {
+const RegularTemplate: Story<StoryProps> = ({
+  showAdditionalAction,
+  primaryButtonText,
+  secondaryButtonText,
+  ...args
+}) => {
   return (
-    <ActionDialog {...args} showDialog={true} additionalActionsNode={showAdditionalAction && additionalActionNode} />
+    <ActionDialog
+      {...args}
+      primaryButton={{ text: primaryButtonText }}
+      secondaryButton={{ text: secondaryButtonText }}
+      showDialog={true}
+      additionalActionsNode={showAdditionalAction && additionalActionNode}
+    />
   )
 }
 export const Regular = RegularTemplate.bind({})
 
-const ContentTemplate: Story<StoryProps> = ({ showAdditionalAction, ...args }) => {
+const ContentTemplate: Story<StoryProps> = ({
+  showAdditionalAction,
+  primaryButtonText,
+  secondaryButtonText,
+  ...args
+}) => {
   return (
-    <ActionDialog {...args} showDialog={true} additionalActionsNode={showAdditionalAction && additionalActionNode}>
+    <ActionDialog
+      {...args}
+      primaryButton={{ text: primaryButtonText }}
+      secondaryButton={{ text: secondaryButtonText }}
+      showDialog={true}
+      additionalActionsNode={showAdditionalAction && additionalActionNode}
+    >
       {content}
     </ActionDialog>
   )
 }
 export const WithContent = ContentTemplate.bind({})
 
-const TransitionTemplate: Story<StoryProps> = ({ showAdditionalAction, ...args }) => {
+const TransitionTemplate: Story<StoryProps> = ({
+  showAdditionalAction,
+  primaryButtonText,
+  secondaryButtonText,
+  ...args
+}) => {
   const [showDialog, setShowDialog] = useState(false)
 
   return (
@@ -71,6 +102,8 @@ const TransitionTemplate: Story<StoryProps> = ({ showAdditionalAction, ...args }
       <Button onClick={() => setShowDialog(true)}>Open Dialog</Button>
       <ActionDialog
         {...args}
+        primaryButton={{ text: primaryButtonText }}
+        secondaryButton={{ text: secondaryButtonText }}
         onExitClick={() => setShowDialog(false)}
         showDialog={showDialog}
         additionalActionsNode={showAdditionalAction && additionalActionNode}

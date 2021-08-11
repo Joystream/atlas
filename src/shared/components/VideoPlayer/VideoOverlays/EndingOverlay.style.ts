@@ -5,7 +5,7 @@ import { ChannelLink } from '@/components/ChannelLink'
 import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { Button } from '../../Button'
-import { CircularProgressbar } from '../../CircularProgressbar'
+import { CircularProgress } from '../../CircularProgress'
 import { IconButton } from '../../IconButton'
 import { Text } from '../../Text'
 
@@ -33,7 +33,7 @@ type InnerContainerProps = {
 
 export const InnerContainer = styled.div<InnerContainerProps>`
   padding: ${sizes(4)};
-  height: calc(100% - 72px);
+  height: calc(100% - ${({ isFullScreen }) => (isFullScreen ? '5.5em' : '4.25em')});
   overflow-y: auto;
   width: 100%;
   display: flex;
@@ -116,14 +116,13 @@ export const CountDownWrapper = styled.div`
   align-items: center;
 `
 
-export const StyledCircularProgressBar = styled(CircularProgressbar)`
+export const StyledCircularProgress = styled(CircularProgress)`
   width: ${sizes(14)};
   height: ${sizes(14)};
 `
 
 export const CountDownButton = styled(IconButton)`
-  /* we need important, because video.js is setting this value to inline-block */
-  display: block !important;
+  display: block;
   position: absolute;
   width: ${sizes(10)};
   height: ${sizes(10)};

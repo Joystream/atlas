@@ -5,9 +5,9 @@ import { TransitionGroup } from 'react-transition-group'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, transitions, typography } from '@/shared/theme'
 
-import { Placeholder } from '../Placeholder'
+import { SkeletonLoader } from '../SkeletonLoader'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small'
+export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel'
 
 type ContainerProps = {
   size: AvatarSize
@@ -32,6 +32,17 @@ const coverAvatarCss = css`
     width: 88px;
     min-width: 88px;
     height: 88px;
+  }
+`
+
+const channelAvatarCss = css`
+  width: 88px;
+  min-width: 88px;
+  height: 88px;
+  ${media.medium} {
+    width: 136px;
+    min-width: 136px;
+    height: 136px;
   }
 `
 
@@ -71,6 +82,8 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
       return coverAvatarCss
     case 'view':
       return viewAvatarCss
+    case 'channel':
+      return channelAvatarCss
     case 'fill':
       return fillAvatarCss
     case 'small':
@@ -126,7 +139,7 @@ export const EditButton = styled.button<EditButtonProps>`
   }
 `
 
-export const StyledPlaceholder = styled(Placeholder)`
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   left: 0;
 `

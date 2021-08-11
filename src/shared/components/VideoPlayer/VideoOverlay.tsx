@@ -1,12 +1,13 @@
+import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks'
 import { AssetAvailability, BasicVideoFieldsFragment } from '@/api/queries'
-import { transitions } from '@/shared/theme'
+import { colors, transitions } from '@/shared/theme'
 import { getRandomIntInclusive } from '@/utils/number'
 
-import { EndingOverlay, ErrorOverlay, LoadingOverlay } from './VideoOverlays'
+import { EndingOverlay, ErrorOverlay } from './VideoOverlays'
 import { PlayerState } from './VideoPlayer'
 
 type VideoOverlaProps = {
@@ -15,6 +16,7 @@ type VideoOverlaProps = {
   channelId?: string
   currentThumbnailUrl?: string | null
   videoId?: string
+  isFullScreen?: boolean
 }
 export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   playerState,
@@ -22,6 +24,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
   channelId,
   currentThumbnailUrl,
   videoId,
+  isFullScreen,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const { videos } = useBasicVideos({
@@ -53,9 +56,10 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
         appear
       >
         <div>
-          {playerState === 'loading' && <LoadingOverlay onPlay={onPlay} />}
+          {playerState === 'loading' && <LoadingOverlay />}
           {playerState === 'ended' && (
             <EndingOverlay
+              isFullScreen={isFullScreen}
               isEnded={true}
               onPlayAgain={onPlay}
               channelId={channelId}
@@ -69,3 +73,18 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
     </SwitchTransition>
   )
 }
+
+export const LoadingOverlay = styled.div`
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${colors.transparentBlack[54]};
+  display: flex;
+  background-size: cover;
+  justify-content: center;
+  pointer-events: none;
+  align-items: center;
+`

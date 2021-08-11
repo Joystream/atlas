@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { StudioContainer } from '@/components'
+import { LimitedWidthContainer } from '@/components'
 import { Button, Text } from '@/shared/components'
 import { SvgSigninIllustration } from '@/shared/illustrations'
 import { colors, media, sizes } from '@/shared/theme'
 
-export const StyledContainer = styled(StudioContainer)`
+export const StyledContainer = styled(LimitedWidthContainer)`
   margin-top: 64px;
   display: flex;
   flex-direction: column;

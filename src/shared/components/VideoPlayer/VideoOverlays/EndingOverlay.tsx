@@ -14,7 +14,7 @@ import {
   OverlayBackground,
   RestartButton,
   StyledChannelLink,
-  StyledCircularProgressBar,
+  StyledCircularProgress,
   SubHeading,
   VideoInfo,
 } from './EndingOverlay.style'
@@ -100,12 +100,12 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
             <StyledChannelLink id={channelId} avatarSize="default" />
           </VideoInfo>
           <CountDownWrapper>
-            <StyledCircularProgressBar
+            <StyledCircularProgress
               value={countdownProgress}
               maxValue={NEXT_VIDEO_TIMEOUT}
               strokeWidth={8}
               variant={'player'}
-              noTrail={!isCountDownStarted}
+              noTrail={isCountDownStarted}
             />
             <CountDownButton variant="tertiary" onClick={handleCountDownButton}>
               {isCountDownStarted ? <SvgPlayerPause /> : <SvgPlayerPlay />}

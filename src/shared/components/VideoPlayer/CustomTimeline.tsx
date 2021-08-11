@@ -28,6 +28,7 @@ type CustomTimelineProps = {
 const UPDATE_INTERVAL = 30
 
 export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullScreen, playerState }) => {
+  const playProgressThumbRef = useRef<HTMLButtonElement>(null)
   const playProgressRef = useRef<HTMLDivElement>(null)
   const seekBarRef = useRef<HTMLDivElement>(null)
   const mouseDisplayTooltipRef = useRef<HTMLDivElement>(null)
@@ -37,24 +38,46 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
   const [mouseDisplayWidth, setMouseDisplayWidth] = useState(0)
   const [mouseDisplayTooltipTime, setMouseDisplayTooltipTime] = useState('0:00')
   const [mouseDisplayTooltipWidth, setMouseDisplayTooltipWidth] = useState(0)
+  const [playProgressThumbWidth, setPlayProgressThumbWidth] = useState(0)
   const [isScrubbing, setIsScrubbing] = useState(false)
   const [playedBefore, setPlayedBefore] = useState(false)
 
   useEffect(() => {
-    if (!player || !playedBefore) {
+    if (!player) {
       return
     }
-    if (isScrubbing) {
-      player.pause()
-    } else {
-      player.play()
-      setPlayedBefore(false)
+    const handler = (event: Event) => {
+      if (event.type === 'seeking') {
+        if (!player.paused()) {
+          setPlayedBefore(true)
+          player.pause()
+        }
+      }
+      if (event.type === 'seeked') {
+        if (playedBefore) {
+          player.play()
+          setPlayedBefore(false)
+        }
+      }
+    }
+    player.on(['seeking', 'seeked'], handler)
+    return () => {
+      player.off(['seeking', 'seeked'], handler)
     }
   }, [isScrubbing, player, playedBefore])
 
   useEffect(() => {
     const playProgress = playProgressRef.current
-    if (!player || !playerState || playerState === 'ended' || playerState === 'error' || !playProgress || isScrubbing) {
+    const playProgressThumb = playProgressThumbRef.current
+    if (
+      !player ||
+      !playerState ||
+      playerState === 'ended' ||
+      playerState === 'error' ||
+      !playProgress ||
+      isScrubbing ||
+      !playProgressThumb
+    ) {
       return
     }
 
@@ -67,6 +90,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
       const progressPercentage = round((currentTime / duration) * 100, 2)
       setPlayProgressWidth(progressPercentage)
+      setPlayProgressThumbWidth(playProgressThumb.clientWidth)
 
       // set loadProgress
 
@@ -115,25 +139,24 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       setMouseDisplayTooltipTime(formatDurationShort(round((percentage / 100) * duration)))
     }
     if (isScrubbing) {
-      if (!player.paused()) {
-        setPlayedBefore(true)
-      }
       setPlayProgressWidth(percentage)
     }
   }
 
-  const handleJumpToTime = (e: React.MouseEvent) => {
+  const handleJumpToTime = (e: React.MouseEvent | React.TouchEvent) => {
     const seekBar = seekBarRef.current
-    if (!seekBar || isScrubbing) {
+    if (!seekBar || (e.type === 'mouseleave' && !isScrubbing) || !player) {
       return
     }
 
     const { x: seekBarPosition, width: seekBarWidth } = seekBar.getBoundingClientRect()
-    const mousePosition = e.clientX - seekBarPosition
+    const mouseOrTouchPosition =
+      'clientX' in e ? e.clientX - seekBarPosition : e.changedTouches[0].clientX - seekBarPosition
 
-    const percentage = clamp(round(mousePosition / seekBarWidth, 4), 0, 100)
+    const percentage = clamp(round(mouseOrTouchPosition / seekBarWidth, 4), 0, 100)
     const newTime = percentage * (player?.duration() || 0)
     player?.currentTime(newTime)
+    setIsScrubbing(false)
   }
 
   return (
@@ -142,12 +165,12 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       isFullScreen={isFullScreen}
       onMouseMove={handleMouseAndTouchMove}
       onTouchMove={handleMouseAndTouchMove}
-      onMouseLeave={() => setIsScrubbing(false)}
+      onMouseLeave={handleJumpToTime}
       onClick={handleJumpToTime}
       onMouseDown={() => setIsScrubbing(true)}
       onTouchStart={() => setIsScrubbing(true)}
       onMouseUp={() => setIsScrubbing(false)}
-      onTouchEnd={() => setIsScrubbing(false)}
+      onTouchEnd={handleJumpToTime}
     >
       <SeekBar ref={seekBarRef}>
         <LoadProgress style={{ width: loadProgressWidth + '%' }} />
@@ -167,7 +190,14 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
         </MouseDisplayWrapper>
         <PlayProgressWrapper>
           <PlayProgress style={{ width: playProgressWidth + '%' }} ref={playProgressRef} />
-          <PlayProgressThumb style={{ left: `clamp(0px, calc(${playProgressWidth}% - 0.5em), calc(100% - 1em))` }} />
+          <PlayProgressThumb
+            ref={playProgressThumbRef}
+            style={{
+              left: `clamp(0px, calc(${playProgressWidth}% - ${
+                playProgressThumbWidth / 2
+              }px), calc(100% - ${playProgressThumbWidth}px))`,
+            }}
+          />
         </PlayProgressWrapper>
       </SeekBar>
     </ProgressControl>
