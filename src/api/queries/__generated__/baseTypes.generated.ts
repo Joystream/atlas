@@ -308,6 +308,8 @@ export type Query = {
   mostViewedChannelsAllTime?: Maybe<Array<EntityViewsInfo>>
   /** Get list of most viewed videos in given period */
   mostViewedVideos?: Maybe<Array<EntityViewsInfo>>
+  /** Get list of most viewed videos in given period */
+  mostViewedVideosAllTime?: Maybe<Array<EntityViewsInfo>>
   search: Array<SearchFtsOutput>
   videoByUniqueInput?: Maybe<Video>
   videoCategories: Array<VideoCategory>
@@ -383,6 +385,10 @@ export type QueryMostViewedChannelsAllTimeArgs = {
 export type QueryMostViewedVideosArgs = {
   period: Scalars['Int']
   limit?: Maybe<Scalars['Int']>
+}
+
+export type QueryMostViewedVideosAllTimeArgs = {
+  limit: Scalars['Int']
 }
 
 export type QuerySearchArgs = {

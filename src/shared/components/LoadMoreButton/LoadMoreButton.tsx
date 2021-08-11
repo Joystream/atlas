@@ -11,7 +11,7 @@ type LoadMoreButtonProps = {
 
 export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick, label = 'Show more videos' }) => (
   <LoadMore
-    variant="secondary"
+    variant="tertiary"
     size="large"
     fullWidth
     onClick={onClick}
