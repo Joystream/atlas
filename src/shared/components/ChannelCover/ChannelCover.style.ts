@@ -26,6 +26,7 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
+  overflow: hidden;
 `
 
 export const CoverImage = styled.img`
