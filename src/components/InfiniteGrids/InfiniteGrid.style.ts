@@ -17,6 +17,8 @@ export const LoadMoreButtonWrapper = styled.div`
 
 export const TitleWrapper = styled.div`
   display: flex;
+  align-items: center;
+  padding-bottom: ${sizes(5)};
 `
 
 export const LanguageSelectWrapper = styled.div`

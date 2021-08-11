@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash'
 import { useEffect, useRef } from 'react'
 
-import { ChannelOrderByInput } from '@/api/queries'
+import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
 
 export type PaginatedData<T> = {
   edges: {
@@ -41,6 +41,8 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onDemand?: boolean
   onScrollToBottom?: () => void
   orderBy?: ChannelOrderByInput
+  sortByViews?: boolean
+  additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
@@ -66,7 +68,9 @@ export const useInfiniteGrid = <
   onScrollToBottom,
   queryVariables,
   onDemand,
+  sortByViews,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
+  additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -79,7 +83,7 @@ export const useInfiniteGrid = <
     variables: {
       ...queryVariables,
       orderBy,
-      first: targetLoadedItemsCount,
+      first: sortByViews ? 100 : targetDisplayedItemsCount,
     },
   })
 
@@ -130,7 +134,9 @@ export const useInfiniteGrid = <
     return () => window.removeEventListener('scroll', scrollHandler)
   }, [isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
 
-  const displayedEdges = data?.edges.slice(skipCount, targetLoadedItemsCount) ?? []
+  const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
+
+  const displayedEdges = edges?.slice(skipCount, targetLoadedItemsCount) ?? []
   const displayedItems = displayedEdges.map((edge) => edge.node)
 
   const displayedItemsCount = data

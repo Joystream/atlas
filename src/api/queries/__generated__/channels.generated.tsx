@@ -57,9 +57,9 @@ export type GetVideoCountQuery = {
 }
 
 export type GetChannelsQueryVariables = Types.Exact<{
-  offset?: Types.Maybe<Types.Scalars['Int']>
-  limit?: Types.Maybe<Types.Scalars['Int']>
   where?: Types.Maybe<Types.ChannelWhereInput>
+  limit?: Types.Maybe<Types.Scalars['Int']>
+  orderBy?: Types.Maybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
 export type GetChannelsQuery = {
@@ -312,8 +312,8 @@ export type GetVideoCountQueryHookResult = ReturnType<typeof useGetVideoCountQue
 export type GetVideoCountLazyQueryHookResult = ReturnType<typeof useGetVideoCountLazyQuery>
 export type GetVideoCountQueryResult = Apollo.QueryResult<GetVideoCountQuery, GetVideoCountQueryVariables>
 export const GetChannelsDocument = gql`
-  query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
-    channels(offset: $offset, limit: $limit, where: $where) {
+  query GetChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]) {
+    channels(where: $where, orderBy: $orderBy, limit: $limit) {
       ...AllChannelFields
     }
   }
@@ -332,9 +332,9 @@ export const GetChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetChannelsQuery({
  *   variables: {
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
  *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
