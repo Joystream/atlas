@@ -25,6 +25,7 @@ export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlay
   const isFullscreen = playerInstance.isFullscreen()
   const duration = playerInstance.duration()
   const isPaused = playerInstance.paused()
+  const isEnded = currentTime === duration
 
   switch (event.code) {
     case 'Space':
@@ -42,7 +43,7 @@ export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlay
       playerInstance.trigger(CustomVideojsEvents.BackwardFiveSec)
       return
     case 'ArrowRight':
-      if (currentTime === duration || playerInstance.ended()) {
+      if (isEnded) {
         return
       }
       playerInstance.currentTime(currentTime + 5)
@@ -53,7 +54,7 @@ export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlay
       playerInstance.trigger(CustomVideojsEvents.BackwardTenSec)
       return
     case 'KeyL':
-      if (currentTime === duration || playerInstance.ended()) {
+      if (isEnded) {
         return
       }
       playerInstance.currentTime(currentTime + 10)
