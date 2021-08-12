@@ -17,6 +17,17 @@ export const GridTesting = () => {
           colSpan={{ small: 2, medium: 3, large: 4, xlarge: 5, xxlarge: 6 }}
         ></StyledGridItem>
       </LayoutGrid>
+      <LayoutGrid big>
+        <StyledGridItem></StyledGridItem>
+        <StyledGridItem></StyledGridItem>
+        <StyledGridItem></StyledGridItem>
+        <StyledGridItem></StyledGridItem>
+        <StyledGridItem></StyledGridItem>
+        <StyledGridItem
+          colStart={{ xlarge: 7 }}
+          colSpan={{ small: 2, medium: 3, large: 4, xlarge: 5, xxlarge: 6 }}
+        ></StyledGridItem>
+      </LayoutGrid>
     </div>
   )
 }

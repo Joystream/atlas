@@ -5,7 +5,7 @@ import { media } from '@/shared/theme'
 
 type ReponsivenessObject = Partial<Record<keyof typeof media, number>>
 
-export const LayoutGrid = styled.div`
+export const LayoutGrid = styled.div<{ big?: boolean }>`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 16px;
@@ -13,6 +13,9 @@ export const LayoutGrid = styled.div`
   ${media.medium} {
     grid-gap: 24px;
   }
+
+  max-width: ${({ big }) => (big ? '2284' : '1440')}px;
+  margin: 0 auto;
 `
 
 type GridItemProps = {
