@@ -98,7 +98,7 @@ const ChannelCardAnchor = styled(Link)`
 `
 
 const StyledAvatar = styled(Avatar)`
-  margin-left: ${sizes(6)};
+  margin-right: ${sizes(6)};
 `
 
 const InfoWrapper = styled.div`

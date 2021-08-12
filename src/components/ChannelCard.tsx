@@ -5,18 +5,15 @@ import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
 import { ChannelCardBase } from '@/shared/components'
 
-export type ChannelCardVariant = 'primary' | 'secondary'
-
 export type ChannelCardProps = {
   id?: string
   rankingNumber?: number
   isLoading?: boolean
-  variant?: ChannelCardVariant
   className?: string
   onClick?: () => void
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({ id, rankingNumber, isLoading, variant, className }) => {
+export const ChannelCard: React.FC<ChannelCardProps> = ({ id, rankingNumber, isLoading, className }) => {
   const { channel } = useChannel(id ?? '', { skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
 
@@ -30,7 +27,6 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, rankingNumber, isL
   return (
     <ChannelCardBase
       className={className}
-      variant={variant}
       isLoading={isLoading}
       id={channel?.id}
       avatarUrl={url}

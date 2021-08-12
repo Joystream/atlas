@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { ChannelCardVariant } from '@/components/ChannelCard'
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
@@ -23,54 +22,38 @@ export const ChannelCardWrapper = styled.div<ChannelCardWrapperProps>`
   }
 `
 
-type ChannelCardArticleProps = {
-  variant?: ChannelCardVariant
-}
-export const ChannelCardArticle = styled.article<ChannelCardArticleProps>`
+export const ChannelCardArticle = styled.article`
   position: relative;
 
   :hover:not(:active) {
     ${() => ChannelCardAnchor} {
-      transform: ${({ variant }) => (variant === 'primary' ? `translate(-${sizes(2)}, -${sizes(2)}) ` : 'unset')};
-      box-shadow: ${({ variant }) =>
-        variant === 'primary' ? `${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']}` : 'unset'};
+      transform: translate(-${sizes(2)}, -${sizes(2)});
+      box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']};
     }
   }
 `
-type ChannelCardAnchorProps = {
-  variant?: ChannelCardVariant
-}
 
-export const ChannelCardAnchor = styled(Link)<ChannelCardAnchorProps>`
+export const ChannelCardAnchor = styled(Link)`
   text-decoration: none;
   align-items: center;
   transition: transform, box-shadow;
   transition-duration: ${transitions.timings.regular};
   transition-timing-function: ${transitions.easing};
-  display: ${({ variant }) => (variant === 'primary' ? 'flex' : 'inline-flex')};
-  justify-content: ${({ variant }) => (variant === 'primary' ? 'center' : 'unset')};
-  flex-direction: ${({ variant }) => (variant === 'primary' ? 'column' : 'row')};
-  background-color: ${({ variant }) => (variant === 'primary' ? colors.gray[900] : 'none')};
-  padding: ${({ variant }) => (variant === 'primary' ? `${sizes(4)} 0` : 'unset')};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: ${colors.gray[900]};
+  padding: ${sizes(4)} 0;
 `
 
-type StyledAvatarProps = {
-  variant?: ChannelCardVariant
-}
-
-export const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
-  margin-bottom: ${({ variant }) => (variant === 'primary' ? sizes(4) : 'unset')};
-  margin-right: ${({ variant }) => (variant === 'secondary' ? sizes(6) : 'unset')};
+export const StyledAvatar = styled(Avatar)`
+  margin-bottom: ${sizes(4)};
 `
 
-type InfoWrapperProps = {
-  variant?: ChannelCardVariant
-}
-
-export const InfoWrapper = styled.div<InfoWrapperProps>`
+export const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${({ variant }) => (variant === 'primary' ? 'center' : 'unset')};
+  align-items: center;
 `
 
 export const ChannelTitle = styled(Text)`
@@ -88,12 +71,8 @@ export const ChannelFollows = styled(Text)`
   white-space: nowrap;
 `
 
-type FollowButtonProps = {
-  channelVariant?: ChannelCardVariant
-}
-
-export const FollowButton = styled(Button)<FollowButtonProps>`
-  margin-top: ${({ channelVariant }) => (channelVariant === 'primary' ? sizes(4) : sizes(2))};
+export const FollowButton = styled(Button)`
+  margin-top: ${sizes(4)};
 `
 
 export const RankingNumber = styled.span`

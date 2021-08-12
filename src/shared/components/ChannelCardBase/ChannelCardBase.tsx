@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { ChannelCardVariant } from '@/components/ChannelCard'
 import { absoluteRoutes } from '@/config/routes'
 import { formatNumberShort } from '@/utils/number'
 
@@ -27,7 +26,6 @@ export type ChannelCardBaseProps = {
   avatarUrl?: string | null
   isFollowing?: boolean
   onFollow?: (event: React.MouseEvent) => void
-  variant?: ChannelCardVariant
   className?: string
   onClick?: () => void
 }
@@ -41,27 +39,21 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   avatarUrl,
   isFollowing,
   onFollow,
-  variant = 'primary',
   className,
   onClick,
 }) => {
   const loading = isLoading || id === undefined
-  const hasRanking = variant === 'primary' && !!rankingNumber
+  const hasRanking = !!rankingNumber
   return (
     <ChannelCardWrapper className={className} hasRanking={hasRanking}>
-      <ChannelCardArticle variant={variant}>
+      <ChannelCardArticle>
         {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
-        {loading && variant === 'primary' ? (
+        {loading ? (
           <SkeletonLoader height="240px" width="300px" />
         ) : (
-          <ChannelCardAnchor onClick={onClick} variant={variant} to={absoluteRoutes.viewer.channel(id || '')}>
-            <StyledAvatar
-              variant={variant}
-              size={variant === 'primary' ? 'channel-card' : 'channel'}
-              loading={loading}
-              assetUrl={avatarUrl}
-            />
-            <InfoWrapper variant={variant}>
+          <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
+            <StyledAvatar size="channel-card" loading={loading} assetUrl={avatarUrl} />
+            <InfoWrapper>
               {loading ? (
                 <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
               ) : (
@@ -77,12 +69,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
               {loading ? (
                 <SkeletonLoader width="90px" height="40px" />
               ) : (
-                <FollowButton
-                  channelVariant={variant}
-                  variant="secondary"
-                  size={variant === 'primary' ? 'small' : 'medium'}
-                  onClick={onFollow}
-                >
+                <FollowButton variant="secondary" size="small" onClick={onFollow}>
                   {isFollowing ? 'Unfollow' : 'Follow'}
                 </FollowButton>
               )}
