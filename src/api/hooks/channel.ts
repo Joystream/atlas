@@ -198,12 +198,7 @@ export const useMostFollowedChannelsAllTime = (
 ) => {
   const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds(variables, opts)
 
-  const mostFollowedChannelsAllTimeIds = useMemo(() => {
-    if (mostFollowedChannelsAllTime) {
-      return mostFollowedChannelsAllTime.map((item) => item.id)
-    }
-    return null
-  }, [mostFollowedChannelsAllTime])
+  const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
 
   const { channels, ...rest } = useChannels(
     {
