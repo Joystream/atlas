@@ -7,7 +7,7 @@ import { sizes } from '@/shared/theme'
 
 const MOST_FOLLOWED_CHANNELS_LIMIT = 100
 
-export const DiscoverChannels = () => {
+export const DiscoverChannels: React.FC = () => {
   const sortChannelsByViewsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
     if (!edges) {
       return []
