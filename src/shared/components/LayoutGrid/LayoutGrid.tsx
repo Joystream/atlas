@@ -41,6 +41,11 @@ const createBreakpointGridItemRules = (breakpointKey: keyof ReponsivenessObject)
 `
 
 export const GridItem = styled.div<GridItemProps>`
+  ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
+  ${({ colSpan }) => !isResponsivenessObject(colSpan) && colSpan && `grid-column-end: span ${colSpan};`}
+  ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
+  ${({ rowSpan }) => !isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
+  
   ${createBreakpointGridItemRules('base')}
   ${createBreakpointGridItemRules('compact')}
   ${createBreakpointGridItemRules('small')}
