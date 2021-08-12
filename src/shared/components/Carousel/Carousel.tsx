@@ -45,6 +45,7 @@ export const Carousel = forwardRef<
   ) => {
     const dotsRef = useRef<HTMLDivElement>(null)
     const gliderInstanceRef = useRef<Glider.Static<HTMLElement>>()
+    const slidesToScrollRef = useRef<number>(0)
 
     const onAnimated = () => {
       if (gliderInstanceRef.current && gliderOptions.responsive) {
@@ -52,11 +53,14 @@ export const Carousel = forwardRef<
           (item) => item.breakpoint === gliderInstanceRef.current?.breakpoint
         )
         const slidesToScroll = gliderOptions.responsive[breakpointIndex].settings.slidesToScroll as number
-        const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScroll
+        const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScrollRef.current || slidesToScroll
         if (nextArrowRef.current && nextArrowRef.current?.classList.contains('disabled') && itemsRemainder) {
           gliderInstanceRef.current.setOption({ slidesToScroll: itemsRemainder }, false)
         } else {
-          gliderInstanceRef.current.setOption({ skipTrack: true, ...gliderOptions }, false)
+          gliderInstanceRef.current.setOption({ slidesToScroll: slidesToScrollRef.current || slidesToScroll }, false)
+          if (!slidesToScrollRef.current) {
+            slidesToScrollRef.current = slidesToScroll
+          }
         }
       }
     }
@@ -77,6 +81,18 @@ export const Carousel = forwardRef<
       dots: dotsRef.current,
       ...gliderOptions,
     })
+
+    const resetSlidesToScroll = () => {
+      slidesToScrollRef.current = 0
+    }
+
+    useEffect(() => {
+      window.addEventListener('resize', resetSlidesToScroll)
+
+      return () => {
+        window.removeEventListener('resize', resetSlidesToScroll)
+      }
+    }, [])
 
     useEffect(() => {
       if (!glider) return
