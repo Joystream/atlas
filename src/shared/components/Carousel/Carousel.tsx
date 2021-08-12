@@ -54,7 +54,7 @@ export const Carousel = forwardRef<
         const slidesToScroll = gliderOptions.responsive[breakpointIndex].settings.slidesToScroll as number
         const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScroll
         if (nextArrowRef.current && nextArrowRef.current?.classList.contains('disabled') && itemsRemainder) {
-          gliderInstanceRef.current.setOption({ slidesToScroll: 2 }, false)
+          gliderInstanceRef.current.setOption({ slidesToScroll: itemsRemainder }, false)
         } else {
           gliderInstanceRef.current.setOption({ skipTrack: true, ...gliderOptions }, false)
         }
