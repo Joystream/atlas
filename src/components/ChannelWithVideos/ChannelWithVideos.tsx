@@ -1,6 +1,4 @@
-import styled from '@emotion/styled'
 import React, { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { useChannel } from '@/api/hooks'
 import { GetVideosConnectionDocument, GetVideosConnectionQuery, GetVideosConnectionQueryVariables } from '@/api/queries'
@@ -9,9 +7,17 @@ import { VideoTile } from '@/components/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
-import { Avatar, Button, Grid, SkeletonLoader, Text } from '@/shared/components'
-import { sizes } from '@/shared/theme'
+import { Grid, SkeletonLoader } from '@/shared/components'
 import { formatNumberShort } from '@/utils/number'
+
+import {
+  ChannelCardAnchor,
+  ChannelFollows,
+  ChannelTitle,
+  FollowButton,
+  InfoWrapper,
+  StyledAvatar,
+} from './ChannelWithVideos.style'
 
 type ChannelWithVideosProps = {
   channelId?: string
@@ -87,40 +93,3 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
     </>
   )
 }
-
-const ChannelCardAnchor = styled(Link)`
-  text-decoration: none;
-  align-items: center;
-  transition: transform, box-shadow;
-  display: inline-flex;
-  justify-content: unset;
-  margin-bottom: ${sizes(10)};
-`
-
-const StyledAvatar = styled(Avatar)`
-  margin-right: ${sizes(6)};
-`
-
-const InfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const ChannelTitle = styled(Text)`
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-
-const ChannelFollows = styled(Text)`
-  margin-top: ${sizes(1)};
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-
-const FollowButton = styled(Button)`
-  margin-top: ${sizes(2)};
-`
