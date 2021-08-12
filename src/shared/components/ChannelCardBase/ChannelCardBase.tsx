@@ -49,31 +49,33 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
       <ChannelCardArticle>
         {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
         {loading ? (
-          <SkeletonLoader height="240px" width="300px" />
+          <SkeletonLoader height="240px" width="100%" />
         ) : (
           <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
-            <StyledAvatar size="channel-card" loading={loading} assetUrl={avatarUrl} />
-            <InfoWrapper>
-              {loading ? (
-                <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
-              ) : (
-                <ChannelTitle variant="h6">{title}</ChannelTitle>
-              )}
-              {loading ? (
-                <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
-              ) : (
-                <ChannelFollows variant="body2" secondary>
-                  {formatNumberShort(follows || 0)} followers
-                </ChannelFollows>
-              )}
-              {loading ? (
-                <SkeletonLoader width="90px" height="40px" />
-              ) : (
-                <FollowButton variant="secondary" size="small" onClick={onFollow}>
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </FollowButton>
-              )}
-            </InfoWrapper>
+            <>
+              <StyledAvatar size="channel-card" loading={loading} assetUrl={avatarUrl} />
+              <InfoWrapper>
+                {loading ? (
+                  <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
+                ) : (
+                  <ChannelTitle variant="h6">{title}</ChannelTitle>
+                )}
+                {loading ? (
+                  <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
+                ) : (
+                  <ChannelFollows variant="body2" secondary>
+                    {formatNumberShort(follows || 0)} followers
+                  </ChannelFollows>
+                )}
+                {loading ? (
+                  <SkeletonLoader width="90px" height="40px" />
+                ) : (
+                  <FollowButton variant="secondary" size="small" onClick={onFollow}>
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </FollowButton>
+                )}
+              </InfoWrapper>
+            </>
           </ChannelCardAnchor>
         )}
       </ChannelCardArticle>
