@@ -233,6 +233,7 @@ const backgroundContainerCss = css`
     display: block;
     opacity: 0;
     height: 100%;
+    position: relative;
     transition: opacity ${transitions.timings.loading} ${transitions.easing};
   }
 
