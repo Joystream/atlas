@@ -31,7 +31,7 @@ const rankingCss = css`
       content: counter(ranking-counter);
       z-index: -5;
       top: 0;
-      left: 0;
+      left: -${sizes(2)};
       height: 50%;
       color: black;
       font-weight: 700;
@@ -43,15 +43,11 @@ const rankingCss = css`
       display: flex;
       align-items: center;
 
+      ${media.medium} {
+        font-size: 140px;
+      }
+
       ${media.large} {
-        font-size: 140px;
-      }
-
-      ${media.xlarge} {
-        font-size: 140px;
-      }
-
-      ${media.xxlarge} {
         font-size: 180px;
       }
     }
@@ -101,7 +97,7 @@ type TrackProps = {
 export const Track = styled.div<TrackProps>`
   align-items: flex-start;
 
-  .glider-slide {
+  .glider-slide:not(:first-of-type) {
     margin-left: ${sizes(4)};
   }
   ${({ hasRanking }) => hasRanking && rankingCss};
