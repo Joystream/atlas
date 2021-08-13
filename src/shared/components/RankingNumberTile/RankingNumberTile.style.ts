@@ -21,6 +21,10 @@ const variantStyles = (variant: 'channel' | 'video') => {
         ${media.medium} {
           top: 0;
           align-items: flex-start;
+          font-size: 140px;
+        }
+        ${media.large} {
+          font-size: 180px;
         }
       `
     case 'video':
@@ -28,6 +32,14 @@ const variantStyles = (variant: 'channel' | 'video') => {
         align-items: flex-start;
         ${media.medium} {
           line-height: 0.7;
+          font-size: 100px;
+        }
+        ${media.large} {
+          font-size: 140px;
+        }
+
+        ${media.xlarge} {
+          font-size: 160px;
         }
       `
     default:
@@ -54,11 +66,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
 
   ${media.medium} {
     left: -${sizes(2)};
-    font-size: 140px;
   }
 
-  ${media.large} {
-    font-size: 180px;
-  }
   ${({ variant }) => variantStyles(variant)};
 `
