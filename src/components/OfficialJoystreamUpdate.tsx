@@ -1,10 +1,8 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
 import { useVideos } from '@/api/hooks'
 import { VideoGallery } from '@/components'
 import { readEnv } from '@/config/envs'
-import { sizes } from '@/shared/theme'
 
 const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL')
 const MAX_VIDEOS = 10
@@ -18,17 +16,13 @@ export const OfficialJoystreamUpdate = () => {
   })
 
   return (
-    <Wrapper>
+    <section>
       <VideoGallery
         title="Official Joystream updates"
         videos={videos || []}
         seeAllUrl={`/channel/${channelId}`}
         loading={loading}
       />
-    </Wrapper>
+    </section>
   )
 }
-
-const Wrapper = styled.div`
-  margin-top: ${sizes(18)};
-`
