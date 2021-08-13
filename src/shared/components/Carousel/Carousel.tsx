@@ -5,8 +5,6 @@ import { Container, Dots, GliderContainer, Track } from './Carousel.style'
 import { GliderProps, useGlider } from '../Glider'
 
 export type CarouselProps = {
-  paddingLeft?: number
-  paddingTop?: number
   className?: string
   arrowPosition?: number
   dotsVisible?: boolean
@@ -22,8 +20,6 @@ export const Carousel = forwardRef<
   (
     {
       children,
-      paddingLeft = 0,
-      paddingTop = 0,
       className = '',
       arrowPosition,
       slidesToShow = 'auto',
@@ -57,7 +53,7 @@ export const Carousel = forwardRef<
 
     return (
       <Container {...getContainerProps({ className })}>
-        <GliderContainer {...getGliderProps()} paddingLeft={paddingLeft} paddingTop={paddingTop} ref={gliderRef}>
+        <GliderContainer {...getGliderProps()} ref={gliderRef}>
           <Track {...getTrackProps()}>{children}</Track>
         </GliderContainer>
         {dotsVisible && <Dots {...getDotsProps()} ref={dotsRef} />}

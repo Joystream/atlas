@@ -9,7 +9,7 @@ import {
   GetChannelsConnectionQueryVariables,
   VideoEdge,
 } from '@/api/queries'
-import { ChannelWithVideos } from '@/components'
+import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
 import { GridHeadingContainer, LoadMoreButton, Select } from '@/shared/components'

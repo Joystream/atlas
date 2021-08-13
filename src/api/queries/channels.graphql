@@ -137,3 +137,17 @@ query GetMostViewedChannelsAllTime($limit: Int!) {
     views
   }
 }
+
+query GetMostFollowedChannels($followedWithinDays: Int!, $limit: Int) {
+  mostFollowedChannels(period: $followedWithinDays, limit: $limit) {
+    id
+    follows
+  }
+}
+
+query GetMostFollowedChannelsAllTime($limit: Int!) {
+  mostFollowedChannelsAllTime(limit: $limit) {
+    id
+    follows
+  }
+}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { InfiniteChannelWithVideosGrid, ViewWrapper } from '@/components'
+import { InfiniteChannelWithVideosGrid, TopTenChannels, ViewWrapper } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
 import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
@@ -11,7 +11,8 @@ export const ChannelsView = () => {
   return (
     <StyledViewWrapper>
       <Header variant="h2">Browse channels</Header>
-      <InfiniteChannelWithVideosGrid title="Channels in your language:" languageSelector onDemand />
+      <TopTenChannels />
+      <StyledInfiniteChannelWithVideosGrid title="Channels in your language:" languageSelector onDemand />
       <CallToActionWrapper>
         <CallToActionButton
           label="Popular on Joystream"
@@ -42,4 +43,8 @@ const Header = styled(Text)`
 
 const StyledViewWrapper = styled(ViewWrapper)`
   padding-bottom: ${sizes(10)};
+`
+
+const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
+  margin-top: ${sizes(36)};
 `
