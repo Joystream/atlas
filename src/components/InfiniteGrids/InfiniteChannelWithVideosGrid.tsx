@@ -1,4 +1,5 @@
 import React, { FC, Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 import { useLanguages } from '@/api/hooks'
 import {
@@ -14,6 +15,7 @@ import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
 import { GridHeadingContainer, LoadMoreButton, Select } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
   AdditionalLink,
@@ -138,16 +140,24 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
           <GridHeadingContainer>
             {!isReady ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
             {languageSelector && (
-              <LanguageSelectWrapper>
-                <Select
-                  items={mappedLanguages || []}
-                  disabled={languagesLoading}
-                  value={selectedLanguage}
-                  size="small"
-                  helperText={null}
-                  onChange={onSelectLanguage}
-                />
-              </LanguageSelectWrapper>
+              <CSSTransition
+                in={!!queryNodeLanguages?.length}
+                timeout={parseInt(transitions.timings.loading)}
+                classNames={transitions.names.fade}
+                mountOnEnter
+                unmountOnExit
+              >
+                <LanguageSelectWrapper>
+                  <Select
+                    items={mappedLanguages}
+                    disabled={languagesLoading}
+                    value={selectedLanguage}
+                    size="small"
+                    helperText={null}
+                    onChange={onSelectLanguage}
+                  />
+                </LanguageSelectWrapper>
+              </CSSTransition>
             )}
             {additionalLink && (
               <AdditionalLink
