@@ -27,7 +27,6 @@ import {
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
-  sortByViews?: boolean
   title?: string
   skipCount?: number
   first?: number
@@ -40,6 +39,7 @@ type InfiniteChannelWithVideosGridProps = {
     name: string
     url: string
   }
+  maximumCount?: number
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -54,10 +54,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   first,
   orderBy = ChannelOrderByInput.CreatedAtAsc,
   className,
-  sortByViews,
   languageSelector,
   idIn = null,
   additionalLink,
+  maximumCount,
   additionalSortFn,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
@@ -91,7 +91,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
-    sortByViews,
     additionalSortFn,
   })
 
@@ -100,7 +99,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   }
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
-  const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
+  const shouldShowLoadMoreButton =
+    onDemand && !loading && (displayedItems.length < totalCount || (maximumCount && totalCount < maximumCount))
+
   const itemsToShow = [...displayedItems, ...placeholderItems]
 
   const mappedLanguages = useMemo(() => {
