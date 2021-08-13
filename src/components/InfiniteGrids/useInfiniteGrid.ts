@@ -42,7 +42,6 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onDemand?: boolean
   onScrollToBottom?: () => void
   orderBy?: ChannelOrderByInput
-  sortByViews?: boolean
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -70,7 +69,6 @@ export const useInfiniteGrid = <
   onError,
   queryVariables,
   onDemand,
-  sortByViews,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
   additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
@@ -85,7 +83,7 @@ export const useInfiniteGrid = <
     variables: {
       ...queryVariables,
       orderBy,
-      first: sortByViews ? 100 : targetDisplayedItemsCount,
+      first: additionalSortFn ? 100 : targetDisplayedItemsCount,
     },
     onError,
   })
