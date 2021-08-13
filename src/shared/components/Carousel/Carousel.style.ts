@@ -10,11 +10,6 @@ export const Container = styled.div`
   position: relative;
 `
 
-type HasPadding = {
-  paddingLeft: number
-  paddingTop: number
-}
-
 export const Arrow = styled(IconButton)`
   display: none;
   z-index: ${zIndex.nearOverlay};
@@ -46,11 +41,9 @@ export const Arrow = styled(IconButton)`
   }
 `
 
-export const GliderContainer = styled.div<HasPadding>`
-  padding-left: ${(props) => props.paddingLeft}px;
-  padding-top: ${(props) => props.paddingTop}px;
-  margin-left: ${(props) => -props.paddingLeft}px;
-  margin-top: ${(props) => -props.paddingTop}px;
+export const GliderContainer = styled.div`
+  padding-left: ${sizes(2)};
+  padding-top: ${sizes(2)};
 `
 
 export const Track = styled.div`
