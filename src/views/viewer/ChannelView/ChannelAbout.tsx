@@ -32,7 +32,7 @@ export const ChannelAbout = () => {
           </TextContainer>
         )}
       </GridItem>
-      <GridItem colSpan={{ base: 12, small: 3 }} colStart={{ small: -3 }}>
+      <GridItem colSpan={{ base: 12, small: 3 }} colStart={{ small: -4 }}>
         <DetailsText variant="h4">Details</DetailsText>
 
         <Details>
