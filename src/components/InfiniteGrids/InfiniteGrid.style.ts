@@ -1,24 +1,15 @@
 import styled from '@emotion/styled'
 
-import { Button, SkeletonLoader, Text } from '@/shared/components'
+import { Button } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 
-export const Title = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
-export const StyledSkeletonLoader = styled(SkeletonLoader)`
-  margin-bottom: ${sizes(4)};
-`
-
 export const LoadMoreButtonWrapper = styled.div`
-  margin-top: ${sizes(10)};
+  margin-top: ${sizes(12)};
 `
 
 export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: ${sizes(5)};
 `
 
 export const LanguageSelectWrapper = styled.div`
@@ -29,8 +20,7 @@ export const LanguageSelectWrapper = styled.div`
 export const Separator = styled.div`
   height: 1px;
   background-color: ${colors.gray[700]};
-  margin-top: ${sizes(12)};
-  margin-bottom: ${sizes(24)};
+  margin: ${sizes(16)} 0;
 `
 
 export const AdditionalLink = styled(Button)`

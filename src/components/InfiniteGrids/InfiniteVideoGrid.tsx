@@ -7,10 +7,10 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, GridHeadingContainer, LoadMoreButton } from '@/shared/components'
+import { Grid, GridHeadingContainer, LoadMoreButton, SkeletonLoader, Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
-import { AdditionalLink, LoadMoreButtonWrapper, StyledSkeletonLoader, Title, TitleWrapper } from './InfiniteGrid.style'
+import { AdditionalLink, LoadMoreButtonWrapper, TitleWrapper } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoTile } from '../VideoTile'
@@ -173,7 +173,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       <TitleWrapper>
         {title && (
           <GridHeadingContainer>
-            {!ready ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
+            {!ready ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
             {additionalLink && (
               <AdditionalLink
                 to={additionalLink.url}
