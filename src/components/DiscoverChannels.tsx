@@ -5,10 +5,8 @@ import { ChannelEdge, VideoEdge } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
 import { sizes } from '@/shared/theme'
 
-const MOST_FOLLOWED_CHANNELS_LIMIT = 100
-
 export const DiscoverChannels: React.FC = () => {
-  const sortChannelsByViewsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
+  const sortChannelsByFollowsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
     if (!edges) {
       return []
     }
@@ -24,10 +22,8 @@ export const DiscoverChannels: React.FC = () => {
   return (
     <StyledInfiniteChannelWithVideosGrid
       title="Discover channels"
-      first={MOST_FOLLOWED_CHANNELS_LIMIT}
       onDemand
-      additionalSortFn={sortChannelsByViewsDesc}
-      sortByViewsOrFollowers
+      additionalSortFn={sortChannelsByFollowsDesc}
     />
   )
 }

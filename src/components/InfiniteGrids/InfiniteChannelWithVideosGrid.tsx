@@ -27,7 +27,6 @@ import {
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
-  sortByViewsOrFollowers?: boolean
   title?: string
   skipCount?: number
   first?: number
@@ -55,7 +54,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   first,
   orderBy = ChannelOrderByInput.CreatedAtAsc,
   className,
-  sortByViewsOrFollowers,
   languageSelector,
   idIn = null,
   additionalLink,
@@ -93,7 +91,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
-    sortByViewsOrFollowers,
     additionalSortFn,
   })
 
