@@ -1,8 +1,6 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
 import { useMostFollowedChannelsAllTime } from '@/api/hooks'
-import { sizes } from '@/shared/theme'
 
 import { ChannelGallery } from './ChannelGallery'
 
@@ -11,12 +9,8 @@ export const TopTenChannels = () => {
 
   const isLoading = loading || channels === null
   return (
-    <Wrapper>
+    <section>
       <ChannelGallery hasRanking channels={channels} loading={isLoading} title="Top 10 Channels" />
-    </Wrapper>
+    </section>
   )
 }
-
-const Wrapper = styled.div`
-  margin-top: ${sizes(18)};
-`

@@ -13,7 +13,7 @@ import {
 import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
-import { GridHeadingContainer, LoadMoreButton, Select } from '@/shared/components'
+import { GridHeadingContainer, LoadMoreButton, Select, SkeletonLoader, Text } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -22,8 +22,6 @@ import {
   LanguageSelectWrapper,
   LoadMoreButtonWrapper,
   Separator,
-  StyledSkeletonLoader,
-  Title,
   TitleWrapper,
 } from './InfiniteGrid.style'
 
@@ -139,7 +137,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       <TitleWrapper>
         {title && (
           <GridHeadingContainer>
-            {!isReady ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h4">{title}</Title>}
+            {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
             {languageSelector && (
               <CSSTransition
                 in={!!queryNodeLanguages?.length}
