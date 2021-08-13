@@ -42,28 +42,27 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   className,
   onClick,
 }) => {
-  const loading = isLoading || id === undefined
   const hasRanking = !!rankingNumber
   return (
     <ChannelCardWrapper className={className} hasRanking={hasRanking}>
       <ChannelCardArticle>
         {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
         <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
-          <StyledAvatar size="channel-card" loading={loading} assetUrl={avatarUrl} />
+          <StyledAvatar size="channel-card" loading={isLoading} assetUrl={avatarUrl} />
           <InfoWrapper>
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader width="100px" height="20px" bottomSpace="4px" />
             ) : (
               <ChannelTitle variant="h6">{title}</ChannelTitle>
             )}
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader width="70px" height="20px" bottomSpace="16px" />
             ) : (
               <ChannelFollows variant="body2" secondary>
                 {formatNumberShort(follows || 0)} followers
               </ChannelFollows>
             )}
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader width="60px" height="30px" />
             ) : (
               <FollowButton variant="secondary" size="small" onClick={onFollow}>
