@@ -25,8 +25,9 @@ export const AssetsManager: React.FC = () => {
       addAssetBeingResolved(contentId)
 
       const resolutionData = pendingAssets[contentId]
-      const allStorageProviders = shuffle(getStorageProviders() || [])
-      const storageProvidersWithoutLiaison = allStorageProviders.filter(
+      const storageProviders = await getStorageProviders()
+      const shuffledStorageProviders = shuffle(storageProviders)
+      const storageProvidersWithoutLiaison = shuffledStorageProviders.filter(
         (provider) => provider.id !== resolutionData.dataObject?.liaison?.id
       )
       const liaison = resolutionData.dataObject?.liaison
