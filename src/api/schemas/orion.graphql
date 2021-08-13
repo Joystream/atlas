@@ -67,23 +67,17 @@ type Query {
   mostFollowedChannelsAllTime(limit: Int!): [ChannelFollowsInfo!]
 
   """
-  Get list of channels with most views in given period
   Get most viewed list of categories
   """
   mostViewedCategories(limit: Int, period: Int!): [EntityViewsInfo!]
 
   """
-  Get most viewed list of categories of all time
-  """
-  mostViewedCategoriesAllTime(limit: Int!): [EntityViewsInfo!]
-
-  """
-  Get most viewed list of channels
+  Get list of channels with most views in given period
   """
   mostViewedChannels(limit: Int, period: Int!): [EntityViewsInfo!]
 
   """
-  Get list of channels with most views in given period
+  Get list of channels with most views of all time
   """
   mostViewedChannelsAllTime(limit: Int!): [EntityViewsInfo!]
 
