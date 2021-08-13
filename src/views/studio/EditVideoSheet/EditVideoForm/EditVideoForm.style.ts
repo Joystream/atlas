@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
 import { Button, TitleArea } from '@/shared/components'
+import { FormField } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const StyledRadioContainer = styled.div`
@@ -70,4 +71,8 @@ export const DeleteVideoContainer = styled.div`
 
 export const DeleteVideoButton = styled(Button)`
   width: 100%;
+`
+
+export const ExtendedMarginFormField = styled(FormField)`
+  margin-top: ${sizes(10)};
 `

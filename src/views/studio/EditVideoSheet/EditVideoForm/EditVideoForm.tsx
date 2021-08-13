@@ -41,6 +41,7 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 import {
   DeleteVideoButton,
   DeleteVideoContainer,
+  ExtendedMarginFormField,
   FormWrapper,
   InputsContainer,
   StyledRadioContainer,
@@ -448,7 +449,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             error={!!errors.description}
             helperText={errors.description?.message}
           />
-          <FormField
+          <ExtendedMarginFormField
             title="Privacy"
             description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
           >
@@ -468,7 +469,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 />
               )}
             />
-          </FormField>
+          </ExtendedMarginFormField>
           <FormField title="Language" description="Main language used in the video">
             <Controller
               name="language"
@@ -562,7 +563,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               )}
             />
           </FormField>
-          <FormField
+          <ExtendedMarginFormField
             title="Content rating"
             description="Whether your video contains explicit material (sex, violence, etc.)"
           >
@@ -595,7 +596,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 </StyledRadioContainer>
               )}
             />
-          </FormField>
+          </ExtendedMarginFormField>
           <FormField
             title="Prior publication"
             description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
