@@ -29,6 +29,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   text-align: left;
   display: flex;
   justify-content: space-between;
+  white-space: nowrap;
   align-items: center;
 
   ${({ size }) => {
