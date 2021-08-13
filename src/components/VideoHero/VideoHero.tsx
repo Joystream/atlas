@@ -68,6 +68,9 @@ export const VideoHero: React.FC = () => {
                 playing={videoPlaying}
                 posterUrl={thumbnailPhotoUrl}
                 onDataLoaded={handlePlaybackDataLoaded}
+                onPlay={() => setVideoPlaying(true)}
+                onPause={() => setVideoPlaying(false)}
+                onEnd={() => setVideoPlaying(false)}
                 src={coverVideo?.coverCutMediaUrl}
               />
             )}
