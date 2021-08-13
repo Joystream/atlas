@@ -14,12 +14,23 @@ export const StyledRadioContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 `
+export const MultiFileSelectWrapper = styled.div<{ width: number }>`
+  width: ${({ width }) => width}px;
+
+  ${media.medium} {
+    position: fixed;
+  }
+`
+
+export const FormScrolling = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+`
 
 export const FormWrapper = styled.form`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
-  overflow-y: auto;
   padding: ${sizes(8)} ${sizes(4)};
 
   ${media.small} {
@@ -27,7 +38,6 @@ export const FormWrapper = styled.form`
   }
 
   ${media.medium} {
-    overflow-y: hidden;
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
@@ -48,7 +58,6 @@ export const InputsContainer = styled.div`
   margin-top: ${sizes(8)};
   ${media.medium} {
     margin-top: 0;
-    overflow-y: auto;
   }
 
   > :last-child {
