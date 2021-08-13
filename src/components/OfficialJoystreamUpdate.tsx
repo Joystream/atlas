@@ -17,12 +17,7 @@ export const OfficialJoystreamUpdate = () => {
 
   return (
     <section>
-      <VideoGallery
-        title="Official Joystream updates"
-        videos={videos || []}
-        seeAllUrl={`/channel/${channelId}`}
-        loading={loading}
-      />
+      <VideoGallery title="Official Joystream updates" videos={videos || []} loading={loading} />
     </section>
   )
 }
