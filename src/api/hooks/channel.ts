@@ -8,6 +8,8 @@ import {
   GetChannelQuery,
   GetChannelsQuery,
   GetChannelsQueryVariables,
+  GetMostFollowedChannelsAllTimeQuery,
+  GetMostFollowedChannelsAllTimeQueryVariables,
   GetMostViewedChannelsAllTimeQuery,
   GetMostViewedChannelsAllTimeQueryVariables,
   GetMostViewedChannelsQuery,
@@ -18,6 +20,7 @@ import {
   useGetBasicChannelQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
+  useGetMostFollowedChannelsAllTimeQuery,
   useGetMostViewedChannelsAllTimeQuery,
   useGetMostViewedChannelsQuery,
   useGetVideoCountQuery,
@@ -164,8 +167,57 @@ export const useMostViewedChannels = (
     { skip: !mostViewedChannelsIds }
   )
 
+  const sortedChannels = useMemo(() => {
+    if (channels) {
+      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
+    }
+    return null
+  }, [channels])
+
   return {
-    channels,
+    channels: sortedChannels,
+    ...rest,
+  }
+}
+
+type MostFollowedChannelsAllTimeOpts = QueryHookOptions<GetMostFollowedChannelsAllTimeQuery>
+export const useMostFollowedChannelsAllTimeIds = (
+  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
+  opts?: MostFollowedChannelsAllTimeOpts
+) => {
+  const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
+  return {
+    mostFollowedChannelsAllTime: data?.mostFollowedChannelsAllTime,
+    ...rest,
+  }
+}
+
+export const useMostFollowedChannelsAllTime = (
+  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
+  opts?: MostPopularChannelsOpts
+) => {
+  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds(variables, opts)
+
+  const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostFollowedChannelsAllTimeIds,
+      },
+    },
+    { skip: !mostFollowedChannelsAllTimeIds }
+  )
+
+  const sortedChannels = useMemo(() => {
+    if (channels) {
+      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
+    }
+    return null
+  }, [channels])
+
+  return {
+    channels: sortedChannels,
     ...rest,
   }
 }
@@ -188,12 +240,7 @@ export const useMostViewedChannelsAllTime = (
 ) => {
   const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds(variables, opts)
 
-  const mostViewedChannelsIds = useMemo(() => {
-    if (mostViewedChannelsAllTime) {
-      return mostViewedChannelsAllTime.map((item) => item.id)
-    }
-    return null
-  }, [mostViewedChannelsAllTime])
+  const mostViewedChannelsIds = mostViewedChannelsAllTime?.map((item) => item.id)
 
   const { channels, ...rest } = useChannels(
     {

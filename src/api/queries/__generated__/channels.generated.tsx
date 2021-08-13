@@ -161,6 +161,25 @@ export type GetMostViewedChannelsAllTimeQuery = {
   mostViewedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
 }
 
+export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
+  followedWithinDays: Types.Scalars['Int']
+  limit?: Types.Maybe<Types.Scalars['Int']>
+}>
+
+export type GetMostFollowedChannelsQuery = {
+  __typename?: 'Query'
+  mostFollowedChannels: Array<{ __typename?: 'ChannelFollowsInfo'; id: string; follows: number }>
+}
+
+export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+}>
+
+export type GetMostFollowedChannelsAllTimeQuery = {
+  __typename?: 'Query'
+  mostFollowedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'ChannelFollowsInfo'; id: string; follows: number }>>
+}
+
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
@@ -773,4 +792,107 @@ export type GetMostViewedChannelsAllTimeLazyQueryHookResult = ReturnType<
 export type GetMostViewedChannelsAllTimeQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsAllTimeQuery,
   GetMostViewedChannelsAllTimeQueryVariables
+>
+export const GetMostFollowedChannelsDocument = gql`
+  query GetMostFollowedChannels($followedWithinDays: Int!, $limit: Int) {
+    mostFollowedChannels(period: $followedWithinDays, limit: $limit) {
+      id
+      follows
+    }
+  }
+`
+
+/**
+ * __useGetMostFollowedChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetMostFollowedChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostFollowedChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostFollowedChannelsQuery({
+ *   variables: {
+ *      followedWithinDays: // value for 'followedWithinDays'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetMostFollowedChannelsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
+) {
+  return Apollo.useQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
+    GetMostFollowedChannelsDocument,
+    baseOptions
+  )
+}
+export function useGetMostFollowedChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
+    GetMostFollowedChannelsDocument,
+    baseOptions
+  )
+}
+export type GetMostFollowedChannelsQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsQuery>
+export type GetMostFollowedChannelsLazyQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsLazyQuery>
+export type GetMostFollowedChannelsQueryResult = Apollo.QueryResult<
+  GetMostFollowedChannelsQuery,
+  GetMostFollowedChannelsQueryVariables
+>
+export const GetMostFollowedChannelsAllTimeDocument = gql`
+  query GetMostFollowedChannelsAllTime($limit: Int!) {
+    mostFollowedChannelsAllTime(limit: $limit) {
+      id
+      follows
+    }
+  }
+`
+
+/**
+ * __useGetMostFollowedChannelsAllTimeQuery__
+ *
+ * To run a query within a React component, call `useGetMostFollowedChannelsAllTimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostFollowedChannelsAllTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMostFollowedChannelsAllTimeQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetMostFollowedChannelsAllTimeQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMostFollowedChannelsAllTimeQuery,
+    GetMostFollowedChannelsAllTimeQueryVariables
+  >
+) {
+  return Apollo.useQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
+    GetMostFollowedChannelsAllTimeDocument,
+    baseOptions
+  )
+}
+export function useGetMostFollowedChannelsAllTimeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostFollowedChannelsAllTimeQuery,
+    GetMostFollowedChannelsAllTimeQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
+    GetMostFollowedChannelsAllTimeDocument,
+    baseOptions
+  )
+}
+export type GetMostFollowedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsAllTimeQuery>
+export type GetMostFollowedChannelsAllTimeLazyQueryHookResult = ReturnType<
+  typeof useGetMostFollowedChannelsAllTimeLazyQuery
+>
+export type GetMostFollowedChannelsAllTimeQueryResult = Apollo.QueryResult<
+  GetMostFollowedChannelsAllTimeQuery,
+  GetMostFollowedChannelsAllTimeQueryVariables
 >
