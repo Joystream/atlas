@@ -36,6 +36,8 @@ type VideoGalleryProps = {
 const PLACEHOLDERS_COUNT = 12
 const MIN_VIDEO_PREVIEW_WIDTH = 281
 const CAROUSEL_SMALL_BREAKPOINT = 688
+const FRACTIONAL_LEVEL = 1.3
+const FRACTIONAL_LEVEL_RANKING = 1.4
 
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
@@ -60,7 +62,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
         return {
           breakpoint,
           settings: {
-            slidesToShow: idx + 1.5,
+            slidesToShow: idx + FRACTIONAL_LEVEL,
             slidesToScroll: idx + 1,
           },
         }
@@ -68,7 +70,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       return {
         breakpoint,
         settings: {
-          slidesToShow: idx + 1,
+          slidesToShow: idx + (breakpoint <= CAROUSEL_SMALL_BREAKPOINT ? FRACTIONAL_LEVEL_RANKING : 1),
           slidesToScroll: idx + 1,
         },
       }
