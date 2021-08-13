@@ -13,7 +13,7 @@ const mappedColors = {
 }
 
 export const CallToActionWrapper = styled.div`
-  margin-top: ${sizes(19)};
+  margin-top: ${sizes(32)};
 
   ${media.medium} {
     display: grid;

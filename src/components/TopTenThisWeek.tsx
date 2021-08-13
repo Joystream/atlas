@@ -1,20 +1,14 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
 import { useMostViewedVideos } from '@/api/hooks'
 import { VideoGallery } from '@/components'
-import { sizes } from '@/shared/theme'
 
 export const TopTenThisWeek = () => {
   const { videos, loading } = useMostViewedVideos({ limit: 10, viewedWithinDays: 7 })
 
   return (
-    <Wrapper>
+    <section>
       <VideoGallery title="Top 10 this week" videos={videos || []} loading={loading} hasRanking />
-    </Wrapper>
+    </section>
   )
 }
-
-const Wrapper = styled.div`
-  margin-top: ${sizes(18)};
-`

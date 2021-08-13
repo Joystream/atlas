@@ -13,7 +13,7 @@ export const ChannelsView = () => {
       <Header variant="h2">Browse channels</Header>
       <TopTenChannels />
       <DiscoverChannels />
-      <StyledInfiniteChannelWithVideosGrid title="Channels in your language" languageSelector onDemand />
+      <InfiniteChannelWithVideosGrid title="Channels in your language" languageSelector onDemand />
       <CallToActionWrapper>
         <CallToActionButton
           label="Popular on Joystream"
@@ -43,11 +43,11 @@ const Header = styled(Text)`
 `
 
 const StyledViewWrapper = styled(ViewWrapper)`
-  padding-bottom: ${sizes(10)};
-`
+  padding-bottom: ${sizes(16)};
 
-const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
-  :not(:last-of-type) {
-    margin-bottom: ${sizes(38)};
+  > section {
+    :not(:first-of-type) {
+      margin-top: ${sizes(32)};
+    }
   }
 `

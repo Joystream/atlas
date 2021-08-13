@@ -29,14 +29,9 @@ export const PopularView: FC = () => {
 
   return (
     <StyledViewWrapper>
-      <Header variant="h2">Popular</Header>
-      <StyledVideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
-      <StyledInfiniteVideoGrid
-        title="Popular videos"
-        idIn={mostViewedVideosIds}
-        ready={!mostViewedVideosLoading}
-        onDemand
-      />
+      <Header variant="h2">Popular on Joystream</Header>
+      <VideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
+      <InfiniteVideoGrid title="Popular videos" idIn={mostViewedVideosIds} ready={!mostViewedVideosLoading} onDemand />
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand
@@ -68,19 +63,15 @@ export const PopularView: FC = () => {
 }
 
 const Header = styled(Text)`
-  margin: ${sizes(16)} 0;
-`
-
-const StyledVideoGallery = styled(VideoGallery)`
-  margin-bottom: ${sizes(38)};
+  margin: ${sizes(17)} 0;
 `
 
 const StyledViewWrapper = styled(ViewWrapper)`
-  padding-bottom: ${sizes(10)};
-`
+  padding-bottom: ${sizes(16)};
 
-const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  :not(:last-of-type) {
-    margin-bottom: ${sizes(38)};
+  > section {
+    :not(:first-of-type) {
+      margin-top: ${sizes(32)};
+    }
   }
 `

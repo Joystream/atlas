@@ -49,14 +49,9 @@ export const HomeView: React.FC = () => {
       <VideoHero />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
-          <StyledInfiniteVideoGrid
-            title="Followed channels"
-            channelIdIn={channelIdIn}
-            ready={!followedLoading}
-            onDemand
-          />
+          <InfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!followedLoading} onDemand />
         ) : null}
-        <StyledInfiniteVideoGrid
+        <InfiniteVideoGrid
           title="Popular on Joystream"
           idIn={mostViewedVideosIds}
           ready={!mostViewedVideosLoading}
@@ -64,7 +59,7 @@ export const HomeView: React.FC = () => {
         />
         <OfficialJoystreamUpdate />
         <TopTenThisWeek />
-        <StyledInfiniteVideoGrid title="All content" onDemand />
+        <InfiniteVideoGrid title="All content" onDemand />
         <CallToActionWrapper>
           <CallToActionButton
             label="Popular on Joystream"
@@ -92,17 +87,11 @@ export const HomeView: React.FC = () => {
 
 const Container = styled.div`
   position: relative;
+  padding-bottom: ${sizes(16)};
 
-  & > * {
-    margin-bottom: 3rem;
-  }
-`
-
-const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  margin: 0;
-  padding-bottom: 4rem;
-
-  :not(:first-of-type) {
-    margin-top: ${sizes(36)};
+  > section {
+    :not(:first-of-type) {
+      margin-top: ${sizes(32)};
+    }
   }
 `

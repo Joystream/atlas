@@ -11,8 +11,8 @@ import { sizes } from '@/shared/theme'
 export const NewView: React.FC = () => (
   <StyledViewWrapper>
     <Header variant="h2">New & Noteworthy</Header>
+    <InfiniteVideoGrid title="Videos worth watching" isFeatured onDemand />
     <PromisingNewChannels />
-    <StyledInfiniteVideoGrid title="Videos worth watching" isFeatured onDemand />
     <CallToActionWrapper>
       <CallToActionButton label="Home" to={absoluteRoutes.viewer.index()} colorVariant="yellow" icon={<SvgNavHome />} />
       <CallToActionButton
@@ -35,14 +35,12 @@ const Header = styled(Text)`
   margin: ${sizes(16)} 0;
 `
 
-const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  margin: 0;
-  padding-bottom: 4rem;
-
-  :not(:first-of-type) {
-    margin-top: ${sizes(36)};
-  }
-`
 const StyledViewWrapper = styled(ViewWrapper)`
-  padding-bottom: ${sizes(10)};
+  padding-bottom: ${sizes(16)};
+
+  > section {
+    :not(:first-of-type) {
+      margin-top: ${sizes(32)};
+    }
+  }
 `
