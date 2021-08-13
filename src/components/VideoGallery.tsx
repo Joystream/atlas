@@ -5,7 +5,7 @@ import { VideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { AvatarContainer } from '@/shared/components/VideoTileBase/VideoTileBase.styles'
-import { media, sizes } from '@/shared/theme'
+import { media } from '@/shared/theme'
 
 import { VideoTile } from './VideoTile'
 

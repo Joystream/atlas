@@ -48,9 +48,11 @@ export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels 
 
   const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
   return (
-    <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible>
+    <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible hasRanking={hasRanking}>
       {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) => (
-        <ChannelCard key={idx} id={channel.id} rankingNumber={hasRanking ? idx + 1 : undefined} />
+        <div key={idx}>
+          <ChannelCard key={idx} id={channel.id} />
+        </div>
       ))}
     </Gallery>
   )
