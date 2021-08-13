@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
@@ -9,49 +8,6 @@ export const CAROUSEL_ARROW_HEIGHT = 48
 
 export const Container = styled.div`
   position: relative;
-`
-
-const rankingCss = css`
-  counter-reset: ranking-counter;
-
-  .glider-slide {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    counter-increment: ranking-counter;
-
-    > * {
-      width: 78%;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    ::before {
-      position: absolute;
-      content: counter(ranking-counter);
-      z-index: -5;
-      top: 0;
-      left: -${sizes(2)};
-      height: 50%;
-      color: black;
-      font-weight: 700;
-      font-size: 100px;
-      -webkit-text-stroke-width: 4px;
-      -webkit-text-stroke-color: ${colors.gray[500]};
-      font-family: 'PxGrotesk', sans-serif;
-      letter-spacing: -0.17em;
-      display: flex;
-      align-items: center;
-
-      ${media.medium} {
-        font-size: 140px;
-      }
-
-      ${media.large} {
-        font-size: 180px;
-      }
-    }
-  }
 `
 
 export const Arrow = styled(IconButton)`
@@ -90,17 +46,10 @@ export const GliderContainer = styled.div`
   padding-top: ${sizes(2)};
 `
 
-type TrackProps = {
-  hasRanking?: boolean
-}
-
-export const Track = styled.div<TrackProps>`
-  align-items: flex-start;
-
+export const Track = styled.div`
   .glider-slide:not(:first-of-type) {
     margin-left: ${sizes(4)};
   }
-  ${({ hasRanking }) => hasRanking && rankingCss};
 `
 
 export const Dots = styled.div`

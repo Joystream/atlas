@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useMemo } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Gallery } from '@/shared/components'
+import { Gallery, RankingNumberTile } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { AvatarContainer } from '@/shared/components/VideoTileBase/VideoTileBase.styles'
 import { media } from '@/shared/theme'
@@ -88,7 +88,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   const createNotFoundHandler = (id?: string) => () => id && onVideoNotFound && onVideoNotFound(id)
   return (
     <Gallery
-      hasRanking={hasRanking}
       title={title}
       responsive={breakpoints}
       itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
@@ -96,8 +95,19 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       seeAllUrl={seeAllUrl}
       className={className}
     >
-      {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <div key={`${idx}-${video.id}`}>
+      {[...videos, ...placeholderItems]?.map((video, idx) =>
+        hasRanking ? (
+          <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
+            <StyledVideoTile
+              id={video.id}
+              progress={video?.progress}
+              removeButton={video ? removeButton : false}
+              onClick={createClickHandler(video.id)}
+              onNotFound={createNotFoundHandler(video.id)}
+              onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+            />
+          </RankingNumberTile>
+        ) : (
           <StyledVideoTile
             id={video.id}
             progress={video?.progress}
@@ -106,11 +116,16 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
             onNotFound={createNotFoundHandler(video.id)}
             onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
           />
-        </div>
-      ))}
+        )
+      )}
     </Gallery>
   )
 }
+
+export const NumberTile = styled.div`
+  display: grid;
+  grid-template-columns: 22% 78%;
+`
 
 const StyledVideoTile = styled(VideoTile)`
   flex-shrink: 0;
