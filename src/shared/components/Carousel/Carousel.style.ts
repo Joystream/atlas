@@ -51,7 +51,8 @@ export const Track = styled.div`
 `
 
 export const Dots = styled.div`
-  margin-top: ${sizes(13)};
+  padding: ${sizes(5.5)} 0;
+  margin-top: ${sizes(12)};
   display: none;
 
   ${media.medium} {
