@@ -1,139 +1,77 @@
-import React, { useEffect, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import React from 'react'
 
-import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
-import { usePersonalDataStore } from '@/providers'
-import { transitions } from '@/shared/theme'
-import { SentryLogger } from '@/utils/logs'
+import { absoluteRoutes } from '@/config/routes'
+import { formatNumberShort } from '@/utils/number'
 
 import {
-  Anchor,
-  AvatarContainer,
+  ChannelCardAnchor,
+  ChannelCardArticle,
+  ChannelCardWrapper,
+  ChannelFollows,
+  ChannelTitle,
   FollowButton,
-  Info,
-  InnerContainer,
-  OuterContainer,
+  InfoWrapper,
+  RankingNumber,
   StyledAvatar,
-  TextBase,
-  VideoCount,
-  VideoCountContainer,
 } from './ChannelCardBase.style'
 
 import { SkeletonLoader } from '../SkeletonLoader'
 
 export type ChannelCardBaseProps = {
-  assetUrl?: string | null
+  id?: string | null
+  rankingNumber?: number
+  isLoading?: boolean
   title?: string | null
-  videoCount?: number
-  channelHref?: string
-  className?: string
-  loading?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  variant?: 'primary' | 'secondary'
   follows?: number | null
-  channelId?: string
+  avatarUrl?: string | null
+  isFollowing?: boolean
+  onFollow?: (event: React.MouseEvent) => void
+  className?: string
+  onClick?: () => void
 }
 
 export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
-  assetUrl,
+  id,
+  rankingNumber,
+  isLoading,
   title,
-  videoCount,
-  loading = true,
-  channelHref,
+  follows,
+  avatarUrl,
+  isFollowing,
+  onFollow,
   className,
   onClick,
-  variant,
-  follows,
-  channelId,
 }) => {
-  const { followChannel } = useFollowChannel()
-  const { unfollowChannel } = useUnfollowChannel()
-  const [isFollowing, setFollowing] = useState<boolean>()
-  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
-  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
-  const isAnimated = !loading && !!channelHref && variant === 'primary'
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (!onClick) return
-    onClick(e)
-  }
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!channelHref) {
-      e.preventDefault()
-    }
-  }
-
-  useEffect(() => {
-    const isFollowing = followedChannels.some((channel) => channel.id === channelId)
-    setFollowing(isFollowing)
-  }, [followedChannels, channelId])
-
-  const onFollowClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    event.preventDefault()
-    if (channelId) {
-      try {
-        if (isFollowing) {
-          updateChannelFollowing(channelId, false)
-          unfollowChannel(channelId)
-          setFollowing(false)
-        } else {
-          updateChannelFollowing(channelId, true)
-          followChannel(channelId)
-          setFollowing(true)
-        }
-      } catch (error) {
-        SentryLogger.error('Failed to update channel following', 'ChannelView', error, { channel: { id: channelId } })
-      }
-    }
-  }
-
-  const followersLabel = follows && follows >= 1 ? `${follows} Follower` : `${follows} Followers`
-
+  const hasRanking = !!rankingNumber
   return (
-    <OuterContainer className={className} onClick={handleClick} variant={variant}>
-      <Anchor to={channelHref ?? ''} onClick={handleAnchorClick}>
-        <SwitchTransition>
-          <CSSTransition
-            key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading) * 0.75}
-            classNames={transitions.names.fade}
-          >
-            <InnerContainer animated={isAnimated}>
-              <AvatarContainer>
-                {loading ? <SkeletonLoader rounded /> : <StyledAvatar assetUrl={assetUrl} />}
-              </AvatarContainer>
-              <Info>
-                {loading ? (
-                  <SkeletonLoader width="140px" height="16px" />
-                ) : (
-                  <TextBase variant="h6">{title || '\u00A0'}</TextBase>
-                )}
-                <VideoCountContainer>
-                  {loading ? (
-                    <SkeletonLoader width="140px" height="16px" />
-                  ) : (
-                    <CSSTransition
-                      in={!!videoCount}
-                      timeout={parseInt(transitions.timings.loading) * 0.5}
-                      classNames={transitions.names.fade}
-                    >
-                      <VideoCount variant="subtitle2">
-                        {videoCount && variant === 'primary' ? `${videoCount} Uploads` : null}
-                        {follows && variant === 'secondary' ? followersLabel : '0 Followers'}
-                      </VideoCount>
-                    </CSSTransition>
-                  )}
-                </VideoCountContainer>
-                {variant === 'secondary' && (
-                  <FollowButton variant="secondary" onClick={onFollowClick}>
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </FollowButton>
-                )}
-              </Info>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
-      </Anchor>
-    </OuterContainer>
+    <ChannelCardWrapper className={className} hasRanking={hasRanking}>
+      <ChannelCardArticle>
+        {hasRanking && <RankingNumber>{rankingNumber}</RankingNumber>}
+        <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
+          <StyledAvatar size="channel-card" loading={isLoading} assetUrl={avatarUrl} />
+          <InfoWrapper>
+            {isLoading ? (
+              <SkeletonLoader width="100px" height="20px" bottomSpace="4px" />
+            ) : (
+              <ChannelTitle variant="h6">{title}</ChannelTitle>
+            )}
+            {isLoading ? (
+              <SkeletonLoader width="70px" height="20px" bottomSpace="16px" />
+            ) : (
+              <ChannelFollows variant="body2" secondary>
+                {formatNumberShort(follows || 0)} followers
+              </ChannelFollows>
+            )}
+            {isLoading ? (
+              <SkeletonLoader width="60px" height="30px" />
+            ) : (
+              <FollowButton variant="secondary" size="small" onClick={onFollow}>
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </FollowButton>
+            )}
+          </InfoWrapper>
+        </ChannelCardAnchor>
+      </ChannelCardArticle>
+    </ChannelCardWrapper>
   )
 }
