@@ -4,11 +4,10 @@ import * as React from 'react'
 export const SvgNavHome = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M15 20v1a1 1 0 001 1h5a1 1 0 001-1v-9.555a1 1 0 00-.331-.743L12 2l-9.669 8.702a1 1 0 00-.331.743V21a1 1 0 001 1h5c.552 0 1-.446 1-.998V17a1 1 0 011-1h5"
-      stroke="#F4F6F8"
-      strokeWidth={2}
-      strokeMiterlimit={10}
-      strokeLinecap="square"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10 21.002A1.999 1.999 0 018 23H3a2 2 0 01-2-2v-9.555a2 2 0 01.662-1.486L12 .655l10.338 9.304A2 2 0 0123 11.445V21a2 2 0 01-2 2h-5a2 2 0 01-2-2v-2h2v2h5v-9.555l-9-8.1-9 8.1V21h5v-4a2 2 0 012-2h6v2h-6v4.002z"
+      fill="#F4F6F8"
     />
   </svg>
 )

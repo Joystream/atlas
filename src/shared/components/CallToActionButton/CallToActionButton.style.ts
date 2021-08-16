@@ -3,10 +3,14 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
+import { ColorVariants } from './CallToActionButton'
+
 import { CallToActionButtonProps } from '.'
+import { Text } from '../Text'
 
 const mappedColors = {
   blue: colors.blue[500],
+  lightBlue: colors.blue[200],
   red: colors.secondary.alert[100],
   yellow: colors.secondary.warning[100],
   green: colors.secondary.success[100],
@@ -21,12 +25,19 @@ export const CallToActionWrapper = styled.div`
     grid-column-gap: ${sizes(6)};
   }
 `
+type IconWrapperProps = {
+  colorVariant: ColorVariants
+}
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled.div<IconWrapperProps>`
   margin-bottom: ${sizes(5)};
+
+  path {
+    fill: ${({ colorVariant = 'blue' }) => mappedColors[colorVariant]};
+  }
 `
 
-export const BodyWrapper = styled.div`
+export const BodyWrapper = styled(Text)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -63,13 +74,6 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
     ${ContentWrapper} {
       transform: translate(-${sizes(2)}, -${sizes(2)});
       box-shadow: ${({ colorVariant = 'blue' }) => `${sizes(2)} ${sizes(2)} 0 ${mappedColors[colorVariant]}`};
-    }
-  }
-
-  ${IconWrapper} {
-    path,
-    circle {
-      stroke: ${({ colorVariant = 'blue' }) => mappedColors[colorVariant]};
     }
   }
 `
