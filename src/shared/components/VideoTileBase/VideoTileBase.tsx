@@ -45,7 +45,6 @@ import {
   ProgressBar,
   ProgressOverlay,
   PublishingStateText,
-  RankingNumber,
   RemoveButton,
   SpacedSkeletonLoader,
   StyledAvatar,
@@ -67,7 +66,6 @@ export type VideoTileBaseMetaProps = {
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
-  rankingNumber?: number
 }
 
 export type VideoTilePublisherProps =
@@ -155,7 +153,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onCopyVideoURLClick,
   onDeleteVideoClick,
   isPullupDisabled,
-  rankingNumber,
 }) => {
   const { openContextMenu, contextMenuOpts } = useContextMenu()
   const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
@@ -205,7 +202,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
-        {rankingNumber && <RankingNumber>{rankingNumber}</RankingNumber>}
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition

@@ -19,7 +19,7 @@ export type VideoTileProps = {
 } & VideoTileBaseMetaProps &
   Pick<VideoTileBaseProps, 'progress' | 'className'>
 
-export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, rankingNumber, ...metaProps }) => {
+export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: video,
@@ -45,7 +45,6 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, rankingNum
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       contentKey={id}
-      rankingNumber={rankingNumber}
       {...metaProps}
     />
   )
