@@ -6,7 +6,7 @@ import { getLinkPropsFromTo } from '@/utils/button'
 
 import { BodyWrapper, ContentWrapper, IconWrapper, StyledContainer } from './CallToActionButton.style'
 
-export type ColorVariants = 'red' | 'green' | 'yellow' | 'blue'
+export type ColorVariants = 'red' | 'green' | 'yellow' | 'blue' | 'lightBlue'
 
 export type CallToActionButtonProps = {
   to?: To
@@ -28,8 +28,8 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
   return (
     <StyledContainer {...linkProps} onClick={onClick} colorVariant={colorVariant}>
       <ContentWrapper>
-        <IconWrapper>{icon}</IconWrapper>
-        <BodyWrapper>
+        <IconWrapper colorVariant={colorVariant === 'blue' ? 'lightBlue' : colorVariant}>{icon}</IconWrapper>
+        <BodyWrapper variant="h5">
           {label}
           <SvgGlyphChevronRight />
         </BodyWrapper>
