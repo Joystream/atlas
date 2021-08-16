@@ -20,7 +20,7 @@ const WHITELIST = ['accountId', 'memberId', 'channelId'] as (keyof ActiveUserSta
 
 export type ActiveUserStoreActions = {
   resetActiveUser: () => void
-  setActiveUser: (activeUserState: Partial<ActiveUserState>) => void
+  setActiveUser: (activeUserChanges: Partial<ActiveUserState>) => void
 }
 
 export const useActiveUserStore = createStore<ActiveUserState, ActiveUserStoreActions>(
@@ -30,11 +30,11 @@ export const useActiveUserStore = createStore<ActiveUserState, ActiveUserStoreAc
       resetActiveUser: () => {
         set((state) => ({ ...state, ...EMPTY_STATE }))
       },
-      setActiveUser: (activeUserState) => {
+      setActiveUser: (activeUserChanges) => {
         set((state) => {
-          state.accountId = activeUserState.accountId || state.accountId
-          state.memberId = activeUserState.memberId || state.memberId
-          state.channelId = activeUserState.channelId || state.channelId
+          state.accountId = activeUserChanges.accountId || state.accountId
+          state.memberId = activeUserChanges.memberId || state.memberId
+          state.channelId = activeUserChanges.channelId || state.channelId
         })
       },
     }),
