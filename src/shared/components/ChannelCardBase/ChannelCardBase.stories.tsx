@@ -11,14 +11,7 @@ export default {
     avatarUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg',
     title: 'Example Channel',
     id: '3',
-    rankingNumber: 4,
     follows: 200,
-  },
-  argTypes: {
-    variant: {
-      control: { type: 'select', options: ['primary', 'secondary'] },
-      defaultValue: 'primary',
-    },
   },
   decorators: [
     (Story) => (

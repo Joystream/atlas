@@ -47,7 +47,12 @@ export const GliderContainer = styled.div`
 `
 
 export const Track = styled.div`
-  align-items: flex-start;
+  .glider-slide:not(:first-of-type) {
+    margin-left: ${sizes(4)};
+    ${media.large} {
+      margin-left: ${sizes(6)};
+    }
+  }
 `
 
 export const Dots = styled.div`

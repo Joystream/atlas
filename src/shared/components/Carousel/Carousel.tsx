@@ -99,7 +99,6 @@ export const Carousel = forwardRef<
       getPrevArrowProps,
       getNextArrowProps,
     }))
-
     return (
       <Container {...getContainerProps({ className })}>
         <GliderContainer {...getGliderProps()} ref={gliderRef}>

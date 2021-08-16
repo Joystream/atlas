@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import React, { useMemo } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Gallery } from '@/shared/components'
+import { Gallery, RankingNumberTile } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
 import { AvatarContainer } from '@/shared/components/VideoTileBase/VideoTileBase.styles'
-import { media, sizes } from '@/shared/theme'
+import { media } from '@/shared/theme'
 
 import { VideoTile } from './VideoTile'
 
@@ -95,19 +95,30 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       seeAllUrl={seeAllUrl}
       className={className}
     >
-      {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <GalleryWrapper key={`${idx}-${video.id}`} hasRanking={hasRanking}>
+      {[...videos, ...placeholderItems]?.map((video, idx) =>
+        hasRanking ? (
+          <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
+            <StyledVideoTile
+              id={video.id}
+              progress={video?.progress}
+              removeButton={video ? removeButton : false}
+              onClick={createClickHandler(video.id)}
+              onNotFound={createNotFoundHandler(video.id)}
+              onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+            />
+          </RankingNumberTile>
+        ) : (
           <StyledVideoTile
+            key={`${idx}-${video.id}`}
             id={video.id}
             progress={video?.progress}
             removeButton={video ? removeButton : false}
             onClick={createClickHandler(video.id)}
             onNotFound={createNotFoundHandler(video.id)}
             onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-            rankingNumber={hasRanking ? idx + 1 : undefined}
           />
-        </GalleryWrapper>
-      ))}
+        )
+      )}
     </Gallery>
   )
 }
@@ -121,21 +132,5 @@ const StyledVideoTile = styled(VideoTile)`
     ${media.medium} {
       display: block;
     }
-  }
-`
-
-const GalleryWrapper = styled.div<{ hasRanking?: boolean }>`
-  position: relative;
-  ${({ hasRanking }) => `
-    display: ${hasRanking ? 'flex' : 'block'};
-    justify-content: ${hasRanking ? 'flex-end' : 'unset'};
-  `}
-
-  ${StyledVideoTile} {
-    width: ${({ hasRanking }) => (hasRanking ? '78%' : '100%')};
-  }
-
-  & + & {
-    margin-left: ${sizes(6)};
   }
 `
