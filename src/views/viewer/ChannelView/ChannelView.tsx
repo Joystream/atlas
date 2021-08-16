@@ -16,10 +16,10 @@ import {
   VideoOrderByInput,
   useSearchLazyQuery,
 } from '@/api/queries'
-import { VideoTile, ViewWrapper } from '@/components'
+import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
-import { ChannelCover, EmptyFallback, Grid, GridItem, LayoutGrid, Pagination, Select, Text } from '@/shared/components'
+import { ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -263,60 +263,58 @@ export const ChannelView: React.FC = () => {
   return (
     <ViewWrapper>
       <ChannelCover assetUrl={coverPhotoUrl} />
-      <LayoutGrid>
-        <GridItem colSpan={12}>
-          <TitleSection className={transitions.names.slide}>
-            <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
-            <TitleContainer>
-              {channel ? (
-                <>
-                  <Title variant="h1">{channel.title}</Title>
-                  <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
-                </>
-              ) : (
-                <>
-                  <TitleSkeletonLoader />
-                  <SubTitleSkeletonLoader />
-                </>
-              )}
-            </TitleContainer>
-            <StyledButtonContainer>
-              <StyledButton
-                icon={isFollowing ? <SvgGlyphCheck /> : <SvgGlyphPlus />}
-                variant={isFollowing ? 'secondary' : 'primary'}
-                onClick={handleFollow}
-                size="large"
-              >
-                {isFollowing ? 'Unfollow' : 'Follow'}
-              </StyledButton>
-            </StyledButtonContainer>
-          </TitleSection>
-          <TabsContainer>
-            <StyledTabs
-              selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
-              initialIndex={0}
-              tabs={mappedTabs}
-              onSelectTab={handleSetCurrentTab}
+      <LimitedWidthContainer>
+        <TitleSection className={transitions.names.slide}>
+          <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
+          <TitleContainer>
+            {channel ? (
+              <>
+                <Title variant="h1">{channel.title}</Title>
+                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+              </>
+            ) : (
+              <>
+                <TitleSkeletonLoader />
+                <SubTitleSkeletonLoader />
+              </>
+            )}
+          </TitleContainer>
+          <StyledButtonContainer>
+            <StyledButton
+              icon={isFollowing ? <SvgGlyphCheck /> : <SvgGlyphPlus />}
+              variant={isFollowing ? 'secondary' : 'primary'}
+              onClick={handleFollow}
+              size="large"
+            >
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </StyledButton>
+          </StyledButtonContainer>
+        </TitleSection>
+        <TabsContainer>
+          <StyledTabs
+            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
+            initialIndex={0}
+            tabs={mappedTabs}
+            onSelectTab={handleSetCurrentTab}
+          />
+          {currentTabName === 'Videos' && (
+            <Search
+              searchInputRef={searchInputRef}
+              isSearchInputOpen={isSearchInputOpen}
+              setIsSearchingInputOpen={setIsSearchingInputOpen}
+              setIsSearching={setIsSearching}
+              search={search}
             />
-            {currentTabName === 'Videos' && (
-              <Search
-                searchInputRef={searchInputRef}
-                isSearchInputOpen={isSearchInputOpen}
-                setIsSearchingInputOpen={setIsSearchingInputOpen}
-                setIsSearching={setIsSearching}
-                search={search}
-              />
-            )}
-            {currentTabName === 'Videos' && !isSearching && (
-              <SortContainer>
-                <Text variant="body2">Sort by</Text>
-                <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-              </SortContainer>
-            )}
-          </TabsContainer>
-          <TabContent />
-        </GridItem>
-      </LayoutGrid>
+          )}
+          {currentTabName === 'Videos' && !isSearching && (
+            <SortContainer>
+              <Text variant="body2">Sort by</Text>
+              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            </SortContainer>
+          )}
+        </TabsContainer>
+        <TabContent />
+      </LimitedWidthContainer>
     </ViewWrapper>
   )
 }
