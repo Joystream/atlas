@@ -4,42 +4,35 @@ import styled from '@emotion/styled'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const RankingNumberTileWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 25% 1fr;
   position: relative;
-  ${media.medium} {
-    grid-template-columns: 22% 1fr;
-  }
+  display: flex;
+  justify-content: flex-end;
 `
 
 const variantStyles = (variant: 'channel' | 'video') => {
   switch (variant) {
     case 'channel':
       return css`
-        align-items: center;
+        height: 100%;
         top: -${sizes(5)};
         ${media.medium} {
           top: 0;
           align-items: flex-start;
           font-size: 140px;
         }
-        ${media.large} {
+        ${media.xlarge} {
           font-size: 180px;
         }
       `
     case 'video':
       return css`
-        align-items: flex-start;
+        height: 50%;
         ${media.medium} {
           line-height: 0.7;
-          font-size: 100px;
-        }
-        ${media.large} {
           font-size: 140px;
         }
-
         ${media.xlarge} {
-          font-size: 160px;
+          font-size: 180px;
         }
       `
     default:
@@ -51,10 +44,10 @@ type RankingNumberProps = {
   variant: 'channel' | 'video'
 }
 export const RankingNumber = styled.div<RankingNumberProps>`
-  position: relative;
+  position: absolute;
   line-height: 1;
   z-index: -5;
-  left: ${sizes(2)};
+  left: 0;
   color: black;
   font-weight: 700;
   font-size: 100px;
@@ -63,10 +56,19 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   font-family: 'PxGrotesk', sans-serif;
   letter-spacing: -0.17em;
   display: flex;
-
-  ${media.medium} {
-    left: -${sizes(2)};
-  }
+  align-items: center;
 
   ${({ variant }) => variantStyles(variant)};
+`
+
+export const ChildrenWrapper = styled.div`
+  --ranking-number-gap: 48px;
+
+  width: calc(100% - var(--ranking-number-gap));
+  ${media.medium} {
+    --ranking-number-gap: 72px;
+  }
+  ${media.xlarge} {
+    --ranking-number-gap: 92px;
+  }
 `

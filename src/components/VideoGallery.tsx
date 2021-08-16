@@ -109,6 +109,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
           </RankingNumberTile>
         ) : (
           <StyledVideoTile
+            key={`${idx}-${video.id}`}
             id={video.id}
             progress={video?.progress}
             removeButton={video ? removeButton : false}
@@ -121,11 +122,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
     </Gallery>
   )
 }
-
-export const NumberTile = styled.div`
-  display: grid;
-  grid-template-columns: 22% 78%;
-`
 
 const StyledVideoTile = styled(VideoTile)`
   flex-shrink: 0;
