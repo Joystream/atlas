@@ -48,6 +48,7 @@ export const InnerContainer = styled.div<InnerContainerProps>`
 `
 
 export const VideoInfo = styled.div`
+  overflow: hidden;
   margin: auto;
   width: 100%;
   display: flex;
@@ -68,8 +69,9 @@ export const Heading = styled(Text)`
   margin-top: ${sizes(4)};
   flex-shrink: 0;
   max-width: 560px;
-  word-break: break-all;
   width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
   text-align: center;
 `
 
