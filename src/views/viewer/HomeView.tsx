@@ -3,6 +3,7 @@ import React from 'react'
 
 import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
 import {
+  DiscoverChannels,
   InfiniteVideoGrid,
   LimitedWidthContainer,
   OfficialJoystreamUpdate,
@@ -57,8 +58,9 @@ export const HomeView: React.FC = () => {
           ready={!mostViewedVideosLoading}
           onDemand
         />
-        <OfficialJoystreamUpdate />
         <TopTenThisWeek />
+        <OfficialJoystreamUpdate />
+        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
         <InfiniteVideoGrid title="All content" onDemand />
         <CallToActionWrapper>
           <CallToActionButton
