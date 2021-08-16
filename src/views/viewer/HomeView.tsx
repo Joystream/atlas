@@ -5,6 +5,7 @@ import React from 'react'
 import { useMostViewedVideosIds } from '@/api/hooks'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import {
+  DiscoverChannels,
   ErrorFallback,
   InfiniteVideoGrid,
   OfficialJoystreamUpdate,
@@ -63,8 +64,9 @@ export const HomeView: React.FC = () => {
             ready={!mostViewedVideosLoading}
             onDemand
           />
-          <OfficialJoystreamUpdate />
           <TopTenThisWeek />
+          <OfficialJoystreamUpdate />
+          <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
           <InfiniteVideoGrid title="All content" onDemand />
           <CallToActionWrapper>
             <CallToActionButton
