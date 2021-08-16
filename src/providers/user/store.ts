@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
-
 import { AccountId, ChannelId, MemberId } from '@/joystream-lib'
+import { createStore } from '@/store'
+import { readFromLocalStorage } from '@/utils/localStorage'
 
 const LOCAL_STORAGE_KEY = 'activeUser'
 
@@ -16,30 +16,41 @@ const EMPTY_STATE: ActiveUserState = {
   channelId: null,
 }
 
-const getInitialState = (): ActiveUserState => {
-  const rawData = localStorage.getItem(LOCAL_STORAGE_KEY)
-  return rawData ? JSON.parse(rawData) : EMPTY_STATE
+const WHITELIST = ['accountId', 'memberId', 'channelId'] as (keyof ActiveUserState)[]
+
+export type ActiveUserStoreActions = {
+  resetActiveUser: () => void
+  setActiveUser: (activeUserState: Partial<ActiveUserState>) => void
 }
 
-export const useActiveUserStore = () => {
-  const [state, setState] = useState<ActiveUserState>(getInitialState())
-
-  // synchronize state with local storage on change
-  useEffect(() => {
-    const rawData = JSON.stringify(state)
-    localStorage.setItem(LOCAL_STORAGE_KEY, rawData)
-  }, [state])
-
-  const setActiveUser = useCallback((changes: Partial<ActiveUserState>) => {
-    setState((currentState) => ({
-      ...currentState,
-      ...changes,
-    }))
-  }, [])
-
-  const resetActiveUser = useCallback(() => {
-    setState(EMPTY_STATE)
-  }, [])
-
-  return { activeUserState: state, setActiveUser, resetActiveUser }
-}
+export const useActiveUserStore = createStore<ActiveUserState, ActiveUserStoreActions>(
+  {
+    state: EMPTY_STATE,
+    actionsFactory: (set) => ({
+      resetActiveUser: () => {
+        set((state) => ({ ...state, ...EMPTY_STATE }))
+      },
+      setActiveUser: (activeUserState) => {
+        set((state) => {
+          state.accountId = activeUserState.accountId || state.accountId
+          state.memberId = activeUserState.memberId || state.memberId
+          state.channelId = activeUserState.channelId || state.channelId
+        })
+      },
+    }),
+  },
+  {
+    persist: {
+      key: LOCAL_STORAGE_KEY,
+      version: 0,
+      whitelist: WHITELIST,
+      migrate: (oldState, oldVersion) => {
+        // migrate store before zustand was added
+        if (oldVersion === undefined) {
+          const activeUser = readFromLocalStorage<ActiveUserState>(LOCAL_STORAGE_KEY)
+          return activeUser
+        }
+      },
+    },
+  }
+)

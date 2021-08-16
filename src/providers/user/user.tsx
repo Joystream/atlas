@@ -7,14 +7,15 @@ import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { Logger } from '@/utils/logger'
 
-import { useActiveUserStore } from './store'
+import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
 export type Account = {
   id: AccountId
   name: string
 }
 
-type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
+type ActiveUserContextValue = ActiveUserStoreActions & {
+  activeUserState: ActiveUserState
   accounts: Account[] | null
   extensionConnected: boolean | null
 
@@ -28,11 +29,13 @@ type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
 
   userInitialized: boolean
 }
+
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
-  const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
+  const activeUserState = useActiveUserStore(({ actions, ...activeUser }) => ({ ...activeUser }))
+  const { setActiveUser, resetActiveUser } = useActiveUserStore((state) => state.actions)
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
