@@ -9,6 +9,7 @@ import {
   GetWorkersQuery,
   GetWorkersQueryVariables,
 } from '@/api/queries/__generated__/workers.generated'
+import { ViewErrorFallback } from '@/components'
 import { Logger } from '@/utils/logger'
 import { getRandomIntInclusive } from '@/utils/number'
 
@@ -25,6 +26,7 @@ StorageProvidersContext.displayName = 'StorageProvidersContext'
 // ¯\_(ツ)_/¯ for the name
 export const StorageProvidersProvider: React.FC = ({ children }) => {
   const [notWorkingStorageProvidersIds, setNotWorkingStorageProvidersIds] = useState<string[]>([])
+  const [storageProvidersError, setStorageProvidersError] = useState<unknown>(null)
   const storageProvidersPromiseRef = useRef<StorageProvidersPromise>()
 
   const client = useApolloClient()
@@ -41,10 +43,13 @@ export const StorageProvidersProvider: React.FC = ({ children }) => {
     storageProvidersPromiseRef.current = promise
     promise.catch((error) => {
       Logger.captureError('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
-      // app won't be usable without storage providers list, we need to throw
-      throw error
+      setStorageProvidersError(error)
     })
   }, [client])
+
+  if (storageProvidersError) {
+    return <ViewErrorFallback />
+  }
 
   return (
     <StorageProvidersContext.Provider
