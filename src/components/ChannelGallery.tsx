@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { ChannelCard } from '@/components/ChannelCard'
-import { Gallery, breakpointsOfGrid } from '@/shared/components'
+import { Gallery, RankingNumberTile, breakpointsOfGrid } from '@/shared/components'
 
 type ChannelGalleryProps = {
   title?: string
@@ -49,9 +49,15 @@ export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels 
   const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
   return (
     <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible>
-      {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) => (
-        <ChannelCard key={idx} id={channel.id} rankingNumber={hasRanking ? idx + 1 : undefined} />
-      ))}
+      {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>
+        hasRanking ? (
+          <RankingNumberTile variant="channel" rankingNumber={idx + 1} key={idx}>
+            <ChannelCard id={channel.id} />
+          </RankingNumberTile>
+        ) : (
+          <ChannelCard key={idx} id={channel.id} />
+        )
+      )}
     </Gallery>
   )
 }
