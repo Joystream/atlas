@@ -19,7 +19,7 @@ export const StyledRadioContainer = styled.div`
 export const MultiFileSelectWrapper = styled.div`
   ${media.medium} {
     position: sticky;
-    top: 32px;
+    top: ${sizes(8)};
   }
 `
 
