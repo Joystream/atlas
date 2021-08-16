@@ -197,7 +197,7 @@ export const EditVideoSheet: React.FC = () => {
         })
         uploadPromises.push(uploadPromise)
       }
-      Promise.all(uploadPromises).catch((e) => Logger.error('Failed assets upload', e))
+      Promise.all(uploadPromises).catch((e) => Logger.captureError('Unexpected upload failure', 'EditVideoSheet', e))
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {

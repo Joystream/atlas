@@ -165,7 +165,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       }
       canvas.toBlob((blob) => {
         if (!blob) {
-          Logger.error('Empty blob from cropped canvas', { blob })
+          Logger.captureError('Got an empty blob from cropped canvas', 'ImageCropDialog')
           return
         }
         const url = URL.createObjectURL(blob)

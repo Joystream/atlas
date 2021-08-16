@@ -84,16 +84,21 @@ export const useStartFileUpload = () => {
       try {
         const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
+          Logger.captureError('No storage provider available for upload', 'UploadsManager')
           return
         }
         storageUrl = storageProvider.url
         storageProviderId = storageProvider.id
       } catch (e) {
-        Logger.error('Failed to find storage provider', e)
+        Logger.captureError('Failed to get storage provider for upload', 'UploadsManager', e)
         return
       }
 
-      Logger.debug(`Uploading to ${storageUrl}`)
+      Logger.debug('Starting file upload', {
+        contentId: asset.contentId,
+        storageProviderId,
+        storageProviderUrl: storageUrl,
+      })
 
       const setAssetStatus = (status: Partial<UploadStatus>) => {
         setUploadStatus(asset.contentId, status)
@@ -104,13 +109,13 @@ export const useStartFileUpload = () => {
       }
 
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
+      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
 
       try {
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
         }
         rax.attach()
-        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
         if (!opts?.isReUpload && !opts?.changeHost && file) {
           addAsset({ ...asset, size: file.size })
         }
@@ -162,7 +167,9 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
       } catch (e) {
-        Logger.error('Failed to upload to storage provider', { storageUrl, error: e })
+        Logger.captureError('Failed to upload asset', 'UploadsManager', e, {
+          asset: { contentId: asset.contentId, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
+        })
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError

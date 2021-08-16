@@ -22,18 +22,6 @@ type StorageProvidersContextValue = {
 const StorageProvidersContext = React.createContext<StorageProvidersContextValue | undefined>(undefined)
 StorageProvidersContext.displayName = 'StorageProvidersContext'
 
-class NoStorageProviderError extends Error {
-  storageProviders: string[]
-  notWorkingStorageProviders: string[]
-
-  constructor(message: string, storageProviders: string[], notWorkingStorageProviders: string[]) {
-    super(message)
-
-    this.storageProviders = storageProviders
-    this.notWorkingStorageProviders = notWorkingStorageProviders
-  }
-}
-
 // ¯\_(ツ)_/¯ for the name
 export const StorageProvidersProvider: React.FC = ({ children }) => {
   const [notWorkingStorageProvidersIds, setNotWorkingStorageProvidersIds] = useState<string[]>([])
@@ -51,7 +39,11 @@ export const StorageProvidersProvider: React.FC = ({ children }) => {
       },
     })
     storageProvidersPromiseRef.current = promise
-    promise.catch((error) => Logger.error('Failed to fetch storage providers list', error))
+    promise.catch((error) => {
+      Logger.captureError('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
+      // app won't be usable without storage providers list, we need to throw
+      throw error
+    })
   }, [client])
 
   return (
@@ -91,11 +83,12 @@ export const useStorageProviders = () => {
     )
 
     if (!workingStorageProviders.length) {
-      throw new NoStorageProviderError(
-        'No storage provider available',
-        storageProviders.map(({ workerId }) => workerId),
-        notWorkingStorageProvidersIds
-      )
+      Logger.captureError('No storage provider available', 'StorageProvidersProvider', null, {
+        providers: {
+          allIds: storageProviders.map(({ workerId }) => workerId),
+          notWorkingIds: notWorkingStorageProvidersIds,
+        },
+      })
     }
 
     return workingStorageProviders
@@ -103,7 +96,7 @@ export const useStorageProviders = () => {
 
   const getRandomStorageProvider = useCallback(async () => {
     const workingStorageProviders = await getStorageProviders()
-    if (!workingStorageProviders) {
+    if (!workingStorageProviders || !workingStorageProviders.length) {
       return null
     }
     const randomStorageProviderIdx = getRandomIntInclusive(0, workingStorageProviders.length - 1)
