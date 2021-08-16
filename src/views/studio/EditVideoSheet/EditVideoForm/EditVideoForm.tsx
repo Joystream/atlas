@@ -89,7 +89,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 }) => {
   const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
-  const [fileSelectContainerRef, fileSelectContainerBounds] = useMeasure()
+  const [actionBarRef, actionBarBounds] = useMeasure()
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -417,14 +417,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   return (
     <>
-      <FormScrolling>
+      <FormScrolling actionBarHeight={actionBarBounds.height}>
         <FormWrapper>
           <Controller
             name="assets"
             control={control}
             render={() => (
-              <div ref={fileSelectContainerRef}>
-                <MultiFileSelectWrapper width={fileSelectContainerBounds.width}>
+              <div>
+                <MultiFileSelectWrapper>
                   <MultiFileSelect
                     files={{
                       video: mediaAsset,
@@ -636,8 +636,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </InputsContainer>
         </FormWrapper>
       </FormScrolling>
-
       <StyledActionBar
+        ref={actionBarRef}
         disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}
         fee={fee}

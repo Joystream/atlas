@@ -5,6 +5,8 @@ import { Button, TitleArea } from '@/shared/components'
 import { FormField } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
+import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
+
 export const StyledRadioContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,15 +16,15 @@ export const StyledRadioContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 `
-export const MultiFileSelectWrapper = styled.div<{ width: number }>`
-  width: ${({ width }) => width}px;
-
+export const MultiFileSelectWrapper = styled.div`
   ${media.medium} {
-    position: fixed;
+    position: sticky;
+    top: 32px;
   }
 `
 
-export const FormScrolling = styled.div`
+export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
+  height: calc(100% - ${({ actionBarHeight }) => actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px);
   overflow-y: auto;
   overflow-x: hidden;
 `
