@@ -4,15 +4,13 @@ import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
-import { SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
   ButtonsContainer,
   Container,
-  ControlsContainer,
-  HorizontalGradientOverlay,
   InfoContainer,
   Media,
   MediaWrapper,
@@ -75,34 +73,35 @@ export const VideoHero: React.FC = () => {
               />
             )}
           </PlayerContainer>
-          {coverVideo && <HorizontalGradientOverlay />}
           <VerticalGradientOverlay />
         </Media>
       </MediaWrapper>
       <InfoContainer isLoading={!coverVideo}>
         <StyledChannelLink
           id={coverVideo?.video.channel.id}
-          hideHandle
           overrideChannel={coverVideo?.video.channel}
-          avatarSize="cover"
+          avatarSize="small"
         />
-        <TitleContainer>
-          {coverVideo ? (
-            <>
-              <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
-                <Title variant="h2">{coverVideo.coverTitle}</Title>
-              </Link>
-              <span>{coverVideo.coverDescription}</span>
-            </>
-          ) : (
-            <>
-              <TitleSkeletonLoader width={380} height={60} />
-              <SkeletonLoader width={300} height={20} bottomSpace={4} />
-              <SkeletonLoader width={200} height={20} />
-            </>
-          )}
-        </TitleContainer>
-        <ControlsContainer>
+        <LayoutGrid>
+          <GridItem colSpan={{ base: 12, compact: 10, small: 8, medium: 5, xlarge: 4, xxlarge: 3 }}>
+            <TitleContainer>
+              {coverVideo ? (
+                <>
+                  <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
+                    <Title variant="h2">{coverVideo.coverTitle}</Title>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <TitleSkeletonLoader width={380} height={60} />
+                  <SkeletonLoader width={300} height={20} bottomSpace={4} />
+                  <SkeletonLoader width={200} height={20} />
+                </>
+              )}
+            </TitleContainer>
+          </GridItem>
+        </LayoutGrid>
+        <div>
           <CSSTransition
             in={displayControls}
             timeout={parseInt(transitions.timings.loading)}
@@ -111,19 +110,15 @@ export const VideoHero: React.FC = () => {
             appear
           >
             <ButtonsContainer>
-              <PlayButton
-                onClick={handlePlayPauseClick}
-                icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-                size="large"
-              >
+              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}>
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
-              <SoundButton onClick={handleSoundToggleClick} size="large">
+              <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgPlayerSoundOn /> : <SvgPlayerSoundOff />}
               </SoundButton>
             </ButtonsContainer>
           </CSSTransition>
-        </ControlsContainer>
+        </div>
       </InfoContainer>
     </Container>
   )
