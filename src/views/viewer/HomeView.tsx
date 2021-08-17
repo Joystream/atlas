@@ -56,13 +56,20 @@ export const HomeView: React.FC = () => {
       <Container className={transitions.names.slide}>
         <ErrorBoundary fallback={ErrorFallback}>
           {!followedLoading && followedChannelsVideosCount ? (
-            <InfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!followedLoading} onDemand />
+            <InfiniteVideoGrid
+              title="Followed channels"
+              channelIdIn={channelIdIn}
+              ready={!followedLoading}
+              onDemand
+              titleLoader
+            />
           ) : null}
           <InfiniteVideoGrid
             title="Popular on Joystream"
             idIn={mostViewedVideosIds}
             ready={!mostViewedVideosLoading}
             onDemand
+            titleLoader
           />
           <TopTenThisWeek />
           <OfficialJoystreamUpdate />

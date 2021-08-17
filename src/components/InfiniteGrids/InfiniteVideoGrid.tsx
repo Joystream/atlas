@@ -17,6 +17,7 @@ import { VideoTile } from '../VideoTile'
 
 type InfiniteVideoGridProps = {
   title?: string
+  titleLoader?: boolean
   categoryId?: string
   channelId?: string
   channelIdIn?: string[] | null
@@ -61,6 +62,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   onDemand = false,
   additionalLink,
   isFeatured = false,
+  titleLoader,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -173,7 +175,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       <TitleWrapper>
         {title && (
           <GridHeadingContainer>
-            {loading || !displayedItems.length ? (
+            {(!ready || !displayedItems.length) && titleLoader ? (
               <SkeletonLoader height={30} width={250} />
             ) : (
               <Text variant="h4">{title}</Text>
