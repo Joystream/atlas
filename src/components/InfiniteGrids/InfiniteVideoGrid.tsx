@@ -7,10 +7,10 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, GridHeadingContainer, LoadMoreButton, SkeletonLoader, Text } from '@/shared/components'
+import { Grid, GridHeadingContainer, LoadMoreButton, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
-import { AdditionalLink, LoadMoreButtonWrapper, TitleWrapper } from './InfiniteGrid.style'
+import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoTile } from '../VideoTile'
@@ -172,9 +172,9 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      <TitleWrapper>
+      <GridHeadingContainer>
         {title && (
-          <GridHeadingContainer>
+          <TitleContainer>
             {(!ready || !displayedItems.length) && titleLoader ? (
               <SkeletonLoader height={30} width={250} />
             ) : (
@@ -191,9 +191,9 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
                 {additionalLink.name}
               </AdditionalLink>
             )}
-          </GridHeadingContainer>
+          </TitleContainer>
         )}
-      </TitleWrapper>
+      </GridHeadingContainer>
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>

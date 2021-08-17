@@ -7,11 +7,6 @@ export const LoadMoreButtonWrapper = styled.div`
   margin-top: ${sizes(12)};
 `
 
-export const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`
-
 export const LanguageSelectWrapper = styled.div`
   margin-left: ${sizes(6)};
   width: ${sizes(34)};

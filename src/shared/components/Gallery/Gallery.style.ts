@@ -16,11 +16,6 @@ export const CarouselArrowsContainer = styled.div`
   margin-left: auto;
 `
 
-export const TitleWrapper = styled.div`
-  align-items: baseline;
-  display: flex;
-`
-
 export const SeeAllLink = styled(Button)`
   flex-shrink: 0;
   margin-left: ${sizes(8)};
