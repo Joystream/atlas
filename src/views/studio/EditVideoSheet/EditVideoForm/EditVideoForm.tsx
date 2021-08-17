@@ -423,22 +423,20 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             name="assets"
             control={control}
             render={() => (
-              <div>
-                <MultiFileSelectWrapper>
-                  <MultiFileSelect
-                    files={{
-                      video: mediaAsset,
-                      thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
-                    }}
-                    onVideoChange={handleVideoFileChange}
-                    onThumbnailChange={handleThumbnailFileChange}
-                    editMode={isEdit}
-                    error={fileSelectError}
-                    onError={handleFileSelectError}
-                    maxVideoSize={10 * 1024 * 1024 * 1024}
-                  />
-                </MultiFileSelectWrapper>
-              </div>
+              <MultiFileSelectWrapper>
+                <MultiFileSelect
+                  files={{
+                    video: mediaAsset,
+                    thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+                  }}
+                  onVideoChange={handleVideoFileChange}
+                  onThumbnailChange={handleThumbnailFileChange}
+                  editMode={isEdit}
+                  error={fileSelectError}
+                  onError={handleFileSelectError}
+                  maxVideoSize={10 * 1024 * 1024 * 1024}
+                />
+              </MultiFileSelectWrapper>
             )}
           />
           <InputsContainer>
