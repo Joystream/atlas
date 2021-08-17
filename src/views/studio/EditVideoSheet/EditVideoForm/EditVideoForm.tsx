@@ -25,7 +25,6 @@ import {
   Checkbox,
   Datepicker,
   FormField,
-  MultiFileSelect,
   RadioButton,
   Select,
   SelectItem,
@@ -46,7 +45,7 @@ import {
   FormScrolling,
   FormWrapper,
   InputsContainer,
-  MultiFileSelectWrapper,
+  StyledMultiFileSelect,
   StyledRadioContainer,
   StyledTitleArea,
 } from './EditVideoForm.style'
@@ -423,8 +422,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             name="assets"
             control={control}
             render={() => (
-              <MultiFileSelectWrapper>
-                <MultiFileSelect
+              <div>
+                <StyledMultiFileSelect
                   files={{
                     video: mediaAsset,
                     thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
@@ -436,7 +435,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   onError={handleFileSelectError}
                   maxVideoSize={10 * 1024 * 1024 * 1024}
                 />
-              </MultiFileSelectWrapper>
+              </div>
             )}
           />
           <InputsContainer>

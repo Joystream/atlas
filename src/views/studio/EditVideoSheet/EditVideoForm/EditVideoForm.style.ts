@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
-import { Button, TitleArea } from '@/shared/components'
+import { Button, MultiFileSelect, TitleArea } from '@/shared/components'
 import { FormField } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
 
@@ -16,7 +16,7 @@ export const StyledRadioContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 `
-export const MultiFileSelectWrapper = styled.div`
+export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.medium} {
     position: sticky;
     top: ${sizes(8)};
@@ -60,10 +60,6 @@ export const InputsContainer = styled.div`
   margin-top: ${sizes(8)};
   ${media.medium} {
     margin-top: 0;
-  }
-
-  > :last-child {
-    padding-bottom: 100px;
   }
 `
 
