@@ -2,6 +2,8 @@
 import * as Sentry from '@sentry/react'
 import { Severity } from '@sentry/react'
 
+import { useActiveUserStore } from '@/providers/user/store'
+
 class CustomError extends Error {
   name: string
   message: string
@@ -80,10 +82,24 @@ export class Logger {
         ...contexts,
       },
       tags,
+      user: getUserInfo(),
     })
   }
 
   static captureMessage = (message: string, source: string, level: LogMessageLevel, contexts?: LogContexts) => {
-    Sentry.captureMessage(message, { level: Severity.fromString(level), contexts, tags: { source } })
+    Sentry.captureMessage(message, {
+      level: Severity.fromString(level),
+      contexts,
+      tags: { source },
+      user: getUserInfo(),
+    })
+  }
+}
+
+const getUserInfo = (): Record<string, unknown> => {
+  const { actions, ...userState } = useActiveUserStore.getState()
+  return {
+    ip_address: '{{auto}}',
+    ...userState,
   }
 }
