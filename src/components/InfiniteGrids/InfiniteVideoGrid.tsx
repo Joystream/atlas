@@ -173,7 +173,11 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       <TitleWrapper>
         {title && (
           <GridHeadingContainer>
-            {!ready ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
+            {loading || !displayedItems.length ? (
+              <SkeletonLoader height={30} width={250} />
+            ) : (
+              <Text variant="h4">{title}</Text>
+            )}
             {additionalLink && (
               <AdditionalLink
                 to={additionalLink.url}
