@@ -4,7 +4,6 @@ export const validateImage = async (file: File): Promise<File> => {
     const fileURL = URL.createObjectURL(file)
     img.src = fileURL
     img.onload = () => resolve(file)
-    img.onerror = () =>
-      reject(new Error('There was an error loading the image please try again or choose another image'))
+    img.onerror = () => reject(new Error('Image could not be loaded'))
   })
 }

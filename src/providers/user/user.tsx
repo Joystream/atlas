@@ -3,6 +3,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
+import { ViewErrorFallback } from '@/components'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { Logger } from '@/utils/logger'
@@ -47,7 +48,16 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     loading: membershipsLoading,
     error: membershipsError,
     refetch: refetchMemberships,
-  } = useMemberships({ where: { controllerAccount_in: accountsIds } }, { skip: !accounts || !accounts.length })
+  } = useMemberships(
+    { where: { controllerAccount_in: accountsIds } },
+    {
+      skip: !accounts || !accounts.length,
+      onError: (error) =>
+        Logger.captureError('Failed to fetch memberships', 'ActiveUserProvider', error, {
+          accounts: { ids: accountsIds },
+        }),
+    }
+  )
 
   // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
   const memberships = membershipsData || membershipPreviousData?.memberships
@@ -57,15 +67,13 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     loading: activeMembershipLoading,
     error: activeMembershipError,
     refetch: refetchActiveMembership,
-  } = useMembership({ where: { id: activeUserState.memberId } }, { skip: !activeUserState.memberId })
-
-  if (membershipsError) {
-    throw membershipsError
-  }
-
-  if (activeMembershipError) {
-    throw activeMembershipError
-  }
+  } = useMembership(
+    { where: { id: activeUserState.memberId } },
+    {
+      skip: !activeUserState.memberId,
+      onError: (error) => Logger.captureError('Failed to fetch active membership', 'ActiveUserProvider', error),
+    }
+  )
 
   // handle polkadot extension
   useEffect(() => {
@@ -97,7 +105,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         setExtensionConnected(true)
       } catch (e) {
         setExtensionConnected(false)
-        Logger.error('Unknown polkadot extension error', e)
+        Logger.captureError('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
       }
     }
 
@@ -141,6 +149,10 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     refetchActiveMembership,
 
     userInitialized,
+  }
+
+  if (membershipsError || activeMembershipError) {
+    return <ViewErrorFallback />
   }
 
   return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>

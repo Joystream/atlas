@@ -1,4 +1,4 @@
-import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicFailedError, ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { TransactionDialogStep, useConnectionStatusStore, useDialog, useSnackbar } from '@/providers'
 import { Logger } from '@/utils/logger'
 
@@ -56,7 +56,7 @@ export const useTransaction = (): HandleTransactionFn => {
         try {
           await preProcess()
         } catch (e) {
-          Logger.error('Failed transaction preprocess', e)
+          Logger.captureError('Failed transaction preprocess', 'TransactionManager', e)
           return false
         }
       }
@@ -65,7 +65,9 @@ export const useTransaction = (): HandleTransactionFn => {
       setDialogStep(ExtrinsicStatus.Unsigned)
       const { data: txData, block } = await txFactory(setDialogStep)
       if (onTxFinalize) {
-        onTxFinalize(txData).catch((e) => Logger.error('Failed transaction finalize callback', e))
+        onTxFinalize(txData).catch((e) =>
+          Logger.captureError('Failed transaction finalize callback', 'TransactionManager', e)
+        )
       }
 
       setDialogStep(ExtrinsicStatus.Syncing)
@@ -75,7 +77,7 @@ export const useTransaction = (): HandleTransactionFn => {
             try {
               await onTxSync(txData)
             } catch (e) {
-              Logger.error('Failed transaction sync callback', e)
+              Logger.captureError('Failed transaction sync callback', 'TransactionManager', e)
             }
           }
           resolve()
@@ -112,11 +114,16 @@ export const useTransaction = (): HandleTransactionFn => {
           iconType: 'warning',
           timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
         })
-      } else {
-        Logger.error(e)
-        setDialogStep(null)
-        openErrorDialog()
+        return false
       }
+
+      if (e instanceof ExtrinsicFailedError) {
+        Logger.captureError('Extrinsic failed', 'TransactionManager', e)
+      } else {
+        Logger.captureError('Unknown sendExtrinsic error', 'TransactionManager', e)
+      }
+      setDialogStep(null)
+      openErrorDialog()
       return false
     }
   }

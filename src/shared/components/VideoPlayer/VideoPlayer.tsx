@@ -130,13 +130,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (playPromise) {
       playPromise.catch((e) => {
         if (e.name === 'NotAllowedError') {
-          Logger.warn('Video play failed:', e)
+          Logger.warn('Video playback failed', e)
         } else {
-          Logger.error('Video play failed:', e)
+          Logger.captureError('Video playback failed', 'VideoPlayer', e, {
+            video: { id: videoId, url: videoJsConfig.src },
+          })
         }
       })
     }
-  }, [player])
+  }, [player, videoId, videoJsConfig.src])
 
   // handle video loading
   useEffect(() => {
@@ -194,7 +196,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
-        Logger.warn('Autoplay failed:', e)
+        Logger.warn('Video autoplay failed', e)
       })
     }
   }, [player, isLoaded, autoplay])
@@ -398,7 +400,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (document.pictureInPictureEnabled) {
         // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
         player.requestPictureInPicture().catch((e) => {
-          Logger.warn('Picture in picture failed:', e)
+          Logger.warn('Picture in picture failed', e)
         })
       }
     }

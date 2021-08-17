@@ -61,7 +61,7 @@ export const createStore = <TState extends object, TActions extends object>(
         try {
           return config.migrate(oldState, oldVersion, storageValue) as CommonStore<TState, TActions>
         } catch (e) {
-          Logger.error(`Failed to migrate store "${config.key}"`, e)
+          Logger.captureError(`Failed to migrate store "${config.key}"`, 'createStore', e)
           return {} as CommonStore<TState, TActions>
         }
       },

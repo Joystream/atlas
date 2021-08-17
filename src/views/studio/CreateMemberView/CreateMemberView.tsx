@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
+import { ViewErrorFallback } from '@/components'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
@@ -64,9 +65,11 @@ export const CreateMemberView = () => {
   const [openErrorDialog, closeErrorDialog] = useDialog()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
-  if (queryNodeStateError) {
-    throw queryNodeStateError
-  }
+  // subscription doesn't allow 'onError' callback
+  useEffect(() => {
+    if (!queryNodeStateError) return
+    Logger.captureError('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
+  }, [queryNodeStateError])
 
   const client = useApolloClient()
 
@@ -143,6 +146,10 @@ export const CreateMemberView = () => {
       }
     }, 500)
   )
+
+  if (queryNodeStateError) {
+    return <ViewErrorFallback />
+  }
 
   return (
     <Wrapper>
@@ -223,7 +230,7 @@ export const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    Logger.error('Failed to create a new member', error)
+    Logger.captureError('Failed to create a membership', 'CreateMemberView', error)
     throw error
   }
 }

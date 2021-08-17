@@ -12,7 +12,7 @@ import {
   StudioSidenav,
   StudioTopbar,
   TOP_NAVBAR_HEIGHT,
-  ViewErrorFallback,
+  ViewErrorBoundary,
 } from '@/components'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
@@ -84,9 +84,6 @@ const StudioLayout = () => {
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
-  // TODO: add route transition
-  // TODO: remove dependency on PersonalDataProvider
-  //  we need PersonalDataProvider because DismissibleBanner in video drafts depends on it
   return (
     <>
       <NoConnectionIndicator
@@ -166,7 +163,7 @@ const StudioLayoutWrapper: React.FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary
-      fallback={ViewErrorFallback}
+      fallback={ViewErrorBoundary}
       onReset={() => {
         navigate(absoluteRoutes.studio.index())
       }}

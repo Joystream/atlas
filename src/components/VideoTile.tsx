@@ -97,7 +97,7 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
   const { video, loading } = useVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => Logger.error('Failed to fetch video', error),
+    onError: (error) => Logger.captureError('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
