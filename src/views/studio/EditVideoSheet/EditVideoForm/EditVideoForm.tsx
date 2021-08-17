@@ -2,6 +2,7 @@ import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
+import useMeasure from 'react-use-measure'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -24,7 +25,6 @@ import {
   Checkbox,
   Datepicker,
   FormField,
-  MultiFileSelect,
   RadioButton,
   Select,
   SelectItem,
@@ -42,8 +42,10 @@ import {
   DeleteVideoButton,
   DeleteVideoContainer,
   ExtendedMarginFormField,
+  FormScrolling,
   FormWrapper,
   InputsContainer,
+  StyledMultiFileSelect,
   StyledRadioContainer,
   StyledTitleArea,
 } from './EditVideoForm.style'
@@ -86,6 +88,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 }) => {
   const { activeChannelId } = useAuthorizedUser()
   const isEdit = !selectedVideoTab?.isDraft
+  const [actionBarRef, actionBarBounds] = useMeasure()
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -413,221 +416,225 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
 
   return (
     <>
-      <FormWrapper>
-        <Controller
-          name="assets"
-          control={control}
-          render={() => (
-            <MultiFileSelect
-              files={{
-                video: mediaAsset,
-                thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
-              }}
-              onVideoChange={handleVideoFileChange}
-              onThumbnailChange={handleThumbnailFileChange}
-              editMode={isEdit}
-              error={fileSelectError}
-              onError={handleFileSelectError}
-              maxVideoSize={10 * 1024 * 1024 * 1024}
-            />
-          )}
-        />
-        <InputsContainer>
-          <StyledTitleArea
-            {...register(
-              'title',
-              textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })
+      <FormScrolling actionBarHeight={actionBarBounds.height}>
+        <FormWrapper>
+          <Controller
+            name="assets"
+            control={control}
+            render={() => (
+              <div>
+                <StyledMultiFileSelect
+                  files={{
+                    video: mediaAsset,
+                    thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+                  }}
+                  onVideoChange={handleVideoFileChange}
+                  onThumbnailChange={handleThumbnailFileChange}
+                  editMode={isEdit}
+                  error={fileSelectError}
+                  onError={handleFileSelectError}
+                  maxVideoSize={10 * 1024 * 1024 * 1024}
+                />
+              </div>
             )}
-            placeholder="Video title"
-            error={!!errors.title}
-            helperText={errors.title?.message}
           />
-          <TextArea
-            {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}
-            maxLength={2160}
-            placeholder="Description of the video to share with your audience"
-            error={!!errors.description}
-            helperText={errors.description?.message}
-          />
-          <ExtendedMarginFormField
-            title="Privacy"
-            description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
-          >
-            <Controller
-              name="isPublic"
-              control={control}
-              rules={{
-                validate: (value) => value !== null,
-              }}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={value}
-                  items={visibilityOptions}
-                  onChange={onChange}
-                  error={!!errors.isPublic && !value}
-                  helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
-                />
+          <InputsContainer>
+            <StyledTitleArea
+              {...register(
+                'title',
+                textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })
               )}
+              placeholder="Video title"
+              error={!!errors.title}
+              helperText={errors.title?.message}
             />
-          </ExtendedMarginFormField>
-          <FormField title="Language" description="Main language used in the video">
-            <Controller
-              name="language"
-              control={control}
-              rules={requiredValidation('Video language')}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={value}
-                  items={languages}
-                  onChange={onChange}
-                  error={!!errors.language && !value}
-                  helperText={errors.language?.message}
-                />
-              )}
+            <TextArea
+              {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}
+              maxLength={2160}
+              placeholder="Description of the video to share with your audience"
+              error={!!errors.description}
+              helperText={errors.description?.message}
             />
-          </FormField>
-          <FormField title="Category" description="Category that best describes the content">
-            <Controller
-              name="category"
-              control={control}
-              rules={requiredValidation('Video category')}
-              render={({ field: { value, onChange, ref } }) => (
-                <Select
-                  containerRef={ref}
-                  value={value}
-                  items={categoriesSelectItems}
-                  onChange={onChange}
-                  error={!!errors.category && !value}
-                  helperText={errors.category?.message}
-                />
-              )}
-            />
-          </FormField>
-          <FormField title="License">
-            <Controller
-              name="licenseCode"
-              control={control}
-              rules={requiredValidation('License')}
-              render={({ field: { value, onChange, ref } }) => (
-                <Select
-                  containerRef={ref}
-                  value={value}
-                  items={knownLicensesOptions}
-                  placeholder="Choose license type"
-                  onChange={onChange}
-                  error={!!errors.licenseCode && !value}
-                  helperText={errors.licenseCode?.message}
-                />
-              )}
-            />
-          </FormField>
-          {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
-            <FormField title="License attribution">
-              <TextField
-                {...register(
-                  'licenseAttribution',
-                  textFieldValidation({ name: 'License attribution', maxLength: 5000 })
+            <ExtendedMarginFormField
+              title="Privacy"
+              description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
+            >
+              <Controller
+                name="isPublic"
+                control={control}
+                rules={{
+                  validate: (value) => value !== null,
+                }}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value}
+                    items={visibilityOptions}
+                    onChange={onChange}
+                    error={!!errors.isPublic && !value}
+                    helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
+                  />
                 )}
-                placeholder="Type your attribution here"
-                error={!!errors.licenseAttribution}
-                helperText={errors.licenseAttribution?.message}
+              />
+            </ExtendedMarginFormField>
+            <FormField title="Language" description="Main language used in the video">
+              <Controller
+                name="language"
+                control={control}
+                rules={requiredValidation('Video language')}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value}
+                    items={languages}
+                    onChange={onChange}
+                    error={!!errors.language && !value}
+                    helperText={errors.language?.message}
+                  />
+                )}
               />
             </FormField>
-          )}
-
-          {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
-            <FormField title="Custom license">
-              <TextArea
-                {...register(
-                  'licenseCustomText',
-                  textFieldValidation({ name: 'License', maxLength: 5000, required: true })
+            <FormField title="Category" description="Category that best describes the content">
+              <Controller
+                name="category"
+                control={control}
+                rules={requiredValidation('Video category')}
+                render={({ field: { value, onChange, ref } }) => (
+                  <Select
+                    containerRef={ref}
+                    value={value}
+                    items={categoriesSelectItems}
+                    onChange={onChange}
+                    error={!!errors.category && !value}
+                    helperText={errors.category?.message}
+                  />
                 )}
-                maxLength={5000}
-                placeholder="Type your license content here"
-                error={!!errors.licenseCustomText}
-                helperText={errors.licenseCustomText?.message}
               />
             </FormField>
-          )}
-
-          <FormField title="Marketing">
-            <Controller
-              name="hasMarketing"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Checkbox
-                  value={value ?? false}
-                  label="My video features a paid promotion material"
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormField>
-          <ExtendedMarginFormField
-            title="Content rating"
-            description="Whether your video contains explicit material (sex, violence, etc.)"
-          >
-            <Controller
-              name="isExplicit"
-              control={control}
-              defaultValue={false}
-              rules={{
-                validate: (value) => value !== null,
-              }}
-              render={({ field: { value, onChange, ref } }) => (
-                <StyledRadioContainer>
-                  <RadioButton
-                    ref={ref}
-                    value="false"
-                    label="All audiences"
-                    onChange={() => onChange(false)}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+            <FormField title="License">
+              <Controller
+                name="licenseCode"
+                control={control}
+                rules={requiredValidation('License')}
+                render={({ field: { value, onChange, ref } }) => (
+                  <Select
+                    containerRef={ref}
+                    value={value}
+                    items={knownLicensesOptions}
+                    placeholder="Choose license type"
+                    onChange={onChange}
+                    error={!!errors.licenseCode && !value}
+                    helperText={errors.licenseCode?.message}
                   />
-                  <RadioButton
-                    value="true"
-                    label="Mature"
-                    onChange={() => onChange(true)}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                  />
-                </StyledRadioContainer>
-              )}
-            />
-          </ExtendedMarginFormField>
-          <FormField
-            title="Prior publication"
-            description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
-          >
-            <Controller
-              name="publishedBeforeJoystream"
-              control={control}
-              rules={{
-                validate: (value) => pastDateValidation(value),
-              }}
-              render={({ field: { value, onChange } }) => (
-                <Datepicker
-                  value={value}
-                  onChange={onChange}
-                  error={!!errors.publishedBeforeJoystream}
-                  helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+                )}
+              />
+            </FormField>
+            {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
+              <FormField title="License attribution">
+                <TextField
+                  {...register(
+                    'licenseAttribution',
+                    textFieldValidation({ name: 'License attribution', maxLength: 5000 })
+                  )}
+                  placeholder="Type your attribution here"
+                  error={!!errors.licenseAttribution}
+                  helperText={errors.licenseAttribution?.message}
                 />
-              )}
-            />
-          </FormField>
-          {isEdit && (
-            <DeleteVideoContainer>
-              <DeleteVideoButton size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
-                Delete video
-              </DeleteVideoButton>
-            </DeleteVideoContainer>
-          )}
-        </InputsContainer>
-      </FormWrapper>
+              </FormField>
+            )}
 
+            {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
+              <FormField title="Custom license">
+                <TextArea
+                  {...register(
+                    'licenseCustomText',
+                    textFieldValidation({ name: 'License', maxLength: 5000, required: true })
+                  )}
+                  maxLength={5000}
+                  placeholder="Type your license content here"
+                  error={!!errors.licenseCustomText}
+                  helperText={errors.licenseCustomText?.message}
+                />
+              </FormField>
+            )}
+
+            <FormField title="Marketing">
+              <Controller
+                name="hasMarketing"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Checkbox
+                    value={value ?? false}
+                    label="My video features a paid promotion material"
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+            <ExtendedMarginFormField
+              title="Content rating"
+              description="Whether your video contains explicit material (sex, violence, etc.)"
+            >
+              <Controller
+                name="isExplicit"
+                control={control}
+                defaultValue={false}
+                rules={{
+                  validate: (value) => value !== null,
+                }}
+                render={({ field: { value, onChange, ref } }) => (
+                  <StyledRadioContainer>
+                    <RadioButton
+                      ref={ref}
+                      value="false"
+                      label="All audiences"
+                      onChange={() => onChange(false)}
+                      selectedValue={value?.toString()}
+                      error={!!errors.isExplicit}
+                      helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                    />
+                    <RadioButton
+                      value="true"
+                      label="Mature"
+                      onChange={() => onChange(true)}
+                      selectedValue={value?.toString()}
+                      error={!!errors.isExplicit}
+                      helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                    />
+                  </StyledRadioContainer>
+                )}
+              />
+            </ExtendedMarginFormField>
+            <FormField
+              title="Prior publication"
+              description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
+            >
+              <Controller
+                name="publishedBeforeJoystream"
+                control={control}
+                rules={{
+                  validate: (value) => pastDateValidation(value),
+                }}
+                render={({ field: { value, onChange } }) => (
+                  <Datepicker
+                    value={value}
+                    onChange={onChange}
+                    error={!!errors.publishedBeforeJoystream}
+                    helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+                  />
+                )}
+              />
+            </FormField>
+            {isEdit && (
+              <DeleteVideoContainer>
+                <DeleteVideoButton size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
+                  Delete video
+                </DeleteVideoButton>
+              </DeleteVideoContainer>
+            )}
+          </InputsContainer>
+        </FormWrapper>
+      </FormScrolling>
       <StyledActionBar
+        ref={actionBarRef}
         disabled={nodeConnectionStatus !== 'connected'}
         fullWidth={true}
         fee={fee}

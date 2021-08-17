@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 
 import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
-import { Button, TitleArea } from '@/shared/components'
+import { Button, MultiFileSelect, TitleArea } from '@/shared/components'
 import { FormField } from '@/shared/components'
 import { colors, media, sizes } from '@/shared/theme'
+
+import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
 export const StyledRadioContainer = styled.div`
   display: flex;
@@ -14,12 +16,23 @@ export const StyledRadioContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 `
+export const StyledMultiFileSelect = styled(MultiFileSelect)`
+  ${media.medium} {
+    position: sticky;
+    top: ${sizes(8)};
+  }
+`
+
+export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
+  height: calc(100% - ${({ actionBarHeight }) => actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px);
+  overflow-y: auto;
+  overflow-x: hidden;
+`
 
 export const FormWrapper = styled.form`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
-  overflow-y: auto;
   padding: ${sizes(8)} ${sizes(4)};
 
   ${media.small} {
@@ -27,7 +40,6 @@ export const FormWrapper = styled.form`
   }
 
   ${media.medium} {
-    overflow-y: hidden;
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
@@ -48,11 +60,6 @@ export const InputsContainer = styled.div`
   margin-top: ${sizes(8)};
   ${media.medium} {
     margin-top: 0;
-    overflow-y: auto;
-  }
-
-  > :last-child {
-    padding-bottom: 100px;
   }
 `
 
