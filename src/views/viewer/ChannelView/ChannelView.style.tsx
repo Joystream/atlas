@@ -135,7 +135,6 @@ export const TabsContainer = styled.div`
   display: grid;
   margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     'tabs tabs tabs'
