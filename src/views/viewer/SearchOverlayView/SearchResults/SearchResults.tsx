@@ -3,10 +3,11 @@ import React, { useMemo, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
-import { ChannelGrid, SkeletonLoaderVideoGrid, VideoGrid, ViewWrapper } from '@/components'
+import { ChannelGrid, SkeletonLoaderVideoGrid, VideoGrid, ViewErrorFallback, ViewWrapper } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 import { AllResultsTab } from './AllResultsTab'
 import { EmptyFallback } from './EmptyFallback'
@@ -18,15 +19,18 @@ const tabs = ['all results', 'videos', 'channels']
 
 export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { data, loading, error } = useSearch({
-    text: query,
-    limit: 50,
-    whereVideo: {
-      mediaAvailability_eq: AssetAvailability.Accepted,
-      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+  const { data, loading, error } = useSearch(
+    {
+      text: query,
+      limit: 50,
+      whereVideo: {
+        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+      },
+      whereChannel: {},
     },
-    whereChannel: {},
-  })
+    { onError: (error) => Logger.captureError('Failed to fetch search results', 'SearchResults', error) }
+  )
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {
     if (loading || !data) {
@@ -48,10 +52,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
     updateRecentSearches(id, 'channel')
   }
   if (error) {
-    throw error
-  }
-  if (!loading && !data) {
-    throw new Error(`There was a problem with your search...`)
+    return <ViewErrorFallback />
   }
 
   if (!loading && channels.length === 0 && videos.length === 0) {

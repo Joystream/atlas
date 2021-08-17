@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { TOP_NAVBAR_HEIGHT, ViewErrorFallback, ViewerSidenav, ViewerTopbar } from '@/components'
+import { TOP_NAVBAR_HEIGHT, ViewErrorBoundary, ViewerSidenav, ViewerTopbar } from '@/components'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
@@ -56,7 +56,7 @@ export const ViewerLayout: React.FC = () => {
       <ViewerSidenav />
       <MainContainer>
         <ErrorBoundary
-          fallback={ViewErrorFallback}
+          fallback={ViewErrorBoundary}
           onReset={() => {
             navigate(absoluteRoutes.viewer.index())
           }}

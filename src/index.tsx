@@ -1,4 +1,3 @@
-import { CaptureConsole } from '@sentry/integrations'
 import * as Sentry from '@sentry/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -22,11 +21,7 @@ const initApp = async () => {
   if (BUILD_ENV === 'production') {
     Sentry.init({
       dsn: SENTRY_DSN,
-      integrations: [
-        new CaptureConsole({
-          levels: ['error'],
-        }),
-      ],
+      ignoreErrors: ['ResizeObserver loop limit exceeded'],
     })
   }
   ReactDOM.render(<App />, document.getElementById('root'))

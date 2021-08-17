@@ -48,10 +48,24 @@ export const AssetsManager: React.FC = () => {
           removeAssetBeingResolved(contentId)
           return
         } catch (e) {
-          Logger.error(`Failed to load ${resolutionData.assetType}`, { contentId, assetUrl })
+          // don't capture every single asset timeout as error, just log it
+          Logger.error('Failed to load asset', {
+            contentId,
+            type: resolutionData.assetType,
+            storageProviderId: storageProvider.workerId,
+            storageProviderUrl: storageProvider.metadata,
+            assetUrl,
+          })
         }
       }
-      Logger.error(`No storage provider was able to provide asset`, { contentId })
+      Logger.captureError('No storage provider was able to provide asset', 'AssetsManager', null, {
+        asset: {
+          contentId,
+          type: resolutionData.assetType,
+          storageProviderIds: storageProvidersToTry.map((sp) => sp.workerId),
+          storageProviderUrls: storageProvidersToTry.map((sp) => sp.metadata),
+        },
+      })
     })
   }, [
     addAsset,

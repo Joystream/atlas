@@ -10,6 +10,7 @@ import {
 } from '@/api/queries'
 import { Grid, SkeletonLoader, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
@@ -103,11 +104,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       return rawData?.videosConnection
     },
     itemsPerRow: videosPerRow,
+    onError: (error) => Logger.captureError('Failed to fetch videos', 'InfiniteVideoGrid', error),
   })
-
-  if (error) {
-    throw error
-  }
 
   // handle category change
   // TODO potentially move into useInfiniteGrid as a general rule - keep separate targetRowsCount per serialized queryVariables
@@ -145,6 +143,10 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ))}
     </>
   )
+
+  if (error) {
+    return null
+  }
 
   if (displayedItems.length <= 0 && placeholdersCount <= 0) {
     return null

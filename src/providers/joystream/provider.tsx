@@ -38,7 +38,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
         handleNodeConnectionUpdate(false)
-        Logger.error('Failed to create JoystreamJs instance', e)
+        Logger.captureError('Failed to create JoystreamJS instance', 'JoystreamProvider', e)
       }
     }
 

@@ -1,7 +1,10 @@
 import { ApolloProvider } from '@apollo/client'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
+import { GlobalStyle } from '@/shared/components'
+import { routingTransitions } from '@/styles/routingTransitions'
 
 import { MainLayout } from './MainLayout'
 import { AssetsManager, DialogProvider, OverlayManagerProvider, Snackbars, StorageProvidersProvider } from './providers'
@@ -12,16 +15,21 @@ export const App = () => {
   const apolloClient = createApolloClient()
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <OverlayManagerProvider>
-        <StorageProvidersProvider>
-          <DialogProvider>
-            <MainLayout />
-            <Snackbars />
-            <AssetsManager />
-          </DialogProvider>
-        </StorageProvidersProvider>
-      </OverlayManagerProvider>
-    </ApolloProvider>
+    <>
+      <GlobalStyle additionalStyles={[routingTransitions]} />
+      <ApolloProvider client={apolloClient}>
+        <BrowserRouter>
+          <OverlayManagerProvider>
+            <StorageProvidersProvider>
+              <DialogProvider>
+                <MainLayout />
+                <Snackbars />
+                <AssetsManager />
+              </DialogProvider>
+            </StorageProvidersProvider>
+          </OverlayManagerProvider>
+        </BrowserRouter>
+      </ApolloProvider>
+    </>
   )
 }

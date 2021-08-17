@@ -6,6 +6,7 @@ import useMeasure from 'react-use-measure'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
+import { ViewErrorFallback } from '@/components'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks'
@@ -101,19 +102,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     sheetState,
   } = useEditVideoSheet()
   const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
-  const { categories, error: categoriesError } = useCategories()
-  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
   const deleteVideo = useDeleteVideo()
 
-  if (categoriesError) {
-    throw categoriesError
-  }
-
-  if (tabDataError) {
-    throw tabDataError
-  }
+  const { categories, error: categoriesError } = useCategories(undefined, {
+    onError: (error) => Logger.captureError('Failed to fetch categories', 'EditVideoSheet', error),
+  })
+  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
   const {
     register,
@@ -399,7 +396,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      Logger.error('Unknown file select error', errorCode)
+      Logger.captureError('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
       setFileSelectError('Unknown error')
     }
   }
@@ -413,6 +410,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       name: c.name || 'Unknown category',
       value: c.id,
     })) || []
+
+  if (tabDataError || categoriesError) {
+    return <ViewErrorFallback />
+  }
 
   return (
     <>

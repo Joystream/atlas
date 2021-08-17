@@ -52,7 +52,6 @@
     "@joystream/types": "~0.16.1",
     "@loadable/component": "^5.14.1",
     "@polkadot/extension-dapp": "~0.37.3-17",
-    "@sentry/integrations": "^6.11.0",
     "@sentry/react": "^6.11.0",
     "@tippyjs/react": "^4.2.5",
     "apollo": "^2.30.2",

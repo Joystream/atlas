@@ -36,7 +36,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => Logger.error('Failed to fetch channel', error),
+    onError: (error) => Logger.captureError('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
   const { url: avatarPhotoUrl } = useAsset({
     entity: channel,

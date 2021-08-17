@@ -1,18 +1,18 @@
 import styled from '@emotion/styled'
-import { ErrorBoundary } from '@sentry/react'
 import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
 import {
-  ErrorFallback,
   InfiniteVideoGrid,
   InterruptedVideosGallery,
   LimitedWidthContainer,
   VideoHero,
+  ViewErrorFallback,
 } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
@@ -31,7 +31,7 @@ export const HomeView: React.FC = () => {
         createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
       },
     },
-    { skip: !anyFollowedChannels }
+    { skip: !anyFollowedChannels, onError: (error) => Logger.captureError('Failed to fetch videos', 'HomeView', error) }
   )
 
   const followedChannelsVideosCount = videosConnection?.totalCount
@@ -39,21 +39,20 @@ export const HomeView: React.FC = () => {
     followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
 
   if (error) {
-    throw error
+    return <ViewErrorFallback />
   }
+
   return (
     <LimitedWidthContainer big>
       <VideoHero />
       <Container className={transitions.names.slide}>
         <InterruptedVideosGallery />
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid
-            title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
-            channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
-            createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
-            ready={!loading}
-          />
-        </ErrorBoundary>
+        <StyledInfiniteVideoGrid
+          title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
+          channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
+          createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
+          ready={!loading}
+        />
       </Container>
     </LimitedWidthContainer>
   )
