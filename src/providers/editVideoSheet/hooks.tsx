@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
+import { Logger } from '@/utils/logger'
 
 import { EditVideoSheetContext } from './provider'
 import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
@@ -25,7 +26,10 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
-  const { video, loading, error } = useVideo(tab?.id ?? '', { skip: tab?.isDraft })
+  const { video, loading, error } = useVideo(tab?.id ?? '', {
+    skip: tab?.isDraft,
+    onError: (error) => Logger.captureError('Failed to fetch video', 'useEditVideoSheetTabData', error),
+  })
 
   if (!tab) {
     return {

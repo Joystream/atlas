@@ -58,7 +58,7 @@ export const AdminView = () => {
         iconType: 'success',
       })
     } catch (error) {
-      Logger.error(error)
+      Logger.captureError('Failed to import local state', 'AdminView', error)
       displaySnackbar({
         title: 'JSON file seems to be corrupted',
         description: 'Please try again with different file',

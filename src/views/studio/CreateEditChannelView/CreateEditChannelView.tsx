@@ -10,6 +10,7 @@ import {
   ImageCropDialogImperativeHandle,
   ImageCropDialogProps,
   LimitedWidthContainer,
+  ViewErrorFallback,
 } from '@/components'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
@@ -94,6 +95,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const { channel, loading, error, refetch: refetchChannel } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
+    onError: (error) =>
+      Logger.captureError('Failed to fetch channel', 'CreateEditChannelView', error, {
+        channel: { id: activeChannelId },
+      }),
   })
   const startFileUpload = useStartFileUpload()
 
@@ -291,7 +296,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         })
         uploadPromises.push(uploadPromise)
       }
-      Promise.all(uploadPromises).catch((e) => Logger.error('Failed assets upload', e))
+      Promise.all(uploadPromises).catch((e) =>
+        Logger.captureError('Unexpected upload failure', 'CreateEditChannelView', e)
+      )
     }
 
     const refetchDataAndCacheAssets = async (channelId: ChannelId) => {
@@ -332,7 +339,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   }
 
   if (error) {
-    throw error
+    return <ViewErrorFallback />
   }
 
   const progressDrawerSteps = [

@@ -1,11 +1,9 @@
 import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import { StudioLoading, TopbarBase } from '@/components'
 import { BASE_PATHS } from '@/config/routes'
-import { GlobalStyle } from '@/shared/components'
-import { routingTransitions } from '@/styles/routingTransitions'
 import { isBrowserOutdated } from '@/utils/browser'
 
 import { useDialog } from './providers'
@@ -43,17 +41,12 @@ export const MainLayout: React.FC = () => {
   }, [openDialog])
 
   return (
-    <>
-      <GlobalStyle additionalStyles={[routingTransitions]} />
-      <BrowserRouter>
-        <Routes>
-          <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
-          <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
-          <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
-          <Route path={BASE_PATHS.playground + '/*'} element={<PlaygroundLayout />} />
-          <Route path={BASE_PATHS.admin + '/*'} element={<AdminView />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <Routes>
+      <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
+      <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
+      <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
+      <Route path={BASE_PATHS.playground + '/*'} element={<PlaygroundLayout />} />
+      <Route path={BASE_PATHS.admin + '/*'} element={<AdminView />} />
+    </Routes>
   )
 }

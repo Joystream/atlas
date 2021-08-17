@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
-import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { ChannelLink, InfiniteVideoGrid, ViewErrorFallback } from '@/components'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
@@ -30,7 +30,9 @@ import {
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id)
+  const { loading, video, error } = useVideo(id, {
+    onError: (error) => Logger.captureError('Failed to load video data', 'VideoView', error),
+  })
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
@@ -74,7 +76,7 @@ export const VideoView: React.FC = () => {
         channelId,
       },
     }).catch((error) => {
-      Logger.warn('Failed to increase video views', { error })
+      Logger.captureError('Failed to increase video views', 'VideoView', error)
     })
   }, [addVideoView, videoId, channelId])
 
@@ -98,7 +100,7 @@ export const VideoView: React.FC = () => {
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
   if (error) {
-    throw error
+    return <ViewErrorFallback />
   }
 
   if (!loading && !video) {

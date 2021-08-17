@@ -1,12 +1,12 @@
-import { ErrorBoundary } from '@sentry/react'
 import React, { useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import { useCategories, useVideos } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { BackgroundPattern, ErrorFallback, TOP_NAVBAR_HEIGHT, VideoGallery } from '@/components'
+import { BackgroundPattern, TOP_NAVBAR_HEIGHT, VideoGallery, ViewErrorFallback } from '@/components'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
+import { Logger } from '@/utils/logger'
 
 import {
   CategoriesVideosContainer,
@@ -21,20 +21,20 @@ import {
 
 export const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
-  const { loading: categoriesLoading, categories, error: categoriesError } = useCategories()
-  const {
-    loading: featuredVideosLoading,
-    videos: featuredVideos,
-    error: featuredVideosError,
-    refetch: refetchFeaturedVideos,
-  } = useVideos(
+  const { loading: categoriesLoading, categories, error: categoriesError } = useCategories(undefined, {
+    onError: (error) => Logger.captureError('Failed to fetch categories', 'VideosView', error),
+  })
+  const { loading: featuredVideosLoading, videos: featuredVideos, error: videosError } = useVideos(
     {
       where: {
         isFeatured_eq: true,
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
     },
-    { notifyOnNetworkStatusChange: true }
+    {
+      notifyOnNetworkStatusChange: true,
+      onError: (error) => Logger.captureError('Failed to fetch videos', 'VideosView', error),
+    }
   )
 
   const topicsRef = useRef<HTMLHeadingElement>(null)
@@ -53,15 +53,9 @@ export const VideosView: React.FC = () => {
     }
   }
 
-  if (categoriesError) {
-    throw categoriesError
+  if (videosError || categoriesError) {
+    return <ViewErrorFallback />
   }
-
-  if (featuredVideosError) {
-    throw featuredVideosError
-  }
-
-  const hasFeaturedVideosError = featuredVideosError && !featuredVideosLoading
 
   return (
     <StyledViewWrapper>
@@ -70,11 +64,7 @@ export const VideosView: React.FC = () => {
         <Header variant="hero">Videos</Header>
         {featuredVideosLoading || featuredVideos?.length ? (
           <FeaturedVideosContainer>
-            {!hasFeaturedVideosError ? (
-              <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos || []} />
-            ) : (
-              <ErrorFallback error={featuredVideosError} resetError={() => refetchFeaturedVideos()} />
-            )}
+            <VideoGallery title="Featured" loading={featuredVideosLoading} videos={featuredVideos || []} />
           </FeaturedVideosContainer>
         ) : null}
         <CategoriesVideosContainer>
@@ -89,9 +79,7 @@ export const VideosView: React.FC = () => {
             onChange={handleCategoryChange}
             isAtTop={inView}
           />
-          <ErrorBoundary fallback={ErrorFallback}>
-            <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
-          </ErrorBoundary>
+          <StyledInfiniteVideoGrid categoryId={selectedCategoryId || undefined} ready={!!categories} />
         </CategoriesVideosContainer>
       </div>
     </StyledViewWrapper>

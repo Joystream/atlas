@@ -24,7 +24,7 @@ export const TransactionManager: React.FC = () => {
         try {
           action.callback()
         } catch (e) {
-          Logger.error('Failed to execute tx sync callback', e)
+          Logger.captureError('Failed to execute tx sync callback', 'TransactionManager', e)
         }
       })
 

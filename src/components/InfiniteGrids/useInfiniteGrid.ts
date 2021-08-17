@@ -36,6 +36,7 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   itemsPerRow: number
   skipCount: number
   onScrollToBottom: () => void
+  onError?: (error: unknown) => void
   queryVariables: TArgs
 }
 
@@ -57,6 +58,7 @@ export const useInfiniteGrid = <
   itemsPerRow,
   skipCount,
   onScrollToBottom,
+  onError,
   queryVariables,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
@@ -69,6 +71,7 @@ export const useInfiniteGrid = <
       ...queryVariables,
       first: targetLoadedItemsCount,
     },
+    onError,
   })
 
   const data = dataAccessor(rawData)
@@ -79,7 +82,7 @@ export const useInfiniteGrid = <
 
   // handle fetching more items
   useEffect(() => {
-    if (loading || !isReady || !fetchMore || allItemsLoaded) {
+    if (loading || error || !isReady || !fetchMore || allItemsLoaded) {
       return
     }
 
@@ -92,10 +95,22 @@ export const useInfiniteGrid = <
     fetchMore({
       variables: { ...queryVariables, first: missingItemsCount, after: endCursor },
     })
-  }, [loading, fetchMore, allItemsLoaded, queryVariables, targetLoadedItemsCount, loadedItemsCount, endCursor, isReady])
+  }, [
+    loading,
+    error,
+    fetchMore,
+    allItemsLoaded,
+    queryVariables,
+    targetLoadedItemsCount,
+    loadedItemsCount,
+    endCursor,
+    isReady,
+  ])
 
   // handle scroll to bottom
   useEffect(() => {
+    if (error) return
+
     const scrollHandler = debounce(() => {
       const scrolledToBottom =
         window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight
@@ -106,7 +121,7 @@ export const useInfiniteGrid = <
 
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [isReady, loading, allItemsLoaded, onScrollToBottom])
+  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom])
 
   const displayedEdges = data?.edges.slice(skipCount, targetLoadedItemsCount) ?? []
   const displayedItems = displayedEdges.map((edge) => edge.node)
