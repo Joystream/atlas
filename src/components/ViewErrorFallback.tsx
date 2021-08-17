@@ -34,7 +34,7 @@ export const ViewErrorFallback: React.FC<ViewErrorFallbackProps> = ({ onResetCli
     <Container>
       <AnimatedError />
       <Message>
-        <Text variant="h3">Oops! An error occurred.</Text>
+        <Header variant="h3">Oops! An error occurred.</Header>
         <Text variant="body1" secondary>
           Something bad happened and the app broke. This has been logged and we&apos;ll try to resolve it as soon as
           possible. You can find support in our Discord community.
@@ -68,6 +68,10 @@ const Message = styled.div`
   ${media.small} {
     max-width: 70%;
   }
+`
+
+const Header = styled(Text)`
+  margin-bottom: ${sizes(2)};
 `
 
 const ButtonsContainer = styled.div`
