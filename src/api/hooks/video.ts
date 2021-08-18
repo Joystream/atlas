@@ -1,5 +1,4 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
-import { useMemo } from 'react'
 
 import {
   AddVideoViewMutation,
@@ -84,12 +83,7 @@ export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVaria
 export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
   const { mostViewedVideos } = useMostViewedVideosIds(variables, opts)
 
-  const mostViewedVideosIds = useMemo(() => {
-    if (mostViewedVideos) {
-      return mostViewedVideos.map((item) => item.id)
-    }
-    return null
-  }, [mostViewedVideos])
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
 
   const { videos, ...rest } = useVideos(
     {
