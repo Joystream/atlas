@@ -4,7 +4,7 @@ import { useVideos } from '@/api/hooks'
 import { VideoGallery } from '@/components'
 import { readEnv } from '@/config/envs'
 
-const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL')
+const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL_ID')
 const MAX_VIDEOS = 10
 
 export const OfficialJoystreamUpdate = () => {
