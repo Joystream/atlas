@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes } from '@/shared/theme'
 
 export const MessageIconWrapper = styled.div`

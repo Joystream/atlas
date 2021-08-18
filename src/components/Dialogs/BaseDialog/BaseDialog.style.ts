@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/shared/components'
+import { IconButton } from '@/shared/components/IconButton'
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 export const DialogBackDrop = styled.div`

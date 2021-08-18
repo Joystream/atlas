@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Button, Text } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes } from '@/shared/theme'
 
 import { BannerVariant } from './Banner'
