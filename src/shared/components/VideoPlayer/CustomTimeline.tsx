@@ -23,11 +23,17 @@ type CustomTimelineProps = {
   player?: VideoJsPlayer | null
   isFullScreen?: boolean
   playerState: PlayerState
+  setPlayerState: React.Dispatch<React.SetStateAction<PlayerState>>
 }
 
 const UPDATE_INTERVAL = 30
 
-export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullScreen, playerState }) => {
+export const CustomTimeline: React.FC<CustomTimelineProps> = ({
+  player,
+  isFullScreen,
+  playerState,
+  setPlayerState,
+}) => {
   const playProgressThumbRef = useRef<HTMLButtonElement>(null)
   const playProgressRef = useRef<HTMLDivElement>(null)
   const seekBarRef = useRef<HTMLDivElement>(null)
@@ -90,7 +96,9 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       setPlayProgressWidth(progressPercentage)
       setPlayProgressThumbWidth(playProgressThumb.clientWidth)
 
-      // set loadProgress
+      if (progressPercentage === 100) {
+        setPlayerState('ended')
+      }
 
       // get all buffered time ranges
       const bufferedTimeRanges = Array.from({ length: buffered.length }).map((_, idx) => ({
@@ -112,7 +120,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
     return () => {
       clearInterval(interval)
     }
-  }, [isScrubbing, player, playerState])
+  }, [isScrubbing, player, playerState, setPlayerState])
 
   const handleMouseAndTouchMove = (e: React.MouseEvent | React.TouchEvent) => {
     const seekBar = seekBarRef.current

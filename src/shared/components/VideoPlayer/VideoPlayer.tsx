@@ -421,6 +421,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showBigPlayButton = playerState === null && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
+  const showControlsIndicator = !isInBackground || playerState !== 'ended'
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
@@ -444,7 +445,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
-              <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
+              <CustomTimeline
+                player={player}
+                isFullScreen={isFullScreen}
+                playerState={playerState}
+                setPlayerState={setPlayerState}
+              />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
                   <PlayButton
@@ -508,7 +514,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        {!isInBackground && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
+        {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
   )
