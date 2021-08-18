@@ -22,7 +22,7 @@ type CustomVideosType = VideoFieldsWithProgress[] | VideoWithIdAndProgress[]
 
 type VideoGalleryProps = {
   title?: string
-  videos?: CustomVideosType
+  videos?: CustomVideosType | null
   loading?: boolean
   removeButton?: boolean
   onRemoveButtonClick?: (id: string) => void
@@ -76,10 +76,12 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       }
     })
   }, [hasRanking])
-  if (!loading && videos?.length === 0) {
+
+  if (loading === false && videos?.length === 0) {
     return null
   }
-  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({
+
+  const placeholderItems = Array.from({ length: loading || !videos?.length ? PLACEHOLDERS_COUNT : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
@@ -95,7 +97,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       seeAllUrl={seeAllUrl}
       className={className}
     >
-      {[...videos, ...placeholderItems]?.map((video, idx) =>
+      {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
             <StyledVideoTile

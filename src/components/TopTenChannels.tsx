@@ -7,10 +7,9 @@ import { ChannelGallery } from './ChannelGallery'
 export const TopTenChannels = () => {
   const { channels, loading } = useMostFollowedChannelsAllTime({ limit: 10 })
 
-  const isLoading = loading || channels === null
   return (
     <section>
-      <ChannelGallery hasRanking channels={channels} loading={isLoading} title="Top 10 Channels" />
+      <ChannelGallery hasRanking channels={channels} loading={loading} title="Top 10 Channels" />
     </section>
   )
 }

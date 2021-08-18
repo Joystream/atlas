@@ -50,13 +50,20 @@ export const HomeView: React.FC = () => {
       <VideoHero />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
-          <InfiniteVideoGrid title="Followed channels" channelIdIn={channelIdIn} ready={!followedLoading} onDemand />
+          <InfiniteVideoGrid
+            title="Followed channels"
+            channelIdIn={channelIdIn}
+            ready={!followedLoading}
+            onDemand
+            titleLoader
+          />
         ) : null}
         <InfiniteVideoGrid
           title="Popular on Joystream"
           idIn={mostViewedVideosIds}
           ready={!mostViewedVideosLoading}
           onDemand
+          titleLoader
         />
         <TopTenThisWeek />
         <OfficialJoystreamUpdate />

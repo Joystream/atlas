@@ -8,7 +8,7 @@ export const TopTenThisWeek = () => {
 
   return (
     <section>
-      <VideoGallery title="Top 10 this week" videos={videos || []} loading={loading} hasRanking />
+      <VideoGallery title="Top 10 this week" videos={videos} loading={loading} hasRanking />
     </section>
   )
 }

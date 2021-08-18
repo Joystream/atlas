@@ -26,11 +26,10 @@ export const PopularView: FC = () => {
   if (mostViewedVideosError) {
     throw mostViewedVideosError
   }
-
   return (
     <StyledViewWrapper>
       <Header variant="h2">Popular on Joystream</Header>
-      <VideoGallery hasRanking title="Top 10 this month" videos={videos || []} loading={loading} />
+      <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
       <InfiniteVideoGrid title="Popular videos" idIn={mostViewedVideosIds} ready={!mostViewedVideosLoading} onDemand />
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
