@@ -7,7 +7,7 @@ import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/componen
 import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 
-export const ChannelsView = () => {
+export const ChannelsView: React.FC = () => {
   return (
     <StyledViewWrapper>
       <Header variant="h2">Browse channels</Header>
