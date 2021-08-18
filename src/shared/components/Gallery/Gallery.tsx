@@ -1,12 +1,13 @@
 import React, { ComponentProps, useRef } from 'react'
 
-import { GridHeadingContainer } from '@/shared/components'
+import { TitleContainer } from '@/shared/components'
 import { Arrow } from '@/shared/components/Carousel/Carousel.style'
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/shared/icons'
 
-import { CarouselArrowsContainer, Container, SeeAllLink, TitleWrapper } from './Gallery.style'
+import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.style'
 
 import { Carousel, CarouselProps } from '../Carousel/Carousel'
+import { GridHeadingContainer } from '../GridHeading'
 import { Text } from '../Text'
 
 export type GalleryProps = {
@@ -28,7 +29,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
   return (
     <Container className={className}>
       <GridHeadingContainer>
-        <TitleWrapper>
+        <TitleContainer>
           {title && <Text variant="h4">{title}</Text>}
           {seeAllUrl && (
             <>
@@ -44,15 +45,15 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
               </SeeAllLink>
             </>
           )}
-        </TitleWrapper>
-        <CarouselArrowsContainer>
-          <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">
-            <SvgGlyphChevronLeft />
-          </Arrow>
-          <Arrow {...carouselRef.current?.getNextArrowProps()} ref={nextArrowRef} size="large" variant="secondary">
-            <SvgGlyphChevronRight />
-          </Arrow>
-        </CarouselArrowsContainer>
+          <CarouselArrowsContainer>
+            <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">
+              <SvgGlyphChevronLeft />
+            </Arrow>
+            <Arrow {...carouselRef.current?.getNextArrowProps()} ref={nextArrowRef} size="large" variant="secondary">
+              <SvgGlyphChevronRight />
+            </Arrow>
+          </CarouselArrowsContainer>
+        </TitleContainer>
       </GridHeadingContainer>
       <Carousel
         {...carouselProps}

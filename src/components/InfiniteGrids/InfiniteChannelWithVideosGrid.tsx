@@ -13,17 +13,11 @@ import {
 import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
-import { GridHeadingContainer, LoadMoreButton, Select, SkeletonLoader, Text } from '@/shared/components'
+import { GridHeadingContainer, LoadMoreButton, Select, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
-import {
-  AdditionalLink,
-  LanguageSelectWrapper,
-  LoadMoreButtonWrapper,
-  Separator,
-  TitleWrapper,
-} from './InfiniteGrid.style'
+import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean
@@ -134,9 +128,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
 
   return (
     <section className={className}>
-      <TitleWrapper>
+      <GridHeadingContainer>
         {title && (
-          <GridHeadingContainer>
+          <TitleContainer>
             {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
             {languageSelector && (
               <CSSTransition
@@ -169,9 +163,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
                 {additionalLink.name}
               </AdditionalLink>
             )}
-          </GridHeadingContainer>
+          </TitleContainer>
         )}
-      </TitleWrapper>
+      </GridHeadingContainer>
       {itemsToShow.map((channel, idx) => (
         <Fragment key={`channels-with-videos-${idx}`}>
           <ChannelWithVideos channelId={channel.id} />
