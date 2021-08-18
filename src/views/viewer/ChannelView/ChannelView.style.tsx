@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink, TOP_NAVBAR_HEIGHT } from '@/components'
-import { Button, EmptyFallback, IconButton, SkeletonLoader, Tabs, Text, TextField } from '@/shared/components'
+import { Button, IconButton, SkeletonLoader, Tabs, Text, TextField } from '@/shared/components'
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
