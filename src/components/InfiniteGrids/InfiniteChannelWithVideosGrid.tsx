@@ -11,7 +11,15 @@ import {
 import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
-import { GridHeadingContainer, LoadMoreButton, Select, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
+import {
+  EmptyFallback,
+  GridHeadingContainer,
+  LoadMoreButton,
+  Select,
+  SkeletonLoader,
+  Text,
+  TitleContainer,
+} from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
 import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
@@ -130,12 +138,22 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
           </TitleContainer>
         )}
       </GridHeadingContainer>
-      {itemsToShow.map((channel, idx) => (
-        <Fragment key={`channels-with-videos-${idx}`}>
-          <ChannelWithVideos channelId={channel.id} />
-          {idx + 1 < itemsToShow.length && <Separator />}
-        </Fragment>
-      ))}
+      {itemsToShow.length ? (
+        itemsToShow.map((channel, idx) => (
+          <Fragment key={`channels-with-videos-${idx}`}>
+            <ChannelWithVideos channelId={channel.id} />
+            {idx + 1 < itemsToShow.length && <Separator />}
+          </Fragment>
+        ))
+      ) : (
+        <>
+          <EmptyFallback
+            title={`No channels found in ${languages.find((language) => language.value === selectedLanguage)?.name}`}
+            variant="large"
+          />
+          <Separator />
+        </>
+      )}
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
           <LoadMoreButton onClick={fetchMore} label="Show more channels" />
