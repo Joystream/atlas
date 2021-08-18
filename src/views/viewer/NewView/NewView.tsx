@@ -11,7 +11,7 @@ import { sizes } from '@/shared/theme'
 export const NewView: React.FC = () => (
   <StyledViewWrapper>
     <Header variant="h2">New & Noteworthy</Header>
-    <InfiniteVideoGrid title="Videos worth watching" isFeatured onDemand />
+    <InfiniteVideoGrid title="Videos worth watching" isFeatured onDemand titleLoader />
     <PromisingNewChannels />
     <CallToActionWrapper>
       <CallToActionButton label="Home" to={absoluteRoutes.viewer.index()} colorVariant="yellow" icon={<SvgNavHome />} />

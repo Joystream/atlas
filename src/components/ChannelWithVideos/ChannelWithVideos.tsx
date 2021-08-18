@@ -83,7 +83,14 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
           {isLoading ? (
             <SkeletonLoader width="90px" height="40px" />
           ) : (
-            <FollowButton variant="secondary" size={'medium'} onClick={() => toggleFollowing()}>
+            <FollowButton
+              variant="secondary"
+              size={'medium'}
+              onClick={(e) => {
+                e.preventDefault()
+                toggleFollowing()
+              }}
+            >
               {isFollowing ? 'Unfollow' : 'Follow'}
             </FollowButton>
           )}
