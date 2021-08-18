@@ -1,2 +1,2 @@
-export * from './useJoystream'
 export * from './provider'
+export * from './useJoystream'
