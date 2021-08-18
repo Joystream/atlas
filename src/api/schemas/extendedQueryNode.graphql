@@ -258,29 +258,6 @@ type Language {
   iso: String!
 }
 
-input LanguageWhereInput {
-  id_eq: ID
-  id_in: [ID!]
-  iso_eq: String
-  iso_contains: String
-  iso_startsWith: String
-  iso_endsWith: String
-  iso_in: [String!]
-}
-
-enum LanguageOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  deletedAt_ASC
-  deletedAt_DESC
-  iso_ASC
-  iso_DESC
-  createdInBlock_ASC
-  createdInBlock_DESC
-}
-
 type Query {
   # Lookup a membership by its ID
   membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
@@ -320,8 +297,6 @@ type Query {
 
   # Free text search across videos and channels
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
-
-  languages(offset: Int, limit: Int, where: LanguageWhereInput, orderBy: [LanguageOrderByInput!]): [Language!]!
 }
 
 type Subscription {
