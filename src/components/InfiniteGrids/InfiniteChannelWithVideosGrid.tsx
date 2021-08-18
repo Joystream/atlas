@@ -1,7 +1,5 @@
-import React, { FC, Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import React, { FC, Fragment, useCallback, useState } from 'react'
 
-import { useLanguages } from '@/api/hooks'
 import {
   ChannelEdge,
   ChannelOrderByInput,
@@ -15,7 +13,6 @@ import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
 import { GridHeadingContainer, LoadMoreButton, Select, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
 
 import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
 
@@ -54,9 +51,8 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   maximumCount,
   additionalSortFn,
 }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>(null)
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
-  const { languages: queryNodeLanguages, loading: languagesLoading } = useLanguages()
   const fetchMore = useCallback(() => {
     setTargetRowsCount((prevState) => prevState + 3)
   }, [])
@@ -98,29 +94,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
 
   const itemsToShow = [...displayedItems, ...placeholderItems]
 
-  const mappedLanguages = useMemo(() => {
-    const mergedLanguages: Array<{ name: string; value: string }> = []
-    if (queryNodeLanguages) {
-      queryNodeLanguages.forEach((language) => {
-        const matchedLanguage = languages.find((item) => item.value === language.iso)
-        if (matchedLanguage) {
-          mergedLanguages.push({
-            name: matchedLanguage?.name,
-            value: language.id,
-          })
-        }
-      })
-    }
-    return mergedLanguages
-  }, [queryNodeLanguages])
-
-  // Set initial language
-  useEffect(() => {
-    if (mappedLanguages.length && languageSelector) {
-      setSelectedLanguage(mappedLanguages.find((item) => item.name === 'English')?.value)
-    }
-  }, [mappedLanguages, languageSelector])
-
   const onSelectLanguage = (value?: string | null) => {
     setTargetRowsCount(INITIAL_ROWS)
     setSelectedLanguage(value)
@@ -133,24 +106,15 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
           <TitleContainer>
             {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
             {languageSelector && (
-              <CSSTransition
-                in={!!queryNodeLanguages?.length}
-                timeout={parseInt(transitions.timings.loading)}
-                classNames={transitions.names.fade}
-                mountOnEnter
-                unmountOnExit
-              >
-                <LanguageSelectWrapper>
-                  <Select
-                    items={mappedLanguages}
-                    disabled={languagesLoading}
-                    value={selectedLanguage}
-                    size="small"
-                    helperText={null}
-                    onChange={onSelectLanguage}
-                  />
-                </LanguageSelectWrapper>
-              </CSSTransition>
+              <LanguageSelectWrapper>
+                <Select
+                  items={languages}
+                  value={selectedLanguage}
+                  size="small"
+                  helperText={null}
+                  onChange={onSelectLanguage}
+                />
+              </LanguageSelectWrapper>
             )}
             {additionalLink && (
               <AdditionalLink
