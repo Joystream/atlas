@@ -47,13 +47,11 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       return
     }
     const handler = (event: Event) => {
-      if (event.type === 'seeking') {
-        if (!player.paused()) {
-          setPlayedBefore(true)
-          player.pause()
-        }
+      if (event.type === 'seeking' && isScrubbing && !player.paused()) {
+        setPlayedBefore(true)
+        player.pause()
       }
-      if (event.type === 'seeked') {
+      if (event.type === 'seeked' && !isScrubbing) {
         if (playedBefore) {
           player.play()
           setPlayedBefore(false)
@@ -155,7 +153,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
 
     const percentage = clamp(round(mouseOrTouchPosition / seekBarWidth, 4), 0, 100)
     const newTime = percentage * (player?.duration() || 0)
-    player?.currentTime(newTime)
+    player.currentTime(newTime)
     setIsScrubbing(false)
   }
 
@@ -166,10 +164,9 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({ player, isFullSc
       onMouseMove={handleMouseAndTouchMove}
       onTouchMove={handleMouseAndTouchMove}
       onMouseLeave={handleJumpToTime}
-      onClick={handleJumpToTime}
       onMouseDown={() => setIsScrubbing(true)}
       onTouchStart={() => setIsScrubbing(true)}
-      onMouseUp={() => setIsScrubbing(false)}
+      onMouseUp={handleJumpToTime}
       onTouchEnd={handleJumpToTime}
     >
       <SeekBar ref={seekBarRef}>
