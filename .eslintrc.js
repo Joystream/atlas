@@ -14,7 +14,7 @@ module.exports = {
     // turns off the rules which may conflict with prettier
     'prettier',
   ],
-  plugins: ['@emotion', '@typescript-eslint'],
+  plugins: ['@emotion', '@typescript-eslint', 'sort-export-all'],
   settings: {
     react: {
       version: 'detect',
@@ -61,6 +61,7 @@ module.exports = {
         'ignoreDeclarationSort': true,
       },
     ],
+    'sort-export-all/sort-export-all': 'warn',
 
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',
