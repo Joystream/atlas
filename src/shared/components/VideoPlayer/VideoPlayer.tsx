@@ -146,15 +146,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
       }
-      if (event.type === 'canplay' || event.type === 'seeked') {
+      if (event.type === 'canplaythrough' || event.type === 'seeked') {
         if (playerState !== null) {
           setPlayerState('playing')
         }
       }
     }
-    player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
+    player.on(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
+      player.off(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
@@ -421,6 +421,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showBigPlayButton = playerState === null && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
+  const showControlsIndicator = !isInBackground || playerState !== 'ended'
+
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
@@ -443,7 +445,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
-              <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
+              <CustomTimeline
+                player={player}
+                isFullScreen={isFullScreen}
+                playerState={playerState}
+                setPlayerState={setPlayerState}
+              />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
                   <PlayButton
@@ -507,7 +514,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        {!isInBackground && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
+        {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
   )
