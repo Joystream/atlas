@@ -97,3 +97,7 @@ export const LicenseContainer = styled.div`
     color: ${colors.gray[500]};
   }
 `
+
+export const NotFoundVideoContainer = styled.div`
+  transform: translateY(50%);
+`

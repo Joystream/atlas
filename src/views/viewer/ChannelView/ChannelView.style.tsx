@@ -227,3 +227,7 @@ export const UnfollowDescriptionAccentText = styled.span`
   font-weight: ${typography.weights.regular};
   color: ${colors.gray[50]};
 `
+
+export const NotFoundChannelContainer = styled.div`
+  transform: translateY(50%);
+`
