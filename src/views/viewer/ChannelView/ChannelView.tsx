@@ -17,9 +17,10 @@ import {
   useSearchLazyQuery,
 } from '@/api/queries'
 import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
-import { ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
+import { Button, ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
@@ -27,6 +28,7 @@ import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
+  NotFoundChannelContainer,
   PaginationContainer,
   SearchButton,
   SearchContainer,
@@ -258,7 +260,18 @@ export const ChannelView: React.FC = () => {
   }, [])
 
   if (!loading && !channel) {
-    return <span>Channel not found</span>
+    return (
+      <NotFoundChannelContainer>
+        <EmptyFallback
+          title="Channel not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundChannelContainer>
+    )
   }
   return (
     <ViewWrapper>

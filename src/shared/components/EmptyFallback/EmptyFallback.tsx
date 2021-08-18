@@ -11,6 +11,7 @@ export type EmptyFallbackProps = {
   subtitle?: string | null
   variant?: EmptyFallbackSizes
   button?: ReactNode
+  className?: string
 }
 
 const ILLUSTRATION_SIZES = {
@@ -24,8 +25,8 @@ const ILLUSTRATION_SIZES = {
   },
 }
 
-export const EmptyFallback: FC<EmptyFallbackProps> = ({ title, subtitle, variant = 'large', button }) => (
-  <Container variant={variant}>
+export const EmptyFallback: FC<EmptyFallbackProps> = ({ title, subtitle, variant = 'large', button, className }) => (
+  <Container className={className} variant={variant}>
     <SvgEmptyStateIllustration width={ILLUSTRATION_SIZES[variant].width} height={ILLUSTRATION_SIZES[variant].height} />
     <Message>
       {title && <Title variant={variant === 'large' ? 'h4' : 'body1'}>{title}</Title>}

@@ -4,10 +4,11 @@ import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { Button, EmptyFallback, SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
 import { Logger } from '@/utils/logger'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -21,6 +22,7 @@ import {
   Meta,
   MoreVideosContainer,
   MoreVideosHeader,
+  NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
   PlayerWrapper,
@@ -102,7 +104,18 @@ export const VideoView: React.FC = () => {
   }
 
   if (!loading && !video) {
-    return <p>Video not found</p>
+    return (
+      <NotFoundVideoContainer>
+        <EmptyFallback
+          title="Video not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundVideoContainer>
+    )
   }
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)

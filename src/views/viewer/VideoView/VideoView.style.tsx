@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { ViewWrapper } from '@/components'
+import { TOP_NAVBAR_HEIGHT, ViewWrapper } from '@/components'
 import { SkeletonLoader, Text } from '@/shared/components'
 import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
 
@@ -96,4 +96,11 @@ export const LicenseContainer = styled.div`
     text-decoration: none;
     color: ${colors.gray[500]};
   }
+`
+
+export const NotFoundVideoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
 `
