@@ -4,41 +4,13 @@ import styled from '@emotion/styled'
 import { Button, IconButton, SkeletonLoader, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
+import { TOP_NAVBAR_HEIGHT } from '..'
 import { ChannelLink } from '../ChannelLink'
-
-const CONTENT_OVERLAP_MAP = {
-  SMALL: 24,
-  MEDIUM: 24,
-  LARGE: 24,
-  XLARGE: 24,
-  XXLARGE: 24,
-}
 
 export const Container = styled.section`
   position: relative;
-  max-height: 100vh;
-
-  /* because of the fixed aspect ratio, as the viewport width grows, the media will occupy more height as well
-   so that the media doesn't take too big of a portion of the space, we let the content overlap the media via a negative margin */
-  ${media.small} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.SMALL}px;
-  }
-
-  ${media.medium} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.MEDIUM}px;
-  }
-
-  ${media.large} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.LARGE}px;
-  }
-
-  ${media.xlarge} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XLARGE}px;
-  }
-
-  ${media.xxlarge} {
-    margin-bottom: -${CONTENT_OVERLAP_MAP.XXLARGE}px;
-  }
+  max-height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  margin-bottom: -${sizes(6)}px;
 `
 
 export const MediaWrapper = styled.div`
@@ -49,9 +21,7 @@ export const MediaWrapper = styled.div`
 export const Media = styled.div`
   width: 100%;
   height: 0;
-
-  /* 2:1 ratio */
-  padding-top: 50%;
+  padding-top: 56.25%;
   position: relative;
 `
 
@@ -67,7 +37,7 @@ export const PlayerContainer = styled.div`
   ${absoluteMediaCss};
 `
 
-export const VerticalGradientOverlay = styled.div`
+export const GradientOverlay = styled.div`
   ${absoluteMediaCss};
 
   background: linear-gradient(180deg, transparent 50%, ${colors.black} 93.23%, ${colors.black} 100%),

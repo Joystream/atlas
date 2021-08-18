@@ -11,6 +11,7 @@ import { transitions } from '@/shared/theme'
 import {
   ButtonsContainer,
   Container,
+  GradientOverlay,
   InfoContainer,
   Media,
   MediaWrapper,
@@ -21,7 +22,6 @@ import {
   Title,
   TitleContainer,
   TitleSkeletonLoader,
-  VerticalGradientOverlay,
 } from './VideoHero.style'
 import { useVideoHero } from './VideoHeroData'
 
@@ -73,7 +73,7 @@ export const VideoHero: React.FC = () => {
               />
             )}
           </PlayerContainer>
-          <VerticalGradientOverlay />
+          <GradientOverlay />
         </Media>
       </MediaWrapper>
       <InfoContainer isLoading={!coverVideo}>
