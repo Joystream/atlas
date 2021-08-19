@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography } from '@/shared/theme'
+import { SvgGlyphChevronRight } from '@/shared/icons'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
@@ -8,6 +9,7 @@ import { Text } from '../Text'
 type StepProps = {
   active?: boolean
   disabled?: boolean
+  fileVariant?: boolean
 }
 
 export const StepWrapper = styled.div<StepProps>`
@@ -17,14 +19,15 @@ export const StepWrapper = styled.div<StepProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
   transition: border ${transitions.timings.routing} ${transitions.easing},
     background-color ${transitions.timings.routing} ${transitions.easing};
   cursor: pointer;
-  background-color: ${({ active }) => (active ? 'rgba(180, 187, 255, 0.06)' : 'none')};
+  background-color: ${({ active, fileVariant }) => (active && fileVariant ? colors.transparentPrimary[6] : 'none')};
+  ${({ active, fileVariant }) =>
+    fileVariant && (active ? `border: 1px solid ${colors.blue[500]}` : `border: 1px solid ${colors.gray[600]}`)};
 
   :hover:not([aria-disabled='true']) {
-    background-color: rgba(180, 187, 255, 0.12);
+    ${({ fileVariant }) => fileVariant && `background-color: ${colors.transparentPrimary[12]}`};
   }
 
   &[aria-disabled='true'] {
@@ -42,7 +45,7 @@ export const StepStatus = styled.div`
 `
 
 export const StepNumber = styled.div<StepProps>`
-  background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
+  background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[500])};
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.white};
   border-radius: 100%;
@@ -62,15 +65,12 @@ export const StepDetails = styled.div`
 
 export const Overhead = styled(Text)`
   display: block;
-  color: ${colors.gray[300]};
-  font-weight: ${typography.weights.regular};
   overflow: hidden;
 `
 
 export const FileName = styled(Text)`
   display: block;
-  font-family: ${typography.fonts.headers};
-  font-size: ${typography.sizes.caption};
+  margin-top: ${sizes(1)};
   height: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -96,5 +96,18 @@ export const Thumbnail = styled.div`
   img {
     object-fit: cover;
     height: 100%;
+  }
+`
+
+export const StyledChevron = styled(SvgGlyphChevronRight)`
+  margin: 0 ${sizes(1)};
+  flex-shrink: 0;
+  display: none;
+  ${media.small} {
+    display: block;
+  }
+
+  > path {
+    stroke: ${colors.gray[500]};
   }
 `

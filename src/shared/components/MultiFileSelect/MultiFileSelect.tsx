@@ -11,7 +11,7 @@ import { getVideoMetadata } from '@/utils/video'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 import { FileSelect } from '../FileSelect'
-import { FileStep } from '../FileStep'
+import { Stepper } from '../Stepper'
 
 type InputFile = {
   url?: string | null
@@ -203,28 +203,53 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         error={error}
       />
       <StepsContainer>
-        <FileStep
-          stepNumber={1}
-          active={step === 'video'}
-          isFileSet={!!files.video}
-          disabled={editMode}
+        <Stepper
+          variant="file"
           type="video"
+          number={1}
+          isFileSet={!!files.video}
+          title={files.video ? 'Video file' : 'Add video file'}
+          active={step === 'video'}
+          disabled={editMode}
           onDelete={() => handleDeleteFile('video')}
-          onSelect={handleChangeStep}
+          onClick={() => handleChangeStep('video')}
           isLoading={isLoading}
         />
+        {/* <FileStep
+            stepNumber={1}
+            active={step === 'video'}
+            isFileSet={!!files.video}
+            disabled={editMode}
+            type="video"
+            onDelete={() => handleDeleteFile('video')}
+            onSelect={handleChangeStep}
+            isLoading={isLoading}
+          /> */}
         <StepDivider>
           <SvgGlyphChevronRight />
         </StepDivider>
-        <FileStep
-          stepNumber={2}
-          active={step === 'image'}
-          isFileSet={!!files.thumbnail?.url}
+        <Stepper
+          variant="file"
           type="image"
-          onDelete={() => handleDeleteFile('image')}
-          onSelect={handleChangeStep}
+          number={2}
+          isFileSet={!!files.thumbnail?.url}
+          title={files.thumbnail ? 'Thumbnail image' : 'Add thumbnail image'}
+          active={step === 'image'}
           thumbnailUrl={files.thumbnail?.url}
+          disabled={editMode}
+          onDelete={() => handleDeleteFile('image')}
+          onClick={() => handleChangeStep('image')}
+          isLoading={isLoading}
         />
+        {/* <FileStep
+            stepNumber={2}
+            active={step === 'image'}
+            isFileSet={!!files.thumbnail?.url}
+            type="image"
+            onDelete={() => handleDeleteFile('image')}
+            onSelect={handleChangeStep}
+            thumbnailUrl={files.thumbnail?.url}
+          /> */}
       </StepsContainer>
       <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
     </MultiFileSelectContainer>

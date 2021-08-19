@@ -1,19 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChevronRight } from '@/shared/icons'
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 import { BaseDialog } from '../BaseDialog'
-
-type CircleProps = {
-  isFilled?: boolean
-  isActive?: boolean
-}
-
-type StyledStepInfoProps = {
-  isActive?: boolean
-}
 
 export const StyledDialog = styled(BaseDialog)`
   max-width: 740px;
@@ -45,56 +34,20 @@ export const StyledHeader = styled.div`
 `
 
 export const StyledStepsInfoContainer = styled.div`
-  display: grid;
+  display: flex;
 
   ${media.small} {
     width: 100%;
-    grid-template-columns: repeat(6, auto);
+    justify-content: space-evenly;
     align-items: center;
-    grid-column-gap: ${sizes(4)};
   }
 `
-export const StyledStepInfo = styled.div<StyledStepInfoProps>`
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
-  align-items: center;
 
-  ${media.small} {
-    display: flex;
-  }
-`
-export const StyledCircle = styled.div<CircleProps>`
-  display: flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 100%;
-  background-color: ${({ isActive }) => (isActive ? colors.blue[500] : colors.gray[400])};
-  color: ${colors.gray[50]};
-`
-export const StyledStepInfoText = styled.div<StyledStepInfoProps>`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  justify-content: center;
-  font-weight: ${typography.weights.semibold};
-  margin-left: ${sizes(2)};
-`
+// export const StyledStepInfo = styled.div<StyledStepInfoProps>`
+//   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+//   align-items: center;
 
-export const StyledStepTitle = styled(Text)`
-  margin-top: ${sizes(1)};
-`
-
-export const StyledChevron = styled(SvgGlyphChevronRight)`
-  margin: 0 ${sizes(1)};
-  flex-shrink: 0;
-  display: none;
-  ${media.small} {
-    display: block;
-  }
-
-  > path {
-    stroke: ${colors.gray[500]};
-  }
-`
+//   ${media.small} {
+//     display: flex;
+//   }
+// `

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
-import { FileType } from '@/types/files'
+import { SvgGlyphCheck, SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 
 import {
   FileName,
@@ -10,38 +9,47 @@ import {
   StepNumber,
   StepStatus,
   StepWrapper,
+  StyledChevron,
   StyledProgress,
   Thumbnail,
-} from './FileStep.style'
+} from './Stepper.styles'
 
 import { IconButton } from '../IconButton'
 
-export type FileStepProps = {
-  stepNumber: number
-  active: boolean
-  onDelete: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  type: FileType
-  isFileSet?: boolean
+export type StepperProps = {
+  title: string
+  variant?: 'file' | 'default'
+  completed?: boolean
+  withChevron?: boolean
+  isFilled?: boolean
   thumbnailUrl?: string | null
-  onSelect?: (step: FileType) => void
-  disabled?: boolean
   isLoading?: boolean
+  isFileSet?: boolean
+  type?: 'video' | 'image'
+  disabled?: boolean
+  active?: boolean
+  onClick?: () => void
+  onDelete?: () => void
+  number?: number
 }
-
-export const FileStep: React.FC<FileStepProps> = ({
-  stepNumber = 1,
-  active,
-  isFileSet,
-  type,
-  onDelete,
+export const Stepper: React.FC<StepperProps> = ({
+  variant = 'default',
+  withChevron,
   thumbnailUrl,
-  onSelect,
   isLoading,
+  type,
   disabled,
+  active,
+  completed,
+  onClick,
+  title,
+  number,
+  isFileSet,
+  onDelete,
 }) => {
-  const handleChangeStep = () => {
-    !disabled && onSelect?.(type)
-  }
+  const defaultVariant = variant === 'default'
+  const fileVariant = variant === 'file'
+
   const [circularProgress, setCircularProgress] = useState(0)
 
   useEffect(() => {
@@ -56,19 +64,10 @@ export const FileStep: React.FC<FileStepProps> = ({
     return () => clearTimeout(timeout)
   }, [circularProgress, isLoading])
 
-  const stepSubtitle =
-    type === 'video'
-      ? isFileSet
-        ? 'Video file'
-        : 'Add video file'
-      : isFileSet
-      ? 'Thumbnail image'
-      : 'Add thumbnail image'
-
   return (
-    <StepWrapper aria-disabled={disabled} active={active} onClick={handleChangeStep}>
+    <StepWrapper aria-disabled={disabled} active={active} onClick={onClick} fileVariant={variant === 'file'}>
       <StepStatus>
-        {!isFileSet && <StepNumber active={active}>{stepNumber}</StepNumber>}
+        {!isFileSet && <StepNumber active={active}>{completed ? <SvgGlyphCheck /> : number}</StepNumber>}
         {isFileSet &&
           (isLoading ? (
             <StyledProgress value={circularProgress} maxValue={100} />
@@ -79,11 +78,14 @@ export const FileStep: React.FC<FileStepProps> = ({
             </Thumbnail>
           ))}
         <StepDetails>
-          <Overhead variant="overhead">Step {stepNumber}</Overhead>
-          <FileName variant="subtitle2">{stepSubtitle}</FileName>
+          <Overhead variant="caption" secondary>
+            Step {number}
+          </Overhead>
+          <FileName variant="overhead">{title}</FileName>
         </StepDetails>
       </StepStatus>
-      {isFileSet && (
+      {defaultVariant && withChevron && <StyledChevron />}
+      {fileVariant && isFileSet && (
         <IconButton variant="tertiary" disabled={disabled} onClick={onDelete}>
           {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
         </IconButton>
