@@ -63,6 +63,7 @@ export const VideoView: React.FC = () => {
 
   const channelId = video?.channel.id
   const videoId = video?.id
+  const categoryId = video?.category?.id
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -72,11 +73,12 @@ export const VideoView: React.FC = () => {
       variables: {
         videoId,
         channelId,
+        categoryId,
       },
     }).catch((error) => {
       Logger.warn('Failed to increase video views', { error })
     })
-  }, [addVideoView, videoId, channelId])
+  }, [addVideoView, videoId, channelId, categoryId])
 
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.

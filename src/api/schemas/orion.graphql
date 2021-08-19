@@ -17,7 +17,7 @@ type Mutation {
   """
   Add a single view to the target video's count
   """
-  addVideoView(categoryId: ID, channelId: ID!, videoId: ID!): EntityViewsInfo!
+  addVideoView(categoryId: ID, channelId: ID!, videoId: ID!, categoryId: ID): EntityViewsInfo!
 
   """
   Add a single follow to the target channel

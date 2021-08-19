@@ -132,8 +132,8 @@ query GetMostViewedVideosAllTime($limit: Int!) {
   }
 }
 
-mutation AddVideoView($videoId: ID!, $channelId: ID!) {
-  addVideoView(videoId: $videoId, channelId: $channelId) {
+mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {
+  addVideoView(videoId: $videoId, channelId: $channelId, categoryId: $categoryId) {
     id
     views
   }
