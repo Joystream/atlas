@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { SvgGlyphChevronRight } from '@/shared/icons'
 import { colors, media, sizes } from '@/shared/theme'
 
 import { BaseDialog } from '../BaseDialog'
@@ -34,20 +35,24 @@ export const StyledHeader = styled.div`
 `
 
 export const StyledStepsInfoContainer = styled.div`
-  display: flex;
+  display: grid;
 
   ${media.small} {
     width: 100%;
-    justify-content: space-evenly;
+    grid-template-columns: repeat(6, auto);
     align-items: center;
   }
 `
 
-// export const StyledStepInfo = styled.div<StyledStepInfoProps>`
-//   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
-//   align-items: center;
+export const StyledChevron = styled(SvgGlyphChevronRight)`
+  margin: 0 ${sizes(1)};
+  flex-shrink: 0;
+  display: none;
+  ${media.small} {
+    display: block;
+  }
 
-//   ${media.small} {
-//     display: flex;
-//   }
-// `
+  > path {
+    stroke: ${colors.gray[500]};
+  }
+`

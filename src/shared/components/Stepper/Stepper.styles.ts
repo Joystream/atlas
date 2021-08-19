@@ -1,18 +1,46 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgGlyphChevronRight } from '@/shared/icons'
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
 
-type StepProps = {
+type StepWrapperProps = {
   active?: boolean
   disabled?: boolean
-  fileVariant?: boolean
+  variant?: 'file' | 'default'
 }
 
-export const StepWrapper = styled.div<StepProps>`
+const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
+  switch (variant) {
+    case 'default':
+      return css`
+        padding: 0;
+        display: ${active ? 'flex' : 'none'};
+        align-items: center;
+
+        ${media.small} {
+          display: flex;
+        }
+      `
+    case 'file':
+      return css`
+        padding: ${sizes(3)} ${sizes(4)};
+        cursor: pointer;
+        border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
+        background-color: ${active ? colors.transparentPrimary[10] : 'none'};
+
+        :hover:not([aria-disabled='true']) {
+          background-color: ${colors.transparentPrimary[18]};
+        }
+      `
+    default:
+      return
+  }
+}
+
+export const StepWrapper = styled.div<StepWrapperProps>`
   height: ${sizes(14)};
   padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
@@ -21,14 +49,8 @@ export const StepWrapper = styled.div<StepProps>`
   align-items: center;
   transition: border ${transitions.timings.routing} ${transitions.easing},
     background-color ${transitions.timings.routing} ${transitions.easing};
-  cursor: pointer;
-  background-color: ${({ active, fileVariant }) => (active && fileVariant ? colors.transparentPrimary[6] : 'none')};
-  ${({ active, fileVariant }) =>
-    fileVariant && (active ? `border: 1px solid ${colors.blue[500]}` : `border: 1px solid ${colors.gray[600]}`)};
 
-  :hover:not([aria-disabled='true']) {
-    ${({ fileVariant }) => fileVariant && `background-color: ${colors.transparentPrimary[12]}`};
-  }
+  ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
@@ -44,7 +66,7 @@ export const StepStatus = styled.div`
   position: relative;
 `
 
-export const StepNumber = styled.div<StepProps>`
+export const StepNumber = styled.div<StepWrapperProps>`
   background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[500])};
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.white};
@@ -68,7 +90,7 @@ export const Overhead = styled(Text)`
   overflow: hidden;
 `
 
-export const FileName = styled(Text)`
+export const StepTitle = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
   height: 100%;
@@ -82,7 +104,7 @@ export const StyledProgress = styled(CircularProgress)`
   height: ${sizes(7)};
 `
 
-export const Thumbnail = styled.div`
+export const StepImage = styled.div`
   flex-shrink: 0;
   color: white;
   background: ${colors.gray[600]};
@@ -96,18 +118,5 @@ export const Thumbnail = styled.div`
   img {
     object-fit: cover;
     height: 100%;
-  }
-`
-
-export const StyledChevron = styled(SvgGlyphChevronRight)`
-  margin: 0 ${sizes(1)};
-  flex-shrink: 0;
-  display: none;
-  ${media.small} {
-    display: block;
-  }
-
-  > path {
-    stroke: ${colors.gray[500]};
   }
 `

@@ -3,15 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { SvgGlyphCheck, SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 
 import {
-  FileName,
   Overhead,
   StepDetails,
+  StepImage,
   StepNumber,
   StepStatus,
+  StepTitle,
   StepWrapper,
-  StyledChevron,
   StyledProgress,
-  Thumbnail,
 } from './Stepper.styles'
 
 import { IconButton } from '../IconButton'
@@ -20,21 +19,18 @@ export type StepperProps = {
   title: string
   variant?: 'file' | 'default'
   completed?: boolean
-  withChevron?: boolean
-  isFilled?: boolean
   thumbnailUrl?: string | null
   isLoading?: boolean
-  isFileSet?: boolean
   type?: 'video' | 'image'
+  isFileSet?: boolean
   disabled?: boolean
   active?: boolean
+  number?: number
   onClick?: () => void
   onDelete?: () => void
-  number?: number
 }
 export const Stepper: React.FC<StepperProps> = ({
   variant = 'default',
-  withChevron,
   thumbnailUrl,
   isLoading,
   type,
@@ -47,7 +43,6 @@ export const Stepper: React.FC<StepperProps> = ({
   isFileSet,
   onDelete,
 }) => {
-  const defaultVariant = variant === 'default'
   const fileVariant = variant === 'file'
 
   const [circularProgress, setCircularProgress] = useState(0)
@@ -65,28 +60,27 @@ export const Stepper: React.FC<StepperProps> = ({
   }, [circularProgress, isLoading])
 
   return (
-    <StepWrapper aria-disabled={disabled} active={active} onClick={onClick} fileVariant={variant === 'file'}>
+    <StepWrapper aria-disabled={disabled} active={active} onClick={() => !disabled && onClick?.()} variant={variant}>
       <StepStatus>
         {!isFileSet && <StepNumber active={active}>{completed ? <SvgGlyphCheck /> : number}</StepNumber>}
         {isFileSet &&
           (isLoading ? (
             <StyledProgress value={circularProgress} maxValue={100} />
           ) : (
-            <Thumbnail>
+            <StepImage>
               {type === 'video' && <SvgGlyphFileVideo />}
               {type === 'image' && thumbnailUrl && <img src={thumbnailUrl} alt="thumbnail" />}
-            </Thumbnail>
+            </StepImage>
           ))}
         <StepDetails>
           <Overhead variant="caption" secondary>
             Step {number}
           </Overhead>
-          <FileName variant="overhead">{title}</FileName>
+          <StepTitle variant="overhead">{title}</StepTitle>
         </StepDetails>
       </StepStatus>
-      {defaultVariant && withChevron && <StyledChevron />}
       {fileVariant && isFileSet && (
-        <IconButton variant="tertiary" disabled={disabled} onClick={onDelete}>
+        <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
           {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
         </IconButton>
       )}

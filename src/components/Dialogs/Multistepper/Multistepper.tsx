@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 import { Stepper } from '@/shared/components'
 
-import { StyledDialog, StyledHeader, StyledStepsInfoContainer } from './Multistepper.style'
+import { StyledChevron, StyledDialog, StyledHeader, StyledStepsInfoContainer } from './Multistepper.style'
 
 import { BaseDialogProps } from '../BaseDialog'
 
@@ -27,14 +27,10 @@ export const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepId
             const isLast = idx === steps.length - 1
 
             return (
-              <Stepper
-                key={idx}
-                withChevron={!isLast}
-                title={step.title}
-                number={idx + 1}
-                active={isActive}
-                completed={isCompleted}
-              />
+              <Fragment key={idx}>
+                <Stepper title={step.title} number={idx + 1} active={isActive} completed={isCompleted} />
+                {!isLast && <StyledChevron />}
+              </Fragment>
             )
           })}
         </StyledStepsInfoContainer>
