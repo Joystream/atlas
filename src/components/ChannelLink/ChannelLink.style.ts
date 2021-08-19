@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SkeletonLoader } from '@/shared/components'
+import { SkeletonLoader, Text } from '@/shared/components'
 import { colors, sizes, typography } from '@/shared/theme'
 
 type ContainerProps = {
@@ -26,6 +26,10 @@ export const Handle = styled.span<HandleProps>`
   line-height: 1;
   font-weight: bold;
   color: ${colors.white};
+  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
+`
+
+export const StyledText = styled(Text)<HandleProps>`
   margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
 `
 

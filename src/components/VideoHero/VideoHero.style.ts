@@ -23,6 +23,14 @@ export const Media = styled.div`
   height: 0;
   padding-top: 56.25%;
   position: relative;
+
+  ${media.smalldium} {
+    margin-bottom: ${sizes(8)}px;
+  }
+
+  ${media.medium} {
+    margin-bottom: 0;
+  }
 `
 
 const absoluteMediaCss = css`
@@ -41,8 +49,8 @@ export const GradientOverlay = styled.div`
   ${absoluteMediaCss};
 
   background: linear-gradient(180deg, transparent 50%, ${colors.black} 93.23%, ${colors.black} 100%),
-    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${colors.transparentBlack[32]} 100%),
-    ${colors.transparentBlack[32]};
+    radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${colors.transparentBlack[54]} 100%),
+    ${colors.transparentBlack[54]};
 `
 
 export const InfoContainer = styled.div<{ isLoading: boolean }>`
@@ -51,9 +59,13 @@ export const InfoContainer = styled.div<{ isLoading: boolean }>`
   width: 100%;
 
   ${media.small} {
+    margin-bottom: 64px;
+    padding-bottom: 0;
+  }
+
+  ${media.smalldium} {
     position: absolute;
     margin: 0;
-    padding-bottom: 0;
     bottom: 64px;
   }
 

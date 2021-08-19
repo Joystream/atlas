@@ -78,6 +78,7 @@ export const VideoHero: React.FC = () => {
       </MediaWrapper>
       <InfoContainer isLoading={!coverVideo}>
         <StyledChannelLink
+          heroTitle
           id={coverVideo?.video.channel.id}
           overrideChannel={coverVideo?.video.channel}
           avatarSize="small"

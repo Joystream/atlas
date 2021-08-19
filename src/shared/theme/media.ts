@@ -8,6 +8,7 @@ const media = {
   base: buildQuery(breakpoints.base),
   compact: buildQuery(breakpoints.compact),
   small: buildQuery(breakpoints.small),
+  smalldium: buildQuery(breakpoints.smalldium),
   medium: buildQuery(breakpoints.medium),
   large: buildQuery(breakpoints.large),
   xlarge: buildQuery(breakpoints.xlarge),
