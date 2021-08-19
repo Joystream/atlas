@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 
 import { RawDraft, channelDraftsSelector, useDraftStore, useUser } from '@/providers'
-import { Button, FormField, Text } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { FormField } from '@/shared/components/FormField'
 import { Select } from '@/shared/components/Select'
+import { Text } from '@/shared/components/Text'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
 

@@ -1,19 +1,18 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
-import {
-  DiscoverChannels,
-  InfiniteVideoGrid,
-  LimitedWidthContainer,
-  OfficialJoystreamUpdate,
-  TopTenThisWeek,
-  VideoHero,
-  ViewErrorFallback,
-} from '@/components'
+import { useMostViewedVideosIds } from '@/api/hooks'
+import useVideosConnection from '@/api/hooks/videosConnection'
+import { DiscoverChannels } from '@/components/DiscoverChannels'
+import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
+import { TopTenThisWeek } from '@/components/TopTenThisWeek'
+import { VideoHero } from '@/components/VideoHero'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
-import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
 import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'

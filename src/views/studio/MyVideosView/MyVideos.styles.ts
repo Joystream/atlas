@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { DismissibleBanner } from '@/shared/components'
+import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const ViewContainer = styled.div`

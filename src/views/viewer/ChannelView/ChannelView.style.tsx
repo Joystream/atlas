@@ -1,8 +1,14 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { ChannelLink, TOP_NAVBAR_HEIGHT } from '@/components'
-import { Button, IconButton, SkeletonLoader, Tabs, Text, TextField } from '@/shared/components'
+import { ChannelLink } from '@/components/ChannelLink'
+import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Tabs } from '@/shared/components/Tabs'
+import { Text } from '@/shared/components/Text'
+import { TextField } from '@/shared/components/TextField'
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'

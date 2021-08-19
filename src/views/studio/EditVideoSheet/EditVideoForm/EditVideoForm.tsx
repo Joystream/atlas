@@ -22,17 +22,14 @@ import {
   useEditVideoSheetTabData,
   useRawAsset,
 } from '@/providers'
-import {
-  Checkbox,
-  Datepicker,
-  FormField,
-  RadioButton,
-  Select,
-  SelectItem,
-  TextArea,
-  TextField,
-} from '@/shared/components'
+import { Checkbox } from '@/shared/components/Checkbox'
+import { Datepicker } from '@/shared/components/Datepicker'
+import { FormField } from '@/shared/components/FormField'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { RadioButton } from '@/shared/components/RadioButton'
+import { Select, SelectItem } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { TextField } from '@/shared/components/TextField'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'

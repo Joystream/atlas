@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Portal } from '@/components'
+import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers'
 
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'

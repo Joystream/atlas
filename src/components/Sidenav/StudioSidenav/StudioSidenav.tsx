@@ -10,7 +10,7 @@ import {
   useEditVideoSheet,
   useUploadsStore,
 } from '@/providers'
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { openInNewTab } from '@/utils/browser'

@@ -2,8 +2,9 @@ import styled from '@emotion/styled'
 import React, { useMemo } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Gallery, RankingNumberTile } from '@/shared/components'
+import { Gallery } from '@/shared/components/Gallery'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
+import { RankingNumberTile } from '@/shared/components/RankingNumberTile'
 import { AvatarContainer } from '@/shared/components/VideoTileBase/VideoTileBase.styles'
 import { media } from '@/shared/theme'
 

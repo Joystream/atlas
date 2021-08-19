@@ -4,16 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import {
-  NoConnectionIndicator,
-  PrivateRoute,
-  StudioEntrypoint,
-  StudioLoading,
-  StudioSidenav,
-  StudioTopbar,
-  TOP_NAVBAR_HEIGHT,
-  ViewErrorBoundary,
-} from '@/components'
+import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
+import { PrivateRoute } from '@/components/PrivateRoute'
+import { StudioSidenav } from '@/components/Sidenav'
+import { StudioEntrypoint, StudioLoading } from '@/components/StudioEntrypoint'
+import { StudioTopbar, TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import {
   ActiveUserProvider,
@@ -29,15 +25,13 @@ import {
 } from '@/providers'
 import { isAllowedBrowser } from '@/utils/browser'
 
-import {
-  CreateEditChannelView,
-  CreateMemberView,
-  EditVideoSheet,
-  MyUploadsView,
-  MyVideosView,
-  SignInJoinView,
-  SignInView,
-} from '.'
+import { CreateEditChannelView } from './CreateEditChannelView'
+import { CreateMemberView } from './CreateMemberView'
+import { EditVideoSheet } from './EditVideoSheet'
+import { MyUploadsView } from './MyUploadsView'
+import { MyVideosView } from './MyVideosView'
+import { SignInJoinView } from './SignInJoinView'
+import { SignInView } from './SignInView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 

@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { absoluteRoutes } from '@/config/routes'
-import { Button, Text } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
 import { SvgJoystreamFullLogo } from '@/shared/illustrations'
 

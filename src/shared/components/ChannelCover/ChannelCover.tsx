@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { BackgroundPattern } from '@/components'
+import { BackgroundPattern } from '@/components/BackgroundPattern'
 import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 

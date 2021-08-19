@@ -1,8 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SkeletonLoader, Text } from '@/shared/components'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Slider } from '@/shared/components/Slider'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes } from '@/shared/theme'
 
 import { ActionDialog } from '../ActionDialog'

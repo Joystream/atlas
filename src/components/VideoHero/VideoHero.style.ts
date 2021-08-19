@@ -1,11 +1,13 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { IconButton, SkeletonLoader, Text } from '@/shared/components'
+import { IconButton } from '@/shared/components/IconButton'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
-import { TOP_NAVBAR_HEIGHT } from '..'
 import { ChannelLink } from '../ChannelLink'
+import { TOP_NAVBAR_HEIGHT } from '../Topbar'
 
 const BUTTONS_HEIGHT = 48
 

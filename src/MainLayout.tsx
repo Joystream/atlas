@@ -2,7 +2,8 @@ import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { StudioLoading, TopbarBase } from '@/components'
+import { StudioLoading } from '@/components/StudioEntrypoint'
+import { TopbarBase } from '@/components/Topbar'
 import { BASE_PATHS } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
 
@@ -10,7 +11,7 @@ import { useDialog } from './providers'
 import { AdminView } from './views/admin'
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'
-import { ViewerLayout } from './views/viewer'
+import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (

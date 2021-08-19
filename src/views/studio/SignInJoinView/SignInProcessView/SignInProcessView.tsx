@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { SignInStepsStepper } from '@/components'
+import { SignInStepsStepper } from '@/components/SignInSteps'
 import { absoluteRoutes } from '@/config/routes'
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 
 import {

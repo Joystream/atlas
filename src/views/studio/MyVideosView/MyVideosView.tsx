@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { LimitedWidthContainer, VideoTilePublisher, ViewErrorFallback } from '@/components'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { VideoTilePublisher } from '@/components/VideoTile'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks'
@@ -16,7 +18,13 @@ import {
   useEditVideoSheet,
   useSnackbar,
 } from '@/providers'
-import { Button, EmptyFallback, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
+import { Grid } from '@/shared/components/Grid'
+import { Pagination } from '@/shared/components/Pagination'
+import { Select } from '@/shared/components/Select'
+import { Tabs } from '@/shared/components/Tabs'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphUpload } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 

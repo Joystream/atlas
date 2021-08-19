@@ -5,13 +5,9 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import {
-  ImageCropDialog,
-  ImageCropDialogImperativeHandle,
-  ImageCropDialogProps,
-  LimitedWidthContainer,
-  ViewErrorFallback,
-} from '@/components'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/Dialogs'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
@@ -29,15 +25,12 @@ import {
   useUser,
 } from '@/providers'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import {
-  ActionBarTransaction,
-  ChannelCover,
-  FormField,
-  Select,
-  SelectItem,
-  TextArea,
-  Tooltip,
-} from '@/shared/components'
+import { ActionBarTransaction } from '@/shared/components/ActionBar'
+import { ChannelCover } from '@/shared/components/ChannelCover'
+import { FormField } from '@/shared/components/FormField'
+import { Select, SelectItem } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { Tooltip } from '@/shared/components/Tooltip'
 import { transitions } from '@/shared/theme'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'

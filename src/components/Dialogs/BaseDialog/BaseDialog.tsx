@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Portal } from '@/components'
+import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers'
 import { SvgGlyphClose } from '@/shared/icons'
 import { transitions } from '@/shared/theme'

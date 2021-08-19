@@ -2,7 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar, SkeletonLoader, Text } from '@/shared/components'
+import { Avatar } from '@/shared/components/Avatar'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
 const previewSubtextCss = css`

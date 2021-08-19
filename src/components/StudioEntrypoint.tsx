@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers'
-import { Spinner, Text } from '@/shared/components'
+import { Spinner } from '@/shared/components/Spinner'
+import { Text } from '@/shared/components/Text'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
 

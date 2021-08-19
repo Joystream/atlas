@@ -1,7 +1,7 @@
 import { RouteComponentProps } from '@reach/router'
 import React from 'react'
 
-import { VideoGallery } from '@/components'
+import { VideoGallery } from '@/components/VideoGallery'
 import { usePersonalDataStore } from '@/providers'
 import { ConsoleLogger } from '@/utils/logs'
 

@@ -1,9 +1,13 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { DiscoverChannels, InfiniteChannelWithVideosGrid, TopTenChannels, ViewWrapper } from '@/components'
+import { DiscoverChannels } from '@/components/DiscoverChannels'
+import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
+import { TopTenChannels } from '@/components/TopTenChannels'
+import { ViewWrapper } from '@/components/ViewWrapper'
 import { absoluteRoutes } from '@/config/routes'
-import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
+import { Text } from '@/shared/components/Text'
 import { SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 

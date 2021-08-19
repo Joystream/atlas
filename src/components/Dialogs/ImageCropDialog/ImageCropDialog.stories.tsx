@@ -3,7 +3,8 @@ import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
 import { OverlayManagerProvider } from '@/providers'
-import { Avatar, SkeletonLoader } from '@/shared/components'
+import { Avatar } from '@/shared/components/Avatar'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from './ImageCropDialog'

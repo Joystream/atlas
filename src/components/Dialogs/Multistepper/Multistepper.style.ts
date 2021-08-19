@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { colors, media, sizes, typography } from '@/shared/theme'
 

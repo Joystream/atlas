@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ExtrinsicStatus } from '@/joystream-lib'
-import { Tooltip } from '@/shared/components'
+import { Tooltip } from '@/shared/components/Tooltip'
 
 import { Step, StepsBar, StyledSpinner, StyledTransactionIllustration, TextContainer } from './TransactionDialog.style'
 

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { Snackbar } from '@/shared/components'
+import { Snackbar } from '@/shared/components/Snackbar'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 
