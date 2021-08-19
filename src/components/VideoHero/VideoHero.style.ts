@@ -21,7 +21,9 @@ export const MediaWrapper = styled.div`
 export const Media = styled.div`
   width: 100%;
   height: 0;
-  padding-top: 56.25%;
+
+  /* 2:1 ratio */
+  padding-top: 50%;
   position: relative;
 
   ${media.smalldium} {

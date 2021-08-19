@@ -60,6 +60,7 @@ export const VideoHero: React.FC = () => {
           <PlayerContainer>
             {coverVideo && (
               <VideoPlayer
+                videoStyle={{ objectFit: 'cover' }}
                 fluid
                 isInBackground
                 muted={soundMuted}
