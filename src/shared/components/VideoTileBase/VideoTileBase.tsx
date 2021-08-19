@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useContextMenu } from '@/hooks'
+import { useContextMenu, usePreloadImg } from '@/hooks'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -32,7 +32,6 @@ import {
   CoverIconWrapper,
   CoverImage,
   CoverImageContainer,
-  CoverNoImage,
   CoverSkeletonLoader,
   CoverThumbnailUploadFailed,
   CoverTopLeftContainer,
@@ -168,6 +167,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     },
   })
   const [failedLoadImage, setFailedLoadImage] = useState(false)
+  const { hasImgLoaded } = usePreloadImg(thumbnailUrl ?? undefined)
+  const { hasImgLoaded: hasAvatarImgLoaded } = usePreloadImg(channelAvatarUrl ?? undefined)
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
@@ -209,27 +210,25 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              {isLoading ? (
+              {isLoading || hasImgLoaded === false ? (
                 <CoverSkeletonLoader />
               ) : (
                 <CoverImageContainer ref={imgRef}>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                    {thumbnailUrl && !failedLoadImage ? (
+                    {thumbnailUrl && !failedLoadImage && !hasThumbnailUploadFailed ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
-                    ) : hasThumbnailUploadFailed ? (
+                    ) : (
                       <CoverThumbnailUploadFailed>
                         <SvgLargeUploadFailed />
                         <Text variant="subtitle2" secondary>
                           Thumbnail upload failed
                         </Text>
                       </CoverThumbnailUploadFailed>
-                    ) : (
-                      <CoverNoImage />
                     )}
                     {(videoPublishState === 'unlisted' || isDraft) && (
                       <CoverVideoPublishingStateOverlay>
@@ -285,7 +284,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           <InfoContainer main={main}>
             {displayChannel && (
               <AvatarContainer scalingFactor={scalingFactor}>
-                {isLoading ? (
+                {isLoading || hasAvatarImgLoaded === false ? (
                   <SkeletonLoader rounded />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
