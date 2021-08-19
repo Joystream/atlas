@@ -18,10 +18,11 @@ export const StyledContainer = styled(LimitedWidthContainer)`
     justify-content: space-between;
   }
   ${media.xlarge} {
-    max-width: 1700px;
+    max-width: 1400px;
     left: 150px;
   }
   ${media.xxlarge} {
+    max-width: 1700px;
     margin-top: 128px;
   }
 `
