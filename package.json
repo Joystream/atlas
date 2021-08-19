@@ -21,7 +21,7 @@
     "dev": "yarn start",
     "build": "react-app-rewired build --stats && yarn bundle-stats",
     "eject": "react-app-rewired eject",
-    "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx --max-warnings 0 .",
     "lint:prettier": "prettier --check .",
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
