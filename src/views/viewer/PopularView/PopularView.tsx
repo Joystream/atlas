@@ -4,28 +4,45 @@ import React, { FC } from 'react'
 import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
 import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
-import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid, VideoGallery, ViewWrapper } from '@/components'
+import {
+  InfiniteChannelWithVideosGrid,
+  InfiniteVideoGrid,
+  VideoGallery,
+  ViewErrorFallback,
+  ViewWrapper,
+} from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
 import { SvgNavChannels, SvgNavHome, SvgNavNew } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
+import { SentryLogger } from '@/utils/logs'
 
 export const PopularView: FC = () => {
   const {
     mostViewedVideosAllTime,
     loading: mostViewedVideosLoading,
-    error: mostViewedVideosError,
-  } = useMostViewedVideosAllTimeIds({
-    limit: 200,
-  })
+    error: mostViewedVideosIdsError,
+  } = useMostViewedVideosAllTimeIds(
+    {
+      limit: 200,
+    },
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'PopularView', error) }
+  )
   const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
-  const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds({ limit: 15 })
+  const { mostViewedChannelsAllTime, error: mostViewedChannelsError } = useMostViewedChannelsAllTimeIds(
+    { limit: 15 },
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels IDs', 'PopularView', error) }
+  )
   const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
-  const { videos, loading } = useMostViewedVideos({ timePeriodDays: 30, limit: 10 })
+  const { videos, loading, error: mostViewedVideosError } = useMostViewedVideos(
+    { timePeriodDays: 30, limit: 10 },
+    { onError: (error) => SentryLogger.error('Failed to fetch videos', 'PopularView', error) }
+  )
 
-  if (mostViewedVideosError) {
-    throw mostViewedVideosError
+  if (mostViewedVideosIdsError || mostViewedVideosError || mostViewedChannelsError) {
+    return <ViewErrorFallback />
   }
+
   return (
     <StyledViewWrapper>
       <Header variant="h2">Popular on Joystream</Header>
