@@ -10,7 +10,7 @@ import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
 import { Button, EmptyFallback, SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import {
@@ -33,7 +33,7 @@ import {
 export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { loading, video, error } = useVideo(id, {
-    onError: (error) => Logger.captureError('Failed to load video data', 'VideoView', error),
+    onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
@@ -78,7 +78,7 @@ export const VideoView: React.FC = () => {
         channelId,
       },
     }).catch((error) => {
-      Logger.captureError('Failed to increase video views', 'VideoView', error)
+      SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
   }, [addVideoView, videoId, channelId])
 

@@ -10,7 +10,7 @@ import {
 } from '@/api/queries'
 import { Grid, SkeletonLoader, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
@@ -104,7 +104,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       return rawData?.videosConnection
     },
     itemsPerRow: videosPerRow,
-    onError: (error) => Logger.captureError('Failed to fetch videos', 'InfiniteVideoGrid', error),
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
   })
 
   // handle category change

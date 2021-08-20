@@ -4,7 +4,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { OverlayManagerProvider } from '@/providers'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { VideoTileBase, VideoTileBaseProps } from './VideoTileBase'
 
@@ -46,7 +46,7 @@ const Publisher: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
 
   const handler = () => {
-    Logger.log('called')
+    ConsoleLogger.log('called')
   }
   return (
     <BrowserRouter>
@@ -135,7 +135,7 @@ PublisherUnlisted.args = {
 const Mix: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
   const createdAtDate = new Date(createdAt ?? '')
   const handler = () => {
-    Logger.log('called')
+    ConsoleLogger.log('called')
   }
   return (
     <BrowserRouter>
@@ -188,7 +188,7 @@ Mixed.args = {
   publisherMode: true,
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
   onClick: () => {
-    Logger.log('Click')
+    ConsoleLogger.log('Click')
   },
 }
 

@@ -14,7 +14,7 @@ import {
   SvgPlayerSoundHalf,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { ControlsIndicator } from './ControlsIndicator'
@@ -130,9 +130,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (playPromise) {
       playPromise.catch((e) => {
         if (e.name === 'NotAllowedError') {
-          Logger.warn('Video playback failed', e)
+          ConsoleLogger.warn('Video playback failed', e)
         } else {
-          Logger.captureError('Video playback failed', 'VideoPlayer', e, {
+          SentryLogger.error('Video playback failed', 'VideoPlayer', e, {
             video: { id: videoId, url: videoJsConfig.src },
           })
         }
@@ -196,7 +196,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
-        Logger.warn('Video autoplay failed', e)
+        ConsoleLogger.warn('Video autoplay failed', e)
       })
     }
   }, [player, isLoaded, autoplay])
@@ -400,7 +400,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (document.pictureInPictureEnabled) {
         // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
         player.requestPictureInPicture().catch((e) => {
-          Logger.warn('Picture in picture failed', e)
+          ConsoleLogger.warn('Picture in picture failed', e)
         })
       }
     }

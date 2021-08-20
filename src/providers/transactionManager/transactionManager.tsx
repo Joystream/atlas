@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
 
@@ -24,7 +24,7 @@ export const TransactionManager: React.FC = () => {
         try {
           action.callback()
         } catch (e) {
-          Logger.captureError('Failed to execute tx sync callback', 'TransactionManager', e)
+          SentryLogger.error('Failed to execute tx sync callback', 'TransactionManager', e)
         }
       })
 

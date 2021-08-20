@@ -4,7 +4,7 @@ import { IconButton } from '@/shared/components'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   AlignInfo,
@@ -86,7 +86,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
   const handleFileChange = async () => {
     const files = inputRef.current?.files
     if (!files?.length) {
-      Logger.captureError('No files selected for image cropping', 'ImageCropDialog')
+      SentryLogger.error('No files selected for image cropping', 'ImageCropDialog')
       return
     }
     const selectedFile = files[0]
@@ -97,7 +97,7 @@ const ImageCropDialogComponent: React.ForwardRefRenderFunction<
       setShowDialog(true)
     } catch (error) {
       onError?.(error)
-      Logger.captureError('Failed to load image for image cropping', 'ImageCropDialog', error, {
+      SentryLogger.error('Failed to load image for image cropping', 'ImageCropDialog', error, {
         file: { name: selectedFile.name, type: selectedFile.type, size: selectedFile.size },
       })
     }

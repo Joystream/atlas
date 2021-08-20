@@ -7,11 +7,11 @@ import { absoluteRoutes } from '@/config/routes'
 import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
 import { AnimatedError, Button, Text } from '@/shared/components'
 import { media, sizes } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 // this isn't a react component, just a function that will be executed once to get a react element
 export const ViewErrorBoundary: FallbackRender = ({ error, resetError }) => {
-  Logger.captureError('Unhandled exception was thrown', 'ErrorBoundary', error)
+  SentryLogger.error('Unhandled exception was thrown', 'ErrorBoundary', error)
   return <ViewErrorFallback onResetClick={resetError} />
 }
 

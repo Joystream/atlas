@@ -18,7 +18,7 @@ import {
 } from '@/providers'
 import { Button, EmptyFallback, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 import { SvgGlyphUpload } from '@/shared/icons'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   PaginationContainer,
@@ -75,7 +75,7 @@ export const MyVideosView = () => {
     },
     {
       notifyOnNetworkStatusChange: true,
-      onError: (error) => Logger.captureError('Failed to fetch videos', 'MyVideosView', error),
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()

@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql'
 
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { BaseDataQuery, DataAccessor, Link } from './types'
 import { normalizeVariables, parseOperationDocument } from './utils'
@@ -13,12 +13,12 @@ export const createQueryHandler = <TQuery extends BaseDataQuery, TVariables = un
   const { operationName, primaryOperationFieldName } = parseOperationDocument(queryDocument)
 
   if (!operationName) {
-    Logger.error('Unable to resolve operation name for mocking', queryDocument)
+    ConsoleLogger.error('Unable to resolve operation name for mocking', queryDocument)
     return
   }
 
   if (!primaryOperationFieldName) {
-    Logger.error('Unable to resolve primary operation field for mocking', queryDocument)
+    ConsoleLogger.error('Unable to resolve primary operation field for mocking', queryDocument)
     return
   }
 

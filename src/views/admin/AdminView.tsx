@@ -5,7 +5,7 @@ import { TARGET_DEV_ENV, availableEnvs, setEnvInLocalStorage } from '@/config/en
 import { absoluteRoutes } from '@/config/routes'
 import { useSnackbar } from '@/providers'
 import { Button, Select, Text } from '@/shared/components'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 const items = availableEnvs().map((item) => ({ name: item, value: item }))
 
@@ -58,7 +58,7 @@ export const AdminView = () => {
         iconType: 'success',
       })
     } catch (error) {
-      Logger.captureError('Failed to import local state', 'AdminView', error)
+      SentryLogger.error('Failed to import local state', 'AdminView', error)
       displaySnackbar({
         title: 'JSON file seems to be corrupted',
         description: 'Please try again with different file',
