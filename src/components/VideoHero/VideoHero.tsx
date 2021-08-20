@@ -4,8 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
-import { GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
-import { SvgActionPause } from '@/shared/icons/ActionPause'
+import { Button, GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
@@ -19,7 +18,6 @@ import {
   InfoContainer,
   Media,
   MediaWrapper,
-  PlayButton,
   PlayerContainer,
   SoundButton,
   StyledChannelLink,
@@ -47,10 +45,6 @@ export const VideoHero: React.FC = () => {
       setDisplayControls(true)
       setVideoPlaying(true)
     }, VIDEO_PLAYBACK_DELAY)
-  }
-
-  const handlePlayPauseClick = () => {
-    setVideoPlaying(!videoPlaying)
   }
 
   const handleSoundToggleClick = () => {
@@ -116,9 +110,9 @@ export const VideoHero: React.FC = () => {
             appear
           >
             <ButtonsContainer>
-              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? <SvgActionPause /> : <SvgActionPlay />}>
-                {videoPlaying ? 'Pause' : 'Play'}
-              </PlayButton>
+              <Button to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')} icon={<SvgActionPlay />}>
+                Play
+              </Button>
               <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>

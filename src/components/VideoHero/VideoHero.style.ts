@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Button, IconButton, SkeletonLoader, Text } from '@/shared/components'
+import { IconButton, SkeletonLoader, Text } from '@/shared/components'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { TOP_NAVBAR_HEIGHT } from '..'
@@ -122,10 +122,6 @@ export const ButtonsContainer = styled.div`
 
 export const ButtonsSpaceKeeper = styled.div`
   min-height: ${BUTTONS_HEIGHT}px;
-`
-
-export const PlayButton = styled(Button)`
-  width: 90px;
 `
 
 export const SoundButton = styled(IconButton)`
