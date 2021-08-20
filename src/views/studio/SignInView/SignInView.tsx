@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router'
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components/SignInSteps'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatusStore, useUser } from '@/providers'
+import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { useUser } from '@/providers/user'
 import { SvgGlyphNewChannel } from '@/shared/icons'
 
 import {

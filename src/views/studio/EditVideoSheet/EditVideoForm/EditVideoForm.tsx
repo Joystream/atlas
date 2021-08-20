@@ -10,18 +10,16 @@ import { ViewErrorFallback } from '@/components'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks'
+import { useAssetStore, useRawAsset } from '@/providers/assets'
+import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { RawDraft, useDraftStore } from '@/providers/drafts'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
-  RawDraft,
-  useAssetStore,
-  useAuthorizedUser,
-  useConnectionStatusStore,
-  useDraftStore,
   useEditVideoSheet,
   useEditVideoSheetTabData,
-  useRawAsset,
-} from '@/providers'
+} from '@/providers/editVideoSheet'
+import { useAuthorizedUser } from '@/providers/user'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
 import { FormField } from '@/shared/components/FormField'

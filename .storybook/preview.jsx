@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { GlobalStyle } from '../src/shared/components'
+import { GlobalStyle } from '../src/shared/components/GlobalStyle'
 
 const Wrapper = styled.div`
   padding: 10px;

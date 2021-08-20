@@ -12,7 +12,8 @@ import { SentryLogger } from '@/utils/logs'
 import { EditVideoSheetContext } from './provider'
 import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
 
-import { channelDraftsSelector, useAuthorizedUser, useDraftStore } from '..'
+import { channelDraftsSelector, useDraftStore } from '../drafts'
+import { useAuthorizedUser } from '../user'
 
 export const useEditVideoSheet = () => {
   const ctx = useContext(EditVideoSheetContext)

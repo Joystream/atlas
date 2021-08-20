@@ -8,7 +8,8 @@ import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 
 import { useUploadsStore } from './store'
 
-import { useSnackbar, useUser } from '..'
+import { useSnackbar } from '../snackbars'
+import { useUser } from '../user'
 
 export const UploadsManager: React.FC = () => {
   const navigate = useNavigate()

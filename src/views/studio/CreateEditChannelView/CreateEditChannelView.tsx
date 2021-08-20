@@ -12,19 +12,14 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import {
-  AssetType,
-  useAsset,
-  useAssetStore,
-  useConnectionStatusStore,
-  useEditVideoSheet,
-  useJoystream,
-  useRawAsset,
-  useSnackbar,
-  useTransaction,
-  useUser,
-} from '@/providers'
+import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
+import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { useEditVideoSheet } from '@/providers/editVideoSheet'
+import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
+import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
+import { useUser } from '@/providers/user'
 import { ActionBarTransaction } from '@/shared/components/ActionBar'
 import { ChannelCover } from '@/shared/components/ChannelCover'
 import { FormField } from '@/shared/components/FormField'

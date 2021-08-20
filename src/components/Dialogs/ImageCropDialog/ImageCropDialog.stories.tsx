@@ -2,7 +2,7 @@ import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
-import { OverlayManagerProvider } from '@/providers'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Avatar } from '@/shared/components/Avatar'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'

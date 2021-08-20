@@ -7,7 +7,11 @@ import { GlobalStyle } from '@/shared/components'
 import { routingTransitions } from '@/styles/routingTransitions'
 
 import { MainLayout } from './MainLayout'
-import { AssetsManager, DialogProvider, OverlayManagerProvider, Snackbars, StorageProvidersProvider } from './providers'
+import { AssetsManager } from './providers/assets'
+import { DialogProvider } from './providers/dialogs'
+import { OverlayManagerProvider } from './providers/overlayManager'
+import { Snackbars } from './providers/snackbars'
+import { StorageProvidersProvider } from './providers/storageProviders'
 
 export const App = () => {
   // create client on render so the mocking setup is done if needed

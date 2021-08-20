@@ -2,7 +2,7 @@ import { debounce, round } from 'lodash'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { usePersonalDataStore } from '@/providers'
+import { usePersonalDataStore } from '@/providers/personalData'
 import {
   SvgPlayerFullScreen,
   SvgPlayerPause,

@@ -2,15 +2,10 @@ import React, { useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
-import { useUploadsStore } from '@/providers'
+import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
-<<<<<<< HEAD
-import { Text } from '@/shared/components'
-import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
-=======
 import { Text } from '@/shared/components/Text'
-import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
->>>>>>> 5cf74553 (clean exports from views, components and shared/components)
+import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {

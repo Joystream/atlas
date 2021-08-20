@@ -7,7 +7,7 @@ import { TopbarBase } from '@/components/Topbar'
 import { BASE_PATHS } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
 
-import { useDialog } from './providers'
+import { useDialog } from './providers/dialogs'
 import { AdminView } from './views/admin'
 import { LegalLayout } from './views/legal'
 import { PlaygroundLayout } from './views/playground'

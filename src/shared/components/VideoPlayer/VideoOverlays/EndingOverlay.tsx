@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers'
+import { AssetType, useAsset } from '@/providers/assets'
 import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/shared/icons'
 
 import {

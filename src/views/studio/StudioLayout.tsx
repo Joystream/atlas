@@ -11,18 +11,13 @@ import { StudioEntrypoint, StudioLoading } from '@/components/StudioEntrypoint'
 import { StudioTopbar, TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import {
-  ActiveUserProvider,
-  ConnectionStatusManager,
-  EditVideoSheetProvider,
-  JoystreamProvider,
-  TransactionManager,
-  UploadsManager,
-  useConnectionStatusStore,
-  useDialog,
-  useUser,
-  useVideoEditSheetRouting,
-} from '@/providers'
+import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
+import { useDialog } from '@/providers/dialogs'
+import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/editVideoSheet'
+import { JoystreamProvider } from '@/providers/joystream'
+import { TransactionManager } from '@/providers/transactionManager'
+import { UploadsManager } from '@/providers/uploadsManager'
+import { ActiveUserProvider, useUser } from '@/providers/user'
 import { isAllowedBrowser } from '@/utils/browser'
 
 import { CreateEditChannelView } from './CreateEditChannelView'

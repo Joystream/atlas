@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
 import { absoluteRoutes } from '@/config/routes'
-import { useUser } from '@/providers'
+import { useUser } from '@/providers/user'
 import { Spinner } from '@/shared/components/Spinner'
 import { Text } from '@/shared/components/Text'
 

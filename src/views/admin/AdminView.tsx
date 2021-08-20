@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { TARGET_DEV_ENV, availableEnvs, setEnvInLocalStorage } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar } from '@/providers'
+import { useSnackbar } from '@/providers/snackbars'
 import { Button } from '@/shared/components/Button'
 import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'

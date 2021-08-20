@@ -11,18 +11,13 @@ import {
 } from '@/api/queries'
 import { useDisplayDataLostWarning } from '@/hooks'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
-import {
-  EditVideoFormFields,
-  EditVideoSheetTab,
-  useAssetStore,
-  useAuthorizedUser,
-  useDraftStore,
-  useEditVideoSheet,
-  useJoystream,
-  useRawAssetResolver,
-  useStartFileUpload,
-  useTransaction,
-} from '@/providers'
+import { useAssetStore, useRawAssetResolver } from '@/providers/assets'
+import { useDraftStore } from '@/providers/drafts'
+import { EditVideoFormFields, EditVideoSheetTab, useEditVideoSheet } from '@/providers/editVideoSheet'
+import { useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactionManager'
+import { useStartFileUpload } from '@/providers/uploadsManager'
+import { useAuthorizedUser } from '@/providers/user'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'

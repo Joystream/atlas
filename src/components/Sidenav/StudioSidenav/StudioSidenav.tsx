@@ -3,13 +3,10 @@ import { CSSTransition } from 'react-transition-group'
 
 import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
-import {
-  chanelUnseenDraftsSelector,
-  useAuthorizedUser,
-  useDraftStore,
-  useEditVideoSheet,
-  useUploadsStore,
-} from '@/providers'
+import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
+import { useEditVideoSheet } from '@/providers/editVideoSheet'
+import { useUploadsStore } from '@/providers/uploadsManager'
+import { useAuthorizedUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'

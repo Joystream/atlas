@@ -9,15 +9,11 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks'
-import {
-  chanelUnseenDraftsSelector,
-  channelDraftsSelector,
-  useAuthorizedUser,
-  useDialog,
-  useDraftStore,
-  useEditVideoSheet,
-  useSnackbar,
-} from '@/providers'
+import { useDialog } from '@/providers/dialogs'
+import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
+import { useEditVideoSheet } from '@/providers/editVideoSheet'
+import { useSnackbar } from '@/providers/snackbars'
+import { useAuthorizedUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Grid } from '@/shared/components/Grid'

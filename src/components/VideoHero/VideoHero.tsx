@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers'
+import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
 import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'

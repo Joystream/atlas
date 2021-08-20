@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheetTabData } from '@/providers'
+import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheetTabData } from '@/providers/editVideoSheet'
 import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 

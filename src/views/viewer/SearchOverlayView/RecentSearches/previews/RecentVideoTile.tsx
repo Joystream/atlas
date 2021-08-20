@@ -3,7 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers'
+import { AssetType, useAsset } from '@/providers/assets'
 import { Text } from '@/shared/components/Text'
 import { transitions } from '@/shared/theme'
 
