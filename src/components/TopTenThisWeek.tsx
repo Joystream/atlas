@@ -4,7 +4,7 @@ import { useMostViewedVideos } from '@/api/hooks'
 import { VideoGallery } from '@/components'
 
 export const TopTenThisWeek = () => {
-  const { videos, loading } = useMostViewedVideos({ limit: 10, viewedWithinDays: 7 })
+  const { videos, loading } = useMostViewedVideos({ limit: 10, timePeriodDays: 7 })
 
   return (
     <section>

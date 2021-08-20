@@ -124,8 +124,8 @@ mutation UnfollowChannel($channelId: ID!) {
   }
 }
 
-query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
-  mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
+query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
+  mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
     id
     views
   }
@@ -138,8 +138,8 @@ query GetMostViewedChannelsAllTime($limit: Int!) {
   }
 }
 
-query GetMostFollowedChannels($followedWithinDays: Int!, $limit: Int) {
-  mostFollowedChannels(period: $followedWithinDays, limit: $limit) {
+query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
+  mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
     id
     follows
   }
