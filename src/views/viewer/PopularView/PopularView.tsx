@@ -21,7 +21,7 @@ export const PopularView: FC = () => {
   const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
   const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds({ limit: 15 })
   const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
-  const { videos, loading } = useMostViewedVideos({ viewedWithinDays: 30, limit: 10 })
+  const { videos, loading } = useMostViewedVideos({ timePeriodDays: 30, limit: 10 })
 
   if (mostViewedVideosError) {
     throw mostViewedVideosError

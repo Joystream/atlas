@@ -143,7 +143,7 @@ export type UnfollowChannelMutation = {
 }
 
 export type GetMostViewedChannelsQueryVariables = Types.Exact<{
-  viewedWithinDays: Types.Scalars['Int']
+  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
@@ -162,7 +162,7 @@ export type GetMostViewedChannelsAllTimeQuery = {
 }
 
 export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
-  followedWithinDays: Types.Scalars['Int']
+  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
@@ -694,8 +694,8 @@ export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
   UnfollowChannelMutationVariables
 >
 export const GetMostViewedChannelsDocument = gql`
-  query GetMostViewedChannels($viewedWithinDays: Int!, $limit: Int) {
-    mostViewedChannels(period: $viewedWithinDays, limit: $limit) {
+  query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
+    mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
       id
       views
     }
@@ -714,7 +714,7 @@ export const GetMostViewedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedChannelsQuery({
  *   variables: {
- *      viewedWithinDays: // value for 'viewedWithinDays'
+ *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
  *   },
  * });
@@ -794,8 +794,8 @@ export type GetMostViewedChannelsAllTimeQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsAllTimeQueryVariables
 >
 export const GetMostFollowedChannelsDocument = gql`
-  query GetMostFollowedChannels($followedWithinDays: Int!, $limit: Int) {
-    mostFollowedChannels(period: $followedWithinDays, limit: $limit) {
+  query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
+    mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
       id
       follows
     }
@@ -814,7 +814,7 @@ export const GetMostFollowedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostFollowedChannelsQuery({
  *   variables: {
- *      followedWithinDays: // value for 'followedWithinDays'
+ *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
  *   },
  * });
