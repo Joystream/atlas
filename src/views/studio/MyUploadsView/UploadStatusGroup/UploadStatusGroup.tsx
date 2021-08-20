@@ -5,7 +5,7 @@ import { useChannel, useVideo } from '@/api/hooks'
 import { useUploadsStore } from '@/providers'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Text } from '@/shared/components'
-import { SvgAlertError, SvgNavChannel, SvgOutlineVideo } from '@/shared/icons'
+import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
@@ -103,7 +103,7 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
           ) : isChannelType ? (
             <SvgNavChannel />
           ) : (
-            <SvgOutlineVideo />
+            <SvgControlsVideo />
           )}
         </Thumbnail>
         <AssetsInfoContainer>

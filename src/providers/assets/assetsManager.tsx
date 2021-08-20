@@ -84,6 +84,7 @@ export const AssetsManager: React.FC = () => {
         } catch (e) {
           // ignore anything else than TimeoutError as it will be handled by assetTestPromise.catch
           if (e instanceof TimeoutError) {
+            AssetLogger.assetTimeout(assetDetails)
             ConsoleLogger.warn('Asset load timed out', assetDetails)
           }
         }
