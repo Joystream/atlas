@@ -8,6 +8,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
 import { Grid, SkeletonLoader } from '@/shared/components'
+import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -32,7 +33,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
 
   const { url: avatarUrl } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId)
-  const { displayedItems, placeholdersCount } = useInfiniteGrid<
+  const { displayedItems, placeholdersCount, error } = useInfiniteGrid<
     GetVideosConnectionQuery,
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
@@ -50,6 +51,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
     targetRowsCount: INITAL_ROWS,
     dataAccessor: (rawData) => rawData?.videosConnection,
     itemsPerRow: videosPerRow,
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
@@ -62,6 +64,10 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   )
 
   const isLoading = !channelId || loading
+
+  if (error) {
+    return null
+  }
 
   return (
     <>
