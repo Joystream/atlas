@@ -4,7 +4,13 @@ import { sub } from 'date-fns'
 import React from 'react'
 
 import useVideosConnection from '@/api/hooks/videosConnection'
-import { ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, VideoHero, ViewWrapper } from '@/components'
+import {
+  ErrorFallback,
+  InfiniteVideoGrid,
+  InterruptedVideosGallery,
+  LimitedWidthContainer,
+  VideoHero,
+} from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
 
@@ -36,7 +42,7 @@ export const HomeView: React.FC = () => {
     throw error
   }
   return (
-    <ViewWrapper>
+    <LimitedWidthContainer big>
       <VideoHero />
       <Container className={transitions.names.slide}>
         <InterruptedVideosGallery />
@@ -49,7 +55,7 @@ export const HomeView: React.FC = () => {
           />
         </ErrorBoundary>
       </Container>
-    </ViewWrapper>
+    </LimitedWidthContainer>
   )
 }
 

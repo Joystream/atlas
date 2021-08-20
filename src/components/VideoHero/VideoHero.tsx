@@ -4,15 +4,18 @@ import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
-import { SkeletonLoader, VideoPlayer } from '@/shared/components'
-import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
+import { GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { SvgActionPause } from '@/shared/icons/ActionPause'
+import { SvgActionPlay } from '@/shared/icons/ActionPlay'
+import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
+import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
 import { transitions } from '@/shared/theme'
 
 import {
   ButtonsContainer,
+  ButtonsSpaceKeeper,
   Container,
-  ControlsContainer,
-  HorizontalGradientOverlay,
+  GradientOverlay,
   InfoContainer,
   Media,
   MediaWrapper,
@@ -23,7 +26,6 @@ import {
   Title,
   TitleContainer,
   TitleSkeletonLoader,
-  VerticalGradientOverlay,
 } from './VideoHero.style'
 import { useVideoHero } from './VideoHeroData'
 
@@ -62,6 +64,7 @@ export const VideoHero: React.FC = () => {
           <PlayerContainer>
             {coverVideo && (
               <VideoPlayer
+                videoStyle={{ objectFit: 'cover' }}
                 fluid
                 isInBackground
                 muted={soundMuted}
@@ -75,34 +78,36 @@ export const VideoHero: React.FC = () => {
               />
             )}
           </PlayerContainer>
-          {coverVideo && <HorizontalGradientOverlay />}
-          <VerticalGradientOverlay />
+          <GradientOverlay />
         </Media>
       </MediaWrapper>
       <InfoContainer isLoading={!coverVideo}>
         <StyledChannelLink
+          variant="secondary"
           id={coverVideo?.video.channel.id}
-          hideHandle
           overrideChannel={coverVideo?.video.channel}
-          avatarSize="cover"
+          avatarSize="small"
         />
-        <TitleContainer>
-          {coverVideo ? (
-            <>
-              <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
-                <Title variant="h2">{coverVideo.coverTitle}</Title>
-              </Link>
-              <span>{coverVideo.coverDescription}</span>
-            </>
-          ) : (
-            <>
-              <TitleSkeletonLoader width={380} height={60} />
-              <SkeletonLoader width={300} height={20} bottomSpace={4} />
-              <SkeletonLoader width={200} height={20} />
-            </>
-          )}
-        </TitleContainer>
-        <ControlsContainer>
+        <LayoutGrid>
+          <GridItem colSpan={{ base: 12, compact: 10, small: 8, medium: 5, xlarge: 4, xxlarge: 3 }}>
+            <TitleContainer>
+              {coverVideo ? (
+                <>
+                  <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
+                    <Title variant="h2">{coverVideo.coverTitle}</Title>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <TitleSkeletonLoader width={380} height={60} />
+                  <SkeletonLoader width={300} height={20} bottomSpace={4} />
+                  <SkeletonLoader width={200} height={20} />
+                </>
+              )}
+            </TitleContainer>
+          </GridItem>
+        </LayoutGrid>
+        <ButtonsSpaceKeeper>
           <CSSTransition
             in={displayControls}
             timeout={parseInt(transitions.timings.loading)}
@@ -111,19 +116,15 @@ export const VideoHero: React.FC = () => {
             appear
           >
             <ButtonsContainer>
-              <PlayButton
-                onClick={handlePlayPauseClick}
-                icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}
-                size="large"
-              >
+              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? <SvgActionPause /> : <SvgActionPlay />}>
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
-              <SoundButton onClick={handleSoundToggleClick} size="large">
-                {!soundMuted ? <SvgPlayerSoundOn /> : <SvgPlayerSoundOff />}
+              <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
+                {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>
             </ButtonsContainer>
           </CSSTransition>
-        </ControlsContainer>
+        </ButtonsSpaceKeeper>
       </InfoContainer>
     </Container>
   )

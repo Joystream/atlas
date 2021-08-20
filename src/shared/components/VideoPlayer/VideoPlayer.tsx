@@ -1,5 +1,5 @@
 import { debounce, round } from 'lodash'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
@@ -44,6 +44,7 @@ import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 export type VideoPlayerProps = {
   nextVideo?: VideoFieldsFragment | null
   className?: string
+  videoStyle?: CSSProperties
   autoplay?: boolean
   isInBackground?: boolean
   playing?: boolean
@@ -63,7 +64,7 @@ const isPiPSupported = 'pictureInPictureEnabled' in document
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | null
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
+  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -434,6 +435,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           </BigPlayButtonOverlay>
         )}
         <video
+          style={videoStyle}
           ref={playerRef}
           className="video-js"
           onClick={() =>

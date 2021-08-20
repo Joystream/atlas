@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SkeletonLoader } from '@/shared/components'
-import { colors, sizes, typography } from '@/shared/theme'
+import { SkeletonLoader, Text } from '@/shared/components'
+import { sizes } from '@/shared/theme'
 
 type ContainerProps = {
   disabled?: boolean
@@ -19,13 +19,7 @@ type HandleProps = {
   withAvatar: boolean
 }
 
-export const Handle = styled.span<HandleProps>`
-  display: inline-block;
-  font-family: ${typography.fonts.headers};
-  font-size: 1rem;
-  line-height: 1;
-  font-weight: bold;
-  color: ${colors.white};
+export const StyledText = styled(Text)<HandleProps>`
   margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
 `
 
