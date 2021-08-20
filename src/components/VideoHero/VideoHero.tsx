@@ -5,7 +5,10 @@ import { CSSTransition } from 'react-transition-group'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
 import { GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
-import { SvgPlayerPause, SvgPlayerPlay, SvgPlayerSoundOff, SvgPlayerSoundOn } from '@/shared/icons'
+import { SvgActionPause } from '@/shared/icons/ActionPause'
+import { SvgActionPlay } from '@/shared/icons/ActionPlay'
+import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
+import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -113,11 +116,11 @@ export const VideoHero: React.FC = () => {
             appear
           >
             <ButtonsContainer>
-              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? <SvgPlayerPause /> : <SvgPlayerPlay />}>
+              <PlayButton onClick={handlePlayPauseClick} icon={videoPlaying ? <SvgActionPause /> : <SvgActionPlay />}>
                 {videoPlaying ? 'Pause' : 'Play'}
               </PlayButton>
               <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
-                {!soundMuted ? <SvgPlayerSoundOn /> : <SvgPlayerSoundOff />}
+                {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>
             </ButtonsContainer>
           </CSSTransition>

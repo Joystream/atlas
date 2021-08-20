@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { SkeletonLoader, Text } from '@/shared/components'
-import { colors, sizes, typography } from '@/shared/theme'
+import { sizes } from '@/shared/theme'
 
 type ContainerProps = {
   disabled?: boolean

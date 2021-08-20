@@ -125,7 +125,7 @@ export const ButtonsSpaceKeeper = styled.div`
 `
 
 export const PlayButton = styled(Button)`
-  width: 97px;
+  width: 90px;
 `
 
 export const SoundButton = styled(IconButton)`
