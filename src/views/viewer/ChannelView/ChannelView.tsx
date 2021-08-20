@@ -22,7 +22,7 @@ import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/provider
 import { ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
@@ -58,7 +58,7 @@ export const ChannelView: React.FC = () => {
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id, {
-    onError: (error) => Logger.captureError('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
+    onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {
     searchVideos,
@@ -74,7 +74,7 @@ export const ChannelView: React.FC = () => {
   } = useSearchVideos({
     id,
     onError: (error) =>
-      Logger.captureError('Failed to search channel videos', 'ChannelView', error, {
+      SentryLogger.error('Failed to search channel videos', 'ChannelView', error, {
         search: { channelId: id, query: searchQuery },
       }),
   })
@@ -114,11 +114,11 @@ export const ChannelView: React.FC = () => {
     },
     {
       notifyOnNetworkStatusChange: true,
-      onError: (error) => Logger.captureError('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
     }
   )
   const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST, {
-    onError: (error) => Logger.captureError('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
   })
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
@@ -167,7 +167,7 @@ export const ChannelView: React.FC = () => {
         setFollowing(true)
       }
     } catch (error) {
-      Logger.captureError('Failed to update channel following', 'ChannelView', error, { channel: { id } })
+      SentryLogger.error('Failed to update channel following', 'ChannelView', error, { channel: { id } })
     }
   }
 

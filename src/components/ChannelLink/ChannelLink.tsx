@@ -5,7 +5,7 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { Container, Handle, HandleSkeletonLoader } from './ChannelLink.style'
 
@@ -34,7 +34,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => Logger.captureError('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
+    onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
   const { url: avatarPhotoUrl } = useAsset({
     entity: channel,

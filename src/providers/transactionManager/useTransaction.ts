@@ -1,6 +1,6 @@
 import { ExtrinsicFailedError, ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { TransactionDialogStep, useConnectionStatusStore, useDialog, useSnackbar } from '@/providers'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
 
@@ -56,7 +56,7 @@ export const useTransaction = (): HandleTransactionFn => {
         try {
           await preProcess()
         } catch (e) {
-          Logger.captureError('Failed transaction preprocess', 'TransactionManager', e)
+          SentryLogger.error('Failed transaction preprocess', 'TransactionManager', e)
           return false
         }
       }
@@ -66,7 +66,7 @@ export const useTransaction = (): HandleTransactionFn => {
       const { data: txData, block } = await txFactory(setDialogStep)
       if (onTxFinalize) {
         onTxFinalize(txData).catch((e) =>
-          Logger.captureError('Failed transaction finalize callback', 'TransactionManager', e)
+          SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', e)
         )
       }
 
@@ -77,7 +77,7 @@ export const useTransaction = (): HandleTransactionFn => {
             try {
               await onTxSync(txData)
             } catch (e) {
-              Logger.captureError('Failed transaction sync callback', 'TransactionManager', e)
+              SentryLogger.error('Failed transaction sync callback', 'TransactionManager', e)
             }
           }
           resolve()
@@ -107,7 +107,7 @@ export const useTransaction = (): HandleTransactionFn => {
       })
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
-        Logger.warn('Sign cancelled')
+        ConsoleLogger.warn('Sign cancelled')
         setDialogStep(null)
         displaySnackbar({
           title: 'Transaction signing cancelled',
@@ -118,9 +118,9 @@ export const useTransaction = (): HandleTransactionFn => {
       }
 
       if (e instanceof ExtrinsicFailedError) {
-        Logger.captureError('Extrinsic failed', 'TransactionManager', e)
+        SentryLogger.error('Extrinsic failed', 'TransactionManager', e)
       } else {
-        Logger.captureError('Unknown sendExtrinsic error', 'TransactionManager', e)
+        SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', e)
       }
       setDialogStep(null)
       openErrorDialog()

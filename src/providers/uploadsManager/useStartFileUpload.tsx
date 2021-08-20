@@ -6,7 +6,7 @@ import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
@@ -84,17 +84,17 @@ export const useStartFileUpload = () => {
       try {
         const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
-          Logger.captureError('No storage provider available for upload', 'UploadsManager')
+          SentryLogger.error('No storage provider available for upload', 'UploadsManager')
           return
         }
         storageUrl = storageProvider.url
         storageProviderId = storageProvider.id
       } catch (e) {
-        Logger.captureError('Failed to get storage provider for upload', 'UploadsManager', e)
+        SentryLogger.error('Failed to get storage provider for upload', 'UploadsManager', e)
         return
       }
 
-      Logger.debug('Starting file upload', {
+      ConsoleLogger.debug('Starting file upload', {
         contentId: asset.contentId,
         storageProviderId,
         storageProviderUrl: storageUrl,
@@ -167,7 +167,7 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
       } catch (e) {
-        Logger.captureError('Failed to upload asset', 'UploadsManager', e, {
+        SentryLogger.error('Failed to upload asset', 'UploadsManager', e, {
           asset: { contentId: asset.contentId, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
         })
         setAssetStatus({ lastStatus: 'error', progress: 0 })

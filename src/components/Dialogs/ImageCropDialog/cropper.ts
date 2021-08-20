@@ -3,7 +3,7 @@ import 'cropperjs/dist/cropper.min.css'
 import { useEffect, useState } from 'react'
 
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 const MAX_ZOOM = 3
 
@@ -165,7 +165,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
       }
       canvas.toBlob((blob) => {
         if (!blob) {
-          Logger.captureError('Got an empty blob from cropped canvas', 'ImageCropDialog')
+          SentryLogger.error('Got an empty blob from cropped canvas', 'ImageCropDialog')
           return
         }
         const url = URL.createObjectURL(blob)

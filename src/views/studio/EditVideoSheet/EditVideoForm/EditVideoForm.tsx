@@ -36,7 +36,7 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/componen
 import { SvgGlyphInfo } from '@/shared/icons'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 
 import {
@@ -105,7 +105,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const deleteVideo = useDeleteVideo()
 
   const { categories, error: categoriesError } = useCategories(undefined, {
-    onError: (error) => Logger.captureError('Failed to fetch categories', 'EditVideoSheet', error),
+    onError: (error) => SentryLogger.error('Failed to fetch categories', 'EditVideoSheet', error),
   })
   const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
 
@@ -393,7 +393,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      Logger.captureError('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
+      SentryLogger.error('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
       setFileSelectError('Unknown error')
     }
   }
