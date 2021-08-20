@@ -193,24 +193,28 @@ export const queryNodeStitchingResolvers = (
         // operationName has to be manually kept in sync with the query name used
         BATCHED_VIDEO_VIEWS_QUERY_NAME
       )
-      const batchedVideoViews = await batchedVideoViewsResolver(
-        parent,
-        {
-          videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id),
-        },
-        context,
-        info
-      )
 
-      const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+      try {
+        const batchedVideoViews = await batchedVideoViewsResolver(
+          parent,
+          { videoIdList: parent.edges.map((edge: VideoEdge) => edge.node.id) },
+          context,
+          info
+        )
 
-      return parent.edges.map((edge: VideoEdge) => ({
-        ...edge,
-        node: {
-          ...edge.node,
-          views: viewsLookup[edge.node.id]?.views || 0,
-        },
-      }))
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+
+        return parent.edges.map((edge: VideoEdge) => ({
+          ...edge,
+          node: {
+            ...edge.node,
+            views: viewsLookup[edge.node.id]?.views || 0,
+          },
+        }))
+      } catch (error) {
+        Logger.warn('Failed to resolve views field', { error })
+        return null
+      }
     },
   },
   Channel: {
@@ -273,42 +277,47 @@ export const queryNodeStitchingResolvers = (
         // operationName has to be manually kept in sync with the query name used
         BATCHED_FOLLOWS_VIEWS_QUERY_NAME
       )
-      const batchedChannelFollows = await batchedChannelFollowsResolver(
-        parent,
-        {
-          channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
-        },
-        context,
-        info
-      )
+      try {
+        const batchedChannelFollows = await batchedChannelFollowsResolver(
+          parent,
+          {
+            channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
+          },
+          context,
+          info
+        )
 
-      const batchedChannelViewsResolver = createResolverWithTransforms(
-        orionSchema,
-        ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
-        [TransformBatchedChannelOrionViewsField],
-        // operationName has to be manually kept in sync with the query name used
-        BATCHED_CHANNEL_VIEWS_QUERY_NAME
-      )
-      const batchedChannelViews = await batchedChannelViewsResolver(
-        parent,
-        {
-          channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
-        },
-        context,
-        info
-      )
+        const batchedChannelViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+          [TransformBatchedChannelOrionViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_CHANNEL_VIEWS_QUERY_NAME
+        )
+        const batchedChannelViews = await batchedChannelViewsResolver(
+          parent,
+          {
+            channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
+          },
+          context,
+          info
+        )
 
-      const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
-      const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+        const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
 
-      return parent.edges.map((edge: ChannelEdge) => ({
-        ...edge,
-        node: {
-          ...edge.node,
-          follows: followsLookup[edge.node.id]?.follows || 0,
-          views: viewsLookup[edge.node.id]?.views || 0,
-        },
-      }))
+        return parent.edges.map((edge: ChannelEdge) => ({
+          ...edge,
+          node: {
+            ...edge.node,
+            follows: followsLookup[edge.node.id]?.follows || 0,
+            views: viewsLookup[edge.node.id]?.views || 0,
+          },
+        }))
+      } catch (error) {
+        Logger.warn('Failed to resolve follows or views field', { error })
+        return null
+      }
     },
   },
 })
