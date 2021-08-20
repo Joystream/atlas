@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { CAROUSEL_ARROW_HEIGHT, Gallery, MIN_VIDEO_TILE_WIDTH } from '@/shared/components'
+import { Gallery, RankingNumberTile } from '@/shared/components'
 import { breakpointsOfGrid } from '@/shared/components/Grid'
-import { sizes } from '@/shared/theme'
+import { AvatarContainer } from '@/shared/components/VideoTileBase/VideoTileBase.styles'
+import { media } from '@/shared/theme'
 
 import { VideoTile } from './VideoTile'
 
@@ -21,29 +22,22 @@ type CustomVideosType = VideoFieldsWithProgress[] | VideoWithIdAndProgress[]
 
 type VideoGalleryProps = {
   title?: string
-  videos?: CustomVideosType
+  videos?: CustomVideosType | null
   loading?: boolean
   removeButton?: boolean
   onRemoveButtonClick?: (id: string) => void
   onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
+  hasRanking?: boolean
+  seeAllUrl?: string
+  className?: string
 }
 
 const PLACEHOLDERS_COUNT = 12
-
-// This is needed since Gliderjs and the Grid have different resizing policies
-const breakpoints = breakpointsOfGrid({
-  breakpoints: 6,
-  minItemWidth: 300,
-  gridColumnGap: 24,
-  viewportContainerDifference: 64,
-}).map((breakpoint, idx) => ({
-  breakpoint,
-  settings: {
-    slidesToShow: idx + 1,
-    slidesToScroll: idx + 1,
-  },
-}))
+const MIN_VIDEO_PREVIEW_WIDTH = 281
+const CAROUSEL_SMALL_BREAKPOINT = 688
+const FRACTIONAL_LEVEL = 1.3
+const FRACTIONAL_LEVEL_RANKING = 1.4
 
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
@@ -53,23 +47,41 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   removeButton,
   onRemoveButtonClick,
   onVideoNotFound,
+  seeAllUrl,
+  hasRanking = false,
+  className,
 }) => {
-  const [coverHeight, setCoverHeight] = useState<number>()
-  const onCoverResize = useCallback((_, imgHeight) => {
-    setCoverHeight(imgHeight)
-  }, [])
-  const arrowPosition = useMemo(() => {
-    if (!coverHeight) {
-      return
-    }
-    const topPx = (coverHeight - CAROUSEL_ARROW_HEIGHT) / 2
-    return topPx
-  }, [coverHeight])
+  const breakpoints = useMemo(() => {
+    return breakpointsOfGrid({
+      breakpoints: 6,
+      minItemWidth: 300,
+      gridColumnGap: 24,
+      viewportContainerDifference: 64,
+    }).map((breakpoint, idx) => {
+      if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
+        return {
+          breakpoint,
+          settings: {
+            slidesToShow: idx + FRACTIONAL_LEVEL,
+            slidesToScroll: idx + 1,
+          },
+        }
+      }
+      return {
+        breakpoint,
+        settings: {
+          slidesToShow: idx + (breakpoint <= CAROUSEL_SMALL_BREAKPOINT ? FRACTIONAL_LEVEL_RANKING : 1),
+          slidesToScroll: idx + 1,
+        },
+      }
+    })
+  }, [hasRanking])
 
-  if (!loading && videos?.length === 0) {
+  if (loading === false && videos?.length === 0) {
     return null
   }
-  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({
+
+  const placeholderItems = Array.from({ length: loading || !videos?.length ? PLACEHOLDERS_COUNT : 0 }, () => ({
     id: undefined,
     progress: undefined,
   }))
@@ -79,33 +91,48 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   return (
     <Gallery
       title={title}
-      paddingLeft={sizes(2, true)}
-      paddingTop={sizes(2, true)}
       responsive={breakpoints}
-      itemWidth={MIN_VIDEO_TILE_WIDTH}
-      arrowPosition={arrowPosition}
+      itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
+      dotsVisible
+      seeAllUrl={seeAllUrl}
+      className={className}
     >
-      {[...videos, ...placeholderItems]?.map((video, idx) => (
-        <StyledVideoTile
-          id={video.id}
-          progress={video?.progress}
-          key={idx}
-          removeButton={video ? removeButton : false}
-          onCoverResize={onCoverResize}
-          onClick={createClickHandler(video.id)}
-          onNotFound={createNotFoundHandler(video.id)}
-          onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-        />
-      ))}
+      {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
+        hasRanking ? (
+          <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
+            <StyledVideoTile
+              id={video.id}
+              progress={video?.progress}
+              removeButton={video ? removeButton : false}
+              onClick={createClickHandler(video.id)}
+              onNotFound={createNotFoundHandler(video.id)}
+              onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+            />
+          </RankingNumberTile>
+        ) : (
+          <StyledVideoTile
+            key={`${idx}-${video.id}`}
+            id={video.id}
+            progress={video?.progress}
+            removeButton={video ? removeButton : false}
+            onClick={createClickHandler(video.id)}
+            onNotFound={createNotFoundHandler(video.id)}
+            onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
+          />
+        )
+      )}
     </Gallery>
   )
 }
 
 const StyledVideoTile = styled(VideoTile)`
-  & + & {
-    margin-left: ${sizes(6)};
-  }
+  flex-shrink: 0;
 
-  /* MIN_VIDEO_TILE_WIDTH */
-  min-width: 300px;
+  ${AvatarContainer} {
+    display: none;
+
+    ${media.medium} {
+      display: block;
+    }
+  }
 `

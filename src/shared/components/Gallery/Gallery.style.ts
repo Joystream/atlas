@@ -1,24 +1,22 @@
 import styled from '@emotion/styled'
 
-import { sizes, typography } from '../../theme'
+import { Button } from '@/shared/components'
+
+import { sizes } from '../../theme'
 
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
 `
-export const HeadingContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: ${sizes(4)};
 
-  > h4 {
-    font-size: ${typography.sizes.h5};
-    margin: 0;
-  }
+export const CarouselArrowsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: ${sizes(4)};
+  margin-left: auto;
+`
 
-  > button {
-    font-size: ${typography.sizes.subtitle2};
-    padding: 0;
-  }
+export const SeeAllLink = styled(Button)`
+  flex-shrink: 0;
+  margin-left: ${sizes(8)};
 `

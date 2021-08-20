@@ -4,11 +4,11 @@ import { BaseDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers'
 import { Button, Text } from '@/shared/components'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 const fakeNodeConnection = async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000))
-  Logger.log('disconnected from node')
+  ConsoleLogger.log('disconnected from node')
   return false
 }
 

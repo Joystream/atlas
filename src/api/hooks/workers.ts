@@ -22,15 +22,21 @@ export const useWorker = (id: string, opts?: WorkerOpts) => {
 }
 
 type WorkersOpts = QueryHookOptions<GetWorkersQuery>
+export const storageWorkersVariables: GetWorkersQueryVariables = {
+  where: {
+    metadata_contains: 'http',
+    isActive_eq: true,
+    type_eq: WorkerType.Storage,
+  },
+}
 export const useStorageWorkers = (variables: GetWorkersQueryVariables, opts?: WorkersOpts) => {
   const { data, loading, ...rest } = useGetWorkersQuery({
     ...opts,
     variables: {
+      ...storageWorkersVariables,
       ...variables,
       where: {
-        metadata_contains: 'http',
-        isActive_eq: true,
-        type_eq: WorkerType.Storage,
+        ...storageWorkersVariables.where,
         ...variables.where,
       },
     },

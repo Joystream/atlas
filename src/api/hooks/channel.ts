@@ -1,4 +1,5 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
+import { useMemo } from 'react'
 
 import {
   AssetAvailability,
@@ -7,12 +8,24 @@ import {
   GetChannelQuery,
   GetChannelsQuery,
   GetChannelsQueryVariables,
+  GetMostFollowedChannelsAllTimeQuery,
+  GetMostFollowedChannelsAllTimeQueryVariables,
+  GetMostFollowedChannelsQuery,
+  GetMostFollowedChannelsQueryVariables,
+  GetMostViewedChannelsAllTimeQuery,
+  GetMostViewedChannelsAllTimeQueryVariables,
+  GetMostViewedChannelsQuery,
+  GetMostViewedChannelsQueryVariables,
   GetVideoCountQuery,
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
+  useGetMostFollowedChannelsAllTimeQuery,
+  useGetMostFollowedChannelsQuery,
+  useGetMostViewedChannelsAllTimeQuery,
+  useGetMostViewedChannelsQuery,
   useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
@@ -119,6 +132,160 @@ export const useUnfollowChannel = (opts?: UnfollowChannelOpts) => {
           })
         },
       }),
+    ...rest,
+  }
+}
+
+type MostFollowedChannelsOpts = QueryHookOptions<GetMostFollowedChannelsQuery>
+export const useMostFollowedChannelsIds = (
+  variables?: GetMostFollowedChannelsQueryVariables,
+  opts?: MostFollowedChannelsOpts
+) => {
+  const { data, ...rest } = useGetMostFollowedChannelsQuery({ ...opts, variables })
+  return {
+    mostFollowedChannels: data?.mostFollowedChannels,
+    ...rest,
+  }
+}
+
+export const useMostFollowedChannels = (
+  variables?: GetMostFollowedChannelsQueryVariables,
+  opts?: MostFollowedChannelsOpts
+) => {
+  const { mostFollowedChannels } = useMostFollowedChannelsIds(variables, opts)
+
+  const mostFollowedChannelsIds = mostFollowedChannels?.map((item) => item.id)
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostFollowedChannelsIds,
+      },
+    },
+    { skip: !mostFollowedChannelsIds }
+  )
+
+  return {
+    channels,
+    ...rest,
+  }
+}
+
+type MostViewedChannelsOpts = QueryHookOptions<GetMostViewedChannelsQuery>
+export const useMostViewedChannelsIds = (
+  variables?: GetMostViewedChannelsQueryVariables,
+  opts?: MostViewedChannelsOpts
+) => {
+  const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
+  return {
+    mostViewedChannels: data?.mostViewedChannels,
+    ...rest,
+  }
+}
+
+export const useMostViewedChannels = (
+  variables?: GetMostViewedChannelsQueryVariables,
+  opts?: MostViewedChannelsOpts
+) => {
+  const { mostViewedChannels } = useMostViewedChannelsIds(variables, opts)
+
+  const mostViewedChannelsIds = mostViewedChannels?.map((item) => item.id)
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostViewedChannelsIds,
+      },
+    },
+    { skip: !mostViewedChannelsIds }
+  )
+
+  const sortedChannels = useMemo(() => {
+    if (channels) {
+      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
+    }
+    return null
+  }, [channels])
+
+  return {
+    channels: sortedChannels,
+    ...rest,
+  }
+}
+
+type MostFollowedChannelsAllTimeOpts = QueryHookOptions<GetMostFollowedChannelsAllTimeQuery>
+export const useMostFollowedChannelsAllTimeIds = (
+  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
+  opts?: MostFollowedChannelsAllTimeOpts
+) => {
+  const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
+  return {
+    mostFollowedChannelsAllTime: data?.mostFollowedChannelsAllTime,
+    ...rest,
+  }
+}
+
+export const useMostFollowedChannelsAllTime = (
+  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
+  opts?: MostFollowedChannelsAllTimeOpts
+) => {
+  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds(variables, opts)
+
+  const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostFollowedChannelsAllTimeIds,
+      },
+    },
+    { skip: !mostFollowedChannelsAllTimeIds }
+  )
+
+  const sortedChannels = useMemo(() => {
+    if (channels) {
+      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
+    }
+    return null
+  }, [channels])
+
+  return {
+    channels: sortedChannels,
+    ...rest,
+  }
+}
+
+type MostViewedChannelsAllTimeOpts = QueryHookOptions<GetMostViewedChannelsAllTimeQuery>
+export const useMostViewedChannelsAllTimeIds = (
+  variables?: GetMostViewedChannelsAllTimeQueryVariables,
+  opts?: MostViewedChannelsAllTimeOpts
+) => {
+  const { data, ...rest } = useGetMostViewedChannelsAllTimeQuery({ ...opts, variables })
+  return {
+    mostViewedChannelsAllTime: data?.mostViewedChannelsAllTime,
+    ...rest,
+  }
+}
+
+export const useMostViewedChannelsAllTime = (
+  variables?: GetMostViewedChannelsAllTimeQueryVariables,
+  opts?: MostViewedChannelsAllTimeOpts
+) => {
+  const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds(variables, opts)
+
+  const mostViewedChannelsIds = mostViewedChannelsAllTime?.map((item) => item.id)
+
+  const { channels, ...rest } = useChannels(
+    {
+      where: {
+        id_in: mostViewedChannelsIds,
+      },
+    },
+    { skip: !mostViewedChannelsIds }
+  )
+
+  return {
+    channels,
     ...rest,
   }
 }

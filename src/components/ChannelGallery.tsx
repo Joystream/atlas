@@ -1,40 +1,65 @@
-import styled from '@emotion/styled'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { Gallery } from '@/shared/components'
-import { sizes } from '@/shared/theme'
-
-import { ChannelCard } from './ChannelCard'
+import { ChannelCard } from '@/components/ChannelCard'
+import { Gallery, RankingNumberTile, breakpointsOfGrid } from '@/shared/components'
 
 type ChannelGalleryProps = {
   title?: string
-  channels?: BasicChannelFieldsFragment[]
+  channels?: BasicChannelFieldsFragment[] | null
   loading?: boolean
   onChannelClick?: (id: string) => void
+  hasRanking?: boolean
 }
 
-const PLACEHOLDERS_COUNT = 12
+const PLACEHOLDERS_COUNT = 10
+const CAROUSEL_SMALL_BREAKPOINT = 688
 
-export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels = [], loading, onChannelClick }) => {
-  if (!loading && channels?.length === 0) {
+export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels = [], loading, hasRanking }) => {
+  const breakpoints = useMemo(() => {
+    return breakpointsOfGrid({
+      breakpoints: 6,
+      minItemWidth: 300,
+      gridColumnGap: 24,
+      viewportContainerDifference: 64,
+    }).map((breakpoint, idx) => {
+      if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
+        return {
+          breakpoint,
+          settings: {
+            slidesToShow: idx + 1.5,
+            slidesToScroll: idx + 1,
+          },
+        }
+      }
+      return {
+        breakpoint,
+        settings: {
+          slidesToShow: idx + 1,
+          slidesToScroll: idx + 1,
+        },
+      }
+    })
+  }, [hasRanking])
+
+  if (loading === false && channels?.length === 0) {
     return null
   }
 
-  const createClickHandler = (id?: string) => () => id && onChannelClick && onChannelClick(id)
-
-  const placeholderItems = Array.from({ length: loading ? PLACEHOLDERS_COUNT : 0 }, () => ({ id: undefined }))
+  const placeholderItems = Array.from({ length: loading || !channels?.length ? PLACEHOLDERS_COUNT : 0 }, () => ({
+    id: undefined,
+  }))
   return (
-    <Gallery title={title} itemWidth={220} exactWidth={true} paddingLeft={sizes(2, true)} paddingTop={sizes(2, true)}>
-      {[...channels, ...placeholderItems].map((channel, idx) => (
-        <StyledChannelCard key={idx} id={channel.id} onClick={createClickHandler(channel.id)} />
-      ))}
+    <Gallery title={title} responsive={breakpoints} itemWidth={350} dotsVisible>
+      {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>
+        hasRanking ? (
+          <RankingNumberTile variant="channel" rankingNumber={idx + 1} key={idx}>
+            <ChannelCard id={channel.id} />
+          </RankingNumberTile>
+        ) : (
+          <ChannelCard key={idx} id={channel.id} />
+        )
+      )}
     </Gallery>
   )
 }
-
-const StyledChannelCard = styled(ChannelCard)`
-  + * {
-    margin-left: 16px;
-  }
-`

@@ -1,7 +1,10 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgGlyphInfo } from '@/shared/icons'
 import { colors, sizes, transitions, typography } from '@/shared/theme'
+
+import { SelectSizes } from '.'
 
 export const SelectWrapper = styled.div`
   width: 100%;
@@ -12,6 +15,7 @@ type SelectButtonProps = {
   filled?: boolean
   error?: boolean
   disabled?: boolean
+  size?: SelectSizes
 }
 
 export const SelectButton = styled.button<SelectButtonProps>`
@@ -19,7 +23,6 @@ export const SelectButton = styled.button<SelectButtonProps>`
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 42px;
   border: none;
   background: none;
   color: ${({ filled }) => (filled ? colors.gray[50] : colors.gray[300])};
@@ -27,6 +30,21 @@ export const SelectButton = styled.button<SelectButtonProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${({ size }) => {
+    switch (size) {
+      case 'regular':
+        return css`
+          min-height: ${sizes(10)};
+        `
+      case 'small':
+        return css`
+          min-height: ${sizes(10)};
+          font-size: 14px !important;
+          padding: 0 ${sizes(4)} !important;
+        `
+    }
+  }}
 
   svg {
     transition: all ${transitions.timings.regular} ${transitions.easing};

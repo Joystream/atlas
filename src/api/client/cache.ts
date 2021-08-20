@@ -7,6 +7,7 @@ import { parseISO } from 'date-fns'
 import {
   AllChannelFieldsFragment,
   AssetAvailability,
+  GetChannelsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   Query,
   VideoConnection,
@@ -20,17 +21,28 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   const channelId = args?.where?.channelId_eq || ''
   const categoryId = args?.where?.categoryId_eq || ''
   const idEq = args?.where?.id_eq || ''
+  const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const channelIdIn = args?.where?.channelId_in ? JSON.stringify(args.where.channelId_in) : ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
+  const isFeatured = args?.where?.isFeatured_eq ?? ''
 
   // only for counting videos in HomeView
   if (args?.where?.channelId_in && !args?.first) {
     return `${createdAtGte}:${channelIdIn}`
   }
 
-  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${sorting}`
+  return `${onlyCount}:${channelId}:${categoryId}:${channelIdIn}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}`
+}
+
+const getChannelKeyArgs = (args: Record<string, GetChannelsConnectionQueryVariables['where']> | null) => {
+  // make sure queries asking for a specific category are separated in cache
+  const languageId = args?.where?.languageId_eq || ''
+  const idIn = args?.where?.id_in || []
+  const orderBy = args?.orderBy || []
+
+  return `${languageId}:${idIn}:${orderBy}`
 }
 
 const createDateHandler = () => ({
@@ -86,7 +98,7 @@ const createCachedAvailabilityHandler = () => ({
 type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
-  channelsConnection: relayStylePagination(),
+  channelsConnection: relayStylePagination(getChannelKeyArgs),
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(

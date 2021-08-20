@@ -18,6 +18,7 @@ fragment AllChannelFields on Channel {
   isPublic
   isCensored
   language {
+    id
     iso
   }
   ownerMember {
@@ -50,14 +51,19 @@ query GetVideoCount($where: VideoWhereInput) {
   }
 }
 
-query GetChannels($offset: Int, $limit: Int, $where: ChannelWhereInput) {
-  channels(offset: $offset, limit: $limit, where: $where) {
+query GetChannels($where: ChannelWhereInput, $limit: Int = 50, $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]) {
+  channels(where: $where, orderBy: $orderBy, limit: $limit) {
     ...AllChannelFields
   }
 }
 
-query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInput) {
-  channelsConnection(first: $first, after: $after, where: $where, orderBy: [createdAt_DESC]) {
+query GetChannelsConnection(
+  $first: Int
+  $after: String
+  $where: ChannelWhereInput
+  $orderBy: [ChannelOrderByInput!] = [createdAt_DESC]
+) {
+  channelsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
     edges {
       cursor
       node {
@@ -75,6 +81,14 @@ query GetChannelsConnection($first: Int, $after: String, $where: ChannelWhereInp
 ### Orion
 
 # modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
+query GetChannelViews($channelId: ID!) {
+  channelViews(channelId: $channelId) {
+    id
+    views
+  }
+}
+
+# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
 query GetChannelFollows($channelId: ID!) {
   channelFollows(channelId: $channelId) {
     id
@@ -86,13 +100,6 @@ query GetBatchedChannelFollows($channelIdList: [ID!]!) {
   batchedChannelFollows(channelIdList: $channelIdList) {
     id
     follows
-  }
-}
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelViews($channelId: ID!) {
-  channelViews(channelId: $channelId) {
-    id
-    views
   }
 }
 
@@ -112,6 +119,34 @@ mutation FollowChannel($channelId: ID!) {
 
 mutation UnfollowChannel($channelId: ID!) {
   unfollowChannel(channelId: $channelId) {
+    id
+    follows
+  }
+}
+
+query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
+  mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
+    id
+    views
+  }
+}
+
+query GetMostViewedChannelsAllTime($limit: Int!) {
+  mostViewedChannelsAllTime(limit: $limit) {
+    id
+    views
+  }
+}
+
+query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
+  mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
+    id
+    follows
+  }
+}
+
+query GetMostFollowedChannelsAllTime($limit: Int!) {
+  mostFollowedChannelsAllTime(limit: $limit) {
     id
     follows
   }

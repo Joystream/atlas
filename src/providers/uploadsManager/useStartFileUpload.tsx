@@ -6,7 +6,7 @@ import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
@@ -82,18 +82,23 @@ export const useStartFileUpload = () => {
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let storageUrl: string, storageProviderId: string
       try {
-        const storageProvider = getRandomStorageProvider()
+        const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
+          SentryLogger.error('No storage provider available for upload', 'UploadsManager')
           return
         }
         storageUrl = storageProvider.url
         storageProviderId = storageProvider.id
       } catch (e) {
-        Logger.error('Failed to find storage provider', e)
+        SentryLogger.error('Failed to get storage provider for upload', 'UploadsManager', e)
         return
       }
 
-      Logger.debug(`Uploading to ${storageUrl}`)
+      ConsoleLogger.debug('Starting file upload', {
+        contentId: asset.contentId,
+        storageProviderId,
+        storageProviderUrl: storageUrl,
+      })
 
       const setAssetStatus = (status: Partial<UploadStatus>) => {
         setUploadStatus(asset.contentId, status)
@@ -104,13 +109,13 @@ export const useStartFileUpload = () => {
       }
 
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
+      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
 
       try {
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
         }
         rax.attach()
-        const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
         if (!opts?.isReUpload && !opts?.changeHost && file) {
           addAsset({ ...asset, size: file.size })
         }
@@ -162,7 +167,9 @@ export const useStartFileUpload = () => {
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
       } catch (e) {
-        Logger.error('Failed to upload to storage provider', { storageUrl, error: e })
+        SentryLogger.error('Failed to upload asset', 'UploadsManager', e, {
+          asset: { contentId: asset.contentId, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
+        })
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError

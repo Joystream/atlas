@@ -54,6 +54,7 @@ export type MultiFileSelectProps = {
   editMode?: boolean
   onError?: (error: FileErrorType | null) => void
   error?: string | null
+  className?: string
 }
 
 export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
@@ -65,6 +66,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   editMode = false,
   onError,
   error,
+  className,
 }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [step, setStep] = useState<FileType>('video')
@@ -182,7 +184,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }
 
   return (
-    <MultiFileSelectContainer>
+    <MultiFileSelectContainer className={className}>
       <FileSelect
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}

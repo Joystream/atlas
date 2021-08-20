@@ -3,17 +3,16 @@ import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { Text } from '@/shared/components'
+import { GridItem, Text } from '@/shared/components'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
   AvatarContainer,
-  Container,
   Details,
-  DetailsContainer,
   DetailsText,
   StyledAvatar,
+  StyledLayoutGrid,
   TextContainer,
 } from './ChannelAbout.style'
 
@@ -22,8 +21,8 @@ export const ChannelAbout = () => {
   const { channel } = useChannel(id)
   const { videoCount } = useChannelVideoCount(id)
   return (
-    <Container>
-      <div>
+    <StyledLayoutGrid>
+      <GridItem colSpan={{ base: 12, small: 8 }} rowStart={{ base: 2, small: 1 }}>
         {!!channel?.description && (
           <TextContainer>
             <Text variant="h4">Description</Text>
@@ -32,8 +31,8 @@ export const ChannelAbout = () => {
             </Text>
           </TextContainer>
         )}
-      </div>
-      <DetailsContainer>
+      </GridItem>
+      <GridItem colSpan={{ base: 12, small: 3 }} colStart={{ small: -4 }}>
         <DetailsText variant="h4">Details</DetailsText>
 
         <Details>
@@ -75,7 +74,7 @@ export const ChannelAbout = () => {
             {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
           </Text>
         </Details>
-      </DetailsContainer>
-    </Container>
+      </GridItem>
+    </StyledLayoutGrid>
   )
 }

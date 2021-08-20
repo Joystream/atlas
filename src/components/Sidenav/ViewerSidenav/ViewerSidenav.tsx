@@ -4,9 +4,9 @@ import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
-import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
+import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { openInNewTab } from '@/utils/browser'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
 
@@ -17,9 +17,14 @@ const viewerSidenavItems: NavItemType[] = [
     to: absoluteRoutes.viewer.index(),
   },
   {
-    icon: <SvgNavVideos />,
-    name: 'Videos',
-    to: absoluteRoutes.viewer.videos(),
+    icon: <SvgNavPopular />,
+    name: 'Popular',
+    to: absoluteRoutes.viewer.popular(),
+  },
+  {
+    icon: <SvgNavNew />,
+    name: 'New',
+    to: absoluteRoutes.viewer.new(),
   },
   {
     icon: <SvgNavChannels />,
@@ -34,7 +39,7 @@ export const ViewerSidenav: React.FC = () => {
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
   const handleChannelNotFound = (id: string) => {
-    Logger.warn(`Followed channel not found, removing id: ${id}`)
+    ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
 

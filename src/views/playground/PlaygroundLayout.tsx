@@ -20,6 +20,7 @@ import {
   UploadFiles,
   VideoMetaData,
 } from './Playgrounds'
+import { GridTesting } from './Playgrounds/GridTesting'
 import OrionTesting from './Playgrounds/OrionTesting'
 
 const playgroundRoutes = [
@@ -36,6 +37,7 @@ const playgroundRoutes = [
   { path: 'dialogs', element: <Dialogs />, name: 'Dialogs' },
   { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
+  { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
 ]
 
 export const PlaygroundLayout = () => {

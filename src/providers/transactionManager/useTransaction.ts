@@ -1,6 +1,6 @@
-import { ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicFailedError, ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { TransactionDialogStep, useConnectionStatusStore, useDialog, useSnackbar } from '@/providers'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
 
@@ -56,7 +56,7 @@ export const useTransaction = (): HandleTransactionFn => {
         try {
           await preProcess()
         } catch (e) {
-          Logger.error('Failed transaction preprocess', e)
+          SentryLogger.error('Failed transaction preprocess', 'TransactionManager', e)
           return false
         }
       }
@@ -65,7 +65,9 @@ export const useTransaction = (): HandleTransactionFn => {
       setDialogStep(ExtrinsicStatus.Unsigned)
       const { data: txData, block } = await txFactory(setDialogStep)
       if (onTxFinalize) {
-        onTxFinalize(txData).catch((e) => Logger.error('Failed transaction finalize callback', e))
+        onTxFinalize(txData).catch((e) =>
+          SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', e)
+        )
       }
 
       setDialogStep(ExtrinsicStatus.Syncing)
@@ -75,7 +77,7 @@ export const useTransaction = (): HandleTransactionFn => {
             try {
               await onTxSync(txData)
             } catch (e) {
-              Logger.error('Failed transaction sync callback', e)
+              SentryLogger.error('Failed transaction sync callback', 'TransactionManager', e)
             }
           }
           resolve()
@@ -105,18 +107,23 @@ export const useTransaction = (): HandleTransactionFn => {
       })
     } catch (e) {
       if (e instanceof ExtrinsicSignCancelledError) {
-        Logger.warn('Sign cancelled')
+        ConsoleLogger.warn('Sign cancelled')
         setDialogStep(null)
         displaySnackbar({
           title: 'Transaction signing cancelled',
           iconType: 'warning',
           timeout: TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
         })
-      } else {
-        Logger.error(e)
-        setDialogStep(null)
-        openErrorDialog()
+        return false
       }
+
+      if (e instanceof ExtrinsicFailedError) {
+        SentryLogger.error('Extrinsic failed', 'TransactionManager', e)
+      } else {
+        SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', e)
+      }
+      setDialogStep(null)
+      openErrorDialog()
       return false
     }
   }

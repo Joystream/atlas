@@ -16,17 +16,19 @@ import {
   VideoOrderByInput,
   useSearchLazyQuery,
 } from '@/api/queries'
-import { LimitedWidthContainer, VideoTile, ViewWrapper } from '@/components'
+import { LimitedWidthContainer, VideoTile, ViewErrorFallback, ViewWrapper } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { AssetType, useAsset, useDialog, usePersonalDataStore } from '@/providers'
-import { ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
+import { Button, ChannelCover, EmptyFallback, Grid, Pagination, Select, Text } from '@/shared/components'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
+  NotFoundChannelContainer,
   PaginationContainer,
   SearchButton,
   SearchContainer,
@@ -57,7 +59,9 @@ export const ChannelView: React.FC = () => {
   const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { channel, loading, error } = useChannel(id)
+  const { channel, loading, error } = useChannel(id, {
+    onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
+  })
   const {
     searchVideos,
     loadingSearch,
@@ -69,7 +73,13 @@ export const ChannelView: React.FC = () => {
     search,
     errorSearch,
     searchQuery,
-  } = useSearchVideos({ id })
+  } = useSearchVideos({
+    id,
+    onError: (error) =>
+      SentryLogger.error('Failed to search channel videos', 'ChannelView', error, {
+        search: { channelId: id, query: searchQuery },
+      }),
+  })
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -104,9 +114,14 @@ export const ChannelView: React.FC = () => {
         mediaAvailability_eq: AssetAvailability.Accepted,
       },
     },
-    { notifyOnNetworkStatusChange: true }
+    {
+      notifyOnNetworkStatusChange: true,
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
+    }
   )
-  const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST)
+  const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST, {
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
+  })
   useEffect(() => {
     const isFollowing = followedChannels.some((channel) => channel.id === id)
     setFollowing(isFollowing)
@@ -154,15 +169,8 @@ export const ChannelView: React.FC = () => {
         setFollowing(true)
       }
     } catch (error) {
-      Logger.warn('Failed to update Channel following', { error })
+      SentryLogger.error('Failed to update channel following', 'ChannelView', error, { channel: { id } })
     }
-  }
-  if (videosError) {
-    throw videosError
-  } else if (error) {
-    throw error
-  } else if (errorSearch) {
-    throw errorSearch
   }
 
   const handleSetCurrentTab = async (tab: number) => {
@@ -257,9 +265,25 @@ export const ChannelView: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!loading && !channel) {
-    return <span>Channel not found</span>
+  if (videosError || error || errorSearch) {
+    return <ViewErrorFallback />
   }
+
+  if (!loading && !channel) {
+    return (
+      <NotFoundChannelContainer>
+        <EmptyFallback
+          title="Channel not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundChannelContainer>
+    )
+  }
+
   return (
     <ViewWrapper>
       <ChannelCover assetUrl={coverPhotoUrl} />
@@ -341,12 +365,15 @@ const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | und
 }
 type UseSearchVideosParams = {
   id: string
+  onError: (error: unknown) => void
 }
-const useSearchVideos = ({ id }: UseSearchVideosParams) => {
+const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
   const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery()
+  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery({
+    onError,
+  })
   const searchInputRef = useRef<HTMLInputElement>(null)
   const search = useCallback(
     (searchQuery: string) => {

@@ -11,7 +11,7 @@ import {
   VideoTilePublisherProps,
 } from '@/shared/components/VideoTileBase/VideoTileBase'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 export type VideoTileProps = {
   id?: string
@@ -41,6 +41,7 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
+      onCopyVideoURLClick={() => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       contentKey={id}
@@ -97,7 +98,7 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
   const { video, loading } = useVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => Logger.error('Failed to fetch video', error),
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined

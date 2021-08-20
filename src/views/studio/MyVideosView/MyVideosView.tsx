@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { LimitedWidthContainer, VideoTilePublisher } from '@/components'
+import { LimitedWidthContainer, VideoTilePublisher, ViewErrorFallback } from '@/components'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks'
@@ -18,6 +18,7 @@ import {
 } from '@/providers'
 import { Button, EmptyFallback, Grid, Pagination, Select, Tabs, Text } from '@/shared/components'
 import { SvgGlyphUpload } from '@/shared/icons'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   PaginationContainer,
@@ -72,7 +73,10 @@ export const MyVideosView = () => {
         isPublic_eq,
       },
     },
-    { notifyOnNetworkStatusChange: true }
+    {
+      notifyOnNetworkStatusChange: true,
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
+    }
   )
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
   const deleteVideo = useDeleteVideo()
@@ -245,7 +249,7 @@ export const MyVideosView = () => {
       ))
 
   if (error) {
-    throw error
+    return <ViewErrorFallback />
   }
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))

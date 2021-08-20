@@ -118,8 +118,22 @@ query GetBatchedVideoViews($videoIdList: [ID!]!) {
   }
 }
 
-mutation AddVideoView($videoId: ID!, $channelId: ID!) {
-  addVideoView(videoId: $videoId, channelId: $channelId) {
+query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
+  mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
+    id
+    views
+  }
+}
+
+query GetMostViewedVideosAllTime($limit: Int!) {
+  mostViewedVideosAllTime(limit: $limit) {
+    id
+    views
+  }
+}
+
+mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {
+  addVideoView(videoId: $videoId, channelId: $channelId, categoryId: $categoryId) {
     id
     views
   }

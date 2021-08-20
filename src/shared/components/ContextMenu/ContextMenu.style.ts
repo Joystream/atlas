@@ -16,7 +16,6 @@ export const StyledContainer = styled.div<ContainerProps>`
   background-color: ${colors.gray[800]};
   width: 200px;
   color: ${colors.white};
-  padding: ${sizes(2)};
   word-break: break-all;
 
   &.menu-enter {
@@ -45,7 +44,7 @@ export const StyledContainer = styled.div<ContainerProps>`
 export const StyledMenuItem = styled.div`
   display: flex;
   align-items: center;
-  padding: ${sizes(3)};
+  padding: ${sizes(4)};
   transition: background-color 200ms ${transitions.easing};
 
   &:hover {

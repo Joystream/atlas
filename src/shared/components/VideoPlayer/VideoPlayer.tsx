@@ -1,5 +1,5 @@
 import { debounce, round } from 'lodash'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers'
@@ -14,7 +14,7 @@ import {
   SvgPlayerSoundHalf,
   SvgPlayerSoundOn,
 } from '@/shared/icons'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { ControlsIndicator } from './ControlsIndicator'
@@ -44,6 +44,7 @@ import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 export type VideoPlayerProps = {
   nextVideo?: VideoFieldsFragment | null
   className?: string
+  videoStyle?: CSSProperties
   autoplay?: boolean
   isInBackground?: boolean
   playing?: boolean
@@ -63,7 +64,7 @@ const isPiPSupported = 'pictureInPictureEnabled' in document
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | null
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, ...videoJsConfig },
+  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -129,13 +130,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (playPromise) {
       playPromise.catch((e) => {
         if (e.name === 'NotAllowedError') {
-          Logger.warn('Video play failed:', e)
+          ConsoleLogger.warn('Video playback failed', e)
         } else {
-          Logger.error('Video play failed:', e)
+          SentryLogger.error('Video playback failed', 'VideoPlayer', e, {
+            video: { id: videoId, url: videoJsConfig.src },
+          })
         }
       })
     }
-  }, [player])
+  }, [player, videoId, videoJsConfig.src])
 
   // handle video loading
   useEffect(() => {
@@ -146,15 +149,15 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
       }
-      if (event.type === 'canplay' || event.type === 'seeked') {
+      if (event.type === 'canplaythrough' || event.type === 'seeked') {
         if (playerState !== null) {
           setPlayerState('playing')
         }
       }
     }
-    player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
+    player.on(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
+      player.off(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
@@ -193,7 +196,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     const playPromise = player.play()
     if (playPromise) {
       playPromise.catch((e) => {
-        Logger.warn('Autoplay failed:', e)
+        ConsoleLogger.warn('Video autoplay failed', e)
       })
     }
   }, [player, isLoaded, autoplay])
@@ -397,7 +400,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (document.pictureInPictureEnabled) {
         // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
         player.requestPictureInPicture().catch((e) => {
-          Logger.warn('Picture in picture failed:', e)
+          ConsoleLogger.warn('Picture in picture failed', e)
         })
       }
     }
@@ -421,6 +424,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showBigPlayButton = playerState === null && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
+  const showControlsIndicator = !isInBackground && playerState !== 'ended'
+
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
@@ -432,6 +437,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           </BigPlayButtonOverlay>
         )}
         <video
+          style={videoStyle}
           ref={playerRef}
           className="video-js"
           onClick={() =>
@@ -443,7 +449,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
-              <CustomTimeline player={player} isFullScreen={isFullScreen} playerState={playerState} />
+              <CustomTimeline
+                player={player}
+                isFullScreen={isFullScreen}
+                playerState={playerState}
+                setPlayerState={setPlayerState}
+              />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
                   <PlayButton
@@ -507,7 +518,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             />
           </>
         )}
-        {!isInBackground && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
+        {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
   )

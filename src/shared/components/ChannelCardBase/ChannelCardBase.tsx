@@ -1,88 +1,69 @@
 import React from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { transitions } from '@/shared/theme'
+import { absoluteRoutes } from '@/config/routes'
+import { formatNumberShort } from '@/utils/number'
 
 import {
-  Anchor,
-  AvatarContainer,
-  Info,
-  InnerContainer,
-  OuterContainer,
+  ChannelCardAnchor,
+  ChannelCardArticle,
+  ChannelFollows,
+  ChannelTitle,
+  FollowButton,
+  InfoWrapper,
   StyledAvatar,
-  TextBase,
-  VideoCount,
-  VideoCountContainer,
 } from './ChannelCardBase.style'
 
 import { SkeletonLoader } from '../SkeletonLoader'
 
 export type ChannelCardBaseProps = {
-  assetUrl?: string | null
+  id?: string | null
+  isLoading?: boolean
   title?: string | null
-  videoCount?: number
-  channelHref?: string
+  follows?: number | null
+  avatarUrl?: string | null
+  isFollowing?: boolean
+  onFollow?: (event: React.MouseEvent) => void
   className?: string
-  loading?: boolean
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: () => void
 }
 
 export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
-  assetUrl,
+  id,
+  isLoading,
   title,
-  videoCount,
-  loading = true,
-  channelHref,
+  follows,
+  avatarUrl,
+  isFollowing,
+  onFollow,
   className,
   onClick,
 }) => {
-  const isAnimated = !loading && !!channelHref
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (!onClick) return
-    onClick(e)
-  }
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!channelHref) {
-      e.preventDefault()
-    }
-  }
   return (
-    <OuterContainer className={className} onClick={handleClick}>
-      <Anchor to={channelHref ?? ''} onClick={handleAnchorClick}>
-        <SwitchTransition>
-          <CSSTransition
-            key={loading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.loading) * 0.75}
-            classNames={transitions.names.fade}
-          >
-            <InnerContainer animated={isAnimated}>
-              <AvatarContainer>
-                {loading ? <SkeletonLoader rounded /> : <StyledAvatar assetUrl={assetUrl} />}
-              </AvatarContainer>
-              <Info>
-                {loading ? (
-                  <SkeletonLoader width="140px" height="16px" />
-                ) : (
-                  <TextBase variant="h6">{title || '\u00A0'}</TextBase>
-                )}
-                <VideoCountContainer>
-                  {loading ? (
-                    <SkeletonLoader width="140px" height="16px" />
-                  ) : (
-                    <CSSTransition
-                      in={!!videoCount}
-                      timeout={parseInt(transitions.timings.loading) * 0.5}
-                      classNames={transitions.names.fade}
-                    >
-                      <VideoCount variant="subtitle2">{`${videoCount ?? ''} Uploads`}</VideoCount>
-                    </CSSTransition>
-                  )}
-                </VideoCountContainer>
-              </Info>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
-      </Anchor>
-    </OuterContainer>
+    <ChannelCardArticle className={className}>
+      <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
+        <StyledAvatar size="channel-card" loading={isLoading} assetUrl={avatarUrl} />
+        <InfoWrapper>
+          {isLoading ? (
+            <SkeletonLoader width="100px" height="20px" bottomSpace="4px" />
+          ) : (
+            <ChannelTitle variant="h6">{title}</ChannelTitle>
+          )}
+          {isLoading ? (
+            <SkeletonLoader width="70px" height="20px" bottomSpace="16px" />
+          ) : (
+            <ChannelFollows variant="body2" secondary>
+              {formatNumberShort(follows || 0)} followers
+            </ChannelFollows>
+          )}
+          {isLoading ? (
+            <SkeletonLoader width="60px" height="30px" />
+          ) : (
+            <FollowButton variant="secondary" size="small" onClick={onFollow}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </FollowButton>
+          )}
+        </InfoWrapper>
+      </ChannelCardAnchor>
+    </ChannelCardArticle>
   )
 }

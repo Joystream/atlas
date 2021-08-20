@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, typography } from '@/shared/theme'
+import { colors, sizes, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
@@ -21,6 +21,7 @@ export const StyledHelperText = styled(Text)<HelperTextProps>`
 `
 
 export const HelperTextsWrapper = styled.div`
+  min-height: ${sizes(3.5)};
   margin-left: 4px;
   margin-top: 8px;
   font-size: ${typography.sizes.body2};

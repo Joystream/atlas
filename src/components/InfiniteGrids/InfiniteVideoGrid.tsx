@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import {
@@ -8,15 +7,18 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, SkeletonLoader, Text } from '@/shared/components'
-import { sizes } from '@/shared/theme'
+import { Grid, GridHeadingContainer, LoadMoreButton, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
+import { SvgGlyphChevronRight } from '@/shared/icons'
+import { SentryLogger } from '@/utils/logs'
 
+import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.style'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoTile } from '../VideoTile'
 
 type InfiniteVideoGridProps = {
   title?: string
+  titleLoader?: boolean
   categoryId?: string
   channelId?: string
   channelIdIn?: string[] | null
@@ -25,14 +27,21 @@ type InfiniteVideoGridProps = {
   isCensored?: boolean
   thumbnailPhotoAvailability?: AssetAvailability
   mediaAvailability?: AssetAvailability
+  idIn?: string[]
   skipCount?: number
   ready?: boolean
   showChannel?: boolean
   className?: string
   currentlyWatchedVideoId?: string
+  onDemand?: boolean
+  additionalLink?: {
+    name: string
+    url: string
+  }
+  isFeatured?: boolean
 }
 
-const INITIAL_ROWS = 4
+const INITIAL_ROWS = 2
 const INITIAL_VIDEOS_PER_ROW = 4
 
 export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
@@ -45,11 +54,16 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   isCensored = false,
   thumbnailPhotoAvailability = AssetAvailability.Accepted,
   mediaAvailability = AssetAvailability.Accepted,
+  idIn,
   skipCount = 0,
   ready = true,
   showChannel = true,
   className,
   currentlyWatchedVideoId,
+  onDemand = false,
+  additionalLink,
+  isFeatured = false,
+  titleLoader,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const queryVariables: { where: VideoWhereInput } = {
@@ -60,6 +74,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ...(categoryId ? { categoryId_eq: categoryId } : {}),
       ...(thumbnailPhotoAvailability ? { thumbnailPhotoAvailability_eq: thumbnailPhotoAvailability } : {}),
       ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
+      ...(idIn ? { id_in: idIn } : {}),
+      isFeatured_eq: isFeatured,
       isPublic_eq: isPublic,
       isCensored_eq: isCensored,
     },
@@ -72,24 +88,25 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
 
-  const onScrollToBottom = useCallback(() => {
+  const fetchMore = useCallback(() => {
     setTargetRowsCountByCategory((prevState) => ({
       ...prevState,
       [cachedCategoryId]: targetRowsCount + 2,
     }))
   }, [cachedCategoryId, targetRowsCount])
 
-  const { placeholdersCount, displayedItems, error } = useInfiniteGrid<
+  const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
     GetVideosConnectionQuery['videosConnection'],
     GetVideosConnectionQueryVariables
   >({
     query: GetVideosConnectionDocument,
-    onScrollToBottom,
     isReady: ready,
     skipCount,
     queryVariables,
     targetRowsCount,
+    onDemand,
+    onScrollToBottom: !onDemand ? fetchMore : undefined,
     dataAccessor: (rawData) => {
       if (currentlyWatchedVideoId) {
         return (
@@ -103,11 +120,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       return rawData?.videosConnection
     },
     itemsPerRow: videosPerRow,
+    onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
   })
-
-  if (error) {
-    throw error
-  }
 
   // handle category change
   // TODO potentially move into useInfiniteGrid as a general rule - keep separate targetRowsCount per serialized queryVariables
@@ -146,24 +160,48 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     </>
   )
 
+  if (error) {
+    return null
+  }
+
   if (displayedItems.length <= 0 && placeholdersCount <= 0) {
     return null
   }
+
+  const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
 
   // TODO: We should probably postpone doing first fetch until `onResize` gets called.
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      {title && (!ready ? <StyledSkeletonLoader height={23} width={250} /> : <Title variant="h5">{title}</Title>)}
+      <GridHeadingContainer>
+        {title && (
+          <TitleContainer>
+            {(!ready || !displayedItems.length) && titleLoader ? (
+              <SkeletonLoader height={30} width={250} />
+            ) : (
+              <Text variant="h4">{title}</Text>
+            )}
+            {additionalLink && (
+              <AdditionalLink
+                to={additionalLink.url}
+                size="medium"
+                variant="secondary"
+                iconPlacement="right"
+                icon={<SvgGlyphChevronRight />}
+              >
+                {additionalLink.name}
+              </AdditionalLink>
+            )}
+          </TitleContainer>
+        )}
+      </GridHeadingContainer>
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
+      {shouldShowLoadMoreButton && (
+        <LoadMoreButtonWrapper>
+          <LoadMoreButton onClick={fetchMore} />
+        </LoadMoreButtonWrapper>
+      )}
     </section>
   )
 }
-
-const Title = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
-
-const StyledSkeletonLoader = styled(SkeletonLoader)`
-  margin-bottom: ${sizes(4)};
-`

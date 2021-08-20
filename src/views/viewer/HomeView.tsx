@@ -1,16 +1,22 @@
 import styled from '@emotion/styled'
-import { ErrorBoundary } from '@sentry/react'
-import { sub } from 'date-fns'
 import React from 'react'
 
-import useVideosConnection from '@/api/hooks/videosConnection'
-import { ErrorFallback, InfiniteVideoGrid, InterruptedVideosGallery, VideoHero, ViewWrapper } from '@/components'
+import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
+import {
+  DiscoverChannels,
+  InfiniteVideoGrid,
+  LimitedWidthContainer,
+  OfficialJoystreamUpdate,
+  TopTenThisWeek,
+  VideoHero,
+  ViewErrorFallback,
+} from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers'
-import { transitions } from '@/shared/theme'
-
-const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
-// last three months
-const MIN_DATE_FOLLOWED_CHANNELS_VIDEOS = sub(new Date(), { months: 3 })
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components'
+import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
+import { sizes, transitions } from '@/shared/theme'
+import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: React.FC = () => {
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
@@ -18,50 +24,86 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { videosConnection, loading, error } = useVideosConnection(
+  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds(
+    {
+      limit: 200,
+      timePeriodDays: 30,
+    },
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'HomeView', error) }
+  )
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+
+  const { videosConnection, loading: followedLoading, error: followedError } = useVideosConnection(
     {
       where: {
         channelId_in: channelIdIn,
-        createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
       },
     },
-    { skip: !anyFollowedChannels }
+    { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
   )
 
   const followedChannelsVideosCount = videosConnection?.totalCount
-  const shouldShowFollowedChannels =
-    followedChannelsVideosCount && followedChannelsVideosCount > MIN_FOLLOWED_CHANNELS_VIDEOS
 
-  if (error) {
-    throw error
+  if (mostViewedVideosError || followedError) {
+    return <ViewErrorFallback />
   }
+
   return (
-    <ViewWrapper>
+    <LimitedWidthContainer big>
       <VideoHero />
       <Container className={transitions.names.slide}>
-        <InterruptedVideosGallery />
-        <ErrorBoundary fallback={ErrorFallback}>
-          <StyledInfiniteVideoGrid
-            title={shouldShowFollowedChannels ? 'Recent Videos From Followed Channels' : 'Recent Videos'}
-            channelIdIn={shouldShowFollowedChannels ? channelIdIn : null}
-            createdAtGte={shouldShowFollowedChannels ? MIN_DATE_FOLLOWED_CHANNELS_VIDEOS : null}
-            ready={!loading}
+        {!followedLoading && followedChannelsVideosCount ? (
+          <InfiniteVideoGrid
+            title="Followed channels"
+            channelIdIn={channelIdIn}
+            ready={!followedLoading}
+            onDemand
+            titleLoader
           />
-        </ErrorBoundary>
+        ) : null}
+        <InfiniteVideoGrid
+          title="Popular on Joystream"
+          idIn={mostViewedVideosIds}
+          ready={!mostViewedVideosLoading}
+          onDemand
+          titleLoader
+        />
+        <TopTenThisWeek />
+        <OfficialJoystreamUpdate />
+        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
+        <InfiniteVideoGrid title="All content" onDemand />
+        <CallToActionWrapper>
+          <CallToActionButton
+            label="Popular on Joystream"
+            to={absoluteRoutes.viewer.popular()}
+            colorVariant="red"
+            icon={<SvgNavPopular />}
+          />
+          <CallToActionButton
+            label="New & Noteworthy"
+            to={absoluteRoutes.viewer.new()}
+            colorVariant="green"
+            icon={<SvgNavNew />}
+          />
+          <CallToActionButton
+            label="Browse channels"
+            to={absoluteRoutes.viewer.channels()}
+            colorVariant="blue"
+            icon={<SvgNavChannels />}
+          />
+        </CallToActionWrapper>
       </Container>
-    </ViewWrapper>
+    </LimitedWidthContainer>
   )
 }
 
 const Container = styled.div`
   position: relative;
+  padding-bottom: ${sizes(16)};
 
-  & > * {
-    margin-bottom: 3rem;
+  > section {
+    :not(:first-of-type) {
+      margin-top: ${sizes(32)};
+    }
   }
-`
-
-const StyledInfiniteVideoGrid = styled(InfiniteVideoGrid)`
-  margin: 0;
-  padding-bottom: 4rem;
 `

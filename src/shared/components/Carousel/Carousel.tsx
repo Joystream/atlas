@@ -1,51 +1,111 @@
-import React, { useRef } from 'react'
+import Glider from 'glider-js'
+import React, {
+  ComponentPropsWithoutRef,
+  ReactNode,
+  RefObject,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
-
-import { Arrow, BackgroundGradient, Container, GliderContainer, Track } from './Carousel.style'
+import { Container, Dots, GliderContainer, Track } from './Carousel.style'
 
 import { GliderProps, useGlider } from '../Glider'
 
 export type CarouselProps = {
-  paddingLeft?: number
-  paddingTop?: number
   className?: string
   arrowPosition?: number
+  dotsVisible?: boolean
 } & GliderProps
+export const Carousel = forwardRef<
+  ReactNode,
+  CarouselProps &
+    ComponentPropsWithoutRef<'div'> & {
+      prevArrowRef: RefObject<HTMLButtonElement>
+      nextArrowRef: RefObject<HTMLButtonElement>
+    }
+>(
+  (
+    {
+      children,
+      className = '',
+      arrowPosition,
+      slidesToShow = 'auto',
+      dotsVisible,
+      prevArrowRef,
+      nextArrowRef,
+      ...gliderOptions
+    },
+    ref
+  ) => {
+    const dotsRef = useRef<HTMLDivElement>(null)
+    const gliderInstanceRef = useRef<Glider.Static<HTMLElement>>()
+    const slidesToScrollRef = useRef<number>(0)
 
-export const Carousel: React.FC<CarouselProps> = ({
-  children,
-  paddingLeft = 0,
-  paddingTop = 0,
-  className = '',
-  arrowPosition,
-  slidesToShow = 'auto',
-  ...gliderOptions
-}) => {
-  // TODO: this is the only place in the app that requires refs to buttons. Once we refactor this component, we can remove forwardRef from buttons
-  const nextArrowRef = useRef<HTMLButtonElement>(null)
-  const prevArrowRef = useRef<HTMLButtonElement>(null)
-  const { ref, getContainerProps, getGliderProps, getTrackProps, getPrevArrowProps, getNextArrowProps } = useGlider<
-    HTMLDivElement
-  >({
-    slidesToShow,
-    arrows: { prev: prevArrowRef.current, next: nextArrowRef.current },
-    ...gliderOptions,
-  })
+    const onAnimated = () => {
+      if (gliderInstanceRef.current && gliderOptions.responsive) {
+        const breakpointIndex = gliderOptions.responsive.findIndex(
+          (item) => item.breakpoint === gliderInstanceRef.current?.breakpoint
+        )
+        const slidesToScroll = gliderOptions.responsive[breakpointIndex].settings.slidesToScroll as number
+        const itemsRemainder = gliderInstanceRef.current.slides.length % slidesToScrollRef.current || slidesToScroll
+        if (nextArrowRef.current && nextArrowRef.current?.classList.contains('disabled') && itemsRemainder) {
+          gliderInstanceRef.current.setOption({ slidesToScroll: itemsRemainder }, false)
+        } else {
+          gliderInstanceRef.current.setOption({ slidesToScroll: slidesToScrollRef.current || slidesToScroll }, false)
+          if (!slidesToScrollRef.current) {
+            slidesToScrollRef.current = slidesToScroll
+          }
+        }
+      }
+    }
 
-  return (
-    <Container {...getContainerProps({ className })}>
-      <Arrow {...getPrevArrowProps()} ref={prevArrowRef} arrowPosition={arrowPosition} size="large">
-        <SvgGlyphChevronLeft />
-      </Arrow>
-      <BackgroundGradient direction="prev" paddingLeft={paddingLeft} paddingTop={paddingTop} />
-      <GliderContainer {...getGliderProps()} paddingLeft={paddingLeft} paddingTop={paddingTop} ref={ref}>
-        <Track {...getTrackProps()}>{children}</Track>
-      </GliderContainer>
-      <Arrow {...getNextArrowProps()} ref={nextArrowRef} arrowPosition={arrowPosition} size="large">
-        <SvgGlyphChevronRight />
-      </Arrow>
-      <BackgroundGradient direction="next" paddingLeft={paddingLeft} paddingTop={paddingTop} />
-    </Container>
-  )
-}
+    const {
+      ref: gliderRef,
+      getContainerProps,
+      getGliderProps,
+      getTrackProps,
+      getPrevArrowProps,
+      getNextArrowProps,
+      getDotsProps,
+      glider,
+    } = useGlider<HTMLDivElement>({
+      slidesToShow,
+      onAnimated,
+      arrows: { prev: prevArrowRef.current, next: nextArrowRef.current },
+      dots: dotsRef.current,
+      ...gliderOptions,
+    })
+
+    const resetSlidesToScroll = () => {
+      slidesToScrollRef.current = 0
+    }
+
+    useEffect(() => {
+      window.addEventListener('resize', resetSlidesToScroll)
+
+      return () => {
+        window.removeEventListener('resize', resetSlidesToScroll)
+      }
+    }, [])
+
+    useEffect(() => {
+      if (!glider) return
+      gliderInstanceRef.current = glider
+    }, [glider])
+
+    useImperativeHandle(ref, () => ({
+      getPrevArrowProps,
+      getNextArrowProps,
+    }))
+    return (
+      <Container {...getContainerProps({ className })}>
+        <GliderContainer {...getGliderProps()} ref={gliderRef}>
+          <Track {...getTrackProps()}>{children}</Track>
+        </GliderContainer>
+        {dotsVisible && <Dots {...getDotsProps()} ref={dotsRef} />}
+      </Container>
+    )
+  }
+)

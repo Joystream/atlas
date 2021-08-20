@@ -5,7 +5,7 @@ import { colors, sizes, typography } from '@/shared/theme'
 import { Text } from '../Text'
 
 export const FormFieldWrapper = styled.div`
-  margin-top: ${sizes(2)};
+  margin-top: ${sizes(6)};
   width: 100%;
   max-width: 760px;
 `
@@ -27,5 +27,5 @@ export const FormFieldDescription = styled(Text)`
 `
 
 export const ChildrenWrapper = styled.div`
-  margin-top: ${sizes(5)};
+  margin-top: ${sizes(6)};
 `

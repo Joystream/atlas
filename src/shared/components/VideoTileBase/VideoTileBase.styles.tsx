@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange, transparentize } from 'polished'
+import { fluidRange } from 'polished'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, transitions, typography } from '@/shared/theme'
+import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -29,9 +29,11 @@ type ScalesWithCoverProps = {
 }
 
 export const CoverWrapper = styled.div<MainProps>`
+  position: relative;
   width: 100%;
   max-width: ${({ main }) => (main ? '650px' : '')};
 `
+
 const clickableAnimation = (clickable: boolean) =>
   clickable
     ? css`
@@ -42,13 +44,19 @@ const clickableAnimation = (clickable: boolean) =>
           opacity: 1;
         }
         ${CoverIconWrapper} {
-          transform: translateY(0);
-        }
-        ${ProgressOverlay} {
-          bottom: ${HOVER_BORDER_SIZE};
+          opacity: 1;
         }
       `
-    : null
+    : css`
+        ${CoverHoverOverlay} {
+          opacity: 1;
+          border-color: ${colors.white};
+        }
+
+        ${CoverIconWrapper} {
+          opacity: 1;
+        }
+      `
 export const CoverContainer = styled.div<ClickableProps>`
   position: relative;
   width: 100%;
@@ -57,7 +65,11 @@ export const CoverContainer = styled.div<ClickableProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
 
-  :hover {
+  :active {
+    ${() => clickableAnimation(false)}
+  }
+
+  :hover:not(:active) {
     ${(props) => clickableAnimation(props.clickable)}
   }
 `
@@ -85,6 +97,14 @@ export const Container = styled.article<MainProps>`
   display: inline-flex;
   flex-direction: column;
   ${({ main }) => main && mainContainerCss}
+
+  :hover {
+    ${() => css`
+      ${KebabMenuIconContainer} {
+        display: flex;
+      }
+    `}
+  }
 `
 
 const mainInfoContainerCss = css`
@@ -96,7 +116,6 @@ const mainInfoContainerCss = css`
 export const InfoContainer = styled.div<MainProps>`
   min-height: 86px;
   display: flex;
-  justify-content: space-between;
   margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
   ${({ main }) => main && mainInfoContainerCss};
 `
@@ -105,20 +124,19 @@ export const AvatarContainer = styled.div<ScalesWithCoverProps>`
   width: calc(40px * ${(props) => props.scalingFactor});
   min-width: calc(40px * ${(props) => props.scalingFactor});
   height: calc(40px * ${(props) => props.scalingFactor});
-  margin-right: ${sizes(2)};
+  margin-right: ${sizes(3)};
 `
 
 export const TextContainer = styled.div`
-  width: calc(100% - 40px);
+  width: calc(100% - 30px);
+
+  ${media.compact} {
+    width: calc(100% - 87px);
+  }
 `
 
 type MetaContainerProps = { noMarginTop: boolean } & MainProps
 export const MetaContainer = styled.div<MetaContainerProps>`
-  margin-top: ${({ noMarginTop, main }) => {
-    if (noMarginTop) return 0
-    if (main) return sizes(3)
-    return sizes(2)
-  }};
   width: 100%;
 `
 
@@ -134,21 +152,21 @@ type CoverImageProps = {
   darkenImg: boolean
 }
 export const CoverImage = styled.img<CoverImageProps>`
+  ${square('100%')}
+
   display: block;
-  width: 100%;
-  height: 100%;
   ${({ darkenImg }) => darkenImg && `filter: brightness(45%);`}
 `
 
 export const CoverNoImage = styled.div`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
 `
 
 export const CoverThumbnailUploadFailed = styled.div`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
   display: flex;
   flex-direction: column;
@@ -163,12 +181,12 @@ export const CoverHoverOverlay = styled.div`
   bottom: 0;
   left: 0;
   opacity: 0;
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
-  border: ${HOVER_BORDER_SIZE} solid ${colors.white};
-  background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 100%);
+  transition: opacity ${transitions.timings.regular} ${transitions.easing}, border ${transitions.timings.routing} linear;
+  background-color: ${colors.transparentGray[54]};
   display: flex;
   justify-content: center;
   align-items: center;
+  border: ${HOVER_BORDER_SIZE} solid transparent;
 `
 
 export const RemoveButton = styled(IconButton)`
@@ -178,17 +196,15 @@ export const RemoveButton = styled(IconButton)`
 `
 
 export const CoverIconWrapper = styled.div`
-  transform: translateY(40px);
-  transition: all ${transitions.timings.regular} ${transitions.easing};
+  opacity: 0;
+  transition: all ${transitions.timings.regular} ease-out;
 `
 
 export const ProgressOverlay = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   height: ${sizes(1)};
-  background-color: ${colors.white};
+  margin-top: ${sizes(3)};
+  background-color: ${colors.gray[400]};
 `
 
 export const ProgressBar = styled.div`
@@ -198,7 +214,7 @@ export const ProgressBar = styled.div`
   height: 100%;
   max-width: 100%;
   width: 0;
-  background-color: ${colors.blue['500']};
+  background-color: ${colors.gray[50]};
 `
 
 export const CoverVideoPublishingStateOverlay = styled.div`
@@ -208,32 +224,60 @@ export const CoverVideoPublishingStateOverlay = styled.div`
   padding: ${sizes(1)} ${sizes(2)};
   display: flex;
   align-items: center;
-  background-color: ${colors.gray['900']};
-  opacity: 0.7;
+  background-color: ${colors.black};
+  color: ${colors.white};
+  z-index: ${zIndex.overlay};
 `
 
 export const PublishingStateText = styled(Text)`
   margin-left: ${sizes(1.5)};
 `
 
+export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
+  ${square(sizes(9))};
+
+  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border-radius: 100%;
+  transition: all ${transitions.timings.regular} ${transitions.easing};
+  margin-left: auto;
+
+  path {
+    transition: all ${transitions.timings.regular} ${transitions.easing};
+  }
+
+  &:hover {
+    path:not([fill='none']) {
+      fill: ${colors.white};
+    }
+
+    background-color: ${colors.transparentPrimary[18]};
+  }
+`
+
 export const CoverDurationOverlay = styled.div`
   position: absolute;
   bottom: ${sizes(2)};
   right: ${sizes(2)};
-  padding: ${sizes(1)} ${sizes(2)};
+  padding: ${sizes(1.5)} ${sizes(2)};
   background-color: ${colors.black};
   color: ${colors.white};
   font-size: ${typography.sizes.body2};
+  z-index: ${zIndex.overlay};
 `
 
 export const StyledAvatar = styled(Avatar)<ChannelProps>`
-  width: 100%;
-  height: 100%;
+  ${square('100%')}
+
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
 export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & ClickableProps>`
   margin: 0;
+  margin-bottom: ${sizes(2)};
   font-weight: ${typography.weights.bold};
   font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
@@ -262,39 +306,15 @@ export const SpacedSkeletonLoader = styled(SkeletonLoader)`
   margin-top: 6px;
 `
 export const CoverSkeletonLoader = styled(SkeletonLoader)`
+  ${square('100%')}
+
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
 `
 
 export const CoverTopLeftContainer = styled.div`
   position: absolute;
   top: ${sizes(2)};
   left: ${sizes(2)};
-`
-
-export const KebabMenuIconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  position: relative;
-  border-radius: 100%;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-
-  path {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
-  }
-
-  &:hover {
-    path:not([fill='none']) {
-      fill: ${colors.white};
-    }
-
-    background-color: ${transparentize(1 - 0.06, colors.white)};
-  }
 `

@@ -1,48 +1,60 @@
-import React, { SetStateAction, useCallback, useContext, useState } from 'react'
+import { ApolloQueryResult, useApolloClient } from '@apollo/client'
+import React, { SetStateAction, useCallback, useContext, useEffect, useState } from 'react'
+import { useRef } from 'react'
 
-import { useStorageWorkers as useStorageProvidersData } from '@/api/hooks'
-import { BasicWorkerFieldsFragment } from '@/api/queries/__generated__/workers.generated'
-import { Logger } from '@/utils/logger'
+import { storageWorkersVariables } from '@/api/hooks'
+import {
+  BasicWorkerFieldsFragment,
+  GetWorkersDocument,
+  GetWorkersQuery,
+  GetWorkersQueryVariables,
+} from '@/api/queries/__generated__/workers.generated'
+import { ViewErrorFallback } from '@/components'
+import { SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
+type StorageProvidersPromise = Promise<ApolloQueryResult<GetWorkersQuery>>
+
 type StorageProvidersContextValue = {
-  storageProviders: BasicWorkerFieldsFragment[]
-  storageProvidersLoading: boolean
+  storageProvidersPromiseRef: React.MutableRefObject<StorageProvidersPromise | undefined>
   notWorkingStorageProvidersIds: string[]
   setNotWorkingStorageProvidersIds: React.Dispatch<SetStateAction<string[]>>
 }
 const StorageProvidersContext = React.createContext<StorageProvidersContextValue | undefined>(undefined)
 StorageProvidersContext.displayName = 'StorageProvidersContext'
 
-class NoStorageProviderError extends Error {
-  storageProviders: string[]
-  notWorkingStorageProviders: string[]
-
-  constructor(message: string, storageProviders: string[], notWorkingStorageProviders: string[]) {
-    super(message)
-
-    this.storageProviders = storageProviders
-    this.notWorkingStorageProviders = notWorkingStorageProviders
-  }
-}
-
 // ¯\_(ツ)_/¯ for the name
 export const StorageProvidersProvider: React.FC = ({ children }) => {
   const [notWorkingStorageProvidersIds, setNotWorkingStorageProvidersIds] = useState<string[]>([])
+  const [storageProvidersError, setStorageProvidersError] = useState<unknown>(null)
+  const storageProvidersPromiseRef = useRef<StorageProvidersPromise>()
 
-  const { storageProviders, loading } = useStorageProvidersData(
-    { limit: 100 },
-    {
+  const client = useApolloClient()
+
+  useEffect(() => {
+    const promise = client.query<GetWorkersQuery, GetWorkersQueryVariables>({
+      query: GetWorkersDocument,
       fetchPolicy: 'network-only',
-      onError: (error) => Logger.error('Failed to fetch storage providers list', error),
-    }
-  )
+      variables: {
+        ...storageWorkersVariables,
+        limit: 100,
+      },
+    })
+    storageProvidersPromiseRef.current = promise
+    promise.catch((error) => {
+      SentryLogger.error('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
+      setStorageProvidersError(error)
+    })
+  }, [client])
+
+  if (storageProvidersError) {
+    return <ViewErrorFallback />
+  }
 
   return (
     <StorageProvidersContext.Provider
       value={{
-        storageProvidersLoading: loading,
-        storageProviders: storageProviders || [],
+        storageProvidersPromiseRef: storageProvidersPromiseRef,
         notWorkingStorageProvidersIds,
         setNotWorkingStorageProvidersIds,
       }}
@@ -59,19 +71,16 @@ export const useStorageProviders = () => {
     throw new Error('useStorageProviders must be used within StorageProvidersProvider')
   }
 
-  const {
-    storageProvidersLoading,
-    storageProviders,
-    notWorkingStorageProvidersIds,
-    setNotWorkingStorageProvidersIds,
-  } = ctx
+  const { storageProvidersPromiseRef, notWorkingStorageProvidersIds, setNotWorkingStorageProvidersIds } = ctx
 
-  const getStorageProviders = useCallback(() => {
-    // make sure we finished fetching providers list
-    if (storageProvidersLoading) {
-      // TODO: we need to handle that somehow, possibly make it async and block until ready
-      Logger.error('Trying to use storage providers while still loading')
-      return null
+  const getStorageProviders = useCallback(async () => {
+    let storageProviders: BasicWorkerFieldsFragment[] = []
+    try {
+      const storageProvidersData = await storageProvidersPromiseRef.current
+      storageProviders = storageProvidersData?.data.workers || []
+    } catch {
+      // error is handled by the context
+      return []
     }
 
     const workingStorageProviders = storageProviders.filter(
@@ -79,19 +88,20 @@ export const useStorageProviders = () => {
     )
 
     if (!workingStorageProviders.length) {
-      throw new NoStorageProviderError(
-        'No storage provider available',
-        storageProviders.map(({ workerId }) => workerId),
-        notWorkingStorageProvidersIds
-      )
+      SentryLogger.error('No storage provider available', 'StorageProvidersProvider', null, {
+        providers: {
+          allIds: storageProviders.map(({ workerId }) => workerId),
+          notWorkingIds: notWorkingStorageProvidersIds,
+        },
+      })
     }
 
     return workingStorageProviders
-  }, [notWorkingStorageProvidersIds, storageProviders, storageProvidersLoading])
+  }, [notWorkingStorageProvidersIds, storageProvidersPromiseRef])
 
-  const getRandomStorageProvider = useCallback(() => {
-    const workingStorageProviders = getStorageProviders()
-    if (!workingStorageProviders) {
+  const getRandomStorageProvider = useCallback(async () => {
+    const workingStorageProviders = await getStorageProviders()
+    if (!workingStorageProviders || !workingStorageProviders.length) {
       return null
     }
     const randomStorageProviderIdx = getRandomIntInclusive(0, workingStorageProviders.length - 1)

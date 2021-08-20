@@ -1,9 +1,5 @@
 scalar DateTime
 
-type Language {
-  iso: String!
-}
-
 type VideoCategory {
   id: ID!
   name: String
@@ -121,6 +117,7 @@ input ChannelWhereInput {
   isCensored_eq: Boolean
   coverPhotoAvailability_eq: AssetAvailability
   avatarPhotoAvailability_eq: AssetAvailability
+  languageId_eq: ID
 }
 
 input ChannelWhereUniqueInput {
@@ -256,6 +253,11 @@ type ProcessorState {
   chainHead: Float!
 }
 
+type Language {
+  id: ID!
+  iso: String!
+}
+
 type Query {
   # Lookup a membership by its ID
   membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
@@ -267,7 +269,7 @@ type Query {
   channelByUniqueInput(where: ChannelWhereUniqueInput!): Channel
 
   # List all channels by given constraints
-  channels(offset: Int, limit: Int, where: ChannelWhereInput): [Channel!]!
+  channels(offset: Int, limit: Int, orderBy: [ChannelOrderByInput!], where: ChannelWhereInput): [Channel!]!
 
   # List all channel by given constraints
   channelsConnection(

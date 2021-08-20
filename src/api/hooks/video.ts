@@ -4,11 +4,17 @@ import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
+  GetMostViewedVideosAllTimeQuery,
+  GetMostViewedVideosAllTimeQueryVariables,
+  GetMostViewedVideosQuery,
+  GetMostViewedVideosQueryVariables,
   GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
+  useGetMostViewedVideosAllTimeQuery,
+  useGetMostViewedVideosQuery,
   useGetVideoQuery,
   useGetVideosQuery,
 } from '@/api/queries'
@@ -61,6 +67,53 @@ export const useBasicVideos = (variables?: GetBasicVideosQueryVariables, opts?: 
   const { data, ...rest } = useGetBasicVideosQuery({ ...opts, variables })
   return {
     videos: data?.videos,
+    ...rest,
+  }
+}
+
+type MostViewedVideosOpts = QueryHookOptions<GetMostViewedVideosQuery>
+export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
+  return {
+    mostViewedVideos: data?.mostViewedVideos,
+    ...rest,
+  }
+}
+
+export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+  const { mostViewedVideos, loading, error } = useMostViewedVideosIds(variables, opts)
+
+  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+
+  const { videos, ...rest } = useVideos(
+    {
+      where: {
+        id_in: mostViewedVideosIds,
+      },
+    },
+    { skip: !mostViewedVideosIds }
+  )
+
+  const sortedVideos = videos
+    ? videos.map((video) => ({ ...video, views: video.views || 0 })).sort((a, b) => b.views - a.views)
+    : null
+
+  return {
+    videos: sortedVideos,
+    ...rest,
+    error: error || rest.error,
+    loading: loading || rest.loading,
+  }
+}
+
+type MostViewedVideosAllTimeOpts = QueryHookOptions<GetMostViewedVideosAllTimeQuery>
+export const useMostViewedVideosAllTimeIds = (
+  variables?: GetMostViewedVideosAllTimeQueryVariables,
+  opts?: MostViewedVideosAllTimeOpts
+) => {
+  const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
+  return {
+    mostViewedVideosAllTime: data?.mostViewedVideosAllTime,
     ...rest,
   }
 }

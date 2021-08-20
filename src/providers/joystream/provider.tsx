@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { NODE_URL } from '@/config/urls'
 import { JoystreamJs } from '@/joystream-lib'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore, useUser } from '..'
 
@@ -38,7 +38,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
       } catch (e) {
         handleNodeConnectionUpdate(false)
-        Logger.error('Failed to create JoystreamJs instance', e)
+        SentryLogger.error('Failed to create JoystreamJS instance', 'JoystreamProvider', e)
       }
     }
 

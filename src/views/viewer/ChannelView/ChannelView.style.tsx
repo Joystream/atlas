@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { ChannelLink } from '@/components'
+import { ChannelLink, TOP_NAVBAR_HEIGHT } from '@/components'
 import { Button, IconButton, SkeletonLoader, Tabs, Text, TextField } from '@/shared/components'
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
@@ -135,7 +135,6 @@ export const TabsContainer = styled.div`
   display: grid;
   margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     'tabs tabs tabs'
@@ -227,4 +226,11 @@ export const UnfollowDescriptionAccentText = styled.span`
   line-height: ${typography.lineHeights.body2};
   font-weight: ${typography.weights.regular};
   color: ${colors.gray[50]};
+`
+
+export const NotFoundChannelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
 `

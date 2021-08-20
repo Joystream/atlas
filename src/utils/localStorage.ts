@@ -1,4 +1,4 @@
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 export const readFromLocalStorage = <T>(key: string, { deserialize = JSON.parse } = {}) => {
   const valueInLocalStorage = window.localStorage.getItem(key)
@@ -6,9 +6,9 @@ export const readFromLocalStorage = <T>(key: string, { deserialize = JSON.parse 
     try {
       return deserialize(valueInLocalStorage) as T
     } catch (error) {
-      Logger.error(
-        `An error occured when deserializing a value from Local Storage. Did you pass the correct serializer to readFromLocalStorage?`
-      )
+      SentryLogger.error('Failed to deserialize value from localStorage', 'readFromLocalStorage', error, {
+        localStorage: { key, value: valueInLocalStorage },
+      })
       throw error
     }
   }

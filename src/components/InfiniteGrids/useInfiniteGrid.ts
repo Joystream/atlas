@@ -1,10 +1,12 @@
 import { ApolloError, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
-import { debounce } from 'lodash'
-import { useEffect } from 'react'
+import { debounce, isEqual } from 'lodash'
+import { useEffect, useRef } from 'react'
 
-type PaginatedData<T> = {
+import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
+
+export type PaginatedData<T> = {
   edges: {
     cursor: string
     node: T
@@ -35,14 +37,21 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   targetRowsCount: number
   itemsPerRow: number
   skipCount: number
-  onScrollToBottom: () => void
+  onError?: (error: unknown) => void
   queryVariables: TArgs
+  onDemand?: boolean
+  onScrollToBottom?: () => void
+  orderBy?: ChannelOrderByInput
+  additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 type UseInfiniteGridReturn<TPaginatedData extends PaginatedData<unknown>> = {
   displayedItems: TPaginatedData['edges'][0]['node'][]
   placeholdersCount: number
   error?: ApolloError
+  allItemsLoaded: boolean
+  loading: boolean
+  totalCount: number
 }
 
 export const useInfiniteGrid = <
@@ -57,18 +66,26 @@ export const useInfiniteGrid = <
   itemsPerRow,
   skipCount,
   onScrollToBottom,
+  onError,
   queryVariables,
+  onDemand,
+  orderBy = ChannelOrderByInput.CreatedAtDesc,
+  additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
 
-  const { loading, data: rawData, error, fetchMore } = useQuery<TRawData, TArgs>(query, {
+  const queryVariablesRef = useRef(queryVariables)
+
+  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
       ...queryVariables,
-      first: targetLoadedItemsCount,
+      orderBy,
+      first: additionalSortFn ? 100 : targetDisplayedItemsCount,
     },
+    onError,
   })
 
   const data = dataAccessor(rawData)
@@ -79,7 +96,7 @@ export const useInfiniteGrid = <
 
   // handle fetching more items
   useEffect(() => {
-    if (loading || !isReady || !fetchMore || allItemsLoaded) {
+    if (loading || error || !isReady || !fetchMore || allItemsLoaded) {
       return
     }
 
@@ -92,23 +109,47 @@ export const useInfiniteGrid = <
     fetchMore({
       variables: { ...queryVariables, first: missingItemsCount, after: endCursor },
     })
-  }, [loading, fetchMore, allItemsLoaded, queryVariables, targetLoadedItemsCount, loadedItemsCount, endCursor, isReady])
+  }, [
+    loading,
+    error,
+    fetchMore,
+    allItemsLoaded,
+    queryVariables,
+    targetLoadedItemsCount,
+    loadedItemsCount,
+    endCursor,
+    isReady,
+  ])
+
+  useEffect(() => {
+    if (!isEqual(queryVariablesRef.current, queryVariables)) {
+      queryVariablesRef.current = queryVariables
+      refetch()
+    }
+  }, [queryVariables, refetch])
 
   // handle scroll to bottom
   useEffect(() => {
+    if (onDemand) {
+      return
+    }
+    if (error) return
+
     const scrollHandler = debounce(() => {
       const scrolledToBottom =
         window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight
-      if (scrolledToBottom && isReady && !loading && !allItemsLoaded) {
+      if (onScrollToBottom && scrolledToBottom && isReady && !loading && !allItemsLoaded) {
         onScrollToBottom()
       }
     }, 100)
 
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [isReady, loading, allItemsLoaded, onScrollToBottom])
+  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
 
-  const displayedEdges = data?.edges.slice(skipCount, targetLoadedItemsCount) ?? []
+  const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
+
+  const displayedEdges = edges?.slice(skipCount, targetLoadedItemsCount) ?? []
   const displayedItems = displayedEdges.map((edge) => edge.node)
 
   const displayedItemsCount = data
@@ -119,6 +160,9 @@ export const useInfiniteGrid = <
   return {
     displayedItems,
     placeholdersCount,
+    allItemsLoaded,
     error,
+    loading,
+    totalCount: data?.totalCount || 0,
   }
 }

@@ -5,17 +5,18 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { TOP_NAVBAR_HEIGHT, ViewErrorFallback, ViewerSidenav, ViewerTopbar } from '@/components'
+import { TOP_NAVBAR_HEIGHT, ViewErrorBoundary, ViewerSidenav, ViewerTopbar } from '@/components'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 
-import { ChannelView, ChannelsView, HomeView, SearchOverlayView, VideoView, VideosView } from '.'
+import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '.'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
+  { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
+  { path: relativeRoutes.viewer.new(), element: <NewView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
-  { path: relativeRoutes.viewer.videos(), element: <VideosView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
 ]
@@ -56,7 +57,7 @@ export const ViewerLayout: React.FC = () => {
       <ViewerSidenav />
       <MainContainer>
         <ErrorBoundary
-          fallback={ViewErrorFallback}
+          fallback={ViewErrorBoundary}
           onReset={() => {
             navigate(absoluteRoutes.viewer.index())
           }}

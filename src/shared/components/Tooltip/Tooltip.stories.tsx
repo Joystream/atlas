@@ -47,8 +47,8 @@ const ChannelCardTooltip: Story<TooltipProps> = (args) => (
       <Tooltip {...args}>
         <ChannelCardBase
           title="Lorem"
-          assetUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
-          loading={false}
+          avatarUrl="https://eu-central-1.linodeobjects.com/atlas-assets/channel-avatars/2.jpg"
+          isLoading={false}
         />
       </Tooltip>
     </div>

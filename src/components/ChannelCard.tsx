@@ -1,35 +1,37 @@
 import React from 'react'
 
 import { useChannel } from '@/api/hooks'
-import { useChannelVideoCount } from '@/api/hooks/channel'
-import { absoluteRoutes } from '@/config/routes'
+import { useHandleFollowChannel } from '@/hooks'
 import { AssetType, useAsset } from '@/providers'
 import { ChannelCardBase } from '@/shared/components'
 
-type ChannelCardProps = {
+export type ChannelCardProps = {
   id?: string
   className?: string
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: () => void
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick }) => {
-  const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
+  const { channel, loading } = useChannel(id ?? '', { skip: !id })
   const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
-  const { videoCount } = useChannelVideoCount(id ?? '', undefined, {
-    fetchPolicy: 'cache-first',
-    skip: !id,
-  })
-  const isLoading = loading || id === undefined
+
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id)
+
+  const handleFollow = (e: React.MouseEvent) => {
+    e.preventDefault()
+    toggleFollowing()
+  }
 
   return (
     <ChannelCardBase
       className={className}
+      isLoading={loading || !channel}
+      id={channel?.id}
+      avatarUrl={url}
+      follows={channel?.follows}
+      onFollow={handleFollow}
+      isFollowing={isFollowing}
       title={channel?.title}
-      channelHref={id ? absoluteRoutes.viewer.channel(id) : undefined}
-      videoCount={videoCount}
-      loading={isLoading}
-      onClick={onClick}
-      assetUrl={url}
     />
   )
 }

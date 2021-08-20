@@ -3,13 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
-import { ChannelLink, InfiniteVideoGrid } from '@/components'
+import { ChannelLink, InfiniteVideoGrid, ViewErrorFallback } from '@/components'
+import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
 import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { Button, EmptyFallback, SkeletonLoader, VideoPlayer } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import {
@@ -21,6 +22,7 @@ import {
   Meta,
   MoreVideosContainer,
   MoreVideosHeader,
+  NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
   PlayerWrapper,
@@ -30,7 +32,9 @@ import {
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id)
+  const { loading, video, error } = useVideo(id, {
+    onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
+  })
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
@@ -63,6 +67,7 @@ export const VideoView: React.FC = () => {
 
   const channelId = video?.channel.id
   const videoId = video?.id
+  const categoryId = video?.category?.id
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -72,11 +77,12 @@ export const VideoView: React.FC = () => {
       variables: {
         videoId,
         channelId,
+        categoryId,
       },
     }).catch((error) => {
-      Logger.warn('Failed to increase video views', { error })
+      SentryLogger.error('Failed to increase video views', 'VideoView', error)
     })
-  }, [addVideoView, videoId, channelId])
+  }, [addVideoView, videoId, channelId, categoryId])
 
   // Save the video timestamp
   // disabling eslint for this line since debounce is an external fn and eslint can't figure out its args, so it will complain.
@@ -98,11 +104,22 @@ export const VideoView: React.FC = () => {
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
   if (error) {
-    throw error
+    return <ViewErrorFallback />
   }
 
   if (!loading && !video) {
-    return <p>Video not found</p>
+    return (
+      <NotFoundVideoContainer>
+        <EmptyFallback
+          title="Video not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundVideoContainer>
+    )
   }
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
@@ -114,6 +131,7 @@ export const VideoView: React.FC = () => {
           {video ? (
             <VideoPlayer
               channelId={video.channel.id}
+              videoId={video.id}
               autoplay
               src={mediaUrl}
               fill

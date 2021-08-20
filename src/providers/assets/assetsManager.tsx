@@ -1,7 +1,11 @@
 import { shuffle } from 'lodash'
 import React, { useEffect } from 'react'
 
-import { Logger } from '@/utils/logger'
+import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
+import { AssetType } from '@/providers'
+import { ResolvedAssetDetails } from '@/types/assets'
+import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { TimeoutError, withTimeout } from '@/utils/misc'
 
 import { getAssetUrl, testAssetDownload } from './helpers'
 import { useAssetStore } from './store'
@@ -25,8 +29,9 @@ export const AssetsManager: React.FC = () => {
       addAssetBeingResolved(contentId)
 
       const resolutionData = pendingAssets[contentId]
-      const allStorageProviders = shuffle(getStorageProviders() || [])
-      const storageProvidersWithoutLiaison = allStorageProviders.filter(
+      const storageProviders = await getStorageProviders()
+      const shuffledStorageProviders = shuffle(storageProviders)
+      const storageProvidersWithoutLiaison = shuffledStorageProviders.filter(
         (provider) => provider.id !== resolutionData.dataObject?.liaison?.id
       )
       const liaison = resolutionData.dataObject?.liaison
@@ -35,22 +40,64 @@ export const AssetsManager: React.FC = () => {
       for (const storageProvider of storageProvidersToTry) {
         const assetUrl = getAssetUrl(resolutionData, storageProvider.metadata ?? '')
         if (!assetUrl) {
-          Logger.warn('Unable to create asset url', resolutionData)
+          ConsoleLogger.warn('Unable to create asset url', resolutionData)
           addAsset(contentId, {})
           return
         }
 
+        const assetTestPromise = testAssetDownload(assetUrl, resolutionData.assetType)
+
+        const assetDetails: ResolvedAssetDetails = {
+          contentId,
+          storageProviderId: storageProvider.workerId,
+          storageProviderUrl: storageProvider.metadata,
+          assetType: resolutionData.assetType,
+          assetUrl,
+        }
+
+        assetTestPromise.then((responseTime) => {
+          if (resolutionData.assetType === AssetType.MEDIA) {
+            // we're currently skipping monitoring video files as it's hard to measure their performance
+            // image assets are easy to measure but videos vary in length and size
+            // we will be able to handle that once we can access more detailed response timing
+            return
+          }
+
+          // if response takes <20ms assume it's coming from cache
+          // we shouldn't need that once we can do detailed timing, then we can check directly
+          if (responseTime > 20) {
+            AssetLogger.assetResponseMetric(assetDetails, responseTime)
+          }
+        })
+        assetTestPromise.catch(() => {
+          AssetLogger.assetError(assetDetails)
+          ConsoleLogger.error('Failed to load asset', assetDetails)
+        })
+        const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
+
         try {
-          await testAssetDownload(assetUrl, resolutionData.assetType)
+          await assetTestPromiseWithTimeout
           addAsset(contentId, { url: assetUrl })
           removePendingAsset(contentId)
           removeAssetBeingResolved(contentId)
           return
         } catch (e) {
-          Logger.error(`Failed to load ${resolutionData.assetType}`, { contentId, assetUrl })
+          // ignore anything else than TimeoutError as it will be handled by assetTestPromise.catch
+          if (e instanceof TimeoutError) {
+            AssetLogger.assetTimeout(assetDetails)
+            ConsoleLogger.warn('Asset load timed out', assetDetails)
+          }
         }
       }
-      Logger.error(`No storage provider was able to provide asset`, { contentId })
+
+      SentryLogger.error('No storage provider was able to provide asset', 'AssetsManager', null, {
+        asset: {
+          contentId,
+          type: resolutionData.assetType,
+          storageProviderIds: storageProvidersToTry.map((sp) => sp.workerId),
+          storageProviderUrls: storageProvidersToTry.map((sp) => sp.metadata),
+        },
+      })
     })
   }, [
     addAsset,

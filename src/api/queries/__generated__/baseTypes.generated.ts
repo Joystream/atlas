@@ -12,11 +12,6 @@ export type Scalars = {
   DateTime: Date
 }
 
-export type Language = {
-  __typename?: 'Language'
-  iso: Scalars['String']
-}
-
 export type VideoCategory = {
   __typename?: 'VideoCategory'
   id: Scalars['ID']
@@ -126,6 +121,7 @@ export type ChannelWhereInput = {
   isCensored_eq?: Maybe<Scalars['Boolean']>
   coverPhotoAvailability_eq?: Maybe<AssetAvailability>
   avatarPhotoAvailability_eq?: Maybe<AssetAvailability>
+  languageId_eq?: Maybe<Scalars['ID']>
 }
 
 export type ChannelWhereUniqueInput = {
@@ -259,6 +255,12 @@ export type ProcessorState = {
   chainHead: Scalars['Float']
 }
 
+export type Language = {
+  __typename?: 'Language'
+  id: Scalars['ID']
+  iso: Scalars['String']
+}
+
 export type Query = {
   __typename?: 'Query'
   /** Get follows counts for a list of channels */
@@ -276,6 +278,18 @@ export type Query = {
   channelsConnection: ChannelConnection
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
+  /** Get list of most followed channels */
+  mostFollowedChannels: Array<ChannelFollowsInfo>
+  /** Get list of most followed channels of all time */
+  mostFollowedChannelsAllTime?: Maybe<Array<ChannelFollowsInfo>>
+  /** Get list of channels with most views in given period */
+  mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
+  /** Get list of channels with most views of all time */
+  mostViewedChannelsAllTime?: Maybe<Array<EntityViewsInfo>>
+  /** Get most viewed list of videos */
+  mostViewedVideos?: Maybe<Array<EntityViewsInfo>>
+  /** Get most viewed list of videos of all time */
+  mostViewedVideosAllTime?: Maybe<Array<EntityViewsInfo>>
   search: Array<SearchFtsOutput>
   videoByUniqueInput?: Maybe<Video>
   videoCategories: Array<VideoCategory>
@@ -314,6 +328,7 @@ export type QueryChannelViewsArgs = {
 export type QueryChannelsArgs = {
   offset?: Maybe<Scalars['Int']>
   limit?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<Array<ChannelOrderByInput>>
   where?: Maybe<ChannelWhereInput>
 }
 
@@ -330,6 +345,33 @@ export type QueryMembershipByUniqueInputArgs = {
 
 export type QueryMembershipsArgs = {
   where: MembershipWhereInput
+}
+
+export type QueryMostFollowedChannelsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  timePeriodDays: Scalars['Int']
+}
+
+export type QueryMostFollowedChannelsAllTimeArgs = {
+  limit: Scalars['Int']
+}
+
+export type QueryMostViewedChannelsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  timePeriodDays: Scalars['Int']
+}
+
+export type QueryMostViewedChannelsAllTimeArgs = {
+  limit: Scalars['Int']
+}
+
+export type QueryMostViewedVideosArgs = {
+  limit?: Maybe<Scalars['Int']>
+  timePeriodDays: Scalars['Int']
+}
+
+export type QueryMostViewedVideosAllTimeArgs = {
+  limit: Scalars['Int']
 }
 
 export type QuerySearchArgs = {
@@ -399,6 +441,7 @@ export type Mutation = {
 }
 
 export type MutationAddVideoViewArgs = {
+  categoryId?: Maybe<Scalars['ID']>
   channelId: Scalars['ID']
   videoId: Scalars['ID']
 }

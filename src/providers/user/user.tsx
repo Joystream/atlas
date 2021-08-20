@@ -3,18 +3,20 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
+import { ViewErrorFallback } from '@/components'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { useActiveUserStore } from './store'
+import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
 export type Account = {
   id: AccountId
   name: string
 }
 
-type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
+type ActiveUserContextValue = ActiveUserStoreActions & {
+  activeUserState: ActiveUserState
   accounts: Account[] | null
   extensionConnected: boolean | null
 
@@ -28,11 +30,13 @@ type ActiveUserContextValue = ReturnType<typeof useActiveUserStore> & {
 
   userInitialized: boolean
 }
+
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
-  const { activeUserState, setActiveUser, resetActiveUser } = useActiveUserStore()
+  const activeUserState = useActiveUserStore(({ actions, ...activeUser }) => ({ ...activeUser }))
+  const { setActiveUser, resetActiveUser } = useActiveUserStore((state) => state.actions)
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
@@ -44,7 +48,16 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     loading: membershipsLoading,
     error: membershipsError,
     refetch: refetchMemberships,
-  } = useMemberships({ where: { controllerAccount_in: accountsIds } }, { skip: !accounts || !accounts.length })
+  } = useMemberships(
+    { where: { controllerAccount_in: accountsIds } },
+    {
+      skip: !accounts || !accounts.length,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error, {
+          accounts: { ids: accountsIds },
+        }),
+    }
+  )
 
   // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
   const memberships = membershipsData || membershipPreviousData?.memberships
@@ -54,15 +67,13 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     loading: activeMembershipLoading,
     error: activeMembershipError,
     refetch: refetchActiveMembership,
-  } = useMembership({ where: { id: activeUserState.memberId } }, { skip: !activeUserState.memberId })
-
-  if (membershipsError) {
-    throw membershipsError
-  }
-
-  if (activeMembershipError) {
-    throw activeMembershipError
-  }
+  } = useMembership(
+    { where: { id: activeUserState.memberId } },
+    {
+      skip: !activeUserState.memberId,
+      onError: (error) => SentryLogger.error('Failed to fetch active membership', 'ActiveUserProvider', error),
+    }
+  )
 
   // handle polkadot extension
   useEffect(() => {
@@ -73,7 +84,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
         if (!enabledExtensions.length) {
-          Logger.warn('No Polkadot extension detected')
+          ConsoleLogger.warn('No Polkadot extension detected')
           setExtensionConnected(false)
           return
         }
@@ -94,7 +105,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         setExtensionConnected(true)
       } catch (e) {
         setExtensionConnected(false)
-        Logger.error('Unknown polkadot extension error', e)
+        SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
       }
     }
 
@@ -113,7 +124,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const account = accounts.find((a) => a.id === activeUserState.accountId)
 
     if (!account) {
-      Logger.warn('Selected accountId not found in extension accounts, resetting user')
+      ConsoleLogger.warn('Selected accountId not found in extension accounts, resetting user')
       resetActiveUser()
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
@@ -138,6 +149,10 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     refetchActiveMembership,
 
     userInitialized,
+  }
+
+  if (membershipsError || activeMembershipError) {
+    return <ViewErrorFallback />
   }
 
   return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>
