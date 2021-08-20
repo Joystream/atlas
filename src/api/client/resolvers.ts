@@ -25,7 +25,7 @@ import {
 } from './transforms/orionViews'
 import { RemoveQueryNodeChannelViewsField } from './transforms/queryNodeViews'
 
-import { Channel, ChannelEdge, Video, VideoEdge } from '../queries'
+import { Channel, ChannelEdge, SearchFtsOutput, Video, VideoEdge } from '../queries'
 
 const BATCHED_VIDEO_VIEWS_QUERY_NAME = 'GetBatchedVideoViews'
 const BATCHED_CHANNEL_VIEWS_QUERY_NAME = 'GetBatchedChannelViews'
@@ -159,10 +159,99 @@ export const queryNodeStitchingResolvers = (
       RemoveQueryNodeChannelViewsField,
     ]),
     // mixed queries
-    search: createResolverWithTransforms(queryNodeSchema, 'search', [
-      RemoveQueryNodeViewsField,
-      RemoveQueryNodeFollowsField,
-    ]),
+    search: async (parent, args, context, info) => {
+      const searchResolver = createResolverWithTransforms(queryNodeSchema, 'search', [
+        RemoveQueryNodeViewsField,
+        RemoveQueryNodeFollowsField,
+        RemoveQueryNodeChannelViewsField,
+      ])
+      const search = await searchResolver(parent, args, context, info)
+
+      const channelIdList = search
+        .filter((result: SearchFtsOutput) => result.item.__typename === 'Channel')
+        .map((result: SearchFtsOutput) => result.item.id)
+
+      const batchedChannelFollowsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_FOLLOWS_QUERY_NAME,
+        [TransformBatchedOrionFollowsField],
+        // operationName has to be manually kept in sync with the query name used
+        BATCHED_FOLLOWS_VIEWS_QUERY_NAME
+      )
+      const batchedChannelFollows = await batchedChannelFollowsResolver(
+        parent,
+        {
+          channelIdList,
+        },
+        context,
+        info
+      )
+
+      const batchedChannelViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+        [TransformBatchedChannelOrionViewsField],
+        // operationName has to be manually kept in sync with the query name used
+        BATCHED_CHANNEL_VIEWS_QUERY_NAME
+      )
+      const batchedChannelViews = await batchedChannelViewsResolver(
+        parent,
+        {
+          channelIdList,
+        },
+        context,
+        info
+      )
+
+      const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+      const channelViewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+
+      const videoIdList = search
+        .filter((result: SearchFtsOutput) => result.item.__typename === 'Video')
+        .map((result: SearchFtsOutput) => result.item.id)
+
+      const batchedVideoViewsResolver = createResolverWithTransforms(
+        orionSchema,
+        ORION_BATCHED_VIEWS_QUERY_NAME,
+        [TransformBatchedOrionViewsField],
+        // operationName has to be manually kept in sync with the query name used
+        BATCHED_VIDEO_VIEWS_QUERY_NAME
+      )
+      const batchedVideoViews = await batchedVideoViewsResolver(
+        parent,
+        {
+          videoIdList,
+        },
+        context,
+        info
+      )
+
+      const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+
+      const searchWithFollowsAndViews = search.map((searchOutput: SearchFtsOutput) => {
+        if (searchOutput.item.__typename === 'Channel') {
+          return {
+            ...searchOutput,
+            item: {
+              ...searchOutput.item,
+              follows: followsLookup[searchOutput.item.id]?.follows || 0,
+              views: channelViewsLookup[searchOutput.item.id]?.views || 0,
+            },
+          }
+        }
+        if (searchOutput.item.__typename === 'Video') {
+          return {
+            ...searchOutput,
+            item: {
+              ...searchOutput.item,
+              views: viewsLookup[searchOutput.item.id]?.views || 0,
+            },
+          }
+        }
+      })
+
+      return searchWithFollowsAndViews
+    },
   },
   Video: {
     views: async (parent, args, context, info) => {
