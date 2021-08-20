@@ -32,6 +32,7 @@ import {
   CoverIconWrapper,
   CoverImage,
   CoverImageContainer,
+  CoverNoImage,
   CoverSkeletonLoader,
   CoverThumbnailUploadFailed,
   CoverTopLeftContainer,
@@ -286,6 +287,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               <AvatarContainer scalingFactor={scalingFactor}>
                 {isLoading || (hasAvatarImgLoaded === false && channelAvatarUrl !== undefined) ? (
                   <SkeletonLoader rounded />
+                ) : isDraft === true ? (
+                  <CoverNoImage />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <StyledAvatar
