@@ -284,7 +284,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           <InfoContainer main={main}>
             {displayChannel && (
               <AvatarContainer scalingFactor={scalingFactor}>
-                {isLoading || (hasAvatarImgLoaded === false && channelAvatarUrl) ? (
+                {isLoading || (hasAvatarImgLoaded === false && channelAvatarUrl !== undefined) ? (
                   <SkeletonLoader rounded />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
