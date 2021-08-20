@@ -282,8 +282,6 @@ export type Query = {
   mostFollowedChannels: Array<ChannelFollowsInfo>
   /** Get list of most followed channels of all time */
   mostFollowedChannelsAllTime?: Maybe<Array<ChannelFollowsInfo>>
-  /** Get most viewed list of categories */
-  mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
   /** Get list of channels with most views in given period */
   mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
   /** Get list of channels with most views of all time */
@@ -351,21 +349,16 @@ export type QueryMembershipsArgs = {
 
 export type QueryMostFollowedChannelsArgs = {
   limit?: Maybe<Scalars['Int']>
-  period: Scalars['Int']
+  timePeriodDays: Scalars['Int']
 }
 
 export type QueryMostFollowedChannelsAllTimeArgs = {
   limit: Scalars['Int']
 }
 
-export type QueryMostViewedCategoriesArgs = {
-  limit?: Maybe<Scalars['Int']>
-  period: Scalars['Int']
-}
-
 export type QueryMostViewedChannelsArgs = {
   limit?: Maybe<Scalars['Int']>
-  period: Scalars['Int']
+  timePeriodDays: Scalars['Int']
 }
 
 export type QueryMostViewedChannelsAllTimeArgs = {
@@ -374,7 +367,7 @@ export type QueryMostViewedChannelsAllTimeArgs = {
 
 export type QueryMostViewedVideosArgs = {
   limit?: Maybe<Scalars['Int']>
-  period: Scalars['Int']
+  timePeriodDays: Scalars['Int']
 }
 
 export type QueryMostViewedVideosAllTimeArgs = {

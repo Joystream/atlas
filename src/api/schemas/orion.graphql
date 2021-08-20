@@ -17,7 +17,7 @@ type Mutation {
   """
   Add a single view to the target video's count
   """
-  addVideoView(categoryId: ID, channelId: ID!, videoId: ID!, categoryId: ID): EntityViewsInfo!
+  addVideoView(categoryId: ID, channelId: ID!, videoId: ID!): EntityViewsInfo!
 
   """
   Add a single follow to the target channel
@@ -59,7 +59,7 @@ type Query {
   """
   Get list of most followed channels
   """
-  mostFollowedChannels(limit: Int, period: Int!): [ChannelFollowsInfo!]!
+  mostFollowedChannels(limit: Int, timePeriodDays: Int!): [ChannelFollowsInfo!]!
 
   """
   Get list of most followed channels of all time
@@ -67,14 +67,9 @@ type Query {
   mostFollowedChannelsAllTime(limit: Int!): [ChannelFollowsInfo!]
 
   """
-  Get most viewed list of categories
-  """
-  mostViewedCategories(limit: Int, period: Int!): [EntityViewsInfo!]
-
-  """
   Get list of channels with most views in given period
   """
-  mostViewedChannels(limit: Int, period: Int!): [EntityViewsInfo!]
+  mostViewedChannels(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
 
   """
   Get list of channels with most views of all time
@@ -84,7 +79,7 @@ type Query {
   """
   Get most viewed list of videos
   """
-  mostViewedVideos(limit: Int, period: Int!): [EntityViewsInfo!]
+  mostViewedVideos(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
 
   """
   Get most viewed list of videos of all time

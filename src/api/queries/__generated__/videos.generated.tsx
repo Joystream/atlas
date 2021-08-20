@@ -124,7 +124,7 @@ export type GetBatchedVideoViewsQuery = {
 }
 
 export type GetMostViewedVideosQueryVariables = Types.Exact<{
-  viewedWithinDays: Types.Scalars['Int']
+  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
 }>
 
@@ -487,8 +487,8 @@ export type GetBatchedVideoViewsQueryResult = Apollo.QueryResult<
   GetBatchedVideoViewsQueryVariables
 >
 export const GetMostViewedVideosDocument = gql`
-  query GetMostViewedVideos($viewedWithinDays: Int!, $limit: Int) {
-    mostViewedVideos(period: $viewedWithinDays, limit: $limit) {
+  query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
+    mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
       id
       views
     }
@@ -507,7 +507,7 @@ export const GetMostViewedVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedVideosQuery({
  *   variables: {
- *      viewedWithinDays: // value for 'viewedWithinDays'
+ *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
  *   },
  * });
