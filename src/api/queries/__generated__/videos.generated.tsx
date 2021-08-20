@@ -145,6 +145,7 @@ export type GetMostViewedVideosAllTimeQuery = {
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['ID']
   channelId: Types.Scalars['ID']
+  categoryId?: Types.Maybe<Types.Scalars['ID']>
 }>
 
 export type AddVideoViewMutation = {
@@ -581,8 +582,8 @@ export type GetMostViewedVideosAllTimeQueryResult = Apollo.QueryResult<
   GetMostViewedVideosAllTimeQueryVariables
 >
 export const AddVideoViewDocument = gql`
-  mutation AddVideoView($videoId: ID!, $channelId: ID!) {
-    addVideoView(videoId: $videoId, channelId: $channelId) {
+  mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {
+    addVideoView(videoId: $videoId, channelId: $channelId, categoryId: $categoryId) {
       id
       views
     }
@@ -605,6 +606,7 @@ export type AddVideoViewMutationFn = Apollo.MutationFunction<AddVideoViewMutatio
  *   variables: {
  *      videoId: // value for 'videoId'
  *      channelId: // value for 'channelId'
+ *      categoryId: // value for 'categoryId'
  *   },
  * });
  */
