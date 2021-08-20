@@ -21,6 +21,7 @@ import {
   TitleContainer,
 } from '@/shared/components'
 import { SvgGlyphChevronRight } from '@/shared/icons'
+import { SentryLogger } from '@/utils/logs'
 
 import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
 
@@ -90,11 +91,8 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
     additionalSortFn,
+    onError: (error) => SentryLogger.error('Failed to fetch channels', 'InfiniteChannelWithVideosGrid', error),
   })
-
-  if (error) {
-    throw error
-  }
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const shouldShowLoadMoreButton =
@@ -105,6 +103,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   const onSelectLanguage = (value?: string | null) => {
     setTargetRowsCount(INITIAL_ROWS)
     setSelectedLanguage(value)
+  }
+
+  if (error) {
+    return null
   }
 
   return (
