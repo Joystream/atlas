@@ -421,7 +421,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showBigPlayButton = playerState === null && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
-  const showControlsIndicator = !isInBackground || playerState !== 'ended'
+  const showControlsIndicator = !isInBackground && playerState !== 'ended'
 
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
