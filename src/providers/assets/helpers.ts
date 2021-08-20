@@ -6,7 +6,6 @@ import {
   VideoFieldsFragment,
 } from '@/api/queries'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { ConsoleLogger } from '@/utils/logs'
 
 import { AssetResolutionData, AssetType } from './types'
 
@@ -38,9 +37,6 @@ export const testAssetDownload = (url: string, type: AssetType): Promise<number>
 
       const performanceEntries = performance.getEntriesByName(url)
       if (performanceEntries.length !== 1) {
-        if (type !== AssetType.MEDIA) {
-          ConsoleLogger.warn('Unexpected number of performance timing entries', { url, performanceEntries })
-        }
         _resolve(0)
         return
       }

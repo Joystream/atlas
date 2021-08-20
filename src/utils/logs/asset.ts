@@ -65,6 +65,14 @@ class _AssetLogger {
     }
     this.addEvent(event)
   }
+
+  assetTimeout(assetDetails: ResolvedAssetDetails) {
+    const event: AssetEvent = {
+      type: 'asset-download-timeout',
+      ...assetDetails,
+    }
+    this.addEvent(event)
+  }
 }
 
 export const AssetLogger = new _AssetLogger()
