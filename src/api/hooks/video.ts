@@ -81,7 +81,7 @@ export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVaria
 }
 
 export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
-  const { mostViewedVideos } = useMostViewedVideosIds(variables, opts)
+  const { mostViewedVideos, loading, error } = useMostViewedVideosIds(variables, opts)
 
   const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
 
@@ -101,6 +101,8 @@ export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariable
   return {
     videos: sortedVideos,
     ...rest,
+    error: error || rest.error,
+    loading: loading || rest.loading,
   }
 }
 

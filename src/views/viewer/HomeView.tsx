@@ -24,10 +24,13 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds({
-    limit: 200,
-    timePeriodDays: 30,
-  })
+  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds(
+    {
+      limit: 200,
+      timePeriodDays: 30,
+    },
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'HomeView', error) }
+  )
   const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
 
   const { videosConnection, loading: followedLoading, error: followedError } = useVideosConnection(
