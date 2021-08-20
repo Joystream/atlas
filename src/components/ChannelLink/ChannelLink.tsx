@@ -7,14 +7,14 @@ import { AssetType, useAsset } from '@/providers'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
 import { Logger } from '@/utils/logger'
 
-import { Container, Handle, HandleSkeletonLoader, StyledText } from './ChannelLink.style'
+import { Container, HandleSkeletonLoader, StyledText } from './ChannelLink.style'
 
 type ChannelLinkProps = {
   id?: string
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
   hideHandle?: boolean
   hideAvatar?: boolean
-  heroTitle?: boolean
+  variant?: 'primary' | 'secondary'
   noLink?: boolean
   overrideChannel?: BasicChannelFieldsFragment
   avatarSize?: AvatarSize
@@ -26,7 +26,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   id,
   hideHandle,
   hideAvatar,
-  heroTitle,
+  variant = 'primary',
   noLink,
   overrideChannel,
   avatarSize = 'default',
@@ -50,12 +50,14 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
       {!hideAvatar && <Avatar loading={!displayedChannel} size={avatarSize} assetUrl={avatarPhotoUrl} />}
       {!hideHandle &&
         (displayedChannel ? (
-          heroTitle ? (
+          variant === 'secondary' ? (
             <StyledText withAvatar={!hideAvatar} secondary variant="button2">
               {displayedChannel.title}
             </StyledText>
           ) : (
-            <Handle withAvatar={!hideAvatar}>{displayedChannel.title}</Handle>
+            <StyledText withAvatar={!hideAvatar} variant="h6">
+              {displayedChannel.title}
+            </StyledText>
           )
         ) : (
           <HandleSkeletonLoader withAvatar={!hideAvatar} height={16} width={150} />

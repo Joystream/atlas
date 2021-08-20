@@ -7,6 +7,8 @@ import { colors, media, sizes, typography } from '@/shared/theme'
 import { TOP_NAVBAR_HEIGHT } from '..'
 import { ChannelLink } from '../ChannelLink'
 
+const BUTTONS_HEIGHT = 48
+
 export const Container = styled.section`
   position: relative;
   max-height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
@@ -118,8 +120,12 @@ export const ButtonsContainer = styled.div`
   display: flex;
 `
 
+export const ButtonsSpaceKeeper = styled.div`
+  min-height: ${BUTTONS_HEIGHT}px;
+`
+
 export const PlayButton = styled(Button)`
-  width: 140px;
+  width: 97px;
 `
 
 export const SoundButton = styled(IconButton)`

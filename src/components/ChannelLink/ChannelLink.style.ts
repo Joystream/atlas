@@ -19,16 +19,6 @@ type HandleProps = {
   withAvatar: boolean
 }
 
-export const Handle = styled.span<HandleProps>`
-  display: inline-block;
-  font-family: ${typography.fonts.headers};
-  font-size: 1rem;
-  line-height: 1;
-  font-weight: bold;
-  color: ${colors.white};
-  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
-`
-
 export const StyledText = styled(Text)<HandleProps>`
   margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
 `

@@ -10,6 +10,7 @@ import { transitions } from '@/shared/theme'
 
 import {
   ButtonsContainer,
+  ButtonsSpaceKeeper,
   Container,
   GradientOverlay,
   InfoContainer,
@@ -79,7 +80,7 @@ export const VideoHero: React.FC = () => {
       </MediaWrapper>
       <InfoContainer isLoading={!coverVideo}>
         <StyledChannelLink
-          heroTitle
+          variant="secondary"
           id={coverVideo?.video.channel.id}
           overrideChannel={coverVideo?.video.channel}
           avatarSize="small"
@@ -103,7 +104,7 @@ export const VideoHero: React.FC = () => {
             </TitleContainer>
           </GridItem>
         </LayoutGrid>
-        <div>
+        <ButtonsSpaceKeeper>
           <CSSTransition
             in={displayControls}
             timeout={parseInt(transitions.timings.loading)}
@@ -120,7 +121,7 @@ export const VideoHero: React.FC = () => {
               </SoundButton>
             </ButtonsContainer>
           </CSSTransition>
-        </div>
+        </ButtonsSpaceKeeper>
       </InfoContainer>
     </Container>
   )
