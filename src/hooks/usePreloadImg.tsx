@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 
-export const usePreloadImg = (thumbnailUrl: string | undefined) => {
+export const usePreloadImg = (imgURL: string | undefined) => {
   const [hasImgLoaded, setHasImgLoaded] = useState(false)
   useEffect(() => {
-    if (thumbnailUrl) {
+    if (imgURL) {
       const newImg = new Image()
       newImg.onload = () => setHasImgLoaded(true)
-      newImg.src = thumbnailUrl
+      newImg.src = imgURL
     }
-  }, [thumbnailUrl])
+  }, [imgURL])
 
   return { hasImgLoaded }
 }
