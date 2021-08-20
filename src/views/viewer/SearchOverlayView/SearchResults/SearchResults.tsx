@@ -7,7 +7,7 @@ import { ChannelGrid, SkeletonLoaderVideoGrid, VideoGrid, ViewErrorFallback, Vie
 import { usePersonalDataStore } from '@/providers'
 import { Tabs } from '@/shared/components'
 import { sizes } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { AllResultsTab } from './AllResultsTab'
 import { EmptyFallback } from './EmptyFallback'
@@ -29,7 +29,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
       },
       whereChannel: {},
     },
-    { onError: (error) => Logger.captureError('Failed to fetch search results', 'SearchResults', error) }
+    { onError: (error) => SentryLogger.error('Failed to fetch search results', 'SearchResults', error) }
   )
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {

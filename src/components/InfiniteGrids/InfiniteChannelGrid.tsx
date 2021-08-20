@@ -9,7 +9,7 @@ import {
 } from '@/api/queries'
 import { Grid, Text } from '@/shared/components'
 import { sizes } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
 
@@ -57,7 +57,7 @@ export const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({
     targetRowsCount,
     dataAccessor: (rawData) => rawData?.channelsConnection,
     itemsPerRow: channelsPerRow,
-    onError: (error) => Logger.captureError('Failed to fetch channels', 'InfiniteChannelsGrid', error),
+    onError: (error) => SentryLogger.error('Failed to fetch channels', 'InfiniteChannelsGrid', error),
   })
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))

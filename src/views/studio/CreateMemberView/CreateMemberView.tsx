@@ -16,7 +16,7 @@ import { useConnectionStatusStore, useDialog, useUser } from '@/providers'
 import { Spinner } from '@/shared/components'
 import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   Form,
@@ -68,7 +68,7 @@ export const CreateMemberView = () => {
   // subscription doesn't allow 'onError' callback
   useEffect(() => {
     if (!queryNodeStateError) return
-    Logger.captureError('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
+    SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
   }, [queryNodeStateError])
 
   const client = useApolloClient()
@@ -230,7 +230,7 @@ export const createNewMember = async (accountId: string, inputs: Inputs) => {
     const response = await axios.post<NewMemberResponse>(FAUCET_URL, body)
     return response.data
   } catch (error) {
-    Logger.captureError('Failed to create a membership', 'CreateMemberView', error)
+    SentryLogger.error('Failed to create a membership', 'CreateMemberView', error)
     throw error
   }
 }

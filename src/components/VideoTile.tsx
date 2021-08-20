@@ -11,7 +11,7 @@ import {
   VideoTilePublisherProps,
 } from '@/shared/components/VideoTileBase/VideoTileBase'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 export type VideoTileProps = {
   id?: string
@@ -97,7 +97,7 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
   const { video, loading } = useVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => Logger.captureError('Failed to fetch video', 'VideoTile', error, { video: { id } }),
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined

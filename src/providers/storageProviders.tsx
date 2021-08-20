@@ -10,7 +10,7 @@ import {
   GetWorkersQueryVariables,
 } from '@/api/queries/__generated__/workers.generated'
 import { ViewErrorFallback } from '@/components'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 
 type StorageProvidersPromise = Promise<ApolloQueryResult<GetWorkersQuery>>
@@ -42,7 +42,7 @@ export const StorageProvidersProvider: React.FC = ({ children }) => {
     })
     storageProvidersPromiseRef.current = promise
     promise.catch((error) => {
-      Logger.captureError('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
+      SentryLogger.error('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
       setStorageProvidersError(error)
     })
   }, [client])
@@ -88,7 +88,7 @@ export const useStorageProviders = () => {
     )
 
     if (!workingStorageProviders.length) {
-      Logger.captureError('No storage provider available', 'StorageProvidersProvider', null, {
+      SentryLogger.error('No storage provider available', 'StorageProvidersProvider', null, {
         providers: {
           allIds: storageProviders.map(({ workerId }) => workerId),
           notWorkingIds: notWorkingStorageProvidersIds,

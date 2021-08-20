@@ -12,7 +12,7 @@ import {
 } from '@/components'
 import { usePersonalDataStore } from '@/providers'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 const MIN_FOLLOWED_CHANNELS_VIDEOS = 16
 // last three months
@@ -31,7 +31,7 @@ export const HomeView: React.FC = () => {
         createdAt_gte: MIN_DATE_FOLLOWED_CHANNELS_VIDEOS,
       },
     },
-    { skip: !anyFollowedChannels, onError: (error) => Logger.captureError('Failed to fetch videos', 'HomeView', error) }
+    { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
   )
 
   const followedChannelsVideosCount = videosConnection?.totalCount

@@ -1,10 +1,14 @@
-/* eslint-disable no-console */
 import * as Sentry from '@sentry/react'
 import { Severity } from '@sentry/react'
 
-import { useActiveUserStore } from '@/providers/user/store'
+import { ConsoleLogger } from './console'
+import { getUserInfo } from './shared'
 
-class CustomError extends Error {
+type LogContexts = Record<string, Record<string, unknown>>
+
+type LogMessageLevel = 'log' | 'warning' | 'error'
+
+class SentryError extends Error {
   name: string
   message: string
 
@@ -15,41 +19,24 @@ class CustomError extends Error {
   }
 }
 
-type LogContexts = Record<string, Record<string, unknown>>
-type LogFn = (message: string, details?: unknown) => void
-type LogMessageLevel = 'info' | 'warning' | 'error'
+class _SentryLogger {
+  private initialized = false
 
-const getLogArgs = (message: string, details?: unknown) => {
-  if (details) {
-    return [message, details]
-  }
-  return [message]
-}
-
-export class Logger {
-  static log: LogFn = (message, details) => {
-    console.log(...getLogArgs(message, details))
+  initialize(DSN: string) {
+    Sentry.init({
+      dsn: DSN,
+      ignoreErrors: ['ResizeObserver loop limit exceeded'],
+    })
+    this.initialized = true
   }
 
-  static warn: LogFn = (message, details) => {
-    console.warn(...getLogArgs(message, details))
-  }
-
-  static error: LogFn = (message, details) => {
-    console.error(...getLogArgs(message, details))
-  }
-
-  static debug: LogFn = (message, details) => {
-    console.debug(...getLogArgs(message, details))
-  }
-
-  static captureError = (
+  error(
     title: string,
     source: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rawError?: any,
     contexts?: LogContexts
-  ) => {
+  ) {
     let error = rawError
     const tags: Record<string, string | number> = {
       source,
@@ -74,9 +61,14 @@ export class Logger {
 
     const message = rawError?.message || rawGraphQLError?.message || ''
 
-    Logger.error(!message ? title : `${title}: ${message}`, { ...error, ...contexts })
+    ConsoleLogger.error(!message ? title : `${title}: ${message}`, { ...error, ...contexts })
 
-    Sentry.captureException(new CustomError(title, message), {
+    if (!this.initialized) {
+      ConsoleLogger.debug("Skipping Sentry error capture because SentryLogger wasn't initialized")
+      return
+    }
+
+    Sentry.captureException(new SentryError(title, message), {
       contexts: {
         error,
         ...contexts,
@@ -86,7 +78,15 @@ export class Logger {
     })
   }
 
-  static captureMessage = (message: string, source: string, level: LogMessageLevel, contexts?: LogContexts) => {
+  message(message: string, source: string, level: LogMessageLevel, contexts?: LogContexts) {
+    const logFn = level === 'error' ? ConsoleLogger.error : level === 'warning' ? ConsoleLogger.warn : ConsoleLogger.log
+    logFn(message, contexts)
+
+    if (!this.initialized) {
+      ConsoleLogger.debug("Skipping Sentry message capture because SentryLogger wasn't initialized")
+      return
+    }
+
     Sentry.captureMessage(message, {
       level: Severity.fromString(level),
       contexts,
@@ -96,10 +96,4 @@ export class Logger {
   }
 }
 
-const getUserInfo = (): Record<string, unknown> => {
-  const { actions, ...userState } = useActiveUserStore.getState()
-  return {
-    ip_address: '{{auto}}',
-    ...userState,
-  }
-}
+export const SentryLogger = new _SentryLogger()

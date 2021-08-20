@@ -25,7 +25,7 @@ import {
 } from '@/providers'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { EditVideoForm } from './EditVideoForm'
 import { Container, DrawerOverlay } from './EditVideoSheet.style'
@@ -152,7 +152,7 @@ export const EditVideoSheet: React.FC = () => {
         assets.video = asset
         videoContentId = contentId
       } else if (dirtyFields.assets?.video) {
-        Logger.warn('Missing video data')
+        ConsoleLogger.warn('Missing video data')
       }
 
       if (thumbnailAsset?.blob && thumbnailHashPromise) {
@@ -163,7 +163,7 @@ export const EditVideoSheet: React.FC = () => {
         assets.thumbnail = asset
         thumbnailContentId = contentId
       } else if (dirtyFields.assets?.thumbnail) {
-        Logger.warn('Missing thumbnail data')
+        ConsoleLogger.warn('Missing thumbnail data')
       }
     }
 
@@ -197,7 +197,7 @@ export const EditVideoSheet: React.FC = () => {
         })
         uploadPromises.push(uploadPromise)
       }
-      Promise.all(uploadPromises).catch((e) => Logger.captureError('Unexpected upload failure', 'EditVideoSheet', e))
+      Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'EditVideoSheet', e))
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {

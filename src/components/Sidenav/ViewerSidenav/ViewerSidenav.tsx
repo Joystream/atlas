@@ -6,7 +6,7 @@ import { usePersonalDataStore } from '@/providers'
 import { Button } from '@/shared/components'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavVideos } from '@/shared/icons'
 import { openInNewTab } from '@/utils/browser'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
 
@@ -34,7 +34,7 @@ export const ViewerSidenav: React.FC = () => {
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
   const handleChannelNotFound = (id: string) => {
-    Logger.warn(`Followed channel not found, removing id: ${id}`)
+    ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
 

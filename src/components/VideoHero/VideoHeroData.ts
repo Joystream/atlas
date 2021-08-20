@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useVideo } from '@/api/hooks/video'
 import { VideoFieldsFragment } from '@/api/queries'
 import { COVER_VIDEO_INFO_URL } from '@/config/urls'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import backupVideoHeroInfo from './backupVideoHeroInfo.json'
 
@@ -26,7 +26,7 @@ export const useVideoHero = (): CoverInfo => {
   const { video } = useVideo(fetchedCoverInfo?.videoId || '', {
     skip: !fetchedCoverInfo?.videoId,
     onError: (error) =>
-      Logger.captureError('Failed to fetch video hero', 'VideoHero', error, {
+      SentryLogger.error('Failed to fetch video hero', 'VideoHero', error, {
         video: { id: fetchedCoverInfo?.videoId },
       }),
   })
@@ -37,7 +37,7 @@ export const useVideoHero = (): CoverInfo => {
         const response = await axios.get<RawCoverInfo>(COVER_VIDEO_INFO_URL)
         setFetchedCoverInfo(response.data)
       } catch (e) {
-        Logger.captureError('Failed to fetch video hero info', 'VideoHero', e, {
+        SentryLogger.error('Failed to fetch video hero info', 'VideoHero', e, {
           videoHero: { url: COVER_VIDEO_INFO_URL },
         })
         setFetchedCoverInfo(backupVideoHeroInfo)

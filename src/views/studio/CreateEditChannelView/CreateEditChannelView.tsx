@@ -43,7 +43,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
 
@@ -96,7 +96,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { channel, loading, error, refetch: refetchChannel } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
     onError: (error) =>
-      Logger.captureError('Failed to fetch channel', 'CreateEditChannelView', error, {
+      SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {
         channel: { id: activeChannelId },
       }),
   })
@@ -297,7 +297,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         uploadPromises.push(uploadPromise)
       }
       Promise.all(uploadPromises).catch((e) =>
-        Logger.captureError('Unexpected upload failure', 'CreateEditChannelView', e)
+        SentryLogger.error('Unexpected upload failure', 'CreateEditChannelView', e)
       )
     }
 

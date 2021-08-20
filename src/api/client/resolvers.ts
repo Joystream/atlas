@@ -3,7 +3,7 @@ import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
 import { createLookup } from '@/utils/data'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger } from '@/utils/logs'
 
 import {
   ORION_BATCHED_FOLLOWS_QUERY_NAME,
@@ -84,7 +84,7 @@ export const queryNodeStitchingResolvers = (
         const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
         return videos.map((video: Video) => ({ ...video, views: viewsLookup[video.id]?.views || 0 }))
       } catch (error) {
-        Logger.warn('Failed to resolve videos field', { error })
+        ConsoleLogger.warn('Failed to resolve videos field', { error })
         return null
       }
     },
@@ -143,7 +143,7 @@ export const queryNodeStitchingResolvers = (
           views: viewsLookup[channel.id]?.views || 0,
         }))
       } catch (error) {
-        Logger.warn('Failed to resolve channels field', { error })
+        ConsoleLogger.warn('Failed to resolve channels field', { error })
         return null
       }
     },
@@ -179,7 +179,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        Logger.warn('Failed to resolve views field', { error })
+        ConsoleLogger.warn('Failed to resolve views field', { error })
         return null
       }
     },
@@ -235,7 +235,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        Logger.warn('Failed to resolve views field', { error })
+        ConsoleLogger.warn('Failed to resolve views field', { error })
         return null
       }
     },
@@ -259,7 +259,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        Logger.warn('Failed to resolve follows field', { error })
+        ConsoleLogger.warn('Failed to resolve follows field', { error })
         return null
       }
     },

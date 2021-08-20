@@ -2,7 +2,7 @@ import { Draft, enableMapSet, produce } from 'immer'
 import create, { GetState, State, StateCreator, StoreApi } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 export type CommonStore<TState, TActions> = {
   actions: TActions
@@ -61,7 +61,7 @@ export const createStore = <TState extends object, TActions extends object>(
         try {
           return config.migrate(oldState, oldVersion, storageValue) as CommonStore<TState, TActions>
         } catch (e) {
-          Logger.captureError(`Failed to migrate store "${config.key}"`, 'createStore', e)
+          SentryLogger.error(`Failed to migrate store "${config.key}"`, 'createStore', e)
           return {} as CommonStore<TState, TActions>
         }
       },

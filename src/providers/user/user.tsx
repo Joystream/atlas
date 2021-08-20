@@ -6,7 +6,7 @@ import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
@@ -53,7 +53,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     {
       skip: !accounts || !accounts.length,
       onError: (error) =>
-        Logger.captureError('Failed to fetch memberships', 'ActiveUserProvider', error, {
+        SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error, {
           accounts: { ids: accountsIds },
         }),
     }
@@ -71,7 +71,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     { where: { id: activeUserState.memberId } },
     {
       skip: !activeUserState.memberId,
-      onError: (error) => Logger.captureError('Failed to fetch active membership', 'ActiveUserProvider', error),
+      onError: (error) => SentryLogger.error('Failed to fetch active membership', 'ActiveUserProvider', error),
     }
   )
 
@@ -84,7 +84,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
         if (!enabledExtensions.length) {
-          Logger.warn('No Polkadot extension detected')
+          ConsoleLogger.warn('No Polkadot extension detected')
           setExtensionConnected(false)
           return
         }
@@ -105,7 +105,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         setExtensionConnected(true)
       } catch (e) {
         setExtensionConnected(false)
-        Logger.captureError('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
+        SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
       }
     }
 
@@ -124,7 +124,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     const account = accounts.find((a) => a.id === activeUserState.accountId)
 
     if (!account) {
-      Logger.warn('Selected accountId not found in extension accounts, resetting user')
+      ConsoleLogger.warn('Selected accountId not found in extension accounts, resetting user')
       resetActiveUser()
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])

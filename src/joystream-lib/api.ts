@@ -33,7 +33,7 @@ import {
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
 
-import { Logger } from '@/utils/logger'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import {
   AccountNotSelectedError,
@@ -87,14 +87,14 @@ export class JoystreamJs {
 
   destroy() {
     this.api.disconnect()
-    Logger.log('[JoystreamJs] Destroyed')
+    ConsoleLogger.log('[JoystreamJs] Destroyed')
   }
 
   private async ensureApi() {
     try {
       await this.api.isReady
     } catch (e) {
-      Logger.captureError('Failed to initialize Polkadot API', 'JoystreamJs', e)
+      SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamJs', e)
       throw new ApiNotConnectedError()
     }
   }
@@ -102,7 +102,7 @@ export class JoystreamJs {
   private async logConnectionData(endpoint: string) {
     await this.ensureApi()
     const chain = await this.api.rpc.system.chain()
-    Logger.log(`[JoystreamJs] Connected to chain "${chain}" via "${endpoint}"`)
+    ConsoleLogger.log(`[JoystreamJs] Connected to chain "${chain}" via "${endpoint}"`)
   }
 
   private async sendExtrinsic(
@@ -159,7 +159,7 @@ export class JoystreamJs {
                     .then(({ number }) => resolve({ block: number.toNumber(), data: unpackedEvents }))
                     .catch((reason) => reject(new ExtrinsicFailedError(reason)))
                 } else {
-                  Logger.captureMessage('Unknown extrinsic event', 'JoystreamJs', 'warning', {
+                  SentryLogger.message('Unknown extrinsic event', 'JoystreamJs', 'warning', {
                     event: { method: event.method },
                   })
                 }
@@ -396,7 +396,7 @@ export class JoystreamJs {
       this.api.setSigner({})
       return
     } else if (!signer) {
-      Logger.captureError('Missing signer for setActiveAccount', 'JoystreamJs')
+      SentryLogger.error('Missing signer for setActiveAccount', 'JoystreamJs')
       return
     }
 

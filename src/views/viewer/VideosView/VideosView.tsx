@@ -6,7 +6,7 @@ import { VideoOrderByInput } from '@/api/queries'
 import { BackgroundPattern, TOP_NAVBAR_HEIGHT, VideoGallery, ViewErrorFallback } from '@/components'
 import { Text } from '@/shared/components'
 import { transitions } from '@/shared/theme'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   CategoriesVideosContainer,
@@ -22,7 +22,7 @@ import {
 export const VideosView: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const { loading: categoriesLoading, categories, error: categoriesError } = useCategories(undefined, {
-    onError: (error) => Logger.captureError('Failed to fetch categories', 'VideosView', error),
+    onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideosView', error),
   })
   const { loading: featuredVideosLoading, videos: featuredVideos, error: videosError } = useVideos(
     {
@@ -33,7 +33,7 @@ export const VideosView: React.FC = () => {
     },
     {
       notifyOnNetworkStatusChange: true,
-      onError: (error) => Logger.captureError('Failed to fetch videos', 'VideosView', error),
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'VideosView', error),
     }
   )
 

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
-import { Logger } from '@/utils/logger'
+import { SentryLogger } from '@/utils/logs'
 
 import { EditVideoSheetContext } from './provider'
 import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
@@ -28,7 +28,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   const { selectedVideoTabCachedAssets } = useEditVideoSheet()
   const { video, loading, error } = useVideo(tab?.id ?? '', {
     skip: tab?.isDraft,
-    onError: (error) => Logger.captureError('Failed to fetch video', 'useEditVideoSheetTabData', error),
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'useEditVideoSheetTabData', error),
   })
 
   if (!tab) {
