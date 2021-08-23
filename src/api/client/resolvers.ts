@@ -3,7 +3,7 @@ import type { IResolvers, ISchemaLevelResolver } from '@graphql-tools/utils'
 import { GraphQLSchema } from 'graphql'
 
 import { createLookup } from '@/utils/data'
-import { ConsoleLogger } from '@/utils/logs'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   ORION_BATCHED_FOLLOWS_QUERY_NAME,
@@ -84,7 +84,7 @@ export const queryNodeStitchingResolvers = (
         const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
         return videos.map((video: Video) => ({ ...video, views: viewsLookup[video.id]?.views || 0 }))
       } catch (error) {
-        ConsoleLogger.warn('Failed to resolve videos field', { error })
+        SentryLogger.error('Failed to resolve videos field', 'batchedVideoViewsResolver', error)
         return null
       }
     },
@@ -143,7 +143,7 @@ export const queryNodeStitchingResolvers = (
           views: viewsLookup[channel.id]?.views || 0,
         }))
       } catch (error) {
-        ConsoleLogger.warn('Failed to resolve channels field', { error })
+        SentryLogger.error('Failed to resolve channels field', 'batchedChannelViewsResolver', error)
         return null
       }
     },
@@ -179,7 +179,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        ConsoleLogger.warn('Failed to resolve views field', { error })
+        SentryLogger.error('Failed to resolve views field', 'batchedChannelViews', error)
         return null
       }
     },
@@ -212,7 +212,7 @@ export const queryNodeStitchingResolvers = (
           },
         }))
       } catch (error) {
-        Logger.warn('Failed to resolve views field', { error })
+        SentryLogger.error('Failed to resolve views field', 'batchedVideoViewsResolver', error)
         return null
       }
     },
@@ -239,7 +239,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        ConsoleLogger.warn('Failed to resolve views field', { error })
+        SentryLogger.error('Failed to resolve views field', 'orionViewsResolver', error)
         return null
       }
     },
@@ -263,7 +263,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        ConsoleLogger.warn('Failed to resolve follows field', { error })
+        SentryLogger.error('Failed to resolve follows field', 'orionFollowsResolver', error)
         return null
       }
     },
@@ -315,7 +315,7 @@ export const queryNodeStitchingResolvers = (
           },
         }))
       } catch (error) {
-        Logger.warn('Failed to resolve follows or views field', { error })
+        SentryLogger.error('Failed to resolve follows or views field', 'batchedChannelViewsResolver', error)
         return null
       }
     },
