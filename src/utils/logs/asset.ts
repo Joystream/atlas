@@ -5,7 +5,6 @@ import { ResolvedAssetDetails } from '@/types/assets'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
-import { getUserInfo } from './shared'
 
 export type AssetEvent = {
   type: string
@@ -15,9 +14,14 @@ export type AssetEvent = {
 
 class _AssetLogger {
   private logUrl = ''
+  private user?: Record<string, unknown>
 
   initialize(logUrl: string | null) {
     if (logUrl) this.logUrl = logUrl
+  }
+
+  setUser(user?: Record<string, unknown>) {
+    this.user = user
   }
 
   private pendingEvents: AssetEvent[] = []
@@ -43,7 +47,7 @@ class _AssetLogger {
   private addEvent(event: AssetEvent) {
     const eventWithUser = {
       ...event,
-      user: getUserInfo(false),
+      user: this.user,
     }
     this.pendingEvents.push(eventWithUser)
     this.sendEvents()

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useQueryNodeStateSubscription } from '@/api/hooks/queryNode'
+import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components/Dialogs'
 import { SentryLogger } from '@/utils/logs'
 
