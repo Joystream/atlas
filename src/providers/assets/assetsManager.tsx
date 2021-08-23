@@ -2,13 +2,13 @@ import { shuffle } from 'lodash'
 import React, { useEffect } from 'react'
 
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
-import { AssetType } from '@/providers'
 import { ResolvedAssetDetails } from '@/types/assets'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
 import { getAssetUrl, testAssetDownload } from './helpers'
 import { useAssetStore } from './store'
+import { AssetType } from './types'
 
 import { useStorageProviders } from '../storageProviders'
 

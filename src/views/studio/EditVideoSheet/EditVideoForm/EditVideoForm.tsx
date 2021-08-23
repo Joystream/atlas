@@ -6,7 +6,7 @@ import useMeasure from 'react-use-measure'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
-import { ViewErrorFallback } from '@/components'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks'

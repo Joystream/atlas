@@ -4,15 +4,13 @@ import React, { FC } from 'react'
 import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
 import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
-import {
-  InfiniteChannelWithVideosGrid,
-  InfiniteVideoGrid,
-  VideoGallery,
-  ViewErrorFallback,
-  ViewWrapper,
-} from '@/components'
+import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
+import { VideoGallery } from '@/components/VideoGallery'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { ViewWrapper } from '@/components/ViewWrapper'
 import { absoluteRoutes } from '@/config/routes'
-import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
+import { Text } from '@/shared/components/Text'
 import { SvgNavChannels, SvgNavHome, SvgNavNew } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'

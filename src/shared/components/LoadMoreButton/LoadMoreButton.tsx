@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { FC, MouseEvent } from 'react'
 
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
 type LoadMoreButtonProps = {

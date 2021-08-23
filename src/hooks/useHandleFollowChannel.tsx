@@ -1,5 +1,5 @@
 import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
-import { usePersonalDataStore } from '@/providers'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger } from '@/utils/logs'
 
 export const useHandleFollowChannel = (id?: string) => {

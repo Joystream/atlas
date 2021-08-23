@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useVideos } from '@/api/hooks'
-import { VideoGallery } from '@/components'
+import { VideoGallery } from '@/components/VideoGallery'
 import { readEnv } from '@/config/envs'
 
 const channelId = readEnv('OFFICIAL_JOYSTREAM_CHANNEL_ID')

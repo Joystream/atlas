@@ -1,7 +1,8 @@
 import { ExtrinsicFailedError, ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { TransactionDialogStep, useTransactionManagerStore } from '.'
+import { TransactionDialogStep, useTransactionManagerStore } from './store'
+
 import { useConnectionStatusStore } from '../connectionStatus'
 import { useDialog } from '../dialogs'
 import { useSnackbar } from '../snackbars'

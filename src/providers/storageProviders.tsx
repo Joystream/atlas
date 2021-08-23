@@ -9,7 +9,7 @@ import {
   GetWorkersQuery,
   GetWorkersQueryVariables,
 } from '@/api/queries/__generated__/workers.generated'
-import { ViewErrorFallback } from '@/components'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'
 

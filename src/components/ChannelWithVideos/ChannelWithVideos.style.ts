@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar, Button, Text } from '@/shared/components'
+import { Avatar } from '@/shared/components/Avatar'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 
 export const ChannelCardAnchor = styled(Link)`

@@ -3,7 +3,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
-import { ViewErrorFallback } from '@/components'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
