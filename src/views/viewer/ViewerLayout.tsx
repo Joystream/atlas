@@ -11,14 +11,7 @@ import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-
-import { ChannelView } from './ChannelView'
-import { ChannelsView } from './ChannelsView'
-import { HomeView } from './HomeView'
-import { NewView } from './NewView'
-import { PopularView } from './PopularView'
-import { SearchOverlayView } from './SearchOverlayView'
-import { VideoView } from './VideoView'
+import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },

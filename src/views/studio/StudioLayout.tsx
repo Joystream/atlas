@@ -19,14 +19,15 @@ import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
 import { isAllowedBrowser } from '@/utils/browser'
-
-import { CreateEditChannelView } from './CreateEditChannelView'
-import { CreateMemberView } from './CreateMemberView'
-import { EditVideoSheet } from './EditVideoSheet'
-import { MyUploadsView } from './MyUploadsView'
-import { MyVideosView } from './MyVideosView'
-import { SignInJoinView } from './SignInJoinView'
-import { SignInView } from './SignInView'
+import {
+  CreateEditChannelView,
+  CreateMemberView,
+  EditVideoSheet,
+  MyUploadsView,
+  MyVideosView,
+  SignInJoinView,
+  SignInView,
+} from '@/views/studio'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
