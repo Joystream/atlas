@@ -25,7 +25,10 @@ class _SentryLogger {
   initialize(DSN: string) {
     Sentry.init({
       dsn: DSN,
-      ignoreErrors: ['ResizeObserver loop limit exceeded'],
+      ignoreErrors: [
+        'ResizeObserver loop limit exceeded',
+        'ResizeObserver loop completed with undelivered notifications',
+      ],
     })
     this.initialized = true
   }
