@@ -11,11 +11,11 @@ import {
   StepTitle,
   StepWrapper,
   StyledProgress,
-} from './Stepper.styles'
+} from './Step.styles'
 
 import { IconButton } from '../IconButton'
 
-export type StepperProps = {
+export type StepProps = {
   title: string
   variant?: 'file' | 'default'
   completed?: boolean
@@ -29,7 +29,7 @@ export type StepperProps = {
   onClick?: () => void
   onDelete?: () => void
 }
-export const Stepper: React.FC<StepperProps> = ({
+export const Step: React.FC<StepProps> = ({
   variant = 'default',
   thumbnailUrl,
   isLoading,

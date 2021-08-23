@@ -11,7 +11,7 @@ import { getVideoMetadata } from '@/utils/video'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 import { FileSelect } from '../FileSelect'
-import { Stepper } from '../Stepper'
+import { Step } from '../Step'
 
 type InputFile = {
   url?: string | null
@@ -203,7 +203,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         error={error}
       />
       <StepsContainer>
-        <Stepper
+        <Step
           variant="file"
           type="video"
           number={1}
@@ -218,7 +218,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <StepDivider>
           <SvgGlyphChevronRight />
         </StepDivider>
-        <Stepper
+        <Step
           variant="file"
           type="image"
           number={2}

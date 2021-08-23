@@ -1,11 +1,11 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { Stepper, StepperProps } from './Stepper'
+import { Step, StepProps } from './Step'
 
 export default {
   title: 'Shared/S/Stepper',
-  component: Stepper,
+  component: Step,
   args: {
     number: 1,
     title: 'Step title',
@@ -13,7 +13,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<StepperProps> = (args) => <Stepper {...args} />
+const Template: Story<StepProps> = (args) => <Step {...args} />
 
 export const Default = Template.bind({})
 
