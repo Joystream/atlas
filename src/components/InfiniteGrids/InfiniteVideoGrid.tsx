@@ -7,7 +7,11 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
-import { Grid, GridHeadingContainer, LoadMoreButton, SkeletonLoader, Text, TitleContainer } from '@/shared/components'
+import { Grid } from '@/shared/components/Grid'
+import { GridHeadingContainer, TitleContainer } from '@/shared/components/GridHeading'
+import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 

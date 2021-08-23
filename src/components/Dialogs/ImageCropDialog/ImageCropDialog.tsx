@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
-import { IconButton } from '@/shared/components'
+import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'

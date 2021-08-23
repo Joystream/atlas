@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Avatar, LayoutGrid, Text } from '@/shared/components'
+import { Avatar } from '@/shared/components/Avatar'
+import { LayoutGrid } from '@/shared/components/LayoutGrid/LayoutGrid'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes } from '@/shared/theme'
 
 export const TextContainer = styled.div`

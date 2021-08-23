@@ -1,8 +1,11 @@
 import { ExtrinsicFailedError, ExtrinsicResult, ExtrinsicSignCancelledError, ExtrinsicStatus } from '@/joystream-lib'
-import { TransactionDialogStep, useConnectionStatusStore, useDialog, useSnackbar } from '@/providers'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { useTransactionManagerStore } from './store'
+import { TransactionDialogStep, useTransactionManagerStore } from './store'
+
+import { useConnectionStatusStore } from '../connectionStatus'
+import { useDialog } from '../dialogs'
+import { useSnackbar } from '../snackbars'
 
 type UpdateStatusFn = (status: TransactionDialogStep) => void
 type SuccessMessage = {

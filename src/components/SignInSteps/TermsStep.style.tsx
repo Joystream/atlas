@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Button, IconButton } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
 import { colors, sizes } from '@/shared/theme'
 
 export const TermsBox = styled.div`

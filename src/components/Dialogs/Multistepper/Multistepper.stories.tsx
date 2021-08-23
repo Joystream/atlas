@@ -2,7 +2,7 @@ import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 
 import { Multistepper } from './Multistepper'
 

@@ -4,31 +4,21 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import {
-  NoConnectionIndicator,
-  PrivateRoute,
-  StudioEntrypoint,
-  StudioLoading,
-  StudioSidenav,
-  StudioTopbar,
-  TOP_NAVBAR_HEIGHT,
-  ViewErrorBoundary,
-} from '@/components'
+import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
+import { PrivateRoute } from '@/components/PrivateRoute'
+import { StudioSidenav } from '@/components/Sidenav'
+import { StudioEntrypoint, StudioLoading } from '@/components/StudioEntrypoint'
+import { StudioTopbar, TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import {
-  ActiveUserProvider,
-  ConnectionStatusManager,
-  EditVideoSheetProvider,
-  JoystreamProvider,
-  TransactionManager,
-  UploadsManager,
-  useConnectionStatusStore,
-  useDialog,
-  useUser,
-  useVideoEditSheetRouting,
-} from '@/providers'
+import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
+import { useDialog } from '@/providers/dialogs'
+import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/editVideoSheet'
+import { JoystreamProvider } from '@/providers/joystream'
+import { TransactionManager } from '@/providers/transactionManager'
+import { UploadsManager } from '@/providers/uploadsManager'
+import { ActiveUserProvider, useUser } from '@/providers/user'
 import { isAllowedBrowser } from '@/utils/browser'
-
 import {
   CreateEditChannelView,
   CreateMemberView,
@@ -37,7 +27,7 @@ import {
   MyVideosView,
   SignInJoinView,
   SignInView,
-} from '.'
+} from '@/views/studio'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 

@@ -3,7 +3,9 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { ActiveUserProvider, ConnectionStatusManager, DialogProvider } from '@/providers'
+import { ConnectionStatusManager } from '@/providers/connectionStatus'
+import { DialogProvider } from '@/providers/dialogs'
+import { ActiveUserProvider } from '@/providers/user'
 import { colors } from '@/shared/theme'
 
 import {

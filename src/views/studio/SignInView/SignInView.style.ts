@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 
-import { LimitedWidthContainer } from '@/components'
-import { Avatar, Button, Text } from '@/shared/components'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Avatar } from '@/shared/components/Avatar'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
 export const Header = styled.header`

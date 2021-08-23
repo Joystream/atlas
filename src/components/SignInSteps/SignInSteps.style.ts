@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
 import { SvgJoystreamLogo, SvgPolkadotLogo } from '@/shared/illustrations'
 import { colors, sizes } from '@/shared/theme'

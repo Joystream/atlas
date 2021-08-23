@@ -2,8 +2,11 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { ChannelGallery, VideoGallery, VideoTile } from '@/components'
-import { SkeletonLoader, Text } from '@/shared/components'
+import { ChannelGallery } from '@/components/ChannelGallery'
+import { VideoGallery } from '@/components/VideoGallery'
+import { VideoTile } from '@/components/VideoTile'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 
 type AllResultsTabProps = {

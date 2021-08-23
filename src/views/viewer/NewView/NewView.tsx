@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { InfiniteVideoGrid, ViewWrapper } from '@/components'
+import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { PromisingNewChannels } from '@/components/PromisingNewChannels'
+import { ViewWrapper } from '@/components/ViewWrapper'
 import { absoluteRoutes } from '@/config/routes'
-import { CallToActionButton, CallToActionWrapper, Text } from '@/shared/components'
+import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
+import { Text } from '@/shared/components/Text'
 import { SvgNavChannels, SvgNavHome, SvgNavPopular } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 

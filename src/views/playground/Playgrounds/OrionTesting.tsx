@@ -8,7 +8,7 @@ import {
   useGetVideosConnectionLazyQuery,
   useGetVideosLazyQuery,
 } from '@/api/queries'
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 
 const OrionTesting = () => {
   const [data, setData] = useState<unknown>(null)

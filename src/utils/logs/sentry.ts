@@ -2,7 +2,6 @@ import * as Sentry from '@sentry/react'
 import { Severity } from '@sentry/react'
 
 import { ConsoleLogger } from './console'
-import { getUserInfo } from './shared'
 
 type LogContexts = Record<string, Record<string, unknown>>
 
@@ -21,6 +20,7 @@ class SentryError extends Error {
 
 class _SentryLogger {
   private initialized = false
+  private user?: Record<string, unknown>
 
   initialize(DSN: string) {
     Sentry.init({
@@ -31,6 +31,10 @@ class _SentryLogger {
       ],
     })
     this.initialized = true
+  }
+
+  setUser(user?: Record<string, unknown>) {
+    this.user = user
   }
 
   error(
@@ -77,7 +81,7 @@ class _SentryLogger {
         ...contexts,
       },
       tags,
-      user: getUserInfo(),
+      user: { ...this.user, ip_address: '{{auto}}' },
     })
   }
 
@@ -94,7 +98,7 @@ class _SentryLogger {
       level: Severity.fromString(level),
       contexts,
       tags: { source },
-      user: getUserInfo(),
+      user: { ...this.user, ip_address: '{{auto}}' },
     })
   }
 }

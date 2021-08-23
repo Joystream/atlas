@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
 import { QUERY_PARAMS } from '@/config/routes'
 import { useRouterQuery } from '@/hooks'
-import { useOverlayManager } from '@/providers'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { colors, zIndex } from '@/shared/theme'
 
 import { RecentSearches } from './RecentSearches'

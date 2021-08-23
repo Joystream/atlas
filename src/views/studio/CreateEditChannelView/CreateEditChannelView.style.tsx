@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Avatar, TitleArea } from '@/shared/components'
+import { Avatar } from '@/shared/components/Avatar'
+import { TitleArea } from '@/shared/components/TitleArea'
 import { media, sizes } from '@/shared/theme'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 

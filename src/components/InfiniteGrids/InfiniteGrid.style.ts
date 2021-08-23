@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 import { colors, sizes } from '@/shared/theme'
 
 export const LoadMoreButtonWrapper = styled.div`

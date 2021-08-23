@@ -1,13 +1,12 @@
 import React, { ComponentProps, useRef } from 'react'
 
-import { TitleContainer } from '@/shared/components'
 import { Arrow } from '@/shared/components/Carousel/Carousel.style'
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/shared/icons'
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.style'
 
 import { Carousel, CarouselProps } from '../Carousel/Carousel'
-import { GridHeadingContainer } from '../GridHeading'
+import { GridHeadingContainer, TitleContainer } from '../GridHeading'
 import { Text } from '../Text'
 
 export type GalleryProps = {

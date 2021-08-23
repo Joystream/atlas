@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { LimitedWidthContainer } from '@/components'
-import { Text } from '@/shared/components'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 
 export const UploadsContainer = styled(LimitedWidthContainer)`

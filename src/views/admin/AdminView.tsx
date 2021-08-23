@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { TARGET_DEV_ENV, availableEnvs, setEnvInLocalStorage } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
-import { useSnackbar } from '@/providers'
-import { Button, Select, Text } from '@/shared/components'
+import { useSnackbar } from '@/providers/snackbars'
+import { Button } from '@/shared/components/Button'
+import { Select } from '@/shared/components/Select'
+import { Text } from '@/shared/components/Text'
 import { SentryLogger } from '@/utils/logs'
 
 const items = availableEnvs().map((item) => ({ name: item, value: item }))

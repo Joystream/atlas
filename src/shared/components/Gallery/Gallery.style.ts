@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 
 import { sizes } from '../../theme'
 

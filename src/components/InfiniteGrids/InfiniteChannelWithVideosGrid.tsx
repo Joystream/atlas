@@ -11,15 +11,12 @@ import {
 import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { languages } from '@/config/languages'
-import {
-  EmptyFallback,
-  GridHeadingContainer,
-  LoadMoreButton,
-  Select,
-  SkeletonLoader,
-  Text,
-  TitleContainer,
-} from '@/shared/components'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
+import { GridHeadingContainer, TitleContainer } from '@/shared/components/GridHeading'
+import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { Select } from '@/shared/components/Select'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 

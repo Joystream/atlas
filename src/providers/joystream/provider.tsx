@@ -5,7 +5,8 @@ import { NODE_URL } from '@/config/urls'
 import { JoystreamJs } from '@/joystream-lib'
 import { SentryLogger } from '@/utils/logs'
 
-import { useConnectionStatusStore, useUser } from '..'
+import { useConnectionStatusStore } from '../connectionStatus'
+import { useUser } from '../user'
 
 type JoystreamContextValue = {
   joystream: JoystreamJs | null

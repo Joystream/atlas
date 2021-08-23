@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react'
 import React from 'react'
 
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 import { SvgGlyphUpload } from '@/shared/icons'
 
 import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'

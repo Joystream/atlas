@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphCheck } from '@/shared/icons'
 
 import {

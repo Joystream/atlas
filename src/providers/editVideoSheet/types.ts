@@ -1,4 +1,4 @@
-import { ImageInputMetadata, VideoInputMetadata } from '@/shared/components'
+import { ImageInputMetadata, VideoInputMetadata } from '@/shared/components/MultiFileSelect'
 
 export type EditVideoAssets = {
   video: {

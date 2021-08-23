@@ -3,7 +3,8 @@ import React from 'react'
 import { useVideo } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, singleDraftSelector, useAsset, useDraftStore } from '@/providers'
+import { AssetType, useAsset } from '@/providers/assets'
+import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import {
   VideoTileBase,
   VideoTileBaseMetaProps,

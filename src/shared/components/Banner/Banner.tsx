@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { IconButton } from '@/shared/components'
+import { IconButton } from '@/shared/components/IconButton'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphClose } from '@/shared/icons'
 
 import {

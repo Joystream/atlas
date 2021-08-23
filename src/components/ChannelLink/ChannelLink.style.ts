@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SkeletonLoader, Text } from '@/shared/components'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 
 type ContainerProps = {

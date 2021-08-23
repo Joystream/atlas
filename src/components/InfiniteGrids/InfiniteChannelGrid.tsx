@@ -7,7 +7,8 @@ import {
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
 } from '@/api/queries'
-import { Grid, Text } from '@/shared/components'
+import { Grid } from '@/shared/components/Grid'
+import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 

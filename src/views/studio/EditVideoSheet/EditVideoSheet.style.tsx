@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components'
-import { ActionBarTransaction } from '@/shared/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { ActionBarTransaction } from '@/shared/components/ActionBar'
 import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`

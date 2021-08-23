@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useMostViewedVideos } from '@/api/hooks'
-import { VideoGallery } from '@/components'
+import { VideoGallery } from '@/components/VideoGallery'
 
 export const TopTenThisWeek = () => {
   const { videos, loading } = useMostViewedVideos({ limit: 10, timePeriodDays: 7 })

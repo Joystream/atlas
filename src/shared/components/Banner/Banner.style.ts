@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 
-import { Button, Text } from '@/shared/components'
 import { colors, sizes } from '@/shared/theme'
 
 import { BannerVariant } from './Banner'
+
+import { Button } from '../Button'
+import { Text } from '../Text'
 
 type BannerProps = {
   variant: BannerVariant
