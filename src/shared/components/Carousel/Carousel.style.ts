@@ -44,6 +44,9 @@ export const Arrow = styled(IconButton)`
 export const GliderContainer = styled.div`
   padding-left: ${sizes(2)};
   padding-top: ${sizes(2)};
+
+  /* hides scrollbar on firefox */
+  scrollbar-width: none;
 `
 
 export const Track = styled.div`
