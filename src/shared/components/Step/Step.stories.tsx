@@ -4,7 +4,7 @@ import React from 'react'
 import { Step, StepProps } from './Step'
 
 export default {
-  title: 'Shared/S/Stepper',
+  title: 'Shared/S/Step',
   component: Step,
   args: {
     number: 1,
