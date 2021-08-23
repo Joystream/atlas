@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
+import { ResolvedAssetDetails } from '@/types/assets'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
@@ -111,6 +112,14 @@ export const useStartFileUpload = () => {
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
       const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
 
+      const assetDetails: ResolvedAssetDetails = {
+        contentId: asset.contentId,
+        assetType: asset.type,
+        assetUrl,
+        storageProviderId,
+        storageProviderUrl: storageUrl,
+      }
+
       try {
         if (!fileInState && !file) {
           throw Error('File was not provided nor found')
@@ -166,10 +175,17 @@ export const useStartFileUpload = () => {
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
+
+        const performanceEntries = performance.getEntriesByName(assetUrl)
+        if (performanceEntries.length === 1) {
+          AssetLogger.uploadRequestMetric(assetDetails, performanceEntries[0].duration, file?.size || 0)
+        }
       } catch (e) {
         SentryLogger.error('Failed to upload asset', 'UploadsManager', e, {
           asset: { contentId: asset.contentId, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
         })
+        AssetLogger.uploadError(assetDetails)
+
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
         const axiosError = e as AxiosError
