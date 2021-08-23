@@ -9,6 +9,7 @@ import { routingTransitions } from '@/styles/routingTransitions'
 import { MainLayout } from './MainLayout'
 import { AssetsManager } from './providers/assets'
 import { DialogProvider } from './providers/dialogs'
+import { EnvironmentProvider } from './providers/environment'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { StorageProvidersProvider } from './providers/storageProviders'
@@ -25,11 +26,13 @@ export const App = () => {
         <BrowserRouter>
           <OverlayManagerProvider>
             <StorageProvidersProvider>
-              <DialogProvider>
-                <MainLayout />
-                <Snackbars />
-                <AssetsManager />
-              </DialogProvider>
+              <EnvironmentProvider>
+                <DialogProvider>
+                  <MainLayout />
+                  <Snackbars />
+                  <AssetsManager />
+                </DialogProvider>
+              </EnvironmentProvider>
             </StorageProvidersProvider>
           </OverlayManagerProvider>
         </BrowserRouter>
