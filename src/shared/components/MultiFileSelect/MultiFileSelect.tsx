@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
-import { SvgGlyphChevronRight } from '@/shared/icons'
+import { SvgGlyphChevronRight, SvgGlyphFileVideo } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
@@ -205,12 +205,12 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       <StepsContainer>
         <Step
           variant="file"
-          type="video"
           number={1}
-          isFileSet={!!files.video}
           title={files.video ? 'Video file' : 'Add video file'}
           active={step === 'video'}
+          stepPlaceholder={!!files.video && <SvgGlyphFileVideo />}
           disabled={editMode}
+          completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
           onClick={() => handleChangeStep('video')}
           isLoading={isLoading}
@@ -220,16 +220,15 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         </StepDivider>
         <Step
           variant="file"
-          type="image"
+          stepPlaceholder={files.thumbnail?.url ? <img src={files.thumbnail?.url} alt="thumbnail" /> : undefined}
           number={2}
-          isFileSet={!!files.thumbnail?.url}
           title={files.thumbnail ? 'Thumbnail image' : 'Add thumbnail image'}
           active={step === 'image'}
           thumbnailUrl={files.thumbnail?.url}
           disabled={editMode}
+          completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
           onClick={() => handleChangeStep('image')}
-          isLoading={isLoading}
         />
       </StepsContainer>
       <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />

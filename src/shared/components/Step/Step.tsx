@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { SvgGlyphCheck, SvgGlyphFileVideo, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
+import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 
 import {
   Overhead,
@@ -21,30 +21,25 @@ export type StepProps = {
   completed?: boolean
   thumbnailUrl?: string | null
   isLoading?: boolean
-  type?: 'video' | 'image'
-  isFileSet?: boolean
   disabled?: boolean
   active?: boolean
   number?: number
+  stepPlaceholder?: React.ReactNode
   onClick?: () => void
   onDelete?: () => void
 }
 export const Step: React.FC<StepProps> = ({
   variant = 'default',
-  thumbnailUrl,
   isLoading,
-  type,
   disabled,
   active,
   completed,
   onClick,
   title,
   number,
-  isFileSet,
+  stepPlaceholder,
   onDelete,
 }) => {
-  const fileVariant = variant === 'file'
-
   const [circularProgress, setCircularProgress] = useState(0)
 
   useEffect(() => {
@@ -62,16 +57,13 @@ export const Step: React.FC<StepProps> = ({
   return (
     <StepWrapper aria-disabled={disabled} active={active} onClick={() => !disabled && onClick?.()} variant={variant}>
       <StepStatus>
-        {!isFileSet && <StepNumber active={active}>{completed ? <SvgGlyphCheck /> : number}</StepNumber>}
-        {isFileSet &&
-          (isLoading ? (
-            <StyledProgress value={circularProgress} maxValue={100} />
-          ) : (
-            <StepImage>
-              {type === 'video' && <SvgGlyphFileVideo />}
-              {type === 'image' && thumbnailUrl && <img src={thumbnailUrl} alt="thumbnail" />}
-            </StepImage>
-          ))}
+        {isLoading ? (
+          <StyledProgress value={circularProgress} maxValue={100} />
+        ) : stepPlaceholder ? (
+          <StepImage>{stepPlaceholder}</StepImage>
+        ) : (
+          <StepNumber active={active}>{completed ? <SvgGlyphCheck /> : number}</StepNumber>
+        )}
         <StepDetails>
           <Overhead variant="caption" secondary>
             Step {number}
@@ -79,8 +71,8 @@ export const Step: React.FC<StepProps> = ({
           <StepTitle variant="overhead">{title}</StepTitle>
         </StepDetails>
       </StepStatus>
-      {fileVariant && isFileSet && (
-        <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
+      {onDelete && completed && !isLoading && (
+        <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete()}>
           {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
         </IconButton>
       )}
