@@ -1,7 +1,7 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { ColorVariants } from './CallToActionButton'
 
@@ -41,6 +41,12 @@ export const BodyWrapper = styled(Text)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: ${typography.sizes.h6};
+  font-weight: ${typography.weights.bold};
+
+  ${media.compact} {
+    font-size: ${typography.sizes.h5};
+  }
 `
 
 export const ContentWrapper = styled.div`
