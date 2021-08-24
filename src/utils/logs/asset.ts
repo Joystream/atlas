@@ -77,6 +77,24 @@ class _AssetLogger {
     }
     this.addEvent(event)
   }
+
+  uploadError(assetDetails: ResolvedAssetDetails) {
+    const event: AssetEvent = {
+      type: 'asset-upload-failure',
+      ...assetDetails,
+    }
+    this.addEvent(event)
+  }
+
+  uploadRequestMetric(assetDetails: ResolvedAssetDetails, uploadTime: number, fileSize: number) {
+    const event: AssetEvent = {
+      type: 'asset-upload-request-time',
+      ...assetDetails,
+      uploadTime,
+      fileSize,
+    }
+    this.addEvent(event)
+  }
 }
 
 export const AssetLogger = new _AssetLogger()
