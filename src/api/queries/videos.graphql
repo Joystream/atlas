@@ -67,6 +67,13 @@ query GetVideo($where: VideoWhereUniqueInput!) {
   }
 }
 
+query GetVideoAssetAvailability($where: VideoWhereUniqueInput!) {
+  videoByUniqueInput(where: $where) {
+    mediaAvailability
+    thumbnailPhotoAvailability
+  }
+}
+
 query GetVideosConnection(
   $first: Int
   $after: String
