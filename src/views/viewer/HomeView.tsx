@@ -10,10 +10,9 @@ import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
 import { TopTenThisWeek } from '@/components/TopTenThisWeek'
 import { VideoHero } from '@/components/VideoHero'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { VideoContentTemplate } from '@/components/templates'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
-import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -48,51 +47,33 @@ export const HomeView: React.FC = () => {
   }
 
   return (
-    <LimitedWidthContainer big>
-      <VideoHero />
-      <Container className={transitions.names.slide}>
-        {!followedLoading && followedChannelsVideosCount ? (
+    <VideoContentTemplate cta={['popular', 'new', 'channels']}>
+      <LimitedWidthContainer big>
+        <VideoHero />
+        <Container className={transitions.names.slide}>
+          {!followedLoading && followedChannelsVideosCount ? (
+            <InfiniteVideoGrid
+              title="Followed channels"
+              channelIdIn={channelIdIn}
+              ready={!followedLoading}
+              onDemand
+              titleLoader
+            />
+          ) : null}
           <InfiniteVideoGrid
-            title="Followed channels"
-            channelIdIn={channelIdIn}
-            ready={!followedLoading}
+            title="Popular on Joystream"
+            idIn={mostViewedVideosIds}
+            ready={!mostViewedVideosLoading}
             onDemand
             titleLoader
           />
-        ) : null}
-        <InfiniteVideoGrid
-          title="Popular on Joystream"
-          idIn={mostViewedVideosIds}
-          ready={!mostViewedVideosLoading}
-          onDemand
-          titleLoader
-        />
-        <TopTenThisWeek />
-        <OfficialJoystreamUpdate />
-        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
-        <InfiniteVideoGrid title="All content" onDemand />
-        <CallToActionWrapper>
-          <CallToActionButton
-            label="Popular on Joystream"
-            to={absoluteRoutes.viewer.popular()}
-            colorVariant="red"
-            icon={<SvgNavPopular />}
-          />
-          <CallToActionButton
-            label="New & Noteworthy"
-            to={absoluteRoutes.viewer.new()}
-            colorVariant="green"
-            icon={<SvgNavNew />}
-          />
-          <CallToActionButton
-            label="Browse channels"
-            to={absoluteRoutes.viewer.channels()}
-            colorVariant="blue"
-            icon={<SvgNavChannels />}
-          />
-        </CallToActionWrapper>
-      </Container>
-    </LimitedWidthContainer>
+          <TopTenThisWeek />
+          <OfficialJoystreamUpdate />
+          <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
+          <InfiniteVideoGrid title="All content" onDemand />
+        </Container>
+      </LimitedWidthContainer>
+    </VideoContentTemplate>
   )
 }
 

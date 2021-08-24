@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import React, { FC } from 'react'
 
 import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
@@ -7,12 +6,8 @@ import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { VideoGallery } from '@/components/VideoGallery'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { ViewWrapper } from '@/components/ViewWrapper'
+import { VideoContentTemplate } from '@/components/templates'
 import { absoluteRoutes } from '@/config/routes'
-import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
-import { Text } from '@/shared/components/Text'
-import { SvgNavChannels, SvgNavHome, SvgNavNew } from '@/shared/icons'
-import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 export const PopularView: FC = () => {
@@ -42,8 +37,7 @@ export const PopularView: FC = () => {
   }
 
   return (
-    <StyledViewWrapper>
-      <Header variant="h2">Popular on Joystream</Header>
+    <VideoContentTemplate title="Popular on Joystream" cta={['new', 'home', 'channels']}>
       <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
       <InfiniteVideoGrid title="Popular videos" idIn={mostViewedVideosIds} ready={!mostViewedVideosLoading} onDemand />
       <InfiniteChannelWithVideosGrid
@@ -52,40 +46,6 @@ export const PopularView: FC = () => {
         idIn={mostViewedChannelsAllTimeIds}
         additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }}
       />
-      <CallToActionWrapper>
-        <CallToActionButton
-          label="New & Noteworthy"
-          to={absoluteRoutes.viewer.new()}
-          colorVariant="green"
-          icon={<SvgNavNew />}
-        />
-        <CallToActionButton
-          label="Home"
-          to={absoluteRoutes.viewer.index()}
-          colorVariant="yellow"
-          icon={<SvgNavHome />}
-        />
-        <CallToActionButton
-          label="Browse channels"
-          to={absoluteRoutes.viewer.channels()}
-          colorVariant="blue"
-          icon={<SvgNavChannels />}
-        />
-      </CallToActionWrapper>
-    </StyledViewWrapper>
+    </VideoContentTemplate>
   )
 }
-
-const Header = styled(Text)`
-  margin: ${sizes(17)} 0;
-`
-
-const StyledViewWrapper = styled(ViewWrapper)`
-  padding-bottom: ${sizes(16)};
-
-  > section {
-    :not(:first-of-type) {
-      margin-top: ${sizes(32)};
-    }
-  }
-`
