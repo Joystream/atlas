@@ -10,7 +10,7 @@ import {
 } from '@/shared/components/CallToActionButton'
 import { Text } from '@/shared/components/Text'
 import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
-import { media, sizes } from '@/shared/theme'
+import { media, sizes, typography } from '@/shared/theme'
 
 type CtaData = 'home' | 'new' | 'channels' | 'popular'
 
@@ -73,11 +73,12 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
 const Header = styled(Text)`
   margin: ${sizes(16)} 0 ${sizes(18)};
-  font-size: ${sizes(8)};
+  font-size: ${typography.sizes.h3};
+  font-weight: ${typography.weights.bold};
 
   ${media.large} {
     margin: ${sizes(16)} 0 ${sizes(17)};
-    font-size: ${sizes(10)};
+    font-size: ${typography.sizes.h2};
   }
 `
 
