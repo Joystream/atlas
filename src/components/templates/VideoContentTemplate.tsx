@@ -10,7 +10,7 @@ import {
 } from '@/shared/components/CallToActionButton'
 import { Text } from '@/shared/components/Text'
 import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
-import { media, sizes, transitions } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 type CtaData = 'home' | 'new' | 'channels' | 'popular'
 
