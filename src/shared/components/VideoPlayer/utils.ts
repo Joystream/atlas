@@ -1,7 +1,5 @@
 import { VideoJsPlayer } from 'video.js'
 
-import { PlayerState } from '../VideoPlayer'
-
 export const VOLUME_STEP = 0.1
 
 export enum CustomVideojsEvents {
@@ -17,7 +15,7 @@ export enum CustomVideojsEvents {
   PauseControl = 'PAUSE_CONTROL',
 }
 
-export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlayer, playerState: PlayerState) => {
+export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlayer) => {
   if (!playerInstance) {
     return
   }
@@ -32,13 +30,17 @@ export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlay
   switch (event.code) {
     case 'Space':
     case 'KeyK':
-      if (playerState === 'loading') return
-      if (!isPaused && playerState === 'playing') {
-        playerInstance.pause()
+      if (!isPaused) {
         playerInstance.trigger(CustomVideojsEvents.PauseControl)
-      } else {
-        playerInstance.play()
+        playerInstance.pause()
+      }
+      if (isPaused) {
         playerInstance.trigger(CustomVideojsEvents.PlayControl)
+        const playPromise = playerInstance.play()
+        if (!playPromise) return
+        playPromise.catch(() => {
+          playerInstance.trigger(CustomVideojsEvents.PauseControl)
+        })
       }
       return
     case 'ArrowLeft':

@@ -61,13 +61,14 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playing' | 'paused' | null
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | null
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
+  const [isPlaying, setIsPlaying] = useState(false)
   const currentVolume = usePersonalDataStore((state) => state.currentVolume)
   const cachedVolume = usePersonalDataStore((state) => state.cachedVolume)
   const setCurrentVolume = usePersonalDataStore((state) => state.actions.setCurrentVolume)
@@ -98,7 +99,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
       if (playerReservedKeys.includes(event.key)) {
         event.preventDefault()
-        hotkeysHandler(event, player, playerState)
+        hotkeysHandler(event, player)
       }
     }
     document.addEventListener('keydown', handler)
@@ -129,7 +130,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (playPromise) {
       playPromise
         .then(() => {
-          setPlayerState('playing')
+          setIsPlaying(true)
         })
         .catch((e) => {
           if (e.name === 'NotAllowedError') {
@@ -152,15 +153,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
       }
-      if (event.type === 'canplaythrough' || event.type === 'seeked') {
-        if (playerState !== null) {
-          setPlayerState('playing')
-        }
+      if (event.type === 'canplay' || event.type === 'seeked') {
+        setPlayerState('playingOrPaused')
       }
     }
-    player.on(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
+    player.on(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     return () => {
-      player.off(['waiting', 'canplaythrough', 'seeking', 'seeked'], handler)
+      player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
   }, [player, playerState])
 
@@ -200,7 +199,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (playPromise) {
       playPromise
         .then(() => {
-          setPlayerState('playing')
+          setIsPlaying(true)
         })
         .catch((e) => {
           ConsoleLogger.warn('Video autoplay failed', e)
@@ -226,11 +225,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     const handler = (event: Event) => {
-      if (event.type === 'play' && playerState !== 'loading') {
-        setPlayerState('playing')
+      if (event.type === 'play') {
+        setIsPlaying(true)
       }
-      if (event.type === 'pause' && playerState !== 'loading') {
-        setPlayerState('paused')
+      if (event.type === 'pause') {
+        setIsPlaying(false)
       }
     }
     player.on(['play', 'pause'], handler)
@@ -375,7 +374,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // button/input handlers
   const handlePlayPause = () => {
-    if (playerState === 'playing') {
+    if (isPlaying) {
       player?.pause()
       player?.trigger(CustomVideojsEvents.PauseControl)
     } else {
@@ -464,12 +463,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   <PlayButton
                     isEnded={playerState === 'ended'}
                     onClick={handlePlayPause}
-                    tooltipText={playerState === 'playing' ? 'Pause (k)' : 'Play (k)'}
+                    tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
                     tooltipPosition="left"
                   >
                     {playerState === 'ended' ? (
                       <SvgPlayerRestart />
-                    ) : playerState === 'playing' ? (
+                    ) : isPlaying ? (
                       <SvgPlayerPause />
                     ) : (
                       <SvgPlayerPlay />
