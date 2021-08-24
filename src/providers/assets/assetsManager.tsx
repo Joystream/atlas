@@ -55,24 +55,25 @@ export const AssetsManager: React.FC = () => {
           assetUrl,
         }
 
-        assetTestPromise.then((responseTime) => {
-          if (resolutionData.assetType === AssetType.MEDIA) {
-            // we're currently skipping monitoring video files as it's hard to measure their performance
-            // image assets are easy to measure but videos vary in length and size
-            // we will be able to handle that once we can access more detailed response timing
-            return
-          }
+        assetTestPromise
+          .then((responseTime) => {
+            if (resolutionData.assetType === AssetType.MEDIA) {
+              // we're currently skipping monitoring video files as it's hard to measure their performance
+              // image assets are easy to measure but videos vary in length and size
+              // we will be able to handle that once we can access more detailed response timing
+              return
+            }
 
-          // if response takes <20ms assume it's coming from cache
-          // we shouldn't need that once we can do detailed timing, then we can check directly
-          if (responseTime > 20) {
-            AssetLogger.assetResponseMetric(assetDetails, responseTime)
-          }
-        })
-        assetTestPromise.catch(() => {
-          AssetLogger.assetError(assetDetails)
-          ConsoleLogger.error('Failed to load asset', assetDetails)
-        })
+            // if response takes <20ms assume it's coming from cache
+            // we shouldn't need that once we can do detailed timing, then we can check directly
+            if (responseTime > 20) {
+              AssetLogger.assetResponseMetric(assetDetails, responseTime)
+            }
+          })
+          .catch(() => {
+            AssetLogger.assetError(assetDetails)
+            ConsoleLogger.error('Failed to load asset', assetDetails)
+          })
         const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
 
         try {
