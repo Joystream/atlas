@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
@@ -11,7 +10,6 @@ import { VideoPlayer } from '@/shared/components/VideoPlayer'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
-import { transitions } from '@/shared/theme'
 
 import {
   ButtonsContainer,
@@ -36,7 +34,7 @@ export const VideoHero: React.FC = () => {
   const coverVideo = useVideoHero()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
-  const [displayControls, setDisplayControls] = useState(false)
+  const [disabledControls, setDisabledControls] = useState(true)
   const [soundMuted, setSoundMuted] = useState(true)
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: coverVideo?.video,
@@ -45,7 +43,7 @@ export const VideoHero: React.FC = () => {
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
-      setDisplayControls(true)
+      setDisabledControls(false)
       setVideoPlaying(true)
     }, VIDEO_PLAYBACK_DELAY)
   }
@@ -105,22 +103,26 @@ export const VideoHero: React.FC = () => {
           </GridItem>
         </LayoutGrid>
         <ButtonsSpaceKeeper>
-          <CSSTransition
-            in={displayControls}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-            unmountOnExit
-            appear
-          >
+          {coverVideo && (
             <ButtonsContainer>
-              <Button to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')} icon={<SvgActionPlay />}>
+              <Button
+                size="large"
+                to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
+                icon={<SvgActionPlay />}
+                disabled={disabledControls}
+              >
                 Play
               </Button>
-              <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
+              <SoundButton
+                size="large"
+                variant="secondary"
+                onClick={handleSoundToggleClick}
+                disabled={disabledControls}
+              >
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>
             </ButtonsContainer>
-          </CSSTransition>
+          )}
         </ButtonsSpaceKeeper>
       </InfoContainer>
     </Container>
