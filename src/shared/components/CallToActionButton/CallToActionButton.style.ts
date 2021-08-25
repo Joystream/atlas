@@ -41,7 +41,6 @@ export const BodyWrapper = styled(Text)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: ${typography.sizes.h6};
 
   ${media.compact} {
     font-size: ${typography.sizes.h5};
