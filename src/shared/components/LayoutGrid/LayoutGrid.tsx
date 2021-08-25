@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { media } from '@/shared/theme'
 
-type ReponsivenessObject = Partial<Record<keyof typeof media, number>>
+type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
 
 export const LayoutGrid = styled.div`
   display: grid;
@@ -30,15 +30,15 @@ const createBreakpointGridItemRules =
   (breakpointKey: keyof ReponsivenessObject) =>
   ({ colStart, colSpan, rowStart, rowSpan }: GridItemProps) =>
     css`
-      ${media[breakpointKey]} {
+      ${breakpointKey === 'base' ? '@media screen and (min-width: 0px)' : media[breakpointKey]} {
         ${isResponsivenessObject(colStart) &&
         colStart[breakpointKey] &&
         `grid-column-start: ${colStart[breakpointKey]};`}
         ${isResponsivenessObject(colSpan) &&
         colSpan[breakpointKey] &&
         `grid-column-end: span ${colSpan[breakpointKey]};`}
-    ${isResponsivenessObject(rowStart) && rowStart[breakpointKey] && `grid-row-start: ${rowStart[breakpointKey]};`}
-    ${isResponsivenessObject(rowSpan) && rowSpan[breakpointKey] && `grid-row-end: span ${rowSpan[breakpointKey]};`}
+        ${isResponsivenessObject(rowStart) && rowStart[breakpointKey] && `grid-row-start: ${rowStart[breakpointKey]};`}
+        ${isResponsivenessObject(rowSpan) && rowSpan[breakpointKey] && `grid-row-end: span ${rowSpan[breakpointKey]};`}
       }
     `
 
@@ -48,6 +48,7 @@ export const GridItem = styled.div<GridItemProps>`
   ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
   ${({ rowSpan }) => !isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
   
+  ${createBreakpointGridItemRules('base')}
   ${createBreakpointGridItemRules('xxs')}
   ${createBreakpointGridItemRules('xs')}
   ${createBreakpointGridItemRules('sm')}
