@@ -1,14 +1,6 @@
-import { TARGET_DEV_ENV, availableEnvs } from '@/config/envs'
 import { createStore } from '@/store'
 
 const LOCAL_STORAGE_KEY = 'environment'
-const env: 'development' | 'production' | 'mocking' = availableEnvs().includes(TARGET_DEV_ENV) ? TARGET_DEV_ENV : null
-
-const DEFAULT_NODE = {
-  development: 'wss://sumer-dev-2.joystream.app/rpc',
-  production: 'wss://rome-rpc-endpoint.joystream.org:9944',
-  mocking: 'ws://127.0.0.1:9944',
-}
 
 export type EnvironmentState = {
   selectedNode: string
@@ -16,8 +8,8 @@ export type EnvironmentState = {
 }
 
 const INITIAL_STATE: EnvironmentState = {
-  selectedNode: DEFAULT_NODE[env],
-  targetEnv: env,
+  targetEnv: 'development',
+  selectedNode: 'wss://sumer-dev-2.joystream.app/rpc',
 }
 
 export type EnvironmentStoreActions = {

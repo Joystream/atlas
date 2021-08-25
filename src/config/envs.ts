@@ -1,9 +1,9 @@
+import { useEnvironmentStore } from '@/providers/environment/store'
+
 type BuildEnv = 'production' | 'development'
 
 export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
-const environment = window.localStorage.getItem('environment')
-const target_env = environment ? JSON.parse(environment).state.targetEnv : null
-export const TARGET_DEV_ENV = target_env ? target_env : 'development'
+export const TARGET_DEV_ENV = useEnvironmentStore.getState().targetEnv
 export const ENV_PREFIX = 'REACT_APP'
 
 export const availableEnvs = () => {
