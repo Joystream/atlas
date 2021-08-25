@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
 
+import { Text } from '@/shared/components'
 import { colors, sizes, transitions } from '@/shared/theme'
 
 import { Text } from '../Text'
