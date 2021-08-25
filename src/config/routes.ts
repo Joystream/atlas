@@ -19,6 +19,7 @@ export const relativeRoutes = {
   viewer: {
     index: () => '',
     new: () => 'new',
+    discover: () => 'discover',
     popular: () => 'popular',
     search: (query?: { query?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
