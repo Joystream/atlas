@@ -5,12 +5,11 @@ import { useMostViewedVideosIds } from '@/api/hooks'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
 import { TopTenThisWeek } from '@/components/TopTenThisWeek'
 import { VideoHero } from '@/components/VideoHero'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { VideoContentTemplate } from '@/components/templates'
+import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/shared/theme'
@@ -48,31 +47,29 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <LimitedWidthContainer big>
-        <VideoHero />
-        <Container className={transitions.names.slide}>
-          {!followedLoading && followedChannelsVideosCount ? (
-            <InfiniteVideoGrid
-              title="Followed channels"
-              channelIdIn={channelIdIn}
-              ready={!followedLoading}
-              onDemand
-              titleLoader
-            />
-          ) : null}
+      <VideoHero />
+      <Container className={transitions.names.slide}>
+        {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
-            title="Popular on Joystream"
-            idIn={mostViewedVideosIds}
-            ready={!mostViewedVideosLoading}
+            title="Followed channels"
+            channelIdIn={channelIdIn}
+            ready={!followedLoading}
             onDemand
             titleLoader
           />
-          <TopTenThisWeek />
-          <OfficialJoystreamUpdate />
-          <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
-          <InfiniteVideoGrid title="All content" onDemand />
-        </Container>
-      </LimitedWidthContainer>
+        ) : null}
+        <InfiniteVideoGrid
+          title="Popular on Joystream"
+          idIn={mostViewedVideosIds}
+          ready={!mostViewedVideosLoading}
+          onDemand
+          titleLoader
+        />
+        <TopTenThisWeek />
+        <OfficialJoystreamUpdate />
+        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
+        <InfiniteVideoGrid title="All content" onDemand />
+      </Container>
     </VideoContentTemplate>
   )
 }

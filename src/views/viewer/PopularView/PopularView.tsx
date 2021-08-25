@@ -6,7 +6,7 @@ import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { VideoGallery } from '@/components/VideoGallery'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { VideoContentTemplate } from '@/components/templates'
+import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { SentryLogger } from '@/utils/logs'
 

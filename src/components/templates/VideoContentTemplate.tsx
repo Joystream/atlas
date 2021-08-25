@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import React from 'react'
 
-import { ViewWrapper } from '@/components/ViewWrapper'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { absoluteRoutes } from '@/config/routes'
 import {
   CallToActionButton,
@@ -47,23 +47,20 @@ const CTA_MAP: Record<string, CallToActionButtonProps> = {
 }
 
 export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
-  const renderCta = useMemo(
-    () =>
-      cta &&
-      cta.map((item, idx) => (
-        <CallToActionButton
-          key={`cta-${idx}`}
-          label={CTA_MAP[item].label}
-          to={CTA_MAP[item].to}
-          colorVariant={CTA_MAP[item].colorVariant}
-          icon={CTA_MAP[item].icon}
-        />
-      )),
-    [cta]
-  )
+  const renderCta =
+    cta &&
+    cta.map((item, idx) => (
+      <CallToActionButton
+        key={`cta-${idx}`}
+        label={CTA_MAP[item].label}
+        to={CTA_MAP[item].to}
+        colorVariant={CTA_MAP[item].colorVariant}
+        icon={CTA_MAP[item].icon}
+      />
+    ))
 
   return (
-    <StyledViewWrapper>
+    <StyledViewWrapper big>
       {title && <Header>{title}</Header>}
       {children}
       {cta && <CallToActionWrapper>{renderCta}</CallToActionWrapper>}
@@ -82,7 +79,7 @@ const Header = styled(Text)`
   }
 `
 
-const StyledViewWrapper = styled(ViewWrapper)`
+const StyledViewWrapper = styled(LimitedWidthContainer)`
   padding-bottom: ${sizes(16)};
 
   > section {
