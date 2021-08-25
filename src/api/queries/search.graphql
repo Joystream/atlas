@@ -5,7 +5,7 @@ query Search($text: String!, $whereVideo: VideoWhereInput, $whereChannel: Channe
         ...VideoFields
       }
       ... on Channel {
-        ...BasicChannelFields
+        ...AllChannelFields
       }
     }
   }

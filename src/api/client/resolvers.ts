@@ -6,26 +6,24 @@ import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 import {
+  ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
   ORION_BATCHED_FOLLOWS_QUERY_NAME,
   ORION_BATCHED_VIEWS_QUERY_NAME,
+  ORION_CHANNEL_VIEWS_QUERY_NAME,
   ORION_FOLLOWS_QUERY_NAME,
   ORION_VIEWS_QUERY_NAME,
-  RemoveQueryNodeFollowsField,
-  RemoveQueryNodeViewsField,
-  TransformBatchedOrionFollowsField,
-  TransformBatchedOrionViewsField,
-  TransformOrionFollowsField,
-  TransformOrionViewsField,
-} from './transforms'
-import {
-  ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
-  ORION_CHANNEL_VIEWS_QUERY_NAME,
+  RemoveQueryNodeChannelFollowsField,
+  RemoveQueryNodeChannelViewsField,
+  RemoveQueryNodeVideoViewsField,
   TransformBatchedChannelOrionViewsField,
+  TransformBatchedOrionFollowsField,
+  TransformBatchedOrionVideoViewsField,
   TransformOrionChannelViewsField,
-} from './transforms/orionViews'
-import { RemoveQueryNodeChannelViewsField } from './transforms/queryNodeViews'
+  TransformOrionFollowsField,
+  TransformOrionVideoViewsField,
+} from './transforms'
 
-import { Channel, ChannelEdge, Video, VideoEdge } from '../queries'
+import { Channel, ChannelEdge, SearchFtsOutput, Video, VideoEdge } from '../queries'
 
 const BATCHED_VIDEO_VIEWS_QUERY_NAME = 'GetBatchedVideoViews'
 const BATCHED_CHANNEL_VIEWS_QUERY_NAME = 'GetBatchedChannelViews'
@@ -58,19 +56,19 @@ export const queryNodeStitchingResolvers = (
   Query: {
     // video queries
     videoByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'videoByUniqueInput', [
-      RemoveQueryNodeViewsField,
+      RemoveQueryNodeVideoViewsField,
     ]),
     videos: async (parent, args, context, info) => {
-      const videosResolver = createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeViewsField])
+      const videosResolver = createResolverWithTransforms(queryNodeSchema, 'videos', [RemoveQueryNodeVideoViewsField])
       const videos = await videosResolver(parent, args, context, info)
-      const batchedVideoViewsResolver = createResolverWithTransforms(
-        orionSchema,
-        ORION_BATCHED_VIEWS_QUERY_NAME,
-        [TransformBatchedOrionViewsField],
-        // operationName has to be manually kept in sync with the query name used
-        BATCHED_VIDEO_VIEWS_QUERY_NAME
-      )
       try {
+        const batchedVideoViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_VIEWS_QUERY_NAME,
+          [TransformBatchedOrionVideoViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_VIDEO_VIEWS_QUERY_NAME
+        )
         const batchedVideoViews = await batchedVideoViewsResolver(
           parent,
           {
@@ -87,53 +85,29 @@ export const queryNodeStitchingResolvers = (
         return videos
       }
     },
-    videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [RemoveQueryNodeViewsField]),
+    videosConnection: createResolverWithTransforms(queryNodeSchema, 'videosConnection', [
+      RemoveQueryNodeVideoViewsField,
+    ]),
     // channel queries
     channelByUniqueInput: createResolverWithTransforms(queryNodeSchema, 'channelByUniqueInput', [
-      RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelFollowsField,
       RemoveQueryNodeChannelViewsField,
     ]),
     channels: async (parent, args, context, info) => {
       const channelsResolver = createResolverWithTransforms(queryNodeSchema, 'channels', [
-        RemoveQueryNodeFollowsField,
+        RemoveQueryNodeChannelFollowsField,
         RemoveQueryNodeChannelViewsField,
       ])
       const channels = await channelsResolver(parent, args, context, info)
-      let followsLookup: Record<string, { id: string; follows: number }>
-      let viewsLookup: Record<string, { id: string; views: number }>
-
-      const batchedChannelFollowsResolver = createResolverWithTransforms(
-        orionSchema,
-        ORION_BATCHED_FOLLOWS_QUERY_NAME,
-        [TransformBatchedOrionFollowsField],
-        // operationName has to be manually kept in sync with the query name used
-        BATCHED_FOLLOWS_VIEWS_QUERY_NAME
-      )
-
-      const batchedChannelViewsResolver = createResolverWithTransforms(
-        orionSchema,
-        ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
-        [TransformBatchedChannelOrionViewsField],
-        // operationName has to be manually kept in sync with the query name used
-        BATCHED_CHANNEL_VIEWS_QUERY_NAME
-      )
-
       try {
-        const batchedChannelFollows = await batchedChannelFollowsResolver(
-          parent,
-          {
-            channelIdList: channels.map((channel: Channel) => channel.id),
-          },
-          context,
-          info
+        const batchedChannelFollowsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_FOLLOWS_QUERY_NAME,
+          [TransformBatchedOrionFollowsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_FOLLOWS_VIEWS_QUERY_NAME
         )
-        followsLookup = createLookup(batchedChannelFollows || [])
-      } catch (error) {
-        SentryLogger.error('Failed to resolve channel follows', 'channels resolver', error)
-      }
-
-      try {
-        const batchedChannelViews = await batchedChannelViewsResolver(
+        const batchedChannelFollowsPromise = batchedChannelFollowsResolver(
           parent,
           {
             channelIdList: channels.map((channel: Channel) => channel.id),
@@ -142,27 +116,147 @@ export const queryNodeStitchingResolvers = (
           info
         )
 
-        viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+        const batchedChannelViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+          [TransformBatchedChannelOrionViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_CHANNEL_VIEWS_QUERY_NAME
+        )
+        const batchedChannelViewsPromise = batchedChannelViewsResolver(
+          parent,
+          {
+            channelIdList: channels.map((channel: Channel) => channel.id),
+          },
+          context,
+          info
+        )
+
+        const [batchedChannelFollows, batchedChannelViews] = await Promise.all([
+          batchedChannelFollowsPromise,
+          batchedChannelViewsPromise,
+        ])
+
+        const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+
+        return channels.map((channel: Channel) => ({
+          ...channel,
+          follows: followsLookup[channel.id]?.follows || 0,
+          views: viewsLookup[channel.id]?.views || 0,
+        }))
       } catch (error) {
-        SentryLogger.error('Failed to resolve channel views', 'channels resolver', error)
+        SentryLogger.error('Failed to resolve channel views or follows', 'channels resolver', error)
         return channels
       }
-
-      return channels.map((channel: Channel) => ({
-        ...channel,
-        follows: (followsLookup && followsLookup[channel.id]?.follows) || 0,
-        views: (viewsLookup && viewsLookup[channel.id]?.views) || 0,
-      }))
     },
     channelsConnection: createResolverWithTransforms(queryNodeSchema, 'channelsConnection', [
-      RemoveQueryNodeFollowsField,
+      RemoveQueryNodeChannelFollowsField,
       RemoveQueryNodeChannelViewsField,
     ]),
     // mixed queries
-    search: createResolverWithTransforms(queryNodeSchema, 'search', [
-      RemoveQueryNodeViewsField,
-      RemoveQueryNodeFollowsField,
-    ]),
+    search: async (parent, args, context, info) => {
+      const searchResolver = createResolverWithTransforms(queryNodeSchema, 'search', [
+        RemoveQueryNodeVideoViewsField,
+        RemoveQueryNodeChannelFollowsField,
+        RemoveQueryNodeChannelViewsField,
+      ])
+      const search = await searchResolver(parent, args, context, info)
+      try {
+        const channelIdList = search
+          .filter((result: SearchFtsOutput) => result.item.__typename === 'Channel')
+          .map((result: SearchFtsOutput) => result.item.id)
+
+        const batchedChannelFollowsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_FOLLOWS_QUERY_NAME,
+          [TransformBatchedOrionFollowsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_FOLLOWS_VIEWS_QUERY_NAME
+        )
+        const batchedChannelFollowsPromise = batchedChannelFollowsResolver(
+          parent,
+          {
+            channelIdList,
+          },
+          context,
+          info
+        )
+
+        const batchedChannelViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
+          [TransformBatchedChannelOrionViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_CHANNEL_VIEWS_QUERY_NAME
+        )
+        const batchedChannelViewsPromise = batchedChannelViewsResolver(
+          parent,
+          {
+            channelIdList,
+          },
+          context,
+          info
+        )
+
+        const videoIdList = search
+          .filter((result: SearchFtsOutput) => result.item.__typename === 'Video')
+          .map((result: SearchFtsOutput) => result.item.id)
+
+        const batchedVideoViewsResolver = createResolverWithTransforms(
+          orionSchema,
+          ORION_BATCHED_VIEWS_QUERY_NAME,
+          [TransformBatchedOrionVideoViewsField],
+          // operationName has to be manually kept in sync with the query name used
+          BATCHED_VIDEO_VIEWS_QUERY_NAME
+        )
+        const batchedVideoViewsPromise = batchedVideoViewsResolver(
+          parent,
+          {
+            videoIdList,
+          },
+          context,
+          info
+        )
+
+        const [batchedChannelFollows, batchedChannelViews, batchedVideoViews] = await Promise.all([
+          batchedChannelFollowsPromise,
+          batchedChannelViewsPromise,
+          batchedVideoViewsPromise,
+        ])
+
+        const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+        const channelViewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedVideoViews || [])
+
+        const searchWithFollowsAndViews = search.map((searchOutput: SearchFtsOutput) => {
+          if (searchOutput.item.__typename === 'Channel') {
+            return {
+              ...searchOutput,
+              item: {
+                ...searchOutput.item,
+                follows: followsLookup[searchOutput.item.id]?.follows || 0,
+                views: channelViewsLookup[searchOutput.item.id]?.views || 0,
+              },
+            }
+          }
+          if (searchOutput.item.__typename === 'Video') {
+            return {
+              ...searchOutput,
+              item: {
+                ...searchOutput.item,
+                views: viewsLookup[searchOutput.item.id]?.views || 0,
+              },
+            }
+          }
+        })
+
+        return searchWithFollowsAndViews
+      } catch (error) {
+        SentryLogger.error('Failed to resolve channel views, channel follows or video views', 'search resolver', error)
+        return search
+      }
+    },
   },
   Video: {
     views: async (parent, args, context, info) => {
@@ -172,7 +266,7 @@ export const queryNodeStitchingResolvers = (
       const orionViewsResolver = createResolverWithTransforms(
         orionSchema,
         ORION_VIEWS_QUERY_NAME,
-        [TransformOrionViewsField],
+        [TransformOrionVideoViewsField],
         // operationName has to be manually kept in sync with the query name used
         'GetVideoViews'
       )
@@ -196,7 +290,7 @@ export const queryNodeStitchingResolvers = (
       const batchedVideoViewsResolver = createResolverWithTransforms(
         orionSchema,
         ORION_BATCHED_VIEWS_QUERY_NAME,
-        [TransformBatchedOrionViewsField],
+        [TransformBatchedOrionVideoViewsField],
         // operationName has to be manually kept in sync with the query name used
         BATCHED_VIDEO_VIEWS_QUERY_NAME
       )
@@ -284,6 +378,15 @@ export const queryNodeStitchingResolvers = (
         // operationName has to be manually kept in sync with the query name used
         BATCHED_FOLLOWS_VIEWS_QUERY_NAME
       )
+      const batchedChannelFollowsPromise = batchedChannelFollowsResolver(
+        parent,
+        {
+          channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
+        },
+        context,
+        info
+      )
+
       const batchedChannelViewsResolver = createResolverWithTransforms(
         orionSchema,
         ORION_BATCHED_CHANNEL_VIEWS_QUERY_NAME,
@@ -291,25 +394,8 @@ export const queryNodeStitchingResolvers = (
         // operationName has to be manually kept in sync with the query name used
         BATCHED_CHANNEL_VIEWS_QUERY_NAME
       )
-      let followsLookup: Record<string, { id: string; follows: number }>
-      let viewsLookup: Record<string, { id: string; views: number }>
-
       try {
-        const batchedChannelFollows = await batchedChannelFollowsResolver(
-          parent,
-          {
-            channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
-          },
-          context,
-          info
-        )
-        followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
-      } catch (error) {
-        SentryLogger.error('Failed to resolve channel follows', 'ChannelConnection.edges resolver', error)
-      }
-
-      try {
-        const batchedChannelViews = await batchedChannelViewsResolver(
+        const batchedChannelViewsPromise = batchedChannelViewsResolver(
           parent,
           {
             channelIdList: parent.edges.map((edge: ChannelEdge) => edge.node.id),
@@ -318,19 +404,24 @@ export const queryNodeStitchingResolvers = (
           info
         )
 
-        viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
-      } catch (error) {
-        SentryLogger.error('Failed to resolve channel views', 'ChannelConnection.edges resolver', error)
-      }
+        const [batchedChannelFollows, batchedChannelViews] = await Promise.all([
+          batchedChannelFollowsPromise,
+          batchedChannelViewsPromise,
+        ])
 
-      return parent.edges.map((edge: ChannelEdge) => ({
-        ...edge,
-        node: {
-          ...edge.node,
-          follows: (followsLookup && followsLookup[edge.node.id]?.follows) || 0,
-          views: (viewsLookup && viewsLookup[edge.node.id]?.views) || 0,
-        },
-      }))
+        const followsLookup = createLookup<{ id: string; follows: number }>(batchedChannelFollows || [])
+        const viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
+        return parent.edges.map((edge: ChannelEdge) => ({
+          ...edge,
+          node: {
+            ...edge.node,
+            follows: followsLookup[edge.node.id]?.follows || 0,
+            views: viewsLookup[edge.node.id]?.views || 0,
+          },
+        }))
+      } catch (error) {
+        SentryLogger.error('Failed to resolve channel views or follows', 'ChannelConnection.edges resolver', error)
+      }
     },
   },
 })

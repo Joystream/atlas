@@ -1,7 +1,7 @@
 import { Transform } from '@graphql-tools/delegate'
 
 // remove follows field from the query node channel request
-export const RemoveQueryNodeFollowsField: Transform = {
+export const RemoveQueryNodeChannelFollowsField: Transform = {
   transformRequest: (request) => {
     request.document = {
       ...request.document,
