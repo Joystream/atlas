@@ -112,15 +112,9 @@ export type VideoTileBaseProps = {
 } & VideoTileBaseMetaProps &
   VideoTilePublisherProps
 
+export type TileSize = 'small' | 'big' | undefined
+
 export const MIN_VIDEO_TILE_WIDTH = 300
-const MAX_VIDEO_PREVIEW_WIDTH = 600
-const MIN_SCALING_FACTOR = 1
-const MAX_SCALING_FACTOR = 1.375
-// Linear Interpolation, see https://en.wikipedia.org/wiki/Linear_interpolation
-const calculateScalingFactor = (videoTileWidth: number) =>
-  MIN_SCALING_FACTOR +
-  ((videoTileWidth - MIN_VIDEO_TILE_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
-    (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_TILE_WIDTH)
 
 export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   title,
@@ -157,15 +151,21 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   isPullupDisabled,
 }) => {
   const { openContextMenu, contextMenuOpts } = useContextMenu()
-  const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
+  const [tileSize, setTileSize] = useState<TileSize>(undefined)
+
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
       const { width: videoTileWidth, height: videoTileHeight } = size
+      if (videoTileWidth && !main) {
+        if (tileSize !== 'small' && videoTileWidth <= 300) {
+          setTileSize('small')
+        }
+        if (tileSize !== 'big' && videoTileWidth > 300) {
+          setTileSize('big')
+        }
+      }
       if (onCoverResize) {
         onCoverResize(videoTileWidth, videoTileHeight)
-      }
-      if (videoTileWidth && !main) {
-        setScalingFactor(calculateScalingFactor(videoTileWidth))
       }
     },
   })
@@ -286,7 +286,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              <AvatarContainer scalingFactor={scalingFactor}>
+              <AvatarContainer>
                 {isLoading || isLoadingAvatar ? (
                   <SkeletonLoader rounded />
                 ) : (
@@ -313,13 +313,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                 <SkeletonLoader height={main ? 45 : 18} width="60%" />
               ) : (
                 <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  <TitleHeader
-                    variant="h6"
-                    main={main}
-                    scalingFactor={scalingFactor}
-                    onClick={onClick}
-                    clickable={clickable}
-                  >
+                  <TitleHeader variant="h6" main={main} size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>
                 </TitleHeaderAnchor>
@@ -333,7 +327,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       variant="subtitle2"
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
-                      scalingFactor={scalingFactor}
                       secondary
                     >
                       {channelTitle}
@@ -345,7 +338,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   {isLoading ? (
                     <SpacedSkeletonLoader height={main ? 16 : 12} width={main ? '40%' : '80%'} />
                   ) : createdAt ? (
-                    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor} secondary>
+                    <MetaText variant="subtitle2" main={main} secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}

@@ -5,12 +5,18 @@ import { Link } from 'react-router-dom'
 
 import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
 
+import { TileSize } from './VideoTileBase'
+
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
+
+type SizeProps = {
+  size?: TileSize
+}
 
 type MainProps = {
   main: boolean
@@ -22,10 +28,6 @@ type ChannelProps = {
 
 type ClickableProps = {
   clickable: boolean
-}
-
-type ScalesWithCoverProps = {
-  scalingFactor: number
 }
 
 export const CoverWrapper = styled.div<MainProps>`
@@ -120,10 +122,9 @@ export const InfoContainer = styled.div<MainProps>`
   ${({ main }) => main && mainInfoContainerCss};
 `
 
-export const AvatarContainer = styled.div<ScalesWithCoverProps>`
-  width: calc(40px * ${(props) => props.scalingFactor});
-  min-width: calc(40px * ${(props) => props.scalingFactor});
-  height: calc(40px * ${(props) => props.scalingFactor});
+export const AvatarContainer = styled.div`
+  ${square(sizes(10))};
+
   margin-right: ${sizes(3)};
 `
 
@@ -275,11 +276,11 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & ClickableProps>`
+export const TitleHeader = styled(Text)<MainProps & ClickableProps & SizeProps>`
   margin: 0;
   margin-bottom: ${sizes(2)};
   font-weight: ${typography.weights.bold};
-  font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
+  font-size: ${({ size }) => (size === 'small' ? typography.sizes.h6 : typography.sizes.subtitle1)};
   ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
 
   line-height: ${({ main }) => (main ? 1 : 1.25)};
@@ -291,15 +292,14 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   overflow-wrap: break-word;
 `
 
-export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
-  font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
+export const ChannelHandle = styled(Text)<ChannelProps>`
+  font-size: ${typography.sizes.subtitle2};
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
-  font-size: ${({ main, scalingFactor }) =>
-    main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2}) `};
+export const MetaText = styled(Text)<MainProps>`
+  font-size: ${({ main }) => (main ? typography.sizes.h6 : typography.sizes.subtitle2)};
 `
 
 export const SpacedSkeletonLoader = styled(SkeletonLoader)`
