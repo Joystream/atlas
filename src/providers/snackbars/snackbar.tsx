@@ -65,5 +65,5 @@ const SnackbarsContainer = styled.div`
   max-width: 360px;
   width: 100%;
   display: grid;
-  z-index: ${zIndex.overlay};
+  z-index: ${zIndex.nearSheetOverlay};
 `
