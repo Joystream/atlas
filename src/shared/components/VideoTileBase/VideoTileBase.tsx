@@ -104,6 +104,7 @@ export type VideoTileBaseProps = {
   thumbnailUrl?: string | null
   hasThumbnailUploadFailed?: boolean
   isLoadingThumbnail?: boolean
+  isLoadingAvatar?: boolean
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
@@ -136,6 +137,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   channelHref,
   videoHref,
   isLoadingThumbnail,
+  isLoadingAvatar,
   isLoading = true,
   showChannel = true,
   showMeta = true,
@@ -207,7 +209,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading ? 'placeholder' : `content-${contentKey}`}
+              key={isLoading || isLoadingThumbnail ? 'placeholder' : `content-${contentKey}`}
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
@@ -286,19 +288,27 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         >
           <InfoContainer main={main}>
             {displayChannel && (
-              <AvatarContainer scalingFactor={scalingFactor}>
-                {isLoading ? (
-                  <SkeletonLoader rounded />
-                ) : (
-                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
-                    <StyledAvatar
-                      assetUrl={channelAvatarUrl}
-                      channelClickable={channelClickable}
-                      onClick={handleChannelClick}
-                    />
-                  </Anchor>
-                )}
-              </AvatarContainer>
+              <SwitchTransition>
+                <CSSTransition
+                  key={isLoading || isLoadingAvatar ? 'placeholder' : `content-${contentKey}`}
+                  timeout={parseInt(transitions.timings.sharp)}
+                  classNames={transitions.names.fade}
+                >
+                  <AvatarContainer scalingFactor={scalingFactor}>
+                    {isLoading || isLoadingAvatar ? (
+                      <SkeletonLoader rounded />
+                    ) : (
+                      <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
+                        <StyledAvatar
+                          assetUrl={channelAvatarUrl}
+                          channelClickable={channelClickable}
+                          onClick={handleChannelClick}
+                        />
+                      </Anchor>
+                    )}
+                  </AvatarContainer>
+                </CSSTransition>
+              </SwitchTransition>
             )}
             <TextContainer>
               {isLoading ? (
