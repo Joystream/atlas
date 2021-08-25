@@ -29,7 +29,7 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
     <StyledContainer {...linkProps} onClick={onClick} colorVariant={colorVariant}>
       <ContentWrapper>
         <IconWrapper colorVariant={colorVariant === 'blue' ? 'lightBlue' : colorVariant}>{icon}</IconWrapper>
-        <BodyWrapper>
+        <BodyWrapper variant="h6">
           {label}
           <SvgGlyphChevronRight />
         </BodyWrapper>

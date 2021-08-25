@@ -42,10 +42,10 @@ export const BodyWrapper = styled(Text)`
   align-items: center;
   justify-content: space-between;
   font-size: ${typography.sizes.h6};
-  font-weight: ${typography.weights.bold};
 
   ${media.compact} {
     font-size: ${typography.sizes.h5};
+    line-height: ${typography.lineHeights.h5};
   }
 `
 
