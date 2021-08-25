@@ -1,18 +1,8 @@
 import React, { Fragment } from 'react'
 
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphCheck } from '@/shared/icons'
+import { Step } from '@/shared/components/Step'
 
-import {
-  StyledChevron,
-  StyledCircle,
-  StyledDialog,
-  StyledHeader,
-  StyledStepInfo,
-  StyledStepInfoText,
-  StyledStepTitle,
-  StyledStepsInfoContainer,
-} from './Multistepper.style'
+import { StyledChevron, StyledDialog, StyledHeader, StyledStepsInfoContainer } from './Multistepper.style'
 
 import { BaseDialogProps } from '../BaseDialog'
 
@@ -38,18 +28,8 @@ export const Multistepper: React.FC<MultistepperProps> = ({ steps, currentStepId
 
             return (
               <Fragment key={idx}>
-                <StyledStepInfo isActive={isActive}>
-                  <StyledCircle isFilled={isActive || isCompleted} isActive={isActive}>
-                    {isCompleted ? <SvgGlyphCheck /> : idx + 1}
-                  </StyledCircle>
-                  <StyledStepInfoText isActive={isActive}>
-                    <Text variant="caption" secondary>
-                      Step {idx + 1}
-                    </Text>
-                    <StyledStepTitle variant="overhead">{step.title}</StyledStepTitle>
-                  </StyledStepInfoText>
-                </StyledStepInfo>
-                {isLast ? null : <StyledChevron />}
+                <Step title={step.title} number={idx + 1} active={isActive} completed={isCompleted} />
+                {!isLast && <StyledChevron />}
               </Fragment>
             )
           })}

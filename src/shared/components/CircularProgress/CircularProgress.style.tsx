@@ -20,6 +20,8 @@ const getStrokeColor = (variant?: TrailVariant) => {
 }
 
 export const SVG = styled.svg`
+  fill: none;
+
   /* needed when parent container has display: flex */
   width: 100%;
 `
