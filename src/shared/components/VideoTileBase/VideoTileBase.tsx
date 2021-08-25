@@ -41,7 +41,6 @@ import {
   InfoContainer,
   KebabMenuIconContainer,
   MetaContainer,
-  MetaText,
   ProgressBar,
   ProgressOverlay,
   PublishingStateText,
@@ -60,11 +59,9 @@ import { Text } from '../Text'
 export type VideoTileBaseMetaProps = {
   showChannel?: boolean
   showMeta?: boolean
-  main?: boolean
   removeButton?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
@@ -112,7 +109,7 @@ export type VideoTileBaseProps = {
 } & VideoTileBaseMetaProps &
   VideoTilePublisherProps
 
-export type TileSize = 'small' | 'big' | undefined
+type TileSize = 'small' | 'big' | undefined
 
 export const MIN_VIDEO_TILE_WIDTH = 250
 const SMALL_SIZE_WIDTH = 300
@@ -127,7 +124,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   views,
   thumbnailUrl,
   hasThumbnailUploadFailed,
-  onCoverResize,
   channelHref,
   videoHref,
   isLoadingThumbnail,
@@ -135,7 +131,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   isLoading = true,
   showChannel = true,
   showMeta = true,
-  main = false,
   removeButton = false,
   videoPublishState = 'default',
   publisherMode = false,
@@ -156,22 +151,18 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
 
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
-      const { width: videoTileWidth, height: videoTileHeight } = size
-      if (videoTileWidth && !main) {
-        if (tileSize !== 'small' && videoTileWidth <= SMALL_SIZE_WIDTH) {
+      const { width: videoTileWidth } = size
+      if (videoTileWidth) {
+        if (tileSize !== 'small' && videoTileWidth < SMALL_SIZE_WIDTH) {
           setTileSize('small')
         }
-        if (tileSize !== 'big' && videoTileWidth > SMALL_SIZE_WIDTH) {
+        if (tileSize !== 'big' && videoTileWidth >= SMALL_SIZE_WIDTH) {
           setTileSize('big')
         }
-      }
-      if (onCoverResize) {
-        onCoverResize(videoTileWidth, videoTileHeight)
       }
     },
   })
   const [failedLoadImage, setFailedLoadImage] = useState(false)
-  const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
@@ -203,8 +194,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   }
 
   return (
-    <Container main={main} className={className}>
-      <CoverWrapper main={main}>
+    <Container className={className}>
+      <CoverWrapper>
         <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
@@ -279,8 +270,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           <ProgressBar style={{ width: `${progress}%` }} />
         </ProgressOverlay>
       )}
-      <InfoContainer main={main}>
-        {displayChannel && (
+      <InfoContainer>
+        {showChannel && (
           <SwitchTransition>
             <CSSTransition
               key={isLoadingAvatar ? 'avatar-placeholder' : 'avatar'}
@@ -311,21 +302,21 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           >
             <TextContainer>
               {isLoading ? (
-                <SkeletonLoader height={main ? 45 : 18} width="60%" />
+                <SkeletonLoader height={18} width="60%" />
               ) : (
                 <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  <TitleHeader variant="h6" main={main} size={tileSize} onClick={onClick} clickable={clickable}>
+                  <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>
                 </TitleHeaderAnchor>
               )}
-              {displayChannel &&
+              {showChannel &&
                 (isLoading ? (
                   <SpacedSkeletonLoader height="12px" width="60%" />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <ChannelHandle
-                      variant="subtitle2"
+                      variant="body2"
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
                       secondary
@@ -335,15 +326,15 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   </Anchor>
                 ))}
               {showMeta && (
-                <MetaContainer noMarginTop={!showChannel} main={main}>
+                <MetaContainer noMarginTop={!showChannel}>
                   {isLoading ? (
-                    <SpacedSkeletonLoader height={main ? 16 : 12} width={main ? '40%' : '80%'} />
+                    <SpacedSkeletonLoader height={12} width={'80%'} />
                   ) : createdAt ? (
-                    <MetaText variant="subtitle2" main={main} secondary>
+                    <Text variant="body2" secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
-                        : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
-                    </MetaText>
+                        : formatVideoViewsAndDate(views ?? null, createdAt)}
+                    </Text>
                   ) : null}
                 </MetaContainer>
               )}

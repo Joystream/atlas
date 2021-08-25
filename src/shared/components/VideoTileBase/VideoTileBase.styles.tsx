@@ -1,11 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 import { Link } from 'react-router-dom'
 
 import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
-
-import { TileSize } from './VideoTileBase'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -15,11 +12,7 @@ import { Text } from '../Text'
 export const HOVER_BORDER_SIZE = '2px'
 
 type SizeProps = {
-  size?: TileSize
-}
-
-type MainProps = {
-  main: boolean
+  size?: 'small' | 'big'
 }
 
 type ChannelProps = {
@@ -30,10 +23,9 @@ type ClickableProps = {
   clickable: boolean
 }
 
-export const CoverWrapper = styled.div<MainProps>`
+export const CoverWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: ${({ main }) => (main ? '650px' : '')};
 `
 
 const clickableAnimation = (clickable: boolean) =>
@@ -76,12 +68,6 @@ export const CoverContainer = styled.div<ClickableProps>`
   }
 `
 
-const mainContainerCss = css`
-  ${media.medium} {
-    flex-direction: row;
-  }
-`
-
 export const Anchor = styled(Link)`
   all: unset;
   color: inherit;
@@ -93,12 +79,11 @@ export const TitleHeaderAnchor = styled(Link)`
   display: grid;
 `
 
-export const Container = styled.article<MainProps>`
+export const Container = styled.article`
   width: 100%;
   color: ${colors.gray[300]};
   display: inline-flex;
   flex-direction: column;
-  ${({ main }) => main && mainContainerCss}
 
   :hover {
     ${() => css`
@@ -109,17 +94,10 @@ export const Container = styled.article<MainProps>`
   }
 `
 
-const mainInfoContainerCss = css`
-  ${media.medium} {
-    margin: ${sizes(8)} 0 0 ${sizes(6)};
-  }
-`
-
-export const InfoContainer = styled.div<MainProps>`
+export const InfoContainer = styled.div`
   min-height: 86px;
   display: flex;
-  margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
-  ${({ main }) => main && mainInfoContainerCss};
+  margin-top: ${sizes(3)};
 `
 
 export const AvatarContainer = styled.div`
@@ -136,7 +114,7 @@ export const TextContainer = styled.div`
   }
 `
 
-type MetaContainerProps = { noMarginTop: boolean } & MainProps
+type MetaContainerProps = { noMarginTop: boolean }
 export const MetaContainer = styled.div<MetaContainerProps>`
   width: 100%;
 `
@@ -276,14 +254,11 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const TitleHeader = styled(Text)<MainProps & ClickableProps & SizeProps>`
+export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
   margin: 0;
   margin-bottom: ${sizes(2)};
-  font-weight: ${typography.weights.bold};
   font-size: ${({ size }) => (size === 'small' ? typography.sizes.h6 : typography.sizes.subtitle1)};
-  ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
-
-  line-height: ${({ main }) => (main ? 1 : 1.25)};
+  line-height: ${({ size }) => (size === 'small' ? typography.lineHeights.h6 : typography.lineHeights.subtitle1)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -293,13 +268,8 @@ export const TitleHeader = styled(Text)<MainProps & ClickableProps & SizeProps>`
 `
 
 export const ChannelHandle = styled(Text)<ChannelProps>`
-  font-size: ${typography.sizes.subtitle2};
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
-`
-
-export const MetaText = styled(Text)<MainProps>`
-  font-size: ${({ main }) => (main ? typography.sizes.h6 : typography.sizes.subtitle2)};
 `
 
 export const SpacedSkeletonLoader = styled(SkeletonLoader)`
