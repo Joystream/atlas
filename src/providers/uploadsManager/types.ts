@@ -4,7 +4,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 export type AssetParent = 'video' | 'channel'
 
-export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting'
+export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'proccessing'
 
 export type AssetUpload = {
   contentId: string
