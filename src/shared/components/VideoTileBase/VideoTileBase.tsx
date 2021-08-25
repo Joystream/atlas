@@ -103,6 +103,7 @@ export type VideoTileBaseProps = {
   views?: number | null
   thumbnailUrl?: string | null
   hasThumbnailUploadFailed?: boolean
+  isLoadingThumbnail?: boolean
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
@@ -134,6 +135,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onCoverResize,
   channelHref,
   videoHref,
+  isLoadingThumbnail,
   isLoading = true,
   showChannel = true,
   showMeta = true,
@@ -209,7 +211,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              {isLoading ? (
+              {isLoading || isLoadingThumbnail ? (
                 <CoverSkeletonLoader />
               ) : (
                 <CoverImageContainer ref={imgRef}>
