@@ -146,7 +146,7 @@ export const queryNodeStitchingResolvers = (
           views: viewsLookup[channel.id]?.views || 0,
         }))
       } catch (error) {
-        SentryLogger.error('Failed to resolve channel views', 'channels resolver', error)
+        SentryLogger.error('Failed to resolve channel views or follows', 'channels resolver', error)
         return channels
       }
     },
