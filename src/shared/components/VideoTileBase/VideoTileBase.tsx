@@ -114,7 +114,7 @@ export type VideoTileBaseProps = {
 
 export type TileSize = 'small' | 'big' | undefined
 
-export const MIN_VIDEO_TILE_WIDTH = 300
+export const MIN_VIDEO_TILE_WIDTH = 250
 
 export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   title,
