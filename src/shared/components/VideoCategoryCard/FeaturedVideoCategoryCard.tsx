@@ -2,7 +2,6 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useHover } from '@/hooks/useHover'
-import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
@@ -18,28 +17,37 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 import { VideoPlayer } from '../VideoPlayer'
 
+export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
 export type FeaturedVideoCategoryCardProps = {
-  variant?: 'default' | 'compact'
-  loading?: boolean
+  title: string
+  icon: React.ReactNode
+  videoUrl: string
+  videoTitle: string
   color: string
+  variant?: FeaturedVideoCategoryCardVariant
 }
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
-  variant = 'default',
-  loading,
+  title,
+  icon,
+  videoUrl,
+  videoTitle,
   color,
+  variant = 'default',
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
+  const isLoading = false
+
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading ? 'placeholder' : 'content'}
+        key={isLoading ? 'placeholder' : 'content'}
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <FeaturedContainer ref={hoverRef} loading={loading} variantCategory={variant} color={color}>
+        <FeaturedContainer ref={hoverRef} isLoading={isLoading} variantCategory={variant} color={color}>
           <PlayerContainer>
-            {!loading && (
+            {
               <VideoPlayer
                 videoStyle={{ objectFit: 'cover' }}
                 loop
@@ -47,36 +55,32 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
                 isInBackground
                 muted={true}
                 playing={variant === 'default' ? isVideoHovering : true}
-                src={
-                  'https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP'
-                }
+                src={videoUrl}
               />
-            )}
+            }
           </PlayerContainer>
 
           <FeaturedContent variantCategory={variant}>
             <div>
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
               ) : (
-                <FeaturedIconCircle color={color}>
-                  <SvgVideoCategoriesScienceAndTechnology />
-                </FeaturedIconCircle>
+                <FeaturedIconCircle color={color}>{icon}</FeaturedIconCircle>
               )}
 
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
               ) : (
-                <Text variant={variant === 'default' ? 'h3' : 'h4'}>Science & Techology</Text>
+                <Text variant={variant === 'default' ? 'h3' : 'h4'}>{title}</Text>
               )}
             </div>
 
-            {!loading && (
+            {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
                 <FeaturedVideoText variant="caption" secondary>
                   Featured video
                 </FeaturedVideoText>
-                <Text variant="h6">KOIOS Blockchain Week</Text>
+                <Text variant="h6">{videoTitle}</Text>
               </FeaturedVideoTitleContainer>
             )}
           </FeaturedContent>

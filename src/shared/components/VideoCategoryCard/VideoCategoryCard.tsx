@@ -1,8 +1,9 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
+import { useVideoCount } from '@/api/hooks'
 import { sizes, transitions } from '@/shared/theme'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   Content,
@@ -21,45 +22,70 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export type VideoCategoryCardProps = {
+  title: string
+  icon: React.ReactNode
+  coverImg: string
+  categoryId: string
+  color: string
+  videosTotalCount: number | undefined
   variant?: 'default' | 'compact'
   loading?: boolean
-  color: string
 }
 
-export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 'default', loading, color }) => {
-  // value from 1 to 100
-  const pieChartValue = 15
+export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
+  variant = 'default',
+  loading,
+  title,
+  categoryId,
+  icon,
+  videosTotalCount,
+  coverImg,
+  color,
+}) => {
+  const { videoCount, loading: loadingVidCount } = useVideoCount(
+    {
+      where: {
+        categoryId_eq: categoryId,
+      },
+    },
+    {
+      onError: (error) =>
+        SentryLogger.error(`Failed to fetch videos count of categoryId ${categoryId}`, 'VideoCategoryCard', error),
+    }
+  )
+
+  // value from 1 to 100 percentage
+  const pieChartValue = ((videoCount ?? 0) / (videosTotalCount ?? 1)) * 100
+  const isLoading = loading || loadingVidCount || videosTotalCount === undefined
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading ? 'placeholder' : 'content'}
+        key={isLoading ? 'placeholder' : 'content'}
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <GeneralContainer loading={loading} variantCategory={variant} color={color}>
+        <GeneralContainer isLoading={isLoading} variantCategory={variant} color={color}>
           <Content variantCategory={variant}>
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
             ) : (
-              <IconCircle color={color}>
-                <SvgVideoCategoriesScienceAndTechnology />
-              </IconCircle>
+              <IconCircle color={color}>{icon}</IconCircle>
             )}
 
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader
                 bottomSpace={variant === 'default' ? sizes(6) : sizes(4)}
-                width="192px"
+                width="100%"
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (
               <Title variantCategory={variant} variant={variant === 'default' ? 'h4' : 'h6'}>
-                Science & Techology
+                {title}
               </Title>
             )}
 
             <VideosNumberContainer>
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader width="80px" height={variant === 'default' ? '20px' : '16px'} />
               ) : (
                 <>
@@ -67,21 +93,17 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
                   <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
-                    123 videos
+                    {videoCount} videos
                   </Text>
                 </>
               )}
             </VideosNumberContainer>
           </Content>
 
-          {variant === 'default' && !loading && (
+          {variant === 'default' && !isLoading && (
             <CoverImgContainer>
               <CoverImgOverlay></CoverImgOverlay>
-              <CoverImg
-                bgImgUrl={
-                  'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp'
-                }
-              />
+              <CoverImg bgImgUrl={coverImg} />
             </CoverImgContainer>
           )}
         </GeneralContainer>
