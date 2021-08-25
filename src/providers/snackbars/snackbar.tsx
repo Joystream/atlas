@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Snackbar } from '@/shared/components/Snackbar'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning } from '@/shared/icons'
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions, zIndex } from '@/shared/theme'
 
 import { useSnackbarStore } from './store'
 
@@ -65,4 +65,5 @@ const SnackbarsContainer = styled.div`
   max-width: 360px;
   width: 100%;
   display: grid;
+  z-index: ${zIndex.nearSheetOverlay};
 `
