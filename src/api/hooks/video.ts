@@ -9,6 +9,8 @@ import {
   GetMostViewedVideosAllTimeQueryVariables,
   GetMostViewedVideosQuery,
   GetMostViewedVideosQueryVariables,
+  GetVideoCountQuery,
+  GetVideoCountQueryVariables,
   GetVideoQuery,
   GetVideoQueryVariables,
   GetVideosQuery,
@@ -18,6 +20,7 @@ import {
   useGetBasicVideosQuery,
   useGetMostViewedVideosAllTimeQuery,
   useGetMostViewedVideosQuery,
+  useGetVideoCountQuery,
   useGetVideoQuery,
   useGetVideosQuery,
 } from '@/api/queries'
@@ -144,6 +147,29 @@ export const useMostViewedVideos = (
     ...rest,
     error: error || rest.error,
     loading: loading || rest.loading,
+  }
+}
+
+export const useVideoCount = (
+  variables?: GetVideoCountQueryVariables,
+  opts?: QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
+) => {
+  const { data, ...rest } = useGetVideoCountQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        ...variables?.where,
+      },
+    },
+  })
+  return {
+    videoCount: data?.videosConnection.totalCount,
+    ...rest,
   }
 }
 
