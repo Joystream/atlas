@@ -11,6 +11,8 @@ export default {
   argTypes: {
     color: { defaultValue: '#D92E61' },
     variant: { defaultValue: 'default' },
+    categoryId: { defaultValue: '1' },
+    videosTotalCount: { defaultValue: 300 },
   },
   component: VideoCategoryCard,
 } as Meta
@@ -28,7 +30,13 @@ Default.args = {}
 const TemplateFeatured: Story<VideoCategoryCardProps> = (args) => {
   return (
     <Container2>
-      <FeaturedVideoCategoryCard {...args}>VideoCategoryCard</FeaturedVideoCategoryCard>
+      <FeaturedVideoCategoryCard
+        videoUrl="https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP"
+        videoTitle="Anderson .Paak and The Free Nationals"
+        {...args}
+      >
+        VideoCategoryCard
+      </FeaturedVideoCategoryCard>
     </Container2>
   )
 }

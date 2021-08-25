@@ -2,21 +2,22 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
 
+import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import { Text } from '../Text'
-
 type ColorProps = { color: string }
-type LoadingProps = { loading?: boolean }
+type LoadingProps = { isLoading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
   position: relative;
   width: 100%;
   height: 100%;
   background: url(${({ bgImgUrl }) => bgImgUrl});
   background-position: center;
   background-size: cover;
+  opacity: 0.2;
 `
 
 export const CoverImgOverlay = styled.div`
@@ -33,8 +34,8 @@ export const CoverImgContainer = styled.div`
   position: relative;
 `
 
-const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
-  !loading &&
+const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
+  !isLoading &&
   css`
     border-left: 0 solid ${color};
     transform: translate(-${sizes(2)}, -${sizes(2)});
@@ -45,15 +46,19 @@ export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
-  cursor: ${({ loading }) => (loading ? 'initial' : 'pointer')};
-  border-left: 4px solid ${({ color, loading }) => (color && !loading ? color : 'transparent')};
-  background-color: ${({ loading }) => (loading ? colors.gray[900] : colors.gray[800])};
+  cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
+  border-left: 4px solid ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
+  background-color: ${({ isLoading }) => (isLoading ? colors.gray[900] : colors.gray[800])};
 
   &:hover {
     ${hoverStyles}
 
     ${CoverImgOverlay} {
       opacity: 0;
+    }
+
+    ${CoverImg} {
+      opacity: 1;
     }
   }
 `
@@ -66,6 +71,8 @@ const generalStyles = ({ variantCategory }: VariantProps) =>
   `
 export const GeneralContainer = styled(Container)`
   ${generalStyles}
+
+  height: 100%;
 `
 
 export const Content = styled.div<VariantProps>`

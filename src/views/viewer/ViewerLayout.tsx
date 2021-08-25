@@ -15,10 +15,13 @@ import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
 
+import { DiscoverView } from './DiscoverView/DiscoverView'
+
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.new(), element: <NewView /> },
+  { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
