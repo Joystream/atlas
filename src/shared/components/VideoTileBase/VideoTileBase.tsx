@@ -209,11 +209,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         <CoverContainer clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading || isLoadingThumbnail ? 'placeholder' : `content-${contentKey}`}
+              key={isLoadingThumbnail ? 'placeholder' : `content-${contentKey}`}
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              {isLoading || isLoadingThumbnail ? (
+              {isLoadingThumbnail ? (
                 <CoverSkeletonLoader />
               ) : (
                 <CoverImageContainer ref={imgRef}>
