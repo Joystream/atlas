@@ -129,7 +129,7 @@ export const queryNodeStitchingResolvers = (
         )
         followsLookup = createLookup(batchedChannelFollows || [])
       } catch (error) {
-        SentryLogger.error('Failed to resolve channels follows', 'channels resolver', error)
+        SentryLogger.error('Failed to resolve channel follows', 'channels resolver', error)
       }
 
       try {
@@ -144,7 +144,7 @@ export const queryNodeStitchingResolvers = (
 
         viewsLookup = createLookup<{ id: string; views: number }>(batchedChannelViews || [])
       } catch (error) {
-        SentryLogger.error('Failed to resolve channels views', 'channels resolver', error)
+        SentryLogger.error('Failed to resolve channel views', 'channels resolver', error)
         return channels
       }
 
@@ -186,7 +186,7 @@ export const queryNodeStitchingResolvers = (
           info
         )
       } catch (error) {
-        SentryLogger.error('Failed to resolve views views', 'Video.views resolver', error)
+        SentryLogger.error('Failed to resolve video views', 'Video.views resolver', error)
         return null
       }
     },
