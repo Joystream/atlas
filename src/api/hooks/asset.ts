@@ -1,26 +1,44 @@
-import { useChannelAssetAvailability } from './channel'
-import { useVideoAssetAvailability } from './video'
+import { useGetChannelAssetAvailabilityLazyQuery, useGetVideoAssetAvailabilityLazyQuery } from '../queries'
 
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 
-export const useAssetsAvailability = (id: string, assetType: AssetType) => {
+export const useAssetsAvailability = (assetType?: AssetType) => {
   const isChannelAsset = assetType === 'cover' || assetType === 'avatar'
-  const isVideoAsset = assetType === 'video' || assetType === 'thumbnail'
-  const { avatarPhotoAvailability, coverPhotoAvailability, ...channelRest } = useChannelAssetAvailability(id, {
-    skip: isVideoAsset,
+  const [getChannelAssetAvailability, channelRest] = useGetChannelAssetAvailabilityLazyQuery({
+    fetchPolicy: 'network-only',
   })
-  const { mediaAvailability, thumbnailPhotoAvailability, ...videoRest } = useVideoAssetAvailability(id, {
-    skip: isChannelAsset,
-  })
+  const [getVideoAssetAvailability, videoRest] = useGetVideoAssetAvailabilityLazyQuery({ fetchPolicy: 'network-only' })
 
   if (isChannelAsset) {
     return {
-      assetAvailability: assetType === 'cover' ? coverPhotoAvailability : avatarPhotoAvailability,
+      getAssetAvailability: (id: string) =>
+        getChannelAssetAvailability({
+          variables: {
+            where: {
+              id,
+            },
+          },
+        }),
+      assetAvailability:
+        assetType === 'cover'
+          ? channelRest.data?.channelByUniqueInput?.coverPhotoAvailability
+          : channelRest.data?.channelByUniqueInput?.avatarPhotoAvailability,
       ...channelRest,
     }
   } else {
     return {
-      assetAvailability: assetType === 'video' ? mediaAvailability : thumbnailPhotoAvailability,
+      getAssetAvailability: (id: string) =>
+        getVideoAssetAvailability({
+          variables: {
+            where: {
+              id,
+            },
+          },
+        }),
+      assetAvailability:
+        assetType === 'video'
+          ? videoRest.data?.videoByUniqueInput?.mediaAvailability
+          : videoRest.data?.videoByUniqueInput?.thumbnailPhotoAvailability,
       ...videoRest,
     }
   }

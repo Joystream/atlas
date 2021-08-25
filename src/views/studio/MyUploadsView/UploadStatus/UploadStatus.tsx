@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 
-import { useAssetsAvailability } from '@/api/hooks'
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
 import { useDialog } from '@/providers/dialogs'
 import { useUploadsStore } from '@/providers/uploadsManager'
@@ -36,26 +35,10 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
-  const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-
-  const { assetAvailability, startPolling, stopPolling } = useAssetsAvailability(asset.parentObject.id, asset.type)
-
-  useEffect(() => {
-    if (uploadStatus?.lastStatus !== 'proccessing') {
-      return
-    }
-    if (assetAvailability === 'PENDING') {
-      startPolling(3000)
-    }
-    if (assetAvailability === 'ACCEPTED') {
-      stopPolling()
-      setUploadStatus(asset.contentId, { lastStatus: 'completed' })
-    }
-  }, [asset.contentId, assetAvailability, setUploadStatus, startPolling, stopPolling, uploadStatus?.lastStatus])
 
   const [openDifferentFileDialog, closeDifferentFileDialog] = useDialog({
     title: 'Different file was selected!',

@@ -1,9 +1,11 @@
 import axios, { AxiosError } from 'axios'
 import { debounce } from 'lodash-es'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
+import { useAssetsAvailability } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { ResolvedAssetDetails } from '@/types/assets'
 import { createStorageNodeUrl } from '@/utils/asset'
@@ -29,6 +31,28 @@ export const useStartFileUpload = () => {
   const addAsset = useUploadsStore((state) => state.addAsset)
   const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
+  const [assetType, setAssetType] = useState<'video' | 'thumbnail' | 'cover' | 'avatar'>()
+  const [assetContentId, setAssetContentId] = useState('')
+  const uploadStatus = useUploadsStore((state) => state.uploadsStatus)
+  const { assetAvailability, getAssetAvailability, startPolling, stopPolling, called } = useAssetsAvailability(
+    assetType
+  )
+
+  useEffect(() => {
+    if (!assetContentId || !assetType) {
+      return
+    }
+    if (uploadStatus[assetContentId]?.lastStatus !== 'proccessing') {
+      return
+    }
+    if (assetAvailability === 'PENDING') {
+      startPolling?.(3000)
+    }
+    if (assetAvailability === 'ACCEPTED') {
+      stopPolling?.()
+      setUploadStatus(assetContentId, { lastStatus: 'completed' })
+    }
+  }, [assetAvailability, assetContentId, assetType, called, setUploadStatus, startPolling, stopPolling, uploadStatus])
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
@@ -82,6 +106,7 @@ export const useStartFileUpload = () => {
   const startFileUpload = useCallback(
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let storageUrl: string, storageProviderId: string
+
       try {
         const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
@@ -140,7 +165,6 @@ export const useStartFileUpload = () => {
 
         assetsNotificationsCount.current.uploads[assetKey] =
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
-
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -172,6 +196,11 @@ export const useStartFileUpload = () => {
 
         // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'proccessing', progress: 100 })
+
+        setAssetType(asset.type)
+        setAssetContentId(asset.contentId)
+        getAssetAvailability(asset.parentObject.id)
+
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
@@ -207,14 +236,15 @@ export const useStartFileUpload = () => {
       }
     },
     [
-      addAsset,
       assetsFiles,
-      displaySnackbar,
       getRandomStorageProvider,
+      setUploadStatus,
+      addAssetFile,
+      getAssetAvailability,
+      addAsset,
+      displaySnackbar,
       markStorageProviderNotWorking,
       navigate,
-      addAssetFile,
-      setUploadStatus,
     ]
   )
 
