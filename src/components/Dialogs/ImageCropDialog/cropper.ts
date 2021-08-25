@@ -33,10 +33,10 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
   videoThumbnail: {
     minWidth: 1280,
     minHeight: 720,
-    width: 1920,
-    height: 1080,
-    maxWidth: 3840,
-    maxHeight: 2160,
+    width: 1280,
+    height: 720,
+    maxWidth: 1920,
+    maxHeight: 1080,
   },
   cover: {
     minWidth: 1920,
@@ -170,7 +170,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
         }
         const url = URL.createObjectURL(blob)
         resolve([blob, url, assetDimensions, imageCropData])
-      }, 'image/jpeg')
+      }, 'image/webp')
     })
   }
 
