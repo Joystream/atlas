@@ -214,20 +214,22 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               ) : (
                 <CoverImageContainer ref={imgRef}>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                    {thumbnailUrl && !failedLoadImage && !hasThumbnailUploadFailed ? (
+                    {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
-                    ) : (
+                    ) : hasThumbnailUploadFailed ? (
                       <CoverThumbnailUploadFailed>
                         <SvgLargeUploadFailed />
                         <Text variant="subtitle2" secondary>
                           Thumbnail upload failed
                         </Text>
                       </CoverThumbnailUploadFailed>
+                    ) : (
+                      <CoverNoImage />
                     )}
                     {(videoPublishState === 'unlisted' || isDraft) && (
                       <CoverVideoPublishingStateOverlay>
@@ -285,8 +287,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               <AvatarContainer scalingFactor={scalingFactor}>
                 {isLoading ? (
                   <SkeletonLoader rounded />
-                ) : isDraft === true ? (
-                  <CoverNoImage />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <StyledAvatar
