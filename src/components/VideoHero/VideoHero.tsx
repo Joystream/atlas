@@ -34,7 +34,6 @@ export const VideoHero: React.FC = () => {
   const coverVideo = useVideoHero()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
-  const [disabledControls, setDisabledControls] = useState(true)
   const [soundMuted, setSoundMuted] = useState(true)
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: coverVideo?.video,
@@ -43,7 +42,6 @@ export const VideoHero: React.FC = () => {
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
-      setDisabledControls(false)
       setVideoPlaying(true)
     }, VIDEO_PLAYBACK_DELAY)
   }
@@ -109,16 +107,10 @@ export const VideoHero: React.FC = () => {
                 size="large"
                 to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
                 icon={<SvgActionPlay />}
-                disabled={disabledControls}
               >
                 Play
               </Button>
-              <SoundButton
-                size="large"
-                variant="secondary"
-                onClick={handleSoundToggleClick}
-                disabled={disabledControls}
-              >
+              <SoundButton size="large" variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>
             </ButtonsContainer>
