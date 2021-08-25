@@ -2,12 +2,14 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { colors } from '@/shared/theme'
-
 import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
 export default {
   title: 'Shared/V/VideoCategoryCard',
+  argTypes: {
+    color: { defaultValue: '#D92E61' },
+    variant: { defaultValue: 'default' },
+  },
   component: VideoCategoryCard,
 } as Meta
 
@@ -18,9 +20,14 @@ const Template: Story<VideoCategoryCardProps> = (args) => {
     </Container>
   )
 }
-export const Regular = Template.bind({})
-Regular.args = {}
+export const Default = Template.bind({})
+Default.args = {}
 
-export const Container = styled.div`
+export const Compact = Template.bind({})
+Compact.args = {
+  variant: 'compact',
+}
+
+const Container = styled.div`
   width: 414px;
 `
