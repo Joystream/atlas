@@ -115,6 +115,7 @@ export type VideoTileBaseProps = {
 export type TileSize = 'small' | 'big' | undefined
 
 export const MIN_VIDEO_TILE_WIDTH = 250
+const SMALL_SIZE_WIDTH = 300
 
 export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   title,
@@ -157,10 +158,10 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     onResize: (size) => {
       const { width: videoTileWidth, height: videoTileHeight } = size
       if (videoTileWidth && !main) {
-        if (tileSize !== 'small' && videoTileWidth <= 300) {
+        if (tileSize !== 'small' && videoTileWidth <= SMALL_SIZE_WIDTH) {
           setTileSize('small')
         }
-        if (tileSize !== 'big' && videoTileWidth > 300) {
+        if (tileSize !== 'big' && videoTileWidth > SMALL_SIZE_WIDTH) {
           setTileSize('big')
         }
       }
