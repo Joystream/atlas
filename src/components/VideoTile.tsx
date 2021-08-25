@@ -21,14 +21,10 @@ export type VideoTileProps = {
   Pick<VideoTileBaseProps, 'progress' | 'className'>
 
 export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: avatarPhotoUrl } = useAsset({
-    entity: video?.channel,
-    assetType: AssetType.AVATAR,
+  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl } = useVideoSharedLogic({
+    id,
+    isDraft: false,
+    onNotFound,
   })
 
   return (
@@ -54,16 +50,12 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isDraft, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
+  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl } = useVideoSharedLogic({
+    id,
+    isDraft,
+    onNotFound,
+  })
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: avatarPhotoUrl } = useAsset({
-    entity: video?.channel,
-    assetType: AssetType.AVATAR,
-  })
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 
@@ -101,7 +93,16 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
-  const internalIsLoadingState = loading || !id
+  const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl, isLoadingAsset: isLoadingAvatar } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
+
+  const internalIsLoadingState = loading || !id || isLoadingAvatar || isLoadingThumbnail
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
-  return { video, loading: internalIsLoadingState, videoHref }
+  return { video, loading: internalIsLoadingState, thumbnailPhotoUrl, avatarPhotoUrl, videoHref }
 }

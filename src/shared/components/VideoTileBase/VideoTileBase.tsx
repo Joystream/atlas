@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useContextMenu, usePreloadImg } from '@/hooks'
+import { useContextMenu } from '@/hooks'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -168,8 +168,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     },
   })
   const [failedLoadImage, setFailedLoadImage] = useState(false)
-  const { hasImgLoaded } = usePreloadImg(thumbnailUrl ?? undefined)
-  const { hasImgLoaded: hasAvatarImgLoaded } = usePreloadImg(channelAvatarUrl ?? undefined)
   const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
@@ -211,7 +209,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              {isLoading || hasImgLoaded === false ? (
+              {isLoading ? (
                 <CoverSkeletonLoader />
               ) : (
                 <CoverImageContainer ref={imgRef}>
@@ -285,7 +283,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           <InfoContainer main={main}>
             {displayChannel && (
               <AvatarContainer scalingFactor={scalingFactor}>
-                {isLoading || (hasAvatarImgLoaded === false && channelAvatarUrl !== undefined) ? (
+                {isLoading ? (
                   <SkeletonLoader rounded />
                 ) : isDraft === true ? (
                   <CoverNoImage />

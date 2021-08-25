@@ -8,12 +8,11 @@ import { ChannelCardBase } from '@/shared/components/ChannelCardBase'
 export type ChannelCardProps = {
   id?: string
   className?: string
-  onClick?: () => void
 }
 
 export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
-  const { channel, loading } = useChannel(id ?? '', { skip: !id })
-  const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { channel, loading } = useChannel(id ?? '', { fetchPolicy: 'cache-first', skip: !id })
+  const { url, isLoadingAsset } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id)
 
@@ -22,10 +21,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
     toggleFollowing()
   }
 
+  const isLoading = loading || id === undefined || isLoadingAsset
   return (
     <ChannelCardBase
       className={className}
-      isLoading={loading || !channel}
+      isLoading={isLoading}
       id={channel?.id}
       avatarUrl={url}
       follows={channel?.follows}

@@ -18,10 +18,10 @@ export const useAsset = ({ entity, assetType }: UseAssetDataArgs) => {
   }, [addPendingAsset, asset, assetData, contentId, pendingAsset])
 
   if (asset) {
-    return { url: asset.url }
+    return { url: asset.url, isLoadingAsset: false }
   }
 
-  return { url: null }
+  return { url: null, isLoadingAsset: !!pendingAsset }
 }
 
 export const useRawAsset = (contentId: string | null) => {
