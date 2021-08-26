@@ -47,7 +47,6 @@ import {
   RemoveButton,
   SpacedSkeletonLoader,
   StyledAvatar,
-  TextContainer,
   TitleHeader,
   TitleHeaderAnchor,
 } from './VideoTileBase.styles'
@@ -300,7 +299,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
             timeout={parseInt(transitions.timings.sharp)}
             classNames={transitions.names.fade}
           >
-            <TextContainer>
+            <div>
               {isLoading ? (
                 <SkeletonLoader height={18} width="60%" />
               ) : (
@@ -338,7 +337,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   ) : null}
                 </MetaContainer>
               )}
-            </TextContainer>
+            </div>
           </CSSTransition>
         </SwitchTransition>
         {!isLoading && (

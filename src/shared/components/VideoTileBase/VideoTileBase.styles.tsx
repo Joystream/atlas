@@ -11,6 +11,7 @@ import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
 const KEBAB_MENU_WIDTH = sizes(8)
+const AVATAR_WITH_MARGIN = sizes(13)
 
 type SizeProps = {
   size?: 'small' | 'big'
@@ -97,18 +98,13 @@ export const Container = styled.article`
 
 export const InfoContainer = styled.div`
   min-height: 86px;
-  display: flex;
+  display: grid;
+  grid-template-columns: ${AVATAR_WITH_MARGIN} auto ${KEBAB_MENU_WIDTH};
   margin-top: ${sizes(3)};
 `
 
 export const AvatarContainer = styled.div`
   ${square(sizes(10))};
-
-  margin-right: ${sizes(3)};
-`
-
-export const TextContainer = styled.div`
-  width: calc(100% - ${KEBAB_MENU_WIDTH});
 `
 
 type MetaContainerProps = { noMarginTop: boolean }
