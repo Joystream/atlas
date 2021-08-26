@@ -5,12 +5,22 @@ import { SkeletonLoader, Text } from '@/shared/components'
 import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
-import { Container, Content, CoverImg, IconCircle, Title, VideoCountContainer } from './VideoCategoryCard.style'
+import {
+  Container,
+  Content,
+  CoverImg,
+  IconCircle,
+  PieChart,
+  PieSegment,
+  Title,
+  VideoCountContainer,
+  VideosNumberContainer,
+} from './VideoCategoryCard.style'
 
 export type VideoCategoryCardProps = {
   variant?: 'default' | 'compact'
-  color: string
   loading?: boolean
+  color: string
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
@@ -19,6 +29,8 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   color,
   ...rest
 }) => {
+  // value from 1 to 100
+  const pieChartValue = 15
   return (
     <SwitchTransition>
       <CSSTransition
@@ -52,9 +64,14 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
               {loading ? (
                 <SkeletonLoader width="80px" height={variant === 'default' ? '20px' : '16px'} />
               ) : (
-                <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
-                  123 videos
-                </Text>
+                <VideosNumberContainer>
+                  <PieChart>
+                    <PieSegment value={pieChartValue}></PieSegment>
+                  </PieChart>
+                  <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
+                    123 videos
+                  </Text>
+                </VideosNumberContainer>
               )}
             </VideoCountContainer>
           </Content>
