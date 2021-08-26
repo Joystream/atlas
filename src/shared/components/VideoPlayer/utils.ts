@@ -15,7 +15,12 @@ export enum CustomVideojsEvents {
   PauseControl = 'PAUSE_CONTROL',
 }
 
-export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlayer) => {
+export const hotkeysHandler = (
+  event: KeyboardEvent,
+  playerInstance: VideoJsPlayer,
+  playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>,
+  pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void
+) => {
   if (!playerInstance) {
     return
   }
@@ -31,16 +36,10 @@ export const hotkeysHandler = (event: KeyboardEvent, playerInstance: VideoJsPlay
     case 'Space':
     case 'KeyK':
       if (!isPaused) {
-        playerInstance.trigger(CustomVideojsEvents.PauseControl)
-        playerInstance.pause()
+        pauseVideo(playerInstance, true)
       }
       if (isPaused) {
-        playerInstance.trigger(CustomVideojsEvents.PlayControl)
-        const playPromise = playerInstance.play()
-        if (!playPromise) return
-        playPromise.catch(() => {
-          playerInstance.trigger(CustomVideojsEvents.PauseControl)
-        })
+        playVideo(playerInstance, true)
       }
       return
     case 'ArrowLeft':

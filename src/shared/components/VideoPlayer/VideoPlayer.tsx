@@ -1,5 +1,6 @@
 import { debounce, round } from 'lodash'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -82,6 +83,44 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [playerState, setPlayerState] = useState<PlayerState>(null)
   const [isLoaded, setIsLoaded] = useState(false)
 
+  const playVideo = useCallback(
+    async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
+      if (!player) {
+        return
+      }
+      withIndicator && player.trigger(CustomVideojsEvents.PlayControl)
+      try {
+        const playPromise = await player.play()
+        if (playPromise && callback) callback()
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          // this will prevent throwing harmless error `the play() request was interrupted by a call to pause()`
+          // Video.js doing something similiar, check:
+          // https://github.com/videojs/video.js/issues/6998
+          // https://github.com/videojs/video.js/blob/4238f5c1d88890547153e7e1de7bd0d1d8e0b236/src/js/utils/promise.js
+          return
+        }
+        if (error.name === 'NotAllowedError') {
+          ConsoleLogger.warn('Video playback failed', error)
+        } else {
+          SentryLogger.error('Video playback failed', 'VideoPlayer', error, {
+            video: { id: videoId, url: videoJsConfig.src },
+          })
+        }
+      }
+    },
+    [videoId, videoJsConfig.src]
+  )
+
+  const pauseVideo = useCallback((player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
+    if (!player) {
+      return
+    }
+    withIndicator && player.trigger(CustomVideojsEvents.PauseControl)
+    callback?.()
+    player.pause()
+  }, [])
+
   // handle hotkeys
   useEffect(() => {
     if (!player || isInBackground) {
@@ -99,13 +138,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
       if (playerReservedKeys.includes(event.key)) {
         event.preventDefault()
-        hotkeysHandler(event, player)
+        hotkeysHandler(event, player, playVideo, pauseVideo)
       }
     }
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [isInBackground, player, playerState])
+  }, [isInBackground, pauseVideo, playVideo, player, playerState])
 
   // handle error
   useEffect(() => {
@@ -120,29 +159,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       player.off('error', handler)
     }
   })
-
-  const playVideo = useCallback(() => {
-    if (!player) {
-      return
-    }
-    player.trigger(CustomVideojsEvents.PlayControl)
-    const playPromise = player.play()
-    if (playPromise) {
-      playPromise
-        .then(() => {
-          setIsPlaying(true)
-        })
-        .catch((e) => {
-          if (e.name === 'NotAllowedError') {
-            ConsoleLogger.warn('Video playback failed', e)
-          } else {
-            SentryLogger.error('Video playback failed', 'VideoPlayer', e, {
-              video: { id: videoId, url: videoJsConfig.src },
-            })
-          }
-        })
-    }
-  }, [player, videoId, videoJsConfig.src])
 
   // handle video loading
   useEffect(() => {
@@ -213,7 +229,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       return
     }
     if (playing) {
-      playVideo()
+      playVideo(player)
     } else {
       player.pause()
     }
@@ -271,7 +287,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
     const handler = () => {
       if (playerState === 'ended') {
-        playVideo()
+        playVideo(player)
       }
     }
     player.on('seeking', handler)
@@ -375,10 +391,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   // button/input handlers
   const handlePlayPause = () => {
     if (isPlaying) {
-      player?.pause()
-      player?.trigger(CustomVideojsEvents.PauseControl)
+      pauseVideo(player, true, () => setIsPlaying(false))
     } else {
-      playVideo()
+      playVideo(player, true, () => setIsPlaying(true))
     }
   }
 
@@ -453,6 +468,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
               <CustomTimeline
+                playVideo={playVideo}
+                pauseVideo={pauseVideo}
                 player={player}
                 isFullScreen={isFullScreen}
                 playerState={playerState}

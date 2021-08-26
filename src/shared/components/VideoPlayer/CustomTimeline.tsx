@@ -24,6 +24,8 @@ type CustomTimelineProps = {
   isFullScreen?: boolean
   playerState: PlayerState
   setPlayerState: React.Dispatch<React.SetStateAction<PlayerState>>
+  playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>
+  pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void
 }
 
 const UPDATE_INTERVAL = 30
@@ -32,6 +34,8 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
   player,
   isFullScreen,
   playerState,
+  playVideo,
+  pauseVideo,
   setPlayerState,
 }) => {
   const playProgressThumbRef = useRef<HTMLButtonElement>(null)
@@ -55,11 +59,11 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
     const handler = (event: Event) => {
       if (event.type === 'seeking' && isScrubbing && !player.paused()) {
         setPlayedBefore(true)
-        player.pause()
+        pauseVideo(player)
       }
       if (event.type === 'seeked' && !isScrubbing) {
         if (playedBefore) {
-          player.play()
+          playVideo(player)
           setPlayedBefore(false)
         }
       }
@@ -68,7 +72,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
     return () => {
       player.off(['seeking', 'seeked'], handler)
     }
-  }, [isScrubbing, player, playedBefore])
+  }, [isScrubbing, player, playedBefore, pauseVideo, playVideo])
 
   useEffect(() => {
     const playProgress = playProgressRef.current
