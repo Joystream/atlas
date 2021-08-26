@@ -21,18 +21,24 @@ export type VideoTileProps = {
   Pick<VideoTileBaseProps, 'progress' | 'className'>
 
 export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft: false, onNotFound })
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: avatarPhotoUrl } = useAsset({
-    entity: video?.channel,
-    assetType: AssetType.AVATAR,
+  const {
+    video,
+    loading,
+    videoHref,
+    thumbnailPhotoUrl,
+    avatarPhotoUrl,
+    isLoadingThumbnail,
+    isLoadingAvatar,
+  } = useVideoSharedLogic({
+    id,
+    isDraft: false,
+    onNotFound,
   })
 
   return (
     <VideoTileBase
+      isLoadingThumbnail={isLoadingThumbnail}
+      isLoadingAvatar={isLoadingAvatar}
       publisherMode={false}
       title={video?.title}
       channelTitle={video?.channel.title}
@@ -45,7 +51,6 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
       onCopyVideoURLClick={() => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
-      contentKey={id}
       {...metaProps}
     />
   )
@@ -54,21 +59,27 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isDraft, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref } = useVideoSharedLogic({ id, isDraft, onNotFound })
+  const {
+    video,
+    loading,
+    videoHref,
+    thumbnailPhotoUrl,
+    avatarPhotoUrl,
+    isLoadingThumbnail,
+    isLoadingAvatar,
+  } = useVideoSharedLogic({
+    id,
+    isDraft,
+    onNotFound,
+  })
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: avatarPhotoUrl } = useAsset({
-    entity: video?.channel,
-    assetType: AssetType.AVATAR,
-  })
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 
   return (
     <VideoTileBase
+      isLoadingThumbnail={isLoadingThumbnail}
+      isLoadingAvatar={isLoadingAvatar}
       publisherMode
       title={isDraft ? draft?.title : video?.title}
       channelTitle={video?.channel.title}
@@ -84,7 +95,6 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}
-      contentKey={id}
       {...metaProps}
     />
   )
@@ -101,7 +111,24 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
+  const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset({
+    entity: video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: avatarPhotoUrl, isLoadingAsset: isLoadingAvatar } = useAsset({
+    entity: video?.channel,
+    assetType: AssetType.AVATAR,
+  })
+
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
-  return { video, loading: internalIsLoadingState, videoHref }
+  return {
+    video,
+    loading: internalIsLoadingState,
+    isLoadingThumbnail,
+    isLoadingAvatar,
+    thumbnailPhotoUrl,
+    avatarPhotoUrl,
+    videoHref,
+  }
 }

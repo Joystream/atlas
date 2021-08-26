@@ -42,6 +42,8 @@ export const AssetsManager: React.FC = () => {
         if (!assetUrl) {
           ConsoleLogger.warn('Unable to create asset url', resolutionData)
           addAsset(contentId, {})
+          removePendingAsset(contentId)
+          removeAssetBeingResolved(contentId)
           return
         }
 

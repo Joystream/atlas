@@ -13,7 +13,7 @@ export type ChannelCardProps = {
 
 export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
   const { channel, loading } = useChannel(id ?? '', { skip: !id })
-  const { url } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { url, isLoadingAsset } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id)
 
@@ -26,6 +26,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
     <ChannelCardBase
       className={className}
       isLoading={loading || !channel}
+      isLoadingAvatar={isLoadingAsset}
       id={channel?.id}
       avatarUrl={url}
       follows={channel?.follows}
