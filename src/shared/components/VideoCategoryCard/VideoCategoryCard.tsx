@@ -35,7 +35,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
     <SwitchTransition>
       <CSSTransition
         key={loading ? 'placeholder' : 'content'}
-        timeout={parseInt(transitions.timings.loading) * 0.75}
+        timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
         <Container loading={loading} variantCategory={variant} color={color} {...rest}>
