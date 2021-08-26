@@ -2,10 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
 
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import { Text } from '../Text'
 
 type ColorProps = { color: string }
 type LoadingProps = { loading?: boolean }
@@ -168,18 +167,18 @@ export const PieSegment = styled.div<{ value: number }>`
   -webkit-clip-path: polygon(var(--a) var(--a), var(--b) var(--a), var(--b) var(--b), var(--a) var(--b));
   clip-path: polygon(var(--a) var(--a), var(--b) var(--a), var(--b) var(--b), var(--a) var(--b));
   height: 100%;
+  width: 100%;
   position: absolute;
   transform: translate(0, -50%) rotate(90deg) rotate(calc(var(--degrees) * 1deg));
   transform-origin: 50% 100%;
-  width: 100%;
   z-index: calc(1 + var(--over50));
 
   &::after,
   &::before {
-    background: var(--bg, #7b8a95);
+    background: ${colors.gray[300]};
     content: '';
-    height: 100%;
     position: absolute;
+    height: 100%;
     width: 100%;
   }
 
