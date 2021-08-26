@@ -5,15 +5,13 @@ import { useMostViewedVideosIds } from '@/api/hooks'
 import useVideosConnection from '@/api/hooks/videosConnection'
 import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
 import { TopTenThisWeek } from '@/components/TopTenThisWeek'
 import { VideoHero } from '@/components/VideoHero'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { CallToActionButton, CallToActionWrapper } from '@/shared/components/CallToActionButton'
-import { SvgNavChannels, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -48,7 +46,7 @@ export const HomeView: React.FC = () => {
   }
 
   return (
-    <LimitedWidthContainer big>
+    <VideoContentTemplate cta={['popular', 'new', 'channels']}>
       <VideoHero />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
@@ -71,28 +69,8 @@ export const HomeView: React.FC = () => {
         <OfficialJoystreamUpdate />
         <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
         <InfiniteVideoGrid title="All content" onDemand />
-        <CallToActionWrapper>
-          <CallToActionButton
-            label="Popular on Joystream"
-            to={absoluteRoutes.viewer.popular()}
-            colorVariant="red"
-            icon={<SvgNavPopular />}
-          />
-          <CallToActionButton
-            label="New & Noteworthy"
-            to={absoluteRoutes.viewer.new()}
-            colorVariant="green"
-            icon={<SvgNavNew />}
-          />
-          <CallToActionButton
-            label="Browse channels"
-            to={absoluteRoutes.viewer.channels()}
-            colorVariant="blue"
-            icon={<SvgNavChannels />}
-          />
-        </CallToActionWrapper>
       </Container>
-    </LimitedWidthContainer>
+    </VideoContentTemplate>
   )
 }
 
