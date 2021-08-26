@@ -20,8 +20,6 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const { selectedNode } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
 
-  console.log(NODE_URL)
-
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
 
   const handleNodeConnectionUpdate = useCallback(
