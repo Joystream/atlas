@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -10,6 +10,7 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
+const KEBAB_MENU_WIDTH = sizes(8)
 
 type SizeProps = {
   size?: 'small' | 'big'
@@ -107,11 +108,7 @@ export const AvatarContainer = styled.div`
 `
 
 export const TextContainer = styled.div`
-  width: calc(100% - 30px);
-
-  ${media.compact} {
-    width: calc(100% - 87px);
-  }
+  width: calc(100% - ${KEBAB_MENU_WIDTH});
 `
 
 type MetaContainerProps = { noMarginTop: boolean }
@@ -213,7 +210,7 @@ export const PublishingStateText = styled(Text)`
 `
 
 export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
-  ${square(sizes(9))};
+  ${square(KEBAB_MENU_WIDTH)};
 
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
   align-items: center;
