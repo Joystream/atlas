@@ -22,11 +22,11 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
     toggleFollowing()
   }
 
-  const isLoading = loading || id === undefined || isLoadingAsset
   return (
     <ChannelCardBase
       className={className}
-      isLoading={isLoading}
+      isLoading={loading || !channel}
+      isLoadingAvatar={isLoadingAsset}
       id={channel?.id}
       avatarUrl={url}
       follows={channel?.follows}

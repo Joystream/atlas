@@ -51,7 +51,6 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
       onCopyVideoURLClick={() => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
-      contentKey={id}
       {...metaProps}
     />
   )
@@ -96,7 +95,6 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
       videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
       isDraft={isDraft}
-      contentKey={id}
       {...metaProps}
     />
   )
