@@ -206,7 +206,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   return (
     <Container main={main} className={className}>
       <CoverWrapper main={main}>
-        <CoverContainer clickable={clickable}>
+        <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
               key={isLoadingThumbnail ? 'placeholder' : `content-${contentKey}`}
@@ -216,7 +216,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               {isLoadingThumbnail ? (
                 <CoverSkeletonLoader />
               ) : (
-                <CoverImageContainer ref={imgRef}>
+                <CoverImageContainer>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
