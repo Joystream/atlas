@@ -3,13 +3,13 @@ import { createStore } from '@/store'
 const LOCAL_STORAGE_KEY = 'environment'
 
 export type EnvironmentState = {
-  selectedNode: string
+  selectedNode: string | null
   targetEnv: string
 }
 
 const INITIAL_STATE: EnvironmentState = {
   targetEnv: 'development',
-  selectedNode: 'wss://sumer-dev-2.joystream.app/rpc',
+  selectedNode: null,
 }
 
 export type EnvironmentStoreActions = {

@@ -1,11 +1,12 @@
 import { web3FromAddress } from '@polkadot/extension-dapp'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { NODE_URL } from '@/config/urls'
 import { JoystreamJs } from '@/joystream-lib'
+import { useEnvironmentStore } from '@/providers/environment/store'
 import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore } from '../connectionStatus'
-import { useNode } from '../environment'
 import { useUser } from '../user'
 
 type JoystreamContextValue = {
@@ -16,8 +17,10 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
-  const { selectedNode } = useNode()
+  const { selectedNode } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
+
+  console.log(NODE_URL)
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
 
@@ -34,7 +37,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     const init = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamJs(selectedNode)
+        joystream = new JoystreamJs(selectedNode || NODE_URL)
         setJoystream(joystream)
 
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate

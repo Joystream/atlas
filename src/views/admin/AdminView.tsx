@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { availableNodes } from '@/config/availableNodes'
 import { TARGET_DEV_ENV, availableEnvs } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
-import { useNode, useTargetEnv } from '@/providers/environment'
+import { NODE_URL } from '@/config/urls'
+import { useEnvironmentStore } from '@/providers/environment/store'
 import { useSnackbar } from '@/providers/snackbars'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
@@ -14,44 +16,16 @@ import { SentryLogger } from '@/utils/logs'
 
 type SelectValue = string | null
 
-const AVAILABLE_NODES = [
-  {
-    name: 'Joystream (Europe/Germany - High Availabitliy)',
-    value: 'wss://rome-rpc-endpoint.joystream.org:9944',
-  },
-  {
-    name: 'Joystream (JoystreamStats.Live)',
-    value: 'wss://joystreamstats.live:9945',
-  },
-  {
-    name: 'Joystream (Europe/UK)',
-    value: 'wss://testnet-rpc-3-uk.joystream.org',
-  },
-  {
-    name: 'Joystream (US/East)',
-    value: 'wss://testnet-rpc-1-us.joystream.org',
-  },
-  {
-    name: 'Joystream (Singapore)',
-    value: 'wss://testnet-rpc-2-singapore.joystream.org',
-  },
-  {
-    name: 'Sumer Dev',
-    value: 'wss://sumer-dev-2.joystream.app/rpc',
-  },
-  {
-    name: 'Local node',
-    value: 'ws://127.0.0.1:9944',
-  },
-]
-
 const items = availableEnvs().map((item) => ({ name: item, value: item }))
 
 export const AdminView = () => {
   const [customUrlError, setCustomUrlError] = useState<string | null>(null)
-  const { setTargetEnv, targetEnv } = useTargetEnv()
-  const { setSelectedNode, selectedNode } = useNode()
-  const isCustomUrl = AVAILABLE_NODES.find(({ value }) => value === selectedNode)
+  const { setSelectedNode, selectedNode, setTargetEnv, targetEnv } = useEnvironmentStore((state) => ({
+    ...state.actions,
+    ...state,
+  }))
+  const determinedNode = selectedNode || NODE_URL
+  const isCustomUrl = availableNodes.find(({ value }) => value === determinedNode)
   const [customUrlChecked, setCustomUrlChecked] = useState(!isCustomUrl)
   const { displaySnackbar } = useSnackbar()
   const customNodeRef = useRef<HTMLInputElement>(null)
@@ -87,7 +61,7 @@ export const AdminView = () => {
       setCustomUrlChecked(true)
     } else {
       setCustomUrlChecked(false)
-      setSelectedNode(isCustomUrl ? AVAILABLE_NODES[0].value : selectedNode)
+      setSelectedNode(isCustomUrl ? availableNodes[0].value : determinedNode)
     }
   }
 
@@ -154,14 +128,14 @@ export const AdminView = () => {
             <TextField
               ref={customNodeRef}
               placeholder="Type your Node URL"
-              defaultValue={selectedNode}
+              defaultValue={determinedNode}
               error={!!customUrlError}
               helperText={customUrlError}
             />
             <Button onClick={handleCustomNodeChange}>Update node</Button>
           </>
         ) : (
-          <Select items={AVAILABLE_NODES} onChange={handleNodeChange} value={selectedNode} />
+          <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
         )}
       </div>
       <div>
