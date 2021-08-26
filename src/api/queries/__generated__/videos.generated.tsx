@@ -241,19 +241,6 @@ export type GetVideoQuery = {
   }>
 }
 
-export type GetVideoAssetAvailabilityQueryVariables = Types.Exact<{
-  where: Types.VideoWhereUniqueInput
-}>
-
-export type GetVideoAssetAvailabilityQuery = {
-  __typename?: 'Query'
-  videoByUniqueInput?: Types.Maybe<{
-    __typename?: 'Video'
-    mediaAvailability: Types.AssetAvailability
-    thumbnailPhotoAvailability: Types.AssetAvailability
-  }>
-}
-
 export type GetVideosConnectionQueryVariables = Types.Exact<{
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
@@ -663,53 +650,6 @@ export function useGetVideoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetVideoQueryHookResult = ReturnType<typeof useGetVideoQuery>
 export type GetVideoLazyQueryHookResult = ReturnType<typeof useGetVideoLazyQuery>
 export type GetVideoQueryResult = Apollo.QueryResult<GetVideoQuery, GetVideoQueryVariables>
-export const GetVideoAssetAvailabilityDocument = gql`
-  query GetVideoAssetAvailability($where: VideoWhereUniqueInput!) {
-    videoByUniqueInput(where: $where) {
-      mediaAvailability
-      thumbnailPhotoAvailability
-    }
-  }
-`
-
-/**
- * __useGetVideoAssetAvailabilityQuery__
- *
- * To run a query within a React component, call `useGetVideoAssetAvailabilityQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideoAssetAvailabilityQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetVideoAssetAvailabilityQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetVideoAssetAvailabilityQuery(
-  baseOptions: Apollo.QueryHookOptions<GetVideoAssetAvailabilityQuery, GetVideoAssetAvailabilityQueryVariables>
-) {
-  return Apollo.useQuery<GetVideoAssetAvailabilityQuery, GetVideoAssetAvailabilityQueryVariables>(
-    GetVideoAssetAvailabilityDocument,
-    baseOptions
-  )
-}
-export function useGetVideoAssetAvailabilityLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoAssetAvailabilityQuery, GetVideoAssetAvailabilityQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetVideoAssetAvailabilityQuery, GetVideoAssetAvailabilityQueryVariables>(
-    GetVideoAssetAvailabilityDocument,
-    baseOptions
-  )
-}
-export type GetVideoAssetAvailabilityQueryHookResult = ReturnType<typeof useGetVideoAssetAvailabilityQuery>
-export type GetVideoAssetAvailabilityLazyQueryHookResult = ReturnType<typeof useGetVideoAssetAvailabilityLazyQuery>
-export type GetVideoAssetAvailabilityQueryResult = Apollo.QueryResult<
-  GetVideoAssetAvailabilityQuery,
-  GetVideoAssetAvailabilityQueryVariables
->
 export const GetVideosConnectionDocument = gql`
   query GetVideosConnection(
     $first: Int

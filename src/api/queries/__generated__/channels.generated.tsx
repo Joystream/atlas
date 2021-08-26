@@ -180,19 +180,6 @@ export type GetChannelQuery = {
   }>
 }
 
-export type GetChannelAssetAvailabilityQueryVariables = Types.Exact<{
-  where: Types.ChannelWhereUniqueInput
-}>
-
-export type GetChannelAssetAvailabilityQuery = {
-  __typename?: 'Query'
-  channelByUniqueInput?: Types.Maybe<{
-    __typename?: 'Channel'
-    coverPhotoAvailability: Types.AssetAvailability
-    avatarPhotoAvailability: Types.AssetAvailability
-  }>
-}
-
 export type GetVideoCountQueryVariables = Types.Exact<{
   where?: Types.Maybe<Types.VideoWhereInput>
 }>
@@ -553,53 +540,6 @@ export function useGetChannelLazyQuery(
 export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
 export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
 export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>
-export const GetChannelAssetAvailabilityDocument = gql`
-  query GetChannelAssetAvailability($where: ChannelWhereUniqueInput!) {
-    channelByUniqueInput(where: $where) {
-      coverPhotoAvailability
-      avatarPhotoAvailability
-    }
-  }
-`
-
-/**
- * __useGetChannelAssetAvailabilityQuery__
- *
- * To run a query within a React component, call `useGetChannelAssetAvailabilityQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelAssetAvailabilityQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetChannelAssetAvailabilityQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetChannelAssetAvailabilityQuery(
-  baseOptions: Apollo.QueryHookOptions<GetChannelAssetAvailabilityQuery, GetChannelAssetAvailabilityQueryVariables>
-) {
-  return Apollo.useQuery<GetChannelAssetAvailabilityQuery, GetChannelAssetAvailabilityQueryVariables>(
-    GetChannelAssetAvailabilityDocument,
-    baseOptions
-  )
-}
-export function useGetChannelAssetAvailabilityLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelAssetAvailabilityQuery, GetChannelAssetAvailabilityQueryVariables>
-) {
-  return Apollo.useLazyQuery<GetChannelAssetAvailabilityQuery, GetChannelAssetAvailabilityQueryVariables>(
-    GetChannelAssetAvailabilityDocument,
-    baseOptions
-  )
-}
-export type GetChannelAssetAvailabilityQueryHookResult = ReturnType<typeof useGetChannelAssetAvailabilityQuery>
-export type GetChannelAssetAvailabilityLazyQueryHookResult = ReturnType<typeof useGetChannelAssetAvailabilityLazyQuery>
-export type GetChannelAssetAvailabilityQueryResult = Apollo.QueryResult<
-  GetChannelAssetAvailabilityQuery,
-  GetChannelAssetAvailabilityQueryVariables
->
 export const GetVideoCountDocument = gql`
   query GetVideoCount($where: VideoWhereInput) {
     videosConnection(first: 0, where: $where) {

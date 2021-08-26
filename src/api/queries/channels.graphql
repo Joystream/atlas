@@ -45,13 +45,6 @@ query GetChannel($where: ChannelWhereUniqueInput!) {
   }
 }
 
-query GetChannelAssetAvailability($where: ChannelWhereUniqueInput!) {
-  channelByUniqueInput(where: $where) {
-    coverPhotoAvailability
-    avatarPhotoAvailability
-  }
-}
-
 query GetVideoCount($where: VideoWhereInput) {
   videosConnection(first: 0, where: $where) {
     totalCount

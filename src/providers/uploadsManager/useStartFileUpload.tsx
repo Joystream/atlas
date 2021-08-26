@@ -1,11 +1,10 @@
 import axios, { AxiosError } from 'axios'
 import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useRef } from 'react'
-import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
-import { useAssetsAvailability } from '@/api/hooks'
+import { useDataObjectAvailabilityLazy } from '@/api/hooks/dataObject'
 import { absoluteRoutes } from '@/config/routes'
 import { ResolvedAssetDetails } from '@/types/assets'
 import { createStorageNodeUrl } from '@/utils/asset'
@@ -31,28 +30,39 @@ export const useStartFileUpload = () => {
   const addAsset = useUploadsStore((state) => state.addAsset)
   const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-  const [assetType, setAssetType] = useState<'video' | 'thumbnail' | 'cover' | 'avatar'>()
-  const [assetContentId, setAssetContentId] = useState('')
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus)
-  const { assetAvailability, getAssetAvailability, startPolling, stopPolling, called } = useAssetsAvailability(
-    assetType
-  )
+  const {
+    getDataObjectAvailability,
+    stopPolling,
+    startPolling,
+    dataObjectAvailability,
+    variables,
+  } = useDataObjectAvailabilityLazy({
+    fetchPolicy: 'network-only',
+  })
 
   useEffect(() => {
-    if (!assetContentId || !assetType) {
+    if (
+      !variables?.joystreamContentIdEq ||
+      uploadStatus[variables?.joystreamContentIdEq]?.lastStatus !== 'proccessing'
+    ) {
       return
     }
-    if (uploadStatus[assetContentId]?.lastStatus !== 'proccessing') {
-      return
-    }
-    if (assetAvailability === 'PENDING') {
+    if (dataObjectAvailability === 'PENDING') {
       startPolling?.(3000)
     }
-    if (assetAvailability === 'ACCEPTED') {
+    if (dataObjectAvailability === 'ACCEPTED') {
       stopPolling?.()
-      setUploadStatus(assetContentId, { lastStatus: 'completed' })
+      setUploadStatus(variables?.joystreamContentIdEq, { lastStatus: 'completed' })
     }
-  }, [assetAvailability, assetContentId, assetType, called, setUploadStatus, startPolling, stopPolling, uploadStatus])
+  }, [
+    dataObjectAvailability,
+    setUploadStatus,
+    startPolling,
+    stopPolling,
+    uploadStatus,
+    variables?.joystreamContentIdEq,
+  ])
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
@@ -106,7 +116,6 @@ export const useStartFileUpload = () => {
   const startFileUpload = useCallback(
     async (file: File | Blob | null, asset: InputAssetUpload, opts?: StartFileUploadOptions) => {
       let storageUrl: string, storageProviderId: string
-
       try {
         const storageProvider = await getRandomStorageProvider()
         if (!storageProvider) {
@@ -196,10 +205,7 @@ export const useStartFileUpload = () => {
 
         // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'proccessing', progress: 100 })
-
-        setAssetType(asset.type)
-        setAssetContentId(asset.contentId)
-        getAssetAvailability(asset.parentObject.id)
+        getDataObjectAvailability(asset.contentId)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
@@ -240,7 +246,7 @@ export const useStartFileUpload = () => {
       getRandomStorageProvider,
       setUploadStatus,
       addAssetFile,
-      getAssetAvailability,
+      getDataObjectAvailability,
       addAsset,
       displaySnackbar,
       markStorageProviderNotWorking,
