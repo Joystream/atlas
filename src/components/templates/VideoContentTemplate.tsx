@@ -47,7 +47,7 @@ const CTA_MAP: Record<string, CallToActionButtonProps> = {
 }
 
 export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
-  const renderCta =
+  const ctaContent =
     cta &&
     cta.map((item, idx) => (
       <CallToActionButton
@@ -61,21 +61,20 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
   return (
     <StyledViewWrapper big>
-      {title && <Header>{title}</Header>}
+      {title && <Header variant="h3">{title}</Header>}
       {children}
-      {cta && <CallToActionWrapper>{renderCta}</CallToActionWrapper>}
+      {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>
   )
 }
 
 const Header = styled(Text)`
-  margin: ${sizes(16)} 0 ${sizes(18)};
+  margin: ${sizes(16)} 0;
   font-size: ${typography.sizes.h3};
-  font-weight: ${typography.weights.bold};
 
   ${media.large} {
-    margin: ${sizes(16)} 0 ${sizes(17)};
     font-size: ${typography.sizes.h2};
+    line-height: ${typography.lineHeights.h2};
   }
 `
 
