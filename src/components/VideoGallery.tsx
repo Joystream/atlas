@@ -127,8 +127,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
 }
 
 const StyledVideoTile = styled(VideoTile)`
-  flex-shrink: 0;
-
   ${AvatarContainer} {
     display: none;
 
