@@ -62,6 +62,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
 `
 
 export const ChildrenWrapper = styled.div`
+  align-self: baseline;
   --ranking-number-gap: 48px;
 
   width: calc(100% - var(--ranking-number-gap));
