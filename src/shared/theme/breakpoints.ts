@@ -1,12 +1,11 @@
 export const breakpoints = {
-  base: '320px',
-  compact: '450px',
-  small: '600px',
-  smalldium: '768px',
-  medium: '1024px',
-  large: '1440px',
-  xlarge: '1920px',
-  xxlarge: '2560px',
+  xxs: '320px',
+  xs: '425px',
+  sm: '768px',
+  md: '1024px',
+  lg: '1440px',
+  xl: '1920px',
+  xxl: '2560px',
 } as const
 
 export default breakpoints

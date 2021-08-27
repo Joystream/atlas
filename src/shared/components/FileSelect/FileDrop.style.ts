@@ -102,7 +102,7 @@ export const Thumbnail = styled.img`
   cursor: pointer;
   display: block;
 
-  ${media.compact} {
+  ${media.xs} {
     object-fit: initial;
   }
 `

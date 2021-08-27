@@ -32,7 +32,7 @@ const StyledBackgroundPattern = styled(SvgBgPattern)`
     right: ${PATTERN_OFFSET.SMALL};
   }
 
-  ${media.medium} {
+  ${media.md} {
     right: ${PATTERN_OFFSET.MEDIUM};
   }
 `

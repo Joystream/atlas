@@ -38,7 +38,7 @@ export const FileLinePoint = styled.div`
     margin-left: ${sizes(4)};
   }
 
-  ${media.medium} {
+  ${media.md} {
     margin-left: ${sizes(13)};
   }
 `
@@ -57,7 +57,7 @@ export const FileLineLastPoint = styled.div`
     margin-left: ${sizes(4)};
   }
 
-  ${media.medium} {
+  ${media.md} {
     margin-left: ${sizes(13)};
   }
 `
@@ -72,7 +72,7 @@ export const StatusMessage = styled(Text)`
   align-items: center;
   justify-content: flex-end;
 
-  ${media.medium} {
+  ${media.md} {
     max-width: ${sizes(42)};
   }
 `

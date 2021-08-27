@@ -10,7 +10,7 @@ import { media, sizes } from '@/shared/theme'
 export const Header = styled.header`
   margin-bottom: ${sizes(12)};
   max-width: 580px;
-  ${media.medium} {
+  ${media.md} {
     max-width: 440px;
   }
 `
@@ -32,12 +32,12 @@ export const Wrapper = styled(LimitedWidthContainer)`
   align-items: center;
   margin-top: 64px;
   padding-bottom: 100px;
-  ${media.medium} {
+  ${media.md} {
     margin-top: 40px;
     align-items: unset;
     flex-direction: row;
   }
-  ${media.xxlarge} {
+  ${media.xxl} {
     margin-top: 64px;
   }
 `
@@ -47,7 +47,7 @@ export const Form = styled.form`
   max-width: 580px;
   display: flex;
   flex-direction: column;
-  ${media.medium} {
+  ${media.md} {
     display: block;
   }
 `
@@ -63,7 +63,7 @@ export const StyledAvatar = styled(Avatar)`
 export const StyledButton = styled(Button)`
   display: block;
   margin-top: 20px;
-  ${media.medium} {
+  ${media.md} {
     margin-left: auto;
   }
 `

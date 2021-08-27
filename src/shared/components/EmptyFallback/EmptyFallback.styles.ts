@@ -11,7 +11,7 @@ export const Container = styled.div<{ variant?: EmptyFallbackSizes }>`
   display: grid;
   place-items: center;
 
-  ${media.compact} {
+  ${media.xs} {
     width: ${({ variant }) => (variant === 'large' ? sizes(90) : 'auto')};
   }
 

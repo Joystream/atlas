@@ -25,7 +25,7 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
 
 export const StyledProgressDrawer = styled(ProgressDrawer)`
   display: none;
-  ${media.medium} {
+  ${media.md} {
     position: absolute;
     right: 0;
     bottom: 100%;

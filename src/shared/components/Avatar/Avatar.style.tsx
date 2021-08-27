@@ -28,7 +28,7 @@ const coverAvatarCss = css`
   min-width: 64px;
   height: 64px;
 
-  ${media.medium} {
+  ${media.md} {
     width: 88px;
     min-width: 88px;
     height: 88px;
@@ -39,7 +39,7 @@ const channelAvatarCss = css`
   width: 88px;
   min-width: 88px;
   height: 88px;
-  ${media.medium} {
+  ${media.md} {
     width: 136px;
     min-width: 136px;
     height: 136px;
@@ -49,7 +49,7 @@ const channelCardAvatarCss = css`
   width: 88px;
   min-width: 88px;
   height: 88px;
-  ${media.medium} {
+  ${media.md} {
     width: 104px;
     min-width: 104px;
     height: 104px;
@@ -60,7 +60,7 @@ const viewAvatarCss = css`
   width: 128px;
   min-width: 128px;
   height: 128px;
-  ${media.medium} {
+  ${media.md} {
     width: 136px;
     min-width: 136px;
     height: 136px;

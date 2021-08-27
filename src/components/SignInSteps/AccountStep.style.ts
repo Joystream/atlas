@@ -109,7 +109,7 @@ export const OrderedSteps = styled.ol`
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
-  ${media.medium} {
+  ${media.md} {
     justify-content: space-between;
   }
 `

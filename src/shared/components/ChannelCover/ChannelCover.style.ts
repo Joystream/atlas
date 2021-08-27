@@ -50,7 +50,7 @@ export const EditableControls = styled.div`
   justify-content: center;
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
-  ${media.medium} {
+  ${media.md} {
     background-color: ${colors.transparentBlack[54]};
     opacity: 0;
 
@@ -69,7 +69,7 @@ export const EditCoverDesktopOverlay = styled.div`
   color: ${colors.gray[200]};
   display: none;
 
-  ${media.medium} {
+  ${media.md} {
     display: flex;
     cursor: pointer;
   }
@@ -84,7 +84,7 @@ export const EditCoverMobileButton = styled(IconButton)`
   &:hover {
     background-color: ${colors.transparentBlack[54]};
   }
-  ${media.medium} {
+  ${media.md} {
     display: none;
   }
 `

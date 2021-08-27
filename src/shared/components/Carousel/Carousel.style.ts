@@ -17,7 +17,7 @@ export const Arrow = styled(IconButton)`
   padding: ${sizes(2)};
   font-size: ${typography.sizes.subtitle2};
 
-  ${media.medium} {
+  ${media.md} {
     display: block;
   }
 
@@ -52,7 +52,7 @@ export const GliderContainer = styled.div`
 export const Track = styled.div`
   .glider-slide:not(:first-of-type) {
     margin-left: ${sizes(4)};
-    ${media.large} {
+    ${media.lg} {
       margin-left: ${sizes(6)};
     }
   }
@@ -63,7 +63,7 @@ export const Dots = styled.div`
   margin-top: ${sizes(12)};
   display: none;
 
-  ${media.medium} {
+  ${media.md} {
     display: flex;
   }
 

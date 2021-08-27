@@ -80,7 +80,7 @@ export const SeekBar = styled.div`
   background-color: ${colors.transparentWhite[32]};
   transition: height ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
   height: 0.5em;
-  ${media.compact} {
+  ${media.xs} {
     height: 0.25em;
   }
 `
@@ -152,7 +152,7 @@ export const PlayProgressThumb = styled.button`
   top: -0.75em;
   height: 2em;
   width: 2em;
-  ${media.compact} {
+  ${media.xs} {
     cursor: pointer;
     top: -0.25em;
     height: 1em;

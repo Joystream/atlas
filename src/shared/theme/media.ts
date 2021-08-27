@@ -5,14 +5,13 @@ function buildQuery(br: string) {
 }
 
 const media = {
-  base: buildQuery(breakpoints.base),
-  compact: buildQuery(breakpoints.compact),
-  small: buildQuery(breakpoints.small),
-  smalldium: buildQuery(breakpoints.smalldium),
-  medium: buildQuery(breakpoints.medium),
-  large: buildQuery(breakpoints.large),
-  xlarge: buildQuery(breakpoints.xlarge),
-  xxlarge: buildQuery(breakpoints.xxlarge),
+  xxs: buildQuery(breakpoints.xs),
+  xs: buildQuery(breakpoints.xs),
+  sm: buildQuery(breakpoints.sm),
+  md: buildQuery(breakpoints.md),
+  lg: buildQuery(breakpoints.lg),
+  xl: buildQuery(breakpoints.xl),
+  xxl: buildQuery(breakpoints.xxl),
 }
 
 export default media

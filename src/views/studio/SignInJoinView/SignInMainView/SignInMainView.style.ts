@@ -14,15 +14,15 @@ export const StyledContainer = styled(LimitedWidthContainer)`
   align-items: center;
   justify-content: center;
   padding-bottom: 100px;
-  ${media.medium} {
+  ${media.md} {
     flex-direction: row;
     justify-content: space-between;
   }
-  ${media.xlarge} {
+  ${media.xl} {
     max-width: 1400px;
     left: 150px;
   }
-  ${media.xxlarge} {
+  ${media.xxl} {
     max-width: 1700px;
     margin-top: 128px;
   }
@@ -53,15 +53,15 @@ export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
   margin-top: 60px;
   align-self: center;
   width: 100%;
-  ${media.medium} {
+  ${media.md} {
     position: relative;
     left: -50px;
     margin-top: 0;
   }
-  ${media.large} {
+  ${media.lg} {
     max-width: 1000px;
   }
-  ${media.xxlarge} {
+  ${media.xxl} {
     max-width: unset;
   }
 `

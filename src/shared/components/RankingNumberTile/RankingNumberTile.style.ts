@@ -15,23 +15,23 @@ const variantStyles = (variant: 'channel' | 'video') => {
       return css`
         height: 100%;
         top: -${sizes(5)};
-        ${media.medium} {
+        ${media.md} {
           top: 0;
           align-items: flex-start;
           font-size: 140px;
         }
-        ${media.xlarge} {
+        ${media.xl} {
           font-size: 180px;
         }
       `
     case 'video':
       return css`
         height: 50%;
-        ${media.medium} {
+        ${media.md} {
           line-height: 0.7;
           font-size: 140px;
         }
-        ${media.xlarge} {
+        ${media.xl} {
           font-size: 180px;
         }
       `
@@ -66,10 +66,10 @@ export const ChildrenWrapper = styled.div`
   --ranking-number-gap: 48px;
 
   width: calc(100% - var(--ranking-number-gap));
-  ${media.medium} {
+  ${media.md} {
     --ranking-number-gap: 72px;
   }
-  ${media.xlarge} {
+  ${media.xl} {
     --ranking-number-gap: 92px;
   }
 `

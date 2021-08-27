@@ -30,11 +30,11 @@ export const Media = styled.div`
   padding-top: 50%;
   position: relative;
 
-  ${media.smalldium} {
+  ${media.sm} {
     margin-bottom: ${sizes(8)}px;
   }
 
-  ${media.medium} {
+  ${media.md} {
     margin-bottom: 0;
   }
 `
@@ -69,17 +69,17 @@ export const InfoContainer = styled.div`
     padding-bottom: 0;
   }
 
-  ${media.smalldium} {
+  ${media.sm} {
     position: absolute;
     margin: 0;
     bottom: 64px;
   }
 
-  ${media.medium} {
+  ${media.md} {
     bottom: 96px;
   }
 
-  ${media.large} {
+  ${media.lg} {
     bottom: 128px;
   }
 `
@@ -97,7 +97,7 @@ export const TitleContainer = styled.div`
 
   margin-bottom: ${sizes(4)};
 
-  ${media.small} {
+  ${media.sm} {
     margin-bottom: ${sizes(8)};
   }
 `
@@ -106,7 +106,7 @@ export const Title = styled(Text)`
   font-size: ${typography.sizes.h3};
   line-height: ${typography.lineHeights.h3};
 
-  ${media.large} {
+  ${media.lg} {
     font-size: ${typography.sizes.h2};
     line-height: ${typography.lineHeights.h2};
   }
@@ -116,11 +116,11 @@ export const TitleSkeletonLoader = styled(SkeletonLoader)`
   width: 90%;
   margin-bottom: ${sizes(2)};
 
-  ${media.compact} {
+  ${media.sm} {
     width: 380px;
   }
 
-  ${media.medium} {
+  ${media.md} {
     margin-bottom: ${sizes(3)};
   }
 `

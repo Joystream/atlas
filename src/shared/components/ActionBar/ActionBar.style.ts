@@ -10,7 +10,7 @@ export const StyledActionBarContainer = styled.div`
   padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
 
-  ${media.medium} {
+  ${media.md} {
     flex-direction: row;
     justify-content: space-between;
     padding: ${sizes(4)} ${sizes(8)};
@@ -32,7 +32,7 @@ export const StyledInfoContainer = styled.div`
     display: flex;
   }
 
-  ${media.large} {
+  ${media.lg} {
     align-items: center;
     width: 100%;
   }
@@ -45,7 +45,7 @@ export const StyledPrimaryText = styled(Text)`
   font-weight: ${typography.weights.bold};
   text-align: right;
 
-  ${media.medium} {
+  ${media.md} {
     margin-right: ${sizes(4)};
   }
 `
@@ -57,7 +57,7 @@ export const StyledSecondaryText = styled(Text)`
   max-width: 360px;
   display: none;
 
-  ${media.medium} {
+  ${media.md} {
     display: block;
   }
 `

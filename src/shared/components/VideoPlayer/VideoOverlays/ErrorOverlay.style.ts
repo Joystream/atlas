@@ -60,14 +60,14 @@ export const StyledAnimatedError = styled(AnimatedError)`
 `
 
 export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.base, breakpoints.medium)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.xxs, breakpoints.md)};
 
   margin-top: ${sizes(8)};
   text-align: center;
 `
 
 export const ErrorMessage = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.base, breakpoints.medium)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.xxs, breakpoints.md)};
 
   max-width: 560px;
   margin-top: ${sizes(2)};

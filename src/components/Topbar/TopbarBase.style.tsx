@@ -53,7 +53,7 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
   color: ${colors.gray[300]};
 
-  ${media.medium} {
+  ${media.md} {
     padding: 0;
     padding-left: calc(var(--global-horizontal-padding) - ${sizes(3)});
     margin-left: 2px;
@@ -103,7 +103,7 @@ export const LogoContainer = styled.div<LogoContainerProps>`
     ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
   }
 
-  ${media.medium} {
+  ${media.md} {
     margin-left: 0;
   }
 `

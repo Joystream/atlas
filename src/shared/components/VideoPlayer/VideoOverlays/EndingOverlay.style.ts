@@ -64,7 +64,7 @@ export const SubHeading = styled(Text)`
 `
 
 export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: sizes(6), toSize: sizes(8) }, breakpoints.base, breakpoints.large)};
+  ${fluidRange({ prop: 'fontSize', fromSize: sizes(6), toSize: sizes(8) }, breakpoints.xxs, breakpoints.lg)};
 
   margin-top: ${sizes(4)};
   flex-shrink: 0;

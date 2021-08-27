@@ -31,7 +31,7 @@ export const IndicatorWrapper = styled.div`
   z-index: ${zIndex.globalOverlay};
   background-color: ${colors.gray[600]};
   padding: ${sizes(3)} ${sizes(5)};
-  ${media.medium} {
+  ${media.md} {
     margin-left: var(--sidenav-collapsed-width);
   }
 `

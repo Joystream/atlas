@@ -19,7 +19,7 @@ const mappedColors = {
 export const CallToActionWrapper = styled.div`
   margin-top: ${sizes(32)};
 
-  ${media.medium} {
+  ${media.md} {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: ${sizes(6)};
@@ -42,7 +42,7 @@ export const BodyWrapper = styled(Text)`
   align-items: center;
   justify-content: space-between;
 
-  ${media.compact} {
+  ${media.xs} {
     font-size: ${typography.sizes.h5};
     line-height: ${typography.lineHeights.h5};
   }
@@ -69,7 +69,7 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
     margin-bottom: ${sizes(4)};
   }
 
-  ${media.medium} {
+  ${media.md} {
     &:not(:last-child) {
       margin-bottom: 0;
     }

@@ -26,7 +26,7 @@ export const StyledInput = styled.input<StyledInputProps>`
     --input-max-width: 400px;
   }
 
-  ${media.medium} {
+  ${media.md} {
     --input-max-width: 600px;
   }
 

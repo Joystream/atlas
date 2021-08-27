@@ -36,7 +36,7 @@ export const StyledContainer = styled.div`
   padding: var(--dialog-padding);
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 24px 40px rgba(0, 0, 0, 0.16);
 
-  ${media.medium} {
+  ${media.md} {
     margin: ${sizes(32)} auto;
   }
 `
