@@ -1,5 +1,5 @@
 import React from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgGlyphImage, SvgGlyphNewChannel, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -12,7 +12,6 @@ import {
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
-  StyledTransitionGroup,
 } from './Avatar.style'
 
 export type AvatarProps = {
@@ -60,7 +59,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           <SvgGlyphNewChannel />
         </NewChannelAvatar>
       ) : (
-        <StyledTransitionGroup>
+        <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}
             timeout={parseInt(transitions.timings.loading)}
@@ -78,7 +77,7 @@ export const Avatar: React.FC<AvatarProps> = ({
               <SilhouetteAvatar />
             )}
           </CSSTransition>
-        </StyledTransitionGroup>
+        </SwitchTransition>
       )}
     </Container>
   )
