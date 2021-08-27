@@ -22,6 +22,8 @@ export type PaginatedDataArgs = {
   after?: string | null
 }
 
+const PREFECHET_VIDEOS = 12
+
 // TODO these types below could be used to get rid of requirement to pass TPaginatedData explicitly
 // however this currently is not possible because of constraints of Typescript and our GraphQL codegen
 // tldr is that our codegen generates interfaces instead of types and a more specific interface cannot be assigned to a generic one
@@ -89,7 +91,7 @@ export const useInfiniteGrid = <
     variables: {
       ...queryVariables,
       orderBy,
-      first: additionalSortFn ? 100 : targetDisplayedItemsCount,
+      first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFECHET_VIDEOS,
     },
     onError,
   })
@@ -113,7 +115,7 @@ export const useInfiniteGrid = <
     }
 
     fetchMore({
-      variables: { ...queryVariables, first: missingItemsCount, after: endCursor },
+      variables: { ...queryVariables, first: missingItemsCount + PREFECHET_VIDEOS, after: endCursor },
     })
   }, [
     loading,

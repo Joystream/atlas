@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   AssetAvailability,
@@ -7,6 +7,7 @@ import {
   GetVideosConnectionQueryVariables,
   VideoWhereInput,
 } from '@/api/queries'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { Grid } from '@/shared/components/Grid'
 import { GridHeadingContainer, TitleContainer } from '@/shared/components/GridHeading'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
@@ -45,7 +46,6 @@ type InfiniteVideoGridProps = {
   isFeatured?: boolean
 }
 
-const INITIAL_ROWS = 2
 const INITIAL_VIDEOS_PER_ROW = 4
 
 export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
@@ -69,7 +69,10 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   isFeatured = false,
   titleLoader,
 }) => {
+  const [targetRowsCount, setTargetRowsCount] = useState<number | null>(null)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
+  const targetRowsCountRef = useRef<number | null>(null)
+  const videoRows = useVideoGridRows()
   const queryVariables: { where: VideoWhereInput } = {
     where: {
       ...(channelId ? { channelId_eq: channelId } : {}),
@@ -85,19 +88,21 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     },
   }
 
-  const [targetRowsCountByCategory, setTargetRowsCountByCategory] = useState<Record<string, number>>({
-    [categoryId]: INITIAL_ROWS,
-  })
-  const [cachedCategoryId, setCachedCategoryId] = useState<string>(categoryId)
-
-  const targetRowsCount = targetRowsCountByCategory[cachedCategoryId]
+  useEffect(() => {
+    if (videoRows) {
+      setTargetRowsCount(
+        targetRowsCountRef.current && targetRowsCountRef.current > videoRows ? targetRowsCountRef.current : videoRows
+      )
+    }
+  }, [videoRows])
 
   const fetchMore = useCallback(() => {
-    setTargetRowsCountByCategory((prevState) => ({
-      ...prevState,
-      [cachedCategoryId]: targetRowsCount + 2,
-    }))
-  }, [cachedCategoryId, targetRowsCount])
+    if (targetRowsCount && videoRows) {
+      const value = targetRowsCount + videoRows
+      setTargetRowsCount(value)
+      targetRowsCountRef.current = value
+    }
+  }, [targetRowsCount, videoRows])
 
   const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
@@ -105,10 +110,10 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     GetVideosConnectionQueryVariables
   >({
     query: GetVideosConnectionDocument,
-    isReady: ready,
+    isReady: ready && !!targetRowsCount,
     skipCount,
     queryVariables,
-    targetRowsCount,
+    targetRowsCount: targetRowsCount || 0,
     onDemand,
     onScrollToBottom: !onDemand ? fetchMore : undefined,
     dataAccessor: (rawData) => {
@@ -126,34 +131,6 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     itemsPerRow: videosPerRow,
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
   })
-
-  // handle category change
-  // TODO potentially move into useInfiniteGrid as a general rule - keep separate targetRowsCount per serialized queryVariables
-  useEffect(() => {
-    if (categoryId === cachedCategoryId) {
-      return
-    }
-
-    setCachedCategoryId(categoryId)
-
-    const categoryRowsSet = !!targetRowsCountByCategory[categoryId]
-    const categoryRowsCount = categoryRowsSet ? targetRowsCountByCategory[categoryId] : INITIAL_ROWS
-    if (!categoryRowsSet) {
-      setTargetRowsCountByCategory((prevState) => ({
-        ...prevState,
-        [categoryId]: categoryRowsCount,
-      }))
-    }
-  }, [
-    categoryId,
-    channelId,
-    cachedCategoryId,
-    targetRowsCountByCategory,
-    videosPerRow,
-    skipCount,
-    channelIdIn,
-    createdAtGte,
-  ])
 
   const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
   const gridContent = (

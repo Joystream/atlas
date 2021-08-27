@@ -3,6 +3,8 @@ import React, { FC, useState } from 'react'
 import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { VideoTile } from '@/components/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
+import { useHandleFollowChannel } from '@/hooks'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Grid } from '@/shared/components/Grid'
@@ -24,15 +26,11 @@ type ChannelWithVideosProps = {
 }
 
 const INITIAL_VIDEOS_PER_ROW = 4
-const INITIAL_ROWS = 1
 
 export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => {
+  const videoRows = useVideoGridRows('videosInChannel')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const {
-    channel,
-    loading: channelLoading,
-    error: channelError,
-  } = useChannel(channelId || '', {
+  const { channel, loading: channelLoading, error: channelError } = useChannel(channelId || '', {
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })
@@ -47,7 +45,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
 
-  const targetItemsCount = videosPerRow * INITIAL_ROWS
+  const targetItemsCount = videosPerRow * videoRows
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
   const placeholderItems = videosLoading ? Array.from({ length: targetItemsCount }, () => ({ id: undefined })) : []
 
