@@ -1,9 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -12,8 +11,8 @@ import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
 
-type MainProps = {
-  main: boolean
+type SizeProps = {
+  size?: 'small' | 'big'
 }
 
 type ChannelProps = {
@@ -24,14 +23,17 @@ type ClickableProps = {
   clickable: boolean
 }
 
-type ScalesWithCoverProps = {
-  scalingFactor: number
+type LoadingProps = {
+  isLoading?: boolean
 }
 
-export const CoverWrapper = styled.div<MainProps>`
+type ActiveProps = {
+  isActive?: boolean
+}
+
+export const CoverWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: ${({ main }) => (main ? '650px' : '')};
 `
 
 const clickableAnimation = (clickable: boolean) =>
@@ -74,68 +76,63 @@ export const CoverContainer = styled.div<ClickableProps>`
   }
 `
 
-const mainContainerCss = css`
-  ${media.medium} {
-    flex-direction: row;
-  }
-`
-
 export const Anchor = styled(Link)`
   all: unset;
   color: inherit;
 `
 
 export const TitleHeaderAnchor = styled(Link)`
-  all: unset;
-  color: inherit;
-  display: grid;
+  margin-bottom: ${sizes(2)};
+  text-decoration: none;
+  display: block;
 `
 
-export const Container = styled.article<MainProps>`
-  width: 100%;
-  color: ${colors.gray[300]};
-  display: inline-flex;
-  flex-direction: column;
-  ${({ main }) => main && mainContainerCss}
-
-  :hover {
-    ${() => css`
-      ${KebabMenuIconContainer} {
-        display: flex;
-      }
-    `}
-  }
-`
-
-const mainInfoContainerCss = css`
-  ${media.medium} {
-    margin: ${sizes(8)} 0 0 ${sizes(6)};
-  }
-`
-
-export const InfoContainer = styled.div<MainProps>`
-  min-height: 86px;
+export const InfoContainer = styled.div`
+  min-height: 94px;
   display: flex;
-  margin-top: ${({ main }) => (main ? sizes(4) : sizes(3))};
-  ${({ main }) => main && mainInfoContainerCss};
+  flex-direction: row;
+  margin-top: ${sizes(3)};
 `
 
-export const AvatarContainer = styled.div<ScalesWithCoverProps>`
-  width: calc(40px * ${(props) => props.scalingFactor});
-  min-width: calc(40px * ${(props) => props.scalingFactor});
-  height: calc(40px * ${(props) => props.scalingFactor});
+export const AvatarContainer = styled.div`
+  ${square(40)};
+
   margin-right: ${sizes(3)};
 `
 
 export const TextContainer = styled.div`
-  width: calc(100% - 30px);
-
-  ${media.compact} {
-    width: calc(100% - 87px);
-  }
+  flex: 1;
 `
 
-type MetaContainerProps = { noMarginTop: boolean } & MainProps
+export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
+  ${square(32)};
+
+  margin-left: ${sizes(2)};
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  pointer-events: ${({ isActive }) => (isActive ? 'auto' : 'none')};
+`
+
+const containerHoverStyles = ({ isLoading }: LoadingProps) =>
+  !isLoading
+    ? css`
+        :hover {
+          ${KebabMenuButtonIcon} {
+            opacity: 1;
+            pointer-events: auto;
+          }
+        }
+      `
+    : null
+
+export const Container = styled.article<LoadingProps>`
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+
+  ${containerHoverStyles};
+`
+
+type MetaContainerProps = { noMarginTop: boolean }
 export const MetaContainer = styled.div<MetaContainerProps>`
   width: 100%;
 `
@@ -233,31 +230,6 @@ export const PublishingStateText = styled(Text)`
   margin-left: ${sizes(1.5)};
 `
 
-export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
-  ${square(sizes(9))};
-
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  border-radius: 100%;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  margin-left: auto;
-
-  path {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
-  }
-
-  &:hover {
-    path:not([fill='none']) {
-      fill: ${colors.white};
-    }
-
-    background-color: ${colors.transparentPrimary[18]};
-  }
-`
-
 export const CoverDurationOverlay = styled.div`
   position: absolute;
   bottom: ${sizes(2)};
@@ -275,14 +247,9 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & ClickableProps>`
-  margin: 0;
-  margin-bottom: ${sizes(2)};
-  font-weight: ${typography.weights.bold};
-  font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.h6});
-  ${({ main }) => main && fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
-
-  line-height: ${({ main }) => (main ? 1 : 1.25)};
+export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
+  font-size: ${({ size }) => (size === 'small' ? typography.sizes.h6 : typography.sizes.subtitle1)};
+  line-height: ${({ size }) => (size === 'small' ? typography.lineHeights.h6 : typography.lineHeights.subtitle1)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -291,15 +258,9 @@ export const TitleHeader = styled(Text)<MainProps & ScalesWithCoverProps & Click
   overflow-wrap: break-word;
 `
 
-export const ChannelHandle = styled(Text)<ChannelProps & ScalesWithCoverProps>`
-  font-size: calc(${(props) => props.scalingFactor} * ${typography.sizes.subtitle2});
+export const ChannelHandle = styled(Text)<ChannelProps>`
   display: inline-block;
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
-`
-
-export const MetaText = styled(Text)<MainProps & ScalesWithCoverProps>`
-  font-size: ${({ main, scalingFactor }) =>
-    main ? typography.sizes.h6 : `calc(${scalingFactor}*${typography.sizes.subtitle2}) `};
 `
 
 export const SpacedSkeletonLoader = styled(SkeletonLoader)`
