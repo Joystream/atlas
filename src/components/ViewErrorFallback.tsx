@@ -67,7 +67,7 @@ const Message = styled.div`
   flex-direction: column;
   text-align: center;
   margin-top: 50px;
-  ${media.small} {
+  ${media.sm} {
     max-width: 70%;
   }
 `

@@ -5,7 +5,7 @@ function buildQuery(br: string) {
 }
 
 const media = {
-  xxs: buildQuery(breakpoints.xs),
+  xxs: buildQuery(breakpoints.xxs),
   xs: buildQuery(breakpoints.xs),
   sm: buildQuery(breakpoints.sm),
   md: buildQuery(breakpoints.md),

@@ -37,8 +37,8 @@ export const FormWrapper = styled.form`
   grid-template-columns: 100%;
   padding: ${sizes(8)} ${sizes(4)};
 
-  ${media.small} {
-    padding: ${sizes(8)} ${sizes(8)};
+  ${media.sm} {
+    padding: ${sizes(8)};
   }
 
   ${media.md} {

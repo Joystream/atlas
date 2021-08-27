@@ -22,7 +22,7 @@ export const Container = styled.div`
 
 export const StyledInput = styled.input<StyledInputProps>`
   --input-max-width: 60vw;
-  ${media.small} {
+  ${media.sm} {
     --input-max-width: 400px;
   }
 

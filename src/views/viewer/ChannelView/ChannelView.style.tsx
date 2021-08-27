@@ -57,10 +57,8 @@ export const SortContainer = styled.div`
   grid-gap: 8px;
   align-items: center;
   grid-template-columns: 1fr;
-  ${media.small} {
+  ${media.xs} {
     grid-template-columns: auto 1fr;
-  }
-  ${media.md} {
     grid-area: initial;
   }
 `
@@ -85,7 +83,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   span {
     font-size: ${typography.sizes.h2};
   }
-  ${media.small} {
+  ${media.sm} {
     margin: 0 ${sizes(6)} 0 0;
   }
 `
@@ -147,13 +145,8 @@ export const TabsContainer = styled.div`
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
-  ${media.small} {
+  ${media.sm} {
     border-bottom: solid 1px ${colors.gray[800]};
-    grid-template-areas:
-      'tabs tabs '
-      'search  sort';
-  }
-  ${media.md} {
     grid-template-areas: initial;
     gap: ${sizes(8)};
     grid-template-rows: 1fr;
@@ -167,10 +160,8 @@ export const SearchContainer = styled.div`
   width: 100%;
   align-items: center;
   align-self: end;
-  ${media.small} {
+  ${media.sm} {
     align-self: initial;
-  }
-  ${media.md} {
     grid-area: initial;
   }
 `
@@ -178,10 +169,8 @@ export const SearchContainer = styled.div`
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
   border-bottom: solid 1px ${colors.gray[800]};
-  ${media.small} {
+  ${media.sm} {
     border-bottom: none;
-  }
-  ${media.md} {
     grid-area: initial;
   }
 `

@@ -1,16 +1,11 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
 import { Text } from '@/shared/components/Text'
 import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
-import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, typography, zIndex } from '@/shared/theme'
 
 import { TopbarVariant } from './TopbarBase'
-
-type TopNavbarStyleProps = {
-  hasFocus?: boolean
-}
 
 type LogoContainerProps = {
   variant?: TopbarVariant
@@ -18,7 +13,7 @@ type LogoContainerProps = {
 }
 
 export const TOP_NAVBAR_HEIGHT = 81
-export const Header = styled.header<TopNavbarStyleProps>`
+export const Header = styled.header`
   position: fixed;
   top: 0;
   left: var(--sidenav-collapsed-width);
@@ -29,20 +24,13 @@ export const Header = styled.header<TopNavbarStyleProps>`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid ${colors.gray[800]};
-  background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
-  transition: background-color 0.4s ${transitions.easing};
+  background-color: ${colors.black};
   padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
-  ${media.small} {
-    z-index: ${zIndex.header};
+  ${media.sm} {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     column-gap: ${sizes(2)};
-  }
-
-  ${StyledSearchbar} {
-    width: 100%;
-    max-width: ${(props) => (props.hasFocus ? '100%' : '385px')};
   }
 `
 
@@ -66,7 +54,7 @@ export const StudioText = styled(Text)`
   font-family: ${typography.fonts.headers};
   margin-left: 6px;
 
-  ${media.small} {
+  ${media.sm} {
     display: block;
   }
 `
@@ -75,7 +63,7 @@ export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
   display: block;
   height: ${sizes(8)};
 
-  ${media.small} {
+  ${media.sm} {
     display: none;
   }
 `
@@ -84,7 +72,7 @@ export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
   display: none;
   height: ${sizes(8)};
 
-  ${media.small} {
+  ${media.sm} {
     display: ${({ variant }) => (variant === 'default' ? 'block' : 'flex')};
   }
 `
@@ -97,7 +85,7 @@ export const LogoContainer = styled.div<LogoContainerProps>`
   display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
   align-items: center;
 
-  ${media.small} {
+  ${media.sm} {
     display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
     ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};

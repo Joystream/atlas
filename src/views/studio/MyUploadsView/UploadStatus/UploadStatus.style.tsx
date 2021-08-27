@@ -12,7 +12,7 @@ export const FileLineContainer = styled.div<FileLineProps>`
   align-items: center;
   margin: ${sizes(6)} 0;
 
-  ${media.small} {
+  ${media.xs} {
     margin: ${sizes(2)} 0;
   }
 `
@@ -33,7 +33,7 @@ export const FileLinePoint = styled.div`
     transform: translateY(calc(50% - 1px));
   }
 
-  ${media.small} {
+  ${media.sm} {
     display: block;
     margin-left: ${sizes(4)};
   }
@@ -52,7 +52,7 @@ export const FileLineLastPoint = styled.div`
   border-bottom: 2px solid ${colors.gray[500]};
   transform: translateY(calc(-50% + 1px));
 
-  ${media.small} {
+  ${media.sm} {
     display: block;
     margin-left: ${sizes(4)};
   }
@@ -101,7 +101,7 @@ export const FileInfoContainer = styled.div`
     align-items: center;
   }
 
-  ${media.small} {
+  ${media.sm} {
     margin-left: ${sizes(6)};
     grid-template-columns: repeat(3, 1fr);
   }

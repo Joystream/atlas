@@ -20,7 +20,7 @@ type StyledTopbarBaseProps = {
 
 export const StyledTopbarBase = styled(TopbarBase)<StyledTopbarBaseProps>`
   ${({ fullWidth }) => fullWidth && 'left: 0;'}
-  ${media.small} {
+  ${media.sm} {
     display: flex;
     justify-content: space-between;
   }

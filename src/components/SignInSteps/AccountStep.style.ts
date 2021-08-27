@@ -84,7 +84,10 @@ export const AccountAddress = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 170px;
-  ${media.small} {
+  ${media.xs} {
+    max-width: 220px;
+  }
+  ${media.sm} {
     max-width: initial;
   }
 `

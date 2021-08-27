@@ -33,7 +33,7 @@ export const InnerContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  ${media.small} {
+  ${media.sm} {
     padding: ${sizes(6)};
   }
 `
@@ -45,7 +45,7 @@ export const AnimationWrapper = styled.div`
   align-items: center;
   margin-top: ${sizes(40)};
   position: relative;
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${sizes(20)};
   }
 `
@@ -54,7 +54,7 @@ export const StyledAnimatedError = styled(AnimatedError)`
   width: 108px;
   position: absolute;
   bottom: 0;
-  ${media.small} {
+  ${media.sm} {
     width: 216px;
   }
 `

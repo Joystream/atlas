@@ -51,7 +51,7 @@ export const ListContainer = styled.div`
 export const StyledCoinsIllustrations = styled(SvgCoinsIllustration)`
   z-index: -2;
   display: none;
-  ${media.small} {
+  ${media.sm} {
     display: block;
     position: relative;
     left: -100px;
@@ -129,7 +129,7 @@ export const StyledButton = styled(Button)`
   bottom: 20px;
   left: var(--global-horizontal-padding);
   width: calc(100% - var(--global-horizontal-padding) * 2);
-  ${media.small} {
+  ${media.sm} {
     margin-top: 40px;
     position: unset;
     width: unset;

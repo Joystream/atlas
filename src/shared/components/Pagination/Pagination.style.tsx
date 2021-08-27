@@ -15,28 +15,26 @@ export const PaginationWrapper = styled.div`
   max-width: 400px;
   justify-content: space-between;
 
-  ${media.small} {
+  ${media.xs} {
     max-width: unset;
     justify-content: unset;
   }
 `
 
 export const ChevronButton = styled(IconButton)`
-  ${media.small} {
-    &:first-of-type {
-      margin-right: ${sizes(8)};
-    }
+  &:first-of-type {
+    margin-right: ${sizes(8)};
+  }
 
-    &:last-of-type {
-      margin-left: ${sizes(8)};
-    }
+  &:last-of-type {
+    margin-left: ${sizes(8)};
   }
 `
 
 export const ThreeDotsWrapper = styled.div`
   display: none;
 
-  ${media.small} {
+  ${media.xs} {
     width: ${sizes(12)};
     height: ${sizes(12)};
     color: ${colors.gray[300]};
@@ -83,7 +81,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
 
   ${({ isActive }) => isActive && buttonActiveState};
 
-  ${media.small} {
+  ${media.xs} {
     display: flex;
   }
 `

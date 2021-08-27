@@ -46,7 +46,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     border: 1px dashed ${colors.blue[500]};
   }
 
-  ${media.small} {
+  ${media.sm} {
     padding-top: 56.25%;
   }
 `
@@ -63,7 +63,7 @@ export const InnerContainer = styled.div`
   max-width: 280px;
   height: 100%;
 
-  ${media.small} {
+  ${media.sm} {
     max-width: 350px;
   }
 `
@@ -118,7 +118,7 @@ export const DismissButton = styled(IconButton)`
 export const Title = styled(Text)`
   margin-top: ${sizes(2)};
 
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${sizes(4)};
   }
 `
@@ -126,7 +126,7 @@ export const Title = styled(Text)`
 export const Paragraph = styled(Text)`
   margin-top: ${sizes(4)};
 
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${sizes(8)};
   }
 `
@@ -137,7 +137,7 @@ export const ButtonsGroup = styled.div`
   justify-content: center;
   margin: ${sizes(4)} 0 ${sizes(2)} 0;
 
-  ${media.small} {
+  ${media.sm} {
     margin: ${sizes(8)} 0 ${sizes(4)} 0;
   }
 `
@@ -145,7 +145,7 @@ export const ButtonsGroup = styled.div`
 export const DragDropText = styled(Text)`
   display: none;
 
-  ${media.small} {
+  ${media.sm} {
     display: initial;
     margin-right: ${sizes(5)};
     color: ${colors.gray[300]};

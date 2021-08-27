@@ -16,7 +16,7 @@ export const Topbar = styled.div`
   min-height: ${EDIT_VIDEO_TABS_BAR_HEIGHT}px;
   border-bottom: solid 1px ${colors.gray[700]};
   padding: 0 ${sizes(4)};
-  ${media.small} {
+  ${media.sm} {
     padding: 0 ${sizes(8)};
   }
 `
@@ -41,7 +41,7 @@ export const ButtonsContainer = styled.div`
   padding: 0 ${sizes(3)};
   border-left: solid 1px ${colors.gray[700]};
 
-  ${media.small} {
+  ${media.sm} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
   }

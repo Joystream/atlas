@@ -4,9 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 
-import { SearchbarContainer, StyledSearchbar } from './ViewerTopbar.style'
-
-import { TopbarBase } from '../TopbarBase'
+import { SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './ViewerTopbar.style'
 
 export const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
@@ -73,7 +71,7 @@ export const ViewerTopbar: React.FC = () => {
     navigate(overlaidLocation)
   }
   return (
-    <TopbarBase hasFocus={isFocused}>
+    <StyledTopbarBase hasFocus={isFocused}>
       <SearchbarContainer>
         <StyledSearchbar
           placeholder="Search..."
@@ -82,10 +80,11 @@ export const ViewerTopbar: React.FC = () => {
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           onCancel={handleCancel}
+          hasFocus={isFocused}
           showCancelButton={isFocused}
           controlled
         />
       </SearchbarContainer>
-    </TopbarBase>
+    </StyledTopbarBase>
   )
 }

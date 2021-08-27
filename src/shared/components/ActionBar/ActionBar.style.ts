@@ -28,7 +28,7 @@ export const StyledInfoContainer = styled.div`
   flex-direction: row;
   align-items: center;
 
-  ${media.small} {
+  ${media.sm} {
     display: flex;
   }
 

@@ -66,7 +66,7 @@ export const DescriptionContainer = styled.div`
     font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
 
-    ${media.small} {
+    ${media.sm} {
       font-size: 1rem;
       color: ${colors.gray[300]};
       line-height: 175%;

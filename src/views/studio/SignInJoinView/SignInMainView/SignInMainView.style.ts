@@ -70,13 +70,13 @@ export const ButtonGroup = styled.div`
   margin-top: ${sizes(12)};
   display: flex;
   flex-direction: column;
-  ${media.small} {
+  ${media.sm} {
     flex-direction: row;
   }
 `
 export const SignInButton = styled(Button)`
   margin-bottom: ${sizes(4)};
-  ${media.small} {
+  ${media.sm} {
     margin-bottom: unset;
     margin-right: ${sizes(4)};
   }

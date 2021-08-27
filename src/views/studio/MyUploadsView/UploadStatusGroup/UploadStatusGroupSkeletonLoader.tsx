@@ -32,7 +32,7 @@ export const UploadStatusGroupSkeletonLoader: React.FC = () => {
 const StyledSkeletonLoaderThumbnail = styled(SkeletonLoader)`
   display: none;
 
-  ${media.small} {
+  ${media.xs} {
     display: block;
   }
 `

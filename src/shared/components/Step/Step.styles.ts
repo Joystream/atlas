@@ -20,7 +20,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
         display: ${active ? 'flex' : 'none'};
         align-items: center;
 
-        ${media.small} {
+        ${media.sm} {
           display: flex;
         }
       `

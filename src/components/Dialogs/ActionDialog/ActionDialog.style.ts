@@ -10,7 +10,7 @@ export const ButtonsContainer = styled.div`
     margin-top: ${sizes(2)};
   }
 
-  ${media.small} {
+  ${media.sm} {
     flex-direction: row-reverse;
     margin-left: auto;
 
@@ -30,7 +30,7 @@ export const ActionsContainer = styled.div`
   flex-direction: column;
   padding-top: ${sizes(6)};
 
-  ${media.small} {
+  ${media.sm} {
     flex-direction: row;
     align-items: center;
   }
@@ -40,7 +40,7 @@ export const AdditionalActionsContainer = styled.div`
   width: 100%;
   margin-bottom: ${sizes(6)};
 
-  ${media.small} {
+  ${media.sm} {
     margin-bottom: 0;
     margin-right: ${sizes(6)};
   }

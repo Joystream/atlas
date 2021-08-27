@@ -64,7 +64,7 @@ export const InfoContainer = styled.div`
   padding-bottom: ${sizes(16)};
   width: 100%;
 
-  ${media.small} {
+  ${media.xs} {
     margin-bottom: 64px;
     padding-bottom: 0;
   }
