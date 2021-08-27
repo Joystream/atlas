@@ -5,7 +5,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
 import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { VideoPlayer } from '@/shared/components/VideoPlayer'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
@@ -74,7 +73,7 @@ export const VideoHero: React.FC = () => {
           <GradientOverlay />
         </Media>
       </MediaWrapper>
-      <InfoContainer isLoading={!coverVideo}>
+      <InfoContainer>
         <StyledChannelLink
           variant="secondary"
           id={coverVideo?.video.channel.id}
@@ -92,9 +91,8 @@ export const VideoHero: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <TitleSkeletonLoader width={380} height={60} />
-                  <SkeletonLoader width={300} height={20} bottomSpace={4} />
-                  <SkeletonLoader width={200} height={20} />
+                  <TitleSkeletonLoader height={34} />
+                  <TitleSkeletonLoader height={34} />
                 </>
               )}
             </TitleContainer>
