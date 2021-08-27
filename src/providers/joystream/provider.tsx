@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { NODE_URL } from '@/config/urls'
 import { JoystreamJs } from '@/joystream-lib'
+import { useEnvironmentStore } from '@/providers/environment/store'
 import { SentryLogger } from '@/utils/logs'
 
 import { useConnectionStatusStore } from '../connectionStatus'
@@ -16,6 +17,7 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
+  const { selectedNode } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
@@ -33,7 +35,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     const init = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamJs(NODE_URL)
+        joystream = new JoystreamJs(selectedNode || NODE_URL)
         setJoystream(joystream)
 
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
@@ -48,7 +50,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleNodeConnectionUpdate, setNodeConnection])
+  }, [handleNodeConnectionUpdate, selectedNode, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeAccountId || !accounts) {
