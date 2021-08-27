@@ -6,4 +6,3 @@ import transitions from './transitions'
 import typography from './typography'
 
 export { typography, breakpoints, sizes, zIndex, colors, transitions, media, square }
-export default { typography, breakpoints, sizes, colors, transitions, media, square }

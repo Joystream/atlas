@@ -210,13 +210,6 @@ export const UnfollowDescriptionContainer = styled.div`
   flex-direction: column;
 `
 
-export const UnfollowDescriptionAccentText = styled.span`
-  font-size: ${typography.sizes.body2};
-  line-height: ${typography.lineHeights.body2};
-  font-weight: ${typography.weights.regular};
-  color: ${colors.gray[50]};
-`
-
 export const NotFoundChannelContainer = styled.div`
   display: flex;
   align-items: center;

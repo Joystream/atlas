@@ -10,7 +10,7 @@ import {
 } from '@/api/queries'
 import { Button } from '@/shared/components/Button'
 
-const OrionTesting = () => {
+export const OrionTesting = () => {
   const [data, setData] = useState<unknown>(null)
   const [getVideos, { data: videosData, loading: videosLoading }] = useGetVideosLazyQuery({
     variables: {
@@ -106,5 +106,3 @@ const OrionTesting = () => {
     </>
   )
 }
-
-export default OrionTesting

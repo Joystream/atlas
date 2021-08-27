@@ -56,7 +56,6 @@ import {
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
-  UnfollowDescriptionAccentText,
   UnfollowDescriptionContainer,
   VideoSection,
 } from './ChannelView.style'
@@ -151,7 +150,9 @@ export const ChannelView: React.FC = () => {
               {videosLastMonth && (
                 <span>
                   {channel?.title} released{' '}
-                  <UnfollowDescriptionAccentText>{videosLastMonth} new videos </UnfollowDescriptionAccentText>
+                  <Text variant="body2" as="span">
+                    {videosLastMonth} new videos
+                  </Text>{' '}
                   this month.
                 </span>
               )}
