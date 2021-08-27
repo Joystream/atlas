@@ -1,5 +1,7 @@
 import { css } from '@emotion/react'
 
+import { toPx } from '@/shared/utils/styles'
+
 const base = 4
 
 export function sizes<B extends boolean>(n: number, raw?: B): B extends false ? string : number
@@ -19,9 +21,11 @@ export const zIndex = {
   globalOverlay: 999,
 }
 
-export function square(size: string | number) {
+export function square(rawSize: string | number) {
+  const size = toPx(rawSize)
   return css`
     width: ${size};
+    min-width: ${size};
     height: ${size};
   `
 }

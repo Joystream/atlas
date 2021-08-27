@@ -10,8 +10,6 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export const HOVER_BORDER_SIZE = '2px'
-const KEBAB_MENU_WIDTH = sizes(8)
-const AVATAR_WITH_MARGIN = sizes(13)
 
 type SizeProps = {
   size?: 'small' | 'big'
@@ -23,6 +21,14 @@ type ChannelProps = {
 
 type ClickableProps = {
   clickable: boolean
+}
+
+type LoadingProps = {
+  isLoading?: boolean
+}
+
+type ActiveProps = {
+  isActive?: boolean
 }
 
 export const CoverWrapper = styled.div`
@@ -76,35 +82,54 @@ export const Anchor = styled(Link)`
 `
 
 export const TitleHeaderAnchor = styled(Link)`
-  all: unset;
-  color: inherit;
-  display: grid;
-`
-
-export const Container = styled.article`
-  width: 100%;
-  color: ${colors.gray[300]};
-  display: inline-flex;
-  flex-direction: column;
-
-  :hover {
-    ${() => css`
-      ${KebabMenuIconContainer} {
-        display: flex;
-      }
-    `}
-  }
+  margin-bottom: ${sizes(2)};
+  text-decoration: none;
+  display: block;
 `
 
 export const InfoContainer = styled.div`
-  min-height: 86px;
-  display: grid;
-  grid-template-columns: ${AVATAR_WITH_MARGIN} auto ${KEBAB_MENU_WIDTH};
+  min-height: 94px;
+  display: flex;
+  flex-direction: row;
   margin-top: ${sizes(3)};
 `
 
 export const AvatarContainer = styled.div`
-  ${square(sizes(10))};
+  ${square(40)};
+
+  margin-right: ${sizes(3)};
+`
+
+export const TextContainer = styled.div`
+  flex: 1;
+`
+
+export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
+  ${square(32)};
+
+  margin-left: ${sizes(2)};
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  pointer-events: ${({ isActive }) => (isActive ? 'auto' : 'none')};
+`
+
+const containerHoverStyles = ({ isLoading }: LoadingProps) =>
+  !isLoading
+    ? css`
+        :hover {
+          ${KebabMenuButtonIcon} {
+            opacity: 1;
+            pointer-events: auto;
+          }
+        }
+      `
+    : null
+
+export const Container = styled.article<LoadingProps>`
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+
+  ${containerHoverStyles};
 `
 
 type MetaContainerProps = { noMarginTop: boolean }
@@ -205,31 +230,6 @@ export const PublishingStateText = styled(Text)`
   margin-left: ${sizes(1.5)};
 `
 
-export const KebabMenuIconContainer = styled.div<{ isActive?: boolean }>`
-  ${square(KEBAB_MENU_WIDTH)};
-
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  border-radius: 100%;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  margin-left: auto;
-
-  path {
-    transition: all ${transitions.timings.regular} ${transitions.easing};
-  }
-
-  &:hover {
-    path:not([fill='none']) {
-      fill: ${colors.white};
-    }
-
-    background-color: ${colors.transparentPrimary[18]};
-  }
-`
-
 export const CoverDurationOverlay = styled.div`
   position: absolute;
   bottom: ${sizes(2)};
@@ -248,8 +248,6 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
 `
 
 export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
-  margin: 0;
-  margin-bottom: ${sizes(2)};
   font-size: ${({ size }) => (size === 'small' ? typography.sizes.h6 : typography.sizes.subtitle1)};
   line-height: ${({ size }) => (size === 'small' ? typography.lineHeights.h6 : typography.lineHeights.subtitle1)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
