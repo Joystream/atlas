@@ -57,7 +57,7 @@ const maxColumnsCss = ({ maxColumns }: ContainerProps) =>
   maxColumns
     ? css`
         ${media.xlarge} {
-          grid-template-columns: repeat(${maxColumns}, 1fr);
+          grid-template-columns: repeat(${maxColumns}, minmax(0, 1fr));
         }
       `
     : null
