@@ -3,18 +3,15 @@ import { isValid } from 'date-fns'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import {
-  Checkbox,
-  Datepicker,
-  FormField,
-  RadioButton,
-  Select,
-  TextArea,
-  TextField,
-  TitleArea,
-  Button as _Button,
-} from '@/shared/components'
-import { SelectItem } from '@/shared/components/Select'
+import { Button as _Button } from '@/shared/components/Button'
+import { Checkbox } from '@/shared/components/Checkbox'
+import { Datepicker } from '@/shared/components/Datepicker'
+import { FormField } from '@/shared/components/FormField'
+import { RadioButton } from '@/shared/components/RadioButton'
+import { Select, SelectItem } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { TextField } from '@/shared/components/TextField'
+import { TitleArea } from '@/shared/components/TitleArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger } from '@/utils/logs'
 

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers'
-import { Button, GridItem, LayoutGrid, SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { AssetType, useAsset } from '@/providers/assets'
+import { Button } from '@/shared/components/Button'
+import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
+import { VideoPlayer } from '@/shared/components/VideoPlayer'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
-import { transitions } from '@/shared/theme'
 
 import {
   ButtonsContainer,
@@ -33,7 +33,6 @@ export const VideoHero: React.FC = () => {
   const coverVideo = useVideoHero()
 
   const [videoPlaying, setVideoPlaying] = useState(false)
-  const [displayControls, setDisplayControls] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
   const { url: thumbnailPhotoUrl } = useAsset({
     entity: coverVideo?.video,
@@ -42,7 +41,6 @@ export const VideoHero: React.FC = () => {
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
-      setDisplayControls(true)
       setVideoPlaying(true)
     }, VIDEO_PLAYBACK_DELAY)
   }
@@ -75,7 +73,7 @@ export const VideoHero: React.FC = () => {
           <GradientOverlay />
         </Media>
       </MediaWrapper>
-      <InfoContainer isLoading={!coverVideo}>
+      <InfoContainer>
         <StyledChannelLink
           variant="secondary"
           id={coverVideo?.video.channel.id}
@@ -93,31 +91,28 @@ export const VideoHero: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <TitleSkeletonLoader width={380} height={60} />
-                  <SkeletonLoader width={300} height={20} bottomSpace={4} />
-                  <SkeletonLoader width={200} height={20} />
+                  <TitleSkeletonLoader height={34} />
+                  <TitleSkeletonLoader height={34} />
                 </>
               )}
             </TitleContainer>
           </GridItem>
         </LayoutGrid>
         <ButtonsSpaceKeeper>
-          <CSSTransition
-            in={displayControls}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-            unmountOnExit
-            appear
-          >
+          {coverVideo && (
             <ButtonsContainer>
-              <Button to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')} icon={<SvgActionPlay />}>
+              <Button
+                size="large"
+                to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
+                icon={<SvgActionPlay />}
+              >
                 Play
               </Button>
-              <SoundButton variant="secondary" onClick={handleSoundToggleClick}>
+              <SoundButton size="large" variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
               </SoundButton>
             </ButtonsContainer>
-          </CSSTransition>
+          )}
         </ButtonsSpaceKeeper>
       </InfoContainer>
     </Container>

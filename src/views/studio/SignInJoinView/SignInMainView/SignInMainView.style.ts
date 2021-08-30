@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { LimitedWidthContainer } from '@/components'
-import { Button, Text } from '@/shared/components'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { SvgSigninIllustration } from '@/shared/illustrations'
 import { colors, media, sizes } from '@/shared/theme'
 

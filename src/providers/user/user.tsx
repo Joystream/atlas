@@ -3,10 +3,10 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
-import { ViewErrorFallback } from '@/components'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
-import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
@@ -37,6 +37,11 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const activeUserState = useActiveUserStore(({ actions, ...activeUser }) => ({ ...activeUser }))
   const { setActiveUser, resetActiveUser } = useActiveUserStore((state) => state.actions)
+
+  useEffect(() => {
+    SentryLogger.setUser(activeUserState)
+    AssetLogger.setUser(activeUserState)
+  }, [activeUserState])
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Grid } from '@/shared/components'
+import { Grid } from '@/shared/components/Grid'
 
 import { VideoTile } from './VideoTile'
 

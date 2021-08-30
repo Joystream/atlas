@@ -1,31 +1,56 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
 
-type StepProps = {
+type StepWrapperProps = {
   active?: boolean
   disabled?: boolean
+  variant?: 'file' | 'default'
 }
 
-export const StepWrapper = styled.div<StepProps>`
+const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
+  switch (variant) {
+    case 'default':
+      return css`
+        padding: 0;
+        display: ${active ? 'flex' : 'none'};
+        align-items: center;
+
+        ${media.small} {
+          display: flex;
+        }
+      `
+    case 'file':
+      return css`
+        padding: ${sizes(3)} ${sizes(4)};
+        cursor: pointer;
+        border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
+        background-color: ${active ? colors.transparentPrimary[10] : 'none'};
+
+        :hover:not([aria-disabled='true']) {
+          background-color: ${colors.transparentPrimary[18]};
+        }
+      `
+    default:
+      return
+  }
+}
+
+export const StepWrapper = styled.div<StepWrapperProps>`
   height: ${sizes(14)};
   padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
   transition: border ${transitions.timings.routing} ${transitions.easing},
     background-color ${transitions.timings.routing} ${transitions.easing};
-  cursor: pointer;
-  background-color: ${({ active }) => (active ? 'rgba(180, 187, 255, 0.06)' : 'none')};
 
-  :hover:not([aria-disabled='true']) {
-    background-color: rgba(180, 187, 255, 0.12);
-  }
+  ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
@@ -41,8 +66,8 @@ export const StepStatus = styled.div`
   position: relative;
 `
 
-export const StepNumber = styled.div<StepProps>`
-  background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[600])};
+export const StepNumber = styled.div<StepWrapperProps>`
+  background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[500])};
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.white};
   border-radius: 100%;
@@ -62,15 +87,12 @@ export const StepDetails = styled.div`
 
 export const Overhead = styled(Text)`
   display: block;
-  color: ${colors.gray[300]};
-  font-weight: ${typography.weights.regular};
   overflow: hidden;
 `
 
-export const FileName = styled(Text)`
+export const StepTitle = styled(Text)`
   display: block;
-  font-family: ${typography.fonts.headers};
-  font-size: ${typography.sizes.caption};
+  margin-top: ${sizes(1)};
   height: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -82,7 +104,7 @@ export const StyledProgress = styled(CircularProgress)`
   height: ${sizes(7)};
 `
 
-export const Thumbnail = styled.div`
+export const StepImage = styled.div`
   flex-shrink: 0;
   color: white;
   background: ${colors.gray[600]};

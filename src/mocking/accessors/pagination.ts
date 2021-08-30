@@ -1,4 +1,5 @@
-import { filterAndSortGenericData } from '.'
+import { filterAndSortGenericData } from './filtering'
+
 import { MockVideo } from '../data/mockVideos'
 import { CountData, FilteringArgs, GenericData } from '../types'
 

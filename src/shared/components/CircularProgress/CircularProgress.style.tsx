@@ -2,8 +2,6 @@ import styled from '@emotion/styled'
 
 import { colors } from '@/shared/theme'
 
-import { Path } from './Path'
-
 export type TrailVariant = 'default' | 'player'
 
 type TrailProps = {
@@ -22,13 +20,15 @@ const getStrokeColor = (variant?: TrailVariant) => {
 }
 
 export const SVG = styled.svg`
+  fill: none;
+
   /* needed when parent container has display: flex */
   width: 100%;
 `
-export const Trail = styled(Path)<TrailProps>`
+export const Trail = styled.path<TrailProps>`
   stroke: ${({ variant }) => getStrokeColor(variant)};
 `
-export const StyledPath = styled(Path)`
+export const StyledPath = styled.path`
   stroke: ${colors.blue[500]};
   transition: stroke-dashoffset 0.5s ease 0s;
 `

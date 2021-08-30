@@ -2,8 +2,8 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
-import { Text } from '@/shared/components'
 import { badgeStyles } from '@/shared/components/Badge'
+import { Text } from '@/shared/components/Text'
 import { SvgJoystreamFullLogo } from '@/shared/illustrations'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 

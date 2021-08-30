@@ -3,12 +3,18 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
-import { ChannelLink, InfiniteVideoGrid, ViewErrorFallback } from '@/components'
+import { ChannelLink } from '@/components/ChannelLink'
+import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks'
-import { AssetType, useAsset, usePersonalDataStore } from '@/providers'
-import { Button, EmptyFallback, SkeletonLoader, VideoPlayer } from '@/shared/components'
+import { AssetType, useAsset } from '@/providers/assets'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { Button } from '@/shared/components/Button'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { VideoPlayer } from '@/shared/components/VideoPlayer'
 import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -21,7 +27,6 @@ import {
   LicenseContainer,
   Meta,
   MoreVideosContainer,
-  MoreVideosHeader,
   NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
@@ -190,12 +195,11 @@ export const VideoView: React.FC = () => {
           )}
         </LicenseContainer>
         <MoreVideosContainer>
-          <MoreVideosHeader>
-            {video ? `More from ${video.channel.title}` : <SkeletonLoader height={23} width={300} />}
-          </MoreVideosHeader>
           <InfiniteVideoGrid
+            title={`More from ${video?.channel.title}`}
+            titleLoader
             ready={!loading}
-            channelId={video?.channel.id}
+            channelId={channelId}
             showChannel={false}
             currentlyWatchedVideoId={video?.id}
           />

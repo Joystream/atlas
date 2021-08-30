@@ -2,9 +2,9 @@ import React, { useRef, useState } from 'react'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
-import { useUploadsStore } from '@/providers'
+import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 

@@ -1,11 +1,13 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { IconButton, SkeletonLoader, Text } from '@/shared/components'
+import { IconButton } from '@/shared/components/IconButton'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
-import { TOP_NAVBAR_HEIGHT } from '..'
 import { ChannelLink } from '../ChannelLink'
+import { TOP_NAVBAR_HEIGHT } from '../Topbar'
 
 const BUTTONS_HEIGHT = 48
 
@@ -57,7 +59,7 @@ export const GradientOverlay = styled.div`
     ${colors.transparentBlack[54]};
 `
 
-export const InfoContainer = styled.div<{ isLoading: boolean }>`
+export const InfoContainer = styled.div`
   position: relative;
   padding-bottom: ${sizes(16)};
   width: 100%;
@@ -87,6 +89,8 @@ export const StyledChannelLink = styled(ChannelLink)`
 `
 
 export const TitleContainer = styled.div`
+  min-height: 80px;
+
   a {
     text-decoration: none;
   }
@@ -109,10 +113,15 @@ export const Title = styled(Text)`
 `
 
 export const TitleSkeletonLoader = styled(SkeletonLoader)`
-  margin-bottom: ${sizes(4)};
+  width: 90%;
+  margin-bottom: ${sizes(2)};
+
+  ${media.compact} {
+    width: 380px;
+  }
 
   ${media.medium} {
-    margin-bottom: ${sizes(5)};
+    margin-bottom: ${sizes(3)};
   }
 `
 

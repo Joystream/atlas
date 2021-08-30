@@ -6,33 +6,28 @@ import useMeasure from 'react-use-measure'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
-import { ViewErrorFallback } from '@/components'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks'
+import { useAssetStore, useRawAsset } from '@/providers/assets'
+import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { RawDraft, useDraftStore } from '@/providers/drafts'
 import {
   EditVideoFormFields,
   EditVideoSheetTab,
-  RawDraft,
-  useAssetStore,
-  useAuthorizedUser,
-  useConnectionStatusStore,
-  useDraftStore,
   useEditVideoSheet,
   useEditVideoSheetTabData,
-  useRawAsset,
-} from '@/providers'
-import {
-  Checkbox,
-  Datepicker,
-  FormField,
-  RadioButton,
-  Select,
-  SelectItem,
-  TextArea,
-  TextField,
-} from '@/shared/components'
+} from '@/providers/editVideoSheet'
+import { useAuthorizedUser } from '@/providers/user'
+import { Checkbox } from '@/shared/components/Checkbox'
+import { Datepicker } from '@/shared/components/Datepicker'
+import { FormField } from '@/shared/components/FormField'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { RadioButton } from '@/shared/components/RadioButton'
+import { Select, SelectItem } from '@/shared/components/Select'
+import { TextArea } from '@/shared/components/TextArea'
+import { TextField } from '@/shared/components/TextField'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'

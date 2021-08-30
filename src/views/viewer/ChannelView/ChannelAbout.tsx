@@ -3,7 +3,8 @@ import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
-import { GridItem, Text } from '@/shared/components'
+import { GridItem } from '@/shared/components/LayoutGrid/LayoutGrid'
+import { Text } from '@/shared/components/Text'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 

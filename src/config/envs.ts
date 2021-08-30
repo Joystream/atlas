@@ -1,15 +1,10 @@
+import { useEnvironmentStore } from '@/providers/environment/store'
+
 type BuildEnv = 'production' | 'development'
 
 export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
-const target_env = window.localStorage.getItem('target_env')
-export const TARGET_DEV_ENV = target_env ? JSON.parse(target_env) : 'development'
+export const TARGET_DEV_ENV = useEnvironmentStore.getState().targetEnv
 export const ENV_PREFIX = 'REACT_APP'
-
-export const setEnvInLocalStorage = (value: string) => {
-  if (availableEnvs().includes(value)) {
-    window.localStorage.setItem('target_env', JSON.stringify(value))
-  }
-}
 
 export const availableEnvs = () => {
   return Array.from(

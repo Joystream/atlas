@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 
 import { useChannels, useVideos } from '@/api/hooks'
-import { usePersonalDataStore } from '@/providers'
-import { Text } from '@/shared/components'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { Text } from '@/shared/components/Text'
 import { createLookup } from '@/utils/data'
 
 import { Container, SearchesList, Title } from './RecentSearches.style'

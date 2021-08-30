@@ -5,12 +5,13 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { TOP_NAVBAR_HEIGHT, ViewErrorBoundary, ViewerSidenav, ViewerTopbar } from '@/components'
+import { ViewerSidenav } from '@/components/Sidenav'
+import { TOP_NAVBAR_HEIGHT, ViewerTopbar } from '@/components/Topbar'
+import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-
-import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '.'
+import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },

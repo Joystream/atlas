@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { OverlayManagerProvider } from '@/providers'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { VideoTileBase, VideoTileBaseProps } from './VideoTileBase'
@@ -34,7 +34,7 @@ const Template: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
   return (
     <BrowserRouter>
       <OverlayManagerProvider>
-        <Wrapper main={args.main}>
+        <Wrapper>
           <VideoTileBase {...args} createdAt={createdAtDate} />
         </Wrapper>
       </OverlayManagerProvider>
@@ -51,7 +51,7 @@ const Publisher: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
   return (
     <BrowserRouter>
       <OverlayManagerProvider>
-        <Wrapper main={args.main}>
+        <Wrapper>
           <VideoTileBase
             {...args}
             publisherMode
@@ -192,8 +192,8 @@ Mixed.args = {
   },
 }
 
-const Wrapper = styled.div<{ main?: boolean }>`
-  max-width: ${({ main }) => (main ? 1200 : 350)}px;
+const Wrapper = styled.div`
+  max-width: 350px;
 `
 
 const ContainerMix = styled.div`

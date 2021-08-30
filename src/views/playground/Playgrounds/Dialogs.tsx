@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useDialog } from '@/providers/dialogs'
-import { Button } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
 
 export const Dialogs = () => {
   const [openFirstDialog, closeFirstDialog] = useDialog({

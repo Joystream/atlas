@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { usePersonalDataStore } from '@/providers'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 import { Banner, BannerProps } from '../Banner'
 

@@ -2,8 +2,9 @@ import React, { useCallback, useEffect } from 'react'
 
 import { BaseDialog } from '@/components/Dialogs'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatusStore } from '@/providers'
-import { Button, Text } from '@/shared/components'
+import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { ConsoleLogger } from '@/utils/logs'
 
 const fakeNodeConnection = async () => {

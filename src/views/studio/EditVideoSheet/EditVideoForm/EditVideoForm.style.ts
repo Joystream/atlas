@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
 
 import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
-import { Button, MultiFileSelect, TitleArea } from '@/shared/components'
-import { FormField } from '@/shared/components'
+import { Button } from '@/shared/components/Button'
+import { FormField } from '@/shared/components/FormField'
+import { MultiFileSelect } from '@/shared/components/MultiFileSelect'
+import { TitleArea } from '@/shared/components/TitleArea'
 import { colors, media, sizes } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'

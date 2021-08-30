@@ -3,10 +3,10 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { toPx } from '@/shared/utils/styles'
+
 import { media, sizes } from '../../theme'
 import { MIN_VIDEO_TILE_WIDTH } from '../VideoTileBase'
-
-const toPx = (n: number | string) => (typeof n === 'number' ? `${n}px` : n)
 
 type GridProps = {
   gap?: number | string
@@ -57,7 +57,7 @@ const maxColumnsCss = ({ maxColumns }: ContainerProps) =>
   maxColumns
     ? css`
         ${media.xlarge} {
-          grid-template-columns: repeat(${maxColumns}, 1fr);
+          grid-template-columns: repeat(${maxColumns}, minmax(0, 1fr));
         }
       `
     : null

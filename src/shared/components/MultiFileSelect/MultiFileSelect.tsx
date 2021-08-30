@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
-import { SvgGlyphChevronRight } from '@/shared/icons'
+import { SvgGlyphChevronRight, SvgGlyphFileVideo } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
@@ -11,7 +11,7 @@ import { getVideoMetadata } from '@/utils/video'
 import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 import { FileSelect } from '../FileSelect'
-import { FileStep } from '../FileStep'
+import { Step } from '../Step'
 
 type InputFile = {
   url?: string | null
@@ -203,27 +203,31 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         error={error}
       />
       <StepsContainer>
-        <FileStep
-          stepNumber={1}
+        <Step
+          variant="file"
+          number={1}
+          title={files.video ? 'Video file' : 'Add video file'}
           active={step === 'video'}
-          isFileSet={!!files.video}
+          stepPlaceholder={!!files.video && <SvgGlyphFileVideo />}
           disabled={editMode}
-          type="video"
+          completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
-          onSelect={handleChangeStep}
+          onClick={() => handleChangeStep('video')}
           isLoading={isLoading}
         />
         <StepDivider>
           <SvgGlyphChevronRight />
         </StepDivider>
-        <FileStep
-          stepNumber={2}
+        <Step
+          variant="file"
+          stepPlaceholder={files.thumbnail?.url ? <img src={files.thumbnail?.url} alt="thumbnail" /> : undefined}
+          number={2}
+          title={files.thumbnail ? 'Thumbnail image' : 'Add thumbnail image'}
           active={step === 'image'}
-          isFileSet={!!files.thumbnail?.url}
-          type="image"
-          onDelete={() => handleDeleteFile('image')}
-          onSelect={handleChangeStep}
           thumbnailUrl={files.thumbnail?.url}
+          completed={!!files.thumbnail?.url}
+          onDelete={() => handleDeleteFile('image')}
+          onClick={() => handleChangeStep('image')}
         />
       </StepsContainer>
       <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />

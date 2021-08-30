@@ -39,9 +39,8 @@ import {
   CoverVideoPublishingStateOverlay,
   CoverWrapper,
   InfoContainer,
-  KebabMenuIconContainer,
+  KebabMenuButtonIcon,
   MetaContainer,
-  MetaText,
   ProgressBar,
   ProgressOverlay,
   PublishingStateText,
@@ -60,11 +59,9 @@ import { Text } from '../Text'
 export type VideoTileBaseMetaProps = {
   showChannel?: boolean
   showMeta?: boolean
-  main?: boolean
   removeButton?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onCoverResize?: (width: number | undefined, height: number | undefined) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
@@ -103,23 +100,19 @@ export type VideoTileBaseProps = {
   views?: number | null
   thumbnailUrl?: string | null
   hasThumbnailUploadFailed?: boolean
+  isLoadingThumbnail?: boolean
+  isLoadingAvatar?: boolean
   isLoading?: boolean
   videoHref?: string
   channelHref?: string
-  contentKey?: string
   className?: string
 } & VideoTileBaseMetaProps &
   VideoTilePublisherProps
 
-export const MIN_VIDEO_TILE_WIDTH = 300
-const MAX_VIDEO_PREVIEW_WIDTH = 600
-const MIN_SCALING_FACTOR = 1
-const MAX_SCALING_FACTOR = 1.375
-// Linear Interpolation, see https://en.wikipedia.org/wiki/Linear_interpolation
-const calculateScalingFactor = (videoTileWidth: number) =>
-  MIN_SCALING_FACTOR +
-  ((videoTileWidth - MIN_VIDEO_TILE_WIDTH) * (MAX_SCALING_FACTOR - MIN_SCALING_FACTOR)) /
-    (MAX_VIDEO_PREVIEW_WIDTH - MIN_VIDEO_TILE_WIDTH)
+type TileSize = 'small' | 'big' | undefined
+
+export const MIN_VIDEO_TILE_WIDTH = 250
+const SMALL_SIZE_WIDTH = 300
 
 export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   title,
@@ -131,13 +124,13 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   views,
   thumbnailUrl,
   hasThumbnailUploadFailed,
-  onCoverResize,
   channelHref,
   videoHref,
+  isLoadingThumbnail,
+  isLoadingAvatar,
   isLoading = true,
   showChannel = true,
   showMeta = true,
-  main = false,
   removeButton = false,
   videoPublishState = 'default',
   publisherMode = false,
@@ -146,7 +139,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onPullupClick,
   onClick,
   onRemoveButtonClick,
-  contentKey,
   className,
   onOpenInTabClick,
   onEditVideoClick,
@@ -155,20 +147,22 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   isPullupDisabled,
 }) => {
   const { openContextMenu, contextMenuOpts } = useContextMenu()
-  const [scalingFactor, setScalingFactor] = useState(MIN_SCALING_FACTOR)
+  const [tileSize, setTileSize] = useState<TileSize>(undefined)
+
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
-      const { width: videoTileWidth, height: videoTileHeight } = size
-      if (onCoverResize) {
-        onCoverResize(videoTileWidth, videoTileHeight)
-      }
-      if (videoTileWidth && !main) {
-        setScalingFactor(calculateScalingFactor(videoTileWidth))
+      const { width: videoTileWidth } = size
+      if (videoTileWidth) {
+        if (tileSize !== 'small' && videoTileWidth < SMALL_SIZE_WIDTH) {
+          setTileSize('small')
+        }
+        if (tileSize !== 'big' && videoTileWidth >= SMALL_SIZE_WIDTH) {
+          setTileSize('big')
+        }
       }
     },
   })
   const [failedLoadImage, setFailedLoadImage] = useState(false)
-  const displayChannel = showChannel && !main
   const clickable = (!!onClick || !!videoHref) && !isLoading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
@@ -200,19 +194,19 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   }
 
   return (
-    <Container main={main} className={className}>
-      <CoverWrapper main={main}>
-        <CoverContainer clickable={clickable}>
+    <Container className={className} isLoading={isLoading}>
+      <CoverWrapper>
+        <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoading ? 'placeholder' : `content-${contentKey}`}
+              key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
-              {isLoading ? (
+              {isLoadingThumbnail ? (
                 <CoverSkeletonLoader />
               ) : (
-                <CoverImageContainer ref={imgRef}>
+                <CoverImageContainer>
                   <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
                     {thumbnailUrl && !failedLoadImage ? (
                       <CoverImage
@@ -276,54 +270,44 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           <ProgressBar style={{ width: `${progress}%` }} />
         </ProgressOverlay>
       )}
-      <SwitchTransition>
-        <CSSTransition
-          key={isLoading ? 'placeholder' : `content-${contentKey}`}
-          timeout={parseInt(transitions.timings.sharp)}
-          classNames={transitions.names.fade}
-        >
-          <InfoContainer main={main}>
-            {displayChannel && (
-              <AvatarContainer scalingFactor={scalingFactor}>
-                {isLoading ? (
-                  <SkeletonLoader rounded />
-                ) : (
-                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
-                    <StyledAvatar
-                      assetUrl={channelAvatarUrl}
-                      channelClickable={channelClickable}
-                      onClick={handleChannelClick}
-                    />
-                  </Anchor>
-                )}
-              </AvatarContainer>
-            )}
+      <InfoContainer>
+        {showChannel && (
+          <AvatarContainer>
+            <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
+              <StyledAvatar
+                loading={isLoading || isLoadingAvatar}
+                assetUrl={channelAvatarUrl}
+                channelClickable={channelClickable}
+                onClick={handleChannelClick}
+              />
+            </Anchor>
+          </AvatarContainer>
+        )}
+        <SwitchTransition>
+          <CSSTransition
+            key={isLoading ? 'text-placeholder' : 'text'}
+            timeout={200}
+            classNames={transitions.names.fade}
+          >
             <TextContainer>
               {isLoading ? (
-                <SkeletonLoader height={main ? 45 : 18} width="60%" />
+                <SkeletonLoader height={18} width="60%" />
               ) : (
                 <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  <TitleHeader
-                    variant="h6"
-                    main={main}
-                    scalingFactor={scalingFactor}
-                    onClick={onClick}
-                    clickable={clickable}
-                  >
+                  <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>
                 </TitleHeaderAnchor>
               )}
-              {displayChannel &&
+              {showChannel &&
                 (isLoading ? (
                   <SpacedSkeletonLoader height="12px" width="60%" />
                 ) : (
                   <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                     <ChannelHandle
-                      variant="subtitle2"
+                      variant="body2"
                       channelClickable={channelClickable}
                       onClick={handleChannelClick}
-                      scalingFactor={scalingFactor}
                       secondary
                     >
                       {channelTitle}
@@ -331,64 +315,62 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   </Anchor>
                 ))}
               {showMeta && (
-                <MetaContainer noMarginTop={!showChannel} main={main}>
+                <MetaContainer noMarginTop={!showChannel}>
                   {isLoading ? (
-                    <SpacedSkeletonLoader height={main ? 16 : 12} width={main ? '40%' : '80%'} />
+                    <SpacedSkeletonLoader height={12} width={'80%'} />
                   ) : createdAt ? (
-                    <MetaText variant="subtitle2" main={main} scalingFactor={scalingFactor} secondary>
+                    <Text variant="body2" secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
-                        : formatVideoViewsAndDate(views ?? null, createdAt, { fullViews: main })}
-                    </MetaText>
+                        : formatVideoViewsAndDate(views ?? null, createdAt)}
+                    </Text>
                   ) : null}
                 </MetaContainer>
               )}
             </TextContainer>
-            {!isLoading && (
-              <>
-                <KebabMenuIconContainer
-                  onClick={(event) => openContextMenu(event, 200)}
-                  isActive={contextMenuOpts.isActive}
-                >
-                  <SvgGlyphMore />
-                </KebabMenuIconContainer>
-                <ContextMenu contextMenuOpts={contextMenuOpts}>
-                  {publisherMode ? (
-                    <>
-                      {onOpenInTabClick && (
-                        <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                          Play in Joystream
-                        </ContextMenuItem>
-                      )}
-                      {onCopyVideoURLClick && (
-                        <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                          Copy video URL
-                        </ContextMenuItem>
-                      )}
-                      {onEditVideoClick && (
-                        <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                          {isDraft ? 'Edit draft' : 'Edit video'}
-                        </ContextMenuItem>
-                      )}
-                      {onDeleteVideoClick && (
-                        <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                          {isDraft ? 'Delete draft' : 'Delete video'}
-                        </ContextMenuItem>
-                      )}
-                    </>
-                  ) : (
-                    onCopyVideoURLClick && (
-                      <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
-                        Copy video URL
-                      </ContextMenuItem>
-                    )
-                  )}
-                </ContextMenu>
-              </>
-            )}
-          </InfoContainer>
-        </CSSTransition>
-      </SwitchTransition>
+          </CSSTransition>
+        </SwitchTransition>
+        <KebabMenuButtonIcon
+          onClick={(event) => openContextMenu(event, 200)}
+          variant="tertiary"
+          size="small"
+          isActive={contextMenuOpts.isActive}
+        >
+          <SvgGlyphMore />
+        </KebabMenuButtonIcon>
+        <ContextMenu contextMenuOpts={contextMenuOpts}>
+          {publisherMode ? (
+            <>
+              {onOpenInTabClick && (
+                <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                  Play in Joystream
+                </ContextMenuItem>
+              )}
+              {onCopyVideoURLClick && (
+                <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
+                  Copy video URL
+                </ContextMenuItem>
+              )}
+              {onEditVideoClick && (
+                <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                  {isDraft ? 'Edit draft' : 'Edit video'}
+                </ContextMenuItem>
+              )}
+              {onDeleteVideoClick && (
+                <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                  {isDraft ? 'Delete draft' : 'Delete video'}
+                </ContextMenuItem>
+              )}
+            </>
+          ) : (
+            onCopyVideoURLClick && (
+              <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                Copy video URL
+              </ContextMenuItem>
+            )
+          )}
+        </ContextMenu>
+      </InfoContainer>
     </Container>
   )
 }

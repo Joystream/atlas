@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { StyledSearchbar } from '@/components/Topbar/ViewerTopbar/ViewerTopbar.style'
-import { Text } from '@/shared/components'
+import { Text } from '@/shared/components/Text'
 import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 

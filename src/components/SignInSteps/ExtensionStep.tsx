@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useRouterQuery } from '@/hooks'
-import { useDialog, useUser } from '@/providers'
-import { Button, Text } from '@/shared/components'
+import { useDialog } from '@/providers/dialogs'
+import { useUser } from '@/providers/user'
+import { Button } from '@/shared/components/Button'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphExternal } from '@/shared/icons'
 
 import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'

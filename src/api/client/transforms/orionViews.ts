@@ -33,7 +33,7 @@ const INFO_SELECTION_SET: SelectionSetNode = {
 export const ORION_VIEWS_QUERY_NAME = 'videoViews'
 
 // Transform a request to expect VideoViewsInfo return type instead of an Int
-export const TransformOrionViewsField: Transform = {
+export const TransformOrionVideoViewsField: Transform = {
   transformRequest(request) {
     request.document = {
       ...request.document,
@@ -77,7 +77,7 @@ export const TransformOrionViewsField: Transform = {
 
 export const ORION_BATCHED_VIEWS_QUERY_NAME = 'batchedVideoViews'
 
-export const TransformBatchedOrionViewsField: Transform = {
+export const TransformBatchedOrionVideoViewsField: Transform = {
   transformRequest(request) {
     request.document = {
       ...request.document,

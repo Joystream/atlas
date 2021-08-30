@@ -1,7 +1,7 @@
 import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 
-import { EditVideoSheetState } from '@/providers'
+import { EditVideoSheetState } from '@/providers/editVideoSheet'
 import { transitions } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './EditVideoTabsBar'

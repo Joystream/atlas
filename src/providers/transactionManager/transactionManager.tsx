@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { TransactionDialog } from '@/components'
+import { TransactionDialog } from '@/components/Dialogs'
 import { SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'

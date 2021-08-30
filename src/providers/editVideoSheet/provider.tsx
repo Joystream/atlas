@@ -12,7 +12,7 @@ import {
   EditVideoTabCachedDirtyFormData,
 } from './types'
 
-import { useOverlayManager } from '..'
+import { useOverlayManager } from '../overlayManager'
 
 export const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
 EditVideoSheetContext.displayName = 'EditVideoSheetContext'

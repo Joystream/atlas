@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment } from './channels.generated'
-import { BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { AllChannelFieldsFragment } from './channels.generated'
+import { AllChannelFieldsFragmentDoc } from './channels.generated'
 import { VideoFieldsFragment } from './videos.generated'
 import { VideoFieldsFragmentDoc } from './videos.generated'
 
@@ -18,7 +18,7 @@ export type SearchQuery = {
   __typename?: 'Query'
   search: Array<{
     __typename?: 'SearchFTSOutput'
-    item: ({ __typename?: 'Video' } & VideoFieldsFragment) | ({ __typename?: 'Channel' } & BasicChannelFieldsFragment)
+    item: ({ __typename?: 'Video' } & VideoFieldsFragment) | ({ __typename?: 'Channel' } & AllChannelFieldsFragment)
   }>
 }
 
@@ -30,13 +30,13 @@ export const SearchDocument = gql`
           ...VideoFields
         }
         ... on Channel {
-          ...BasicChannelFields
+          ...AllChannelFields
         }
       }
     }
   }
   ${VideoFieldsFragmentDoc}
-  ${BasicChannelFieldsFragmentDoc}
+  ${AllChannelFieldsFragmentDoc}
 `
 
 /**

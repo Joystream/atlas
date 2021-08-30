@@ -15,6 +15,7 @@ export type TextFieldProps = {
   required?: boolean
   className?: string
   placeholder?: string
+  defaultValue?: string
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
@@ -30,6 +31,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
     disabled,
     required,
     placeholder,
+    defaultValue,
     ...inputBaseProps
   },
   ref
@@ -49,6 +51,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
         type={type}
         required={required}
         tabIndex={disabled ? -1 : 0}
+        defaultValue={defaultValue}
       />
     </InputBase>
   )

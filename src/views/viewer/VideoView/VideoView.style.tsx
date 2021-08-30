@@ -1,8 +1,10 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { TOP_NAVBAR_HEIGHT, ViewWrapper } from '@/components'
-import { SkeletonLoader, Text } from '@/shared/components'
+import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { ViewWrapper } from '@/components/ViewWrapper'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
 
 export const StyledViewWrapper = styled(ViewWrapper)`

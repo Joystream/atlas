@@ -2,10 +2,11 @@ import React from 'react'
 import shallow from 'zustand/shallow'
 
 import { absoluteRoutes } from '@/config/routes'
-import { useUser } from '@/providers'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
-import { Button, EmptyFallback } from '@/shared/components'
+import { useUser } from '@/providers/user'
+import { Button } from '@/shared/components/Button'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { SvgGlyphUpload } from '@/shared/icons'
 
 import { StyledText, UploadsContainer } from './MyUploadsView.style'

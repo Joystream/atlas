@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, ButtonProps } from '@/shared/components'
+import { Button, ButtonProps } from '@/shared/components/Button'
 
 import { ActionsContainer, AdditionalActionsContainer, ButtonsContainer } from './ActionDialog.style'
 

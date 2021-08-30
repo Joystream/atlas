@@ -44,6 +44,9 @@ export const Arrow = styled(IconButton)`
 export const GliderContainer = styled.div`
   padding-left: ${sizes(2)};
   padding-top: ${sizes(2)};
+
+  /* hides scrollbar on firefox */
+  scrollbar-width: none;
 `
 
 export const Track = styled.div`
@@ -56,7 +59,7 @@ export const Track = styled.div`
 `
 
 export const Dots = styled.div`
-  padding: ${sizes(5.5)} 0;
+  padding: ${sizes(3.5)} 0;
   margin-top: ${sizes(12)};
   display: none;
 
@@ -65,10 +68,11 @@ export const Dots = styled.div`
   }
 
   .glider-dot {
+    width: 36px;
+    height: 20px;
     background-color: transparent;
-    width: ${sizes(10)};
     border-radius: 0;
-    padding: ${sizes(1)};
+    padding: ${sizes(2)} ${sizes(0.5)};
     margin: 0;
 
     &::after {
