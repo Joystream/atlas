@@ -27,7 +27,6 @@ import {
   LicenseContainer,
   Meta,
   MoreVideosContainer,
-  MoreVideosHeader,
   NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
@@ -196,12 +195,11 @@ export const VideoView: React.FC = () => {
           )}
         </LicenseContainer>
         <MoreVideosContainer>
-          <MoreVideosHeader>
-            {video ? `More from ${video.channel.title}` : <SkeletonLoader height={23} width={300} />}
-          </MoreVideosHeader>
           <InfiniteVideoGrid
+            title={`More from ${video?.channel.title}`}
+            titleLoader
             ready={!loading}
-            channelId={video?.channel.id}
+            channelId={channelId}
             showChannel={false}
             currentlyWatchedVideoId={video?.id}
           />
