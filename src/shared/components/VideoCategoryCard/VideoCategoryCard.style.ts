@@ -2,10 +2,10 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
 
-import { Text } from '@/shared/components'
 import { colors, sizes, transitions } from '@/shared/theme'
 
 import { VideoCategoryCardProps } from '.'
+import { Text } from '../Text'
 
 type ColorProps = { color: string }
 type LoadingProps = { loading?: VideoCategoryCardProps['loading'] }
@@ -17,13 +17,6 @@ export const CoverImg = styled.div<{ bgImgUrl: string }>`
   filter: grayscale(100%);
 `
 
-const defaultStyles = ({ variantCategory }: VariantProps) =>
-  variantCategory === 'default' &&
-  css`
-    height: 228px;
-    grid-template-columns: 2fr 1fr;
-  `
-
 const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
   !loading &&
   css`
@@ -32,16 +25,13 @@ const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
+const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
-  background-color: ${({ loading }) => (loading ? colors.gray[900] : colors.gray[800])};
   cursor: pointer;
-
-  ${defaultStyles}
-
-  border-left: 4px solid ${({ color, loading }) => (!loading && color ? color : 'transparent')};
+  border-left: 4px solid ${({ color, loading }) => (color && !loading ? color : 'transparent')};
+  background-color: ${({ loading }) => (loading ? colors.gray[900] : colors.gray[800])};
 
   &:hover {
     ${hoverStyles}
@@ -50,6 +40,46 @@ export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
       filter: grayscale(0%);
     }
   }
+`
+
+const generalStyles = ({ variantCategory }: VariantProps) =>
+  variantCategory === 'default' &&
+  css`
+    height: 228px;
+    grid-template-columns: 2fr 1fr;
+  `
+export const GeneralContainer = styled(Container)`
+  ${generalStyles}
+`
+
+export const PlayerContainer = styled.div`
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.15;
+`
+
+export const FeaturedContainer = styled(Container)`
+  position: relative;
+  height: ${({ variantCategory }) => (variantCategory === 'default' ? '320px' : '256px')};
+  padding: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(8) : sizes(6))};
+  align-items: end;
+
+  &:hover {
+    ${PlayerContainer} {
+      opacity: 0.3;
+    }
+  }
+`
+
+export const FeaturedContent = styled.div<VariantProps>`
+  z-index: 1;
+  position: relative;
+  display: grid;
+  ${({ variantCategory }) => variantCategory === 'default' && 'grid-template-columns: 2fr 1fr'};
 `
 
 export const Content = styled.div<VariantProps>`
@@ -65,11 +95,20 @@ export const IconCircle = styled.div<ColorProps>`
   justify-content: center;
   width: ${sizes(10)};
   height: ${sizes(10)};
-  background: ${({ color }) => transparentize(0.8, color)};
   border-radius: 100%;
+  background: ${({ color }) => transparentize(0.8, color)};
 
   path {
     fill: ${({ color }) => color};
+  }
+`
+
+export const FeaturedIconCircle = styled(IconCircle)`
+  background: ${({ color }) => color};
+  margin-bottom: ${sizes(4)};
+
+  path {
+    fill: ${colors.black};
   }
 `
 
@@ -131,4 +170,11 @@ export const PieSegment = styled.div<{ value: number }>`
 
 export const VideosNumberContainer = styled.div`
   display: flex;
+`
+
+export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
+  margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
+  display: grid;
+  align-self: end;
+  text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
 `

@@ -1,21 +1,29 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SkeletonLoader, Text } from '@/shared/components'
 import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
-  Container,
   Content,
   CoverImg,
+  FeaturedContainer,
+  FeaturedContent,
+  FeaturedIconCircle,
+  FeaturedVideoTitleContainer,
+  GeneralContainer,
   IconCircle,
   PieChart,
   PieSegment,
+  PlayerContainer,
   Title,
   VideoCountContainer,
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
+
+import { SkeletonLoader } from '../SkeletonLoader'
+import { Text } from '../Text'
+import { VideoPlayer } from '../VideoPlayer'
 
 export type VideoCategoryCardProps = {
   variant?: 'default' | 'compact'
@@ -38,7 +46,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <Container loading={loading} variantCategory={variant} color={color} {...rest}>
+        <GeneralContainer loading={loading} variantCategory={variant} color={color} {...rest}>
           <Content variantCategory={variant}>
             {loading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
@@ -83,7 +91,72 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
               }
             ></CoverImg>
           )}
-        </Container>
+        </GeneralContainer>
+      </CSSTransition>
+    </SwitchTransition>
+  )
+}
+
+export const FeaturedVideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
+  variant = 'default',
+  loading,
+  color,
+  ...rest
+}) => {
+  return (
+    <SwitchTransition>
+      <CSSTransition
+        key={loading ? 'placeholder' : 'content'}
+        timeout={parseInt(transitions.timings.sharp)}
+        classNames={transitions.names.fade}
+      >
+        <FeaturedContainer loading={loading} variantCategory={variant} color={color} {...rest}>
+          <PlayerContainer>
+            {!loading && (
+              <VideoPlayer
+                videoStyle={{ objectFit: 'cover' }}
+                fluid
+                isInBackground
+                muted={true}
+                playing={true}
+                // onDataLoaded={handlePlaybackDataLoaded}
+                // onPlay={() => setVideoPlaying(true)}
+                // onPause={() => setVideoPlaying(false)}
+                // onEnd={() => setVideoPlaying(false)}
+                src={
+                  'https://sumer-dev-2.joystream.app/storage/asset/v0/5FfYnDTjhkBSqbiUxmTBugtBLGKWrbhsENgTbgfRDbuuNzkQ'
+                }
+              />
+            )}
+          </PlayerContainer>
+
+          <FeaturedContent variantCategory={variant}>
+            <div>
+              {loading ? (
+                <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
+              ) : (
+                <FeaturedIconCircle color={color}>
+                  <SvgVideoCategoriesScienceAndTechnology />
+                </FeaturedIconCircle>
+              )}
+
+              {loading ? (
+                <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
+              ) : (
+                <Text variant={variant === 'default' ? 'h3' : 'h4'}>Science & Techology</Text>
+              )}
+            </div>
+
+            {!loading && (
+              <FeaturedVideoTitleContainer variantCategory={variant}>
+                <Text variant={'caption'} secondary>
+                  Featured video
+                </Text>
+                <Text variant={'h6'}>KOIOS Blockchain Week</Text>
+              </FeaturedVideoTitleContainer>
+            )}
+          </FeaturedContent>
+        </FeaturedContainer>
       </CSSTransition>
     </SwitchTransition>
   )

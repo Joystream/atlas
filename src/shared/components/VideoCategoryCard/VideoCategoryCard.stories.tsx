@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
+import { FeaturedVideoCategoryCard, VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
 export default {
   title: 'Shared/V/VideoCategoryCard',
@@ -23,11 +23,20 @@ const Template: Story<VideoCategoryCardProps> = (args) => {
 export const Default = Template.bind({})
 Default.args = {}
 
-export const Compact = Template.bind({})
-Compact.args = {
-  variant: 'compact',
+const TemplateFeatured: Story<VideoCategoryCardProps> = (args) => {
+  return (
+    <Container2>
+      <FeaturedVideoCategoryCard {...args}>VideoCategoryCard</FeaturedVideoCategoryCard>
+    </Container2>
+  )
 }
+export const Featured = TemplateFeatured.bind({})
+Featured.args = {}
 
 const Container = styled.div`
   width: 414px;
+`
+
+const Container2 = styled.div`
+  width: 636px;
 `
