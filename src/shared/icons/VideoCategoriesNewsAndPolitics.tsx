@@ -2,11 +2,11 @@
 import * as React from 'react'
 
 export const SvgVideoCategoriesNewsAndPolitics = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={22} height={20} viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
-      d="M0 2a2 2 0 012-2h10a2 2 0 012 2v13a3 3 0 106 0V7h2v8a5 5 0 01-5 5H5a5 5 0 01-5-5V2zm5 16a3 3 0 01-3-3V2h10v13c0 1.126.372 2.164 1 3H5zM18 5V4h-2v11h2V5zM4 6h6V4H4v2zm6 4H4V8h6v2zm-6 4h2v-2H4v2z"
+      d="M1 4a2 2 0 012-2h10a2 2 0 012 2v13a3 3 0 106 0V9h2v8a5 5 0 01-5 5H6a5 5 0 01-5-5V4zm5 16a3 3 0 01-3-3V4h10v13c0 1.126.372 2.164 1 3H6zM19 7V6h-2v11h2V7zM5 8h6V6H5v2zm6 4H5v-2h6v2zm-6 4h2v-2H5v2z"
       fill="#F4F6F8"
     />
   </svg>
