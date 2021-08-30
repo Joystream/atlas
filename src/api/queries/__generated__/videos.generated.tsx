@@ -96,6 +96,16 @@ export type GetVideosQuery = {
   videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
 }
 
+export type GetChannelVideosPreviewQueryVariables = Types.Exact<{
+  limit?: Types.Maybe<Types.Scalars['Int']>
+  channelId?: Types.Maybe<Types.Scalars['ID']>
+}>
+
+export type GetChannelVideosPreviewQuery = {
+  __typename?: 'Query'
+  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
+}
+
 export type GetBasicVideosQueryVariables = Types.Exact<{
   where?: Types.Maybe<Types.VideoWhereInput>
 }>
@@ -363,6 +373,65 @@ export function useGetVideosLazyQuery(
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
+export const GetChannelVideosPreviewDocument = gql`
+  query GetChannelVideosPreview($limit: Int = 10, $channelId: ID) {
+    videos(
+      offset: 0
+      limit: $limit
+      where: {
+        channelId_eq: $channelId
+        isPublic_eq: true
+        isCensored_eq: false
+        thumbnailPhotoAvailability_eq: ACCEPTED
+        mediaAvailability_eq: ACCEPTED
+      }
+      orderBy: [createdAt_DESC]
+    ) {
+      ...VideoFields
+    }
+  }
+  ${VideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetChannelVideosPreviewQuery__
+ *
+ * To run a query within a React component, call `useGetChannelVideosPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelVideosPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelVideosPreviewQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetChannelVideosPreviewQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelVideosPreviewQuery, GetChannelVideosPreviewQueryVariables>
+) {
+  return Apollo.useQuery<GetChannelVideosPreviewQuery, GetChannelVideosPreviewQueryVariables>(
+    GetChannelVideosPreviewDocument,
+    baseOptions
+  )
+}
+export function useGetChannelVideosPreviewLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelVideosPreviewQuery, GetChannelVideosPreviewQueryVariables>
+) {
+  return Apollo.useLazyQuery<GetChannelVideosPreviewQuery, GetChannelVideosPreviewQueryVariables>(
+    GetChannelVideosPreviewDocument,
+    baseOptions
+  )
+}
+export type GetChannelVideosPreviewQueryHookResult = ReturnType<typeof useGetChannelVideosPreviewQuery>
+export type GetChannelVideosPreviewLazyQueryHookResult = ReturnType<typeof useGetChannelVideosPreviewLazyQuery>
+export type GetChannelVideosPreviewQueryResult = Apollo.QueryResult<
+  GetChannelVideosPreviewQuery,
+  GetChannelVideosPreviewQueryVariables
+>
 export const GetBasicVideosDocument = gql`
   query GetBasicVideos($where: VideoWhereInput) {
     videos(where: $where) {

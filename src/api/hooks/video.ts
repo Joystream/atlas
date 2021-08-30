@@ -4,6 +4,7 @@ import {
   AddVideoViewMutation,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
+  GetChannelVideosPreviewQuery,
   GetMostViewedVideosAllTimeQuery,
   GetMostViewedVideosAllTimeQueryVariables,
   GetMostViewedVideosQuery,
@@ -13,6 +14,7 @@ import {
   GetVideosQueryVariables,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
+  useGetChannelVideosPreviewQuery,
   useGetMostViewedVideosAllTimeQuery,
   useGetMostViewedVideosQuery,
   useGetVideoQuery,
@@ -34,6 +36,21 @@ export const useVideo = (id: string, opts?: VideoOpts) => {
 type VideosOpts = QueryHookOptions<GetVideosQuery>
 export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
   const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
+  return {
+    videos: data?.videos,
+    ...rest,
+  }
+}
+
+export const useChannelPreviewVideos = (
+  channelId: string | null | undefined,
+  opts?: QueryHookOptions<GetChannelVideosPreviewQuery>
+) => {
+  const { data, ...rest } = useGetChannelVideosPreviewQuery({
+    ...opts,
+    variables: { channelId },
+    skip: !channelId || opts?.skip,
+  })
   return {
     videos: data?.videos,
     ...rest,
