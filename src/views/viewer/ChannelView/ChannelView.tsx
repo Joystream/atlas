@@ -228,46 +228,40 @@ export const ChannelView: React.FC = () => {
     { length: loadingVideos || loadingSearch ? videosPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
     () => ({
       id: undefined,
-      progress: undefined,
     })
   )
 
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
-  const TabContent = () => {
-    switch (currentTabName) {
-      default:
-      case 'Videos':
-        return (
-          <>
-            <VideoSection className={transitions.names.slide}>
-              {!videosWithPlaceholders.length && isSearching && (
-                <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />
-              )}
-              {!videosWithPlaceholders.length && !isSearching && (
-                <EmptyFallback title="No videos on this channel" variant="small" />
-              )}
-              <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-                {videosWithPlaceholders.map((video, idx) => (
-                  <VideoTile key={idx} id={video.id} showChannel={false} />
-                ))}
-              </Grid>
-            </VideoSection>
-            <PaginationContainer>
-              <Pagination
-                onChangePage={handleChangePage}
-                page={isSearching ? currentSearchPage : currentPage}
-                itemsPerPage={videosPerPage}
-                totalCount={isSearching ? searchVideos?.length : totalCount}
-                maxPaginationLinks={7}
-              />
-            </PaginationContainer>
-          </>
-        )
-      case 'Information':
-        return <ChannelAbout />
-    }
-  }
+  const tabContent =
+    currentTabName === 'Videos' ? (
+      <>
+        <VideoSection className={transitions.names.slide}>
+          {!videosWithPlaceholders.length && isSearching && (
+            <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />
+          )}
+          {!videosWithPlaceholders.length && !isSearching && (
+            <EmptyFallback title="No videos on this channel" variant="small" />
+          )}
+          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+            {videosWithPlaceholders.map((video, idx) => (
+              <VideoTile key={idx} id={video.id} showChannel={false} />
+            ))}
+          </Grid>
+        </VideoSection>
+        <PaginationContainer>
+          <Pagination
+            onChangePage={handleChangePage}
+            page={isSearching ? currentSearchPage : currentPage}
+            itemsPerPage={videosPerPage}
+            totalCount={isSearching ? searchVideos?.length : totalCount}
+            maxPaginationLinks={7}
+          />
+        </PaginationContainer>
+      </>
+    ) : (
+      <ChannelAbout />
+    )
 
   // At mount set the tab from the search params
   useEffect(() => {
@@ -348,7 +342,7 @@ export const ChannelView: React.FC = () => {
             </SortContainer>
           )}
         </TabsContainer>
-        <TabContent />
+        {tabContent}
       </LimitedWidthContainer>
     </ViewWrapper>
   )
