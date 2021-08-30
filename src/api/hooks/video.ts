@@ -2,6 +2,7 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   AddVideoViewMutation,
+  AssetAvailability,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
   GetMostViewedVideosAllTimeQuery,
@@ -11,6 +12,7 @@ import {
   GetVideoQuery,
   GetVideosQuery,
   GetVideosQueryVariables,
+  VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
   useGetMostViewedVideosAllTimeQuery,
@@ -34,6 +36,32 @@ export const useVideo = (id: string, opts?: VideoOpts) => {
 type VideosOpts = QueryHookOptions<GetVideosQuery>
 export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
   const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
+  return {
+    videos: data?.videos,
+    ...rest,
+  }
+}
+
+export const useChannelPreviewVideos = (
+  channelId: string | null | undefined,
+  opts?: QueryHookOptions<GetVideosQuery>
+) => {
+  const { data, ...rest } = useGetVideosQuery({
+    ...opts,
+    variables: {
+      where: {
+        channelId_eq: channelId,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+      },
+      orderBy: VideoOrderByInput.CreatedAtDesc,
+      offset: 0,
+      limit: 10,
+    },
+    skip: !channelId || opts?.skip,
+  })
   return {
     videos: data?.videos,
     ...rest,
