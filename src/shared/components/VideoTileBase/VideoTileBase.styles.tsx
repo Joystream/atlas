@@ -102,6 +102,7 @@ export const AvatarContainer = styled.div`
 
 export const TextContainer = styled.div`
   flex: 1;
+  overflow: hidden;
 `
 
 export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
