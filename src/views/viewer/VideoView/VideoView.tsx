@@ -2,7 +2,7 @@ import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useAddVideoView, useVideo, useVideos } from '@/api/hooks'
+import { useAddVideoView, useVideo } from '@/api/hooks'
 import { ChannelLink } from '@/components/ChannelLink'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -27,7 +27,6 @@ import {
   LicenseContainer,
   Meta,
   MoreVideosContainer,
-  MoreVideosHeader,
   NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
@@ -72,11 +71,6 @@ export const VideoView: React.FC = () => {
   }, [video?.duration, timestampFromQuery])
 
   const channelId = video?.channel.id
-  const { videos } = useVideos(
-    { where: { channelId_eq: channelId, isPublic_eq: true, isCensored_eq: false } },
-    { skip: !channelId }
-  )
-  const shouldShowMoreVideos = videos && videos.length > 1
   const videoId = video?.id
   const categoryId = video?.category?.id
 
@@ -201,19 +195,14 @@ export const VideoView: React.FC = () => {
           )}
         </LicenseContainer>
         <MoreVideosContainer>
-          {shouldShowMoreVideos && (
-            <>
-              <MoreVideosHeader>
-                {video ? `More from ${video.channel.title}` : <SkeletonLoader height={23} width={300} />}
-              </MoreVideosHeader>
-              <InfiniteVideoGrid
-                ready={!loading}
-                channelId={channelId}
-                showChannel={false}
-                currentlyWatchedVideoId={video?.id}
-              />
-            </>
-          )}
+          <InfiniteVideoGrid
+            title={`More from ${video?.channel.title}`}
+            titleLoader
+            ready={!loading}
+            channelId={channelId}
+            showChannel={false}
+            currentlyWatchedVideoId={video?.id}
+          />
         </MoreVideosContainer>
       </InfoContainer>
     </StyledViewWrapper>
