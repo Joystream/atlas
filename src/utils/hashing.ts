@@ -23,5 +23,5 @@ const createIterableFile = (file: File | Blob, chunkSize: number): AsyncIterable
 
 export const computeFileHash = async (file: File | Blob, chunkSize = DEFAULT_CHUNK_SIZE): Promise<string> => {
   const iterableFile = createIterableFile(file, chunkSize)
-  return await IpfsHash.of(iterableFile)
+  return await IpfsHash.of(iterableFile, { cidVersion: 0 })
 }
