@@ -17,7 +17,7 @@ export const useAsset = ({ entity, assetType }: UseAssetDataArgs) => {
     addPendingAsset(contentId, assetData)
   }, [addPendingAsset, asset, assetData, contentId, pendingAsset])
 
-  return { url: asset?.url, isLoadingAsset: !asset }
+  return { url: asset?.url, isLoadingAsset: !assetData || (!!contentId && !asset) }
 }
 
 export const useRawAsset = (contentId: string | null) => {

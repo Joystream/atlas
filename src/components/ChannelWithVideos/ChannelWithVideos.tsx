@@ -32,7 +32,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { channel, loading } = useChannel(channelId || '')
 
-  const { url: avatarUrl } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId)
   const { displayedItems, placeholdersCount, error } = useInfiniteGrid<
     GetVideosConnectionQuery,
@@ -73,7 +73,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   return (
     <>
       <ChannelCardAnchor to={absoluteRoutes.viewer.channel(channelId)}>
-        <StyledAvatar size="channel" loading={isLoading} assetUrl={avatarUrl} />
+        <StyledAvatar size="channel" loading={isLoading || isLoadingAvatar} assetUrl={avatarUrl} />
         <InfoWrapper>
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />

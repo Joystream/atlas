@@ -272,32 +272,21 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
       )}
       <InfoContainer>
         {showChannel && (
-          <SwitchTransition>
-            <CSSTransition
-              key={isLoadingAvatar ? 'avatar-placeholder' : 'avatar'}
-              timeout={parseInt(transitions.timings.sharp)}
-              classNames={transitions.names.fade}
-            >
-              <AvatarContainer>
-                {isLoading || isLoadingAvatar ? (
-                  <SkeletonLoader rounded />
-                ) : (
-                  <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
-                    <StyledAvatar
-                      assetUrl={channelAvatarUrl}
-                      channelClickable={channelClickable}
-                      onClick={handleChannelClick}
-                    />
-                  </Anchor>
-                )}
-              </AvatarContainer>
-            </CSSTransition>
-          </SwitchTransition>
+          <AvatarContainer>
+            <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
+              <StyledAvatar
+                loading={isLoading || isLoadingAvatar}
+                assetUrl={channelAvatarUrl}
+                channelClickable={channelClickable}
+                onClick={handleChannelClick}
+              />
+            </Anchor>
+          </AvatarContainer>
         )}
         <SwitchTransition>
           <CSSTransition
             key={isLoading ? 'text-placeholder' : 'text'}
-            timeout={parseInt(transitions.timings.sharp)}
+            timeout={200}
             classNames={transitions.names.fade}
           >
             <TextContainer>
