@@ -33,6 +33,20 @@ export const CoverImgContainer = styled.div`
   position: relative;
 `
 
+export const CoverImgOverlay = styled.div`
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: ${colors.gray[800]};
+  mix-blend-mode: color;
+`
+
+export const CoverImgContainer = styled.div`
+  position: relative;
+`
+
 const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
   !loading &&
   css`
@@ -51,6 +65,10 @@ const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
 
   &:hover {
     ${hoverStyles}
+
+    ${CoverImgOverlay} {
+      opacity: 0;
+    }
 
     ${CoverImgOverlay} {
       opacity: 0;
@@ -205,11 +223,17 @@ export const PieSegment = styled.div<{ value: number }>`
 
 export const VideosNumberContainer = styled.div`
   display: flex;
+  align-items: center;
 `
 
 export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
   margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
   display: grid;
+  gap: ${sizes(1)};
   align-self: end;
   text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
+`
+
+export const FeaturedVideoText = styled(Text)`
+  color: ${colors.gray[200]};
 `
