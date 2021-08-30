@@ -225,7 +225,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           title={files.thumbnail ? 'Thumbnail image' : 'Add thumbnail image'}
           active={step === 'image'}
           thumbnailUrl={files.thumbnail?.url}
-          disabled={editMode}
           completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
           onClick={() => handleChangeStep('image')}
