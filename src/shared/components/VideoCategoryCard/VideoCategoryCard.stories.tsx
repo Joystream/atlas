@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
+import { FeaturedVideoCategoryCard, VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
 import { FeaturedVideoCategoryCard } from '.'
 

@@ -41,7 +41,7 @@ const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
+const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
@@ -86,6 +86,15 @@ export const IconCircle = styled.div<ColorProps>`
 
   path {
     fill: ${({ color }) => color};
+  }
+`
+
+export const FeaturedIconCircle = styled(IconCircle)`
+  background: ${({ color }) => color};
+  margin-bottom: ${sizes(4)};
+
+  path {
+    fill: ${colors.black};
   }
 `
 
@@ -196,4 +205,11 @@ export const PieSegment = styled.div<{ value: number }>`
 
 export const VideosNumberContainer = styled.div`
   display: flex;
+`
+
+export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
+  margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
+  display: grid;
+  align-self: end;
+  text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
 `

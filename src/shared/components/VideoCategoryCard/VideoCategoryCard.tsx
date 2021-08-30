@@ -13,6 +13,7 @@ import {
   IconCircle,
   PieChart,
   PieSegment,
+  PlayerContainer,
   Title,
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
