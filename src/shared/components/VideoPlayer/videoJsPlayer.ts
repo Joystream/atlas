@@ -8,6 +8,7 @@ export type VideoJsConfig = {
   fluid?: boolean
   fill?: boolean
   muted?: boolean
+  loop?: boolean
   posterUrl?: string | null
   startTime?: number
   onDataLoaded?: () => void
@@ -25,6 +26,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   src,
   width,
   muted = false,
+  loop = false,
   posterUrl,
   startTime = 0,
   onDataLoaded,
@@ -108,6 +110,13 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
 
     player.muted(muted)
   }, [player, muted])
+
+  useEffect(() => {
+    if (!player) {
+      return
+    }
+    player.loop(loop)
+  }, [player, loop])
 
   useEffect(() => {
     if (!player || !posterUrl) {

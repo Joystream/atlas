@@ -11,10 +11,28 @@ type ColorProps = { color: string }
 type LoadingProps = { loading?: VideoCategoryCardProps['loading'] }
 type VariantProps = { variantCategory?: VideoCategoryCardProps['variant'] }
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: all ${transitions.timings.regular} ${transitions.easing};
   background: url(${({ bgImgUrl }) => bgImgUrl});
   background-position: center;
   background-size: cover;
   filter: grayscale(100%);
+`
+
+export const CoverImgOverlay = styled.div`
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: ${colors.gray[800]};
+  mix-blend-mode: color;
+`
+
+export const CoverImgContainer = styled.div`
+  position: relative;
 `
 
 const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
@@ -39,6 +57,10 @@ const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
     ${CoverImg} {
       filter: grayscale(0%);
     }
+
+    ${CoverImgOverlay} {
+      opacity: 0;
+    }
   }
 `
 
@@ -57,7 +79,6 @@ export const PlayerContainer = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  object-fit: cover;
   z-index: 0;
   opacity: 0.15;
 `
@@ -116,10 +137,6 @@ export const Title = styled(Text)<VariantProps>`
   margin-bottom: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(6) : sizes(4))};
 `
 
-export const VideoCountContainer = styled.div`
-  align-self: end;
-`
-
 // ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e
 export const PieChart = styled.div`
   margin-right: ${sizes(2)};
@@ -170,11 +187,17 @@ export const PieSegment = styled.div<{ value: number }>`
 
 export const VideosNumberContainer = styled.div`
   display: flex;
+  align-items: center;
 `
 
 export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
   margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
   display: grid;
+  gap: ${sizes(1)};
   align-self: end;
   text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
+`
+
+export const FeaturedVideoText = styled(Text)`
+  color: ${colors.gray[200]};
 `

@@ -1,15 +1,19 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useHover } from '@/hooks/useHover'
 import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
   Content,
   CoverImg,
+  CoverImgContainer,
+  CoverImgOverlay,
   FeaturedContainer,
   FeaturedContent,
   FeaturedIconCircle,
+  FeaturedVideoText,
   FeaturedVideoTitleContainer,
   GeneralContainer,
   IconCircle,
@@ -17,7 +21,6 @@ import {
   PieSegment,
   PlayerContainer,
   Title,
-  VideoCountContainer,
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
 
@@ -68,28 +71,31 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
               </Title>
             )}
 
-            <VideoCountContainer>
+            <VideosNumberContainer>
               {loading ? (
                 <SkeletonLoader width="80px" height={variant === 'default' ? '20px' : '16px'} />
               ) : (
-                <VideosNumberContainer>
+                <>
                   <PieChart>
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
                   <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
                     123 videos
                   </Text>
-                </VideosNumberContainer>
+                </>
               )}
-            </VideoCountContainer>
+            </VideosNumberContainer>
           </Content>
 
           {variant === 'default' && !loading && (
-            <CoverImg
-              bgImgUrl={
-                'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp'
-              }
-            ></CoverImg>
+            <CoverImgContainer>
+              <CoverImgOverlay></CoverImgOverlay>
+              <CoverImg
+                bgImgUrl={
+                  'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp'
+                }
+              ></CoverImg>
+            </CoverImgContainer>
           )}
         </GeneralContainer>
       </CSSTransition>
@@ -103,6 +109,7 @@ export const FeaturedVideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   color,
   ...rest
 }) => {
+  const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
   return (
     <SwitchTransition>
       <CSSTransition
@@ -110,19 +117,16 @@ export const FeaturedVideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <FeaturedContainer loading={loading} variantCategory={variant} color={color} {...rest}>
+        <FeaturedContainer ref={hoverRef} loading={loading} variantCategory={variant} color={color} {...rest}>
           <PlayerContainer>
             {!loading && (
               <VideoPlayer
                 videoStyle={{ objectFit: 'cover' }}
+                loop
                 fluid
                 isInBackground
                 muted={true}
-                playing={true}
-                // onDataLoaded={handlePlaybackDataLoaded}
-                // onPlay={() => setVideoPlaying(true)}
-                // onPause={() => setVideoPlaying(false)}
-                // onEnd={() => setVideoPlaying(false)}
+                playing={isVideoHovering}
                 src={
                   'https://sumer-dev-2.joystream.app/storage/asset/v0/5FfYnDTjhkBSqbiUxmTBugtBLGKWrbhsENgTbgfRDbuuNzkQ'
                 }
@@ -149,9 +153,9 @@ export const FeaturedVideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
 
             {!loading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <Text variant={'caption'} secondary>
+                <FeaturedVideoText variant={'caption'} secondary>
                   Featured video
-                </Text>
+                </FeaturedVideoText>
                 <Text variant={'h6'}>KOIOS Blockchain Week</Text>
               </FeaturedVideoTitleContainer>
             )}
