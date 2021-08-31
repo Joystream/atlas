@@ -1,7 +1,6 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
@@ -21,12 +20,22 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export type VideoCategoryCardProps = {
+  title: string
+  icon: React.ReactNode
+  coverImg: string
+  color: string
   variant?: 'default' | 'compact'
   loading?: boolean
-  color: string
 }
 
-export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 'default', loading, color }) => {
+export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
+  variant = 'default',
+  loading,
+  title,
+  icon,
+  coverImg,
+  color,
+}) => {
   // value from 1 to 100
   const pieChartValue = 15
   return (
@@ -41,9 +50,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 
             {loading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
             ) : (
-              <IconCircle color={color}>
-                <SvgVideoCategoriesScienceAndTechnology />
-              </IconCircle>
+              <IconCircle color={color}>{icon}</IconCircle>
             )}
 
             {loading ? (
@@ -54,7 +61,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 
               />
             ) : (
               <Title variantCategory={variant} variant={variant === 'default' ? 'h4' : 'h6'}>
-                Science & Techology
+                {title}
               </Title>
             )}
 
@@ -77,11 +84,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 
           {variant === 'default' && !loading && (
             <CoverImgContainer>
               <CoverImgOverlay></CoverImgOverlay>
-              <CoverImg
-                bgImgUrl={
-                  'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp'
-                }
-              />
+              <CoverImg bgImgUrl={coverImg} />
             </CoverImgContainer>
           )}
         </GeneralContainer>
