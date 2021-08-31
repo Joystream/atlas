@@ -4,21 +4,19 @@ import { transparentize } from 'polished'
 
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import { VideoCategoryCardProps } from '.'
 import { Text } from '../Text'
 
 type ColorProps = { color: string }
-type LoadingProps = { loading?: VideoCategoryCardProps['loading'] }
-type VariantProps = { variantCategory?: VideoCategoryCardProps['variant'] }
+type LoadingProps = { loading?: boolean }
+type VariantProps = { variantCategory?: 'default' | 'compact' }
+
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
   position: relative;
   width: 100%;
   height: 100%;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
   background: url(${({ bgImgUrl }) => bgImgUrl});
   background-position: center;
   background-size: cover;
-  filter: grayscale(100%);
 `
 
 export const CoverImgOverlay = styled.div`
@@ -43,7 +41,7 @@ const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
+export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
@@ -53,10 +51,6 @@ const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
 
   &:hover {
     ${hoverStyles}
-
-    ${CoverImg} {
-      filter: grayscale(0%);
-    }
 
     ${CoverImgOverlay} {
       opacity: 0;
@@ -72,35 +66,6 @@ const generalStyles = ({ variantCategory }: VariantProps) =>
   `
 export const GeneralContainer = styled(Container)`
   ${generalStyles}
-`
-
-export const PlayerContainer = styled.div`
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 0;
-  opacity: 0.15;
-`
-
-export const FeaturedContainer = styled(Container)`
-  position: relative;
-  height: ${({ variantCategory }) => (variantCategory === 'default' ? '320px' : '256px')};
-  padding: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(8) : sizes(6))};
-  align-items: end;
-
-  &:hover {
-    ${PlayerContainer} {
-      opacity: 0.3;
-    }
-  }
-`
-
-export const FeaturedContent = styled.div<VariantProps>`
-  z-index: 1;
-  position: relative;
-  display: grid;
-  ${({ variantCategory }) => variantCategory === 'default' && 'grid-template-columns: 2fr 1fr'};
 `
 
 export const Content = styled.div<VariantProps>`
@@ -121,15 +86,6 @@ export const IconCircle = styled.div<ColorProps>`
 
   path {
     fill: ${({ color }) => color};
-  }
-`
-
-export const FeaturedIconCircle = styled(IconCircle)`
-  background: ${({ color }) => color};
-  margin-bottom: ${sizes(4)};
-
-  path {
-    fill: ${colors.black};
   }
 `
 
@@ -188,16 +144,4 @@ export const PieSegment = styled.div<{ value: number }>`
 export const VideosNumberContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
-  margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
-  display: grid;
-  gap: ${sizes(1)};
-  align-self: end;
-  text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
-`
-
-export const FeaturedVideoText = styled(Text)`
-  color: ${colors.gray[200]};
 `
