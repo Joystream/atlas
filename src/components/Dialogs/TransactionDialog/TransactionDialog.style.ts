@@ -43,7 +43,7 @@ export const StyledTransactionIllustration = styled(SvgTransactionIllustration)`
   top: ${sizes(2)};
   left: -50px;
 
-  ${media.small} {
+  ${media.xs} {
     left: 0;
   }
 `

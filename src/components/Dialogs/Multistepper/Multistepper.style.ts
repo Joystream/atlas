@@ -22,7 +22,7 @@ export const StyledHeader = styled.div`
   hr {
     display: none;
 
-    ${media.small} {
+    ${media.sm} {
       display: inline;
       width: 16px;
       height: 1px;
@@ -37,7 +37,7 @@ export const StyledHeader = styled.div`
 export const StyledStepsInfoContainer = styled.div`
   display: grid;
 
-  ${media.small} {
+  ${media.sm} {
     width: 100%;
     grid-template-columns: repeat(6, auto);
     align-items: center;
@@ -48,7 +48,7 @@ export const StyledChevron = styled(SvgGlyphChevronRight)`
   margin: 0 ${sizes(1)};
   flex-shrink: 0;
   display: none;
-  ${media.small} {
+  ${media.sm} {
     display: block;
   }
 

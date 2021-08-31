@@ -94,7 +94,7 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
     left: ${sizes(12)};
     top: ${sizes(3)};
 
-    ${media.medium} {
+    ${media.md} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
     }
@@ -122,7 +122,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 
   > svg {
-    ${media.medium} {
+    ${media.md} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
       transition: transform ${transitions.timings.regular} ${transitions.easing};
     }
@@ -141,7 +141,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 
   ::after {
-    ${media.medium} {
+    ${media.md} {
       content: ${({ content }) => `'${content}'`};
       position: absolute;
       font-size: 12px;

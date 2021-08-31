@@ -12,7 +12,7 @@ export const TabsContainer = styled.div`
   margin-bottom: ${sizes(8)};
   border-bottom: solid 1px ${colors.gray[800]};
 
-  ${media.medium} {
+  ${media.md} {
     display: grid;
     grid-template-columns: 1fr 250px;
   }
@@ -35,7 +35,7 @@ export const SortContainer = styled.div`
   grid-gap: 8px;
   grid-template-columns: auto 1fr;
   align-items: center;
-  ${media.medium} {
+  ${media.md} {
     display: grid;
   }
 `

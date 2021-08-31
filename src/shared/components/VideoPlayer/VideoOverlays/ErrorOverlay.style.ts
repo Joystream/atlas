@@ -33,7 +33,7 @@ export const InnerContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  ${media.small} {
+  ${media.sm} {
     padding: ${sizes(6)};
   }
 `
@@ -45,7 +45,7 @@ export const AnimationWrapper = styled.div`
   align-items: center;
   margin-top: ${sizes(40)};
   position: relative;
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${sizes(20)};
   }
 `
@@ -54,20 +54,20 @@ export const StyledAnimatedError = styled(AnimatedError)`
   width: 108px;
   position: absolute;
   bottom: 0;
-  ${media.small} {
+  ${media.sm} {
     width: 216px;
   }
 `
 
 export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.base, breakpoints.medium)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.xxs, breakpoints.md)};
 
   margin-top: ${sizes(8)};
   text-align: center;
 `
 
 export const ErrorMessage = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.base, breakpoints.medium)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.xxs, breakpoints.md)};
 
   max-width: 560px;
   margin-top: ${sizes(2)};

@@ -15,7 +15,7 @@ export const StyledViewWrapper = styled(ViewWrapper)`
 export const PlayerContainer = styled.div`
   width: 100%;
   height: calc(100vw * 0.5625);
-  ${media.medium} {
+  ${media.md} {
     height: calc((100vw - var(--sidenav-collapsed-width)) * 0.5625);
     max-height: calc(70vh);
   }
@@ -45,11 +45,11 @@ export const Meta = styled(Text)`
   margin-top: ${sizes(1)};
   color: ${colors.gray[300]};
 
-  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.base, breakpoints.xlarge)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.xxs, breakpoints.xl)};
 `
 
 export const TitleText = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.base, breakpoints.xlarge)};
+  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.xxs, breakpoints.xl)};
 
   word-break: break-word;
 `
@@ -66,7 +66,7 @@ export const DescriptionContainer = styled.div`
     font-size: ${typography.sizes.body2};
     margin: ${sizes(4)} 0 0;
 
-    ${media.small} {
+    ${media.sm} {
       font-size: 1rem;
       color: ${colors.gray[300]};
       line-height: 175%;

@@ -81,7 +81,7 @@ export const Thumbnail = styled.div`
   height: ${sizes(12)};
   background-color: ${colors.gray[700]};
 
-  ${media.small} {
+  ${media.xs} {
     display: flex;
   }
 `

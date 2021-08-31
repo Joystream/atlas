@@ -10,7 +10,7 @@ export const StyledTitleSection = styled(TitleSection)`
   width: auto;
   flex-direction: row;
   padding-top: ${sizes(8)};
-  ${media.small} {
+  ${media.sm} {
     padding-top: 0;
   }
 
@@ -46,7 +46,7 @@ export const StyledAvatar = styled(Avatar)`
   width: 80px;
   height: 80px;
   visibility: visible;
-  ${media.small} {
+  ${media.sm} {
     width: 136px;
     height: 136px;
   }

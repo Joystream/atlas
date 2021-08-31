@@ -72,7 +72,7 @@ const Header = styled(Text)`
   margin: ${sizes(16)} 0;
   font-size: ${typography.sizes.h3};
 
-  ${media.large} {
+  ${media.lg} {
     font-size: ${typography.sizes.h2};
     line-height: ${typography.lineHeights.h2};
   }

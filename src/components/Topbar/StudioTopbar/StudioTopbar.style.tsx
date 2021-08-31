@@ -20,7 +20,7 @@ type StyledTopbarBaseProps = {
 
 export const StyledTopbarBase = styled(TopbarBase)<StyledTopbarBaseProps>`
   ${({ fullWidth }) => fullWidth && 'left: 0;'}
-  ${media.small} {
+  ${media.sm} {
     display: flex;
     justify-content: space-between;
   }
@@ -70,7 +70,7 @@ export const StudioTopbarContainer = styled.div`
     ${TextContainer} {
       display: none;
 
-      ${media.medium} {
+      ${media.md} {
         display: flex;
       }
     }
@@ -105,7 +105,7 @@ export const DrawerMemberText = styled(Text)`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  ${media.medium} {
+  ${media.md} {
     max-width: 160px;
   }
 `
@@ -163,7 +163,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   z-index: ${zIndex.nearOverlay};
 
-  ${media.medium} {
+  ${media.md} {
     width: 328px;
   }
   ${ChannelInfoContainer} {
@@ -173,7 +173,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
     margin-left: 0;
   }
   ${TextContainer} {
-    ${media.medium} {
+    ${media.md} {
       width: 200px;
     }
   }

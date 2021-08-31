@@ -10,7 +10,7 @@ export const LayoutGrid = styled.div`
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 16px;
 
-  ${media.medium} {
+  ${media.md} {
     grid-gap: 24px;
   }
 `
@@ -46,11 +46,11 @@ export const GridItem = styled.div<GridItemProps>`
   ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
   ${({ rowSpan }) => !isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
   
-  ${createBreakpointGridItemRules('base')}
-  ${createBreakpointGridItemRules('compact')}
-  ${createBreakpointGridItemRules('small')}
-  ${createBreakpointGridItemRules('medium')}
-  ${createBreakpointGridItemRules('large')}
-  ${createBreakpointGridItemRules('xlarge')}
-  ${createBreakpointGridItemRules('xxlarge')}
+  ${createBreakpointGridItemRules('xxs')}
+  ${createBreakpointGridItemRules('xs')}
+  ${createBreakpointGridItemRules('sm')}
+  ${createBreakpointGridItemRules('md')}
+  ${createBreakpointGridItemRules('lg')}
+  ${createBreakpointGridItemRules('xl')}
+  ${createBreakpointGridItemRules('xxl')}
 `

@@ -13,7 +13,7 @@ export const StepsContainer = styled.div`
   justify-content: space-between;
   margin-top: ${sizes(5)};
 
-  ${media.small} {
+  ${media.sm} {
     grid-template-columns: 1fr auto 1fr;
     margin-top: ${sizes(10)};
   }
@@ -30,7 +30,7 @@ export const StepDivider = styled.div`
 
   svg {
     display: none;
-    ${media.small} {
+    ${media.sm} {
       display: initial;
     }
 

@@ -5,7 +5,6 @@ import { FullLogo, Header, LogoContainer, LogoLink, ShortLogo, StudioText } from
 export type TopbarVariant = 'default' | 'studio'
 export type TopbarBaseProps = {
   variant?: TopbarVariant
-  hasFocus?: boolean
   className?: string
   isHamburgerButtonPresent?: boolean
 }
@@ -13,14 +12,13 @@ export type TopbarBaseProps = {
 export const TopbarBase: React.FC<TopbarBaseProps> = ({
   children,
   variant = 'default',
-  hasFocus,
   className,
   isHamburgerButtonPresent = true,
 }) => {
   const isStudio = variant === 'studio'
   const logoLink = isStudio ? '/studio' : '/'
   return (
-    <Header hasFocus={hasFocus} className={className}>
+    <Header className={className}>
       <LogoContainer variant={variant} isHamburgerButtonPresent={isHamburgerButtonPresent}>
         <LogoLink to={logoLink}>
           <ShortLogo />

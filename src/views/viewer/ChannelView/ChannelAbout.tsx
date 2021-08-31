@@ -23,7 +23,7 @@ export const ChannelAbout = () => {
   const { videoCount } = useChannelVideoCount(id)
   return (
     <StyledLayoutGrid>
-      <GridItem colSpan={{ base: 12, small: 8 }} rowStart={{ base: 2, small: 1 }}>
+      <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
         {!!channel?.description && (
           <TextContainer>
             <Text variant="h4">Description</Text>
@@ -33,7 +33,7 @@ export const ChannelAbout = () => {
           </TextContainer>
         )}
       </GridItem>
-      <GridItem colSpan={{ base: 12, small: 3 }} colStart={{ small: -4 }}>
+      <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
         <DetailsText variant="h4">Details</DetailsText>
 
         <Details>
