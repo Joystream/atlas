@@ -1,7 +1,6 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useHover } from '@/hooks/useHover'
 import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
 import { sizes, transitions } from '@/shared/theme'
 
@@ -14,7 +13,6 @@ import {
   IconCircle,
   PieChart,
   PieSegment,
-  PlayerContainer,
   Title,
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
