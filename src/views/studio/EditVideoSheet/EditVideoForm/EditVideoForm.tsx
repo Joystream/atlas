@@ -1,5 +1,5 @@
 import { formatISO, isValid } from 'date-fns'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'

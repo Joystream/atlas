@@ -2,7 +2,7 @@ import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { StudioLoading } from '@/components/StudioEntrypoint'
+import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarBase } from '@/components/Topbar'
 import { BASE_PATHS } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
@@ -10,7 +10,6 @@ import { isBrowserOutdated } from '@/utils/browser'
 import { useDialog } from './providers/dialogs'
 import { AdminView } from './views/admin'
 import { LegalLayout } from './views/legal'
-import { PlaygroundLayout } from './views/playground'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
@@ -20,6 +19,10 @@ const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'
       <StudioLoading />
     </>
   ),
+})
+
+const LoadablePlaygroundLayout = loadable(() => import('./views/playground/PlaygroundLayout'), {
+  fallback: <h1>Loading Playground...</h1>,
 })
 
 export const MainLayout: React.FC = () => {
@@ -46,7 +49,7 @@ export const MainLayout: React.FC = () => {
       <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
       <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
       <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
-      <Route path={BASE_PATHS.playground + '/*'} element={<PlaygroundLayout />} />
+      <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       <Route path={BASE_PATHS.admin + '/*'} element={<AdminView />} />
     </Routes>
   )

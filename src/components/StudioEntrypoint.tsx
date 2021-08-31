@@ -1,12 +1,9 @@
-import styled from '@emotion/styled'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { StudioLoading } from '@/components/StudioLoading'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user'
-import { Spinner } from '@/shared/components/Spinner'
-import { Text } from '@/shared/components/Text'
 
 const DEFAULT_ROUTE = absoluteRoutes.studio.videos()
 
@@ -59,28 +56,4 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   }
 
   return <StudioLoading />
-}
-
-const LoadingStudioContainer = styled.main`
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  div {
-    margin-top: 24px;
-  }
-`
-
-export const StudioLoading: React.FC = () => {
-  return (
-    <LoadingStudioContainer>
-      <Text variant="h1">Loading Joystream studio...</Text>
-      <Spinner size="large" />
-    </LoadingStudioContainer>
-  )
 }

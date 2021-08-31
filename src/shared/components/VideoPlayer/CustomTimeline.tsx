@@ -1,4 +1,4 @@
-import { clamp, round } from 'lodash'
+import { clamp, round } from 'lodash-es'
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import { VideoJsPlayer } from 'video.js'

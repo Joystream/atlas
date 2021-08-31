@@ -1,4 +1,4 @@
-import { debounce, round } from 'lodash'
+import { debounce, round } from 'lodash-es'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 

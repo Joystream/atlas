@@ -3,17 +3,12 @@ import graphql from '@rollup/plugin-graphql'
 import inject from '@rollup/plugin-inject'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import path from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    inject({
-      include: ['node_modules/**/*.js*'],
-      modules: {
-        Buffer: ['buffer', 'Buffer'],
-      },
-    }),
     reactRefresh(),
     babel({
       extensions: ['.tsx', '.ts'],
@@ -23,13 +18,50 @@ export default defineConfig({
       babelHelpers: 'bundled',
     }),
     graphql(),
+    {
+      ...visualizer({
+        template: 'treemap',
+        filename: 'dist/stats.html',
+      }),
+      enforce: 'post',
+    },
+    {
+      ...inject({
+        include: ['node_modules/**/*.js*', 'node_modules/**/*.cjs*'],
+        modules: {
+          Buffer: ['buffer', 'Buffer'],
+        },
+      }),
+      enforce: 'post',
+    },
   ],
-  optimizeDeps: {
-    include: ['buffer'],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+  optimizeDeps: {
+    include: ['buffer'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendors-studio': [
+            '@polkadot/util',
+            '@polkadot/wasm-crypto-wasm',
+            '@polkadot/util-crypto',
+            '@polkadot/types',
+            '@polkadot/keyring',
+            '@polkadot/api',
+            '@polkadot/api-derive',
+            '@polkadot/rpc-core',
+            '@polkadot/rpc-provider',
+            '@joystream/types',
+            '@joystream/content-metadata-protobuf',
+          ],
+        },
+      },
     },
   },
 })
