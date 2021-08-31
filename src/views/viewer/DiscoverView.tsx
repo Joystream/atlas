@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
@@ -10,7 +11,7 @@ import { colors, media, sizes } from '@/shared/theme'
 export const DiscoverView: React.FC = () => {
   const isMdBreakpoint = useMediaMatch('md')
   return (
-    <Container>
+    <StyledLimitedWidthContainer big>
       <Text variant="h2">Discover</Text>
       <FeaturedCategoriesContainer>
         {[0, 0, 0].map((category, i, arr) => (
@@ -27,12 +28,12 @@ export const DiscoverView: React.FC = () => {
           <VideoCategoryCard key={i} variant={isMdBreakpoint ? 'default' : 'compact'} color="#E7BE2D" />
         ))}
       </CategoriesContainer>
-    </Container>
+    </StyledLimitedWidthContainer>
   )
 }
 
-const Container = styled.div`
-  margin: ${sizes(16)} 0;
+const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
+  margin: ${sizes(16)} auto;
 `
 
 const FeaturedCategoriesContainer = styled.div`
