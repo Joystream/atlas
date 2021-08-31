@@ -160,6 +160,7 @@ export const PieSegment = styled.div<{ value: number }>`
 `
 
 export const VideosNumberContainer = styled.div`
+  align-self: end;
   display: flex;
   align-items: center;
 `
