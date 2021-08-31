@@ -34,7 +34,7 @@ export const UploadsManager: React.FC = () => {
 
   useEffect(() => {
     // do this only on first render or when active channel changes
-    if (!activeChannelId || cachedActiveChannelId === activeChannelId || isSyncing) {
+    if (!activeChannelId || cachedActiveChannelId === activeChannelId || cachedActiveChannelId === null || isSyncing) {
       return
     }
     setCachedActiveChannelId(activeChannelId)
