@@ -46,6 +46,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
             fill: ${textOnly && colors.blue[400]};
           }
         }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
+        }
       `
     case 'secondary':
       return css`
@@ -100,6 +105,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         &:active {
           background-color: ${colors.secondary.alert[300]};
         }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
+        }
       `
     case 'destructive-secondary':
       return css`
@@ -145,6 +155,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
 
         &:active {
           background-color: ${colors.secondary.warning[300]};
+        }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
         }
       `
     case 'warning-secondary':
@@ -249,6 +264,7 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
+    color: ${colors.gray[50]};
   }
 
   transition-duration: ${transitions.timings.sharp};
