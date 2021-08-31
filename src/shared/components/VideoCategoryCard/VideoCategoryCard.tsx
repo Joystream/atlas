@@ -24,14 +24,9 @@ export type VideoCategoryCardProps = {
   variant?: 'default' | 'compact'
   loading?: boolean
   color: string
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+}
 
-export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
-  variant = 'default',
-  loading,
-  color,
-  ...rest
-}) => {
+export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({ variant = 'default', loading, color }) => {
   // value from 1 to 100
   const pieChartValue = 15
   return (
@@ -41,7 +36,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <GeneralContainer loading={loading} variantCategory={variant} color={color} {...rest}>
+        <GeneralContainer loading={loading} variantCategory={variant} color={color}>
           <Content variantCategory={variant}>
             {loading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />

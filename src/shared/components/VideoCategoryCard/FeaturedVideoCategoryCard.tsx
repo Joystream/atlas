@@ -22,13 +22,12 @@ export type FeaturedVideoCategoryCardProps = {
   variant?: 'default' | 'compact'
   loading?: boolean
   color: string
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+}
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
   variant = 'default',
   loading,
   color,
-  ...rest
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
   return (
@@ -38,7 +37,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <FeaturedContainer ref={hoverRef} loading={loading} variantCategory={variant} color={color} {...rest}>
+        <FeaturedContainer ref={hoverRef} loading={loading} variantCategory={variant} color={color}>
           <PlayerContainer>
             {!loading && (
               <VideoPlayer
@@ -74,10 +73,10 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
 
             {!loading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <FeaturedVideoText variant={'caption'} secondary>
+                <FeaturedVideoText variant="caption" secondary>
                   Featured video
                 </FeaturedVideoText>
-                <Text variant={'h6'}>KOIOS Blockchain Week</Text>
+                <Text variant="h6">KOIOS Blockchain Week</Text>
               </FeaturedVideoTitleContainer>
             )}
           </FeaturedContent>

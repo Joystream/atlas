@@ -45,7 +45,7 @@ export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
-  cursor: pointer;
+  cursor: ${({ loading }) => (loading ? 'initial' : 'pointer')};
   border-left: 4px solid ${({ color, loading }) => (color && !loading ? color : 'transparent')};
   background-color: ${({ loading }) => (loading ? colors.gray[900] : colors.gray[800])};
 
