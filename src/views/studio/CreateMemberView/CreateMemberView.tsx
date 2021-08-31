@@ -190,7 +190,7 @@ export const CreateMemberView = () => {
             textFieldValidation({
               name: 'Member handle',
               maxLength: 40,
-              minLength: 4,
+              minLength: 5,
               required: true,
               pattern: MEMBERSHIP_NAME_PATTERN,
               patternMessage: 'may contain only lowercase letters, numbers and underscores',
