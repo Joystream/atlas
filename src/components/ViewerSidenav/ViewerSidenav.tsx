@@ -5,6 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
+import { SvgNavDiscover } from '@/shared/icons/NavDiscover'
 import { openInNewTab } from '@/utils/browser'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -25,6 +26,11 @@ const viewerSidenavItems: NavItemType[] = [
     icon: <SvgNavNew />,
     name: 'New',
     to: absoluteRoutes.viewer.new(),
+  },
+  {
+    icon: <SvgNavDiscover />,
+    name: 'Discover',
+    to: absoluteRoutes.viewer.discover(),
   },
   {
     icon: <SvgNavChannels />,
