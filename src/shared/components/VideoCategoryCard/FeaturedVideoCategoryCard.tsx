@@ -18,8 +18,9 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 import { VideoPlayer } from '../VideoPlayer'
 
+export type Variant = 'default' | 'compact'
 export type FeaturedVideoCategoryCardProps = {
-  variant?: 'default' | 'compact'
+  variant?: Variant
   loading?: boolean
   color: string
 }
@@ -41,6 +42,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
           <PlayerContainer>
             {!loading && (
               <VideoPlayer
+                startTime={25} // TODO: remove this before merge
                 videoStyle={{ objectFit: 'cover' }}
                 loop
                 fluid
