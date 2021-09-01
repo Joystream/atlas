@@ -96,6 +96,7 @@ export const ChannelView: React.FC = () => {
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
   const [isFollowing, setFollowing] = useState<boolean>()
   const currentTabName = searchParams.get('tab')
+  const [currentTab, setCurrentTab] = useState<string | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset({
@@ -235,7 +236,7 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
   const tabContent =
-    currentTabName === 'Videos' ? (
+    currentTab === 'Videos' ? (
       <>
         <VideoSection className={transitions.names.slide}>
           {!videosWithPlaceholders.length && isSearching && (
@@ -270,6 +271,12 @@ export const ChannelView: React.FC = () => {
     if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (currentTabName) {
+      setCurrentTab(currentTabName)
+    }
+  }, [currentTabName])
 
   if (videosError || error || errorSearch) {
     return <ViewErrorFallback />
@@ -322,12 +329,12 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <StyledTabs
-            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
+            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTab)}
             initialIndex={0}
             tabs={mappedTabs}
             onSelectTab={handleSetCurrentTab}
           />
-          {currentTabName === 'Videos' && (
+          {currentTab === 'Videos' && (
             <Search
               searchInputRef={searchInputRef}
               isSearchInputOpen={isSearchInputOpen}
@@ -336,7 +343,7 @@ export const ChannelView: React.FC = () => {
               search={search}
             />
           )}
-          {currentTabName === 'Videos' && !isSearching && (
+          {currentTab === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
