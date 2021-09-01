@@ -1,4 +1,5 @@
-import React from 'react'
+import { debounce } from 'lodash'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
@@ -7,7 +8,7 @@ import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } 
 export type PaginationProps = {
   itemsPerPage?: number
   totalCount?: number
-  maxPaginationLinks?: number
+  defaultPaginationLength?: number
   onChangePage: (page: number) => void
   page: number
 }
@@ -16,16 +17,44 @@ export type PaginationProps = {
 export const Pagination: React.FC<PaginationProps> = ({
   itemsPerPage = 0,
   totalCount = 0,
-  maxPaginationLinks = 5,
+  defaultPaginationLength = 5,
   page = 0,
   onChangePage,
 }) => {
+  const paginationWrapperRef = useRef<HTMLDivElement>(null)
+  const [paginationLength, setPaginationLength] = useState(defaultPaginationLength)
+
+  const calculatePaginationLength = () => {
+    const paginationButtonWidth = 48
+    const arrowsWithMargins = paginationButtonWidth + 32 * 4
+    const viewPortHorizontalPadding = 32
+    const viewPortDifference =
+      window.innerWidth -
+      viewPortHorizontalPadding -
+      (paginationButtonWidth * defaultPaginationLength + arrowsWithMargins)
+    if (viewPortDifference < 0) {
+      setPaginationLength(defaultPaginationLength - Math.ceil(Math.abs(viewPortDifference) / paginationButtonWidth))
+    } else {
+      setPaginationLength(defaultPaginationLength)
+    }
+  }
+  const debouncedPaginationLength = debounce(calculatePaginationLength, 100)
+
+  useEffect(() => {
+    debouncedPaginationLength()
+    window.addEventListener('resize', debouncedPaginationLength)
+
+    return () => {
+      window.removeEventListener('resize', debouncedPaginationLength)
+    }
+  }, [debouncedPaginationLength])
+
   const internalPage = page + 1
   const totalPages = itemsPerPage ? Math.ceil(totalCount / itemsPerPage) : 0
   const prevPage = internalPage - 1
   const nextPage = internalPage + 1
 
-  const pages = generatePaginationArray(internalPage, maxPaginationLinks, totalPages)
+  const pages = generatePaginationArray(internalPage, paginationLength, totalPages)
 
   if (totalPages <= 1) return null
 
@@ -36,7 +65,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <PaginationWrapper>
+    <PaginationWrapper ref={paginationWrapperRef}>
       <ChevronButton
         variant="secondary"
         size="large"
@@ -94,7 +123,7 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
     return slicedArray
   }
 
-  const arrayWithDots = slicedArray.map((el, idx) => {
+  return slicedArray.map((el, idx) => {
     // first page
     if (idx === 0 && maxPaginationLinks !== 4) {
       return 1
@@ -113,5 +142,4 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
     }
     return el
   })
-  return arrayWithDots
 }

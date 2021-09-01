@@ -32,18 +32,14 @@ export const ChevronButton = styled(IconButton)`
 `
 
 export const ThreeDotsWrapper = styled.div`
-  display: none;
-
-  ${media.xs} {
-    width: ${sizes(12)};
-    height: ${sizes(12)};
-    color: ${colors.gray[300]};
-    font-size: ${typography.sizes.subtitle2};
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    cursor: default;
-  }
+  width: ${sizes(12)};
+  height: ${sizes(12)};
+  color: ${colors.gray[300]};
+  font-size: ${typography.sizes.subtitle2};
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: default;
 `
 
 const buttonActiveState = css`
@@ -52,8 +48,8 @@ const buttonActiveState = css`
 `
 
 export const PaginationButton = styled.button<PaginationButtonProps>`
-  /* show only one active button on mobile */
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+  display: flex;
+  flex-shrink: 0;
   border: none;
   cursor: pointer;
   width: ${sizes(12)};
@@ -80,8 +76,4 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   }
 
   ${({ isActive }) => isActive && buttonActiveState};
-
-  ${media.xs} {
-    display: flex;
-  }
 `
