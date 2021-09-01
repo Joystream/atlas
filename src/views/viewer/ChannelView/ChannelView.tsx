@@ -396,6 +396,28 @@ const Search: React.FC<SearchProps> = ({
     [search, searchInputRef, searchQuery, setIsSearching, setIsSearchingInputOpen, setSearchQuery]
   )
 
+  const toggleSearchInput = useCallback(() => {
+    if (isSearchInputOpen) {
+      setIsSearchingInputOpen(false)
+      searchInputRef.current?.blur()
+    } else {
+      setIsSearchingInputOpen(true)
+      searchInputRef.current?.focus()
+    }
+  }, [isSearchInputOpen, searchInputRef, setIsSearchingInputOpen])
+
+  useEffect(() => {
+    const onClickOutsideSearch = (event: Event) => {
+      if (!searchQuery.length && isSearchInputOpen && searchInputRef.current !== event.target) {
+        toggleSearchInput()
+      }
+    }
+    window.addEventListener('click', onClickOutsideSearch)
+    return () => {
+      window.removeEventListener('click', onClickOutsideSearch)
+    }
+  }, [isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
+
   return (
     <SearchContainer>
       <StyledTextField
@@ -408,13 +430,7 @@ const Search: React.FC<SearchProps> = ({
         type="search"
         helperText={null}
       />
-      <SearchButton
-        onClick={() => {
-          setIsSearchingInputOpen(true)
-          searchInputRef.current?.focus()
-        }}
-        variant="tertiary"
-      >
+      <SearchButton onClick={toggleSearchInput} variant="tertiary">
         <SvgGlyphSearch />
       </SearchButton>
     </SearchContainer>
