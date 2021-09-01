@@ -266,11 +266,14 @@ export const ChannelView: React.FC = () => {
     )
 
   // At mount set the tab from the search params
+  const initialRender = useRef(true)
   useEffect(() => {
-    const tabIndex = TABS.findIndex((t) => t === currentTabName)
-    if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (initialRender.current) {
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
 
   useEffect(() => {
     if (currentTabName) {
