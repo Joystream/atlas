@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
-import { colors, media, sizes } from '@/shared/theme'
+import { Text } from '@/shared/components/Text'
+import { SvgGlyphAddVideo } from '@/shared/icons'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 export const ViewContainer = styled.div`
   padding-top: ${sizes(8)};
@@ -38,4 +41,54 @@ export const SortContainer = styled.div`
   ${media.md} {
     display: grid;
   }
+`
+
+export const NewVideoTile = styled(Link)`
+  position: relative;
+  background: none;
+  border: 1px dashed ${colors.gray[500]};
+  color: ${colors.gray[500]};
+  transition: border ${transitions.timings.player} ease-out;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  cursor: pointer;
+
+  :hover {
+    border: 1px dashed ${colors.gray[200]};
+    color: ${colors.gray[200]};
+    ${() => StyledIcon} {
+      > path {
+        fill: ${colors.gray[200]};
+      }
+    }
+    ${() => StyledText} {
+      color: ${colors.gray[200]};
+    }
+  }
+`
+
+export const TextAndIconWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
+
+export const StyledIcon = styled(SvgGlyphAddVideo)`
+  > path {
+    transition: fill ${transitions.timings.player} ease-out;
+    fill: ${colors.gray[500]};
+  }
+`
+
+export const StyledText = styled(Text)`
+  text-align: center;
+  margin-top: ${sizes(2)};
+  color: ${colors.gray[500]};
+  transition: color ${transitions.timings.player} ease-out;
 `

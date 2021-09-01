@@ -25,10 +25,14 @@ import { SvgGlyphUpload } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 
 import {
+  NewVideoTile,
   PaginationContainer,
   SortContainer,
   StyledDismissibleBanner,
+  StyledIcon,
+  StyledText,
   TabsContainer,
+  TextAndIconWrapper,
   ViewContainer,
 } from './MyVideos.styles'
 
@@ -297,6 +301,14 @@ export const MyVideosView = () => {
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+              {currentPage === 0 && (
+                <NewVideoTile to={absoluteRoutes.studio.editVideo()}>
+                  <TextAndIconWrapper>
+                    <StyledIcon />
+                    <StyledText variant="body2">Upload new video</StyledText>
+                  </TextAndIconWrapper>
+                </NewVideoTile>
+              )}
               {gridContent}
             </Grid>
             {((isDraftTab && drafts.length === 0) ||
