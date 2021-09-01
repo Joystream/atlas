@@ -3,14 +3,7 @@ import { persist } from 'zustand/middleware'
 
 import { ChannelId, VideoId } from '@/joystream-lib'
 
-import {
-  AssetParent,
-  AssetUpload,
-  InputAssetUpload,
-  StartFileUploadOptions,
-  UploadStatus,
-  UploadsStatusRecord,
-} from './types'
+import { AssetParent, AssetUpload, UploadStatus, UploadsStatusRecord } from './types'
 
 type AssetFile = {
   contentId: string
@@ -28,9 +21,9 @@ type UploadStoreState = {
   addAssetFile: (assetFile: AssetFile) => void
   isSyncing: boolean
   setIsSyncing: (isSyncing: boolean) => void
-  pendingAssets: string[]
-  removePendingAsset: (contentId: string) => void
-  addPendingAsset: (contentId: string) => void
+  pendingAssetsIds: string[]
+  removePendingAssetId: (contentId: string) => void
+  addPendingAssetId: (contentId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
@@ -42,7 +35,7 @@ export const useUploadsStore = create<UploadStoreState>(
       uploadsStatus: {},
       assetsFiles: [],
       isSyncing: false,
-      pendingAssets: [],
+      pendingAssetsIds: [],
 
       setUploadStatus: (contentId, status) => {
         set((state) => ({
@@ -71,14 +64,14 @@ export const useUploadsStore = create<UploadStoreState>(
       setIsSyncing: (isSyncing) => {
         set((state) => ({ ...state, isSyncing: isSyncing }))
       },
-      addPendingAsset: (contentId) => {
+      addPendingAssetId: (contentId) => {
         set((state) => {
-          return { ...state, pendingAssets: [...state.pendingAssets, contentId] }
+          return { ...state, pendingAssetsIds: [...state.pendingAssetsIds, contentId] }
         })
       },
-      removePendingAsset: (contentId) => {
+      removePendingAssetId: (contentId) => {
         set((state) => {
-          return { ...state, pendingAssets: state.pendingAssets.filter((id) => id !== contentId) }
+          return { ...state, pendingAssets: state.pendingAssetsIds.filter((id) => id !== contentId) }
         })
       },
     }),

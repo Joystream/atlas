@@ -19,7 +19,6 @@ import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/ed
 import { JoystreamProvider } from '@/providers/joystream'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
-import { PendingUploadsManager } from '@/providers/uploadsManager/pendingUploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
@@ -159,7 +158,6 @@ const StudioLayoutWrapper: React.FC = () => {
         <EditVideoSheetProvider>
           <JoystreamProvider>
             <ConnectionStatusManager />
-            <PendingUploadsManager />
             <UploadsManager />
             <TransactionManager />
             <StudioLayout />

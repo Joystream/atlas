@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
+import { useGetDataObjectAvailabilityLazyQuery } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 
@@ -21,15 +22,58 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const { addAsset, removeAsset, setIsSyncing, isSyncing } = useUploadsStore(
+
+  const {
+    addAsset,
+    removeAsset,
+    setIsSyncing,
+    isSyncing,
+    pendingAssetsIds,
+    removePendingAssetId,
+    setUploadStatus,
+  } = useUploadsStore(
     (state) => ({
       addAsset: state.addAsset,
       removeAsset: state.removeAsset,
       setIsSyncing: state.setIsSyncing,
       isSyncing: state.isSyncing,
+      pendingAssetsIds: state.pendingAssetsIds,
+      removePendingAssetId: state.removePendingAssetId,
+      setUploadStatus: state.setUploadStatus,
     }),
     shallow
   )
+
+  const [getDataObjectAvailability, { stopPolling, startPolling, data }] = useGetDataObjectAvailabilityLazyQuery({
+    fetchPolicy: 'network-only',
+    onCompleted: () => {
+      startPolling?.(3000)
+    },
+  })
+
+  useEffect(() => {
+    if (!pendingAssetsIds.length) {
+      return
+    }
+    getDataObjectAvailability({
+      variables: {
+        joystreamContentIdIn: pendingAssetsIds,
+      },
+    })
+  }, [getDataObjectAvailability, pendingAssetsIds])
+
+  useEffect(() => {
+    data?.dataObjects?.forEach((asset) => {
+      if (asset.liaisonJudgement === 'ACCEPTED') {
+        setUploadStatus(asset.joystreamContentId, { lastStatus: 'completed' })
+        removePendingAssetId(asset.joystreamContentId)
+      }
+    })
+    if (data?.dataObjects?.every((entry) => entry.liaisonJudgement === 'ACCEPTED')) {
+      stopPolling?.()
+    }
+  }, [data?.dataObjects, removePendingAssetId, setUploadStatus, stopPolling])
+
   const client = useApolloClient()
 
   useEffect(() => {

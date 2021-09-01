@@ -9,7 +9,6 @@ import { ResolvedAssetDetails } from '@/types/assets'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { useSecondStore } from './secondStore'
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
 
@@ -30,7 +29,7 @@ export const useStartFileUpload = () => {
   const addAsset = useUploadsStore((state) => state.addAsset)
   const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-  const addPendingAssetId = useSecondStore((state) => state.addPendingAssetId)
+  const addPendingAssetId = useUploadsStore((state) => state.addPendingAssetId)
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
