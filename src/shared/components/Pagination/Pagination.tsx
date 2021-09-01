@@ -13,6 +13,9 @@ export type PaginationProps = {
   page: number
 }
 
+const PAGINATION_BUTTON_WIDTH = 48
+const VIEWPORT_PADDING = 32
+
 // Codewise component works with index starting from 0 but it's rendered with index starting from 1
 export const Pagination: React.FC<PaginationProps> = ({
   itemsPerPage = 0,
@@ -25,15 +28,11 @@ export const Pagination: React.FC<PaginationProps> = ({
   const [paginationLength, setPaginationLength] = useState(defaultPaginationLength)
 
   const calculatePaginationLength = () => {
-    const paginationButtonWidth = 48
-    const arrowsWithMargins = paginationButtonWidth + 32 * 4
-    const viewPortHorizontalPadding = 32
+    const arrowsWithMargins = PAGINATION_BUTTON_WIDTH + 32 * 4
     const viewPortDifference =
-      window.innerWidth -
-      viewPortHorizontalPadding -
-      (paginationButtonWidth * defaultPaginationLength + arrowsWithMargins)
+      window.innerWidth - VIEWPORT_PADDING - (PAGINATION_BUTTON_WIDTH * defaultPaginationLength + arrowsWithMargins)
     if (viewPortDifference < 0) {
-      setPaginationLength(defaultPaginationLength - Math.ceil(Math.abs(viewPortDifference) / paginationButtonWidth))
+      setPaginationLength(defaultPaginationLength - Math.ceil(Math.abs(viewPortDifference) / PAGINATION_BUTTON_WIDTH))
     } else {
       setPaginationLength(defaultPaginationLength)
     }
