@@ -5,7 +5,6 @@ import { transparentize } from 'polished'
 import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-
 type ColorProps = { color: string }
 type LoadingProps = { loading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
@@ -17,20 +16,6 @@ export const CoverImg = styled.div<{ bgImgUrl: string }>`
   background: url(${({ bgImgUrl }) => bgImgUrl});
   background-position: center;
   background-size: cover;
-`
-
-export const CoverImgOverlay = styled.div`
-  transition: opacity ${transitions.timings.regular} ${transitions.easing};
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background-color: ${colors.gray[800]};
-  mix-blend-mode: color;
-`
-
-export const CoverImgContainer = styled.div`
-  position: relative;
 `
 
 export const CoverImgOverlay = styled.div`
@@ -109,60 +94,6 @@ export const IconCircle = styled.div<ColorProps>`
 
 export const Title = styled(Text)<VariantProps>`
   margin-bottom: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(6) : sizes(4))};
-`
-
-// ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e
-export const PieChart = styled.div`
-  margin-right: ${sizes(2)};
-  background: ${transparentize(0.8, colors.gray[300])};
-  border-radius: 100%;
-  height: ${sizes(4)};
-  width: ${sizes(4)};
-  overflow: hidden;
-  position: relative;
-`
-
-export const PieSegment = styled.div<{ value: number }>`
-  --a: calc(var(--over50, 0) * -100%);
-  --b: calc((1 + var(--over50, 0)) * 100%);
-  --degrees: calc((var(--offset, 0) / 100) * 360);
-  --over50: ${({ value }) => (value > 50 ? 1 : 0)};
-  --pieChartValue: ${({ value }) => value};
-
-  -webkit-clip-path: polygon(var(--a) var(--a), var(--b) var(--a), var(--b) var(--b), var(--a) var(--b));
-  clip-path: polygon(var(--a) var(--a), var(--b) var(--a), var(--b) var(--b), var(--a) var(--b));
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  transform: translate(0, -50%) rotate(90deg) rotate(calc(var(--degrees) * 1deg));
-  transform-origin: 50% 100%;
-  z-index: calc(1 + var(--over50));
-
-  &::after,
-  &::before {
-    background: ${colors.gray[300]};
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 100%;
-  }
-
-  &::before {
-    --degrees: calc((var(--pieChartValue, 0) / 100) * 360);
-
-    transform: translate(0, 100%) rotate(calc(var(--degrees) * 1deg));
-    transform-origin: 50% 0%;
-  }
-
-  &::after {
-    opacity: var(--over50, 0);
-  }
-`
-
-export const VideosNumberContainer = styled.div`
-  align-self: end;
-  display: flex;
-  align-items: center;
 `
 
 // ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e
