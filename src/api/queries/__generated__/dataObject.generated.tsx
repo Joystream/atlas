@@ -6,17 +6,23 @@ import * as Types from './baseTypes.generated'
 const defaultOptions = {}
 export type GetDataObjectAvailabilityQueryVariables = Types.Exact<{
   joystreamContentIdEq?: Types.Maybe<Types.Scalars['String']>
+  joystreamContentIdIn?: Types.Maybe<Array<Types.Scalars['String']> | Types.Scalars['String']>
 }>
 
 export type GetDataObjectAvailabilityQuery = {
   __typename?: 'Query'
-  dataObjects: Array<{ __typename?: 'DataObject'; liaisonJudgement: Types.LiaisonJudgement }>
+  dataObjects: Array<{
+    __typename?: 'DataObject'
+    liaisonJudgement: Types.LiaisonJudgement
+    joystreamContentId: string
+  }>
 }
 
 export const GetDataObjectAvailabilityDocument = gql`
-  query GetDataObjectAvailability($joystreamContentIdEq: String) {
-    dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq }) {
+  query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContentIdIn: [String!]) {
+    dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
       liaisonJudgement
+      joystreamContentId
     }
   }
 `
@@ -34,6 +40,7 @@ export const GetDataObjectAvailabilityDocument = gql`
  * const { data, loading, error } = useGetDataObjectAvailabilityQuery({
  *   variables: {
  *      joystreamContentIdEq: // value for 'joystreamContentIdEq'
+ *      joystreamContentIdIn: // value for 'joystreamContentIdIn'
  *   },
  * });
  */

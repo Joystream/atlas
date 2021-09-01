@@ -1,5 +1,6 @@
-query GetDataObjectAvailability($joystreamContentIdEq: String) {
-  dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq }) {
+query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContentIdIn: [String!]) {
+  dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
     liaisonJudgement
+    joystreamContentId
   }
 }
