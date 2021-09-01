@@ -6,8 +6,6 @@ import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
 import { FeaturedVideoCategoryCard } from '.'
 
-import { FeaturedVideoCategoryCard } from '.'
-
 export default {
   title: 'Shared/V/VideoCategoryCard',
   argTypes: {
