@@ -38,6 +38,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   loading,
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
+
   return (
     <SwitchTransition>
       <CSSTransition
