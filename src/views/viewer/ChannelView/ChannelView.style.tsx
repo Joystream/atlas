@@ -142,6 +142,7 @@ export const TabsContainer = styled.div`
     'tabs tabs tabs'
     'search sort sort';
   align-items: baseline;
+  grid-template-rows: 1fr 78px;
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
