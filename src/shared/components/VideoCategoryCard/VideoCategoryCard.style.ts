@@ -10,12 +10,14 @@ type LoadingProps = { loading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
+  transition: opacity ${transitions.timings.regular} ${transitions.easing};
   position: relative;
   width: 100%;
   height: 100%;
   background: url(${({ bgImgUrl }) => bgImgUrl});
   background-position: center;
   background-size: cover;
+  opacity: 0.2;
 `
 
 export const CoverImgOverlay = styled.div`
@@ -55,8 +57,8 @@ export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
       opacity: 0;
     }
 
-    ${CoverImgOverlay} {
-      opacity: 0;
+    ${CoverImg} {
+      opacity: 1;
     }
   }
 `
