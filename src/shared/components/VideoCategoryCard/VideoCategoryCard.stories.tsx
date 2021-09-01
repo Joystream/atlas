@@ -13,6 +13,8 @@ export default {
   argTypes: {
     color: { defaultValue: '#D92E61' },
     variant: { defaultValue: 'default' },
+    categoryId: { defaultValue: '1' },
+    videosTotalCount: { defaultValue: 300 },
   },
   component: VideoCategoryCard,
 } as Meta

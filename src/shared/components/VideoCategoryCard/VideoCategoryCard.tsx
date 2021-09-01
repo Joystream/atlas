@@ -1,6 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useVideosConnection } from '@/api/hooks'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
@@ -23,7 +24,9 @@ export type VideoCategoryCardProps = {
   title: string
   icon: React.ReactNode
   coverImg: string
+  categoryId: string
   color: string
+  videosTotalCount: number | undefined
   variant?: 'default' | 'compact'
   loading?: boolean
 }
@@ -32,28 +35,38 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   variant = 'default',
   loading,
   title,
+  categoryId,
   icon,
+  videosTotalCount,
   coverImg,
   color,
 }) => {
-  // value from 1 to 100
-  const pieChartValue = 15
+  const { videosConnection, loading: loadingVidConnection } = useVideosConnection({
+    first: 0,
+    where: {
+      categoryId_eq: categoryId,
+    },
+  })
+
+  // value from 1 to 100 percentage
+  const pieChartValue = ((videosConnection?.totalCount ?? 0) / (videosTotalCount ?? 1)) * 100
+  const isLoading = loading || loadingVidConnection || videosTotalCount === undefined
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading ? 'placeholder' : 'content'}
+        key={isLoading ? 'placeholder' : 'content'}
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <GeneralContainer loading={loading} variantCategory={variant} color={color}>
+        <GeneralContainer loading={isLoading} variantCategory={variant} color={color}>
           <Content variantCategory={variant}>
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
             ) : (
               <IconCircle color={color}>{icon}</IconCircle>
             )}
 
-            {loading ? (
+            {isLoading ? (
               <SkeletonLoader
                 bottomSpace={variant === 'default' ? sizes(6) : sizes(4)}
                 width="192px"
@@ -66,7 +79,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
             )}
 
             <VideosNumberContainer>
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader width="80px" height={variant === 'default' ? '20px' : '16px'} />
               ) : (
                 <>
@@ -74,14 +87,14 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
                   <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
-                    123 videos
+                    {videosConnection?.totalCount} videos
                   </Text>
                 </>
               )}
             </VideosNumberContainer>
           </Content>
 
-          {variant === 'default' && !loading && (
+          {variant === 'default' && !isLoading && (
             <CoverImgContainer>
               <CoverImgOverlay></CoverImgOverlay>
               <CoverImg bgImgUrl={coverImg} />
