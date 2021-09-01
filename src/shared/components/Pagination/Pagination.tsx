@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
@@ -24,7 +24,6 @@ export const Pagination: React.FC<PaginationProps> = ({
   page = 0,
   onChangePage,
 }) => {
-  const paginationWrapperRef = useRef<HTMLDivElement>(null)
   const [paginationLength, setPaginationLength] = useState(defaultPaginationLength)
 
   const calculatePaginationLength = () => {
@@ -64,7 +63,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <PaginationWrapper ref={paginationWrapperRef}>
+    <PaginationWrapper>
       <ChevronButton
         variant="secondary"
         size="large"
