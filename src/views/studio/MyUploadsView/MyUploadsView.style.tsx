@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Text } from '@/shared/components/Text'
 import { sizes } from '@/shared/theme'
 

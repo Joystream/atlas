@@ -4,23 +4,23 @@ import { useCallback } from 'react'
 import { GetDataObjectAvailabilityQuery, useGetDataObjectAvailabilityLazyQuery } from '@/api/queries'
 
 type DataObjectOpts = QueryHookOptions<GetDataObjectAvailabilityQuery>
-export const useDataObjectAvailabilityLazy = (opts?: DataObjectOpts) => {
-  const [getDataObjectAvailability, { data, ...rest }] = useGetDataObjectAvailabilityLazyQuery(opts)
+export const useDataObjectsAvailabilityLazy = (opts?: DataObjectOpts) => {
+  const [getDataObjectsAvailability, { data, ...rest }] = useGetDataObjectAvailabilityLazyQuery(opts)
 
-  const _getDataObjectAvailability = useCallback(
-    (contentId) => {
-      getDataObjectAvailability({
+  const _getDataObjectsAvailability = useCallback(
+    (ids: string[]) => {
+      getDataObjectsAvailability({
         variables: {
-          joystreamContentIdEq: contentId,
+          joystreamContentIdIn: ids,
         },
       })
     },
-    [getDataObjectAvailability]
+    [getDataObjectsAvailability]
   )
 
   return {
-    getDataObjectAvailability: _getDataObjectAvailability,
-    dataObjectAvailability: data?.dataObjects.length ? data.dataObjects[0].liaisonJudgement : undefined,
+    getDataObjectsAvailability: _getDataObjectsAvailability,
+    dataObjects: data?.dataObjects,
     ...rest,
   }
 }
