@@ -1,0 +1,351 @@
+diff --git a/index.d.ts b/index.d.ts
+index e53607372161f70721fe2b17247929f3d92c0387..f609b5def8769cfd6e985faa6ab292331a2aa6d8 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -1,6 +1,6 @@
+ import * as React from "react";
+ import { Action } from "history";
+-import type { Blocker, History, InitialEntry, Location, PartialLocation, Path, State, To } from "history";
++import type { Blocker, History, InitialEntry, Location, Path, State, To } from "history";
+ /**
+  * A Navigator is a "location changer"; it's how you get to different locations.
+  *
+@@ -89,9 +89,13 @@ export interface RouterProps {
+  * @see https://reactrouter.com/api/Router
+  */
+ export declare function Router({ children, action, location, navigator, static: staticProp }: RouterProps): React.ReactElement;
++interface PartialLocation<S extends State = State> extends Omit<Partial<Location<S>>, "pathname"> {
++    pathname: string;
++}
+ export interface RoutesProps {
+     basename?: string;
+     children?: React.ReactNode;
++    location?: PartialLocation;
+ }
+ /**
+  * A container for a nested tree of <Route> elements that renders the branch
+@@ -99,7 +103,7 @@ export interface RoutesProps {
+  *
+  * @see https://reactrouter.com/api/Routes
+  */
+-export declare function Routes({ basename, children }: RoutesProps): React.ReactElement | null;
++export declare function Routes({ basename, children, location }: RoutesProps): React.ReactElement | null;
+ /**
+  * Blocks all navigation attempts. This is useful for preventing the page from
+  * changing until some condition is met, like saving form data.
+@@ -190,7 +194,7 @@ export declare function useResolvedPath(to: To): Path;
+  *
+  * @see https://reactrouter.com/api/useRoutes
+  */
+-export declare function useRoutes(partialRoutes: PartialRouteObject[], basename?: string): React.ReactElement | null;
++export declare function useRoutes(partialRoutes: PartialRouteObject[], basename?: string, location?: PartialLocation): React.ReactElement | null;
+ /**
+  * Creates a route config from an array of JavaScript objects. Used internally
+  * by `useRoutes` to normalize the route config.
+@@ -242,7 +246,7 @@ export declare function generatePath(path: string, params?: Params): string;
+  *
+  * @see https://reactrouter.com/api/matchRoutes
+  */
+-export declare function matchRoutes(routes: PartialRouteObject[], location: string | PartialLocation, basename?: string): RouteMatch[] | null;
++export declare function matchRoutes(routes: PartialRouteObject[], location: string | Partial<Location>, basename?: string): RouteMatch[] | null;
+ export interface RouteMatch {
+     route: RouteObject;
+     pathname: string;
+diff --git a/index.js b/index.js
+index 2d22a165a2130370e9975259edb1fb54b9d34ad4..3b62149e8005fb1bbbebaf749eda1d48786220e2 100644
+--- a/index.js
++++ b/index.js
+@@ -201,9 +201,9 @@ function Router(_ref4) {
+ function Routes(_ref5) {
+   var _ref5$basename = _ref5.basename,
+       basename = _ref5$basename === void 0 ? "" : _ref5$basename,
+-      children = _ref5.children;
++      children = _ref5.children,
++      location = _ref5.location;
+   var routes = createRoutesFromChildren(children);
+-  var location = useLocation();
+   return useRoutes_(routes, location, basename);
+ } ///////////////////////////////////////////////////////////////////////////////
+ // HOOKS
+@@ -313,9 +313,11 @@ function useNavigate() {
+   var navigator = useContext(NavigatorContext);
+ 
+   var _React$useContext = useContext(RouteContext),
+-      pathname = _React$useContext.pathname,
+       basename = _React$useContext.basename;
+ 
++  var _useLocation = useLocation(),
++      pathname = _useLocation.pathname;
++
+   var activeRef = useRef(false);
+   useEffect(function () {
+     activeRef.current = true;
+@@ -382,7 +384,7 @@ function useResolvedPath(to) {
+  * @see https://reactrouter.com/api/useRoutes
+  */
+ 
+-function useRoutes(partialRoutes, basename) {
++function useRoutes(partialRoutes, basename, location) {
+   if (basename === void 0) {
+     basename = "";
+   }
+@@ -390,14 +392,13 @@ function useRoutes(partialRoutes, basename) {
+   !useInRouterContext() ? process.env.NODE_ENV !== "production" ? invariant(false, // TODO: This error is probably because they somehow have 2 versions of the
+   // router loaded. We can help them understand how to avoid that.
+   "useRoutes() may be used only in the context of a <Router> component.") : invariant(false) : void 0;
+-  var location = useLocation();
+   var routes = useMemo(function () {
+     return createRoutesFromArray(partialRoutes);
+   }, [partialRoutes]);
+   return useRoutes_(routes, location, basename);
+ }
+ 
+-function useRoutes_(routes, location, basename) {
++function useRoutes_(routes, locationOverride, basename) {
+   if (basename === void 0) {
+     basename = "";
+   }
+@@ -416,6 +417,8 @@ function useRoutes_(routes, location, basename) {
+   }
+ 
+   var basenameForMatching = basename ? joinPaths([parentPathname, basename]) : parentPathname;
++  var contextLocation = useLocation();
++  var location = locationOverride !== null && locationOverride !== void 0 ? locationOverride : contextLocation;
+   var matches = useMemo(function () {
+     return matchRoutes(routes, location, basenameForMatching);
+   }, [location, routes, basenameForMatching]);
+diff --git a/index.js.map b/index.js.map
+index e8c26383bb9041c6b1d084312d4de4954a75d8b1..58f8e7e717bcd6fa8459fef0ee59d835cae68768 100644
+--- a/index.js.map
++++ b/index.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"index.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.useContext"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA0CE,QAAI;;;;;AAwBA;AAEA,8BAAA,CA1BA;KAAJ;;;;AAwCF,IAAM,kBAAN;;;;AAGE,IAAA,kBAAA,OAAA;AACA,4CAAA,QAAQ,eAAR;;AAED;;;;;;;2CAyEU;;;;gBAQD;QAEJ;QACA;;UAIE;;;;AAgBR;;;;;;;;;;;;;;;;;;;;;;;;;;AA2EE,IAAA;AACA,IAAA;;;;;;;;;;;;;;;;;;;;;;;;;SAoCM;;;;;;;;;;AAqBJ,IAAA;;;MAAA;;;AAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;MAmFO;oFAKN;;;;YAQQ;;AACC,MAAA,QAAA;;AAAkB,MAAA;;;;;;;;;;;SA0Bf;;;;;;;;AAWd;AAEA;;;;;;;;;;;;;;;;;;;AA2BI,aAAA;AAEA;;;;;AAkBA;iBAKW;;;;;;MAvBX;;;;;;;;;;;;;AAwDF;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA6CA;;;;;;;;;;;;;;;;iBA+BW;kBACD,QAAA,UAAkB,SAAlB;;;;;;;;;uBA0Da;;;;;;;;;;;;AAqBvB,IAAA,iBAAA,OAAA;;oDAIoE;AAAA,eAAA;aAAA,KAAA;AAAA;;;;;;;;AAW/D;;AAEH,8CAAA,OAAO,MAAA,8FAAA,CAAP;;gBAqBK;;;;;;;;;;qBAcU;SACdA,UAAA,aAAA;;;;;;;;;;;;;;;;;;;sCA2BqC;;;;;;;;AAQ1C;;;;;;;;;4CAYW;AAAA,cAAA;YAAA,KAAA;AAAA;;;;;;;;;SAsBN;;;AAGL,mBAAA,OAAA,UAAA,UAAA;;;;;sCAcqB;;;wCADnB;;6CAIW;AACX;;;;yJAUM;;;4BAac;;;;;;;;;;;;gBAsBR,mBAAA;;;QAAiD,cAAA;AAC7D,IAAA,SAAS,yBAAA,QAAA,CAAT;AAEA,kDAAuB,CAAC;AAEpB,MAAA,eAAe;AACf,MAAA;;wBAEgB,0BAAA,EAA+B,SAA/B;kBACN;AACE,QAAA,UAAA;;;MAPhB;GAHY,MAAA;;;;;;;;;;;;;;;;aA8CD;wBACO,CAAC;;;;;AAMnB,QAAI,qBAAJ;WAEO,CAAC;;;AAIR,gBAAA;;;;;;;;;;;;;gDAuBE;AAGF,QAAI,sCAAJ;;;;;;QASE,YAAA;;wBAIA,QACA,wBAAwB,CAAC,aAAA,SAAD;;;;gBAMW;AACjC,MAAA,aAAa,kBADoB;AAEjC,MAAA,eAAe,aAAA,CAAsB,aAAtB,KACF,IAHoB;AAIjC;AACA;;aAEG;AAP8B;;AAYrC,QAAI,QAAQ,KAAR,SAAJ;wBACoB,wBAAwB,CAAC,aAAA,SAAD;;qBAE3B;AACf,QAAA,cAAA,cAAA;;;;;;SAKC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"index.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.createContext","React.useContext","React.createElement","React.Fragment"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SAmCK;;;;;;;;;;;AA8BC,sBAAgB,QAAhB;;AAIH;;;;;AAYH,oBAAA,CAAqB,GAArB,MAAA,SAAA;gBACc;AACZ,IAAA,kBAAA,OAAA;AACA,4CAAA,QAAQ,eAAR;;;;oCAgDqBA,aAAA,CAA+B,IAA/B;;;;;AA2BvB;gCAEsB;;;;;QAShB;;;SAKC;;;;;;;;;;AAoDJ;;;AACG,SAAU,YAAV;;;;;;;;;;;;;;;;;AA6CJ,IAAA,UAAU;;;;;;;;;;;;;;;;;;;;;;;;;SAoCJ;;;;;;;;;;AAqBJ,IAAA;;;MAAA;;;AAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;MAmFO,uCAAa;GAInB,mBAAmB;;AAQI,IAAA;;;;;;YAEU,EAAE;;;;AA0BrC;;;;;;;;;;;;;;;;AAmBA;;;;;;;;;;;;;;;;;;;;AAyCE,QAAI,OACG,aAAa;;AAOlB,QAAA;;;;;YAQI;;;;;AAML,MAtBD;;;;;;;;;;;;qBA4CgB;;;;aAUT;kBAKO,CAAC;AAChB;AAGD;;;;;;;;;;;;;;;;;;;;AAwBI,oBAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;MA+GE,6BAAA;;;MACA,wBAAA;;yBAEqB;wBACV;;;;;;;;;AAOX,iBAAW,eAAX;;OAAA,MAGO;YACD,IAAI;;;;;;;;;;;;;;;;;SAgDPC,UAAA,CAAiB,YAAjB;;;;;;;;;;;;;;;;;;AAsBH,wBAAA,GAAA;;;;;;sBAGe,CAAC,EAAD,UAAA,UAAA;;;;;;;;;;;;;;;;;GA4BnB;;;;;;;;;SAeK;;;;;;uCAWL;MACU,oCAAV;MACM;;;;;;kBASM,kBAAkB;;;;;;;;;MAgC7B;;gBAIW;AAEZ;;;;;kBAKoB;;;;;AAEpB,IAAA,2CAAA;AAEA;;AAcI,MAAA,OAAiB;sBAAA;+DAAA;kBAIT,SAAS,gCAAA,CAJA;0BAAA;;AAAA;MAdrB;;;;;;;;;;;;;;;sCAwCyB;mBAGV,UAAA;;iCAGgB;;eAEtB,oBAAA,iBAAwBC,aAAA,CAAC,MAAD,MAAA;;;QAE/B,aACO;YAEH;;;;;;;;;;;;;;;YA2BE;;QAKN;;;AAGA;;;yBAIqBC;AACnB;AACA,MAAA,WAAA,CAAY,KAAZ,OAAA,EAGE,gDAHF;;;;;mBAWW;;;;;;;;gCAOa;qBACf;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/react-router.development.js b/react-router.development.js
+index 4a40f428d1b8c953efef7f4648e710f26653d6bf..16268878acbee7246cb6fd07c8d2551e4d520045 100644
+--- a/react-router.development.js
++++ b/react-router.development.js
+@@ -172,10 +172,10 @@ function Router({
+ 
+ function Routes({
+   basename = "",
+-  children
++  children,
++  location
+ }) {
+   let routes = createRoutesFromChildren(children);
+-  let location = useLocation();
+   return useRoutes_(routes, location, basename);
+ } ///////////////////////////////////////////////////////////////////////////////
+ // HOOKS
+@@ -281,9 +281,11 @@ function useNavigate() {
+   `useNavigate() may be used only in the context of a <Router> component.`)  : void 0;
+   let navigator = useContext(NavigatorContext);
+   let {
+-    pathname,
+     basename
+   } = useContext(RouteContext);
++  let {
++    pathname
++  } = useLocation();
+   let activeRef = useRef(false);
+   useEffect(() => {
+     activeRef.current = true;
+@@ -344,16 +346,15 @@ function useResolvedPath(to) {
+  * @see https://reactrouter.com/api/useRoutes
+  */
+ 
+-function useRoutes(partialRoutes, basename = "") {
++function useRoutes(partialRoutes, basename = "", location) {
+   !useInRouterContext() ?  invariant(false, // TODO: This error is probably because they somehow have 2 versions of the
+   // router loaded. We can help them understand how to avoid that.
+   `useRoutes() may be used only in the context of a <Router> component.`)  : void 0;
+-  let location = useLocation();
+   let routes = useMemo(() => createRoutesFromArray(partialRoutes), [partialRoutes]);
+   return useRoutes_(routes, location, basename);
+ }
+ 
+-function useRoutes_(routes, location, basename = "") {
++function useRoutes_(routes, locationOverride, basename = "") {
+   let {
+     route: parentRoute,
+     pathname: parentPathname,
+@@ -369,6 +370,8 @@ function useRoutes_(routes, location, basename = "") {
+   }
+ 
+   let basenameForMatching = basename ? joinPaths([parentPathname, basename]) : parentPathname;
++  let contextLocation = useLocation();
++  let location = locationOverride !== null && locationOverride !== void 0 ? locationOverride : contextLocation;
+   let matches = useMemo(() => matchRoutes(routes, location, basenameForMatching), [location, routes, basenameForMatching]);
+ 
+   if (!matches) {
+diff --git a/react-router.development.js.map b/react-router.development.js.map
+index 1a7a391aa13c4a137c751725328621d1085421c7..bac7e9ecbf1fd1036b7bde5f77f5656ed025dbb2 100644
+--- a/react-router.development.js.map
++++ b/react-router.development.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"react-router.development.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.useContext"],"mappings":";;;;;;;;;;;;;;AA0CE,QAAI;;;;;AAwBA;AAEA,8BAAA,CA1BA;KAAJ;;;;AAwCF,MAAM,kBAAN;;;;AAGE,IAAA,kBAAA,OAAA;AACA,KAAA,QAAQ,eAAR;;AAED;;;;;;;AAyEU;;;;kBAQD;QAEJ;QACA;;UAIE;;;;;;;;;;;;;;;;;;;;;;;;;;;;;MAuFF,MAAA,UAAA;AAIJ,IAAA;AACA,IAAA;;;;;;;;;;;;;;;;;;;;SAoCM;;;;;;;AAON;;;;AAcE,IAAA;;;MAAA;;;AAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QAmFK,EAAE,UAAU;;6CAKhB,uDAAA;;;;YAQQ;;AACC,MAAA;;AAAkB,MAAA;;;;;;;;;;;SA0Bf;;;;;;;;AAWd;AAEA;;;;;;;;;;;;;;;AA2BI,aAAA;AAEA;+BAIE;;;;;AAcF;iBAKW;;;;;;MAvBX;;;;;;;;;;;;;AAwDF;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;AA4CA;;;;;;;;;;;;;;;;iBA+BW;kBACD,QAAA,UAAkB,SAAlB;;;;;;;;;uBA0Da;;;;;MAYnB;YAAA;;AAAA;;;AASJ,IAAA,iBAAA,OAAA;;mDAIoE;;;;;;;AAW/D;;AAEH,OAAA,OAAO,MAAA,8FAAA,CAAP;;gBAqBK;;;;;;;;;;qBAcU;SACdA,UAAA,aAAA;;;;;;;;;;;;;;;;;;;;;;iBA2BqC;;;AAQ1C;;;;;;;;;iDAYW;;;;;;SAsBN;;;AAGL,mBAAA,OAAA,UAAA,eAAA;;;;AAaE,IAAA;iBACmB;;EAGR;AACX;;;;uJAUM,yIAKJ,sGAEA,qEACA;;;4BAKkB;;;;;;;;;;gBAsBR,mBAAA;;;AAAiD,IAAA;;AAC7D,IAAA,SAAS,GAAG,cAAA;;AAAA,KAAZ;AAEA,kDAAuB,CAAC;AAEpB,MAAA,eAAe;AACf,MAAA;;wBAEgB;aAA+B;SAA/B;kBACN;AACE,QAAA;;;MAPhB;GAHY,MAAA;;;;;;;;;;;;;;;;aA8CD;wBACO,CAAC;;;;;AAMnB,QAAI,qBAAJ;WAEO,CAAC;;;AAIR,gBAAA;;;;;;;;;;;;;wCAuBE;AAGF,QAAI,sCAAJ;;;;;;QASE,YAAA;;wBAIA,QACA,wBAAwB,CAAC,aAAA,SAAD;;;;gBAMW;AACjC,MAAA,aAAa,kBADoB;AAEjC,MAAA,eAAe,aAAA,CAAsB,aAAtB,KACF,IAHoB;AAIjC;AACA;;;AALiC;;AAYrC,QAAI,QAAQ,KAAR,SAAJ;wBACoB,wBAAwB,CAAC,aAAA,SAAD;;qBAE3B;AACf,QAAA,cAAA,cAAA;;;;;;SAKC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"react-router.development.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.createContext","React.useContext","React.createElement","React.Fragment"],"mappings":";;;;;;;;;SAmCK;;;;;;;;;;;AA8BC,sBAAgB,QAAhB;;AAIH;;;;;AAYH,oBAAA,CAAqB,GAArB,MAAA,SAAA;gBACc;AACZ,IAAA,kBAAA,OAAA;AACA,KAAA,QAAQ,eAAR;;;;sCAgDqBA,aAAA,CAA+B,IAA/B;;;;;;gCA6BD;;;;;QAShB;;;SAKC;;;;;;;;;;AAoDJ;;;AACG,SAAU,YAAV;;;;CAAA;;;;;;;;;;;;;AA6CJ,IAAA,UAAU;;;;;;;;;;;;;;;;;;;;SAoCJ;;;;;;;AAON;;;;AAcE,IAAA;;;MAAA;;;AAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QAmFK,EAAE,UAAU,GAAG;;GAInB,mBAAmB,iFAEjB;;AAMqB,IAAA;;;;;;YAEU,EAAE;;;;AA0BrC;;;;;;;;;;;;;;;;AAmBA;;;;;;;;;;;;AAqBE;;;;AAoBA,QAAI,OACG,aAAa;+BAMlB;;AACA,QAAA;;;;;YAQI;;;;;AAML,MAtBD;;;;;;;;;;;;qBA4CgB;;;;aAUT;kBAKO,CAAC;AAChB;AAGD;;;;;;;;;;;;;;;;;;;;AAwBI,oBAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA+GE,IAAA;;;AACA,IAAA;;yBAEqB;kBACV;;;;;AAOX,iBAAW,eAAX;;OAAA,MAGO;YACD,IAAI;;;;+EAwBV;;;;;;;;;;;;;SAwBGC,UAAA,CAAiB,YAAjB;;;;;;;;;;;;;;;;;;AAsBH,wBAAA,GAAA;MACA;YAAA;;AAAA;kCAEe,CAAC,EAAD,UAAA,UAAA;;;;;;;;;;;;GA4BnB;;;;;;;SAeK;;AAWL,IAAA;AACA,IAAA,UAAU;YACJ;;;;;;;kBASM,kBAAkB;mJAQ5B,kBAAkB,oDAElB;;;;;;mFAsBD;;gBAIW;AAEZ;;;;;kBAKoB;;;;;;AAEpB,IAAA;;KAAA;AAEA;;AAcI,MAAA,OAAiB;cAAA;;;UAAA;kBAIT,SAAS,gCAAA,CAJA;gBAAA;;AAAA;MAdrB;;;;;;;;;;;;;;;sCAwCyB;mBAGV;;iCAGgB;;eAEtB,oBAAA,iBAAwBC,aAAA,CAAC,MAAD,MAAA;;;QAE/B,aACO;YAEH;;;;;;;;;;;;;;;YA2BE;;QAKN;;;AAGA;;;yBAIqBC;AACnB;AACA,MAAA,WAAA,CAAY,KAAZ,OAAA,EAGE,gDAHF;;;;;mBAWW;;;;;;;;gCAOa;qBACf;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/react-router.production.min.js b/react-router.production.min.js
+index e73dbda0eccb7b2f6aeef6731d8ba631bf113a76..79c34ece772959dd917ce415459b2dc5352a28ad 100644
+--- a/react-router.production.min.js
++++ b/react-router.production.min.js
+@@ -1,2 +1,2 @@
+-import{createContext as e,useRef as t,useState as n,useLayoutEffect as r,createElement as l,useContext as a,useEffect as i,useMemo as c,useCallback as u,Children as o,isValidElement as s,Fragment as p}from"react";import{createMemoryHistory as h,Action as f,parsePath as m}from"history";function d(e,t){if(!e)throw new Error(t)}const g=e(null),v=e({static:!1}),S=e({outlet:null,params:{},pathname:"",basename:"",route:null});function y({children:e,initialEntries:a,initialIndex:i}){let c=t();null==c.current&&(c.current=h({initialEntries:a,initialIndex:i}));let u=c.current,[o,s]=n({action:u.action,location:u.location});return r(()=>u.listen(s),[u]),l(b,{children:e,action:o.action,location:o.location,navigator:u})}function E({to:e,replace:t,state:n}){N()||d(!1);let r=U();return i(()=>{r(e,{replace:t,state:n})}),null}function x(e){return A()}function $({element:e=l(x,null)}){return e}function b({children:e=null,action:t=f.Pop,location:n,navigator:r,static:a=!1}){return N()&&d(!1),l(g.Provider,{value:r},l(v.Provider,{children:e,value:{action:t,location:n,static:a}}))}function w({basename:e="",children:t}){return O(k(t),P(),e)}function W(e,t=!0){N()||d(!1);let n=a(g);i(()=>{if(!t)return;let r=n.block(t=>{let n={...t,retry(){r(),t.retry()}};e(n)});return r},[n,e,t])}function C(e){N()||d(!1);let t=a(g),n=I(e);return t.createHref(n)}function N(){return null!=a(v).location}function P(){return N()||d(!1),a(v).location}function R(e){return N()||d(!1),D(e,P().pathname)}function U(){N()||d(!1);let e=a(g),{pathname:n,basename:r}=a(S),l=t(!1);return i(()=>{l.current=!0}),u((t,a={})=>{if(l.current)if("number"==typeof t)e.go(t);else{let l=G(t,n,r);(a.replace?e.replace:e.push)(l,a.state)}},[r,e,n])}function A(){return a(S).outlet}function F(){return a(S).params}function I(e){let{pathname:t,basename:n}=a(S);return c(()=>G(e,t,n),[e,t,n])}function _(e,t=""){N()||d(!1);let n=P();return O(c(()=>j(e),[e]),n,t)}function O(e,t,n=""){let{route:r,pathname:i,params:u}=a(S),o=n?K([i,n]):i,s=c(()=>L(e,t,o),[t,e,o]);if(!s)return null;let p={};return s.reduceRight((e,{params:t,pathname:r,route:a})=>(p={...p,...t},l(S.Provider,{children:a.element,value:{outlet:e,params:{...u,...p},pathname:K([o,r]),basename:n,route:a}})),null)}function j(e){return e.map(e=>{let t={path:e.path||"/",caseSensitive:!0===e.caseSensitive,element:e.element||l(x,null)};return e.children&&(t.children=j(e.children)),t})}function k(e){let t=[];return o.forEach(e,e=>{if(!s(e))return;if(e.type===p)return void t.push.apply(t,k(e.props.children));let n={path:e.props.path||"/",caseSensitive:!0===e.props.caseSensitive,element:e};if(e.props.children){let t=k(e.props.children);t.length&&(n.children=t)}t.push(n)}),t}function H(e,t={}){return e.replace(/:(\w+)/g,(e,n)=>(null==t[n]&&d(!1),t[n])).replace(/\/*\*$/,e=>null==t["*"]?"":t["*"].replace(/^\/*/,"/"))}function L(e,t,n=""){"string"==typeof t&&(t=m(t));let r=t.pathname||"/";if(n){let e=n.replace(/^\/*/,"/").replace(/\/+$/,"");if(!r.startsWith(e))return null;r=r===e?"/":r.slice(e.length)}let l=function e(t,n=[],r="",l=[],a=[]){return t.forEach((t,i)=>{t={...t,path:t.path||"/",caseSensitive:!!t.caseSensitive,element:t.element};let c=K([r,t.path]),u=l.concat(t),o=a.concat(i);t.children&&e(t.children,n,c,u,o),n.push([c,u,o])}),n}(e);!function(e){let t=e.reduce((e,[t])=>(e[t]=function(e){let t=e.split("/"),n=t.length;t.some(z)&&(n+=-2);return t.filter(e=>!z(e)).reduce((e,t)=>e+(q.test(t)?2:""===t?1:10),n)}(t),e),{});!function(e,t){let n=e.slice(0);e.sort((e,r)=>t(e,r)||n.indexOf(e)-n.indexOf(r))}(e,(e,n)=>{let[r,,l]=e,a=t[r],[i,,c]=n,u=t[i];return a!==u?u-a:function(e,t){return e.length===t.length&&e.slice(0,-1).every((e,n)=>e===t[n])?e[e.length-1]-t[t.length-1]:0}(l,c)})}(l);let a=null;for(let i=0;null==a&&i<l.length;++i)a=B(l[i],r);return a}const q=/^:\w+$/,z=e=>"*"===e;function B(e,t){let n=e[1],r="/",l={},a=[];for(let i=0;i<n.length;++i){let e=n[i],c="/"===r?t:t.slice(r.length)||"/",u=D({path:e.path,caseSensitive:e.caseSensitive,end:i===n.length-1},c);if(!u)return null;r=K([r,u.pathname]),l={...l,...u.params},a.push({route:e,pathname:r,params:l})}return a}function D(e,t){"string"==typeof e&&(e={path:e});let{path:n,caseSensitive:r=!1,end:l=!0}=e,[a,i]=function(e,t,n){let r=[],l="^("+e.replace(/^\/*/,"/").replace(/\/?\*?$/,"").replace(/[\\.*+^$?{}|()[\]]/g,"\\$&").replace(/:(\w+)/g,(e,t)=>(r.push(t),"([^\\/]+)"))+")";e.endsWith("*")?(e.endsWith("/*")?l+="(?:\\/(.+)|\\/?)":l+="(.*)",r.push("*")):n&&(l+="\\/?");n&&(l+="$");let a=t?void 0:"i";return[new RegExp(l,a),r]}(n,r,l),c=t.match(a);if(!c)return null;let u=c[1],o=c.slice(2);return{path:n,pathname:u,params:i.reduce((e,t,n)=>(e[t]=function(e,t){try{return decodeURIComponent(e)}catch(n){return e}}(o[n]||""),e),{})}}function G(e,t="/",n=""){let{pathname:r,search:l="",hash:a=""}="string"==typeof e?m(e):e;return{pathname:r?function(e,t){let n=M((r=t,r.replace(/\/+$/,"")));var r;return M(e).forEach(e=>{".."===e?n.length>1&&n.pop():"."!==e&&n.push(e)}),n.length>1?K(n):"/"}(r,r.startsWith("/")?n?J("/"+n):"/":t):t,search:Q(l),hash:T(a)}}const J=e=>e.replace(/\/\/+/g,"/"),K=e=>J(e.join("/")),M=e=>J(e).split("/"),Q=e=>e&&"?"!==e?e.startsWith("?")?e:"?"+e:"",T=e=>e&&"#"!==e?e.startsWith("#")?e:"#"+e:"";export{y as MemoryRouter,E as Navigate,x as Outlet,$ as Route,b as Router,w as Routes,v as UNSAFE_LocationContext,g as UNSAFE_NavigatorContext,S as UNSAFE_RouteContext,j as createRoutesFromArray,k as createRoutesFromChildren,H as generatePath,D as matchPath,L as matchRoutes,G as resolvePath,W as useBlocker,C as useHref,N as useInRouterContext,P as useLocation,R as useMatch,U as useNavigate,A as useOutlet,F as useParams,I as useResolvedPath,_ as useRoutes};
++import{createContext as e,useRef as t,useState as n,useLayoutEffect as r,createElement as l,useContext as a,useEffect as i,useMemo as c,useCallback as u,Children as o,isValidElement as s,Fragment as p}from"react";import{createMemoryHistory as h,Action as f,parsePath as m}from"history";function d(e,t){if(!e)throw new Error(t)}const g=e(null),v=e({static:!1}),S=e({outlet:null,params:{},pathname:"",basename:"",route:null});function y({children:e,initialEntries:a,initialIndex:i}){let c=t();null==c.current&&(c.current=h({initialEntries:a,initialIndex:i}));let u=c.current,[o,s]=n({action:u.action,location:u.location});return r(()=>u.listen(s),[u]),l(b,{children:e,action:o.action,location:o.location,navigator:u})}function E({to:e,replace:t,state:n}){N()||d(!1);let r=U();return i(()=>{r(e,{replace:t,state:n})}),null}function x(e){return A()}function $({element:e=l(x,null)}){return e}function b({children:e=null,action:t=f.Pop,location:n,navigator:r,static:a=!1}){return N()&&d(!1),l(g.Provider,{value:r},l(v.Provider,{children:e,value:{action:t,location:n,static:a}}))}function w({basename:e="",children:t,location:n}){return O(k(t),n,e)}function W(e,t=!0){N()||d(!1);let n=a(g);i(()=>{if(!t)return;let r=n.block(t=>{let n={...t,retry(){r(),t.retry()}};e(n)});return r},[n,e,t])}function C(e){N()||d(!1);let t=a(g),n=I(e);return t.createHref(n)}function N(){return null!=a(v).location}function P(){return N()||d(!1),a(v).location}function R(e){return N()||d(!1),D(e,P().pathname)}function U(){N()||d(!1);let e=a(g),{basename:n}=a(S),{pathname:r}=P(),l=t(!1);return i(()=>{l.current=!0}),u((t,a={})=>{if(l.current)if("number"==typeof t)e.go(t);else{let l=G(t,r,n);(a.replace?e.replace:e.push)(l,a.state)}},[n,e,r])}function A(){return a(S).outlet}function F(){return a(S).params}function I(e){let{pathname:t,basename:n}=a(S);return c(()=>G(e,t,n),[e,t,n])}function _(e,t="",n){return N()||d(!1),O(c(()=>j(e),[e]),n,t)}function O(e,t,n=""){let{route:r,pathname:i,params:u}=a(S),o=n?K([i,n]):i,s=P(),p=null!=t?t:s,h=c(()=>L(e,p,o),[p,e,o]);if(!h)return null;let f={};return h.reduceRight((e,{params:t,pathname:r,route:a})=>(f={...f,...t},l(S.Provider,{children:a.element,value:{outlet:e,params:{...u,...f},pathname:K([o,r]),basename:n,route:a}})),null)}function j(e){return e.map(e=>{let t={path:e.path||"/",caseSensitive:!0===e.caseSensitive,element:e.element||l(x,null)};return e.children&&(t.children=j(e.children)),t})}function k(e){let t=[];return o.forEach(e,e=>{if(!s(e))return;if(e.type===p)return void t.push.apply(t,k(e.props.children));let n={path:e.props.path||"/",caseSensitive:!0===e.props.caseSensitive,element:e};if(e.props.children){let t=k(e.props.children);t.length&&(n.children=t)}t.push(n)}),t}function H(e,t={}){return e.replace(/:(\w+)/g,(e,n)=>(null==t[n]&&d(!1),t[n])).replace(/\/*\*$/,e=>null==t["*"]?"":t["*"].replace(/^\/*/,"/"))}function L(e,t,n=""){"string"==typeof t&&(t=m(t));let r=t.pathname||"/";if(n){let e=n.replace(/^\/*/,"/").replace(/\/+$/,"");if(!r.startsWith(e))return null;r=r===e?"/":r.slice(e.length)}let l=function e(t,n=[],r="",l=[],a=[]){return t.forEach((t,i)=>{t={...t,path:t.path||"/",caseSensitive:!!t.caseSensitive,element:t.element};let c=K([r,t.path]),u=l.concat(t),o=a.concat(i);t.children&&e(t.children,n,c,u,o),n.push([c,u,o])}),n}(e);!function(e){let t=e.reduce((e,[t])=>(e[t]=function(e){let t=e.split("/"),n=t.length;t.some(z)&&(n+=-2);return t.filter(e=>!z(e)).reduce((e,t)=>e+(q.test(t)?2:""===t?1:10),n)}(t),e),{});!function(e,t){let n=e.slice(0);e.sort((e,r)=>t(e,r)||n.indexOf(e)-n.indexOf(r))}(e,(e,n)=>{let[r,,l]=e,a=t[r],[i,,c]=n,u=t[i];return a!==u?u-a:function(e,t){return e.length===t.length&&e.slice(0,-1).every((e,n)=>e===t[n])?e[e.length-1]-t[t.length-1]:0}(l,c)})}(l);let a=null;for(let i=0;null==a&&i<l.length;++i)a=B(l[i],r);return a}const q=/^:\w+$/,z=e=>"*"===e;function B(e,t){let n=e[1],r="/",l={},a=[];for(let i=0;i<n.length;++i){let e=n[i],c="/"===r?t:t.slice(r.length)||"/",u=D({path:e.path,caseSensitive:e.caseSensitive,end:i===n.length-1},c);if(!u)return null;r=K([r,u.pathname]),l={...l,...u.params},a.push({route:e,pathname:r,params:l})}return a}function D(e,t){"string"==typeof e&&(e={path:e});let{path:n,caseSensitive:r=!1,end:l=!0}=e,[a,i]=function(e,t,n){let r=[],l="^("+e.replace(/^\/*/,"/").replace(/\/?\*?$/,"").replace(/[\\.*+^$?{}|()[\]]/g,"\\$&").replace(/:(\w+)/g,(e,t)=>(r.push(t),"([^\\/]+)"))+")";e.endsWith("*")?(e.endsWith("/*")?l+="(?:\\/(.+)|\\/?)":l+="(.*)",r.push("*")):n&&(l+="\\/?");n&&(l+="$");let a=t?void 0:"i";return[new RegExp(l,a),r]}(n,r,l),c=t.match(a);if(!c)return null;let u=c[1],o=c.slice(2);return{path:n,pathname:u,params:i.reduce((e,t,n)=>(e[t]=function(e,t){try{return decodeURIComponent(e)}catch(n){return e}}(o[n]||""),e),{})}}function G(e,t="/",n=""){let{pathname:r,search:l="",hash:a=""}="string"==typeof e?m(e):e;return{pathname:r?function(e,t){let n=M((r=t,r.replace(/\/+$/,"")));var r;return M(e).forEach(e=>{".."===e?n.length>1&&n.pop():"."!==e&&n.push(e)}),n.length>1?K(n):"/"}(r,r.startsWith("/")?n?J("/"+n):"/":t):t,search:Q(l),hash:T(a)}}const J=e=>e.replace(/\/\/+/g,"/"),K=e=>J(e.join("/")),M=e=>J(e).split("/"),Q=e=>e&&"?"!==e?e.startsWith("?")?e:"?"+e:"",T=e=>e&&"#"!==e?e.startsWith("#")?e:"#"+e:"";export{y as MemoryRouter,E as Navigate,x as Outlet,$ as Route,b as Router,w as Routes,v as UNSAFE_LocationContext,g as UNSAFE_NavigatorContext,S as UNSAFE_RouteContext,j as createRoutesFromArray,k as createRoutesFromChildren,H as generatePath,D as matchPath,L as matchRoutes,G as resolvePath,W as useBlocker,C as useHref,N as useInRouterContext,P as useLocation,R as useMatch,U as useNavigate,A as useOutlet,F as useParams,I as useResolvedPath,_ as useRoutes};
+ //# sourceMappingURL=react-router.production.min.js.map
+diff --git a/react-router.production.min.js.map b/react-router.production.min.js.map
+index 40e2f3b41e9773dfd37bb086e8e7867dfc398192..20fed1551a3604255452fde7cf212f3d9e6c63f0 100644
+--- a/react-router.production.min.js.map
++++ b/react-router.production.min.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"react-router.production.min.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["action","location","Navigate","navigate","staticProp","static","Routes","useLocation","pathname","basename","activeRef","navigator","React.useContext","RouteContext","useRoutes_","params","matches","route","allParams","Provider","children","value","joinPaths","path","partialRoute","element","routes","createRoutesFromChildren","caseSensitive","props"],"mappings":"skBA2QEA,gBACAC,+HAoCMC,+DAqBJC,6KA0FIC,gFAcGJ,OAAAA,aAAkBK,sBA0BfC,2XA8KDC,kDAuEPC,WAAAC,uCASJC,wIAsCOC,0BAeJC,uFA2BqCC,iFA0CrCC,uBAGL,4CAaEC,YACmBF,KA2BCJ,yEAsBRO,sCAAiDC,MAAAA,MAC7DC,EAAY,gBAEYC,UAEpBC,mBACAC,gCAE+CH,YACrCI,SACEb,SAAAA,iEAqCGc,kFAMfC,eAEIJ,6FAuCNK,oCAIAC,EACAC,EAAyBF,yBAMU,CACjCF,uBACAK,eACa,IADEH,QAAsBG,4BAUrCH,EAAQI,sBACQF,EAAyBF,6BAG3CR,0BAKCS"}
+\ No newline at end of file
++{"version":3,"file":"react-router.production.min.js","sources":["../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.createContext","MemoryRouter","location","history","Navigate","navigate","staticProp","value","unblock","block","[object Object]","useResolvedPath","createHref","basename","pathname","to","path","React.useContext","RouteContext","useInRouterContext","useRoutes_","route","parentPathname","parentParams","allParams","joinPaths","partialRoute","React.createElement","Outlet","children","React.Fragment","routes","apply","createRoutesFromChildren"],"mappings":"+UAoIuBA,EAA+B,gFA2C/C,OAqDD,SAAUC,qKA6CdC,SAAUC,sHAoCJC,+DAqBJC,6KA0FIC,GAAa,oCAYIC,oEAEYD,4IAsF/BE,IACgBC,sBAOlBC,wFA8CKC,cAKQC,sDA4Bb,4IA+GEC,kBACAC,YAEqB,8EAQVC,cAGJ,KACDC,kFAgDHC,EAAiBC,0CAsBpB,kBACAJ,WAAAD,gCAEgBE,4CA4BpBI,2CAeKC,gBAWLC,QACAP,SAAUQ,SACJC,6DAyCLrB,gCAWmB,4DAEpBsB,+CAgBIjB,MAAiB,sCAITkB,iEAyBGC,wBAGgB,+CAEtBA,WAAwBC,EAACC,gBAEhCF,EACOG,aAEHA,sGAuCiBC,cAEnBC,OAAYC,QAGVC,2HAesB"}
+\ No newline at end of file
+diff --git a/umd/index.d.ts b/umd/index.d.ts
+index e53607372161f70721fe2b17247929f3d92c0387..f609b5def8769cfd6e985faa6ab292331a2aa6d8 100644
+--- a/umd/index.d.ts
++++ b/umd/index.d.ts
+@@ -1,6 +1,6 @@
+ import * as React from "react";
+ import { Action } from "history";
+-import type { Blocker, History, InitialEntry, Location, PartialLocation, Path, State, To } from "history";
++import type { Blocker, History, InitialEntry, Location, Path, State, To } from "history";
+ /**
+  * A Navigator is a "location changer"; it's how you get to different locations.
+  *
+@@ -89,9 +89,13 @@ export interface RouterProps {
+  * @see https://reactrouter.com/api/Router
+  */
+ export declare function Router({ children, action, location, navigator, static: staticProp }: RouterProps): React.ReactElement;
++interface PartialLocation<S extends State = State> extends Omit<Partial<Location<S>>, "pathname"> {
++    pathname: string;
++}
+ export interface RoutesProps {
+     basename?: string;
+     children?: React.ReactNode;
++    location?: PartialLocation;
+ }
+ /**
+  * A container for a nested tree of <Route> elements that renders the branch
+@@ -99,7 +103,7 @@ export interface RoutesProps {
+  *
+  * @see https://reactrouter.com/api/Routes
+  */
+-export declare function Routes({ basename, children }: RoutesProps): React.ReactElement | null;
++export declare function Routes({ basename, children, location }: RoutesProps): React.ReactElement | null;
+ /**
+  * Blocks all navigation attempts. This is useful for preventing the page from
+  * changing until some condition is met, like saving form data.
+@@ -190,7 +194,7 @@ export declare function useResolvedPath(to: To): Path;
+  *
+  * @see https://reactrouter.com/api/useRoutes
+  */
+-export declare function useRoutes(partialRoutes: PartialRouteObject[], basename?: string): React.ReactElement | null;
++export declare function useRoutes(partialRoutes: PartialRouteObject[], basename?: string, location?: PartialLocation): React.ReactElement | null;
+ /**
+  * Creates a route config from an array of JavaScript objects. Used internally
+  * by `useRoutes` to normalize the route config.
+@@ -242,7 +246,7 @@ export declare function generatePath(path: string, params?: Params): string;
+  *
+  * @see https://reactrouter.com/api/matchRoutes
+  */
+-export declare function matchRoutes(routes: PartialRouteObject[], location: string | PartialLocation, basename?: string): RouteMatch[] | null;
++export declare function matchRoutes(routes: PartialRouteObject[], location: string | Partial<Location>, basename?: string): RouteMatch[] | null;
+ export interface RouteMatch {
+     route: RouteObject;
+     pathname: string;
+diff --git a/umd/react-router.development.js b/umd/react-router.development.js
+index 485b9fdfbbe8587911652fcb37ee5612f58f1df2..1699a52313fd0d43c4336535bce4de469211fb29 100644
+--- a/umd/react-router.development.js
++++ b/umd/react-router.development.js
+@@ -202,9 +202,9 @@
+   function Routes(_ref5) {
+     var _ref5$basename = _ref5.basename,
+         basename = _ref5$basename === void 0 ? "" : _ref5$basename,
+-        children = _ref5.children;
++        children = _ref5.children,
++        location = _ref5.location;
+     var routes = createRoutesFromChildren(children);
+-    var location = useLocation();
+     return useRoutes_(routes, location, basename);
+   } ///////////////////////////////////////////////////////////////////////////////
+   // HOOKS
+@@ -314,9 +314,11 @@
+     var navigator = React.useContext(NavigatorContext);
+ 
+     var _React$useContext = React.useContext(RouteContext),
+-        pathname = _React$useContext.pathname,
+         basename = _React$useContext.basename;
+ 
++    var _useLocation = useLocation(),
++        pathname = _useLocation.pathname;
++
+     var activeRef = React.useRef(false);
+     React.useEffect(function () {
+       activeRef.current = true;
+@@ -383,7 +385,7 @@
+    * @see https://reactrouter.com/api/useRoutes
+    */
+ 
+-  function useRoutes(partialRoutes, basename) {
++  function useRoutes(partialRoutes, basename, location) {
+     if (basename === void 0) {
+       basename = "";
+     }
+@@ -391,14 +393,13 @@
+     !useInRouterContext() ?  invariant(false, // TODO: This error is probably because they somehow have 2 versions of the
+     // router loaded. We can help them understand how to avoid that.
+     "useRoutes() may be used only in the context of a <Router> component.")  : void 0;
+-    var location = useLocation();
+     var routes = React.useMemo(function () {
+       return createRoutesFromArray(partialRoutes);
+     }, [partialRoutes]);
+     return useRoutes_(routes, location, basename);
+   }
+ 
+-  function useRoutes_(routes, location, basename) {
++  function useRoutes_(routes, locationOverride, basename) {
+     if (basename === void 0) {
+       basename = "";
+     }
+@@ -417,6 +418,8 @@
+     }
+ 
+     var basenameForMatching = basename ? joinPaths([parentPathname, basename]) : parentPathname;
++    var contextLocation = useLocation();
++    var location = locationOverride !== null && locationOverride !== void 0 ? locationOverride : contextLocation;
+     var matches = React.useMemo(function () {
+       return matchRoutes(routes, location, basenameForMatching);
+     }, [location, routes, basenameForMatching]);
+diff --git a/umd/react-router.development.js.map b/umd/react-router.development.js.map
+index 27c150ec601e987c8a483b7069574625984d1d89..30c566211fe5f702b89c2ceeb00e39f2c499151d 100644
+--- a/umd/react-router.development.js.map
++++ b/umd/react-router.development.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"react-router.development.js","sources":["../../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.useContext"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EA0CE,QAAI;;;;;EAwBA;EAEA,8BAAA,CA1BA;OAAJ;;;;EAwCF,IAAM,kBAAN;;;;EAGE,IAAA,kBAAA,OAAA;EACA,KAAA,QAAQ,eAAR;;EAED;;;;;;;EAyEU;;;;kBAQD;UAEJ;UACA;;YAIE;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EA2FN,IAAA;EACA,IAAA;;;;;;;;;;;;;;;;;;;;;;;;;WAoCM;;;;;;;;;;EAqBJ,IAAA;;;QAAA;;;EAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QAmFO;+CAKN;;;;cAQQ;;EACC,MAAA,QAAA;;EAAkB,MAAA;;;;;;;;;;;WA0Bf;;;;;;;;EAWd;EAEA;;;;;;;;;;;;;;;;;;;EA2BI,aAAA;EAEA;;;;;EAkBA;mBAKW;;;;;;QAvBX;;;;;;;;;;;;;EAwDF;;;;;;;;;;;;;;;;;;;;;;;;;;;;EA6CA;;;;;;;;;;;;;;;;mBA+BW;oBACD,QAAA,UAAkB,SAAlB;;;;;;;;;yBA0Da;;;;;;;;;;;;EAqBvB,IAAA,iBAAA,OAAA;;4DAIoE;EAAA,eAAA;eAAA,KAAA;EAAA;;;;;;;;EAW/D;;EAEH,OAAA,OAAO,MAAA,8FAAA,CAAP;;kBAqBK;;;;;;;;;;uBAcU;WACdA,gBAAA,aAAA;;;;;;;;;;;;;;;;;;;8CA2BqC;;;;;;;;EAQ1C;;;;;;;;;8CAYW;EAAA,cAAA;cAAA,KAAA;EAAA;;;;;;;;;WAsBN;;;EAGL,mBAAA,OAAA,UAAA,UAAA;;;;;8CAcqB;;;0CADnB;;IAIW;EACX;;;;2JAUM;;;8BAac;;;;;;;;;;;;kBAsBR,mBAAA;;;UAAiD,cAAA;EAC7D,IAAA,SAAS,yBAAA,QAAA,CAAT;EAEA,wDAAuB,CAAC;EAEpB,MAAA,eAAe;EACf,MAAA;;0BAEgB,0BAAA,EAA+B,SAA/B;oBACN;EACE,QAAA,UAAA;;;QAPhB;KAHY,MAAA;;;;;;;;;;;;;;;;eA8CD;0BACO,CAAC;;;;;EAMnB,QAAI,qBAAJ;aAEO,CAAC;;;EAIR,gBAAA;;;;;;;;;;;;;wDAuBE;EAGF,QAAI,4CAAJ;;;;;;UASE,YAAA;;0BAIA,QACA,wBAAwB,CAAC,aAAA,SAAD;;;;kBAMW;EACjC,MAAA,aAAa,kBADoB;EAEjC,MAAA,eAAe,aAAA,CAAsB,aAAtB,KACF,IAHoB;EAIjC;EACA;;eAEG;EAP8B;;EAYrC,QAAI,QAAQ,KAAR,SAAJ;0BACoB,wBAAwB,CAAC,aAAA,SAAD;;uBAE3B;EACf,QAAA,cAAA,cAAA;;;;;;WAKC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"react-router.development.js","sources":["../../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.createContext","history","React.useContext","React.createElement","React.Fragment"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WAmCK;;;;;;;;;;;EA8BC,sBAAgB,QAAhB;;EAIH;;;;;EAYH,oBAAA,CAAqB,GAArB,MAAA,SAAA;kBACc;EACZ,IAAA,kBAAA,OAAA;EACA,KAAA,QAAQ,eAAR;;;;sCAgDqBA,mBAAA,CAA+B,IAA/B;;;;;;kCA6BD;;;;;UAShB;;;WAKC;;;;;;;;;;EAoDJ;;;EACG,SAAU,YAAV;;;;;;;;;;;;;;;;;EA6CJ,IAAA,UAAUC;;;;;;;;;;;;;;;;;;;;;;;;;WAoCJ;;;;;;;;;;EAqBJ,IAAA;;;QAAA;;;EAOH;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QAmFO,uCAAa;KAInB,mBAAmB;;EAQI,IAAA;;;;;;cAEU,EAAE;;;;EA0BrC;;;;;;;;;;;;;;;;EAmBA;;;;;;;;;;;;;;;;;;;;EAyCE,QAAI,OACG,aAAa;;EAOlB,QAAA;;;;;cAQI;;;;;EAML,MAtBD;;;;;;;;;;;;uBA4CgB;;;;eAUT;oBAKO,CAAC;EAChB;EAGD;;;;;;;;;;;;;;;;;;;;EAwBI,oBAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QA+GE,6BAAA;;;QACA,wBAAA;;iCAEqB;gCACV;;;;;;;;;EAOX,iBAAW,eAAX;;SAAA,MAGO;cACD,IAAI;;;;;;;;;;;;;;;;;WAgDPC,gBAAA,CAAiB,YAAjB;;;;;;;;;;;;;;;;;;EAsBH,wBAAA,GAAA;;;;;;wBAGe,CAAC,EAAD,UAAA,UAAA;;;;;;;;;;;;;;;;;KA4BnB;;;;;;;;;WAeK;;;;;;yCAWL;QACU,oCAAV;QACM;;;;;;oBASM,kBAAkB;;;;;;;;;QAgC7B;;kBAIW;EAEZ;;;;;oBAKoB;;;;;EAEpB,IAAA,2CAAA;EAEA;;EAcI,MAAA,OAAiB;wBAAA;iEAAA;oBAIT,SAAS,gCAAA,CAJA;4BAAA;;EAAA;QAdrB;;;;;;;;;;;;;;;wCAwCyB;qBAGV,UAAA;;mCAGgB;;iBAEtB,oBAAA,iBAAwBC,mBAAA,CAAC,MAAD,MAAA;;;UAE/B,aACO;cAEH;;;;;;;;;;;;;;;cA2BE;;UAKN;;;EAGA;;;2BAIqBC;EACnB;EACA,MAAA,WAAA,CAAY,KAAZ,OAAA,EAGE,gDAHF;;;;;qBAWW;;;;;;;;kCAOa;uBACf;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/umd/react-router.production.min.js b/umd/react-router.production.min.js
+index 0e6b69c1467004d687da36a13c8a00037724a955..beadc087129719af181d2c9238f026e6254f7966 100644
+--- a/umd/react-router.production.min.js
++++ b/umd/react-router.production.min.js
+@@ -1,2 +1,2 @@
+-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("react"),require("history")):"function"==typeof define&&define.amd?define(["exports","react","history"],t):t((e=e||self).ReactRouter={},e.React,e.HistoryLibrary)}(this,(function(e,t,n){"use strict";function r(){return(r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e}).apply(this,arguments)}function a(e,t){if(!e)throw new Error(t)}var u=t.createContext(null),i=t.createContext({static:!1}),o=t.createContext({outlet:null,params:{},pathname:"",basename:"",route:null});function c(e){return p()}function l(e){var r=e.children,o=void 0===r?null:r,c=e.action,l=void 0===c?n.Action.Pop:c,f=e.location,h=e.navigator,p=e.static,v=void 0!==p&&p;return s()&&a(!1),t.createElement(u.Provider,{value:h},t.createElement(i.Provider,{children:o,value:{action:l,location:f,static:v}}))}function s(){return null!=t.useContext(i).location}function f(){return s()||a(!1),t.useContext(i).location}function h(){s()||a(!1);var e=t.useContext(u),n=t.useContext(o),r=n.pathname,i=n.basename,c=t.useRef(!1);return t.useEffect((function(){c.current=!0})),t.useCallback((function(t,n){if(void 0===n&&(n={}),c.current)if("number"==typeof t)e.go(t);else{var a=b(t,r,i);(n.replace?e.replace:e.push)(a,n.state)}}),[i,e,r])}function p(){return t.useContext(o).outlet}function v(e){var n=t.useContext(o),r=n.pathname,a=n.basename;return t.useMemo((function(){return b(e,r,a)}),[e,r,a])}function d(e,n,a){void 0===a&&(a="");var u=t.useContext(o),i=(u.route,u.pathname),c=u.params,l=a?S([i,a]):i,s=t.useMemo((function(){return y(e,n,l)}),[n,e,l]);if(!s)return null;var f={};return s.reduceRight((function(e,n){var u=n.params,i=n.pathname,s=n.route;return f=r({},f,u),t.createElement(o.Provider,{children:s.element,value:{outlet:e,params:r({},c,f),pathname:S([l,i]),basename:a,route:s}})}),null)}function m(e){return e.map((function(e){var n={path:e.path||"/",caseSensitive:!0===e.caseSensitive,element:e.element||t.createElement(c,null)};return e.children&&(n.children=m(e.children)),n}))}function g(e){var n=[];return t.Children.forEach(e,(function(e){if(t.isValidElement(e))if(e.type!==t.Fragment){var r={path:e.props.path||"/",caseSensitive:!0===e.props.caseSensitive,element:e};if(e.props.children){var a=g(e.props.children);a.length&&(r.children=a)}n.push(r)}else n.push.apply(n,g(e.props.children))})),n}function y(e,t,a){void 0===a&&(a=""),"string"==typeof t&&(t=n.parsePath(t));var u=t.pathname||"/";if(a){var i=a.replace(/^\/*/,"/").replace(/\/+$/,"");if(!u.startsWith(i))return null;u=u===i?"/":u.slice(i.length)}var o=function e(t,n,a,u,i){void 0===n&&(n=[]);void 0===a&&(a="");void 0===u&&(u=[]);void 0===i&&(i=[]);return t.forEach((function(t,o){t=r({},t,{path:t.path||"/",caseSensitive:!!t.caseSensitive,element:t.element});var c=S([a,t.path]),l=u.concat(t),s=i.concat(o);t.children&&e(t.children,n,c,l,s),n.push([c,l,s])})),n}(e);!function(e){var t=e.reduce((function(e,t){var n=t[0];return e[n]=function(e){var t=e.split("/"),n=t.length;t.some(C)&&(n+=-2);return t.filter((function(e){return!C(e)})).reduce((function(e,t){return e+(x.test(t)?2:""===t?1:10)}),n)}(n),e}),{});n=e,r=function(e,n){var r=e[0],a=e[2],u=t[r],i=n[0],o=n[2],c=t[i];return u!==c?c-u:function(e,t){return e.length===t.length&&e.slice(0,-1).every((function(e,n){return e===t[n]}))?e[e.length-1]-t[t.length-1]:0}(a,o)},a=n.slice(0),n.sort((function(e,t){return r(e,t)||a.indexOf(e)-a.indexOf(t)}));var n,r,a}(o);for(var c=null,l=0;null==c&&l<o.length;++l)c=E(o[l],u);return c}var x=/^:\w+$/,C=function(e){return"*"===e};function E(e,t){for(var n=e[1],a="/",u={},i=[],o=0;o<n.length;++o){var c=n[o],l="/"===a?t:t.slice(a.length)||"/",s=R({path:c.path,caseSensitive:c.caseSensitive,end:o===n.length-1},l);if(!s)return null;a=S([a,s.pathname]),u=r({},u,s.params),i.push({route:c,pathname:a,params:u})}return i}function R(e,t){"string"==typeof e&&(e={path:e});var n=e,r=n.path,a=n.caseSensitive,u=void 0!==a&&a,i=n.end,o=function(e,t,n){var r=[],a="^("+e.replace(/^\/*/,"/").replace(/\/?\*?$/,"").replace(/[\\.*+^$?{}|()[\]]/g,"\\$&").replace(/:(\w+)/g,(function(e,t){return r.push(t),"([^\\/]+)"}))+")";e.endsWith("*")?(e.endsWith("/*")?a+="(?:\\/(.+)|\\/?)":a+="(.*)",r.push("*")):n&&(a+="\\/?");n&&(a+="$");var u=t?void 0:"i";return[new RegExp(a,u),r]}(r,u,void 0===i||i),c=o[0],l=o[1],s=t.match(c);if(!s)return null;var f=s[1],h=s.slice(2);return{path:r,pathname:f,params:l.reduce((function(e,t,n){return e[t]=function(e,t){try{return decodeURIComponent(e)}catch(t){return e}}(h[n]||""),e}),{})}}function b(e,t,r){void 0===t&&(t="/"),void 0===r&&(r="");var a="string"==typeof e?n.parsePath(e):e,u=a.pathname,i=a.search,o=void 0===i?"":i,c=a.hash,l=void 0===c?"":c;return{pathname:u?function(e,t){var n=O((r=t,r.replace(/\/+$/,"")));var r;return O(e).forEach((function(e){".."===e?n.length>1&&n.pop():"."!==e&&n.push(e)})),n.length>1?S(n):"/"}(u,u.startsWith("/")?r?P("/"+r):"/":t):t,search:$(o),hash:w(l)}}var P=function(e){return e.replace(/\/\/+/g,"/")},S=function(e){return P(e.join("/"))},O=function(e){return P(e).split("/")},$=function(e){return e&&"?"!==e?e.startsWith("?")?e:"?"+e:""},w=function(e){return e&&"#"!==e?e.startsWith("#")?e:"#"+e:""};e.MemoryRouter=function(e){var r=e.children,a=e.initialEntries,u=e.initialIndex,i=t.useRef();null==i.current&&(i.current=n.createMemoryHistory({initialEntries:a,initialIndex:u}));var o=i.current,c=t.useState({action:o.action,location:o.location}),s=c[0],f=c[1];return t.useLayoutEffect((function(){return o.listen(f)}),[o]),t.createElement(l,{children:r,action:s.action,location:s.location,navigator:o})},e.Navigate=function(e){var n=e.to,r=e.replace,u=e.state;s()||a(!1);var i=h();return t.useEffect((function(){i(n,{replace:r,state:u})})),null},e.Outlet=c,e.Route=function(e){var n=e.element;return void 0===n?t.createElement(c,null):n},e.Router=l,e.Routes=function(e){var t=e.basename,n=void 0===t?"":t;return d(g(e.children),f(),n)},e.UNSAFE_LocationContext=i,e.UNSAFE_NavigatorContext=u,e.UNSAFE_RouteContext=o,e.createRoutesFromArray=m,e.createRoutesFromChildren=g,e.generatePath=function(e,t){return void 0===t&&(t={}),e.replace(/:(\w+)/g,(function(e,n){return null==t[n]&&a(!1),t[n]})).replace(/\/*\*$/,(function(e){return null==t["*"]?"":t["*"].replace(/^\/*/,"/")}))},e.matchPath=R,e.matchRoutes=y,e.resolvePath=b,e.useBlocker=function(e,n){void 0===n&&(n=!0),s()||a(!1);var i=t.useContext(u);t.useEffect((function(){if(n){var t=i.block((function(n){var a=r({},n,{retry:function(){t(),n.retry()}});e(a)}));return t}}),[i,e,n])},e.useHref=function(e){s()||a(!1);var n=t.useContext(u),r=v(e);return n.createHref(r)},e.useInRouterContext=s,e.useLocation=f,e.useMatch=function(e){return s()||a(!1),R(e,f().pathname)},e.useNavigate=h,e.useOutlet=p,e.useParams=function(){return t.useContext(o).params},e.useResolvedPath=v,e.useRoutes=function(e,n){void 0===n&&(n=""),s()||a(!1);var r=f();return d(t.useMemo((function(){return m(e)}),[e]),r,n)},Object.defineProperty(e,"__esModule",{value:!0})}));
++!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("react"),require("history")):"function"==typeof define&&define.amd?define(["exports","react","history"],t):t((e=e||self).ReactRouter={},e.React,e.HistoryLibrary)}(this,(function(e,t,n){"use strict";function r(){return(r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e}).apply(this,arguments)}function a(e,t){if(!e)throw new Error(t)}var u=t.createContext(null),i=t.createContext({static:!1}),o=t.createContext({outlet:null,params:{},pathname:"",basename:"",route:null});function c(e){return p()}function l(e){var r=e.children,o=void 0===r?null:r,c=e.action,l=void 0===c?n.Action.Pop:c,f=e.location,h=e.navigator,p=e.static,v=void 0!==p&&p;return s()&&a(!1),t.createElement(u.Provider,{value:h},t.createElement(i.Provider,{children:o,value:{action:l,location:f,static:v}}))}function s(){return null!=t.useContext(i).location}function f(){return s()||a(!1),t.useContext(i).location}function h(){s()||a(!1);var e=t.useContext(u),n=t.useContext(o).basename,r=f().pathname,i=t.useRef(!1);return t.useEffect((function(){i.current=!0})),t.useCallback((function(t,a){if(void 0===a&&(a={}),i.current)if("number"==typeof t)e.go(t);else{var u=b(t,r,n);(a.replace?e.replace:e.push)(u,a.state)}}),[n,e,r])}function p(){return t.useContext(o).outlet}function v(e){var n=t.useContext(o),r=n.pathname,a=n.basename;return t.useMemo((function(){return b(e,r,a)}),[e,r,a])}function d(e,n,a){void 0===a&&(a="");var u=t.useContext(o),i=(u.route,u.pathname),c=u.params,l=a?S([i,a]):i,s=f(),h=null!=n?n:s,p=t.useMemo((function(){return y(e,h,l)}),[h,e,l]);if(!p)return null;var v={};return p.reduceRight((function(e,n){var u=n.params,i=n.pathname,s=n.route;return v=r({},v,u),t.createElement(o.Provider,{children:s.element,value:{outlet:e,params:r({},c,v),pathname:S([l,i]),basename:a,route:s}})}),null)}function m(e){return e.map((function(e){var n={path:e.path||"/",caseSensitive:!0===e.caseSensitive,element:e.element||t.createElement(c,null)};return e.children&&(n.children=m(e.children)),n}))}function g(e){var n=[];return t.Children.forEach(e,(function(e){if(t.isValidElement(e))if(e.type!==t.Fragment){var r={path:e.props.path||"/",caseSensitive:!0===e.props.caseSensitive,element:e};if(e.props.children){var a=g(e.props.children);a.length&&(r.children=a)}n.push(r)}else n.push.apply(n,g(e.props.children))})),n}function y(e,t,a){void 0===a&&(a=""),"string"==typeof t&&(t=n.parsePath(t));var u=t.pathname||"/";if(a){var i=a.replace(/^\/*/,"/").replace(/\/+$/,"");if(!u.startsWith(i))return null;u=u===i?"/":u.slice(i.length)}var o=function e(t,n,a,u,i){void 0===n&&(n=[]);void 0===a&&(a="");void 0===u&&(u=[]);void 0===i&&(i=[]);return t.forEach((function(t,o){t=r({},t,{path:t.path||"/",caseSensitive:!!t.caseSensitive,element:t.element});var c=S([a,t.path]),l=u.concat(t),s=i.concat(o);t.children&&e(t.children,n,c,l,s),n.push([c,l,s])})),n}(e);!function(e){var t=e.reduce((function(e,t){var n=t[0];return e[n]=function(e){var t=e.split("/"),n=t.length;t.some(C)&&(n+=-2);return t.filter((function(e){return!C(e)})).reduce((function(e,t){return e+(x.test(t)?2:""===t?1:10)}),n)}(n),e}),{});n=e,r=function(e,n){var r=e[0],a=e[2],u=t[r],i=n[0],o=n[2],c=t[i];return u!==c?c-u:function(e,t){return e.length===t.length&&e.slice(0,-1).every((function(e,n){return e===t[n]}))?e[e.length-1]-t[t.length-1]:0}(a,o)},a=n.slice(0),n.sort((function(e,t){return r(e,t)||a.indexOf(e)-a.indexOf(t)}));var n,r,a}(o);for(var c=null,l=0;null==c&&l<o.length;++l)c=E(o[l],u);return c}var x=/^:\w+$/,C=function(e){return"*"===e};function E(e,t){for(var n=e[1],a="/",u={},i=[],o=0;o<n.length;++o){var c=n[o],l="/"===a?t:t.slice(a.length)||"/",s=R({path:c.path,caseSensitive:c.caseSensitive,end:o===n.length-1},l);if(!s)return null;a=S([a,s.pathname]),u=r({},u,s.params),i.push({route:c,pathname:a,params:u})}return i}function R(e,t){"string"==typeof e&&(e={path:e});var n=e,r=n.path,a=n.caseSensitive,u=void 0!==a&&a,i=n.end,o=function(e,t,n){var r=[],a="^("+e.replace(/^\/*/,"/").replace(/\/?\*?$/,"").replace(/[\\.*+^$?{}|()[\]]/g,"\\$&").replace(/:(\w+)/g,(function(e,t){return r.push(t),"([^\\/]+)"}))+")";e.endsWith("*")?(e.endsWith("/*")?a+="(?:\\/(.+)|\\/?)":a+="(.*)",r.push("*")):n&&(a+="\\/?");n&&(a+="$");var u=t?void 0:"i";return[new RegExp(a,u),r]}(r,u,void 0===i||i),c=o[0],l=o[1],s=t.match(c);if(!s)return null;var f=s[1],h=s.slice(2);return{path:r,pathname:f,params:l.reduce((function(e,t,n){return e[t]=function(e,t){try{return decodeURIComponent(e)}catch(t){return e}}(h[n]||""),e}),{})}}function b(e,t,r){void 0===t&&(t="/"),void 0===r&&(r="");var a="string"==typeof e?n.parsePath(e):e,u=a.pathname,i=a.search,o=void 0===i?"":i,c=a.hash,l=void 0===c?"":c;return{pathname:u?function(e,t){var n=O((r=t,r.replace(/\/+$/,"")));var r;return O(e).forEach((function(e){".."===e?n.length>1&&n.pop():"."!==e&&n.push(e)})),n.length>1?S(n):"/"}(u,u.startsWith("/")?r?P("/"+r):"/":t):t,search:$(o),hash:w(l)}}var P=function(e){return e.replace(/\/\/+/g,"/")},S=function(e){return P(e.join("/"))},O=function(e){return P(e).split("/")},$=function(e){return e&&"?"!==e?e.startsWith("?")?e:"?"+e:""},w=function(e){return e&&"#"!==e?e.startsWith("#")?e:"#"+e:""};e.MemoryRouter=function(e){var r=e.children,a=e.initialEntries,u=e.initialIndex,i=t.useRef();null==i.current&&(i.current=n.createMemoryHistory({initialEntries:a,initialIndex:u}));var o=i.current,c=t.useState({action:o.action,location:o.location}),s=c[0],f=c[1];return t.useLayoutEffect((function(){return o.listen(f)}),[o]),t.createElement(l,{children:r,action:s.action,location:s.location,navigator:o})},e.Navigate=function(e){var n=e.to,r=e.replace,u=e.state;s()||a(!1);var i=h();return t.useEffect((function(){i(n,{replace:r,state:u})})),null},e.Outlet=c,e.Route=function(e){var n=e.element;return void 0===n?t.createElement(c,null):n},e.Router=l,e.Routes=function(e){var t=e.basename,n=void 0===t?"":t,r=e.children,a=e.location;return d(g(r),a,n)},e.UNSAFE_LocationContext=i,e.UNSAFE_NavigatorContext=u,e.UNSAFE_RouteContext=o,e.createRoutesFromArray=m,e.createRoutesFromChildren=g,e.generatePath=function(e,t){return void 0===t&&(t={}),e.replace(/:(\w+)/g,(function(e,n){return null==t[n]&&a(!1),t[n]})).replace(/\/*\*$/,(function(e){return null==t["*"]?"":t["*"].replace(/^\/*/,"/")}))},e.matchPath=R,e.matchRoutes=y,e.resolvePath=b,e.useBlocker=function(e,n){void 0===n&&(n=!0),s()||a(!1);var i=t.useContext(u);t.useEffect((function(){if(n){var t=i.block((function(n){var a=r({},n,{retry:function(){t(),n.retry()}});e(a)}));return t}}),[i,e,n])},e.useHref=function(e){s()||a(!1);var n=t.useContext(u),r=v(e);return n.createHref(r)},e.useInRouterContext=s,e.useLocation=f,e.useMatch=function(e){return s()||a(!1),R(e,f().pathname)},e.useNavigate=h,e.useOutlet=p,e.useParams=function(){return t.useContext(o).params},e.useResolvedPath=v,e.useRoutes=function(e,n,r){return void 0===n&&(n=""),s()||a(!1),d(t.useMemo((function(){return m(e)}),[e]),r,n)},Object.defineProperty(e,"__esModule",{value:!0})}));
+ //# sourceMappingURL=react-router.production.min.js.map
+diff --git a/umd/react-router.production.min.js.map b/umd/react-router.production.min.js.map
+index 7253ce108f9ee2482f78a739548aea4673783007..324f8e652ffdaf16aee0afc5fe28151efa677bcf 100644
+--- a/umd/react-router.production.min.js.map
++++ b/umd/react-router.production.min.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"react-router.production.min.js","sources":["../../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["staticProp","action","static","activeRef","navigator","React.useContext","RouteContext","params","basename","matches","route","allParams","Provider","children","value","joinPaths","path","partialRoute","element","caseSensitive","props","createRoutesFromChildren","routes","location","navigate","useLocation","useRoutes_"],"mappings":"szBA+ZQA,qHAcGC,OAAAA,aAAkBC,gQAwR3BC,6KAsCOC,0BAeJC,wDA2BqCC,qFA6C1C,wDAcqBA,8BADnBC,SA4BoBC,kGAsBRC,yDAAiDC,IAAAA,aAC7DC,8BAEwBC,UAEpBC,mBACAC,8BAE+CH,YACrCI,SACEP,SAAAA,2EAqCGQ,gGAMfC,eAEIJ,uHAuCNK,2BAWmC,CACjCF,uBACAG,eACa,IADED,QAAsBC,4BAUrCD,EAAQE,sBACQC,EAAyBH,6BAG3CR,0CAvBAY,EACAD,EAAyBH,sBA2BxBI,m+FApvBHrB,gBACAsB,gSAyDEC,m+BAgTSC,gMA0MRC"}
+\ No newline at end of file
++{"version":3,"file":"react-router.production.min.js","sources":["../../../packages/react-router/index.tsx"],"sourcesContent":[null],"names":["React.createContext","staticProp","value","basename","pathname","to","path","React.useContext","RouteContext","useRoutes_","parentPathname","route","parentParams","location","allParams","joinPaths","partialRoute","React.createElement","Outlet","children","React.Fragment","routes","apply","createRoutesFromChildren","history","navigate","unblock","block","retry","useResolvedPath","createHref","useInRouterContext"],"mappings":"0hBAoIuBA,gBAA+B,4GA2C/C,gKAqPCC,8DAYiBC,kFAEYD,yDA6KjC,sGA+GEE,kBAAAA,SACAC,MAAAA,qBAEqB,mIAQVC,cAGJ,KACDC,mFAgDHC,aAAiBC,UAsBpB,oGAGgBH,2BA2CfI,kDAYKC,KADVC,QACAP,UACMQ,yFAyCLC,gCAWmB,oFAEpBC,2DAgBIZ,MAAiB,oCAITa,mEAyBG,SAAAC,uBAGgB,+CAEtBA,WAAwBC,gBAACC,gBAEhCF,EACOG,aAEHA,gIAuCiBC,kHAoBK,mEAlBxBC,OAAYC,QAGVC,yzFAnxBF,kNA6CJV,SAAUW,uRAyDRC,muBA8LEC,IACgBC,iCAOlBC,yHA8CKC,cAKQC,gRA+PfC"}
+\ No newline at end of file
