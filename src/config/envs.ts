@@ -1,4 +1,4 @@
-import { useEnvironmentStore } from '@/providers/environment/store'
+import { useEnvironmentStore } from '@/providers/environment'
 
 type BuildEnv = 'production' | 'development'
 
