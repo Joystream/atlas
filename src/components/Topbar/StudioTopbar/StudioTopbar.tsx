@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks'
+import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useUser } from '@/providers/user'
