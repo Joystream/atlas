@@ -6,7 +6,7 @@ import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
 type ColorProps = { color: string }
-type LoadingProps = { loading?: boolean }
+type LoadingProps = { isLoading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
 export const CoverImg = styled.div<{ bgImgUrl: string }>`
@@ -34,8 +34,8 @@ export const CoverImgContainer = styled.div`
   position: relative;
 `
 
-const hoverStyles = ({ loading, color }: LoadingProps & ColorProps) =>
-  !loading &&
+const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
+  !isLoading &&
   css`
     border-left: 0 solid ${color};
     transform: translate(-${sizes(2)}, -${sizes(2)});
@@ -46,9 +46,9 @@ export const Container = styled.div<ColorProps & VariantProps & LoadingProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
   display: grid;
-  cursor: ${({ loading }) => (loading ? 'initial' : 'pointer')};
-  border-left: 4px solid ${({ color, loading }) => (color && !loading ? color : 'transparent')};
-  background-color: ${({ loading }) => (loading ? colors.gray[900] : colors.gray[800])};
+  cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
+  border-left: 4px solid ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
+  background-color: ${({ isLoading }) => (isLoading ? colors.gray[900] : colors.gray[800])};
 
   &:hover {
     ${hoverStyles}
@@ -149,16 +149,4 @@ export const PieSegment = styled.div<{ value: number }>`
 export const VideosNumberContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
-  margin-top: ${({ variantCategory }) => (variantCategory === 'default' ? 0 : sizes(4))};
-  display: grid;
-  gap: ${sizes(1)};
-  align-self: end;
-  text-align: ${({ variantCategory }) => (variantCategory === 'default' ? 'right' : 'left')};
-`
-
-export const FeaturedVideoText = styled(Text)`
-  color: ${colors.gray[200]};
 `
