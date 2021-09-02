@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/ImageCropDialog'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'

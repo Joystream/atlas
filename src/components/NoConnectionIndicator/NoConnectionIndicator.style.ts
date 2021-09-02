@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
-import { TOP_NAVBAR_HEIGHT } from '../Topbar'
+import { TOP_NAVBAR_HEIGHT } from '../TopbarBase'
 
 export const TextWrapper = styled.div`
   width: 100%;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
+import { NavItemType, SidenavBase } from '@/components/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'

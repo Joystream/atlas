@@ -6,8 +6,7 @@ import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
-import { TopbarBase } from '../TopbarBase'
-import { TOP_NAVBAR_HEIGHT } from '../TopbarBase.style'
+import { TOP_NAVBAR_HEIGHT, TopbarBase } from '../TopbarBase'
 
 type CommonStudioTopbarProps = {
   isActive?: boolean

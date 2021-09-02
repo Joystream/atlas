@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { NavItemType, SidenavBase } from '@/components/Sidenav/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useEditVideoSheet } from '@/providers/editVideoSheet'
@@ -11,6 +10,8 @@ import { Button } from '@/shared/components/Button'
 import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { openInNewTab } from '@/utils/browser'
+
+import { NavItemType, SidenavBase } from '../SidenavBase'
 
 const studioNavbarItems: NavItemType[] = [
   {

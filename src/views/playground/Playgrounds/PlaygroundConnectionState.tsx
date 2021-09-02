@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 
-import { BaseDialog } from '@/components/Dialogs'
+import { BaseDialog } from '@/components/BaseDialog'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { Button } from '@/shared/components/Button'

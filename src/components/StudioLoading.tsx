@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Spinner } from '@/shared/components/Spinner'
 import { Text } from '@/shared/components/Text'
 

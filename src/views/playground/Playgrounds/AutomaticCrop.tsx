@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { Button } from '@/shared/components/Button'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { computeFileHash } from '@/utils/hashing'

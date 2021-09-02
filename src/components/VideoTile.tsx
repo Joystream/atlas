@@ -10,7 +10,7 @@ import {
   VideoTileBaseMetaProps,
   VideoTileBaseProps,
   VideoTilePublisherProps,
-} from '@/shared/components/VideoTileBase/VideoTileBase'
+} from '@/shared/components/VideoTileBase'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 

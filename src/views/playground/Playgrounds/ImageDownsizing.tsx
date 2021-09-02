@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { AssetDimensions } from '@/types/cropper'

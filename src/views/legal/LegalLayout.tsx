@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { TopbarBase } from '@/components/Topbar'
+import { TopbarBase } from '@/components/TopbarBase'
 import { relativeRoutes } from '@/config/routes'
 import { colors, sizes } from '@/shared/theme'
 

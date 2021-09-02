@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/StudioLoading'
-import { TopbarBase } from '@/components/Topbar'
+import { TopbarBase } from '@/components/TopbarBase'
 import { BASE_PATHS } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
 
