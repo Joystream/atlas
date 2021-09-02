@@ -552,19 +552,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               </FormField>
             )}
 
-            <FormField title="Marketing">
-              <Controller
-                name="hasMarketing"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <Checkbox
-                    value={value ?? false}
-                    label="My video features a paid promotion material"
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </FormField>
             <ExtendedMarginFormField
               title="Content rating"
               description="Whether your video contains explicit material (sex, violence, etc.)"
@@ -599,8 +586,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 )}
               />
             </ExtendedMarginFormField>
-            <FormField
+            <ExtendedMarginFormField
               title="Prior publication"
+              optional
               description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
             >
               <Controller
@@ -615,6 +603,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                     onChange={onChange}
                     error={!!errors.publishedBeforeJoystream}
                     helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
+                  />
+                )}
+              />
+            </ExtendedMarginFormField>
+            <FormField title="Marketing" optional>
+              <Controller
+                name="hasMarketing"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Checkbox
+                    value={value ?? false}
+                    label="My video features a paid promotion material"
+                    onChange={onChange}
                   />
                 )}
               />

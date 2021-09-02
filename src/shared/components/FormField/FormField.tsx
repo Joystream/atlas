@@ -1,17 +1,33 @@
 import React from 'react'
 
-import { ChildrenWrapper, FormFieldDescription, FormFieldTitle, FormFieldWrapper } from './FormField.style'
+import {
+  ChildrenWrapper,
+  FormFieldDescription,
+  FormFieldHeader,
+  FormFieldTitle,
+  FormFieldWrapper,
+} from './FormField.style'
+
+import { Text } from '../Text'
 
 export type FormFieldProps = {
   title: string
+  optional?: boolean
   description?: string | string[]
   className?: string
 }
 
-export const FormField: React.FC<FormFieldProps> = ({ children, title, description, className }) => {
+export const FormField: React.FC<FormFieldProps> = ({ children, title, description, className, optional }) => {
   return (
     <FormFieldWrapper className={className}>
-      <FormFieldTitle variant="h6">{title}</FormFieldTitle>
+      <FormFieldHeader>
+        <FormFieldTitle variant="h6">{title}</FormFieldTitle>
+        {optional && (
+          <Text variant="body2" secondary>
+            (Optional)
+          </Text>
+        )}
+      </FormFieldHeader>
       {description &&
         (description instanceof Array ? (
           description.map((p, idx) => (
