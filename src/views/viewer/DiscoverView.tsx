@@ -7,21 +7,23 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
-import { SvgVideoCategoriesAutosAndVehicles } from '@/shared/icons/VideoCategoriesAutosAndVehicles'
-import { SvgVideoCategoriesComedy } from '@/shared/icons/VideoCategoriesComedy'
-import { SvgVideoCategoriesEducation } from '@/shared/icons/VideoCategoriesEducation'
-import { SvgVideoCategoriesEntertainment } from '@/shared/icons/VideoCategoriesEntertainment'
-import { SvgVideoCategoriesFilmAndAnimation } from '@/shared/icons/VideoCategoriesFilmAndAnimation'
-import { SvgVideoCategoriesGaming } from '@/shared/icons/VideoCategoriesGaming'
-import { SvgVideoCategoriesHowtoAndStyle } from '@/shared/icons/VideoCategoriesHowtoAndStyle'
-import { SvgVideoCategoriesMusic } from '@/shared/icons/VideoCategoriesMusic'
-import { SvgVideoCategoriesNewsAndPolitics } from '@/shared/icons/VideoCategoriesNewsAndPolitics'
-import { SvgVideoCategoriesNonprofitsAndActivism } from '@/shared/icons/VideoCategoriesNonprofitsAndActivism'
-import { SvgVideoCategoriesPeopleAndBlogs } from '@/shared/icons/VideoCategoriesPeopleAndBlogs'
-import { SvgVideoCategoriesPetsAndAnimals } from '@/shared/icons/VideoCategoriesPetsAndAnimals'
-import { SvgVideoCategoriesScienceAndTechnology } from '@/shared/icons/VideoCategoriesScienceAndTechnology'
-import { SvgVideoCategoriesSports } from '@/shared/icons/VideoCategoriesSports'
-import { SvgVideoCategoriesTravelAndEvents } from '@/shared/icons/VideoCategoriesTravelAndEvents'
+import {
+  SvgVideoCategoriesAutosAndVehicles,
+  SvgVideoCategoriesComedy,
+  SvgVideoCategoriesEducation,
+  SvgVideoCategoriesEntertainment,
+  SvgVideoCategoriesFilmAndAnimation,
+  SvgVideoCategoriesGaming,
+  SvgVideoCategoriesHowtoAndStyle,
+  SvgVideoCategoriesMusic,
+  SvgVideoCategoriesNewsAndPolitics,
+  SvgVideoCategoriesNonprofitsAndActivism,
+  SvgVideoCategoriesPeopleAndBlogs,
+  SvgVideoCategoriesPetsAndAnimals,
+  SvgVideoCategoriesScienceAndTechnology,
+  SvgVideoCategoriesSports,
+  SvgVideoCategoriesTravelAndEvents,
+} from '@/shared/icons'
 import { colors, media, sizes } from '@/shared/theme'
 
 type VideoCategoryData = { title: string; icon: React.ReactNode; color: string; coverImg: string }
@@ -135,28 +137,25 @@ const videoCategories = {
 const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & VideoCategoryData> = [
   {
     ...videoCategories['travel-and-events'],
-    videoUrl: 'https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP',
-    videoTitle: 'Anderson .Paak and The Free Nationals',
+    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5778.mp4',
+    videoTitle: 'Wreck Diving. Philippines, Boracay.',
   },
   {
     ...videoCategories['education'],
-    videoUrl: 'https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP',
-    videoTitle: 'Anderson .Paak and The Free Nationals',
+    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/3941.mp4',
+    videoTitle: 'ФИЛОСОФИЯ СТОИЦИЗМА',
   },
   {
     ...videoCategories['film-and-animation'],
-    videoUrl: 'https://sumer-dev-2.joystream.app/storage/asset/v0/5Fbef6KfEP3ncHxroVsdWQF6gLb8ph47dcAmzWptjuMMWHnP',
-    videoTitle: 'Anderson .Paak and The Free Nationals',
+    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5984.mp4',
+    videoTitle: 'taxi driver edit',
   },
 ]
 
 export const DiscoverView: React.FC = () => {
-  const { videosConnection } = useVideosConnection(
-    {
-      first: 0,
-    }
-    // { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
-  )
+  const { videosConnection } = useVideosConnection({
+    first: 0,
+  })
   const isMdBreakpoint = useMediaMatch('md')
   return (
     <StyledLimitedWidthContainer big>
@@ -217,7 +216,7 @@ const FeaturedCategoriesContainer = styled.div`
 const CategoriesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${sizes(4)};
+  gap: ${sizes(6)};
   margin: ${sizes(12)} 0 ${sizes(16)} 0;
 
   ${media.lg} {
