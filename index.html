@@ -19,10 +19,11 @@
     <link rel="stylesheet" href="https://eu-central-1.linodeobjects.com/atlas-assets/fonts/PxGrotesk/PxGrotesk.css" />
     <link rel="stylesheet" href="https://eu-central-1.linodeobjects.com/atlas-assets/fonts/Inter/inter.css" />
 
-    <!--  manual node polyfills  -->
+    <!--  manual polyfills  -->
     <script>
-      globalThis.setImmediate = setTimeout
+      window.setImmediate = setTimeout
       window.global = window
+      window.__DEV__ = false
     </script>
   </head>
   <body>

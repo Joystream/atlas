@@ -19,18 +19,17 @@ export default defineConfig({
     }),
     graphql(),
     {
-      ...visualizer({
-        template: 'treemap',
-        filename: 'dist/stats.html',
+      ...inject({
+        include: ['node_modules/**/*.js*'],
+        modules: {
+          Buffer: ['buffer', 'Buffer'],
+        },
       }),
       enforce: 'post',
     },
     {
-      ...inject({
-        include: ['node_modules/**/*.js*', 'node_modules/**/*.cjs*'],
-        modules: {
-          Buffer: ['buffer', 'Buffer'],
-        },
+      ...visualizer({
+        filename: 'dist/stats.html',
       }),
       enforce: 'post',
     },
@@ -43,25 +42,31 @@ export default defineConfig({
   optimizeDeps: {
     include: ['buffer'],
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendors-studio': [
-            '@polkadot/util',
-            '@polkadot/wasm-crypto-wasm',
-            '@polkadot/util-crypto',
-            '@polkadot/types',
-            '@polkadot/keyring',
-            '@polkadot/api',
-            '@polkadot/api-derive',
-            '@polkadot/rpc-core',
-            '@polkadot/rpc-provider',
-            '@joystream/types',
-            '@joystream/content-metadata-protobuf',
-          ],
-        },
-      },
-    },
-  },
+  // build: {
+  // commonjsOptions: {
+  //   transformMixedEsModules: true,
+  // ignore: (id: string) => id.includes('polkadot'),
+  // esmExternals: true,
+  // },
+  // rollupOptions: {
+  //   output: {
+  //     manualChunks: {
+  //       'vendors-studio': [
+  //         '@polkadot/util',
+  //         '@polkadot/types',
+  //         '@polkadot/wasm-crypto-wasm',
+  //         '@polkadot/util-crypto',
+  //         '@polkadot/types',
+  //         '@polkadot/keyring',
+  //         '@polkadot/api',
+  //         '@polkadot/api-derive',
+  //         '@polkadot/rpc-core',
+  //         '@polkadot/rpc-provider',
+  //         '@joystream/types',
+  //         '@joystream/content-metadata-protobuf',
+  //       ],
+  //     },
+  //   },
+  // },
+  // },
 })

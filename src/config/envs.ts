@@ -2,14 +2,14 @@ import { useEnvironmentStore } from '@/providers/environment/store'
 
 type BuildEnv = 'production' | 'development'
 
-export const BUILD_ENV = (process.env.REACT_APP_ENV || 'production') as BuildEnv
+export const BUILD_ENV = (import.meta.env.VITE_ENV || 'production') as BuildEnv
 export const TARGET_DEV_ENV = useEnvironmentStore.getState().targetEnv
 export const ENV_PREFIX = 'VITE'
 
 export const availableEnvs = () => {
   return Array.from(
     new Set(
-      Object.keys(process.env)
+      Object.keys(import.meta.env)
         .filter((key) => key.startsWith(ENV_PREFIX) && !key.startsWith(`${ENV_PREFIX}_ENV`))
         .map((key) => {
           return key.replace(ENV_PREFIX, '').split('_')[1].toLowerCase()
