@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useHover } from '@/hooks/useHover'
-import { AssetType } from '@/providers/assets'
-import { testAssetDownload } from '@/providers/assets/helpers'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
