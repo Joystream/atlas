@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useHover } from '@/hooks/useHover'
+import { AssetType } from '@/providers/assets'
+import { testAssetDownload } from '@/providers/assets/helpers'
 import { sizes, transitions } from '@/shared/theme'
 
 import {
@@ -25,7 +27,6 @@ export type FeaturedVideoCategoryCardProps = {
   videoTitle: string
   color: string
   variant?: Variant
-  loading?: boolean
 }
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
@@ -35,22 +36,21 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   videoTitle,
   color,
   variant = 'default',
-  loading,
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
+  const isLoading = false
 
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading ? 'placeholder' : 'content'}
+        key={isLoading ? 'placeholder' : 'content'}
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <FeaturedContainer ref={hoverRef} loading={loading} variantCategory={variant} color={color}>
+        <FeaturedContainer ref={hoverRef} isLoading={isLoading} variantCategory={variant} color={color}>
           <PlayerContainer>
-            {!loading && (
+            {
               <VideoPlayer
-                startTime={25} // TODO: remove this before merge
                 videoStyle={{ objectFit: 'cover' }}
                 loop
                 fluid
@@ -59,25 +59,25 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
                 playing={variant === 'default' ? isVideoHovering : true}
                 src={videoUrl}
               />
-            )}
+            }
           </PlayerContainer>
 
           <FeaturedContent variantCategory={variant}>
             <div>
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
               ) : (
                 <FeaturedIconCircle color={color}>{icon}</FeaturedIconCircle>
               )}
 
-              {loading ? (
+              {isLoading ? (
                 <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
               ) : (
                 <Text variant={variant === 'default' ? 'h3' : 'h4'}>{title}</Text>
               )}
             </div>
 
-            {!loading && (
+            {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
                 <FeaturedVideoText variant="caption" secondary>
                   Featured video

@@ -58,7 +58,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <GeneralContainer loading={isLoading} variantCategory={variant} color={color}>
+        <GeneralContainer isLoading={isLoading} variantCategory={variant} color={color}>
           <Content variantCategory={variant}>
             {isLoading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
