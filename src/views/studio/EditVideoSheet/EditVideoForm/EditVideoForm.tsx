@@ -433,9 +433,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 'title',
                 textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })
               )}
+              min={3}
+              max={40}
               placeholder="Video title"
-              error={!!errors.title}
-              helperText={errors.title?.message}
             />
             <TextArea
               {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}

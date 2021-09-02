@@ -7,9 +7,16 @@ export default {
   title: 'Shared/T/TitleArea',
   component: TitleArea,
   argTypes: {
-    helperText: { control: 'text', defaultValue: 'Channel title must be at least 2 character' },
-    warning: { control: 'boolean' },
-    error: { control: 'boolean' },
+    value: {
+      table: {
+        disable: true,
+      },
+    },
+    name: {
+      table: {
+        disable: true,
+      },
+    },
   },
 } as Meta
 

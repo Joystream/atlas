@@ -63,8 +63,8 @@ export const PlaygroundValidationForm = () => {
         <TitleArea
           {...register('header', textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
           value="Lorem ipsum"
-          error={!!errors.header}
-          helperText={errors.header?.message}
+          min={3}
+          max={20}
         />
 
         <FormField title="Title" description="Lorem ipsum dolor sit amet">

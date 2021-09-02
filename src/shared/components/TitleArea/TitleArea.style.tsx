@@ -5,23 +5,19 @@ import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
-type HelperTextProps = {
-  error?: boolean
-  warning?: boolean
-}
-
-type StyledInputProps = {
-  widthSize: number | null
-}
-
 export const Container = styled.div`
   position: relative;
   width: fit-content;
-  background-color: ${colors.gray[800]};
 `
+
+type StyledInputProps = {
+  touchedAndEmpty?: boolean
+}
 
 export const StyledInput = styled.input<StyledInputProps>`
   --input-max-width: 60vw;
+
+  caret-color: ${colors.blue[500]};
   ${media.sm} {
     --input-max-width: 400px;
   }
@@ -32,7 +28,7 @@ export const StyledInput = styled.input<StyledInputProps>`
 
   line-height: 1;
   padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '40px' })};
+  ${fluidRange({ prop: 'fontSize', fromSize: '32px', toSize: '48px' })};
 
   color: white;
   background-color: ${colors.transparent};
@@ -44,22 +40,51 @@ export const StyledInput = styled.input<StyledInputProps>`
   border: none;
   min-width: 100px;
   max-width: var(--input-max-width);
-  width: ${({ widthSize }) => (widthSize ? `${widthSize}ch` : '100%')};
-  height: ${sizes(13)};
+  height: 52px;
 
   &:hover {
-    filter: brightness(80%);
+    opacity: 75%;
+  }
+
+  ::placeholder {
+    color: ${colors.gray[500]};
+  }
+
+  + ${() => TitleAreaInfo} {
+    ${({ touchedAndEmpty }) => touchedAndEmpty && `opacity: 1`};
+  }
+
+  :focus,
+  :invalid {
+    + ${() => TitleAreaInfo} {
+      opacity: 1;
+    }
   }
 `
 
-export const HelperText = styled(Text)<HelperTextProps>`
-  color: ${({ warning, error }) => {
-    if (warning) return colors.warning
-    if (error) return colors.error
-  }};
-  background-color: ${colors.gray[800]};
-  width: fit-content;
+type TitleAreaInfoProps = {
+  error?: boolean
+}
+
+export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
+  display: grid;
+  opacity: 0;
   max-width: 600px;
-  padding: ${sizes(2)};
-  ${fluidRange({ prop: 'fontSize', fromSize: '10px', toSize: '16px' })};
+  padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
+  grid-template-columns: 1fr 1fr;
+  grid-gap: ${sizes(9)};
+`
+
+type CharactersCounterProps = {
+  error?: boolean
+}
+
+export const MinMaxChars = styled(Text)`
+  white-space: nowrap;
+`
+
+export const CharactersCounter = styled(Text)<CharactersCounterProps>`
+  ${({ error }) => error && `color: ${colors.error}`};
+
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
