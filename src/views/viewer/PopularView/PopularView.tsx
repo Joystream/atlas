@@ -27,7 +27,11 @@ export const PopularView: FC = () => {
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels IDs', 'PopularView', error) }
   )
   const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
-  const { videos, loading, error: mostViewedVideosError } = useMostViewedVideos(
+  const {
+    videos,
+    loading,
+    error: mostViewedVideosError,
+  } = useMostViewedVideos(
     { timePeriodDays: 30, limit: 10 },
     { onError: (error) => SentryLogger.error('Failed to fetch videos', 'PopularView', error) }
   )

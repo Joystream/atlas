@@ -18,15 +18,13 @@ export const OrionTesting = () => {
     },
     fetchPolicy: 'network-only',
   })
-  const [
-    getVideosConnection,
-    { data: videosConnectionData, loading: videosConnectionLoading },
-  ] = useGetVideosConnectionLazyQuery({
-    variables: {
-      first: 5,
-    },
-    fetchPolicy: 'network-only',
-  })
+  const [getVideosConnection, { data: videosConnectionData, loading: videosConnectionLoading }] =
+    useGetVideosConnectionLazyQuery({
+      variables: {
+        first: 5,
+      },
+      fetchPolicy: 'network-only',
+    })
 
   const [getChannels, { data: channelsData, loading: channelsLoading }] = useGetChannelsLazyQuery({
     variables: {
@@ -35,15 +33,13 @@ export const OrionTesting = () => {
     fetchPolicy: 'network-only',
   })
 
-  const [
-    getChannelsConnection,
-    { data: channelsConnectionData, loading: channelsConnectionLoading },
-  ] = useGetChannelsConnectionLazyQuery({
-    variables: {
-      first: 5,
-    },
-    fetchPolicy: 'network-only',
-  })
+  const [getChannelsConnection, { data: channelsConnectionData, loading: channelsConnectionLoading }] =
+    useGetChannelsConnectionLazyQuery({
+      variables: {
+        first: 5,
+      },
+      fetchPolicy: 'network-only',
+    })
 
   useEffect(() => {
     if (videosData) {

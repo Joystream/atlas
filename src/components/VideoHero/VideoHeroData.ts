@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-import { useVideo } from '@/api/hooks/video'
+import { useVideo } from '@/api/hooks'
 import { VideoFieldsFragment } from '@/api/queries'
 import { TARGET_DEV_ENV } from '@/config/envs'
 import { COVER_VIDEO_INFO_URL } from '@/config/urls'

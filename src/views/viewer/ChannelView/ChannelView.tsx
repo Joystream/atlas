@@ -341,10 +341,10 @@ const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
     [id, searchVideo]
   )
 
-  const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData?.search), [
-    loadingSearch,
-    searchData,
-  ])
+  const { searchVideos } = useMemo(
+    () => getVideosFromSearch(loadingSearch, searchData?.search),
+    [loadingSearch, searchData]
+  )
 
   return {
     searchVideos,

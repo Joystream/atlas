@@ -2,9 +2,9 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { DataObjectFieldsFragment } from './shared.generated'
 import { DataObjectFieldsFragmentDoc } from './shared.generated'
 
+const defaultOptions = {}
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
@@ -12,7 +12,23 @@ export type BasicChannelFieldsFragment = {
   createdAt: Date
   avatarPhotoUrls: Array<string>
   avatarPhotoAvailability: Types.AssetAvailability
-  avatarPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  avatarPhotoDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
 }
 
 export type AllChannelFieldsFragment = {
@@ -24,10 +40,48 @@ export type AllChannelFieldsFragment = {
   isCensored: boolean
   coverPhotoUrls: Array<string>
   coverPhotoAvailability: Types.AssetAvailability
+  id: string
+  title?: Types.Maybe<string>
+  createdAt: Date
+  avatarPhotoUrls: Array<string>
+  avatarPhotoAvailability: Types.AssetAvailability
   language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
   ownerMember?: Types.Maybe<{ __typename?: 'Membership'; id: string; handle: string; avatarUri?: Types.Maybe<string> }>
-  coverPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
-} & BasicChannelFieldsFragment
+  coverPhotoDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
+  avatarPhotoDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
+}
 
 export type GetBasicChannelQueryVariables = Types.Exact<{
   where: Types.ChannelWhereUniqueInput
@@ -35,7 +89,31 @@ export type GetBasicChannelQueryVariables = Types.Exact<{
 
 export type GetBasicChannelQuery = {
   __typename?: 'Query'
-  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
+  channelByUniqueInput?: Types.Maybe<{
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
 }
 
 export type GetChannelQueryVariables = Types.Exact<{
@@ -44,7 +122,62 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channelByUniqueInput?: Types.Maybe<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
+  channelByUniqueInput?: Types.Maybe<{
+    __typename?: 'Channel'
+    description?: Types.Maybe<string>
+    follows?: Types.Maybe<number>
+    views?: Types.Maybe<number>
+    isPublic?: Types.Maybe<boolean>
+    isCensored: boolean
+    coverPhotoUrls: Array<string>
+    coverPhotoAvailability: Types.AssetAvailability
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+    ownerMember?: Types.Maybe<{
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      avatarUri?: Types.Maybe<string>
+    }>
+    coverPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
 }
 
 export type GetVideoCountQueryVariables = Types.Exact<{
@@ -64,7 +197,62 @@ export type GetChannelsQueryVariables = Types.Exact<{
 
 export type GetChannelsQuery = {
   __typename?: 'Query'
-  channels: Array<{ __typename?: 'Channel' } & AllChannelFieldsFragment>
+  channels: Array<{
+    __typename?: 'Channel'
+    description?: Types.Maybe<string>
+    follows?: Types.Maybe<number>
+    views?: Types.Maybe<number>
+    isPublic?: Types.Maybe<boolean>
+    isCensored: boolean
+    coverPhotoUrls: Array<string>
+    coverPhotoAvailability: Types.AssetAvailability
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+    ownerMember?: Types.Maybe<{
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      avatarUri?: Types.Maybe<string>
+    }>
+    coverPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
 }
 
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
@@ -82,7 +270,62 @@ export type GetChannelsConnectionQuery = {
     edges: Array<{
       __typename?: 'ChannelEdge'
       cursor: string
-      node: { __typename?: 'Channel' } & AllChannelFieldsFragment
+      node: {
+        __typename?: 'Channel'
+        description?: Types.Maybe<string>
+        follows?: Types.Maybe<number>
+        views?: Types.Maybe<number>
+        isPublic?: Types.Maybe<boolean>
+        isCensored: boolean
+        coverPhotoUrls: Array<string>
+        coverPhotoAvailability: Types.AssetAvailability
+        id: string
+        title?: Types.Maybe<string>
+        createdAt: Date
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+        ownerMember?: Types.Maybe<{
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          avatarUri?: Types.Maybe<string>
+        }>
+        coverPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
@@ -247,12 +490,14 @@ export const GetBasicChannelDocument = gql`
 export function useGetBasicChannelQuery(
   baseOptions: Apollo.QueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 ) {
-  return Apollo.useQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, options)
 }
 export function useGetBasicChannelLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicChannelQuery, GetBasicChannelQueryVariables>(GetBasicChannelDocument, options)
 }
 export type GetBasicChannelQueryHookResult = ReturnType<typeof useGetBasicChannelQuery>
 export type GetBasicChannelLazyQueryHookResult = ReturnType<typeof useGetBasicChannelLazyQuery>
@@ -283,12 +528,14 @@ export const GetChannelDocument = gql`
  * });
  */
 export function useGetChannelQuery(baseOptions: Apollo.QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
-  return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, options)
 }
 export function useGetChannelLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, options)
 }
 export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>
 export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>
@@ -320,12 +567,14 @@ export const GetVideoCountDocument = gql`
 export function useGetVideoCountQuery(
   baseOptions?: Apollo.QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
 ) {
-  return Apollo.useQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, options)
 }
 export function useGetVideoCountLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVideoCountQuery, GetVideoCountQueryVariables>(GetVideoCountDocument, options)
 }
 export type GetVideoCountQueryHookResult = ReturnType<typeof useGetVideoCountQuery>
 export type GetVideoCountLazyQueryHookResult = ReturnType<typeof useGetVideoCountLazyQuery>
@@ -360,12 +609,14 @@ export const GetChannelsDocument = gql`
 export function useGetChannelsQuery(
   baseOptions?: Apollo.QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) {
-  return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, options)
 }
 export function useGetChannelsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, options)
 }
 export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>
 export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLazyQuery>
@@ -416,17 +667,19 @@ export const GetChannelsConnectionDocument = gql`
 export function useGetChannelsConnectionQuery(
   baseOptions?: Apollo.QueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(
     GetChannelsConnectionDocument,
-    baseOptions
+    options
   )
 }
 export function useGetChannelsConnectionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetChannelsConnectionQuery, GetChannelsConnectionQueryVariables>(
     GetChannelsConnectionDocument,
-    baseOptions
+    options
   )
 }
 export type GetChannelsConnectionQueryHookResult = ReturnType<typeof useGetChannelsConnectionQuery>
@@ -463,12 +716,14 @@ export const GetChannelViewsDocument = gql`
 export function useGetChannelViewsQuery(
   baseOptions: Apollo.QueryHookOptions<GetChannelViewsQuery, GetChannelViewsQueryVariables>
 ) {
-  return Apollo.useQuery<GetChannelViewsQuery, GetChannelViewsQueryVariables>(GetChannelViewsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelViewsQuery, GetChannelViewsQueryVariables>(GetChannelViewsDocument, options)
 }
 export function useGetChannelViewsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetChannelViewsQuery, GetChannelViewsQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetChannelViewsQuery, GetChannelViewsQueryVariables>(GetChannelViewsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelViewsQuery, GetChannelViewsQueryVariables>(GetChannelViewsDocument, options)
 }
 export type GetChannelViewsQueryHookResult = ReturnType<typeof useGetChannelViewsQuery>
 export type GetChannelViewsLazyQueryHookResult = ReturnType<typeof useGetChannelViewsLazyQuery>
@@ -501,17 +756,16 @@ export const GetChannelFollowsDocument = gql`
 export function useGetChannelFollowsQuery(
   baseOptions: Apollo.QueryHookOptions<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
 ) {
-  return Apollo.useQuery<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(
-    GetChannelFollowsDocument,
-    baseOptions
-  )
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(GetChannelFollowsDocument, options)
 }
 export function useGetChannelFollowsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetChannelFollowsQuery, GetChannelFollowsQueryVariables>(
     GetChannelFollowsDocument,
-    baseOptions
+    options
   )
 }
 export type GetChannelFollowsQueryHookResult = ReturnType<typeof useGetChannelFollowsQuery>
@@ -545,17 +799,19 @@ export const GetBatchedChannelFollowsDocument = gql`
 export function useGetBatchedChannelFollowsQuery(
   baseOptions: Apollo.QueryHookOptions<GetBatchedChannelFollowsQuery, GetBatchedChannelFollowsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetBatchedChannelFollowsQuery, GetBatchedChannelFollowsQueryVariables>(
     GetBatchedChannelFollowsDocument,
-    baseOptions
+    options
   )
 }
 export function useGetBatchedChannelFollowsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetBatchedChannelFollowsQuery, GetBatchedChannelFollowsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetBatchedChannelFollowsQuery, GetBatchedChannelFollowsQueryVariables>(
     GetBatchedChannelFollowsDocument,
-    baseOptions
+    options
   )
 }
 export type GetBatchedChannelFollowsQueryHookResult = ReturnType<typeof useGetBatchedChannelFollowsQuery>
@@ -592,17 +848,19 @@ export const GetBatchedChannelViewsDocument = gql`
 export function useGetBatchedChannelViewsQuery(
   baseOptions: Apollo.QueryHookOptions<GetBatchedChannelViewsQuery, GetBatchedChannelViewsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetBatchedChannelViewsQuery, GetBatchedChannelViewsQueryVariables>(
     GetBatchedChannelViewsDocument,
-    baseOptions
+    options
   )
 }
 export function useGetBatchedChannelViewsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetBatchedChannelViewsQuery, GetBatchedChannelViewsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetBatchedChannelViewsQuery, GetBatchedChannelViewsQueryVariables>(
     GetBatchedChannelViewsDocument,
-    baseOptions
+    options
   )
 }
 export type GetBatchedChannelViewsQueryHookResult = ReturnType<typeof useGetBatchedChannelViewsQuery>
@@ -641,7 +899,8 @@ export type FollowChannelMutationFn = Apollo.MutationFunction<FollowChannelMutat
 export function useFollowChannelMutation(
   baseOptions?: Apollo.MutationHookOptions<FollowChannelMutation, FollowChannelMutationVariables>
 ) {
-  return Apollo.useMutation<FollowChannelMutation, FollowChannelMutationVariables>(FollowChannelDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<FollowChannelMutation, FollowChannelMutationVariables>(FollowChannelDocument, options)
 }
 export type FollowChannelMutationHookResult = ReturnType<typeof useFollowChannelMutation>
 export type FollowChannelMutationResult = Apollo.MutationResult<FollowChannelMutation>
@@ -682,10 +941,8 @@ export type UnfollowChannelMutationFn = Apollo.MutationFunction<
 export function useUnfollowChannelMutation(
   baseOptions?: Apollo.MutationHookOptions<UnfollowChannelMutation, UnfollowChannelMutationVariables>
 ) {
-  return Apollo.useMutation<UnfollowChannelMutation, UnfollowChannelMutationVariables>(
-    UnfollowChannelDocument,
-    baseOptions
-  )
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UnfollowChannelMutation, UnfollowChannelMutationVariables>(UnfollowChannelDocument, options)
 }
 export type UnfollowChannelMutationHookResult = ReturnType<typeof useUnfollowChannelMutation>
 export type UnfollowChannelMutationResult = Apollo.MutationResult<UnfollowChannelMutation>
@@ -722,17 +979,19 @@ export const GetMostViewedChannelsDocument = gql`
 export function useGetMostViewedChannelsQuery(
   baseOptions: Apollo.QueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>(
     GetMostViewedChannelsDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostViewedChannelsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>(
     GetMostViewedChannelsDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostViewedChannelsQueryHookResult = ReturnType<typeof useGetMostViewedChannelsQuery>
@@ -769,9 +1028,10 @@ export const GetMostViewedChannelsAllTimeDocument = gql`
 export function useGetMostViewedChannelsAllTimeQuery(
   baseOptions: Apollo.QueryHookOptions<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
     GetMostViewedChannelsAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostViewedChannelsAllTimeLazyQuery(
@@ -780,9 +1040,10 @@ export function useGetMostViewedChannelsAllTimeLazyQuery(
     GetMostViewedChannelsAllTimeQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
     GetMostViewedChannelsAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostViewedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostViewedChannelsAllTimeQuery>
@@ -822,17 +1083,19 @@ export const GetMostFollowedChannelsDocument = gql`
 export function useGetMostFollowedChannelsQuery(
   baseOptions: Apollo.QueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
     GetMostFollowedChannelsDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostFollowedChannelsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
     GetMostFollowedChannelsDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostFollowedChannelsQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsQuery>
@@ -872,9 +1135,10 @@ export function useGetMostFollowedChannelsAllTimeQuery(
     GetMostFollowedChannelsAllTimeQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
     GetMostFollowedChannelsAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostFollowedChannelsAllTimeLazyQuery(
@@ -883,9 +1147,10 @@ export function useGetMostFollowedChannelsAllTimeLazyQuery(
     GetMostFollowedChannelsAllTimeQueryVariables
   >
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
     GetMostFollowedChannelsAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostFollowedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsAllTimeQuery>

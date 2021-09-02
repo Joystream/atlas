@@ -28,11 +28,19 @@ const INITIAL_ROWS = 1
 
 export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const { channel, loading: channelLoading, error: channelError } = useChannel(channelId || '', {
+  const {
+    channel,
+    loading: channelLoading,
+    error: channelError,
+  } = useChannel(channelId || '', {
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })
-  const { videos, loading: videosLoading, error: videosError } = useChannelPreviewVideos(channelId, {
+  const {
+    videos,
+    loading: videosLoading,
+    error: videosError,
+  } = useChannelPreviewVideos(channelId, {
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 

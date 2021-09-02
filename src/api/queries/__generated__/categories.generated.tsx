@@ -3,13 +3,14 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
+const defaultOptions = {}
 export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }
 
 export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetVideoCategoriesQuery = {
   __typename?: 'Query'
-  videoCategories: Array<{ __typename?: 'VideoCategory' } & VideoCategoryFieldsFragment>
+  videoCategories: Array<{ __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }>
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -45,17 +46,16 @@ export const GetVideoCategoriesDocument = gql`
 export function useGetVideoCategoriesQuery(
   baseOptions?: Apollo.QueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
 ) {
-  return Apollo.useQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(
-    GetVideoCategoriesDocument,
-    baseOptions
-  )
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(GetVideoCategoriesDocument, options)
 }
 export function useGetVideoCategoriesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetVideoCategoriesQuery, GetVideoCategoriesQueryVariables>(
     GetVideoCategoriesDocument,
-    baseOptions
+    options
   )
 }
 export type GetVideoCategoriesQueryHookResult = ReturnType<typeof useGetVideoCategoriesQuery>

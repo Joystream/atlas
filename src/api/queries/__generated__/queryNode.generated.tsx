@@ -3,6 +3,7 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
+const defaultOptions = {}
 export type GetQueryNodeStateSubscriptionVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetQueryNodeStateSubscription = {
@@ -45,9 +46,10 @@ export const GetQueryNodeStateDocument = gql`
 export function useGetQueryNodeStateSubscription(
   baseOptions?: Apollo.SubscriptionHookOptions<GetQueryNodeStateSubscription, GetQueryNodeStateSubscriptionVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useSubscription<GetQueryNodeStateSubscription, GetQueryNodeStateSubscriptionVariables>(
     GetQueryNodeStateDocument,
-    baseOptions
+    options
   )
 }
 export type GetQueryNodeStateSubscriptionHookResult = ReturnType<typeof useGetQueryNodeStateSubscription>

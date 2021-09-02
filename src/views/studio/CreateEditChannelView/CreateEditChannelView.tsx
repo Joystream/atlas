@@ -81,7 +81,12 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
 
-  const { channel, loading, error, refetch: refetchChannel } = useChannel(activeChannelId || '', {
+  const {
+    channel,
+    loading,
+    error,
+    refetch: refetchChannel,
+  } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {

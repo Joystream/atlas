@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useMostViewedVideosIds } from '@/api/hooks'
-import useVideosConnection from '@/api/hooks/videosConnection'
+import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
 import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
@@ -21,7 +20,11 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const { mostViewedVideos, loading: mostViewedVideosLoading, error: mostViewedVideosError } = useMostViewedVideosIds(
+  const {
+    mostViewedVideos,
+    loading: mostViewedVideosLoading,
+    error: mostViewedVideosError,
+  } = useMostViewedVideosIds(
     {
       limit: 200,
       timePeriodDays: 30,
@@ -30,7 +33,11 @@ export const HomeView: React.FC = () => {
   )
   const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
 
-  const { videosConnection, loading: followedLoading, error: followedError } = useVideosConnection(
+  const {
+    videosConnection,
+    loading: followedLoading,
+    error: followedError,
+  } = useVideosConnection(
     {
       where: {
         channelId_in: channelIdIn,

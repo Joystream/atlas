@@ -109,7 +109,11 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   )
 
   const isVideo = asset.type === 'video'
-  const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileSelect,
+  } = useDropzone({
     onDrop,
     maxFiles: 1,
     multiple: false,

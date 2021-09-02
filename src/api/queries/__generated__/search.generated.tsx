@@ -2,11 +2,10 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllChannelFieldsFragment } from './channels.generated'
 import { AllChannelFieldsFragmentDoc } from './channels.generated'
-import { VideoFieldsFragment } from './videos.generated'
 import { VideoFieldsFragmentDoc } from './videos.generated'
 
+const defaultOptions = {}
 export type SearchQueryVariables = Types.Exact<{
   text: Types.Scalars['String']
   whereVideo?: Types.Maybe<Types.VideoWhereInput>
@@ -18,7 +17,156 @@ export type SearchQuery = {
   __typename?: 'Query'
   search: Array<{
     __typename?: 'SearchFTSOutput'
-    item: ({ __typename?: 'Video' } & VideoFieldsFragment) | ({ __typename?: 'Channel' } & AllChannelFieldsFragment)
+    item:
+      | {
+          __typename?: 'Video'
+          id: string
+          title?: Types.Maybe<string>
+          description?: Types.Maybe<string>
+          views?: Types.Maybe<number>
+          duration?: Types.Maybe<number>
+          createdAt: Date
+          isPublic?: Types.Maybe<boolean>
+          isExplicit?: Types.Maybe<boolean>
+          isFeatured: boolean
+          hasMarketing?: Types.Maybe<boolean>
+          isCensored: boolean
+          publishedBeforeJoystream?: Types.Maybe<Date>
+          mediaUrls: Array<string>
+          mediaAvailability: Types.AssetAvailability
+          thumbnailPhotoUrls: Array<string>
+          thumbnailPhotoAvailability: Types.AssetAvailability
+          category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+          language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+          mediaMetadata: {
+            __typename?: 'VideoMediaMetadata'
+            id: string
+            pixelHeight?: Types.Maybe<number>
+            pixelWidth?: Types.Maybe<number>
+          }
+          mediaDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+          thumbnailPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+          channel: {
+            __typename?: 'Channel'
+            id: string
+            title?: Types.Maybe<string>
+            createdAt: Date
+            avatarPhotoUrls: Array<string>
+            avatarPhotoAvailability: Types.AssetAvailability
+            avatarPhotoDataObject?: Types.Maybe<{
+              __typename?: 'DataObject'
+              id: string
+              createdAt: Date
+              size: number
+              liaisonJudgement: Types.LiaisonJudgement
+              ipfsContentId: string
+              joystreamContentId: string
+              liaison?: Types.Maybe<{
+                __typename?: 'Worker'
+                id: string
+                workerId: string
+                metadata?: Types.Maybe<string>
+                isActive: boolean
+                type: Types.WorkerType
+              }>
+            }>
+          }
+          license?: Types.Maybe<{
+            __typename?: 'License'
+            id: string
+            code?: Types.Maybe<number>
+            attribution?: Types.Maybe<string>
+            customText?: Types.Maybe<string>
+          }>
+        }
+      | {
+          __typename?: 'Channel'
+          description?: Types.Maybe<string>
+          follows?: Types.Maybe<number>
+          views?: Types.Maybe<number>
+          isPublic?: Types.Maybe<boolean>
+          isCensored: boolean
+          coverPhotoUrls: Array<string>
+          coverPhotoAvailability: Types.AssetAvailability
+          id: string
+          title?: Types.Maybe<string>
+          createdAt: Date
+          avatarPhotoUrls: Array<string>
+          avatarPhotoAvailability: Types.AssetAvailability
+          language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+          ownerMember?: Types.Maybe<{
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            avatarUri?: Types.Maybe<string>
+          }>
+          coverPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+          avatarPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+        }
   }>
 }
 
@@ -59,10 +207,12 @@ export const SearchDocument = gql`
  * });
  */
 export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables>) {
-  return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
 }
 export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-  return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
 }
 export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>
 export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>

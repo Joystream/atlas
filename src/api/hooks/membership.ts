@@ -3,14 +3,16 @@ import { QueryHookOptions } from '@apollo/client'
 import {
   GetMembershipQuery,
   GetMembershipQueryVariables,
+  GetMembershipsQuery,
   GetMembershipsQueryVariables,
   useGetMembershipQuery,
   useGetMembershipsQuery,
 } from '@/api/queries'
 
-type MembershipOpts = QueryHookOptions<GetMembershipQuery>
-
-export const useMembership = (variables: GetMembershipQueryVariables, opts?: MembershipOpts) => {
+export const useMembership = (
+  variables: GetMembershipQueryVariables,
+  opts?: QueryHookOptions<GetMembershipQuery, GetMembershipQueryVariables>
+) => {
   const { data, ...rest } = useGetMembershipQuery({
     ...opts,
     variables,
@@ -21,7 +23,10 @@ export const useMembership = (variables: GetMembershipQueryVariables, opts?: Mem
   }
 }
 
-export const useMemberships = (variables: GetMembershipsQueryVariables, opts?: MembershipOpts) => {
+export const useMemberships = (
+  variables: GetMembershipsQueryVariables,
+  opts?: QueryHookOptions<GetMembershipsQuery, GetMembershipsQueryVariables>
+) => {
   const { data, ...rest } = useGetMembershipsQuery({
     ...opts,
     variables,

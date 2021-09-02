@@ -5,11 +5,16 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
+import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     reactRefresh(),
+    checker({
+      typescript: true,
+      eslint: { files: ['./src'], extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+    }),
     babel({
       extensions: ['.tsx', '.ts'],
       include: ['src/**/*.style.*', 'src/**/*.styles.*'],

@@ -2,11 +2,10 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment } from './channels.generated'
 import { BasicChannelFieldsFragmentDoc } from './channels.generated'
-import { DataObjectFieldsFragment } from './shared.generated'
 import { DataObjectFieldsFragmentDoc } from './shared.generated'
 
+const defaultOptions = {}
 export type VideoMediaMetadataFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
   id: string
@@ -28,7 +27,23 @@ export type BasicVideoFieldsFragment = {
   title?: Types.Maybe<string>
   thumbnailPhotoUrls: Array<string>
   thumbnailPhotoAvailability: Types.AssetAvailability
-  thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
+  thumbnailPhotoDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
 }
 
 export type VideoFieldsFragment = {
@@ -51,11 +66,78 @@ export type VideoFieldsFragment = {
   thumbnailPhotoAvailability: Types.AssetAvailability
   category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
   language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-  mediaMetadata: { __typename?: 'VideoMediaMetadata' } & VideoMediaMetadataFieldsFragment
-  mediaDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
-  thumbnailPhotoDataObject?: Types.Maybe<{ __typename?: 'DataObject' } & DataObjectFieldsFragment>
-  channel: { __typename?: 'Channel' } & BasicChannelFieldsFragment
-  license?: Types.Maybe<{ __typename?: 'License' } & LicenseFieldsFragment>
+  mediaMetadata: {
+    __typename?: 'VideoMediaMetadata'
+    id: string
+    pixelHeight?: Types.Maybe<number>
+    pixelWidth?: Types.Maybe<number>
+  }
+  mediaDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
+  thumbnailPhotoDataObject?: Types.Maybe<{
+    __typename?: 'DataObject'
+    id: string
+    createdAt: Date
+    size: number
+    liaisonJudgement: Types.LiaisonJudgement
+    ipfsContentId: string
+    joystreamContentId: string
+    liaison?: Types.Maybe<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  }>
+  channel: {
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }
+  license?: Types.Maybe<{
+    __typename?: 'License'
+    id: string
+    code?: Types.Maybe<number>
+    attribution?: Types.Maybe<string>
+    customText?: Types.Maybe<string>
+  }>
 }
 
 export type GetVideoQueryVariables = Types.Exact<{
@@ -64,7 +146,99 @@ export type GetVideoQueryVariables = Types.Exact<{
 
 export type GetVideoQuery = {
   __typename?: 'Query'
-  videoByUniqueInput?: Types.Maybe<{ __typename?: 'Video' } & VideoFieldsFragment>
+  videoByUniqueInput?: Types.Maybe<{
+    __typename?: 'Video'
+    id: string
+    title?: Types.Maybe<string>
+    description?: Types.Maybe<string>
+    views?: Types.Maybe<number>
+    duration?: Types.Maybe<number>
+    createdAt: Date
+    isPublic?: Types.Maybe<boolean>
+    isExplicit?: Types.Maybe<boolean>
+    isFeatured: boolean
+    hasMarketing?: Types.Maybe<boolean>
+    isCensored: boolean
+    publishedBeforeJoystream?: Types.Maybe<Date>
+    mediaUrls: Array<string>
+    mediaAvailability: Types.AssetAvailability
+    thumbnailPhotoUrls: Array<string>
+    thumbnailPhotoAvailability: Types.AssetAvailability
+    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+    mediaMetadata: {
+      __typename?: 'VideoMediaMetadata'
+      id: string
+      pixelHeight?: Types.Maybe<number>
+      pixelWidth?: Types.Maybe<number>
+    }
+    mediaDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    thumbnailPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: Types.Maybe<string>
+      createdAt: Date
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }
+    license?: Types.Maybe<{
+      __typename?: 'License'
+      id: string
+      code?: Types.Maybe<number>
+      attribution?: Types.Maybe<string>
+      customText?: Types.Maybe<string>
+    }>
+  }>
 }
 
 export type GetVideosConnectionQueryVariables = Types.Exact<{
@@ -79,7 +253,103 @@ export type GetVideosConnectionQuery = {
   videosConnection: {
     __typename?: 'VideoConnection'
     totalCount: number
-    edges: Array<{ __typename?: 'VideoEdge'; cursor: string; node: { __typename?: 'Video' } & VideoFieldsFragment }>
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
+        id: string
+        title?: Types.Maybe<string>
+        description?: Types.Maybe<string>
+        views?: Types.Maybe<number>
+        duration?: Types.Maybe<number>
+        createdAt: Date
+        isPublic?: Types.Maybe<boolean>
+        isExplicit?: Types.Maybe<boolean>
+        isFeatured: boolean
+        hasMarketing?: Types.Maybe<boolean>
+        isCensored: boolean
+        publishedBeforeJoystream?: Types.Maybe<Date>
+        mediaUrls: Array<string>
+        mediaAvailability: Types.AssetAvailability
+        thumbnailPhotoUrls: Array<string>
+        thumbnailPhotoAvailability: Types.AssetAvailability
+        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+        mediaMetadata: {
+          __typename?: 'VideoMediaMetadata'
+          id: string
+          pixelHeight?: Types.Maybe<number>
+          pixelWidth?: Types.Maybe<number>
+        }
+        mediaDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        thumbnailPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: Types.Maybe<string>
+          createdAt: Date
+          avatarPhotoUrls: Array<string>
+          avatarPhotoAvailability: Types.AssetAvailability
+          avatarPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+        }
+        license?: Types.Maybe<{
+          __typename?: 'License'
+          id: string
+          code?: Types.Maybe<number>
+          attribution?: Types.Maybe<string>
+          customText?: Types.Maybe<string>
+        }>
+      }
+    }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
   }
 }
@@ -93,7 +363,101 @@ export type GetVideosQueryVariables = Types.Exact<{
 
 export type GetVideosQuery = {
   __typename?: 'Query'
-  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & VideoFieldsFragment>>
+  videos?: Types.Maybe<
+    Array<{
+      __typename?: 'Video'
+      id: string
+      title?: Types.Maybe<string>
+      description?: Types.Maybe<string>
+      views?: Types.Maybe<number>
+      duration?: Types.Maybe<number>
+      createdAt: Date
+      isPublic?: Types.Maybe<boolean>
+      isExplicit?: Types.Maybe<boolean>
+      isFeatured: boolean
+      hasMarketing?: Types.Maybe<boolean>
+      isCensored: boolean
+      publishedBeforeJoystream?: Types.Maybe<Date>
+      mediaUrls: Array<string>
+      mediaAvailability: Types.AssetAvailability
+      thumbnailPhotoUrls: Array<string>
+      thumbnailPhotoAvailability: Types.AssetAvailability
+      category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+      language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+      mediaMetadata: {
+        __typename?: 'VideoMediaMetadata'
+        id: string
+        pixelHeight?: Types.Maybe<number>
+        pixelWidth?: Types.Maybe<number>
+      }
+      mediaDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+      thumbnailPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+      channel: {
+        __typename?: 'Channel'
+        id: string
+        title?: Types.Maybe<string>
+        createdAt: Date
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
+      license?: Types.Maybe<{
+        __typename?: 'License'
+        id: string
+        code?: Types.Maybe<number>
+        attribution?: Types.Maybe<string>
+        customText?: Types.Maybe<string>
+      }>
+    }>
+  >
 }
 
 export type GetBasicVideosQueryVariables = Types.Exact<{
@@ -102,7 +466,32 @@ export type GetBasicVideosQueryVariables = Types.Exact<{
 
 export type GetBasicVideosQuery = {
   __typename?: 'Query'
-  videos?: Types.Maybe<Array<{ __typename?: 'Video' } & BasicVideoFieldsFragment>>
+  videos?: Types.Maybe<
+    Array<{
+      __typename?: 'Video'
+      id: string
+      title?: Types.Maybe<string>
+      thumbnailPhotoUrls: Array<string>
+      thumbnailPhotoAvailability: Types.AssetAvailability
+      thumbnailPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+  >
 }
 
 export type GetVideoViewsQueryVariables = Types.Exact<{
@@ -251,10 +640,12 @@ export const GetVideoDocument = gql`
  * });
  */
 export function useGetVideoQuery(baseOptions: Apollo.QueryHookOptions<GetVideoQuery, GetVideoQueryVariables>) {
-  return Apollo.useQuery<GetVideoQuery, GetVideoQueryVariables>(GetVideoDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideoQuery, GetVideoQueryVariables>(GetVideoDocument, options)
 }
 export function useGetVideoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVideoQuery, GetVideoQueryVariables>) {
-  return Apollo.useLazyQuery<GetVideoQuery, GetVideoQueryVariables>(GetVideoDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVideoQuery, GetVideoQueryVariables>(GetVideoDocument, options)
 }
 export type GetVideoQueryHookResult = ReturnType<typeof useGetVideoQuery>
 export type GetVideoLazyQueryHookResult = ReturnType<typeof useGetVideoLazyQuery>
@@ -305,17 +696,19 @@ export const GetVideosConnectionDocument = gql`
 export function useGetVideosConnectionQuery(
   baseOptions?: Apollo.QueryHookOptions<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>(
     GetVideosConnectionDocument,
-    baseOptions
+    options
   )
 }
 export function useGetVideosConnectionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>(
     GetVideosConnectionDocument,
-    baseOptions
+    options
   )
 }
 export type GetVideosConnectionQueryHookResult = ReturnType<typeof useGetVideosConnectionQuery>
@@ -353,12 +746,14 @@ export const GetVideosDocument = gql`
  * });
  */
 export function useGetVideosQuery(baseOptions?: Apollo.QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>) {
-  return Apollo.useQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, options)
 }
 export function useGetVideosLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetVideosQuery, GetVideosQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVideosQuery, GetVideosQueryVariables>(GetVideosDocument, options)
 }
 export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
@@ -391,12 +786,14 @@ export const GetBasicVideosDocument = gql`
 export function useGetBasicVideosQuery(
   baseOptions?: Apollo.QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) {
-  return Apollo.useQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, options)
 }
 export function useGetBasicVideosLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicVideosQuery, GetBasicVideosQueryVariables>(GetBasicVideosDocument, options)
 }
 export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQuery>
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
@@ -429,12 +826,14 @@ export const GetVideoViewsDocument = gql`
 export function useGetVideoViewsQuery(
   baseOptions: Apollo.QueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
 ) {
-  return Apollo.useQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, options)
 }
 export function useGetVideoViewsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, options)
 }
 export type GetVideoViewsQueryHookResult = ReturnType<typeof useGetVideoViewsQuery>
 export type GetVideoViewsLazyQueryHookResult = ReturnType<typeof useGetVideoViewsLazyQuery>
@@ -467,17 +866,19 @@ export const GetBatchedVideoViewsDocument = gql`
 export function useGetBatchedVideoViewsQuery(
   baseOptions: Apollo.QueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
     GetBatchedVideoViewsDocument,
-    baseOptions
+    options
   )
 }
 export function useGetBatchedVideoViewsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
     GetBatchedVideoViewsDocument,
-    baseOptions
+    options
   )
 }
 export type GetBatchedVideoViewsQueryHookResult = ReturnType<typeof useGetBatchedVideoViewsQuery>
@@ -515,17 +916,19 @@ export const GetMostViewedVideosDocument = gql`
 export function useGetMostViewedVideosQuery(
   baseOptions: Apollo.QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>(
     GetMostViewedVideosDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostViewedVideosLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>(
     GetMostViewedVideosDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostViewedVideosQueryHookResult = ReturnType<typeof useGetMostViewedVideosQuery>
@@ -562,17 +965,19 @@ export const GetMostViewedVideosAllTimeDocument = gql`
 export function useGetMostViewedVideosAllTimeQuery(
   baseOptions: Apollo.QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>(
     GetMostViewedVideosAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export function useGetMostViewedVideosAllTimeLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
 ) {
+  const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useLazyQuery<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>(
     GetMostViewedVideosAllTimeDocument,
-    baseOptions
+    options
   )
 }
 export type GetMostViewedVideosAllTimeQueryHookResult = ReturnType<typeof useGetMostViewedVideosAllTimeQuery>
@@ -613,7 +1018,8 @@ export type AddVideoViewMutationFn = Apollo.MutationFunction<AddVideoViewMutatio
 export function useAddVideoViewMutation(
   baseOptions?: Apollo.MutationHookOptions<AddVideoViewMutation, AddVideoViewMutationVariables>
 ) {
-  return Apollo.useMutation<AddVideoViewMutation, AddVideoViewMutationVariables>(AddVideoViewDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddVideoViewMutation, AddVideoViewMutationVariables>(AddVideoViewDocument, options)
 }
 export type AddVideoViewMutationHookResult = ReturnType<typeof useAddVideoViewMutation>
 export type AddVideoViewMutationResult = Apollo.MutationResult<AddVideoViewMutation>

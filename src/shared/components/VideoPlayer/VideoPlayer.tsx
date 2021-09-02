@@ -55,8 +55,8 @@ export type VideoPlayerProps = {
 
 declare global {
   interface Document {
-    pictureInPictureEnabled: boolean
-    pictureInPictureElement: Element
+    readonly pictureInPictureEnabled: boolean
+    readonly pictureInPictureElement: Element
   }
 }
 
