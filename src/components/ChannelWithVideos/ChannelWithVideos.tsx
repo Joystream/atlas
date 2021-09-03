@@ -3,9 +3,8 @@ import React, { FC, useState } from 'react'
 import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { VideoTile } from '@/components/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
-import { useHandleFollowChannel } from '@/hooks'
-import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Grid } from '@/shared/components/Grid'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
@@ -30,7 +29,11 @@ const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => {
   const videoRows = useVideoGridRows('videosInChannel')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const { channel, loading: channelLoading, error: channelError } = useChannel(channelId || '', {
+  const {
+    channel,
+    loading: channelLoading,
+    error: channelError,
+  } = useChannel(channelId || '', {
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })

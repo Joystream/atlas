@@ -15,8 +15,8 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
-import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
 import { ChannelCover } from '@/shared/components/ChannelCover'
@@ -56,8 +56,7 @@ const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
-  const videoRows = useVideoGridRows()
-  const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
+  const videoRows = useVideoGridRows('channel')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id, {
