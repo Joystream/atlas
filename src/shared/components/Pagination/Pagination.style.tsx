@@ -15,11 +15,10 @@ type PaginationButtonProps = {
 export const PaginationWrapper = styled.div`
   display: flex;
   max-width: 400px;
-  justify-content: space-between;
+  justify-content: center;
 
   ${media.xs} {
     max-width: unset;
-    justify-content: unset;
   }
 `
 

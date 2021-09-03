@@ -188,7 +188,7 @@ export const ChannelView: React.FC = () => {
             page={isSearching ? currentSearchPage : currentPage}
             itemsPerPage={videosPerPage}
             totalCount={isSearching ? searchVideos?.length : totalCount}
-            defaultPaginationLength={7}
+            maxPaginationLinks={7}
           />
         </PaginationContainer>
       </>

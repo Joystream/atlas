@@ -128,9 +128,6 @@ export const StyledButton = styled(Button)`
 export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
   padding-bottom: ${sizes(16)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const TabsContainer = styled.div`
