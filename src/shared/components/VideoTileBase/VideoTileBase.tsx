@@ -205,7 +205,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
             >
               <CoverImageContainer>
                 <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  {isLoadingThumbnail ? (
+                  {isLoadingThumbnail && !isDraft ? (
                     <>
                       {(videoHref || publisherMode) && (
                         <SkeletonHoverOverlay>
