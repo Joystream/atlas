@@ -1,12 +1,5 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { GridItem } from '@/shared/components/LayoutGrid'
-import { Text } from '@/shared/components/Text'
-import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
 import {
   SvgVideoCategoriesAutosAndVehicles,
   SvgVideoCategoriesComedy,
@@ -24,10 +17,9 @@ import {
   SvgVideoCategoriesSports,
   SvgVideoCategoriesTravelAndEvents,
 } from '@/shared/icons'
-import { colors, media, sizes } from '@/shared/theme'
 
 type VideoCategoryData = { title: string; icon: React.ReactNode; color: string; coverImg: string }
-const videoCategories = {
+export const videoCategories = {
   'science-and-Technology': {
     id: '14',
     title: 'Science & Technology',
@@ -134,7 +126,7 @@ const videoCategories = {
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/news-and-politics.webp',
   },
 } as const
-const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & VideoCategoryData> = [
+export const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & VideoCategoryData> = [
   {
     ...videoCategories['travel-and-events'],
     videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5778.mp4',
@@ -151,84 +143,3 @@ const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & 
     videoTitle: 'taxi driver edit',
   },
 ]
-
-export const DiscoverView: React.FC = () => {
-  const { videosConnection } = useVideosConnection({
-    first: 0,
-  })
-  const isMdBreakpoint = useMediaMatch('md')
-  return (
-    <StyledLimitedWidthContainer big>
-      <Text variant="h2">Discover</Text>
-      <FeaturedCategoriesContainer>
-        {featuredVideoCategories.map((category, i) => (
-          <GridItem key={i} colSpan={{ sm: i === 0 ? 2 : 1, xl: 1 }}>
-            <FeaturedVideoCategoryCard
-              variant={isMdBreakpoint ? 'default' : 'compact'}
-              title={category.title}
-              videoTitle={category.videoTitle}
-              videoUrl={category.videoUrl}
-              color={category.color}
-              icon={category.icon}
-            />
-          </GridItem>
-        ))}
-      </FeaturedCategoriesContainer>
-      <BorderTextContainer>
-        <Text variant="h4">All categories</Text>
-      </BorderTextContainer>
-      <CategoriesContainer>
-        {Object.values(videoCategories).map((category, i) => (
-          <VideoCategoryCard
-            key={i}
-            title={category.title}
-            coverImg={category.coverImg}
-            categoryId={category.id}
-            color={category.color}
-            icon={category.icon}
-            videosTotalCount={videosConnection?.totalCount}
-            variant={isMdBreakpoint ? 'default' : 'compact'}
-          />
-        ))}
-      </CategoriesContainer>
-    </StyledLimitedWidthContainer>
-  )
-}
-
-const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
-  margin: ${sizes(16)} auto;
-`
-
-const FeaturedCategoriesContainer = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  margin: ${sizes(16)} 0;
-
-  ${media.sm} {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  ${media.xl} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`
-
-const CategoriesContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${sizes(6)};
-  margin: ${sizes(12)} 0 ${sizes(16)} 0;
-
-  ${media.lg} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${media.xl} {
-    grid-template-columns: repeat(4, 1fr);
-  }
-`
-
-const BorderTextContainer = styled.div`
-  padding-bottom: ${sizes(5)};
-  border-bottom: 1px solid ${colors.gray[700]};
-`

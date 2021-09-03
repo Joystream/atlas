@@ -14,7 +14,7 @@ import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
 
-import { DiscoverView } from './DiscoverView'
+import { DiscoverView } from './DiscoverView/DiscoverView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
