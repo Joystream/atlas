@@ -37,7 +37,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
   })
 
   const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
 
   const targetItemsCount = videosPerRow * INITIAL_ROWS
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
