@@ -47,31 +47,27 @@ export default defineConfig({
   optimizeDeps: {
     include: ['buffer'],
   },
-  // build: {
-  // commonjsOptions: {
-  //   transformMixedEsModules: true,
-  // ignore: (id: string) => id.includes('polkadot'),
-  // esmExternals: true,
-  // },
-  // rollupOptions: {
-  //   output: {
-  //     manualChunks: {
-  //       'vendors-studio': [
-  //         '@polkadot/util',
-  //         '@polkadot/types',
-  //         '@polkadot/wasm-crypto-wasm',
-  //         '@polkadot/util-crypto',
-  //         '@polkadot/types',
-  //         '@polkadot/keyring',
-  //         '@polkadot/api',
-  //         '@polkadot/api-derive',
-  //         '@polkadot/rpc-core',
-  //         '@polkadot/rpc-provider',
-  //         '@joystream/types',
-  //         '@joystream/content-metadata-protobuf',
-  //       ],
-  //     },
-  //   },
-  // },
-  // },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendors-studio': [
+            '@polkadot/util',
+            '@polkadot/types',
+            '@polkadot/wasm-crypto-wasm',
+            '@polkadot/util-crypto',
+            '@polkadot/types',
+            '@polkadot/keyring',
+            '@polkadot/api',
+            '@polkadot/api-derive',
+            '@polkadot/rpc-core',
+            '@polkadot/rpc-provider',
+            '@polkadot/extension-dapp',
+            '@joystream/types',
+            '@joystream/content-metadata-protobuf',
+          ],
+        },
+      },
+    },
+  },
 })
