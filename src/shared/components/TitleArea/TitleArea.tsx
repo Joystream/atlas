@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useEffect } from 'react'
 
 import { CharactersCounter, Container, MinMaxChars, StyledInput, TitleAreaInfo } from './TitleArea.style'
 
@@ -21,11 +20,17 @@ export const TitleArea = React.forwardRef<HTMLInputElement, TitleAreaProps>(
     const [charactersCount, setCharactersCount] = useState(0)
     const [touched, setTouched] = useState(false)
 
-    useEffect(() => {
-      setCharactersCount(value?.length || 0)
-    }, [value])
-
     const invalidInput = charactersCount < min || charactersCount > max
+
+    const handleFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setCharactersCount(e.target.value.length)
+      setTouched(true)
+    }
+
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setCharactersCount(e.target.value.length)
+      onChange?.(e)
+    }
 
     return (
       <Container className={className}>
@@ -37,10 +42,10 @@ export const TitleArea = React.forwardRef<HTMLInputElement, TitleAreaProps>(
           name={name}
           placeholder={placeholder}
           type="text"
-          onFocus={() => setTouched(true)}
+          onFocus={handleFocus}
           touchedAndEmpty={touched && !charactersCount}
           defaultValue={value}
-          onChange={onChange}
+          onChange={handleOnChange}
           onBlur={onBlur}
         />
         <TitleAreaInfo>
