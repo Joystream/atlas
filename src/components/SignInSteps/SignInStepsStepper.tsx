@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
 
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 
 import { AccountStep } from './AccountStep'
 import { ExtensionStep } from './ExtensionStep'

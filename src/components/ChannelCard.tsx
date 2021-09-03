@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useChannel } from '@/api/hooks'
-import { useHandleFollowChannel } from '@/hooks'
+import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { AssetType, useAsset } from '@/providers/assets'
 import { ChannelCardBase } from '@/shared/components/ChannelCardBase'
 

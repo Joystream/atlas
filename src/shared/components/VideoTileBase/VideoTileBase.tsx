@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useContextMenu } from '@/hooks'
+import { useContextMenu } from '@/hooks/useContextMenu'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,

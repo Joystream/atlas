@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useDialog } from '@/providers/dialogs'
 import { useUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
