@@ -20,6 +20,11 @@ import { Tooltip } from '../Tooltip'
 export type ActionBarProps = {
   primaryText?: string
   secondaryText?: string
+  primaryButtonTooltipText?: {
+    headerText: string
+    text: string
+    icon: boolean
+  }
   primaryButtonText?: string
   detailsText?: string
   tooltipText?: string
@@ -47,6 +52,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   disabled,
   onConfirmClick,
   onCancelClick,
+  primaryButtonTooltipText,
 }) => {
   return (
     <StyledActionBarContainer className={className}>
@@ -71,10 +77,18 @@ export const ActionBar: React.FC<ActionBarProps> = ({
               {secondaryButtonText}
             </Button>
           )}
-          {primaryButtonText && (
-            <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
-              {primaryButtonText}
-            </Button>
+          {primaryButtonTooltipText && (
+            <Tooltip
+              headerText={primaryButtonTooltipText.headerText}
+              text={primaryButtonTooltipText.text}
+              icon={primaryButtonTooltipText.icon}
+              placement="top-end"
+              offsetX={-6}
+            >
+              <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+                {primaryButtonText}
+              </Button>
+            </Tooltip>
           )}
         </StyledButtonsContainer>
       </StyledInnerContainer>
