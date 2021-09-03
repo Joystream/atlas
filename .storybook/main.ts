@@ -22,8 +22,10 @@ const config: CustomizedStorybookConfig = {
   viteFinal(storybookConfig) {
     const viteConfig = _viteConfig as UserConfig
     const vitePlugins = Array.isArray(viteConfig.plugins) ? viteConfig.plugins.flat() : []
-    // @ts-ignore some weird error going on, whatever
-    const filteredVitePlugins = vitePlugins.filter((plugin) => plugin.name !== 'react-refresh')
+    const filteredVitePlugins = vitePlugins.filter(
+      // @ts-ignore some weird error going on, whatever
+      (plugin) => plugin.name !== 'react-refresh' && plugin.name !== 'vite-plugin-checker'
+    )
 
     const merged: UserConfig = {
       ...storybookConfig,
