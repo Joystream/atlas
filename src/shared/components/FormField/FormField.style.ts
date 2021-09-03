@@ -14,15 +14,19 @@ export const FormFieldWrapper = styled.div<DenseProps>`
   max-width: 760px;
 `
 
-export const FormFieldTitle = styled(Text)`
-  margin: 0;
-  line-height: ${sizes(5)};
-  word-wrap: break-word;
+export const FormFieldHeader = styled.header`
+  display: flex;
+  align-items: center;
   width: 85%;
+  padding-bottom: ${sizes(2)};
+  word-wrap: break-word;
+`
+
+export const FormFieldTitle = styled(Text)`
+  margin-right: ${sizes(4)};
 `
 
 export const FormFieldDescription = styled(Text)`
-  margin-top: ${sizes(2)};
   width: 85%;
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.gray[300]};
