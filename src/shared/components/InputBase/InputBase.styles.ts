@@ -36,7 +36,7 @@ export const FormGroup = styled.label<FormGroupProps>`
     }
 
     :not(:placeholder-shown) {
-      border: 1px solid ${colors.gray[200]};
+      border: 1px solid ${colors.gray[500]};
     }
 
     :focus {
@@ -44,7 +44,7 @@ export const FormGroup = styled.label<FormGroupProps>`
     }
 
     :not(:focus) {
-      border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
+      border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[500])};
     }
   }
 
