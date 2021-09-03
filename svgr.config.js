@@ -34,5 +34,5 @@ function indexTemplate(filePaths) {
     const basename = path.basename(filePath, path.extname(filePath))
     return `export * from './${basename}'`
   })
-  return comment + exportEntries.join('\n') + '\n'
+  return comment + '\n' + exportEntries.join('\n') + '\n'
 }
