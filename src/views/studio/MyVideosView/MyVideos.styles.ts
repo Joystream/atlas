@@ -51,7 +51,9 @@ export const NewVideoTile = styled(Link)`
   transition: border ${transitions.timings.player} ease-out;
   width: 100%;
   height: 0;
-  padding-bottom: 56.25%;
+
+  /* 2px account for border */
+  padding-bottom: calc(56.25% - 2px);
   cursor: pointer;
 
   :hover {
