@@ -14,6 +14,7 @@ export default defineConfig({
     checker({
       typescript: true,
       eslint: { files: ['./src'], extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+      overlay: false,
     }),
     babel({
       extensions: ['.tsx', '.ts'],
