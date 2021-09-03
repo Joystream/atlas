@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -22,10 +23,13 @@ import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphUpload } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
   NewVideoTile,
+  NewVideoTileSkeleton,
+  NewVideoTileWrapper,
   PaginationContainer,
   SortContainer,
   StyledDismissibleBanner,
@@ -302,12 +306,26 @@ export const MyVideosView = () => {
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
               {currentPage === 0 && (
-                <NewVideoTile to={absoluteRoutes.studio.editVideo()}>
-                  <TextAndIconWrapper>
-                    <StyledIcon />
-                    <StyledText variant="body2">Upload new video</StyledText>
-                  </TextAndIconWrapper>
-                </NewVideoTile>
+                <SwitchTransition>
+                  <CSSTransition
+                    key={loading ? 'cover-placeholder' : 'cover'}
+                    timeout={parseInt(transitions.timings.sharp)}
+                    classNames={transitions.names.fade}
+                  >
+                    <NewVideoTileWrapper>
+                      {loading ? (
+                        <NewVideoTileSkeleton />
+                      ) : (
+                        <NewVideoTile to={absoluteRoutes.studio.editVideo()}>
+                          <TextAndIconWrapper>
+                            <StyledIcon />
+                            <StyledText variant="body2">Upload new video</StyledText>
+                          </TextAndIconWrapper>
+                        </NewVideoTile>
+                      )}
+                    </NewVideoTileWrapper>
+                  </CSSTransition>
+                </SwitchTransition>
               )}
               {gridContent}
             </Grid>
