@@ -24,3 +24,5 @@ storybook-static
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+.DS_Store
