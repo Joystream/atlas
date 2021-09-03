@@ -16,8 +16,7 @@ import {
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
-import { ContentId } from '@joystream/types/media'
-import { ContentParameters } from '@joystream/types/storage'
+import { ContentId, ContentParameters } from '@joystream/types/storage'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer, SubmittableExtrinsic } from '@polkadot/api/types'
 import {
@@ -414,12 +413,13 @@ export class JoystreamJs {
 
   createFileAsset({ ipfsContentId, size }: AssetMetadata): [NewAsset, string] {
     const contentId = ContentId.generate(this.api.registry)
+    const b = new Bytes(this.api.registry, ipfsContentId)
     const content = new ContentParameters(this.api.registry, {
       content_id: contentId,
       // hardcoded type_id - it's not used but needs to be one of the allowed values
       type_id: new U64(this.api.registry, 1),
       size: new U64(this.api.registry, size),
-      ipfs_content_id: new Bytes(this.api.registry, ipfsContentId),
+      ipfs_content_id: b,
     })
     return [new NewAsset(this.api.registry, { upload: content }), contentId.encode()]
   }

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'

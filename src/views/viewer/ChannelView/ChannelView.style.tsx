@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components/ChannelLink'
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'

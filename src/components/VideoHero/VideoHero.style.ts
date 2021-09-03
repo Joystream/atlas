@@ -7,7 +7,7 @@ import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
-import { TOP_NAVBAR_HEIGHT } from '../Topbar'
+import { TOP_NAVBAR_HEIGHT } from '../TopbarBase'
 
 const BUTTONS_HEIGHT = 48
 

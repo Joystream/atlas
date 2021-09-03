@@ -1,4 +1,4 @@
-import { debounce, round } from 'lodash'
+import { debounce, round } from 'lodash-es'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
@@ -55,8 +55,8 @@ export type VideoPlayerProps = {
 
 declare global {
   interface Document {
-    pictureInPictureEnabled: boolean
-    pictureInPictureElement: Element
+    readonly pictureInPictureEnabled: boolean
+    readonly pictureInPictureElement: Element
   }
 }
 

@@ -7,7 +7,7 @@ import { AccountStep } from './AccountStep'
 import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
 
-import { Multistepper } from '../Dialogs'
+import { Multistepper } from '../Multistepper'
 
 export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()

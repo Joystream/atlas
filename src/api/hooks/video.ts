@@ -10,6 +10,7 @@ import {
   GetMostViewedVideosQuery,
   GetMostViewedVideosQueryVariables,
   GetVideoQuery,
+  GetVideoQueryVariables,
   GetVideosQuery,
   GetVideosQueryVariables,
   VideoOrderByInput,
@@ -21,8 +22,7 @@ import {
   useGetVideosQuery,
 } from '@/api/queries'
 
-type VideoOpts = QueryHookOptions<GetVideoQuery>
-export const useVideo = (id: string, opts?: VideoOpts) => {
+export const useVideo = (id: string, opts?: QueryHookOptions<GetVideoQuery, GetVideoQueryVariables>) => {
   const { data, ...queryRest } = useGetVideoQuery({
     ...opts,
     variables: { where: { id } },
@@ -33,8 +33,10 @@ export const useVideo = (id: string, opts?: VideoOpts) => {
   }
 }
 
-type VideosOpts = QueryHookOptions<GetVideosQuery>
-export const useVideos = (variables?: GetVideosQueryVariables, opts?: VideosOpts) => {
+export const useVideos = (
+  variables?: GetVideosQueryVariables,
+  opts?: QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>
+) => {
   const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
   return {
     videos: data?.videos,
@@ -68,8 +70,7 @@ export const useChannelPreviewVideos = (
   }
 }
 
-type AddVideoViewOpts = Omit<MutationHookOptions<AddVideoViewMutation>, 'variables'>
-export const useAddVideoView = (opts?: AddVideoViewOpts) => {
+export const useAddVideoView = (opts?: Omit<MutationHookOptions<AddVideoViewMutation>, 'variables'>) => {
   const [addVideoView, rest] = useAddVideoViewMutation({
     update: (cache, mutationResult) => {
       cache.modify({
@@ -90,8 +91,10 @@ export const useAddVideoView = (opts?: AddVideoViewOpts) => {
   }
 }
 
-type BasicVideosQueryOpts = QueryHookOptions<GetBasicVideosQuery>
-export const useBasicVideos = (variables?: GetBasicVideosQueryVariables, opts?: BasicVideosQueryOpts) => {
+export const useBasicVideos = (
+  variables?: GetBasicVideosQueryVariables,
+  opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+) => {
   const { data, ...rest } = useGetBasicVideosQuery({ ...opts, variables })
   return {
     videos: data?.videos,
@@ -99,8 +102,11 @@ export const useBasicVideos = (variables?: GetBasicVideosQueryVariables, opts?: 
   }
 }
 
-type MostViewedVideosOpts = QueryHookOptions<GetMostViewedVideosQuery>
-export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+type MostViewedVideosQueryOpts = QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
+export const useMostViewedVideosIds = (
+  variables?: GetMostViewedVideosQueryVariables,
+  opts?: MostViewedVideosQueryOpts
+) => {
   const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
   return {
     mostViewedVideos: data?.mostViewedVideos,
@@ -108,7 +114,10 @@ export const useMostViewedVideosIds = (variables?: GetMostViewedVideosQueryVaria
   }
 }
 
-export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosOpts) => {
+export const useMostViewedVideos = (
+  variables?: GetMostViewedVideosQueryVariables,
+  opts?: MostViewedVideosQueryOpts
+) => {
   const { mostViewedVideos, loading, error } = useMostViewedVideosIds(variables, opts)
 
   const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
@@ -134,10 +143,9 @@ export const useMostViewedVideos = (variables?: GetMostViewedVideosQueryVariable
   }
 }
 
-type MostViewedVideosAllTimeOpts = QueryHookOptions<GetMostViewedVideosAllTimeQuery>
 export const useMostViewedVideosAllTimeIds = (
   variables?: GetMostViewedVideosAllTimeQueryVariables,
-  opts?: MostViewedVideosAllTimeOpts
+  opts?: QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
 ) => {
   const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
   return {

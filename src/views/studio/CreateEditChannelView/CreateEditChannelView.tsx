@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/ImageCropDialog'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
@@ -81,7 +81,12 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
 
-  const { channel, loading, error, refetch: refetchChannel } = useChannel(activeChannelId || '', {
+  const {
+    channel,
+    loading,
+    error,
+    refetch: refetchChannel,
+  } = useChannel(activeChannelId || '', {
     skip: newChannel || !activeChannelId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch channel', 'CreateEditChannelView', error, {

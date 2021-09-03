@@ -2,9 +2,9 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragment } from './channels.generated'
 import { BasicChannelFieldsFragmentDoc } from './channels.generated'
 
+const defaultOptions = {}
 export type BasicMembershipFieldsFragment = {
   __typename?: 'Membership'
   id: string
@@ -12,7 +12,31 @@ export type BasicMembershipFieldsFragment = {
   avatarUri?: Types.Maybe<string>
   about?: Types.Maybe<string>
   controllerAccount: string
-  channels: Array<{ __typename?: 'Channel' } & BasicChannelFieldsFragment>
+  channels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
 }
 
 export type GetMembershipQueryVariables = Types.Exact<{
@@ -21,7 +45,39 @@ export type GetMembershipQueryVariables = Types.Exact<{
 
 export type GetMembershipQuery = {
   __typename?: 'Query'
-  membershipByUniqueInput?: Types.Maybe<{ __typename?: 'Membership' } & BasicMembershipFieldsFragment>
+  membershipByUniqueInput?: Types.Maybe<{
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    avatarUri?: Types.Maybe<string>
+    about?: Types.Maybe<string>
+    controllerAccount: string
+    channels: Array<{
+      __typename?: 'Channel'
+      id: string
+      title?: Types.Maybe<string>
+      createdAt: Date
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+  }>
 }
 
 export type GetMembershipsQueryVariables = Types.Exact<{
@@ -30,7 +86,39 @@ export type GetMembershipsQueryVariables = Types.Exact<{
 
 export type GetMembershipsQuery = {
   __typename?: 'Query'
-  memberships: Array<{ __typename?: 'Membership' } & BasicMembershipFieldsFragment>
+  memberships: Array<{
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    avatarUri?: Types.Maybe<string>
+    about?: Types.Maybe<string>
+    controllerAccount: string
+    channels: Array<{
+      __typename?: 'Channel'
+      id: string
+      title?: Types.Maybe<string>
+      createdAt: Date
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+  }>
 }
 
 export const BasicMembershipFieldsFragmentDoc = gql`
@@ -74,12 +162,14 @@ export const GetMembershipDocument = gql`
 export function useGetMembershipQuery(
   baseOptions: Apollo.QueryHookOptions<GetMembershipQuery, GetMembershipQueryVariables>
 ) {
-  return Apollo.useQuery<GetMembershipQuery, GetMembershipQueryVariables>(GetMembershipDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMembershipQuery, GetMembershipQueryVariables>(GetMembershipDocument, options)
 }
 export function useGetMembershipLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMembershipQuery, GetMembershipQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(GetMembershipDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMembershipQuery, GetMembershipQueryVariables>(GetMembershipDocument, options)
 }
 export type GetMembershipQueryHookResult = ReturnType<typeof useGetMembershipQuery>
 export type GetMembershipLazyQueryHookResult = ReturnType<typeof useGetMembershipLazyQuery>
@@ -112,12 +202,14 @@ export const GetMembershipsDocument = gql`
 export function useGetMembershipsQuery(
   baseOptions: Apollo.QueryHookOptions<GetMembershipsQuery, GetMembershipsQueryVariables>
 ) {
-  return Apollo.useQuery<GetMembershipsQuery, GetMembershipsQueryVariables>(GetMembershipsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetMembershipsQuery, GetMembershipsQueryVariables>(GetMembershipsDocument, options)
 }
 export function useGetMembershipsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetMembershipsQuery, GetMembershipsQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetMembershipsQuery, GetMembershipsQueryVariables>(GetMembershipsDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMembershipsQuery, GetMembershipsQueryVariables>(GetMembershipsDocument, options)
 }
 export type GetMembershipsQueryHookResult = ReturnType<typeof useGetMembershipsQuery>
 export type GetMembershipsLazyQueryHookResult = ReturnType<typeof useGetMembershipsLazyQuery>

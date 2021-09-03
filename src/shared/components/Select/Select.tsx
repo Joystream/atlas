@@ -27,7 +27,8 @@ export type SelectProps<T = string> = {
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
-export const Select = <T,>({
+// `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
+export const Select = <T extends unknown>({
   label = '',
   items,
   placeholder = 'Select option',

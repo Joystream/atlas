@@ -44,7 +44,7 @@ const playgroundRoutes = [
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
 ]
 
-export const PlaygroundLayout = () => {
+const PlaygroundLayout = () => {
   return (
     <ActiveUserProvider>
       <DialogProvider>
@@ -94,3 +94,5 @@ const ContentContainer = styled.div`
   padding-left: 30px;
   overflow: hidden;
 `
+
+export default PlaygroundLayout

@@ -14,7 +14,11 @@ export const PlaygroundMemberChannel = () => {
   const [activeUserString, setActiveUserString] = useState('')
 
   const { activeAccountId, activeMemberId, activeChannelId, setActiveUser, resetActiveUser } = useUser()
-  const { memberships, loading: membershipsLoading, error: membershipsError } = useMemberships({
+  const {
+    memberships,
+    loading: membershipsLoading,
+    error: membershipsError,
+  } = useMemberships({
     where: { controllerAccount_eq: account },
   })
 

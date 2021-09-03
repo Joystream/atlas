@@ -26,19 +26,21 @@ function isResponsivenessObject(prop?: number | 'initial' | ReponsivenessObject)
   return !!prop && typeof prop !== 'number' && prop !== 'initial'
 }
 
-const createBreakpointGridItemRules = (breakpointKey: keyof ReponsivenessObject) => ({
-  colStart,
-  colSpan,
-  rowStart,
-  rowSpan,
-}: GridItemProps) => css`
-  ${media[breakpointKey]} {
-    ${isResponsivenessObject(colStart) && colStart[breakpointKey] && `grid-column-start: ${colStart[breakpointKey]};`}
-    ${isResponsivenessObject(colSpan) && colSpan[breakpointKey] && `grid-column-end: span ${colSpan[breakpointKey]};`}
+const createBreakpointGridItemRules =
+  (breakpointKey: keyof ReponsivenessObject) =>
+  ({ colStart, colSpan, rowStart, rowSpan }: GridItemProps) =>
+    css`
+      ${media[breakpointKey]} {
+        ${isResponsivenessObject(colStart) &&
+        colStart[breakpointKey] &&
+        `grid-column-start: ${colStart[breakpointKey]};`}
+        ${isResponsivenessObject(colSpan) &&
+        colSpan[breakpointKey] &&
+        `grid-column-end: span ${colSpan[breakpointKey]};`}
     ${isResponsivenessObject(rowStart) && rowStart[breakpointKey] && `grid-row-start: ${rowStart[breakpointKey]};`}
     ${isResponsivenessObject(rowSpan) && rowSpan[breakpointKey] && `grid-row-end: span ${rowSpan[breakpointKey]};`}
-  }
-`
+      }
+    `
 
 export const GridItem = styled.div<GridItemProps>`
   ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}

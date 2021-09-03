@@ -1,7 +1,7 @@
 import { ApolloError, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
-import { debounce, isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
 import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
@@ -77,7 +77,13 @@ export const useInfiniteGrid = <
 
   const queryVariablesRef = useRef(queryVariables)
 
-  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
+  const {
+    loading,
+    data: rawData,
+    error,
+    fetchMore,
+    refetch,
+  } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {

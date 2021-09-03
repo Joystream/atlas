@@ -1,4 +1,4 @@
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 

@@ -55,9 +55,9 @@ export const StepsContainer = styled.div<StepsContainerProps>`
   z-index: 1;
 `
 
-export const StyledSvgGlyphChevronDown = styled(SvgGlyphChevronDown, { shouldForwardProp: isPropValid })<
-  StepsContainerProps
->`
+export const StyledSvgGlyphChevronDown = styled(SvgGlyphChevronDown, {
+  shouldForwardProp: isPropValid,
+})<StepsContainerProps>`
   transform: rotate(${({ isHidden }) => (isHidden ? '-180deg' : '0deg')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
 `

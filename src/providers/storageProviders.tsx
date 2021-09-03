@@ -3,12 +3,7 @@ import React, { SetStateAction, useCallback, useContext, useEffect, useState } f
 import { useRef } from 'react'
 
 import { storageWorkersVariables } from '@/api/hooks'
-import {
-  BasicWorkerFieldsFragment,
-  GetWorkersDocument,
-  GetWorkersQuery,
-  GetWorkersQueryVariables,
-} from '@/api/queries/__generated__/workers.generated'
+import { BasicWorkerFieldsFragment, GetWorkersDocument, GetWorkersQuery, GetWorkersQueryVariables } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { SentryLogger } from '@/utils/logs'
 import { getRandomIntInclusive } from '@/utils/number'

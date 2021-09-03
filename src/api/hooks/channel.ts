@@ -5,7 +5,9 @@ import {
   AssetAvailability,
   FollowChannelMutation,
   GetBasicChannelQuery,
+  GetBasicChannelQueryVariables,
   GetChannelQuery,
+  GetChannelQueryVariables,
   GetChannelsQuery,
   GetChannelsQueryVariables,
   GetMostFollowedChannelsAllTimeQuery,
@@ -17,6 +19,7 @@ import {
   GetMostViewedChannelsQuery,
   GetMostViewedChannelsQueryVariables,
   GetVideoCountQuery,
+  GetVideoCountQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
@@ -30,8 +33,10 @@ import {
   useUnfollowChannelMutation,
 } from '@/api/queries'
 
-type BasicChannelOpts = QueryHookOptions<GetBasicChannelQuery>
-export const useBasicChannel = (id: string, opts?: BasicChannelOpts) => {
+export const useBasicChannel = (
+  id: string,
+  opts?: QueryHookOptions<GetBasicChannelQuery, GetBasicChannelQueryVariables>
+) => {
   const { data, ...rest } = useGetBasicChannelQuery({
     ...opts,
     variables: { where: { id } },
@@ -42,8 +47,7 @@ export const useBasicChannel = (id: string, opts?: BasicChannelOpts) => {
   }
 }
 
-type ChannelOpts = QueryHookOptions<GetChannelQuery>
-export const useChannel = (id: string, opts?: ChannelOpts) => {
+export const useChannel = (id: string, opts?: QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) => {
   const { data, ...rest } = useGetChannelQuery({
     ...opts,
     variables: { where: { id } },
@@ -54,8 +58,11 @@ export const useChannel = (id: string, opts?: ChannelOpts) => {
   }
 }
 
-type VideoCountOpts = QueryHookOptions<GetVideoCountQuery>
-export const useChannelVideoCount = (channelId: string, createdAt_gte?: Date, opts?: VideoCountOpts) => {
+export const useChannelVideoCount = (
+  channelId: string,
+  createdAt_gte?: Date,
+  opts?: QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
+) => {
   const { data, ...rest } = useGetVideoCountQuery({
     ...opts,
     variables: {
@@ -75,8 +82,10 @@ export const useChannelVideoCount = (channelId: string, createdAt_gte?: Date, op
   }
 }
 
-type ChannelsOpts = QueryHookOptions<GetChannelsQuery>
-export const useChannels = (variables?: GetChannelsQueryVariables, opts?: ChannelsOpts) => {
+export const useChannels = (
+  variables?: GetChannelsQueryVariables,
+  opts?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
+) => {
   const { data, ...rest } = useGetChannelsQuery({ ...opts, variables })
   return {
     channels: data?.channels,
@@ -84,8 +93,7 @@ export const useChannels = (variables?: GetChannelsQueryVariables, opts?: Channe
   }
 }
 
-type FollowChannelOpts = MutationHookOptions<FollowChannelMutation>
-export const useFollowChannel = (opts?: FollowChannelOpts) => {
+export const useFollowChannel = (opts?: MutationHookOptions<FollowChannelMutation>) => {
   const [followChannel, rest] = useFollowChannelMutation()
   return {
     followChannel: (id: string) =>
@@ -110,8 +118,7 @@ export const useFollowChannel = (opts?: FollowChannelOpts) => {
   }
 }
 
-type UnfollowChannelOpts = MutationHookOptions<UnfollowChannelMutation>
-export const useUnfollowChannel = (opts?: UnfollowChannelOpts) => {
+export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMutation>) => {
   const [unfollowChannel, rest] = useUnfollowChannelMutation()
   return {
     unfollowChannel: (id: string) =>
@@ -136,10 +143,13 @@ export const useUnfollowChannel = (opts?: UnfollowChannelOpts) => {
   }
 }
 
-type MostFollowedChannelsOpts = QueryHookOptions<GetMostFollowedChannelsQuery>
+type MostFollowedChannelsQueryOpts = QueryHookOptions<
+  GetMostFollowedChannelsQuery,
+  GetMostFollowedChannelsQueryVariables
+>
 export const useMostFollowedChannelsIds = (
   variables?: GetMostFollowedChannelsQueryVariables,
-  opts?: MostFollowedChannelsOpts
+  opts?: MostFollowedChannelsQueryOpts
 ) => {
   const { data, ...rest } = useGetMostFollowedChannelsQuery({ ...opts, variables })
   return {
@@ -150,7 +160,7 @@ export const useMostFollowedChannelsIds = (
 
 export const useMostFollowedChannels = (
   variables?: GetMostFollowedChannelsQueryVariables,
-  opts?: MostFollowedChannelsOpts
+  opts?: MostFollowedChannelsQueryOpts
 ) => {
   const { mostFollowedChannels } = useMostFollowedChannelsIds(variables, opts)
 
@@ -171,10 +181,10 @@ export const useMostFollowedChannels = (
   }
 }
 
-type MostViewedChannelsOpts = QueryHookOptions<GetMostViewedChannelsQuery>
+type MostViewedChannelsQueryOpts = QueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
 export const useMostViewedChannelsIds = (
   variables?: GetMostViewedChannelsQueryVariables,
-  opts?: MostViewedChannelsOpts
+  opts?: MostViewedChannelsQueryOpts
 ) => {
   const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
   return {
@@ -185,7 +195,7 @@ export const useMostViewedChannelsIds = (
 
 export const useMostViewedChannels = (
   variables?: GetMostViewedChannelsQueryVariables,
-  opts?: MostViewedChannelsOpts
+  opts?: MostViewedChannelsQueryOpts
 ) => {
   const { mostViewedChannels } = useMostViewedChannelsIds(variables, opts)
 
@@ -213,10 +223,13 @@ export const useMostViewedChannels = (
   }
 }
 
-type MostFollowedChannelsAllTimeOpts = QueryHookOptions<GetMostFollowedChannelsAllTimeQuery>
+type MostFollowedChannelsAllTimeQueryOpts = QueryHookOptions<
+  GetMostFollowedChannelsAllTimeQuery,
+  GetMostFollowedChannelsAllTimeQueryVariables
+>
 export const useMostFollowedChannelsAllTimeIds = (
   variables?: GetMostFollowedChannelsAllTimeQueryVariables,
-  opts?: MostFollowedChannelsAllTimeOpts
+  opts?: MostFollowedChannelsAllTimeQueryOpts
 ) => {
   const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
   return {
@@ -227,7 +240,7 @@ export const useMostFollowedChannelsAllTimeIds = (
 
 export const useMostFollowedChannelsAllTime = (
   variables?: GetMostFollowedChannelsAllTimeQueryVariables,
-  opts?: MostFollowedChannelsAllTimeOpts
+  opts?: MostFollowedChannelsAllTimeQueryOpts
 ) => {
   const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds(variables, opts)
 
@@ -255,10 +268,13 @@ export const useMostFollowedChannelsAllTime = (
   }
 }
 
-type MostViewedChannelsAllTimeOpts = QueryHookOptions<GetMostViewedChannelsAllTimeQuery>
+type MostViewedChannelsAllTimeQueryOpts = QueryHookOptions<
+  GetMostViewedChannelsAllTimeQuery,
+  GetMostViewedChannelsAllTimeQueryVariables
+>
 export const useMostViewedChannelsAllTimeIds = (
   variables?: GetMostViewedChannelsAllTimeQueryVariables,
-  opts?: MostViewedChannelsAllTimeOpts
+  opts?: MostViewedChannelsAllTimeQueryOpts
 ) => {
   const { data, ...rest } = useGetMostViewedChannelsAllTimeQuery({ ...opts, variables })
   return {
@@ -269,7 +285,7 @@ export const useMostViewedChannelsAllTimeIds = (
 
 export const useMostViewedChannelsAllTime = (
   variables?: GetMostViewedChannelsAllTimeQueryVariables,
-  opts?: MostViewedChannelsAllTimeOpts
+  opts?: MostViewedChannelsAllTimeQueryOpts
 ) => {
   const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds(variables, opts)
 

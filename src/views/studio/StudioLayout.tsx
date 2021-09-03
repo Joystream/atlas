@@ -6,9 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
 import { PrivateRoute } from '@/components/PrivateRoute'
-import { StudioSidenav } from '@/components/Sidenav'
-import { StudioEntrypoint, StudioLoading } from '@/components/StudioEntrypoint'
-import { StudioTopbar, TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { StudioEntrypoint } from '@/components/StudioEntrypoint'
+import { StudioLoading } from '@/components/StudioLoading'
+import { StudioSidenav } from '@/components/StudioSidenav'
+import { StudioTopbar } from '@/components/StudioTopbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -37,14 +39,8 @@ const StudioLayout = () => {
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
 
-  const {
-    activeAccountId,
-    activeMemberId,
-    activeChannelId,
-    extensionConnected,
-    memberships,
-    userInitialized,
-  } = useUser()
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
+    useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
   const [enterLocation] = useState(location.pathname)

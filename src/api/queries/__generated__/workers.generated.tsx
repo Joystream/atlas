@@ -3,6 +3,7 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
+const defaultOptions = {}
 export type BasicWorkerFieldsFragment = {
   __typename?: 'Worker'
   id: string
@@ -18,7 +19,14 @@ export type GetWorkerQueryVariables = Types.Exact<{
 
 export type GetWorkerQuery = {
   __typename?: 'Query'
-  workerByUniqueInput?: Types.Maybe<{ __typename?: 'Worker' } & BasicWorkerFieldsFragment>
+  workerByUniqueInput?: Types.Maybe<{
+    __typename?: 'Worker'
+    id: string
+    workerId: string
+    metadata?: Types.Maybe<string>
+    isActive: boolean
+    type: Types.WorkerType
+  }>
 }
 
 export type GetWorkersQueryVariables = Types.Exact<{
@@ -29,7 +37,16 @@ export type GetWorkersQueryVariables = Types.Exact<{
 
 export type GetWorkersQuery = {
   __typename?: 'Query'
-  workers?: Types.Maybe<Array<{ __typename?: 'Worker' } & BasicWorkerFieldsFragment>>
+  workers?: Types.Maybe<
+    Array<{
+      __typename?: 'Worker'
+      id: string
+      workerId: string
+      metadata?: Types.Maybe<string>
+      isActive: boolean
+      type: Types.WorkerType
+    }>
+  >
 }
 
 export const BasicWorkerFieldsFragmentDoc = gql`
@@ -67,12 +84,14 @@ export const GetWorkerDocument = gql`
  * });
  */
 export function useGetWorkerQuery(baseOptions: Apollo.QueryHookOptions<GetWorkerQuery, GetWorkerQueryVariables>) {
-  return Apollo.useQuery<GetWorkerQuery, GetWorkerQueryVariables>(GetWorkerDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetWorkerQuery, GetWorkerQueryVariables>(GetWorkerDocument, options)
 }
 export function useGetWorkerLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetWorkerQuery, GetWorkerQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetWorkerQuery, GetWorkerQueryVariables>(GetWorkerDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetWorkerQuery, GetWorkerQueryVariables>(GetWorkerDocument, options)
 }
 export type GetWorkerQueryHookResult = ReturnType<typeof useGetWorkerQuery>
 export type GetWorkerLazyQueryHookResult = ReturnType<typeof useGetWorkerLazyQuery>
@@ -105,12 +124,14 @@ export const GetWorkersDocument = gql`
  * });
  */
 export function useGetWorkersQuery(baseOptions?: Apollo.QueryHookOptions<GetWorkersQuery, GetWorkersQueryVariables>) {
-  return Apollo.useQuery<GetWorkersQuery, GetWorkersQueryVariables>(GetWorkersDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetWorkersQuery, GetWorkersQueryVariables>(GetWorkersDocument, options)
 }
 export function useGetWorkersLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetWorkersQuery, GetWorkersQueryVariables>
 ) {
-  return Apollo.useLazyQuery<GetWorkersQuery, GetWorkersQueryVariables>(GetWorkersDocument, baseOptions)
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetWorkersQuery, GetWorkersQueryVariables>(GetWorkersDocument, options)
 }
 export type GetWorkersQueryHookResult = ReturnType<typeof useGetWorkersQuery>
 export type GetWorkersLazyQueryHookResult = ReturnType<typeof useGetWorkersLazyQuery>

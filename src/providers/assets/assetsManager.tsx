@@ -1,4 +1,4 @@
-import { shuffle } from 'lodash'
+import { shuffle } from 'lodash-es'
 import React, { useEffect } from 'react'
 
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'

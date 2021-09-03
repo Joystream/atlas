@@ -35,7 +35,7 @@ Atlas is a content consumption and publication app for the Joystream platform. T
     - `types/` - global Typescript related code
     - `utils/` - common utilities - e.g. for formatting dates etc.
     - `views/` - all the top-level views displayed by the router
-    - `index.tsx` - app entry-point
+    - `main.tsx` - app entry-point
     - `App.tsx` - React entry-point
 
 ### Shared folder
