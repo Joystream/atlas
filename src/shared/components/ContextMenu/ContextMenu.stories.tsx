@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { useContextMenu } from '@/hooks'
+import { useContextMenu } from '@/hooks/useContextMenu'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
