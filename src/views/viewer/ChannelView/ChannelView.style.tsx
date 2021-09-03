@@ -141,11 +141,13 @@ export const TabsContainer = styled.div`
   grid-template-areas:
     'tabs tabs tabs'
     'search sort sort';
-  align-items: baseline;
+  align-items: flex-end;
+  grid-template-rows: 1fr 78px;
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
   ${media.sm} {
+    align-items: baseline;
     border-bottom: solid 1px ${colors.gray[800]};
     grid-template-areas: initial;
     gap: ${sizes(8)};
