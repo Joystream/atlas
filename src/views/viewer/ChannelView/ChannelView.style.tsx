@@ -205,11 +205,6 @@ export const SearchButton = styled(IconButton)`
   position: absolute;
 `
 
-export const UnfollowDescriptionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
 export const NotFoundChannelContainer = styled.div`
   display: flex;
   align-items: center;
