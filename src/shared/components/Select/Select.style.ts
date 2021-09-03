@@ -29,7 +29,8 @@ export const SelectButton = styled.button<SelectButtonProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: ${({ isOpen }) => (isOpen ? `1px solid ${colors.blue[500]} !important` : 0)};
+  border: ${({ isOpen, error, disabled }) =>
+    `1px solid ${isOpen ? colors.blue[500] : error && !disabled ? colors.error : colors.gray[200]}`};
 
   ${({ size }) => {
     switch (size) {
