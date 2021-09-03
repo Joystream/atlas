@@ -12,14 +12,13 @@ export const FormFieldWrapper = styled.div`
 
 export const FormFieldHeader = styled.header`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   width: 85%;
   padding-bottom: ${sizes(2)};
   word-wrap: break-word;
 `
 
 export const FormFieldTitle = styled(Text)`
-  margin: 0;
   margin-right: ${sizes(4)};
 `
 
