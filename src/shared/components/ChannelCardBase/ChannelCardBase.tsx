@@ -44,7 +44,7 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
 }) => {
   return (
     <ChannelCardArticle className={className}>
-      <ChannelCardAnchor onClick={onClick} to={absoluteRoutes.viewer.channel(id || '')}>
+      <ChannelCardAnchor onClick={onClick} to={id ? absoluteRoutes.viewer.channel(id) : ''}>
         <StyledAvatar size="channel-card" loading={isLoadingAvatar} assetUrl={avatarUrl} />
         <SwitchTransition>
           <CSSTransition

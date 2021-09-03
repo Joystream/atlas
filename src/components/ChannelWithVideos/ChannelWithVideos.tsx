@@ -59,7 +59,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
 
   return (
     <>
-      <ChannelCardAnchor to={absoluteRoutes.viewer.channel(channelId)}>
+      <ChannelCardAnchor to={channelId ? absoluteRoutes.viewer.channel(channelId) : ''}>
         <StyledAvatar size="channel" loading={isLoading || isLoadingAvatar} assetUrl={avatarUrl} />
         <InfoWrapper>
           {isLoading ? (
