@@ -27,7 +27,7 @@ import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  NewVideoTile,
+  NewVideoTileLink,
   NewVideoTileSkeleton,
   NewVideoTileWrapper,
   PaginationContainer,
@@ -305,28 +305,7 @@ export const MyVideosView = () => {
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-              {currentPage === 0 && (
-                <SwitchTransition>
-                  <CSSTransition
-                    key={loading ? 'cover-placeholder' : 'cover'}
-                    timeout={parseInt(transitions.timings.sharp)}
-                    classNames={transitions.names.fade}
-                  >
-                    <NewVideoTileWrapper>
-                      {loading ? (
-                        <NewVideoTileSkeleton />
-                      ) : (
-                        <NewVideoTile to={absoluteRoutes.studio.editVideo()}>
-                          <TextAndIconWrapper>
-                            <StyledIcon />
-                            <StyledText variant="body2">Upload new video</StyledText>
-                          </TextAndIconWrapper>
-                        </NewVideoTile>
-                      )}
-                    </NewVideoTileWrapper>
-                  </CSSTransition>
-                </SwitchTransition>
-              )}
+              {currentPage === 0 && <NewVideoTile loading={loading} />}
               {gridContent}
             </Grid>
             {((isDraftTab && drafts.length === 0) ||
@@ -396,4 +375,33 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
     default:
       return undefined
   }
+}
+
+type NewVideoTileProps = {
+  loading?: boolean
+}
+
+const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading }) => {
+  return (
+    <SwitchTransition>
+      <CSSTransition
+        key={loading ? 'cover-placeholder' : 'cover'}
+        timeout={parseInt(transitions.timings.sharp)}
+        classNames={transitions.names.fade}
+      >
+        <NewVideoTileWrapper>
+          {loading ? (
+            <NewVideoTileSkeleton />
+          ) : (
+            <NewVideoTileLink to={absoluteRoutes.studio.editVideo()}>
+              <TextAndIconWrapper>
+                <StyledIcon />
+                <StyledText variant="body2">Upload new video</StyledText>
+              </TextAndIconWrapper>
+            </NewVideoTileLink>
+          )}
+        </NewVideoTileWrapper>
+      </CSSTransition>
+    </SwitchTransition>
+  )
 }

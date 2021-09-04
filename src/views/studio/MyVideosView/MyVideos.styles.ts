@@ -67,7 +67,7 @@ export const NewVideoTileWrapper = styled.div`
   padding-bottom: calc(56.25% - 2px);
 `
 
-export const NewVideoTile = styled(Link)`
+export const NewVideoTileLink = styled(Link)`
   position: absolute;
   background: none;
   border: 1px dashed ${colors.gray[500]};
