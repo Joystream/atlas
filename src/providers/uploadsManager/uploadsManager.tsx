@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
+import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 
@@ -40,7 +41,7 @@ export const UploadsManager: React.FC = () => {
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      startPolling?.(3000)
+      startPolling?.(ASSET_POLLING_INTERVAL)
     },
   })
 
