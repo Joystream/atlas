@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { CharactersCounter, Container, MinMaxChars, StyledInput, TitleAreaInfo } from './TitleArea.style'
 
@@ -10,42 +10,58 @@ export type TitleAreaProps = {
   min?: number
   max?: number
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
 }
 
-export const TitleArea = React.forwardRef<HTMLInputElement, TitleAreaProps>(
+export const TitleArea = React.forwardRef<HTMLTextAreaElement, TitleAreaProps>(
   ({ name, value, placeholder = 'Enter text here', onChange, onBlur, className, max = 60, min = 5 }, ref) => {
     const [charactersCount, setCharactersCount] = useState(0)
     const [touched, setTouched] = useState(false)
-
     const invalidInput = charactersCount < min || charactersCount > max
+    const containerRef = useRef<HTMLDivElement>(null)
 
-    const handleFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFocus = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setCharactersCount(e.target.value.length)
       setTouched(true)
     }
 
-    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+      const textarea = containerRef.current?.querySelector('textarea')
+      if (!textarea) {
+        return
+      }
+      textarea.style.height = 'initial'
+      const scrollHeight = textarea.scrollHeight
+      textarea.style.height = scrollHeight + 'px'
+    })
+
+    const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setCharactersCount(e.target.value.length)
       onChange?.(e)
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+      }
+    }
+
     return (
-      <Container className={className}>
+      <Container ref={containerRef} className={className}>
         <StyledInput
-          autoComplete="off"
           ref={ref}
+          rows={1}
           minLength={min}
           maxLength={max}
           name={name}
           placeholder={placeholder}
-          type="text"
           onFocus={handleFocus}
           touchedAndEmpty={touched && !charactersCount}
           defaultValue={value}
           onChange={handleOnChange}
+          onKeyDown={handleKeyDown}
           onBlur={onBlur}
         />
         <TitleAreaInfo>

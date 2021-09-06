@@ -21,7 +21,7 @@ export default {
 } as Meta
 
 const Template: Story<TitleAreaProps> = (args) => {
-  const input = React.useRef<HTMLInputElement>(null)
+  const input = React.useRef<HTMLTextAreaElement>(null)
   const [text, setText] = useState('Lorem ipsum')
   return <TitleArea {...args} value={text} ref={input} onChange={(e) => setText(e.target.value)} />
 }
@@ -29,7 +29,7 @@ const Template: Story<TitleAreaProps> = (args) => {
 export const Controlled = Template.bind({})
 
 const TemplateUncontrolled: Story<TitleAreaProps> = (args) => {
-  const input = React.useRef<HTMLInputElement>(null)
+  const input = React.useRef<HTMLTextAreaElement>(null)
   return <TitleArea {...args} value="Lorem ipsum" ref={input} />
 }
 
