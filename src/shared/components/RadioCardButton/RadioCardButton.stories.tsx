@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { RadioCardButton } from './RadioCardButton'
+import { RadioCardButton, RadioCardButtonProps } from './RadioCardButton'
 
 export default {
   title: 'Shared/R/RadioCardButton',
@@ -9,10 +9,12 @@ export default {
   args: {
     label: 'Radio input label',
     helperText: 'Radio helper text',
+    disabled: false,
+    error: false,
   },
 } as Meta
 
-const Template: Story = (args) => {
+const Template: Story<RadioCardButtonProps> = (args) => {
   const [selected, setSelected] = useState<string | number>('1')
   const handleClick: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
     const element = e.currentTarget as HTMLInputElement

@@ -6,15 +6,9 @@ import { RadioInput, RadioInputProps } from './RadioInput'
 export default {
   title: 'Shared/R/RadioInput',
   component: RadioInput,
-  argTypes: {
-    disabled: {
-      options: [true, false],
-      control: { type: 'radio' },
-    },
-    error: {
-      options: [true, false],
-      control: { type: 'radio' },
-    },
+  args: {
+    disabled: false,
+    error: false,
   },
 } as Meta
 

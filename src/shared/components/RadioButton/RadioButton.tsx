@@ -30,7 +30,6 @@ export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
             error={error}
             disabled={disabled}
             onChange={onChange}
-            type="radio"
             value={value}
             selectedValue={selectedValue}
           />
