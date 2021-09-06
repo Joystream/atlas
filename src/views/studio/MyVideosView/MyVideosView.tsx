@@ -71,10 +71,12 @@ export const MyVideosView = () => {
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
   const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const drafts =
-    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+  const drafts = [
+    'new-video-tile' as const,
+    ...(sortVideosBy === VideoOrderByInput.CreatedAtAsc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
+  ]
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
@@ -93,8 +95,8 @@ export const MyVideosView = () => {
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
   const deleteVideo = useDeleteVideo()
 
-  const videos = edges
-    ?.map((edge) => edge.node)
+  const videos = ['new-video-tile' as const, ...(edges ? edges : [])]
+    ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
@@ -228,37 +230,47 @@ export const MyVideosView = () => {
     ? drafts
         // pagination slice
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
-        .map((draft, idx) => (
+        .map((draft, idx) => {
+          if (draft === 'new-video-tile') {
+            return <NewVideoTile loading={loading} key={idx} />
+          }
+          return (
+            <VideoTilePublisher
+              key={idx}
+              id={draft.id}
+              showChannel={false}
+              isDraft
+              isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
+              onClick={() => handleVideoClick(draft.id, { draft: true })}
+              onPullupClick={(e) => {
+                e.stopPropagation()
+                handleVideoClick(draft.id, { draft: true, minimized: true })
+              }}
+              onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+              onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+            />
+          )
+        })
+    : videosWithSkeletonLoaders.map((video, idx) => {
+        if (video === 'new-video-tile') {
+          return <NewVideoTile loading={loading} key={idx} />
+        }
+        return (
           <VideoTilePublisher
             key={idx}
-            id={draft.id}
+            id={video.id}
             showChannel={false}
-            isDraft
-            isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-            onClick={() => handleVideoClick(draft.id, { draft: true })}
+            isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
+            onClick={() => handleVideoClick(video.id)}
             onPullupClick={(e) => {
               e.stopPropagation()
-              handleVideoClick(draft.id, { draft: true, minimized: true })
+              handleVideoClick(video.id, { minimized: true })
             }}
-            onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-            onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+            onEditVideoClick={() => handleVideoClick(video.id)}
+            onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
           />
-        ))
-    : videosWithSkeletonLoaders.map((video, idx) => (
-        <VideoTilePublisher
-          key={idx}
-          id={video.id}
-          showChannel={false}
-          isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-          onClick={() => handleVideoClick(video.id)}
-          onPullupClick={(e) => {
-            e.stopPropagation()
-            handleVideoClick(video.id, { minimized: true })
-          }}
-          onEditVideoClick={() => handleVideoClick(video.id)}
-          onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
-        />
-      ))
+        )
+      })
 
   if (error) {
     return <ViewErrorFallback />
@@ -305,7 +317,6 @@ export const MyVideosView = () => {
               />
             )}
             <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-              {currentPage === 0 && <NewVideoTile loading={loading} />}
               {gridContent}
             </Grid>
             {((isDraftTab && drafts.length === 0) ||
@@ -346,7 +357,8 @@ export const MyVideosView = () => {
                 onChangePage={handleChangePage}
                 page={currentPage}
                 itemsPerPage={videosPerPage}
-                totalCount={isDraftTab ? drafts.length : totalCount}
+                // +1 is for new video tile
+                totalCount={isDraftTab ? drafts.length + 1 : (totalCount || 0) + 1}
               />
             </PaginationContainer>
           </>
