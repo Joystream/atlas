@@ -19,17 +19,13 @@ type TitleAreaInfoProps = {
 export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
   display: grid;
   opacity: 0;
-  max-width: 600px;
-  padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
   grid-template-columns: 1fr 1fr;
-  grid-gap: ${sizes(9)};
+  grid-gap: ${sizes(8)};
 `
 
 export const StyledInput = styled.textarea<StyledInputProps>`
   caret-color: ${colors.blue[500]};
-  line-height: 1;
-  padding: ${sizes(1)} 0 ${sizes(2)} ${sizes(2)};
-  font-size: ${sizes(8)};
+  font-size: ${typography.sizes.h4};
   color: white;
   background-color: ${colors.transparent};
   font-family: ${typography.fonts.headers};
@@ -58,7 +54,7 @@ export const StyledInput = styled.textarea<StyledInputProps>`
     }
   }
   ${media.sm} {
-    font-size: ${sizes(12)};
+    font-size: ${typography.sizes.h2};
   }
 `
 
