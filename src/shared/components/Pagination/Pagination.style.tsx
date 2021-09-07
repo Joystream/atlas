@@ -1,7 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions, typography } from '@/shared/theme'
+import { colors, media, square, transitions, typography } from '@/shared/theme'
+
+import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
 
 import { IconButton } from '../IconButton'
 
@@ -13,37 +15,34 @@ type PaginationButtonProps = {
 export const PaginationWrapper = styled.div`
   display: flex;
   max-width: 400px;
-  justify-content: space-between;
+  justify-content: center;
 
   ${media.xs} {
     max-width: unset;
-    justify-content: unset;
   }
 `
 
 export const ChevronButton = styled(IconButton)`
+  user-select: none;
   &:first-of-type {
-    margin-right: ${sizes(8)};
+    margin-right: ${ARROWS_MARGINS}px;
   }
 
   &:last-of-type {
-    margin-left: ${sizes(8)};
+    margin-left: ${ARROWS_MARGINS}px;
   }
 `
 
 export const ThreeDotsWrapper = styled.div`
-  display: none;
+  ${square(PAGINATION_BUTTON_WIDTH)};
 
-  ${media.xs} {
-    width: ${sizes(12)};
-    height: ${sizes(12)};
-    color: ${colors.gray[300]};
-    font-size: ${typography.sizes.subtitle2};
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    cursor: default;
-  }
+  color: ${colors.gray[300]};
+  font-size: ${typography.sizes.subtitle2};
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: default;
+  user-select: none;
 `
 
 const buttonActiveState = css`
@@ -52,12 +51,12 @@ const buttonActiveState = css`
 `
 
 export const PaginationButton = styled.button<PaginationButtonProps>`
-  /* show only one active button on mobile */
-  display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
+  ${square(PAGINATION_BUTTON_WIDTH)};
+
+  display: flex;
+  flex-shrink: 0;
   border: none;
   cursor: pointer;
-  width: ${sizes(12)};
-  height: ${sizes(12)};
   color: ${colors.gray[300]};
   font-size: ${typography.sizes.subtitle2};
   justify-content: center;
@@ -68,6 +67,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   font-family: ${typography.fonts.headers};
   transition: background-color ${transitions.timings.loading} ${transitions.easing},
     color ${transitions.timings.loading} ${transitions.easing}, opacity 200ms ${transitions.easing};
+  user-select: none;
 
   :hover,
   :focus {
@@ -80,8 +80,4 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   }
 
   ${({ isActive }) => isActive && buttonActiveState};
-
-  ${media.xs} {
-    display: flex;
-  }
 `
