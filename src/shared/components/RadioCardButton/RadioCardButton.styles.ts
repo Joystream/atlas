@@ -26,7 +26,7 @@ export const RadioCardLabel = styled.label<RadioCardLabelProps>`
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  border: 1px solid ${({ selected, disabled, error }) => getRadioCardBorderColor({ selected, disabled, error })};
+  border: 1px solid ${getRadioCardBorderColor};
   transition: background-color 0.25s ease, border-color 0.25s ease;
 `
 

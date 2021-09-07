@@ -1,14 +1,9 @@
 import React from 'react'
 
-import {
-  RadioButtonContainer,
-  RadioButtonLabel,
-  RadioButtonStyleProps,
-  StyledHelperText,
-  StyledLabelText,
-} from './RadioButton.style'
+import { RadioButtonLabel, RadioButtonStyleProps, StyledHelperText } from './RadioButton.style'
 
-import { RadioInput } from '../RadioInput/RadioInput'
+import { RadioInput } from '../RadioInput'
+import { Text } from '../Text'
 
 type RadioButtonProps = Partial<{
   selectedValue: string | number
@@ -23,18 +18,16 @@ export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
   ({ value, selectedValue, label, helperText, className, disabled, error, onChange, ...props }, ref) => {
     return (
       <RadioButtonLabel disabled={disabled} className={className}>
-        <RadioButtonContainer>
-          <RadioInput
-            {...props}
-            ref={ref}
-            error={error}
-            disabled={disabled}
-            onChange={onChange}
-            value={value}
-            selectedValue={selectedValue}
-          />
-        </RadioButtonContainer>
-        {label && <StyledLabelText variant="body1">{label}</StyledLabelText>}
+        <RadioInput
+          {...props}
+          ref={ref}
+          error={error}
+          disabled={disabled}
+          onChange={onChange}
+          value={value}
+          selectedValue={selectedValue}
+        />
+        {label && <Text variant="body1">{label}</Text>}
         {helperText && <StyledHelperText helperText={helperText} error={error} />}
       </RadioButtonLabel>
     )

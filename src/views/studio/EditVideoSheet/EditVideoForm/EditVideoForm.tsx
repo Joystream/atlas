@@ -23,7 +23,7 @@ import { useAuthorizedUser } from '@/providers/user'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
 import { FormField } from '@/shared/components/FormField'
-import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect'
 import { RadioButton } from '@/shared/components/RadioButton'
 import { RadioCardButton } from '@/shared/components/RadioCardButton'
 import { Select, SelectItem } from '@/shared/components/Select'
@@ -491,10 +491,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   rules={{
                     validate: (value) => value !== null,
                   }}
-                  render={({ field: { value, onChange, ref } }) => (
+                  render={({ field: { value, onChange } }) => (
                     <RadioCardButtonsContainer>
                       <RadioCardButton
-                        ref={ref}
                         value="true"
                         label="Public"
                         onChange={() => onChange(true)}
@@ -506,7 +505,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                         label="Unlisted"
                         onChange={() => onChange(false)}
                         selectedValue={value?.toString()}
-                        helperText={'Visible with link only'}
+                        helperText="Visible with link only"
                       />
                     </RadioCardButtonsContainer>
                   )}
