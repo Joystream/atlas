@@ -78,7 +78,7 @@ export const PlayControl = styled.div<PlayControlProps>`
   left: 0;
 
   /* hide PlayControl when loading on mobile */
-  ${({ isLoading }) => isLoading && `opacity: 0;`};
+  ${({ isLoading }) => isLoading && `opacity: 0;`}
   @media (hover: hover) {
     opacity: 1;
     margin-right: 0.5em;
