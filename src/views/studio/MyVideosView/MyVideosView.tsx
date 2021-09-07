@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -23,22 +22,16 @@ import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphUpload } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  NewVideoTileLink,
-  NewVideoTileSkeleton,
-  NewVideoTileWrapper,
   PaginationContainer,
   SortContainer,
   StyledDismissibleBanner,
-  StyledIcon,
-  StyledText,
   TabsContainer,
-  TextAndIconWrapper,
   ViewContainer,
 } from './MyVideos.styles'
+import { NewVideoTile } from './NewVideoTile'
 
 const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
 
@@ -388,33 +381,4 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
     default:
       return undefined
   }
-}
-
-type NewVideoTileProps = {
-  loading?: boolean
-}
-
-const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading }) => {
-  return (
-    <SwitchTransition>
-      <CSSTransition
-        key={loading ? 'cover-placeholder' : 'cover'}
-        timeout={parseInt(transitions.timings.sharp)}
-        classNames={transitions.names.fade}
-      >
-        <NewVideoTileWrapper>
-          {loading ? (
-            <NewVideoTileSkeleton />
-          ) : (
-            <NewVideoTileLink to={absoluteRoutes.studio.editVideo()}>
-              <TextAndIconWrapper>
-                <StyledIcon />
-                <StyledText variant="body2">Upload new video</StyledText>
-              </TextAndIconWrapper>
-            </NewVideoTileLink>
-          )}
-        </NewVideoTileWrapper>
-      </CSSTransition>
-    </SwitchTransition>
-  )
 }
