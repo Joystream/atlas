@@ -35,7 +35,7 @@ export const FormGroup = styled.label<FormGroupProps>`
       color: ${colors.gray[300]};
     }
 
-    :not(:placeholder-shown) {
+    :not(:placeholder-shown):not(button) {
       border: 1px solid ${colors.gray[200]};
     }
 
@@ -43,7 +43,7 @@ export const FormGroup = styled.label<FormGroupProps>`
       border: 1px solid ${colors.blue[500]};
     }
 
-    :not(:focus) {
+    :not(:focus):not(button) {
       border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
     }
   }
