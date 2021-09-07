@@ -171,7 +171,7 @@ export const useStartFileUpload = () => {
         })
 
         // TODO: remove assets from the same parent if all finished
-        setAssetStatus({ lastStatus: 'proccessing', progress: 100 })
+        setAssetStatus({ lastStatus: 'processing', progress: 100 })
         addPendingAssetId(asset.contentId)
 
         assetsNotificationsCount.current.uploaded[assetKey] =

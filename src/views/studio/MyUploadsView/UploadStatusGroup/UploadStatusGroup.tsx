@@ -47,7 +47,7 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
     0
   )
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
-  const isProccessing = uploadsStatuses.some((file) => masterProgress === 100 && file?.lastStatus === 'proccessing')
+  const isProcessing = uploadsStatuses.some((file) => masterProgress === 100 && file?.lastStatus === 'processing')
 
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : video?.title
   const assetsGroupNumberText = `${uploads.length} asset${uploads.length > 1 ? 's' : ''}`
@@ -69,8 +69,8 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
     if (isCompleted) {
       return <Text variant="subtitle2">Uploaded</Text>
     }
-    if (isProccessing) {
-      return <Text variant="subtitle2">Proccessing...</Text>
+    if (isProcessing) {
+      return <Text variant="subtitle2">Processing...</Text>
     }
 
     return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>

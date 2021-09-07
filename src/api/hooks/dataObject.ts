@@ -3,8 +3,7 @@ import { useCallback } from 'react'
 
 import { GetDataObjectAvailabilityQuery, useGetDataObjectAvailabilityLazyQuery } from '@/api/queries'
 
-type DataObjectOpts = QueryHookOptions<GetDataObjectAvailabilityQuery>
-export const useDataObjectsAvailabilityLazy = (opts?: DataObjectOpts) => {
+export const useDataObjectsAvailabilityLazy = (opts?: QueryHookOptions<GetDataObjectAvailabilityQuery>) => {
   const [getDataObjectsAvailability, { data, ...rest }] = useGetDataObjectAvailabilityLazyQuery(opts)
 
   const _getDataObjectsAvailability = useCallback(
