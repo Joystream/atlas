@@ -29,6 +29,7 @@ export const useStartFileUpload = () => {
   const addAsset = useUploadsStore((state) => state.addAsset)
   const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
+  const addPendingAssetId = useUploadsStore((state) => state.addPendingAssetId)
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
@@ -140,7 +141,6 @@ export const useStartFileUpload = () => {
 
         assetsNotificationsCount.current.uploads[assetKey] =
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
-
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -171,7 +171,9 @@ export const useStartFileUpload = () => {
         })
 
         // TODO: remove assets from the same parent if all finished
-        setAssetStatus({ lastStatus: 'completed', progress: 100 })
+        setAssetStatus({ lastStatus: 'processing', progress: 100 })
+        addPendingAssetId(asset.contentId)
+
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
         displayUploadedNotification.current(assetKey)
@@ -207,14 +209,15 @@ export const useStartFileUpload = () => {
       }
     },
     [
-      addAsset,
       assetsFiles,
-      displaySnackbar,
       getRandomStorageProvider,
+      setUploadStatus,
+      addAssetFile,
+      addPendingAssetId,
+      addAsset,
+      displaySnackbar,
       markStorageProviderNotWorking,
       navigate,
-      addAssetFile,
-      setUploadStatus,
     ]
   )
 

@@ -21,6 +21,9 @@ type UploadStoreState = {
   addAssetFile: (assetFile: AssetFile) => void
   isSyncing: boolean
   setIsSyncing: (isSyncing: boolean) => void
+  pendingAssetsIds: string[]
+  removePendingAssetId: (contentId: string) => void
+  addPendingAssetId: (contentId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
@@ -32,6 +35,7 @@ export const useUploadsStore = create<UploadStoreState>(
       uploadsStatus: {},
       assetsFiles: [],
       isSyncing: false,
+      pendingAssetsIds: [],
 
       setUploadStatus: (contentId, status) => {
         set((state) => ({
@@ -59,6 +63,16 @@ export const useUploadsStore = create<UploadStoreState>(
       },
       setIsSyncing: (isSyncing) => {
         set((state) => ({ ...state, isSyncing: isSyncing }))
+      },
+      addPendingAssetId: (contentId) => {
+        set((state) => {
+          return { ...state, pendingAssetsIds: [...state.pendingAssetsIds, contentId] }
+        })
+      },
+      removePendingAssetId: (contentId) => {
+        set((state) => {
+          return { ...state, pendingAssets: state.pendingAssetsIds.filter((id) => id !== contentId) }
+        })
       },
     }),
     {

@@ -89,6 +89,11 @@ export type DataObject = {
   joystreamContentId: Scalars['String']
 }
 
+export type DataObjectWhereInput = {
+  joystreamContentId_eq?: Maybe<Scalars['String']>
+  joystreamContentId_in?: Maybe<Array<Scalars['String']>>
+}
+
 export type EntityViewsInfo = {
   __typename?: 'EntityViewsInfo'
   id: Scalars['ID']
@@ -190,6 +195,7 @@ export type Query = {
   channelViews?: Maybe<EntityViewsInfo>
   channels: Array<Channel>
   channelsConnection: ChannelConnection
+  dataObjects: Array<DataObject>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   /** Get list of most followed channels */
@@ -251,6 +257,11 @@ export type QueryChannelsConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<ChannelWhereInput>
   orderBy?: Maybe<Array<ChannelOrderByInput>>
+}
+
+export type QueryDataObjectsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<DataObjectWhereInput>
 }
 
 export type QueryMembershipByUniqueInputArgs = {

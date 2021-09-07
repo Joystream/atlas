@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
+import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
+import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 
@@ -21,15 +23,47 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const { addAsset, removeAsset, setIsSyncing, isSyncing } = useUploadsStore(
-    (state) => ({
-      addAsset: state.addAsset,
-      removeAsset: state.removeAsset,
-      setIsSyncing: state.setIsSyncing,
-      isSyncing: state.isSyncing,
-    }),
-    shallow
-  )
+
+  const { addAsset, removeAsset, setIsSyncing, isSyncing, pendingAssetsIds, removePendingAssetId, setUploadStatus } =
+    useUploadsStore(
+      (state) => ({
+        addAsset: state.addAsset,
+        removeAsset: state.removeAsset,
+        setIsSyncing: state.setIsSyncing,
+        isSyncing: state.isSyncing,
+        pendingAssetsIds: state.pendingAssetsIds,
+        removePendingAssetId: state.removePendingAssetId,
+        setUploadStatus: state.setUploadStatus,
+      }),
+      shallow
+    )
+
+  const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
+    fetchPolicy: 'network-only',
+    onCompleted: () => {
+      startPolling?.(ASSET_POLLING_INTERVAL)
+    },
+  })
+
+  useEffect(() => {
+    if (!pendingAssetsIds.length) {
+      return
+    }
+    getDataObjectsAvailability(pendingAssetsIds)
+  }, [getDataObjectsAvailability, pendingAssetsIds])
+
+  useEffect(() => {
+    dataObjects?.forEach((asset) => {
+      if (asset.liaisonJudgement === 'ACCEPTED') {
+        setUploadStatus(asset.joystreamContentId, { lastStatus: 'completed' })
+        removePendingAssetId(asset.joystreamContentId)
+      }
+    })
+    if (dataObjects?.every((entry) => entry.liaisonJudgement === 'ACCEPTED')) {
+      stopPolling?.()
+    }
+  }, [dataObjects, removePendingAssetId, setUploadStatus, stopPolling])
+
   const client = useApolloClient()
 
   useEffect(() => {
