@@ -63,6 +63,11 @@ type DataObject {
   joystreamContentId: String!
 }
 
+input DataObjectWhereInput {
+  joystreamContentId_eq: String
+  joystreamContentId_in: [String!]
+}
+
 type Membership {
   id: ID!
   handle: String!
@@ -297,6 +302,8 @@ type Query {
 
   # Free text search across videos and channels
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
+
+  dataObjects(limit: Int, where: DataObjectWhereInput): [DataObject!]!
 }
 
 type Subscription {
