@@ -71,8 +71,9 @@ export const MyVideosView = () => {
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
   const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
+
   const drafts = [
-    'new-video-tile' as const,
+    ...(_drafts.length ? ['new-video-tile' as const] : []),
     ...(sortVideosBy === VideoOrderByInput.CreatedAtAsc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
@@ -95,7 +96,7 @@ export const MyVideosView = () => {
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
   const deleteVideo = useDeleteVideo()
 
-  const videos = ['new-video-tile' as const, ...(edges ? edges : [])]
+  const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
     ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
@@ -358,7 +359,7 @@ export const MyVideosView = () => {
                 page={currentPage}
                 itemsPerPage={videosPerPage}
                 // +1 is for new video tile
-                totalCount={isDraftTab ? drafts.length + 1 : (totalCount || 0) + 1}
+                totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
               />
             </PaginationContainer>
           </>
