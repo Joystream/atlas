@@ -71,7 +71,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const rowsToLoad = useVideoGridRows()
-  const [_targetRowsCount, setTargetRowsCount] = useState<number>(rowsToLoad)
+  const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
   const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
   const queryVariables: { where: VideoWhereInput } = {
