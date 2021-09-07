@@ -63,7 +63,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         </StyledInfoContainer>
         <StyledButtonsContainer>
           {detailsText && tooltipText && (
-            <Tooltip text={tooltipText} placement="top-end" offsetX={-6}>
+            <Tooltip arrowDisabled text={tooltipText} placement="top-end">
               <DetailsContainer>
                 <Text variant="body2" secondary>
                   {detailsText}
@@ -79,11 +79,11 @@ export const ActionBar: React.FC<ActionBarProps> = ({
           )}
           {primaryButtonTooltipText && (
             <Tooltip
+              arrowDisabled
               headerText={primaryButtonTooltipText.headerText}
               text={primaryButtonTooltipText.text}
               icon={primaryButtonTooltipText.icon}
               placement="top-end"
-              offsetX={-6}
             >
               <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
                 {primaryButtonText}

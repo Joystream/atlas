@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
@@ -78,7 +78,12 @@ export const DetailsContainer = styled.div`
   margin-left: auto;
   display: flex;
   align-items: center;
-  padding: 0 ${sizes(5)};
+  padding: 13px ${sizes(4)};
+  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+
+  :hover {
+    background-color: ${colors.transparentPrimary[18]};
+  }
 `
 
 export const DetailsIconWrapper = styled.span`
