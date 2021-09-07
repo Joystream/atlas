@@ -27,7 +27,7 @@ type ChannelWithVideosProps = {
 const INITIAL_VIDEOS_PER_ROW = 4
 
 export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => {
-  const videoRows = useVideoGridRows('videosInChannel')
+  const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
     channel,

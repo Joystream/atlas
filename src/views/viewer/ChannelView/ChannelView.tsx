@@ -56,7 +56,7 @@ const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
-  const videoRows = useVideoGridRows('channel')
+  const videoRows = useVideoGridRows('main')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id, {

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import {
   AssetAvailability,
@@ -69,10 +69,11 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   isFeatured = false,
   titleLoader,
 }) => {
-  const [targetRowsCount, setTargetRowsCount] = useState<number | null>(null)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const targetRowsCountRef = useRef<number | null>(null)
-  const videoRows = useVideoGridRows()
+  const rowsToLoad = useVideoGridRows()
+  const [_targetRowsCount, setTargetRowsCount] = useState<number>(rowsToLoad)
+  const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
+
   const queryVariables: { where: VideoWhereInput } = {
     where: {
       ...(channelId ? { channelId_eq: channelId } : {}),
@@ -88,21 +89,9 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     },
   }
 
-  useEffect(() => {
-    if (videoRows) {
-      setTargetRowsCount(
-        targetRowsCountRef.current && targetRowsCountRef.current > videoRows ? targetRowsCountRef.current : videoRows
-      )
-    }
-  }, [videoRows])
-
   const fetchMore = useCallback(() => {
-    if (targetRowsCount && videoRows) {
-      const value = targetRowsCount + videoRows
-      setTargetRowsCount(value)
-      targetRowsCountRef.current = value
-    }
-  }, [targetRowsCount, videoRows])
+    setTargetRowsCount(targetRowsCount + rowsToLoad)
+  }, [targetRowsCount, rowsToLoad])
 
   const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
     GetVideosConnectionQuery,
@@ -110,10 +99,10 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     GetVideosConnectionQueryVariables
   >({
     query: GetVideosConnectionDocument,
-    isReady: ready && !!targetRowsCount,
+    isReady: ready,
     skipCount,
     queryVariables,
-    targetRowsCount: targetRowsCount || 0,
+    targetRowsCount,
     onDemand,
     onScrollToBottom: !onDemand ? fetchMore : undefined,
     dataAccessor: (rawData) => {
