@@ -4,13 +4,15 @@ import shallow from 'zustand/shallow'
 import { useChannel, useVideo } from '@/api/hooks'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
+import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
-import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
+import { SvgAlertError } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
   AssetsDrawerContainer,
   AssetsInfoContainer,
+  BottomProgressBar,
   Container,
   ProgressBar,
   StyledExpandButton,
@@ -54,26 +56,40 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
 
   const renderAssetsGroupInfo = () => {
     if (errorsCount) {
-      return <Text variant="subtitle2">{`${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
+      return (
+        <Text variant="subtitle2" secondary>{`${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
+      )
     }
     if (missingAssetsCount) {
       return (
-        <Text variant="subtitle2">{`${missingAssetsCount} asset${
+        <Text variant="subtitle2" secondary>{`${missingAssetsCount} asset${
           missingAssetsCount > 1 ? 's' : ''
         } lost connection`}</Text>
       )
     }
     if (isWaiting) {
-      return <Text variant="subtitle2">Waiting for upload...</Text>
+      return (
+        <Text variant="subtitle2" secondary>
+          Waiting for upload...
+        </Text>
+      )
     }
     if (isCompleted) {
-      return <Text variant="subtitle2">Uploaded</Text>
+      return (
+        <Text variant="subtitle2" secondary>
+          Uploaded
+        </Text>
+      )
     }
     if (isProcessing) {
-      return <Text variant="subtitle2">Processing...</Text>
+      return (
+        <Text variant="subtitle2" secondary>
+          Processing...
+        </Text>
+      )
     }
 
-    return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
+    return <Text variant="subtitle2" secondary>{`Uploading... (${masterProgress}%)`}</Text>
   }
 
   const enrichedUploadData =
@@ -101,18 +117,13 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
         isActive={isAssetsDrawerActive}
       >
         <ProgressBar progress={isCompleted ? 100 : masterProgress} hasUploadingAsset={hasUploadingAsset} />
-        <Thumbnail>
-          {errorsCount || missingAssetsCount ? (
-            <SvgAlertError />
-          ) : isChannelType ? (
-            <SvgNavChannel />
-          ) : (
-            <SvgControlsVideo />
-          )}
-        </Thumbnail>
+        <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />
+        <Thumbnail>{errorsCount || missingAssetsCount ? <SvgAlertError /> : <Loader variant="small" />}</Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
-          <Text variant="body2">{assetsGroupNumberText}</Text>
+          <Text variant="body2" secondary>
+            {assetsGroupNumberText}
+          </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
           {renderAssetsGroupInfo()}

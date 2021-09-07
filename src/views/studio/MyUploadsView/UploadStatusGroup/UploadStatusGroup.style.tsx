@@ -6,7 +6,7 @@ import { colors, media, sizes, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
   progress: number
-  hasUploadingAsset: boolean
+  hasUploadingAsset?: boolean
 }
 
 type UploadStatusGroupProps = {
@@ -29,7 +29,7 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   padding: ${sizes(4)};
   width: 100%;
   height: ${sizes(20)};
-  background-color: ${({ isActive }) => (isActive ? colors.gray[900] : colors.black)};
+  background-color: ${colors.gray[900]};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 
@@ -66,14 +66,29 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: ${colors.transparentPrimary[20]};
+  background-color: ${colors.gray[800]};
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-  ${pulseAnimationCss}
+
+  /* ${pulseAnimationCss} */
+`
+
+export const BottomProgressBar = styled.div<ProgressbarProps>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform-origin: 0 0;
+  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
+  transition: transform 1s linear;
+  background-color: ${colors.blue[500]};
+  height: 4px;
 `
 
 export const Thumbnail = styled.div`
+  position: relative;
+  z-index: 1;
   display: none;
   justify-content: center;
   align-items: center;
@@ -86,6 +101,8 @@ export const Thumbnail = styled.div`
   }
 `
 export const AssetsInfoContainer = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -95,6 +112,8 @@ export const AssetsInfoContainer = styled.div`
 `
 
 export const UploadInfoContainer = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   margin-left: auto;

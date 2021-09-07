@@ -235,8 +235,10 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
             {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
             <Text variant="body2">{fileTypeText}</Text>
           </FileInfoType>
-          <Text variant="body2">{dimension}</Text>
-          <Text>{size}</Text>
+          <Text variant="body2" secondary>
+            {dimension}
+          </Text>
+          <Text secondary>{size}</Text>
         </FileInfoContainer>
         <StatusMessage variant="subtitle2">{renderStatusMessage()}</StatusMessage>
       </FileLineContainer>
