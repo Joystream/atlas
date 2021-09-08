@@ -50,7 +50,7 @@ export const VideoView: React.FC = () => {
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -138,6 +138,7 @@ export const VideoView: React.FC = () => {
               channelId={video.channel.id}
               videoId={video.id}
               autoplay
+              isMediaLoading={isMediaLoading}
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}
