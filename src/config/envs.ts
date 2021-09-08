@@ -2,9 +2,12 @@ import { useEnvironmentStore } from '@/providers/environment'
 
 type BuildEnv = 'production' | 'development'
 
-export const BUILD_ENV = (import.meta.env.VITE_ENV || 'production') as BuildEnv
-export const TARGET_DEV_ENV = useEnvironmentStore.getState().targetEnv
 export const ENV_PREFIX = 'VITE'
+const getEnvName = (name: string) => {
+  return `${ENV_PREFIX}_${name}`
+}
+
+export const BUILD_ENV = (import.meta.env[getEnvName('ENV')] || 'production') as BuildEnv
 
 export const availableEnvs = () => {
   return Array.from(
@@ -21,8 +24,8 @@ export const availableEnvs = () => {
 export const readEnv = (name: string, required = true): string => {
   const fullName =
     BUILD_ENV === 'production'
-      ? `${ENV_PREFIX}_PRODUCTION_${name}`
-      : `${ENV_PREFIX}_${TARGET_DEV_ENV.toUpperCase()}_${name}`
+      ? getEnvName(`PRODUCTION_${name}`)
+      : getEnvName(`${useEnvironmentStore.getState().targetDevEnv.toUpperCase()}_${name}`)
   const value = import.meta.env[fullName]
   if (!value && required) {
     throw new Error(`Missing required env variable "${name}", tried access via "${fullName}"`)

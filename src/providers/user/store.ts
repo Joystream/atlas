@@ -1,13 +1,12 @@
-import { AccountId, ChannelId, MemberId } from '@/joystream-lib'
 import { createStore } from '@/store'
 import { readFromLocalStorage } from '@/utils/localStorage'
 
 const LOCAL_STORAGE_KEY = 'activeUser'
 
 export type ActiveUserState = {
-  accountId: AccountId | null
-  memberId: MemberId | null
-  channelId: ChannelId | null
+  accountId: string | null
+  memberId: string | null
+  channelId: string | null
 }
 
 const EMPTY_STATE: ActiveUserState = {

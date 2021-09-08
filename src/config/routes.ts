@@ -4,7 +4,6 @@ export const BASE_PATHS = {
   legal: '/legal',
   studio: '/studio',
   playground: '/playground',
-  admin: '/admin',
 } as const
 
 const withQueryParameters = (basePath: string, query: Record<string, string> = {}) => {
@@ -43,9 +42,6 @@ export const relativeRoutes = {
     newMembership: () => 'membership/new',
   },
   playground: {
-    index: () => '',
-  },
-  admin: {
     index: () => '',
   },
 }

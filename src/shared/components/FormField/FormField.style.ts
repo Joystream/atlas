@@ -4,8 +4,12 @@ import { colors, sizes, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
-export const FormFieldWrapper = styled.div`
-  margin-top: ${sizes(6)};
+type DenseProps = {
+  dense?: boolean
+}
+
+export const FormFieldWrapper = styled.div<DenseProps>`
+  margin-top: ${({ dense }) => sizes(dense ? 4 : 6)};
   width: 100%;
   max-width: 760px;
 `
@@ -26,6 +30,6 @@ export const FormFieldDescription = styled(Text)`
   word-wrap: break-word;
 `
 
-export const ChildrenWrapper = styled.div`
-  margin-top: ${sizes(6)};
+export const ChildrenWrapper = styled.div<DenseProps>`
+  margin-top: ${({ dense }) => sizes(dense ? 2 : 6)};
 `

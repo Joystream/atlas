@@ -2,13 +2,13 @@ import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
+import { AdminOverlay } from '@/components/AdminOverlay'
 import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarBase } from '@/components/TopbarBase'
 import { BASE_PATHS } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
 
 import { useDialog } from './providers/dialogs'
-import { AdminView } from './views/admin'
 import { LegalLayout } from './views/legal'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
@@ -45,12 +45,14 @@ export const MainLayout: React.FC = () => {
   }, [openDialog])
 
   return (
-    <Routes>
-      <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
-      <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
-      <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
-      <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
-      <Route path={BASE_PATHS.admin + '/*'} element={<AdminView />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path={BASE_PATHS.viewer + '/*'} element={<ViewerLayout />} />
+        <Route path={BASE_PATHS.legal + '/*'} element={<LegalLayout />} />
+        <Route path={BASE_PATHS.studio + '/*'} element={<LoadableStudioLayout />} />
+        <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
+      </Routes>
+      <AdminOverlay />
+    </>
   )
 }
