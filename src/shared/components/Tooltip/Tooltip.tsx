@@ -30,7 +30,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   arrowDisabled,
   className,
 }) => {
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
   return (
     <Tippy
       onMount={() => setIsVisible(true)}
