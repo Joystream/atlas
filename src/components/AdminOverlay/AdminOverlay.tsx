@@ -256,8 +256,7 @@ const UserTab: React.FC = () => {
       setMemberIdValue(state.memberId)
       setChannelIdValue(state.channelId)
     }
-    const unsub = useActiveUserStore.subscribe(handler)
-    return () => unsub
+    return useActiveUserStore.subscribe(handler)
   }, [])
 
   const handleAccountIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
