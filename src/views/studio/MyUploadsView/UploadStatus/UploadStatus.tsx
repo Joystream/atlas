@@ -8,22 +8,27 @@ import { useDialog } from '@/providers/dialogs'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { Button } from '@/shared/components/Button'
 import { CircularProgress } from '@/shared/components/CircularProgress'
+import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
 import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
 import {
+  FailedStatusWrapper,
+  FileInfo,
   FileInfoContainer,
+  FileInfoDetails,
   FileInfoType,
   FileLineContainer,
   FileLineLastPoint,
   FileLinePoint,
   FileStatusContainer,
   ProgressbarContainer,
-  StatusMessage,
+  ReconnectingText,
+  RetryButton,
+  StatusText,
 } from './UploadStatus.style'
 
 type UploadStatusProps = {
@@ -190,23 +195,37 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
 
   const renderStatusMessage = () => {
     if (uploadStatus?.lastStatus === 'reconnecting') {
-      return 'Reconnecting...'
+      return (
+        <StatusText variant="subtitle2" secondary>
+          Reconnecting...
+        </StatusText>
+      )
     }
     if (uploadStatus?.lastStatus === 'error') {
       return (
-        <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
-          Try again
-        </Button>
+        <FailedStatusWrapper>
+          <StatusText variant="subtitle2" secondary mobileText="Asset failed">
+            Asset failed during upload
+          </StatusText>
+          <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
+            Try again
+          </RetryButton>
+        </FailedStatusWrapper>
       )
     }
     if (!uploadStatus?.lastStatus) {
       return (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
-            Reconnect file
-          </Button>
-        </div>
+        <FailedStatusWrapper>
+          <StatusText variant="subtitle2" secondary mobileText="Asset failed">
+            Asset failed during upload
+          </StatusText>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
+              Reconnect file
+            </RetryButton>
+          </div>
+        </FailedStatusWrapper>
       )
     }
   }
@@ -218,29 +237,43 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (uploadStatus?.lastStatus === 'error' || !uploadStatus?.lastStatus) {
       return <SvgAlertWarning />
     }
+    if (uploadStatus?.lastStatus === 'processing') {
+      return <Loader variant="small" />
+    }
     return (
       <ProgressbarContainer>
-        <CircularProgress value={uploadStatus?.progress ?? 0} />
+        <CircularProgress value={uploadStatus?.progress ?? 0} noTrail />
       </ProgressbarContainer>
     )
   }
-
+  const isReconnecting = uploadStatus?.lastStatus === 'reconnecting'
   return (
     <>
       <FileLineContainer isLast={isLast}>
-        {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
-        <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
         <FileInfoContainer>
-          <FileInfoType>
-            {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
-            <Text variant="body2">{fileTypeText}</Text>
-          </FileInfoType>
-          <Text variant="body2" secondary>
-            {dimension}
-          </Text>
-          <Text secondary>{size}</Text>
+          {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
+          <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
+          <FileInfo>
+            <FileInfoType>
+              {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
+              <Text variant="body2">{fileTypeText}</Text>
+            </FileInfoType>
+            <FileInfoDetails isReconnecting={isReconnecting}>
+              {dimension && (
+                <Text variant="body2" secondary>
+                  {dimension}
+                </Text>
+              )}
+              {size && <Text secondary>{size}</Text>}
+            </FileInfoDetails>
+            {isReconnecting && (
+              <ReconnectingText variant="body2" secondary>
+                Reconnecting...
+              </ReconnectingText>
+            )}
+          </FileInfo>
         </FileInfoContainer>
-        <StatusMessage variant="subtitle2">{renderStatusMessage()}</StatusMessage>
+        {renderStatusMessage()}
       </FileLineContainer>
       <ImageCropDialog ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
       <ImageCropDialog ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />
