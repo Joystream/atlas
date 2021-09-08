@@ -37,7 +37,7 @@ const environmentsItems = availableEnvs().map((item) => ({ name: ENVIRONMENT_NAM
 const TABS: TabItem[] = [{ name: 'Env' }, { name: 'State' }, { name: 'User' }]
 
 export const AdminOverlay: React.FC = () => {
-  const [overlayOpen, setOverlayOpen] = useState(true)
+  const [overlayOpen, setOverlayOpen] = useState(false)
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
   useEffect(() => {
