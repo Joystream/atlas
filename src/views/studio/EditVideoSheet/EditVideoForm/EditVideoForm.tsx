@@ -636,7 +636,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         fullWidth={true}
         fee={fee}
         isActive={selectedVideoTab?.isDraft || isDirty}
-        primaryButtonText={isEdit ? 'Publish changes' : 'Start publishing'}
+        primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
         onConfirmClick={handleSubmit}
         detailsText={isEdit ? undefined : 'Drafts are saved automatically'}
         tooltipText={
@@ -647,6 +647,19 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         detailsTextIcon={isEdit ? undefined : <SvgGlyphInfo />}
         secondaryButtonText={isEdit ? 'Cancel' : undefined}
         onCancelClick={isEdit ? () => reset() : undefined}
+        primaryButtonTooltipText={
+          isEdit
+            ? {
+                headerText: 'Change anything to proceed',
+                text: 'To publish changes you have to provide new value to any field',
+                icon: true,
+              }
+            : {
+                headerText: 'Fill all required fields to proceed',
+                text: 'Required: video file, thumbnail, title, category, language',
+                icon: true,
+              }
+        }
       />
     </>
   )
