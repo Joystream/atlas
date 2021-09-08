@@ -61,7 +61,7 @@ export const FileLineLastPoint = styled.div`
   border-bottom: 2px solid ${colors.gray[500]};
   transform: translateY(calc(-50% + 1px));
 
-  ${media.md} {
+  ${media.lg} {
     margin-left: ${sizes(13)};
   }
 `

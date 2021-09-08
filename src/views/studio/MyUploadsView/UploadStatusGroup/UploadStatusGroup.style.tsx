@@ -8,6 +8,8 @@ import { colors, media, sizes, transitions } from '@/shared/theme'
 type ProgressbarProps = {
   progress: number
   hasUploadingAsset?: boolean
+  isProcessing?: boolean
+  isCompleted?: boolean
 }
 
 type UploadStatusGroupProps = {
@@ -33,33 +35,50 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   background-color: ${colors.gray[900]};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+`
 
-  &:hover {
-    background-color: ${colors.gray[900]};
+const greenBarAnimation = keyframes`
+   0% {
+    opacity: 0.2;
+    background-color: ${colors.secondary.success[100]};
+    transform: scaleX(0);
+  }
+  75% {
+    transform: scaleX(1);
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
   }
 `
 
-const pulse = keyframes`
+const pulseAnimation = keyframes`
   0% {
     opacity: 1;
   }
   50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.7;
+    opacity: 0.2
   }
   100% {
     opacity: 1;
   }
 `
 
-const pulseAnimationCss = (props: ProgressbarProps) =>
-  props.hasUploadingAsset
-    ? css`
-        animation: ${pulse} 2.5s infinite ease-in-out;
-      `
-    : null
+const completedAnimationCss = (props: ProgressbarProps) => {
+  if (props.isProcessing) {
+    return css`
+      animation: ${pulseAnimation} 2.5s infinite ease-in-out;
+    `
+  }
+  if (props.isCompleted) {
+    return css`
+      opacity: 0;
+      animation: ${greenBarAnimation} 400ms ease-out;
+      animation-iteration-count: 1;
+    `
+  }
+  return null
+}
 
 export const ProgressBar = styled.div<ProgressbarProps>`
   position: absolute;
@@ -72,7 +91,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
 
-  /* ${pulseAnimationCss} */
+  ${completedAnimationCss}
 `
 
 export const BottomProgressBar = styled.div<ProgressbarProps>`

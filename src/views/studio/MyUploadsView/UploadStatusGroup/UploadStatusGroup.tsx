@@ -6,7 +6,7 @@ import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
-import { SvgAlertError } from '@/shared/icons'
+import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
@@ -92,7 +92,11 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
       )
     }
 
-    return <AssetGroupInfoText variant="subtitle2" secondary>{`Uploading... (${masterProgress}%)`}</AssetGroupInfoText>
+    return (
+      <AssetGroupInfoText variant="subtitle2" secondary>
+        Uploading...{masterProgress}%
+      </AssetGroupInfoText>
+    )
   }
 
   const enrichedUploadData =
@@ -112,16 +116,28 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
   if (videoLoading || channelLoading) {
     return <UploadStatusGroupSkeletonLoader />
   }
-
   return (
     <Container>
       <UploadStatusGroupContainer
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar progress={isCompleted ? 100 : masterProgress} hasUploadingAsset={hasUploadingAsset} />
-        <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />
-        <Thumbnail>{errorsCount || missingAssetsCount ? <SvgAlertError /> : <Loader variant="small" />}</Thumbnail>
+        <ProgressBar
+          progress={isCompleted ? 100 : masterProgress}
+          hasUploadingAsset={hasUploadingAsset}
+          isProcessing={isProcessing}
+          isCompleted={isCompleted}
+        />
+        {!isCompleted && <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />}
+        <Thumbnail>
+          {errorsCount || missingAssetsCount ? (
+            <SvgAlertError />
+          ) : isCompleted ? (
+            <SvgAlertSuccess />
+          ) : (
+            <Loader variant="small" />
+          )}
+        </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
           <Text variant="body2" secondary>
