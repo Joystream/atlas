@@ -54,7 +54,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
               {headerText && <TooltipText variant="overhead">{headerText}</TooltipText>}
             </TooltipHeader>
 
-            <TooltipText variant="caption">{text}</TooltipText>
+            <TooltipText withIcon={!!icon} variant="caption">
+              {text}
+            </TooltipText>
 
             {!arrowDisabled && <Arrow />}
           </StyledTooltip>
