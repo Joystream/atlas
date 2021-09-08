@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
@@ -66,7 +66,6 @@ export const StyledButtonsContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: row;
-  align-items: center;
   justify-content: flex-end;
 
   > *:not(:last-child) {
@@ -75,10 +74,17 @@ export const StyledButtonsContainer = styled.div`
 `
 
 export const DetailsContainer = styled.div`
+  user-select: none;
   margin-left: auto;
   display: flex;
   align-items: center;
+  height: 100%;
   padding: 0 ${sizes(5)};
+  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+
+  :hover {
+    background-color: ${colors.transparentPrimary[18]};
+  }
 `
 
 export const DetailsIconWrapper = styled.span`
