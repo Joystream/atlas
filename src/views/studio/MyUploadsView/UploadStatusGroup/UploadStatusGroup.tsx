@@ -10,6 +10,7 @@ import { SvgAlertError } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
+  AssetGroupInfoText,
   AssetsDrawerContainer,
   AssetsInfoContainer,
   BottomProgressBar,
@@ -57,39 +58,41 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
   const renderAssetsGroupInfo = () => {
     if (errorsCount) {
       return (
-        <Text variant="subtitle2" secondary>{`${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
+        <AssetGroupInfoText variant="subtitle2" secondary>{`${errorsCount} asset${
+          errorsCount > 1 ? 's' : ''
+        } upload failed`}</AssetGroupInfoText>
       )
     }
     if (missingAssetsCount) {
       return (
-        <Text variant="subtitle2" secondary>{`${missingAssetsCount} asset${
+        <AssetGroupInfoText variant="subtitle2" secondary>{`${missingAssetsCount} asset${
           missingAssetsCount > 1 ? 's' : ''
-        } lost connection`}</Text>
+        } lost connection`}</AssetGroupInfoText>
       )
     }
     if (isWaiting) {
       return (
-        <Text variant="subtitle2" secondary>
+        <AssetGroupInfoText variant="subtitle2" secondary>
           Waiting for upload...
-        </Text>
+        </AssetGroupInfoText>
       )
     }
     if (isCompleted) {
       return (
-        <Text variant="subtitle2" secondary>
+        <AssetGroupInfoText variant="subtitle2" secondary>
           Uploaded
-        </Text>
+        </AssetGroupInfoText>
       )
     }
     if (isProcessing) {
       return (
-        <Text variant="subtitle2" secondary>
+        <AssetGroupInfoText variant="subtitle2" secondary>
           Processing...
-        </Text>
+        </AssetGroupInfoText>
       )
     }
 
-    return <Text variant="subtitle2" secondary>{`Uploading... (${masterProgress}%)`}</Text>
+    return <AssetGroupInfoText variant="subtitle2" secondary>{`Uploading... (${masterProgress}%)`}</AssetGroupInfoText>
   }
 
   const enrichedUploadData =

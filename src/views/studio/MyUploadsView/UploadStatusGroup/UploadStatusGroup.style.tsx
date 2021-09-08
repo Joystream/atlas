@@ -2,6 +2,7 @@ import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components/ExpandButton'
+import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
 type ProgressbarProps = {
@@ -89,15 +90,16 @@ export const BottomProgressBar = styled.div<ProgressbarProps>`
 export const Thumbnail = styled.div`
   position: relative;
   z-index: 1;
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: ${sizes(18)};
+  width: ${sizes(12)};
   height: ${sizes(12)};
   background-color: ${colors.gray[700]};
 
   ${media.xs} {
-    display: flex;
+    width: ${sizes(18)};
+    height: ${sizes(12)};
   }
 `
 export const AssetsInfoContainer = styled.div`
@@ -121,6 +123,12 @@ export const UploadInfoContainer = styled.div`
   height: ${sizes(12)};
   color: ${colors.gray[300]};
   text-align: right;
+`
+export const AssetGroupInfoText = styled(Text)`
+  display: none;
+  ${media.sm} {
+    display: block;
+  }
 `
 
 export const StyledExpandButton = styled(ExpandButton)`
