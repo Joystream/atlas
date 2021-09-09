@@ -11,7 +11,7 @@ export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
-  const removeAssetsFromUploads = useUploadsStore((state) => state.removeAssetsWithParent)
+  const { removeAssetsWithParent: removeAssetsFromUploads } = useUploadsStore((state) => state.actions)
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()
 
   const client = useApolloClient()

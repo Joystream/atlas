@@ -1,7 +1,5 @@
-import create from 'zustand'
-import { persist } from 'zustand/middleware'
-
 import { ChannelId, VideoId } from '@/joystream-lib'
+import { createStore } from '@/store'
 
 import { AssetParent, AssetUpload, UploadStatus, UploadsStatusRecord } from './types'
 
@@ -10,33 +8,30 @@ type AssetFile = {
   blob: File | Blob
 }
 
-type UploadStoreState = {
+type _UploadStoreState = {
   uploads: AssetUpload[]
+  uploadsStatus: UploadsStatusRecord
+  assetsFiles: AssetFile[]
+  isSyncing: boolean
+  pendingAssetsIds: string[]
+}
+
+type UploadStoreActions = {
   addAsset: (asset: AssetUpload) => void
   removeAsset: (contentId: string) => void
   removeAssetsWithParent: (type: AssetParent, id: ChannelId | VideoId) => void
-  uploadsStatus: UploadsStatusRecord
   setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
-  assetsFiles: AssetFile[]
   addAssetFile: (assetFile: AssetFile) => void
-  isSyncing: boolean
   setIsSyncing: (isSyncing: boolean) => void
-  pendingAssetsIds: string[]
   removePendingAssetId: (contentId: string) => void
   addPendingAssetId: (contentId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
-export const useUploadsStore = create<UploadStoreState>(
-  persist(
-    (set) => ({
-      uploads: [],
-      uploadsStatus: {},
-      assetsFiles: [],
-      isSyncing: false,
-      pendingAssetsIds: [],
-
+export const useUploadsStore = createStore<_UploadStoreState, UploadStoreActions>(
+  {
+    actionsFactory: (set) => ({
       setUploadStatus: (contentId, status) => {
         set((state) => ({
           ...state,
@@ -75,8 +70,19 @@ export const useUploadsStore = create<UploadStoreState>(
         })
       },
     }),
-    {
-      name: UPLOADS_LOCAL_STORAGE_KEY,
+    state: {
+      uploads: [],
+      uploadsStatus: {},
+      assetsFiles: [],
+      isSyncing: false,
+      pendingAssetsIds: [],
+    },
+  },
+  {
+    persist: {
+      key: UPLOADS_LOCAL_STORAGE_KEY,
+      whitelist: ['uploads'],
+      version: 0,
       migrate: (state) => {
         const uploads = window.localStorage.getItem(UPLOADS_LOCAL_STORAGE_KEY)
         return {
@@ -84,7 +90,6 @@ export const useUploadsStore = create<UploadStoreState>(
           uploads: JSON.parse(uploads || ''),
         }
       },
-      whitelist: ['uploads'],
-    }
-  )
+    },
+  }
 )

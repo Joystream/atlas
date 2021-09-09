@@ -25,11 +25,8 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const addAssetFile = useUploadsStore((state) => state.addAssetFile)
-  const addAsset = useUploadsStore((state) => state.addAsset)
-  const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
+  const { addAssetFile, addAsset, setUploadStatus, addPendingAssetId } = useUploadsStore((state) => state.actions)
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-  const addPendingAssetId = useUploadsStore((state) => state.addPendingAssetId)
 
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{

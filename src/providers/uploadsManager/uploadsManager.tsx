@@ -23,20 +23,10 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-
-  const { addAsset, removeAsset, setIsSyncing, isSyncing, pendingAssetsIds, removePendingAssetId, setUploadStatus } =
-    useUploadsStore(
-      (state) => ({
-        addAsset: state.addAsset,
-        removeAsset: state.removeAsset,
-        setIsSyncing: state.setIsSyncing,
-        isSyncing: state.isSyncing,
-        pendingAssetsIds: state.pendingAssetsIds,
-        removePendingAssetId: state.removePendingAssetId,
-        setUploadStatus: state.setUploadStatus,
-      }),
-      shallow
-    )
+  const { addAsset, removeAsset, setIsSyncing, removePendingAssetId, setUploadStatus } = useUploadsStore(
+    (state) => state.actions
+  )
+  const { isSyncing, pendingAssetsIds } = useUploadsStore((state) => state)
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
