@@ -33,40 +33,45 @@ export const useUploadsStore = createStore<_UploadStoreState, UploadStoreActions
   {
     actionsFactory: (set) => ({
       setUploadStatus: (contentId, status) => {
-        set((state) => ({
-          ...state,
-          uploadsStatus: { ...state.uploadsStatus, [contentId]: { ...state.uploadsStatus[contentId], ...status } },
-        }))
+        set((state) => {
+          state.uploadsStatus[contentId] = { ...state.uploadsStatus[contentId], ...status }
+        })
       },
       addAssetFile: (assetFile) => {
-        set((state) => ({ ...state, assetsFiles: [...state.assetsFiles, assetFile] }))
+        set((state) => {
+          state.assetsFiles.push(assetFile)
+        })
       },
       addAsset: (asset) => {
-        set((state) => ({ ...state, uploads: [...state.uploads, asset] }))
+        set((state) => {
+          state.uploads.push(asset)
+        })
       },
       removeAsset: (contentId) => {
-        set((state) => ({
-          ...state,
-          uploads: state.uploads.filter((asset) => asset.contentId !== contentId),
-        }))
+        set((state) => {
+          state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
+        })
       },
       removeAssetsWithParent: (type, id) => {
-        set((state) => ({
-          ...state,
-          uploads: state.uploads.filter((asset) => asset.parentObject.id !== id || asset.parentObject.type !== type),
-        }))
+        set((state) => {
+          state.uploads = state.uploads.filter(
+            (asset) => asset.parentObject.id !== id || asset.parentObject.type !== type
+          )
+        })
       },
       setIsSyncing: (isSyncing) => {
-        set((state) => ({ ...state, isSyncing: isSyncing }))
+        set((state) => {
+          state.isSyncing = isSyncing
+        })
       },
       addPendingAssetId: (contentId) => {
         set((state) => {
-          return { ...state, pendingAssetsIds: [...state.pendingAssetsIds, contentId] }
+          state.pendingAssetsIds.push(contentId)
         })
       },
       removePendingAssetId: (contentId) => {
         set((state) => {
-          return { ...state, pendingAssets: state.pendingAssetsIds.filter((id) => id !== contentId) }
+          state.pendingAssetsIds = state.pendingAssetsIds.filter((id) => id !== contentId)
         })
       },
     }),
