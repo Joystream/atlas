@@ -27,6 +27,7 @@ export const NewVideoTileWrapper = styled.div`
 
   /* 2px account for border */
   padding-bottom: calc(56.25% - 2px);
+  margin-bottom: ${sizes(12)};
 `
 
 export const NewVideoTileLink = styled(Link)`
