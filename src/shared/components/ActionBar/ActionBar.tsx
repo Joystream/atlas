@@ -54,12 +54,11 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   onCancelClick,
   primaryButtonTooltipText,
 }) => {
-  const renderButton = () =>
-    primaryButtonText ? (
-      <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
-        {primaryButtonText}
-      </Button>
-    ) : null
+  const renderButton = primaryButtonText ? (
+    <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+      {primaryButtonText}
+    </Button>
+  ) : null
 
   return (
     <StyledActionBarContainer className={className}>
@@ -92,10 +91,10 @@ export const ActionBar: React.FC<ActionBarProps> = ({
               icon={primaryButtonTooltipText?.icon}
               placement="top-end"
             >
-              {renderButton()}
+              {renderButton}
             </Tooltip>
           ) : (
-            <>{renderButton()}</>
+            <>{renderButton}</>
           )}
         </StyledButtonsContainer>
       </StyledInnerContainer>
