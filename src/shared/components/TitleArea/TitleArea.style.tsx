@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { colors, sizes, typography } from '@/shared/theme'
+
+import { TitleAreaVariant } from './'
 
 import { Text } from '../Text'
 
@@ -10,6 +12,7 @@ export const Container = styled.div`
 
 type StyledTextAreaProps = {
   touchedAndEmpty?: boolean
+  variant?: TitleAreaVariant
 }
 
 type TitleAreaInfoProps = {
@@ -25,7 +28,6 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
 
 export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   caret-color: ${colors.blue[500]};
-  font-size: ${typography.sizes.h4};
   color: white;
   background-color: ${colors.transparent};
   font-family: ${typography.fonts.headers};
@@ -34,6 +36,14 @@ export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   width: 100%;
   resize: none;
   height: auto;
+  font-size: ${({ variant }) => {
+    if (variant === 'large') {
+      return typography.sizes.h4
+    }
+    if (variant === 'small') {
+      return typography.sizes.h2
+    }
+  }};
 
   &:hover {
     opacity: 75%;
@@ -52,9 +62,6 @@ export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
     + ${TitleAreaInfo} {
       opacity: 1;
     }
-  }
-  ${media.sm} {
-    font-size: ${typography.sizes.h2};
   }
 `
 

@@ -4,7 +4,10 @@ import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInf
 
 import { Text } from '../Text'
 
+export type TitleAreaVariant = 'small' | 'large'
+
 export type TitleAreaProps = {
+  variant?: TitleAreaVariant
   name?: string
   value?: string
   min?: number
@@ -18,6 +21,7 @@ export type TitleAreaProps = {
 export const TitleArea: React.FC<TitleAreaProps> = ({
   name,
   value,
+  variant = 'small',
   placeholder = 'Enter text here',
   onChange,
   onBlur,
@@ -52,6 +56,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
   return (
     <Container className={className}>
       <StyledTextArea
+        variant={variant}
         ref={textareaRef}
         rows={1}
         minLength={min}

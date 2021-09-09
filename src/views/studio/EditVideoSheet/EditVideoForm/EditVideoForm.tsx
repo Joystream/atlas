@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -87,6 +88,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const isEdit = !selectedVideoTab?.isDraft
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
+  const smMatch = useMediaMatch('sm')
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -433,7 +435,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               control={control}
               rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })}
               render={({ field: { value, onChange } }) => (
-                <StyledTitleArea onChange={onChange} value={value} min={3} max={40} placeholder="Video title" />
+                <StyledTitleArea
+                  variant={smMatch ? 'small' : 'large'}
+                  onChange={onChange}
+                  value={value}
+                  min={3}
+                  max={40}
+                  placeholder="Video title"
+                />
               )}
             />
 
