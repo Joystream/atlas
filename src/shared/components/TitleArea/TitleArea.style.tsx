@@ -8,7 +8,7 @@ export const Container = styled.div`
   position: relative;
 `
 
-type StyledInputProps = {
+type StyledTextAreaProps = {
   touchedAndEmpty?: boolean
 }
 
@@ -23,7 +23,7 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
   grid-gap: ${sizes(8)};
 `
 
-export const StyledInput = styled.textarea<StyledInputProps>`
+export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   caret-color: ${colors.blue[500]};
   font-size: ${typography.sizes.h4};
   color: white;

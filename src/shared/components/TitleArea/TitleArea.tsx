@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { CharactersCounter, Container, MinMaxChars, StyledInput, TitleAreaInfo } from './TitleArea.style'
+import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.style'
 
 import { Text } from '../Text'
 
@@ -15,65 +15,67 @@ export type TitleAreaProps = {
   className?: string
 }
 
-export const TitleArea = React.forwardRef<HTMLTextAreaElement, TitleAreaProps>(
-  ({ name, value, placeholder = 'Enter text here', onChange, onBlur, className, max = 60, min = 5 }, ref) => {
-    const [charactersCount, setCharactersCount] = useState(0)
-    const [touched, setTouched] = useState(false)
-    const invalidInput = charactersCount < min || charactersCount > max
-    const containerRef = useRef<HTMLDivElement>(null)
+export const TitleArea: React.FC<TitleAreaProps> = ({
+  name,
+  value,
+  placeholder = 'Enter text here',
+  onChange,
+  onBlur,
+  className,
+  max = 60,
+  min = 5,
+}) => {
+  const [touched, setTouched] = useState(false)
+  const invalidInput = (value?.length || 0) < min || (value?.length || 0) > max
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-    const handleFocus = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setCharactersCount(e.target.value.length)
-      setTouched(true)
-    }
-
-    useEffect(() => {
-      const textarea = containerRef.current?.querySelector('textarea')
-      if (!textarea) {
-        return
-      }
-      setCharactersCount(textarea.value.length)
-      textarea.style.height = 'initial'
-      const scrollHeight = textarea.scrollHeight
-      textarea.style.height = scrollHeight + 'px'
-    }, [value])
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        e.preventDefault()
-      }
-    }
-
-    return (
-      <Container ref={containerRef} className={className}>
-        <StyledInput
-          ref={ref}
-          rows={1}
-          minLength={min}
-          maxLength={max}
-          name={name}
-          placeholder={placeholder}
-          onFocus={handleFocus}
-          touchedAndEmpty={touched && !charactersCount}
-          defaultValue={value}
-          onChange={onChange}
-          onKeyDown={handleKeyDown}
-          onBlur={onBlur}
-        />
-        <TitleAreaInfo>
-          <MinMaxChars secondary variant="caption">
-            Min {min} Chars | Max {max} Chars
-          </MinMaxChars>
-          <Text secondary variant="caption">
-            <CharactersCounter error={invalidInput} variant="caption">
-              {charactersCount} &nbsp;
-            </CharactersCounter>
-            / {max}
-          </Text>
-        </TitleAreaInfo>
-      </Container>
-    )
+  const handleFocus = () => {
+    setTouched(true)
   }
-)
 
-TitleArea.displayName = 'TitleArea'
+  useEffect(() => {
+    const textarea = textareaRef.current
+    if (!textarea) {
+      return
+    }
+    textarea.style.height = 'initial'
+    const scrollHeight = textarea.scrollHeight
+    textarea.style.height = scrollHeight + 'px'
+  }, [value])
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+    }
+  }
+
+  return (
+    <Container className={className}>
+      <StyledTextArea
+        ref={textareaRef}
+        rows={1}
+        minLength={min}
+        maxLength={max}
+        name={name}
+        placeholder={placeholder}
+        onFocus={handleFocus}
+        touchedAndEmpty={touched && !value?.length}
+        value={value}
+        onChange={onChange}
+        onKeyDown={handleKeyDown}
+        onBlur={onBlur}
+      />
+      <TitleAreaInfo>
+        <MinMaxChars secondary variant="caption">
+          Min {min} Chars | Max {max} Chars
+        </MinMaxChars>
+        <Text secondary variant="caption">
+          <CharactersCounter error={invalidInput} variant="caption">
+            {value?.length || 0} &nbsp;
+          </CharactersCounter>
+          / {max}
+        </Text>
+      </TitleAreaInfo>
+    </Container>
+  )
+}

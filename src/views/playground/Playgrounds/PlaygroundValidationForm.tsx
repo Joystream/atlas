@@ -60,11 +60,13 @@ export const PlaygroundValidationForm = () => {
   return (
     <>
       <form onSubmit={onSubmit}>
-        <TitleArea
-          {...register('header', textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 20 }))}
-          value="Lorem ipsum"
-          min={3}
-          max={20}
+        <Controller
+          name="header"
+          control={control}
+          rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 20, required: true })}
+          render={({ field: { value, onChange } }) => (
+            <TitleArea onChange={onChange} value={value} min={3} max={20} placeholder="Channel name" />
+          )}
         />
 
         <FormField title="Title" description="Lorem ipsum dolor sit amet">
