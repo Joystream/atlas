@@ -54,6 +54,13 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   onCancelClick,
   primaryButtonTooltipText,
 }) => {
+  const renderButton = () =>
+    primaryButtonText ? (
+      <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+        {primaryButtonText}
+      </Button>
+    ) : null
+
   return (
     <StyledActionBarContainer className={className}>
       <StyledInnerContainer>
@@ -77,18 +84,18 @@ export const ActionBar: React.FC<ActionBarProps> = ({
               {secondaryButtonText}
             </Button>
           )}
-          {primaryButtonTooltipText && (
+          {primaryButtonTooltipText ? (
             <Tooltip
               arrowDisabled
-              headerText={primaryButtonTooltipText.headerText}
-              text={primaryButtonTooltipText.text}
-              icon={primaryButtonTooltipText.icon}
+              headerText={primaryButtonTooltipText?.headerText}
+              text={primaryButtonTooltipText?.text}
+              icon={primaryButtonTooltipText?.icon}
               placement="top-end"
             >
-              <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
-                {primaryButtonText}
-              </Button>
+              {renderButton()}
             </Tooltip>
+          ) : (
+            <>{renderButton()}</>
           )}
         </StyledButtonsContainer>
       </StyledInnerContainer>
