@@ -227,7 +227,7 @@ const StateTab: React.FC = () => {
   }
 
   return (
-    <VerticalSpacedContainer>
+    <VerticalSpacedContainer topMargin>
       <Button onClick={handleExportClick} variant="secondary" size="large">
         Export local state
       </Button>
