@@ -4,13 +4,13 @@ import { colors, sizes } from '@/shared/theme'
 
 import { Text } from '../Text'
 
-type RadioCardLabelProps = {
+type OptionCardLabelProps = {
   selected?: boolean
   disabled?: boolean
   error?: boolean
 }
 
-const getRadioCardBorderColor = ({ selected, disabled, error }: RadioCardLabelProps) => {
+const getOptionCardBorderColor = ({ selected, disabled, error }: OptionCardLabelProps) => {
   if (disabled) {
     return colors.gray[500]
   } else if (error) {
@@ -21,12 +21,12 @@ const getRadioCardBorderColor = ({ selected, disabled, error }: RadioCardLabelPr
   return colors.gray[500]
 }
 
-export const RadioCardLabel = styled.label<RadioCardLabelProps>`
+export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  border: 1px solid ${getRadioCardBorderColor};
+  border: 1px solid ${getOptionCardBorderColor};
   transition: background-color 0.25s ease, border-color 0.25s ease;
 
   :hover {
@@ -45,6 +45,6 @@ export const InputAndTitleWrapper = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-export const RadioCardTitle = styled(Text)`
+export const OptionCardTitle = styled(Text)`
   margin-right: ${sizes(2)};
 `

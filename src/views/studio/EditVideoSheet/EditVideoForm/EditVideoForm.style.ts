@@ -11,8 +11,10 @@ import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: ${sizes(6)};
+  gap: ${sizes(6)};
+  ${media.sm} {
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 export const RadioButtonsContainer = styled.div`

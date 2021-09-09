@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { InputAndTitleWrapper, RadioCardLabel, RadioCardTitle } from './RadioCardButton.styles'
+import { InputAndTitleWrapper, OptionCardLabel, OptionCardTitle } from './OptionCard.style'
 
 import { RadioInput } from '../RadioInput'
 import { Text } from '../Text'
 
-export type RadioCardButtonProps = {
+export type OptionCardProps = {
   label: string
   helperText?: string
   error?: boolean
@@ -14,12 +14,12 @@ export type RadioCardButtonProps = {
   className?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-export const RadioCardButton = React.forwardRef<HTMLInputElement, RadioCardButtonProps>(
+export const OptionCard = React.forwardRef<HTMLInputElement, OptionCardProps>(
   ({ helperText, label, selectedValue, className, value, onChange, disabled, error, ...props }, ref) => {
     return (
-      <RadioCardLabel disabled={disabled} selected={value === selectedValue} error={error} className={className}>
+      <OptionCardLabel disabled={disabled} selected={value === selectedValue} error={error} className={className}>
         <InputAndTitleWrapper>
-          <RadioCardTitle variant="subtitle1">{label}</RadioCardTitle>
+          <OptionCardTitle variant="subtitle1">{label}</OptionCardTitle>
           <RadioInput
             {...props}
             ref={ref}
@@ -33,9 +33,9 @@ export const RadioCardButton = React.forwardRef<HTMLInputElement, RadioCardButto
         <Text variant="caption" secondary>
           {helperText}
         </Text>
-      </RadioCardLabel>
+      </OptionCardLabel>
     )
   }
 )
 
-RadioCardButton.displayName = 'RadioCardButton'
+OptionCard.displayName = 'OptionCard'

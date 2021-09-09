@@ -24,8 +24,8 @@ import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
 import { FormField } from '@/shared/components/FormField'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect'
+import { OptionCard } from '@/shared/components/OptionCard'
 import { RadioButton } from '@/shared/components/RadioButton'
-import { RadioCardButton } from '@/shared/components/RadioCardButton'
 import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
@@ -493,14 +493,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   }}
                   render={({ field: { value, onChange } }) => (
                     <RadioCardButtonsContainer>
-                      <RadioCardButton
+                      <OptionCard
                         value="true"
                         label="Public"
                         onChange={() => onChange(true)}
                         selectedValue={value?.toString()}
                         helperText="Visible to all"
                       />
-                      <RadioCardButton
+                      <OptionCard
                         value="false"
                         label="Unlisted"
                         onChange={() => onChange(false)}
