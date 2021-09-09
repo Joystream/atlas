@@ -547,14 +547,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </ControlsOverlay>
           </>
         )}
-        <VideoOverlay
-          videoId={videoId}
-          isFullScreen={isFullScreen}
-          playerState={playerState}
-          onPlay={handlePlayPause}
-          channelId={channelId}
-          currentThumbnailUrl={videoJsConfig.posterUrl}
-        />
+        {!isInBackground && (
+          <VideoOverlay
+            videoId={videoId}
+            isFullScreen={isFullScreen}
+            playerState={playerState}
+            onPlay={handlePlayPause}
+            channelId={channelId}
+            currentThumbnailUrl={videoJsConfig.posterUrl}
+          />
+        )}
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
