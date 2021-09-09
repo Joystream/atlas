@@ -426,18 +426,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 name="title"
                 control={control}
                 rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                render={({ field: { ref, value, onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <Tooltip text="Click to edit channel title" placement="top-start">
-                    <StyledTitleArea
-                      ref={ref}
-                      min={3}
-                      max={40}
-                      placeholder="Channel title"
-                      value={value}
-                      onChange={(e) => {
-                        onChange(e.currentTarget.value)
-                      }}
-                    />
+                    <StyledTitleArea min={3} max={40} placeholder="Channel title" value={value} onChange={onChange} />
                   </Tooltip>
                 )}
               />

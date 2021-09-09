@@ -428,15 +428,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             )}
           />
           <InputsContainer>
-            <StyledTitleArea
-              {...register(
-                'title',
-                textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })
+            <Controller
+              name="title"
+              control={control}
+              rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })}
+              render={({ field: { value, onChange } }) => (
+                <StyledTitleArea onChange={onChange} value={value} min={3} max={40} placeholder="Video title" />
               )}
-              min={3}
-              max={40}
-              placeholder="Video title"
             />
+
             <TextArea
               {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}
               maxLength={2160}

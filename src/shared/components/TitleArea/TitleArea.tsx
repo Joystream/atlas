@@ -32,15 +32,11 @@ export const TitleArea = React.forwardRef<HTMLTextAreaElement, TitleAreaProps>(
       if (!textarea) {
         return
       }
+      setCharactersCount(textarea.value.length)
       textarea.style.height = 'initial'
       const scrollHeight = textarea.scrollHeight
       textarea.style.height = scrollHeight + 'px'
-    })
-
-    const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setCharactersCount(e.target.value.length)
-      onChange?.(e)
-    }
+    }, [value])
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
@@ -60,7 +56,7 @@ export const TitleArea = React.forwardRef<HTMLTextAreaElement, TitleAreaProps>(
           onFocus={handleFocus}
           touchedAndEmpty={touched && !charactersCount}
           defaultValue={value}
-          onChange={handleOnChange}
+          onChange={onChange}
           onKeyDown={handleKeyDown}
           onBlur={onBlur}
         />
