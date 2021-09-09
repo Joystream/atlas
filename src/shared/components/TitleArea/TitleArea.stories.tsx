@@ -10,6 +10,7 @@ export default {
     min: 3,
     max: 30,
     placeholder: 'Type here',
+    variant: 'small',
   },
 } as Meta
 
