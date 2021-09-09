@@ -25,9 +25,17 @@ export const RadioCardLabel = styled.label<RadioCardLabelProps>`
   padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   border: 1px solid ${getRadioCardBorderColor};
   transition: background-color 0.25s ease, border-color 0.25s ease;
+
+  :hover {
+    border: ${({ selected, disabled, error }) => !selected && !disabled && !error && `1px solid ${colors.gray[300]}`};
+  }
+
+  :active {
+    border: ${({ selected, disabled, error }) => !selected && !disabled && !error && `1px solid ${colors.gray[50]}`};
+  }
 `
 
 export const InputAndTitleWrapper = styled.div`
