@@ -54,7 +54,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   onCancelClick,
   primaryButtonTooltipText,
 }) => {
-  const renderButton = primaryButtonText ? (
+  const buttonNode = primaryButtonText ? (
     <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
       {primaryButtonText}
     </Button>
@@ -91,10 +91,10 @@ export const ActionBar: React.FC<ActionBarProps> = ({
               icon={primaryButtonTooltipText?.icon}
               placement="top-end"
             >
-              {renderButton}
+              {buttonNode}
             </Tooltip>
           ) : (
-            <>{renderButton}</>
+            <>{buttonNode}</>
           )}
         </StyledButtonsContainer>
       </StyledInnerContainer>
