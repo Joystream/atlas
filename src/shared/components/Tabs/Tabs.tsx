@@ -6,7 +6,7 @@ import { transitions } from '@/shared/theme'
 
 import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
-type TabItem = {
+export type TabItem = {
   name: string
   badgeNumber?: number
 }

@@ -17,7 +17,7 @@ JoystreamContext.displayName = 'JoystreamContext'
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
-  const { selectedNode } = useEnvironmentStore((state) => state)
+  const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
@@ -35,7 +35,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     const init = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamJs(selectedNode || NODE_URL)
+        joystream = new JoystreamJs(nodeOverride || NODE_URL)
         setJoystream(joystream)
 
         joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
@@ -50,7 +50,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     return () => {
       joystream?.destroy()
     }
-  }, [handleNodeConnectionUpdate, selectedNode, setNodeConnection])
+  }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeAccountId || !accounts) {

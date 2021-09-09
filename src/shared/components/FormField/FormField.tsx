@@ -5,12 +5,13 @@ import { ChildrenWrapper, FormFieldDescription, FormFieldTitle, FormFieldWrapper
 export type FormFieldProps = {
   title: string
   description?: string | string[]
+  dense?: boolean
   className?: string
 }
 
-export const FormField: React.FC<FormFieldProps> = ({ children, title, description, className }) => {
+export const FormField: React.FC<FormFieldProps> = ({ children, title, description, dense, className }) => {
   return (
-    <FormFieldWrapper className={className}>
+    <FormFieldWrapper dense={dense} className={className}>
       <FormFieldTitle variant="h6">{title}</FormFieldTitle>
       {description &&
         (description instanceof Array ? (
@@ -22,7 +23,7 @@ export const FormField: React.FC<FormFieldProps> = ({ children, title, descripti
         ) : (
           <FormFieldDescription variant="body2">{description}</FormFieldDescription>
         ))}
-      <ChildrenWrapper>{children}</ChildrenWrapper>
+      <ChildrenWrapper dense={dense}>{children}</ChildrenWrapper>
     </FormFieldWrapper>
   )
 }

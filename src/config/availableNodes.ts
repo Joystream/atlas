@@ -20,7 +20,7 @@ export const availableNodes = [
     value: 'wss://testnet-rpc-2-singapore.joystream.org',
   },
   {
-    name: 'Sumer Dev',
+    name: 'sumer-dev-2',
     value: 'wss://sumer-dev-2.joystream.app/rpc',
   },
   {
