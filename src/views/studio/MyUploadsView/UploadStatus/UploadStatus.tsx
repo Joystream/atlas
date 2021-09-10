@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { absoluteRoutes } from '@/config/routes'
 import { useDialog } from '@/providers/dialogs'
 import { useUploadsStore } from '@/providers/uploadsManager'
@@ -109,7 +109,11 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   )
 
   const isVideo = asset.type === 'video'
-  const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    open: openFileSelect,
+  } = useDropzone({
     onDrop,
     maxFiles: 1,
     multiple: false,

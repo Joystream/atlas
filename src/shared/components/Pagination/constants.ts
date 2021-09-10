@@ -1,0 +1,2 @@
+export const PAGINATION_BUTTON_WIDTH = 48
+export const ARROWS_MARGINS = 32

@@ -1,4 +1,4 @@
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -8,7 +8,7 @@ import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
@@ -50,7 +50,7 @@ export const VideoView: React.FC = () => {
     entity: video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: mediaUrl } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -138,6 +138,7 @@ export const VideoView: React.FC = () => {
               channelId={video.channel.id}
               videoId={video.id}
               autoplay
+              isMediaLoading={isMediaLoading}
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}

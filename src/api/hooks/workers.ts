@@ -1,16 +1,16 @@
 import { QueryHookOptions } from '@apollo/client'
 
-import { WorkerType } from '@/api/queries'
 import {
   GetWorkerQuery,
+  GetWorkerQueryVariables,
   GetWorkersQuery,
   GetWorkersQueryVariables,
+  WorkerType,
   useGetWorkerQuery,
   useGetWorkersQuery,
-} from '@/api/queries/__generated__/workers.generated'
+} from '@/api/queries'
 
-type WorkerOpts = QueryHookOptions<GetWorkerQuery>
-export const useWorker = (id: string, opts?: WorkerOpts) => {
+export const useWorker = (id: string, opts?: QueryHookOptions<GetWorkerQuery, GetWorkerQueryVariables>) => {
   const { data, ...queryRest } = useGetWorkerQuery({
     ...opts,
     variables: { where: { id } },
@@ -21,7 +21,6 @@ export const useWorker = (id: string, opts?: WorkerOpts) => {
   }
 }
 
-type WorkersOpts = QueryHookOptions<GetWorkersQuery>
 export const storageWorkersVariables: GetWorkersQueryVariables = {
   where: {
     metadata_contains: 'http',
@@ -29,7 +28,10 @@ export const storageWorkersVariables: GetWorkersQueryVariables = {
     type_eq: WorkerType.Storage,
   },
 }
-export const useStorageWorkers = (variables: GetWorkersQueryVariables, opts?: WorkersOpts) => {
+export const useStorageWorkers = (
+  variables: GetWorkersQueryVariables,
+  opts?: QueryHookOptions<GetWorkersQuery, GetWorkersQueryVariables>
+) => {
   const { data, loading, ...rest } = useGetWorkersQuery({
     ...opts,
     variables: {

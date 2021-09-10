@@ -12,18 +12,18 @@ export const StyledStudioContainer = styled(LimitedWidthContainer)`
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
-  ${media.medium} {
+  ${media.md} {
     align-items: unset;
     flex-direction: row;
     justify-content: center;
   }
-  ${media.xlarge} {
+  ${media.xl} {
     margin-top: 40px;
     flex-direction: column;
     align-items: center;
     left: 200px;
   }
-  ${media.xxlarge} {
+  ${media.xxl} {
     margin-top: 64px;
   }
 `
@@ -40,10 +40,10 @@ export const SubTitle = styled(Text)`
 export const ListContainer = styled.div`
   max-width: 440px;
   padding-bottom: 100px;
-  ${media.medium} {
+  ${media.md} {
     margin-left: 60px;
   }
-  ${media.xlarge} {
+  ${media.xl} {
     margin-left: 0;
   }
 `
@@ -51,27 +51,27 @@ export const ListContainer = styled.div`
 export const StyledCoinsIllustrations = styled(SvgCoinsIllustration)`
   z-index: -2;
   display: none;
-  ${media.small} {
+  ${media.sm} {
     display: block;
     position: relative;
     left: -100px;
     bottom: 100px;
     width: 450px;
   }
-  ${media.medium} {
+  ${media.md} {
     position: fixed;
     left: 0;
     bottom: -200px;
   }
-  ${media.large} {
+  ${media.lg} {
     bottom: -150px;
     width: 600px;
   }
-  ${media.xlarge} {
+  ${media.xl} {
     bottom: -100px;
     width: 900px;
   }
-  ${media.xxlarge} {
+  ${media.xxl} {
     top: 150px;
     bottom: unset;
     width: 1200px;
@@ -129,7 +129,7 @@ export const StyledButton = styled(Button)`
   bottom: 20px;
   left: var(--global-horizontal-padding);
   width: calc(100% - var(--global-horizontal-padding) * 2);
-  ${media.small} {
+  ${media.sm} {
     margin-top: 40px;
     position: unset;
     width: unset;

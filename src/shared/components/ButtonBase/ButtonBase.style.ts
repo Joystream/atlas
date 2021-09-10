@@ -50,7 +50,7 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
     case 'secondary':
       return css`
         /* 1px inset border */
-        box-shadow: inset 0 0 0 1px ${colors.gray[500]};
+        box-shadow: inset 0 0 0 1px ${colors.gray[400]};
         color: ${colors.gray[50]};
 
         &:hover,
@@ -66,6 +66,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           path {
             fill: ${textOnly && colors.gray[300]};
           }
+        }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          opacity: ${iconOnly ? 0.25 : 0.5};
         }
       `
     case 'tertiary':
@@ -118,6 +123,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
             fill: ${textOnly && colors.secondary.alert[100]};
           }
         }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          opacity: ${iconOnly ? 0.25 : 0.5};
+        }
       `
     case 'warning':
       return css`
@@ -158,6 +168,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           path {
             fill: ${textOnly && colors.secondary.warning[300]};
           }
+        }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          opacity: ${iconOnly ? 0.25 : 0.5};
         }
       `
   }

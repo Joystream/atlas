@@ -44,11 +44,12 @@ import {
   GetVideosDocument,
   GetVideosQuery,
   GetVideosQueryVariables,
+  GetWorkersDocument,
+  GetWorkersQuery,
   SearchDocument,
   SearchQuery,
   SearchQueryVariables,
 } from '@/api/queries'
-import { GetWorkersDocument, GetWorkersQuery } from '@/api/queries/__generated__/workers.generated'
 import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_URL } from '@/config/urls'
 import { mockCategories, mockChannels, mockMemberships, mockVideos, mockWorkers } from '@/mocking/data'
 

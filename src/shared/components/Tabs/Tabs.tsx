@@ -1,4 +1,4 @@
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
@@ -6,7 +6,7 @@ import { transitions } from '@/shared/theme'
 
 import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
-type TabItem = {
+export type TabItem = {
   name: string
   badgeNumber?: number
 }

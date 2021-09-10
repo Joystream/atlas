@@ -1,4 +1,4 @@
-import { debounce, round } from 'lodash'
+import { debounce, round } from 'lodash-es'
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
@@ -48,6 +48,7 @@ export type VideoPlayerProps = {
   videoStyle?: CSSProperties
   autoplay?: boolean
   isInBackground?: boolean
+  isMediaLoading?: boolean
   playing?: boolean
   channelId?: string
   videoId?: string
@@ -55,17 +56,28 @@ export type VideoPlayerProps = {
 
 declare global {
   interface Document {
-    pictureInPictureEnabled: boolean
-    pictureInPictureElement: Element
+    readonly pictureInPictureEnabled: boolean
+    readonly pictureInPictureElement: Element
   }
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | null
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
+  {
+    className,
+    isInBackground,
+    playing,
+    nextVideo,
+    channelId,
+    videoId,
+    autoplay,
+    videoStyle,
+    isMediaLoading,
+    ...videoJsConfig
+  },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -80,8 +92,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [isPiPEnabled, setIsPiPEnabled] = useState(false)
 
-  const [playerState, setPlayerState] = useState<PlayerState>(null)
+  const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isAutoPlayFailed, setIsAutoPlayFailed] = useState(false)
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -90,6 +103,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
       withIndicator && player.trigger(CustomVideojsEvents.PlayControl)
       try {
+        setIsAutoPlayFailed(false)
         const playPromise = await player.play()
         if (playPromise && callback) callback()
       } catch (error) {
@@ -165,6 +179,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
+    if (isMediaLoading) {
+      setPlayerState('loading')
+    }
     const handler = (event: Event) => {
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
@@ -177,7 +194,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
-  }, [player, playerState])
+  }, [isMediaLoading, player, playerState])
 
   useEffect(() => {
     if (!player) {
@@ -218,6 +235,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           setIsPlaying(true)
         })
         .catch((e) => {
+          setIsAutoPlayFailed(true)
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
@@ -440,10 +458,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const showBigPlayButton = playerState === null && !isInBackground
+  const showBigPlayButton = isAutoPlayFailed && !isInBackground
   const showPlayerControls = !isInBackground && isLoaded && playerState
   const showControlsIndicator = !isInBackground && playerState !== 'ended'
-
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
       <div data-vjs-player>
@@ -528,15 +545,17 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 </ScreenControls>
               </CustomControls>
             </ControlsOverlay>
-            <VideoOverlay
-              videoId={videoId}
-              isFullScreen={isFullScreen}
-              playerState={playerState}
-              onPlay={handlePlayPause}
-              channelId={channelId}
-              currentThumbnailUrl={videoJsConfig.posterUrl}
-            />
           </>
+        )}
+        {!isInBackground && (
+          <VideoOverlay
+            videoId={videoId}
+            isFullScreen={isFullScreen}
+            playerState={playerState}
+            onPlay={handlePlayPause}
+            channelId={channelId}
+            currentThumbnailUrl={videoJsConfig.posterUrl}
+          />
         )}
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>

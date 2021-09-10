@@ -1,18 +1,10 @@
 import styled from '@emotion/styled'
 
+import { SvgBgPattern } from '@/shared/illustrations'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 import { Text } from '../Text'
-
-export const CONTENT_OVERLAP_MAP = {
-  BASE: 0,
-  SMALL: 0,
-  MEDIUM: 0,
-  LARGE: 100,
-  XLARGE: 200,
-  XXLARGE: 300,
-}
 
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--global-horizontal-padding));
@@ -26,6 +18,7 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
+  background-color: ${colors.gray[900]};
   overflow: hidden;
 `
 
@@ -50,7 +43,7 @@ export const EditableControls = styled.div`
   justify-content: center;
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
-  ${media.medium} {
+  ${media.md} {
     background-color: ${colors.transparentBlack[54]};
     opacity: 0;
 
@@ -69,7 +62,7 @@ export const EditCoverDesktopOverlay = styled.div`
   color: ${colors.gray[200]};
   display: none;
 
-  ${media.medium} {
+  ${media.md} {
     display: flex;
     cursor: pointer;
   }
@@ -84,7 +77,7 @@ export const EditCoverMobileButton = styled(IconButton)`
   &:hover {
     background-color: ${colors.transparentBlack[54]};
   }
-  ${media.medium} {
+  ${media.md} {
     display: none;
   }
 `
@@ -105,4 +98,10 @@ export const FailedUploadContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+export const StyledBackgroundPattern = styled(SvgBgPattern)`
+  position: absolute;
+  top: 0;
+  right: 0;
 `

@@ -43,7 +43,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
 
     :hover {
-      ${media.compact} {
+      ${media.xs} {
         cursor: pointer;
         background-color: ${colors.transparentPrimary[18]};
         backdrop-filter: blur(${sizes(8)});
@@ -55,7 +55,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
 
     :active {
-      ${media.compact} {
+      ${media.xs} {
         background-color: ${colors.transparentPrimary[10]};
       }
     }
@@ -119,7 +119,7 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   padding: 0.5em;
   white-space: nowrap;
   transition: opacity ${transitions.timings.player} ease-in, backdrop-filter ${transitions.timings.player} ease-in;
-  ${media.compact} {
+  ${media.xs} {
     display: flex;
   }
 `

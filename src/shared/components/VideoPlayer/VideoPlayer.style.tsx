@@ -223,7 +223,7 @@ export const ScreenControls = styled.div`
   ${ControlButton}:last-of-type {
     margin-right: 0;
   }
-  ${media.small} {
+  ${media.sm} {
     gap: 0.5em;
   }
 `

@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { transitions } from '@/shared/theme'
 
 import { SignInMainView } from './SignInMainView'

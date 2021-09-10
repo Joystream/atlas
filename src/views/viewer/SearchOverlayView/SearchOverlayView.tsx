@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { QUERY_PARAMS } from '@/config/routes'
-import { useRouterQuery } from '@/hooks'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { colors, zIndex } from '@/shared/theme'
 

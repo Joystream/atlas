@@ -118,6 +118,6 @@ export const singleDraftSelector = (id: string) => (store: CommonStore<DraftStor
   store.drafts.find((draft) => draft.id === id)
 export const channelDraftsSelector = (channelId: string) => (store: CommonStore<DraftStoreState, DraftStoreActions>) =>
   store.drafts.filter((d) => d.channelId === channelId)
-export const chanelUnseenDraftsSelector = (channelId: string) => (
-  store: CommonStore<DraftStoreState, DraftStoreActions>
-) => store.drafts.filter((d) => d.channelId === channelId && d.seen === false)
+export const chanelUnseenDraftsSelector =
+  (channelId: string) => (store: CommonStore<DraftStoreState, DraftStoreActions>) =>
+    store.drafts.filter((d) => d.channelId === channelId && d.seen === false)

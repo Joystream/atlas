@@ -45,7 +45,7 @@ export const PreviewContainer = styled(Link)`
   > * + * {
     margin-left: ${sizes(3)};
 
-    ${media.small} {
+    ${media.sm} {
       margin-left: ${sizes(6)};
     }
   }

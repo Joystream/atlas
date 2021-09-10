@@ -23,13 +23,14 @@ export const SelectButton = styled.button<SelectButtonProps>`
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  border: none;
   background: none;
   color: ${({ filled }) => (filled ? colors.gray[50] : colors.gray[300])};
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: ${({ isOpen, error, disabled }) =>
+    `1px solid ${isOpen ? colors.blue[500] : error && !disabled ? colors.error : colors.gray[200]}`};
 
   ${({ size }) => {
     switch (size) {

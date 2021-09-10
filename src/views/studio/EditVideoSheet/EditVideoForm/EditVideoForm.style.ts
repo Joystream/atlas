@@ -19,7 +19,7 @@ export const StyledRadioContainer = styled.div`
   }
 `
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
-  ${media.medium} {
+  ${media.md} {
     position: sticky;
     top: ${sizes(8)};
   }
@@ -37,18 +37,18 @@ export const FormWrapper = styled.form`
   grid-template-columns: 100%;
   padding: ${sizes(8)} ${sizes(4)};
 
-  ${media.small} {
-    padding: ${sizes(8)} ${sizes(8)};
+  ${media.sm} {
+    padding: ${sizes(8)};
   }
 
-  ${media.medium} {
+  ${media.md} {
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 1fr;
   }
 
-  ${media.large} {
+  ${media.lg} {
     padding: ${sizes(8)} 0 0 0;
   }
 
@@ -60,7 +60,7 @@ export const InputsContainer = styled.div`
   flex-direction: column;
   padding: ${sizes(4)};
   margin-top: ${sizes(8)};
-  ${media.medium} {
+  ${media.md} {
     margin-top: 0;
   }
 `

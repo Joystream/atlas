@@ -51,7 +51,7 @@ export const ControlsIndicatorIconWrapper = styled.div`
     width: ${sizes(12)};
     height: ${sizes(12)};
   }
-  ${media.small} {
+  ${media.sm} {
     width: ${sizes(32)};
     height: ${sizes(32)};
 
@@ -73,7 +73,7 @@ export const ControlsIndicatorTooltip = styled.div`
   margin-top: ${sizes(3)};
   backdrop-filter: blur(${sizes(8)});
 
-  ${media.small} {
+  ${media.sm} {
     display: flex;
   }
 `

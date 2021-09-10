@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { AssetDimensions } from '@/types/cropper'
@@ -9,8 +9,7 @@ import { formatBytes } from '@/utils/size'
 
 const LARGE_FILE_IMAGES = [
   {
-    url:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/In_the_Conservatory.jpg/8192px-In_the_Conservatory.jpg',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/In_the_Conservatory.jpg/8192px-In_the_Conservatory.jpg',
     size: '~ 25mb',
   },
   {
@@ -18,13 +17,11 @@ const LARGE_FILE_IMAGES = [
     size: '~ 50mb',
   },
   {
-    url:
-      'https://upload.wikimedia.org/wikipedia/en/f/f3/Franti%C5%A1ek_Kupka_-_Katedr%C3%A1la_-_Google_Art_Project.jpg',
+    url: 'https://upload.wikimedia.org/wikipedia/en/f/f3/Franti%C5%A1ek_Kupka_-_Katedr%C3%A1la_-_Google_Art_Project.jpg',
     size: '~ 95mb',
   },
   {
-    url:
-      'https://upload.wikimedia.org/wikipedia/commons/6/60/James_McNeill_Whistler_-_La_Princesse_du_pays_de_la_porcelaine_-_Google_Art_Project.jpg',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/6/60/James_McNeill_Whistler_-_La_Princesse_du_pays_de_la_porcelaine_-_Google_Art_Project.jpg',
     size: '~ 200mb',
   },
 ]

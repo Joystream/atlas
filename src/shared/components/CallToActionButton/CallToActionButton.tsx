@@ -1,6 +1,7 @@
 import { To } from 'history'
 import React, { FC, MouseEvent, ReactNode } from 'react'
 
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { getLinkPropsFromTo } from '@/utils/button'
 
@@ -23,13 +24,14 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
   colorVariant = 'blue',
   label,
 }) => {
+  const xsMatch = useMediaMatch('xs')
   const linkProps = getLinkPropsFromTo(to)
 
   return (
     <StyledContainer {...linkProps} onClick={onClick} colorVariant={colorVariant}>
       <ContentWrapper>
         <IconWrapper colorVariant={colorVariant === 'blue' ? 'lightBlue' : colorVariant}>{icon}</IconWrapper>
-        <BodyWrapper variant="h6">
+        <BodyWrapper variant={xsMatch ? 'h5' : 'h6'}>
           {label}
           <SvgGlyphChevronRight />
         </BodyWrapper>

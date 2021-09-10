@@ -41,7 +41,7 @@ export const InnerContainer = styled.div<InnerContainerProps>`
   align-items: center;
   justify-content: center;
 
-  ${media.small} {
+  ${media.sm} {
     flex-direction: column;
     padding: ${sizes(6)};
   }
@@ -54,7 +54,7 @@ export const VideoInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${media.small} {
+  ${media.sm} {
     margin: unset;
   }
 `
@@ -64,7 +64,7 @@ export const SubHeading = styled(Text)`
 `
 
 export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: sizes(6), toSize: sizes(8) }, breakpoints.base, breakpoints.large)};
+  ${fluidRange({ prop: 'fontSize', fromSize: sizes(6), toSize: sizes(8) }, breakpoints.xxs, breakpoints.lg)};
 
   margin-top: ${sizes(4)};
   flex-shrink: 0;
@@ -82,7 +82,7 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
   flex-shrink: 0;
   margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
 
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
   }
 
@@ -91,7 +91,7 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     display: flex;
     align-items: center;
     margin-left: ${sizes(2)};
-    ${media.small} {
+    ${media.sm} {
       font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(4))};
       margin-left: ${sizes(3)};
     }
@@ -101,7 +101,7 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     width: ${sizes(6)};
     height: ${sizes(6)};
     min-width: ${sizes(6)};
-    ${media.small} {
+    ${media.sm} {
       width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       height: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       min-width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
@@ -137,7 +137,7 @@ export const CountDownButton = styled(IconButton)`
 
 export const RestartButton = styled(Button)`
   margin-top: ${sizes(6)};
-  ${media.small} {
+  ${media.sm} {
     margin-top: ${sizes(12)};
   }
 `

@@ -1,4 +1,4 @@
-import { round } from 'lodash'
+import { round } from 'lodash-es'
 
 import { createStore } from '@/store'
 import { readFromLocalStorage } from '@/utils/localStorage'

@@ -13,7 +13,10 @@ import {
   AutomaticCrop,
   Dialogs,
   FileHashing,
+  GridTesting,
   ImageDownsizing,
+  OrionTesting,
+  PlaygroundBreakpoints,
   PlaygroundCommonStore,
   PlaygroundConnectionState,
   PlaygroundDrafts,
@@ -22,8 +25,6 @@ import {
   UploadFiles,
   VideoMetaData,
 } from './Playgrounds'
-import { GridTesting } from './Playgrounds/GridTesting'
-import OrionTesting from './Playgrounds/OrionTesting'
 
 const playgroundRoutes = [
   { path: 'animations', element: <Animations />, name: 'Animations' },
@@ -40,9 +41,10 @@ const playgroundRoutes = [
   { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
+  { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
 ]
 
-export const PlaygroundLayout = () => {
+const PlaygroundLayout = () => {
   return (
     <ActiveUserProvider>
       <DialogProvider>
@@ -92,3 +94,5 @@ const ContentContainer = styled.div`
   padding-left: 30px;
   overflow: hidden;
 `
+
+export default PlaygroundLayout

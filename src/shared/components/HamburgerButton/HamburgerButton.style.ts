@@ -35,7 +35,7 @@ export const Hamburger = styled.button`
     background-color: rgba(0, 0, 0, 0.4);
   }
 
-  ${media.medium} {
+  ${media.md} {
     top: 16px;
     height: ${sizes(12)};
     width: ${sizes(12)};

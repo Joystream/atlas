@@ -1,14 +1,7 @@
-import { subMonths } from 'date-fns'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import {
-  useChannel,
-  useChannelVideoCount,
-  useFollowChannel,
-  useUnfollowChannel,
-  useVideosConnection,
-} from '@/api/hooks'
+import { useChannel, useVideosConnection } from '@/api/hooks'
 import {
   AssetAvailability,
   SearchQuery,
@@ -22,9 +15,9 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
+import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
-import { useDialog } from '@/providers/dialogs'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { ChannelCover } from '@/shared/components/ChannelCover'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
@@ -56,18 +49,14 @@ import {
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
-  UnfollowDescriptionAccentText,
-  UnfollowDescriptionContainer,
   VideoSection,
 } from './ChannelView.style'
 
-const DATE_ONE_MONTH_PAST = subMonths(new Date(), 1)
 const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
-const ROWS_AMOUNT = 4
 export const ChannelView: React.FC = () => {
-  const [openUnfollowDialog, closeUnfollowDialog] = useDialog()
+  const videoRows = useVideoGridRows('main')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id, {
@@ -91,12 +80,10 @@ export const ChannelView: React.FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
-  const { followChannel } = useFollowChannel()
-  const { unfollowChannel } = useUnfollowChannel()
-  const followedChannels = usePersonalDataStore((state) => state.followedChannels)
-  const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
-  const [isFollowing, setFollowing] = useState<boolean>()
+
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const currentTabName = searchParams.get('tab')
+  const [currentTab, setCurrentTab] = useState<string | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset({
@@ -130,59 +117,6 @@ export const ChannelView: React.FC = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
     }
   )
-  const { videoCount: videosLastMonth } = useChannelVideoCount(id, DATE_ONE_MONTH_PAST, {
-    onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
-  })
-  useEffect(() => {
-    const isFollowing = followedChannels.some((channel) => channel.id === id)
-    setFollowing(isFollowing)
-  }, [followedChannels, id])
-
-  const handleFollow = () => {
-    try {
-      if (isFollowing) {
-        openUnfollowDialog({
-          variant: 'error',
-          exitButton: false,
-          error: true,
-          title: 'Would you consider staying?',
-          description: (
-            <UnfollowDescriptionContainer>
-              {videosLastMonth && (
-                <span>
-                  {channel?.title} released{' '}
-                  <UnfollowDescriptionAccentText>{videosLastMonth} new videos </UnfollowDescriptionAccentText>
-                  this month.
-                </span>
-              )}
-              <span>Keep following for more fresh content!</span>
-            </UnfollowDescriptionContainer>
-          ),
-          primaryButton: {
-            text: 'Unfollow',
-            onClick: () => {
-              updateChannelFollowing(id, false)
-              unfollowChannel(id)
-              setFollowing(false)
-              closeUnfollowDialog()
-            },
-          },
-          secondaryButton: {
-            text: 'Keep following',
-            onClick: () => {
-              closeUnfollowDialog()
-            },
-          },
-        })
-      } else {
-        updateChannelFollowing(id, true)
-        followChannel(id)
-        setFollowing(true)
-      }
-    } catch (error) {
-      SentryLogger.error('Failed to update channel following', 'ChannelView', error, { channel: { id } })
-    }
-  }
 
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
@@ -217,7 +151,7 @@ export const ChannelView: React.FC = () => {
     }
   }
 
-  const videosPerPage = ROWS_AMOUNT * videosPerRow
+  const videosPerPage = videoRows * videosPerRow
 
   const videos = (isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []
   const paginatedVideos = isSearching
@@ -234,7 +168,7 @@ export const ChannelView: React.FC = () => {
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
   const tabContent =
-    currentTabName === 'Videos' ? (
+    currentTab === 'Videos' ? (
       <>
         <VideoSection className={transitions.names.slide}>
           {!videosWithPlaceholders.length && isSearching && (
@@ -264,11 +198,20 @@ export const ChannelView: React.FC = () => {
     )
 
   // At mount set the tab from the search params
+  const initialRender = useRef(true)
   useEffect(() => {
-    const tabIndex = TABS.findIndex((t) => t === currentTabName)
-    if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (initialRender.current) {
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
+
+  useEffect(() => {
+    if (currentTabName) {
+      setCurrentTab(currentTabName)
+    }
+  }, [currentTabName])
 
   if (videosError || error || errorSearch) {
     return <ViewErrorFallback />
@@ -312,7 +255,7 @@ export const ChannelView: React.FC = () => {
             <StyledButton
               icon={isFollowing ? <SvgGlyphCheck /> : <SvgGlyphPlus />}
               variant={isFollowing ? 'secondary' : 'primary'}
-              onClick={handleFollow}
+              onClick={toggleFollowing}
               size="large"
             >
               {isFollowing ? 'Unfollow' : 'Follow'}
@@ -321,12 +264,12 @@ export const ChannelView: React.FC = () => {
         </TitleSection>
         <TabsContainer>
           <StyledTabs
-            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTabName)}
+            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTab)}
             initialIndex={0}
             tabs={mappedTabs}
             onSelectTab={handleSetCurrentTab}
           />
-          {currentTabName === 'Videos' && (
+          {currentTab === 'Videos' && (
             <Search
               searchInputRef={searchInputRef}
               isSearchInputOpen={isSearchInputOpen}
@@ -335,7 +278,7 @@ export const ChannelView: React.FC = () => {
               search={search}
             />
           )}
-          {currentTabName === 'Videos' && !isSearching && (
+          {currentTab === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
@@ -399,10 +342,10 @@ const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
     [id, searchVideo]
   )
 
-  const { searchVideos } = useMemo(() => getVideosFromSearch(loadingSearch, searchData?.search), [
-    loadingSearch,
-    searchData,
-  ])
+  const { searchVideos } = useMemo(
+    () => getVideosFromSearch(loadingSearch, searchData?.search),
+    [loadingSearch, searchData]
+  )
 
   return {
     searchVideos,

@@ -1,7 +1,7 @@
 import { ApolloError, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
-import { debounce, isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
 import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
@@ -21,6 +21,8 @@ export type PaginatedDataArgs = {
   first?: number | null
   after?: string | null
 }
+
+const PREFETCHED_ITEMS_COUNT = 12
 
 // TODO these types below could be used to get rid of requirement to pass TPaginatedData explicitly
 // however this currently is not possible because of constraints of Typescript and our GraphQL codegen
@@ -77,13 +79,19 @@ export const useInfiniteGrid = <
 
   const queryVariablesRef = useRef(queryVariables)
 
-  const { loading, data: rawData, error, fetchMore, refetch } = useQuery<TRawData, TArgs>(query, {
+  const {
+    loading,
+    data: rawData,
+    error,
+    fetchMore,
+    refetch,
+  } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
       ...queryVariables,
       orderBy,
-      first: additionalSortFn ? 100 : targetDisplayedItemsCount,
+      first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,
   })
@@ -107,7 +115,7 @@ export const useInfiniteGrid = <
     }
 
     fetchMore({
-      variables: { ...queryVariables, first: missingItemsCount, after: endCursor },
+      variables: { ...queryVariables, first: missingItemsCount + PREFETCHED_ITEMS_COUNT, after: endCursor },
     })
   }, [
     loading,

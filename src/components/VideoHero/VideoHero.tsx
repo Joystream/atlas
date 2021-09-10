@@ -81,7 +81,7 @@ export const VideoHero: React.FC = () => {
           avatarSize="small"
         />
         <LayoutGrid>
-          <GridItem colSpan={{ base: 12, compact: 10, small: 8, medium: 5, xlarge: 4, xxlarge: 3 }}>
+          <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
             <TitleContainer>
               {coverVideo ? (
                 <>

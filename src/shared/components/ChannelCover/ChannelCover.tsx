@@ -1,7 +1,6 @@
 import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { BackgroundPattern } from '@/components/BackgroundPattern'
 import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -15,6 +14,7 @@ import {
   FailedUploadContainer,
   Media,
   MediaWrapper,
+  StyledBackgroundPattern,
 } from './ChannelCover.style'
 
 import { Text } from '../Text'
@@ -65,7 +65,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
                   </Text>
                 </FailedUploadContainer>
               ) : (
-                <BackgroundPattern />
+                <StyledBackgroundPattern />
               )}
             </CSSTransition>
           </TransitionGroup>

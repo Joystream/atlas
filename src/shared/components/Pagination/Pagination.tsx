@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useLayoutEffect, useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/shared/icons'
 
 import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.style'
+import { PAGINATION_BUTTON_WIDTH } from './constants'
 
 export type PaginationProps = {
   itemsPerPage?: number
@@ -20,12 +22,29 @@ export const Pagination: React.FC<PaginationProps> = ({
   page = 0,
   onChangePage,
 }) => {
+  const [paginationLength, setPaginationLength] = useState(maxPaginationLinks)
+
+  const { width, ref: paginationWrapperRef } = useResizeObserver()
+
+  useLayoutEffect(() => {
+    if (!width) {
+      return
+    }
+    const calculatedLength = Math.floor(width / PAGINATION_BUTTON_WIDTH) - 4
+    setPaginationLength(() => {
+      if (calculatedLength < 1) {
+        return 1
+      }
+      return calculatedLength < maxPaginationLinks ? calculatedLength : maxPaginationLinks
+    })
+  }, [maxPaginationLinks, width])
+
   const internalPage = page + 1
   const totalPages = itemsPerPage ? Math.ceil(totalCount / itemsPerPage) : 0
   const prevPage = internalPage - 1
   const nextPage = internalPage + 1
 
-  const pages = generatePaginationArray(internalPage, maxPaginationLinks, totalPages)
+  const pages = generatePaginationArray(internalPage, paginationLength, totalPages)
 
   if (totalPages <= 1) return null
 
@@ -36,7 +55,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <PaginationWrapper>
+    <PaginationWrapper ref={paginationWrapperRef}>
       <ChevronButton
         variant="secondary"
         size="large"
@@ -94,7 +113,7 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
     return slicedArray
   }
 
-  const arrayWithDots = slicedArray.map((el, idx) => {
+  return slicedArray.map((el, idx) => {
     // first page
     if (idx === 0 && maxPaginationLinks !== 4) {
       return 1
@@ -113,5 +132,4 @@ const generatePaginationArray = (currentPage: number, maxPaginationLinks: number
     }
     return el
   })
-  return arrayWithDots
 }

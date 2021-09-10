@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'

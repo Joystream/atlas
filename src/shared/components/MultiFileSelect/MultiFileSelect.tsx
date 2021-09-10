@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/Dialogs/ImageCropDialog'
+import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { SvgGlyphChevronRight, SvgGlyphFileVideo } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'

@@ -10,7 +10,7 @@ import {
   VideoTileBaseMetaProps,
   VideoTileBaseProps,
   VideoTilePublisherProps,
-} from '@/shared/components/VideoTileBase/VideoTileBase'
+} from '@/shared/components/VideoTileBase'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 
@@ -21,19 +21,12 @@ export type VideoTileProps = {
   Pick<VideoTileBaseProps, 'progress' | 'className'>
 
 export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaProps }) => {
-  const {
-    video,
-    loading,
-    videoHref,
-    thumbnailPhotoUrl,
-    avatarPhotoUrl,
-    isLoadingThumbnail,
-    isLoadingAvatar,
-  } = useVideoSharedLogic({
-    id,
-    isDraft: false,
-    onNotFound,
-  })
+  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
+    useVideoSharedLogic({
+      id,
+      isDraft: false,
+      onNotFound,
+    })
 
   return (
     <VideoTileBase
@@ -59,19 +52,12 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isDraft, onNotFound, ...metaProps }) => {
-  const {
-    video,
-    loading,
-    videoHref,
-    thumbnailPhotoUrl,
-    avatarPhotoUrl,
-    isLoadingThumbnail,
-    isLoadingAvatar,
-  } = useVideoSharedLogic({
-    id,
-    isDraft,
-    onNotFound,
-  })
+  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
+    useVideoSharedLogic({
+      id,
+      isDraft,
+      onNotFound,
+    })
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending

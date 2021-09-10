@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components/ChannelLink'
-import { TOP_NAVBAR_HEIGHT } from '@/components/Topbar'
+import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
@@ -24,7 +24,7 @@ export const TitleSection = styled.div`
   width: 100%;
   margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
-  ${media.compact} {
+  ${media.xs} {
     grid-template-columns: auto 1fr auto;
   }
 `
@@ -32,7 +32,7 @@ export const TitleContainer = styled.div`
   max-width: 100%;
   overflow: hidden;
 
-  ${media.medium} {
+  ${media.md} {
     max-width: 60%;
   }
 
@@ -56,13 +56,9 @@ export const SortContainer = styled.div`
   display: grid;
   grid-gap: 8px;
   align-items: center;
-  ${media.base} {
-    grid-template-columns: 1fr;
-  }
-  ${media.small} {
+  grid-template-columns: 1fr;
+  ${media.xs} {
     grid-template-columns: auto 1fr;
-  }
-  ${media.medium} {
     grid-area: initial;
   }
 `
@@ -87,7 +83,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   span {
     font-size: ${typography.sizes.h2};
   }
-  ${media.small} {
+  ${media.sm} {
     margin: 0 ${sizes(6)} 0 0;
   }
 `
@@ -96,7 +92,7 @@ export const TitleSkeletonLoader = styled(SkeletonLoader)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
 
-  ${media.medium} {
+  ${media.md} {
     height: ${TITLE_HEIGHT};
   }
 `
@@ -106,7 +102,7 @@ export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   margin-top: ${sizes(2)};
   height: ${SM_SUBTITLE_HEIGHT};
 
-  ${media.medium} {
+  ${media.md} {
     height: ${SUBTITLE_HEIGHT};
   }
 `
@@ -117,7 +113,7 @@ export const StyledButtonContainer = styled.div`
   grid-column: 1 / span 2;
   width: 100%;
 
-  ${media.compact} {
+  ${media.xs} {
     grid-column: initial;
     margin-top: 0;
     margin-left: auto;
@@ -132,9 +128,6 @@ export const StyledButton = styled(Button)`
 export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
   padding-bottom: ${sizes(16)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const TabsContainer = styled.div`
@@ -145,17 +138,14 @@ export const TabsContainer = styled.div`
   grid-template-areas:
     'tabs tabs tabs'
     'search sort sort';
-  align-items: baseline;
-  ${media.compact} {
+  align-items: flex-end;
+  grid-template-rows: 1fr 78px;
+  ${media.xs} {
     padding-top: ${sizes(8)};
   }
-  ${media.small} {
+  ${media.sm} {
+    align-items: baseline;
     border-bottom: solid 1px ${colors.gray[800]};
-    grid-template-areas:
-      'tabs tabs '
-      'search  sort';
-  }
-  ${media.medium} {
     grid-template-areas: initial;
     gap: ${sizes(8)};
     grid-template-rows: 1fr;
@@ -168,26 +158,18 @@ export const SearchContainer = styled.div`
   grid-area: search;
   width: 100%;
   align-items: center;
-  ${media.base} {
-    align-self: end;
-  }
-  ${media.small} {
+  align-self: end;
+  ${media.sm} {
     align-self: initial;
-  }
-  ${media.medium} {
     grid-area: initial;
   }
 `
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  ${media.base} {
-    border-bottom: solid 1px ${colors.gray[800]};
-  }
-  ${media.small} {
+  border-bottom: solid 1px ${colors.gray[800]};
+  ${media.sm} {
     border-bottom: none;
-  }
-  ${media.medium} {
     grid-area: initial;
   }
 `
@@ -220,18 +202,6 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
 
 export const SearchButton = styled(IconButton)`
   position: absolute;
-`
-
-export const UnfollowDescriptionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-export const UnfollowDescriptionAccentText = styled.span`
-  font-size: ${typography.sizes.body2};
-  line-height: ${typography.lineHeights.body2};
-  font-weight: ${typography.weights.regular};
-  color: ${colors.gray[50]};
 `
 
 export const NotFoundChannelContainer = styled.div`

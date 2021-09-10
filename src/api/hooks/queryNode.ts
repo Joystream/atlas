@@ -4,10 +4,11 @@ import {
   GetQueryNodeStateSubscription,
   GetQueryNodeStateSubscriptionVariables,
   useGetQueryNodeStateSubscription,
-} from '@/api/queries/__generated__/queryNode.generated'
+} from '@/api/queries'
 
-type QueryNodeStateOpts = SubscriptionHookOptions<GetQueryNodeStateSubscription, GetQueryNodeStateSubscriptionVariables>
-export const useQueryNodeStateSubscription = (opts?: QueryNodeStateOpts) => {
+export const useQueryNodeStateSubscription = (
+  opts?: SubscriptionHookOptions<GetQueryNodeStateSubscription, GetQueryNodeStateSubscriptionVariables>
+) => {
   const { data, ...rest } = useGetQueryNodeStateSubscription(opts)
   return {
     queryNodeState: data?.stateSubscription,

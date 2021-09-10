@@ -1,7 +1,6 @@
 import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicWorkerFieldsFragment } from './workers.generated'
 import { BasicWorkerFieldsFragmentDoc } from './workers.generated'
 
 export type DataObjectFieldsFragment = {
@@ -12,7 +11,14 @@ export type DataObjectFieldsFragment = {
   liaisonJudgement: Types.LiaisonJudgement
   ipfsContentId: string
   joystreamContentId: string
-  liaison?: Types.Maybe<{ __typename?: 'Worker' } & BasicWorkerFieldsFragment>
+  liaison?: Types.Maybe<{
+    __typename?: 'Worker'
+    id: string
+    workerId: string
+    metadata?: Types.Maybe<string>
+    isActive: boolean
+    type: Types.WorkerType
+  }>
 }
 
 export const DataObjectFieldsFragmentDoc = gql`

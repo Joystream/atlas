@@ -34,11 +34,10 @@ type CommonStoreOpts<TState extends object> = {
 
 // enable immer support for Map and Set
 enableMapSet()
-const immer = <T extends State>(config: StateCreator<T, (fn: (state: Draft<T>) => void) => void>): StateCreator<T> => (
-  set,
-  get,
-  api
-) => config((fn) => set(produce<T>(fn)), get, api)
+const immer =
+  <T extends State>(config: StateCreator<T, (fn: (state: Draft<T>) => void) => void>): StateCreator<T> =>
+  (set, get, api) =>
+    config((fn) => set(produce<T>(fn)), get, api)
 
 export const createStore = <TState extends object, TActions extends object>(
   initialStore: CommonStoreInit<TState, TActions>,

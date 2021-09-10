@@ -1,5 +1,4 @@
-import { WorkerType } from '@/api/queries'
-import { BasicWorkerFieldsFragment } from '@/api/queries/__generated__/workers.generated'
+import { BasicWorkerFieldsFragment, WorkerType } from '@/api/queries'
 
 export const mockWorkers: BasicWorkerFieldsFragment[] = [
   {

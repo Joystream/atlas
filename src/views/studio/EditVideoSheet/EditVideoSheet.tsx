@@ -9,7 +9,7 @@ import {
   GetVideosConnectionQueryVariables,
   VideoOrderByInput,
 } from '@/api/queries'
-import { useDisplayDataLostWarning } from '@/hooks'
+import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAssetResolver } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'

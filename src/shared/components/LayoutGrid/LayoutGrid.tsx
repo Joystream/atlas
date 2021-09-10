@@ -10,7 +10,7 @@ export const LayoutGrid = styled.div`
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 16px;
 
-  ${media.medium} {
+  ${media.md} {
     grid-gap: 24px;
   }
 `
@@ -26,19 +26,21 @@ function isResponsivenessObject(prop?: number | 'initial' | ReponsivenessObject)
   return !!prop && typeof prop !== 'number' && prop !== 'initial'
 }
 
-const createBreakpointGridItemRules = (breakpointKey: keyof ReponsivenessObject) => ({
-  colStart,
-  colSpan,
-  rowStart,
-  rowSpan,
-}: GridItemProps) => css`
-  ${media[breakpointKey]} {
-    ${isResponsivenessObject(colStart) && colStart[breakpointKey] && `grid-column-start: ${colStart[breakpointKey]};`}
-    ${isResponsivenessObject(colSpan) && colSpan[breakpointKey] && `grid-column-end: span ${colSpan[breakpointKey]};`}
+const createBreakpointGridItemRules =
+  (breakpointKey: keyof ReponsivenessObject) =>
+  ({ colStart, colSpan, rowStart, rowSpan }: GridItemProps) =>
+    css`
+      ${media[breakpointKey]} {
+        ${isResponsivenessObject(colStart) &&
+        colStart[breakpointKey] &&
+        `grid-column-start: ${colStart[breakpointKey]};`}
+        ${isResponsivenessObject(colSpan) &&
+        colSpan[breakpointKey] &&
+        `grid-column-end: span ${colSpan[breakpointKey]};`}
     ${isResponsivenessObject(rowStart) && rowStart[breakpointKey] && `grid-row-start: ${rowStart[breakpointKey]};`}
     ${isResponsivenessObject(rowSpan) && rowSpan[breakpointKey] && `grid-row-end: span ${rowSpan[breakpointKey]};`}
-  }
-`
+      }
+    `
 
 export const GridItem = styled.div<GridItemProps>`
   ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
@@ -46,11 +48,11 @@ export const GridItem = styled.div<GridItemProps>`
   ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
   ${({ rowSpan }) => !isResponsivenessObject(rowSpan) && rowSpan && `grid-row-end: span ${rowSpan};`}
   
-  ${createBreakpointGridItemRules('base')}
-  ${createBreakpointGridItemRules('compact')}
-  ${createBreakpointGridItemRules('small')}
-  ${createBreakpointGridItemRules('medium')}
-  ${createBreakpointGridItemRules('large')}
-  ${createBreakpointGridItemRules('xlarge')}
-  ${createBreakpointGridItemRules('xxlarge')}
+  ${createBreakpointGridItemRules('xxs')}
+  ${createBreakpointGridItemRules('xs')}
+  ${createBreakpointGridItemRules('sm')}
+  ${createBreakpointGridItemRules('md')}
+  ${createBreakpointGridItemRules('lg')}
+  ${createBreakpointGridItemRules('xl')}
+  ${createBreakpointGridItemRules('xxl')}
 `
