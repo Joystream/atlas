@@ -23,7 +23,8 @@ import { useAuthorizedUser } from '@/providers/user'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
 import { FormField } from '@/shared/components/FormField'
-import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect/MultiFileSelect'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect'
+import { OptionCard } from '@/shared/components/OptionCard'
 import { RadioButton } from '@/shared/components/RadioButton'
 import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
@@ -41,15 +42,11 @@ import {
   FormScrolling,
   FormWrapper,
   InputsContainer,
+  RadioButtonsContainer,
+  RadioCardButtonsContainer,
   StyledMultiFileSelect,
-  StyledRadioContainer,
   StyledTitleArea,
 } from './EditVideoForm.style'
-
-const visibilityOptions: SelectItem<boolean>[] = [
-  { name: 'Public', value: true },
-  { name: 'Unlisted (video will not appear in feeds and search)', value: false },
-]
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -451,43 +448,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               error={!!errors.description}
               helperText={errors.description?.message}
             />
-            <ExtendedMarginFormField
-              title="Privacy"
-              description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
-            >
-              <Controller
-                name="isPublic"
-                control={control}
-                rules={{
-                  validate: (value) => value !== null,
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    value={value}
-                    items={visibilityOptions}
-                    onChange={onChange}
-                    error={!!errors.isPublic && !value}
-                    helperText={errors.isPublic ? 'Video visibility must be selected' : ''}
-                  />
-                )}
-              />
-            </ExtendedMarginFormField>
-            <FormField title="Language" description="Main language used in the video">
-              <Controller
-                name="language"
-                control={control}
-                rules={requiredValidation('Video language')}
-                render={({ field: { value, onChange } }) => (
-                  <Select
-                    value={value}
-                    items={languages}
-                    onChange={onChange}
-                    error={!!errors.language && !value}
-                    helperText={errors.language?.message}
-                  />
-                )}
-              />
-            </FormField>
             <FormField title="Category" description="Category that best describes the content">
               <Controller
                 name="category"
@@ -505,7 +465,54 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 )}
               />
             </FormField>
-            <FormField title="License">
+            <FormField title="Language" description="Main language used in the video">
+              <Controller
+                name="language"
+                control={control}
+                rules={requiredValidation('Video language')}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value}
+                    items={languages}
+                    onChange={onChange}
+                    error={!!errors.language && !value}
+                    helperText={errors.language?.message}
+                  />
+                )}
+              />
+              <ExtendedMarginFormField
+                title="Privacy"
+                description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
+              >
+                <Controller
+                  name="isPublic"
+                  control={control}
+                  defaultValue={true}
+                  rules={{
+                    validate: (value) => value !== null,
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <RadioCardButtonsContainer>
+                      <OptionCard
+                        value="true"
+                        label="Public"
+                        onChange={() => onChange(true)}
+                        selectedValue={value?.toString()}
+                        helperText="Visible to all"
+                      />
+                      <OptionCard
+                        value="false"
+                        label="Unlisted"
+                        onChange={() => onChange(false)}
+                        selectedValue={value?.toString()}
+                        helperText="Visible with link only"
+                      />
+                    </RadioCardButtonsContainer>
+                  )}
+                />
+              </ExtendedMarginFormField>
+            </FormField>
+            <ExtendedMarginFormField title="License">
               <Controller
                 name="licenseCode"
                 control={control}
@@ -522,7 +529,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   />
                 )}
               />
-            </FormField>
+            </ExtendedMarginFormField>
             {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
               <FormField title="License attribution">
                 <TextField
@@ -564,7 +571,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   validate: (value) => value !== null,
                 }}
                 render={({ field: { value, onChange, ref } }) => (
-                  <StyledRadioContainer>
+                  <RadioButtonsContainer>
                     <RadioButton
                       ref={ref}
                       value="false"
@@ -582,7 +589,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                       error={!!errors.isExplicit}
                       helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
                     />
-                  </StyledRadioContainer>
+                  </RadioButtonsContainer>
                 )}
               />
             </ExtendedMarginFormField>
