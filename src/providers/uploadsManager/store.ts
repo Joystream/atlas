@@ -8,7 +8,7 @@ type AssetFile = {
   blob: File | Blob
 }
 
-type _UploadStoreState = {
+type UploadStoreState = {
   uploads: AssetUpload[]
   uploadsStatus: UploadsStatusRecord
   assetsFiles: AssetFile[]
@@ -29,7 +29,7 @@ type UploadStoreActions = {
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
-export const useUploadsStore = createStore<_UploadStoreState, UploadStoreActions>(
+export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>(
   {
     actionsFactory: (set) => ({
       setUploadStatus: (contentId, status) => {

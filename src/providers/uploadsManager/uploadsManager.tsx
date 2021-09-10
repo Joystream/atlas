@@ -26,7 +26,8 @@ export const UploadsManager: React.FC = () => {
   const { addAsset, removeAsset, setIsSyncing, removePendingAssetId, setUploadStatus } = useUploadsStore(
     (state) => state.actions
   )
-  const { isSyncing, pendingAssetsIds } = useUploadsStore((state) => state)
+  const isSyncing = useUploadsStore((state) => state.isSyncing)
+  const pendingAssetsIds = useUploadsStore((state) => state.pendingAssetsIds)
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
