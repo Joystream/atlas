@@ -15,6 +15,26 @@ export type CustomRadioInputProps = {
   error?: boolean
 }
 
+export const hoverState = (checked?: boolean) => {
+  return css`
+    border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
+
+    &::before {
+      background-color: ${colors.transparentPrimary[12]};
+    }
+  `
+}
+export const activeState = (checked?: boolean) => {
+  return css`
+    border: 1px solid ${colors.gray[50]};
+    padding: ${checked && '4px'};
+
+    &::before {
+      background-color: ${colors.transparentPrimary[6]};
+    }
+  `
+}
+
 const colorFromProps = ({ error, checked, disabled }: CustomRadioInputProps) => {
   if (disabled) {
     return css`
@@ -46,11 +66,7 @@ const colorFromProps = ({ error, checked, disabled }: CustomRadioInputProps) => 
       }
 
       &:hover {
-        border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
-
-        &::before {
-          background-color: ${colors.transparentPrimary[12]};
-        }
+        ${hoverState(checked)}
       }
 
       &:focus {
@@ -62,12 +78,7 @@ const colorFromProps = ({ error, checked, disabled }: CustomRadioInputProps) => 
       }
 
       &:active {
-        border: 1px solid ${colors.gray[50]};
-        padding: ${checked && '4px'};
-
-        &::before {
-          background-color: ${colors.transparentPrimary[6]};
-        }
+        ${activeState(checked)}
       }
     `
   }

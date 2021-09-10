@@ -2,20 +2,21 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/shared/theme'
 
+import { CustomRadioInput, activeState, hoverState } from '../RadioInput/RadioInput.style'
 import { Text } from '../Text'
 
 type OptionCardLabelProps = {
-  selected?: boolean
+  checked?: boolean
   disabled?: boolean
   error?: boolean
 }
 
-const getOptionCardBorderColor = ({ selected, disabled, error }: OptionCardLabelProps) => {
+const getOptionCardBorderColor = ({ checked, disabled, error }: OptionCardLabelProps) => {
   if (disabled) {
     return colors.gray[500]
   } else if (error) {
     return colors.error
-  } else if (selected && !error) {
+  } else if (checked && !error) {
     return colors.blue[500]
   }
   return colors.gray[500]
@@ -30,11 +31,17 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   transition: background-color 0.25s ease, border-color 0.25s ease;
 
   :hover {
-    border: ${({ selected, disabled, error }) => !selected && !disabled && !error && `1px solid ${colors.gray[300]}`};
+    border: ${({ checked, disabled, error }) => !checked && !disabled && !error && `1px solid ${colors.gray[300]}`};
+    ${CustomRadioInput} {
+      ${({ checked, disabled, error }) => !disabled && !error && hoverState(checked)};
+    }
   }
 
   :active {
-    border: ${({ selected, disabled, error }) => !selected && !disabled && !error && `1px solid ${colors.gray[50]}`};
+    border: ${({ checked, disabled, error }) => !checked && !disabled && !error && `1px solid ${colors.gray[50]}`};
+    ${CustomRadioInput} {
+      ${({ checked, disabled, error }) => !disabled && !error && activeState(checked)};
+    }
   }
 `
 

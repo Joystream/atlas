@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { OptionCard, OptionCardProps } from './OptionCard'
 
 export default {
-  title: 'Shared/R/OptionCard',
+  title: 'Shared/O/OptionCard',
   component: OptionCard,
   args: {
     label: 'Radio input label',

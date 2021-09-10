@@ -17,7 +17,7 @@ export type OptionCardProps = {
 export const OptionCard = React.forwardRef<HTMLInputElement, OptionCardProps>(
   ({ helperText, label, selectedValue, className, value, onChange, disabled, error, ...props }, ref) => {
     return (
-      <OptionCardLabel disabled={disabled} selected={value === selectedValue} error={error} className={className}>
+      <OptionCardLabel disabled={disabled} checked={value === selectedValue} error={error} className={className}>
         <InputAndTitleWrapper>
           <OptionCardTitle variant="subtitle1">{label}</OptionCardTitle>
           <RadioInput
