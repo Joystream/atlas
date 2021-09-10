@@ -159,8 +159,8 @@ export const useStartFileUpload = () => {
             backoffType: 'static',
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
-              if (cfg?.currentRetryAttempt === 1) {
-                setAssetStatus({ lastStatus: 'reconnecting' })
+              if (cfg?.currentRetryAttempt || 0 >= 1) {
+                setAssetStatus({ lastStatus: 'reconnecting', retries: cfg?.currentRetryAttempt })
               }
             },
           },

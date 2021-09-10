@@ -10,7 +10,6 @@ import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
-  AssetGroupInfoText,
   AssetsDrawerContainer,
   AssetsInfoContainer,
   BottomProgressBar,
@@ -24,11 +23,11 @@ import {
 
 import { UploadStatus } from '../UploadStatus'
 
-export type UploadStatusGroupVariant = 'large' | 'compact'
+export type UploadStatusGroupSize = 'large' | 'compact'
 
 export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
-  variant?: UploadStatusGroupVariant
+  variant?: UploadStatusGroupSize
 }
 
 export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, variant = 'compact' }) => {
@@ -43,7 +42,9 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, v
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
   const isCompleted = uploadsStatuses.every((file) => file?.lastStatus === 'completed')
-  const hasUploadingAsset = uploadsStatuses.some((file) => file?.lastStatus === 'inProgress')
+  const uploadRetries = uploadsStatuses
+    .filter((file) => file?.lastStatus === 'reconnecting')
+    .map((file) => file?.retries)[0]
   const errorsCount = uploadsStatuses.filter((file) => file?.lastStatus === 'error').length
   const missingAssetsCount = uploadsStatuses.filter((file) => !file || !file.lastStatus).length
 
@@ -60,46 +61,24 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, v
 
   const renderAssetsGroupInfo = () => {
     if (errorsCount) {
-      return (
-        <AssetGroupInfoText variant="subtitle2" secondary>{`${errorsCount} asset${
-          errorsCount > 1 ? 's' : ''
-        } upload failed`}</AssetGroupInfoText>
-      )
+      return `${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`
     }
     if (missingAssetsCount) {
-      return (
-        <AssetGroupInfoText variant="subtitle2" secondary>{`${missingAssetsCount} asset${
-          missingAssetsCount > 1 ? 's' : ''
-        } lost connection`}</AssetGroupInfoText>
-      )
+      return `${missingAssetsCount} asset${missingAssetsCount > 1 ? 's' : ''} lost connection`
+    }
+    if (uploadRetries) {
+      return `Trying to reconnect...(${uploadRetries})`
     }
     if (isWaiting) {
-      return (
-        <AssetGroupInfoText variant="subtitle2" secondary>
-          Waiting for upload...
-        </AssetGroupInfoText>
-      )
+      return 'Waiting for upload...'
     }
     if (isCompleted) {
-      return (
-        <AssetGroupInfoText variant="subtitle2" secondary>
-          Uploaded
-        </AssetGroupInfoText>
-      )
+      return 'Uploaded'
     }
     if (isProcessing) {
-      return (
-        <AssetGroupInfoText variant="subtitle2" secondary>
-          Processing...
-        </AssetGroupInfoText>
-      )
+      return 'Processing...'
     }
-
-    return (
-      <AssetGroupInfoText variant="subtitle2" secondary>
-        Uploading...{masterProgress}%
-      </AssetGroupInfoText>
-    )
+    return `Uploading...${masterProgress}%`
   }
 
   const enrichedUploadData =
@@ -127,12 +106,11 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, v
       >
         <ProgressBar
           progress={isCompleted ? 100 : masterProgress}
-          hasUploadingAsset={hasUploadingAsset}
           isProcessing={isProcessing}
           isCompleted={isCompleted}
         />
         {!isCompleted && <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />}
-        <Thumbnail>
+        <Thumbnail size={variant}>
           {errorsCount || missingAssetsCount ? (
             <SvgAlertError />
           ) : isCompleted ? (
@@ -148,7 +126,11 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, v
           </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
-          {renderAssetsGroupInfo()}
+          {variant === 'large' && (
+            <Text variant="subtitle2" secondary>
+              {renderAssetsGroupInfo()}
+            </Text>
+          )}
           <StyledExpandButton
             expanded={isAssetsDrawerActive}
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
@@ -158,7 +140,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, v
       </UploadStatusGroupContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {enrichedUploadData.map((file, idx) => (
-          <UploadStatus key={file.contentId} asset={file} isLast={uploads.length === idx + 1} />
+          <UploadStatus size={variant} key={file.contentId} asset={file} isLast={uploads.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>

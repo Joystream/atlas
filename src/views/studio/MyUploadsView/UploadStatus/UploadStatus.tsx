@@ -26,17 +26,19 @@ import {
   FileLinePoint,
   FileStatusContainer,
   ProgressbarContainer,
-  ReconnectingText,
   RetryButton,
   StatusText,
 } from './UploadStatus.style'
 
+import { UploadStatusGroupSize } from '../UploadStatusGroup'
+
 type UploadStatusProps = {
   isLast?: boolean
   asset: AssetUpload
+  size?: UploadStatusGroupSize
 }
 
-export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset }) => {
+export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
@@ -170,11 +172,11 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     }
   }
 
-  const dimension =
+  const assetDimension =
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
-  const size = formatBytes(asset.size)
+  const assetSize = formatBytes(asset.size)
 
   const assetsDialogs = {
     avatar: avatarDialogRef,
@@ -194,18 +196,12 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   }
 
   const renderStatusMessage = () => {
-    if (uploadStatus?.lastStatus === 'reconnecting') {
-      return (
-        <StatusText variant="subtitle2" secondary>
-          Reconnecting...
-        </StatusText>
-      )
-    }
+    const failedStatusText = size === 'compact' ? 'Upload failed' : 'Asset failed during upload'
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="subtitle2" secondary mobileText="Asset failed">
-            Asset failed during upload
+          <StatusText variant="subtitle2" secondary size={size}>
+            {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
             Try again
@@ -216,8 +212,8 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="subtitle2" secondary mobileText="Asset failed">
-            Asset failed during upload
+          <StatusText variant="subtitle2" secondary size={size}>
+            {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
@@ -249,27 +245,28 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const isReconnecting = uploadStatus?.lastStatus === 'reconnecting'
   return (
     <>
-      <FileLineContainer isLast={isLast}>
+      <FileLineContainer isLast={isLast} size={size}>
         <FileInfoContainer>
-          {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
+          {isLast ? <FileLineLastPoint size={size} /> : <FileLinePoint size={size} />}
           <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
-          <FileInfo>
-            <FileInfoType>
+          <FileInfo size={size}>
+            <FileInfoType warning={isReconnecting && size === 'compact'}>
               {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
               <Text variant="body2">{fileTypeText}</Text>
             </FileInfoType>
-            <FileInfoDetails isReconnecting={isReconnecting}>
-              {dimension && (
-                <Text variant="body2" secondary>
-                  {dimension}
-                </Text>
-              )}
-              {size && <Text secondary>{size}</Text>}
-            </FileInfoDetails>
-            {isReconnecting && (
-              <ReconnectingText variant="body2" secondary>
-                Reconnecting...
-              </ReconnectingText>
+            {size === 'compact' && isReconnecting ? (
+              <Text variant="body2" secondary>
+                Trying to reconnect...({uploadStatus.retries})
+              </Text>
+            ) : (
+              <FileInfoDetails size={size}>
+                {assetDimension && (
+                  <Text variant="body2" secondary>
+                    {assetDimension}
+                  </Text>
+                )}
+                {assetSize && <Text secondary>{assetSize}</Text>}
+              </FileInfoDetails>
             )}
           </FileInfo>
         </FileInfoContainer>
