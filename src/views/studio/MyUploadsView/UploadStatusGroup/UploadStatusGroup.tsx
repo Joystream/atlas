@@ -24,11 +24,14 @@ import {
 
 import { UploadStatus } from '../UploadStatus'
 
-export type AssetsGroupBarUploadProps = {
+export type UploadStatusGroupVariant = 'large' | 'compact'
+
+export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
+  variant?: UploadStatusGroupVariant
 }
 
-export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads }) => {
+export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, variant = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
   const drawer = useRef<HTMLDivElement>(null)
   const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.contentId], shallow))
