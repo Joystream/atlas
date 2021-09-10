@@ -9,15 +9,19 @@ import { colors, media, sizes } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
-export const StyledRadioContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  > * + * {
-    margin-top: ${sizes(2)};
+export const RadioCardButtonsContainer = styled.div`
+  display: grid;
+  gap: ${sizes(6)};
+  ${media.sm} {
+    grid-template-columns: 1fr 1fr;
   }
 `
+
+export const RadioButtonsContainer = styled.div`
+  display: grid;
+  grid-row-gap: ${sizes(2)};
+`
+
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
     position: sticky;
