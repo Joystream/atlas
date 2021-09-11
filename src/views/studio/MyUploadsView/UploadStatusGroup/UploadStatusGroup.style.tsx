@@ -9,6 +9,7 @@ import { UploadStatusGroupSize } from './UploadStatusGroup'
 type ProgressbarProps = {
   progress: number
   isProcessing?: boolean
+  runCompletedAnimation?: boolean
   isCompleted?: boolean
 }
 
@@ -70,9 +71,8 @@ const completedAnimationCss = (props: ProgressbarProps) => {
       animation: ${pulseAnimation} 2.5s infinite ease-in-out;
     `
   }
-  if (props.isCompleted) {
+  if (props.runCompletedAnimation) {
     return css`
-      opacity: 0;
       animation: ${greenBarAnimation} 400ms ease-out;
       animation-iteration-count: 1;
     `
@@ -90,8 +90,9 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
   transition: transform 1s linear;
-
   ${completedAnimationCss}
+
+  ${({ isCompleted }) => isCompleted && `opacity: 0.2`};
 `
 
 export const BottomProgressBar = styled.div<ProgressbarProps>`

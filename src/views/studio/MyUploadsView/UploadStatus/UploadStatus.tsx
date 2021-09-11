@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { absoluteRoutes } from '@/config/routes'
@@ -12,6 +13,7 @@ import { CircularProgress } from '@/shared/components/CircularProgress'
 import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
 import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
@@ -248,7 +250,17 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
       <FileLineContainer isLast={isLast} size={size}>
         <FileInfoContainer>
           {isLast ? <FileLineLastPoint size={size} /> : <FileLinePoint size={size} />}
-          <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
+          <FileStatusContainer>
+            <SwitchTransition>
+              <CSSTransition
+                key={uploadStatus?.lastStatus || 'no-status'}
+                classNames={transitions.names.fade}
+                timeout={200}
+              >
+                {renderStatusIndicator()}
+              </CSSTransition>
+            </SwitchTransition>
+          </FileStatusContainer>
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
               {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}

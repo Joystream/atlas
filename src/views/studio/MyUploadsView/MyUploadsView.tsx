@@ -53,7 +53,7 @@ export const MyUploadsView: React.FC = () => {
         placeholderItems
       ) : hasUploads ? (
         groupedUploadsState.map((files) => (
-          <UploadStatusGroup variant={lgMatch ? 'large' : 'compact'} key={files[0].parentObject.id} uploads={files} />
+          <UploadStatusGroup size={lgMatch ? 'large' : 'compact'} key={files[0].parentObject.id} uploads={files} />
         ))
       ) : (
         <EmptyFallback
