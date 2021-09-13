@@ -46,7 +46,7 @@ export type EditVideoFormFields = {
   licenseAttribution: string | null
   hasMarketing: boolean | null
   isPublic: boolean
-  isExplicit: boolean | null
+  isExplicit: boolean
   publishedBeforeJoystream: Date | null
   assets: EditVideoAssets
 }
