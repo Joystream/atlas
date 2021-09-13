@@ -3,7 +3,7 @@ import React, { Ref } from 'react'
 
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
-import { SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
+import { SelectBadge, SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
 
 import { InputBase, InputBaseProps, LabelText } from '../InputBase'
 import { Tooltip } from '../Tooltip'
@@ -15,6 +15,7 @@ export type SelectItem<T = string> = {
   name: string
   tooltipHeaderText?: string
   tooltipText?: string
+  badgeText?: string
 }
 
 export type SelectProps<T = string> = {
@@ -75,6 +76,7 @@ export const Select = <T extends unknown>({
           size={size}
         >
           {selectedItem?.name || placeholder}
+          {selectedItem?.badgeText && <SelectBadge variant="caption">{selectedItem.badgeText}</SelectBadge>}
           <SvgGlyphChevronDown />
         </SelectButton>
         <SelectMenu isOpen={isOpen} {...getMenuProps()}>
