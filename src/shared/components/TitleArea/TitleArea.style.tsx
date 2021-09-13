@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, typography } from '@/shared/theme'
+import { colors, typography } from '@/shared/theme'
 
 import { TitleAreaVariant } from './'
 
@@ -17,13 +17,12 @@ type StyledTextAreaProps = {
 
 type TitleAreaInfoProps = {
   error?: boolean
+  visible?: boolean
 }
 
 export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
-  display: grid;
-  opacity: 0;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: ${sizes(8)};
+  display: none;
+  justify-content: space-between;
 `
 
 export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
@@ -54,13 +53,13 @@ export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   }
 
   + ${TitleAreaInfo} {
-    ${({ touchedAndEmpty }) => touchedAndEmpty && `opacity: 1`};
+    ${({ touchedAndEmpty }) => touchedAndEmpty && `display: flex`};
   }
 
   :focus,
   :invalid {
     + ${TitleAreaInfo} {
-      opacity: 1;
+      display: flex;
     }
   }
 `

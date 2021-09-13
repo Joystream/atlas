@@ -70,6 +70,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
         onKeyDown={handleKeyDown}
         onBlur={onBlur}
       />
+
       <TitleAreaInfo>
         <MinMaxChars secondary variant="caption">
           Min {min} Chars | Max {max} Chars
