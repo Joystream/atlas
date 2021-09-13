@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { limitedWidthContainerStyle } from '@/components/LimitedWidthContainer'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Button } from '@/shared/components/Button'
 import { FormField } from '@/shared/components/FormField'
 import { MultiFileSelect } from '@/shared/components/MultiFileSelect'
@@ -31,7 +31,7 @@ export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
   overflow-x: hidden;
 `
 
-export const FormWrapper = styled.form`
+export const FormWrapper = styled(LimitedWidthContainer)`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
@@ -51,8 +51,6 @@ export const FormWrapper = styled.form`
   ${media.lg} {
     padding: ${sizes(8)} 0 0 0;
   }
-
-  ${limitedWidthContainerStyle};
 `
 
 export const InputsContainer = styled.div`
