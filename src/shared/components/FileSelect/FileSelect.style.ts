@@ -17,6 +17,7 @@ type InfoContainerProps = {
 }
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
+  overflow: hidden;
   position: relative;
   width: 100%;
   height: 0;
@@ -79,7 +80,7 @@ export const InfoBackground = styled.div`
   height: 100%;
 `
 
-export const InnerContainer = styled.div`
+export const InnerContainer = styled(animated.div)`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -96,7 +97,7 @@ export const InnerContainer = styled.div`
   }
 `
 
-export const Thumbnail = styled.img`
+export const Thumbnail = styled(animated.img)`
   position: absolute;
   top: 0;
   max-width: 100%;

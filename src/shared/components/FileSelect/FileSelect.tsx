@@ -1,6 +1,7 @@
+import beazierEasing from 'bezier-easing'
 import React, { useCallback } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
-import { useTransition } from 'react-spring'
+import { useSpring, useTransition } from 'react-spring'
 
 import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
@@ -51,6 +52,18 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
     enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
     leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
+    config: {
+      duration: 300,
+      easing: beazierEasing(0.42, 0, 0.7, 1),
+    },
+  })
+
+  const innerContainerSpring = useSpring({
+    opacity: isLoading ? 0.1 : 1,
+    config: {
+      duration: 300,
+      easing: beazierEasing(0.42, 0, 0.7, 1),
+    },
   })
 
   const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
@@ -95,13 +108,14 @@ export const FileSelect: React.FC<FileSelectProps> = ({
       )}
       {thumbnailUrl && fileType === 'image' ? (
         <Thumbnail
+          style={innerContainerSpring}
           src={thumbnailUrl}
           alt="video thumbnail"
           onClick={handleReAdjustThumbnail}
           title="Click to readjust"
         />
       ) : (
-        <InnerContainer>
+        <InnerContainer style={innerContainerSpring}>
           {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
           <Title variant="h5">{title}</Title>
           <Paragraph variant="subtitle2" as="p" secondary>
