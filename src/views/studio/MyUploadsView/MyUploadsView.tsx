@@ -53,6 +53,7 @@ export const MyUploadsView: React.FC = () => {
         groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
       ) : (
         <EmptyFallback
+          verticalCentered
           title="No ongoing uploads"
           subtitle="You will see status of each ongoing upload here."
           button={
