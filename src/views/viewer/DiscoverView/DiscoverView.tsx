@@ -1,10 +1,12 @@
 import React from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useVideoCount } from '@/api/hooks'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   BorderTextContainer,
@@ -15,10 +17,18 @@ import {
 import { featuredVideoCategories, videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
-  const { videosConnection } = useVideosConnection({
-    first: 0,
-  })
+  const { videoCount, error } = useVideoCount(
+    {},
+    {
+      onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
+    }
+  )
   const isMdBreakpoint = useMediaMatch('md')
+
+  if (error) {
+    return <ViewErrorFallback />
+  }
+
   return (
     <StyledLimitedWidthContainer big>
       <Text variant="h2">Discover</Text>
@@ -48,7 +58,7 @@ export const DiscoverView: React.FC = () => {
             categoryId={category.id}
             color={category.color}
             icon={category.icon}
-            videosTotalCount={videosConnection?.totalCount}
+            videosTotalCount={videoCount}
             variant={isMdBreakpoint ? 'default' : 'compact'}
           />
         ))}
