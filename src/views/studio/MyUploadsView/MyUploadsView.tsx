@@ -9,7 +9,7 @@ import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { SvgGlyphUpload } from '@/shared/icons'
 
-import { EmptyFallbackWrapper, StyledText, UploadsContainer } from './MyUploadsView.style'
+import { StyledText, UploadsContainer } from './MyUploadsView.style'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
@@ -52,17 +52,16 @@ export const MyUploadsView: React.FC = () => {
       ) : hasUploads ? (
         groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
       ) : (
-        <EmptyFallbackWrapper>
-          <EmptyFallback
-            title="No ongoing uploads"
-            subtitle="You will see status of each ongoing upload here."
-            button={
-              <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
-                Upload video
-              </Button>
-            }
-          />
-        </EmptyFallbackWrapper>
+        <EmptyFallback
+          verticalCentered
+          title="No ongoing uploads"
+          subtitle="You will see status of each ongoing upload here."
+          button={
+            <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
+              Upload video
+            </Button>
+          }
+        />
       )}
     </UploadsContainer>
   )

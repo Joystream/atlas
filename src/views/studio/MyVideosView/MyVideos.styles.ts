@@ -1,10 +1,19 @@
 import styled from '@emotion/styled'
 
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
+import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
-export const ViewContainer = styled.div`
-  padding-top: ${sizes(8)};
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 120px;
+`
+
+export const StyledText = styled(Text)`
+  margin: ${sizes(8)} 0;
 `
 
 export const TabsContainer = styled.div`

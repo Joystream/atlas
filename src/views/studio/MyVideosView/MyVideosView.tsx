@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { VideoTilePublisher } from '@/components/VideoTile'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
@@ -28,8 +27,9 @@ import {
   PaginationContainer,
   SortContainer,
   StyledDismissibleBanner,
+  StyledLimitedWidthContainer,
+  StyledText,
   TabsContainer,
-  ViewContainer,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
 
@@ -272,93 +272,93 @@ export const MyVideosView = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <LimitedWidthContainer>
-      <ViewContainer>
-        <Text variant="h2">My videos</Text>
-        {hasNoVideos ? (
-          <EmptyFallback
-            title="Add your first video"
-            subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
-            button={
-              <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
-                Upload video
-              </Button>
-            }
-          />
-        ) : (
-          <>
-            <TabsContainer>
-              <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-              <SortContainer>
-                <Text variant="body2">Sort by</Text>
-                <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-              </SortContainer>
-            </TabsContainer>
-            {isDraftTab && (
-              <StyledDismissibleBanner
-                id="video-draft-saved-locally-warning"
-                title="Video drafts are saved locally"
-                icon="info"
-                description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
-              />
-            )}
-            {currentTabName === 'Unlisted' && (
-              <StyledDismissibleBanner
-                id="unlisted-video-link-info"
-                title="Unlisted videos can be seen only with direct link"
-                icon="info"
-                description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
-              />
-            )}
-            <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-              {gridContent}
-            </Grid>
-            {((isDraftTab && drafts.length === 0) ||
-              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
-              <EmptyFallback
-                title={
-                  currentTabName === 'All Videos'
-                    ? 'No videos yet'
-                    : currentTabName === 'Public'
-                    ? 'No public videos yet'
-                    : currentTabName === 'Drafts'
-                    ? 'No drafts here yet'
-                    : 'No unlisted videos here yet'
-                }
-                subtitle={
-                  currentTabName === 'All Videos'
-                    ? null
-                    : currentTabName === 'Public'
-                    ? 'Videos published with "Public" privacy setting will show up here.'
-                    : currentTabName === 'Drafts'
-                    ? "Each video that hasn't been published yet will be available here as a draft."
-                    : 'Videos published with "Unlisted" privacy setting will show up here.'
-                }
-                button={
-                  <Button
-                    icon={<SvgGlyphUpload />}
-                    to={absoluteRoutes.studio.editVideo()}
-                    variant="secondary"
-                    size="large"
-                  >
-                    Upload video
-                  </Button>
-                }
-              />
-            )}
-            <PaginationContainer>
-              <Pagination
-                onChangePage={handleChangePage}
-                page={currentPage}
-                itemsPerPage={videosPerPage}
-                // +1 is for new video tile
-                totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
-              />
-            </PaginationContainer>
-          </>
-        )}
-      </ViewContainer>
-    </LimitedWidthContainer>
+    <StyledLimitedWidthContainer>
+      <StyledText variant="h2">My videos</StyledText>
+      {hasNoVideos ? (
+        <EmptyFallback
+          verticalCentered
+          title="Add your first video"
+          subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
+          button={
+            <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+              Upload video
+            </Button>
+          }
+        />
+      ) : (
+        <>
+          <TabsContainer>
+            <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+            <SortContainer>
+              <Text variant="body2">Sort by</Text>
+              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            </SortContainer>
+          </TabsContainer>
+          {isDraftTab && (
+            <StyledDismissibleBanner
+              id="video-draft-saved-locally-warning"
+              title="Video drafts are saved locally"
+              icon="info"
+              description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
+            />
+          )}
+          {currentTabName === 'Unlisted' && (
+            <StyledDismissibleBanner
+              id="unlisted-video-link-info"
+              title="Unlisted videos can be seen only with direct link"
+              icon="info"
+              description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
+            />
+          )}
+          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+            {gridContent}
+          </Grid>
+          {((isDraftTab && drafts.length === 0) ||
+            (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
+            <EmptyFallback
+              verticalCentered
+              title={
+                currentTabName === 'All Videos'
+                  ? 'No videos yet'
+                  : currentTabName === 'Public'
+                  ? 'No public videos yet'
+                  : currentTabName === 'Drafts'
+                  ? 'No drafts here yet'
+                  : 'No unlisted videos here yet'
+              }
+              subtitle={
+                currentTabName === 'All Videos'
+                  ? null
+                  : currentTabName === 'Public'
+                  ? 'Videos published with "Public" privacy setting will show up here.'
+                  : currentTabName === 'Drafts'
+                  ? "Each video that hasn't been published yet will be available here as a draft."
+                  : 'Videos published with "Unlisted" privacy setting will show up here.'
+              }
+              button={
+                <Button
+                  icon={<SvgGlyphUpload />}
+                  to={absoluteRoutes.studio.editVideo()}
+                  variant="secondary"
+                  size="large"
+                >
+                  Upload video
+                </Button>
+              }
+            />
+          )}
+          <PaginationContainer>
+            <Pagination
+              onChangePage={handleChangePage}
+              page={currentPage}
+              itemsPerPage={videosPerPage}
+              // +1 is for new video tile
+              totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
+            />
+          </PaginationContainer>
+        </>
+      )}
+    </StyledLimitedWidthContainer>
   )
 }
 

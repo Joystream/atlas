@@ -6,10 +6,17 @@ import { EmptyFallbackSizes } from './EmptyFallback'
 
 import { Text } from '../Text'
 
-export const Container = styled.div<{ variant?: EmptyFallbackSizes }>`
+type ContainerProps = {
+  variant?: EmptyFallbackSizes
+  verticalCentered?: boolean
+}
+
+export const Container = styled.div<ContainerProps>`
   margin: ${sizes(10)} auto;
   display: grid;
-  place-items: center;
+  place-content: center;
+  justify-items: center;
+  height: ${({ verticalCentered }) => (verticalCentered ? '100%' : 'auto')};
 
   ${media.xs} {
     width: ${({ variant }) => (variant === 'large' ? sizes(90) : 'auto')};

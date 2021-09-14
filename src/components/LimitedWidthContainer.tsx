@@ -8,5 +8,4 @@ export const LimitedWidthContainer = styled.div<LimitedWidthContainerProps>`
   max-width: var(--max-inner-width);
   position: relative;
   margin: 0 auto;
-  height: 100%;
 `
