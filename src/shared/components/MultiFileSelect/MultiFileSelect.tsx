@@ -71,7 +71,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
 }) => {
   const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const [step, setStep] = useState<FileType>('video')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isImgLoading, setIsImgLoading] = useState(false)
+  const [isVideoLoading, setIsVideoLoading] = useState(false)
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)
   const thumbnailStepRef = useRef<HTMLDivElement>(null)
 
@@ -84,22 +85,25 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   }, [editMode, files.video])
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isVideoLoading && !isImgLoading) {
       return
     }
     if (error) {
-      setIsLoading(false)
+      setIsVideoLoading(false)
       return
     }
     const timeout = setTimeout(() => {
-      if (isLoading) {
-        setIsLoading(false)
+      if (isVideoLoading) {
+        setIsVideoLoading(false)
         setStep('image')
+      }
+      if (isImgLoading) {
+        setIsImgLoading(false)
       }
     }, 1000)
 
     return () => clearTimeout(timeout)
-  }, [error, isLoading])
+  }, [error, isImgLoading, isVideoLoading])
 
   const updateVideoFile = async (file: File) => {
     try {
@@ -133,11 +137,12 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       imageCropData,
     }
     onThumbnailChange(updatedThumbnail)
+    setIsImgLoading(true)
   }
 
   const handleUploadFile = async (file: File) => {
     if (step === 'video') {
-      setIsLoading(true)
+      setIsVideoLoading(true)
       updateVideoFile(file)
     }
     if (step === 'image') {
@@ -164,7 +169,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     if (fileType === 'image') {
       onThumbnailChange(null)
     }
-    setIsLoading(false)
+    setIsVideoLoading(false)
   }
 
   const handleFileRejections = async (fileRejections: FileRejection[]) => {
@@ -189,7 +194,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         maxSize={step === 'video' ? maxVideoSize : maxImageSize}
         onUploadFile={handleUploadFile}
         onReAdjustThumbnail={handleReAdjustThumbnail}
-        isLoading={isLoading}
+        isLoading={isVideoLoading || isImgLoading}
         fileType={step}
         title={step === 'video' ? 'Select video file' : 'Add thumbnail image'}
         thumbnailUrl={files.thumbnail?.url}
@@ -213,7 +218,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           disabled={editMode}
           completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
-          isLoading={isLoading}
+          isLoading={isVideoLoading}
         />
         <StepDivider>
           <SvgGlyphChevronRight />

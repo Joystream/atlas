@@ -1,26 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
-import { useSpring } from 'react-spring'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { useTransition } from 'react-spring'
 
-import {
-  SvgAlertError,
-  SvgGlyphClose,
-  SvgGlyphUpload,
-  SvgIllustrativeFileSelected,
-  SvgIllustrativeImage,
-  SvgIllustrativeVideo,
-} from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
 import {
   ButtonsGroup,
-  DismissButton,
   DragAndDropArea,
   DragDropText,
-  ErrorContainer,
-  ErrorText,
   InfoBackground,
   InfoContainer,
   InfoHeading,
@@ -58,9 +46,13 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   onReAdjustThumbnail,
   onDropRejected,
   isLoading,
-  onError,
-  error,
 }) => {
+  const infoContainerTransitions = useTransition(isLoading, {
+    from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
+    enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
+    leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
+  })
+
   const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
     (acceptedFiles) => {
       const [file] = acceptedFiles
@@ -69,7 +61,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     [onUploadFile]
   )
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open, acceptedFiles } = useDropzone({
     onDropAccepted,
     onDropRejected,
     maxFiles: 1,
@@ -88,16 +80,19 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
       <input {...getInputProps()} />
-      <CSSTransition unmountOnExit mountOnEnter classNames={transitions.names.fade} timeout={300} in={isLoading}>
-        <InfoContainer>
-          <InfoBackground />
-          <InfoInnerContainer>
-            <SvgIllustrativeFileSelected />
-            <InfoHeading variant="caption">selected</InfoHeading>
-            <Text variant="body2">wild-life-ep-6.mp4</Text>
-          </InfoInnerContainer>
-        </InfoContainer>
-      </CSSTransition>
+      {infoContainerTransitions(
+        (styles, item) =>
+          item && (
+            <InfoContainer style={{ opacity: styles.opacity }}>
+              <InfoBackground />
+              <InfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
+                <SvgIllustrativeFileSelected />
+                <InfoHeading variant="caption">selected</InfoHeading>
+                {acceptedFiles.length !== 0 && <Text variant="body2">{acceptedFiles[0].name}</Text>}
+              </InfoInnerContainer>
+            </InfoContainer>
+          )
+      )}
       {thumbnailUrl && fileType === 'image' ? (
         <Thumbnail
           src={thumbnailUrl}
@@ -106,8 +101,6 @@ export const FileSelect: React.FC<FileSelectProps> = ({
           title="Click to readjust"
         />
       ) : (
-        // <SwitchTransition>
-        //   <CSSTransition key={fileType} classNames="fade" timeout={100}>
         <InnerContainer>
           {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
           <Title variant="h5">{title}</Title>
@@ -123,17 +116,6 @@ export const FileSelect: React.FC<FileSelectProps> = ({
             </Button>
           </ButtonsGroup>
         </InnerContainer>
-        //   </CSSTransition>
-        // </SwitchTransition>
-      )}
-      {error && (
-        <ErrorContainer onClick={(e) => e.stopPropagation()}>
-          <SvgAlertError />
-          <ErrorText variant="body2">{error}</ErrorText>
-          <DismissButton variant="tertiary" onClick={() => onError?.(null)}>
-            <SvgGlyphClose />
-          </DismissButton>
-        </ErrorContainer>
       )}
     </DragAndDropArea>
   )

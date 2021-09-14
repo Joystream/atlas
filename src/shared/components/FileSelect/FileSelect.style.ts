@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { darken } from 'polished'
+import { animated } from 'react-spring'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
@@ -45,8 +46,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     padding-top: 56.25%;
   }
 `
-
-export const InfoContainer = styled.div<InfoContainerProps>`
+export const InfoContainer = styled(animated.div)<InfoContainerProps>`
   top: 0;
   width: 100%;
   height: 100%;
@@ -58,7 +58,7 @@ export const InfoContainer = styled.div<InfoContainerProps>`
   justify-content: center;
 `
 
-export const InfoInnerContainer = styled.div`
+export const InfoInnerContainer = styled(animated.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,8 +80,6 @@ export const InfoBackground = styled.div`
 `
 
 export const InnerContainer = styled.div`
-  /* update this */
-  opacity: 0.1;
   position: absolute;
   z-index: 1;
   top: 0;
@@ -98,19 +96,6 @@ export const InnerContainer = styled.div`
   }
 `
 
-export const ErrorContainer = styled.div`
-  position: absolute;
-  cursor: initial;
-  bottom: 0;
-  z-index: 2;
-  width: 100%;
-  padding: ${sizes(2)} 0;
-  background-color: ${colors.transparentError};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
 export const Thumbnail = styled.img`
   position: absolute;
   top: 0;
@@ -123,10 +108,6 @@ export const Thumbnail = styled.img`
   ${media.xs} {
     object-fit: initial;
   }
-`
-
-export const ErrorText = styled(Text)`
-  margin-left: ${sizes(4)};
 `
 
 export const DismissButton = styled(IconButton)`
