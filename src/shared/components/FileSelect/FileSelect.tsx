@@ -1,8 +1,17 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
+import { useSpring } from 'react-spring'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgAlertError, SvgGlyphClose, SvgGlyphUpload, SvgLargeUploadImage, SvgLargeUploadVideo } from '@/shared/icons'
+import {
+  SvgAlertError,
+  SvgGlyphClose,
+  SvgGlyphUpload,
+  SvgIllustrativeFileSelected,
+  SvgIllustrativeImage,
+  SvgIllustrativeVideo,
+} from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { FileType } from '@/types/files'
 
 import {
@@ -12,14 +21,18 @@ import {
   DragDropText,
   ErrorContainer,
   ErrorText,
+  InfoBackground,
+  InfoContainer,
+  InfoHeading,
+  InfoInnerContainer,
   InnerContainer,
   Paragraph,
-  ProgressBar,
   Thumbnail,
   Title,
-} from './FileDrop.style'
+} from './FileSelect.style'
 
 import { Button } from '../Button'
+import { Text } from '../Text'
 
 export type FileSelectProps = {
   fileType: FileType
@@ -74,8 +87,17 @@ export const FileSelect: React.FC<FileSelectProps> = ({
 
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <ProgressBar isLoading={isLoading} />
       <input {...getInputProps()} />
+      <CSSTransition unmountOnExit mountOnEnter classNames={transitions.names.fade} timeout={300} in={isLoading}>
+        <InfoContainer>
+          <InfoBackground />
+          <InfoInnerContainer>
+            <SvgIllustrativeFileSelected />
+            <InfoHeading variant="caption">selected</InfoHeading>
+            <Text variant="body2">wild-life-ep-6.mp4</Text>
+          </InfoInnerContainer>
+        </InfoContainer>
+      </CSSTransition>
       {thumbnailUrl && fileType === 'image' ? (
         <Thumbnail
           src={thumbnailUrl}
@@ -84,23 +106,25 @@ export const FileSelect: React.FC<FileSelectProps> = ({
           title="Click to readjust"
         />
       ) : (
-        <SwitchTransition>
-          <CSSTransition key={fileType} classNames="fade" timeout={100}>
-            <InnerContainer>
-              {fileType === 'video' ? <SvgLargeUploadVideo /> : <SvgLargeUploadImage />}
-              <Title variant="h5">{title}</Title>
-              <Paragraph variant="subtitle2" as="p">
-                {paragraph}
-              </Paragraph>
-              <ButtonsGroup>
-                <DragDropText variant="body2">Drag and drop or </DragDropText>
-                <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
-                  Select a file
-                </Button>
-              </ButtonsGroup>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
+        // <SwitchTransition>
+        //   <CSSTransition key={fileType} classNames="fade" timeout={100}>
+        <InnerContainer>
+          {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+          <Title variant="h5">{title}</Title>
+          <Paragraph variant="subtitle2" as="p" secondary>
+            {paragraph}
+          </Paragraph>
+          <ButtonsGroup>
+            <DragDropText variant="body2" secondary>
+              Drag and drop or
+            </DragDropText>
+            <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
+              Select a file
+            </Button>
+          </ButtonsGroup>
+        </InnerContainer>
+        //   </CSSTransition>
+        // </SwitchTransition>
       )}
       {error && (
         <ErrorContainer onClick={(e) => e.stopPropagation()}>

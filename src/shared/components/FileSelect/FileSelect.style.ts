@@ -11,7 +11,7 @@ type DragAndDropAreaProps = {
   isFileDialogActive?: boolean
 }
 
-type ProgressBarProps = {
+type InfoContainerProps = {
   isLoading?: boolean
 }
 
@@ -41,17 +41,47 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
         isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
   }
 
-  :hover::after,
-  :focus::after {
-    border: 1px dashed ${colors.blue[500]};
-  }
-
   ${media.sm} {
     padding-top: 56.25%;
   }
 `
 
+export const InfoContainer = styled.div<InfoContainerProps>`
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+export const InfoInnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+export const InfoHeading = styled(Text)`
+  color: ${colors.blue[200]};
+  display: block;
+  margin: ${sizes(4)} 0 ${sizes(1)} 0;
+`
+
+export const InfoBackground = styled.div`
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  opacity: 0.2;
+  background-color: ${colors.blue[500]};
+  height: 100%;
+`
+
 export const InnerContainer = styled.div`
+  /* update this */
+  opacity: 0.1;
   position: absolute;
   z-index: 1;
   top: 0;
@@ -66,18 +96,6 @@ export const InnerContainer = styled.div`
   ${media.sm} {
     max-width: 350px;
   }
-`
-
-export const ProgressBar = styled.div<ProgressBarProps>`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.blue[500]};
-  opacity: 0.2;
-  top: 0;
-  position: absolute;
-  transform-origin: left;
-  transform: ${({ isLoading }) => `scaleX(${isLoading ? 1 : 0}) `};
-  transition: transform ${({ isLoading }) => (isLoading ? '1000ms' : '0ms')} ${transitions.easing};
 `
 
 export const ErrorContainer = styled.div`
@@ -148,7 +166,5 @@ export const DragDropText = styled(Text)`
   ${media.sm} {
     display: initial;
     margin-right: ${sizes(5)};
-    color: ${colors.gray[300]};
-    text-decoration: underline;
   }
 `
