@@ -122,23 +122,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
     defaultValues: {
-      title: '',
-      isPublic: true,
-      language: 'en',
-      category: null,
-      licenseCode: 1001,
-      licenseAttribution: '',
-      licenseCustomText: '',
-      description: '',
-      hasMarketing: false,
-      publishedBeforeJoystream: null,
-      isExplicit: false,
       assets: {
         video: {
           contentId: null,
         },
         thumbnail: { cropContentId: null, originalContentId: null },
       },
+      ...tabData,
     },
   })
 
