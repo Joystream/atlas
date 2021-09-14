@@ -27,6 +27,10 @@ export const FormGroup = styled.label<FormGroupProps>`
     font-size: ${typography.sizes.body1};
     line-height: 28px;
 
+    :focus {
+      border: 1px solid ${colors.blue[500]};
+    }
+
     :disabled {
       cursor: not-allowed;
     }
@@ -37,10 +41,6 @@ export const FormGroup = styled.label<FormGroupProps>`
 
     :not(:placeholder-shown):not(button) {
       border: 1px solid ${colors.gray[200]};
-    }
-
-    :focus {
-      border: 1px solid ${colors.blue[500]};
     }
 
     :not(:focus):not(button) {

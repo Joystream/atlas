@@ -23,7 +23,6 @@ import { ChannelCover } from '@/shared/components/ChannelCover'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Grid } from '@/shared/components/Grid'
 import { Pagination } from '@/shared/components/Pagination'
-import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
@@ -40,6 +39,7 @@ import {
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledSelect,
   StyledTabs,
   StyledTextField,
   SubTitle,
@@ -126,11 +126,11 @@ export const ChannelView: React.FC = () => {
     setIsSearching(false)
     setSearchParams({ 'tab': TABS[tab] }, { replace: true })
   }
-  const handleSorting = (value?: VideoOrderByInput | null) => {
+  const handleSorting = (value?: unknown) => {
     if (value) {
-      setSortVideosBy(value)
+      setSortVideosBy(value as VideoOrderByInput)
       setCurrentPage(0)
-      refetch({ ...variables, orderBy: value })
+      refetch({ ...variables, orderBy: value as VideoOrderByInput | undefined })
     }
   }
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
@@ -276,12 +276,20 @@ export const ChannelView: React.FC = () => {
               setIsSearchingInputOpen={setIsSearchingInputOpen}
               setIsSearching={setIsSearching}
               search={search}
+              isSearching={isSearching}
+              setCurrentTab={setCurrentTab}
             />
           )}
-          {currentTab === 'Videos' && !isSearching && (
+          {currentTab === 'Videos' && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
-              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+              <StyledSelect
+                helperText={null}
+                disabled={isSearching}
+                value={!isSearching ? sortVideosBy : 0}
+                items={!isSearching ? SORT_OPTIONS : []}
+                onChange={!isSearching ? handleSorting : undefined}
+              />
             </SortContainer>
           )}
         </TabsContainer>
@@ -366,14 +374,18 @@ type SearchProps = {
   isSearchInputOpen: boolean
   setIsSearchingInputOpen: (isOpen: boolean) => void
   setIsSearching: (isOpen: boolean) => void
+  isSearching?: boolean
   search: (searchQuery: string) => void
+  setCurrentTab: (tab: string) => void
 }
 const Search: React.FC<SearchProps> = ({
   searchInputRef,
   isSearchInputOpen,
   setIsSearching,
+  isSearching,
   search,
   setIsSearchingInputOpen,
+  setCurrentTab,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const handleSearchInputKeyPress = useCallback(
@@ -382,6 +394,7 @@ const Search: React.FC<SearchProps> = ({
         if (searchQuery.trim() === '') {
           setSearchQuery('')
           setIsSearching(false)
+          setCurrentTab('Videos')
         } else {
           search(searchQuery)
           setIsSearching(true)
@@ -393,7 +406,7 @@ const Search: React.FC<SearchProps> = ({
         setSearchQuery('')
       }
     },
-    [search, searchInputRef, searchQuery, setIsSearching, setIsSearchingInputOpen, setSearchQuery]
+    [search, searchInputRef, searchQuery, setCurrentTab, setIsSearching, setIsSearchingInputOpen]
   )
 
   const toggleSearchInput = useCallback(() => {
@@ -408,7 +421,7 @@ const Search: React.FC<SearchProps> = ({
 
   useEffect(() => {
     const onClickOutsideSearch = (event: Event) => {
-      if (!searchQuery.length && isSearchInputOpen && searchInputRef.current !== event.target) {
+      if (!isSearching && isSearchInputOpen && searchInputRef.current !== event.target) {
         toggleSearchInput()
       }
     }
@@ -416,10 +429,10 @@ const Search: React.FC<SearchProps> = ({
     return () => {
       window.removeEventListener('click', onClickOutsideSearch)
     }
-  }, [isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
+  }, [isSearching, isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
 
   return (
-    <SearchContainer>
+    <SearchContainer isOpen={isSearchInputOpen}>
       <StyledTextField
         ref={searchInputRef}
         isOpen={isSearchInputOpen}
@@ -429,8 +442,9 @@ const Search: React.FC<SearchProps> = ({
         placeholder="Search"
         type="search"
         helperText={null}
+        isSearching={isSearching}
       />
-      <SearchButton onClick={toggleSearchInput} variant="tertiary">
+      <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
         <SvgGlyphSearch />
       </SearchButton>
     </SearchContainer>
