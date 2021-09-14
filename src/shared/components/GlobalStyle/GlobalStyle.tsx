@@ -9,6 +9,12 @@ import { colors, media, sizes, typography } from '../../theme'
 const globalStyles = css`
   ${emotionNormalize};
 
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   *,
   *::after,
   *::before {

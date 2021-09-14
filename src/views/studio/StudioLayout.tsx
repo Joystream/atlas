@@ -141,6 +141,7 @@ const StudioLayout = () => {
 
 const MainContainer = styled.main`
   position: relative;
+  height: 100%;
   padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
   margin-left: var(--sidenav-collapsed-width);
 `
