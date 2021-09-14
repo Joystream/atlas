@@ -38,7 +38,6 @@ import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.st
 
 import {
   DeleteVideoButton,
-  DeleteVideoContainer,
   ExtendedMarginFormField,
   FormScrolling,
   FormWrapper,
@@ -642,11 +641,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 />
               </FormField>
               {isEdit && (
-                <DeleteVideoContainer>
-                  <DeleteVideoButton size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
-                    Delete video
-                  </DeleteVideoButton>
-                </DeleteVideoContainer>
+                <DeleteVideoButton fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
+                  Delete video
+                </DeleteVideoButton>
               )}
             </MoreSettingsSection>
           </InputsContainer>

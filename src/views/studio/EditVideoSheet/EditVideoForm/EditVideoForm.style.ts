@@ -6,7 +6,7 @@ import { FormField } from '@/shared/components/FormField'
 import { MultiFileSelect } from '@/shared/components/MultiFileSelect'
 import { Text } from '@/shared/components/Text'
 import { TitleArea } from '@/shared/components/TitleArea'
-import { colors, media, sizes } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
@@ -97,17 +97,8 @@ export const StyledTitleArea = styled(TitleArea)`
   margin-bottom: ${sizes(4)};
 `
 
-export const DeleteVideoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: ${sizes(6)};
-  padding-top: ${sizes(4)};
-  border-top: 1px solid ${colors.gray[400]};
-`
-
 export const DeleteVideoButton = styled(Button)`
-  width: 100%;
+  margin-top: ${sizes(10)};
 `
 
 export const ExtendedMarginFormField = styled(FormField)`
