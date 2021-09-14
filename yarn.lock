@@ -7023,6 +7023,7 @@ __metadata:
     awesome-debounce-promise: ^2.1.0
     axios: ^0.21.1
     babel-loader: ^8.2.2
+    bezier-easing: ^2.1.0
     bn.js: ^4.12.0
     body-scroll-lock: ^3.1.5
     buffer: ^5.7.1
@@ -7456,6 +7457,13 @@ __metadata:
   dependencies:
     open: ^7.0.3
   checksum: 3d1a945d125cbbc6e6a841bef7540435d77d5aa61fc4d345896f5f0b3780fcf9c7145373deaedf62d674a427b187ae973f4410884f9fea0c15f7f01f9dc339c7
+  languageName: node
+  linkType: hard
+
+"bezier-easing@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "bezier-easing@npm:2.1.0"
+  checksum: ec22666b5385979b3e7a63eaf2631395b1be5beb3aed4f14cc70ae9eb09032082584f7e3eec045e4c122466987ed7e159f5b39f82b8a9870cd55e75b0d55a7d5
   languageName: node
   linkType: hard
 
