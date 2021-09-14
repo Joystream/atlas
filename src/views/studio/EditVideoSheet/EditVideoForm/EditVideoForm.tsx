@@ -410,7 +410,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   return (
     <>
       <FormScrolling actionBarHeight={actionBarBounds.height}>
-        <FormWrapper>
+        <FormWrapper as="form">
           <Controller
             name="assets"
             control={control}
