@@ -16,7 +16,6 @@ import { useAuthorizedUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Grid } from '@/shared/components/Grid'
-import { Pagination } from '@/shared/components/Pagination'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
@@ -24,10 +23,10 @@ import { SvgGlyphUpload } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  PaginationContainer,
   SortContainer,
   StyledDismissibleBanner,
   StyledLimitedWidthContainer,
+  StyledPagination,
   StyledText,
   TabsContainer,
 } from './MyVideos.styles'
@@ -347,15 +346,13 @@ export const MyVideosView = () => {
               }
             />
           )}
-          <PaginationContainer>
-            <Pagination
-              onChangePage={handleChangePage}
-              page={currentPage}
-              itemsPerPage={videosPerPage}
-              // +1 is for new video tile
-              totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
-            />
-          </PaginationContainer>
+          <StyledPagination
+            onChangePage={handleChangePage}
+            page={currentPage}
+            itemsPerPage={videosPerPage}
+            // +1 is for new video tile
+            totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
+          />
         </>
       )}
     </StyledLimitedWidthContainer>

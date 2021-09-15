@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
+import { Pagination } from '@/shared/components/Pagination'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
@@ -27,12 +28,9 @@ export const TabsContainer = styled.div`
   }
 `
 
-export const PaginationContainer = styled.div`
+export const StyledPagination = styled(Pagination)`
   padding-top: ${sizes(6)};
   padding-bottom: ${sizes(16)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const StyledDismissibleBanner = styled(DismissibleBanner)`
