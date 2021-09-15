@@ -47,7 +47,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     padding-top: 56.25%;
   }
 `
-export const InfoContainer = styled(animated.div)<InfoContainerProps>`
+export const SelectedFileInfo = styled(animated.div)<InfoContainerProps>`
   top: 0;
   width: 100%;
   height: 100%;
@@ -59,19 +59,19 @@ export const InfoContainer = styled(animated.div)<InfoContainerProps>`
   justify-content: center;
 `
 
-export const InfoInnerContainer = styled(animated.div)`
+export const SelectedFileInfoInnerContainer = styled(animated.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-export const InfoHeading = styled(Text)`
+export const SelectedFilInfoeHeading = styled(Text)`
   color: ${colors.blue[200]};
   display: block;
   margin: ${sizes(4)} 0 ${sizes(1)} 0;
 `
 
-export const InfoBackground = styled.div`
+export const SelectedFileInfoBackground = styled.div`
   width: 100%;
   position: absolute;
   z-index: -1;

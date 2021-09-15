@@ -11,12 +11,12 @@ import {
   ButtonsGroup,
   DragAndDropArea,
   DragDropText,
-  InfoBackground,
-  InfoContainer,
-  InfoHeading,
-  InfoInnerContainer,
   InnerContainer,
   Paragraph,
+  SelectedFilInfoeHeading,
+  SelectedFileInfo,
+  SelectedFileInfoBackground,
+  SelectedFileInfoInnerContainer,
   Thumbnail,
   Title,
 } from './FileSelect.style'
@@ -51,21 +51,32 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   error,
   isLoading,
 }) => {
-  const infoContainerTransitions = useTransition(isLoading, {
+  const selectedFileTransitions = useTransition(isLoading, {
     from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
     enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
     leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
     config: {
-      duration: 300,
-      easing: beazierEasing(0.42, 0, 0.7, 1),
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
     },
   })
 
   const innerContainerSpring = useSpring({
     opacity: isLoading ? 0.1 : 1,
     config: {
-      duration: 300,
-      easing: beazierEasing(0.42, 0, 0.7, 1),
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
+    },
+  })
+
+  const innerContainerTransitions = useTransition(fileType, {
+    from: { x: '200%' },
+    enter: { x: '0%' },
+    leave: { x: '-200%' },
+    immediate: fileType === 'video',
+    config: {
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
     },
   })
 
@@ -126,17 +137,17 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
       <input {...getInputProps()} />
-      {infoContainerTransitions(
+      {selectedFileTransitions(
         (styles, item) =>
           item && (
-            <InfoContainer style={{ opacity: styles.opacity }}>
-              <InfoBackground />
-              <InfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
+            <SelectedFileInfo style={{ opacity: styles.opacity }}>
+              <SelectedFileInfoBackground />
+              <SelectedFileInfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
                 <SvgIllustrativeFileSelected />
-                <InfoHeading variant="caption">selected</InfoHeading>
+                <SelectedFilInfoeHeading variant="caption">selected</SelectedFilInfoeHeading>
                 {acceptedFiles.length !== 0 && <Text variant="body2">{acceptedFiles[0].name}</Text>}
-              </InfoInnerContainer>
-            </InfoContainer>
+              </SelectedFileInfoInnerContainer>
+            </SelectedFileInfo>
           )
       )}
       {thumbnailUrl && fileType === 'image' ? (
@@ -148,21 +159,23 @@ export const FileSelect: React.FC<FileSelectProps> = ({
           title="Click to readjust"
         />
       ) : (
-        <InnerContainer style={innerContainerSpring}>
-          {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
-          <Title variant="h5">{title}</Title>
-          <Paragraph variant="subtitle2" as="p" secondary>
-            {paragraph}
-          </Paragraph>
-          <ButtonsGroup>
-            <DragDropText variant="body2" secondary>
-              Drag and drop or
-            </DragDropText>
-            <Button size="medium" onClick={() => open()} icon={<SvgGlyphUpload />}>
-              Select a file
-            </Button>
-          </ButtonsGroup>
-        </InnerContainer>
+        innerContainerTransitions((style, item) => (
+          <InnerContainer key={item} style={{ ...innerContainerSpring, ...style }}>
+            {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+            <Title variant="h5">{title}</Title>
+            <Paragraph variant="subtitle2" as="p" secondary>
+              {paragraph}
+            </Paragraph>
+            <ButtonsGroup>
+              <DragDropText variant="body2" secondary>
+                Drag and drop or
+              </DragDropText>
+              <Button size="medium" onClick={() => open()} icon={<SvgGlyphUpload />}>
+                Select a file
+              </Button>
+            </ButtonsGroup>
+          </InnerContainer>
+        ))
       )}
     </DragAndDropArea>
   )
