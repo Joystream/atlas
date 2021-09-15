@@ -165,11 +165,12 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const handleDeleteFile = (fileType: FileType) => {
     if (fileType === 'video') {
       onVideoChange(null)
+      setIsVideoLoading(false)
     }
     if (fileType === 'image') {
       onThumbnailChange(null)
+      setIsImgLoading(false)
     }
-    setIsVideoLoading(false)
   }
 
   const handleFileRejections = async (fileRejections: FileRejection[]) => {
@@ -239,6 +240,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
           ref={thumbnailStepRef}
+          isLoading={isImgLoading}
         />
         {stepsActive && (
           <CSSTransition in={step === 'image'} timeout={400} classNames="underline">
