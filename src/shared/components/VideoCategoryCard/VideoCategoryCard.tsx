@@ -75,7 +75,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
             {isLoading ? (
               <SkeletonLoader
                 bottomSpace={variant === 'default' ? sizes(6) : sizes(4)}
-                width="192px"
+                width="100%"
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (

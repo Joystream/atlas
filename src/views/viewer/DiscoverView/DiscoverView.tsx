@@ -34,7 +34,7 @@ export const DiscoverView: React.FC = () => {
       <Text variant="h2">Discover</Text>
       <FeaturedCategoriesContainer>
         {featuredVideoCategories.map((category, i) => (
-          <GridItem key={i} colSpan={{ sm: i === 0 ? 2 : 1, xl: 1 }}>
+          <GridItem key={i} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
             <FeaturedVideoCategoryCard
               variant={isMdBreakpoint ? 'default' : 'compact'}
               title={category.title}
@@ -51,16 +51,17 @@ export const DiscoverView: React.FC = () => {
       </BorderTextContainer>
       <CategoriesContainer>
         {Object.values(videoCategories).map((category, i) => (
-          <VideoCategoryCard
-            key={i}
-            title={category.title}
-            coverImg={category.coverImg}
-            categoryId={category.id}
-            color={category.color}
-            icon={category.icon}
-            videosTotalCount={videoCount}
-            variant={isMdBreakpoint ? 'default' : 'compact'}
-          />
+          <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>
+            <VideoCategoryCard
+              title={category.title}
+              coverImg={category.coverImg}
+              categoryId={category.id}
+              color={category.color}
+              icon={category.icon}
+              videosTotalCount={videoCount}
+              variant={isMdBreakpoint ? 'default' : 'compact'}
+            />
+          </GridItem>
         ))}
       </CategoriesContainer>
     </StyledLimitedWidthContainer>
