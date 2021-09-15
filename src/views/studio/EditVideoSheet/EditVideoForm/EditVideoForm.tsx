@@ -305,7 +305,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     watch,
   ])
 
-  const handleVideoFileChange = async (video: VideoInputFile | null) => {
+  const handleVideoFileChange = (video: VideoInputFile | null) => {
     const currentAssetsValue = getValues('assets')
 
     if (!video) {
@@ -341,7 +341,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
+  const handleThumbnailFileChange = (thumbnail: ImageInputFile | null) => {
     const currentAssetsValue = getValues('assets')
 
     if (!thumbnail) {
@@ -378,7 +378,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleFileSelectError = useCallback(async (errorCode: FileErrorType | null) => {
+  const handleFileSelectError = useCallback((errorCode: FileErrorType | null) => {
     if (!errorCode) {
       setFileSelectError(null)
     } else if (errorCode === 'file-invalid-type') {

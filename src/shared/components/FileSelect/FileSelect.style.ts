@@ -20,8 +20,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   overflow: hidden;
   position: relative;
   width: 100%;
-  height: 0;
-  padding-top: 90%;
+  height: 400px;
   display: flex;
   justify-content: center;
   transition: all ${transitions.timings.routing} ${transitions.easing};
@@ -44,6 +43,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   }
 
   ${media.sm} {
+    height: 0;
     padding-top: 56.25%;
   }
 `
@@ -89,12 +89,8 @@ export const InnerContainer = styled(animated.div)`
   flex-direction: column;
   display: flex;
   text-align: center;
-  max-width: 280px;
+  max-width: 270px;
   height: 100%;
-
-  ${media.sm} {
-    max-width: 350px;
-  }
 `
 
 export const Thumbnail = styled(animated.img)`
@@ -105,10 +101,6 @@ export const Thumbnail = styled(animated.img)`
   object-fit: contain;
   cursor: pointer;
   display: block;
-
-  ${media.xs} {
-    object-fit: initial;
-  }
 `
 
 export const DismissButton = styled(IconButton)`
@@ -124,22 +116,14 @@ export const Title = styled(Text)`
 `
 
 export const Paragraph = styled(Text)`
-  margin-top: ${sizes(4)};
-
-  ${media.sm} {
-    margin-top: ${sizes(8)};
-  }
+  margin-top: ${sizes(3)};
 `
 
 export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: ${sizes(4)} 0 ${sizes(2)} 0;
-
-  ${media.sm} {
-    margin: ${sizes(8)} 0 ${sizes(4)} 0;
-  }
+  margin-top: ${sizes(8)};
 `
 
 export const DragDropText = styled(Text)`

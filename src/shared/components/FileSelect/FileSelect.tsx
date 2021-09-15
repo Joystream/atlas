@@ -158,7 +158,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
             <DragDropText variant="body2" secondary>
               Drag and drop or
             </DragDropText>
-            <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
+            <Button size="medium" onClick={() => open()} icon={<SvgGlyphUpload />}>
               Select a file
             </Button>
           </ButtonsGroup>
