@@ -1,6 +1,6 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash-es'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 
@@ -378,7 +378,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleFileSelectError = async (errorCode: FileErrorType | null) => {
+  const handleFileSelectError = useCallback(async (errorCode: FileErrorType | null) => {
     if (!errorCode) {
       setFileSelectError(null)
     } else if (errorCode === 'file-invalid-type') {
@@ -389,7 +389,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       SentryLogger.error('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
       setFileSelectError('Unknown error')
     }
-  }
+  }, [])
 
   const handleDeleteVideo = () => {
     selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))

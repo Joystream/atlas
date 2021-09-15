@@ -1,8 +1,9 @@
 import beazierEasing from 'bezier-easing'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useSpring, useTransition } from 'react-spring'
 
+import { useDialog } from '@/providers/dialogs'
 import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
@@ -46,6 +47,8 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   thumbnailUrl,
   onReAdjustThumbnail,
   onDropRejected,
+  onError,
+  error,
   isLoading,
 }) => {
   const infoContainerTransitions = useTransition(isLoading, {
@@ -84,6 +87,36 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     noClick: true,
     noKeyboard: true,
   })
+
+  const [openErrorDialog, closeErrorDialog] = useDialog()
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    openErrorDialog({
+      title: 'Unsupported file type selected',
+      description: error,
+      variant: 'warning',
+      exitButton: false,
+      primaryButton: {
+        onClick: () => {
+          closeErrorDialog()
+          onError?.(null)
+          open()
+        },
+        text: 'Reselect file',
+        variant: 'primary',
+      },
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => {
+          onError?.(null)
+          closeErrorDialog()
+        },
+      },
+    })
+  }, [closeErrorDialog, error, onError, open, openErrorDialog])
 
   const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     e.stopPropagation()
