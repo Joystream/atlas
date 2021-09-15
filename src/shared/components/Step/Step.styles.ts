@@ -12,6 +12,12 @@ type StepWrapperProps = {
   variant?: 'file' | 'default'
 }
 
+const truncateText = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
   switch (variant) {
     case 'default':
@@ -49,6 +55,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
   align-items: center;
   transition: border ${transitions.timings.routing} ${transitions.easing},
     background-color ${transitions.timings.routing} ${transitions.easing};
+  ${truncateText}
 
   ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
 
@@ -64,6 +71,7 @@ export const StepStatus = styled.div`
   align-items: center;
   width: 100%;
   position: relative;
+  ${truncateText}
 `
 
 export const StepNumber = styled.div<StepWrapperProps>`
@@ -83,6 +91,7 @@ export const StepNumber = styled.div<StepWrapperProps>`
 export const StepDetails = styled.div`
   margin-left: 10px;
   width: 100%;
+  ${truncateText}
 `
 
 export const Overhead = styled(Text)`

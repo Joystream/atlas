@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 export const MultiFileSelectContainer = styled.div`
   width: 100%;
@@ -12,6 +12,7 @@ export const StepsContainer = styled.div`
   grid-template-columns: 1fr;
   justify-content: space-between;
   margin-top: ${sizes(5)};
+  position: relative;
 
   ${media.sm} {
     grid-template-columns: 1fr auto 1fr;
@@ -35,5 +36,24 @@ export const StepDivider = styled.div`
     }
 
     transform: rotate(0deg);
+  }
+`
+
+export const AnimatedUnderline = styled.div`
+  display: none;
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  background-color: ${colors.blue[500]};
+  width: 100%;
+  will-change: left;
+
+  &.underline-enter,
+  &.underline-exit {
+    transition: left ${transitions.timings.regular} ${transitions.easing};
+  }
+
+  ${media.sm} {
+    display: block;
   }
 `

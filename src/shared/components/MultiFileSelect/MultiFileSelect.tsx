@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
+import { CSSTransition } from 'react-transition-group'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { SvgGlyphChevronRight, SvgGlyphFileVideo } from '@/shared/icons'
@@ -8,7 +9,7 @@ import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
 import { getVideoMetadata } from '@/utils/video'
 
-import { MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+import { AnimatedUnderline, MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
 
 import { FileSelect } from '../FileSelect'
 import { Step } from '../Step'
@@ -72,6 +73,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const [step, setStep] = useState<FileType>('video')
   const [isLoading, setIsLoading] = useState(false)
   const [rawImageFile, setRawImageFile] = useState<File | null>(null)
+  const thumbnailStepRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (editMode || files.video) {
@@ -182,6 +184,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     const firstError = errors[0]
     onError?.(firstError.code)
   }
+  const stepsActive =
+    (editMode && !files.thumbnail?.url) || (!editMode && !(files.thumbnail?.originalBlob && files.video?.blob))
 
   return (
     <MultiFileSelectContainer className={className}>
@@ -206,10 +210,11 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <Step
           variant="file"
           number={1}
-          title={files.video ? 'Video file' : 'Add video file'}
-          active={step === 'video'}
+          title={files.video ? (files.video.blob ? (files.video.blob as File).name : 'Video file') : 'Add video file'}
+          active={step === 'video' && stepsActive}
           stepPlaceholder={!!files.video && <SvgGlyphFileVideo />}
           disabled={editMode}
+          clickable={stepsActive}
           completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
           onClick={() => handleChangeStep('video')}
@@ -222,13 +227,31 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           variant="file"
           stepPlaceholder={files.thumbnail?.url ? <img src={files.thumbnail?.url} alt="thumbnail" /> : undefined}
           number={2}
-          title={files.thumbnail ? 'Thumbnail image' : 'Add thumbnail image'}
-          active={step === 'image'}
+          clickable={stepsActive}
+          title={
+            files.thumbnail
+              ? files.thumbnail.originalBlob
+                ? (files.thumbnail.originalBlob as File).name
+                : 'Thumbnail image'
+              : 'Add thumbnail image'
+          }
+          active={step === 'image' && stepsActive}
           thumbnailUrl={files.thumbnail?.url}
           completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
           onClick={() => handleChangeStep('image')}
+          ref={thumbnailStepRef}
         />
+        {stepsActive && (
+          <CSSTransition in={step === 'image'} timeout={400} classNames="underline">
+            <AnimatedUnderline
+              style={{
+                width: thumbnailStepRef?.current?.offsetWidth,
+                left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
+              }}
+            />
+          </CSSTransition>
+        )}
       </StepsContainer>
       <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
     </MultiFileSelectContainer>
