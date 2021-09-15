@@ -33,13 +33,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     case 'file':
       return css`
         padding: ${sizes(3)} ${sizes(4)};
-        cursor: pointer;
         border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
-        background-color: ${active ? colors.transparentPrimary[10] : 'none'};
-
-        :hover:not([aria-disabled='true']) {
-          background-color: ${colors.transparentPrimary[18]};
-        }
       `
     default:
       return

@@ -157,10 +157,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
   }
 
-  const handleChangeStep = (step: FileType) => {
-    setStep(step)
-  }
-
   const handleDeleteFile = (fileType: FileType) => {
     if (fileType === 'video') {
       onVideoChange(null)
@@ -217,7 +213,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           clickable={stepsActive}
           completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
-          onClick={() => handleChangeStep('video')}
           isLoading={isLoading}
         />
         <StepDivider>
@@ -239,7 +234,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           thumbnailUrl={files.thumbnail?.url}
           completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
-          onClick={() => handleChangeStep('image')}
           ref={thumbnailStepRef}
         />
         {stepsActive && (
