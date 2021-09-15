@@ -7,6 +7,7 @@ import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } 
 import { PAGINATION_BUTTON_WIDTH } from './constants'
 
 export type PaginationProps = {
+  className?: string
   itemsPerPage?: number
   totalCount?: number
   maxPaginationLinks?: number
@@ -20,6 +21,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalCount = 0,
   maxPaginationLinks = 5,
   page = 0,
+  className,
   onChangePage,
 }) => {
   const [paginationLength, setPaginationLength] = useState(maxPaginationLinks)
@@ -55,7 +57,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <PaginationWrapper ref={paginationWrapperRef}>
+    <PaginationWrapper className={className} ref={paginationWrapperRef}>
       <ChevronButton
         variant="secondary"
         size="large"
