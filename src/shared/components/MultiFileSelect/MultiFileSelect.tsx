@@ -77,12 +77,15 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   const thumbnailStepRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (isImgLoading || isVideoLoading) {
+      return
+    }
     if (editMode || files.video) {
       setStep('image')
     } else {
       setStep('video')
     }
-  }, [editMode, files.video])
+  }, [editMode, files.video, isImgLoading, isVideoLoading])
 
   useEffect(() => {
     if (!isVideoLoading && !isImgLoading) {
