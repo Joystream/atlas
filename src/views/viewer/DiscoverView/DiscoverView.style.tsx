@@ -1,39 +1,19 @@
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { colors, media, sizes } from '@/shared/theme'
+import { LayoutGrid } from '@/shared/components/LayoutGrid'
+import { colors, sizes } from '@/shared/theme'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin: ${sizes(16)} auto;
 `
 
-export const FeaturedCategoriesContainer = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
+export const FeaturedCategoriesContainer = styled(LayoutGrid)`
   margin: ${sizes(16)} 0;
-
-  ${media.sm} {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  ${media.xl} {
-    grid-template-columns: repeat(3, 1fr);
-  }
 `
 
-export const CategoriesContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${sizes(6)};
+export const CategoriesContainer = styled(LayoutGrid)`
   margin: ${sizes(12)} 0 ${sizes(16)} 0;
-
-  ${media.lg} {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  ${media.xl} {
-    grid-template-columns: repeat(4, 1fr);
-  }
 `
 
 export const BorderTextContainer = styled.div`

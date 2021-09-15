@@ -71,6 +71,8 @@ const generalStyles = ({ variantCategory }: VariantProps) =>
   `
 export const GeneralContainer = styled(Container)`
   ${generalStyles}
+
+  height: 100%;
 `
 
 export const Content = styled.div<VariantProps>`

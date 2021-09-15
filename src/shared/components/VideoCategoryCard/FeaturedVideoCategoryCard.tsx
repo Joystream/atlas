@@ -17,14 +17,14 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 import { VideoPlayer } from '../VideoPlayer'
 
-export type Variant = 'default' | 'compact'
+export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
 export type FeaturedVideoCategoryCardProps = {
   title: string
   icon: React.ReactNode
   videoUrl: string
   videoTitle: string
   color: string
-  variant?: Variant
+  variant?: FeaturedVideoCategoryCardVariant
 }
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({

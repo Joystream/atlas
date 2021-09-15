@@ -1,8 +1,9 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useVideoCount } from '@/api/hooks'
 import { sizes, transitions } from '@/shared/theme'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   Content,
@@ -41,16 +42,21 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   coverImg,
   color,
 }) => {
-  const { videosConnection, loading: loadingVidConnection } = useVideosConnection({
-    first: 0,
-    where: {
-      categoryId_eq: categoryId,
+  const { videoCount, loading: loadingVidCount } = useVideoCount(
+    {
+      where: {
+        categoryId_eq: categoryId,
+      },
     },
-  })
+    {
+      onError: (error) =>
+        SentryLogger.error(`Failed to fetch videos count of categoryId ${categoryId}`, 'VideoCategoryCard', error),
+    }
+  )
 
   // value from 1 to 100 percentage
-  const pieChartValue = ((videosConnection?.totalCount ?? 0) / (videosTotalCount ?? 1)) * 100
-  const isLoading = loading || loadingVidConnection || videosTotalCount === undefined
+  const pieChartValue = ((videoCount ?? 0) / (videosTotalCount ?? 1)) * 100
+  const isLoading = loading || loadingVidCount || videosTotalCount === undefined
   return (
     <SwitchTransition>
       <CSSTransition
@@ -69,7 +75,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
             {isLoading ? (
               <SkeletonLoader
                 bottomSpace={variant === 'default' ? sizes(6) : sizes(4)}
-                width="192px"
+                width="100%"
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (
@@ -87,7 +93,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
                   <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
-                    {videosConnection?.totalCount} videos
+                    {videoCount} videos
                   </Text>
                 </>
               )}
