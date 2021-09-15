@@ -52,6 +52,7 @@ const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
+  badgeText: license.code === 1001 ? 'Default' : undefined,
   tooltipText: license.description,
   tooltipHeaderText: license.longName,
 }))
