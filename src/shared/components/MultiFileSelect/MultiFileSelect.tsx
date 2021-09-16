@@ -210,7 +210,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           active={step === 'video' && stepsActive}
           stepPlaceholder={!!files.video && <SvgGlyphFileVideo />}
           disabled={editMode}
-          clickable={stepsActive}
           completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
           isLoading={isLoading}
@@ -222,7 +221,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           variant="file"
           stepPlaceholder={files.thumbnail?.url ? <img src={files.thumbnail?.url} alt="thumbnail" /> : undefined}
           number={2}
-          clickable={stepsActive}
           title={
             files.thumbnail
               ? files.thumbnail.originalBlob

@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
-import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
 
 type StepWrapperProps = {
@@ -32,7 +31,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
       `
     case 'file':
       return css`
-        padding: ${sizes(3)} ${sizes(4)};
+        padding: 0 ${sizes(4)};
         border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
       `
     default:
@@ -42,9 +41,9 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
 
 export const StepWrapper = styled.div<StepWrapperProps>`
   height: ${sizes(14)};
-  padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto ${sizes(10)};
   justify-content: space-between;
   align-items: center;
   transition: border ${transitions.timings.routing} ${transitions.easing},
@@ -102,9 +101,9 @@ export const StepTitle = styled(Text)`
   text-overflow: ellipsis;
 `
 
-export const StyledProgress = styled(CircularProgress)`
+export const ProgressContainer = styled.div`
   width: ${sizes(7)};
-  height: ${sizes(7)};
+  flex-shrink: 0;
 `
 
 export const StepImage = styled.div`
@@ -112,7 +111,7 @@ export const StepImage = styled.div`
   color: white;
   background: ${colors.gray[600]};
   width: ${sizes(7)};
-  height: ${sizes(6)};
+  height: ${sizes(7)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,4 +121,8 @@ export const StepImage = styled.div`
     object-fit: cover;
     height: 100%;
   }
+`
+
+export const IconButtonContainer = styled.div`
+  width: ${sizes(10)};
 `

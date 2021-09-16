@@ -2,8 +2,9 @@ import React, { forwardRef, useEffect, useState } from 'react'
 
 import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/shared/icons'
 
-import { Overhead, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper, StyledProgress } from './Step.styles'
+import { Overhead, ProgressContainer, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper } from './Step.styles'
 
+import { CircularProgress } from '../CircularProgress'
 import { IconButton } from '../IconButton'
 
 export type StepProps = {
@@ -16,15 +17,10 @@ export type StepProps = {
   active?: boolean
   number?: number
   stepPlaceholder?: React.ReactNode
-  onClick?: () => void
   onDelete?: () => void
-  clickable?: boolean
 }
 export const Step = forwardRef<HTMLDivElement, StepProps>(
-  (
-    { variant = 'default', isLoading, disabled, active, completed, onClick, title, number, onDelete, clickable = true },
-    ref
-  ) => {
+  ({ variant = 'default', isLoading, disabled, active, completed, title, number, onDelete }, ref) => {
     const [circularProgress, setCircularProgress] = useState(0)
 
     useEffect(() => {
@@ -40,16 +36,12 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
     }, [circularProgress, isLoading])
 
     return (
-      <StepWrapper
-        aria-disabled={disabled}
-        active={active}
-        onClick={() => !disabled && clickable && onClick?.()}
-        variant={variant}
-        ref={ref}
-      >
+      <StepWrapper aria-disabled={disabled} active={active} variant={variant} ref={ref}>
         <StepStatus>
           {isLoading ? (
-            <StyledProgress value={circularProgress} maxValue={100} />
+            <ProgressContainer>
+              <CircularProgress value={circularProgress} maxValue={100} />
+            </ProgressContainer>
           ) : (
             <StepNumber active={completed}>{completed || disabled ? <SvgGlyphCheck /> : number}</StepNumber>
           )}
