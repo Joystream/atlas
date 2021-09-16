@@ -33,6 +33,7 @@ export type StartFileUploadOptions = {
 export type UploadStatus = {
   lastStatus?: AssetUploadStatus
   progress?: number
+  retries?: number
 }
 
 export type UploadsStatusRecord = Record<string, UploadStatus | undefined>

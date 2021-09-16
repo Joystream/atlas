@@ -1,16 +1,20 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
+import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
-import { SvgAlertError, SvgControlsVideo, SvgNavChannel } from '@/shared/icons'
+import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
   AssetsDrawerContainer,
   AssetsInfoContainer,
+  BottomProgressBar,
   Container,
   ProgressBar,
   StyledExpandButton,
@@ -21,12 +25,19 @@ import {
 
 import { UploadStatus } from '../UploadStatus'
 
-export type AssetsGroupBarUploadProps = {
+export type UploadStatusGroupSize = 'large' | 'compact'
+
+type UploadGroupState = 'error' | 'completed' | 'inProgress' | null
+
+export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
+  size?: UploadStatusGroupSize
 }
 
-export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads }) => {
+export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
+  const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
+  const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.contentId], shallow))
 
@@ -37,7 +48,9 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
 
   const isWaiting = uploadsStatuses.every((file) => file?.progress === 0 && file?.lastStatus === 'inProgress')
   const isCompleted = uploadsStatuses.every((file) => file?.lastStatus === 'completed')
-  const hasUploadingAsset = uploadsStatuses.some((file) => file?.lastStatus === 'inProgress')
+  const uploadRetries = uploadsStatuses
+    .filter((file) => file?.lastStatus === 'reconnecting')
+    .map((file) => file?.retries)[0]
   const errorsCount = uploadsStatuses.filter((file) => file?.lastStatus === 'error').length
   const missingAssetsCount = uploadsStatuses.filter((file) => !file || !file.lastStatus).length
 
@@ -48,32 +61,43 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
   )
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)
   const isProcessing = uploadsStatuses.some((file) => masterProgress === 100 && file?.lastStatus === 'processing')
+  const hasUploadingAsset = uploadsStatuses.some((file) => file?.lastStatus === 'inProgress')
 
   const assetsGroupTitleText = isChannelType ? 'Channel assets' : video?.title
   const assetsGroupNumberText = `${uploads.length} asset${uploads.length > 1 ? 's' : ''}`
 
-  const renderAssetsGroupInfo = () => {
-    if (errorsCount) {
-      return <Text variant="subtitle2">{`${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`}</Text>
-    }
-    if (missingAssetsCount) {
-      return (
-        <Text variant="subtitle2">{`${missingAssetsCount} asset${
-          missingAssetsCount > 1 ? 's' : ''
-        } lost connection`}</Text>
-      )
-    }
-    if (isWaiting) {
-      return <Text variant="subtitle2">Waiting for upload...</Text>
+  useEffect(() => {
+    if (hasUploadingAsset) {
+      setUploadGroupState('inProgress')
     }
     if (isCompleted) {
-      return <Text variant="subtitle2">Uploaded</Text>
+      setUploadGroupState('completed')
+    }
+    if (errorsCount || missingAssetsCount) {
+      setUploadGroupState('error')
+    }
+  }, [errorsCount, hasUploadingAsset, isCompleted, missingAssetsCount])
+
+  const renderAssetsGroupInfo = () => {
+    if (errorsCount) {
+      return `${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`
+    }
+    if (missingAssetsCount) {
+      return `${missingAssetsCount} asset${missingAssetsCount > 1 ? 's' : ''} lost connection`
+    }
+    if (uploadRetries) {
+      return `Trying to reconnect...(${uploadRetries})`
+    }
+    if (isWaiting) {
+      return 'Waiting for upload...'
+    }
+    if (isCompleted) {
+      return 'Uploaded'
     }
     if (isProcessing) {
-      return <Text variant="subtitle2">Processing...</Text>
+      return 'Processing...'
     }
-
-    return <Text variant="subtitle2">{`Uploading... (${masterProgress}%)`}</Text>
+    return `Uploading...${masterProgress}%`
   }
 
   const enrichedUploadData =
@@ -94,28 +118,57 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
     return <UploadStatusGroupSkeletonLoader />
   }
 
+  const renderThumbnailIcon = (uploadGroupState: UploadGroupState) => {
+    switch (uploadGroupState) {
+      case 'completed':
+        return <SvgAlertSuccess />
+      case 'error':
+        return <SvgAlertError />
+      case 'inProgress':
+        return <Loader variant="small" />
+      default:
+        return <Loader variant="small" />
+    }
+  }
   return (
     <Container>
       <UploadStatusGroupContainer
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar progress={isCompleted ? 100 : masterProgress} hasUploadingAsset={hasUploadingAsset} />
-        <Thumbnail>
-          {errorsCount || missingAssetsCount ? (
-            <SvgAlertError />
-          ) : isChannelType ? (
-            <SvgNavChannel />
-          ) : (
-            <SvgControlsVideo />
+        <ProgressBar
+          progress={isCompleted ? 100 : masterProgress}
+          isProcessing={isProcessing}
+          isCompleted={isCompleted}
+          runCompletedAnimation={runCompletedAnimation}
+        />
+        {!isCompleted && <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />}
+        <Thumbnail size={size}>
+          {uploadGroupState && (
+            <SwitchTransition>
+              <CSSTransition
+                addEndListener={() => uploadGroupState === 'completed' && setRunCompletedAnimation(true)}
+                key={uploadGroupState}
+                classNames={transitions.names.fade}
+                timeout={200}
+              >
+                {renderThumbnailIcon(uploadGroupState)}
+              </CSSTransition>
+            </SwitchTransition>
           )}
         </Thumbnail>
         <AssetsInfoContainer>
           <Text variant="h6">{assetsGroupTitleText}</Text>
-          <Text variant="body2">{assetsGroupNumberText}</Text>
+          <Text variant="body2" secondary>
+            {assetsGroupNumberText}
+          </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
-          {renderAssetsGroupInfo()}
+          {size === 'large' && (
+            <Text variant="subtitle2" secondary>
+              {renderAssetsGroupInfo()}
+            </Text>
+          )}
           <StyledExpandButton
             expanded={isAssetsDrawerActive}
             onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
@@ -125,7 +178,7 @@ export const UploadStatusGroup: React.FC<AssetsGroupBarUploadProps> = ({ uploads
       </UploadStatusGroupContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {enrichedUploadData.map((file, idx) => (
-          <UploadStatus key={file.contentId} asset={file} isLast={uploads.length === idx + 1} />
+          <UploadStatus size={size} key={file.contentId} asset={file} isLast={uploads.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>

@@ -2,6 +2,7 @@ import React from 'react'
 import shallow from 'zustand/shallow'
 
 import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
@@ -18,6 +19,7 @@ type GroupByParentObjectIdAcc = {
 }
 
 export const MyUploadsView: React.FC = () => {
+  const lgMatch = useMediaMatch('lg')
   const { activeChannelId } = useUser()
 
   const channelUploads = useUploadsStore(
@@ -50,7 +52,9 @@ export const MyUploadsView: React.FC = () => {
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (
-        groupedUploadsState.map((files) => <UploadStatusGroup key={files[0].parentObject.id} uploads={files} />)
+        groupedUploadsState.map((files) => (
+          <UploadStatusGroup size={lgMatch ? 'large' : 'compact'} key={files[0].parentObject.id} uploads={files} />
+        ))
       ) : (
         <EmptyFallback
           verticalCentered
