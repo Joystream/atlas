@@ -88,9 +88,18 @@ export const MoreSettingsDescription = styled(Text)<MoreSettingsDescriptionProps
 
 export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
   visibility: ${({ expanded }) => (expanded ? 'visible' : 'hidden')};
-  max-height: ${({ expanded }) => (expanded ? '800px' : '0px')};
+  max-height: ${({ expanded }) => (expanded ? '1200px' : '0px')};
   overflow: hidden;
   transition: max-height 300ms ease-out;
+
+  svg {
+    /*
+    Workaround. 
+    For some reason chevron on Select element hides with little delay. This is causing layout shift. 
+    To fix that let's just set 'display: none' on all svgs when section is not expanded.
+    */
+    display: ${({ expanded }) => (expanded ? 'unset' : 'none')};
+  }
 `
 
 export const StyledTitleArea = styled(TitleArea)`
