@@ -32,7 +32,7 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
 
 export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
   height: calc(100% - ${({ actionBarHeight }) => actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px);
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
 `
 
