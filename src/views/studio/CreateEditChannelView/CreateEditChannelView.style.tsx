@@ -21,6 +21,7 @@ export const StyledTitleSection = styled(TitleSection)`
 
 export const StyledTitleArea = styled(TitleArea)`
   visibility: visible;
+  margin-left: ${sizes(2)};
 `
 
 export const StyledSubTitle = styled(SubTitle)`
