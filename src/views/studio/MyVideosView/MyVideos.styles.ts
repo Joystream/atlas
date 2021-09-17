@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
+import { Grid } from '@/shared/components/Grid'
 import { Pagination } from '@/shared/components/Pagination'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
@@ -26,6 +27,10 @@ export const TabsContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 250px;
   }
+`
+
+export const StyledGrid = styled(Grid)`
+  grid-template-rows: 1fr 1fr;
 `
 
 export const StyledPagination = styled(Pagination)`

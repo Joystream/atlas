@@ -15,16 +15,17 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Grid } from '@/shared/components/Grid'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphUpload } from '@/shared/icons'
+import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
   SortContainer,
   StyledDismissibleBanner,
+  StyledGrid,
   StyledLimitedWidthContainer,
   StyledPagination,
   StyledText,
@@ -309,9 +310,9 @@ export const MyVideosView = () => {
               description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
             />
           )}
-          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
+          <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(4)}>
             {gridContent}
-          </Grid>
+          </StyledGrid>
           {((isDraftTab && drafts.length === 0) ||
             (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
             <EmptyFallback
