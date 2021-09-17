@@ -111,12 +111,13 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors },
+    formState: { isDirty, dirtyFields, errors, isValid },
     watch,
     setFocus,
     setValue,
     reset,
   } = useForm<Inputs>({
+    mode: 'onChange',
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null },
       cover: { contentId: null, assetDimensions: null, imageCropData: null },
@@ -361,6 +362,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
   const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
+  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
 
   return (
     <form onSubmit={handleSubmit}>
@@ -507,7 +509,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           >
             <ActionBarTransaction
               fee={0}
-              disabled={!isDirty || nodeConnectionStatus !== 'connected'}
+              disabled={!isDirty || nodeConnectionStatus !== 'connected' || !isValid}
               progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
               fullWidth={!activeChannelId}
               primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
@@ -518,6 +520,23 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               secondaryButtonOnClick={() => reset()}
               secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
               secondaryButtonVariant="default"
+              primaryButtonTooltip={
+                isDisabled
+                  ? {
+                      headerText: newChannel
+                        ? 'Fill all required fields to proceed'
+                        : isValid
+                        ? 'Change anything to proceed'
+                        : 'Fill all required fields to proceed',
+                      text: newChannel
+                        ? 'Required: title'
+                        : isValid
+                        ? 'To publish changes you have to provide new value to any field'
+                        : 'Required: title',
+                      icon: true,
+                    }
+                  : undefined
+              }
             />
           </CSSTransition>
         </InnerFormContainer>

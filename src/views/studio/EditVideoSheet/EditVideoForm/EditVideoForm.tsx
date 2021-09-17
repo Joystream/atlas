@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -88,6 +89,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const isEdit = !selectedVideoTab?.isDraft
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
+  const mdMatch = useMediaMatch('md')
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -118,10 +120,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setValue,
     watch,
     reset,
-    formState: { errors, dirtyFields, isDirty },
+    formState: { errors, dirtyFields, isDirty, isValid },
   } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       assets: {
         video: {
@@ -408,8 +410,10 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
+  const isFormValid = !!mediaAsset && !!thumbnailAsset && isValid
 
-  const isDisabled = isEdit ? !isDirty : false || nodeConnectionStatus !== 'connected'
+  const isDisabled =
+    !isDirty || (!isEdit && !mediaAsset) || !thumbnailAsset || !isValid || nodeConnectionStatus !== 'connected'
 
   return (
     <>
@@ -566,7 +570,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   <TextArea
                     {...register(
                       'licenseCustomText',
-                      textFieldValidation({ name: 'License', maxLength: 5000, required: true })
+                      textFieldValidation({ name: 'License', maxLength: 5000, required: false })
                     )}
                     maxLength={5000}
                     placeholder="Type your license content here"
@@ -660,24 +664,26 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         primaryButtonOnClick={handleSubmit}
         primaryButtonTooltip={
           isDisabled
-            ? isEdit
-              ? {
-                  headerText: 'Change anything to proceed',
-                  text: 'To publish changes you have to provide new value to any field',
-                  icon: true,
-                }
-              : {
-                  headerText: 'Fill all required fields to proceed',
-                  text: 'Required: video file, thumbnail, title, category, language',
-                  icon: true,
-                }
+            ? {
+                headerText: isEdit
+                  ? isFormValid
+                    ? 'Change anything to proceed'
+                    : 'Fill all required fields to proceed'
+                  : 'Fill all required fields to proceed',
+                text: isEdit
+                  ? isFormValid
+                    ? 'To publish changes you have to provide new value to any field'
+                    : 'Required: video file, thumbnail, title, category, language'
+                  : 'Required: video file, thumbnail, title, category, language',
+                icon: true,
+              }
             : undefined
         }
         secondaryButtonText={isDisabled ? undefined : 'Cancel'}
         secondaryButtonOnClick={() => reset()}
         secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
         secondaryButtonVariant={isEdit ? 'default' : 'draft'}
-        detailsText="Drafts are saved automatically"
+        detailsText={mdMatch ? 'Drafts are saved automatically' : 'Saving drafts'}
         detailsTextTooltip={{
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
         }}
