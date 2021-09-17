@@ -1,89 +1,82 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions, typography } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/shared/theme'
 
+import { ActionBarSize } from '.'
+import { Button } from '../Button'
 import { Text } from '../Text'
 
-export const StyledActionBarContainer = styled.div`
+type ActionBarContainerProps = {
+  size: ActionBarSize
+}
+
+const getActionBarStyle = ({ size }: ActionBarContainerProps) => {
+  switch (size) {
+    case 'compact':
+      return css`
+        display: grid;
+        padding: ${sizes(4)};
+        grid-template-rows: auto auto;
+        grid-template-columns: 1fr;
+      `
+    case 'medium':
+    case 'large':
+      return css`
+        display: flex;
+        justify-content: space-between;
+        padding: ${sizes(4)} ${sizes(8)};
+      `
+    default:
+      return null
+  }
+}
+
+export const FlexWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
+`
+
+export const ActionBarContainer = styled.div<ActionBarContainerProps>`
   background-color: ${colors.gray[900]};
-  padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
-
-  ${media.md} {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: ${sizes(4)} ${sizes(8)};
-  }
-`
-
-export const StyledInnerContainer = styled.div`
-  display: flex;
-  width: 100%;
-`
-
-export const StyledInfoContainer = styled.div`
-  display: none;
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-
-  ${media.sm} {
-    display: flex;
-  }
-
-  ${media.lg} {
-    align-items: center;
-    width: 100%;
-  }
+  ${getActionBarStyle}
 `
 
 export const StyledPrimaryText = styled(Text)`
-  color: ${colors.white};
-  font-family: ${typography.fonts.headers};
-  font-size: ${typography.sizes.h5};
-  font-weight: ${typography.weights.bold};
-  text-align: right;
+  margin-right: ${sizes(5)};
+  align-self: center;
+`
 
-  ${media.md} {
-    margin-right: ${sizes(4)};
-  }
+type ActionButtonPrimaryProps = {
+  actonBarSize: ActionBarSize
+}
+
+export const ActionButtonPrimary = styled(Button)<ActionButtonPrimaryProps>`
+  margin-left: ${({ actonBarSize }) => (actonBarSize === 'compact' ? 0 : sizes(4))};
+  margin-top: ${({ actonBarSize }) => (actonBarSize === 'compact' ? sizes(4) : 0)};
 `
 
 export const StyledSecondaryText = styled(Text)`
-  color: ${colors.gray[300]};
-  font-size: ${typography.sizes.body2};
-  line-height: 20px;
   max-width: 360px;
-  display: none;
-
-  ${media.md} {
-    display: block;
-  }
+  align-self: center;
 `
 
-export const StyledButtonsContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-end;
+type DetailsContainerProps = {
+  size: ActionBarSize
+}
 
-  > *:not(:last-child) {
-    margin-right: ${sizes(4)};
-  }
-`
-
-export const DetailsContainer = styled.div`
+export const DetailsContainer = styled.div<DetailsContainerProps>`
   user-select: none;
   margin-left: auto;
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 ${sizes(5)};
+  padding: ${({ size }) => (size === 'compact' ? `${sizes(4)} 0` : `0 ${sizes(4)}`)};
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
-    background-color: ${colors.transparentPrimary[18]};
+    ${({ size }) => size !== 'compact' && `background-color: ${colors.transparentPrimary[18]}`};
   }
 `
 

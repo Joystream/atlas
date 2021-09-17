@@ -15,8 +15,6 @@ export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrappe
   left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
   right: 0;
   z-index: ${zIndex.header};
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
-  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
 
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;

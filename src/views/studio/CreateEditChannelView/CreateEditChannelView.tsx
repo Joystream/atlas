@@ -26,6 +26,7 @@ import { FormField } from '@/shared/components/FormField'
 import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { Tooltip } from '@/shared/components/Tooltip'
+import { SvgPlayerCancel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
@@ -505,15 +506,18 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             unmountOnExit
           >
             <ActionBarTransaction
-              disabled={nodeConnectionStatus !== 'connected'}
               fee={0}
+              disabled={!isDirty || nodeConnectionStatus !== 'connected'}
               progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
-              isActive={newChannel || (!loading && isDirty)}
               fullWidth={!activeChannelId}
               primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
-              secondaryButtonText={newChannel ? undefined : 'Cancel'}
-              onCancelClick={() => reset()}
-              onConfirmClick={handleSubmit}
+              primaryButtonOnClick={handleSubmit}
+              secondaryButtonText={
+                newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'
+              }
+              secondaryButtonOnClick={() => reset()}
+              secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
+              secondaryButtonVariant="default"
             />
           </CSSTransition>
         </InnerFormContainer>

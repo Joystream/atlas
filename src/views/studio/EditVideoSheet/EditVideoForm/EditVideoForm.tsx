@@ -1,4 +1,4 @@
-import { formatISO, isValid } from 'date-fns'
+import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
@@ -30,7 +30,7 @@ import { RadioButton } from '@/shared/components/RadioButton'
 import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
-import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgGlyphInfo } from '@/shared/icons'
+import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgPlayerCancel } from '@/shared/icons'
 import { FileType } from '@/types/files'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -121,6 +121,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     formState: { errors, dirtyFields, isDirty },
   } = useForm<EditVideoFormFields>({
     shouldFocusError: true,
+    mode: 'onBlur',
     defaultValues: {
       assets: {
         video: {
@@ -172,7 +173,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           ...data,
           channelId: activeChannelId,
           type: 'video',
-          publishedBeforeJoystream: isValid(data.publishedBeforeJoystream)
+          publishedBeforeJoystream: isDateValid(data.publishedBeforeJoystream)
             ? formatISO(data.publishedBeforeJoystream as Date)
             : null,
         }
@@ -407,6 +408,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
+
+  const isDisabled = isEdit ? !isDirty : false || nodeConnectionStatus !== 'connected'
+
   return (
     <>
       <FormScrolling actionBarHeight={actionBarBounds.height}>
@@ -650,35 +654,35 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         </FormWrapper>
       </FormScrolling>
       <StyledActionBar
+        disabled={isDisabled}
         ref={actionBarRef}
-        disabled={nodeConnectionStatus !== 'connected'}
+        primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
+        primaryButtonOnClick={handleSubmit}
+        primaryButtonTooltip={
+          isDisabled
+            ? isEdit
+              ? {
+                  headerText: 'Change anything to proceed',
+                  text: 'To publish changes you have to provide new value to any field',
+                  icon: true,
+                }
+              : {
+                  headerText: 'Fill all required fields to proceed',
+                  text: 'Required: video file, thumbnail, title, category, language',
+                  icon: true,
+                }
+            : undefined
+        }
+        secondaryButtonText={isDisabled ? undefined : 'Cancel'}
+        secondaryButtonOnClick={() => reset()}
+        secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
+        secondaryButtonVariant={isEdit ? 'default' : 'draft'}
+        detailsText="Drafts are saved automatically"
+        detailsTextTooltip={{
+          text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+        }}
         fullWidth={true}
         fee={fee}
-        isActive={selectedVideoTab?.isDraft || isDirty}
-        primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
-        onConfirmClick={handleSubmit}
-        detailsText={isEdit ? undefined : 'Drafts are saved automatically'}
-        tooltipText={
-          isEdit
-            ? undefined
-            : 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.'
-        }
-        detailsTextIcon={isEdit ? undefined : <SvgGlyphInfo />}
-        secondaryButtonText={isEdit ? 'Cancel' : undefined}
-        onCancelClick={isEdit ? () => reset() : undefined}
-        primaryButtonTooltipText={
-          isEdit
-            ? {
-                headerText: 'Change anything to proceed',
-                text: 'To publish changes you have to provide new value to any field',
-                icon: true,
-              }
-            : {
-                headerText: 'Fill all required fields to proceed',
-                text: 'Required: video file, thumbnail, title, category, language',
-                icon: true,
-              }
-        }
       />
     </>
   )

@@ -3,12 +3,11 @@ import React, { ReactNode } from 'react'
 import { SvgGlyphInfo } from '@/shared/icons'
 
 import {
+  ActionBarContainer,
+  ActionButtonPrimary,
   DetailsContainer,
   DetailsIconWrapper,
-  StyledActionBarContainer,
-  StyledButtonsContainer,
-  StyledInfoContainer,
-  StyledInnerContainer,
+  FlexWrapper,
   StyledPrimaryText,
   StyledSecondaryText,
 } from './ActionBar.style'
@@ -17,87 +16,129 @@ import { Button } from '../Button'
 import { Text } from '../Text'
 import { Tooltip } from '../Tooltip'
 
+export type ActionBarSize = 'large' | 'medium' | 'compact'
+
 export type ActionBarProps = {
+  size?: ActionBarSize
   primaryText?: string
   secondaryText?: string
-  primaryButtonTooltipText?: {
-    headerText: string
-    text: string
-    icon: boolean
-  }
-  primaryButtonText?: string
-  detailsText?: string
-  tooltipText?: string
-  detailsTextIcon?: ReactNode
-  isActive?: boolean
   fullWidth?: boolean
-  secondaryButtonText?: string
-  secondaryButtonIcon?: ReactNode
   className?: string
   disabled?: boolean
-  onConfirmClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onCancelClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  primaryButtonText?: string
+  primaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  primaryButtonTooltip?: {
+    text: string
+    headerText?: string
+    icon?: boolean
+  }
+  secondaryButtonText?: string
+  secondaryButtonVariant?: 'draft' | 'default'
+  secondaryButtonIcon?: ReactNode
+  secondaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  detailsText?: string
+  detailsTextTooltip?: {
+    text: string
+    headerText?: string
+    icon?: boolean
+  }
 }
 
 export const ActionBar: React.FC<ActionBarProps> = ({
   primaryText,
   secondaryText,
-  primaryButtonText,
-  secondaryButtonText,
-  detailsText,
-  tooltipText,
-  detailsTextIcon,
-  secondaryButtonIcon,
   className,
   disabled,
-  onConfirmClick,
-  onCancelClick,
-  primaryButtonTooltipText,
+  primaryButtonText,
+  primaryButtonOnClick,
+  primaryButtonTooltip,
+  secondaryButtonText,
+  secondaryButtonIcon,
+  secondaryButtonVariant,
+  secondaryButtonOnClick,
+  detailsTextTooltip,
+  detailsText,
+  size = 'compact',
 }) => {
-  const buttonNode = primaryButtonText ? (
-    <Button disabled={disabled} onClick={onConfirmClick} size="large" type="submit">
+  const detailsNode =
+    secondaryButtonVariant === 'draft' ? (
+      <DetailsContainer size={size}>
+        <Text variant="body2" secondary>
+          {detailsText}
+        </Text>
+        <DetailsIconWrapper>
+          <SvgGlyphInfo />
+        </DetailsIconWrapper>
+      </DetailsContainer>
+    ) : null
+
+  const secondaryButtonNode =
+    secondaryButtonVariant === 'default' && secondaryButtonText ? (
+      <Button
+        icon={size === 'compact' ? secondaryButtonIcon : undefined}
+        disabled={disabled}
+        onClick={secondaryButtonOnClick}
+        variant={size === 'compact' ? 'tertiary' : 'secondary'}
+        size={size === 'compact' ? 'small' : 'large'}
+        iconPlacement="right"
+      >
+        {secondaryButtonText}
+      </Button>
+    ) : null
+
+  const primaryButtonNode = primaryButtonText ? (
+    <ActionButtonPrimary
+      actonBarSize={size}
+      disabled={disabled}
+      fullWidth={size === 'compact'}
+      onClick={primaryButtonOnClick}
+      size="large"
+      type="submit"
+    >
       {primaryButtonText}
-    </Button>
+    </ActionButtonPrimary>
   ) : null
 
+  if (size === 'compact')
+    return (
+      <ActionBarContainer size={size} className={className}>
+        <FlexWrapper>
+          <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
+          {secondaryButtonNode}
+          {detailsNode}
+        </FlexWrapper>
+        {primaryButtonNode}
+      </ActionBarContainer>
+    )
   return (
-    <StyledActionBarContainer className={className}>
-      <StyledInnerContainer>
-        <StyledInfoContainer>
-          <StyledPrimaryText>{primaryText}</StyledPrimaryText>
-          <StyledSecondaryText>{secondaryText}</StyledSecondaryText>
-        </StyledInfoContainer>
-        <StyledButtonsContainer>
-          {detailsText && tooltipText && (
-            <Tooltip arrowDisabled text={tooltipText} placement="top-end">
-              <DetailsContainer>
-                <Text variant="body2" secondary>
-                  {detailsText}
-                </Text>
-                <DetailsIconWrapper>{detailsTextIcon || <SvgGlyphInfo />}</DetailsIconWrapper>
-              </DetailsContainer>
-            </Tooltip>
-          )}
-          {secondaryButtonText && !detailsText && (
-            <Button icon={secondaryButtonIcon} onClick={onCancelClick} variant="secondary" size="large">
-              {secondaryButtonText}
-            </Button>
-          )}
-          {primaryButtonTooltipText ? (
-            <Tooltip
-              arrowDisabled
-              headerText={primaryButtonTooltipText?.headerText}
-              text={primaryButtonTooltipText?.text}
-              icon={primaryButtonTooltipText?.icon}
-              placement="top-end"
-            >
-              {buttonNode}
-            </Tooltip>
-          ) : (
-            <>{buttonNode}</>
-          )}
-        </StyledButtonsContainer>
-      </StyledInnerContainer>
-    </StyledActionBarContainer>
+    <ActionBarContainer size={size} className={className}>
+      <FlexWrapper>
+        <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
+        {size === 'large' && (
+          <StyledSecondaryText variant="body2" secondary>
+            {secondaryText}
+          </StyledSecondaryText>
+        )}
+      </FlexWrapper>
+      <FlexWrapper>
+        {secondaryButtonNode}
+        {secondaryButtonVariant === 'draft' && detailsText && (
+          <Tooltip arrowDisabled text={detailsTextTooltip?.text} placement="top-end">
+            {detailsNode}
+          </Tooltip>
+        )}
+        {primaryButtonText && (
+          <Tooltip
+            arrowDisabled
+            headerText={primaryButtonTooltip?.headerText}
+            text={primaryButtonTooltip?.text}
+            icon={primaryButtonTooltip?.icon}
+            placement="top-end"
+          >
+            {primaryButtonNode}
+          </Tooltip>
+        )}
+      </FlexWrapper>
+    </ActionBarContainer>
   )
 }
