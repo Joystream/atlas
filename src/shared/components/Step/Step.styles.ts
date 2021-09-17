@@ -32,7 +32,13 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
+        border-color: ${active ? colors.blue[500] : colors.gray[500]};
+        border-width: 1px 1px ${active ? '4px' : '1px'} 1px;
+        border-style: solid;
+
+        ${media.sm} {
+          border-width: 1px 1px 1px 1px;
+        }
       `
     default:
       return

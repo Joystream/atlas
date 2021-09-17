@@ -206,7 +206,9 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <Step
           variant="file"
           number={1}
-          title={files.video ? (files.video.blob as File).name || 'Video file' : 'Add video file'}
+          title={
+            editMode ? 'Video file' : files.video ? (files.video.blob as File).name || 'Video file' : 'Add video file'
+          }
           active={step === 'video' && stepsActive}
           disabled={editMode}
           completed={!!files.video}
