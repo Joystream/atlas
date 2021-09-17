@@ -4,8 +4,9 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Button } from '@/shared/components/Button'
 import { FormField } from '@/shared/components/FormField'
 import { MultiFileSelect } from '@/shared/components/MultiFileSelect'
+import { Text } from '@/shared/components/Text'
 import { TitleArea } from '@/shared/components/TitleArea'
-import { colors, media, sizes } from '@/shared/theme'
+import { media, sizes } from '@/shared/theme'
 
 import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
@@ -31,7 +32,7 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
 
 export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
   height: calc(100% - ${({ actionBarHeight }) => actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px);
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
 `
 
@@ -67,21 +68,46 @@ export const InputsContainer = styled.div`
   }
 `
 
+type MoreSettingsSectionProps = {
+  expanded: boolean
+}
+type MoreSettingsDescriptionProps = {
+  visible: boolean
+}
+
+export const MoreSettingsHeader = styled.div`
+  margin-top: ${sizes(10)};
+`
+
+export const MoreSettingsDescription = styled(Text)<MoreSettingsDescriptionProps>`
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  height: ${({ visible }) => (visible ? 'auto' : '0')};
+  margin-top: ${sizes(4)};
+  transition: opacity 150ms ease-out;
+`
+
+export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
+  visibility: ${({ expanded }) => (expanded ? 'visible' : 'hidden')};
+  max-height: ${({ expanded }) => (expanded ? '1200px' : '0px')};
+  overflow: hidden;
+  transition: max-height 300ms ease-out;
+
+  svg {
+    /*
+    Workaround. 
+    For some reason chevron on Select element hides with little delay. This is causing layout shift. 
+    To fix that let's just set 'display: none' on all svgs when section is not expanded.
+    */
+    display: ${({ expanded }) => (expanded ? 'unset' : 'none')};
+  }
+`
+
 export const StyledTitleArea = styled(TitleArea)`
   margin-bottom: ${sizes(4)};
 `
 
-export const DeleteVideoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: ${sizes(6)};
-  padding-top: ${sizes(4)};
-  border-top: 1px solid ${colors.gray[400]};
-`
-
 export const DeleteVideoButton = styled(Button)`
-  width: 100%;
+  margin-top: ${sizes(10)};
 `
 
 export const ExtendedMarginFormField = styled(FormField)`

@@ -75,7 +75,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
     language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
     isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
-    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? null,
+    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
       (tab.isDraft
