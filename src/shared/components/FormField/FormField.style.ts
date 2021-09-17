@@ -11,7 +11,6 @@ type DenseProps = {
 export const FormFieldWrapper = styled.div<DenseProps>`
   margin-top: ${({ dense }) => sizes(dense ? 4 : 6)};
   width: 100%;
-  max-width: 760px;
 `
 
 export const FormFieldHeader = styled.header`
