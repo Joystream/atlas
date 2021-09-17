@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { TransactionDialog } from '@/components/TransactionDialog'
-// import { ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicStatus } from '@/joystream-lib'
 import { SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
@@ -13,8 +13,6 @@ export const TransactionManager: React.FC = () => {
     dialogStep,
     actions: { removeOldBlockActions, setDialogStep },
   } = useTransactionManagerStore((state) => state)
-
-  //const dialogStep = ExtrinsicStatus.ProcessingAssets
 
   useQueryNodeStateSubscription({
     onSubscriptionData: ({ subscriptionData }) => {
