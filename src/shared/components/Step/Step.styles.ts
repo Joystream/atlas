@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
-import { CircularProgress } from '../CircularProgress'
 import { Text } from '../Text'
 
 type StepWrapperProps = {
@@ -11,6 +10,12 @@ type StepWrapperProps = {
   disabled?: boolean
   variant?: 'file' | 'default'
 }
+
+const truncateText = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 
 const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
   switch (variant) {
@@ -26,13 +31,13 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
       `
     case 'file':
       return css`
-        padding: ${sizes(3)} ${sizes(4)};
-        cursor: pointer;
-        border: 1px solid ${active ? colors.blue[500] : colors.gray[500]};
-        background-color: ${active ? colors.transparentPrimary[10] : 'none'};
+        padding: 0 ${sizes(4)};
+        border-color: ${active ? colors.blue[500] : colors.gray[500]};
+        border-width: 1px 1px ${active ? '4px' : '1px'} 1px;
+        border-style: solid;
 
-        :hover:not([aria-disabled='true']) {
-          background-color: ${colors.transparentPrimary[18]};
+        ${media.sm} {
+          border-width: 1px 1px 1px 1px;
         }
       `
     default:
@@ -42,13 +47,14 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
 
 export const StepWrapper = styled.div<StepWrapperProps>`
   height: ${sizes(14)};
-  padding: ${sizes(3)} ${sizes(4)};
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto ${sizes(10)};
   justify-content: space-between;
   align-items: center;
   transition: border ${transitions.timings.routing} ${transitions.easing},
     background-color ${transitions.timings.routing} ${transitions.easing};
+  ${truncateText}
 
   ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
 
@@ -64,6 +70,7 @@ export const StepStatus = styled.div`
   align-items: center;
   width: 100%;
   position: relative;
+  ${truncateText}
 `
 
 export const StepNumber = styled.div<StepWrapperProps>`
@@ -83,6 +90,7 @@ export const StepNumber = styled.div<StepWrapperProps>`
 export const StepDetails = styled.div`
   margin-left: 10px;
   width: 100%;
+  ${truncateText}
 `
 
 export const Overhead = styled(Text)`
@@ -99,9 +107,9 @@ export const StepTitle = styled(Text)`
   text-overflow: ellipsis;
 `
 
-export const StyledProgress = styled(CircularProgress)`
+export const ProgressContainer = styled.div`
   width: ${sizes(7)};
-  height: ${sizes(7)};
+  flex-shrink: 0;
 `
 
 export const StepImage = styled.div`
@@ -109,7 +117,7 @@ export const StepImage = styled.div`
   color: white;
   background: ${colors.gray[600]};
   width: ${sizes(7)};
-  height: ${sizes(6)};
+  height: ${sizes(7)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,4 +127,8 @@ export const StepImage = styled.div`
     object-fit: cover;
     height: 100%;
   }
+`
+
+export const IconButtonContainer = styled.div`
+  width: ${sizes(10)};
 `
