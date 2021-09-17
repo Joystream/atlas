@@ -44,9 +44,7 @@ export const useTransaction = (): HandleTransactionFn => {
     },
   })
 
-  const [openCompletedDialog, closeCompletedDialog] = useDialog()
-
-  return async ({ preProcess, txFactory, onTxFinalize, onTxSync, successMessage }) => {
+  return async ({ preProcess, txFactory, onTxFinalize, onTxSync }) => {
     try {
       if (nodeConnectionStatus !== 'connected') {
         openErrorDialog()
@@ -89,23 +87,9 @@ export const useTransaction = (): HandleTransactionFn => {
       })
 
       return new Promise((resolve) => {
-        const handleDialogClose = () => {
-          closeCompletedDialog()
-          resolve(true)
-        }
-
         queryNodeSyncPromise.then(() => {
-          setDialogStep(null)
-          openCompletedDialog({
-            variant: 'success',
-            title: successMessage.title,
-            description: successMessage.description,
-            secondaryButton: {
-              text: 'Close',
-              onClick: handleDialogClose,
-            },
-            onExitClick: handleDialogClose,
-          })
+          setDialogStep(ExtrinsicStatus.Completed)
+          resolve(true)
         })
       })
     } catch (e) {

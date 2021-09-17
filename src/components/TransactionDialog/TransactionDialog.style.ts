@@ -1,55 +1,125 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { rgba } from 'polished'
+import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { Spinner } from '@/shared/components/Spinner'
-import { SvgTransactionIllustration } from '@/shared/illustrations'
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { SvgPolkadotLogo } from '@/shared/icons'
+import { colors, sizes, square, transitions } from '@/shared/theme'
 
 type StepProps = {
   isActive?: boolean
+  past?: boolean
+  loop?: boolean
 }
 export const StepsBar = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+  padding: ${sizes(2)};
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
-  grid-gap: ${sizes(1)};
+  grid-gap: ${sizes(2)};
   width: 100%;
-  height: ${sizes(2)};
+  height: 24px;
 `
 
 export const Step = styled.div<StepProps>`
-  background-color: ${({ isActive }) => (isActive ? colors.gray[400] : colors.gray[600])};
+  position: relative;
+  background-color: ${colors.gray[700]};
   height: 100%;
   transition: background-color ${transitions.timings.regular} ${transitions.easing};
 
-  :hover {
-    ${({ isActive }) =>
-      !isActive &&
-      css`
-        background-color: ${colors.gray[500]};
-      `};
+  &::after {
+    content: '';
+    height: 100%;
+    position: absolute;
+    display: ${({ isActive, past }) => (isActive || past ? 'block' : 'none')};
+    animation-name: ${({ isActive, past }) => (isActive && !past ? 'slideAndFadeIn' : 'unset')};
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    animation-duration: 2s;
+    background-color: ${colors.gray[500]};
+    width: 100%;
+
+    @keyframes slideAndFadeIn {
+      0% {
+        width: ${({ loop }) => (loop ? 0 : '100%')};
+        opacity: 1;
+      }
+
+      50% {
+        width: 100%;
+        opacity: 1;
+      }
+
+      100% {
+        width: 100%;
+        opacity: 0;
+      }
+    }
   }
 `
 
 export const TextContainer = styled.div`
-  margin-top: ${sizes(40)};
   position: relative;
+  background-color: ${colors.gray[700]};
+  padding: var(--dialog-padding);
 `
 
-export const StyledTransactionIllustration = styled(SvgTransactionIllustration)`
-  position: absolute;
-  top: ${sizes(2)};
-  left: -50px;
-
-  ${media.xs} {
-    left: 0;
-  }
+export const StyledTransactionIllustration = styled.div`
+  height: 264px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--dialog-padding);
+  padding-top: 0;
+  position: relative;
 `
 
 export const StyledSpinner = styled(Spinner)`
   position: absolute;
   top: ${sizes(8)};
   left: ${sizes(6)};
+`
+
+export const StyledLottie = styled(Lottie, {
+  shouldForwardProp: (prop) => prop !== 'size',
+})<{ size?: { width: number; height: number } }>`
+  width: ${({ size }) => (size ? `${size.width}px` : 'auto')};
+  height: ${({ size }) => (size ? `${size.height}px` : 'auto')};
+`
+
+export const PolkadotLogoWrapper = styled.div`
+  ${square('100%')};
+
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
+
+export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: ${sizes(6)};
+`
+
+export const Success = styled.div`
+  ${square('100%')};
+
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${rgba(colors.blue[500], 0.2)};
+`
+
+export const SuccessIcon = styled.div`
+  ${square(48)};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.blue[500]};
+  border-radius: 50%;
 `
