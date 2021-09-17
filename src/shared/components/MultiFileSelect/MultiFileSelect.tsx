@@ -225,7 +225,9 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
             files.thumbnail
               ? files.thumbnail.originalBlob
                 ? (files.thumbnail.originalBlob as File).name
-                : 'Thumbnail image'
+                : files.thumbnail.url
+                ? 'Thumbnail image'
+                : 'Add thumbnail image'
               : 'Add thumbnail image'
           }
           active={step === 'image' && stepsActive}

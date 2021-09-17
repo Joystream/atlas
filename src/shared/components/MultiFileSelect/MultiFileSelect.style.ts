@@ -8,7 +8,6 @@ export const MultiFileSelectContainer = styled.div`
 
 export const StepsContainer = styled.div`
   display: grid;
-  grid-gap: ${sizes(2)};
   grid-template-columns: 1fr;
   justify-content: space-between;
   margin-top: ${sizes(5)};
@@ -17,6 +16,7 @@ export const StepsContainer = styled.div`
   ${media.sm} {
     grid-template-columns: 1fr auto 1fr;
     margin-top: ${sizes(10)};
+    grid-gap: ${sizes(2)};
   }
 `
 
@@ -28,14 +28,14 @@ export const StepDivider = styled.div`
   align-items: center;
   width: ${sizes(8)};
   height: initial;
+  margin: ${sizes(5)} auto;
 
   svg {
-    display: none;
-    ${media.sm} {
-      display: initial;
-    }
+    transform: rotate(90deg);
 
-    transform: rotate(0deg);
+    ${media.sm} {
+      transform: rotate(0deg);
+    }
   }
 `
 
