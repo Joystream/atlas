@@ -509,7 +509,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
           >
             <ActionBarTransaction
               fee={0}
-              disabled={!isDirty || nodeConnectionStatus !== 'connected' || !isValid}
+              primaryButtonDisabled={isDisabled}
               progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
               fullWidth={!activeChannelId}
               primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}

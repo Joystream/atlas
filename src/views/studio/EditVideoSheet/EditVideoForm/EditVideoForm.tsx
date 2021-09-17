@@ -658,9 +658,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         </FormWrapper>
       </FormScrolling>
       <StyledActionBar
-        disabled={isDisabled}
         ref={actionBarRef}
         primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
+        primaryButtonDisabled={isDisabled}
         primaryButtonOnClick={handleSubmit}
         primaryButtonTooltip={
           isDisabled
@@ -679,7 +679,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
               }
             : undefined
         }
-        secondaryButtonText={isDisabled ? undefined : 'Cancel'}
+        secondaryButtonText={!isEdit || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'}
         secondaryButtonOnClick={() => reset()}
         secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
         secondaryButtonVariant={isEdit ? 'default' : 'draft'}

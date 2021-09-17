@@ -24,8 +24,8 @@ export type ActionBarProps = {
   secondaryText?: string
   fullWidth?: boolean
   className?: string
-  disabled?: boolean
   primaryButtonText?: string
+  primaryButtonDisabled?: boolean
   primaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   primaryButtonTooltip?: {
     text: string
@@ -33,6 +33,7 @@ export type ActionBarProps = {
     icon?: boolean
   }
   secondaryButtonText?: string
+  secondaryButtonDisabled?: boolean
   secondaryButtonVariant?: 'draft' | 'default'
   secondaryButtonIcon?: ReactNode
   secondaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -48,11 +49,12 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   primaryText,
   secondaryText,
   className,
-  disabled,
   primaryButtonText,
+  primaryButtonDisabled,
   primaryButtonOnClick,
   primaryButtonTooltip,
   secondaryButtonText,
+  secondaryButtonDisabled,
   secondaryButtonIcon,
   secondaryButtonVariant,
   secondaryButtonOnClick,
@@ -76,7 +78,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
     secondaryButtonVariant === 'default' && secondaryButtonText ? (
       <Button
         icon={size === 'compact' ? secondaryButtonIcon : undefined}
-        disabled={disabled}
+        disabled={secondaryButtonDisabled}
         onClick={secondaryButtonOnClick}
         variant={size === 'compact' ? 'tertiary' : 'secondary'}
         size={size === 'compact' ? 'small' : 'large'}
@@ -89,7 +91,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   const primaryButtonNode = primaryButtonText ? (
     <ActionButtonPrimary
       actonBarSize={size}
-      disabled={disabled}
+      disabled={primaryButtonDisabled}
       fullWidth={size === 'compact'}
       onClick={primaryButtonOnClick}
       size="large"
