@@ -74,6 +74,10 @@ type MoreSettingsSectionProps = {
 type MoreSettingsDescriptionProps = {
   visible: boolean
 }
+export const StyledTitleArea = styled(TitleArea)`
+  margin-bottom: ${sizes(8)};
+  width: 100%;
+`
 
 export const MoreSettingsHeader = styled.div`
   margin-top: ${sizes(10)};
@@ -100,10 +104,6 @@ export const MoreSettingsSection = styled.div<MoreSettingsSectionProps>`
     */
     display: ${({ expanded }) => (expanded ? 'unset' : 'none')};
   }
-`
-
-export const StyledTitleArea = styled(TitleArea)`
-  margin-bottom: ${sizes(4)};
 `
 
 export const DeleteVideoButton = styled(Button)`

@@ -11,6 +11,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -70,6 +71,7 @@ type CreateEditChannelViewProps = {
 export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const smMatch = useMediaMatch('sm')
 
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
@@ -426,17 +428,15 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 name="title"
                 control={control}
                 rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                render={({ field: { ref, value, onChange } }) => (
-                  <Tooltip text="Click to edit channel title">
+                render={({ field: { value, onChange } }) => (
+                  <Tooltip text="Click to edit channel title" placement="top-start">
                     <StyledTitleArea
-                      ref={ref}
+                      variant={smMatch ? 'small' : 'large'}
+                      min={3}
+                      max={40}
                       placeholder="Channel title"
                       value={value}
-                      onChange={(e) => {
-                        onChange(e.currentTarget.value)
-                      }}
-                      error={!!errors.title}
-                      helperText={errors.title?.message}
+                      onChange={onChange}
                     />
                   </Tooltip>
                 )}
