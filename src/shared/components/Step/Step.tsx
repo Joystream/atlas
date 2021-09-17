@@ -11,12 +11,10 @@ export type StepProps = {
   title: string
   variant?: 'file' | 'default'
   completed?: boolean
-  thumbnailUrl?: string | null
   isLoading?: boolean
   disabled?: boolean
   active?: boolean
   number?: number
-  stepPlaceholder?: React.ReactNode
   onDelete?: () => void
 }
 export const Step = forwardRef<HTMLDivElement, StepProps>(

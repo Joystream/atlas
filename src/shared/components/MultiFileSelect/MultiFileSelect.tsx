@@ -3,7 +3,7 @@ import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
-import { SvgGlyphChevronRight, SvgGlyphFileVideo } from '@/shared/icons'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
@@ -206,9 +206,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         <Step
           variant="file"
           number={1}
-          title={files.video ? (files.video.blob ? (files.video.blob as File).name : 'Video file') : 'Add video file'}
+          title={files.video ? (files.video.blob as File).name || 'Video file' : 'Add video file'}
           active={step === 'video' && stepsActive}
-          stepPlaceholder={!!files.video && <SvgGlyphFileVideo />}
           disabled={editMode}
           completed={!!files.video}
           onDelete={() => handleDeleteFile('video')}
@@ -219,7 +218,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         </StepDivider>
         <Step
           variant="file"
-          stepPlaceholder={files.thumbnail?.url ? <img src={files.thumbnail?.url} alt="thumbnail" /> : undefined}
           number={2}
           title={
             files.thumbnail
@@ -229,7 +227,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
               : 'Add thumbnail image'
           }
           active={step === 'image' && stepsActive}
-          thumbnailUrl={files.thumbnail?.url}
           completed={!!files.thumbnail?.url}
           onDelete={() => handleDeleteFile('image')}
           ref={thumbnailStepRef}
