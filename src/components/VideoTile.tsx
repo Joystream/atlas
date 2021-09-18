@@ -5,6 +5,7 @@ import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
+import { useUploadsStore } from '@/providers/uploadsManager'
 import {
   VideoTileBase,
   VideoTileBaseMetaProps,
@@ -52,18 +53,28 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isDraft, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
-    useVideoSharedLogic({
-      id,
-      isDraft,
-      onNotFound,
-    })
+  const {
+    video,
+    loading,
+    videoHref,
+    thumbnailPhotoUrl,
+    avatarPhotoUrl,
+    isLoadingThumbnail,
+    isLoadingAvatar,
+    uploadsStatus,
+  } = useVideoSharedLogic({
+    id,
+    isDraft,
+    onNotFound,
+  })
+
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
   const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
 
   return (
     <VideoTileBase
+      uploadStatus={uploadsStatus}
       isLoadingThumbnail={isLoadingThumbnail}
       isLoadingAvatar={isLoadingAvatar}
       publisherMode
@@ -106,6 +117,10 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
     assetType: AssetType.AVATAR,
   })
 
+  const uploadsStatus = useUploadsStore(
+    (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
+  )
+
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
   return {
@@ -116,5 +131,6 @@ const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpt
     thumbnailPhotoUrl,
     avatarPhotoUrl,
     videoHref,
+    uploadsStatus,
   }
 }

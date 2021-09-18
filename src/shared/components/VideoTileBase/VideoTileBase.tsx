@@ -3,6 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks/useContextMenu'
+import { UploadStatus } from '@/providers/uploadsManager/types'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -24,6 +25,7 @@ import { PullUp } from './PullUp'
 import {
   Anchor,
   AvatarContainer,
+  BottomProgressBar,
   ChannelHandle,
   Container,
   CoverContainer,
@@ -40,14 +42,17 @@ import {
   CoverWrapper,
   InfoContainer,
   KebabMenuButtonIcon,
+  LoadingVideoContainer,
   MetaContainer,
   ProgressBar,
+  ProgressBarAA,
   ProgressOverlay,
   PublishingStateText,
   RemoveButton,
   SkeletonHoverOverlay,
   SpacedSkeletonLoader,
   StyledAvatar,
+  StyledLoader,
   TextContainer,
   TitleHeader,
   TitleHeaderAnchor,
@@ -72,6 +77,7 @@ export type VideoTilePublisherProps =
       isPullupDisabled?: boolean
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
+      uploadStatus?: UploadStatus
       onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
       onOpenInTabClick?: () => void
       onEditVideoClick?: () => void
@@ -83,6 +89,7 @@ export type VideoTilePublisherProps =
       isPullupDisabled?: undefined
       isDraft?: undefined
       videoPublishState?: undefined
+      uploadStatus?: undefined
       onPullupClick?: undefined
       onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
@@ -134,6 +141,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   showMeta = true,
   removeButton = false,
   videoPublishState = 'default',
+  uploadStatus,
   publisherMode = false,
   isDraft,
   onChannelClick,
@@ -193,22 +201,85 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
       setFailedLoadImage(true)
     }
   }
+
+  const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
+
   return (
-    <Container className={className} isLoading={isLoading}>
+    <Container className={className} isLoading={isLoading || isUploading}>
       <CoverWrapper>
         <CoverContainer ref={imgRef} clickable={clickable}>
-          <SwitchTransition>
-            <CSSTransition
-              key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
-              timeout={parseInt(transitions.timings.sharp)}
-              classNames={transitions.names.fade}
-            >
-              <CoverImageContainer>
-                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  {isLoadingThumbnail && !isDraft ? (
-                    <>
-                      {(videoHref || publisherMode) && (
-                        <SkeletonHoverOverlay>
+          {isUploading ? (
+            <LoadingVideoContainer>
+              <ProgressBarAA
+                progress={uploadStatus.progress || 0}
+                isProcessing={uploadStatus.lastStatus === 'processing'}
+              />
+              <BottomProgressBar progress={uploadStatus.progress || 0} />
+              <StyledLoader variant="small" />
+            </LoadingVideoContainer>
+          ) : (
+            <SwitchTransition>
+              <CSSTransition
+                key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
+                timeout={parseInt(transitions.timings.sharp)}
+                classNames={transitions.names.fade}
+              >
+                <CoverImageContainer>
+                  <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                    {isLoadingThumbnail && !isDraft ? (
+                      <>
+                        {(videoHref || publisherMode) && (
+                          <SkeletonHoverOverlay>
+                            <CoverIconWrapper>
+                              {publisherMode ? (
+                                <SvgLargeEdit />
+                              ) : (
+                                <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
+                              )}
+                            </CoverIconWrapper>
+                          </SkeletonHoverOverlay>
+                        )}
+                        <CoverSkeletonLoader />
+                      </>
+                    ) : (
+                      <>
+                        {thumbnailUrl && !failedLoadImage ? (
+                          <CoverImage
+                            darkenImg={videoPublishState === 'unlisted' || !!isDraft}
+                            src={thumbnailUrl}
+                            onError={handleFailedThumbnailLoad}
+                            alt={`${title} by ${channelTitle} thumbnail`}
+                          />
+                        ) : hasThumbnailUploadFailed ? (
+                          <CoverThumbnailUploadFailed>
+                            <SvgLargeUploadFailed />
+                            <Text variant="subtitle2" secondary>
+                              Thumbnail upload failed
+                            </Text>
+                          </CoverThumbnailUploadFailed>
+                        ) : (
+                          <CoverNoImage />
+                        )}
+                        {(videoPublishState === 'unlisted' || isDraft) && (
+                          <CoverVideoPublishingStateOverlay>
+                            {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
+                            <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
+                          </CoverVideoPublishingStateOverlay>
+                        )}
+                        {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                        <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                          {publisherMode && (
+                            <CoverTopLeftContainer>
+                              <PullUp
+                                // set to true when video is already on the snackbar
+                                disabled={!!isPullupDisabled}
+                                onClick={(event) => {
+                                  event.preventDefault()
+                                  onPullupClick && onPullupClick(event)
+                                }}
+                              />
+                            </CoverTopLeftContainer>
+                          )}
                           <CoverIconWrapper>
                             {publisherMode ? (
                               <SvgLargeEdit />
@@ -216,68 +287,19 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                               <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
                             )}
                           </CoverIconWrapper>
-                        </SkeletonHoverOverlay>
-                      )}
-                      <CoverSkeletonLoader />
-                    </>
-                  ) : (
-                    <>
-                      {thumbnailUrl && !failedLoadImage ? (
-                        <CoverImage
-                          darkenImg={videoPublishState === 'unlisted' || !!isDraft}
-                          src={thumbnailUrl}
-                          onError={handleFailedThumbnailLoad}
-                          alt={`${title} by ${channelTitle} thumbnail`}
-                        />
-                      ) : hasThumbnailUploadFailed ? (
-                        <CoverThumbnailUploadFailed>
-                          <SvgLargeUploadFailed />
-                          <Text variant="subtitle2" secondary>
-                            Thumbnail upload failed
-                          </Text>
-                        </CoverThumbnailUploadFailed>
-                      ) : (
-                        <CoverNoImage />
-                      )}
-                      {(videoPublishState === 'unlisted' || isDraft) && (
-                        <CoverVideoPublishingStateOverlay>
-                          {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
-                          <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
-                        </CoverVideoPublishingStateOverlay>
-                      )}
-                      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                      <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                        {publisherMode && (
-                          <CoverTopLeftContainer>
-                            <PullUp
-                              // set to true when video is already on the snackbar
-                              disabled={!!isPullupDisabled}
-                              onClick={(event) => {
-                                event.preventDefault()
-                                onPullupClick && onPullupClick(event)
-                              }}
-                            />
-                          </CoverTopLeftContainer>
-                        )}
-                        <CoverIconWrapper>
-                          {publisherMode ? (
-                            <SvgLargeEdit />
-                          ) : (
-                            <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
+                          {removeButton && (
+                            <RemoveButton onClick={handleRemoveClick}>
+                              <SvgGlyphClose />
+                            </RemoveButton>
                           )}
-                        </CoverIconWrapper>
-                        {removeButton && (
-                          <RemoveButton onClick={handleRemoveClick}>
-                            <SvgGlyphClose />
-                          </RemoveButton>
-                        )}
-                      </CoverHoverOverlay>
-                    </>
-                  )}
-                </Anchor>
-              </CoverImageContainer>
-            </CSSTransition>
-          </SwitchTransition>
+                        </CoverHoverOverlay>
+                      </>
+                    )}
+                  </Anchor>
+                </CoverImageContainer>
+              </CSSTransition>
+            </SwitchTransition>
+          )}
         </CoverContainer>
       </CoverWrapper>
       {!!progress && (
@@ -329,9 +351,18 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                     </ChannelHandle>
                   </Anchor>
                 ))}
-              {showMeta && (
-                <MetaContainer noMarginTop={!showChannel}>
-                  {isLoading ? (
+              <MetaContainer noMarginTop={!showChannel}>
+                {showMeta &&
+                  (isUploading ? (
+                    isLoading ? (
+                      <SpacedSkeletonLoader height={12} width={'80%'} />
+                    ) : (
+                      <Text variant="body2" secondary>
+                        {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
+                        {uploadStatus.lastStatus === 'processing' && 'Processing...'}
+                      </Text>
+                    )
+                  ) : isLoading ? (
                     <SpacedSkeletonLoader height={12} width={'80%'} />
                   ) : createdAt ? (
                     <Text variant="body2" secondary>
@@ -339,9 +370,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt)}
                     </Text>
-                  ) : null}
-                </MetaContainer>
-              )}
+                  ) : null)}
+              </MetaContainer>
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
@@ -349,7 +379,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           onClick={(event) => openContextMenu(event, 200)}
           variant="tertiary"
           size="small"
-          isActive={contextMenuOpts.isActive}
+          isActive={isUploading ? false : contextMenuOpts.isActive}
         >
           <SvgGlyphMore />
         </KebabMenuButtonIcon>
