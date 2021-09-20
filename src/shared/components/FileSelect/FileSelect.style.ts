@@ -12,7 +12,7 @@ type DragAndDropAreaProps = {
   isFileDialogActive?: boolean
 }
 
-type InfoContainerProps = {
+type LoadingProp = {
   isLoading?: boolean
 }
 
@@ -47,7 +47,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     padding-top: 56.25%;
   }
 `
-export const SelectedFileInfo = styled(animated.div)<InfoContainerProps>`
+export const SelectedFileInfo = styled(animated.div)<LoadingProp>`
   top: 0;
   width: 100%;
   height: 100%;
@@ -80,7 +80,7 @@ export const SelectedFileInfoBackground = styled.div`
   height: 100%;
 `
 
-export const InnerContainer = styled(animated.div)`
+export const InnerContainer = styled(animated.div, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -91,9 +91,11 @@ export const InnerContainer = styled(animated.div)`
   text-align: center;
   max-width: 270px;
   height: 100%;
+  opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
+  transition: opacity 400ms ease-out;
 `
 
-export const Thumbnail = styled(animated.img)`
+export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   top: 0;
   max-width: 100%;
@@ -101,6 +103,8 @@ export const Thumbnail = styled(animated.img)`
   object-fit: contain;
   cursor: pointer;
   display: block;
+  opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
+  transition: opacity 400ms ease-out;
 `
 
 export const DismissButton = styled(IconButton)`

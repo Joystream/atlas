@@ -404,7 +404,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
-
   return (
     <>
       <FormScrolling actionBarHeight={actionBarBounds.height}>
@@ -413,20 +412,18 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             name="assets"
             control={control}
             render={() => (
-              <div>
-                <StyledMultiFileSelect
-                  files={{
-                    video: mediaAsset,
-                    thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
-                  }}
-                  onVideoChange={handleVideoFileChange}
-                  onThumbnailChange={handleThumbnailFileChange}
-                  editMode={isEdit}
-                  error={fileSelectError}
-                  onError={handleFileSelectError}
-                  maxVideoSize={10 * 1024 * 1024 * 1024}
-                />
-              </div>
+              <StyledMultiFileSelect
+                files={{
+                  video: mediaAsset,
+                  thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+                }}
+                onVideoChange={handleVideoFileChange}
+                onThumbnailChange={handleThumbnailFileChange}
+                editMode={isEdit}
+                error={fileSelectError}
+                onError={handleFileSelectError}
+                maxVideoSize={10 * 1024 * 1024 * 1024}
+              />
             )}
           />
           <InputsContainer>
@@ -590,29 +587,27 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   rules={{
                     validate: (value) => value !== null,
                   }}
-                  render={({ field: { value, onChange, ref } }) => {
-                    return (
-                      <RadioButtonsContainer>
-                        <RadioButton
-                          ref={ref}
-                          value="false"
-                          label="All audiences"
-                          onChange={() => onChange(false)}
-                          selectedValue={value?.toString()}
-                          error={!!errors.isExplicit}
-                          helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                        />
-                        <RadioButton
-                          value="true"
-                          label="Mature"
-                          onChange={() => onChange(true)}
-                          selectedValue={value?.toString()}
-                          error={!!errors.isExplicit}
-                          helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                        />
-                      </RadioButtonsContainer>
-                    )
-                  }}
+                  render={({ field: { value, onChange, ref } }) => (
+                    <RadioButtonsContainer>
+                      <RadioButton
+                        ref={ref}
+                        value="false"
+                        label="All audiences"
+                        onChange={() => onChange(false)}
+                        selectedValue={value?.toString()}
+                        error={!!errors.isExplicit}
+                        helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                      />
+                      <RadioButton
+                        value="true"
+                        label="Mature"
+                        onChange={() => onChange(true)}
+                        selectedValue={value?.toString()}
+                        error={!!errors.isExplicit}
+                        helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                      />
+                    </RadioButtonsContainer>
+                  )}
                 />
               </ExtendedMarginFormField>
               <ExtendedMarginFormField

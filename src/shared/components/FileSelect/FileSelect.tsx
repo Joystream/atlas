@@ -1,7 +1,7 @@
 import beazierEasing from 'bezier-easing'
 import React, { useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
-import { useSpring, useTransition } from 'react-spring'
+import { useTransition } from 'react-spring'
 
 import { useDialog } from '@/providers/dialogs'
 import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
@@ -51,7 +51,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   error,
   isLoading,
 }) => {
-  const selectedFileTransitions = useTransition(isLoading, {
+  const selectedFileTransition = useTransition(isLoading, {
     from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
     enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
     leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
@@ -61,15 +61,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     },
   })
 
-  const innerContainerSpring = useSpring({
-    opacity: isLoading ? 0.1 : 1,
-    config: {
-      duration: 400,
-      easing: beazierEasing(0, 0, 0.58, 1),
-    },
-  })
-
-  const innerContainerTransitions = useTransition(fileType, {
+  const innerContainerTransition = useTransition(fileType, {
     from: { x: '200%' },
     enter: { x: '0%' },
     leave: { x: '-200%' },
@@ -137,7 +129,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
       <input {...getInputProps()} />
-      {selectedFileTransitions(
+      {selectedFileTransition(
         (styles, item) =>
           item && (
             <SelectedFileInfo style={{ opacity: styles.opacity }}>
@@ -150,17 +142,17 @@ export const FileSelect: React.FC<FileSelectProps> = ({
             </SelectedFileInfo>
           )
       )}
-      {thumbnailUrl && fileType === 'image' ? (
-        <Thumbnail
-          style={innerContainerSpring}
-          src={thumbnailUrl}
-          alt="video thumbnail"
-          onClick={handleReAdjustThumbnail}
-          title="Click to readjust"
-        />
-      ) : (
-        innerContainerTransitions((style, item) => (
-          <InnerContainer key={item} style={{ ...innerContainerSpring, ...style }}>
+      {innerContainerTransition((style, item) =>
+        thumbnailUrl && fileType === 'image' ? (
+          <Thumbnail
+            isLoading={isLoading}
+            src={thumbnailUrl}
+            alt="video thumbnail"
+            onClick={handleReAdjustThumbnail}
+            title="Click to readjust"
+          />
+        ) : (
+          <InnerContainer key={item} style={style} isLoading={isLoading}>
             {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
             <Title variant="h5">{title}</Title>
             <Paragraph variant="subtitle2" as="p" secondary>
@@ -175,7 +167,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
               </Button>
             </ButtonsGroup>
           </InnerContainer>
-        ))
+        )
       )}
     </DragAndDropArea>
   )
