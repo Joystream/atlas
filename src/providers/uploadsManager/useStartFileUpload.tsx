@@ -18,7 +18,6 @@ import { useStorageProviders } from '../storageProviders'
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
-const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
@@ -29,7 +28,6 @@ export const useStartFileUpload = () => {
     (state) => state.actions
   )
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
     uploads: {
@@ -46,36 +44,13 @@ export const useStartFileUpload = () => {
   const displayUploadingNotification = useRef(
     debounce(() => {
       displaySnackbar({
-        title:
-          pendingUploadingNotificationsCounts.current > 1
-            ? `${pendingUploadingNotificationsCounts.current} assets being uploaded`
-            : 'Asset being uploaded',
-        iconType: 'info',
+        title: `(${pendingUploadingNotificationsCounts.current}) ongoing upload`,
+        iconType: 'uploading',
         timeout: UPLOADING_SNACKBAR_TIMEOUT,
-        actionText: 'See',
+        actionText: 'Inspect',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
       pendingUploadingNotificationsCounts.current = 0
-    }, 700)
-  )
-
-  const displayUploadedNotification = useRef(
-    debounce((key) => {
-      const uploaded = assetsNotificationsCount.current.uploaded[key]
-      const uploads = assetsNotificationsCount.current.uploads[key]
-
-      displaySnackbar({
-        customId: key,
-        title: `${uploaded}/${uploads} assets uploaded`,
-        iconType: 'success',
-        timeout: UPLOADED_SNACKBAR_TIMEOUT,
-        actionText: 'See',
-        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-      })
-      if (uploaded === uploads) {
-        assetsNotificationsCount.current.uploaded[key] = 0
-        assetsNotificationsCount.current.uploads[key] = 0
-      }
     }, 700)
   )
 
@@ -171,11 +146,10 @@ export const useStartFileUpload = () => {
 
         // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'processing', progress: 100 })
-        addProcessingAssetId(asset.contentId)
+        addPendingAssetId(asset.contentId)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
-        displayUploadedNotification.current(assetKey)
 
         const performanceEntries = performance.getEntriesByName(assetUrl)
         if (performanceEntries.length === 1) {

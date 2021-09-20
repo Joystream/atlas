@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
+import shallow from 'zustand/shallow'
 
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
 import { PrivateRoute } from '@/components/PrivateRoute'
@@ -17,9 +18,11 @@ import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/c
 import { useDialog } from '@/providers/dialogs'
 import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/editVideoSheet'
 import { JoystreamProvider } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { TransactionManager } from '@/providers/transactionManager'
-import { UploadsManager } from '@/providers/uploadsManager'
+import { UploadsManager, useUploadsStore } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
+import { SvgGlyphExternal } from '@/shared/icons'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
   CreateEditChannelView,
@@ -32,15 +35,29 @@ import {
 } from '@/views/studio'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
+const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
 const StudioLayout = () => {
   const location = useLocation()
+  const navigate = useNavigate()
   const displayedLocation = useVideoEditSheetRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
+  const { displaySnackbar } = useSnackbar()
+  const displayedSnackbars = useRef<string[]>([])
 
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
     useUser()
+  const channelUploads = useUploadsStore(
+    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
+    shallow
+  )
+  const assetsFiles = useUploadsStore((state) => state.assetsFiles)
+  const videoAsset = assetsFiles.find(
+    (asset) =>
+      channelUploads.map((upload) => upload.contentId).includes(asset.contentId) && /video/.test(asset.blob.type)
+  )
+  const videoAssetStatus = useUploadsStore((state) => videoAsset && state.uploadsStatus[videoAsset.contentId], shallow)
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
   const [enterLocation] = useState(location.pathname)
@@ -49,6 +66,26 @@ const StudioLayout = () => {
   const accountSet = !!activeAccountId && !!extensionConnected
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
+
+  useEffect(() => {
+    if (
+      videoAsset &&
+      videoAssetStatus?.lastStatus === 'completed' &&
+      !displayedSnackbars.current.includes(videoAsset.contentId)
+    ) {
+      displaySnackbar({
+        customId: videoAsset.contentId,
+        title: 'Video ready to be reviewed',
+        description: (videoAsset.blob as File).name,
+        iconType: 'success',
+        timeout: UPLOADED_SNACKBAR_TIMEOUT,
+        actionText: 'See on Joystream',
+        actionIcon: <SvgGlyphExternal />,
+        onActionClick: () => navigate(absoluteRoutes.viewer.channel(activeChannelId || undefined)),
+      })
+      displayedSnackbars.current.push(videoAsset.contentId)
+    }
+  }, [activeChannelId, displaySnackbar, navigate, videoAsset, videoAssetStatus])
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
