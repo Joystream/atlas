@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -6,7 +6,6 @@ import { colors, sizes, square, transitions, typography, zIndex } from '@/shared
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
-import { Loader } from '../Loader'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
@@ -31,97 +30,6 @@ type LoadingProps = {
 type ActiveProps = {
   isActive?: boolean
 }
-
-export const LoadingVideoContainer = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: ${colors.gray[900]};
-`
-
-const greenBarAnimation = keyframes`
-   0% {
-    opacity: 0.2;
-    background-color: ${colors.secondary.success[100]};
-    transform: scaleX(0);
-  }
-  75% {
-    transform: scaleX(1);
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0;
-  }
-`
-
-const pulseAnimation = keyframes`
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.2
-  }
-  100% {
-    opacity: 1;
-  }
-`
-
-type ProgressbarProps = {
-  progress: number
-  isProcessing?: boolean
-  runCompletedAnimation?: boolean
-  isCompleted?: boolean
-}
-const completedAnimationCss = (props: ProgressbarProps) => {
-  if (props.isProcessing) {
-    return css`
-      animation: ${pulseAnimation} 2.5s infinite ease-in-out;
-    `
-  }
-  if (props.runCompletedAnimation) {
-    return css`
-      animation: ${greenBarAnimation} 400ms ease-out;
-      animation-iteration-count: 1;
-    `
-  }
-  return null
-}
-
-// todo extract to separate component
-export const ProgressBarAA = styled.div<ProgressbarProps>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: ${colors.gray[800]};
-  transform-origin: 0 0;
-  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
-  transition: transform 1s linear;
-  ${completedAnimationCss}
-
-  ${({ isCompleted }) => isCompleted && `opacity: 0.2`};
-`
-
-export const BottomProgressBar = styled.div<ProgressbarProps>`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  transform-origin: 0 0;
-  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
-  transition: transform 1s linear;
-  background-color: ${colors.blue[500]};
-  height: 4px;
-`
-
-export const StyledLoader = styled(Loader)`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-`
 
 export const CoverWrapper = styled.div`
   position: relative;
@@ -171,6 +79,28 @@ export const CoverContainer = styled.div<ClickableProps>`
 export const Anchor = styled(Link)`
   all: unset;
   color: inherit;
+`
+
+export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
+
+export const UploadProgressTransition = styled.div`
+  &.${DELAYED_FADE_CLASSNAME}-enter {
+    opacity: 0;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit {
+    opacity: 1;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit-active {
+    opacity: 0;
+    transition: opacity 400ms ease-out 600ms;
+  }
 `
 
 export const TitleHeaderAnchor = styled(Link)`

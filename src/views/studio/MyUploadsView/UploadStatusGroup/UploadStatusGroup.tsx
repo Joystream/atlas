@@ -7,6 +7,7 @@ import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
+import { UploadProgressBar } from '@/shared/components/UploadProgressBar'
 import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
@@ -14,9 +15,7 @@ import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/Up
 import {
   AssetsDrawerContainer,
   AssetsInfoContainer,
-  BottomProgressBar,
   Container,
-  ProgressBar,
   StyledExpandButton,
   Thumbnail,
   UploadInfoContainer,
@@ -27,7 +26,7 @@ import { UploadStatus } from '../UploadStatus'
 
 export type UploadStatusGroupSize = 'large' | 'compact'
 
-type UploadGroupState = 'error' | 'completed' | 'inProgress' | null
+type UploadGroupState = 'error' | 'completed' | 'inProgress' | 'processing' | null
 
 export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
@@ -67,6 +66,9 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const assetsGroupNumberText = `${uploads.length} asset${uploads.length > 1 ? 's' : ''}`
 
   useEffect(() => {
+    if (isProcessing) {
+      setUploadGroupState('processing')
+    }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
     }
@@ -76,7 +78,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (errorsCount || missingAssetsCount) {
       setUploadGroupState('error')
     }
-  }, [errorsCount, hasUploadingAsset, isCompleted, missingAssetsCount])
+  }, [errorsCount, hasUploadingAsset, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (errorsCount) {
@@ -125,24 +127,24 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
       case 'error':
         return <SvgAlertError />
       case 'inProgress':
+      case 'processing':
         return <Loader variant="small" />
       default:
         return <Loader variant="small" />
     }
   }
+
   return (
     <Container>
       <UploadStatusGroupContainer
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar
-          progress={isCompleted ? 100 : masterProgress}
-          isProcessing={isProcessing}
-          isCompleted={isCompleted}
-          runCompletedAnimation={runCompletedAnimation}
+        <UploadProgressBar
+          withCompletedAnimation={runCompletedAnimation}
+          lastStatus={uploadGroupState || undefined}
+          progress={masterProgress}
         />
-        {!isCompleted && <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />}
         <Thumbnail size={size}>
           {uploadGroupState && (
             <SwitchTransition>
