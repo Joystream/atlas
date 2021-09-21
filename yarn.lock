@@ -3541,6 +3541,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@popperjs/core@npm:^2.10.1":
+  version: 2.10.1
+  resolution: "@popperjs/core@npm:2.10.1"
+  checksum: 55262eb98984a03364a844177a9d4b9ab1c6e3503eaa1ecb086c028b5b6d93985a92b5b5783008962633015fc9f0232fda3ce88f5b17930a909a633387a06505
+  languageName: node
+  linkType: hard
+
 "@popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0, @popperjs/core@npm:^2.8.3":
   version: 2.10.0
   resolution: "@popperjs/core@npm:2.10.0"
@@ -6994,6 +7001,7 @@ __metadata:
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22
     "@polkadot/extension-dapp": ~0.37.3-17
+    "@popperjs/core": ^2.10.1
     "@rollup/plugin-babel": ^5.3.0
     "@rollup/plugin-graphql": ^1.0.0
     "@rollup/plugin-inject": ^4.0.2
@@ -7056,6 +7064,7 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-lottie-player: ^1.4.0
     react-number-format: ^4.4.4
+    react-popper: ^2.2.5
     react-router: 6.0.0-beta.3
     react-router-dom: 6.0.0-beta.3
     react-spring: ^9.2.4
@@ -17413,7 +17422,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-popper@npm:^2.2.4":
+"react-popper@npm:^2.2.4, react-popper@npm:^2.2.5":
   version: 2.2.5
   resolution: "react-popper@npm:2.2.5"
   dependencies:
