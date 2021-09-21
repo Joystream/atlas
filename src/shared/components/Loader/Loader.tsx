@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
+import Lottie from 'react-lottie-player'
 
 import loaderLargeAnimation from '../../assets/animations/loader-L.json'
 import loaderMediumAnimation from '../../assets/animations/loader-M.json'

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { rgba } from 'polished'
-import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
+import Lottie from 'react-lottie-player'
 
 import { Spinner } from '@/shared/components/Spinner'
-import { SvgPolkadotLogo } from '@/shared/icons'
+import { SvgOutlineError, SvgPolkadotLogo } from '@/shared/icons'
 import { colors, sizes, square, transitions } from '@/shared/theme'
 
 type StepProps = {
@@ -122,4 +122,23 @@ export const SuccessIcon = styled.div`
   justify-content: center;
   background-color: ${colors.blue[500]};
   border-radius: 50%;
+  animation-iteration-count: 1;
+  animation-name: zoomOut;
+  animation-duration: 600ms;
+  animation-timing-function: ${transitions.easing};
+
+  @keyframes zoomOut {
+    from {
+      opacity: 0;
+      transform: scale(2);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+`
+
+export const StyledSvgOutlineError = styled(SvgOutlineError)`
+  margin-bottom: ${sizes(4)};
 `

@@ -55,7 +55,11 @@ export const useTransaction = (): HandleTransactionFn => {
       if (preProcess) {
         setDialogStep(ExtrinsicStatus.ProcessingAssets)
         try {
-          await preProcess()
+          await new Promise((resolve) =>
+            setTimeout(() => {
+              resolve(preProcess())
+            }, 2000)
+          )
         } catch (e) {
           SentryLogger.error('Failed transaction preprocess', 'TransactionManager', e)
           return false

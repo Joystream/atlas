@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { ActionDialogProps } from '@/components/ActionDialog'
-import { ActionDialog } from '@/components/ActionDialog'
+import { ActionDialog, ActionDialogProps } from '@/components/ActionDialog'
 import { ExtrinsicStatus } from '@/joystream-lib'
+import errorAnimation from '@/shared/assets/animations/stepper/error.json'
 import firstStepAnimation from '@/shared/assets/animations/stepper/step1.json'
 import secondStepAnimation from '@/shared/assets/animations/stepper/step2.json'
 import thirdStepAnimation from '@/shared/assets/animations/stepper/step3.json'
@@ -19,6 +19,7 @@ import {
   StepsBar,
   StyledLottie,
   StyledPolkadotLogo,
+  StyledSvgOutlineError,
   StyledTransactionIllustration,
   Success,
   SuccessIcon,
@@ -82,38 +83,74 @@ const TRANSACTION_STEPS_DETAILS = {
     animation: {
       data: fourthStepAnimation,
       size: {
-        width: 216,
-        height: 216,
+        width: 144,
+        height: 144,
       },
       loop: true,
+    },
+  },
+  [ExtrinsicStatus.Error]: {
+    title: 'Something went wrong...',
+    description:
+      'An unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+    tooltip: 'Propagation',
+    animation: {
+      data: errorAnimation,
+      size: {
+        width: 288,
+        height: 264,
+      },
+      loop: false,
     },
   },
 }
 
 export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
+  const initialStatusRef = useRef<number | null>(null)
+  const nonUploadTransaction = initialStatusRef.current === ExtrinsicStatus.Unsigned
+  const error = status === ExtrinsicStatus.Error
   const stepDetails =
-    status != null && status !== ExtrinsicStatus.Error
+    status != null
       ? TRANSACTION_STEPS_DETAILS[status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status]
       : null
 
   useEffect(() => {
+    if (status !== null && initialStatusRef.current === null) {
+      initialStatusRef.current = status
+    }
+    if (status === null) {
+      initialStatusRef.current = null
+    }
     if (status) {
       setPolkadotLogoVisible(false)
     }
   }, [status])
 
+  useEffect(() => {
+    if (status === ExtrinsicStatus.Completed) {
+      setTimeout(() => {
+        onClose()
+      }, 2000)
+    }
+  }, [status, onClose])
+
   const canCancel =
     status === ExtrinsicStatus.ProcessingAssets ||
     status === ExtrinsicStatus.Unsigned ||
-    status === ExtrinsicStatus.Completed
+    status === ExtrinsicStatus.Completed ||
+    status === ExtrinsicStatus.Error
 
-  const transactionSteps = Object.values(TRANSACTION_STEPS_DETAILS)
+  const transactionSteps = Object.values(TRANSACTION_STEPS_DETAILS).slice(nonUploadTransaction ? 2 : 1)
 
   return (
     <ActionDialog
       showDialog={!!stepDetails}
-      secondaryButton={{ text: 'Cancel', onClick: onClose, disabled: !canCancel }}
+      secondaryButton={{
+        text: status === ExtrinsicStatus.Completed || status === ExtrinsicStatus.Error ? 'Close' : 'Cancel',
+        onClick: onClose,
+        disabled: !canCancel,
+      }}
       exitButton={false}
       illustration
       {...actionDialogProps}
@@ -123,8 +160,13 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
           <Tooltip key={idx} text={tooltip} placement="top-end">
             <Step
               loop={stepDetails?.animation.loop}
-              past={!!status && idx < status && status !== idx}
-              isActive={!!status && status === idx}
+              past={
+                status !== null &&
+                !error &&
+                idx < status - (nonUploadTransaction ? 1 : 0) &&
+                status - (nonUploadTransaction ? 1 : 0) !== idx
+              }
+              isActive={status !== null && !error && status - (nonUploadTransaction ? 1 : 0) === idx}
             />
           </Tooltip>
         ))}
@@ -149,8 +191,9 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
             loop={stepDetails?.animation.loop}
             animationData={stepDetails?.animation.data}
             play
-            size={stepDetails?.animation.size}
-            onComplete={() => !stepDetails?.animation.loop && setPolkadotLogoVisible(true)}
+            onComplete={() =>
+              !stepDetails?.animation.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
+            }
           />
         )}
         <CSSTransition
@@ -168,6 +211,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
         </CSSTransition>
       </StyledTransactionIllustration>
       <TextContainer>
+        {error && <StyledSvgOutlineError />}
         <StyledTitleText variant="h4">{stepDetails?.title}</StyledTitleText>
         <StyledDescriptionText variant="body2">{stepDetails?.description}</StyledDescriptionText>
       </TextContainer>
