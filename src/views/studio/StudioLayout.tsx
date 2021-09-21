@@ -21,6 +21,7 @@ import { JoystreamProvider } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager, useUploadsStore } from '@/providers/uploadsManager'
+import { AssetUpload } from '@/providers/uploadsManager/types'
 import { ActiveUserProvider, useUser } from '@/providers/user'
 import { SvgGlyphExternal } from '@/shared/icons'
 import { isAllowedBrowser } from '@/utils/browser'
@@ -34,6 +35,9 @@ import {
   SignInView,
 } from '@/views/studio'
 
+type UploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'processing'
+type VideoAssets = AssetUpload & { uploadStatus?: UploadStatus }
+
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
@@ -44,20 +48,20 @@ const StudioLayout = () => {
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
-  const displayedSnackbars = useRef<string[]>([])
-
+  const videoAssetsRef = useRef<VideoAssets[]>([])
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
     useUser()
-  const channelUploads = useUploadsStore(
-    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
+  const { assetsFiles, channelUploads, uploadStatuses } = useUploadsStore(
+    (state) => ({
+      assetsFiles: state.assetsFiles,
+      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+      uploadStatuses: state.uploadsStatus,
+    }),
     shallow
   )
-  const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-  const videoAsset = assetsFiles.find(
-    (asset) =>
-      channelUploads.map((upload) => upload.contentId).includes(asset.contentId) && /video/.test(asset.blob.type)
-  )
-  const videoAssetStatus = useUploadsStore((state) => videoAsset && state.uploadsStatus[videoAsset.contentId], shallow)
+  const videoAssets = channelUploads
+    .filter((asset) => asset.type === 'video')
+    .map((asset) => ({ ...asset, uploadStatus: uploadStatuses[asset.contentId]?.lastStatus }))
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
   const [enterLocation] = useState(location.pathname)
@@ -67,25 +71,30 @@ const StudioLayout = () => {
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
 
+  // display snackbar when video upload is complete
   useEffect(() => {
-    if (
-      videoAsset &&
-      videoAssetStatus?.lastStatus === 'completed' &&
-      !displayedSnackbars.current.includes(videoAsset.contentId)
-    ) {
-      displaySnackbar({
-        customId: videoAsset.contentId,
-        title: 'Video ready to be reviewed',
-        description: (videoAsset.blob as File).name,
-        iconType: 'success',
-        timeout: UPLOADED_SNACKBAR_TIMEOUT,
-        actionText: 'See on Joystream',
-        actionIcon: <SvgGlyphExternal />,
-        onActionClick: () => navigate(absoluteRoutes.viewer.channel(activeChannelId || undefined)),
+    if (videoAssets.length) {
+      videoAssets.forEach((video) => {
+        const videoObject = videoAssetsRef.current.find(
+          (videoRef) => videoRef.uploadStatus !== 'completed' && videoRef.contentId === video.contentId
+        )
+        if (videoObject && video.uploadStatus === 'completed') {
+          const file = assetsFiles.find((asset) => asset.contentId === video.contentId)
+          displaySnackbar({
+            customId: video.contentId,
+            title: 'Video ready to be reviewed',
+            description: (file?.blob as File).name,
+            iconType: 'success',
+            timeout: UPLOADED_SNACKBAR_TIMEOUT,
+            actionText: 'See on Joystream',
+            actionIcon: <SvgGlyphExternal />,
+            onActionClick: () => window.open(`/video/${video.parentObject.id}`, '_blank'),
+          })
+        }
       })
-      displayedSnackbars.current.push(videoAsset.contentId)
+      videoAssetsRef.current = videoAssets
     }
-  }, [activeChannelId, displaySnackbar, navigate, videoAsset, videoAssetStatus])
+  }, [assetsFiles, displaySnackbar, navigate, videoAssets])
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
