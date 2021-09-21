@@ -40,7 +40,7 @@ export const FormWrapper = styled(LimitedWidthContainer)`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
-  padding: ${sizes(12)} ${sizes(4)};
+  padding: ${sizes(12)} ${sizes(8)};
 
   ${media.md} {
     padding-bottom: 0;
@@ -53,7 +53,7 @@ export const FormWrapper = styled(LimitedWidthContainer)`
 export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(20)};
   ${media.md} {
     margin-top: 0;
   }
