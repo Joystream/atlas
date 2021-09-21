@@ -18,7 +18,7 @@ const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
 
-const ActiveUnderline = css`
+const activeUnderline = css`
   &::after {
     content: '';
     display: block;
@@ -209,7 +209,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
   }
 
-  ${({ isSearching }) => isSearching && ActiveUnderline}
+  ${({ isSearching }) => isSearching && activeUnderline}
 
   > input {
     height: 40px;
@@ -247,7 +247,7 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
   position: absolute;
 
   ${media.sm} {
-    ${({ isSearching, isOpen }) => isSearching && !isOpen && ActiveUnderline}
+    ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
   }
 `
 

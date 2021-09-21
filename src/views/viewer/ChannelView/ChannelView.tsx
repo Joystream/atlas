@@ -287,6 +287,7 @@ export const ChannelView: React.FC = () => {
                 helperText={null}
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
+                placeholder={isSearching ? 'Best match' : undefined}
                 items={!isSearching ? SORT_OPTIONS : []}
                 onChange={!isSearching ? handleSorting : undefined}
               />
