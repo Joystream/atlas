@@ -1,3 +1,4 @@
+import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { rgba } from 'polished'
 import Lottie from 'react-lottie-player'
@@ -11,6 +12,35 @@ type StepProps = {
   past?: boolean
   loop?: boolean
 }
+
+const slideAndFadeIn = (loop?: boolean) => keyframes`
+  0% {
+  width: ${loop ? 0 : '100%'};
+  opacity: 1;
+}
+
+50% {
+  width: 100%;
+  opacity: 1;
+}
+
+100% {
+  width: 100%;
+  opacity: 0;
+}
+`
+
+const zoomOut = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`
+
 export const StepsBar = styled.div`
   padding: ${sizes(2)};
   display: grid;
@@ -31,29 +61,12 @@ export const Step = styled.div<StepProps>`
     height: 100%;
     position: absolute;
     display: ${({ isActive, past }) => (isActive || past ? 'block' : 'none')};
-    animation-name: ${({ isActive, past }) => (isActive && !past ? 'slideAndFadeIn' : 'unset')};
+    animation-name: ${({ isActive, past, loop }) => (isActive && !past ? slideAndFadeIn(loop) : 'unset')};
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
     animation-duration: 2s;
     background-color: ${colors.gray[500]};
     width: 100%;
-
-    @keyframes slideAndFadeIn {
-      0% {
-        width: ${({ loop }) => (loop ? 0 : '100%')};
-        opacity: 1;
-      }
-
-      50% {
-        width: 100%;
-        opacity: 1;
-      }
-
-      100% {
-        width: 100%;
-        opacity: 0;
-      }
-    }
   }
 `
 
@@ -122,21 +135,7 @@ export const SuccessIcon = styled.div`
   justify-content: center;
   background-color: ${colors.blue[500]};
   border-radius: 50%;
-  animation-iteration-count: 1;
-  animation-name: zoomOut;
-  animation-duration: 600ms;
-  animation-timing-function: ${transitions.easing};
-
-  @keyframes zoomOut {
-    from {
-      opacity: 0;
-      transform: scale(2);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+  animation: ${zoomOut}, 600ms, ${transitions.easing}, 1;
 `
 
 export const StyledSvgOutlineError = styled(SvgOutlineError)`
