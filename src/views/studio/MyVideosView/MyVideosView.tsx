@@ -64,7 +64,7 @@ export const MyVideosView = () => {
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
   const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
   const drafts =
-    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+    sortVideosBy === VideoOrderByInput.CreatedAtDesc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
 
