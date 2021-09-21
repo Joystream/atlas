@@ -6,29 +6,45 @@ import shallow from 'zustand/shallow'
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
+import { AssetUpload } from '@/providers/uploadsManager/types'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 import { createLookup } from '@/utils/data'
+import { SvgGlyphExternal } from '@/shared/icons'
 
 import { useUploadsStore } from './store'
 
 import { useSnackbar } from '../snackbars'
 import { useUser } from '../user'
 
+type UploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'processing'
+type VideoAssets = AssetUpload & { uploadStatus?: UploadStatus }
+
+const UPLOADED_SNACKBAR_TIMEOUT = 13000
+
 export const UploadsManager: React.FC = () => {
   const navigate = useNavigate()
   const { activeChannelId } = useUser()
   const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)
+  const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
-  const channelUploadsState = useUploadsStore(
-    (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
+  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds } = useUploadsStore(
+    (state) => ({
+      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+      isSyncing: state.isSyncing,
+      assetsFiles: state.assetsFiles,
+      processingAssetsIds: state.processingAssetsIds,
+      uploadStatuses: state.uploadsStatus,
+    }),
     shallow
   )
   const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
     useUploadsStore((state) => state.actions)
-  const isSyncing = useUploadsStore((state) => state.isSyncing)
-  const processingAssetsIds = useUploadsStore((state) => state.processingAssetsIds)
   const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
+
+  const videoAssets = channelUploads
+    .filter((asset) => asset.type === 'video')
+    .map((asset) => ({ ...asset, uploadStatus: uploadStatuses[asset.contentId]?.lastStatus }))
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
@@ -36,6 +52,31 @@ export const UploadsManager: React.FC = () => {
       startPolling?.(ASSET_POLLING_INTERVAL)
     },
   })
+
+  // display snackbar when video upload is complete
+  useEffect(() => {
+    if (videoAssets.length) {
+      videoAssets.forEach((video) => {
+        const videoObject = videoAssetsRef.current.find(
+          (videoRef) => videoRef.uploadStatus !== 'completed' && videoRef.contentId === video.contentId
+        )
+        if (videoObject && video.uploadStatus === 'completed') {
+          const file = assetsFiles.find((asset) => asset.contentId === video.contentId)
+          displaySnackbar({
+            customId: video.contentId,
+            title: 'Video ready to be viewed',
+            description: (file?.blob as File).name,
+            iconType: 'success',
+            timeout: UPLOADED_SNACKBAR_TIMEOUT,
+            actionText: 'See on Joystream',
+            actionIcon: <SvgGlyphExternal />,
+            onActionClick: () => window.open(`/video/${video.parentObject.id}`, '_blank'),
+          })
+        }
+      })
+      videoAssetsRef.current = videoAssets
+    }
+  }, [assetsFiles, displaySnackbar, navigate, videoAssets])
 
   const initialRender = useRef(true)
   useEffect(() => {
@@ -85,7 +126,7 @@ export const UploadsManager: React.FC = () => {
 
       // remove assets from local state that weren't returned by the query node
       // mark asset as not missing in local state
-      channelUploadsState.forEach((asset) => {
+      channelUploads.forEach((asset) => {
         if (asset.owner !== activeChannelId) {
           return
         }
@@ -184,7 +225,7 @@ export const UploadsManager: React.FC = () => {
     init()
   }, [
     activeChannelId,
-    channelUploadsState,
+    channelUploads,
     client,
     displaySnackbar,
     navigate,
