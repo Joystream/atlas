@@ -1,8 +1,7 @@
 import React from 'react'
 
+import { CategoryVideos } from '@/components/CategoryVideos/CategoryVideos'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-
-import { CategoryVideos } from './CategoryVideos'
 
 export const CategoryView = () => {
   return (
