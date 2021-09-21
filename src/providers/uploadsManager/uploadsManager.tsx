@@ -7,6 +7,7 @@ import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
+import { createLookup } from '@/utils/data'
 
 import { useUploadsStore } from './store'
 
@@ -27,6 +28,7 @@ export const UploadsManager: React.FC = () => {
     useUploadsStore((state) => state.actions)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
   const processingAssetsIds = useUploadsStore((state) => state.processingAssetsIds)
+  const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
@@ -34,6 +36,12 @@ export const UploadsManager: React.FC = () => {
       startPolling?.(ASSET_POLLING_INTERVAL)
     },
   })
+
+  useEffect(() => {
+    processingAssetsIds.map((assetId) => {
+      setUploadStatus(assetId, { progress: 100, lastStatus: 'processing' })
+    })
+  }, [processingAssetsIds, setUploadStatus])
 
   useEffect(() => {
     if (!processingAssetsIds.length) {
@@ -150,7 +158,10 @@ export const UploadsManager: React.FC = () => {
         })
       }
 
-      const missingAssetsNotificationCount = Object.values(pendingAssetsLookup).length
+      const missingAssetsNotificationCount = Object.keys(pendingAssetsLookup).filter(
+        (key) => !processingAssetsLookup[key]
+      ).length
+
       if (missingAssetsNotificationCount > 0) {
         displaySnackbar({
           title: `${missingAssetsNotificationCount} asset${
@@ -177,6 +188,8 @@ export const UploadsManager: React.FC = () => {
     cachedActiveChannelId,
     isSyncing,
     setIsSyncing,
+    processingAssetsIds,
+    processingAssetsLookup,
   ])
 
   return null
