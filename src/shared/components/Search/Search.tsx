@@ -147,7 +147,7 @@ const StyledTextField = styled(TextField)<TextFieldProps>`
   > input {
     ${({ isOpen }) => isOpen === false && 'border: none !important'};
 
-    padding: 10px 16px 10px 42px;
+    padding: 5px 16px 5px 42px;
     caret-color: ${colors.blue[500]};
 
     &:focus {
