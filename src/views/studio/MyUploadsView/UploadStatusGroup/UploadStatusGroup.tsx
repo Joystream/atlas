@@ -12,6 +12,7 @@ import { transitions } from '@/shared/theme'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
+  AssetGroupTitleText,
   AssetsDrawerContainer,
   AssetsInfoContainer,
   BottomProgressBar,
@@ -158,7 +159,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
           )}
         </Thumbnail>
         <AssetsInfoContainer>
-          <Text variant="h6">{assetsGroupTitleText}</Text>
+          <AssetGroupTitleText variant="h6">{assetsGroupTitleText}</AssetGroupTitleText>
           <Text variant="body2" secondary>
             {assetsGroupNumberText}
           </Text>

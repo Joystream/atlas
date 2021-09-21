@@ -2,6 +2,7 @@ import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components/ExpandButton'
+import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
 
 import { UploadStatusGroupSize } from './UploadStatusGroup'
@@ -32,7 +33,6 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   align-items: center;
   padding: ${sizes(4)};
   width: 100%;
-  height: ${sizes(20)};
   background-color: ${colors.gray[900]};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
@@ -115,6 +115,7 @@ export const Thumbnail = styled.div<ThumbnailProps>`
   position: relative;
   z-index: 1;
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   background-color: ${colors.gray[700]};
@@ -140,8 +141,14 @@ export const AssetsInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   margin-left: ${sizes(4)};
-  height: ${sizes(12)};
   color: ${colors.gray[300]};
+  flex: 0 1 auto;
+  overflow: hidden;
+`
+
+export const AssetGroupTitleText = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const UploadInfoContainer = styled.div`
@@ -151,9 +158,7 @@ export const UploadInfoContainer = styled.div`
   align-items: center;
   margin-left: auto;
   width: fit-content;
-  height: ${sizes(12)};
   color: ${colors.gray[300]};
-  text-align: right;
 `
 
 export const StyledExpandButton = styled(ExpandButton)`
