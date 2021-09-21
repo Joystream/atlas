@@ -25,7 +25,7 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const { addAssetFile, addAssetToUploads, setUploadStatus, addPendingAssetId } = useUploadsStore(
+  const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAssetId } = useUploadsStore(
     (state) => state.actions
   )
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
@@ -171,7 +171,7 @@ export const useStartFileUpload = () => {
 
         // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'processing', progress: 100 })
-        addPendingAssetId(asset.contentId)
+        addProcessingAssetId(asset.contentId)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
@@ -212,7 +212,7 @@ export const useStartFileUpload = () => {
       getRandomStorageProvider,
       setUploadStatus,
       addAssetFile,
-      addPendingAssetId,
+      addProcessingAssetId,
       addAssetToUploads,
       displaySnackbar,
       markStorageProviderNotWorking,

@@ -23,10 +23,10 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removePendingAssetId, setUploadStatus } =
+  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
     useUploadsStore((state) => state.actions)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
-  const pendingAssetsIds = useUploadsStore((state) => state.pendingAssetsIds)
+  const processingAssetsIds = useUploadsStore((state) => state.processingAssetsIds)
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
@@ -36,23 +36,23 @@ export const UploadsManager: React.FC = () => {
   })
 
   useEffect(() => {
-    if (!pendingAssetsIds.length) {
+    if (!processingAssetsIds.length) {
       return
     }
-    getDataObjectsAvailability(pendingAssetsIds)
-  }, [getDataObjectsAvailability, pendingAssetsIds])
+    getDataObjectsAvailability(processingAssetsIds)
+  }, [getDataObjectsAvailability, processingAssetsIds])
 
   useEffect(() => {
     dataObjects?.forEach((asset) => {
       if (asset.liaisonJudgement === 'ACCEPTED') {
         setUploadStatus(asset.joystreamContentId, { lastStatus: 'completed' })
-        removePendingAssetId(asset.joystreamContentId)
+        removeProcessingAssetId(asset.joystreamContentId)
       }
     })
     if (dataObjects?.every((entry) => entry.liaisonJudgement === 'ACCEPTED')) {
       stopPolling?.()
     }
-  }, [dataObjects, removePendingAssetId, setUploadStatus, stopPolling])
+  }, [dataObjects, removeProcessingAssetId, setUploadStatus, stopPolling])
 
   const client = useApolloClient()
 
