@@ -53,7 +53,7 @@ export type MultiFileSelectProps = {
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
   editMode?: boolean
-  onError?: (error: FileErrorType | null) => void
+  onError?: (error: FileErrorType | null, fileType: FileType) => void
   error?: string | null
   className?: string
 }
@@ -122,7 +122,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
       }
       onVideoChange(updatedVideo)
     } catch (e) {
-      onError?.('file-invalid-type')
+      onError?.('file-invalid-type', step)
     }
   }
 
@@ -154,7 +154,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         setRawImageFile(file)
         dialogRef.current?.open(file)
       } catch (error) {
-        onError?.('file-invalid-type')
+        onError?.('file-invalid-type', step)
       }
     }
   }
@@ -187,7 +187,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
     }
 
     const firstError = errors[0]
-    onError?.(firstError.code)
+    onError?.(firstError.code, step)
   }
   const stepsActive =
     (editMode && !files.thumbnail?.url) || (!editMode && !(files.thumbnail?.originalBlob && files.video?.blob))
@@ -204,8 +204,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         thumbnailUrl={files.thumbnail?.url}
         paragraph={
           step === 'video'
-            ? `Maximum 10GB. Prefered format is MP4 (H.264) or WEBM (VP8,VP9)`
-            : `Preffered 16:9 image ratio. Accepting JPEG or WEBP formats.`
+            ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
+            : `Preferred 16:9 image ratio`
         }
         onDropRejected={handleFileRejections}
         onError={onError}

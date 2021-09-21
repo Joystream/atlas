@@ -65,7 +65,7 @@ export const SelectedFileInfoInnerContainer = styled(animated.div)`
   align-items: center;
 `
 
-export const SelectedFilInfoeHeading = styled(Text)`
+export const SelectedFileInfoHeading = styled(Text)`
   color: ${colors.blue[200]};
   display: block;
   margin: ${sizes(4)} 0 ${sizes(1)} 0;

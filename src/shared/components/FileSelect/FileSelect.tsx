@@ -13,9 +13,9 @@ import {
   DragDropText,
   InnerContainer,
   Paragraph,
-  SelectedFilInfoeHeading,
   SelectedFileInfo,
   SelectedFileInfoBackground,
+  SelectedFileInfoHeading,
   SelectedFileInfoInnerContainer,
   Thumbnail,
   Title,
@@ -33,7 +33,7 @@ export type FileSelectProps = {
   isLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: (error: string | null) => void
+  onError?: (error: string | null, fileType: FileType) => void
   error?: string | null
   maxSize?: number
 }
@@ -105,7 +105,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
       primaryButton: {
         onClick: () => {
           closeErrorDialog()
-          onError?.(null)
+          onError?.(null, fileType)
           open()
         },
         text: 'Reselect file',
@@ -114,12 +114,12 @@ export const FileSelect: React.FC<FileSelectProps> = ({
       secondaryButton: {
         text: 'Cancel',
         onClick: () => {
-          onError?.(null)
+          onError?.(null, fileType)
           closeErrorDialog()
         },
       },
     })
-  }, [closeErrorDialog, error, onError, open, openErrorDialog])
+  }, [closeErrorDialog, error, fileType, onError, open, openErrorDialog])
 
   const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     e.stopPropagation()
@@ -136,7 +136,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
               <SelectedFileInfoBackground />
               <SelectedFileInfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
                 <SvgIllustrativeFileSelected />
-                <SelectedFilInfoeHeading variant="caption">selected</SelectedFilInfoeHeading>
+                <SelectedFileInfoHeading variant="caption">selected</SelectedFileInfoHeading>
                 {acceptedFiles.length !== 0 && <Text variant="body2">{acceptedFiles[0].name}</Text>}
               </SelectedFileInfoInnerContainer>
             </SelectedFileInfo>

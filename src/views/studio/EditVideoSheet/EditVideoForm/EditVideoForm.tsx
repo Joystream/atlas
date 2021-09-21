@@ -32,6 +32,7 @@ import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgGlyphInfo } from '@/shared/icons'
+import { FileType } from '@/types/files'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
@@ -378,11 +379,15 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleFileSelectError = useCallback((errorCode: FileErrorType | null) => {
+  const handleFileSelectError = useCallback((errorCode: FileErrorType | null, fileType: FileType) => {
     if (!errorCode) {
       setFileSelectError(null)
     } else if (errorCode === 'file-invalid-type') {
-      setFileSelectError('Invalid file type')
+      setFileSelectError(
+        fileType === 'video'
+          ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
+          : `Preferred 16:9 image ratio`
+      )
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
