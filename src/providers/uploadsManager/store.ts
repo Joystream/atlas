@@ -17,9 +17,9 @@ type UploadStoreState = {
 }
 
 type UploadStoreActions = {
-  addAsset: (asset: AssetUpload) => void
-  removeAsset: (contentId: string) => void
-  removeAssetsWithParent: (type: AssetParent, id: ChannelId | VideoId) => void
+  addAssetToUploads: (asset: AssetUpload) => void
+  removeAssetFromUploads: (contentId: string) => void
+  removeAssetsWithParentFromUploads: (type: AssetParent, id: ChannelId | VideoId) => void
   setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
   addAssetFile: (assetFile: AssetFile) => void
   setIsSyncing: (isSyncing: boolean) => void
@@ -42,17 +42,17 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
           state.assetsFiles.push(assetFile)
         })
       },
-      addAsset: (asset) => {
+      addAssetToUploads: (asset) => {
         set((state) => {
           state.uploads.push(asset)
         })
       },
-      removeAsset: (contentId) => {
+      removeAssetFromUploads: (contentId) => {
         set((state) => {
           state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
         })
       },
-      removeAssetsWithParent: (type, id) => {
+      removeAssetsWithParentFromUploads: (type, id) => {
         set((state) => {
           state.uploads = state.uploads.filter(
             (asset) => asset.parentObject.id !== id || asset.parentObject.type !== type

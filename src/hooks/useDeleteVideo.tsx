@@ -11,7 +11,7 @@ export const useDeleteVideo = () => {
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
-  const removeAssetsFromUploads = useUploadsStore((state) => state.actions.removeAssetsWithParent)
+  const removeAssetsWithParentFromUploads = useUploadsStore((state) => state.actions.removeAssetsWithParentFromUploads)
   const [openDeleteVideoDialog, closeDeleteVideoDialog] = useDialog()
 
   const client = useApolloClient()
@@ -49,7 +49,7 @@ export const useDeleteVideo = () => {
       txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
       onTxSync: async () => {
         removeVideoFromCache(videoId, client)
-        removeAssetsFromUploads('video', videoId)
+        removeAssetsWithParentFromUploads('video', videoId)
         onTxSync?.()
       },
       successMessage: {

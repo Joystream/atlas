@@ -23,9 +23,8 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const { addAsset, removeAsset, setIsSyncing, removePendingAssetId, setUploadStatus } = useUploadsStore(
-    (state) => state.actions
-  )
+  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removePendingAssetId, setUploadStatus } =
+    useUploadsStore((state) => state.actions)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
   const pendingAssetsIds = useUploadsStore((state) => state.pendingAssetsIds)
 
@@ -79,7 +78,7 @@ export const UploadsManager: React.FC = () => {
         }
 
         if (!pendingAssetsLookup[asset.contentId]) {
-          removeAsset(asset.contentId)
+          removeAssetFromUploads(asset.contentId)
         } else {
           // mark asset as not missing from local state
           delete missingLocalAssetsLookup[asset.contentId]
@@ -92,7 +91,7 @@ export const UploadsManager: React.FC = () => {
         const thumbnail = video.thumbnailPhotoDataObject
 
         if (media && missingLocalAssetsLookup[media.joystreamContentId]) {
-          addAsset({
+          addAssetToUploads({
             contentId: media.joystreamContentId,
             ipfsContentId: media.ipfsContentId,
             parentObject: {
@@ -106,7 +105,7 @@ export const UploadsManager: React.FC = () => {
         }
 
         if (thumbnail && missingLocalAssetsLookup[thumbnail.joystreamContentId]) {
-          addAsset({
+          addAssetToUploads({
             contentId: thumbnail.joystreamContentId,
             ipfsContentId: thumbnail.ipfsContentId,
             parentObject: {
@@ -125,7 +124,7 @@ export const UploadsManager: React.FC = () => {
       const cover = fetchedChannel?.coverPhotoDataObject
 
       if (avatar && missingLocalAssetsLookup[avatar.joystreamContentId]) {
-        addAsset({
+        addAssetToUploads({
           contentId: avatar.joystreamContentId,
           ipfsContentId: avatar.ipfsContentId,
           parentObject: {
@@ -138,7 +137,7 @@ export const UploadsManager: React.FC = () => {
         })
       }
       if (cover && missingLocalAssetsLookup[cover.joystreamContentId]) {
-        addAsset({
+        addAssetToUploads({
           contentId: cover.joystreamContentId,
           ipfsContentId: cover.ipfsContentId,
           parentObject: {
@@ -173,8 +172,8 @@ export const UploadsManager: React.FC = () => {
     client,
     displaySnackbar,
     navigate,
-    removeAsset,
-    addAsset,
+    removeAssetFromUploads,
+    addAssetToUploads,
     cachedActiveChannelId,
     isSyncing,
     setIsSyncing,

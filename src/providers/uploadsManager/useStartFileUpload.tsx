@@ -25,7 +25,9 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const { addAssetFile, addAsset, setUploadStatus, addPendingAssetId } = useUploadsStore((state) => state.actions)
+  const { addAssetFile, addAssetToUploads, setUploadStatus, addPendingAssetId } = useUploadsStore(
+    (state) => state.actions
+  )
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
 
   const pendingUploadingNotificationsCounts = useRef(0)
@@ -124,7 +126,7 @@ export const useStartFileUpload = () => {
         }
         rax.attach()
         if (!opts?.isReUpload && !opts?.changeHost && file) {
-          addAsset({ ...asset, size: file.size })
+          addAssetToUploads({ ...asset, size: file.size })
         }
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })
@@ -211,7 +213,7 @@ export const useStartFileUpload = () => {
       setUploadStatus,
       addAssetFile,
       addPendingAssetId,
-      addAsset,
+      addAssetToUploads,
       displaySnackbar,
       markStorageProviderNotWorking,
       navigate,
