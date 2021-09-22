@@ -14,12 +14,11 @@ export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
 `
 
 export const StyledText = styled(Text)`
-  margin: ${sizes(8)} 0;
+  margin: ${sizes(12)} 0;
 `
 
 export const TabsContainer = styled.div`
-  padding-top: ${sizes(8)};
-  margin-bottom: ${sizes(8)};
+  margin-bottom: ${sizes(12)};
   border-bottom: solid 1px ${colors.gray[800]};
 
   ${media.md} {
@@ -29,12 +28,12 @@ export const TabsContainer = styled.div`
 `
 
 export const StyledPagination = styled(Pagination)`
-  padding-top: ${sizes(6)};
+  padding-top: ${sizes(12)};
   padding-bottom: ${sizes(16)};
 `
 
 export const StyledDismissibleBanner = styled(DismissibleBanner)`
-  margin-bottom: ${sizes(8)};
+  margin-bottom: ${sizes(12)};
 `
 
 export const SortContainer = styled.div`
