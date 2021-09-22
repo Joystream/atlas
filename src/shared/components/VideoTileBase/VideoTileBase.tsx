@@ -177,10 +177,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
       event.preventDefault()
+      onClick?.(event)
     }
-  }
-  const handleCoverHoverOverlayClick = (event: React.MouseEvent<HTMLElement>) => {
-    onClick?.(event)
   }
   const handleRemoveClick = (event: React.MouseEvent<HTMLElement>) => {
     if (onRemoveButtonClick) {
@@ -246,7 +244,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                         </CoverVideoPublishingStateOverlay>
                       )}
                       {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                      <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
+                      <CoverHoverOverlay>
                         {publisherMode && (
                           <CoverTopLeftContainer>
                             <PullUp
