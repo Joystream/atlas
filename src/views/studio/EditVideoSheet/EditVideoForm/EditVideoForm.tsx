@@ -665,11 +665,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
         size={actionBarSize}
         primaryText={`Fee: ${fee} Joy`}
         secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-        primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
-        primaryButtonDisabled={isDisabled}
-        primaryButtonOnClick={handleSubmit}
-        primaryButtonTooltip={
-          isDisabled
+        primaryButton={{
+          text: isEdit ? 'Publish changes' : 'Upload',
+          disabled: isDisabled,
+          onClick: handleSubmit,
+          tooltip: isDisabled
             ? {
                 headerText: isEdit
                   ? isFormValid
@@ -683,12 +683,14 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   : 'Required: video file, thumbnail, title, category, language',
                 icon: true,
               }
-            : undefined
-        }
-        secondaryButtonText={!isEdit || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'}
-        secondaryButtonOnClick={() => reset()}
-        secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
-        secondaryButtonVariant={isEdit ? 'default' : 'draft'}
+            : undefined,
+        }}
+        secondaryButton={{
+          text: !isEdit || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel',
+          onClick: () => reset(),
+          icon: <SvgPlayerCancel width={16} height={16} />,
+          isDraftButton: !isEdit,
+        }}
         detailsText={mdMatch ? 'Drafts are saved automatically' : 'Saving drafts'}
         detailsTextTooltip={{
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',

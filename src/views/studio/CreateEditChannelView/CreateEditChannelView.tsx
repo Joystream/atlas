@@ -515,17 +515,11 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               <ActionBar
                 primaryText={`Fee: 0 Joy`}
                 secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-                primaryButtonDisabled={isDisabled}
-                primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
-                primaryButtonOnClick={handleSubmit}
-                secondaryButtonText={
-                  newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'
-                }
-                secondaryButtonOnClick={() => reset()}
-                secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
-                secondaryButtonVariant="default"
-                primaryButtonTooltip={
-                  isDisabled
+                primaryButton={{
+                  text: newChannel ? 'Create channel' : 'Publish changes',
+                  disabled: isDisabled,
+                  onClick: handleSubmit,
+                  tooltip: isDisabled
                     ? {
                         headerText: newChannel
                           ? 'Fill all required fields to proceed'
@@ -539,8 +533,14 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                           : 'Required: title',
                         icon: true,
                       }
-                    : undefined
-                }
+                    : undefined,
+                }}
+                secondaryButton={{
+                  text: newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel',
+                  onClick: () => reset(),
+                  icon: <SvgPlayerCancel width={16} height={16} />,
+                  isDraftButton: false,
+                }}
               />
             </ActionBarTransactionWrapper>
           </CSSTransition>

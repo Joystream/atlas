@@ -32,8 +32,13 @@ const getActionBarStyle = ({ size }: ActionBarContainerProps) => {
   }
 }
 
-export const FlexWrapper = styled.div`
+type FlexWrapperProps = {
+  compact?: boolean
+}
+
+export const FlexWrapper = styled.div<FlexWrapperProps>`
   display: flex;
+  height: ${({ compact }) => (compact ? '40px' : '48px')};
   justify-content: space-between;
 `
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 import { SvgGlyphInfo } from '@/shared/icons'
 
@@ -12,11 +12,19 @@ import {
   StyledSecondaryText,
 } from './ActionBar.style'
 
-import { Button } from '../Button'
+import { Button, ButtonProps } from '../Button'
 import { Text } from '../Text'
-import { Tooltip } from '../Tooltip'
+import { Tooltip, TooltipProps } from '../Tooltip'
 
 export type ActionBarSize = 'large' | 'medium' | 'compact'
+
+type ActionDialogButtonProps = {
+  text?: string
+  disabled?: boolean
+  onClick?: (e: React.MouseEvent) => void
+  isDraftButton?: boolean
+  tooltip?: TooltipProps
+} & Omit<ButtonProps, 'children'>
 
 export type ActionBarProps = {
   size?: ActionBarSize
@@ -24,19 +32,8 @@ export type ActionBarProps = {
   secondaryText?: string
   fullWidth?: boolean
   className?: string
-  primaryButtonText?: string
-  primaryButtonDisabled?: boolean
-  primaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  primaryButtonTooltip?: {
-    text: string
-    headerText?: string
-    icon?: boolean
-  }
-  secondaryButtonText?: string
-  secondaryButtonDisabled?: boolean
-  secondaryButtonVariant?: 'draft' | 'default'
-  secondaryButtonIcon?: ReactNode
-  secondaryButtonOnClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  primaryButton?: ActionDialogButtonProps
+  secondaryButton?: ActionDialogButtonProps
   detailsText?: string
   detailsTextTooltip?: {
     text: string
@@ -50,62 +47,54 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     primaryText,
     secondaryText,
     className,
-    primaryButtonText,
-    primaryButtonDisabled,
-    primaryButtonOnClick,
-    primaryButtonTooltip,
-    secondaryButtonText,
-    secondaryButtonDisabled,
-    secondaryButtonIcon,
-    secondaryButtonVariant,
-    secondaryButtonOnClick,
+    primaryButton,
+    secondaryButton,
     detailsTextTooltip,
     detailsText,
     size = 'compact',
   }) => {
-    const detailsNode =
-      secondaryButtonVariant === 'draft' ? (
-        <DetailsContainer size={size}>
-          <Text variant="body2" secondary>
-            {detailsText}
-          </Text>
-          <DetailsIconWrapper>
-            <SvgGlyphInfo />
-          </DetailsIconWrapper>
-        </DetailsContainer>
-      ) : null
+    const detailsNode = secondaryButton?.isDraftButton ? (
+      <DetailsContainer size={size}>
+        <Text variant="body2" secondary>
+          {detailsText}
+        </Text>
+        <DetailsIconWrapper>
+          <SvgGlyphInfo />
+        </DetailsIconWrapper>
+      </DetailsContainer>
+    ) : null
 
     const secondaryButtonNode =
-      secondaryButtonVariant === 'default' && secondaryButtonText ? (
+      !secondaryButton?.isDraftButton && secondaryButton?.text ? (
         <Button
-          icon={size === 'compact' ? secondaryButtonIcon : undefined}
-          disabled={secondaryButtonDisabled}
-          onClick={secondaryButtonOnClick}
+          icon={size === 'compact' ? secondaryButton.icon : undefined}
+          disabled={secondaryButton.disabled}
+          onClick={secondaryButton.onClick}
           variant={size === 'compact' ? 'tertiary' : 'secondary'}
           size={size === 'compact' ? 'small' : 'large'}
           iconPlacement="right"
         >
-          {secondaryButtonText}
+          {secondaryButton.text}
         </Button>
       ) : null
 
-    const primaryButtonNode = primaryButtonText ? (
+    const primaryButtonNode = primaryButton?.text ? (
       <ActionButtonPrimary
         actonBarSize={size}
-        disabled={primaryButtonDisabled}
+        disabled={primaryButton.disabled}
         fullWidth={size === 'compact'}
-        onClick={primaryButtonOnClick}
+        onClick={primaryButton.onClick}
         size="large"
         type="submit"
       >
-        {primaryButtonText}
+        {primaryButton.text}
       </ActionButtonPrimary>
     ) : null
 
     if (size === 'compact')
       return (
         <ActionBarContainer size={size} className={className}>
-          <FlexWrapper>
+          <FlexWrapper compact>
             <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
             {secondaryButtonNode}
             {detailsNode}
@@ -116,7 +105,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     return (
       <ActionBarContainer size={size} className={className}>
         <FlexWrapper>
-          <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
+          <StyledPrimaryText variant="h5">{primaryText}</StyledPrimaryText>
           {size === 'large' && (
             <StyledSecondaryText variant="body2" secondary>
               {secondaryText}
@@ -125,19 +114,13 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         </FlexWrapper>
         <FlexWrapper>
           {secondaryButtonNode}
-          {secondaryButtonVariant === 'draft' && detailsText && (
+          {secondaryButton?.isDraftButton && detailsText && (
             <Tooltip arrowDisabled text={detailsTextTooltip?.text} placement="top-end">
               {detailsNode}
             </Tooltip>
           )}
-          {primaryButtonText && (
-            <Tooltip
-              arrowDisabled
-              headerText={primaryButtonTooltip?.headerText}
-              text={primaryButtonTooltip?.text}
-              icon={primaryButtonTooltip?.icon}
-              placement="top-end"
-            >
+          {primaryButton?.text && (
+            <Tooltip arrowDisabled placement="top-end" {...primaryButton.tooltip}>
               {primaryButtonNode}
             </Tooltip>
           )}
