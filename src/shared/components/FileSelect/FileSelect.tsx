@@ -1,25 +1,28 @@
-import React, { useCallback } from 'react'
+import beazierEasing from 'bezier-easing'
+import React, { useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { useTransition } from 'react-spring'
 
-import { SvgAlertError, SvgGlyphClose, SvgGlyphUpload, SvgLargeUploadImage, SvgLargeUploadVideo } from '@/shared/icons'
+import { useDialog } from '@/providers/dialogs'
+import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
 import {
   ButtonsGroup,
-  DismissButton,
   DragAndDropArea,
   DragDropText,
-  ErrorContainer,
-  ErrorText,
   InnerContainer,
   Paragraph,
-  ProgressBar,
+  SelectedFileInfo,
+  SelectedFileInfoBackground,
+  SelectedFileInfoHeading,
+  SelectedFileInfoInnerContainer,
   Thumbnail,
   Title,
-} from './FileDrop.style'
+} from './FileSelect.style'
 
 import { Button } from '../Button'
+import { Text } from '../Text'
 
 export type FileSelectProps = {
   fileType: FileType
@@ -30,7 +33,7 @@ export type FileSelectProps = {
   isLoading?: boolean
   onReAdjustThumbnail?: () => void
   onDropRejected?: (fileRejections: FileRejection[]) => void
-  onError?: (error: string | null) => void
+  onError?: (error: string | null, fileType: FileType) => void
   error?: string | null
   maxSize?: number
 }
@@ -44,10 +47,31 @@ export const FileSelect: React.FC<FileSelectProps> = ({
   thumbnailUrl,
   onReAdjustThumbnail,
   onDropRejected,
-  isLoading,
   onError,
   error,
+  isLoading,
 }) => {
+  const selectedFileTransition = useTransition(isLoading, {
+    from: { opacity: 0, transform: 'scale(1.5)', x: '0%' },
+    enter: { opacity: 1, transform: 'scale(1)', x: '0%' },
+    leave: { opacity: 0, transform: 'scale(1)', x: '-200%' },
+    config: {
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
+    },
+  })
+
+  const innerContainerTransition = useTransition(fileType, {
+    from: { x: '200%' },
+    enter: { x: '0%' },
+    leave: { x: '-200%' },
+    immediate: fileType === 'video',
+    config: {
+      duration: 400,
+      easing: beazierEasing(0, 0, 0.58, 1),
+    },
+  })
+
   const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
     (acceptedFiles) => {
       const [file] = acceptedFiles
@@ -56,7 +80,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     [onUploadFile]
   )
 
-  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragAccept, isFileDialogActive, open, acceptedFiles } = useDropzone({
     onDropAccepted,
     onDropRejected,
     maxFiles: 1,
@@ -67,6 +91,36 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     noKeyboard: true,
   })
 
+  const [openErrorDialog, closeErrorDialog] = useDialog()
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    openErrorDialog({
+      title: 'Unsupported file type selected',
+      description: error,
+      variant: 'warning',
+      exitButton: false,
+      primaryButton: {
+        onClick: () => {
+          closeErrorDialog()
+          onError?.(null, fileType)
+          open()
+        },
+        text: 'Reselect file',
+        variant: 'primary',
+      },
+      secondaryButton: {
+        text: 'Cancel',
+        onClick: () => {
+          onError?.(null, fileType)
+          closeErrorDialog()
+        },
+      },
+    })
+  }, [closeErrorDialog, error, fileType, onError, open, openErrorDialog])
+
   const handleReAdjustThumbnail = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     e.stopPropagation()
     onReAdjustThumbnail?.()
@@ -74,42 +128,46 @@ export const FileSelect: React.FC<FileSelectProps> = ({
 
   return (
     <DragAndDropArea {...getRootProps()} isDragAccept={isDragAccept} isFileDialogActive={isFileDialogActive}>
-      <ProgressBar isLoading={isLoading} />
       <input {...getInputProps()} />
-      {thumbnailUrl && fileType === 'image' ? (
-        <Thumbnail
-          src={thumbnailUrl}
-          alt="video thumbnail"
-          onClick={handleReAdjustThumbnail}
-          title="Click to readjust"
-        />
-      ) : (
-        <SwitchTransition>
-          <CSSTransition key={fileType} classNames="fade" timeout={100}>
-            <InnerContainer>
-              {fileType === 'video' ? <SvgLargeUploadVideo /> : <SvgLargeUploadImage />}
-              <Title variant="h5">{title}</Title>
-              <Paragraph variant="subtitle2" as="p">
-                {paragraph}
-              </Paragraph>
-              <ButtonsGroup>
-                <DragDropText variant="body2">Drag and drop or </DragDropText>
-                <Button onClick={() => open()} icon={<SvgGlyphUpload />}>
-                  Select a file
-                </Button>
-              </ButtonsGroup>
-            </InnerContainer>
-          </CSSTransition>
-        </SwitchTransition>
+      {selectedFileTransition(
+        (styles, item) =>
+          item && (
+            <SelectedFileInfo style={{ opacity: styles.opacity }}>
+              <SelectedFileInfoBackground />
+              <SelectedFileInfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
+                <SvgIllustrativeFileSelected />
+                <SelectedFileInfoHeading variant="caption">selected</SelectedFileInfoHeading>
+                {acceptedFiles.length !== 0 && <Text variant="body2">{acceptedFiles[0].name}</Text>}
+              </SelectedFileInfoInnerContainer>
+            </SelectedFileInfo>
+          )
       )}
-      {error && (
-        <ErrorContainer onClick={(e) => e.stopPropagation()}>
-          <SvgAlertError />
-          <ErrorText variant="body2">{error}</ErrorText>
-          <DismissButton variant="tertiary" onClick={() => onError?.(null)}>
-            <SvgGlyphClose />
-          </DismissButton>
-        </ErrorContainer>
+      {innerContainerTransition((style, item) =>
+        thumbnailUrl && fileType === 'image' ? (
+          <Thumbnail
+            isLoading={isLoading}
+            src={thumbnailUrl}
+            alt="video thumbnail"
+            onClick={handleReAdjustThumbnail}
+            title="Click to readjust"
+          />
+        ) : (
+          <InnerContainer key={item} style={style} isLoading={isLoading}>
+            {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
+            <Title variant="h5">{title}</Title>
+            <Paragraph variant="subtitle2" as="p" secondary>
+              {paragraph}
+            </Paragraph>
+            <ButtonsGroup>
+              <DragDropText variant="body2" secondary>
+                Drag and drop or
+              </DragDropText>
+              <Button size="medium" onClick={() => open()} icon={<SvgGlyphUpload />}>
+                Select a file
+              </Button>
+            </ButtonsGroup>
+          </InnerContainer>
+        )
       )}
     </DragAndDropArea>
   )
