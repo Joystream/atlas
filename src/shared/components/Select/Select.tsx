@@ -1,5 +1,5 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
-import React, { Ref } from 'react'
+import React, { Ref, forwardRef } from 'react'
 
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
@@ -40,19 +40,22 @@ export type SelectProps<T = string> = {
 
 // don't use React.FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
-export const Select = <T extends unknown>({
-  label = '',
-  labelPosition = 'top',
-  items,
-  placeholder = 'Select option',
-  error,
-  value,
-  disabled,
-  onChange,
-  containerRef,
-  size = 'regular',
-  ...inputBaseProps
-}: SelectProps<T>) => {
+export const _Select = <T extends unknown>(
+  {
+    label = '',
+    labelPosition = 'top',
+    items,
+    placeholder = 'Select option',
+    error,
+    value,
+    disabled,
+    onChange,
+    containerRef,
+    size = 'regular',
+    ...inputBaseProps
+  }: SelectProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
   const itemsValues = items.map((item) => item.value)
 
   const handleItemSelect = (changes: UseSelectStateChange<T>) => {
@@ -67,14 +70,14 @@ export const Select = <T extends unknown>({
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items: itemsValues, selectedItem: value, onSelectedItemChange: handleItemSelect })
+  } = useSelect({ items: itemsValues, defaultSelectedItem: value, onSelectedItemChange: handleItemSelect })
 
   const selectedItem = items.find((item) => item.value === selectedItemValue)
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper labelPosition={labelPosition} ref={containerRef}>
-        <SelectLabel {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
+      <SelectWrapper labelPosition={labelPosition}>
+        <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && <StyledLabelText labelPosition={labelPosition}>{label}</StyledLabelText>}
         </SelectLabel>
         <SelectMenuWrapper>
@@ -120,3 +123,8 @@ export const Select = <T extends unknown>({
     </InputBase>
   )
 }
+
+// https://fettblog.eu/typescript-react-generic-forward-refs/#option-1%3A-type-assertion
+export const Select = forwardRef(_Select) as <T>(
+  props: SelectProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => ReturnType<typeof _Select>
