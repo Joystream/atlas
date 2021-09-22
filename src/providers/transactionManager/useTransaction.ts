@@ -4,7 +4,6 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
 
 import { useConnectionStatusStore } from '../connectionStatus'
-import { useDialog } from '../dialogs'
 import { useSnackbar } from '../snackbars'
 
 type UpdateStatusFn = (status: TransactionDialogStep) => void
@@ -28,26 +27,10 @@ export const useTransaction = (): HandleTransactionFn => {
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
 
-  const [openErrorDialog, closeErrorDialog] = useDialog({
-    variant: 'error',
-    title: 'Something went wrong...',
-    description:
-      'Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-    secondaryButton: {
-      text: 'Close',
-      onClick: () => {
-        closeErrorDialog()
-      },
-    },
-    onExitClick: () => {
-      closeErrorDialog()
-    },
-  })
-
   return async ({ preProcess, txFactory, onTxFinalize, onTxSync }) => {
     try {
       if (nodeConnectionStatus !== 'connected') {
-        openErrorDialog()
+        setDialogStep(ExtrinsicStatus.Error)
         return false
       }
 
@@ -55,11 +38,7 @@ export const useTransaction = (): HandleTransactionFn => {
       if (preProcess) {
         setDialogStep(ExtrinsicStatus.ProcessingAssets)
         try {
-          await new Promise((resolve) =>
-            setTimeout(() => {
-              resolve(preProcess())
-            }, 2000)
-          )
+          await preProcess()
         } catch (e) {
           SentryLogger.error('Failed transaction preprocess', 'TransactionManager', e)
           return false
@@ -113,8 +92,7 @@ export const useTransaction = (): HandleTransactionFn => {
       } else {
         SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', e)
       }
-      setDialogStep(null)
-      openErrorDialog()
+      setDialogStep(ExtrinsicStatus.Error)
       return false
     }
   }

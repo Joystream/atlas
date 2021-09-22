@@ -135,7 +135,8 @@ export const SuccessIcon = styled.div`
   justify-content: center;
   background-color: ${colors.blue[500]};
   border-radius: 50%;
-  animation: ${zoomOut}, 600ms, ${transitions.easing}, 1;
+  opacity: 0;
+  animation: ${zoomOut} 600ms ${transitions.easing} 1 100ms forwards;
 `
 
 export const StyledSvgOutlineError = styled(SvgOutlineError)`

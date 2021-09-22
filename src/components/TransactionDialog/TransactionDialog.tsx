@@ -3,16 +3,11 @@ import { CSSTransition } from 'react-transition-group'
 
 import { ActionDialog, ActionDialogProps } from '@/components/ActionDialog'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import errorAnimation from '@/shared/assets/animations/stepper/error.json'
-import firstStepAnimation from '@/shared/assets/animations/stepper/step1.json'
-import secondStepAnimation from '@/shared/assets/animations/stepper/step2.json'
-import thirdStepAnimation from '@/shared/assets/animations/stepper/step3.json'
-import fourthStepAnimation from '@/shared/assets/animations/stepper/step4.json'
 import { Text } from '@/shared/components/Text'
-import { Tooltip } from '@/shared/components/Tooltip'
 import { SvgGlyphCheck } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
+import { TRANSACTION_STEPS_DETAILS } from './TransactionDialog.constants'
 import {
   PolkadotLogoWrapper,
   Step,
@@ -31,78 +26,6 @@ import { StyledDescriptionText, StyledTitleText } from '../MessageDialog/Message
 export type TransactionDialogProps = Pick<ActionDialogProps, 'className'> & {
   status: ExtrinsicStatus | null
   onClose: () => void
-}
-
-const TRANSACTION_STEPS_DETAILS = {
-  [ExtrinsicStatus.ProcessingAssets]: {
-    title: 'Processing your assets',
-    description:
-      "Please wait till all your assets get processed. This can take up to 1 minute, depending on asset size and your machine's computing power.",
-    tooltip: 'Processing',
-    animation: {
-      data: firstStepAnimation,
-      size: {
-        width: 216,
-        height: 216,
-      },
-      loop: true,
-    },
-  },
-  [ExtrinsicStatus.Unsigned]: {
-    title: 'Sign in Polkadot',
-    description: 'Please sign the transaction using the Polkadot browser extension.',
-    tooltip: 'Signature',
-    animation: {
-      data: secondStepAnimation,
-      size: {
-        width: 288,
-        height: 216,
-      },
-      loop: false,
-    },
-  },
-  [ExtrinsicStatus.Signed]: {
-    title: 'Processing transaction',
-    description:
-      'Your transaction has been signed and sent. Please wait for the blockchain confirmation. This should take about 15 seconds.',
-    tooltip: 'Confirmation',
-    animation: {
-      data: thirdStepAnimation,
-      size: {
-        width: 216,
-        height: 216,
-      },
-      loop: true,
-    },
-  },
-  [ExtrinsicStatus.Syncing]: {
-    title: 'Propagating changes',
-    description:
-      "Your transaction has been accepted and included into the blockchain. Please wait till it's picked up by the indexing node. This should take up to 15 seconds.",
-    tooltip: 'Propagation',
-    animation: {
-      data: fourthStepAnimation,
-      size: {
-        width: 144,
-        height: 144,
-      },
-      loop: true,
-    },
-  },
-  [ExtrinsicStatus.Error]: {
-    title: 'Something went wrong...',
-    description:
-      'An unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
-    tooltip: 'Propagation',
-    animation: {
-      data: errorAnimation,
-      size: {
-        width: 288,
-        height: 264,
-      },
-      loop: false,
-    },
-  },
 }
 
 export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, onClose, ...actionDialogProps }) => {
@@ -156,19 +79,18 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
       {...actionDialogProps}
     >
       <StepsBar>
-        {transactionSteps.map(({ tooltip }, idx) => (
-          <Tooltip key={idx} text={tooltip} placement="top-end">
-            <Step
-              loop={stepDetails?.animation.loop}
-              past={
-                status !== null &&
-                !error &&
-                idx < status - (nonUploadTransaction ? 1 : 0) &&
-                status - (nonUploadTransaction ? 1 : 0) !== idx
-              }
-              isActive={status !== null && !error && status - (nonUploadTransaction ? 1 : 0) === idx}
-            />
-          </Tooltip>
+        {transactionSteps.map((_, idx) => (
+          <Step
+            loop={stepDetails?.animation.loop}
+            key={`transactionStep-${idx}`}
+            past={
+              status !== null &&
+              !error &&
+              idx < status - (nonUploadTransaction ? 1 : 0) &&
+              status - (nonUploadTransaction ? 1 : 0) !== idx
+            }
+            isActive={status !== null && !error && status - (nonUploadTransaction ? 1 : 0) === idx}
+          />
         ))}
       </StepsBar>
       <StyledTransactionIllustration>
@@ -182,7 +104,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({ status, on
           <PolkadotLogoWrapper>
             <StyledPolkadotLogo />
             <Text secondary variant="caption">
-              Continue in Polkadot
+              Continue in Polkadot extension
             </Text>
           </PolkadotLogoWrapper>
         </CSSTransition>
