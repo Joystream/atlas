@@ -686,12 +686,13 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             : undefined,
         }}
         secondaryButton={{
-          text: !isEdit || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel',
-          isDraftBadgeVisible: !isEdit,
+          visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
+          text: 'Cancel',
           onClick: () => reset(),
           icon: <SvgPlayerCancel width={16} height={16} />,
         }}
         draftBadge={{
+          visible: !isEdit,
           text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
           tooltip: {
             text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',

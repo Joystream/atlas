@@ -1,6 +1,8 @@
 import React from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 import { SvgGlyphInfo } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
   ActionBarContainer,
@@ -28,6 +30,7 @@ type ActionDialogButtonProps = {
 type ActionDialogDraftBadge = {
   text: string
   tooltip?: TooltipProps
+  visible?: boolean
 }
 
 export type ActionBarProps = {
@@ -37,7 +40,7 @@ export type ActionBarProps = {
   fullWidth?: boolean
   className?: string
   primaryButton?: ActionDialogButtonProps
-  secondaryButton?: ActionDialogButtonProps & { isDraftBadgeVisible?: boolean }
+  secondaryButton?: ActionDialogButtonProps & { visible?: boolean }
   draftBadge?: ActionDialogDraftBadge
 }
 
@@ -55,16 +58,24 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     ) : null
 
     const secondaryButtonNode = secondaryButton?.text ? (
-      <Button
-        icon={size === 'compact' ? secondaryButton.icon : undefined}
-        disabled={secondaryButton.disabled}
-        onClick={secondaryButton.onClick}
-        variant={size === 'compact' ? 'tertiary' : 'secondary'}
-        size={size === 'compact' ? 'small' : 'large'}
-        iconPlacement="right"
+      <CSSTransition
+        in={secondaryButton.visible}
+        timeout={parseInt(transitions.timings.sharp)}
+        classNames={transitions.names.fade}
+        mountOnEnter
+        unmountOnExit
       >
-        {secondaryButton.text}
-      </Button>
+        <Button
+          icon={size === 'compact' ? secondaryButton.icon : undefined}
+          disabled={secondaryButton.disabled}
+          onClick={secondaryButton.onClick}
+          variant={size === 'compact' ? 'tertiary' : 'secondary'}
+          size={size === 'compact' ? 'small' : 'large'}
+          iconPlacement="right"
+        >
+          {secondaryButton.text}
+        </Button>
+      </CSSTransition>
     ) : null
 
     const primaryButtonNode = primaryButton?.text ? (
@@ -85,7 +96,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         <ActionBarContainer size={size} className={className}>
           <FlexWrapper compact>
             <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
-            {secondaryButton?.isDraftBadgeVisible ? draftBadgeNode : secondaryButtonNode}
+            {draftBadge?.visible ? draftBadgeNode : secondaryButtonNode}
           </FlexWrapper>
           {primaryButtonNode}
         </ActionBarContainer>
@@ -101,17 +112,16 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
           )}
         </FlexWrapper>
         <FlexWrapper>
-          {secondaryButtonNode}
-          {secondaryButton?.isDraftBadgeVisible && (
+          {draftBadge?.visible ? (
             <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
               {draftBadgeNode}
             </Tooltip>
+          ) : (
+            secondaryButtonNode
           )}
-          {primaryButton?.text && (
-            <Tooltip arrowDisabled placement="top-end" {...primaryButton.tooltip}>
-              {primaryButtonNode}
-            </Tooltip>
-          )}
+          <Tooltip arrowDisabled placement="top-end" {...primaryButton?.tooltip}>
+            {primaryButtonNode}
+          </Tooltip>
         </FlexWrapper>
       </ActionBarContainer>
     )

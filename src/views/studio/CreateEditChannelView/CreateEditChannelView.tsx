@@ -536,7 +536,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                     : undefined,
                 }}
                 secondaryButton={{
-                  text: newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel',
+                  visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
+                  text: 'Cancel',
                   onClick: () => reset(),
                   icon: <SvgPlayerCancel width={16} height={16} />,
                 }}
