@@ -22,15 +22,17 @@ export default {
 } as Meta
 
 const Template: Story = (args) => {
-  const { openContextMenu, closeContextMenu, contextMenuOpts } = useContextMenu()
+  const { openContextMenu, closeContextMenu, targetRef, isVisible } = useContextMenu()
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button onClick={(e) => openContextMenu(e, 200)}>Open menu on the left side</Button>
-        <Button onClick={(e) => openContextMenu(e, 200)}>Open menu on the right side</Button>
+        <Button ref={targetRef} onClick={openContextMenu}>
+          Open menu on the left side
+        </Button>
       </div>
       <div>
-        <ContextMenu contextMenuOpts={contextMenuOpts} {...args}>
+        <ContextMenu targetRef={targetRef} isVisible={isVisible} {...args}>
           <ContextMenuItem icon={<SvgGlyphEdit />} onClick={closeContextMenu}>
             Edit video
           </ContextMenuItem>

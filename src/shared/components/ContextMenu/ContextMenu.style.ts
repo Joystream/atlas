@@ -3,16 +3,7 @@ import styled from '@emotion/styled'
 import { colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Text } from '../Text'
 
-type ContainerProps = {
-  isActive?: boolean
-  position: { x: number; y: number; left: boolean }
-}
-
-export const StyledContainer = styled.div<ContainerProps>`
-  position: absolute;
-  top: ${({ position }) => position.y}px;
-  left: ${({ position }) => position.left && position.x}px;
-  right: ${({ position }) => !position.left && position.x}px;
+export const StyledContainer = styled.div`
   background-color: ${colors.gray[800]};
   width: 200px;
   color: ${colors.white};

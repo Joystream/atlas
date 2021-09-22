@@ -1,21 +1,13 @@
 import React, { ReactNode } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Portal } from '@/components/Portal'
-import { useOverlayManager } from '@/providers/overlayManager'
-
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
+
+import { PopoverBase, PopoverBaseProps } from '../PopoverBase/PopoverBase'
 
 type MenuItemProps = {
   icon: ReactNode
   onClick: () => void
-}
-
-type ContextMenuProps = {
-  contextMenuOpts: {
-    isActive?: boolean
-    position: { x: number; y: number; left: boolean }
-  }
 }
 
 export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onClick }) => {
@@ -27,13 +19,12 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
   )
 }
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
-  const { contextMenuContainerRef } = useOverlayManager()
+export const ContextMenu: React.FC<PopoverBaseProps> = ({ children, isVisible, ...rest }) => {
   return (
-    <Portal containerRef={contextMenuContainerRef}>
-      <CSSTransition in={isActive} timeout={150} classNames="menu" unmountOnExit>
-        <StyledContainer position={position}>{children}</StyledContainer>
+    <PopoverBase isVisible={isVisible} {...rest}>
+      <CSSTransition in={isVisible} timeout={150} classNames="menu" unmountOnExit>
+        <StyledContainer>{children}</StyledContainer>
       </CSSTransition>
-    </Portal>
+    </PopoverBase>
   )
 }

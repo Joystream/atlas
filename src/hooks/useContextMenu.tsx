@@ -1,35 +1,21 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-export const useContextMenu = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0, left: true })
-  const [isActive, setMenuActive] = useState(false)
+export const useContextMenu = <T extends HTMLElement = HTMLButtonElement>() => {
+  const [isVisible, setIsVisible] = useState(false)
+  const targetRef = useRef<T>(null)
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isVisible) {
       return
     }
-    const closeContextMenu = () => setMenuActive(false)
+    const closeContextMenu = () => setIsVisible(false)
     document.addEventListener('click', closeContextMenu, { once: true, capture: true })
-  }, [isActive])
+  }, [isVisible])
 
-  const openContextMenu = useCallback((event: React.MouseEvent, menuWidth: number) => {
-    const clickPositionFromRight = document.body.clientWidth - event.pageX
-    if (clickPositionFromRight > menuWidth) {
-      setPosition({ x: event.pageX, y: event.pageY, left: true })
-    } else {
-      setPosition({ x: clickPositionFromRight, y: event.pageY, left: false })
-    }
-    setMenuActive(true)
-  }, [])
-
-  const closeContextMenu = useCallback(() => {
-    setMenuActive(false)
-  }, [])
-
-  const contextMenuOpts = {
-    isActive,
-    position,
+  return {
+    targetRef,
+    openContextMenu: () => setIsVisible(true),
+    closeContextMenu: () => setIsVisible(false),
+    isVisible,
   }
-
-  return { openContextMenu, closeContextMenu, contextMenuOpts }
 }
