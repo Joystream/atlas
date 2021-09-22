@@ -26,8 +26,8 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
   if (disabled) {
     return css`
       opacity: 0.5;
-      background-color: ${checked ? colors.blue[50] : colors.gray[400]};
-      border: ${checked ? `2px solid ${colors.gray[400]}` : `1px solid ${colors.gray[200]}`};
+      background-color: ${checked ? colors.gray[50] : colors.gray[400]};
+      border: ${checked ? `4px solid ${colors.gray[400]}` : `1px solid ${colors.gray[200]}`};
       background-clip: ${checked ? 'content-box' : 'unset'};
 
       &::before {
@@ -40,28 +40,30 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
     `
   } else if (error) {
     return css`
-      background-color: ${checked ? colors.error : colors.transparent};
-      border: ${checked ? `2px solid ${colors.error}` : `1px solid ${colors.error}`};
+      background-color: ${checked ? colors.gray[50] : colors.transparent};
+      border: ${checked ? `4px solid ${colors.secondary.alert[100]}` : `1px solid ${colors.secondary.alert[100]}`};
+      padding: 0;
     `
   } else {
     return css`
-      border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
-      background-color: ${checked ? colors.blue[50] : colors.transparent};
+      border: ${checked ? `4px solid ${colors.blue[500]}` : `1px solid ${colors.gray[300]}`};
+      background-color: ${checked ? colors.gray[50] : colors.transparent};
+      padding: ${checked ? 0 : '3px'};
 
       &::before {
         transition: background-color 200ms ${transitions.easing};
       }
 
       &:hover {
-        border: ${checked ? `2px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
+        border: ${checked ? `4px solid ${colors.blue[500]}` : `1px solid ${colors.gray[200]}`};
 
         &::before {
-          background-color: ${colors.transparentPrimary[12]};
+          background-color: ${colors.transparentPrimary[18]};
         }
       }
 
       &:focus {
-        border-color: ${checked ? colors.transparent : colors.gray[700]};
+        border-color: ${checked ? colors.blue[500] : colors.gray[700]};
 
         &::before {
           background-color: ${checked ? colors.blue[200] : colors.gray[50]};
@@ -69,11 +71,22 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
       }
 
       &:active {
-        border: 1px solid ${colors.gray[50]};
-        padding: ${checked && '4px'};
+        border: ${checked ? `border: 4px solid ${colors.gray[50]}` : `1px solid ${colors.gray[200]}`};
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: -4px;
+          bottom: -4px;
+          left: -4px;
+          right: -4px;
+          display: ${checked ? 'block' : 'none'};
+          border-radius: 50%;
+          border: 1px solid ${colors.gray[50]};
+        }
 
         &::before {
-          background-color: ${colors.transparentPrimary[6]};
+          background-color: ${colors.transparentPrimary[10]};
         }
       }
     `
@@ -81,13 +94,13 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
 }
 
 export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
-  --radio-button-size: 18px;
+  --radio-button-size: 16px;
   --radio-button-container-size: ${sizes(6)};
 
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  grid-column-gap: ${sizes(3)};
+  grid-column-gap: ${sizes(1)};
   grid-row-gap: ${sizes(1)};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
@@ -114,10 +127,10 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
 
   &::before {
     content: '';
-    top: -8px;
-    bottom: -8px;
-    left: -8px;
-    right: -8px;
+    top: -12px;
+    bottom: -12px;
+    left: -12px;
+    right: -12px;
     border-radius: 50%;
     position: absolute;
     z-index: -1;
