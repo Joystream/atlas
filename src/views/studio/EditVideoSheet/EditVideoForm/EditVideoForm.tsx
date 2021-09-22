@@ -1,6 +1,6 @@
 import { formatISO, isValid } from 'date-fns'
 import { debounce } from 'lodash-es'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldError, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 
@@ -32,6 +32,7 @@ import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { TextField } from '@/shared/components/TextField'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgGlyphInfo } from '@/shared/icons'
+import { FileType } from '@/types/files'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
@@ -305,7 +306,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     watch,
   ])
 
-  const handleVideoFileChange = async (video: VideoInputFile | null) => {
+  const handleVideoFileChange = (video: VideoInputFile | null) => {
     const currentAssetsValue = getValues('assets')
 
     if (!video) {
@@ -341,7 +342,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleThumbnailFileChange = async (thumbnail: ImageInputFile | null) => {
+  const handleThumbnailFileChange = (thumbnail: ImageInputFile | null) => {
     const currentAssetsValue = getValues('assets')
 
     if (!thumbnail) {
@@ -378,18 +379,22 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setFileSelectError(null)
   }
 
-  const handleFileSelectError = async (errorCode: FileErrorType | null) => {
+  const handleFileSelectError = useCallback((errorCode: FileErrorType | null, fileType: FileType) => {
     if (!errorCode) {
       setFileSelectError(null)
     } else if (errorCode === 'file-invalid-type') {
-      setFileSelectError('Invalid file type')
+      setFileSelectError(
+        fileType === 'video'
+          ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
+          : `Preferred 16:9 image ratio`
+      )
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
       SentryLogger.error('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
       setFileSelectError('Unknown error')
     }
-  }
+  }, [])
 
   const handleDeleteVideo = () => {
     selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
@@ -404,7 +409,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
-
   return (
     <>
       <FormScrolling actionBarHeight={actionBarBounds.height}>
@@ -413,20 +417,18 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
             name="assets"
             control={control}
             render={() => (
-              <div>
-                <StyledMultiFileSelect
-                  files={{
-                    video: mediaAsset,
-                    thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
-                  }}
-                  onVideoChange={handleVideoFileChange}
-                  onThumbnailChange={handleThumbnailFileChange}
-                  editMode={isEdit}
-                  error={fileSelectError}
-                  onError={handleFileSelectError}
-                  maxVideoSize={10 * 1024 * 1024 * 1024}
-                />
-              </div>
+              <StyledMultiFileSelect
+                files={{
+                  video: mediaAsset,
+                  thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+                }}
+                onVideoChange={handleVideoFileChange}
+                onThumbnailChange={handleThumbnailFileChange}
+                editMode={isEdit}
+                error={fileSelectError}
+                onError={handleFileSelectError}
+                maxVideoSize={10 * 1024 * 1024 * 1024}
+              />
             )}
           />
           <InputsContainer>
@@ -590,29 +592,27 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                   rules={{
                     validate: (value) => value !== null,
                   }}
-                  render={({ field: { value, onChange, ref } }) => {
-                    return (
-                      <RadioButtonsContainer>
-                        <RadioButton
-                          ref={ref}
-                          value="false"
-                          label="All audiences"
-                          onChange={() => onChange(false)}
-                          selectedValue={value?.toString()}
-                          error={!!errors.isExplicit}
-                          helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                        />
-                        <RadioButton
-                          value="true"
-                          label="Mature"
-                          onChange={() => onChange(true)}
-                          selectedValue={value?.toString()}
-                          error={!!errors.isExplicit}
-                          helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                        />
-                      </RadioButtonsContainer>
-                    )
-                  }}
+                  render={({ field: { value, onChange, ref } }) => (
+                    <RadioButtonsContainer>
+                      <RadioButton
+                        ref={ref}
+                        value="false"
+                        label="All audiences"
+                        onChange={() => onChange(false)}
+                        selectedValue={value?.toString()}
+                        error={!!errors.isExplicit}
+                        helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                      />
+                      <RadioButton
+                        value="true"
+                        label="Mature"
+                        onChange={() => onChange(true)}
+                        selectedValue={value?.toString()}
+                        error={!!errors.isExplicit}
+                        helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
+                      />
+                    </RadioButtonsContainer>
+                  )}
                 />
               </ExtendedMarginFormField>
               <ExtendedMarginFormField

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { darken } from 'polished'
+import { animated } from 'react-spring'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
@@ -11,15 +12,15 @@ type DragAndDropAreaProps = {
   isFileDialogActive?: boolean
 }
 
-type ProgressBarProps = {
+type LoadingProp = {
   isLoading?: boolean
 }
 
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
+  overflow: hidden;
   position: relative;
   width: 100%;
-  height: 0;
-  padding-top: 90%;
+  height: 400px;
   display: flex;
   justify-content: center;
   transition: all ${transitions.timings.routing} ${transitions.easing};
@@ -41,17 +42,45 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
         isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
   }
 
-  :hover::after,
-  :focus::after {
-    border: 1px dashed ${colors.blue[500]};
-  }
-
   ${media.sm} {
+    height: 0;
     padding-top: 56.25%;
   }
 `
+export const SelectedFileInfo = styled(animated.div)<LoadingProp>`
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
 
-export const InnerContainer = styled.div`
+export const SelectedFileInfoInnerContainer = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+export const SelectedFileInfoHeading = styled(Text)`
+  color: ${colors.blue[200]};
+  display: block;
+  margin: ${sizes(4)} 0 ${sizes(1)} 0;
+`
+
+export const SelectedFileInfoBackground = styled.div`
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  opacity: 0.2;
+  background-color: ${colors.blue[500]};
+  height: 100%;
+`
+
+export const InnerContainer = styled(animated.div, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -60,40 +89,13 @@ export const InnerContainer = styled.div`
   flex-direction: column;
   display: flex;
   text-align: center;
-  max-width: 280px;
+  max-width: 270px;
   height: 100%;
-
-  ${media.sm} {
-    max-width: 350px;
-  }
+  opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
+  transition: opacity 400ms ease-out;
 `
 
-export const ProgressBar = styled.div<ProgressBarProps>`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.blue[500]};
-  opacity: 0.2;
-  top: 0;
-  position: absolute;
-  transform-origin: left;
-  transform: ${({ isLoading }) => `scaleX(${isLoading ? 1 : 0}) `};
-  transition: transform ${({ isLoading }) => (isLoading ? '1000ms' : '0ms')} ${transitions.easing};
-`
-
-export const ErrorContainer = styled.div`
-  position: absolute;
-  cursor: initial;
-  bottom: 0;
-  z-index: 2;
-  width: 100%;
-  padding: ${sizes(2)} 0;
-  background-color: ${colors.transparentError};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-export const Thumbnail = styled.img`
+export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => prop !== 'isLoading' })<LoadingProp>`
   position: absolute;
   top: 0;
   max-width: 100%;
@@ -101,14 +103,8 @@ export const Thumbnail = styled.img`
   object-fit: contain;
   cursor: pointer;
   display: block;
-
-  ${media.xs} {
-    object-fit: initial;
-  }
-`
-
-export const ErrorText = styled(Text)`
-  margin-left: ${sizes(4)};
+  opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
+  transition: opacity 400ms ease-out;
 `
 
 export const DismissButton = styled(IconButton)`
@@ -124,22 +120,14 @@ export const Title = styled(Text)`
 `
 
 export const Paragraph = styled(Text)`
-  margin-top: ${sizes(4)};
-
-  ${media.sm} {
-    margin-top: ${sizes(8)};
-  }
+  margin-top: ${sizes(3)};
 `
 
 export const ButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: ${sizes(4)} 0 ${sizes(2)} 0;
-
-  ${media.sm} {
-    margin: ${sizes(8)} 0 ${sizes(4)} 0;
-  }
+  margin-top: ${sizes(8)};
 `
 
 export const DragDropText = styled(Text)`
@@ -148,7 +136,5 @@ export const DragDropText = styled(Text)`
   ${media.sm} {
     display: initial;
     margin-right: ${sizes(5)};
-    color: ${colors.gray[300]};
-    text-decoration: underline;
   }
 `
