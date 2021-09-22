@@ -4,6 +4,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
 import { Grid } from '@/shared/components/Grid'
 import { Pagination } from '@/shared/components/Pagination'
+import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
@@ -19,12 +20,17 @@ export const StyledText = styled(Text)`
 `
 
 export const TabsContainer = styled.div`
-  margin-bottom: ${sizes(12)};
+  margin: ${sizes(12)} 0;
   border-bottom: solid 1px ${colors.gray[800]};
 
-  ${media.md} {
+  ${media.sm} {
     display: grid;
-    grid-template-columns: 1fr 250px;
+    align-items: center;
+    grid-template-columns: 1fr auto;
+  }
+  ${media.md} {
+    gap: ${sizes(4)};
+    grid-template-columns: 1fr 250px auto;
   }
 `
 
@@ -41,12 +47,10 @@ export const StyledDismissibleBanner = styled(DismissibleBanner)`
   margin-bottom: ${sizes(12)};
 `
 
-export const SortContainer = styled.div`
-  display: none;
-  grid-gap: 8px;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  ${media.md} {
-    display: grid;
+export const StyledSelect = styled(Select)`
+  margin-bottom: ${sizes(4)};
+  ${media.sm} {
+    margin-left: auto;
+    width: 250px;
   }
-`
+` as typeof Select

@@ -27,6 +27,7 @@ import {
   StyledGrid,
   StyledLimitedWidthContainer,
   StyledPagination,
+  StyledSelect,
   StyledText,
   TabsContainer,
 } from './MyVideos.styles'
@@ -50,6 +51,7 @@ export const MyVideosView = () => {
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
@@ -270,38 +272,44 @@ export const MyVideosView = () => {
     return <ViewErrorFallback />
   }
 
+  const sortVisibleAndUploadButtonVisible = isDraftTab ? !!drafts.length : !hasNoVideos
+
+  const uploadButtonNode = (
+    <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+      Upload Video
+    </Button>
+  )
+
+  const sortSelectNode = (
+    <Select
+      size="small"
+      labelPosition="left"
+      label="Sort by"
+      helperText={null}
+      value={sortVideosBy}
+      items={SORT_OPTIONS}
+      onChange={handleSorting}
+    />
+  )
+
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
-      {!smMatch && !hasNoVideos && (
-        <Button size="large" to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
-          Upload Video
-        </Button>
-      )}
+      {!smMatch && sortVisibleAndUploadButtonVisible && uploadButtonNode}
       {hasNoVideos ? (
         <EmptyFallback
           verticalCentered
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
-          button={
-            <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
-              Upload video
-            </Button>
-          }
+          button={uploadButtonNode}
         />
       ) : (
         <>
           <TabsContainer>
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-            <Select
-              labelPosition="left"
-              label="Sort by"
-              helperText={null}
-              value={sortVideosBy}
-              items={SORT_OPTIONS}
-              onChange={handleSorting}
-            />
+            {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
+            {smMatch && sortVisibleAndUploadButtonVisible && uploadButtonNode}
           </TabsContainer>
           {isDraftTab && (
             <StyledDismissibleBanner
@@ -317,6 +325,17 @@ export const MyVideosView = () => {
               title="Unlisted videos can be seen only with direct link"
               icon="info"
               description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
+            />
+          )}
+          {!mdMatch && sortVisibleAndUploadButtonVisible && (
+            <StyledSelect
+              size="small"
+              labelPosition="left"
+              label="Sort by"
+              helperText={null}
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
             />
           )}
           <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(4)}>
@@ -344,16 +363,7 @@ export const MyVideosView = () => {
                   ? "Each video that hasn't been published yet will be available here as a draft."
                   : 'Videos published with "Unlisted" privacy setting will show up here.'
               }
-              button={
-                <Button
-                  icon={<SvgGlyphUpload />}
-                  to={absoluteRoutes.studio.editVideo()}
-                  variant="secondary"
-                  size="large"
-                >
-                  Upload video
-                </Button>
-              }
+              button={uploadButtonNode}
             />
           )}
           <StyledPagination
