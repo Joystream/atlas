@@ -45,102 +45,106 @@ export type ActionBarProps = {
   }
 }
 
-export const ActionBar: React.FC<ActionBarProps> = ({
-  primaryText,
-  secondaryText,
-  className,
-  primaryButtonText,
-  primaryButtonDisabled,
-  primaryButtonOnClick,
-  primaryButtonTooltip,
-  secondaryButtonText,
-  secondaryButtonDisabled,
-  secondaryButtonIcon,
-  secondaryButtonVariant,
-  secondaryButtonOnClick,
-  detailsTextTooltip,
-  detailsText,
-  size = 'compact',
-}) => {
-  const detailsNode =
-    secondaryButtonVariant === 'draft' ? (
-      <DetailsContainer size={size}>
-        <Text variant="body2" secondary>
-          {detailsText}
-        </Text>
-        <DetailsIconWrapper>
-          <SvgGlyphInfo />
-        </DetailsIconWrapper>
-      </DetailsContainer>
-    ) : null
+export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
+  ({
+    primaryText,
+    secondaryText,
+    className,
+    primaryButtonText,
+    primaryButtonDisabled,
+    primaryButtonOnClick,
+    primaryButtonTooltip,
+    secondaryButtonText,
+    secondaryButtonDisabled,
+    secondaryButtonIcon,
+    secondaryButtonVariant,
+    secondaryButtonOnClick,
+    detailsTextTooltip,
+    detailsText,
+    size = 'compact',
+  }) => {
+    const detailsNode =
+      secondaryButtonVariant === 'draft' ? (
+        <DetailsContainer size={size}>
+          <Text variant="body2" secondary>
+            {detailsText}
+          </Text>
+          <DetailsIconWrapper>
+            <SvgGlyphInfo />
+          </DetailsIconWrapper>
+        </DetailsContainer>
+      ) : null
 
-  const secondaryButtonNode =
-    secondaryButtonVariant === 'default' && secondaryButtonText ? (
-      <Button
-        icon={size === 'compact' ? secondaryButtonIcon : undefined}
-        disabled={secondaryButtonDisabled}
-        onClick={secondaryButtonOnClick}
-        variant={size === 'compact' ? 'tertiary' : 'secondary'}
-        size={size === 'compact' ? 'small' : 'large'}
-        iconPlacement="right"
+    const secondaryButtonNode =
+      secondaryButtonVariant === 'default' && secondaryButtonText ? (
+        <Button
+          icon={size === 'compact' ? secondaryButtonIcon : undefined}
+          disabled={secondaryButtonDisabled}
+          onClick={secondaryButtonOnClick}
+          variant={size === 'compact' ? 'tertiary' : 'secondary'}
+          size={size === 'compact' ? 'small' : 'large'}
+          iconPlacement="right"
+        >
+          {secondaryButtonText}
+        </Button>
+      ) : null
+
+    const primaryButtonNode = primaryButtonText ? (
+      <ActionButtonPrimary
+        actonBarSize={size}
+        disabled={primaryButtonDisabled}
+        fullWidth={size === 'compact'}
+        onClick={primaryButtonOnClick}
+        size="large"
+        type="submit"
       >
-        {secondaryButtonText}
-      </Button>
+        {primaryButtonText}
+      </ActionButtonPrimary>
     ) : null
 
-  const primaryButtonNode = primaryButtonText ? (
-    <ActionButtonPrimary
-      actonBarSize={size}
-      disabled={primaryButtonDisabled}
-      fullWidth={size === 'compact'}
-      onClick={primaryButtonOnClick}
-      size="large"
-      type="submit"
-    >
-      {primaryButtonText}
-    </ActionButtonPrimary>
-  ) : null
-
-  if (size === 'compact')
+    if (size === 'compact')
+      return (
+        <ActionBarContainer size={size} className={className}>
+          <FlexWrapper>
+            <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
+            {secondaryButtonNode}
+            {detailsNode}
+          </FlexWrapper>
+          {primaryButtonNode}
+        </ActionBarContainer>
+      )
     return (
       <ActionBarContainer size={size} className={className}>
         <FlexWrapper>
           <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
-          {secondaryButtonNode}
-          {detailsNode}
+          {size === 'large' && (
+            <StyledSecondaryText variant="body2" secondary>
+              {secondaryText}
+            </StyledSecondaryText>
+          )}
         </FlexWrapper>
-        {primaryButtonNode}
+        <FlexWrapper>
+          {secondaryButtonNode}
+          {secondaryButtonVariant === 'draft' && detailsText && (
+            <Tooltip arrowDisabled text={detailsTextTooltip?.text} placement="top-end">
+              {detailsNode}
+            </Tooltip>
+          )}
+          {primaryButtonText && (
+            <Tooltip
+              arrowDisabled
+              headerText={primaryButtonTooltip?.headerText}
+              text={primaryButtonTooltip?.text}
+              icon={primaryButtonTooltip?.icon}
+              placement="top-end"
+            >
+              {primaryButtonNode}
+            </Tooltip>
+          )}
+        </FlexWrapper>
       </ActionBarContainer>
     )
-  return (
-    <ActionBarContainer size={size} className={className}>
-      <FlexWrapper>
-        <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
-        {size === 'large' && (
-          <StyledSecondaryText variant="body2" secondary>
-            {secondaryText}
-          </StyledSecondaryText>
-        )}
-      </FlexWrapper>
-      <FlexWrapper>
-        {secondaryButtonNode}
-        {secondaryButtonVariant === 'draft' && detailsText && (
-          <Tooltip arrowDisabled text={detailsTextTooltip?.text} placement="top-end">
-            {detailsNode}
-          </Tooltip>
-        )}
-        {primaryButtonText && (
-          <Tooltip
-            arrowDisabled
-            headerText={primaryButtonTooltip?.headerText}
-            text={primaryButtonTooltip?.text}
-            icon={primaryButtonTooltip?.icon}
-            placement="top-end"
-          >
-            {primaryButtonNode}
-          </Tooltip>
-        )}
-      </FlexWrapper>
-    </ActionBarContainer>
-  )
-}
+  }
+)
+
+ActionBar.displayName = 'ActionBar'

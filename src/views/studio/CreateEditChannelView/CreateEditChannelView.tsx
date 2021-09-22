@@ -20,7 +20,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'
-import { ActionBarTransaction } from '@/shared/components/ActionBar'
+import { ActionBar } from '@/shared/components/ActionBar'
 import { ChannelCover } from '@/shared/components/ChannelCover'
 import { FormField } from '@/shared/components/FormField'
 import { Select, SelectItem } from '@/shared/components/Select'
@@ -37,8 +37,10 @@ import { formatNumberShort } from '@/utils/number'
 import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
 
 import {
+  ActionBarTransactionWrapper,
   InnerFormContainer,
   StyledAvatar,
+  StyledProgressDrawer,
   StyledSubTitle,
   StyledTitleArea,
   StyledTitleSection,
@@ -71,7 +73,6 @@ type CreateEditChannelViewProps = {
 export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
@@ -507,37 +508,41 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ActionBarTransaction
-              fee={0}
-              primaryButtonDisabled={isDisabled}
-              progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
-              fullWidth={!activeChannelId}
-              primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
-              primaryButtonOnClick={handleSubmit}
-              secondaryButtonText={
-                newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'
-              }
-              secondaryButtonOnClick={() => reset()}
-              secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
-              secondaryButtonVariant="default"
-              primaryButtonTooltip={
-                isDisabled
-                  ? {
-                      headerText: newChannel
-                        ? 'Fill all required fields to proceed'
-                        : isValid
-                        ? 'Change anything to proceed'
-                        : 'Fill all required fields to proceed',
-                      text: newChannel
-                        ? 'Required: title'
-                        : isValid
-                        ? 'To publish changes you have to provide new value to any field'
-                        : 'Required: title',
-                      icon: true,
-                    }
-                  : undefined
-              }
-            />
+            <ActionBarTransactionWrapper fullWidth={!activeChannelId}>
+              {!activeChannelId && progressDrawerSteps?.length ? (
+                <StyledProgressDrawer steps={progressDrawerSteps} />
+              ) : null}
+              <ActionBar
+                primaryText={`Fee: 0 Joy`}
+                secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+                primaryButtonDisabled={isDisabled}
+                primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
+                primaryButtonOnClick={handleSubmit}
+                secondaryButtonText={
+                  newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel'
+                }
+                secondaryButtonOnClick={() => reset()}
+                secondaryButtonIcon={<SvgPlayerCancel width={16} height={16} />}
+                secondaryButtonVariant="default"
+                primaryButtonTooltip={
+                  isDisabled
+                    ? {
+                        headerText: newChannel
+                          ? 'Fill all required fields to proceed'
+                          : isValid
+                          ? 'Change anything to proceed'
+                          : 'Fill all required fields to proceed',
+                        text: newChannel
+                          ? 'Required: title'
+                          : isValid
+                          ? 'To publish changes you have to provide new value to any field'
+                          : 'Required: title',
+                        icon: true,
+                      }
+                    : undefined
+                }
+              />
+            </ActionBarTransactionWrapper>
           </CSSTransition>
         </InnerFormContainer>
       </LimitedWidthContainer>

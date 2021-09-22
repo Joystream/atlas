@@ -2,7 +2,6 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { ActionBar, ActionBarProps } from './ActionBar'
-import { ActionBarTransaction, ActionBarTransactionProps } from './ActionBarTransaction'
 
 export default {
   title: 'Shared/A/ActionBar',
@@ -29,7 +28,3 @@ export default {
 const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} />
 
 export const Default = Template.bind({})
-
-const TransactionTemplate: Story<ActionBarTransactionProps> = (args) => <ActionBarTransaction {...args} />
-
-export const Transaction = TransactionTemplate.bind({})

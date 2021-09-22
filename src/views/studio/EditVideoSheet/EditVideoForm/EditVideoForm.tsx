@@ -21,6 +21,7 @@ import {
   useEditVideoSheetTabData,
 } from '@/providers/editVideoSheet'
 import { useAuthorizedUser } from '@/providers/user'
+import { ActionBar } from '@/shared/components/ActionBar'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
@@ -36,7 +37,6 @@ import { FileType } from '@/types/files'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
-import { StyledActionBar } from '@/views/studio/EditVideoSheet/EditVideoSheet.style'
 
 import {
   DeleteVideoButton,
@@ -90,6 +90,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const mdMatch = useMediaMatch('md')
+  const lgMatch = useMediaMatch('lg')
+
+  const actionBarSize = lgMatch ? 'large' : smMatch ? 'medium' : 'compact'
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -657,8 +660,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </InputsContainer>
         </FormWrapper>
       </FormScrolling>
-      <StyledActionBar
+      <ActionBar
         ref={actionBarRef}
+        size={actionBarSize}
+        primaryText={`Fee: ${fee} Joy`}
+        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
         primaryButtonText={isEdit ? 'Publish changes' : 'Upload'}
         primaryButtonDisabled={isDisabled}
         primaryButtonOnClick={handleSubmit}
@@ -688,7 +694,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
         }}
         fullWidth={true}
-        fee={fee}
       />
     </>
   )
