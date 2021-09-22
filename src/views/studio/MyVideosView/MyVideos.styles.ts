@@ -30,7 +30,7 @@ export const TabsContainer = styled.div`
 `
 
 export const StyledGrid = styled(Grid)`
-  grid-template-rows: 1fr 1fr;
+  grid-auto-rows: 1fr;
 `
 
 export const StyledPagination = styled(Pagination)`
