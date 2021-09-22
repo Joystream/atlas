@@ -27,6 +27,11 @@ export const FormGroup = styled.label<FormGroupProps>`
     font-size: ${typography.sizes.body1};
     line-height: 28px;
 
+    input,
+    textarea {
+      color: ${colors.gray[50]};
+    }
+
     :disabled {
       cursor: not-allowed;
     }
@@ -39,18 +44,13 @@ export const FormGroup = styled.label<FormGroupProps>`
       border: 1px solid ${colors.gray[200]};
     }
 
-    :focus {
+    &:focus {
       border: 1px solid ${colors.blue[500]};
     }
 
     :not(:focus):not(button) {
       border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
     }
-  }
-
-  input,
-  textarea {
-    color: ${colors.gray[50]};
   }
 `
 

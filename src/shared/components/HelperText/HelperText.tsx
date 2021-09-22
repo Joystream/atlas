@@ -24,7 +24,7 @@ export const HelperText: React.FC<HelperTextProps> = ({
   maxLength,
   warning,
   error,
-  helperText = '\u00A0',
+  helperText,
   charactersCount,
   className,
 }) => {
