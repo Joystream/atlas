@@ -12,5 +12,5 @@ export const UploadsContainer = styled(LimitedWidthContainer)`
 `
 
 export const StyledText = styled(Text)`
-  margin: ${sizes(8)} 0;
+  margin: ${sizes(12)} 0;
 `

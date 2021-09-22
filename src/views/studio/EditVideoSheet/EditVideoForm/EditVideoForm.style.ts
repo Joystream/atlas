@@ -26,7 +26,7 @@ export const RadioButtonsContainer = styled.div`
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
     position: sticky;
-    top: ${sizes(8)};
+    top: ${sizes(12)};
   }
 `
 
@@ -40,29 +40,21 @@ export const FormWrapper = styled(LimitedWidthContainer)`
   display: grid;
   grid-template-rows: max-content max-content;
   grid-template-columns: 100%;
-  padding: ${sizes(8)} ${sizes(4)};
-
-  ${media.sm} {
-    padding: ${sizes(8)};
-  }
+  padding: ${sizes(12)} ${sizes(4)};
 
   ${media.md} {
+    padding: ${sizes(12)} ${sizes(8)};
     padding-bottom: 0;
     grid-gap: ${sizes(12)};
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 1fr;
-  }
-
-  ${media.lg} {
-    padding: ${sizes(8)} 0 0 0;
   }
 `
 
 export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${sizes(4)};
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(20)};
   ${media.md} {
     margin-top: 0;
   }
