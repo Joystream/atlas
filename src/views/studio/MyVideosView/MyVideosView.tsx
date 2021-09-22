@@ -8,6 +8,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useDialog } from '@/providers/dialogs'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useEditVideoSheet } from '@/providers/editVideoSheet'
@@ -17,13 +18,11 @@ import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
-import { Text } from '@/shared/components/Text'
 import { SvgGlyphUpload } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  SortContainer,
   StyledDismissibleBanner,
   StyledGrid,
   StyledLimitedWidthContainer,
@@ -50,6 +49,7 @@ export const MyVideosView = () => {
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
+  const smMatch = useMediaMatch('sm')
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
@@ -274,6 +274,11 @@ export const MyVideosView = () => {
   return (
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
+      {!smMatch && !hasNoVideos && (
+        <Button size="large" to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+          Upload Video
+        </Button>
+      )}
       {hasNoVideos ? (
         <EmptyFallback
           verticalCentered
@@ -289,10 +294,14 @@ export const MyVideosView = () => {
         <>
           <TabsContainer>
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-            <SortContainer>
-              <Text variant="body2">Sort by</Text>
-              <Select value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-            </SortContainer>
+            <Select
+              labelPosition="left"
+              label="Sort by"
+              helperText={null}
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
+            />
           </TabsContainer>
           {isDraftTab && (
             <StyledDismissibleBanner

@@ -3,9 +3,19 @@ import React, { Ref } from 'react'
 
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
-import { SelectBadge, SelectButton, SelectMenu, SelectOption, SelectWrapper, StyledSvgGlyphInfo } from './Select.style'
+import {
+  SelectBadge,
+  SelectButton,
+  SelectLabel,
+  SelectMenu,
+  SelectMenuWrapper,
+  SelectOption,
+  SelectWrapper,
+  StyledLabelText,
+  StyledSvgGlyphInfo,
+} from './Select.style'
 
-import { InputBase, InputBaseProps, LabelText } from '../InputBase'
+import { InputBase, InputBaseProps } from '../InputBase'
 import { Tooltip } from '../Tooltip'
 
 export type SelectSizes = 'regular' | 'small'
@@ -21,6 +31,7 @@ export type SelectItem<T = string> = {
 export type SelectProps<T = string> = {
   onChange?: (value?: T | null) => void
   value?: T | null
+  labelPosition?: 'top' | 'left'
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
@@ -31,6 +42,7 @@ export type SelectProps<T = string> = {
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 export const Select = <T extends unknown>({
   label = '',
+  labelPosition = 'top',
   items,
   placeholder = 'Select option',
   error,
@@ -61,47 +73,49 @@ export const Select = <T extends unknown>({
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
-      <SelectWrapper ref={containerRef}>
-        <label {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
-          {label && <LabelText>{label}</LabelText>}
-        </label>
-        <SelectButton
-          disabled={disabled}
-          error={error}
-          filled={selectedItemValue != null}
-          isOpen={isOpen}
-          type="button"
-          {...getToggleButtonProps()}
-          tabIndex={disabled ? -1 : 0}
-          size={size}
-        >
-          {selectedItem?.name || placeholder}
-          {selectedItem?.badgeText && <SelectBadge variant="caption">{selectedItem.badgeText}</SelectBadge>}
-          <SvgGlyphChevronDown />
-        </SelectButton>
-        <SelectMenu isOpen={isOpen} {...getMenuProps()}>
-          {isOpen &&
-            items.map((item, index) => (
-              <SelectOption
-                isSelected={highlightedIndex === index}
-                key={`${item.name}-${index}`}
-                {...getItemProps({ item: item.value, index })}
-              >
-                {item.tooltipText && (
-                  <Tooltip
-                    headerText={item.tooltipHeaderText}
-                    text={item.tooltipText}
-                    placement="top-end"
-                    offsetX={6}
-                    offsetY={12}
-                  >
-                    <StyledSvgGlyphInfo />
-                  </Tooltip>
-                )}
-                {item?.name}
-              </SelectOption>
-            ))}
-        </SelectMenu>
+      <SelectWrapper labelPosition={labelPosition} ref={containerRef}>
+        <SelectLabel {...getLabelProps()} tabIndex={disabled ? -1 : 0}>
+          {label && <StyledLabelText labelPosition={labelPosition}>{label}</StyledLabelText>}
+        </SelectLabel>
+        <SelectMenuWrapper>
+          <SelectButton
+            disabled={disabled}
+            error={error}
+            filled={selectedItemValue != null}
+            isOpen={isOpen}
+            type="button"
+            {...getToggleButtonProps()}
+            tabIndex={disabled ? -1 : 0}
+            size={size}
+          >
+            {selectedItem?.name || placeholder}
+            {selectedItem?.badgeText && <SelectBadge variant="caption">{selectedItem.badgeText}</SelectBadge>}
+            <SvgGlyphChevronDown />
+          </SelectButton>
+          <SelectMenu isOpen={isOpen} {...getMenuProps()}>
+            {isOpen &&
+              items.map((item, index) => (
+                <SelectOption
+                  isSelected={highlightedIndex === index}
+                  key={`${item.name}-${index}`}
+                  {...getItemProps({ item: item.value, index })}
+                >
+                  {item.tooltipText && (
+                    <Tooltip
+                      headerText={item.tooltipHeaderText}
+                      text={item.tooltipText}
+                      placement="top-end"
+                      offsetX={6}
+                      offsetY={12}
+                    >
+                      <StyledSvgGlyphInfo />
+                    </Tooltip>
+                  )}
+                  {item?.name}
+                </SelectOption>
+              ))}
+          </SelectMenu>
+        </SelectMenuWrapper>
       </SelectWrapper>
     </InputBase>
   )

@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 
+import { Text } from '../Text'
+
 type FormGroupProps = {
   error?: boolean
   disabled?: boolean
@@ -54,12 +56,10 @@ export const FormGroup = styled.label<FormGroupProps>`
   }
 `
 
-export const LabelText = styled.span`
+export const LabelText = styled(Text)`
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
   margin-bottom: ${sizes(2)};
-  color: ${colors.gray[200]};
-  font-size: ${typography.sizes.body2};
 `

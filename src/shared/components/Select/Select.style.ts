@@ -5,11 +5,22 @@ import { SvgGlyphInfo } from '@/shared/icons'
 import { colors, sizes, transitions, typography } from '@/shared/theme'
 
 import { SelectSizes } from '.'
+import { LabelText } from '../InputBase'
 import { Text } from '../Text'
 
-export const SelectWrapper = styled.div`
+type SelectWrapperProps = {
+  labelPosition?: 'top' | 'left'
+}
+
+export const SelectWrapper = styled.div<SelectWrapperProps>`
   width: 100%;
   position: relative;
+  ${({ labelPosition }) =>
+    labelPosition === 'left' &&
+    css`
+      display: flex;
+      align-items: center;
+    `};
 `
 type SelectButtonProps = {
   isOpen?: boolean
@@ -18,6 +29,22 @@ type SelectButtonProps = {
   disabled?: boolean
   size?: SelectSizes
 }
+
+export const SelectLabel = styled.label`
+  flex-shrink: 0;
+`
+type StyledLabelTextProps = {
+  labelPosition?: 'top' | 'left'
+}
+export const StyledLabelText = styled(LabelText)<StyledLabelTextProps>`
+  margin-bottom: ${({ labelPosition }) => (labelPosition === 'top' ? sizes(2) : 0)};
+  margin-right: ${({ labelPosition }) => (labelPosition === 'left' ? sizes(2) : 0)};
+`
+
+export const SelectMenuWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
 
 export const SelectButton = styled.button<SelectButtonProps>`
   cursor: pointer;
