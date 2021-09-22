@@ -10,7 +10,7 @@ export const StepsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
-  margin-top: ${sizes(5)};
+  margin-top: ${sizes(10)};
   position: relative;
 
   ${media.sm} {
