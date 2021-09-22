@@ -24,6 +24,7 @@ export const PaginationWrapper = styled.div`
 
 export const ChevronButton = styled(IconButton)`
   user-select: none;
+
   &:first-of-type {
     margin-right: ${ARROWS_MARGINS}px;
   }

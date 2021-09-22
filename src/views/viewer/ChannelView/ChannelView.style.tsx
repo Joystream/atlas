@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
@@ -5,6 +6,7 @@ import { ChannelLink } from '@/components/ChannelLink'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
+import { Select } from '@/shared/components/Select'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
@@ -15,6 +17,18 @@ const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
+
+const activeUnderline = css`
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: ${colors.blue[500]};
+    bottom: -${sizes(3)};
+  }
+`
 
 export const TitleSection = styled.div`
   display: grid;
@@ -56,8 +70,9 @@ export const SortContainer = styled.div`
   display: grid;
   grid-gap: 8px;
   align-items: center;
-  grid-template-columns: 1fr;
-  ${media.xs} {
+  grid-template-columns: auto 1fr;
+
+  ${media.sm} {
     grid-template-columns: auto 1fr;
     grid-area: initial;
   }
@@ -137,14 +152,15 @@ export const TabsContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     'tabs tabs tabs'
-    'search sort sort';
-  align-items: flex-end;
-  grid-template-rows: 1fr 78px;
+    'search search search'
+    'sort sort sort';
+  grid-template-rows: 1fr auto auto;
+  align-items: baseline;
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
   ${media.sm} {
-    align-items: baseline;
+    align-items: center;
     border-bottom: solid 1px ${colors.gray[800]};
     grid-template-areas: initial;
     gap: ${sizes(8)};
@@ -153,15 +169,20 @@ export const TabsContainer = styled.div`
   }
 `
 
-export const SearchContainer = styled.div`
+type SearchContainerProps = {
+  isOpen?: boolean
+}
+export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
   width: 100%;
   align-items: center;
-  align-self: end;
+  margin: ${sizes(6)} 0 ${sizes(16)};
+  position: relative;
   ${media.sm} {
-    align-self: initial;
     grid-area: initial;
+    margin: 0;
+    max-width: 200px;
   }
 `
 
@@ -176,19 +197,30 @@ export const StyledTabs = styled(Tabs)`
 
 type TextFieldProps = {
   isOpen?: boolean
+  isSearching?: boolean
 }
 export const StyledTextField = styled(TextField)<TextFieldProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing};
   will-change: max-width;
-  width: 100%;
   align-items: center;
-  max-width: ${({ isOpen }) => (isOpen ? '192px' : '0px')};
+  position: relative;
+
+  ${media.sm} {
+    max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
+  }
+
+  ${({ isSearching }) => isSearching && activeUnderline}
 
   > input {
-    ${({ isOpen }) => isOpen === false && 'border: none !important'};
-
+    height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${colors.blue[500]};
+    font-size: ${typography.sizes.body2};
+    line-height: ${typography.lineHeights.body2};
+
+    ${media.sm} {
+      ${({ isOpen }) => isOpen === false && 'border: none !important'};
+    }
 
     &:focus {
       border: 1px solid ${colors.white};
@@ -200,13 +232,28 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   }
 `
 
-export const SearchButton = styled(IconButton)`
-  position: absolute;
-`
-
+type SearchButttonProps = {
+  isSearching?: boolean
+  isOpen?: boolean
+}
 export const NotFoundChannelContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+`
+
+export const SearchButton = styled(IconButton)<SearchButttonProps>`
+  position: absolute;
+
+  ${media.sm} {
+    ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
+  }
+`
+
+export const StyledSelect = styled(Select)`
+  button {
+    font-size: ${typography.sizes.body2};
+    line-height: ${typography.lineHeights.body2};
+  }
 `
