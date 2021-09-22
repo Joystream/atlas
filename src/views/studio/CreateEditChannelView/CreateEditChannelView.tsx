@@ -539,7 +539,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   text: newChannel || !isDirty || nodeConnectionStatus !== 'connected' ? undefined : 'Cancel',
                   onClick: () => reset(),
                   icon: <SvgPlayerCancel width={16} height={16} />,
-                  isDraftButton: false,
                 }}
               />
             </ActionBarTransactionWrapper>

@@ -5,8 +5,8 @@ import { SvgGlyphInfo } from '@/shared/icons'
 import {
   ActionBarContainer,
   ActionButtonPrimary,
-  DetailsContainer,
   DetailsIconWrapper,
+  DraftsBadgeContainer,
   FlexWrapper,
   StyledPrimaryText,
   StyledSecondaryText,
@@ -22,9 +22,13 @@ type ActionDialogButtonProps = {
   text?: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
-  isDraftButton?: boolean
   tooltip?: TooltipProps
 } & Omit<ButtonProps, 'children'>
+
+type ActionDialogDraftBadge = {
+  text: string
+  tooltip?: TooltipProps
+}
 
 export type ActionBarProps = {
   size?: ActionBarSize
@@ -33,50 +37,35 @@ export type ActionBarProps = {
   fullWidth?: boolean
   className?: string
   primaryButton?: ActionDialogButtonProps
-  secondaryButton?: ActionDialogButtonProps
-  detailsText?: string
-  detailsTextTooltip?: {
-    text: string
-    headerText?: string
-    icon?: boolean
-  }
+  secondaryButton?: ActionDialogButtonProps & { isDraftBadgeVisible?: boolean }
+  draftBadge?: ActionDialogDraftBadge
 }
 
 export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  ({
-    primaryText,
-    secondaryText,
-    className,
-    primaryButton,
-    secondaryButton,
-    detailsTextTooltip,
-    detailsText,
-    size = 'compact',
-  }) => {
-    const detailsNode = secondaryButton?.isDraftButton ? (
-      <DetailsContainer size={size}>
+  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, size = 'compact' }) => {
+    const draftBadgeNode = draftBadge ? (
+      <DraftsBadgeContainer size={size}>
         <Text variant="body2" secondary>
-          {detailsText}
+          {draftBadge.text}
         </Text>
         <DetailsIconWrapper>
           <SvgGlyphInfo />
         </DetailsIconWrapper>
-      </DetailsContainer>
+      </DraftsBadgeContainer>
     ) : null
 
-    const secondaryButtonNode =
-      !secondaryButton?.isDraftButton && secondaryButton?.text ? (
-        <Button
-          icon={size === 'compact' ? secondaryButton.icon : undefined}
-          disabled={secondaryButton.disabled}
-          onClick={secondaryButton.onClick}
-          variant={size === 'compact' ? 'tertiary' : 'secondary'}
-          size={size === 'compact' ? 'small' : 'large'}
-          iconPlacement="right"
-        >
-          {secondaryButton.text}
-        </Button>
-      ) : null
+    const secondaryButtonNode = secondaryButton?.text ? (
+      <Button
+        icon={size === 'compact' ? secondaryButton.icon : undefined}
+        disabled={secondaryButton.disabled}
+        onClick={secondaryButton.onClick}
+        variant={size === 'compact' ? 'tertiary' : 'secondary'}
+        size={size === 'compact' ? 'small' : 'large'}
+        iconPlacement="right"
+      >
+        {secondaryButton.text}
+      </Button>
+    ) : null
 
     const primaryButtonNode = primaryButton?.text ? (
       <ActionButtonPrimary
@@ -96,8 +85,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         <ActionBarContainer size={size} className={className}>
           <FlexWrapper compact>
             <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
-            {secondaryButtonNode}
-            {detailsNode}
+            {secondaryButton?.isDraftBadgeVisible ? draftBadgeNode : secondaryButtonNode}
           </FlexWrapper>
           {primaryButtonNode}
         </ActionBarContainer>
@@ -114,9 +102,9 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         </FlexWrapper>
         <FlexWrapper>
           {secondaryButtonNode}
-          {secondaryButton?.isDraftButton && detailsText && (
-            <Tooltip arrowDisabled text={detailsTextTooltip?.text} placement="top-end">
-              {detailsNode}
+          {secondaryButton?.isDraftBadgeVisible && (
+            <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
+              {draftBadgeNode}
             </Tooltip>
           )}
           {primaryButton?.text && (

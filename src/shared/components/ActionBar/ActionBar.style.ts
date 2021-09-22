@@ -67,11 +67,11 @@ export const StyledSecondaryText = styled(Text)`
   align-self: center;
 `
 
-type DetailsContainerProps = {
+type DraftsBadgeContainerProps = {
   size: ActionBarSize
 }
 
-export const DetailsContainer = styled.div<DetailsContainerProps>`
+export const DraftsBadgeContainer = styled.div<DraftsBadgeContainerProps>`
   user-select: none;
   margin-left: auto;
   display: flex;
