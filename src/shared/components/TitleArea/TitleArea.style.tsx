@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import TextareaAutosize from 'react-textarea-autosize'
 
 import { colors, media, sizes, typography } from '@/shared/theme'
 
@@ -18,7 +19,7 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
   justify-content: space-between;
 `
 
-export const StyledTextArea = styled.textarea`
+export const StyledTextArea = styled(TextareaAutosize)`
   caret-color: ${colors.blue[500]};
   color: white;
   background-color: ${colors.transparent};

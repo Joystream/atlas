@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.style'
 
@@ -27,21 +27,10 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
 }) => {
   const [touched, setTouched] = useState(false)
   const invalidInput = (value?.length || 0) < min || (value?.length || 0) > max
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleFocus = () => {
     setTouched(true)
   }
-
-  useEffect(() => {
-    const textarea = textareaRef.current
-    if (!textarea) {
-      return
-    }
-    textarea.style.height = 'initial'
-    const scrollHeight = textarea.scrollHeight
-    textarea.style.height = scrollHeight + 'px'
-  }, [value])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -52,7 +41,6 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
   return (
     <Container className={className}>
       <StyledTextArea
-        ref={textareaRef}
         rows={1}
         minLength={min}
         maxLength={max}
