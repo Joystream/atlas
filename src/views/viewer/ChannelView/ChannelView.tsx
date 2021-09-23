@@ -281,7 +281,7 @@ export const ChannelView: React.FC = () => {
           {currentTab === 'Videos' && !isSearching && (
             <SortContainer>
               <Text variant="body2">Sort by</Text>
-              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+              <Select value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
             </SortContainer>
           )}
         </TabsContainer>
@@ -406,7 +406,6 @@ const Search: React.FC<SearchProps> = ({
         onKeyDown={handleSearchInputKeyPress}
         placeholder="Search"
         type="search"
-        helperText={null}
       />
       <SearchButton
         onClick={() => {

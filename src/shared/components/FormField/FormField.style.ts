@@ -9,7 +9,7 @@ type DenseProps = {
 }
 
 export const FormFieldWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 4 : 6)};
+  margin-top: ${({ dense }) => sizes(dense ? 4 : 10)};
   width: 100%;
 `
 

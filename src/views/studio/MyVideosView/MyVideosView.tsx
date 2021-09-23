@@ -290,7 +290,7 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             <SortContainer>
               <Text variant="body2">Sort by</Text>
-              <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+              <Select value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
             </SortContainer>
           </TabsContainer>
           {isDraftTab && (
