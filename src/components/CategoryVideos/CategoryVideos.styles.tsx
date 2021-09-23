@@ -6,27 +6,16 @@ export const Container = styled.div`
   margin-top: ${sizes(16)};
 `
 
-export const FiltersSearchContainer = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  grid-template-columns: 1fr auto;
-
-  ${media.md} {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row-reverse;
-  }
-`
-
 export const ControlsContainer = styled.div`
   display: grid;
+  grid-template-columns: 1fr auto;
   gap: ${sizes(4)};
+  align-items: center;
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[700]};
 
   ${media.md} {
     grid-template-columns: auto 168px 1fr 241px;
-    align-items: center;
   }
 `
 

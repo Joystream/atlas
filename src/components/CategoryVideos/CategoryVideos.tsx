@@ -1,22 +1,20 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useState } from 'react'
 
-import { AssetAvailability, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
+import { VideoOrderByInput } from '@/api/queries'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
-import { Search } from '@/shared/components/Search/Search'
+import { GridItem } from '@/shared/components/LayoutGrid'
 import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters, SvgGlyphClose } from '@/shared/icons'
-import { SentryLogger } from '@/utils/logs'
 
 import {
   Container,
   ControlsContainer,
   FiltersContainer,
   FiltersInnerContainer,
-  FiltersSearchContainer,
   SortContainer,
 } from './CategoryVideos.styles'
 
@@ -27,33 +25,6 @@ export const CategoryVideos = () => {
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [isFiltersOpen, setiIsFiltersOpen] = useState(false)
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const [isSearchInputOpen, setIsSearchingInputOpen] = useState(!mdMatch)
-  const [, setIsSearching] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchVideo] = useSearchLazyQuery({
-    onError: (error) =>
-      SentryLogger.error('Failed to search channel videos', 'ChannelView', error, {
-        search: { query: searchQuery },
-      }),
-  })
-  const search = useCallback(
-    (searchQuery: string) => {
-      setSearchQuery(searchQuery)
-      searchVideo({
-        variables: {
-          text: searchQuery,
-          whereVideo: {
-            isPublic_eq: true,
-            mediaAvailability_eq: AssetAvailability.Accepted,
-            thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-          },
-          limit: 100,
-        },
-      })
-    },
-    [searchVideo]
-  )
 
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
@@ -66,16 +37,11 @@ export const CategoryVideos = () => {
   return (
     <Container>
       <ControlsContainer>
-        <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
-        {mdMatch && <Select size="small" helperText={null} placeholder="Language" value={null} items={SORT_OPTIONS} />}
-        <FiltersSearchContainer>
-          <Search
-            searchInputRef={searchInputRef}
-            isSearchInputOpen={isSearchInputOpen}
-            setIsSearchingInputOpen={setIsSearchingInputOpen}
-            setIsSearching={setIsSearching}
-            search={search}
-          />
+        <GridItem colSpan={{ base: 2, md: 1 }}>
+          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
+        </GridItem>
+        <Select size="small" helperText={null} placeholder="Language" value={null} items={SORT_OPTIONS} />
+        <div>
           {betweenMdAndLgMatch ? (
             <IconButton variant="secondary" onClick={handleFilterClick}>
               <SvgActionFilters />
@@ -85,7 +51,7 @@ export const CategoryVideos = () => {
               Filters
             </Button>
           )}
-        </FiltersSearchContainer>
+        </div>
         {mdMatch && (
           <SortContainer>
             <Text variant="body2">Sort by</Text>
