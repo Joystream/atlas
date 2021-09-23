@@ -19,6 +19,11 @@ export const FormGroup = styled.label<FormGroupProps>`
   }
 
   input,
+  textarea {
+    color: ${colors.gray[50]};
+  }
+
+  input,
   button,
   textarea {
     transition: border ${transitions.timings.regular} ${transitions.easing};
@@ -26,11 +31,6 @@ export const FormGroup = styled.label<FormGroupProps>`
     padding: 10px ${sizes(4)};
     font-size: ${typography.sizes.body1};
     line-height: 28px;
-
-    input,
-    textarea {
-      color: ${colors.gray[50]};
-    }
 
     :disabled {
       cursor: not-allowed;
