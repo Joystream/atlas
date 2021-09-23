@@ -23,6 +23,7 @@ import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
+  MobileButton,
   StyledDismissibleBanner,
   StyledGrid,
   StyledLimitedWidthContainer,
@@ -274,12 +275,6 @@ export const MyVideosView = () => {
 
   const sortVisibleAndUploadButtonVisible = isDraftTab ? !!drafts.length : !hasNoVideos
 
-  const uploadButtonNode = (
-    <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
-      Upload Video
-    </Button>
-  )
-
   const sortSelectNode = (
     <Select
       size="small"
@@ -296,20 +291,32 @@ export const MyVideosView = () => {
   return (
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
-      {!smMatch && sortVisibleAndUploadButtonVisible && uploadButtonNode}
+      {!smMatch && sortVisibleAndUploadButtonVisible && (
+        <MobileButton to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+          Upload Video
+        </MobileButton>
+      )}
       {hasNoVideos ? (
         <EmptyFallback
           verticalCentered
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
-          button={uploadButtonNode}
+          button={
+            <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+              Upload video
+            </Button>
+          }
         />
       ) : (
         <>
           <TabsContainer>
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
-            {smMatch && sortVisibleAndUploadButtonVisible && uploadButtonNode}
+            {smMatch && sortVisibleAndUploadButtonVisible && (
+              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+                Upload Video
+              </Button>
+            )}
           </TabsContainer>
           {isDraftTab && (
             <StyledDismissibleBanner
@@ -363,7 +370,16 @@ export const MyVideosView = () => {
                   ? "Each video that hasn't been published yet will be available here as a draft."
                   : 'Videos published with "Unlisted" privacy setting will show up here.'
               }
-              button={uploadButtonNode}
+              button={
+                <Button
+                  icon={<SvgGlyphUpload />}
+                  to={absoluteRoutes.studio.editVideo()}
+                  variant="secondary"
+                  size="large"
+                >
+                  Upload video
+                </Button>
+              }
             />
           )}
           <StyledPagination

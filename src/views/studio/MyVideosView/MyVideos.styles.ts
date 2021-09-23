@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Button } from '@/shared/components/Button'
 import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
 import { Grid } from '@/shared/components/Grid'
 import { Pagination } from '@/shared/components/Pagination'
@@ -20,7 +21,7 @@ export const StyledText = styled(Text)`
 `
 
 export const TabsContainer = styled.div`
-  margin: ${sizes(12)} 0;
+  margin-bottom: ${sizes(12)};
   border-bottom: solid 1px ${colors.gray[800]};
 
   ${media.sm} {
@@ -44,6 +45,10 @@ export const StyledPagination = styled(Pagination)`
 `
 
 export const StyledDismissibleBanner = styled(DismissibleBanner)`
+  margin-bottom: ${sizes(12)};
+`
+
+export const MobileButton = styled(Button)`
   margin-bottom: ${sizes(12)};
 `
 
