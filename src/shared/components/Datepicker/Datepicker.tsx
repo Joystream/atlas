@@ -35,7 +35,7 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
     const value = e.target.value
     setRawValue(value)
 
-    const parsedDate = parse(e.target.value, DATE_FORMAT, new Date())
+    const parsedDate = value ? parse(e.target.value, DATE_FORMAT, new Date()) : null
     onChange(parsedDate)
   }
 
