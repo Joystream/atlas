@@ -353,7 +353,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                 {showMeta &&
                   (isUploading ? (
                     isLoading ? (
-                      <SpacedSkeletonLoader height={12} width={'80%'} />
+                      <SpacedSkeletonLoader height={12} width="80%" />
                     ) : (
                       <Text variant="body2" secondary>
                         {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
@@ -361,7 +361,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       </Text>
                     )
                   ) : isLoading ? (
-                    <SpacedSkeletonLoader height={12} width={'80%'} />
+                    <SpacedSkeletonLoader height={12} width="80%" />
                   ) : createdAt ? (
                     <Text variant="body2" secondary>
                       {isDraft
@@ -377,7 +377,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           onClick={(event) => openContextMenu(event, 200)}
           variant="tertiary"
           size="small"
-          isActive={isUploading ? false : contextMenuOpts.isActive}
+          isActive={!isUploading || contextMenuOpts.isActive}
         >
           <SvgGlyphMore />
         </KebabMenuButtonIcon>

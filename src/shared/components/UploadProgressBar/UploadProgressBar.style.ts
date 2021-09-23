@@ -16,30 +16,30 @@ export const UploadProgressBarContainer = styled.div`
 `
 
 const greenBarAnimation = keyframes`
- 0% {
-  opacity: 0.2;
-  background-color: ${colors.secondary.success[100]};
-  transform: scaleX(0);
-}
-75% {
-  transform: scaleX(1);
-  opacity: 0.2;
-}
-100% {
-  opacity: 0;
-}
+  0% {
+    opacity: 0.2;
+    background-color: ${colors.secondary.success[100]};
+    transform: scaleX(0);
+  }
+  75% {
+    transform: scaleX(1);
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
 `
 
 const pulseAnimation = keyframes`
-0% {
-  opacity: 1;
-}
-50% {
-  opacity: 0.2
-}
-100% {
-  opacity: 1;
-}
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2
+  }
+  100% {
+    opacity: 1;
+  }
 `
 
 type ProgressbarProps = {
@@ -71,7 +71,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   width: 100%;
   background-color: ${colors.gray[800]};
   transform-origin: 0 0;
-  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
+  transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
   ${completedAnimationCss}
 
@@ -84,7 +84,7 @@ export const BottomProgressBar = styled.div<ProgressbarProps>`
   left: 0;
   width: 100%;
   transform-origin: 0 0;
-  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
+  transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
   background-color: ${colors.blue[500]};
   height: 4px;

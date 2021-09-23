@@ -21,7 +21,7 @@ export type UploadProgressBarProps = {
 }
 
 export const UploadProgressBar: React.FC<UploadProgressBarProps> = ({
-  progress,
+  progress = 0,
   lastStatus,
   className,
   withLoadingIndicator,
@@ -31,11 +31,11 @@ export const UploadProgressBar: React.FC<UploadProgressBarProps> = ({
     <UploadProgressBarContainer className={className}>
       <ProgressBar
         runCompletedAnimation={withCompletedAnimation}
-        progress={progress || 0}
+        progress={progress}
         isProcessing={lastStatus === 'processing'}
         isCompleted={lastStatus === 'completed'}
       />
-      {lastStatus !== 'completed' && <BottomProgressBar progress={progress || 0} />}
+      {lastStatus !== 'completed' && <BottomProgressBar progress={progress} />}
       {withLoadingIndicator && (
         <SwitchTransition>
           <CSSTransition
