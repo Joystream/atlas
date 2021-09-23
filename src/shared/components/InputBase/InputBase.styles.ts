@@ -19,6 +19,11 @@ export const FormGroup = styled.label<FormGroupProps>`
   }
 
   input,
+  textarea {
+    color: ${colors.gray[50]};
+  }
+
+  input,
   button,
   textarea {
     transition: border ${transitions.timings.regular} ${transitions.easing};
@@ -43,14 +48,13 @@ export const FormGroup = styled.label<FormGroupProps>`
       border: 1px solid ${colors.gray[200]};
     }
 
+    &:focus {
+      border: 1px solid ${colors.blue[500]};
+    }
+
     :not(:focus):not(button) {
       border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
     }
-  }
-
-  input,
-  textarea {
-    color: ${colors.gray[50]};
   }
 `
 

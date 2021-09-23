@@ -149,7 +149,6 @@ const EnvTab: React.FC = () => {
           items={environmentsItems}
           onChange={handleEnvironmentChange}
           value={targetDevEnv}
-          helperText={null}
           disabled={BUILD_ENV === 'production'}
         />
       </FormField>
@@ -157,10 +156,10 @@ const EnvTab: React.FC = () => {
       <FormField title="Node" dense>
         <Checkbox label="Custom node URL" value={usingCustomNodeUrl} onChange={handleCustomNodeCheckboxChange} />
         {!usingCustomNodeUrl ? (
-          <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} helperText={null} />
+          <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
         ) : (
           <CustomNodeUrlWrapper>
-            <TextField value={customNodeUrl} onChange={handleCustomNodeUrlChange} helperText={null} />
+            <TextField value={customNodeUrl} onChange={handleCustomNodeUrlChange} />
             <Button onClick={handleSaveCustomNodeUrlClick} size="large">
               Save
             </Button>
@@ -287,13 +286,13 @@ const UserTab: React.FC = () => {
     <VerticalSpacedContainer>
       <HorizontalSpacedContainer>
         <FormField dense title="Account ID">
-          <TextField value={accountIdValue || ''} onChange={handleAccountIdChange} helperText={null} />
+          <TextField value={accountIdValue || ''} onChange={handleAccountIdChange} />
         </FormField>
         <FormField dense title="Member ID">
-          <TextField value={memberIdValue || ''} onChange={handleMemberIdChange} helperText={null} />
+          <TextField value={memberIdValue || ''} onChange={handleMemberIdChange} />
         </FormField>
         <FormField dense title="Channel ID">
-          <TextField value={channelIdValue || ''} onChange={handleChannelIdChange} helperText={null} />
+          <TextField value={channelIdValue || ''} onChange={handleChannelIdChange} />
         </FormField>
       </HorizontalSpacedContainer>
       <Button onClick={handleSaveClick} size="large" variant="secondary">
