@@ -47,7 +47,6 @@ export const CategoryVideos = () => {
             isPublic_eq: true,
             mediaAvailability_eq: AssetAvailability.Accepted,
             thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-            // channelId_eq: '0',
           },
           limit: 100,
         },
@@ -68,7 +67,7 @@ export const CategoryVideos = () => {
     <Container>
       <ControlsContainer>
         <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
-        {mdMatch && <Select helperText={null} placeholder="Language" value={null} items={SORT_OPTIONS} />}
+        {mdMatch && <Select size="small" helperText={null} placeholder="Language" value={null} items={SORT_OPTIONS} />}
         <FiltersSearchContainer>
           <Search
             searchInputRef={searchInputRef}
@@ -90,7 +89,7 @@ export const CategoryVideos = () => {
         {mdMatch && (
           <SortContainer>
             <Text variant="body2">Sort by</Text>
-            <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            <Select size="small" helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
           </SortContainer>
         )}
       </ControlsContainer>

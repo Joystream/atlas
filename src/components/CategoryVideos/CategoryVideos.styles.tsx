@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const Container = styled.div`
-  margin: ${sizes(16)} 0 0 0;
+  margin-top: ${sizes(16)};
 `
 
 export const FiltersSearchContainer = styled.div`
