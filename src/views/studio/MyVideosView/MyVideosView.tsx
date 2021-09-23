@@ -18,7 +18,7 @@ import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
-import { SvgGlyphUpload } from '@/shared/icons'
+import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -280,7 +280,6 @@ export const MyVideosView = () => {
       size="small"
       labelPosition="left"
       label="Sort by"
-      helperText={null}
       value={sortVideosBy}
       items={SORT_OPTIONS}
       onChange={handleSorting}
@@ -292,7 +291,7 @@ export const MyVideosView = () => {
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
-        <MobileButton to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+        <MobileButton size="large" to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
           Upload Video
         </MobileButton>
       )}
@@ -313,7 +312,7 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphUpload />}>
+              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
                 Upload Video
               </Button>
             )}
@@ -339,7 +338,6 @@ export const MyVideosView = () => {
               size="small"
               labelPosition="left"
               label="Sort by"
-              helperText={null}
               value={sortVideosBy}
               items={SORT_OPTIONS}
               onChange={handleSorting}

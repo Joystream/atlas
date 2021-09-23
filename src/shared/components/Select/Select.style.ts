@@ -69,8 +69,9 @@ export const SelectButton = styled.button<SelectButtonProps>`
       case 'small':
         return css`
           min-height: ${sizes(10)};
-          font-size: 14px !important;
           padding: 0 ${sizes(4)} !important;
+          font-size: ${typography.sizes.body2} !important;
+          line-height: ${typography.lineHeights.body2} !important;
         `
     }
   }}

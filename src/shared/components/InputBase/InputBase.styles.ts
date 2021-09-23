@@ -30,9 +30,9 @@ export const FormGroup = styled.label<FormGroupProps>`
   textarea {
     transition: border ${transitions.timings.regular} ${transitions.easing};
     background: none;
-    padding: ${sizes(2)} ${sizes(4)};
+    padding: 10px ${sizes(4)};
     font-size: ${typography.sizes.body1};
-    line-height: 30px;
+    line-height: ${typography.lineHeights.body1};
 
     :disabled {
       cursor: not-allowed;
