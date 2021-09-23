@@ -70,7 +70,7 @@ export const _Select = <T extends unknown>(
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items: itemsValues, defaultSelectedItem: value, onSelectedItemChange: handleItemSelect })
+  } = useSelect({ items: itemsValues, selectedItem: value || null, onSelectedItemChange: handleItemSelect })
 
   const selectedItem = items.find((item) => item.value === selectedItemValue)
 
