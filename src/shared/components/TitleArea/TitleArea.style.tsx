@@ -30,8 +30,10 @@ export const StyledTextArea = styled(TextareaAutosize)`
   resize: none;
   height: auto;
   font-size: ${typography.sizes.h4};
+  line-height: ${typography.lineHeights.h4};
   ${media.lg} {
     font-size: ${typography.sizes.h2};
+    line-height: ${typography.lineHeights.h2};
   }
 
   &:hover {
