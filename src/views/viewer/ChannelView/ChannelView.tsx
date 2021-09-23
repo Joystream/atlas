@@ -284,7 +284,6 @@ export const ChannelView: React.FC = () => {
             <SortContainer>
               <Text variant="body2">Sort by</Text>
               <StyledSelect
-                helperText={null}
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
                 placeholder={isSearching ? 'Best match' : undefined}
@@ -442,7 +441,6 @@ const Search: React.FC<SearchProps> = ({
         onKeyDown={handleSearchInputKeyPress}
         placeholder="Search"
         type="search"
-        helperText={null}
         isSearching={isSearching}
       />
       <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
