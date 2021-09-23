@@ -1,6 +1,9 @@
+import styled from '@emotion/styled'
 import { Placement, offset } from '@popperjs/core'
 import React, { RefObject, useRef, useState } from 'react'
 import { usePopper } from 'react-popper'
+
+import { zIndex } from '@/shared/theme'
 
 export type PopoverBaseProps = {
   targetRef: RefObject<HTMLElement>
@@ -37,9 +40,13 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
   })
 
   return (
-    <div ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
+    <Container ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
       <div ref={setArrowRed} style={styles.arrow} className="arrow" />
       {children}
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  z-index: ${zIndex.header};
+`
