@@ -9,6 +9,7 @@ import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
+  Anchor,
   AvatarContainer,
   Details,
   DetailsText,
@@ -21,6 +22,7 @@ export const ChannelAbout = () => {
   const { id } = useParams()
   const { channel } = useChannel(id)
   const { videoCount } = useChannelVideoCount(id)
+  const pioneerUrl = import.meta.env.VITE_PIONEER_URL
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
@@ -42,7 +44,14 @@ export const ChannelAbout = () => {
           </Text>
           <AvatarContainer>
             <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
-            <Text variant="body1">{channel?.ownerMember?.handle}</Text>
+            <Anchor
+              as="a"
+              variant="body1"
+              href={`${pioneerUrl}/#/members/${channel?.ownerMember?.handle}`}
+              target="_blank"
+            >
+              {channel?.ownerMember?.handle}
+            </Anchor>
           </AvatarContainer>
         </Details>
 
