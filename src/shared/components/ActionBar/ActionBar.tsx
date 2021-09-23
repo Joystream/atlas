@@ -1,6 +1,7 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SvgGlyphInfo } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
@@ -18,8 +19,6 @@ import { Button, ButtonProps } from '../Button'
 import { Text } from '../Text'
 import { Tooltip, TooltipProps } from '../Tooltip'
 
-export type ActionBarSize = 'large' | 'medium' | 'compact'
-
 type ActionDialogButtonProps = {
   text?: string
   disabled?: boolean
@@ -34,7 +33,6 @@ type ActionDialogDraftBadge = {
 }
 
 export type ActionBarProps = {
-  size?: ActionBarSize
   primaryText?: string
   secondaryText?: string
   fullWidth?: boolean
@@ -45,9 +43,12 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, size = 'compact' }) => {
+  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge }, ref) => {
+    const smMatch = useMediaMatch('sm')
+    const lgMatch = useMediaMatch('lg')
+
     const draftBadgeNode = draftBadge ? (
-      <DraftsBadgeContainer size={size}>
+      <DraftsBadgeContainer>
         <Text variant="body2" secondary>
           {draftBadge.text}
         </Text>
@@ -66,11 +67,11 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         unmountOnExit
       >
         <Button
-          icon={size === 'compact' ? secondaryButton.icon : undefined}
+          icon={!smMatch ? secondaryButton.icon : undefined}
           disabled={secondaryButton.disabled}
           onClick={secondaryButton.onClick}
-          variant={size === 'compact' ? 'tertiary' : 'secondary'}
-          size={size === 'compact' ? 'small' : 'large'}
+          variant={!smMatch ? 'tertiary' : 'secondary'}
+          size={!smMatch ? 'small' : 'large'}
           iconPlacement="right"
         >
           {secondaryButton.text}
@@ -80,9 +81,8 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
 
     const primaryButtonNode = primaryButton?.text ? (
       <ActionButtonPrimary
-        actonBarSize={size}
+        isMobile={!smMatch}
         disabled={primaryButton.disabled}
-        fullWidth={size === 'compact'}
         onClick={primaryButton.onClick}
         size="large"
         type="submit"
@@ -91,21 +91,22 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       </ActionButtonPrimary>
     ) : null
 
-    if (size === 'compact')
+    if (!smMatch)
       return (
-        <ActionBarContainer size={size} className={className}>
-          <FlexWrapper compact>
+        <ActionBarContainer ref={ref} className={className}>
+          <FlexWrapper>
             <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
             {draftBadge?.visible ? draftBadgeNode : secondaryButtonNode}
           </FlexWrapper>
           {primaryButtonNode}
         </ActionBarContainer>
       )
+
     return (
-      <ActionBarContainer size={size} className={className}>
+      <ActionBarContainer ref={ref} className={className}>
         <FlexWrapper>
           <StyledPrimaryText variant="h5">{primaryText}</StyledPrimaryText>
-          {size === 'large' && (
+          {lgMatch && (
             <StyledSecondaryText variant="body2" secondary>
               {secondaryText}
             </StyledSecondaryText>

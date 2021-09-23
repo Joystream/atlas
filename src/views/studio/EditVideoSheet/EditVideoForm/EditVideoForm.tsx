@@ -90,9 +90,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const [actionBarRef, actionBarBounds] = useMeasure()
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const mdMatch = useMediaMatch('md')
-  const lgMatch = useMediaMatch('lg')
-
-  const actionBarSize = lgMatch ? 'large' : smMatch ? 'medium' : 'compact'
 
   const [forceReset, setForceReset] = useState(false)
   const [fileSelectError, setFileSelectError] = useState<string | null>(null)
@@ -662,7 +659,6 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       </FormScrolling>
       <ActionBar
         ref={actionBarRef}
-        size={actionBarSize}
         primaryText={`Fee: ${fee} Joy`}
         secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
         primaryButton={{

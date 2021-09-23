@@ -1,51 +1,31 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
-import { ActionBarSize } from '.'
 import { Button } from '../Button'
 import { Text } from '../Text'
 
-type ActionBarContainerProps = {
-  size: ActionBarSize
-}
-
-const getActionBarStyle = ({ size }: ActionBarContainerProps) => {
-  switch (size) {
-    case 'compact':
-      return css`
-        display: grid;
-        padding: ${sizes(4)};
-        grid-template-rows: auto auto;
-        grid-template-columns: 1fr;
-      `
-    case 'medium':
-    case 'large':
-      return css`
-        display: flex;
-        justify-content: space-between;
-        padding: ${sizes(4)} ${sizes(8)};
-      `
-    default:
-      return null
-  }
-}
-
-type FlexWrapperProps = {
-  compact?: boolean
-}
-
-export const FlexWrapper = styled.div<FlexWrapperProps>`
+export const FlexWrapper = styled.div`
   display: flex;
-  height: ${({ compact }) => (compact ? '40px' : '48px')};
+  height: 40px;
   justify-content: space-between;
+  ${media.sm} {
+    height: 48px;
+  }
 `
 
-export const ActionBarContainer = styled.div<ActionBarContainerProps>`
+export const ActionBarContainer = styled.div`
   background-color: ${colors.gray[900]};
   border-top: 1px solid ${colors.gray[700]};
-  ${getActionBarStyle}
+  display: grid;
+  padding: ${sizes(4)};
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr;
+  ${media.sm} {
+    display: flex;
+    justify-content: space-between;
+    padding: ${sizes(4)} ${sizes(8)};
+  }
 `
 
 export const StyledPrimaryText = styled(Text)`
@@ -54,12 +34,12 @@ export const StyledPrimaryText = styled(Text)`
 `
 
 type ActionButtonPrimaryProps = {
-  actonBarSize: ActionBarSize
+  isMobile?: boolean
 }
 
 export const ActionButtonPrimary = styled(Button)<ActionButtonPrimaryProps>`
-  margin-left: ${({ actonBarSize }) => (actonBarSize === 'compact' ? 0 : sizes(4))};
-  margin-top: ${({ actonBarSize }) => (actonBarSize === 'compact' ? sizes(4) : 0)};
+  margin-left: ${({ isMobile }) => (isMobile ? 0 : sizes(4))};
+  margin-top: ${({ isMobile }) => (isMobile ? sizes(4) : 0)};
 `
 
 export const StyledSecondaryText = styled(Text)`
@@ -67,21 +47,21 @@ export const StyledSecondaryText = styled(Text)`
   align-self: center;
 `
 
-type DraftsBadgeContainerProps = {
-  size: ActionBarSize
-}
-
-export const DraftsBadgeContainer = styled.div<DraftsBadgeContainerProps>`
+export const DraftsBadgeContainer = styled.div`
   user-select: none;
   margin-left: auto;
   display: flex;
   align-items: center;
   height: 100%;
-  padding: ${({ size }) => (size === 'compact' ? `${sizes(4)} 0` : `0 ${sizes(4)}`)};
+  padding: ${sizes(4)} 0;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 
-  :hover {
-    ${({ size }) => size !== 'compact' && `background-color: ${colors.transparentPrimary[18]}`};
+  ${media.sm} {
+    padding: 0 ${sizes(4)};
+
+    :hover {
+      background-color: ${colors.transparentPrimary[18]};
+    }
   }
 `
 
