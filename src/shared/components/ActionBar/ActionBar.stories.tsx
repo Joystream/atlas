@@ -6,12 +6,6 @@ import { ActionBar, ActionBarProps } from './ActionBar'
 export default {
   title: 'Shared/A/ActionBar',
   component: ActionBar,
-  argTypes: {
-    size: {
-      options: ['small', 'medium', 'large'],
-      control: { type: 'radio' },
-    },
-  },
   args: {
     primaryText: 'Fee: 0.2 Joy',
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',

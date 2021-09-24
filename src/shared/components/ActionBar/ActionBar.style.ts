@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions, zIndex } from '@/shared/theme'
 
 import { Button } from '../Button'
 import { Text } from '../Text'
@@ -14,13 +14,19 @@ export const FlexWrapper = styled.div`
   }
 `
 
-export const ActionBarContainer = styled.div`
+export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   background-color: ${colors.gray[900]};
   border-top: 1px solid ${colors.gray[700]};
   display: grid;
   padding: ${sizes(4)};
   grid-template-rows: auto auto;
   grid-template-columns: 1fr;
+  z-index: ${zIndex.header};
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
+  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+  &.${transitions.names.fade}-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
+  }
   ${media.sm} {
     display: flex;
     justify-content: space-between;
@@ -43,8 +49,12 @@ export const ActionButtonPrimary = styled(Button)<ActionButtonPrimaryProps>`
 `
 
 export const StyledSecondaryText = styled(Text)`
-  max-width: 360px;
-  align-self: center;
+  display: none;
+  ${media.lg} {
+    max-width: 360px;
+    align-self: center;
+    display: block;
+  }
 `
 
 export const DraftsBadgeContainer = styled.div`
@@ -67,4 +77,10 @@ export const DraftsBadgeContainer = styled.div`
 
 export const DetailsIconWrapper = styled.span`
   margin-left: ${sizes(2)};
+`
+
+export const ActionBarTransactionWrapper = styled.div<{ isActive: boolean }>`
+  position: fixed;
+  bottom: 0;
+  right: 0;
 `

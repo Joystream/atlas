@@ -33,6 +33,7 @@ type ActionDialogDraftBadge = {
 }
 
 export type ActionBarProps = {
+  isEdit?: boolean
   primaryText?: string
   secondaryText?: string
   fullWidth?: boolean
@@ -43,9 +44,8 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge }, ref) => {
+  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, isEdit }, ref) => {
     const smMatch = useMediaMatch('sm')
-    const lgMatch = useMediaMatch('lg')
 
     const draftBadgeNode = draftBadge ? (
       <DraftsBadgeContainer>
@@ -93,7 +93,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
 
     if (!smMatch)
       return (
-        <ActionBarContainer ref={ref} className={className}>
+        <ActionBarContainer ref={ref} className={className} isActive={isEdit ? !primaryButton?.disabled : true}>
           <FlexWrapper>
             <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
             {draftBadge?.visible ? draftBadgeNode : secondaryButtonNode}
@@ -103,14 +103,12 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
       )
 
     return (
-      <ActionBarContainer ref={ref} className={className}>
+      <ActionBarContainer ref={ref} className={className} isActive={isEdit ? !primaryButton?.disabled : true}>
         <FlexWrapper>
           <StyledPrimaryText variant="h5">{primaryText}</StyledPrimaryText>
-          {lgMatch && (
-            <StyledSecondaryText variant="body2" secondary>
-              {secondaryText}
-            </StyledSecondaryText>
-          )}
+          <StyledSecondaryText variant="body2" secondary>
+            {secondaryText}
+          </StyledSecondaryText>
         </FlexWrapper>
         <FlexWrapper>
           {draftBadge?.visible ? (

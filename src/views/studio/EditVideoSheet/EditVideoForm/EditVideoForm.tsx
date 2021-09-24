@@ -659,6 +659,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
       </FormScrolling>
       <ActionBar
         ref={actionBarRef}
+        isEdit={isEdit}
         primaryText={`Fee: ${fee} Joy`}
         secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
         primaryButton={{
