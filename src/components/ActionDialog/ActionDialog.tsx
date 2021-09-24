@@ -2,9 +2,9 @@ import React from 'react'
 
 import { Button, ButtonProps } from '@/shared/components/Button'
 
-import { ActionsContainer, AdditionalActionsContainer, ButtonsContainer } from './ActionDialog.style'
+import { ActionsContainer, AdditionalActionsContainer, ButtonsContainer, StyledBaseDialog } from './ActionDialog.style'
 
-import { BaseDialog, BaseDialogProps } from '../BaseDialog'
+import { BaseDialogProps } from '../BaseDialog'
 
 type DialogButtonProps = {
   text?: string
@@ -18,6 +18,7 @@ export type ActionDialogProps = {
   secondaryButton?: DialogButtonProps
   warning?: boolean
   error?: boolean
+  illustration?: boolean
 } & BaseDialogProps
 
 export const ActionDialog: React.FC<ActionDialogProps> = ({
@@ -27,12 +28,13 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
   warning,
   error,
   children,
+  illustration = false,
   ...baseDialogProps
 }) => {
   const hasAnyAction = additionalActionsNode || primaryButton?.text || secondaryButton?.text
 
   return (
-    <BaseDialog {...baseDialogProps}>
+    <StyledBaseDialog {...baseDialogProps} illustration={illustration}>
       {children}
       {hasAnyAction && (
         <ActionsContainer>
@@ -51,6 +53,6 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
           </ButtonsContainer>
         </ActionsContainer>
       )}
-    </BaseDialog>
+    </StyledBaseDialog>
   )
 }
