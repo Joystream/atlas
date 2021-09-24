@@ -3,7 +3,6 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { useContextMenu } from '@/hooks/useContextMenu'
-import { UploadStatus } from '@/providers/uploadsManager/types'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -18,6 +17,7 @@ import {
   SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { UploadStatus } from '@/types/uploads'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
