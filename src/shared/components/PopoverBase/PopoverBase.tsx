@@ -3,6 +3,8 @@ import { Placement, offset } from '@popperjs/core'
 import React, { RefObject, useRef, useState } from 'react'
 import { usePopper } from 'react-popper'
 
+import { Portal } from '@/components/Portal'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { zIndex } from '@/shared/theme'
 
 export type PopoverBaseProps = {
@@ -19,6 +21,7 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
   children,
   className,
 }) => {
+  const { contextContainerRef } = useOverlayManager()
   const popperRef = useRef(null)
   const [arrowRef, setArrowRed] = useState<HTMLDivElement | null>(null)
   const { styles, attributes } = usePopper(targetRef.current, popperRef.current, {
@@ -40,10 +43,12 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
   })
 
   return (
-    <Container ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
-      <div ref={setArrowRed} style={styles.arrow} className="arrow" />
-      {children}
-    </Container>
+    <Portal containerRef={contextContainerRef}>
+      <Container ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
+        <div ref={setArrowRed} style={styles.arrow} className="arrow" />
+        {children}
+      </Container>
+    </Portal>
   )
 }
 
