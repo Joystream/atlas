@@ -11,6 +11,8 @@ export type TransactionDialogStep =
   | ExtrinsicStatus.Unsigned
   | ExtrinsicStatus.Signed
   | ExtrinsicStatus.Syncing
+  | ExtrinsicStatus.Completed
+  | ExtrinsicStatus.Error
   | null
 
 type TransactionManagerStoreState = {

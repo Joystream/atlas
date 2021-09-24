@@ -1,6 +1,9 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { media, sizes } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
+
+import { BaseDialog } from '../BaseDialog'
 
 export const ButtonsContainer = styled.div`
   display: flex;
@@ -44,4 +47,19 @@ export const AdditionalActionsContainer = styled.div`
     margin-bottom: 0;
     margin-right: ${sizes(6)};
   }
+`
+
+type BaseDialogProps = { illustration: boolean }
+export const StyledBaseDialog = styled(BaseDialog)<BaseDialogProps>`
+  ${({ illustration }) =>
+    illustration &&
+    css`
+      padding: 0;
+      background-color: ${colors.gray[800]};
+      ${ActionsContainer} {
+        background-color: ${colors.gray[700]};
+        padding: var(--dialog-padding);
+        padding-top: 0;
+      }
+    `};
 `
