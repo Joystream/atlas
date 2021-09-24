@@ -44,14 +44,10 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
 
   return (
     <Portal containerRef={contextContainerRef}>
-      <Container ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
+      <div ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
         <div ref={setArrowRed} style={styles.arrow} className="arrow" />
         {children}
-      </Container>
+      </div>
     </Portal>
   )
 }
-
-const Container = styled.div`
-  z-index: ${zIndex.header};
-`
