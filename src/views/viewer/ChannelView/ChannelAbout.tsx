@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
+import { PIONEER_URL } from '@/config/urls'
 import { GridItem } from '@/shared/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { formatNumberShort } from '@/utils/number'
@@ -22,7 +23,6 @@ export const ChannelAbout = () => {
   const { id } = useParams()
   const { channel } = useChannel(id)
   const { videoCount } = useChannelVideoCount(id)
-  const pioneerUrl = import.meta.env.VITE_PIONEER_URL
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
@@ -47,7 +47,7 @@ export const ChannelAbout = () => {
             <Anchor
               as="a"
               variant="body1"
-              href={`${pioneerUrl}/#/members/${channel?.ownerMember?.handle}`}
+              href={`${PIONEER_URL}/#/members/${channel?.ownerMember?.handle}`}
               target="_blank"
             >
               {channel?.ownerMember?.handle}
