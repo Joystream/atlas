@@ -14,7 +14,10 @@ export const DialogBackDrop = styled.div`
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
 `
 
-export const StyledContainer = styled.div`
+type StyledContainerProps = {
+  variant?: 'primary' | 'secondary'
+}
+export const StyledContainer = styled.div<StyledContainerProps>`
   display: grid;
   --dialog-padding: ${sizes(4)};
   ${media.sm} {
@@ -32,7 +35,7 @@ export const StyledContainer = styled.div`
   max-height: 75vh;
   overflow: auto;
   color: ${colors.white};
-  background-color: ${colors.gray[700]};
+  background-color: ${({ variant }) => (variant === 'primary' ? colors.gray[700] : colors.gray[800])};
   padding: var(--dialog-padding);
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 24px 40px rgba(0, 0, 0, 0.16);
 `
