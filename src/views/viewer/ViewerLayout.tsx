@@ -12,16 +12,7 @@ import { ViewerTopbar } from '@/components/ViewerTopbar'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-import {
-  CategoryView,
-  ChannelView,
-  ChannelsView,
-  HomeView,
-  NewView,
-  PopularView,
-  SearchOverlayView,
-  VideoView,
-} from '@/views/viewer'
+import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 
@@ -33,7 +24,6 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
-  { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
 ]
 
 export const ViewerLayout: React.FC = () => {

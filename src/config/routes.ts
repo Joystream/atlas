@@ -21,7 +21,6 @@ export const relativeRoutes = {
     new: () => 'new',
     discover: () => 'discover',
     popular: () => 'popular',
-    category: (id = ':id') => `category/${id}`,
     search: (query?: { query?: string }) => withQueryParameters('search', query),
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
