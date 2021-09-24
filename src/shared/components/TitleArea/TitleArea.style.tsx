@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
+import TextareaAutosize from 'react-textarea-autosize'
 
-import { colors, typography } from '@/shared/theme'
-
-import { TitleAreaVariant } from './'
+import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { Text } from '../Text'
 
@@ -10,22 +9,17 @@ export const Container = styled.div`
   position: relative;
 `
 
-type StyledTextAreaProps = {
-  touchedAndEmpty?: boolean
-  variant?: TitleAreaVariant
-}
-
 type TitleAreaInfoProps = {
-  error?: boolean
   visible?: boolean
 }
 
 export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
-  display: none;
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
+  flex-wrap: wrap;
   justify-content: space-between;
 `
 
-export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
+export const StyledTextArea = styled(TextareaAutosize)`
   caret-color: ${colors.blue[500]};
   color: white;
   background-color: ${colors.transparent};
@@ -35,14 +29,12 @@ export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
   width: 100%;
   resize: none;
   height: auto;
-  font-size: ${({ variant }) => {
-    if (variant === 'large') {
-      return typography.sizes.h4
-    }
-    if (variant === 'small') {
-      return typography.sizes.h2
-    }
-  }};
+  font-size: ${typography.sizes.h4};
+  line-height: ${typography.lineHeights.h4};
+  ${media.lg} {
+    font-size: ${typography.sizes.h2};
+    line-height: ${typography.lineHeights.h2};
+  }
 
   &:hover {
     opacity: 75%;
@@ -50,10 +42,6 @@ export const StyledTextArea = styled.textarea<StyledTextAreaProps>`
 
   ::placeholder {
     color: ${colors.gray[500]};
-  }
-
-  + ${TitleAreaInfo} {
-    ${({ touchedAndEmpty }) => touchedAndEmpty && `display: flex`};
   }
 
   :focus,
@@ -70,6 +58,8 @@ type CharactersCounterProps = {
 
 export const MinMaxChars = styled(Text)`
   white-space: nowrap;
+  margin-right: ${sizes(2)};
+  margin-bottom: ${sizes(1)};
 `
 
 export const CharactersCounter = styled(Text)<CharactersCounterProps>`
