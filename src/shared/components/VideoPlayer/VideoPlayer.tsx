@@ -48,7 +48,6 @@ export type VideoPlayerProps = {
   videoStyle?: CSSProperties
   autoplay?: boolean
   isInBackground?: boolean
-  isMediaLoading?: boolean
   playing?: boolean
   channelId?: string
   videoId?: string
@@ -66,18 +65,7 @@ const isPiPSupported = 'pictureInPictureEnabled' in document
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  {
-    className,
-    isInBackground,
-    playing,
-    nextVideo,
-    channelId,
-    videoId,
-    autoplay,
-    videoStyle,
-    isMediaLoading,
-    ...videoJsConfig
-  },
+  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -179,9 +167,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
-    if (isMediaLoading) {
-      setPlayerState('loading')
-    }
     const handler = (event: Event) => {
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
@@ -194,7 +179,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
-  }, [isMediaLoading, player, playerState])
+  }, [player, playerState])
 
   useEffect(() => {
     if (!player) {
