@@ -55,6 +55,7 @@ export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: ${sizes(20)};
+  padding-bottom: ${sizes(12)};
   ${media.md} {
     margin-top: 0;
   }
