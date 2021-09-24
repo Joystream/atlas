@@ -71,7 +71,7 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
       }
 
       &:active {
-        border: ${checked ? `border: 4px solid ${colors.gray[50]}` : `1px solid ${colors.gray[200]}`};
+        border: ${checked ? `border: 4px solid ${colors.gray[50]}` : `1px solid ${colors.gray[50]}`};
 
         &::after {
           content: '';
@@ -127,13 +127,15 @@ export const StyledInput = styled.div<RadioButtonStyleProps>`
 
   &::before {
     content: '';
-    top: -12px;
-    bottom: -12px;
-    left: -12px;
-    right: -12px;
     border-radius: 50%;
     position: absolute;
     z-index: -1;
+    ${({ checked }) => `
+      top: ${checked ? '-12px' : '-9px'};
+      bottom: ${checked ? '-12px' : '-9px'};
+      left: ${checked ? '-12px' : '-9px'};
+      right: ${checked ? '-12px' : '-9px'};
+    `}
   }
   ${colorFromProps};
 
