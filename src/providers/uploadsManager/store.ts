@@ -13,18 +13,18 @@ type UploadStoreState = {
   uploadsStatus: UploadsStatusRecord
   assetsFiles: AssetFile[]
   isSyncing: boolean
-  pendingAssetsIds: string[]
+  processingAssetsIds: string[]
 }
 
 type UploadStoreActions = {
-  addAsset: (asset: AssetUpload) => void
-  removeAsset: (contentId: string) => void
-  removeAssetsWithParent: (type: AssetParent, id: ChannelId | VideoId) => void
+  addAssetToUploads: (asset: AssetUpload) => void
+  removeAssetFromUploads: (contentId: string) => void
+  removeAssetsWithParentFromUploads: (type: AssetParent, id: ChannelId | VideoId) => void
   setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
   addAssetFile: (assetFile: AssetFile) => void
   setIsSyncing: (isSyncing: boolean) => void
-  removePendingAssetId: (contentId: string) => void
-  addPendingAssetId: (contentId: string) => void
+  removeProcessingAssetId: (contentId: string) => void
+  addProcessingAssetId: (contentId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
@@ -42,17 +42,17 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
           state.assetsFiles.push(assetFile)
         })
       },
-      addAsset: (asset) => {
+      addAssetToUploads: (asset) => {
         set((state) => {
           state.uploads.push(asset)
         })
       },
-      removeAsset: (contentId) => {
+      removeAssetFromUploads: (contentId) => {
         set((state) => {
           state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
         })
       },
-      removeAssetsWithParent: (type, id) => {
+      removeAssetsWithParentFromUploads: (type, id) => {
         set((state) => {
           state.uploads = state.uploads.filter(
             (asset) => asset.parentObject.id !== id || asset.parentObject.type !== type
@@ -64,14 +64,14 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
           state.isSyncing = isSyncing
         })
       },
-      addPendingAssetId: (contentId) => {
+      addProcessingAssetId: (contentId) => {
         set((state) => {
-          state.pendingAssetsIds.push(contentId)
+          state.processingAssetsIds.push(contentId)
         })
       },
-      removePendingAssetId: (contentId) => {
+      removeProcessingAssetId: (contentId) => {
         set((state) => {
-          state.pendingAssetsIds = state.pendingAssetsIds.filter((id) => id !== contentId)
+          state.processingAssetsIds = state.processingAssetsIds.filter((id) => id !== contentId)
         })
       },
     }),
@@ -80,13 +80,13 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       uploadsStatus: {},
       assetsFiles: [],
       isSyncing: false,
-      pendingAssetsIds: [],
+      processingAssetsIds: [],
     },
   },
   {
     persist: {
       key: UPLOADS_LOCAL_STORAGE_KEY,
-      whitelist: ['uploads'],
+      whitelist: ['uploads', 'processingAssetsIds'],
       version: 0,
       migrate: (state) => {
         const uploads = window.localStorage.getItem(UPLOADS_LOCAL_STORAGE_KEY)

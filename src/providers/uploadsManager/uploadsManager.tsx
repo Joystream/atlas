@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
@@ -7,6 +7,7 @@ import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
+import { createLookup } from '@/utils/data'
 
 import { useUploadsStore } from './store'
 
@@ -23,11 +24,11 @@ export const UploadsManager: React.FC = () => {
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
     shallow
   )
-  const { addAsset, removeAsset, setIsSyncing, removePendingAssetId, setUploadStatus } = useUploadsStore(
-    (state) => state.actions
-  )
+  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
+    useUploadsStore((state) => state.actions)
   const isSyncing = useUploadsStore((state) => state.isSyncing)
-  const pendingAssetsIds = useUploadsStore((state) => state.pendingAssetsIds)
+  const processingAssetsIds = useUploadsStore((state) => state.processingAssetsIds)
+  const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
@@ -36,24 +37,35 @@ export const UploadsManager: React.FC = () => {
     },
   })
 
+  const initialRender = useRef(true)
   useEffect(() => {
-    if (!pendingAssetsIds.length) {
+    if (!initialRender.current) {
       return
     }
-    getDataObjectsAvailability(pendingAssetsIds)
-  }, [getDataObjectsAvailability, pendingAssetsIds])
+    processingAssetsIds.map((assetId) => {
+      setUploadStatus(assetId, { progress: 100, lastStatus: 'processing' })
+    })
+    initialRender.current = false
+  }, [processingAssetsIds, setUploadStatus])
+
+  useEffect(() => {
+    if (!processingAssetsIds.length) {
+      return
+    }
+    getDataObjectsAvailability(processingAssetsIds)
+  }, [getDataObjectsAvailability, processingAssetsIds])
 
   useEffect(() => {
     dataObjects?.forEach((asset) => {
       if (asset.liaisonJudgement === 'ACCEPTED') {
         setUploadStatus(asset.joystreamContentId, { lastStatus: 'completed' })
-        removePendingAssetId(asset.joystreamContentId)
+        removeProcessingAssetId(asset.joystreamContentId)
       }
     })
     if (dataObjects?.every((entry) => entry.liaisonJudgement === 'ACCEPTED')) {
       stopPolling?.()
     }
-  }, [dataObjects, removePendingAssetId, setUploadStatus, stopPolling])
+  }, [dataObjects, removeProcessingAssetId, setUploadStatus, stopPolling])
 
   const client = useApolloClient()
 
@@ -79,7 +91,7 @@ export const UploadsManager: React.FC = () => {
         }
 
         if (!pendingAssetsLookup[asset.contentId]) {
-          removeAsset(asset.contentId)
+          removeAssetFromUploads(asset.contentId)
         } else {
           // mark asset as not missing from local state
           delete missingLocalAssetsLookup[asset.contentId]
@@ -92,7 +104,7 @@ export const UploadsManager: React.FC = () => {
         const thumbnail = video.thumbnailPhotoDataObject
 
         if (media && missingLocalAssetsLookup[media.joystreamContentId]) {
-          addAsset({
+          addAssetToUploads({
             contentId: media.joystreamContentId,
             ipfsContentId: media.ipfsContentId,
             parentObject: {
@@ -106,7 +118,7 @@ export const UploadsManager: React.FC = () => {
         }
 
         if (thumbnail && missingLocalAssetsLookup[thumbnail.joystreamContentId]) {
-          addAsset({
+          addAssetToUploads({
             contentId: thumbnail.joystreamContentId,
             ipfsContentId: thumbnail.ipfsContentId,
             parentObject: {
@@ -125,7 +137,7 @@ export const UploadsManager: React.FC = () => {
       const cover = fetchedChannel?.coverPhotoDataObject
 
       if (avatar && missingLocalAssetsLookup[avatar.joystreamContentId]) {
-        addAsset({
+        addAssetToUploads({
           contentId: avatar.joystreamContentId,
           ipfsContentId: avatar.ipfsContentId,
           parentObject: {
@@ -138,7 +150,7 @@ export const UploadsManager: React.FC = () => {
         })
       }
       if (cover && missingLocalAssetsLookup[cover.joystreamContentId]) {
-        addAsset({
+        addAssetToUploads({
           contentId: cover.joystreamContentId,
           ipfsContentId: cover.ipfsContentId,
           parentObject: {
@@ -151,7 +163,10 @@ export const UploadsManager: React.FC = () => {
         })
       }
 
-      const missingAssetsNotificationCount = Object.values(pendingAssetsLookup).length
+      const missingAssetsNotificationCount = Object.keys(pendingAssetsLookup).filter(
+        (key) => !processingAssetsLookup[key]
+      ).length
+
       if (missingAssetsNotificationCount > 0) {
         displaySnackbar({
           title: `${missingAssetsNotificationCount} asset${
@@ -173,11 +188,13 @@ export const UploadsManager: React.FC = () => {
     client,
     displaySnackbar,
     navigate,
-    removeAsset,
-    addAsset,
+    removeAssetFromUploads,
+    addAssetToUploads,
     cachedActiveChannelId,
     isSyncing,
     setIsSyncing,
+    processingAssetsIds,
+    processingAssetsLookup,
   ])
 
   return null
