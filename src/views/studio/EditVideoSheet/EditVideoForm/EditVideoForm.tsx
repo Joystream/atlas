@@ -21,7 +21,6 @@ import {
   useEditVideoSheetTabData,
 } from '@/providers/editVideoSheet'
 import { useAuthorizedUser } from '@/providers/user'
-import { ActionBar } from '@/shared/components/ActionBar'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
@@ -49,6 +48,7 @@ import {
   MoreSettingsSection,
   RadioButtonsContainer,
   RadioCardButtonsContainer,
+  StyledActionBar,
   StyledMultiFileSelect,
   StyledTitleArea,
 } from './EditVideoForm.style'
@@ -657,7 +657,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
           </InputsContainer>
         </FormWrapper>
       </FormScrolling>
-      <ActionBar
+      <StyledActionBar
         ref={actionBarRef}
         isEdit={isEdit}
         primaryText={`Fee: ${fee} Joy`}

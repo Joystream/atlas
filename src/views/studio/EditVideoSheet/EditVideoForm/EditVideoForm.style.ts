@@ -1,14 +1,13 @@
 import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { ActionBar } from '@/shared/components/ActionBar'
 import { Button } from '@/shared/components/Button'
 import { FormField } from '@/shared/components/FormField'
 import { MultiFileSelect } from '@/shared/components/MultiFileSelect'
 import { Text } from '@/shared/components/Text'
 import { TitleArea } from '@/shared/components/TitleArea'
 import { media, sizes } from '@/shared/theme'
-
-import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
@@ -31,9 +30,10 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
 `
 
 export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
-  height: calc(100% - ${({ actionBarHeight }) => actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px);
+  height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+  padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 
 export const FormWrapper = styled(LimitedWidthContainer)`
@@ -105,4 +105,11 @@ export const DeleteVideoButton = styled(Button)`
 
 export const ExtendedMarginFormField = styled(FormField)`
   margin-top: ${sizes(10)};
+`
+
+export const StyledActionBar = styled(ActionBar)`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
 `
