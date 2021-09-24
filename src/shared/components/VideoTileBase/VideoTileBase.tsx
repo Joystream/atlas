@@ -377,7 +377,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           onClick={(event) => openContextMenu(event, 200)}
           variant="tertiary"
           size="small"
-          isActive={!isUploading || contextMenuOpts.isActive}
+          isActive={isUploading ? false : contextMenuOpts.isActive}
         >
           <SvgGlyphMore />
         </KebabMenuButtonIcon>
