@@ -1,11 +1,9 @@
-import styled from '@emotion/styled'
 import { Placement, offset } from '@popperjs/core'
 import React, { RefObject, useRef, useState } from 'react'
 import { usePopper } from 'react-popper'
 
 import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { zIndex } from '@/shared/theme'
 
 export type PopoverBaseProps = {
   targetRef: RefObject<HTMLElement>
