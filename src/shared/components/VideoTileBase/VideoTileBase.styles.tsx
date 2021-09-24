@@ -88,7 +88,6 @@ export const TitleHeaderAnchor = styled(Link)`
 `
 
 export const InfoContainer = styled.div`
-  min-height: 94px;
   display: flex;
   flex-direction: row;
   margin-top: ${sizes(3)};

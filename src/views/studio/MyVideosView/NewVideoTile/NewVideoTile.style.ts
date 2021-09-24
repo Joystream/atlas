@@ -22,12 +22,8 @@ export const StyledText = styled(Text)`
 
 export const NewVideoTileWrapper = styled.div`
   width: 100%;
-  height: 0;
+  height: 100%;
   position: relative;
-
-  /* 2px account for border */
-  padding-bottom: calc(56.25% - 2px);
-  margin-bottom: ${sizes(12)};
 `
 
 export const NewVideoTileLink = styled(Link)`
