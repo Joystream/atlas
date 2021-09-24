@@ -44,7 +44,9 @@ export const useStartFileUpload = () => {
   const displayUploadingNotification = useRef(
     debounce(() => {
       displaySnackbar({
-        title: `(${pendingUploadingNotificationsCounts.current}) ongoing upload`,
+        title: `${pendingUploadingNotificationsCounts.current} ${
+          pendingUploadingNotificationsCounts.current > 1 ? 'files' : 'file'
+        } added to uploads`,
         iconType: 'uploading',
         timeout: UPLOADING_SNACKBAR_TIMEOUT,
         actionText: 'Inspect',
@@ -146,7 +148,7 @@ export const useStartFileUpload = () => {
 
         // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'processing', progress: 100 })
-        addPendingAssetId(asset.contentId)
+        addProcessingAssetId(asset.contentId)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1

@@ -172,6 +172,7 @@ export const EditVideoSheet: React.FC = () => {
           parentObject: {
             type: 'video',
             id: videoId,
+            title: metadata.title,
           },
           type: 'video',
           dimensions: width && height ? { width, height } : undefined,

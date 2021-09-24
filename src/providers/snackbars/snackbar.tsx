@@ -6,9 +6,7 @@ import { Snackbar } from '@/shared/components/Snackbar'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphUpload } from '@/shared/icons'
 import { sizes, transitions, zIndex } from '@/shared/theme'
 
-import { useSnackbarStore } from './store'
-
-type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading'
+import { SnackbarIconType, useSnackbarStore } from './store'
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertInfo />,

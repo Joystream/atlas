@@ -6,18 +6,18 @@ import shallow from 'zustand/shallow'
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetUpload } from '@/providers/uploadsManager/types'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
-import { createLookup } from '@/utils/data'
 import { SvgGlyphExternal } from '@/shared/icons'
+import { openInNewTab } from '@/utils/browser'
+import { createLookup } from '@/utils/data'
 
 import { useUploadsStore } from './store'
+import { AssetUpload, AssetUploadStatus } from './types'
 
 import { useSnackbar } from '../snackbars'
 import { useUser } from '../user'
 
-type UploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'processing'
-type VideoAssets = AssetUpload & { uploadStatus?: UploadStatus }
+type VideoAssets = AssetUpload & { uploadStatus?: AssetUploadStatus }
 
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
@@ -61,16 +61,15 @@ export const UploadsManager: React.FC = () => {
           (videoRef) => videoRef.uploadStatus !== 'completed' && videoRef.contentId === video.contentId
         )
         if (videoObject && video.uploadStatus === 'completed') {
-          const file = assetsFiles.find((asset) => asset.contentId === video.contentId)
           displaySnackbar({
             customId: video.contentId,
             title: 'Video ready to be viewed',
-            description: (file?.blob as File).name,
+            description: video.parentObject?.title || '',
             iconType: 'success',
             timeout: UPLOADED_SNACKBAR_TIMEOUT,
             actionText: 'See on Joystream',
             actionIcon: <SvgGlyphExternal />,
-            onActionClick: () => window.open(`/video/${video.parentObject.id}`, '_blank'),
+            onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(video.parentObject.id), true),
           })
         }
       })
