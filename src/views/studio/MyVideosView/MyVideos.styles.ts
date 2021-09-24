@@ -31,7 +31,7 @@ export const TabsContainer = styled.div`
   }
   ${media.md} {
     gap: ${sizes(4)};
-    grid-template-columns: 1fr 250px auto;
+    grid-template-columns: 1fr minmax(230px, 250px) max-content;
   }
 `
 

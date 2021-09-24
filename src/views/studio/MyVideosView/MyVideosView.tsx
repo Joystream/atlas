@@ -292,7 +292,7 @@ export const MyVideosView = () => {
       <StyledText variant="h2">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton size="large" to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
-          Upload Video
+          Upload video
         </MobileButton>
       )}
       {hasNoVideos ? (
@@ -313,7 +313,7 @@ export const MyVideosView = () => {
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
               <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
-                Upload Video
+                Upload video
               </Button>
             )}
           </TabsContainer>
