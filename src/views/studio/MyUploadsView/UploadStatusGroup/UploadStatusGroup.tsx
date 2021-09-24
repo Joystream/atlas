@@ -28,7 +28,7 @@ import { UploadStatus } from '../UploadStatus'
 
 export type UploadStatusGroupSize = 'large' | 'compact'
 
-type UploadGroupState = 'error' | 'completed' | 'inProgress' | null
+type UploadGroupState = 'error' | 'completed' | 'inProgress' | 'processing' | null
 
 export type UploadStatusGroupProps = {
   uploads: AssetUpload[]
@@ -71,13 +71,16 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
     }
+    if (isProcessing) {
+      setUploadGroupState('processing')
+    }
     if (isCompleted) {
       setUploadGroupState('completed')
     }
     if (errorsCount || missingAssetsCount) {
       setUploadGroupState('error')
     }
-  }, [errorsCount, hasUploadingAsset, isCompleted, missingAssetsCount])
+  }, [errorsCount, hasUploadingAsset, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (errorsCount) {
@@ -126,6 +129,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
       case 'error':
         return <SvgAlertError />
       case 'inProgress':
+      case 'processing':
         return <Loader variant="small" />
       default:
         return <Loader variant="small" />
