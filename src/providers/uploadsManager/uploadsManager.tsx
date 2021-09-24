@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
@@ -37,10 +37,15 @@ export const UploadsManager: React.FC = () => {
     },
   })
 
+  const initialRender = useRef(true)
   useEffect(() => {
+    if (!initialRender.current) {
+      return
+    }
     processingAssetsIds.map((assetId) => {
       setUploadStatus(assetId, { progress: 100, lastStatus: 'processing' })
     })
+    initialRender.current = false
   }, [processingAssetsIds, setUploadStatus])
 
   useEffect(() => {
