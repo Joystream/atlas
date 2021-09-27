@@ -226,7 +226,7 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={loading} key={idx} />
+            return <NewVideoTile loading={loading} key={idx} onClick={() => addVideoTab()} />
           }
           return (
             <VideoTilePublisher
@@ -247,7 +247,7 @@ export const MyVideosView = () => {
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
         if (video === 'new-video-tile') {
-          return <NewVideoTile loading={loading} key={idx} />
+          return <NewVideoTile loading={loading} key={idx} onClick={() => addVideoTab()} />
         }
         return (
           <VideoTilePublisher

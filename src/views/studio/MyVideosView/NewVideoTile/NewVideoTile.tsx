@@ -15,9 +15,10 @@ import {
 
 type NewVideoTileProps = {
   loading?: boolean
+  onClick?: () => void
 }
 
-export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading }) => {
+export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading, onClick }) => {
   return (
     <SwitchTransition>
       <CSSTransition
@@ -29,7 +30,7 @@ export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading }) => {
           {loading ? (
             <NewVideoTileSkeleton />
           ) : (
-            <NewVideoTileLink to={absoluteRoutes.studio.editVideo()}>
+            <NewVideoTileLink to={absoluteRoutes.studio.editVideo()} onClick={onClick}>
               <TextAndIconWrapper>
                 <StyledIcon />
                 <StyledText variant="body2">Upload new video</StyledText>
