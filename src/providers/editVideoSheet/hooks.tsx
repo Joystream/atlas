@@ -70,7 +70,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     title: tab.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
-    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? 1001, // PDM as a default license
+    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? 1002,
     licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
     language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',

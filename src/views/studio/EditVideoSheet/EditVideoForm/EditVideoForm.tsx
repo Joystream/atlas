@@ -57,7 +57,7 @@ const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
-  badgeText: license.code === 1001 ? 'Default' : undefined,
+  badgeText: license.code === 1002 ? 'Default' : undefined,
   tooltipText: license.description,
   tooltipHeaderText: license.longName,
 }))
@@ -542,7 +542,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
                 />
               </FormField>
               {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
-                <FormField title="License attribution">
+                <FormField title="License attribution" optional>
                   <TextField
                     {...register(
                       'licenseAttribution',
