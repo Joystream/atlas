@@ -81,6 +81,28 @@ export const Anchor = styled(Link)`
   color: inherit;
 `
 
+export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
+
+export const UploadProgressTransition = styled.div`
+  &.${DELAYED_FADE_CLASSNAME}-enter {
+    opacity: 0;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit {
+    opacity: 1;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit-active {
+    opacity: 0;
+    transition: opacity 400ms ease-out 600ms;
+  }
+`
+
 export const TitleHeaderAnchor = styled(Link)`
   margin-bottom: ${sizes(2)};
   text-decoration: none;
