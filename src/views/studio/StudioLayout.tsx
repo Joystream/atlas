@@ -38,7 +38,6 @@ const StudioLayout = () => {
   const displayedLocation = useVideoEditSheetRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
     useUser()
 

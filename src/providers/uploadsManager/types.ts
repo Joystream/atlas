@@ -12,6 +12,7 @@ export type AssetUpload = {
   parentObject: {
     type: AssetParent
     id: ChannelId | VideoId
+    title?: string
   }
   owner: ChannelId
   type: AssetType
