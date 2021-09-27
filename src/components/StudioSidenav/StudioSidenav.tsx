@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
-import { SvgGlyphAddVideo, SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { openInNewTab } from '@/utils/browser'
 
 import { NavItemType, SidenavBase } from '../SidenavBase'
@@ -39,7 +36,6 @@ export const StudioSidenav: React.FC = () => {
   const { activeChannelId } = useAuthorizedUser()
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
 
-  const { sheetState } = useEditVideoSheet()
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
   const assetsInProgress = Object.values(uploadsStatus).filter((asset) => asset?.lastStatus === 'inProgress')
@@ -66,11 +62,9 @@ export const StudioSidenav: React.FC = () => {
       isStudio
       items={studioNavbarItemsWithBadge}
       buttonsContent={
-        <>
-          <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
-            Joystream
-          </Button>
-        </>
+        <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
+          Joystream
+        </Button>
       }
     />
   )
