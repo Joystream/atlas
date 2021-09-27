@@ -1,10 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgGlyphInfo } from '@/shared/icons'
-
 import { ActionBar, ActionBarProps } from './ActionBar'
-import { ActionBarTransaction, ActionBarTransactionProps } from './ActionBarTransaction'
 
 export default {
   title: 'Shared/A/ActionBar',
@@ -22,10 +19,6 @@ export default {
   },
 } as Meta
 
-const Template: Story<ActionBarProps> = (args) => <ActionBar detailsTextIcon={<SvgGlyphInfo />} {...args} />
+const Template: Story<ActionBarProps> = (args) => <ActionBar {...args} />
 
 export const Default = Template.bind({})
-
-const TransactionTemplate: Story<ActionBarTransactionProps> = (args) => <ActionBarTransaction {...args} />
-
-export const Transaction = TransactionTemplate.bind({})
