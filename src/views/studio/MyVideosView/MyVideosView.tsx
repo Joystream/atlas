@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { VideoTilePublisher } from '@/components/VideoTile'
+import { VideoTilePublisher } from '@/components/VideoTilePublisher'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'

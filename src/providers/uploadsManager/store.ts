@@ -1,7 +1,8 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { createStore } from '@/store'
+import { UploadStatus } from '@/types/uploads'
 
-import { AssetParent, AssetUpload, UploadStatus, UploadsStatusRecord } from './types'
+import { AssetParent, AssetUpload, UploadsStatusRecord } from './types'
 
 type AssetFile = {
   contentId: string

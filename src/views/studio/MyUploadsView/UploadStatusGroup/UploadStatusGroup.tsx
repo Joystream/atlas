@@ -7,6 +7,7 @@ import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
+import { UploadProgressBar } from '@/shared/components/UploadProgressBar'
 import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
@@ -15,9 +16,7 @@ import {
   AssetGroupTitleText,
   AssetsDrawerContainer,
   AssetsInfoContainer,
-  BottomProgressBar,
   Container,
-  ProgressBar,
   StyledExpandButton,
   Thumbnail,
   UploadInfoContainer,
@@ -68,6 +67,9 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const assetsGroupNumberText = `${uploads.length} asset${uploads.length > 1 ? 's' : ''}`
 
   useEffect(() => {
+    if (isProcessing) {
+      setUploadGroupState('processing')
+    }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
     }
@@ -135,19 +137,18 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
         return <Loader variant="small" />
     }
   }
+
   return (
     <Container>
       <UploadStatusGroupContainer
         onClick={() => setAssetsDrawerActive(!isAssetsDrawerActive)}
         isActive={isAssetsDrawerActive}
       >
-        <ProgressBar
-          progress={isCompleted ? 100 : masterProgress}
-          isProcessing={isProcessing}
-          isCompleted={isCompleted}
-          runCompletedAnimation={runCompletedAnimation}
+        <UploadProgressBar
+          withCompletedAnimation={runCompletedAnimation}
+          lastStatus={uploadGroupState || undefined}
+          progress={masterProgress}
         />
-        {!isCompleted && <BottomProgressBar progress={isCompleted ? 100 : masterProgress} />}
         <Thumbnail size={size}>
           {uploadGroupState && (
             <SwitchTransition>

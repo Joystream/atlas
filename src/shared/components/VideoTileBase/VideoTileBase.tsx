@@ -17,6 +17,7 @@ import {
   SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { UploadStatus } from '@/types/uploads'
 import { formatDateAgo, formatDurationShort } from '@/utils/time'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
@@ -38,6 +39,7 @@ import {
   CoverTopLeftContainer,
   CoverVideoPublishingStateOverlay,
   CoverWrapper,
+  DELAYED_FADE_CLASSNAME,
   InfoContainer,
   KebabMenuButtonIcon,
   MetaContainer,
@@ -51,11 +53,13 @@ import {
   TextContainer,
   TitleHeader,
   TitleHeaderAnchor,
+  UploadProgressTransition,
 } from './VideoTileBase.styles'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
+import { UploadProgressBar } from '../UploadProgressBar'
 
 export type VideoTileBaseMetaProps = {
   showChannel?: boolean
@@ -72,6 +76,7 @@ export type VideoTilePublisherProps =
       isPullupDisabled?: boolean
       isDraft?: boolean
       videoPublishState?: 'default' | 'unlisted'
+      uploadStatus?: UploadStatus
       onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
       onOpenInTabClick?: () => void
       onEditVideoClick?: () => void
@@ -83,6 +88,7 @@ export type VideoTilePublisherProps =
       isPullupDisabled?: undefined
       isDraft?: undefined
       videoPublishState?: undefined
+      uploadStatus?: undefined
       onPullupClick?: undefined
       onOpenInTabClick?: undefined
       onEditVideoClick?: undefined
@@ -134,6 +140,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   showMeta = true,
   removeButton = false,
   videoPublishState = 'default',
+  uploadStatus,
   publisherMode = false,
   isDraft,
   onChannelClick,
@@ -163,8 +170,9 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
       }
     },
   })
+  const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
   const [failedLoadImage, setFailedLoadImage] = useState(false)
-  const clickable = (!!onClick || !!videoHref) && !isLoading
+  const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
   const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -193,8 +201,9 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
       setFailedLoadImage(true)
     }
   }
+
   return (
-    <Container className={className} isLoading={isLoading}>
+    <Container className={className} isLoading={isLoading || isUploading}>
       <CoverWrapper>
         <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
@@ -239,13 +248,15 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       ) : (
                         <CoverNoImage />
                       )}
-                      {(videoPublishState === 'unlisted' || isDraft) && (
+                      {(videoPublishState === 'unlisted' || isDraft) && !isUploading && (
                         <CoverVideoPublishingStateOverlay>
                           {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
                           <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
                         </CoverVideoPublishingStateOverlay>
                       )}
-                      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
+                      {!!duration && !isUploading && (
+                        <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>
+                      )}
                       <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
                         {publisherMode && (
                           <CoverTopLeftContainer>
@@ -278,6 +289,15 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               </CoverImageContainer>
             </CSSTransition>
           </SwitchTransition>
+          <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
+            <UploadProgressTransition>
+              <UploadProgressBar
+                progress={uploadStatus?.progress}
+                lastStatus={uploadStatus?.lastStatus}
+                withLoadingIndicator
+              />
+            </UploadProgressTransition>
+          </CSSTransition>
         </CoverContainer>
       </CoverWrapper>
       {!!progress && (
@@ -329,19 +349,27 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                     </ChannelHandle>
                   </Anchor>
                 ))}
-              {showMeta && (
-                <MetaContainer noMarginTop={!showChannel}>
-                  {isLoading ? (
-                    <SpacedSkeletonLoader height={12} width={'80%'} />
+              <MetaContainer noMarginTop={!showChannel}>
+                {showMeta &&
+                  (isUploading ? (
+                    isLoading ? (
+                      <SpacedSkeletonLoader height={12} width="80%" />
+                    ) : (
+                      <Text variant="body2" secondary>
+                        {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
+                        {uploadStatus.lastStatus === 'processing' && 'Processing...'}
+                      </Text>
+                    )
+                  ) : isLoading ? (
+                    <SpacedSkeletonLoader height={12} width="80%" />
                   ) : createdAt ? (
                     <Text variant="body2" secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt)}
                     </Text>
-                  ) : null}
-                </MetaContainer>
-              )}
+                  ) : null)}
+              </MetaContainer>
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
@@ -349,7 +377,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           onClick={(event) => openContextMenu(event, 200)}
           variant="tertiary"
           size="small"
-          isActive={contextMenuOpts.isActive}
+          isActive={isUploading ? false : contextMenuOpts.isActive}
         >
           <SvgGlyphMore />
         </KebabMenuButtonIcon>
