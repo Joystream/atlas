@@ -78,7 +78,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
 
   const navigate = useNavigate()
 
-  const { sheetState, setSheetState, anyVideoTabsCachedAssets } = useEditVideoSheet()
+  const { sheetState, setSheetState, anyVideoTabsCachedAssets, addVideoTab } = useEditVideoSheet()
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
@@ -157,7 +157,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              <IconButton to={absoluteRoutes.studio.editVideo()}>
+              <IconButton to={absoluteRoutes.studio.editVideo()} onClick={() => addVideoTab()}>
                 <SvgGlyphAddVideo />
               </IconButton>
             </CSSTransition>

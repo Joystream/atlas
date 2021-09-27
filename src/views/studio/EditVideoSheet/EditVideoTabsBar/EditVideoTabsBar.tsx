@@ -47,7 +47,7 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
       <TabsContainer ref={tabsContainerRef}>
         {videoTabs.map((tab, idx) => (
           <EditVideoTab
-            key={tab.id}
+            key={tab.id || idx}
             tab={tab}
             selected={tab.id === selectedVideoTab?.id}
             onTabSelect={(e) => handleTabSelect(e, idx)}
