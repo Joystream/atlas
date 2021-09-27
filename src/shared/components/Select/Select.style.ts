@@ -6,7 +6,6 @@ import { colors, sizes, transitions, typography } from '@/shared/theme'
 
 import { SelectSizes } from '.'
 import { LabelText } from '../InputBase'
-import { Text } from '../Text'
 
 type SelectWrapperProps = {
   labelPosition?: 'top' | 'left'
@@ -127,11 +126,4 @@ export const StyledSvgGlyphInfo = styled(SvgGlyphInfo)`
   &:hover {
     opacity: 1;
   }
-`
-
-export const SelectBadge = styled(Text)`
-  margin-left: ${sizes(3)};
-  background-color: ${colors.gray[700]};
-  height: 100%;
-  padding: 2px ${sizes(1)};
 `

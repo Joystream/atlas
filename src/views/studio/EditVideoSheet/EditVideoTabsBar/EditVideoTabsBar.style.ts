@@ -20,6 +20,7 @@ export const Topbar = styled.div`
     padding: 0 ${sizes(8)};
   }
 `
+
 export const TabsContainer = styled.div`
   display: flex;
   align-items: center;
@@ -40,22 +41,32 @@ export const ButtonsContainer = styled.div`
   grid-gap: ${sizes(1)};
   padding: 0 ${sizes(3)};
   border-left: solid 1px ${colors.gray[700]};
-
   ${media.sm} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
   }
 `
+export const TabWrapper = styled.div<{ isLast?: boolean }>`
+  height: 100%;
+  display: flex;
+  ${({ isLast }) => isLast && `padding-right: ${sizes(2)}`};
+  ${({ isLast }) => isLast && `border-right: 1px solid ${colors.gray[700]}`};
+`
+
 export const Tab = styled.div<{ selected: boolean }>`
+  max-width: 200px;
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 ${sizes(1)} 0 ${sizes(3)};
+  justify-content: center;
   cursor: pointer;
   user-select: none;
+  padding-right: ${sizes(3)};
+  transition: box-shadow 0.125s ease, color 0.125s ease;
   ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${colors.blue[500]};`}
-  > button {
-    margin-left: ${sizes(1)};
+
+  :hover {
+    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${colors.gray[300]};`}
   }
 `
 export const TabTitle = styled(Text)`
@@ -76,4 +87,5 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   padding: ${({ hasOverflow }) => (hasOverflow ? `0 ${sizes(2)}` : '0')};
   border-left: ${({ hasOverflow }) => hasOverflow && `1px solid ${colors.gray[700]}`};
   background-color: ${colors.gray[900]};
+  margin-left: ${sizes(2)};
 `
