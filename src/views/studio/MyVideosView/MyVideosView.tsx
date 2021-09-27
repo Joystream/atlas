@@ -8,6 +8,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useDialog } from '@/providers/dialogs'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useEditVideoSheet } from '@/providers/editVideoSheet'
@@ -17,17 +18,17 @@ import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphUpload } from '@/shared/icons'
+import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  SortContainer,
+  MobileButton,
   StyledDismissibleBanner,
   StyledGrid,
   StyledLimitedWidthContainer,
   StyledPagination,
+  StyledSelect,
   StyledText,
   TabsContainer,
 } from './MyVideos.styles'
@@ -50,6 +51,8 @@ export const MyVideosView = () => {
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
+  const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
@@ -270,17 +273,46 @@ export const MyVideosView = () => {
     return <ViewErrorFallback />
   }
 
+  const sortVisibleAndUploadButtonVisible = isDraftTab ? !!drafts.length : !hasNoVideos
+
+  const sortSelectNode = (
+    <Select
+      size="small"
+      labelPosition="left"
+      label="Sort by"
+      value={sortVideosBy}
+      items={SORT_OPTIONS}
+      onChange={handleSorting}
+    />
+  )
+
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
+      {!smMatch && sortVisibleAndUploadButtonVisible && (
+        <MobileButton
+          size="large"
+          to={absoluteRoutes.studio.editVideo()}
+          icon={<SvgGlyphAddVideo />}
+          onClick={() => addVideoTab()}
+        >
+          Upload video
+        </MobileButton>
+      )}
       {hasNoVideos ? (
         <EmptyFallback
           verticalCentered
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
-            <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+            <Button
+              icon={<SvgGlyphUpload />}
+              to={absoluteRoutes.studio.editVideo()}
+              variant="secondary"
+              size="large"
+              onClick={() => addVideoTab()}
+            >
               Upload video
             </Button>
           }
@@ -289,10 +321,12 @@ export const MyVideosView = () => {
         <>
           <TabsContainer>
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-            <SortContainer>
-              <Text variant="body2">Sort by</Text>
-              <Select value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-            </SortContainer>
+            {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
+            {smMatch && sortVisibleAndUploadButtonVisible && (
+              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />} onClick={() => addVideoTab()}>
+                Upload video
+              </Button>
+            )}
           </TabsContainer>
           {isDraftTab && (
             <StyledDismissibleBanner
@@ -308,6 +342,16 @@ export const MyVideosView = () => {
               title="Unlisted videos can be seen only with direct link"
               icon="info"
               description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
+            />
+          )}
+          {!mdMatch && sortVisibleAndUploadButtonVisible && (
+            <StyledSelect
+              size="small"
+              labelPosition="left"
+              label="Sort by"
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
             />
           )}
           <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(4)}>
@@ -341,6 +385,7 @@ export const MyVideosView = () => {
                   to={absoluteRoutes.studio.editVideo()}
                   variant="secondary"
                   size="large"
+                  onClick={() => addVideoTab()}
                 >
                   Upload video
                 </Button>
