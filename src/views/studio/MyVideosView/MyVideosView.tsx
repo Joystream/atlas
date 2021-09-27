@@ -291,7 +291,12 @@ export const MyVideosView = () => {
     <StyledLimitedWidthContainer>
       <StyledText variant="h2">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
-        <MobileButton size="large" to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
+        <MobileButton
+          size="large"
+          to={absoluteRoutes.studio.editVideo()}
+          icon={<SvgGlyphAddVideo />}
+          onClick={() => addVideoTab()}
+        >
           Upload video
         </MobileButton>
       )}
@@ -301,7 +306,13 @@ export const MyVideosView = () => {
           title="Add your first video"
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
-            <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+            <Button
+              icon={<SvgGlyphUpload />}
+              to={absoluteRoutes.studio.editVideo()}
+              variant="secondary"
+              size="large"
+              onClick={() => addVideoTab()}
+            >
               Upload video
             </Button>
           }
@@ -312,7 +323,7 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />}>
+              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />} onClick={() => addVideoTab()}>
                 Upload video
               </Button>
             )}
@@ -374,6 +385,7 @@ export const MyVideosView = () => {
                   to={absoluteRoutes.studio.editVideo()}
                   variant="secondary"
                   size="large"
+                  onClick={() => addVideoTab()}
                 >
                   Upload video
                 </Button>
