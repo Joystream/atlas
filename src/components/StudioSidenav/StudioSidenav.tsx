@@ -67,20 +67,6 @@ export const StudioSidenav: React.FC = () => {
       items={studioNavbarItemsWithBadge}
       buttonsContent={
         <>
-          <CSSTransition
-            in={sheetState !== 'open'}
-            unmountOnExit
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-          >
-            <Button
-              icon={<SvgGlyphAddVideo />}
-              to={absoluteRoutes.studio.editVideo()}
-              onClick={() => setExpanded(false)}
-            >
-              New Video
-            </Button>
-          </CSSTransition>
           <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
             Joystream
           </Button>
