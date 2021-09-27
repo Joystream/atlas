@@ -3,12 +3,14 @@ import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { languages } from '@/config/languages'
+import { PIONEER_URL } from '@/config/urls'
 import { GridItem } from '@/shared/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
+  Anchor,
   AvatarContainer,
   Details,
   DetailsText,
@@ -42,7 +44,14 @@ export const ChannelAbout = () => {
           </Text>
           <AvatarContainer>
             <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
-            <Text variant="body1">{channel?.ownerMember?.handle}</Text>
+            <Anchor
+              as="a"
+              variant="body1"
+              href={`${PIONEER_URL}/#/members/${channel?.ownerMember?.handle}`}
+              target="_blank"
+            >
+              {channel?.ownerMember?.handle}
+            </Anchor>
           </AvatarContainer>
         </Details>
 
