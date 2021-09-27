@@ -404,8 +404,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     setCurrentVolume(Number(event.target.value))
   }
 
-  const handleMute = (event: React.MouseEvent) => {
-    event.stopPropagation()
+  const handleMute = () => {
     if (currentVolume === 0) {
       setCurrentVolume(cachedVolume || 0.05)
     } else {
@@ -413,7 +412,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handlePictureInPicture = () => {
+  const handlePictureInPicture = (event: React.MouseEvent) => {
+    event.stopPropagation()
     if (document.pictureInPictureElement) {
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       player.exitPictureInPicture()
@@ -427,7 +427,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handleFullScreen = () => {
+  const handleFullScreen = (event: React.MouseEvent) => {
+    event.stopPropagation()
     if (player?.isFullscreen()) {
       player?.exitFullscreen()
     } else {
@@ -448,7 +449,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const showControlsIndicator = !isInBackground && playerState !== 'ended'
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
-      <div data-vjs-player>
+      <div data-vjs-player onClick={handlePlayPause}>
         {showBigPlayButton && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
@@ -494,7 +495,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     )}
                   </PlayButton>
                 </PlayControl>
-                <VolumeControl>
+                <VolumeControl onClick={(e) => e.stopPropagation()}>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
                     {renderVolumeButton()}
                   </VolumeButton>
