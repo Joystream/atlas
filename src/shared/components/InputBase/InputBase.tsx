@@ -30,7 +30,7 @@ export const InputBase: React.FC<InputBaseProps> = ({
 }) => {
   return (
     <FormGroup as={isSelect ? 'div' : 'label'} disabled={disabled} className={className} error={error}>
-      {label && <LabelText>{label}</LabelText>}
+      {label && <LabelText variant="body2">{label}</LabelText>}
       {children}
       {helperText && (
         <HelperText

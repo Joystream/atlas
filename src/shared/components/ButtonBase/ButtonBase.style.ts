@@ -234,8 +234,8 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-top: -0.5px;
-  margin-bottom: -0.5px;
+  margin-top: ${({ textOnly }) => textOnly && '-0.5px'};
+  margin-bottom: ${({ textOnly }) => textOnly && '-0.5px'};
   height: 100%;
   visibility: hidden;
   border-bottom-width: ${({ textOnly }) => textOnly && '1px'};

@@ -8,11 +8,12 @@ import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
 import { SvgGlyphExternal } from '@/shared/icons'
+import { AssetUploadStatus } from '@/types/uploads'
 import { openInNewTab } from '@/utils/browser'
 import { createLookup } from '@/utils/data'
 
 import { useUploadsStore } from './store'
-import { AssetUpload, AssetUploadStatus } from './types'
+import { AssetUpload } from './types'
 
 import { useSnackbar } from '../snackbars'
 import { useUser } from '../user'
