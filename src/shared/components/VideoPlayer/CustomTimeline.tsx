@@ -171,6 +171,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
 
   return (
     <ProgressControl
+      onClick={(event) => event.stopPropagation()}
       isScrubbing={isScrubbing}
       isFullScreen={isFullScreen}
       onMouseMove={handleMouseAndTouchMove}
