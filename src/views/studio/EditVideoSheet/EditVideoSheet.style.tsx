@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
-import { ActionBarTransaction } from '@/shared/components/ActionBar'
 import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`
@@ -26,8 +25,4 @@ export const DrawerOverlay = styled(animated.div)`
   bottom: 0;
   left: 0;
   background-color: ${colors.transparentBlack[66]};
-`
-
-export const StyledActionBar = styled(ActionBarTransaction)`
-  position: initial;
 `

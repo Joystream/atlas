@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 
 import { Avatar } from '@/shared/components/Avatar'
+import { ProgressDrawer } from '@/shared/components/ProgressDrawer'
 import { TitleArea } from '@/shared/components/TitleArea'
-import { media, sizes } from '@/shared/theme'
+import { media, sizes, transitions, zIndex } from '@/shared/theme'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`
@@ -50,5 +51,32 @@ export const StyledAvatar = styled(Avatar)`
   ${media.sm} {
     width: 136px;
     height: 136px;
+  }
+`
+
+type ActionBarTransactionWrapperProps = {
+  fullWidth?: boolean
+  isActive?: boolean
+}
+
+export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrapperProps>`
+  position: fixed;
+  bottom: 0;
+  left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
+  right: 0;
+  z-index: ${zIndex.header};
+
+  &.${transitions.names.fade}-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
+  }
+`
+
+export const StyledProgressDrawer = styled(ProgressDrawer)`
+  display: none;
+  ${media.md} {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    display: block;
   }
 `
