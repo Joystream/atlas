@@ -1,10 +1,9 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
+import { UploadStatus } from '@/types/uploads'
 
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 export type AssetParent = 'video' | 'channel'
-
-export type AssetUploadStatus = 'completed' | 'inProgress' | 'error' | 'reconnecting' | 'processing'
 
 export type AssetUpload = {
   contentId: string
@@ -29,12 +28,6 @@ export type UploadsManagerState = AssetUpload[]
 export type StartFileUploadOptions = {
   isReUpload?: boolean
   changeHost?: boolean
-}
-
-export type UploadStatus = {
-  lastStatus?: AssetUploadStatus
-  progress?: number
-  retries?: number
 }
 
 export type UploadsStatusRecord = Record<string, UploadStatus | undefined>
