@@ -1,8 +1,8 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { AssetUploadStatus } from '@/providers/uploadsManager/types'
 import { transitions } from '@/shared/theme'
+import { AssetUploadStatus } from '@/types/uploads'
 
 import {
   BottomProgressBar,

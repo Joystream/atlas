@@ -6,11 +6,12 @@ import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
 import { ResolvedAssetDetails } from '@/types/assets'
+import { UploadStatus } from '@/types/uploads'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
-import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
+import { InputAssetUpload, StartFileUploadOptions } from './types'
 
 import { useSnackbar } from '../snackbars'
 import { useStorageProviders } from '../storageProviders'
