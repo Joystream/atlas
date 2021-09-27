@@ -7,7 +7,7 @@ export const SvgAlertSuccess = (props: React.SVGProps<SVGSVGElement>) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1.293-6.293l6-6-1.414-1.414L10 13.586l-1.293-1.293-1.414 1.414 2 2 .707.707.707-.707z"
-      fill="#00DBB0"
+      fill="#10CC5E"
     />
   </svg>
 )

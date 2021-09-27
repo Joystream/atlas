@@ -1,7 +1,9 @@
+import { ReactNode } from 'react'
+
 import { createStore } from '@/store'
 import { createId } from '@/utils/createId'
 
-type SnackbarIconType = 'success' | 'error' | 'info' | 'warning'
+export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploading'
 
 export type DisplaySnackbarArgs = {
   customId?: string
@@ -13,6 +15,7 @@ export type DisplaySnackbarArgs = {
   onExit?: () => void
   actionText?: string
   onActionClick?: () => void
+  actionIcon?: ReactNode
 }
 
 type Snackbar = {
