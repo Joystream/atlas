@@ -8,9 +8,9 @@ import { transitions } from '@/shared/theme'
 import {
   ActionBarContainer,
   ActionButtonPrimary,
+  ActionButtonPrimaryTooltip,
   DetailsIconWrapper,
   DraftsBadgeContainer,
-  FlexWrapper,
   StyledPrimaryText,
   StyledSecondaryText,
 } from './ActionBar.style'
@@ -33,12 +33,12 @@ type ActionDialogDraftBadge = {
 }
 
 export type ActionBarProps = {
+  primaryButton: ActionDialogButtonProps
   isEdit?: boolean
   primaryText?: string
   secondaryText?: string
   fullWidth?: boolean
   className?: string
-  primaryButton?: ActionDialogButtonProps
   secondaryButton?: ActionDialogButtonProps & { visible?: boolean }
   draftBadge?: ActionDialogDraftBadge
 }
@@ -47,81 +47,53 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
   ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, isEdit }, ref) => {
     const smMatch = useMediaMatch('sm')
 
-    const draftBadgeNode = draftBadge ? (
-      <DraftsBadgeContainer>
-        <Text variant="body2" secondary>
-          {draftBadge.text}
-        </Text>
-        <DetailsIconWrapper>
-          <SvgGlyphInfo />
-        </DetailsIconWrapper>
-      </DraftsBadgeContainer>
-    ) : null
-
-    const secondaryButtonNode = secondaryButton?.text ? (
-      <CSSTransition
-        in={secondaryButton.visible}
-        timeout={parseInt(transitions.timings.sharp)}
-        classNames={transitions.names.fade}
-        mountOnEnter
-        unmountOnExit
-      >
-        <Button
-          icon={!smMatch ? secondaryButton.icon : undefined}
-          disabled={secondaryButton.disabled}
-          onClick={secondaryButton.onClick}
-          variant={!smMatch ? 'tertiary' : 'secondary'}
-          size={!smMatch ? 'small' : 'large'}
-          iconPlacement="right"
-        >
-          {secondaryButton.text}
-        </Button>
-      </CSSTransition>
-    ) : null
-
-    const primaryButtonNode = primaryButton?.text ? (
-      <ActionButtonPrimary
-        isMobile={!smMatch}
-        disabled={primaryButton.disabled}
-        onClick={primaryButton.onClick}
-        size="large"
-        type="submit"
-      >
-        {primaryButton.text}
-      </ActionButtonPrimary>
-    ) : null
-
-    if (!smMatch)
-      return (
-        <ActionBarContainer ref={ref} className={className} isActive={isEdit ? !primaryButton?.disabled : true}>
-          <FlexWrapper>
-            <StyledPrimaryText variant="h6">{primaryText}</StyledPrimaryText>
-            {draftBadge?.visible ? draftBadgeNode : secondaryButtonNode}
-          </FlexWrapper>
-          {primaryButtonNode}
-        </ActionBarContainer>
-      )
-
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isEdit ? !primaryButton?.disabled : true}>
-        <FlexWrapper>
-          <StyledPrimaryText variant="h5">{primaryText}</StyledPrimaryText>
-          <StyledSecondaryText variant="body2" secondary>
-            {secondaryText}
-          </StyledSecondaryText>
-        </FlexWrapper>
-        <FlexWrapper>
-          {draftBadge?.visible ? (
-            <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
-              {draftBadgeNode}
-            </Tooltip>
-          ) : (
-            secondaryButtonNode
-          )}
-          <Tooltip arrowDisabled placement="top-end" {...primaryButton?.tooltip}>
-            {primaryButtonNode}
+        <StyledPrimaryText variant={!smMatch ? 'h6' : 'h5'}>{primaryText}</StyledPrimaryText>
+        <StyledSecondaryText variant="body2" secondary>
+          {secondaryText}
+        </StyledSecondaryText>
+        {draftBadge?.visible ? (
+          <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
+            <DraftsBadgeContainer>
+              <Text variant="body2" secondary>
+                {draftBadge.text}
+              </Text>
+              <DetailsIconWrapper>
+                <SvgGlyphInfo />
+              </DetailsIconWrapper>
+            </DraftsBadgeContainer>
           </Tooltip>
-        </FlexWrapper>
+        ) : secondaryButton ? (
+          <CSSTransition
+            in={secondaryButton.visible}
+            timeout={parseInt(transitions.timings.sharp)}
+            classNames={transitions.names.fade}
+            mountOnEnter
+            unmountOnExit
+          >
+            <Button
+              icon={!smMatch ? secondaryButton.icon : undefined}
+              disabled={secondaryButton.disabled}
+              onClick={secondaryButton.onClick}
+              variant={!smMatch ? 'tertiary' : 'secondary'}
+              size={!smMatch ? 'small' : 'large'}
+              iconPlacement="right"
+            >
+              {secondaryButton.text}
+            </Button>
+          </CSSTransition>
+        ) : null}
+        <ActionButtonPrimaryTooltip arrowDisabled placement="top-end" {...primaryButton?.tooltip}>
+          <ActionButtonPrimary
+            disabled={primaryButton.disabled}
+            onClick={primaryButton.onClick}
+            size="large"
+            type="submit"
+          >
+            {primaryButton.text}
+          </ActionButtonPrimary>
+        </ActionButtonPrimaryTooltip>
       </ActionBarContainer>
     )
   }

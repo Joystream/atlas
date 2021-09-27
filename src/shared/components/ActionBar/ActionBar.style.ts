@@ -4,15 +4,7 @@ import { colors, media, sizes, transitions, zIndex } from '@/shared/theme'
 
 import { Button } from '../Button'
 import { Text } from '../Text'
-
-export const FlexWrapper = styled.div`
-  display: flex;
-  height: 40px;
-  justify-content: space-between;
-  ${media.sm} {
-    height: 48px;
-  }
-`
+import { Tooltip } from '../Tooltip'
 
 export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   background-color: ${colors.gray[900]};
@@ -22,42 +14,56 @@ export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   grid-template-rows: auto auto;
   grid-template-columns: 1fr;
   z-index: ${zIndex.header};
-  transition: transform ${transitions.timings.regular} ${transitions.easing};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
+  grid-template-areas: 'primary-text badge' 'primary-button primary-button';
+
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
   }
   ${media.sm} {
-    display: flex;
-    justify-content: space-between;
+    grid-template-areas: 'primary-text badge primary-button';
+    padding: ${sizes(4)} ${sizes(8)};
+  }
+  ${media.lg} {
+    grid-template-columns: max-content 1fr max-content max-content;
+    grid-template-areas: 'primary-text secondary-text badge primary-button';
     padding: ${sizes(4)} ${sizes(8)};
   }
 `
 
 export const StyledPrimaryText = styled(Text)`
+  grid-area: primary-text;
   margin-right: ${sizes(5)};
   align-self: center;
-`
-
-type ActionButtonPrimaryProps = {
-  isMobile?: boolean
-}
-
-export const ActionButtonPrimary = styled(Button)<ActionButtonPrimaryProps>`
-  margin-left: ${({ isMobile }) => (isMobile ? 0 : sizes(4))};
-  margin-top: ${({ isMobile }) => (isMobile ? sizes(4) : 0)};
 `
 
 export const StyledSecondaryText = styled(Text)`
   display: none;
   ${media.lg} {
+    grid-area: secondary-text;
     max-width: 360px;
     align-self: center;
     display: block;
   }
 `
 
+export const ActionButtonPrimaryTooltip = styled(Tooltip)`
+  grid-area: primary-button;
+`
+
+export const ActionButtonPrimary = styled(Button)`
+  grid-area: primary-button;
+  width: 100%;
+  margin-top: ${sizes(4)};
+  ${media.sm} {
+    margin-top: 0;
+    margin-left: ${sizes(4)};
+  }
+`
+
 export const DraftsBadgeContainer = styled.div`
+  grid-area: badge;
   user-select: none;
   margin-left: auto;
   display: flex;
@@ -77,10 +83,4 @@ export const DraftsBadgeContainer = styled.div`
 
 export const DetailsIconWrapper = styled.span`
   margin-left: ${sizes(2)};
-`
-
-export const ActionBarTransactionWrapper = styled.div<{ isActive: boolean }>`
-  position: fixed;
-  bottom: 0;
-  right: 0;
 `
