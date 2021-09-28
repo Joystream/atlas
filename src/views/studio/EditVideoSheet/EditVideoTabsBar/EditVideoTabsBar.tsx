@@ -115,7 +115,9 @@ const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, isLast, selected, onTa
         >
           <SvgGlyphClose />
         </IconButton>
-        <TabTitle variant="subtitle2">{tabData?.title || 'Untitled'}</TabTitle>
+        <TabTitle secondary={!selected} variant="subtitle2">
+          {tabData?.title || 'Untitled'}
+        </TabTitle>
         {selected && badgeText && <Badge variant="caption">{badgeText}</Badge>}
       </Tab>
     </TabWrapper>

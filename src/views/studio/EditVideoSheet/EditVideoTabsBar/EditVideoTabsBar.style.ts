@@ -53,6 +53,15 @@ export const TabWrapper = styled.div<{ isLast?: boolean }>`
   ${({ isLast }) => isLast && `border-right: 1px solid ${colors.gray[700]}`};
 `
 
+export const TabTitle = styled(Text)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: ${sizes(3)};
+  max-width: 120px;
+  transition: color 0.125s ease;
+`
+
 export const Tab = styled.div<{ selected: boolean }>`
   max-width: 200px;
   height: 100%;
@@ -62,18 +71,15 @@ export const Tab = styled.div<{ selected: boolean }>`
   cursor: pointer;
   user-select: none;
   padding-right: ${sizes(3)};
-  transition: box-shadow 0.125s ease, color 0.125s ease;
+  transition: box-shadow 0.125s ease;
   ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${colors.blue[500]};`}
 
   :hover {
     ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${colors.gray[300]};`}
+    ${TabTitle} {
+      color: ${colors.gray[50]};
+    }
   }
-`
-export const TabTitle = styled(Text)`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
 `
 
 export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
