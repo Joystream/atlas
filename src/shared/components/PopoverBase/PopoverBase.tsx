@@ -13,8 +13,7 @@ export type PopoverBaseProps = {
 }
 
 export const PopoverBase: React.FC<PopoverBaseProps> = ({
-  hideOnClick,
-  isVisible,
+  hideOnClick = true,
   placement = 'bottom-start',
   children,
   offset = [0, 8],
@@ -26,7 +25,6 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
       trigger="click"
       hideOnClick={hideOnClick}
       interactive
-      visible={true}
       render={(attrs) => (
         <div {...attrs} className={className}>
           {content}

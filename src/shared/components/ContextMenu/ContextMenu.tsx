@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
 
@@ -21,15 +20,7 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
 
 export const ContextMenu: React.FC<PopoverBaseProps> = ({ children, content, ...rest }) => {
   return (
-    <PopoverBase
-      hideOnClick
-      content={
-        <CSSTransition in timeout={150} classNames="menu" unmountOnExit>
-          <StyledContainer>{content}</StyledContainer>
-        </CSSTransition>
-      }
-      {...rest}
-    >
+    <PopoverBase content={<StyledContainer>{content}</StyledContainer>} {...rest}>
       {children}
     </PopoverBase>
   )

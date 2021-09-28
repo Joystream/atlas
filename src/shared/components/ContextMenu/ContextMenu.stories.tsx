@@ -25,7 +25,22 @@ const Template: Story = (args) => {
   return (
     <>
       <div>
-        <ContextMenu content={<div>asdasdas</div>} {...args}>
+        <ContextMenu
+          content={
+            <div>
+              <ContextMenuItem icon={<SvgGlyphEdit />} onClick={() => {}}>
+                Edit video
+              </ContextMenuItem>
+              <ContextMenuItem icon={<SvgGlyphCopy />} onClick={() => {}}>
+                Copy video URL
+              </ContextMenuItem>
+              <ContextMenuItem icon={<SvgGlyphTrash />} onClick={() => {}}>
+                Delete video
+              </ContextMenuItem>
+            </div>
+          }
+          {...args}
+        >
           <Button>Open menu on the left side</Button>
         </ContextMenu>
       </div>
