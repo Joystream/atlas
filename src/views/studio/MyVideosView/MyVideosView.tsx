@@ -254,7 +254,7 @@ export const MyVideosView = () => {
         }
         return (
           <VideoTilePublisher
-            key={idx}
+            key={`video-tile-${video.id || idx}`}
             id={video.id}
             showChannel={false}
             isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
