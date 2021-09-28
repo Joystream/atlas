@@ -229,11 +229,11 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={loading} key={idx} onClick={() => addVideoTab()} />
+            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={() => addVideoTab()} />
           }
           return (
             <VideoTilePublisher
-              key={idx}
+              key={`draft-${idx}`}
               id={draft.id}
               showChannel={false}
               isDraft
@@ -254,7 +254,7 @@ export const MyVideosView = () => {
         }
         return (
           <VideoTilePublisher
-            key={idx}
+            key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
             id={video.id}
             showChannel={false}
             isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
