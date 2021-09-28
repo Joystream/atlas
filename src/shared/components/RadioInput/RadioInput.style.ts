@@ -121,10 +121,10 @@ export const CustomRadioInput = styled.div<CustomRadioInputProps>`
 
   &::before {
     content: '';
-    top: -8px;
-    bottom: -8px;
-    left: -8px;
-    right: -8px;
+    top: ${({ checked }) => (checked ? '-12px' : '-9px')};
+    bottom: ${({ checked }) => (checked ? '-12px' : '-9px')};
+    left: ${({ checked }) => (checked ? '-12px' : '-9px')};
+    right: ${({ checked }) => (checked ? '-12px' : '-9px')};
     border-radius: 50%;
     position: absolute;
     z-index: -1;
