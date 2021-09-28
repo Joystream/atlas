@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
 import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
-import { VideoPlayer } from '@/shared/components/VideoPlayer'
+import { SvgActionPause } from '@/shared/icons'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
@@ -26,6 +26,8 @@ import {
   TitleSkeletonLoader,
 } from './VideoHero.style'
 import { useVideoHero } from './VideoHeroData'
+
+import BackgroundVideoPlayer from '../BackgroundVideoPlayer'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -55,17 +57,14 @@ export const VideoHero: React.FC = () => {
         <Media>
           <PlayerContainer>
             {coverVideo && (
-              <VideoPlayer
-                videoStyle={{ objectFit: 'cover' }}
-                fluid
-                isInBackground
+              <BackgroundVideoPlayer
                 muted={soundMuted}
                 playing={videoPlaying}
-                posterUrl={thumbnailPhotoUrl}
-                onDataLoaded={handlePlaybackDataLoaded}
+                poster={thumbnailPhotoUrl || ''}
+                onLoadedData={handlePlaybackDataLoaded}
                 onPlay={() => setVideoPlaying(true)}
                 onPause={() => setVideoPlaying(false)}
-                onEnd={() => setVideoPlaying(false)}
+                onEnded={() => setVideoPlaying(false)}
                 src={coverVideo?.coverCutMediaUrl}
               />
             )}
@@ -103,10 +102,10 @@ export const VideoHero: React.FC = () => {
             <ButtonsContainer>
               <Button
                 size="large"
-                to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
-                icon={<SvgActionPlay />}
+                onClick={() => setVideoPlaying((prev) => !prev)}
+                icon={videoPlaying ? <SvgActionPause /> : <SvgActionPlay />}
               >
-                Play
+                {videoPlaying ? 'Pause' : 'Play'}
               </Button>
               <SoundButton size="large" variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
