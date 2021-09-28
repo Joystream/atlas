@@ -53,7 +53,6 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
             tab={tab}
             selected={tab.id === selectedVideoTab?.id}
             onTabSelect={(e) => handleTabSelect(e, idx)}
-            isLast={videoTabs.length - 1 === idx}
             onRemoveTabClick={() => onRemoveTabClick(idx)}
           />
         ))}
@@ -118,7 +117,7 @@ const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, isLast, selected, onTa
         <TabTitle secondary={!selected} variant="subtitle2">
           {tabData?.title || 'Untitled'}
         </TabTitle>
-        {selected && badgeText && <Badge variant="caption">{badgeText}</Badge>}
+        {badgeText && <Badge variant="caption">{badgeText}</Badge>}
       </Tab>
     </TabWrapper>
   )

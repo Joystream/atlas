@@ -50,7 +50,6 @@ export const TabWrapper = styled.div<{ isLast?: boolean }>`
   height: 100%;
   display: flex;
   ${({ isLast }) => isLast && `padding-right: ${sizes(2)}`};
-  ${({ isLast }) => isLast && `border-right: 1px solid ${colors.gray[700]}`};
 `
 
 export const TabTitle = styled(Text)`
@@ -90,8 +89,8 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   justify-content: center;
   height: 100%;
   max-width: ${sizes(14)};
-  padding: ${({ hasOverflow }) => (hasOverflow ? `0 ${sizes(2)}` : '0')};
-  border-left: ${({ hasOverflow }) => hasOverflow && `1px solid ${colors.gray[700]}`};
+  padding: 0 ${sizes(2)};
+  border-left: 1px solid ${colors.gray[700]};
   background-color: ${colors.gray[900]};
   margin-left: ${sizes(2)};
 `
