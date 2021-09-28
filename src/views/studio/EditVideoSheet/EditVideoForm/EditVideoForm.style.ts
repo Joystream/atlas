@@ -9,6 +9,8 @@ import { Text } from '@/shared/components/Text'
 import { TitleArea } from '@/shared/components/TitleArea'
 import { media, sizes } from '@/shared/theme'
 
+import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
+
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
   gap: ${sizes(6)};
@@ -29,8 +31,13 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
   }
 `
 
-export const FormScrolling = styled.div<{ actionBarHeight?: number }>`
-  height: 100%;
+type FormScrollingProps = {
+  actionBarHeight?: number
+  isEdit?: boolean
+}
+export const FormScrolling = styled.div<FormScrollingProps>`
+  height: ${({ actionBarHeight, isEdit }) =>
+    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px)`};
   overflow-y: scroll;
   overflow-x: hidden;
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
