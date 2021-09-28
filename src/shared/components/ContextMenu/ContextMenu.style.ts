@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography } from '../../theme'
+import { colors, sizes, transitions, typography, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
@@ -17,6 +17,7 @@ export const StyledContainer = styled.div<ContainerProps>`
   width: 200px;
   color: ${colors.white};
   word-break: break-all;
+  z-index: ${zIndex.nearOverlay};
 
   &.menu-enter {
     opacity: 0;
