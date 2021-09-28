@@ -4,7 +4,6 @@ import React, { Ref, forwardRef } from 'react'
 import { SvgGlyphChevronDown } from '@/shared/icons'
 
 import {
-  SelectBadge,
   SelectButton,
   SelectLabel,
   SelectMenu,
@@ -15,6 +14,7 @@ import {
   StyledSvgGlyphInfo,
 } from './Select.style'
 
+import { Badge } from '../Badge'
 import { InputBase, InputBaseProps } from '../InputBase'
 import { Tooltip } from '../Tooltip'
 
@@ -92,7 +92,7 @@ export const _Select = <T extends unknown>(
             size={size}
           >
             {selectedItem?.name || placeholder}
-            {selectedItem?.badgeText && <SelectBadge variant="caption">{selectedItem.badgeText}</SelectBadge>}
+            {selectedItem?.badgeText && <Badge variant="caption">{selectedItem.badgeText}</Badge>}
             <SvgGlyphChevronDown />
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>

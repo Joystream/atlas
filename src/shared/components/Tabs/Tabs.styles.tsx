@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, typography, zIndex } from '@/shared/theme'
 
-import { badgeStyles } from '../Badge'
+import { smallBadgeStyles } from '../Badge'
 
 type TabProps = {
   selected: boolean
@@ -50,7 +50,7 @@ export const Tab = styled.div<TabProps>`
   }
 
   span {
-    ${badgeStyles}
+    ${smallBadgeStyles}
 
     &[data-badge]::after {
       margin-top: calc(-1 * ${sizes(2)});

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 
 import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheetTabData } from '@/providers/editVideoSheet'
+import { Badge } from '@/shared/components/Badge'
 import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 
@@ -9,6 +10,7 @@ import {
   ButtonsContainer,
   Tab,
   TabTitle,
+  TabWrapper,
   TabsContainer,
   Topbar,
 } from './EditVideoTabsBar.style'
@@ -81,26 +83,42 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
 type EditVideoTabProps = {
   tab: EditVideoSheetTab
   selected: boolean
+  isLast?: boolean
   onTabSelect: (e: React.MouseEvent<HTMLDivElement>) => void
   onRemoveTabClick: () => void
 }
 
-const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, selected, onTabSelect, onRemoveTabClick }) => {
-  const { tabData } = useEditVideoSheetTabData(tab)
+const getBadgeText = (tab: EditVideoSheetTab) => {
+  if (tab.isNew || tab.isDraft) {
+    return 'New'
+  }
+  if (!tab.isNew) {
+    return 'Edit'
+  }
+  return
+}
 
+const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, isLast, selected, onTabSelect, onRemoveTabClick }) => {
+  const { tabData } = useEditVideoSheetTabData(tab)
+  const badgeText = getBadgeText(tab)
   return (
-    <Tab key={tab.id} selected={selected} onClick={onTabSelect}>
-      <TabTitle variant="subtitle2">{tabData?.title || 'Untitled'}</TabTitle>
-      <IconButton
-        size="small"
-        variant="tertiary"
-        onClick={(e) => {
-          e.stopPropagation()
-          onRemoveTabClick()
-        }}
-      >
-        <SvgGlyphClose />
-      </IconButton>
-    </Tab>
+    <TabWrapper onClick={onTabSelect} isLast={isLast}>
+      <Tab selected={selected}>
+        <IconButton
+          size="small"
+          variant="tertiary"
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemoveTabClick()
+          }}
+        >
+          <SvgGlyphClose />
+        </IconButton>
+        <TabTitle secondary={!selected} variant="subtitle2">
+          {tabData?.title || 'Untitled'}
+        </TabTitle>
+        {badgeText && <Badge variant="caption">{badgeText}</Badge>}
+      </Tab>
+    </TabWrapper>
   )
 }

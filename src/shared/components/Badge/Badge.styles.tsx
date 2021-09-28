@@ -1,8 +1,11 @@
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 
 import { colors, sizes, typography } from '@/shared/theme'
 
-export const badgeStyles = css`
+import { Text } from '../Text'
+
+export const smallBadgeStyles = css`
   &[data-badge]::after {
     position: absolute;
     width: ${sizes(4)};
@@ -23,4 +26,10 @@ export const badgeStyles = css`
   &[data-badge='']::after {
     display: none;
   }
+`
+
+export const Badge = styled(Text)`
+  margin-left: ${sizes(3)};
+  background-color: ${colors.gray[700]};
+  padding: 2px ${sizes(1)};
 `
