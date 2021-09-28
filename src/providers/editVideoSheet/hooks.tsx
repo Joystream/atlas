@@ -15,6 +15,8 @@ import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoShe
 import { channelDraftsSelector, useDraftStore } from '../drafts'
 import { useAuthorizedUser } from '../user'
 
+export const DEFAULT_LICENSE_ID = 1002
+
 export const useEditVideoSheet = () => {
   const ctx = useContext(EditVideoSheetContext)
   if (ctx === undefined) {
@@ -70,7 +72,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
     title: tab.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
-    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? 1002,
+    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
     licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
     licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
     language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',

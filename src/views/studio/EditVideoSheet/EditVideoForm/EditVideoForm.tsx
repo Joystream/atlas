@@ -15,6 +15,7 @@ import { useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
 import {
+  DEFAULT_LICENSE_ID,
   EditVideoFormFields,
   EditVideoSheetTab,
   useEditVideoSheet,
@@ -57,7 +58,7 @@ const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
-  badgeText: license.code === 1002 ? 'Default' : undefined,
+  badgeText: license.code === DEFAULT_LICENSE_ID ? 'Default' : undefined,
   tooltipText: license.description,
   tooltipHeaderText: license.longName,
 }))
