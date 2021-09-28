@@ -90,11 +90,8 @@ type EditVideoTabProps = {
 }
 
 const getBadgeText = (tab: EditVideoSheetTab) => {
-  if (tab.isNew) {
+  if (tab.isNew || tab.isDraft) {
     return 'New'
-  }
-  if (tab.isDraft) {
-    return 'Draft'
   }
   if (!tab.isNew) {
     return 'Edit'
@@ -119,7 +116,7 @@ const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, isLast, selected, onTa
           <SvgGlyphClose />
         </IconButton>
         <TabTitle variant="subtitle2">{tabData?.title || 'Untitled'}</TabTitle>
-        {badgeText && <Badge variant="caption">{badgeText}</Badge>}
+        {selected && badgeText && <Badge variant="caption">{badgeText}</Badge>}
       </Tab>
     </TabWrapper>
   )
