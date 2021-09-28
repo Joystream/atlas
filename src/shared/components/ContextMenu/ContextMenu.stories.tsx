@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { useContextMenu } from '@/hooks/useContextMenu'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphTrash } from '@/shared/icons'
 
@@ -22,26 +22,11 @@ export default {
 } as Meta
 
 const Template: Story = (args) => {
-  const { openContextMenu, closeContextMenu, targetRef, isVisible } = useContextMenu()
-
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button ref={targetRef} onClick={openContextMenu}>
-          Open menu on the left side
-        </Button>
-      </div>
       <div>
-        <ContextMenu targetRef={targetRef} isVisible={isVisible} {...args}>
-          <ContextMenuItem icon={<SvgGlyphEdit />} onClick={closeContextMenu}>
-            Edit video
-          </ContextMenuItem>
-          <ContextMenuItem icon={<SvgGlyphCopy />} onClick={closeContextMenu}>
-            Copy video URL
-          </ContextMenuItem>
-          <ContextMenuItem icon={<SvgGlyphTrash />} onClick={closeContextMenu}>
-            Delete video
-          </ContextMenuItem>
+        <ContextMenu content={<div>asdasdas</div>} {...args}>
+          <Button>Open menu on the left side</Button>
         </ContextMenu>
       </div>
     </>

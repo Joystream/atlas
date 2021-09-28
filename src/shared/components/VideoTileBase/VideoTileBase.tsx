@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { useContextMenu } from '@/hooks/useContextMenu'
 import {
   SvgGlyphClose,
   SvgGlyphCopy,
@@ -154,7 +153,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onDeleteVideoClick,
   isPullupDisabled,
 }) => {
-  const { openContextMenu, isVisible, targetRef } = useContextMenu()
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
@@ -369,46 +367,47 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
-        <KebabMenuButtonIcon
-          ref={targetRef}
-          onClick={openContextMenu}
-          variant="tertiary"
-          size="small"
-          isActive={isUploading ? false : isVisible}
-        >
-          <SvgGlyphMore />
-        </KebabMenuButtonIcon>
-        <ContextMenu isVisible={isVisible} targetRef={targetRef} placement={'bottom-end'}>
-          {publisherMode ? (
+
+        <ContextMenu
+          placement={'bottom-end'}
+          content={
             <>
-              {onOpenInTabClick && (
-                <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                  Play in Joystream
-                </ContextMenuItem>
-              )}
-              {onCopyVideoURLClick && (
-                <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                  Copy video URL
-                </ContextMenuItem>
-              )}
-              {onEditVideoClick && (
-                <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                  {isDraft ? 'Edit draft' : 'Edit video'}
-                </ContextMenuItem>
-              )}
-              {onDeleteVideoClick && (
-                <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                  {isDraft ? 'Delete draft' : 'Delete video'}
-                </ContextMenuItem>
+              {publisherMode ? (
+                <>
+                  {onOpenInTabClick && (
+                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                      Play in Joystream
+                    </ContextMenuItem>
+                  )}
+                  {onCopyVideoURLClick && (
+                    <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
+                      Copy video URL
+                    </ContextMenuItem>
+                  )}
+                  {onEditVideoClick && (
+                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                      {isDraft ? 'Edit draft' : 'Edit video'}
+                    </ContextMenuItem>
+                  )}
+                  {onDeleteVideoClick && (
+                    <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                      {isDraft ? 'Delete draft' : 'Delete video'}
+                    </ContextMenuItem>
+                  )}
+                </>
+              ) : (
+                onCopyVideoURLClick && (
+                  <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
+                    Copy video URL
+                  </ContextMenuItem>
+                )
               )}
             </>
-          ) : (
-            onCopyVideoURLClick && (
-              <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
-                Copy video URL
-              </ContextMenuItem>
-            )
-          )}
+          }
+        >
+          <KebabMenuButtonIcon variant="tertiary" size="small">
+            <SvgGlyphMore />
+          </KebabMenuButtonIcon>
         </ContextMenu>
       </InfoContainer>
     </Container>

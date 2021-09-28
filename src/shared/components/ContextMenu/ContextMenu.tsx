@@ -19,12 +19,18 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
   )
 }
 
-export const ContextMenu: React.FC<PopoverBaseProps> = ({ children, isVisible, ...rest }) => {
+export const ContextMenu: React.FC<PopoverBaseProps> = ({ children, content, ...rest }) => {
   return (
-    <PopoverBase isVisible={isVisible} {...rest}>
-      <CSSTransition in={isVisible} timeout={150} classNames="menu" unmountOnExit>
-        <StyledContainer>{children}</StyledContainer>
-      </CSSTransition>
+    <PopoverBase
+      hideOnClick
+      content={
+        <CSSTransition in timeout={150} classNames="menu" unmountOnExit>
+          <StyledContainer>{content}</StyledContainer>
+        </CSSTransition>
+      }
+      {...rest}
+    >
+      {children}
     </PopoverBase>
   )
 }

@@ -1,51 +1,46 @@
-import { Placement, offset } from '@popperjs/core'
-import React, { RefObject, useRef, useState } from 'react'
-import { usePopper } from 'react-popper'
-
-import { Portal } from '@/components/Portal'
-import { useOverlayManager } from '@/providers/overlayManager'
+import styled from '@emotion/styled'
+import { Placement } from '@popperjs/core'
+import Tippy from '@tippyjs/react/headless'
+import React from 'react'
 
 export type PopoverBaseProps = {
-  targetRef: RefObject<HTMLElement>
+  content: React.ReactNode
   isVisible?: boolean
   placement?: Placement
-  offset?: typeof offset
+  offset?: [number, number]
+  hideOnClick?: boolean
   className?: string
 }
 
 export const PopoverBase: React.FC<PopoverBaseProps> = ({
-  targetRef,
+  hideOnClick,
+  isVisible,
   placement = 'bottom-start',
   children,
+  offset = [0, 8],
+  content,
   className,
 }) => {
-  const { contextContainerRef } = useOverlayManager()
-  const popperRef = useRef(null)
-  const [arrowRef, setArrowRed] = useState<HTMLDivElement | null>(null)
-  const { styles, attributes } = usePopper(targetRef.current, popperRef.current, {
-    placement,
-    modifiers: [
-      {
-        name: 'arrow',
-        options: {
-          element: arrowRef,
-        },
-      },
-      {
-        name: 'offset',
-        options: {
-          offset: [0, 8],
-        },
-      },
-    ],
-  })
-
   return (
-    <Portal containerRef={contextContainerRef}>
-      <div ref={popperRef} style={styles.popper} {...attributes.popper} className={className}>
-        <div ref={setArrowRed} style={styles.arrow} className="arrow" />
-        {children}
-      </div>
-    </Portal>
+    <Tippy
+      trigger="click"
+      hideOnClick={hideOnClick}
+      interactive
+      visible={true}
+      render={(attrs) => (
+        <div {...attrs} className={className}>
+          {content}
+        </div>
+      )}
+      placement={placement}
+      offset={offset}
+    >
+      <TriggerContainer tabIndex={0}>{children}</TriggerContainer>
+    </Tippy>
   )
 }
+
+const TriggerContainer = styled.div`
+  height: max-content;
+  width: max-content;
+`
