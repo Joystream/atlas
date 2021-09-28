@@ -10,7 +10,8 @@ import { Select } from '@/shared/components/Select'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Tabs } from '@/shared/components/Tabs'
 import { Text } from '@/shared/components/Text'
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { TextField } from '@/shared/components/TextField'
+import { colors, media, sizes, transitions, typography } from '@/shared/theme'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -174,7 +175,7 @@ type SearchContainerProps = {
 export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
-  width: 100%;
+  width: 192px;
   align-items: center;
   margin: ${sizes(6)} 0 ${sizes(16)};
   position: relative;

@@ -15,7 +15,7 @@ export const ControlsContainer = styled.div`
   border-bottom: 1px solid ${colors.gray[700]};
 
   ${media.md} {
-    grid-template-columns: auto 168px 1fr 241px;
+    grid-template-columns: auto 160px 1fr 242px;
   }
 `
 

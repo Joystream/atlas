@@ -1,8 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannel, useVideosConnection } from '@/api/hooks'
-import { AssetAvailability, VideoOrderByInput } from '@/api/queries'
+import {
+  AssetAvailability,
+  SearchQuery,
+  VideoFieldsFragment,
+  VideoOrderByInput,
+  useSearchLazyQuery,
+} from '@/api/queries'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { VideoTile } from '@/components/VideoTile'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -18,7 +24,7 @@ import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Grid } from '@/shared/components/Grid'
 import { Pagination } from '@/shared/components/Pagination'
 import { Text } from '@/shared/components/Text'
-import { SvgGlyphCheck, SvgGlyphPlus } from '@/shared/icons'
+import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
@@ -27,12 +33,15 @@ import { ChannelAbout } from './ChannelAbout'
 import {
   NotFoundChannelContainer,
   PaginationContainer,
+  SearchButton,
+  SearchContainer,
   SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
   StyledSelect,
   StyledTabs,
+  StyledTextField,
   SubTitle,
   SubTitleSkeletonLoader,
   TabsContainer,
@@ -261,8 +270,7 @@ export const ChannelView: React.FC = () => {
             onSelectTab={handleSetCurrentTab}
           />
           {currentTab === 'Videos' && (
-            <StyledSearch
-              width="192px"
+            <Search
               searchInputRef={searchInputRef}
               isSearchInputOpen={isSearchInputOpen}
               setIsSearchingInputOpen={setIsSearchingInputOpen}
