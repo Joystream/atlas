@@ -1,37 +1,15 @@
 import React, { useState } from 'react'
 
-import { NavItemType, SidenavBase } from '@/components/SidenavBase'
+import { SidenavBase } from '@/components/SidenavBase'
+import { navItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
-import { SvgGlyphExternal, SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
+import { SvgGlyphExternal } from '@/shared/icons'
 import { openInNewTab } from '@/utils/browser'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
-
-const viewerSidenavItems: NavItemType[] = [
-  {
-    icon: <SvgNavHome />,
-    name: 'Home',
-    to: absoluteRoutes.viewer.index(),
-  },
-  {
-    icon: <SvgNavPopular />,
-    name: 'Popular',
-    to: absoluteRoutes.viewer.popular(),
-  },
-  {
-    icon: <SvgNavNew />,
-    name: 'New',
-    to: absoluteRoutes.viewer.new(),
-  },
-  {
-    icon: <SvgNavChannels />,
-    name: 'Channels',
-    to: absoluteRoutes.viewer.channels(),
-  },
-]
 
 export const ViewerSidenav: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
@@ -47,7 +25,7 @@ export const ViewerSidenav: React.FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      items={viewerSidenavItems}
+      items={navItems}
       additionalContent={
         <FollowedChannels
           onClick={() => setExpanded(false)}
