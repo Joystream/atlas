@@ -3,8 +3,6 @@ import { Placement } from '@popperjs/core'
 import Tippy from '@tippyjs/react/headless'
 import React from 'react'
 
-import { transitions } from '@/shared/theme'
-
 export type PopoverProps = {
   content: React.ReactNode
   isVisible?: boolean
@@ -14,7 +12,7 @@ export type PopoverProps = {
   className?: string
 }
 
-const EXIT_ANIMATION_DURATION = 50
+const EXIT_ANIMATION_DURATION = 100
 
 export const Popover: React.FC<PopoverProps> = ({
   hideOnClick = true,
@@ -65,7 +63,7 @@ const TriggerContainer = styled.div`
 `
 
 const ContentContainer = styled.div`
-  transition: ${transitions.timings.sharp} cubic-bezier(0.25, 0.01, 0.25, 1);
+  transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
   opacity: 0;
   transform: scale(0.88);
 
