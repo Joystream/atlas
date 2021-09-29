@@ -14,6 +14,8 @@ export type PopoverBaseProps = {
   className?: string
 }
 
+const EXIT_ANIMATION_DURATION = 50
+
 export const PopoverBase: React.FC<PopoverBaseProps> = ({
   hideOnClick = true,
   placement = 'bottom-start',
@@ -41,7 +43,7 @@ export const PopoverBase: React.FC<PopoverBaseProps> = ({
           box?.classList.remove('popover-enter-active')
           box?.classList.add('popover-exit-active')
 
-          setTimeout(() => instance.unmount(), 50)
+          setTimeout(() => instance.unmount(), EXIT_ANIMATION_DURATION)
         })
       }}
       render={(attrs) => (
@@ -75,6 +77,6 @@ const ContentContainer = styled.div`
   &.popover-exit-active {
     opacity: 0;
     transform: scale(0.88);
-    transition: 50ms cubic-bezier(0.25, 0.01, 0.25, 1);
+    transition: ${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `
