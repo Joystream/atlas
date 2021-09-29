@@ -5,7 +5,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
 import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
-import { SvgActionPause } from '@/shared/icons'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
@@ -27,7 +26,7 @@ import {
 } from './VideoHero.style'
 import { useVideoHero } from './VideoHeroData'
 
-import BackgroundVideoPlayer from '../BackgroundVideoPlayer'
+import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
@@ -102,10 +101,10 @@ export const VideoHero: React.FC = () => {
             <ButtonsContainer>
               <Button
                 size="large"
-                onClick={() => setVideoPlaying((prev) => !prev)}
-                icon={videoPlaying ? <SvgActionPause /> : <SvgActionPlay />}
+                to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
+                icon={<SvgActionPlay />}
               >
-                {videoPlaying ? 'Pause' : 'Play'}
+                Play
               </Button>
               <SoundButton size="large" variant="secondary" onClick={handleSoundToggleClick}>
                 {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}

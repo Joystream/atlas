@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import BackgroundVideoPlayer from '@/components/BackgroundVideoPlayer'
+import { BackgroundVideoPlayer } from '@/components/BackgroundVideoPlayer'
 import { useHover } from '@/hooks/useHover'
 import { sizes, transitions } from '@/shared/theme'
 

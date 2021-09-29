@@ -10,7 +10,7 @@ type BackgroundVideoPlayerProps = {
   playing?: boolean
 } & React.VideoHTMLAttributes<HTMLVideoElement>
 
-const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
+export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
   autoPlay,
   playing,
   poster,
@@ -41,7 +41,7 @@ const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
     } else {
       videoRef.current.pause()
     }
-  }, [autoPlay, playing])
+  }, [playing])
 
   const handlePlay = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPosterVisible(false)
@@ -106,5 +106,3 @@ export const StyledVideo = styled.video`
   width: 100%;
   height: 100%;
 `
-
-export default BackgroundVideoPlayer
