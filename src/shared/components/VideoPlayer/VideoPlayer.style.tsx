@@ -10,7 +10,6 @@ import { colors, media, sizes, transitions, zIndex } from '../../theme'
 import { Text } from '../Text'
 
 type ContainerProps = {
-  isInBackground?: boolean
   isFullScreen?: boolean
 }
 type CustomControlsProps = {
@@ -228,21 +227,6 @@ export const ScreenControls = styled.div`
   }
 `
 
-const backgroundContainerCss = css`
-  .vjs-poster {
-    display: block;
-    opacity: 0;
-    height: 100%;
-    position: relative;
-    transition: opacity ${transitions.timings.loading} ${transitions.easing};
-  }
-
-  .vjs-ended .vjs-poster,
-  .vjs-paused:not(.vjs-has-started) .vjs-poster {
-    opacity: 1;
-  }
-`
-
 export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
@@ -332,8 +316,6 @@ export const Container = styled.div<ContainerProps>`
   .vjs-poster {
     background-size: cover;
   }
-
-  ${({ isInBackground }) => isInBackground && backgroundContainerCss};
 `
 
 export const BigPlayButtonOverlay = styled.div`
