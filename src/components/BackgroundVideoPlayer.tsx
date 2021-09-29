@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/shared/theme'
+import { ConsoleLogger } from '@/utils/logs'
 
 type BackgroundVideoPlayerProps = {
   className?: string
@@ -10,15 +11,27 @@ type BackgroundVideoPlayerProps = {
 } & React.VideoHTMLAttributes<HTMLVideoElement>
 
 const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
-  playing,
   autoPlay,
+  playing,
   poster,
+  playsInline = true,
   onPlay,
   onEnded,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPosterVisible, setIsPosterVisible] = useState(true)
+
+  const initialRender = useRef(true)
+  useEffect(() => {
+    // do this checking only once
+    if (initialRender.current === false) return
+    initialRender.current = false
+    if (playing === false && autoPlay) {
+      ConsoleLogger.warn(`BackgroundVideoPlayer: if "playing" prop is initially set to false, "autoPlay" won't work`)
+    }
+  }, [autoPlay, playing])
+
   useEffect(() => {
     if (!videoRef.current) {
       return
@@ -42,7 +55,15 @@ const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
 
   return (
     <VideoWrapper>
-      <StyledVideo ref={videoRef} onEnded={handleEnded} onPlay={handlePlay} poster={poster} {...props} />
+      <StyledVideo
+        autoPlay={autoPlay}
+        playsInline={playsInline}
+        ref={videoRef}
+        onEnded={handleEnded}
+        onPlay={handlePlay}
+        poster={poster}
+        {...props}
+      />
       {poster && (
         <CSSTransition
           in={isPosterVisible}

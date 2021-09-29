@@ -52,7 +52,6 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
                 src={videoUrl}
                 loop
                 muted
-                autoPlay
                 playing={variant === 'default' ? isVideoHovering : true}
               />
             }
