@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
 
-import { PopoverBase, PopoverBaseProps } from '../PopoverBase/PopoverBase'
+import { PopoverBase, PopoverBaseProps } from '../PopoverBase'
 
 type MenuItemProps = {
   icon: ReactNode

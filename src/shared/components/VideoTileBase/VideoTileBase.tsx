@@ -369,7 +369,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         </SwitchTransition>
 
         <ContextMenu
-          placement={'bottom-end'}
+          placement="bottom-end"
           content={
             <>
               {publisherMode ? (
@@ -405,7 +405,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
             </>
           }
         >
-          <KebabMenuButtonIcon variant="tertiary" size="small">
+          <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
             <SvgGlyphMore />
           </KebabMenuButtonIcon>
         </ContextMenu>
