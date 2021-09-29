@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
 
-import { PopoverBase, PopoverBaseProps } from '../PopoverBase'
+import { Popover, PopoverProps } from '../Popover'
 
 type MenuItemProps = {
   icon: ReactNode
@@ -18,10 +18,10 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
   )
 }
 
-export const ContextMenu: React.FC<PopoverBaseProps> = ({ children, content, ...rest }) => {
+export const ContextMenu: React.FC<PopoverProps> = ({ children, content, ...rest }) => {
   return (
-    <PopoverBase content={<StyledContainer>{content}</StyledContainer>} {...rest}>
+    <Popover content={<StyledContainer>{content}</StyledContainer>} {...rest}>
       {children}
-    </PopoverBase>
+    </Popover>
   )
 }

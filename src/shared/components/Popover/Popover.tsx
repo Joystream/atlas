@@ -5,7 +5,7 @@ import React from 'react'
 
 import { transitions } from '@/shared/theme'
 
-export type PopoverBaseProps = {
+export type PopoverProps = {
   content: React.ReactNode
   isVisible?: boolean
   placement?: Placement
@@ -16,7 +16,7 @@ export type PopoverBaseProps = {
 
 const EXIT_ANIMATION_DURATION = 50
 
-export const PopoverBase: React.FC<PopoverBaseProps> = ({
+export const Popover: React.FC<PopoverProps> = ({
   hideOnClick = true,
   placement = 'bottom-start',
   children,
