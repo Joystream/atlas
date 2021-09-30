@@ -103,7 +103,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (isProcessing) {
       return 'Processing...'
     }
-    return `Uploading...(${masterProgress}%)`
+    return `Uploading... (${masterProgress}%)`
   }
 
   const enrichedUploadData =
