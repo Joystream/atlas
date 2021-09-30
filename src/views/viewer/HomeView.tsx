@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { useVideoHeroData } from '@/api/featured'
 import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
 import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
@@ -19,6 +20,8 @@ export const HomeView: React.FC = () => {
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
+
+  const videoHeroData = useVideoHeroData()
 
   const {
     mostViewedVideos,
@@ -54,7 +57,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero />
+      <VideoHero videoHeroData={videoHeroData} />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid

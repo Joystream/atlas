@@ -1,44 +1,43 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { VideoHeroData } from '@/api/featured'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
 import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Text } from '@/shared/components/Text'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
 import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
 import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
+import { transitions } from '@/shared/theme'
 
 import {
+  BackgroundContainer,
   ButtonsContainer,
-  ButtonsSpaceKeeper,
   Container,
   GradientOverlay,
   InfoContainer,
-  Media,
-  MediaWrapper,
-  PlayerContainer,
-  SoundButton,
   StyledChannelLink,
-  Title,
   TitleContainer,
-  TitleSkeletonLoader,
 } from './VideoHero.style'
-import { useVideoHero } from './VideoHeroData'
 
 import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 
 const VIDEO_PLAYBACK_DELAY = 1250
 
-export const VideoHero: React.FC = () => {
-  const coverVideo = useVideoHero()
+export type VideoHeroProps = {
+  videoHeroData: VideoHeroData | null
+}
+
+export const VideoHero: React.FC<VideoHeroProps> = ({ videoHeroData }) => {
+  const isCompact = useMediaMatch('sm')
 
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: coverVideo?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
 
   const handlePlaybackDataLoaded = () => {
     setTimeout(() => {
@@ -52,66 +51,77 @@ export const VideoHero: React.FC = () => {
 
   return (
     <Container>
-      <MediaWrapper>
-        <Media>
-          <PlayerContainer>
-            {coverVideo && (
-              <BackgroundVideoPlayer
-                muted={soundMuted}
-                playing={videoPlaying}
-                poster={thumbnailPhotoUrl || ''}
-                onLoadedData={handlePlaybackDataLoaded}
-                onPlay={() => setVideoPlaying(true)}
-                onPause={() => setVideoPlaying(false)}
-                onEnded={() => setVideoPlaying(false)}
-                src={coverVideo?.coverCutMediaUrl}
-              />
-            )}
-          </PlayerContainer>
-          <GradientOverlay />
-        </Media>
-      </MediaWrapper>
+      <BackgroundContainer>
+        {videoHeroData && (
+          <BackgroundVideoPlayer
+            muted={soundMuted}
+            playing={videoPlaying}
+            poster={videoHeroData.thumbnailPhotoUrl || ''}
+            onLoadedData={handlePlaybackDataLoaded}
+            onPlay={() => setVideoPlaying(true)}
+            onPause={() => setVideoPlaying(false)}
+            onEnded={() => setVideoPlaying(false)}
+            src={videoHeroData?.heroVideoCutUrl}
+          />
+        )}
+        <GradientOverlay />
+      </BackgroundContainer>
       <InfoContainer>
-        <StyledChannelLink
-          variant="secondary"
-          id={coverVideo?.video.channel.id}
-          overrideChannel={coverVideo?.video.channel}
-          avatarSize="small"
-        />
         <LayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
+            <StyledChannelLink variant="secondary" id={videoHeroData?.video.channel.id} />
             <TitleContainer>
-              {coverVideo ? (
-                <>
-                  <Link to={absoluteRoutes.viewer.video(coverVideo.video.id)}>
-                    <Title variant="h2">{coverVideo.coverTitle}</Title>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <TitleSkeletonLoader height={34} />
-                  <TitleSkeletonLoader height={34} />
-                </>
-              )}
+              <SwitchTransition>
+                <CSSTransition
+                  key={videoHeroData ? 'data' : 'placeholder'}
+                  classNames={transitions.names.fade}
+                  timeout={parseInt(transitions.timings.regular)}
+                >
+                  {videoHeroData ? (
+                    <Link to={absoluteRoutes.viewer.video(videoHeroData.video.id)}>
+                      <Text variant={isCompact ? 'h2' : 'h4'}>{videoHeroData.heroTitle}</Text>
+                    </Link>
+                  ) : isCompact ? (
+                    <SkeletonLoader height={48} width={360} />
+                  ) : (
+                    <>
+                      <SkeletonLoader height={30} width="100%" bottomSpace={4} />
+                      <SkeletonLoader height={30} width={240} />
+                    </>
+                  )}
+                </CSSTransition>
+              </SwitchTransition>
             </TitleContainer>
           </GridItem>
         </LayoutGrid>
-        <ButtonsSpaceKeeper>
-          {coverVideo && (
-            <ButtonsContainer>
-              <Button
-                size="large"
-                to={absoluteRoutes.viewer.video(coverVideo ? coverVideo.video.id : '')}
-                icon={<SvgActionPlay />}
-              >
-                Play
-              </Button>
-              <SoundButton size="large" variant="secondary" onClick={handleSoundToggleClick}>
-                {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
-              </SoundButton>
-            </ButtonsContainer>
-          )}
-        </ButtonsSpaceKeeper>
+        <SwitchTransition>
+          <CSSTransition
+            key={videoHeroData ? 'data' : 'placeholder'}
+            classNames={transitions.names.fade}
+            timeout={parseInt(transitions.timings.regular)}
+          >
+            {videoHeroData ? (
+              <ButtonsContainer>
+                <Button
+                  size={isCompact ? 'large' : 'medium'}
+                  fullWidth={!isCompact}
+                  to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
+                  icon={<SvgActionPlay />}
+                >
+                  Play
+                </Button>
+                <IconButton size={isCompact ? 'large' : 'medium'} variant="secondary" onClick={handleSoundToggleClick}>
+                  {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
+                </IconButton>
+              </ButtonsContainer>
+            ) : (
+              <ButtonsContainer>
+                <SkeletonLoader width={isCompact ? '96px' : '100%'} height={isCompact ? '48px' : '40px'} />
+                <SkeletonLoader width={isCompact ? '48px' : '40px'} height={isCompact ? '48px' : '40px'} />
+              </ButtonsContainer>
+            )}
+          </CSSTransition>
+        </SwitchTransition>
       </InfoContainer>
     </Container>
   )
