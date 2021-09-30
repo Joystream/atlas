@@ -31,7 +31,7 @@ export const StyledTextArea = styled(TextareaAutosize)`
   height: auto;
   font-size: ${typography.sizes.h4};
   line-height: ${typography.lineHeights.h4};
-  ${media.lg} {
+  ${media.sm} {
     font-size: ${typography.sizes.h2};
     line-height: ${typography.lineHeights.h2};
   }
