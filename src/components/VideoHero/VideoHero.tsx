@@ -67,12 +67,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({ videoHeroData }) => {
       <InfoContainer>
         <LayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
-            <StyledChannelLink
-              variant="secondary"
-              id={videoHeroData?.video.channel.id}
-              overrideChannel={videoHeroData?.video.channel}
-              avatarSize="small"
-            />
+            <StyledChannelLink variant="secondary" id={videoHeroData?.video.channel.id} />
             <TitleContainer>
               {videoHeroData ? (
                 <Link to={absoluteRoutes.viewer.video(videoHeroData.video.id)}>

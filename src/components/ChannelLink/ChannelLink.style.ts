@@ -21,9 +21,9 @@ type HandleProps = {
 }
 
 export const StyledText = styled(Text)<HandleProps>`
-  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
+  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(3) : 0)};
 `
 
 export const HandleSkeletonLoader = styled(SkeletonLoader)<HandleProps>`
-  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
+  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(3) : 0)};
 `
