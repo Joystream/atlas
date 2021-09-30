@@ -9,7 +9,7 @@ import { Text } from '@/shared/components/Text'
 import { TitleArea } from '@/shared/components/TitleArea'
 import { media, sizes } from '@/shared/theme'
 
-import { EDIT_VIDEO_TABS_BAR_HEIGHT } from '../EditVideoTabsBar'
+import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspaceTabsBar'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
@@ -37,7 +37,7 @@ type FormScrollingProps = {
 }
 export const FormScrolling = styled.div<FormScrollingProps>`
   height: ${({ actionBarHeight, isEdit }) =>
-    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${EDIT_VIDEO_TABS_BAR_HEIGHT}px)`};
+    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px) `};
   overflow-y: scroll;
   overflow-x: hidden;
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;

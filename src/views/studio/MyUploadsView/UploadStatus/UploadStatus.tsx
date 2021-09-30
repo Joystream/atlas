@@ -66,7 +66,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
       text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
       onClick: () => {
         if (asset.parentObject.type === 'video') {
-          navigate(absoluteRoutes.studio.editVideo())
+          navigate(absoluteRoutes.studio.videoWorkspace())
         }
         if (asset.parentObject.type === 'channel') {
           navigate(absoluteRoutes.studio.editChannel())

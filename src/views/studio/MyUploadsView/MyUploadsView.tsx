@@ -61,7 +61,12 @@ export const MyUploadsView: React.FC = () => {
           title="No ongoing uploads"
           subtitle="You will see status of each ongoing upload here."
           button={
-            <Button icon={<SvgGlyphUpload />} variant="secondary" size="large" to={absoluteRoutes.studio.editVideo()}>
+            <Button
+              icon={<SvgGlyphUpload />}
+              variant="secondary"
+              size="large"
+              to={absoluteRoutes.studio.videoWorkspace()}
+            >
               Upload video
             </Button>
           }

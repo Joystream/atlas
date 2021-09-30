@@ -4,31 +4,32 @@ import { createId } from '@/utils/createId'
 
 import {
   ContextValue,
-  EditVideoAssets,
-  EditVideoAssetsCache,
-  EditVideoFormFields,
-  EditVideoSheetState,
-  EditVideoSheetTab,
-  EditVideoTabCachedDirtyFormData,
+  VideoWorkspaceAssets,
+  VideoWorkspaceAssetsCache,
+  VideoWorkspaceFormFields,
+  VideoWorkspaceState,
+  VideoWorkspaceTab,
+  VideoWorkspaceTabCachedDirtyFormData,
 } from './types'
 
 import { useOverlayManager } from '../overlayManager'
 
-export const EditVideoSheetContext = React.createContext<ContextValue | undefined>(undefined)
-EditVideoSheetContext.displayName = 'EditVideoSheetContext'
+export const VideoWorkspaceContext = React.createContext<ContextValue | undefined>(undefined)
+VideoWorkspaceContext.displayName = 'VideoWorkspaceContext'
 
-export const EditVideoSheetProvider: React.FC = ({ children }) => {
-  const [videoTabs, setVideoTabs] = useState<EditVideoSheetTab[]>([])
+export const VideoWorkspaceProvider: React.FC = ({ children }) => {
+  const [videoTabs, setVideoTabs] = useState<VideoWorkspaceTab[]>([])
   const [selectedVideoTabIdx, setSelectedVideoTabIdx] = useState<number>(-1)
-  const [sheetState, setSheetState] = useState<EditVideoSheetState>('closed')
-  const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
-  const [assetsCache, setAssetsCache] = useState<EditVideoAssetsCache>({})
-  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] = useState<EditVideoTabCachedDirtyFormData>({})
+  const [videoWorkspaceState, setVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
+  const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
+  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>({})
+  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] =
+    useState<VideoWorkspaceTabCachedDirtyFormData>({})
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const addVideoTab = useCallback(
-    (tab?: EditVideoSheetTab, shouldSelect = true) => {
-      const tabToAdd: EditVideoSheetTab = tab ?? {
+    (tab?: VideoWorkspaceTab, shouldSelect = true) => {
+      const tabToAdd: VideoWorkspaceTab = tab ?? {
         id: createId(),
         isDraft: true,
         isNew: true,
@@ -50,7 +51,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
 
   const selectedVideoTab = videoTabs[selectedVideoTabIdx]
   const setSelectedVideoTabCachedAssets = useCallback(
-    (assets: EditVideoAssets | null) => {
+    (assets: VideoWorkspaceAssets | null) => {
       setAssetsCache((existingAssets) => ({
         ...existingAssets,
         [selectedVideoTab?.id]: assets,
@@ -60,7 +61,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   )
   const selectedVideoTabCachedAssets = assetsCache[selectedVideoTab?.id]
   const updateSelectedVideoTab = useCallback(
-    (tabUpdates: Partial<EditVideoSheetTab>) => {
+    (tabUpdates: Partial<VideoWorkspaceTab>) => {
       setVideoTabs((tabs) => tabs.map((tab, idx) => (idx !== selectedVideoTabIdx ? tab : { ...tab, ...tabUpdates })))
     },
     [selectedVideoTabIdx]
@@ -73,9 +74,9 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       const existingAssetsCopy = { ...assetsCache }
       delete existingAssetsCopy[tabId]
       setAssetsCache(existingAssetsCopy)
-      // if there are no other tabs, close the sheet
+      // if there are no other tabs, close the videoWorkspace
       if (videoTabs.length <= 1) {
-        setSheetState('closed')
+        setVideoWorkspaceState('closed')
       } else {
         let newSelectedIdx
 
@@ -94,7 +95,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   )
 
   const setSelectedVideoTabCachedDirtyFormData = useCallback(
-    (data: Partial<EditVideoFormFields>) => {
+    (data: Partial<VideoWorkspaceFormFields>) => {
       _setVideoTabsCachedDirtyFormData((currentMap) => ({
         ...currentMap,
         [selectedVideoTab.id]: { ...data },
@@ -106,29 +107,29 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   const selectedVideoTabCachedDirtyFormData = videoTabsCachedDirtyFormData[selectedVideoTab?.id]
 
   useEffect(() => {
-    if (sheetState === cachedSheetState) {
+    if (videoWorkspaceState === cachedVideoWorkspaceState) {
       return
     }
-    setCachedSheetState(sheetState)
+    setCachedVideoWorkspaceState(videoWorkspaceState)
 
-    if (sheetState === 'open') {
+    if (videoWorkspaceState === 'open') {
       if (videoTabs.length === 0) {
         addVideoTab()
       }
       incrementOverlaysOpenCount()
     }
-    if (sheetState === 'closed' || sheetState === 'minimized') {
+    if (videoWorkspaceState === 'closed' || videoWorkspaceState === 'minimized') {
       decrementOverlaysOpenCount()
     }
-    if (sheetState === 'closed') {
+    if (videoWorkspaceState === 'closed') {
       setVideoTabs([])
       setSelectedVideoTabIdx(-1)
       setAssetsCache({})
       _setVideoTabsCachedDirtyFormData({})
     }
   }, [
-    sheetState,
-    cachedSheetState,
+    videoWorkspaceState,
+    cachedVideoWorkspaceState,
     videoTabs.length,
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
@@ -145,7 +146,7 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <EditVideoSheetContext.Provider
+    <VideoWorkspaceContext.Provider
       value={{
         hasVideoTabAnyCachedAssets,
         anyVideoTabsCachedAssets,
@@ -155,8 +156,8 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
         updateSelectedVideoTab,
         selectedVideoTabIdx,
         setSelectedVideoTabIdx,
-        sheetState,
-        setSheetState,
+        videoWorkspaceState,
+        setVideoWorkspaceState,
         selectedVideoTabCachedAssets,
         setSelectedVideoTabCachedAssets,
         selectedVideoTabCachedDirtyFormData,
@@ -164,6 +165,6 @@ export const EditVideoSheetProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </EditVideoSheetContext.Provider>
+    </VideoWorkspaceContext.Provider>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { EditVideoSheetState, EditVideoSheetTab, useEditVideoSheetTabData } from '@/providers/editVideoSheet'
+import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
 import { Badge } from '@/shared/components/Badge'
 import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
@@ -13,12 +13,12 @@ import {
   TabWrapper,
   TabsContainer,
   Topbar,
-} from './EditVideoTabsBar.style'
+} from './VideoWorkspaceTabsBar.style'
 
 type TabsBarProps = {
-  videoTabs: EditVideoSheetTab[]
-  selectedVideoTab?: EditVideoSheetTab
-  sheetState: EditVideoSheetState
+  videoTabs: VideoWorkspaceTab[]
+  selectedVideoTab?: VideoWorkspaceTab
+  videoWorkspaceState: VideoWorkspaceState
   onAddNewTabClick: () => void
   onRemoveTabClick: (tabIdx: number) => void
   onTabSelect: (tabIdx: number) => void
@@ -26,10 +26,10 @@ type TabsBarProps = {
   onToggleMinimizedClick: () => void
 }
 
-export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
+export const VideoWorkspaceTabsBar: React.FC<TabsBarProps> = ({
   videoTabs,
   selectedVideoTab,
-  sheetState,
+  videoWorkspaceState,
   onAddNewTabClick,
   onRemoveTabClick,
   onTabSelect,
@@ -48,7 +48,7 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
     <Topbar>
       <TabsContainer ref={tabsContainerRef}>
         {videoTabs.map((tab, idx) => (
-          <EditVideoTab
+          <VideoWorkspaceSingleTab
             key={tab.id || idx}
             tab={tab}
             selected={tab.id === selectedVideoTab?.id}
@@ -70,7 +70,7 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
       </TabsContainer>
       <ButtonsContainer>
         <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
-          {sheetState === 'open' ? <SvgGlyphMinimize /> : <SvgGlyphMaximize />}
+          {videoWorkspaceState === 'open' ? <SvgGlyphMinimize /> : <SvgGlyphMaximize />}
         </IconButton>
         <IconButton variant="tertiary" onClick={onCloseClick}>
           <SvgGlyphClose />
@@ -80,15 +80,15 @@ export const EditVideoTabsBar: React.FC<TabsBarProps> = ({
   )
 }
 
-type EditVideoTabProps = {
-  tab: EditVideoSheetTab
+type VideoWorkspaceTabProps = {
+  tab: VideoWorkspaceTab
   selected: boolean
   isLast?: boolean
   onTabSelect: (e: React.MouseEvent<HTMLDivElement>) => void
   onRemoveTabClick: () => void
 }
 
-const getBadgeText = (tab: EditVideoSheetTab) => {
+const getBadgeText = (tab: VideoWorkspaceTab) => {
   if (tab.isNew || tab.isDraft) {
     return 'New'
   }
@@ -98,8 +98,14 @@ const getBadgeText = (tab: EditVideoSheetTab) => {
   return
 }
 
-const EditVideoTab: React.FC<EditVideoTabProps> = ({ tab, isLast, selected, onTabSelect, onRemoveTabClick }) => {
-  const { tabData } = useEditVideoSheetTabData(tab)
+const VideoWorkspaceSingleTab: React.FC<VideoWorkspaceTabProps> = ({
+  tab,
+  isLast,
+  selected,
+  onTabSelect,
+  onRemoveTabClick,
+}) => {
+  const { tabData } = useVideoWorkspaceTabData(tab)
   const badgeText = getBadgeText(tab)
   return (
     <TabWrapper onClick={onTabSelect} isLast={isLast}>

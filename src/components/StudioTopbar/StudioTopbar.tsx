@@ -6,8 +6,8 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { AssetType, useAsset } from '@/providers/assets'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useUser } from '@/providers/user'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { Button } from '@/shared/components/Button'
 import { ExpandButton } from '@/shared/components/ExpandButton'
 import { IconButton } from '@/shared/components/IconButton'
@@ -78,7 +78,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
 
   const navigate = useNavigate()
 
-  const { sheetState, setSheetState, anyVideoTabsCachedAssets, addVideoTab } = useEditVideoSheet()
+  const { videoWorkspaceState, setVideoWorkspaceState, anyVideoTabsCachedAssets, addVideoTab } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
@@ -101,7 +101,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
 
   const changeChannel = (channelId: string) => {
     setActiveUser({ channelId })
-    setSheetState('closed')
+    setVideoWorkspaceState('closed')
   }
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
@@ -138,7 +138,7 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
   }
 
   const logout = () => {
-    setSheetState('closed')
+    setVideoWorkspaceState('closed')
     resetActiveUser()
     navigate(absoluteRoutes.studio.index())
   }
@@ -151,13 +151,13 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={sheetState !== 'open' && !!activeChannelId}
+              in={videoWorkspaceState !== 'open' && !!activeChannelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              <IconButton to={absoluteRoutes.studio.editVideo()} onClick={() => addVideoTab()}>
+              <IconButton to={absoluteRoutes.studio.videoWorkspace()} onClick={() => addVideoTab()}>
                 <SvgGlyphAddVideo />
               </IconButton>
             </CSSTransition>

@@ -13,27 +13,27 @@ import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAssetResolver } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'
-import { EditVideoFormFields, EditVideoSheetTab, useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
+import { VideoWorkspaceFormFields, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { computeFileHash } from '@/utils/hashing'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { EditVideoForm } from './EditVideoForm'
-import { Container, DrawerOverlay } from './EditVideoSheet.style'
-import { EditVideoTabsBar } from './EditVideoTabsBar'
-import { useEditVideoSheetAnimations } from './animations'
+import { Container, DrawerOverlay } from './VideoWorkspace.style'
+import { VideoWorkspaceForm } from './VideoWorkspaceForm'
+import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
+import { useVideoWorkspaceAnimations } from './animations'
 
-export const EditVideoSheet: React.FC = () => {
+export const VideoWorkspace: React.FC = () => {
   const { activeChannelId, activeMemberId } = useAuthorizedUser()
 
-  // sheet state
+  // videoWorkspace state
   const {
-    sheetState,
-    setSheetState,
+    videoWorkspaceState,
+    setVideoWorkspaceState,
     videoTabs,
     selectedVideoTabIdx,
     setSelectedVideoTabIdx,
@@ -44,10 +44,11 @@ export const EditVideoSheet: React.FC = () => {
     hasVideoTabAnyCachedAssets,
     setSelectedVideoTabCachedAssets,
     setSelectedVideoTabCachedDirtyFormData,
-  } = useEditVideoSheet()
-  const selectedVideoTab = videoTabs[selectedVideoTabIdx] as EditVideoSheetTab | undefined
+  } = useVideoWorkspace()
+  const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
   const isEdit = !selectedVideoTab?.isDraft
-  const { containerRef, drawerOverlayAnimationProps, sheetAnimationProps } = useEditVideoSheetAnimations(sheetState)
+  const { containerRef, drawerOverlayAnimationProps, videoWorkspaceAnimationProps } =
+    useVideoWorkspaceAnimations(videoWorkspaceState)
 
   const { openWarningDialog } = useDisplayDataLostWarning()
   const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
@@ -63,7 +64,7 @@ export const EditVideoSheet: React.FC = () => {
   const resolveAsset = useRawAssetResolver()
 
   useEffect(() => {
-    if (sheetState === 'closed' || !anyVideoTabsCachedAssets) {
+    if (videoWorkspaceState === 'closed' || !anyVideoTabsCachedAssets) {
       return
     }
     window.onbeforeunload = (e: BeforeUnloadEvent) => {
@@ -73,7 +74,7 @@ export const EditVideoSheet: React.FC = () => {
     return () => {
       window.onbeforeunload = null
     }
-  }, [sheetState, anyVideoTabsCachedAssets])
+  }, [videoWorkspaceState, anyVideoTabsCachedAssets])
 
   const handleVideoFileChange = (file: Blob) => {
     const hashPromise = computeFileHash(file)
@@ -86,8 +87,8 @@ export const EditVideoSheet: React.FC = () => {
   }
 
   const handleSubmit = async (
-    data: EditVideoFormFields,
-    dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>,
+    data: VideoWorkspaceFormFields,
+    dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceFormFields>,
     callback?: () => void
   ) => {
     if (!selectedVideoTab) {
@@ -193,7 +194,7 @@ export const EditVideoSheet: React.FC = () => {
         })
         uploadPromises.push(uploadPromise)
       }
-      Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'EditVideoSheet', e))
+      Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
     }
 
     const refetchDataAndCacheAssets = async (videoId: VideoId) => {
@@ -251,28 +252,28 @@ export const EditVideoSheet: React.FC = () => {
     })
 
     if (completed) {
-      setSheetState('minimized')
+      setVideoWorkspaceState('minimized')
       removeVideoTab(selectedVideoTabIdx)
     }
   }
 
-  const toggleMinimizedSheet = () => {
-    setSheetState(sheetState === 'open' ? 'minimized' : 'open')
+  const toggleMinimizedVideoWorkspace = () => {
+    setVideoWorkspaceState(videoWorkspaceState === 'open' ? 'minimized' : 'open')
   }
 
   const handleDeleteVideo = (videoId: string) => {
     const videoTabIdx = videoTabs.findIndex((vt) => vt.id === videoId)
     removeVideoTab(videoTabIdx)
 
-    // close the sheet if we closed the last tab
-    setSheetState(videoTabs.length === 1 ? 'closed' : 'minimized')
+    // close the videoWorkspace if we closed the last tab
+    setVideoWorkspaceState(videoTabs.length === 1 ? 'closed' : 'minimized')
   }
 
-  const closeSheet = () => {
+  const closeVideoWorkspace = () => {
     if (anyVideoTabsCachedAssets) {
-      openWarningDialog({ onConfirm: () => setSheetState('closed') })
+      openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
     } else {
-      setSheetState('closed')
+      setVideoWorkspaceState('closed')
     }
   }
 
@@ -287,21 +288,21 @@ export const EditVideoSheet: React.FC = () => {
   return (
     <>
       <DrawerOverlay style={drawerOverlayAnimationProps} />
-      <Container ref={containerRef} role="dialog" style={sheetAnimationProps}>
-        <EditVideoTabsBar
+      <Container ref={containerRef} role="dialog" style={videoWorkspaceAnimationProps}>
+        <VideoWorkspaceTabsBar
           videoTabs={videoTabs}
           selectedVideoTab={selectedVideoTab}
-          sheetState={sheetState}
+          videoWorkspaceState={videoWorkspaceState}
           onAddNewTabClick={() => addVideoTab()}
           onRemoveTabClick={handleRemoveVideoTab}
           onTabSelect={(tabIdx) => {
             setSelectedVideoTabIdx(tabIdx)
-            setSheetState('open')
+            setVideoWorkspaceState('open')
           }}
-          onCloseClick={closeSheet}
-          onToggleMinimizedClick={toggleMinimizedSheet}
+          onCloseClick={closeVideoWorkspace}
+          onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
         />
-        <EditVideoForm
+        <VideoWorkspaceForm
           onDeleteVideo={handleDeleteVideo}
           selectedVideoTab={selectedVideoTab}
           onSubmit={handleSubmit}
