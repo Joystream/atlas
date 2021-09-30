@@ -9,29 +9,29 @@ import { absoluteRoutes } from '@/config/routes'
 import { RoutingState } from '@/types/routing'
 import { SentryLogger } from '@/utils/logs'
 
-import { EditVideoSheetContext } from './provider'
-import { EditVideoAssets, EditVideoFormFields, EditVideoSheetState, EditVideoSheetTab } from './types'
+import { VideoWorkspaceContext } from './provider'
+import { VideoWorkspaceAssets, VideoWorkspaceFormFields, VideoWorkspaceState, VideoWorkspaceTab } from './types'
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
 import { useAuthorizedUser } from '../user'
 
 export const DEFAULT_LICENSE_ID = 1002
 
-export const useEditVideoSheet = () => {
-  const ctx = useContext(EditVideoSheetContext)
+export const useVideoWorkspace = () => {
+  const ctx = useContext(VideoWorkspaceContext)
   if (ctx === undefined) {
-    throw new Error('useUploadVideoActionSheet must be used within a VideoActionSheetProvider')
+    throw new Error('useUploadVideoActionVideoWorkspace must be used within a VideoActionVideoWorkspaceProvider')
   }
   return ctx
 }
 
-export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
+export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const { selectedVideoTabCachedAssets } = useEditVideoSheet()
+  const { selectedVideoTabCachedAssets } = useVideoWorkspace()
   const { video, loading, error } = useVideo(tab?.id ?? '', {
     skip: tab?.isDraft,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'useEditVideoSheetTabData', error),
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceTabData', error),
   })
 
   if (!tab) {
@@ -50,7 +50,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
 
   const draft = drafts.find((d) => d.id === tab.id)
 
-  const assets: EditVideoAssets = tab.isDraft
+  const assets: VideoWorkspaceAssets = tab.isDraft
     ? selectedVideoTabCachedAssets || {
         video: { contentId: null },
         thumbnail: {
@@ -68,7 +68,7 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
         },
       }
 
-  const normalizedData: EditVideoFormFields = {
+  const normalizedData: VideoWorkspaceFormFields = {
     title: tab.isDraft ? draft?.title ?? '' : video?.title ?? '',
     description: (tab.isDraft ? draft?.description : video?.description) ?? '',
     category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
@@ -95,15 +95,15 @@ export const useEditVideoSheetTabData = (tab?: EditVideoSheetTab) => {
   }
 }
 
-export const useVideoEditSheetRouting = (): Location => {
+export const useVideoWorkspaceRouting = (): Location => {
   const navigate = useNavigate()
 
   const location = useLocation() as Location<RoutingState>
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
-  const editVideoMatch = useMatch({ path: absoluteRoutes.studio.editVideo() })
-  const { sheetState, setSheetState } = useEditVideoSheet()
-  const [cachedSheetState, setCachedSheetState] = useState<EditVideoSheetState>('closed')
+  const videoWorkspaceMatch = useMatch({ path: absoluteRoutes.studio.videoWorkspace() })
+  const { videoWorkspaceState, setVideoWorkspaceState } = useVideoWorkspace()
+  const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
 
   useEffect(() => {
     if (location === cachedLocation) {
@@ -111,40 +111,40 @@ export const useVideoEditSheetRouting = (): Location => {
     }
     setCachedLocation(location)
 
-    if (editVideoMatch && sheetState !== 'open') {
+    if (videoWorkspaceMatch && videoWorkspaceState !== 'open') {
       // route changed to video edit
       const state: RoutingState = {
         overlaidLocation: cachedLocation ?? defaultLocation,
       }
       navigate(location, { replace: true, state })
-      setSheetState('open')
+      setVideoWorkspaceState('open')
     }
-  }, [location, cachedLocation, editVideoMatch, sheetState, setSheetState, navigate])
+  }, [location, cachedLocation, videoWorkspaceMatch, videoWorkspaceState, setVideoWorkspaceState, navigate])
 
   useEffect(() => {
-    if (sheetState === cachedSheetState) {
+    if (videoWorkspaceState === cachedVideoWorkspaceState) {
       return
     }
-    setCachedSheetState(sheetState)
+    setCachedVideoWorkspaceState(videoWorkspaceState)
 
     if (
-      (sheetState === 'minimized' && cachedSheetState === 'open') ||
-      (sheetState === 'closed' && cachedSheetState !== 'minimized')
+      (videoWorkspaceState === 'minimized' && cachedVideoWorkspaceState === 'open') ||
+      (videoWorkspaceState === 'closed' && cachedVideoWorkspaceState !== 'minimized')
     ) {
-      // restore the old location when sheet was minimized/closed
+      // restore the old location when videoWorkspace was minimized/closed
       const oldLocation = location.state?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)
     }
-    if (sheetState === 'open' && !editVideoMatch) {
-      // sheetState changed without the route - most likely from the sheet itself, change URL and save current location
+    if (videoWorkspaceState === 'open' && !videoWorkspaceMatch) {
+      // videoWorkspaceState changed without the route - most likely from the videoWorkspace itself, change URL and save current location
       const state: RoutingState = {
         overlaidLocation: location,
       }
-      navigate(absoluteRoutes.studio.editVideo(), { state: state })
+      navigate(absoluteRoutes.studio.videoWorkspace(), { state: state })
     }
-  }, [sheetState, cachedSheetState, location, navigate, editVideoMatch])
+  }, [videoWorkspaceState, cachedVideoWorkspaceState, location, navigate, videoWorkspaceMatch])
 
-  if (editVideoMatch) {
+  if (videoWorkspaceMatch) {
     return location.state?.overlaidLocation ?? cachedLocation ?? defaultLocation
   }
 

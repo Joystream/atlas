@@ -15,27 +15,27 @@ import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useDialog } from '@/providers/dialogs'
-import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/editVideoSheet'
 import { JoystreamProvider } from '@/providers/joystream'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
+import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
   CreateEditChannelView,
   CreateMemberView,
-  EditVideoSheet,
   MyUploadsView,
   MyVideosView,
   SignInJoinView,
   SignInView,
+  VideoWorkspace,
 } from '@/views/studio'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
   const location = useLocation()
-  const displayedLocation = useVideoEditSheetRouting()
+  const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
@@ -131,7 +131,7 @@ const StudioLayout = () => {
               />
             </Routes>
           </MainContainer>
-          {channelSet && <EditVideoSheet />}
+          {channelSet && <VideoWorkspace />}
         </>
       )}
     </>
@@ -155,14 +155,14 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <EditVideoSheetProvider>
+        <VideoWorkspaceProvider>
           <JoystreamProvider>
             <ConnectionStatusManager />
             <UploadsManager />
             <TransactionManager />
             <StudioLayout />
           </JoystreamProvider>
-        </EditVideoSheetProvider>
+        </VideoWorkspaceProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

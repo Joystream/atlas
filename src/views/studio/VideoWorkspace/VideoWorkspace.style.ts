@@ -6,7 +6,7 @@ import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`
   position: fixed;
-  z-index: ${zIndex.sheetOverlay};
+  z-index: ${zIndex.videoWorkspaceOverlay};
   top: ${TOP_NAVBAR_HEIGHT}px;
   left: var(--sidenav-collapsed-width);
   right: 0;
@@ -19,7 +19,7 @@ export const Container = styled(animated.div)`
 
 export const DrawerOverlay = styled(animated.div)`
   position: fixed;
-  z-index: ${zIndex.sheetOverlay};
+  z-index: ${zIndex.videoWorkspaceOverlay};
   top: 0;
   right: 0;
   bottom: 0;
