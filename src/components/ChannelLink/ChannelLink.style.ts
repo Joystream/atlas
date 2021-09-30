@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { Avatar } from '@/shared/components/Avatar'
 import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 type ContainerProps = {
   disabled?: boolean
@@ -16,14 +16,22 @@ export const Container = styled(Link)<ContainerProps>`
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 `
 
-type HandleProps = {
-  withAvatar: boolean
+type AvatarProps = {
+  withHandle: boolean
 }
 
-export const StyledText = styled(Text)<HandleProps>`
-  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
+export const StyledAvatar = styled(Avatar)<AvatarProps>`
+  margin-right: ${({ withHandle }) => (withHandle ? sizes(3) : 0)};
 `
 
-export const HandleSkeletonLoader = styled(SkeletonLoader)<HandleProps>`
-  margin-left: ${({ withAvatar }) => (withAvatar ? sizes(2) : 0)};
+type HandleProps = {
+  isSecondary: boolean
+}
+
+const secondaryTextCss = `
+  color: ${colors.gray[200]};
+`
+
+export const StyledText = styled(Text)<HandleProps>`
+  ${({ isSecondary }) => isSecondary && secondaryTextCss}
 `
