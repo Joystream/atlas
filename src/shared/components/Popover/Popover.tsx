@@ -1,13 +1,15 @@
 import styled from '@emotion/styled'
 import { Placement } from '@popperjs/core'
-import Tippy from '@tippyjs/react/headless'
-import React from 'react'
+import Tippy, { TippyProps } from '@tippyjs/react/headless'
+import React, { MutableRefObject } from 'react'
+
+export type TippyInstance = Parameters<Required<TippyProps>['render']>[2] // what a mess, i know
 
 export type PopoverProps = {
   content: React.ReactNode
-  isVisible?: boolean
   placement?: Placement
   offset?: [number, number]
+  instanceRef?: MutableRefObject<TippyInstance>
   hideOnClick?: boolean
   className?: string
 }
@@ -20,6 +22,7 @@ export const Popover: React.FC<PopoverProps> = ({
   children,
   offset = [0, 8],
   content,
+  instanceRef,
   className,
 }) => {
   return (
@@ -28,6 +31,11 @@ export const Popover: React.FC<PopoverProps> = ({
       hideOnClick={hideOnClick}
       interactive
       animation
+      onCreate={(instance) => {
+        if (instanceRef) {
+          instanceRef.current = instance
+        }
+      }}
       onTrigger={(instance) => {
         const box = instance.popper.firstElementChild
         requestAnimationFrame(() => {
@@ -35,7 +43,7 @@ export const Popover: React.FC<PopoverProps> = ({
           box?.classList.remove('popover-exit-active')
         })
       }}
-      onUntrigger={(instance) => {
+      onHide={(instance) => {
         const box = instance.popper.firstElementChild
         requestAnimationFrame(() => {
           box?.classList.remove('popover-enter-active')

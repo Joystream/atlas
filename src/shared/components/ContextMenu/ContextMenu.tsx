@@ -20,7 +20,7 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onCli
 
 export const ContextMenu: React.FC<PopoverProps> = ({ children, content, ...rest }) => {
   return (
-    <Popover content={<StyledContainer>{content}</StyledContainer>} {...rest}>
+    <Popover hideOnClick content={<StyledContainer>{content}</StyledContainer>} {...rest}>
       {children}
     </Popover>
   )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
@@ -56,6 +56,7 @@ import {
 } from './VideoTileBase.styles'
 
 import { ContextMenu, ContextMenuItem } from '../ContextMenu'
+import { TippyInstance } from '../Popover'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 import { UploadProgressBar } from '../UploadProgressBar'
@@ -153,6 +154,8 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onDeleteVideoClick,
   isPullupDisabled,
 }) => {
+  const contextMenuInstanceRef = useRef<TippyInstance>()
+
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
@@ -369,28 +372,53 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         </SwitchTransition>
 
         <ContextMenu
+          instanceRef={contextMenuInstanceRef}
           placement="bottom-end"
           content={
             <>
               {publisherMode ? (
                 <>
                   {onOpenInTabClick && (
-                    <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
+                    <ContextMenuItem
+                      icon={<SvgGlyphPlay />}
+                      onClick={() => {
+                        onOpenInTabClick()
+                        contextMenuInstanceRef.current?.hide()
+                      }}
+                    >
                       Play in Joystream
                     </ContextMenuItem>
                   )}
                   {onCopyVideoURLClick && (
-                    <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
+                    <ContextMenuItem
+                      icon={<SvgGlyphCopy />}
+                      onClick={() => {
+                        onCopyVideoURLClick()
+                        contextMenuInstanceRef.current?.hide()
+                      }}
+                    >
                       Copy video URL
                     </ContextMenuItem>
                   )}
                   {onEditVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
+                    <ContextMenuItem
+                      icon={<SvgGlyphEdit />}
+                      onClick={() => {
+                        onEditVideoClick()
+                        contextMenuInstanceRef.current?.hide()
+                      }}
+                    >
                       {isDraft ? 'Edit draft' : 'Edit video'}
                     </ContextMenuItem>
                   )}
                   {onDeleteVideoClick && (
-                    <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
+                    <ContextMenuItem
+                      icon={<SvgGlyphTrash />}
+                      onClick={() => {
+                        onDeleteVideoClick()
+                        contextMenuInstanceRef.current?.hide()
+                      }}
+                    >
                       {isDraft ? 'Delete draft' : 'Delete video'}
                     </ContextMenuItem>
                   )}
