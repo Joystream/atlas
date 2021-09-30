@@ -20,7 +20,7 @@ export const DEFAULT_LICENSE_ID = 1002
 export const useVideoWorkspace = () => {
   const ctx = useContext(VideoWorkspaceContext)
   if (ctx === undefined) {
-    throw new Error('useUploadVideoActionVideoWorkspace must be used within a VideoActionVideoWorkspaceProvider')
+    throw new Error('useVideoWorkspace must be used within a VideoWorkspaceProvider')
   }
   return ctx
 }

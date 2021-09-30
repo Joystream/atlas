@@ -4,12 +4,14 @@ import useMeasure from 'react-use-measure'
 import { VideoWorkspaceState } from '@/providers/videoWorkspace'
 import { transitions } from '@/shared/theme'
 
-import { EDIT_VIDEO_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
+import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
 
 export const useVideoWorkspaceAnimations = (videoWorkspaceState: VideoWorkspaceState) => {
   const [containerRef, containerBounds] = useMeasure()
   // 1 extra px to account for the border
-  const minimizedTransform = containerBounds.height ? containerBounds.height - EDIT_VIDEO_TABS_BAR_HEIGHT + 1 : 10000
+  const minimizedTransform = containerBounds.height
+    ? containerBounds.height - VIDEO_WORKSPACE_TABS_BAR_HEIGHT + 1
+    : 10000
   const videoWorkspaceStateToTransform: Record<VideoWorkspaceState, number> = {
     open: 0,
     minimized: minimizedTransform,
