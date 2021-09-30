@@ -447,7 +447,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
               error={!!errors.description}
               helperText={errors.description?.message}
             />
-            <FormField title="Category" description="Category that best describes the content">
+            <FormField title="Category">
               <Controller
                 name="category"
                 control={control}
@@ -464,7 +464,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
                 )}
               />
             </FormField>
-            <FormField title="Language" description="Main language used in the video">
+            <FormField title="Language">
               <Controller
                 name="language"
                 control={control}
@@ -479,10 +479,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
                   />
                 )}
               />
-              <ExtendedMarginFormField
-                title="Privacy"
-                description="Privacy of the video. Please note that because of nature of the blockchain, even unlisted videos can be publicly visible by querying the blockchain data."
-              >
+              <ExtendedMarginFormField title="Visibility">
                 <Controller
                   name="isPublic"
                   control={control}
@@ -575,7 +572,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
 
               <ExtendedMarginFormField
                 title="Content rating"
-                description="Whether your video contains explicit material (sex, violence, etc.)"
+                description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."
               >
                 <Controller
                   name="isExplicit"

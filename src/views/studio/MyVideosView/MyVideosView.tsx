@@ -34,7 +34,7 @@ import {
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
 
-const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
+const TABS = ['All videos', 'Public', 'Drafts', 'Unlisted'] as const
 
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -102,7 +102,7 @@ export const MyVideosView = () => {
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+  const hasNoVideos = currentTabName === 'All videos' && totalCount === 0 && drafts.length === 0
 
   useEffect(() => {
     if (!fetchMore || !edges?.length || !totalCount) {
@@ -366,7 +366,7 @@ export const MyVideosView = () => {
             <EmptyFallback
               verticalCentered
               title={
-                currentTabName === 'All Videos'
+                currentTabName === 'All videos'
                   ? 'No videos yet'
                   : currentTabName === 'Public'
                   ? 'No public videos yet'
@@ -375,7 +375,7 @@ export const MyVideosView = () => {
                   : 'No unlisted videos here yet'
               }
               subtitle={
-                currentTabName === 'All Videos'
+                currentTabName === 'All videos'
                   ? null
                   : currentTabName === 'Public'
                   ? 'Videos published with "Public" privacy setting will show up here.'
@@ -424,7 +424,7 @@ const getPublicness = (currentTabName: typeof TABS[number]) => {
       return true
     case 'Unlisted':
       return false
-    case 'All Videos':
+    case 'All videos':
     default:
       return undefined
   }
