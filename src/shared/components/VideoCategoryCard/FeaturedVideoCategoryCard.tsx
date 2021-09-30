@@ -1,6 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { BackgroundVideoPlayer } from '@/components/BackgroundVideoPlayer'
 import { useHover } from '@/hooks/useHover'
 import { sizes, transitions } from '@/shared/theme'
 
@@ -15,7 +16,6 @@ import {
 
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
-import { VideoPlayer } from '../VideoPlayer'
 
 export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
 export type FeaturedVideoCategoryCardProps = {
@@ -48,14 +48,11 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
         <FeaturedContainer ref={hoverRef} isLoading={isLoading} variantCategory={variant} color={color}>
           <PlayerContainer>
             {
-              <VideoPlayer
-                videoStyle={{ objectFit: 'cover' }}
-                loop
-                fluid
-                isInBackground
-                muted={true}
-                playing={variant === 'default' ? isVideoHovering : true}
+              <BackgroundVideoPlayer
                 src={videoUrl}
+                loop
+                muted
+                playing={variant === 'default' ? isVideoHovering : true}
               />
             }
           </PlayerContainer>
