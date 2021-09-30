@@ -1,13 +1,16 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
-import { Avatar, AvatarSize } from '@/shared/components/Avatar'
+import { AvatarSize } from '@/shared/components/Avatar'
+import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, HandleSkeletonLoader, StyledText } from './ChannelLink.style'
+import { Container, StyledAvatar, StyledText } from './ChannelLink.style'
 
 type ChannelLinkProps = {
   id?: string
@@ -44,24 +47,35 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   })
 
   const displayedChannel = overrideChannel || channel
+  const isSecondary = variant === 'secondary'
 
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
-      {!hideAvatar && <Avatar loading={!displayedChannel} size={avatarSize} assetUrl={avatarPhotoUrl} />}
-      {!hideHandle &&
-        (displayedChannel ? (
-          variant === 'secondary' ? (
-            <StyledText withAvatar={!hideAvatar} secondary variant="button2">
-              {displayedChannel.title}
-            </StyledText>
-          ) : (
-            <StyledText withAvatar={!hideAvatar} variant="h6">
-              {displayedChannel.title}
-            </StyledText>
-          )
-        ) : (
-          <HandleSkeletonLoader withAvatar={!hideAvatar} height={16} width={150} />
-        ))}
+      {!hideAvatar && (
+        <StyledAvatar
+          withHandle={!hideHandle}
+          loading={!displayedChannel}
+          size={avatarSize}
+          assetUrl={avatarPhotoUrl}
+        />
+      )}
+      {!hideHandle && (
+        <SwitchTransition>
+          <CSSTransition
+            key={displayedChannel ? 'data' : 'placeholder'}
+            classNames={transitions.names.fade}
+            timeout={parseInt(transitions.timings.regular)}
+          >
+            {displayedChannel ? (
+              <StyledText variant={isSecondary ? 'button2' : 'h6'} isSecondary={isSecondary}>
+                {displayedChannel.title}
+              </StyledText>
+            ) : (
+              <SkeletonLoader height={16} width={150} />
+            )}
+          </CSSTransition>
+        </SwitchTransition>
+      )}
     </Container>
   )
 }
