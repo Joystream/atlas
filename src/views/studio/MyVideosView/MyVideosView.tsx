@@ -57,6 +57,9 @@ export const MyVideosView = () => {
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
+  const isAllVideosTab = currentTabName === 'All videos'
+  const isPublicTab = currentTabName === 'Public'
+  const isUnlistedTab = currentTabName === 'Unlisted'
   const isPublic_eq = getPublicness(currentTabName)
 
   const removeDraftNotificationsCount = useRef(0)
@@ -102,7 +105,7 @@ export const MyVideosView = () => {
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const hasNoVideos = currentTabName === 'All videos' && totalCount === 0 && drafts.length === 0
+  const hasNoVideos = isAllVideosTab && totalCount === 0 && drafts.length === 0
 
   useEffect(() => {
     if (!fetchMore || !edges?.length || !totalCount) {
@@ -340,7 +343,7 @@ export const MyVideosView = () => {
               description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
             />
           )}
-          {currentTabName === 'Unlisted' && (
+          {isUnlistedTab && (
             <StyledDismissibleBanner
               id="unlisted-video-link-info"
               title="Unlisted videos can be seen only with direct link"
@@ -366,20 +369,20 @@ export const MyVideosView = () => {
             <EmptyFallback
               verticalCentered
               title={
-                currentTabName === 'All videos'
+                isAllVideosTab
                   ? 'No videos yet'
-                  : currentTabName === 'Public'
+                  : isPublicTab
                   ? 'No public videos yet'
-                  : currentTabName === 'Drafts'
+                  : isDraftTab
                   ? 'No drafts here yet'
                   : 'No unlisted videos here yet'
               }
               subtitle={
-                currentTabName === 'All videos'
+                isAllVideosTab
                   ? null
-                  : currentTabName === 'Public'
+                  : isPublicTab
                   ? 'Videos published with "Public" privacy setting will show up here.'
-                  : currentTabName === 'Drafts'
+                  : isDraftTab
                   ? "Each video that hasn't been published yet will be available here as a draft."
                   : 'Videos published with "Unlisted" privacy setting will show up here.'
               }
