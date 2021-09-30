@@ -48,7 +48,6 @@ export type VideoPlayerProps = {
   className?: string
   videoStyle?: CSSProperties
   autoplay?: boolean
-  isInBackground?: boolean
   playing?: boolean
   channelId?: string
   videoId?: string
@@ -66,18 +65,7 @@ const isPiPSupported = 'pictureInPictureEnabled' in document
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  {
-    isVideoPending,
-    className,
-    isInBackground,
-    playing,
-    nextVideo,
-    channelId,
-    videoId,
-    autoplay,
-    videoStyle,
-    ...videoJsConfig
-  },
+  { isVideoPending, className, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -144,7 +132,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   // handle hotkeys
   useEffect(() => {
-    if (!player || isInBackground) {
+    if (!player) {
       return
     }
 
@@ -165,7 +153,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [isInBackground, pauseVideo, playVideo, player, playerState])
+  }, [pauseVideo, playVideo, player, playerState])
 
   // handle error
   useEffect(() => {
@@ -394,7 +382,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   )
   // update volume on mouse input
   useEffect(() => {
-    if (!player || isInBackground) {
+    if (!player) {
       return
     }
     player?.volume(currentVolume)
@@ -408,7 +396,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
       player.muted(true)
     }
-  }, [currentVolume, volumeToSave, isInBackground, player, setCachedVolume])
+  }, [currentVolume, volumeToSave, player, setCachedVolume])
 
   // button/input handlers
   const handlePlayPause = () => {
@@ -463,13 +451,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const showBigPlayButton = isAutoPlayFailed && !isInBackground
-  const showPlayerControls = !isInBackground && isLoaded && playerState
-  const showControlsIndicator = !isInBackground && playerState !== 'ended'
+  const showPlayerControls = isLoaded && playerState
+  const showControlsIndicator = playerState !== 'ended'
   return (
-    <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
+    <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
-        {showBigPlayButton && (
+        {isAutoPlayFailed && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgPlayerPlay />
@@ -552,16 +539,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </ControlsOverlay>
           </>
         )}
-        {!isInBackground && (
-          <VideoOverlay
-            videoId={videoId}
-            isFullScreen={isFullScreen}
-            playerState={playerState}
-            onPlay={handlePlayPause}
-            channelId={channelId}
-            currentThumbnailUrl={videoJsConfig.posterUrl}
-          />
-        )}
+        <VideoOverlay
+          videoId={videoId}
+          isFullScreen={isFullScreen}
+          playerState={playerState}
+          onPlay={handlePlayPause}
+          channelId={channelId}
+          currentThumbnailUrl={videoJsConfig.posterUrl}
+        />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
     </Container>
