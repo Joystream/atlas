@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { SidenavBase } from '@/components/SidenavBase'
-import { navItems } from '@/config/nav'
+import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
@@ -25,7 +25,7 @@ export const ViewerSidenav: React.FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      items={navItems}
+      items={viewerNavItems}
       additionalContent={
         <FollowedChannels
           onClick={() => setExpanded(false)}

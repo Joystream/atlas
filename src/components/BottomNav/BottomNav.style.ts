@@ -2,6 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, PathMatch } from 'react-router-dom'
 
+import { Text } from '@/shared/components/Text'
 import { colors, sizes, typography, zIndex } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
@@ -14,16 +15,16 @@ export const Container = styled.div`
   bottom: 0;
   z-index: ${zIndex.nearSheetOverlay};
   display: flex;
-  transition: all ${animation.medium.timing} ${animation.medium.easing};
+  transition: transform ${animation.medium.timing} ${animation.medium.easing};
 
   &.bottom-nav-active,
   &.bottom-nav-exit {
-    bottom: 0;
+    transform: translateY(0);
   }
 
   &.bottom-nav-exit-active,
   &.bottom-nav-enter {
-    bottom: -64px;
+    transform: translateY(100%);
   }
 `
 
@@ -36,17 +37,14 @@ export const NavLink = styled(Link, { shouldForwardProp: isPropValid })<{ active
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 0 ${sizes(2.5)};
   flex: 1;
 
   ${({ active }) => active && `background-color: ${colors.transparentPrimary[18]}`};
-
-  > svg {
-    margin: 0 auto;
-  }
 `
 
-export const NavTitle = styled.span`
+export const NavTitle = styled(Text)`
   min-width: 56px;
   margin-top: ${sizes(1)};
 `

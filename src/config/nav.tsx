@@ -3,7 +3,7 @@ import React from 'react'
 import { absoluteRoutes } from '@/config/routes'
 import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
 
-export const navItems = [
+export const viewerNavItems = [
   {
     icon: <SvgNavHome />,
     name: 'Home',
