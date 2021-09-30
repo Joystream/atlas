@@ -13,7 +13,7 @@ export const Container = styled.section`
   justify-content: flex-end;
 
   ${media.sm} {
-    padding: ${sizes(8)};
+    padding: ${sizes(8)} var(--global-horizontal-padding);
     height: 66.6667vh;
   }
 `
@@ -61,7 +61,7 @@ export const ButtonsContainer = styled.div`
   display: flex;
   margin-top: ${sizes(4)};
 
-  ${media.md} {
+  ${media.sm} {
     margin-top: ${sizes(8)};
   }
 
