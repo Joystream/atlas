@@ -30,7 +30,7 @@ export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading, onClick }) 
           {loading ? (
             <NewVideoTileSkeleton />
           ) : (
-            <NewVideoTileLink to={absoluteRoutes.studio.editVideo()} onClick={onClick}>
+            <NewVideoTileLink to={absoluteRoutes.studio.videoWorkspace()} onClick={onClick}>
               <TextAndIconWrapper>
                 <StyledIcon />
                 <StyledText variant="body2">Upload new video</StyledText>

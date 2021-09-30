@@ -14,12 +14,12 @@ import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { ActionBar } from '@/shared/components/ActionBar'
 import { ChannelCover } from '@/shared/components/ChannelCover'
 import { FormField } from '@/shared/components/FormField'
@@ -133,7 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
+  const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
@@ -229,7 +229,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    setSheetState('closed')
+    setVideoWorkspaceState('closed')
 
     const metadata: CreateChannelMetadata = {
       ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
@@ -503,7 +503,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             />
           </FormField>
           <CSSTransition
-            in={sheetState !== 'open'}
+            in={videoWorkspaceState !== 'open'}
             timeout={2 * parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
             unmountOnExit

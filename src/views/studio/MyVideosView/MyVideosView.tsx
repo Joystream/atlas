@@ -11,9 +11,9 @@ import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useDialog } from '@/providers/dialogs'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Select } from '@/shared/components/Select'
@@ -45,7 +45,7 @@ const SNACKBAR_TIMEOUT = 5000
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
+  const { setVideoWorkspaceState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -157,15 +157,15 @@ export const MyVideosView = () => {
         })
       }
 
-      setSheetState('minimized')
+      setVideoWorkspaceState('minimized')
     } else {
       const tabIdx = videoTabs.findIndex((t) => t.id === id)
       if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
-      navigate(absoluteRoutes.studio.editVideo())
+      navigate(absoluteRoutes.studio.videoWorkspace())
     }
   }
 
-  // Workaround for removing drafts from video sheet tabs via snackbar
+  // Workaround for removing drafts from video videoWorkspace tabs via snackbar
   // Snackbar will probably need a refactor to handle actions that change state
   useEffect(() => {
     if (tabIdToRemoveViaSnackbar !== undefined) {
@@ -293,7 +293,7 @@ export const MyVideosView = () => {
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"
-          to={absoluteRoutes.studio.editVideo()}
+          to={absoluteRoutes.studio.videoWorkspace()}
           icon={<SvgGlyphAddVideo />}
           onClick={() => addVideoTab()}
         >
@@ -308,7 +308,7 @@ export const MyVideosView = () => {
           button={
             <Button
               icon={<SvgGlyphUpload />}
-              to={absoluteRoutes.studio.editVideo()}
+              to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
               size="large"
               onClick={() => addVideoTab()}
@@ -323,7 +323,11 @@ export const MyVideosView = () => {
             <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
             {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
             {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button to={absoluteRoutes.studio.editVideo()} icon={<SvgGlyphAddVideo />} onClick={() => addVideoTab()}>
+              <Button
+                to={absoluteRoutes.studio.videoWorkspace()}
+                icon={<SvgGlyphAddVideo />}
+                onClick={() => addVideoTab()}
+              >
                 Upload video
               </Button>
             )}
@@ -382,7 +386,7 @@ export const MyVideosView = () => {
               button={
                 <Button
                   icon={<SvgGlyphUpload />}
-                  to={absoluteRoutes.studio.editVideo()}
+                  to={absoluteRoutes.studio.videoWorkspace()}
                   variant="secondary"
                   size="large"
                   onClick={() => addVideoTab()}

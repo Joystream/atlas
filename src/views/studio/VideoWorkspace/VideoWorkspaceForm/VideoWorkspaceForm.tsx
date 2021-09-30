@@ -14,14 +14,14 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
+import { useAuthorizedUser } from '@/providers/user'
 import {
   DEFAULT_LICENSE_ID,
-  EditVideoFormFields,
-  EditVideoSheetTab,
-  useEditVideoSheet,
-  useEditVideoSheetTabData,
-} from '@/providers/editVideoSheet'
-import { useAuthorizedUser } from '@/providers/user'
+  VideoWorkspaceFormFields,
+  VideoWorkspaceTab,
+  useVideoWorkspace,
+  useVideoWorkspaceTabData,
+} from '@/providers/videoWorkspace'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { Datepicker } from '@/shared/components/Datepicker'
@@ -52,7 +52,7 @@ import {
   StyledActionBar,
   StyledMultiFileSelect,
   StyledTitleArea,
-} from './EditVideoForm.style'
+} from './VideoWorkspaceForm.style'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -63,22 +63,22 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
   tooltipHeaderText: license.longName,
 }))
 
-type EditVideoFormProps = {
+type VideoWorkspaceFormProps = {
   onSubmit: (
-    data: EditVideoFormFields,
-    dirtyFields: FieldNamesMarkedBoolean<EditVideoFormFields>,
+    data: VideoWorkspaceFormFields,
+    dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceFormFields>,
     callback: () => void
   ) => void
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
-  selectedVideoTab?: EditVideoSheetTab
+  selectedVideoTab?: VideoWorkspaceTab
   fee: number
 }
 
 type ValueOf<T> = T[keyof T]
 
-export const EditVideoForm: React.FC<EditVideoFormProps> = ({
+export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
   selectedVideoTab,
   onSubmit,
   onThumbnailFileChange,
@@ -100,8 +100,8 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setSelectedVideoTabCachedAssets,
     selectedVideoTabCachedDirtyFormData,
     setSelectedVideoTabCachedDirtyFormData,
-    sheetState,
-  } = useEditVideoSheet()
+    videoWorkspaceState,
+  } = useVideoWorkspace()
   const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
 
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -109,9 +109,9 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const deleteVideo = useDeleteVideo()
 
   const { categories, error: categoriesError } = useCategories(undefined, {
-    onError: (error) => SentryLogger.error('Failed to fetch categories', 'EditVideoSheet', error),
+    onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
   })
-  const { tabData, loading: tabDataLoading, error: tabDataError } = useEditVideoSheetTabData(selectedVideoTab)
+  const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceTabData(selectedVideoTab)
 
   const {
     register,
@@ -122,7 +122,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     watch,
     reset,
     formState: { errors, dirtyFields, isDirty, isValid },
-  } = useForm<EditVideoFormFields>({
+  } = useForm<VideoWorkspaceFormFields>({
     shouldFocusError: true,
     mode: 'onChange',
     defaultValues: {
@@ -142,32 +142,32 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const originalThumbnailAsset = useRawAsset(watch('assets.thumbnail').originalContentId)
 
   useEffect(() => {
-    // reset form for edited video on sheet close
-    if (isEdit && sheetState === 'closed' && tabData && !tabDataLoading) {
+    // reset form for edited video on videoWorkspace close
+    if (isEdit && videoWorkspaceState === 'closed' && tabData && !tabDataLoading) {
       reset(tabData)
       setMoreSettingsVisible(false)
     }
-  }, [isEdit, reset, setValue, sheetState, tabData, tabDataLoading])
+  }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading])
 
   useEffect(() => {
     if (isEdit) {
       return
     }
-    // reset multifileselect when sheetState is closed
-    if (sheetState === 'closed') {
+    // reset multifileselect when videoWorkspaceState is closed
+    if (videoWorkspaceState === 'closed') {
       setValue('assets', {
         video: { contentId: null },
         thumbnail: { cropContentId: null, originalContentId: null },
       })
     }
-  }, [sheetState, setValue, isEdit])
+  }, [videoWorkspaceState, setValue, isEdit])
 
   // we pass the functions explicitly so the debounced function doesn't need to change when those functions change
   const debouncedDraftSave = useRef(
     debounce(
       (
-        tab: EditVideoSheetTab,
-        data: EditVideoFormFields,
+        tab: VideoWorkspaceTab,
+        data: VideoWorkspaceFormFields,
         addDraftFn: typeof addDraft,
         updateDraftFn: typeof updateDraft,
         updateSelectedTabFn: typeof updateSelectedVideoTab
@@ -194,11 +194,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
   const debouncedSetSelectedVideoTabCachedDirtyFormData = useRef(
     debounce(
       (
-        data: EditVideoFormFields,
-        dirtyFields: DeepMap<EditVideoFormFields, true>,
+        data: VideoWorkspaceFormFields,
+        dirtyFields: DeepMap<VideoWorkspaceFormFields, true>,
         setSelectedVideoTabCachedDirtyFormDataFn: typeof setSelectedVideoTabCachedDirtyFormData
       ) => {
-        const keysToKeep = Object.keys(dirtyFields) as Array<keyof EditVideoFormFields>
+        const keysToKeep = Object.keys(dirtyFields) as Array<keyof VideoWorkspaceFormFields>
         const dirtyData = keysToKeep.reduce((acc, curr) => {
           acc[curr] = data[curr]
           return acc
@@ -230,9 +230,11 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     if (selectedVideoTabCachedDirtyFormData) {
       // allow a render for the form to reset first and then set fields dirty
       setTimeout(() => {
-        const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof EditVideoFormFields>
+        const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof VideoWorkspaceFormFields>
         keys.forEach((key) => {
-          setValue(key, selectedVideoTabCachedDirtyFormData[key] as ValueOf<EditVideoFormFields>, { shouldDirty: true })
+          setValue(key, selectedVideoTabCachedDirtyFormData[key] as ValueOf<VideoWorkspaceFormFields>, {
+            shouldDirty: true,
+          })
         })
       }, 0)
     }
@@ -248,7 +250,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     setValue,
   ])
 
-  const handleSubmit = createSubmitHandler(async (data: EditVideoFormFields) => {
+  const handleSubmit = createSubmitHandler(async (data: VideoWorkspaceFormFields) => {
     // do initial validation
     if (!isEdit && !data.assets.video.contentId) {
       setFileSelectError('Video file cannot be empty')
@@ -383,7 +385,7 @@ export const EditVideoForm: React.FC<EditVideoFormProps> = ({
     } else if (errorCode === 'file-too-large') {
       setFileSelectError('File too large')
     } else {
-      SentryLogger.error('Unknown file select error', 'EditVideoForm', null, { error: { code: errorCode } })
+      SentryLogger.error('Unknown file select error', 'VideoWorkspaceForm', null, { error: { code: errorCode } })
       setFileSelectError('Unknown error')
     }
   }, [])
