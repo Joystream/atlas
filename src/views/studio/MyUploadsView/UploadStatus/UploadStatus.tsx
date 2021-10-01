@@ -198,7 +198,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   }
 
   const renderStatusMessage = () => {
-    const failedStatusText = size === 'compact' ? 'Upload failed' : 'Asset failed during upload'
+    const failedStatusText = size === 'compact' ? 'Upload failed' : 'Asset upload failed'
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
