@@ -60,7 +60,7 @@ export const MyVideosView = () => {
   const isAllVideosTab = currentTabName === 'All videos'
   const isPublicTab = currentTabName === 'Public'
   const isUnlistedTab = currentTabName === 'Unlisted'
-  const isPublic_eq = getPublicness(currentTabName)
+  const isPublic_eq = isPublicTab ? true : isUnlistedTab ? false : undefined
 
   const removeDraftNotificationsCount = useRef(0)
   const addToTabNotificationsCount = useRef(0)
@@ -419,16 +419,4 @@ const usePagination = (currentTab: number) => {
     setCurrentPage(0)
   }, [currentTab])
   return { currentPage, setCurrentPage }
-}
-
-const getPublicness = (currentTabName: typeof TABS[number]) => {
-  switch (currentTabName) {
-    case 'Public':
-      return true
-    case 'Unlisted':
-      return false
-    case 'All videos':
-    default:
-      return undefined
-  }
 }
