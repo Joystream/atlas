@@ -1,7 +1,7 @@
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { sizes } from '@/shared/theme'
+import { colors, sizes, square, typography } from '@/shared/theme'
 
 import { ButtonBase, ButtonSize, ButtonVariant } from '../ButtonBase'
 import { Text } from '../Text'
@@ -87,4 +87,32 @@ export const StyledText = styled(Text)<TextProps>`
   ${textPaddingStyles};
 
   color: inherit;
+`
+
+export const Indicator = styled.div<{ dot?: boolean }>`
+  ${square(16)}
+
+  font-weight: ${typography.weights.bold};
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.blue[500]};
+  position: absolute;
+  border-radius: 50%;
+  top: -${sizes(2)};
+  right: -${sizes(2)};
+
+  ${({ dot }) =>
+    dot &&
+    css`
+      &::after {
+        ${square(8)}
+
+        content: '';
+        background-color: ${colors.white};
+        border-radius: 50%;
+        display: block;
+      }
+    `}
 `

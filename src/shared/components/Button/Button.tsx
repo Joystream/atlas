@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.style'
+import { ButtonIconWrapper, IconPlacement, Indicator, StyledButtonBase, StyledText } from './Button.style'
 
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 import { TextVariant } from '../Text'
@@ -9,6 +9,7 @@ export type ButtonProps = {
   icon?: React.ReactNode
   iconPlacement?: IconPlacement
   children: React.ReactNode
+  indicator?: boolean | string | number
 } & Omit<ButtonBaseProps, 'children'>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
@@ -18,7 +19,10 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ icon, children, size = 'medium', iconPlacement = 'left', variant, textOnly, ...baseButtonProps }, ref) => {
+  (
+    { icon, children, size = 'medium', iconPlacement = 'left', variant, textOnly, indicator, ...baseButtonProps },
+    ref
+  ) => {
     const iconOnly = !children
     return (
       <StyledButtonBase
@@ -49,6 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {icon}
           </ButtonIconWrapper>
         )}
+        {indicator && <Indicator dot={indicator === true}>{indicator !== true && indicator}</Indicator>}
       </StyledButtonBase>
     )
   }
