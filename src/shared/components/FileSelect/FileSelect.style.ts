@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { darken } from 'polished'
 import { animated } from 'react-spring'
 
 import { colors, media, sizes, transitions } from '@/shared/theme'
@@ -26,7 +25,6 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   transition: all ${transitions.timings.routing} ${transitions.easing};
   background: ${({ isDragAccept }) =>
     isDragAccept && `radial-gradient(55.47% 148.24% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(64, 56, 255, 0.2) 100%) ;`};
-  background-color: ${darken(0.16, colors.gray[600])};
 
   ::after {
     content: '';
