@@ -17,7 +17,6 @@ export const FormFieldHeader = styled.header`
   display: flex;
   align-items: center;
   width: 85%;
-  padding-bottom: ${sizes(2)};
   word-wrap: break-word;
 `
 
@@ -27,12 +26,13 @@ export const FormFieldTitle = styled(Text)`
 
 export const FormFieldDescription = styled(Text)`
   width: 85%;
+  padding: ${sizes(2)} 0;
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.gray[300]};
   line-height: ${sizes(5)};
   word-wrap: break-word;
 `
 
-export const ChildrenWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 2 : 6)};
+export const ChildrenWrapper = styled.div`
+  margin-top: ${sizes(4)};
 `

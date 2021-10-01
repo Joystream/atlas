@@ -39,7 +39,7 @@ export const FormField: React.FC<FormFieldProps> = ({ children, title, descripti
         ) : (
           <FormFieldDescription variant="body2">{description}</FormFieldDescription>
         ))}
-      <ChildrenWrapper dense={dense}>{children}</ChildrenWrapper>
+      <ChildrenWrapper>{children}</ChildrenWrapper>
     </FormFieldWrapper>
   )
 }
