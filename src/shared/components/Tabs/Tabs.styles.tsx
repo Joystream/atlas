@@ -39,7 +39,6 @@ export const Tab = styled.div<TabProps>`
   padding: ${sizes(6)} 0;
   font-size: ${typography.sizes.body2};
   color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
-  text-transform: capitalize;
   text-align: center;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${colors.blue[500]};` : 'none')};
 

@@ -19,7 +19,7 @@ import { EmptyFallback } from './EmptyFallback'
 type SearchResultsProps = {
   query: string
 }
-const tabs = ['all results', 'videos', 'channels']
+const tabs = ['All results', 'Videos', 'Channels']
 
 export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
