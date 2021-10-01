@@ -20,7 +20,6 @@ export const ControlsContainer = styled.div`
 `
 
 export const SortContainer = styled.div`
-  border-left: 1px solid ${colors.gray[700]};
   padding-left: ${sizes(4)};
   display: grid;
   grid-gap: 8px;
