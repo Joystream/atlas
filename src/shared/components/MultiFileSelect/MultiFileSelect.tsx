@@ -58,6 +58,9 @@ export type MultiFileSelectProps = {
   className?: string
 }
 
+const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
+const VIDEO_SELECT_TITLE = 'Select video file'
+
 export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   onVideoChange,
   onThumbnailChange,
@@ -200,7 +203,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
         onReAdjustThumbnail={handleReAdjustThumbnail}
         isLoading={isVideoLoading || isImgLoading}
         fileType={step}
-        title={step === 'video' ? 'Select video file' : 'Add thumbnail image'}
+        title={step === 'video' ? VIDEO_SELECT_TITLE : THUMBNAIL_SELECT_TITLE}
         thumbnailUrl={files.thumbnail?.url}
         paragraph={
           step === 'video'
@@ -216,7 +219,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           variant="file"
           number={1}
           title={
-            editMode ? 'Video file' : files.video ? (files.video.blob as File).name || 'Video file' : 'Add video file'
+            editMode ? 'Video file' : files.video ? (files.video.blob as File).name || 'Video file' : VIDEO_SELECT_TITLE
           }
           active={step === 'video' && stepsActive}
           disabled={editMode}
@@ -236,8 +239,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
                 ? (files.thumbnail.originalBlob as File).name
                 : files.thumbnail.url
                 ? 'Thumbnail image'
-                : 'Add thumbnail image'
-              : 'Add thumbnail image'
+                : THUMBNAIL_SELECT_TITLE
+              : THUMBNAIL_SELECT_TITLE
           }
           active={step === 'image' && stepsActive}
           completed={!!files.thumbnail?.url}
