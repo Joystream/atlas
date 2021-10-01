@@ -18,6 +18,7 @@ export const SearchbarContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
+  margin-right: ${sizes(2)};
 
   > svg {
     display: none;
@@ -37,18 +38,16 @@ export const SearchbarContainer = styled.div`
 export const StyledSearchbar = styled(Searchbar)<FocusProps>`
   transition: width ${transitions.timings.regular} ${transitions.easing};
   will-change: width;
-  width: ${({ hasFocus }) => (hasFocus ? 'calc(100% - 57px)' : '42px')};
+  width: ${({ hasFocus }) => (hasFocus ? 'calc(100% - 57px)' : '39px')};
   padding-left: ${({ hasFocus }) => (hasFocus ? sizes(4) : 0)};
   margin-left: auto;
-  height: 40px;
-  margin-right: ${sizes(1)};
+  height: 39px;
 
   ${media.sm} {
     max-width: 480px;
     width: 100%;
     margin-left: 0;
     height: initial;
-    margin-right: 0;
   }
 `
 

@@ -43,7 +43,7 @@ export const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  outline: 1px solid ${colors.gray[700]};
+  border: 1px solid ${colors.gray[700]};
 
   ${media.sm} {
     height: 48px;
@@ -72,6 +72,7 @@ export const SearchHelper = styled(Text)`
 `
 
 export const SearchButton = styled(IconButton)`
+  padding: 0;
   margin: 0 auto;
 
   ${media.sm} {

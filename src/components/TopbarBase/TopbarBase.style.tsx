@@ -32,7 +32,7 @@ export const Header = styled.header`
   max-height: ${TOP_NAVBAR_HEIGHT}px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${colors.gray[800]};
+  box-shadow: inset 0 -1px 0 ${colors.gray[700]};
   background-color: ${colors.black};
   padding: ${sizes(3)} calc(var(--scrollbar-gap-width) + ${sizes(3)}) ${sizes(3)} ${sizes(3)};
 
