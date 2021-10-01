@@ -1,12 +1,13 @@
 import React from 'react'
 
-import { FullLogo, Header, LogoContainer, LogoLink, ShortLogo, StudioText } from './TopbarBase.style'
+import { Header, JoystreamFullLogo, LogoContainer, LogoLink, ShortLogo, StudioFullLogo } from './TopbarBase.style'
 
 export type TopbarVariant = 'default' | 'studio'
 export type TopbarBaseProps = {
   variant?: TopbarVariant
   className?: string
   isHamburgerButtonPresent?: boolean
+  noLogo?: boolean
 }
 
 export const TopbarBase: React.FC<TopbarBaseProps> = ({
@@ -14,18 +15,20 @@ export const TopbarBase: React.FC<TopbarBaseProps> = ({
   variant = 'default',
   className,
   isHamburgerButtonPresent = true,
+  noLogo,
 }) => {
   const isStudio = variant === 'studio'
   const logoLink = isStudio ? '/studio' : '/'
   return (
     <Header className={className}>
-      <LogoContainer variant={variant} isHamburgerButtonPresent={isHamburgerButtonPresent}>
-        <LogoLink to={logoLink}>
-          <ShortLogo />
-          <FullLogo variant={variant} />
-          {isStudio && <StudioText secondary>studio</StudioText>}
-        </LogoLink>
-      </LogoContainer>
+      {!noLogo && (
+        <LogoContainer variant={variant} isHamburgerButtonPresent={isHamburgerButtonPresent}>
+          <LogoLink to={logoLink}>
+            <ShortLogo />
+            {isStudio ? <StudioFullLogo /> : <JoystreamFullLogo />}
+          </LogoLink>
+        </LogoContainer>
+      )}
       {children}
     </Header>
   )

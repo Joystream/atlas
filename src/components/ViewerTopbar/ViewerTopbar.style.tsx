@@ -15,26 +15,44 @@ export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
 `
 
 export const SearchbarContainer = styled.div`
-  max-width: 1156px;
-  width: 100%;
   display: flex;
-  justify-content: center;
+  width: 100%;
   align-items: center;
-  margin-left: ${sizes(14)};
+
+  > svg {
+    display: none;
+  }
 
   ${media.sm} {
+    max-width: 1156px;
+    justify-content: center;
     margin: 0;
+
+    > svg {
+      display: none;
+    }
   }
 `
 
 export const StyledSearchbar = styled(Searchbar)<FocusProps>`
-  transition: max-width ${transitions.timings.regular} ${transitions.easing};
-  will-change: max-width;
-  height: 42px;
-  width: 100%;
-  max-width: ${(props) => (props.hasFocus ? '100%' : '385px')};
+  transition: width ${transitions.timings.regular} ${transitions.easing};
+  will-change: width;
+  width: ${({ hasFocus }) => (hasFocus ? 'calc(100% - 57px)' : '42px')};
+  padding-left: ${({ hasFocus }) => (hasFocus ? sizes(4) : 0)};
+  margin-left: auto;
+  height: 40px;
+  margin-right: ${sizes(1)};
 
   ${media.sm} {
+    max-width: 480px;
+    width: 100%;
+    margin-left: 0;
     height: initial;
+    margin-right: 0;
   }
+`
+
+export const ButtonWrapper = styled.div`
+  align-self: center;
+  justify-self: flex-end;
 `

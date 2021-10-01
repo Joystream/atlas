@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 
-import { SvgGlyphClose } from '@/shared/icons'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
+import { SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
 
-import { CancelButton, Container, Input, StyledSvgOutlineSearch } from './Searchbar.style'
+import { CancelButton, Container, Input, SearchButton, SearchHelper, StyledSvgOutlineSearch } from './Searchbar.style'
 
 type SearchbarProps = {
   value: string
   onCancel?: () => void
   showCancelButton?: boolean
   controlled?: boolean
+  onClick?: () => void
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export const Searchbar: React.FC<SearchbarProps> = ({
   placeholder,
@@ -21,9 +24,11 @@ export const Searchbar: React.FC<SearchbarProps> = ({
   onBlur,
   onSubmit,
   className,
+  onClick,
   ...htmlProps
 }) => {
   const [value, setValue] = useState('')
+  const smMatch = useMediaMatch('sm')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -44,23 +49,36 @@ export const Searchbar: React.FC<SearchbarProps> = ({
 
   return (
     <Container className={className}>
-      <StyledSvgOutlineSearch />
-      <Input
-        value={controlled ? externalValue : value}
-        placeholder={placeholder}
-        type="search"
-        onChange={handleChange}
-        onFocus={onFocus}
-        onFocusCapture={onFocus}
-        onBlur={onBlur}
-        onSubmit={onSubmit}
-        data-hj-allow
-        {...htmlProps}
-      />
-      {showCancelButton && (
+      {(smMatch || showCancelButton) && (
+        <>
+          <StyledSvgOutlineSearch />
+          <Input
+            value={controlled ? externalValue : value}
+            placeholder={placeholder}
+            type="search"
+            onChange={handleChange}
+            onFocus={onFocus}
+            onFocusCapture={onFocus}
+            onBlur={onBlur}
+            onSubmit={onSubmit}
+            data-hj-allow
+            {...htmlProps}
+          />
+        </>
+      )}
+      {showCancelButton ? (
         <CancelButton onClick={handleCancel} variant="tertiary" size="small">
           <SvgGlyphClose />
         </CancelButton>
+      ) : (
+        <>
+          <SearchButton variant="tertiary" onClick={onClick}>
+            <SvgGlyphSearch />
+          </SearchButton>
+          <SearchHelper variant="caption" secondary>
+            Press <ShortcutIndicator>/</ShortcutIndicator>
+          </SearchHelper>
+        </>
       )}
     </Container>
   )

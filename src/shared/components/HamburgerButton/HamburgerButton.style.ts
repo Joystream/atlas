@@ -17,7 +17,7 @@ export const Hamburger = styled.button`
   position: fixed;
   z-index: ${zIndex.sideNav};
   cursor: pointer;
-  background-color: ${colors.gray[700]};
+  background-color: ${colors.black};
   border: none;
   border-radius: 100%;
   display: inline-block;

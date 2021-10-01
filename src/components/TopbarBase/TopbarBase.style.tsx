@@ -1,11 +1,20 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Text } from '@/shared/components/Text'
-import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo } from '@/shared/illustrations'
-import { colors, media, sizes, typography, zIndex } from '@/shared/theme'
+import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo, SvgStudioFullLogo } from '@/shared/illustrations'
+import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { TopbarVariant } from './TopbarBase'
+
+const logoStyles = css`
+  display: none;
+  height: ${sizes(8)};
+
+  ${media.sm} {
+    display: block;
+  }
+`
 
 type LogoContainerProps = {
   variant?: TopbarVariant
@@ -49,16 +58,6 @@ export const LogoLink = styled(Link)`
   }
 `
 
-export const StudioText = styled(Text)`
-  display: none;
-  font-family: ${typography.fonts.headers};
-  margin-left: 6px;
-
-  ${media.sm} {
-    display: block;
-  }
-`
-
 export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
   display: block;
   height: ${sizes(8)};
@@ -68,13 +67,12 @@ export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
   }
 `
 
-export const FullLogo = styled(SvgJoystreamFullLogo)<LogoContainerProps>`
-  display: none;
-  height: ${sizes(8)};
+export const JoystreamFullLogo = styled(SvgJoystreamFullLogo)`
+  ${logoStyles}
+`
 
-  ${media.sm} {
-    display: ${({ variant }) => (variant === 'default' ? 'block' : 'flex')};
-  }
+export const StudioFullLogo = styled(SvgStudioFullLogo)`
+  ${logoStyles}
 `
 
 export const LogoContainer = styled.div<LogoContainerProps>`
@@ -82,11 +80,10 @@ export const LogoContainer = styled.div<LogoContainerProps>`
   ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
 
   margin-top: ${({ variant }) => (variant === 'default' ? sizes(1) : '0')};
-  display: ${({ variant }) => (variant === 'default' ? 'none' : 'flex')};
+  display: flex;
   align-items: center;
 
   ${media.sm} {
-    display: flex;
     margin: 0 ${sizes(3)} 0 ${sizes(12)};
     ${({ isHamburgerButtonPresent }) => !isHamburgerButtonPresent && 'margin-left: 0'};
   }

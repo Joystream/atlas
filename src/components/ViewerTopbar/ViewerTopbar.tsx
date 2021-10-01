@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
+import { SvgGlyphAddVideo } from '@/shared/icons'
 import { RoutingState } from '@/types/routing'
+import { openInNewTab } from '@/utils/browser'
 
-import { SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './ViewerTopbar.style'
+import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './ViewerTopbar.style'
 
 export const ViewerTopbar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
   const overlaidLocation = locationState?.overlaidLocation || location
+  const smMatch = useMediaMatch('sm')
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -70,8 +76,9 @@ export const ViewerTopbar: React.FC = () => {
     const overlaidLocation = locationState?.overlaidLocation || { pathname: absoluteRoutes.viewer.index() }
     navigate(overlaidLocation)
   }
+
   return (
-    <StyledTopbarBase hasFocus={isFocused}>
+    <StyledTopbarBase hasFocus={isFocused} noLogo={!smMatch && isFocused}>
       <SearchbarContainer>
         <StyledSearchbar
           placeholder="Search..."
@@ -80,11 +87,29 @@ export const ViewerTopbar: React.FC = () => {
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           onCancel={handleCancel}
-          hasFocus={isFocused}
           showCancelButton={isFocused}
           controlled
+          hasFocus={isFocused}
+          onClick={handleFocus}
         />
       </SearchbarContainer>
+      <ButtonWrapper>
+        {smMatch && (
+          <Button
+            onClick={() => openInNewTab(absoluteRoutes.studio.index())}
+            icon={<SvgGlyphAddVideo />}
+            iconPlacement="left"
+            size="medium"
+          >
+            Start publishing
+          </Button>
+        )}
+        {!isFocused && !smMatch && (
+          <IconButton>
+            <SvgGlyphAddVideo />
+          </IconButton>
+        )}
+      </ButtonWrapper>
     </StyledTopbarBase>
   )
 }
