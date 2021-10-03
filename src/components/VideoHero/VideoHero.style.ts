@@ -4,6 +4,11 @@ import { colors, media, sizes } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
 
+export const HeaderNodeWrapper = styled.div`
+  position: absolute;
+  top: 0;
+`
+
 export const Container = styled.section`
   position: relative;
   padding: 160px var(--global-horizontal-padding) ${sizes(4)};
@@ -69,4 +74,8 @@ export const ButtonsContainer = styled.div`
     margin-left: ${sizes(4)};
     flex-shrink: 0;
   }
+`
+
+export const SliderNodeWrapper = styled.div`
+  margin-left: auto;
 `

@@ -17,6 +17,7 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
   playsInline = true,
   onPlay,
   onEnded,
+  src,
   ...props
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -41,7 +42,7 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
     } else {
       videoRef.current.pause()
     }
-  }, [playing])
+  }, [playing, src])
 
   const handlePlay = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPosterVisible(false)
@@ -56,6 +57,7 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
   return (
     <VideoWrapper>
       <StyledVideo
+        src={src}
         autoPlay={autoPlay}
         playsInline={playsInline}
         ref={videoRef}
