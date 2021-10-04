@@ -1,45 +1,13 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, typography } from '../../theme'
 import { Text } from '../Text'
 
-type ContainerProps = {
-  isActive?: boolean
-  position: { x: number; y: number; left: boolean }
-}
-
-export const StyledContainer = styled.div<ContainerProps>`
-  position: absolute;
-  top: ${({ position }) => position.y}px;
-  left: ${({ position }) => position.left && position.x}px;
-  right: ${({ position }) => !position.left && position.x}px;
+export const StyledContainer = styled.div`
   background-color: ${colors.gray[800]};
   width: 200px;
   color: ${colors.white};
   word-break: break-all;
-  z-index: ${zIndex.nearOverlay};
-
-  &.menu-enter {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-
-  &.menu-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-  }
-
-  &.menu-exit {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  &.menu-exit-active {
-    opacity: 0;
-    transform: scale(0.88);
-    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
-  }
 `
 
 export const StyledMenuItem = styled.div`
