@@ -203,15 +203,15 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   return (
     <Container className={className} isLoading={isLoading || isUploading}>
       <CoverWrapper>
-        <CoverContainer ref={imgRef} clickable={clickable}>
-          <SwitchTransition>
-            <CSSTransition
-              key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
-              timeout={parseInt(transitions.timings.sharp)}
-              classNames={transitions.names.fade}
-            >
-              <CoverImageContainer>
-                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+        <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+          <CoverContainer ref={imgRef} clickable={clickable}>
+            <SwitchTransition>
+              <CSSTransition
+                key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
+                timeout={parseInt(transitions.timings.sharp)}
+                classNames={transitions.names.fade}
+              >
+                <CoverImageContainer>
                   {isLoadingThumbnail && !isDraft ? (
                     <>
                       {(videoHref || publisherMode) && (
@@ -281,20 +281,26 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       </CoverHoverOverlay>
                     </>
                   )}
-                </Anchor>
-              </CoverImageContainer>
+                </CoverImageContainer>
+              </CSSTransition>
+            </SwitchTransition>
+            <CSSTransition
+              in={isUploading}
+              timeout={1000}
+              classNames={DELAYED_FADE_CLASSNAME}
+              unmountOnExit
+              mountOnEnter
+            >
+              <UploadProgressTransition>
+                <UploadProgressBar
+                  progress={uploadStatus?.progress}
+                  lastStatus={uploadStatus?.lastStatus}
+                  withLoadingIndicator
+                />
+              </UploadProgressTransition>
             </CSSTransition>
-          </SwitchTransition>
-          <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
-            <UploadProgressTransition>
-              <UploadProgressBar
-                progress={uploadStatus?.progress}
-                lastStatus={uploadStatus?.lastStatus}
-                withLoadingIndicator
-              />
-            </UploadProgressTransition>
-          </CSSTransition>
-        </CoverContainer>
+          </CoverContainer>
+        </Anchor>
       </CoverWrapper>
       {!!progress && (
         <ProgressOverlay>

@@ -48,6 +48,10 @@ const clickableAnimation = (clickable: boolean) =>
         ${CoverIconWrapper} {
           opacity: 1;
         }
+
+        ::after {
+          transform: translate(${sizes(2)}, ${sizes(2)});
+        }
       `
     : css`
         ${CoverHoverOverlay} {
@@ -73,6 +77,16 @@ export const CoverContainer = styled.div<ClickableProps>`
 
   :hover:not(:active) {
     ${(props) => clickableAnimation(props.clickable)}
+  }
+
+  ::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
   }
 `
 
