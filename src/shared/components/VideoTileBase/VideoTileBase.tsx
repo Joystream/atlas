@@ -375,39 +375,29 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               ? [
                   {
                     icon: <SvgGlyphPlay />,
-                    onClick: () => {
-                      onOpenInTabClick && onOpenInTabClick()
-                    },
+                    onClick: onOpenInTabClick,
                     title: 'Play in Joystream',
                   },
                   {
                     icon: <SvgGlyphCopy />,
-                    onClick: () => {
-                      onCopyVideoURLClick && onCopyVideoURLClick()
-                    },
+                    onClick: onCopyVideoURLClick,
                     title: 'Copy video URL',
                   },
                   {
                     icon: <SvgGlyphEdit />,
-                    onClick: () => {
-                      onEditVideoClick && onEditVideoClick()
-                    },
+                    onClick: onEditVideoClick,
                     title: isDraft ? 'Edit draft' : 'Edit video',
                   },
                   {
                     icon: <SvgGlyphTrash />,
-                    onClick: () => {
-                      onDeleteVideoClick && onDeleteVideoClick()
-                    },
+                    onClick: onDeleteVideoClick,
                     title: isDraft ? 'Delete draft' : 'Delete video',
                   },
                 ]
               : [
                   {
                     icon: <SvgGlyphCopy />,
-                    onClick: () => {
-                      onCopyVideoURLClick && onCopyVideoURLClick()
-                    },
+                    onClick: onCopyVideoURLClick,
                     title: 'Copy video URL',
                   },
                 ]

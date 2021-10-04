@@ -7,7 +7,7 @@ import { Popover, PopoverProps, TippyInstance } from '../Popover'
 type MenuItemProps = {
   icon: ReactNode
   title: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title }) => {
@@ -35,7 +35,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...re
               icon={item.icon}
               title={item.title}
               onClick={() => {
-                item.onClick()
+                item.onClick?.()
                 contextMenuInstanceRef.current?.hide()
               }}
             />
