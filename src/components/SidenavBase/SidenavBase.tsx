@@ -5,12 +5,12 @@ import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
 import { HamburgerButton } from '@/shared/components/HamburgerButton'
+import { SvgJoystreamLogoFull, SvgJoystreamLogoStudio } from '@/shared/illustrations'
 import { transitions } from '@/shared/theme'
 
 import {
   ButtonGroup,
   DrawerOverlay,
-  JoystreamLogo,
   LegalLink,
   LegalLinksWrapper,
   LogoLink,
@@ -19,7 +19,6 @@ import {
   SidebarNavItem,
   SidebarNavLink,
   SidebarNavList,
-  StudioLogo,
   SubItem,
   SubItemsWrapper,
 } from './SidenavBase.style'
@@ -64,7 +63,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
       </CSSTransition>
       <SidebarNav expanded={expanded} isStudio={isStudio}>
         <LogoLink to="./" onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
-          {isStudio ? <StudioLogo /> : <JoystreamLogo />}
+          {isStudio ? <SvgJoystreamLogoStudio /> : <SvgJoystreamLogoFull />}
         </LogoLink>
         <SidebarNavList>
           {items.map((item) => (

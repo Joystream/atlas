@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SvgJoystreamFullLogo, SvgJoystreamOneLetterLogo, SvgStudioFullLogo } from '@/shared/illustrations'
+import { SvgJoystreamLogoFull, SvgJoystreamLogoShort, SvgJoystreamLogoStudio } from '@/shared/illustrations'
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { TopbarVariant } from './TopbarBase'
@@ -58,7 +58,7 @@ export const LogoLink = styled(Link)`
   }
 `
 
-export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
+export const ShortLogo = styled(SvgJoystreamLogoShort)`
   display: block;
   height: ${sizes(8)};
 
@@ -67,11 +67,11 @@ export const ShortLogo = styled(SvgJoystreamOneLetterLogo)`
   }
 `
 
-export const JoystreamFullLogo = styled(SvgJoystreamFullLogo)`
+export const JoystreamFullLogo = styled(SvgJoystreamLogoFull)`
   ${logoStyles}
 `
 
-export const StudioFullLogo = styled(SvgStudioFullLogo)`
+export const StudioFullLogo = styled(SvgJoystreamLogoStudio)`
   ${logoStyles}
 `
 
