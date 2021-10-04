@@ -4,9 +4,14 @@ import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const VideoHeroHeader = styled.header`
-  margin-top: ${sizes(8)};
+  position: absolute;
+  top: 0;
+  margin-top: ${sizes(9)};
   display: flex;
   align-items: center;
+  ${media.sm} {
+    margin-top: ${sizes(8)};
+  }
 `
 export const Divider = styled.div`
   width: 1px;

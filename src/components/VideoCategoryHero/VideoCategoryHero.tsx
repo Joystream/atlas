@@ -32,9 +32,17 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     const currentTime = e.currentTarget.currentTime
     const duration = e.currentTarget.duration
-    const progressInPercentage = round((currentTime / duration) * 100, 2)
-    setVideoProgress(progressInPercentage)
+    if (duration && currentTime) {
+      const progressInPercentage = round((currentTime / duration) * 100, 2)
+      setVideoProgress(progressInPercentage)
+    } else {
+      setVideoProgress(0)
+    }
   }
+
+  const videosWithProgress = videos?.map((video, idx) =>
+    video ? { ...video, progress: idx === activeVideoIdx ? videoProgress : 0 } : null
+  )
 
   return (
     <StyledVideoHero
@@ -42,7 +50,7 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
       videoHeroData={videos ? videos[activeVideoIdx] : null}
       headerNode={
         <VideoHeroHeader>
-          {header ? (
+          {videos?.[activeVideoIdx] ? (
             <IconButton variant="tertiary">
               <SvgGlyphChevronLeft />
             </IconButton>
@@ -50,7 +58,7 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
             <SkeletonLoader rounded height={40} width={40} />
           )}
           <Divider />
-          {header ? (
+          {videos?.[activeVideoIdx] ? (
             <>
               {header.icon}
               <VideoHeroHeaderTitle variant="h5">{header.title}</VideoHeroHeaderTitle>
@@ -62,9 +70,9 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
       }
       sliderNode={
         <VideoHeroSlider
+          loading={!videos?.[activeVideoIdx]}
           activeVideoIdx={activeVideoIdx}
-          progress={videoProgress}
-          videos={videos}
+          videos={videosWithProgress}
           onTileClick={handleVideoClick}
         />
       }

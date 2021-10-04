@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { VideoHeroData } from '@/api/featured'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 
 import {
@@ -26,20 +27,36 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
   className,
   videos,
   activeVideoIdx = 0,
-  progress,
   onTileClick,
 }) => {
+  const smMatch = useMediaMatch('sm')
+
+  const handleChangeTile = (e: React.MouseEvent) => {
+    if (smMatch) {
+      return
+    }
+    const clientWidthCenter = e.currentTarget.clientWidth / 2
+    if (clientWidthCenter <= e.clientX) {
+      const idx = activeVideoIdx + 1 === 3 ? 0 : activeVideoIdx + 1
+      onTileClick?.(idx)
+    } else {
+      const idx = activeVideoIdx - 1 === -1 ? 2 : activeVideoIdx - 1
+      onTileClick?.(idx)
+    }
+  }
   return (
-    <VideoHeroSliderWrapper className={className}>
+    <VideoHeroSliderWrapper className={className} onClick={handleChangeTile}>
       {loading
-        ? Array.from({ length: 3 }).map((_, idx) => <SkeletonLoader key={idx} width={80} height={45} />)
+        ? Array.from({ length: 3 }).map((_, idx) => (
+            <SkeletonLoader key={idx} width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
+          ))
         : videos?.map((video, idx) => (
             <VideoSliderPreview
               key={idx}
-              progress={progress}
+              progress={video?.progress}
               thumbnailUrl={video?.thumbnailPhotoUrl}
               active={idx === activeVideoIdx}
-              onClick={() => onTileClick?.(idx)}
+              onClick={() => smMatch && onTileClick?.(idx)}
             />
           ))}
     </VideoHeroSliderWrapper>

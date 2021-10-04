@@ -20,9 +20,7 @@ import {
   ButtonsContainer,
   Container,
   GradientOverlay,
-  HeaderNodeWrapper,
   InfoContainer,
-  SliderNodeWrapper,
   StyledChannelLink,
   TitleContainer,
 } from './VideoHero.style'
@@ -53,8 +51,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
   withMuteButton,
   onTimeUpdate,
 }) => {
-  const isCompact = useMediaMatch('sm')
-  const xsMatch = useMediaMatch('xs')
+  const isCompact = useMediaMatch('xs')
 
   const [videoPlaying, setVideoPlaying] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
@@ -87,7 +84,8 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
         )}
         <GradientOverlay />
       </BackgroundContainer>
-      {headerNode && <HeaderNodeWrapper>{headerNode}</HeaderNodeWrapper>}
+      {sliderNode && sliderNode}
+      {headerNode && headerNode}
       <InfoContainer>
         <LayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
@@ -126,7 +124,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
               <ButtonsContainer>
                 <Button
                   size={isCompact ? 'large' : 'medium'}
-                  fullWidth={!xsMatch}
+                  fullWidth={!isCompact}
                   to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
                   icon={<SvgActionPlay />}
                 >
@@ -145,13 +143,14 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
             ) : (
               <ButtonsContainer>
                 <SkeletonLoader width={isCompact ? '96px' : '100%'} height={isCompact ? '48px' : '40px'} />
-                <SkeletonLoader width={isCompact ? '48px' : '40px'} height={isCompact ? '48px' : '40px'} />
+                {withMuteButton && (
+                  <SkeletonLoader width={isCompact ? '48px' : '40px'} height={isCompact ? '48px' : '40px'} />
+                )}
               </ButtonsContainer>
             )}
           </CSSTransition>
         </SwitchTransition>
       </InfoContainer>
-      {sliderNode && sliderNode}
     </Container>
   )
 }

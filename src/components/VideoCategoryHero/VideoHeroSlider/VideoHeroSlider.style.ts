@@ -1,37 +1,59 @@
 import styled from '@emotion/styled'
 
-import { colors } from '@/shared/theme'
+import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 export const VideoHeroSliderWrapper = styled.div`
   position: absolute;
-  right: var(--global-horizontal-padding);
+  margin: ${sizes(4)};
+  padding: 0 inherit;
+  top: 0;
+  left: 0;
   display: grid;
+  width: calc(100% - ${sizes(8)});
+  height: 100%;
   grid-gap: 8px;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(3, 1fr);
+  ${media.sm} {
+    bottom: 0;
+    z-index: ${zIndex.overlay};
+    right: 0;
+    padding-bottom: inherit;
+    left: unset;
+    top: unset;
+    margin: auto;
+    width: auto;
+    height: auto;
+  }
 `
 
 type VideoSliderThumbnailProps = {
   active?: boolean
 }
 export const VideoSliderThumbnail = styled.img<VideoSliderThumbnailProps>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  object-fit: cover;
-  opacity: ${({ active }) => (active ? 1 : 0.5)};
-  transform: translateY(${({ active }) => (active ? '-8px' : 0)});
-  transition: opacity 150ms ease-out, transform 150ms ease-out;
+  display: none;
+  ${media.sm} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    object-fit: cover;
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+    transform: translateY(${({ active }) => (active ? '-8px' : 0)});
+    opacity: ${({ active }) => (active ? 1 : 0.5)};
+    display: block;
+  }
 `
 export const VideoSliderPreviewWrapper = styled.div`
-  width: 80px;
-  height: 45px;
   position: relative;
   :hover ${VideoSliderThumbnail} {
     opacity: 1;
     transform: translateY(-8px);
+  }
+  ${media.sm} {
+    width: 80px;
+    height: 45px;
   }
 `
 
@@ -40,12 +62,15 @@ type VideoSliderProgressBarProps = {
 }
 
 export const VideoSliderProgressBar = styled.div<VideoSliderProgressBarProps>`
-  opacity: ${({ active }) => (active ? 1 : 0)};
-  position: absolute;
-  bottom: 0;
   background-color: ${colors.transparentWhite[32]};
-  height: 2px;
-  width: 80px; /* temporary */
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  ${media.sm} {
+    opacity: ${({ active }) => (active ? 1 : 0)};
+    bottom: 0;
+    height: 2px;
+  }
 `
 
 type VideoSliderProgressProps = {
