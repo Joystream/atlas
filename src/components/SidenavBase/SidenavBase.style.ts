@@ -1,10 +1,10 @@
 import isPropValid from '@emotion/is-prop-valid'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/shared/components/Badge'
-import { Text } from '@/shared/components/Text'
-import { SvgJoystreamFullLogo } from '@/shared/illustrations'
+import { SvgJoystreamFullLogo, SvgStudioFullLogo } from '@/shared/illustrations'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
@@ -49,14 +49,16 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
 `
 
-export const Logo = styled(SvgJoystreamFullLogo)`
+const logoStyles = css`
   height: ${sizes(8)};
 `
 
-export const StudioText = styled(Text)`
-  color: ${colors.gray[300]};
-  font-family: ${typography.fonts.headers};
-  margin-left: 6px;
+export const JoystreamLogo = styled(SvgJoystreamFullLogo)`
+  ${logoStyles}
+`
+
+export const StudioLogo = styled(SvgStudioFullLogo)`
+  ${logoStyles}
 `
 
 export const SidebarNavList = styled.ul`

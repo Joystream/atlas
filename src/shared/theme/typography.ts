@@ -10,6 +10,7 @@ export default {
     medium: 500,
     semibold: 600,
     bold: 700,
+    extraBold: 800,
   },
   // assuming 1rem = 16px
   sizes: {

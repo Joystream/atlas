@@ -10,16 +10,16 @@ import { transitions } from '@/shared/theme'
 import {
   ButtonGroup,
   DrawerOverlay,
+  JoystreamLogo,
   LegalLink,
   LegalLinksWrapper,
-  Logo,
   LogoLink,
   SidebarNav,
   SidebarNavFooter,
   SidebarNavItem,
   SidebarNavLink,
   SidebarNavList,
-  StudioText,
+  StudioLogo,
   SubItem,
   SubItemsWrapper,
 } from './SidenavBase.style'
@@ -64,8 +64,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
       </CSSTransition>
       <SidebarNav expanded={expanded} isStudio={isStudio}>
         <LogoLink to="./" onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
-          <Logo />
-          {isStudio && <StudioText>studio</StudioText>}
+          {isStudio ? <StudioLogo /> : <JoystreamLogo />}
         </LogoLink>
         <SidebarNavList>
           {items.map((item) => (
