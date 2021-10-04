@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
-export const VideoHeroHeader = styled.header`
+export const StyledVideoHeroHeader = styled.header`
   position: absolute;
   top: 0;
   margin-top: ${sizes(9)};

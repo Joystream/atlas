@@ -11,7 +11,7 @@ export const VideoHeroSliderWrapper = styled.div`
   display: grid;
   width: calc(100% - ${sizes(8)});
   height: 100%;
-  grid-gap: 8px;
+  grid-gap: ${sizes(2)};
   grid-template-columns: repeat(3, 1fr);
   ${media.sm} {
     bottom: 0;
@@ -73,11 +73,7 @@ export const VideoSliderProgressBar = styled.div<VideoSliderProgressBarProps>`
   }
 `
 
-type VideoSliderProgressProps = {
-  progress?: number
-}
-
-export const VideoSliderProgress = styled.div<VideoSliderProgressProps>`
+export const VideoSliderProgress = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -85,6 +81,5 @@ export const VideoSliderProgress = styled.div<VideoSliderProgressProps>`
   background-color: ${colors.gray[200]};
   width: 100%;
   transform-origin: 0 0;
-  transform: scaleX(${({ progress = 0 }) => progress / 100});
   transition: transform 125ms ease-in;
 `

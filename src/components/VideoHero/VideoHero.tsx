@@ -34,14 +34,9 @@ export type VideoHeroProps = {
   headerNode?: React.ReactNode
   sliderNode?: React.ReactNode
   withMuteButton?: boolean
-  height?: string
   videoHeroData: VideoHeroData | null
   onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
   onEnded?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
-  videoHeroHeader?: {
-    title: string
-    icon: React.ReactNode
-  }
 }
 
 export const VideoHero: React.FC<VideoHeroProps> = ({

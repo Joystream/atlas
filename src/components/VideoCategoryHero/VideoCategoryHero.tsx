@@ -3,13 +3,9 @@ import { round } from 'lodash'
 import React, { ReactNode, useState } from 'react'
 
 import { VideoHeroData } from '@/api/featured'
-import { absoluteRoutes } from '@/config/routes'
-import { IconButton } from '@/shared/components/IconButton'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { SvgGlyphChevronLeft } from '@/shared/icons'
 import { media } from '@/shared/theme'
 
-import { Divider, VideoHeroHeader, VideoHeroHeaderTitle } from './VideoCategoryHero.style'
+import { VideoHeroHeader } from './VideoHereoHeader'
 import { VideoHeroSlider } from './VideoHeroSlider'
 
 import { VideoHero } from '../VideoHero'
@@ -49,38 +45,23 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
     video ? { ...video, progress: idx === activeVideoIdx ? videoProgress : 0 } : null
   )
 
+  const shouldShowSlider = videos && videos?.length > 1
+
   return (
     <StyledVideoHero
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
       videoHeroData={videos ? videos[activeVideoIdx] : null}
-      headerNode={
-        <VideoHeroHeader>
-          {videos?.[activeVideoIdx] ? (
-            <IconButton variant="tertiary" to={absoluteRoutes.viewer.discover()}>
-              <SvgGlyphChevronLeft />
-            </IconButton>
-          ) : (
-            <SkeletonLoader rounded height={40} width={40} />
-          )}
-          <Divider />
-          {videos?.[activeVideoIdx] ? (
-            <>
-              {header.icon}
-              <VideoHeroHeaderTitle variant="h5">{header.title}</VideoHeroHeaderTitle>
-            </>
-          ) : (
-            <SkeletonLoader height={24} width={160} />
-          )}
-        </VideoHeroHeader>
-      }
+      headerNode={<VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />}
       sliderNode={
-        <VideoHeroSlider
-          loading={!videos?.[activeVideoIdx]}
-          activeVideoIdx={activeVideoIdx}
-          videos={videosWithProgress}
-          onTileClick={handleVideoClick}
-        />
+        shouldShowSlider ? (
+          <VideoHeroSlider
+            loading={!videos?.[activeVideoIdx]}
+            activeVideoIdx={activeVideoIdx}
+            videos={videosWithProgress}
+            onTileClick={handleVideoClick}
+          />
+        ) : undefined
       }
     />
   )

@@ -28,15 +28,17 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
   const smMatch = useMediaMatch('sm')
 
   const handleChangeTile = (e: React.MouseEvent) => {
-    if (smMatch) {
+    if (smMatch || !videos) {
       return
     }
+    const videosLastIdx = videos.length - 1
     const clientWidthCenter = e.currentTarget.clientWidth / 2
+
     if (clientWidthCenter <= e.clientX) {
-      const idx = activeVideoIdx + 1 >= 3 ? 0 : activeVideoIdx + 1
+      const idx = activeVideoIdx + 1 >= videosLastIdx ? 0 : activeVideoIdx + 1
       onTileClick?.(idx)
     } else {
-      const idx = activeVideoIdx - 1 <= -1 ? 2 : activeVideoIdx - 1
+      const idx = activeVideoIdx - 1 <= -1 ? videosLastIdx : activeVideoIdx - 1
       onTileClick?.(idx)
     }
   }
@@ -73,7 +75,7 @@ export const VideoSliderPreview: React.FC<VideoSliderPreviewProps> = ({ progress
     <VideoSliderPreviewWrapper onClick={onClick}>
       <VideoSliderThumbnail src={thumbnailUrl || ''} active={active} />
       <VideoSliderProgressBar active={active}>
-        <VideoSliderProgress progress={progress} />
+        <VideoSliderProgress style={{ transform: `scaleX(${progress ? progress / 100 : 0})` }} />
       </VideoSliderProgressBar>
     </VideoSliderPreviewWrapper>
   )
