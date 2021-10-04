@@ -49,12 +49,14 @@ export const ViewerSidenav: React.FC = () => {
       toggleSideNav={setExpanded}
       items={viewerSidenavItems}
       additionalContent={
-        <FollowedChannels
-          onClick={() => setExpanded(false)}
-          onChannelNotFound={handleChannelNotFound}
-          followedChannels={followedChannels}
-          expanded={expanded}
-        />
+        followedChannels.length ? (
+          <FollowedChannels
+            onClick={() => setExpanded(false)}
+            onChannelNotFound={handleChannelNotFound}
+            followedChannels={followedChannels}
+            expanded={expanded}
+          />
+        ) : null
       }
       buttonsContent={
         <>
