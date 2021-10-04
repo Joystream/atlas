@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Placement } from '@popperjs/core'
 import Tippy, { TippyProps } from '@tippyjs/react/headless'
-import React, { MutableRefObject } from 'react'
+import React, { LegacyRef, MutableRefObject } from 'react'
 
 export type TippyInstance = Parameters<Required<TippyProps>['render']>[2] // what a mess, i know
 
@@ -39,7 +39,7 @@ export const Popover: React.FC<PopoverProps> = ({
         }
       }}
       onTrigger={(instance) => {
-        const box = instance.popper.firstElementChild
+        const box = instance.popper.firstElementChild?.firstElementChild
         requestAnimationFrame(() => {
           box?.classList.add('popover-enter-active')
           box?.classList.remove('popover-exit-active')

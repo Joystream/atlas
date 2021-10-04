@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/shared/components/Text'
+import { SvgGlyphHide } from '@/shared/icons'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const Container = styled.div`
   margin-top: ${sizes(16)};
-  position: relative;
 `
 
 export const ControlsContainer = styled.div`
@@ -44,4 +45,31 @@ export const FiltersInnerContainer = styled.div`
   gap: ${sizes(4)};
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+`
+
+export const OtherFilterStyledText = styled(Text)`
+  margin: 0 0 ${sizes(2)} ${sizes(2)};
+  display: flex;
+  align-items: center;
+`
+
+export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
+  margin-right: ${sizes(2)};
+
+  & path {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+`
+
+export const DateUploadFilterContainer = styled.div`
+  padding-bottom: ${sizes(1)};
+  display: grid;
+  gap: ${sizes(3)};
+`
+
+export const MobileFilterContainer = styled.div`
+  display: grid;
+  padding-bottom: ${sizes(6)};
+  gap: ${sizes(3)};
 `
