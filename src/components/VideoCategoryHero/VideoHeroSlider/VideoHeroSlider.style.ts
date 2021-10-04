@@ -17,7 +17,7 @@ export const VideoHeroSliderWrapper = styled.div`
     bottom: 0;
     z-index: ${zIndex.overlay};
     right: 0;
-    padding-bottom: inherit;
+    padding: inherit;
     left: unset;
     top: unset;
     margin: auto;

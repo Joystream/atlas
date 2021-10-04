@@ -37,6 +37,7 @@ export type VideoHeroProps = {
   height?: string
   videoHeroData: VideoHeroData | null
   onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
+  onEnded?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
   videoHeroHeader?: {
     title: string
     icon: React.ReactNode
@@ -50,6 +51,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
   sliderNode,
   withMuteButton,
   onTimeUpdate,
+  onEnded,
 }) => {
   const isCompact = useMediaMatch('xs')
 
@@ -66,6 +68,11 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
     setSoundMuted(!soundMuted)
   }
 
+  const handleEnded = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    setVideoPlaying(false)
+    onEnded?.(e)
+  }
+
   return (
     <Container className={className}>
       <BackgroundContainer>
@@ -75,10 +82,10 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
             playing={videoPlaying}
             onTimeUpdate={onTimeUpdate}
             poster={videoHeroData.thumbnailPhotoUrl || ''}
-            onLoadedData={handlePlaybackDataLoaded}
             onPlay={() => setVideoPlaying(true)}
             onPause={() => setVideoPlaying(false)}
-            onEnded={() => setVideoPlaying(false)}
+            onLoadedData={handlePlaybackDataLoaded}
+            onEnded={handleEnded}
             src={videoHeroData?.heroVideoCutUrl}
           />
         )}

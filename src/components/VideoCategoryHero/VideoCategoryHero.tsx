@@ -3,6 +3,7 @@ import { round } from 'lodash'
 import React, { ReactNode, useState } from 'react'
 
 import { VideoHeroData } from '@/api/featured'
+import { absoluteRoutes } from '@/config/routes'
 import { IconButton } from '@/shared/components/IconButton'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { SvgGlyphChevronLeft } from '@/shared/icons'
@@ -28,6 +29,10 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   const handleVideoClick = (idx: number) => {
     setActiveVideoIdx(idx)
   }
+  const handleEnded = () => {
+    const idx = activeVideoIdx + 1 >= 3 ? 0 : activeVideoIdx + 1
+    setActiveVideoIdx(idx)
+  }
 
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     const currentTime = e.currentTarget.currentTime
@@ -47,11 +52,12 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   return (
     <StyledVideoHero
       onTimeUpdate={handleTimeUpdate}
+      onEnded={handleEnded}
       videoHeroData={videos ? videos[activeVideoIdx] : null}
       headerNode={
         <VideoHeroHeader>
           {videos?.[activeVideoIdx] ? (
-            <IconButton variant="tertiary">
+            <IconButton variant="tertiary" to={absoluteRoutes.viewer.discover()}>
               <SvgGlyphChevronLeft />
             </IconButton>
           ) : (
