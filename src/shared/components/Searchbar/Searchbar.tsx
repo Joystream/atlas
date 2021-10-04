@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
 
-import { CancelButton, Container, Input, SearchButton, SearchHelper, StyledSvgOutlineSearch } from './Searchbar.style'
+import { CancelButton, Container, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
 
 type SearchbarProps = {
   value: string
@@ -75,9 +74,12 @@ export const Searchbar: React.FC<SearchbarProps> = ({
           <SearchButton variant="tertiary" onClick={onClick}>
             <SvgGlyphSearch />
           </SearchButton>
-          <SearchHelper variant="caption" secondary>
-            Press <ShortcutIndicator>/</ShortcutIndicator>
-          </SearchHelper>
+          {/**
+             * This was done in advance as part of the search sprint and will be implemented in the new search flow.
+               <SearchHelper variant="caption" secondary>
+                 Press <ShortcutIndicator>/</ShortcutIndicator>
+               </SearchHelper>
+          */}
         </>
       )}
     </Container>

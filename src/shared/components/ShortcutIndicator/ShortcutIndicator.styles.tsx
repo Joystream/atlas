@@ -8,7 +8,7 @@ export const ShortcutIndicator = styled.kbd`
   font-family: ${typography.fonts.base};
   color: ${colors.gray[300]};
   font-weight: ${typography.weights.extraBold};
-  font-size: 0.7rem;
+  font-size: 11px;
   border: 1px solid ${colors.gray[500]};
   border-radius: 2px;
   display: inline-flex;
