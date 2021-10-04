@@ -25,7 +25,7 @@ export const BottomNav = () => {
 
   const toggleNavbar = () => {
     /**
-     * Safari allows to 'overscroll' page which causes bottom navigation wrong behavior.
+     * Some browsers allows to 'overscroll' page which causes bottom navigation wrong behavior.
      * This condition checks if user scrolled out of page in both directions, top and bottom.
      */
     if (window.scrollY < 0 || window.scrollY >= document.body.scrollHeight - window.innerHeight) {
