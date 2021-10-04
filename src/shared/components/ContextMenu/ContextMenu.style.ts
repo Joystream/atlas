@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions, typography, zIndex } from '../../theme'
+import { colors, sizes, transitions, typography } from '../../theme'
 import { Text } from '../Text'
 
 export const StyledContainer = styled.div`
