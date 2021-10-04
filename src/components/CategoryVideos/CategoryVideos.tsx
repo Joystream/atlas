@@ -5,6 +5,7 @@ import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useDialog } from '@/providers/dialogs'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { IconButton } from '@/shared/components/IconButton'
@@ -21,15 +22,18 @@ import {
   DateUploadFilterContainer,
   FiltersContainer,
   FiltersInnerContainer,
+  MobileFilterContainer,
   OtherFilterStyledIcon,
   OtherFilterStyledText,
   SortContainer,
 } from './CategoryVideos.styles'
 
 export const CategoryVideos = () => {
+  const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const betweenMdAndLgMatch = mdMatch && !lgMatch
+  // const betweenBaseAndSMMatch = !smMatch
 
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
@@ -42,14 +46,15 @@ export const CategoryVideos = () => {
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState(false)
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState(false)
 
+  // mobile dialog
+  const [openMobileFiltersDialog, closeMobileFiltersDialog] = useDialog()
+
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
       setSortVideosBy(value)
     }
   }
-  const handleFilterClick = () => {
-    setiIsFiltersOpen((value) => !value)
-  }
+
   const clearDateUploadedFilter = () => setdateUploadedFilter(undefined)
   const clearVideoLegnthFilter = () => setVideoLegnthFilter([])
   const clearLicensesFilter = () => setLicensesFilter([])
@@ -69,6 +74,140 @@ export const CategoryVideos = () => {
     licensesFilter.length !== 0 ||
     matureContentRatingFilter ||
     paidPromotionalMaterialFilter
+
+  // keep this last
+  const handleFilterClick = () => {
+    openMobileFiltersDialog({
+      onExitClick: () => {
+        closeMobileFiltersDialog()
+      },
+      title: 'Filters',
+      description: (
+        <>
+          <MobileFilterContainer>
+            <Text secondary variant="overhead">
+              Sort by
+            </Text>
+            <Select size="small" helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+          </MobileFilterContainer>
+
+          <MobileFilterContainer>
+            <Text secondary variant="overhead">
+              Date uploaded
+            </Text>
+            <RadioButton
+              onClick={() => {
+                setdateUploadedFilter(1)
+              }}
+              name="date-uploaded"
+              label="Last 24 hours"
+              value={1}
+              selectedValue={dateUploadedFilter}
+            ></RadioButton>
+            <RadioButton
+              onClick={() => {
+                setdateUploadedFilter(7)
+              }}
+              name="date-uploaded"
+              label="Last 7 days"
+              value={7}
+              selectedValue={dateUploadedFilter}
+            ></RadioButton>
+            <RadioButton
+              onClick={() => {
+                setdateUploadedFilter(30)
+              }}
+              name="date-uploaded"
+              label="Last 30 days"
+              value={30}
+              selectedValue={dateUploadedFilter}
+            ></RadioButton>
+            <RadioButton
+              onClick={() => {
+                setdateUploadedFilter(365)
+              }}
+              name="date-uploaded"
+              label="Last 365 days"
+              value={365}
+              selectedValue={dateUploadedFilter}
+            ></RadioButton>
+          </MobileFilterContainer>
+          <MobileFilterContainer>
+            <Text secondary variant="overhead">
+              Length
+            </Text>
+            <Checkbox
+              onChange={(value) => {
+                setVideoLegnthFilter((filter) =>
+                  value ? [...filter, '0-to-4'] : filter.filter((videoLength) => videoLength === '0-to-4')
+                )
+              }}
+              name="length"
+              label="Less than 4 minutes"
+              value={videoLegnthFilter.includes('0-to-4')}
+            ></Checkbox>
+            <Checkbox
+              onChange={(value) => {
+                setVideoLegnthFilter((filter) =>
+                  value ? [...filter, '4-to-10'] : filter.filter((videoLength) => videoLength === '4-to-10')
+                )
+              }}
+              name="length"
+              label="4 to 10 minutes"
+              value={videoLegnthFilter.includes('4-to-10')}
+            ></Checkbox>
+            <Checkbox
+              onChange={(value) => {
+                setVideoLegnthFilter((filter) =>
+                  value ? [...filter, '10-to-9999'] : filter.filter((videoLength) => videoLength === '10-to-9999')
+                )
+              }}
+              name="length"
+              label="More than 10 minutes"
+              value={videoLegnthFilter.includes('10-to-9999')}
+            ></Checkbox>
+          </MobileFilterContainer>
+          <MobileFilterContainer>
+            <Text secondary variant="overhead">
+              License
+            </Text>
+            {knownLicenses.map((license) => (
+              <Checkbox
+                name="license"
+                key={license.code}
+                label={license.name}
+                value={!!licensesFilter?.includes(license.code)}
+                onChange={(value) =>
+                  setLicensesFilter((licenses) =>
+                    value ? [...licenses, license.code] : licenses.filter((code) => code !== license.code)
+                  )
+                }
+              ></Checkbox>
+            ))}
+          </MobileFilterContainer>
+          <MobileFilterContainer>
+            <OtherFilterStyledText secondary variant="overhead">
+              <OtherFilterStyledIcon />
+              Exclude:
+            </OtherFilterStyledText>
+            <Checkbox
+              onChange={setPaidPromotionalMaterialFilter}
+              name="other-filters"
+              label="Paid promotional material"
+              value={paidPromotionalMaterialFilter}
+            ></Checkbox>
+            <Checkbox
+              onChange={setMatureContentRatingFilter}
+              name="other-filters"
+              label="Mature content rating"
+              value={matureContentRatingFilter}
+            ></Checkbox>
+          </MobileFilterContainer>
+        </>
+      ),
+    })
+    setiIsFiltersOpen((value) => !value)
+  }
   return (
     <Container>
       <ControlsContainer>

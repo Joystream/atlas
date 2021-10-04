@@ -67,3 +67,9 @@ export const DateUploadFilterContainer = styled.div`
   display: grid;
   gap: ${sizes(3)};
 `
+
+export const MobileFilterContainer = styled.div`
+  display: grid;
+  padding-bottom: ${sizes(6)};
+  gap: ${sizes(3)};
+`
