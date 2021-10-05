@@ -30,7 +30,6 @@ import {
 import { ActionDialog, ActionDialogProps } from '../ActionDialog'
 import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
-//TODO: remove duplicate inputs from desktop filters and mobile filters
 export const CategoryVideos = () => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
@@ -89,6 +88,111 @@ export const CategoryVideos = () => {
     paidPromotionalMaterialFilter,
     matureContentRatingFilter,
   })
+
+  const dateUploadedInputs = (
+    <>
+      <RadioButton
+        onChange={() => {
+          setdateUploadedFilter(1)
+        }}
+        name="date-uploaded"
+        label="Last 24 hours"
+        value={1}
+        selectedValue={dateUploadedFilter}
+      ></RadioButton>
+      <RadioButton
+        onChange={() => {
+          setdateUploadedFilter(7)
+        }}
+        name="date-uploaded"
+        label="Last 7 days"
+        value={7}
+        selectedValue={dateUploadedFilter}
+      ></RadioButton>
+      <RadioButton
+        onChange={() => {
+          setdateUploadedFilter(30)
+        }}
+        name="date-uploaded"
+        label="Last 30 days"
+        value={30}
+        selectedValue={dateUploadedFilter}
+      ></RadioButton>
+      <RadioButton
+        onChange={() => {
+          setdateUploadedFilter(365)
+        }}
+        name="date-uploaded"
+        label="Last 365 days"
+        value={365}
+        selectedValue={dateUploadedFilter}
+      ></RadioButton>
+    </>
+  )
+  const videoLengthInputs = (
+    <>
+      <Checkbox
+        onChange={(value) => {
+          setVideoLegnthFilter((filter) =>
+            value ? [...filter, '0-to-4'] : filter.filter((videoLength) => videoLength !== '0-to-4')
+          )
+        }}
+        name="length"
+        label="Less than 4 minutes"
+        value={videoLegnthFilter.includes('0-to-4')}
+      />
+      <Checkbox
+        onChange={(value) => {
+          setVideoLegnthFilter((filter) =>
+            value ? [...filter, '4-to-10'] : filter.filter((videoLength) => videoLength !== '4-to-10')
+          )
+        }}
+        name="length"
+        label="4 to 10 minutes"
+        value={videoLegnthFilter.includes('4-to-10')}
+      />
+      <Checkbox
+        onChange={(value) => {
+          setVideoLegnthFilter((filter) =>
+            value ? [...filter, '10-to-9999'] : filter.filter((videoLength) => videoLength !== '10-to-9999')
+          )
+        }}
+        name="length"
+        label="More than 10 minutes"
+        value={videoLegnthFilter.includes('10-to-9999')}
+      />
+    </>
+  )
+  const licenseInputs = knownLicenses.map((license) => (
+    <Checkbox
+      name="license"
+      key={license.code}
+      label={license.name}
+      value={!!licensesFilter?.includes(license.code)}
+      onChange={(value) =>
+        setLicensesFilter((licenses) =>
+          value ? [...licenses, license.code] : licenses.filter((code) => code !== license.code)
+        )
+      }
+    ></Checkbox>
+  ))
+  const otherFiltersInputs = (
+    <>
+      <Checkbox
+        onChange={setPaidPromotionalMaterialFilter}
+        name="other-filters"
+        label="Paid promotional material"
+        value={paidPromotionalMaterialFilter}
+      ></Checkbox>
+      <Checkbox
+        onChange={setMatureContentRatingFilter}
+        name="other-filters"
+        label="Mature content rating"
+        value={matureContentRatingFilter}
+      ></Checkbox>
+    </>
+  )
+
   return (
     <Container>
       <ControlsContainer>
@@ -143,113 +247,26 @@ export const CategoryVideos = () => {
                 <Text secondary variant="overhead">
                   Date uploaded
                 </Text>
-                <RadioButton
-                  onClick={() => {
-                    setdateUploadedFilter(1)
-                  }}
-                  name="date-uploaded"
-                  label="Last 24 hours"
-                  value={1}
-                  selectedValue={dateUploadedFilter}
-                ></RadioButton>
-                <RadioButton
-                  onClick={() => {
-                    setdateUploadedFilter(7)
-                  }}
-                  name="date-uploaded"
-                  label="Last 7 days"
-                  value={7}
-                  selectedValue={dateUploadedFilter}
-                ></RadioButton>
-                <RadioButton
-                  onClick={() => {
-                    setdateUploadedFilter(30)
-                  }}
-                  name="date-uploaded"
-                  label="Last 30 days"
-                  value={30}
-                  selectedValue={dateUploadedFilter}
-                ></RadioButton>
-                <RadioButton
-                  onClick={() => {
-                    setdateUploadedFilter(365)
-                  }}
-                  name="date-uploaded"
-                  label="Last 365 days"
-                  value={365}
-                  selectedValue={dateUploadedFilter}
-                ></RadioButton>
+                {dateUploadedInputs}
               </MobileFilterContainer>
               <MobileFilterContainer>
                 <Text secondary variant="overhead">
                   Length
                 </Text>
-                <Checkbox
-                  onChange={(value) => {
-                    setVideoLegnthFilter((filter) =>
-                      value ? [...filter, '0-to-4'] : filter.filter((videoLength) => videoLength !== '0-to-4')
-                    )
-                  }}
-                  name="length"
-                  label="Less than 4 minutes"
-                  value={videoLegnthFilter.includes('0-to-4')}
-                ></Checkbox>
-                <Checkbox
-                  onChange={(value) => {
-                    setVideoLegnthFilter((filter) =>
-                      value ? [...filter, '4-to-10'] : filter.filter((videoLength) => videoLength !== '4-to-10')
-                    )
-                  }}
-                  name="length"
-                  label="4 to 10 minutes"
-                  value={videoLegnthFilter.includes('4-to-10')}
-                ></Checkbox>
-                <Checkbox
-                  onChange={(value) => {
-                    setVideoLegnthFilter((filter) =>
-                      value ? [...filter, '10-to-9999'] : filter.filter((videoLength) => videoLength !== '10-to-9999')
-                    )
-                  }}
-                  name="length"
-                  label="More than 10 minutes"
-                  value={videoLegnthFilter.includes('10-to-9999')}
-                ></Checkbox>
+                {videoLengthInputs}
               </MobileFilterContainer>
               <MobileFilterContainer>
                 <Text secondary variant="overhead">
                   License
                 </Text>
-                {knownLicenses.map((license) => (
-                  <Checkbox
-                    name="license"
-                    key={license.code}
-                    label={license.name}
-                    value={!!licensesFilter?.includes(license.code)}
-                    onChange={(value) =>
-                      setLicensesFilter((licenses) =>
-                        value ? [...licenses, license.code] : licenses.filter((code) => code !== license.code)
-                      )
-                    }
-                  ></Checkbox>
-                ))}
+                {licenseInputs}
               </MobileFilterContainer>
               <MobileFilterContainer>
                 <OtherFilterStyledText secondary variant="overhead">
                   <OtherFilterStyledIcon />
                   Exclude:
                 </OtherFilterStyledText>
-                <Checkbox
-                  onChange={setPaidPromotionalMaterialFilter}
-                  name="other-filters"
-                  label="Paid promotional material"
-                  value={paidPromotionalMaterialFilter}
-                ></Checkbox>
-                <Checkbox
-                  onChange={setMatureContentRatingFilter}
-                  name="other-filters"
-                  label="Mature content rating"
-                  value={matureContentRatingFilter}
-                ></Checkbox>
+                {otherFiltersInputs}
               </MobileFilterContainer>
             </>
           }
@@ -267,46 +284,7 @@ export const CategoryVideos = () => {
         <FiltersContainer open={isFiltersOpen}>
           <FiltersInnerContainer>
             <PopoverDialog
-              content={
-                <DateUploadFilterContainer>
-                  <RadioButton
-                    onClick={() => {
-                      setdateUploadedFilter(1)
-                    }}
-                    name="date-uploaded"
-                    label="Last 24 hours"
-                    value={1}
-                    selectedValue={dateUploadedFilter}
-                  ></RadioButton>
-                  <RadioButton
-                    onClick={() => {
-                      setdateUploadedFilter(7)
-                    }}
-                    name="date-uploaded"
-                    label="Last 7 days"
-                    value={7}
-                    selectedValue={dateUploadedFilter}
-                  ></RadioButton>
-                  <RadioButton
-                    onClick={() => {
-                      setdateUploadedFilter(30)
-                    }}
-                    name="date-uploaded"
-                    label="Last 30 days"
-                    value={30}
-                    selectedValue={dateUploadedFilter}
-                  ></RadioButton>
-                  <RadioButton
-                    onClick={() => {
-                      setdateUploadedFilter(365)
-                    }}
-                    name="date-uploaded"
-                    label="Last 365 days"
-                    value={365}
-                    selectedValue={dateUploadedFilter}
-                  ></RadioButton>
-                </DateUploadFilterContainer>
-              }
+              content={<DateUploadFilterContainer>{dateUploadedInputs}</DateUploadFilterContainer>}
               footer={
                 <>
                   <Button
@@ -326,40 +304,7 @@ export const CategoryVideos = () => {
               </Button>
             </PopoverDialog>
             <PopoverDialog
-              content={
-                <>
-                  <Checkbox
-                    onChange={(value) => {
-                      setVideoLegnthFilter((filter) =>
-                        value ? [...filter, '0-to-4'] : filter.filter((videoLength) => videoLength !== '0-to-4')
-                      )
-                    }}
-                    name="length"
-                    label="Less than 4 minutes"
-                    value={videoLegnthFilter.includes('0-to-4')}
-                  ></Checkbox>
-                  <Checkbox
-                    onChange={(value) => {
-                      setVideoLegnthFilter((filter) =>
-                        value ? [...filter, '4-to-10'] : filter.filter((videoLength) => videoLength !== '4-to-10')
-                      )
-                    }}
-                    name="length"
-                    label="4 to 10 minutes"
-                    value={videoLegnthFilter.includes('4-to-10')}
-                  ></Checkbox>
-                  <Checkbox
-                    onChange={(value) => {
-                      setVideoLegnthFilter((filter) =>
-                        value ? [...filter, '10-to-9999'] : filter.filter((videoLength) => videoLength !== '10-to-9999')
-                      )
-                    }}
-                    name="length"
-                    label="More than 10 minutes"
-                    value={videoLegnthFilter.includes('10-to-9999')}
-                  ></Checkbox>
-                </>
-              }
+              content={videoLengthInputs}
               footer={
                 <>
                   <Button
@@ -379,23 +324,7 @@ export const CategoryVideos = () => {
               </Button>
             </PopoverDialog>
             <PopoverDialog
-              content={
-                <>
-                  {knownLicenses.map((license) => (
-                    <Checkbox
-                      name="license"
-                      key={license.code}
-                      label={license.name}
-                      value={!!licensesFilter?.includes(license.code)}
-                      onChange={(value) =>
-                        setLicensesFilter((licenses) =>
-                          value ? [...licenses, license.code] : licenses.filter((code) => code !== license.code)
-                        )
-                      }
-                    ></Checkbox>
-                  ))}
-                </>
-              }
+              content={licenseInputs}
               footer={
                 <>
                   <Button
@@ -421,18 +350,7 @@ export const CategoryVideos = () => {
                     <OtherFilterStyledIcon />
                     Exclude:
                   </OtherFilterStyledText>
-                  <Checkbox
-                    onChange={setPaidPromotionalMaterialFilter}
-                    name="other-filters"
-                    label="Paid promotional material"
-                    value={paidPromotionalMaterialFilter}
-                  ></Checkbox>
-                  <Checkbox
-                    onChange={setMatureContentRatingFilter}
-                    name="other-filters"
-                    label="Mature content rating"
-                    value={matureContentRatingFilter}
-                  ></Checkbox>
+                  {otherFiltersInputs}
                 </>
               }
               footer={
