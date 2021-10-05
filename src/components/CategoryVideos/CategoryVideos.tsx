@@ -53,7 +53,7 @@ export const CategoryVideos = () => {
   const [videoLegnthFilter, setVideoLegnthFilter] = useState<VideoLengthOptions>()
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
-  const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
+  const [_videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
     categoryId_eq: id,
     languageId_eq: 'en',
   })
@@ -142,16 +142,16 @@ export const CategoryVideos = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLanguage])
 
-  console.log({
-    sortVideosBy,
-    dateUploadedFilter,
-    licensesFilter,
-    videoLegnthFilter,
-    paidPromotionalMaterialFilter,
-    matureContentRatingFilter,
-    videoWhereInput,
-    categoryId: id,
-  })
+  // console.log({
+  //   sortVideosBy,
+  //   dateUploadedFilter,
+  //   licensesFilter,
+  //   videoLegnthFilter,
+  //   paidPromotionalMaterialFilter,
+  //   matureContentRatingFilter,
+  //   videoWhereInput,
+  //   categoryId: id,
+  // })
 
   const dateUploadedInputs = (
     <>
