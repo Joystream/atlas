@@ -33,7 +33,7 @@ const tabs = ['Videos', 'Channels']
 
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [filtersOpen, setFiltersOpen] = useState(true)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const { data, loading, error } = useSearch(
     {
       text: query,
