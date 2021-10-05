@@ -154,6 +154,8 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       transform: translateX(-50%);
       bottom: 0;
       margin-bottom: 10px;
+      font-family: ${typography.fonts.headers};
+      font-weight: ${typography.weights.bold};
     }
   }
 `
