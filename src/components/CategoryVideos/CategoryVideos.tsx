@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { add } from 'date-fns'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
@@ -31,6 +32,8 @@ import {
 import { ActionDialog, ActionDialogProps } from '../ActionDialog'
 import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
+type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
+
 export const CategoryVideos = () => {
   const { id } = useParams()
 
@@ -45,19 +48,14 @@ export const CategoryVideos = () => {
   // filters
   const [isFiltersOpen, setiIsFiltersOpen] = useState(true)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [dateUploadedFilter, setdateUploadedFilter] = useState<number | undefined>()
-  const [licensesFilter, setLicensesFilter] = useState<number[]>([])
-  const [videoLegnthFilter, setVideoLegnthFilter] = useState<string[]>([])
-  const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState(false)
-  const [matureContentRatingFilter, setMatureContentRatingFilter] = useState(false)
+  const [dateUploadedFilter, setdateUploadedFilter] = useState<number>()
+  const [licensesFilter, setLicensesFilter] = useState<number[]>()
+  const [videoLegnthFilter, setVideoLegnthFilter] = useState<VideoLengthOptions>()
+  const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
+  const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
     categoryId_eq: id,
-    createdAt_gte: new Date(),
-    licenseId_in: ['1'],
-    duration_lte: 10 * 60 * 1000,
-    hasMarketing_eq: false,
-    isExplicit_eq: false,
-    languageId_eq: '123',
+    languageId_eq: 'en',
   })
 
   const handleSorting = (value?: VideoOrderByInput | null) => {
@@ -68,30 +66,82 @@ export const CategoryVideos = () => {
 
   const clearSortVideosBy = () => setSortVideosBy(VideoOrderByInput.CreatedAtDesc)
   const clearDateUploadedFilter = () => setdateUploadedFilter(undefined)
-  const clearVideoLegnthFilter = () => setVideoLegnthFilter([])
-  const clearLicensesFilter = () => setLicensesFilter([])
+  const clearVideoLegnthFilter = () => setVideoLegnthFilter(undefined)
+  const clearLicensesFilter = () => setLicensesFilter(undefined)
   const clearOtherFilters = () => {
-    setPaidPromotionalMaterialFilter(false)
-    setMatureContentRatingFilter(false)
+    setPaidPromotionalMaterialFilter(undefined)
+    setMatureContentRatingFilter(undefined)
   }
   const clearAllFilters = () => {
+    setSelectedLanguage('en')
     clearSortVideosBy()
     clearDateUploadedFilter()
     clearVideoLegnthFilter()
     clearLicensesFilter()
     clearOtherFilters()
+    handleApplyFilter()
   }
   const canClearAllFilters =
     sortVideosBy !== VideoOrderByInput.CreatedAtDesc ||
     dateUploadedFilter !== undefined ||
-    videoLegnthFilter.length !== 0 ||
-    licensesFilter.length !== 0 ||
+    videoLegnthFilter?.length !== 0 ||
+    licensesFilter?.length !== 0 ||
     matureContentRatingFilter ||
     paidPromotionalMaterialFilter
 
   const handleFilterClick = () => {
     setiIsFiltersOpen((value) => !value)
   }
+  const handleApplyFilter = useCallback(() => {
+    const getDurationRules = () => {
+      switch (videoLegnthFilter) {
+        case '0-to-4':
+          return {
+            duration_lte: 4 * 60 * 1000,
+          }
+        case '4-to-10':
+          return {
+            duration_gte: 4 * 60 * 1000,
+            duration_lte: 10 * 60 * 1000,
+          }
+        case '10-to-9999':
+          return {
+            duration_gte: 10 * 60 * 1000,
+          }
+        default:
+          return {}
+      }
+    }
+
+    setVideoWhereInput({
+      categoryId_eq: id,
+      languageId_eq: selectedLanguage,
+      createdAt_gte: dateUploadedFilter
+        ? add(new Date(), {
+            days: -dateUploadedFilter,
+          })
+        : undefined,
+      licenseId_in: licensesFilter?.map((license) => license.toString()),
+      hasMarketing_eq: paidPromotionalMaterialFilter,
+      isExplicit_eq: matureContentRatingFilter,
+      ...getDurationRules(),
+    })
+  }, [
+    dateUploadedFilter,
+    id,
+    licensesFilter,
+    matureContentRatingFilter,
+    paidPromotionalMaterialFilter,
+    selectedLanguage,
+    videoLegnthFilter,
+  ])
+
+  useEffect(() => {
+    handleApplyFilter()
+    // this is ok only want to apply filters here when language changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLanguage])
+
   console.log({
     sortVideosBy,
     dateUploadedFilter,
@@ -99,6 +149,8 @@ export const CategoryVideos = () => {
     videoLegnthFilter,
     paidPromotionalMaterialFilter,
     matureContentRatingFilter,
+    videoWhereInput,
+    categoryId: id,
   })
 
   const dateUploadedInputs = (
@@ -143,35 +195,32 @@ export const CategoryVideos = () => {
   )
   const videoLengthInputs = (
     <>
-      <Checkbox
-        onChange={(value) => {
-          setVideoLegnthFilter((filter) =>
-            value ? [...filter, '0-to-4'] : filter.filter((videoLength) => videoLength !== '0-to-4')
-          )
+      <RadioButton
+        onChange={() => {
+          setVideoLegnthFilter('0-to-4')
         }}
         name="length"
         label="Less than 4 minutes"
-        value={videoLegnthFilter.includes('0-to-4')}
+        value="0-to-4"
+        selectedValue={videoLegnthFilter}
       />
-      <Checkbox
-        onChange={(value) => {
-          setVideoLegnthFilter((filter) =>
-            value ? [...filter, '4-to-10'] : filter.filter((videoLength) => videoLength !== '4-to-10')
-          )
+      <RadioButton
+        onChange={() => {
+          setVideoLegnthFilter('4-to-10')
         }}
         name="length"
         label="4 to 10 minutes"
-        value={videoLegnthFilter.includes('4-to-10')}
+        value="4-to-10"
+        selectedValue={videoLegnthFilter}
       />
-      <Checkbox
-        onChange={(value) => {
-          setVideoLegnthFilter((filter) =>
-            value ? [...filter, '10-to-9999'] : filter.filter((videoLength) => videoLength !== '10-to-9999')
-          )
+      <RadioButton
+        onChange={() => {
+          setVideoLegnthFilter('10-to-9999')
         }}
         name="length"
         label="More than 10 minutes"
-        value={videoLegnthFilter.includes('10-to-9999')}
+        value="10-to-9999"
+        selectedValue={videoLegnthFilter}
       />
     </>
   )
@@ -183,7 +232,7 @@ export const CategoryVideos = () => {
       value={!!licensesFilter?.includes(license.code)}
       onChange={(value) =>
         setLicensesFilter((licenses) =>
-          value ? [...licenses, license.code] : licenses.filter((code) => code !== license.code)
+          value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
         )
       }
     ></Checkbox>
@@ -194,13 +243,13 @@ export const CategoryVideos = () => {
         onChange={setPaidPromotionalMaterialFilter}
         name="other-filters"
         label="Paid promotional material"
-        value={paidPromotionalMaterialFilter}
+        value={!!paidPromotionalMaterialFilter}
       ></Checkbox>
       <Checkbox
         onChange={setMatureContentRatingFilter}
         name="other-filters"
         label="Mature content rating"
-        value={matureContentRatingFilter}
+        value={!!matureContentRatingFilter}
       ></Checkbox>
     </>
   )
@@ -284,7 +333,7 @@ export const CategoryVideos = () => {
           }
           primaryButton={{
             text: 'Apply',
-            onClick: () => null, //TODO: apply filters
+            onClick: handleApplyFilter,
           }}
           secondaryButton={{
             text: 'Clear',
@@ -307,7 +356,9 @@ export const CategoryVideos = () => {
                   >
                     Clear
                   </Button>
-                  <Button size="small">Apply</Button>
+                  <Button size="small" onClick={handleApplyFilter}>
+                    Apply
+                  </Button>
                 </>
               }
             >
@@ -323,11 +374,13 @@ export const CategoryVideos = () => {
                     size="small"
                     variant="secondary"
                     onClick={clearVideoLegnthFilter}
-                    disabled={videoLegnthFilter.length === 0}
+                    disabled={videoLegnthFilter?.length === 0}
                   >
                     Clear
                   </Button>
-                  <Button size="small">Apply</Button>
+                  <Button size="small" onClick={handleApplyFilter}>
+                    Apply
+                  </Button>
                 </>
               }
             >
@@ -342,12 +395,14 @@ export const CategoryVideos = () => {
                   <Button
                     size="small"
                     variant="secondary"
-                    disabled={licensesFilter.length === 0}
+                    disabled={licensesFilter?.length === 0}
                     onClick={clearLicensesFilter}
                   >
                     Clear
                   </Button>
-                  <Button size="small">Apply</Button>
+                  <Button size="small" onClick={handleApplyFilter}>
+                    Apply
+                  </Button>
                 </>
               }
             >
@@ -375,7 +430,9 @@ export const CategoryVideos = () => {
                   >
                     Clear
                   </Button>
-                  <Button size="small">Apply</Button>
+                  <Button size="small" onClick={handleApplyFilter}>
+                    Apply
+                  </Button>
                 </>
               }
             >
