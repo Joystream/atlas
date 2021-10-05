@@ -1,6 +1,7 @@
 import { add } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { CSSTransition } from 'react-transition-group'
 
 import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
 import { languages } from '@/config/languages'
@@ -342,112 +343,114 @@ export const CategoryVideos = () => {
           }}
         />
       ) : (
-        <FiltersContainer open={isFiltersOpen}>
-          <FiltersInnerContainer>
-            <PopoverDialog
-              content={<DateUploadFilterContainer>{dateUploadedInputs}</DateUploadFilterContainer>}
-              footer={
-                <>
-                  <Button
-                    onClick={clearDateUploadedFilter}
-                    size="small"
-                    variant="secondary"
-                    disabled={dateUploadedFilter === undefined}
-                  >
-                    Clear
-                  </Button>
-                  <Button size="small" onClick={handleApplyFilter}>
-                    Apply
-                  </Button>
-                </>
-              }
-            >
-              <Button variant="secondary" onClick={() => null}>
-                Date uploaded
-              </Button>
-            </PopoverDialog>
-            <PopoverDialog
-              content={videoLengthInputs}
-              footer={
-                <>
-                  <Button
-                    size="small"
-                    variant="secondary"
-                    onClick={clearVideoLegnthFilter}
-                    disabled={videoLegnthFilter?.length === 0}
-                  >
-                    Clear
-                  </Button>
-                  <Button size="small" onClick={handleApplyFilter}>
-                    Apply
-                  </Button>
-                </>
-              }
-            >
-              <Button variant="secondary" onClick={() => null}>
-                Length
-              </Button>
-            </PopoverDialog>
-            <PopoverDialog
-              content={licenseInputs}
-              footer={
-                <>
-                  <Button
-                    size="small"
-                    variant="secondary"
-                    disabled={licensesFilter?.length === 0}
-                    onClick={clearLicensesFilter}
-                  >
-                    Clear
-                  </Button>
-                  <Button size="small" onClick={handleApplyFilter}>
-                    Apply
-                  </Button>
-                </>
-              }
-            >
-              <Button variant="secondary" onClick={() => null}>
-                License
-              </Button>
-            </PopoverDialog>
-            <PopoverDialog
-              content={
-                <>
-                  <OtherFilterStyledText secondary variant="overhead">
-                    <OtherFilterStyledIcon />
-                    Exclude:
-                  </OtherFilterStyledText>
-                  {otherFiltersInputs}
-                </>
-              }
-              footer={
-                <>
-                  <Button
-                    onClick={clearOtherFilters}
-                    size="small"
-                    variant="secondary"
-                    disabled={!matureContentRatingFilter && !paidPromotionalMaterialFilter}
-                  >
-                    Clear
-                  </Button>
-                  <Button size="small" onClick={handleApplyFilter}>
-                    Apply
-                  </Button>
-                </>
-              }
-            >
-              <Button variant="secondary" onClick={() => null}>
-                Other filters
-              </Button>
-            </PopoverDialog>
-          </FiltersInnerContainer>
+        <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
+          <FiltersContainer open={true}>
+            <FiltersInnerContainer>
+              <PopoverDialog
+                content={<DateUploadFilterContainer>{dateUploadedInputs}</DateUploadFilterContainer>}
+                footer={
+                  <>
+                    <Button
+                      onClick={clearDateUploadedFilter}
+                      size="small"
+                      variant="secondary"
+                      disabled={dateUploadedFilter === undefined}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="small" onClick={handleApplyFilter}>
+                      Apply
+                    </Button>
+                  </>
+                }
+              >
+                <Button variant="secondary" onClick={() => null}>
+                  Date uploaded
+                </Button>
+              </PopoverDialog>
+              <PopoverDialog
+                content={videoLengthInputs}
+                footer={
+                  <>
+                    <Button
+                      size="small"
+                      variant="secondary"
+                      onClick={clearVideoLegnthFilter}
+                      disabled={videoLegnthFilter?.length === 0}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="small" onClick={handleApplyFilter}>
+                      Apply
+                    </Button>
+                  </>
+                }
+              >
+                <Button variant="secondary" onClick={() => null}>
+                  Length
+                </Button>
+              </PopoverDialog>
+              <PopoverDialog
+                content={licenseInputs}
+                footer={
+                  <>
+                    <Button
+                      size="small"
+                      variant="secondary"
+                      disabled={licensesFilter?.length === 0}
+                      onClick={clearLicensesFilter}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="small" onClick={handleApplyFilter}>
+                      Apply
+                    </Button>
+                  </>
+                }
+              >
+                <Button variant="secondary" onClick={() => null}>
+                  License
+                </Button>
+              </PopoverDialog>
+              <PopoverDialog
+                content={
+                  <>
+                    <OtherFilterStyledText secondary variant="overhead">
+                      <OtherFilterStyledIcon />
+                      Exclude:
+                    </OtherFilterStyledText>
+                    {otherFiltersInputs}
+                  </>
+                }
+                footer={
+                  <>
+                    <Button
+                      onClick={clearOtherFilters}
+                      size="small"
+                      variant="secondary"
+                      disabled={!matureContentRatingFilter && !paidPromotionalMaterialFilter}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="small" onClick={handleApplyFilter}>
+                      Apply
+                    </Button>
+                  </>
+                }
+              >
+                <Button variant="secondary" onClick={() => null}>
+                  Other filters
+                </Button>
+              </PopoverDialog>
+            </FiltersInnerContainer>
 
-          {canClearAllFilters && (
-            <Button onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
-              Clear all
-            </Button>
-          )}
-        </FiltersContainer>
+            {canClearAllFilters && (
+              <Button onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
+                Clear all
+              </Button>
+            )}
+          </FiltersContainer>
+        </CSSTransition>
       )}
     </Container>
   )

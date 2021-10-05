@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 export const Container = styled.div`
   margin-top: ${sizes(16)};
@@ -38,6 +38,18 @@ export const FiltersContainer = styled.div<{ open: boolean }>`
   justify-content: space-between;
   padding: ${sizes(4)};
   background-color: ${colors.gray[900]};
+  will-change: opacity;
+  transition: opacity ${transitions.timings.sharp} ${transitions.easing};
+
+  &.filters-active,
+  &.filters-exit {
+    opacity: 1;
+  }
+
+  &.filters-exit-active,
+  &.filters-enter {
+    opacity: 0;
+  }
 `
 
 export const FiltersInnerContainer = styled.div`
