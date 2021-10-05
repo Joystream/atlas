@@ -31,14 +31,15 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
     if (smMatch || !videos) {
       return
     }
-    const videosLastIdx = videos.length - 1
+    const videosLength = videos.length
+    console.log(videosLength)
     const clientWidthCenter = e.currentTarget.clientWidth / 2
 
     if (clientWidthCenter <= e.clientX) {
-      const idx = activeVideoIdx + 1 >= videosLastIdx ? 0 : activeVideoIdx + 1
+      const idx = activeVideoIdx + 1 >= videosLength ? 0 : activeVideoIdx + 1
       onTileClick?.(idx)
     } else {
-      const idx = activeVideoIdx - 1 <= -1 ? videosLastIdx : activeVideoIdx - 1
+      const idx = activeVideoIdx - 1 <= -1 ? videosLength - 1 : activeVideoIdx - 1
       onTileClick?.(idx)
     }
   }

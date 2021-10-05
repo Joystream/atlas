@@ -5,7 +5,6 @@ import { colors, media, sizes, zIndex } from '@/shared/theme'
 export const VideoHeroSliderWrapper = styled.div`
   position: absolute;
   margin: ${sizes(4)};
-  padding: 0 inherit;
   top: 0;
   left: 0;
   display: grid;
@@ -66,6 +65,7 @@ export const VideoSliderProgressBar = styled.div<VideoSliderProgressBarProps>`
   position: absolute;
   height: 4px;
   width: 100%;
+  opacity: ${({ active }) => (active ? 1 : 0.25)};
   ${media.sm} {
     opacity: ${({ active }) => (active ? 1 : 0)};
     bottom: 0;
