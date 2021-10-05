@@ -1,9 +1,7 @@
-import styled from '@emotion/styled'
 import { round } from 'lodash'
 import React, { ReactNode, useState } from 'react'
 
 import { VideoHeroData } from '@/api/featured'
-import { media } from '@/shared/theme'
 
 import { VideoHeroHeader } from './VideoHereoHeader'
 import { VideoHeroSlider } from './VideoHeroSlider'
@@ -24,9 +22,12 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
 
   const handleVideoClick = (idx: number) => {
     setActiveVideoIdx(idx)
+    setVideoProgress(0)
   }
+
   const handleEnded = () => {
     const idx = activeVideoIdx + 1 >= 3 ? 0 : activeVideoIdx + 1
+    setVideoProgress(0)
     setActiveVideoIdx(idx)
   }
 

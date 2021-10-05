@@ -34,7 +34,7 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
   }, [autoPlay, playing])
 
   useEffect(() => {
-    if (!videoRef.current) {
+    if (!videoRef.current || playing === undefined) {
       return
     }
     if (playing) {

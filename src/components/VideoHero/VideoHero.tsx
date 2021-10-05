@@ -27,8 +27,6 @@ import {
 
 import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 
-const VIDEO_PLAYBACK_DELAY = 1250
-
 export type VideoHeroProps = {
   isCategory?: boolean
   headerNode?: React.ReactNode
@@ -50,21 +48,13 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
 }) => {
   const isCompact = useMediaMatch('xs')
 
-  const [videoPlaying, setVideoPlaying] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
-
-  const handlePlaybackDataLoaded = () => {
-    setTimeout(() => {
-      setVideoPlaying(true)
-    }, VIDEO_PLAYBACK_DELAY)
-  }
 
   const handleSoundToggleClick = () => {
     setSoundMuted(!soundMuted)
   }
 
   const handleEnded = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    setVideoPlaying(false)
     onEnded?.(e)
   }
 
@@ -74,12 +64,9 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
         {videoHeroData && (
           <BackgroundVideoPlayer
             muted={soundMuted}
-            playing={videoPlaying}
+            autoPlay
             onTimeUpdate={onTimeUpdate}
             poster={videoHeroData.thumbnailPhotoUrl || ''}
-            onPlay={() => setVideoPlaying(true)}
-            onPause={() => setVideoPlaying(false)}
-            onLoadedData={handlePlaybackDataLoaded}
             onEnded={handleEnded}
             src={videoHeroData?.heroVideoCutUrl}
           />
