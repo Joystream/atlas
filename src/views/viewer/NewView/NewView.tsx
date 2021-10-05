@@ -6,7 +6,7 @@ import { VideoContentTemplate } from '@/components/templates/VideoContentTemplat
 
 export const NewView: React.FC = () => (
   <VideoContentTemplate title="New & Noteworthy" cta={['home', 'channels', 'popular']}>
-    <InfiniteVideoGrid title="Videos worth watching" isFeatured onDemand titleLoader />
+    <InfiniteVideoGrid title="Videos worth watching" videoWhereInput={{ isFeatured_eq: true }} onDemand titleLoader />
     <PromisingNewChannels />
   </VideoContentTemplate>
 )

@@ -2,9 +2,11 @@ import React, { useCallback, useState } from 'react'
 
 import {
   AssetAvailability,
+  ChannelOrderByInput,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
+  VideoOrderByInput,
   VideoWhereInput,
 } from '@/api/queries'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
@@ -24,41 +26,26 @@ import { VideoTile } from '../VideoTile'
 type InfiniteVideoGridProps = {
   title?: string
   titleLoader?: boolean
-  categoryId?: string
-  channelId?: string
-  channelIdIn?: string[] | null
-  createdAtGte?: Date | null
-  isPublic?: boolean
-  isCensored?: boolean
-  thumbnailPhotoAvailability?: AssetAvailability
-  mediaAvailability?: AssetAvailability
-  idIn?: string[]
+  videoWhereInput?: VideoWhereInput
   skipCount?: number
   ready?: boolean
   showChannel?: boolean
   className?: string
   currentlyWatchedVideoId?: string
   onDemand?: boolean
+  orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalLink?: {
     name: string
     url: string
   }
-  isFeatured?: boolean
 }
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
 export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   title,
-  categoryId = '',
-  channelId = null,
-  channelIdIn = null,
-  createdAtGte = null,
-  isPublic = true,
-  isCensored = false,
-  thumbnailPhotoAvailability = AssetAvailability.Accepted,
-  mediaAvailability = AssetAvailability.Accepted,
-  idIn,
+  videoWhereInput,
+  orderBy,
   skipCount = 0,
   ready = true,
   showChannel = true,
@@ -66,7 +53,6 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   currentlyWatchedVideoId,
   onDemand = false,
   additionalLink,
-  isFeatured = false,
   titleLoader,
 }) => {
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
@@ -76,18 +62,14 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
 
   const queryVariables: { where: VideoWhereInput } = {
     where: {
-      ...(channelId ? { channelId_eq: channelId } : {}),
-      ...(channelIdIn ? { channelId_in: channelIdIn } : {}),
-      ...(createdAtGte ? { createdAt_gte: createdAtGte } : {}),
-      ...(categoryId ? { categoryId_eq: categoryId } : {}),
-      ...(thumbnailPhotoAvailability ? { thumbnailPhotoAvailability_eq: thumbnailPhotoAvailability } : {}),
-      ...(mediaAvailability ? { mediaAvailability_eq: mediaAvailability } : {}),
-      ...(idIn ? { id_in: idIn } : {}),
-      isFeatured_eq: isFeatured,
-      isPublic_eq: isPublic,
-      isCensored_eq: isCensored,
+      isPublic_eq: true,
+      thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+      mediaAvailability_eq: AssetAvailability.Accepted,
+      ...videoWhereInput,
     },
   }
+
+  console.log({ queryVariables })
 
   const fetchMore = useCallback(() => {
     setTargetRowsCount(targetRowsCount + rowsToLoad)
@@ -102,6 +84,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     isReady: ready,
     skipCount,
     queryVariables,
+    orderBy,
     targetRowsCount,
     onDemand,
     onScrollToBottom: !onDemand ? fetchMore : undefined,
@@ -139,7 +122,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   }
 
   const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
-
+  console.log({ loading, dispItems: displayedItems, totalCount })
   // TODO: We should probably postpone doing first fetch until `onResize` gets called.
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (

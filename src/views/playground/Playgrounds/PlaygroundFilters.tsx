@@ -20,6 +20,7 @@ export const PlaygroundFilters: React.FC = () => {
   const betweenMdAndLgMatch = mdMatch && !lgMatch
 
   const filtersBarLogic = useFiltersBar()
+
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen },
@@ -45,8 +46,7 @@ export const PlaygroundFilters: React.FC = () => {
   return (
     <Container>
       <ControlsContainer>
-        {/* TODO: xss should be base here */}
-        <GridItem colSpan={{ xxs: 2, md: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 1 }}>
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
         </GridItem>
         <Select
