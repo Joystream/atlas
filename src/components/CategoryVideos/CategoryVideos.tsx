@@ -82,13 +82,18 @@ export const CategoryVideos = () => {
     clearOtherFilters()
     handleApplyFilter()
   }
+
+  const canClearDateUploadedFilter = dateUploadedFilter !== undefined
+  const canClearVideoLegnthFilter = videoLegnthFilter !== undefined
+  const canClearLicensesFilter = licensesFilter !== undefined
+  const canClearOtherFilters = matureContentRatingFilter !== undefined || paidPromotionalMaterialFilter !== undefined
   const canClearAllFilters =
+    selectedLanguage !== 'en' ||
     sortVideosBy !== VideoOrderByInput.CreatedAtDesc ||
-    dateUploadedFilter !== undefined ||
-    videoLegnthFilter?.length !== 0 ||
-    licensesFilter?.length !== 0 ||
-    matureContentRatingFilter ||
-    paidPromotionalMaterialFilter
+    canClearDateUploadedFilter ||
+    canClearVideoLegnthFilter ||
+    canClearLicensesFilter ||
+    canClearOtherFilters
 
   const handleFilterClick = () => {
     setiIsFiltersOpen((value) => !value)
@@ -274,7 +279,12 @@ export const CategoryVideos = () => {
               <SvgActionFilters />
             </IconButton>
           ) : (
-            <Button variant="secondary" icon={<SvgActionFilters />} onClick={handleFilterClick}>
+            <Button
+              badge={canClearAllFilters}
+              variant="secondary"
+              icon={<SvgActionFilters />}
+              onClick={handleFilterClick}
+            >
               Filters
             </Button>
           )}
@@ -364,7 +374,7 @@ export const CategoryVideos = () => {
                   </>
                 }
               >
-                <Button variant="secondary" onClick={() => null}>
+                <Button badge={canClearDateUploadedFilter} variant="secondary" onClick={() => null}>
                   Date uploaded
                 </Button>
               </PopoverDialog>
@@ -386,7 +396,7 @@ export const CategoryVideos = () => {
                   </>
                 }
               >
-                <Button variant="secondary" onClick={() => null}>
+                <Button badge={canClearVideoLegnthFilter} variant="secondary" onClick={() => null}>
                   Length
                 </Button>
               </PopoverDialog>
@@ -408,7 +418,7 @@ export const CategoryVideos = () => {
                   </>
                 }
               >
-                <Button variant="secondary" onClick={() => null}>
+                <Button badge={canClearLicensesFilter} variant="secondary" onClick={() => null}>
                   License
                 </Button>
               </PopoverDialog>
@@ -438,7 +448,7 @@ export const CategoryVideos = () => {
                   </>
                 }
               >
-                <Button variant="secondary" onClick={() => null}>
+                <Button badge={canClearOtherFilters} variant="secondary" onClick={() => null}>
                   Other filters
                 </Button>
               </PopoverDialog>
