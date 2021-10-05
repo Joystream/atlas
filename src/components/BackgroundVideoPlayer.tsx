@@ -34,6 +34,8 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
   }, [autoPlay, playing])
 
   useEffect(() => {
+    // show poster again when src changes
+    setIsPosterVisible(true)
     if (!videoRef.current || playing === undefined) {
       return
     }
