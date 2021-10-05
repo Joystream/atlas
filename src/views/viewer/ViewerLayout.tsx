@@ -5,11 +5,13 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { BottomNav } from '@/components/BottomNav'
 import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { ViewerSidenav } from '@/components/ViewerSidenav'
 import { ViewerTopbar } from '@/components/ViewerTopbar'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
@@ -28,6 +30,7 @@ export const ViewerLayout: React.FC = () => {
   const navigate = useNavigate()
   const searchMatch = useMatch({ path: absoluteRoutes.viewer.search() })
   const [cachedLocation, setCachedLocation] = useState(location)
+  const mdMatch = useMediaMatch('md')
 
   useEffect(() => {
     if (location.pathname === cachedLocation.pathname) {
@@ -88,6 +91,7 @@ export const ViewerLayout: React.FC = () => {
           </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
+      {!mdMatch && <BottomNav />}
     </>
   )
 }
