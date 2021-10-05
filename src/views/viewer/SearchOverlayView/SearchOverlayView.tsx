@@ -38,6 +38,5 @@ const OverlayContainer = styled.div`
   right: 0;
   height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
   background-color: ${colors.black};
-  padding: 0 var(--global-horizontal-padding);
   overflow: auto;
 `

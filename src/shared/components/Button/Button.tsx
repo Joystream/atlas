@@ -8,7 +8,7 @@ import { TextVariant } from '../Text'
 export type ButtonProps = {
   icon?: React.ReactNode
   iconPlacement?: IconPlacement
-  children: React.ReactNode
+  children?: React.ReactNode
   indicator?: boolean | string | number
 } & Omit<ButtonBaseProps, 'children'>
 

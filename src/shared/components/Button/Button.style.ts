@@ -75,6 +75,8 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles};
+
+  position: relative;
 `
 
 export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps>`

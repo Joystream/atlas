@@ -2,9 +2,13 @@ import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { languages } from '@/config/languages'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { Button } from '@/shared/components/Button'
+import { SvgGlyphFilters } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
-import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+import { BackgroundGradient, FiltersWrapper, StyledSelect, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 export type TabItem = {
   name: string
@@ -16,6 +20,7 @@ export type TabsProps = {
   onSelectTab: (idx: number) => void
   selected?: number
   className?: string
+  onFiltersClick?: () => void
 }
 
 const SCROLL_SHADOW_OFFSET = 10
@@ -26,6 +31,7 @@ export const Tabs: React.FC<TabsProps> = ({
   initialIndex = -1,
   selected: paramsSelected,
   className,
+  onFiltersClick,
 }) => {
   const [_selected, setSelected] = useState(initialIndex)
   const selected = paramsSelected ?? _selected
@@ -35,6 +41,7 @@ export const Tabs: React.FC<TabsProps> = ({
     left: false,
     right: true,
   })
+  const smMatch = useMediaMatch('sm')
 
   useEffect(() => {
     const tabsGroup = tabsRef.current
@@ -95,15 +102,19 @@ export const Tabs: React.FC<TabsProps> = ({
             <span data-badge={tab.badgeNumber}>{tab.name}</span>
           </Tab>
         ))}
+        <FiltersWrapper>
+          {smMatch && <StyledSelect items={languages} placeholder="Any language" size="small" />}
+          <Button
+            icon={<SvgGlyphFilters />}
+            iconPlacement="left"
+            variant="secondary"
+            indicator
+            onClick={onFiltersClick}
+          >
+            {smMatch && 'Filters'}
+          </Button>
+        </FiltersWrapper>
       </TabsGroup>
-      <CSSTransition
-        in={shadowsVisible.right && isContentOverflown}
-        timeout={100}
-        classNames={transitions.names.fade}
-        unmountOnExit
-      >
-        <BackgroundGradient direction="next" />
-      </CSSTransition>
     </TabsWrapper>
   )
 }
