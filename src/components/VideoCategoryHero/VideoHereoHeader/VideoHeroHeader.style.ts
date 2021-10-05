@@ -4,14 +4,10 @@ import { Text } from '@/shared/components/Text'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const StyledVideoHeroHeader = styled.header`
-  position: absolute;
-  top: 0;
-  margin-top: ${sizes(9)};
+  position: relative;
   display: flex;
   align-items: center;
-  ${media.sm} {
-    margin-top: ${sizes(8)};
-  }
+  align-self: flex-start;
 `
 export const Divider = styled.div`
   width: 1px;

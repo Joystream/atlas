@@ -6,14 +6,12 @@ import { ChannelLink } from '../ChannelLink'
 
 export const Container = styled.section`
   position: relative;
-  padding: 160px var(--global-horizontal-padding) ${sizes(4)};
   margin: 0 calc(-1 * var(--global-horizontal-padding));
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  padding: 36px var(--global-horizontal-padding) 16px;
+  display: grid;
 
   ${media.sm} {
-    padding: ${sizes(8)} var(--global-horizontal-padding);
+    padding: 32px var(--global-horizontal-padding);
     height: 66.6667vh;
   }
 `
@@ -44,6 +42,8 @@ export const GradientOverlay = styled.div`
 
 export const InfoContainer = styled.div`
   position: relative;
+  align-self: end;
+  margin-top: 124px;
   width: 100%;
 `
 
