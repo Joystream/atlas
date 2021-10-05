@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router'
 
-import { VideoOrderByInput } from '@/api/queries'
+import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import knownLicenses from '@/data/knownLicenses.json'
@@ -31,6 +32,8 @@ import { ActionDialog, ActionDialogProps } from '../ActionDialog'
 import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
 export const CategoryVideos = () => {
+  const { id } = useParams()
+
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
@@ -47,6 +50,15 @@ export const CategoryVideos = () => {
   const [videoLegnthFilter, setVideoLegnthFilter] = useState<string[]>([])
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState(false)
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState(false)
+  const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
+    categoryId_eq: id,
+    createdAt_gte: new Date(),
+    licenseId_in: ['1'],
+    duration_lte: 10 * 60 * 1000,
+    hasMarketing_eq: false,
+    isExplicit_eq: false,
+    languageId_eq: '123',
+  })
 
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
