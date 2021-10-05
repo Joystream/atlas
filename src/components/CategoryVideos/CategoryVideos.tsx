@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { VideoOrderByInput } from '@/api/queries'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useDialog } from '@/providers/dialogs'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { IconButton } from '@/shared/components/IconButton'
@@ -29,8 +28,9 @@ import {
 } from './CategoryVideos.styles'
 
 import { ActionDialog, ActionDialogProps } from '../ActionDialog'
-import { MessageIconWrapper, StyledTitleText } from '../MessageDialog/MessageDialog.style'
+import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
+//TODO: remove duplicate inputs from desktop filters and mobile filters
 export const CategoryVideos = () => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
