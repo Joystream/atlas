@@ -48,7 +48,7 @@ export const FooterContainer = styled.div<Scrollable>`
   ${({ isScrollable }) => isScrollable && footerContainerScrollableStyles};
 `
 
-export const PopoverContainer = styled(Popover)<Scrollable>`
+export const PopoverContainer = styled(Popover)`
   display: grid;
   grid-template-rows: auto 1fr auto;
   background-color: ${colors.gray[700]};

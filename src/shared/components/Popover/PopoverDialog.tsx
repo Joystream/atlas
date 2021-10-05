@@ -22,7 +22,6 @@ export const PopoverDialog: React.FC<PopoverDialogProps> = ({ header, content, f
   return (
     <PopoverContainer
       {...rest}
-      isScrollable={isScrollable}
       contentContainerRef={containerRef}
       content={
         <>
