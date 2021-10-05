@@ -62,7 +62,7 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused'
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'processing'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },

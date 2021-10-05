@@ -7,7 +7,7 @@ import { AssetAvailability, BasicVideoFieldsFragment } from '@/api/queries'
 import { colors, transitions } from '@/shared/theme'
 import { getRandomIntInclusive } from '@/utils/number'
 
-import { EndingOverlay, ErrorOverlay } from './VideoOverlays'
+import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
 import { PlayerState } from './VideoPlayer'
 
 type VideoOverlaProps = {
@@ -56,6 +56,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
         appear
       >
         <div>
+          {playerState === 'processing' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
           {playerState === 'ended' && (
             <EndingOverlay
