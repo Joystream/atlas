@@ -32,7 +32,6 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
       return
     }
     const videosLength = videos.length
-    console.log(videosLength)
     const clientWidthCenter = e.currentTarget.clientWidth / 2
 
     if (clientWidthCenter <= e.clientX) {

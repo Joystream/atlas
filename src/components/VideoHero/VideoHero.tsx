@@ -30,7 +30,7 @@ import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 const VIDEO_PLAYBACK_DELAY = 1250
 
 export type VideoHeroProps = {
-  className?: string
+  isCategory?: boolean
   headerNode?: React.ReactNode
   sliderNode?: React.ReactNode
   withMuteButton?: boolean
@@ -42,7 +42,7 @@ export type VideoHeroProps = {
 export const VideoHero: React.FC<VideoHeroProps> = ({
   videoHeroData = null,
   headerNode,
-  className,
+  isCategory,
   sliderNode,
   withMuteButton,
   onTimeUpdate,
@@ -69,8 +69,8 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
   }
 
   return (
-    <Container className={className}>
-      <BackgroundContainer>
+    <Container isCategory={isCategory}>
+      <BackgroundContainer isCategory={isCategory}>
         {videoHeroData && (
           <BackgroundVideoPlayer
             muted={soundMuted}
@@ -88,7 +88,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       </BackgroundContainer>
       {sliderNode && sliderNode}
       {headerNode && headerNode}
-      <InfoContainer>
+      <InfoContainer isCategory={isCategory}>
         <LayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
             <StyledChannelLink variant="secondary" id={videoHeroData?.video.channel.id} />

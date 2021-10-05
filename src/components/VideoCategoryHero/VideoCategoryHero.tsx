@@ -48,7 +48,8 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   const shouldShowSlider = videos && videos?.length > 1
 
   return (
-    <StyledVideoHero
+    <VideoHero
+      isCategory
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
       videoHeroData={videos ? videos[activeVideoIdx] : null}
@@ -66,9 +67,3 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
     />
   )
 }
-
-const StyledVideoHero = styled(VideoHero)`
-  ${media.sm} {
-    height: 392px;
-  }
-`

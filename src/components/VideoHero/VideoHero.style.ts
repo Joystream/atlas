@@ -4,7 +4,11 @@ import { colors, media, sizes } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
 
-export const Container = styled.section`
+type IsCategoryProp = {
+  isCategory?: boolean
+}
+
+export const Container = styled.section<IsCategoryProp>`
   position: relative;
   margin: 0 calc(-1 * var(--global-horizontal-padding));
   padding: 36px var(--global-horizontal-padding) 16px;
@@ -12,16 +16,16 @@ export const Container = styled.section`
 
   ${media.sm} {
     padding: 32px var(--global-horizontal-padding);
-    height: 66.6667vh;
+    height: ${({ isCategory }) => (isCategory ? '392px' : '66.6667vh')};
   }
 `
 
-export const BackgroundContainer = styled.div`
+export const BackgroundContainer = styled.div<IsCategoryProp>`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 240px;
+  height: ${({ isCategory }) => (isCategory ? '360px' : '240px')};
 
   ${media.sm} {
     bottom: -128px;
@@ -40,11 +44,14 @@ export const GradientOverlay = styled.div`
     ${colors.transparentBlack[54]};
 `
 
-export const InfoContainer = styled.div`
+export const InfoContainer = styled.div<IsCategoryProp>`
   position: relative;
   align-self: end;
-  margin-top: 124px;
+  margin-top: ${({ isCategory }) => (isCategory ? '208px' : '124px')};
   width: 100%;
+  ${media.sm} {
+    margin-top: unset;
+  }
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
