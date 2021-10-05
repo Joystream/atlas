@@ -7,7 +7,7 @@ import { Button } from '../Button'
 import { Text } from '../Text'
 
 export default {
-  title: 'Shared/P/Popover',
+  title: 'Shared/P/PopoverDialog',
   component: PopoverDialog,
   argTypes: {},
 } as Meta
