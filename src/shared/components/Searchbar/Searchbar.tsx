@@ -27,7 +27,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
   ...htmlProps
 }) => {
   const [value, setValue] = useState('')
-  const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -48,7 +48,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({
 
   return (
     <Container className={className}>
-      {(smMatch || showCancelButton) && (
+      {(mdMatch || showCancelButton) && (
         <>
           <StyledSvgOutlineSearch />
           <Input

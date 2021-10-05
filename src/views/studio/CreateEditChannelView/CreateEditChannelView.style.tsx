@@ -54,15 +54,10 @@ export const StyledAvatar = styled(Avatar)`
   }
 `
 
-type ActionBarTransactionWrapperProps = {
-  fullWidth?: boolean
-  isActive?: boolean
-}
-
-export const ActionBarTransactionWrapper = styled.div<ActionBarTransactionWrapperProps>`
+export const ActionBarTransactionWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: ${({ fullWidth }) => (fullWidth ? 0 : 'var(--sidenav-collapsed-width)')};
+  left: var(--size-sidenav-width-collapsed);
   right: 0;
   z-index: ${zIndex.header};
 

@@ -14,6 +14,7 @@ import { IconButton } from '@/shared/components/IconButton'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/shared/icons'
+import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
 import { transitions } from '@/shared/theme'
 
 import {
@@ -36,11 +37,10 @@ import {
   StyledLink,
   StyledTopbarBase,
   TextContainer,
-} from './StudioTopbar.style'
+} from './TopbarStudio.style'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
-  fullWidth?: boolean
 }
 
 type ChannelInfoProps = {
@@ -65,16 +65,8 @@ type NavDrawerProps = {
   handleClose: () => void
 }
 
-export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, fullWidth }) => {
-  const {
-    activeChannelId,
-    setActiveUser,
-    resetActiveUser,
-    activeMembership,
-    activeMembershipLoading,
-    memberships,
-    activeAccountId,
-  } = useUser()
+export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+  const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
 
   const navigate = useNavigate()
 
@@ -143,11 +135,9 @@ export const StudioTopbar: React.FC<StudioTopbarProps> = ({ hideChannelInfo, ful
     navigate(absoluteRoutes.studio.index())
   }
 
-  const channelSet = !!activeAccountId && !!activeChannelId && !!memberships?.length
-
   return (
     <>
-      <StyledTopbarBase variant="studio" fullWidth={fullWidth} isHamburgerButtonPresent={!!channelSet}>
+      <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
@@ -16,7 +15,7 @@ export const PlayerContainer = styled.div`
   width: 100%;
   height: calc(100vw * 0.5625);
   ${media.md} {
-    height: calc((100vw - var(--sidenav-collapsed-width)) * 0.5625);
+    height: calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625);
     max-height: calc(70vh);
   }
 `
@@ -24,7 +23,7 @@ export const PlayerContainer = styled.div`
 export const PlayerWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
@@ -104,5 +103,5 @@ export const NotFoundVideoContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  height: calc(100vh - var(--size-topbar-height));
 `

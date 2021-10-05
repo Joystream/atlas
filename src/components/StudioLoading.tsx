@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Spinner } from '@/shared/components/Spinner'
 import { Text } from '@/shared/components/Text'
 
@@ -18,7 +17,7 @@ const LoadingStudioContainer = styled.main`
   position: relative;
   width: 100%;
   height: 100vh;
-  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
+  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

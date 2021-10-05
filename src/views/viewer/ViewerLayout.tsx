@@ -6,10 +6,9 @@ import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BottomNav } from '@/components/BottomNav'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
+import { SidenavViewer } from '@/components/SidenavViewer'
+import { TopbarViewer } from '@/components/TopbarViewer'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
-import { ViewerSidenav } from '@/components/ViewerSidenav'
-import { ViewerTopbar } from '@/components/ViewerTopbar'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/shared/theme'
@@ -58,8 +57,8 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
-      <ViewerTopbar />
-      <ViewerSidenav />
+      <TopbarViewer />
+      <SidenavViewer />
       <MainContainer>
         <ErrorBoundary
           fallback={ViewErrorBoundary}
@@ -98,6 +97,6 @@ export const ViewerLayout: React.FC = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
-  margin-left: var(--sidenav-collapsed-width);
+  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
+  margin-left: var(--size-sidenav-width-collapsed);
 `

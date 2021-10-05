@@ -43,9 +43,9 @@ export const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid ${colors.gray[700]};
+  box-shadow: inset 0 0 0 1px ${colors.gray[700]};
 
-  ${media.sm} {
+  ${media.md} {
     height: 48px;
     padding-left: ${sizes(4)};
   }
@@ -66,7 +66,7 @@ export const SearchHelper = styled(Text)`
   flex-shrink: 0;
   display: none;
 
-  ${media.sm} {
+  ${media.md} {
     display: block;
   }
 `
@@ -75,7 +75,7 @@ export const SearchButton = styled(IconButton)`
   padding: 0;
   margin: 0 auto;
 
-  ${media.sm} {
+  ${media.md} {
     display: none;
   }
 `

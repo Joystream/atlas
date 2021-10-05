@@ -24,7 +24,7 @@ export const SearchbarContainer = styled.div`
     display: none;
   }
 
-  ${media.sm} {
+  ${media.md} {
     max-width: 1156px;
     justify-content: center;
     margin: 0;
@@ -43,7 +43,7 @@ export const StyledSearchbar = styled(Searchbar)<FocusProps>`
   margin-left: auto;
   height: 39px;
 
-  ${media.sm} {
+  ${media.md} {
     max-width: 480px;
     width: 100%;
     margin-left: 0;

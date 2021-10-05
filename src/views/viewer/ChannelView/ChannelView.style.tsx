@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components/ChannelLink'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { Select } from '@/shared/components/Select'
@@ -240,7 +239,7 @@ export const NotFoundChannelContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  height: calc(100vh - var(--size-topbar-height));
 `
 
 export const SearchButton = styled(IconButton)<SearchButttonProps>`

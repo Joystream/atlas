@@ -6,12 +6,13 @@ import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphExternal } from '@/shared/icons'
+import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { openInNewTab } from '@/utils/browser'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
 
-export const ViewerSidenav: React.FC = () => {
+export const SidenavViewer: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
@@ -25,6 +26,8 @@ export const ViewerSidenav: React.FC = () => {
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
+      logoNode={<SvgJoystreamLogoFull />}
+      logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={
         followedChannels.length ? (
